@@ -1,11 +1,11 @@
 [
-    {name: '阿榮福利味',
-        url: /http:\/\/www\.azofreeware\.com\//i,
-        siteExample: 'http://www.azofreeware.com/',
-        nextLink: 'css;#blog-pager-older-link;',
+    {name: '小說狂人',
+        url: /https:\/\/czbooks\.net\/n\/.*\//i,
+        siteExample: 'https://czbooks.net/n/u079a/uhdm',
+        nextLink: 'auto;',
         autopager: {
-            pageElement: 'css;div.blog-posts > .date-outer',
-            //useiframe:true,
+            separator: false,
+            pageElement: 'css;.name,.content',
         },
     },{name: 'UU看書',
         url: /https:\/\/t\.uukanshu\.com\/read\.aspx.*/i,
