@@ -2,10 +2,10 @@
     {name: '阿榮福利味',
         url: /http:\/\/www\.azofreeware\.com\//i,
         siteExample: 'http://www.azofreeware.com/',
-        nextLink: 'auto;',
+        nextLink: 'css;#blog-pager-older-link;',
         autopager: {
             pageElement: 'css;div.blog-posts > .date-outer',
-            //				useiframe:true,
+            //useiframe:true,
         },
     },{name: 'UU看書',
         url: /https:\/\/t\.uukanshu\.com\/read\.aspx.*/i,
