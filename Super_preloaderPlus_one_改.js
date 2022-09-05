@@ -8,7 +8,7 @@
             pageElement: 'css;.name,.content',
         },
     },{name: 'UU看書',
-        url: /https:\/\/t\.uukanshu\.com\/read\.aspx.*/i,
+        url: /https:\/\/?(?:(?:t)|(?:sj))+\.uukanshu\.com\/read\.aspx.*/i,
         siteExample: 'https://t.uukanshu.com/read.aspx?tid=80260&sid=110757',
         nextLink: 'auto;',
         autopager: {
