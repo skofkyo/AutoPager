@@ -1,6 +1,6 @@
 [
     {"name": "imgasd",
-        "url": /https?:\/\/imgasd\.com/i,
+        "url": "^https?://imgasd\\.com",
         "exampleUrl": "https://imgasd.com/page/1",
         "pageElement": "css;.list",
         "nextLink": {
@@ -12,7 +12,7 @@
         }
     },
     {"name": "牛C網",
-        "url": /https?:\/\/niuc1\.com\/.*\.html/i,
+        "url": "^https?://niuc1\\.com/.*\\.html",
         "exampleUrl": "https://niuc1.com/64884.html",
         "pageElement": "css;div.panel-body.single.mt-2 > p",
         "nextLink": "auto;",
@@ -22,7 +22,7 @@
         }
     },
     {"name": "肉視頻",
-        "url": /https?:\/\/rouv01\.xyz\/?(?:(?:t)|(?:v))+/i,
+        "url": "^https?://rouv01\\.xyz/(t|v)",
         "exampleUrl": "https://rouv01.xyz/t/%E5%9C%8B%E7%94%A2AV",
         "pageElement": "css;.shadow",
         "nextLink": "auto;",
@@ -32,7 +32,7 @@
         }
     },
     {"name": "小黃書搜索",
-        "url": /https?:\/\/tw\.xchina\.co\/search\/.*\/.*\.html/i,
+        "url": "^https?://tw\\.xchina\\.co/search/.*/.*\\.html",
         "exampleUrl": "https://tw.xchina.co/search/keyword-%E5%A4%A7%E5%B0%BA%E5%BA%A6/mode-photo.html",
         "pageElement": "css;.article.result",
         "nextLink": "auto;",
@@ -41,7 +41,7 @@
         }
     },
     {"name": "小黃書 原圖瀏覽",
-        "url": /https?:\/\/tw\.xchina\.co\/photoShow/i,
+        "url": "^https?://tw\\.xchina\\.co/photoShow",
         "exampleUrl": "https://tw.xchina.co/photoShow.php?server=1&id=631648d1d7c18&pageSize=19&index=0&title=%E3%80%90%E6%9C%AA%E5%88%86%E9%A1%9E%E4%BA%BA%E9%AB%94%E6%94%9D%E5%BD%B1%E3%80%91%E7%99%BD%E8%8E%89%E6%84%9B%E5%90%83%E5%B7%A7%E5%85%8B%E5%8A%9B%E3%80%8A%E7%94%98%E9%9B%A8%E3%80%8B",
         "pageElement": "css;div.container > img",
         "nextLink": {
@@ -54,7 +54,7 @@
         }
     },
     {"name": "小黃書 圖片清單瀏覽",
-        "url": /https?:\/\/tw\.xchina\.co\/photo\//i,
+        "url": "^https?://tw\\.xchina\\.co/photo/",
         "exampleUrl": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
         "pageElement": "css;.photos > a",
         "nextLink": "auto;",
@@ -66,7 +66,7 @@
         }
     },
     {"name": "小黃書",
-        "url": /https?:\/\/tw\.xchina\.co\/?(?:(?:photos)|(?:videos))+\//i,
+        "url": "^https?://tw\\.xchina\\.co/(photos|videos)/",
         "exampleUrl": "https://tw.xchina.co/photos/series-%E6%9C%AA%E5%88%86%E7%B1%BB%E4%BA%BA%E4%BD%93%E6%91%84%E5%BD%B1.html",
         "pageElement": "css;div.list div.item,.videos",
         "nextLink": "auto;",
@@ -75,7 +75,7 @@
         }
     },
     {"name": "性愛套圖",
-        "url": /https?:\/\/myjkwd\.com\//i,
+        "url": "^https?://myjkwd\\.com/",
         "exampleUrl": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=20940&page=0",
         "pageElement": "css;body > main > div > div.blogbox > div.contentbox,.bloglist",
         "nextLink": "auto;",
@@ -86,7 +86,7 @@
         }
     },
     {"name": "hitxhot",
-        "url": /https?:\/\/hitxhot\.com\/gallerys/i,
+        "url": "^https?://hitxhot\\.com/gallerys/",
         "exampleUrl": "https://hitxhot.com/gallerys/VTUyc3VzVjNjaTRuWU5Lcm5lclZzUT09.html",
         "pageElement": "css; div.contentme",
         "nextLink": "auto;",
@@ -96,23 +96,22 @@
         }
     },
     {"name": "hitxhot",
-        "url": /https?:\/\/hitxhot\.com\/\?/i,
+        "url": "^https?://hitxhot\\.com/\\?",
         "exampleUrl": "https://hitxhot.com/?page=1",
         "pageElement": "css;div.videos",
         "nextLink": {
             "startAfter": "?page=",
-            //"mFails": ["^https?://hitxhot\\.com/+", "?page=1"],
             "inc": 1
         }
     },
     {"name": "國模網",
-        "url": /https?:\/\/gm34\.xyz\//i,
+        "url": "^https?://gm34\\.xyz/",
         "exampleUrl": "https://gm34.xyz/",
         "pageElement": "css;#main > article",
         "nextLink": "css;a.next"
     },
     {"name": "小說狂人",
-        "url": /https?:\/\/czbooks\.net\/n\/.*\//i,
+        "url": "^https?://czbooks\\.net/n/.*/",
         "exampleUrl": "https://czbooks.net/n/u079a/uhdm",
         "pageElement": "css;.name,.content",
         "nextLink": "auto;",
@@ -121,7 +120,7 @@
         }
     },
     {"name": "UU看書",
-        "url": /https?:\/\/?(?:(?:t)|(?:sj))+\.uukanshu\.com\/read\.aspx.*/i,
+        "url": "^https?://(t|sj)\\.uukanshu\\.com/read\\.aspx",
         "exampleUrl": "https://t.uukanshu.com/read.aspx?tid=80260&sid=110757",
         "pageElement": "css;#divContent > h3,#bookContent",
         "nextLink": "auto;",
@@ -132,7 +131,7 @@
         }
     },
     {"name": "愛下電子書",
-        "url": /https?:\/\/tw\.ixdzs\.com\/read\/.*\/.*\.html/i,
+        "url": "^https?://tw\\.ixdzs\\.com/read/.*/.*\\.html",
         "exampleUrl": "https://tw.ixdzs.com/read/38804/p1.html",
         "pageElement": "css;#page",
         "nextLink": "auto;",
@@ -143,13 +142,12 @@
         }
     },
     {"name": "愛下電子書",
-        "url": /https?:\/\/tw\.ixdzs\.com\/sort\/.*/i,
+        "url": "^https?://tw\\.ixdzs\\.com/sort/",
         "exampleUrl": "https://tw.ixdzs.com/sort/1",
-        "pageElement": "css;body > section",
-        "nextLink": "css;#pager > a.pager-r",
+        "pageElement": "css;body > main > div:nth-child(2)",
+        "nextLink": "//a[text()='»']",
         "autopager": {
-            "useiframe": true,
-            "iloaded": true
+            "maxpage": 10,
         }
     }
 ]
