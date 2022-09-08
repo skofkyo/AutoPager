@@ -1,4 +1,12 @@
 {
+    "嗨皮漫画": {
+        "host": "m.happymh.com",
+        "url": "/\\/latest/",
+		"pager": {
+			"type": 2,
+			"nextL": ".more-div-btn",
+		},
+    },
     "Gdaily": {
         "host": "www.gdaily.org",
         "url": "/\\/(software|app|online|teaching)/",
