@@ -1,11 +1,35 @@
 {
+    "HOTGIRL.asia": {
+        "host": "hotgirl.asia",
+        "url": "/\\/(photos|livestream|china|korea|videos)\\//",
+        "history": false,
+        "pager": {
+            "nextL": "li.active+li>a",
+            "pageE": ".videos-list,.movies-list,#myimg",
+            "replaceE": "#pagination",
+            "scrollD": 10000
+        }
+    },
+    "HOTGIRL.asia 寫真": {
+        "host": "hotgirl.asia",
+        "url": "/\\/.*\\//",
+        "history": false,
+        "pager": {
+            "nextL": "li.active+li>a",
+            "pageE": "#myimg",
+            "insertP": ["#pagination",1],
+            "replaceE": "#pagination",
+            "scrollD": 10000
+        }
+    },
     "嗨皮漫画": {
         "host": "m.happymh.com",
         "url": "/\\/latest/",
-		"pager": {
-			"type": 2,
-			"nextL": ".more-div-btn",
-		},
+        "pager": {
+            "type": 2,
+            "nextL": ".more-div-btn",
+            "nextTextOf": "点击查看更多"
+        }
     },
     "Gdaily": {
         "host": "www.gdaily.org",
@@ -44,8 +68,7 @@
         "pager": {
             "nextL": "a.next",
             "pageE": ".list",
-            "replaceE": ".pager",
-            "scrollD": 2000
+            "replaceE": ".pager"
         }
     },
     "小黃書 圖片清單瀏覽": {
@@ -56,8 +79,7 @@
         "pager": {
             "nextL": "a.next",
             "pageE": ".photos > a",
-            "replaceE": ".pager",
-            "scrollD": 2000
+            "replaceE": ".pager"
         }
     },
     "小黃書": {
@@ -78,7 +100,7 @@
             "nextL": "//a[text()='下一页']",
             "pageE": "div.bloglist > ul,.entry>center,.entry>img",
             "replaceE": ".pageLink",
-            "scrollD": 3000
+            "scrollD": 10000
         }
     },
     "愛下電子書 閱讀": {
