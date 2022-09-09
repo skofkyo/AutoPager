@@ -1,4 +1,23 @@
 [
+    {"name": "onejav.com",
+        "url": "^https?://onejav\\.com/(new|popular|tag|actress)",
+        "exampleUrl": "https://onejav.com/new?page=2",
+        "pageElement": "css;div.card.mb-3,.columns.is-multiline",
+        "nextLink": "//a[text()='Next']",
+        "autopager": {
+            "separator": false,
+        }
+    },
+    {"name": "jav9999",
+        "url": "^https?://jav9999\\.com/(1|uded|amateur|chinese|actress|wuman)",
+        "exampleUrl": "https://jav9999.com/1",
+        "pageElement": "css;.yps",
+        "nextLink": "auto;",
+        "autopager": {
+            "separator": false,
+            "ipages": [true,100]
+        }
+    },
     {"name": "imgasd",
         "url": "^https?://imgasd\\.com",
         "exampleUrl": "https://imgasd.com/page/1",
@@ -14,7 +33,8 @@
         "pageElement": "css;div.panel-body.single.mt-2 > p",
         "nextLink": "auto;",
         "autopager": {
-            "separator": false
+            "separator": false,
+            "ipages": [true,100]
         }
     },
     {"name": "肉視頻",
@@ -23,7 +43,7 @@
         "pageElement": "css;.shadow",
         "nextLink": "auto;",
         "autopager": {
-            "maxpage": 10,
+            "maxpage": 100,
             "stylish": ".shadow.drawer .shadow.drawer {display: none}"
         }
     },
