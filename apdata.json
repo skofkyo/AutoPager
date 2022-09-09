@@ -1,4 +1,181 @@
 {
+    "U9A9": {
+        "host": "/u9a9\\.(com|cc|net|xyz)/",
+        "history": false,
+        "pager": {
+            "nextL": "//a[text()='»']",
+            "pageE": "table > tbody",
+            "replaceE": ".pagination"
+        }
+    },
+    "onejav.com 首頁": {
+        "host": "onejav.com",
+        "url": "return (fun.lp() == '/')",
+        "pager": {
+            "type": 2,
+            "nextL": "#button-load-more",
+            "nextTextOf": "Load more"
+        }
+    },
+    "SpankBang MD": {
+        "host": "/(.*\\.)?spankbang\\.com/",
+        "url": "/\\/pornstars/",
+        "history": false,
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": ".next>a",
+            "pageE": "ul.results",
+            "replaceE": ".pagination"
+        }
+    },
+    "SpankBang": {
+        "host": "/(.*\\.)?spankbang\\.com/",
+        "url": "/\\/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)/",
+        "history": false,
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": ".next>a",
+            "pageE": ".video-list.video-rotate.video-list-with-ads",
+            "replaceE": ".pagination",
+            "scrollD": 600
+        }
+    },
+    "missav": {
+        "host": "missav.com",
+        "url": "/\\/(search|chinese|new|release|uncensored|siro|luxugana|maan|scute|ara|fc2|heyzo|tokyohot|caribbeancomcaribbeancom|1pondo|caribbeancom|caribbeancompr|10musume|pacopacomama|gachinco|xxxav|marriedslash|naughty4610|naughty0930|madoutwav|actresses)/",
+        "history": false,
+        "iframe": true,
+        "style": "div.space-y-5.mb-5,footer {display: none !important;}",
+        "pager": {
+            "type": 6,
+            "nextL": "a[rel=\"next\"]",
+            "pageE": "div.grid.grid-cols-2.md\\:grid-cols-3.xl\\:grid-cols-4.gap-5 > div,div.max-w-full.p-8.text-nord4.bg-nord1.rounded-lg",
+            "replaceE": "div > nav",
+            "scrollD": 350
+        }
+    },
+    "愛污傳媒": {
+        "host": "/www\\.aiwu.*\\.(info|top)/",
+        "url": "/\\/index\\.php\\//",
+        "history": false,
+        "pager": {
+            "nextL": "a[title=\"Go to next page!\"]",
+            "pageE": ".grid.mx-auto.videos",
+            "replaceE": ".pagination"
+        }
+    },
+    "fanxxx.net": {
+        "host": "fanxxx.net",
+        "url": "/\\/(av-chinese|amateur-sex|search)/",
+        "history": false,
+        "pager": {
+            "nextL": "a[rel=\"next\"]",
+            "pageE": ".video-list",
+            "replaceE": ".pagenavi"
+        }
+    },
+    "JAVDAY": {
+        "host": "javday.tv",
+        "url": "/\\/category\\//",
+        "history": false,
+        "pager": {
+            "nextL": ".layui-laypage-next",
+            "pageE": ".videoGroup>#app",
+            "replaceE": "#container>.av"
+        }
+    },
+    "癡漢隊長": {
+        "host": "javcaptain.com",
+        "url": "/\\/(censored|uncensored|western|fc2|hanime|search)/",
+        "history": false,
+        "pager": {
+            "nextL": "a.page-link[rel=\"next\"]",
+            "pageE": ".page-content > .col,.page-content > .col-12",
+            "replaceE": ".page-content > .pagination"
+        }
+    },
+    "加勒逼A片網": {
+        "host": "159i.com",
+        "url": "/\\/video\\//",
+        "history": false,
+        "pager": {
+            "nextL": ".next>a",
+            "pageE": "#content>.post.f",
+            "replaceE": ".page-navigator"
+        }
+    },
+    "HPJAV": {
+        "host": "hpjav.tv",
+        "url": "/\\/(hot|category|models|)/",
+        "history": false,
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "li.active+li>a",
+            "pageE": ".post-list,.models-list",
+            "replaceE": ".models-page-box"
+        }
+    },
+    "X5AV": {
+        "host": "x5av.com",
+        "url": "/\\/e\\/(action|search)\\//",
+        "history": false,
+        "pager": {
+            "nextL": ".c-nav.next.ease.a1",
+            "pageE": ".videos-container",
+            "replaceE": ".pagination",
+            "scrollD": 10000
+        }
+    },
+    "麻豆社": {
+        "host": ["madou.club", "xxxmadou.com"],
+        "url": "",
+        "pager": {
+            "type": 2,
+            "nextL": ".ias_trigger>a",
+            "nextTextOf": "下一页"
+        }
+    },
+    "www.javbangers.com": {
+        "host": "www.javbangers.com",
+        "url": "/\\/(latest|top|most)/",
+        "history": false,
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "li.page-current+li.page>a",
+            "pageE": ".porntrex-box",
+            "replaceE": ".pagination"
+        }
+    },
+    "UU看書": {
+        "host": "www.uukanshu.com",
+        "url": "/\\/b\\//",
+        "history": false,
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "#next",
+            "pageE": ".h1title,.contentbox",
+            "replaceE": ".fanye"
+        }
+    },
+    "UU看書 手機板": {
+        "host": ["t.uukanshu.com", "sj.uukanshu.com"],
+        "url": "/\\/read/",
+        "style": ".samebooks1 {display: none !important;}",
+        "history": false,
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "#read_next",
+            "pageE": "#divContent > h3,#bookContent",
+            "replaceE": ".rp-switch",
+            "scrollD": 4000
+        }
+    },
     "HOTGIRL.asia": {
         "host": "hotgirl.asia",
         "url": "/\\/(photos|livestream|china|korea|videos)\\//",
