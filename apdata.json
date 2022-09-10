@@ -1,4 +1,40 @@
-{
+{	"拷贝漫画 - 分类页2": {
+		"host": "/copymanga\\./",
+		"url": "/\\/comics/",
+		"pager": {
+			"type": 6,
+			"nextL": "li.next>a",
+			"pageE": ".container.exemptComicList",
+			"replaceE": "ul.page-all",
+			"loadTime": 1000,
+			"scrollD": 3000
+		},
+		"function": {
+			"bF": "return fun.src_bF(pageE)"
+		}
+	},
+	"拷贝漫画 - 推荐页2": {
+		"host": "/copymanga\\./",
+		"url": "/\\/recommend/",
+		"pager": {
+			"nextL": "li.next>a",
+			"pageE": ".container.correlationList",
+			"replaceE": "ul.page-all"
+		},
+		"function": {
+			"bF": "return fun.src_bF(pageE)"
+		}
+	},
+    "＊MioBT＊": {
+        "host": "/(www\\.)?miobt.com/",
+        "history": false,
+        "pager": {
+            "nextL": "a.nextprev:last-of-type",
+            "pageE": "#data_list>tr",
+            "replaceE": ".pages",
+			"scrollD": 2500
+        }
+    },
     "U9A9": {
         "host": "/u9a9\\.(com|cc|net|xyz)/",
         "history": false,
