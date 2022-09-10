@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pagetual
-// @name:zh-CN   东方永页机
+// @name:zh-CN   東方永頁機
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @name:ru      Pagetual
@@ -10,9 +10,9 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.2
+// @version      1.9.31.4
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
+// @description:zh-CN  自動翻頁尾本 - 自動載入並拼接下一分頁內容，支援任意網頁
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
@@ -131,75 +131,75 @@
         case "zh-CN":
         case "zh-SG":
             config = {
-                enableDebug:"调试模式，输出信息至控制台",
-                disable:"暂时禁用",
-                disableSite:"切换禁用状态",
+                enableDebug:"除錯模式，輸出資訊至控制檯",
+                disable:"暫時禁用",
+                disableSite:"切換禁用狀態",
                 disableSiteTips:"已在此站禁用",
-                enableSiteTips:"已在此站启用",
-                enable:"启用翻页",
-                toTop:"回到顶部",
-                toBottom:"前往页尾",
-                current:"当前页",
-                forceIframe:"强制拼接",
-                cancelForceIframe:"取消强制拼接",
-                configure:"打开配置页面",
-                firstUpdate:"点击此处初始化规则",
-                update:"更新规则",
-                click2update:"点击立即更新规则",
-                loadNow:"立即翻页",
-                loadConfirm:"要翻几页？（0为不间断）",
-                noNext:"没有找到下一页，请新建规则",
+                enableSiteTips:"已在此站啟用",
+                enable:"啟用翻頁",
+                toTop:"回到頂部",
+                toBottom:"前往頁尾",
+                current:"目前頁",
+                forceIframe:"強制拼接",
+                cancelForceIframe:"取消強制拼接",
+                configure:"打開配置頁面",
+                firstUpdate:"點選此處初始化規則",
+                update:"更新規則",
+                click2update:"點選立即更新規則",
+                loadNow:"立即翻頁",
+                loadConfirm:"要翻幾頁？（0為不間斷）",
+                noNext:"沒有找到下一頁，請新建規則",
                 passSec:"更新于 #t# 秒前",
-                passMin:"更新于 #t# 分钟前",
-                passHour:"更新于 #t# 小时前",
+                passMin:"更新于 #t# 分鐘前",
+                passHour:"更新于 #t# 小時前",
                 passDay:"更新于 #t# 天前",
-                cantDel:"无法删除内置规则",
-                confirmDel:"是否确认要删除此规则？",
+                cantDel:"無法刪除內建規則",
+                confirmDel:"是否確認要刪除此規則？",
                 updateSucc:"更新成功",
-                beginUpdate:"正在更新，请耐心等待，不要关闭页面",
-                customUrls:"导入 Pagetual 或 AutoPagerize 规则 url，一行一条",
-                customRules:"输入【东方永页机】格式的自定义规则",
-                save:"保存设置",
-                loadingText:"少女祈祷中...",
+                beginUpdate:"正在更新，請耐心等待，不要關閉頁面",
+                customUrls:"匯入 Pagetual 或 AutoPagerize 規則 url，一行一條",
+                customRules:"輸入【東方永頁機】格式的自定義規則",
+                save:"儲存設定",
+                loadingText:"少女祈禱中...",
                 opacity:"不透明值",
-                opacityPlaceholder:"0: 隐藏分隔条",
-                hideBar:"隐藏分页隔条",
-                dbClick2Stop:"空白处双击暂停翻页",
-                sortTitle:"排序在下次更新规则后生效",
-                autoRun:"自动启用，否则为白名单模式",
-                autoLoadNum:"自动加载指定页数",
-                inputPageNum:"输入页码跳转",
-                enableHistory:"翻页后写入历史记录",
-                initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
-                preload:"翻页前预读下一页，加速浏览",
-                click2ImportRule:"点击下方添加特殊规则库，并静待更新成功：",
-                forceAllBody:"是否拼接整个页面？",
-                openInNewTab:"使拼接页面的内容在新页面打开",
-                importSucc:"导入成功",
-                import:"导入",
-                editCurrent:"编辑此站规则",
-                editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符",
-                upBtnImg:"回到页首图标",
-                downBtnImg:"前往页尾图标",
-                loadingTextTitle:"加载中文字",
-                dbClick2StopCtrl:"Ctrl 键",
-                dbClick2StopAlt:"Alt 键",
-                dbClick2StopShift:"Shift 键",
-                dbClick2StopMeta:"Meta 键",
-                dbClick2StopKey:"快捷键",
-                pageElementCss:"页面主体框架的样式",
-                customCss:"自定义 CSS",
-                firstAlert:"你还未导入规则库，请选择合适的规则库导入哦",
-                picker:"东方永页机主体元素抓取器",
-                closePicker:"关闭东方永页机抓取器",
-                pickerPlaceholder:"没想法建议留空",
-                pickerCheck:"检查你编辑的选择器并复制",
-                switchSelector:"点击切换元素",
-                gotoEdit:"使用当前的选择器前往编辑规则",
-                manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'），可使用 Alt + 左方向键返回",
-                nextSwitch:"切换其他页码",
-                arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
-                hideLoadingIcon:"隐藏加载动画"
+                opacityPlaceholder:"0: 隱藏分隔條",
+                hideBar:"隱藏分頁隔條",
+                dbClick2Stop:"空白處雙擊暫停翻頁",
+                sortTitle:"排序在下次更新規則後生效",
+                autoRun:"自動啟用，否則為白名單模式",
+                autoLoadNum:"自動載入指定頁數",
+                inputPageNum:"輸入頁碼跳轉",
+                enableHistory:"翻頁后寫入歷史記錄",
+                initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
+                preload:"翻頁前預讀下一頁，加速瀏覽",
+                click2ImportRule:"點選下方新增特殊規則庫，並靜待更新成功：",
+                forceAllBody:"是否拼接整個頁面？",
+                openInNewTab:"使拼接頁面的內容在新頁面打開",
+                importSucc:"匯入成功",
+                import:"匯入",
+                editCurrent:"編輯此站規則",
+                editBlacklist:"編輯黑名單網址，一行一條，支援? *萬用字元",
+                upBtnImg:"回到頁首圖示",
+                downBtnImg:"前往頁尾圖示",
+                loadingTextTitle:"載入中文字",
+                dbClick2StopCtrl:"Ctrl 鍵",
+                dbClick2StopAlt:"Alt 鍵",
+                dbClick2StopShift:"Shift 鍵",
+                dbClick2StopMeta:"Meta 鍵",
+                dbClick2StopKey:"快捷鍵",
+                pageElementCss:"頁面主體框架的樣式",
+                customCss:"自定義 CSS",
+                firstAlert:"你還未匯入規則庫，請選擇合適的規則庫匯入哦",
+                picker:"東方永頁機主體元素抓取器",
+                closePicker:"關閉東方永頁機抓取器",
+                pickerPlaceholder:"沒想法建議留空",
+                pickerCheck:"檢查你編輯的選擇器並複製",
+                switchSelector:"點選切換元素",
+                gotoEdit:"使用目前的選擇器前往編輯規則",
+                manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'），可使用 Alt + 左方向鍵返回",
+                nextSwitch:"切換其他頁碼",
+                arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
+                hideLoadingIcon:"隱藏載入動畫"
             };
             break;
         case "zh-TW":
@@ -955,6 +955,7 @@
             }
 
             function checkRule(r) {
+                if (r.from == 1 && r.url.length <= 13) return false;
                 let urlReg=new RegExp(r.url, "i");
                 if(urlReg.test(location.href)){
                     if(r.include){
@@ -1253,7 +1254,9 @@
             if(typeof _unsafeWindow.Discourse!='undefined')return {};
             let video=document.querySelector("video,iframe[src*=player]");
             if(video){
-                if(video.scrollWidth>500 && video.scrollHeight>500){
+                let scrollWidth = video.scrollWidth || video.offsetWidth;
+                let scrollHeight = video.scrollHeight || video.offsetHeight;
+                if(scrollWidth>500 && scrollHeight>500){
                     debug("Won't run when video found");
                     return {};
                 }
@@ -1372,7 +1375,7 @@
                     if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                     if(aTag.innerText.length<=18){
                         if(!next1){
-                            if(/^[下后後次][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
+                            if(/^翻?[下后後次][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -1381,7 +1384,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後次][一1]?[章话話篇个個]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
+                            if(/^[下后後次][一1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -1708,11 +1711,11 @@
             }
             if(this.insert && !refresh){
                 let parent=this.insert;
-                if (isVisible(parent.parentNode, _unsafeWindow)) {
-                    while(parent && parent.nodeName!="BODY"){
+                if (parent.parentNode && (parent.parentNode.nodeName === 'HTML' || isVisible(parent.parentNode, _unsafeWindow))) {
+                    while(parent && parent.nodeName != "HTML"){
                         parent=parent.parentNode;
                     }
-                    if(parent && parent.nodeName=="BODY"){
+                    if(parent && parent.nodeName == "HTML"){
                         return this.insert;
                     }
                 }
@@ -3704,7 +3707,7 @@
            100% { opacity: 1 }
          }
         `);
-        pageBarStyle=`vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"block"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center!important;`;
+        pageBarStyle=`vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center!important;justify-content: center;`;
     }
     var loadingDiv=document.createElement("div");
     loadingDiv.style.cssText="cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
@@ -3714,13 +3717,13 @@
         loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`}`;
     }
 
-    var upSvg=`<svg width="30" height="30" class="upSvg" style="display:initial;position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
-    var upSvgCSS=`display:initial;position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
-    var downSvg=`<svg width="30" height="30" class="downSvg" style="display:initial;position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
-    var downSvgCSS=`display:initial;position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
+    var upSvg=`<svg width="30" height="30" class="upSvg" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var upSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
+    var downSvg=`<svg width="30" height="30" class="downSvg" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var downSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
 
-    const initStyle=`display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
-    const pageTextStyle=`background: unset!important;line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
+    const initStyle=`display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px 5px;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
+    const pageTextStyle=`background: unset!important;line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
 
     var tipsWords=document.createElement("div");
     tipsWords.className="pagetual_tipsWords";
@@ -4614,9 +4617,12 @@
                 resizePool.forEach(resizeArr => {
                     let iframe = resizeArr[1]();
                     let frameDoc = resizeArr[2]();
-                    if(ruleParser.curSiteRule.singleUrl){
-                        iframe.style.height=frameDoc.body.scrollHeight+"px";
-                        iframe.style.width=frameDoc.body.scrollWidth+"px";
+                    if(ruleParser.curSiteRule.singleUrl || forceState === 2){
+                        iframe.style.height = (frameDoc.body.scrollHeight || frameDoc.body.offsetHeight) + "px";
+                        iframe.style.minHeight = iframe.style.height;
+                        iframe.style.width = "100%";
+                        frameDoc.documentElement.scrollTop = 0;
+                        frameDoc.documentElement.scrollLeft = 0;
                     }else{
                         let pageEle = resizeArr[0]();
                         if(pageEle){
@@ -4624,8 +4630,9 @@
                             if(pageEle.length > 1){
                                 targetElement = targetElement.parentNode;
                             }
-                            if(parseInt(iframe.style.height)==targetElement.scrollHeight) return;
-                            iframe.style.height=targetElement.scrollHeight+"px";
+                            let scrollHeight = targetElement.scrollHeight || targetElement.offsetHeight;
+                            if(parseInt(iframe.style.height)==scrollHeight) return;
+                            iframe.style.height=scrollHeight+"px";
                             frameDoc.documentElement.scrollTop = 0;
                             frameDoc.documentElement.scrollLeft = 0;
                             while(targetElement && targetElement.offsetParent){
