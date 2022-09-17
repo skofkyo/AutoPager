@@ -168,15 +168,15 @@
     {
         "name": "BOOK☆WALKER",
         "url": "^https?://bookwalker\\.jp/(category|search|new)/",
-        "nextLink": "css;.o-pager-next>a",
-        "pageElement": "css;.o-contents-section__body",
+        "nextLink": ".o-pager-next>a",
+        "pageElement": ".o-contents-section__body",
         "pageBar": 0
     },
     {
         "name": "二次元動漫 - 閱讀",
         "url": "^https?://www\\.2animx\\.com/index-look-name",
         "nextLink": "//a[text()='下一頁'][not(starts-with(@href,'javascript'))]",
-        "pageElement": "css;#ComicPic",
+        "pageElement": "#ComicPic",
         "rate": 3
     },
     {
@@ -236,7 +236,7 @@
     {
         "name": "U9A9",
         "url": "^https?://u9a9\\.(com|cc|net|xyz)",
-        "pageElement": "css;table>tbody",
+        "pageElement": "table>tbody",
         "pageBar": 0
     },
     {
@@ -404,7 +404,7 @@
     {
         "name": "小黃書 - 分類",
         "url": "^https?://tw\\.xchina\\.co/(photos|videos|models)/",
-        "pageElement": "css;.list>.item,.videos",
+        "pageElement": ".list>.item,.videos",
         "pageBar": 0
     },
     {
@@ -422,13 +422,13 @@
         "name": "hitxhot - 清單",
         "url": "^https?://hitxhot\\.com/",
         "nextLink": "//a[text()='Next »']",
-        "pageElement": "css;.videos",
+        "pageElement": ".videos",
         "pageBar": 0
     },
     {
         "name": "國模網",
         "url": "^https?://gm\\d+\\.xyz/",
-        "nextLink": "css;a.next",
+        "nextLink": "a.next",
         "pageElement": "#main > article",
         "pageBar": 0
     },
