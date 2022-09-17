@@ -1,0 +1,468 @@
+[
+    {
+        "name": "軟體部落",
+        "action": 2,
+        "url": "^https?://softblog\\.tw/",
+        "include": ".page-numbers",
+        "nextLink": "a.next",
+        "pageElement": "#blog-entries>[id^=post]",
+        "css": "inIframe:.boxed-layout #wrap .container{padding-left: 0px!important;padding-right:0px!important;}",
+        "rate": 3,
+        "pageBar": 0
+    },
+    {
+        "name": "mobile01",
+        "url": "^https?://www\\.mobile01\\.com/(topiclist|forumtopic|topicdetail)\\.php",
+        "nextLink": "a.c-pagination--next,li.is-active+li>a",
+        "pageElement": ".l-listTable__tr,.l-articlePage",
+        "wait": 1000,
+        "sleep": 1000
+    },
+    {
+        "name": "巴哈姆特 - 內文",
+        "url": "^https?://forum\\.gamer\\.com.tw/C\\.php",
+        "nextLink": "a.next",
+        "pageElement": ".c-section[id*='post']",
+        "pageBar": 0
+    },
+    {
+        "name": "巴哈姆特 - 文章列表",
+        "url": "^https?://forum\\.gamer\\.com.tw/B\\.php",
+        "nextLink": "a.next",
+        "pageElement": ".b-list>tbody>tr:not(.b-list__head)",
+        "pageAction": "Forum.B.lazyThumbnail();Forum.Common.drawNoImageCanvas();",
+        "pageBar": 0
+    },
+    {
+        "name": "94i.in - 自動簽到",
+        "url": "^https://94i\\.in/",
+        "autoClick": "#pper_a:not([style='display: none;'])"
+    },
+    {
+        "name": "四季線上 - 懷舊戲劇分類",
+        "url": "^https://www\\.4gtv\\.tv/classicdrama",
+        "loadMore": "#more"
+    },
+    {
+        "name": "麻豆社,草麻豆",
+        "url": "^https://(madouxxxmadou|)\\.(club|com)/",
+        "loadMore": ".ias_trigger>a"
+    },
+    {
+        "name": "嗨皮漫画 - 更新頁",
+        "url": "^https://m\\.happymh\\.com/latest$",
+        "loadMore": ".more-div-btn"
+    },
+    {
+        "name": "R3SUB - 搜索",
+        "url": "^https?://r3sub\\.com/search\\.php",
+        "exampleUrl": "https://r3sub.com/search.php?s=king",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".movie.movie--preview.ddd",
+        "pageBar": 0
+    },
+    {
+        "name": "SubHD",
+        "url": "^https?://subhd(tw)?\\.(tv|com|la|cc|me)/(zu|search)/",
+        "pageElement": ".bg-white.shadow-sm.rounded-3",
+        "insert": "nav.clearfix",
+        "insertPos": 1,
+        "pageBar": 0
+    },
+    {
+        "name": "A4k 字幕网",
+        "url": "^https?://www\\.a4k\\.net/",
+        "nextLink": "a.pager__item--next",
+        "pageElement": ".list>.item",
+        "pageBar": 0
+    },
+    {
+        "name": "点点字幕",
+        "url": "^https?://www\\.ddzimu\\.com/\\w+/xslist\\.php",
+        "nextLink": "li.disabled+li>a",
+        "pageElement": ".list>ul>li:not(.first)",
+        "pageBar": 0
+    },
+    {
+        "name": "limetorrents.cc",
+        "url": "^https?://www\\.limetorrents\\.lol/(browse-torrents|search)/",
+        "nextLink": "#next",
+        "pageElement": "table.table2>tbody>tr:not(:first-of-type)",
+        "pageBar": 0
+    },
+    {
+        "name": "BT 之家",
+        "url": "^https?://www\\.btbtt\\d+\\.com/",
+        "nextLink": "//div[@class='page']/a[text()='▶' or text()='下一页']",
+        "pageElement": "#threadlist",
+        "pageBar": 0
+    },
+    {
+        "name": "爱恋动漫&MioBT",
+        "url": "^https?://(www\\.)?(kisssub|miobt)\\.(org|com)",
+        "exampleUrl": "http://www.kisssub.org/4.html",
+        "pageElement": "#data_list>tr",
+        "pageBar": 0
+    },
+    {
+        "name": "牛C網 - 美圖列表",
+        "url": "^https?://niuc1.com/sex",
+        "pageElement": ".cat_list",
+        "pageBar": 0
+    },
+    {
+        "name": "牛C網 - 看圖",
+        "url": "^https?://niuc1\\.com/.*\\.html",
+        "pageElement": "div.panel-body.single.mt-2 > p",
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "肉視頻",
+        "url": "^https?://(rouv01|rou)\\.(xyz|video)/(t|v|search)",
+        "nextLink": "nav > a:last-child",
+        "pageElement": ".shadow.drawer .shadow",
+        "pageBar": 0
+    },
+    {
+        "name": "jav9999",
+        "url": "^https?://jav9999\\.com/(1|uded|amateur|chinese|actress|wuman)?",
+        "pageElement": ".yps",
+        "pageBar": 0
+    },
+    {
+        "name": "onejav.com",
+        "url": "^https?://onejav\\.com/(new|popular|tag|actress)",
+        "nextLink": "//a[text()='Next']",
+        "pageElement": "div.card.mb-3,.columns.is-multiline",
+        "pageBar": 0
+    },
+    {
+        "name": "onejav.com - 首頁",
+        "url": "^https?://onejav\\.com/$",
+        "loadMore": "#button-load-more"
+    },
+    {
+        "name": "飞极速在线",
+        "url": "^https?://(www\\.)?(fjisu|feijisu)\\d+\\.com/\\w+/\\w+/",
+        "pageElement": ".b-listtab",
+        "pageBar": 0
+    },
+    {
+        "name": "Bookshop.tw",
+        "url": "^https?://www\\.bookshop\\.tw",
+        "action": 1,
+        "nextLink": "#url_ne",
+        "pageElement": ".listbg0",
+        "wait": 500,
+        "sleep": 500,
+        "pageBar": 0
+    },
+    {
+        "name": "Mox.moe",
+        "url": "^https?://mox\\.moe",
+        "nextLink": ".book_list>tbody>tr:last-child>td:nth-child(3)>a:nth-child(8)",
+        "pageElement": ".listbg",
+        "pageBar": 0
+    },
+    {
+        "name": "BOOK☆WALKER",
+        "url": "^https?://bookwalker\\.jp/(category|search|new)/",
+        "nextLink": "css;.o-pager-next>a",
+        "pageElement": "css;.o-contents-section__body",
+        "pageBar": 0
+    },
+    {
+        "name": "二次元動漫 - 閱讀",
+        "url": "^https?://www\\.2animx\\.com/index-look-name",
+        "nextLink": "//a[text()='下一頁'][not(starts-with(@href,'javascript'))]",
+        "pageElement": "css;#ComicPic",
+        "rate": 3
+    },
+    {
+        "name": "二次元動漫 - 清單",
+        "url": "^https?://www\\.2animx\\.com/index-html-status",
+        "pageElement": ".box.across.list>.box-bd>.liemh.htmls.indliemh"
+    },
+    {
+        "name": "酷漫屋 - 阅读",
+        "url": "^https?://www\\.kumw5\\.com/\\d+/\\d+\\.html$",
+        "action": 1,
+        "nextLink": ".next",
+        "pageElement": ".main_img",
+        "rate": 3
+    },
+    {
+        "name": "酷漫屋 - 清单",
+        "url": "^https?://www\\.kumw5\\.com/(sort|rank)/",
+        "pageElement": ".box.container",
+        "pageBar": 0
+    },
+    {
+        "name": "www.ka234.cc - 看圖",
+        "url": "^https?://www\\.ka234\\.cc/z/\\d+/\\d+\\.html",
+        "pageElement": ".content>img",
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "www.ka234.cc - 分類",
+        "url": "^https?://www\\.ka234\\.cc/(z|plus)/(new|\\d+|search)",
+        "pageElement": ".item.clearfix",
+        "pageBar": 0
+    },
+    {
+        "name": "极品性感美女 - 搜索",
+        "url": "^https?://www\\.(jpxgyw|xgyw|xgmn5|nvshenheji|mntup|xgmn|mn5|jpxgmn)\\.(com|cc|org|top)/plus/search",
+        "nextLink": ".current+a",
+        "pageElement": ".node",
+        "pageBar": 0
+    },
+    {
+        "name": "拷贝漫画 - 分类页",
+        "url": "^https?://copymanga\\.site/comics",
+        "action": 1,
+        "nextLink": "li.next>a",
+        "pageElement": ".container.exemptComicList",
+        "pageBar": 0
+    },
+    {
+        "name": "拷贝漫画 - 推荐页",
+        "url": "^https?://copymanga\\.site/recommend",
+        "nextLink": "li.next>a",
+        "pageElement": ".container.correlationList",
+        "pageBar": 0
+    },
+    {
+        "name": "U9A9",
+        "url": "^https?://u9a9\\.(com|cc|net|xyz)",
+        "pageElement": "css;table>tbody",
+        "pageBar": 0
+    },
+    {
+        "name": "SpankBang PS",
+        "url": "^https?://.*spankbang\\.com/pornstars",
+        "nextLink": ".next>a",
+        "pageElement": "ul.results",
+        "pageBar": 0
+    },
+    {
+        "name": "SpankBang",
+        "url": "^https?://.*spankbang\\.com/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)",
+        "nextLink": ".next>a",
+        "pageElement": ".video-list.video-rotate.video-list-with-ads",
+        "pageBar": 0
+    },
+    {
+        "name": "missav",
+        "url": "^https?://missav.com/(search|chinese|new|release|uncensored|siro|luxugana|maan|scute|ara|fc2|heyzo|tokyohot|caribbeancomcaribbeancom|1pondo|caribbeancom|caribbeancompr|10musume|pacopacomama|gachinco|xxxav|marriedslash|naughty4610|naughty0930|madoutwav|actresses)",
+        "nextLink": "a[rel='next']",
+        "pageElement": "div.grid.grid-cols-2.md\\:grid-cols-3.xl\\:grid-cols-4.gap-5 > div,div.max-w-full.p-8.text-nord4.bg-nord1.rounded-lg",
+        "pageBar": 0
+    },
+    {
+        "name": "愛污傳媒",
+        "url": "^https?://www\\.aiwu.*\\.(info|top|com)/index\\.php/",
+        "nextLink": "a[title='Go to next page!']",
+        "pageElement": ".grid.mx-auto.videos",
+        "pageBar": 0
+    },
+    {
+        "name": "fanxxx.net",
+        "url": "^https?://fanxxx\\.net/(av-chinese|amateur-sex|search)",
+        "nextLink": "a[rel='next']",
+        "pageElement": ".video-list",
+        "pageBar": 0
+    },
+    {
+        "name": "JAVDAY",
+        "url": "^https?://javday\\.tv/(category|search)/",
+        "pageElement": ".videoGroup>#app",
+        "pageBar": 0
+    },
+    {
+        "name": "癡漢隊長",
+        "url": "^https?://javcaptain\\.com/(en/|ja/|zh/|ko/)?(censored|uncensored|western|fc2|hanime|search)",
+        "nextLink": "a.page-link[rel='next']",
+        "pageElement": ".page-content > .col,.page-content > .col-12",
+        "css": "div.category-page.video-list-item.col-xl-3.col-lg-2.col-md-3.col-sm-6.col-6.mb-2{display:none!important}",
+        "pageBar": 0
+    },
+    {
+        "name": "Supjav",
+        "url": "^https?://supjav\\.com/(\\w+/)?(\\?s=|popular|category)",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".posts.clearfix",
+        "pageBar": 0
+    },
+    {
+        "name": "加勒逼A片網",
+        "url": "^https://159i\\.com/video/((category|search)/.+/)?$",
+        "nextLink": ".next>a",
+        "pageElement": "#content>.post.f",
+        "pageBar": 0
+    },
+    {
+        "name": "avple.tv - 類別",
+        "action": 2,
+        "url": "^https://avple\\.tv/tags/\\d+/\\d+/\\w+$",
+        "nextLinkByUrl": [
+            "(/\\d+/)(\\d+)(/\\w+)$",
+            "$1{$2+1}$3"
+        ],
+        "pageElement": ".jss23",
+        "pageBar": 0,
+        "css": "inIframe:header{display:none!important;}.jss23{margin-left:-7px;margin-right:7px;}",
+        "fitWidth": false,
+        "exclude": "li:last-child>button[tabindex='-1']",
+        "rate": 3,
+        "sleep": 500
+    },
+    {
+        "name": "avple.tv - 搜索",
+        "action": 2,
+        "url": "^https://avple\\.tv/search",
+        "nextLinkByUrl": [
+            "(&page=)(\\d+)(&.+)$",
+            "$1{$2+1}$3"
+        ],
+        "pageElement": ".jss23",
+        "pageBar": 0,
+        "css": "inIframe:header{display:none!important;}.jss23{margin-left:-7px;margin-right:7px;}",
+        "fitWidth": false,
+        "exclude": "li:last-child>button[tabindex='-1']",
+        "rate": 3,
+        "sleep": 500
+    },
+    {
+        "name": "X5AV",
+        "url": "^https?://x5av\\.com/e/(action|search)/",
+        "pageElement": ".videos-container",
+        "pageBar": 0
+    },
+    {
+        "name": "javbangers.com",
+        "url": "^https?://www\\.javbangers\\.com/(latest|top|most|albums)",
+        "nextLink": "li.page-current+li.page>a",
+        "pageElement": ".porntrex-box,.box",
+        "pageBar": 0
+    },
+    {
+        "name": "HOTGIRL.asia - 清單",
+        "url": "^https?://hotgirl\\.asia/(\\?s=|genre|tag|photos|livestream|china|korea|videos)(\\/)?",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".vl-item,.movies-list,#myimg",
+        "pageBar": 0
+    },
+    {
+        "name": "HOTGIRL.asia - 寫真",
+        "url": "^https?://hotgirl\\.asia/.+[^donate]/(\\d+\\/)?$",
+        "nextLink": "li.active+li>a",
+        "pageElement": "#myimg",
+        "insert": "#pagination",
+        "insertPos": 1,
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "Gdaily",
+        "url": "^https?://www\\.gdaily\\.org/(search|software|app|online|teaching)",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".columns .column",
+        "pageBar": 0
+    },
+    {
+        "name": "imgasd",
+        "url": "^https?://imgasd\\.com",
+        "nextLink": "a.active+a",
+        "pageElement": ".list",
+        "pageBar": 0
+    },
+    {
+        "name": "小黃書 - 搜索",
+        "url": "^https?://tw\\.xchina\\.co/search/.*/.*\\.html",
+        "pageElement": ".article.result",
+        "pageBar": 0
+    },
+    {
+        "name": "小黃書 - 原圖瀏覽",
+        "url": "^https?://tw\\.xchina\\.co/photoShow",
+        "nextLink": ".image > a:not([href^='j']):nth-child(4)",
+        "pageElement": ".container > img",
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "小黃書 - 圖片清單瀏覽",
+        "url": "^https?://tw\\.xchina\\.co/photo/",
+        "exampleUrl": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
+        "pageElement": ".photos > a",
+        "css": ".photos > div.item {display: none}",
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "小黃書 - 分類",
+        "url": "^https?://tw\\.xchina\\.co/(photos|videos|models)/",
+        "pageElement": "css;.list>.item,.videos",
+        "pageBar": 0
+    },
+    {
+        "name": "hitxhot - 寫真",
+        "url": "^https?://hitxhot\\.com/gallerys/",
+        "nextLink": "//a[text()='Next >']",
+        "pageElement": ".contentme>img",
+        "insert": ".contentme>br:last-child",
+        "insertPos": 1,
+        "css": ".coveringtrailer,div.contain.refill,div.relatedvideos.contain.refill.reller {display: none}",
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "hitxhot - 清單",
+        "url": "^https?://hitxhot\\.com/",
+        "nextLink": "//a[text()='Next »']",
+        "pageElement": "css;.videos",
+        "pageBar": 0
+    },
+    {
+        "name": "國模網",
+        "url": "^https?://gm\\d+\\.xyz/",
+        "nextLink": "css;a.next",
+        "pageElement": "#main > article",
+        "pageBar": 0
+    },
+    {
+        "name": "性愛套圖",
+        "url": "^https?://myjkwd\\.com/",
+        "pageElement": "div.bloglist > ul,.entry>center,.entry>img",
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "小說狂人",
+        "url": "^https?://czbooks\\.net/n/\\w+/\\w+",
+        "pageElement": ".name,.content",
+        "pageBar": 0
+    },
+    {
+        "name": "UU看書 - 手機版",
+        "url": "^https?://(t|sj)\\.uukanshu\\.com/read\\.aspx",
+        "action": 1,
+        "nextLink": "#read_next",
+        "pageElement": "#divContent > h3,#bookContent",
+        "pageBar": 0
+    },
+    {
+        "name": "愛下電子書 - 閱讀",
+        "url": "^https?://tw\\.ixdzs\\.com/read/\\d+/\\w+\\.html",
+        "pageElement": "#page",
+        "pageBar": 0
+    },
+    {
+        "name": "愛下電子書 - 清單",
+        "url": "^https?://tw\\.ixdzs\\.com/(sort|hot|end)/",
+        "pageElement": ".u-list",
+        "pageBar": 0
+    }
+]
