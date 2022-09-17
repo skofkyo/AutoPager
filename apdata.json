@@ -1,4 +1,188 @@
-{    
+{ 
+    "4gtv 搜索": {
+        "host": "www.4gtv.tv",
+        "url": "/^\\/search/",
+        "pager": {
+            "type": 2,
+            "nextL": "#moveContent",
+            "interval": 1000
+        }
+    },
+    "4gtv 懷舊": {
+        "host": "www.4gtv.tv",
+        "url": "/^\\/classicdrama/",
+        "pager": {
+            "type": 2,
+            "nextL": "#more",
+            "interval": 1000
+        }
+    },
+	"軟體部落": {
+		"host": "softblog.tw",
+		"url": "return fun.getCSS('.page-numbers')",
+		"iframe": true,
+		"pager": {
+			"type": 6,
+			"nextL": "a.next",
+			"pageE": "#blog-entries>[id^=post]",
+			"replaceE": ".oceanwp-pagination",
+            "scrollD": 6000
+		}
+	},
+    "肉視頻": {
+        "host": ["rou.video", "rouv01.xyz"],
+        "url": "/^\\/(t|v|search)/",
+        "pager": {
+            "nextL": "nav > a:last-child",
+            "pageE": ".shadow.drawer .shadow",
+            "replaceE": "nav"
+        }
+    },
+    "jav9999": {
+        "host": "jav9999.com",
+        "url": "/^\\/(1|uded|amateur|chinese|actress|wuman)/",
+        "pager": {
+            "nextL": "//a[text()='下一頁']",
+            "pageE": ".yps",
+            "replaceE": ".row.text-center.fanye"
+        }
+    },
+    "onejav.com": {
+        "host": "onejav.com",
+        "url": "/^\\/(new|popular|tag|actress)/",
+        "pager": {
+            "nextL": "//a[text()='Next']",
+            "pageE": "div.card.mb-3,.columns.is-multiline",
+            "replaceE": ".pagination"
+        }
+    },
+    "onejav.com 首頁": {
+        "host": "onejav.com",
+        "url": "return (fun.lp() == '/')",
+        "pager": {
+            "type": 2,
+            "nextL": "#button-load-more",
+            "nextTextOf": "Load more"
+        }
+    },
+    "mobile01": {
+        "host": "www.mobile01.com",
+        "url": "/^\\/(topiclist|forumtopic|topicdetail)\\.php/",
+        "blank": 4,
+        "pager": {
+            "nextL": "li.is-active+li>a",
+            "pageE": ".l-listTable__tr,.l-articlePage",
+            "replaceE": ".l-pagination,.u-gapTop--lg.u-gapBottom--max.u-tac.article_end"
+        }
+    },
+    "飞极速在线": {
+        "host": "/(www\\.)?(fjisu|feijisu)\\d+\\.com/",
+        "url": "/^\\/\\w+\\/\\w+\\//",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "//a[text()='下一页']",
+            "pageE": ".b-listtab",
+            "replaceE": ".pages"
+        }
+    },
+    "Mox.moe": {
+        "host": "mox.moe",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": ".book_list>tbody>tr:last-child>td:nth-child(3)>a:nth-child(8)",
+            "pageE": ".listbg",
+            "replaceE": ".book_list>tbody>tr:last-child",
+            "scrollD": 10000
+        }
+    },
+    "BOOK☆WALKER": {
+        "host": "bookwalker.jp",
+        "url": "/^\\/(category|search|new)\\//",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": ".o-pager-next>a",
+            "pageE": ".o-contents-section__body",
+            "replaceE": ".o-list--menu,.o-list--footer",
+            "loadTime": 1000,
+            "scrollD": 1000
+        }
+    },
+    "Bookshop.tw": {
+        "host": "www.bookshop.tw",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "#url_ne",
+            "pageE": ".listbg0",
+            "replaceE": ".list>tbody>tr:last-child",
+            "scrollD": 8000
+        }
+    },
+    "巴哈姆特 - 內文": {
+        "host": "forum.gamer.com.tw",
+        "url": "/^\\/C\\.php/",
+        "blank": 4,
+        "pager": {
+            "nextL": "a.next",
+            "pageE": ".c-section[id*='post']",
+            "replaceE": ".c-section__main.page"
+        }
+    },
+    "巴哈姆特 - 文章列表": {
+        "host": "forum.gamer.com.tw",
+        "url": "/^\\/B\\.php/",
+        "blank": 4,
+        "pager": {
+            "nextL": "a.next",
+            "pageE": ".b-list>tbody>tr:not(.b-list__head)",
+            "replaceE": ".b-pager"
+        },
+        "function": {
+            "aF": "Forum.B.lazyThumbnail();Forum.Common.drawNoImageCanvas();"
+        }
+    },
+    "二次元動漫 清單": {
+        "host": "www.2animx.com",
+        "url": "/^\\/index-html-status/",
+        "pager": {
+            "nextL": "//a[text()='下一頁']",
+            "pageE": ".box.across.list>.box-bd>.liemh.htmls.indliemh",
+            "replaceE": ".pagination",
+            "scrollD": 10000
+        }
+    },
+    "酷漫屋 查看更多章节": {
+        "host": "www.kumw5.com",
+        "url": "return fun.getCSS('.detail-more')",
+        "pager": {
+            "type": 2,
+            "nextL": ".detail-more",
+            "nextTextOf": "查看更多章节"
+        }
+    },
+    "酷漫屋 阅读": {
+        "host": "www.kumw5.com",
+        "url": "/^\\/\\d+\\/\\d+\\.html$/",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": ".next",
+            "pageE": ".main_img",
+            "replaceE": ".chapend"
+        }
+    },
+    "酷漫屋 清单": {
+        "host": "www.kumw5.com",
+        "url": "/^\\/(sort|rank)\\//",
+        "pager": {
+            "nextL": "//a[text()=' > ']",
+            "pageE": ".box.container",
+            "replaceE": ".page-pagination"
+        }
+    },
     "飘天文学": {
         "host": "www.ptwxz.com",
         "url": "/^\\/html\\/.+\\/\\d+\\.html/",
@@ -22,7 +206,7 @@
             "replaceE": ".pagination"
         },
         "function": {
-            "bF": "pageE[0].querySelectorAll('.media.loading').forEach((o)=>{o.className = 'media'}); return fun.src_bF(pageE, [1,'[data-src]','data-src'])"
+            "bF": "pageE[0].querySelectorAll('.media.loading').forEach((o)=>{o.className = 'media'}); return fun.src_bF(pageE,[1,'[data-src]','data-src'])"
         }
     },
     "www.ka234.cc": {
@@ -36,373 +220,378 @@
             "scrollD": 2000
         }
     },
-    "撸女吧": {
-        "host": "/(www\\.)?\\d+mm\\.cc/",
-        "url": "/^\\/(post|web)\\//",
-        "style": "img[src$='.gif'] {display: none !important;}",
+    "极品性感美女 搜索": {
+        "host": "www.jpxgyw.cc",
+        "url": "/\\/search\\//",
         "pager": {
-            "type": 3,
-            "nextL": "li.next-page>a",
-            "pageE": ".entry img, .article-content img",
-            "replaceE": "#dm-fy",
-			"scrollD": 10000
+            "nextL": ".current+a",
+            "pageE": ".node",
+            "replaceE": ".pagination",
+            "scrollD": 6000
         }
     },
-	"极品性感美女 搜索": {
-		"host": "www.jpxgyw.cc",
-		"url": "/\\/search\\//",
+    "极品性感美女 清单": {
+        "host": "www.jpxgyw.cc",
+        "url": "/\\/[A-Za-z]+\\/(page_\\d+\\.html)?$/",
+        "pager": {
+            "nextL": "//a[text()='下一页']",
+            "pageE": ".related_posts",
+            "replaceE": ".pagination",
+            "scrollD": 6000
+        }
+    },
+    "极品性感美女 看图": {
+        "host": "www.jpxgyw.cc",
+        "url": "/\\/[A-Za-z]+\\/[A-Za-z]+\\d+\\.html$/",
+        "style": "[src=\"/uploadfile/zyx.gif\"],div.pagination > p{display: none !important;}",
+        "pager": {
+            "nextL": "//a[text()='下一页']",
+            "pageE": "p>img[alt]",
+            "replaceE": ".pagination",
+            "scrollD": 10000
+        }
+    },
+    "拷贝漫画 - 分类页2": {
+        "host": "/copymanga\\./",
+        "url": "/\\/comics/",
+        "pager": {
+            "type": 6,
+            "nextL": "li.next>a",
+            "pageE": ".container.exemptComicList",
+            "replaceE": "ul.page-all",
+            "loadTime": 1000,
+            "scrollD": 3000
+        },
+        "function": {
+            "bF": "return fun.src_bF(pageE)"
+        }
+    },
+    "拷贝漫画 - 推荐页2": {
+        "host": "/copymanga\\./",
+        "url": "/\\/recommend/",
+        "pager": {
+            "nextL": "li.next>a",
+            "pageE": ".container.correlationList",
+            "replaceE": "ul.page-all"
+        },
+        "function": {
+            "bF": "return fun.src_bF(pageE)"
+        }
+    },
+    "U9A9": {
+        "host": "/u9a9\\.(com|cc|net|xyz)/",
+        "pager": {
+            "nextL": "//a[text()='»']",
+            "pageE": "table>tbody",
+            "replaceE": ".pagination"
+        }
+    },
+    "SpankBang PS": {
+        "host": "/.*spankbang\\.com/",
+        "url": "/^\\/pornstars/",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": ".next>a",
+            "pageE": "ul.results",
+            "replaceE": ".pagination"
+        }
+    },
+    "SpankBang": {
+        "host": "/.*spankbang\\.com/",
+        "url": "/^\\/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)/",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": ".next>a",
+            "pageE": ".video-list.video-rotate.video-list-with-ads",
+            "replaceE": ".pagination",
+            "scrollD": 600
+        }
+    },
+    "missav": {
+        "host": "missav.com",
+        "url": "/^\\/(search|chinese|new|release|uncensored|siro|luxugana|maan|scute|ara|fc2|heyzo|tokyohot|caribbeancomcaribbeancom|1pondo|caribbeancom|caribbeancompr|10musume|pacopacomama|gachinco|xxxav|marriedslash|naughty4610|naughty0930|madoutwav|actresses)/",
+        "iframe": true,
+        "style": "div.space-y-5.mb-5,footer {display: none !important;}",
+        "pager": {
+            "type": 6,
+            "nextL": "a[rel='next']",
+            "pageE": "div.grid.grid-cols-2.md\\:grid-cols-3.xl\\:grid-cols-4.gap-5 > div,div.max-w-full.p-8.text-nord4.bg-nord1.rounded-lg",
+            "replaceE": "div > nav",
+            "scrollD": 350
+        }
+    },
+    "愛污傳媒": {
+        "host": "/www\\.aiwu.*\\.(info|top|com)/",
+        "url": "/^\\/index\\.php\\//",
+        "pager": {
+            "nextL": "a[title='Go to next page!']",
+            "pageE": ".grid.mx-auto.videos",
+            "replaceE": ".pagination"
+        }
+    },
+    "fanxxx.net": {
+        "host": "fanxxx.net",
+        "url": "/^\\/(av-chinese|amateur-sex|search)/",
+        "pager": {
+            "nextL": "a[rel='next']",
+            "pageE": ".video-list",
+            "replaceE": ".pagenavi",
+            "scrollD": 6000
+        }
+    },
+    "JAVDAY": {
+        "host": "javday.tv",
+        "url": "/^\\/(category|search)\\//",
+        "pager": {
+            "nextL": ".layui-laypage-next",
+            "pageE": ".videoGroup>#app",
+            "replaceE": "#container>.av",
+            "scrollD": 6000
+        }
+    },
+    "癡漢隊長": {
+        "host": "javcaptain.com",
+        "url": "/\\/(censored|uncensored|western|fc2|hanime|search)/",
+        "pager": {
+            "nextL": "a.page-link[rel='next']",
+            "pageE": ".page-content > .col,.page-content > .col-12",
+            "replaceE": ".page-content > .pagination",
+            "scrollD": 6000
+        }
+    },
+    "加勒逼A片網": {
+        "host": "159i.com",
+        "url": "/^\\/video\\/((category|search)\\/.+\\/)?$/",
+        "pager": {
+            "nextL": ".next>a",
+            "pageE": "#content>.post.f",
+            "replaceE": ".page-navigator",
+            "scrollD": 4000
+        }
+    },
+    "HPJAV": {
+        "host": "hpjav.tv",
+        "iframe": true,
+        "pager": {
+            "type": 5,
+            "nextL": "li.active+li>a"
+        }
+    },
+    "X5AV": {
+        "host": "x5av.com",
+        "url": "/^\\/e\\/(action|search)\\//",
+        "pager": {
+            "nextL": ".c-nav.next.ease.a1",
+            "pageE": ".videos-container",
+            "replaceE": ".pagination",
+            "scrollD": 10000
+        }
+    },
+    "麻豆社,草麻豆": {
+        "host": ["madou.club","xxxmadou.com"],
+        "pager": {
+            "type": 2,
+            "nextL": ".ias_trigger>a",
+            "nextTextOf": "下一页"
+        }
+    },
+    "javbangers.com": {
+        "host": "www.javbangers.com",
+        "url": "/\\/(latest|top|most|albums)/",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "li.page-current+li.page>a",
+            "pageE": ".porntrex-box,.box",
+            "replaceE": ".pagination",
+            "loadTime": 2000,
+            "scrollD": 10000
+        }
+    },
+    "HOTGIRL.asia - 清單": {
+        "host": "hotgirl.asia",
+        "url": "/^\\/(\\?s=|genre|tag|photos|livestream|china|korea|videos)(\\/)?/",
+        "pager": {
+            "nextL": "li.active+li>a",
+            "pageE": ".vl-item,.movies-list,#myimg",
+            "replaceE": "#pagination",
+            "scrollD": 10000
+        }
+    },
+    "HOTGIRL.asia - 寫真": {
+        "host": "hotgirl.asia",
+        "url": "/^\\/.+[^donate]\\/(\\d+\\/)?$/",
+        "pager": {
+            "nextL": "li.active+li>a",
+            "pageE": "#myimg",
+            "insertP": ["#pagination",1],
+            "replaceE": "#pagination",
+            "scrollD": 10000
+        }
+    },
+    "嗨皮漫画 - 更新頁": {
+        "host": "m.happymh.com",
+        "url": "/^\\/latest$/",
+        "pager": {
+            "type": 2,
+            "nextL": ".more-div-btn",
+            "nextTextOf": "点击查看更多"
+        }
+    },
+    "Gdaily": {
+        "host": "www.gdaily.org",
+        "url": "/^\\/(search|software|app|online|teaching)/",
+        "pager": {
+            "nextL": "li.active+li>a",
+            "pageE": ".columns .column",
+            "replaceE": ".navigation"
+        }
+    },
+    "阿榮福利味": {
+        "host": "www.azofreeware.com",
+        "pager": {
+            "nextL": ".blog-pager-older-link",
+            "pageE": ".blog-posts.hfeed",
+            "replaceE": "#blog-pager"
+        }
+    },
+    "imgasd": {
+        "host": "imgasd.com",
+        "pager": {
+            "nextL": "a.active+a",
+            "pageE": ".list",
+            "replaceE": ".pagination"
+        }
+    },
+    "小黃書 - 搜索": {
+        "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+        "url": "/^\\/search\\/.+\\/.*\\.html$/",
+        "pager": {
+            "nextL": "a.next",
+            "pageE": ".list",
+            "replaceE": ".pager",
+            "scrollD": 10000
+        }
+    },
+    "小黃書 - 清單": {
+        "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+        "url": "/^\\/photo\\//",
+        "style": ".photos > div.item {display: none !important;}",
+        "pager": {
+            "nextL": "a.next",
+            "pageE": ".photos > a",
+            "replaceE": ".pager",
+            "scrollD": 10000
+        }
+    },
+    "小黃書 - 原圖": {
+        "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+        "url": "/^\\/photoShow\\.php/",
+        "style": ".container>img {max-width: 99% !important;display: block !important;margin: 0 auto !important;}",
+        "pager": {
+            "type": 3,
+            "nextL": ".image>a:not([href^='j']):nth-child(4)",
+            "pageE": ".container>img",
+            "replaceE": ".index,.image>a:nth-child(4)",
+            "scrollE": ".ad",
+            "scrollD": 10000
+        }
+    },
+    "小黃書 - 分類": {
+        "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+        "url": "/^\\/(photos|videos|models)(\\/|\\.html)/",
+        "pager": {
+            "nextL": "a.next",
+            "pageE": ".list>.item,.videos",
+            "replaceE": ".pager",
+            "scrollD": 10000
+        }
+    },
+	"hitxhot.com - 寫真": {
+		"host": "hitxhot.com",
+		"url": "/^\\/gallerys/",
+		"style": ".contain.refill:not(.relatedvideos) {display: none !important;}",
 		"pager": {
-			"nextL": ".current+a",
-			"pageE": ".node",
-			"replaceE": ".pagination"
+			"type": 3,
+			"nextL": "//a[text()='Next >']",
+			"pageE": ".contentme>img",
+			"insertP": [".contentme>br:last-child",1],
+			"replaceE": ".pagination-site"
 		}
 	},
-	"极品性感美女 清单": {
-		"host": "www.jpxgyw.cc",
-		"url": "/\\/\\w+\\/$/",
+	"hitxhot.com - 清單": {
+		"host": "hitxhot.com",
+		"url": "/^\\/(\\?page)?/",
 		"pager": {
-			"nextL": "//a[text()='下一页']",
-			"pageE": ".related_posts",
-			"replaceE": ".pagination"
+			"nextL": "//a[text()='Next »']",
+			"pageE": ".videos",
+			"replaceE": ".pagination-site"
 		}
 	},
-	"极品性感美女 看图": {
-		"host": "www.jpxgyw.cc",
-		"url": "/\\d+\\.html/",
-		"style": "[src=\"/uploadfile/zyx.gif\"],div.pagination > p{display: none !important;}",
-		"pager": {
-			"nextL": "//a[text()='下一页']",
-			"pageE": "p>img[alt]",
-			"replaceE": ".pagination",
-			"scrollD": 4000
-		}
-	},
-	"拷贝漫画 - 分类页2": {
-		"host": "/copymanga\\./",
-		"url": "/\\/comics/",
-		"pager": {
-			"type": 6,
-			"nextL": "li.next>a",
-			"pageE": ".container.exemptComicList",
-			"replaceE": "ul.page-all",
-			"loadTime": 1000,
-			"scrollD": 3000
-		},
-		"function": {
-			"bF": "return fun.src_bF(pageE)"
-		}
-	},
-	"拷贝漫画 - 推荐页2": {
-		"host": "/copymanga\\./",
-		"url": "/\\/recommend/",
-		"pager": {
-			"nextL": "li.next>a",
-			"pageE": ".container.correlationList",
-			"replaceE": "ul.page-all"
-		},
-		"function": {
-			"bF": "return fun.src_bF(pageE)"
-		}
-	},
-	"U9A9": {
-		"host": "/u9a9\\.(com|cc|net|xyz)/",
-		"history": false,
-		"pager": {
-			"nextL": "//a[text()='»']",
-			"pageE": "table > tbody",
-			"replaceE": ".pagination"
-		}
-	},
-	"onejav.com 首頁": {
-		"host": "onejav.com",
-		"url": "return (fun.lp() == '/')",
-		"pager": {
-			"type": 2,
-			"nextL": "#button-load-more",
-			"nextTextOf": "Load more"
-		}
-	},
-	"SpankBang PS": {
-		"host": "/(.*\\.)?spankbang\\.com/",
-		"url": "/\\/pornstars/",
-		"history": false,
-		"iframe": true,
-		"pager": {
-			"type": 6,
-			"nextL": ".next>a",
-			"pageE": "ul.results",
-			"replaceE": ".pagination"
-		}
-	},
-	"SpankBang": {
-		"host": "/(.*\\.)?spankbang\\.com/",
-		"url": "/\\/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)/",
-		"history": false,
-		"iframe": true,
-		"pager": {
-			"type": 6,
-			"nextL": ".next>a",
-			"pageE": ".video-list.video-rotate.video-list-with-ads",
-			"replaceE": ".pagination",
-			"scrollD": 600
-		}
-	},
-	"missav": {
-		"host": "missav.com",
-		"url": "/\\/(search|chinese|new|release|uncensored|siro|luxugana|maan|scute|ara|fc2|heyzo|tokyohot|caribbeancomcaribbeancom|1pondo|caribbeancom|caribbeancompr|10musume|pacopacomama|gachinco|xxxav|marriedslash|naughty4610|naughty0930|madoutwav|actresses)/",
-		"history": false,
-		"iframe": true,
-		"style": "div.space-y-5.mb-5,footer {display: none !important;}",
-		"pager": {
-			"type": 6,
-			"nextL": "a[rel=\"next\"]",
-			"pageE": "div.grid.grid-cols-2.md\\:grid-cols-3.xl\\:grid-cols-4.gap-5 > div,div.max-w-full.p-8.text-nord4.bg-nord1.rounded-lg",
-			"replaceE": "div > nav",
-			"scrollD": 350
-		}
-	},
-	"愛污傳媒": {
-		"host": "/www\\.aiwu.*\\.(info|top)/",
-		"url": "/\\/index\\.php\\//",
-		"history": false,
-		"pager": {
-			"nextL": "a[title=\"Go to next page!\"]",
-			"pageE": ".grid.mx-auto.videos",
-			"replaceE": ".pagination"
-		}
-	},
-	"fanxxx.net": {
-		"host": "fanxxx.net",
-		"url": "/\\/(av-chinese|amateur-sex|search)/",
-		"history": false,
-		"pager": {
-			"nextL": "a[rel=\"next\"]",
-			"pageE": ".video-list",
-			"replaceE": ".pagenavi"
-		}
-	},
-	"JAVDAY": {
-		"host": "javday.tv",
-		"url": "/\\/category\\//",
-		"history": false,
-		"pager": {
-			"nextL": ".layui-laypage-next",
-			"pageE": ".videoGroup>#app",
-			"replaceE": "#container>.av"
-		}
-	},
-	"癡漢隊長": {
-		"host": "javcaptain.com",
-		"url": "/\\/(censored|uncensored|western|fc2|hanime|search)/",
-		"history": false,
-		"pager": {
-			"nextL": "a.page-link[rel=\"next\"]",
-			"pageE": ".page-content > .col,.page-content > .col-12",
-			"replaceE": ".page-content > .pagination"
-		}
-	},
-	"加勒逼A片網": {
-		"host": "159i.com",
-		"url": "/\\/video\\//",
-		"history": false,
-		"pager": {
-			"nextL": ".next>a",
-			"pageE": "#content>.post.f",
-			"replaceE": ".page-navigator"
-		}
-	},
-	"HPJAV": {
-		"host": "hpjav.tv",
-		"url": "/\\/(hot|category|models|)/",
-		"history": false,
-		"iframe": true,
-		"style": ".visible-lg-block.visible-md-block.visible-sm-block {display: none !important;}",
-		"pager": {
-			"type": 5,
-			"style": ".visible-lg-block.visible-md-block.visible-sm-block {display: none !important;}",
-			"nextL": "li.active+li>a"
-		}
-	},
-	"X5AV": {
-		"host": "x5av.com",
-		"url": "/\\/e\\/(action|search)\\//",
-		"history": false,
-		"pager": {
-			"nextL": ".c-nav.next.ease.a1",
-			"pageE": ".videos-container",
-			"replaceE": ".pagination",
-			"scrollD": 10000
-		}
-	},
-	"麻豆社": {
-		"host": ["madou.club","xxxmadou.com"],
-		"url": "",
-		"pager": {
-			"type": 2,
-			"nextL": ".ias_trigger>a",
-			"nextTextOf": "下一页"
-		}
-	},
-	"www.javbangers.com": {
-		"host": "www.javbangers.com",
-		"url": "/\\/(latest|top|most)/",
-		"history": false,
-		"iframe": true,
-		"pager": {
-			"type": 6,
-			"nextL": "li.page-current+li.page>a",
-			"pageE": ".porntrex-box",
-			"replaceE": ".pagination"
-		}
-	},
-	"UU看書": {
-		"host": "www.uukanshu.com",
-		"url": "/\\/b\\//",
-		"history": false,
-		"iframe": true,
-		"pager": {
-			"type": 6,
-			"nextL": "#next",
-			"pageE": ".h1title,.contentbox",
-			"replaceE": ".fanye"
-		}
-	},
-	"UU看書 手機板": {
-		"host": "/(t|sj)\\.uukanshu\\.com/",
-		"url": "/\\/read/",
-		"style": ".samebooks1 {display: none !important;}",
-		"history": false,
-		"iframe": true,
-		"pager": {
-			"type": 6,
-			"nextL": "#read_next",
-			"pageE": "#divContent > h3,#bookContent",
-			"replaceE": ".rp-switch",
-			"scrollD": 4000
-		}
-	},
-	"HOTGIRL.asia": {
-		"host": "hotgirl.asia",
-		"url": "/\\/(photos|livestream|china|korea|videos)\\//",
-		"history": false,
-		"pager": {
-			"nextL": "li.active+li>a",
-			"pageE": ".videos-list,.movies-list,#myimg",
-			"replaceE": "#pagination",
-			"scrollD": 10000
-		}
-	},
-	"HOTGIRL.asia 寫真": {
-		"host": "hotgirl.asia",
-		"url": "/\\/.*\\//",
-		"history": false,
-		"pager": {
-			"nextL": "li.active+li>a",
-			"pageE": "#myimg",
-			"insertP": ["#pagination",1],
-			"replaceE": "#pagination",
-			"scrollD": 10000
-		}
-	},
-	"嗨皮漫画": {
-		"host": "m.happymh.com",
-		"url": "/\\/latest/",
-		"pager": {
-			"type": 2,
-			"nextL": ".more-div-btn",
-			"nextTextOf": "点击查看更多"
-		}
-	},
-	"Gdaily": {
-		"host": "www.gdaily.org",
-		"url": "/\\/(software|app|online|teaching)/",
-		"history": false,
-		"pager": {
-			"nextL": "li.active+li>a",
-			"pageE": ".columns .column",
-			"replaceE": ".navigation"
-		}
-	},
-	"阿榮福利味": {
-		"host": "www.azofreeware.com",
-		"url": "/(\\/search\\?|\\/\\d+)?/",
-		"history": false,
-		"pager": {
-			"nextL": ".blog-pager-older-link",
-			"pageE": ".blog-posts.hfeed",
-			"replaceE": "#blog-pager"
-		}
-	},
-	"imgasd": {
-		"host": "imgasd.com",
-		"url": "",
-		"history": false,
-		"pager": {
-			"nextL": "a.active+a",
-			"pageE": ".list",
-			"replaceE": ".pagination"
-		}
-	},
-	"小黃書搜索": {
-		"host": "/(tw\\.|kr\\.)?xchina\\.co/",
-		"url": "/\\/search\\//",
-		"history": false,
-		"pager": {
-			"nextL": "a.next",
-			"pageE": ".list",
-			"replaceE": ".pager"
-		}
-	},
-	"小黃書 圖片清單瀏覽": {
-		"host": "/(tw\\.|kr\\.)?xchina\\.co/",
-		"url": "/\\/photo\\//",
-		"style": ".photos > div.item {display: none !important;}",
-		"history": false,
-		"pager": {
-			"nextL": "a.next",
-			"pageE": ".photos > a",
-			"replaceE": ".pager"
-		}
-	},
-	"小黃書": {
-		"host": "/(tw\\.|kr\\.)?xchina\\.co/",
-		"url": "/^\\/(photos|videos)\\//",
-		"history": false,
-		"pager": {
-			"nextL": "a.next",
-			"pageE": "div.list div.item,.videos",
-			"replaceE": ".pager"
-		}
-	},
-	"性愛套圖": {
-		"host": "myjkwd.com",
-		"url": "/e\\/action/",
-		"history": false,
-		"pager": {
-			"nextL": "//a[text()='下一页']",
-			"pageE": "div.bloglist > ul,.entry>center,.entry>img",
-			"replaceE": ".pageLink",
-			"scrollD": 10000
-		}
-	},
-	"愛下電子書 閱讀": {
-		"host": "tw.ixdzs.com",
-		"url": "/\\/read\\//",
-		"history": false,
-		"pager": {
-			"nextL": "//a[text()='下一章']",
-			"pageE": "#page",
-			"replaceE": ".page-d.page-turn"
-		}
-	},
-	"愛下電子書 清單": {
-		"host": "tw.ixdzs.com",
-		"url": "/\\/(sort|hot|end)\\//",
-		"history": false,
-		"pager": {
-			"nextL": "//a[text()='»']",
-			"pageE": ".u-list",
-			"replaceE": ".page"
-		}
-	}
+    "性愛套圖": {
+        "host": "myjkwd.com",
+        "url": "/^\\/e\\//",
+        "blank": 4,
+        "pager": {
+            "nextL": "//a[text()='下一页']",
+            "pageE": "div.bloglist > ul,.entry>center,.entry>img",
+            "replaceE": ".pageLink",
+            "scrollD": 10000
+        }
+    },
+        "小說狂人": {
+        "host": "czbooks.net",
+        "url": "/^\\/n\\/\\w+/\\w+/",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "//a[text()='下一章']",
+            "pageE": ".name,.content",
+            "replaceE": ".nav"
+        }
+    },
+        "UU看書": {
+        "host": "www.uukanshu.com",
+        "url": "/^\\/b\\//",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "#next",
+            "pageE": ".h1title,.contentbox",
+            "replaceE": ".fanye"
+        }
+    },
+    "UU看書 - 手機版": {
+        "host": "/(t|sj)\\.uukanshu\\.com/",
+        "url": "/^\\/read/",
+        "style": ".samebooks1 {display: none !important;}",
+        "iframe": true,
+        "pager": {
+            "type": 6,
+            "nextL": "#read_next",
+            "pageE": "#divContent > h3,#bookContent",
+            "replaceE": ".rp-switch",
+            "scrollD": 4000
+        }
+    },
+    "愛下電子書 - 閱讀": {
+        "host": "tw.ixdzs.com",
+        "url": "/^\\/read\\/\\d+\\//",
+        "pager": {
+            "nextL": "//a[text()='下一章']",
+            "pageE": "#page",
+            "replaceE": ".page-d.page-turn"
+        }
+    },
+    "愛下電子書 - 清單": {
+        "host": "tw.ixdzs.com",
+        "url": "/^\\/(sort|hot|end)\\//",
+        "pager": {
+            "nextL": "//a[text()='»']",
+            "pageE": ".u-list",
+            "replaceE": ".page"
+        }
+    }
 }
