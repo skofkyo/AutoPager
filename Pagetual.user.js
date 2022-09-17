@@ -10,9 +10,9 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.4
+// @version      1.9.31.17
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自動翻頁尾本 - 自動載入並拼接下一分頁內容，支援任意網頁
+// @description:zh-CN  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
@@ -44,6 +44,8 @@
 // @grant        GM.deleteValue
 // @grant        GM.info
 // @grant        GM.setClipboard
+// @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
+// @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @supportURL   https://github.com/hoothin/UserScripts/issues
 // @connect      wedata.net
 // @connect      githubusercontent.com
@@ -199,7 +201,11 @@
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'），可使用 Alt + 左方向鍵返回",
                 nextSwitch:"切換其他頁碼",
                 arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
-                hideLoadingIcon:"隱藏載入動畫"
+                hideLoadingIcon:"隱藏載入動畫",
+                duplicate:"檢測到永頁機重複安裝，請刪除其他指令碼管理器中的永頁機!",
+                forceStateIframe:"以 iframe 嵌入整頁",
+                forceStateDynamic:"通過 iframe 載入動態內容后取出",
+                forceStateDisable:"在此站禁用"
             };
             break;
         case "zh-TW":
@@ -273,7 +279,11 @@
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
                 nextSwitch:"切換其他頁碼",
                 arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
-                hideLoadingIcon:"隱藏加載動畫"
+                hideLoadingIcon:"隱藏加載動畫",
+                duplicate:"檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
+                forceStateIframe:"以 iframe 嵌入整頁",
+                forceStateDynamic:"通過 iframe 加載動態內容後取出",
+                forceStateDisable:"在此站禁用"
             };
             break;
         case "ja":
@@ -346,7 +356,11 @@
                 manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
                 nextSwitch:"次のページに切り替え",
                 arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ",
-                hideLoadingIcon:"読み込み中のアニメーションを隠す"
+                hideLoadingIcon:"読み込み中のアニメーションを隠す",
+                duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
+                forceStateIframe: "iframe にページ全体を埋め込む",
+                forceStateDynamic: "iframe 経由で動的コンテンツを読み込む",
+                forceStateDisable: "このステーションでのページめくりを無効にする"
             };
             break;
         case "ru":
@@ -420,7 +434,11 @@
                 manualMode:"Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
                 nextSwitch:"Переключить ссылку на следующую страницу",
                 arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
-                hideLoadingIcon:"Скрыть анимацию загрузки"
+                hideLoadingIcon:"Скрыть анимацию загрузки",
+                duplicate: "Обнаружена двойная установка Pagetual, пожалуйста, удалите постоянную страничную машину в других менеджерах скриптов!",
+                forceStateIframe: "Вставить полную страницу как iframe",
+                forceStateDynamic:"Загружать динамический контент через iframe",
+                forceStateDisable: "Отключить перелистывание страниц на этой станции"
             };
             break;
         default:
@@ -493,7 +511,11 @@
                 manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
                 nextSwitch:"Switch next link",
                 arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next",
-                hideLoadingIcon:"Hide loading animation"
+                hideLoadingIcon:"Hide loading animation",
+                duplicate:"Duplicate Pagetual have been installed, check your script manager!",
+                forceStateIframe: "Embed full page as iframe",
+                forceStateDynamic: "Load dynamic content via iframe",
+                forceStateDisable: "Disable page turning on this site"
             };
             break;
     }
@@ -519,7 +541,7 @@
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM.xmlHttpRequest;
     }else{
-        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(f.onerror())};
+        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(e => f.onerror(e))};
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
@@ -638,8 +660,9 @@
             var result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
             return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
         } catch (err) {
-            throw new Error(`Invalid xpath: ${xpath}`);
+            debug(`Invalid xpath: ${xpath}`);
         }
+        return null;
     }
 
     function getAllElementsByXpath(xpath, contextNode, doc){
@@ -653,7 +676,7 @@
                 if (node.nodeType === 1) result.push(node);
             }
         } catch (err) {
-            throw new Error(`Invalid xpath: ${xpath}`);
+            debug(`Invalid xpath: ${xpath}`);
         }
         return result;
     }
@@ -822,19 +845,20 @@
 
         formatRule(item, from){
             if(item.data && item.data.url){
-                return {
+                let result = {
                     name:item.name,
                     from:from,
-                    type:0,
                     action:item.data.forceIframe=="true"?1:0,
                     url:item.data.url,
                     pageElement:item.data.pageElement,
                     nextLink:item.data.nextLink,
                     insert:item.data.insertBefore||undefined,
-                    updatedAt:item.updated_at,
-                    css:(item.data.Stylus && item.data.CSS) ? (item.data.Stylus + item.data.CSS) : (item.data.Stylus || item.data.CSS),
-                    pageAction:item.data.bookmarklet
+                    updatedAt:item.updated_at
                 };
+                let _css = (item.data.Stylus || '') + (item.data.CSS || '');
+                if (_css) result.css = _css;
+                if (item.data.bookmarklet) result.pageAction = item.data.bookmarklet;
+                return result;
             }else{
                 item.from=from;
                 return item;
@@ -1139,21 +1163,12 @@
                             break;
                         }
                     }
-                    let sameClassName = null, hasSameClass = false;
+                    let hasSameClass = false;
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
                         if(curNode.tagName=="CANVAS")continue;
                         if(!curNode.offsetParent)continue;
                         if(curNode.tagName!="IMG" && curNode.querySelector('img')==null && /^\s*$/.test(curNode.innerText))continue;
-                        if(curNode.className && sameClassName !== '' && curNode.style.display !== 'none'){
-                            if (sameClassName === null) sameClassName = curNode.className;
-                            else {
-                                if (sameClassName != curNode.className) {
-                                    sameClassName = '';
-                                    hasSameClass = false;
-                                } else hasSameClass = true;
-                            }
-                        }
                         if(needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode)>windowHeight){
                             continue;
                         }
@@ -1190,12 +1205,21 @@
                             curMaxEle=curNode;
                         }
                     }
+                    if (curMaxEle) {
+                        for(i = 0; i < ele.children.length; i++) {
+                            let curNode = ele.children[i];
+                            if (curMaxEle != curNode && curNode.className && curNode.style.display !== 'none' && curMaxEle.className == curNode.className){
+                                hasSameClass = true;
+                                break;
+                            }
+                        }
+                    }
                     if(curMaxEle && !hasSameClass && (isHori || curHeight>maxHeight || (needCheckNext && curHeight>windowHeight && ele.contains(self.initNext)))){
                         return checkElement(curMaxEle);
                     }
                     if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
-                    if(ele.tagName=="TD")ele=ele.parentNode;
-                    if(ele.tagName=="TBODY"){
+                    else if(ele.tagName=="TD")ele=ele.parentNode;
+                    else if(ele.tagName=="TBODY"){
                         self.curSiteRule.pageElement=geneSelector(ele)+">*";
                         if(ele.children.length>0 && ele.children[0].querySelector("th")){
                             self.curSiteRule.pageElement+=":not(:first-child)";
@@ -1216,7 +1240,9 @@
                         }
                         if(!hasText){
                             let middleChild=ele.children[parseInt(ele.children.length/2)];
-                            if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
+                            if(curWin.getComputedStyle(ele).display==='flex' || rulesData.opacity!=0){
+                                ele=[ele];
+                            }else if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
                                 ele=[ele];
                             }else{
                                 self.curSiteRule.pageElement+=">*";
@@ -1300,6 +1326,7 @@
                 body.querySelector("a#btnPreGn")||
                 body.querySelector("a.page-next")||
                 body.querySelector("a.pages-next")||
+                body.querySelector("a.page.right")||
                 getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
             if(!next){
                 let nexts=body.querySelectorAll("a.next");
@@ -1360,6 +1387,10 @@
             }
             if(!next){
                 next=body.querySelector(".number>ul>li.active+li>a");
+            }
+            if(!next){
+                next=body.querySelector(".pages>a[href='javascript:;']+a");
+                if(next && (next.href=="javascript:;" || next.getAttribute("href")=="#"))next=null;
             }
             if(!next){
                 let aTags=body.querySelectorAll("a,button");
@@ -1617,7 +1648,7 @@
 
                 if((href===""||href===null) && needUrl){
                     this.nextLinkHref=false;
-                }else if(/^(javascript:void\(0\)|#)/.test(href) && needUrl){
+                }else if(/^(javascript:(void\(0\)|;)|#)/.test(href) && needUrl){
                     this.nextLinkHref=false;
                 }else{
                     this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(href):"#";
@@ -1647,7 +1678,7 @@
                     if(ruleParser.curSiteRule.sandbox!=false){
                         iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
                     }
-                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
                     iframe.addEventListener('load', function (e) {
                         try{
                             let doc=iframe.contentDocument || iframe.contentWindow.document;
@@ -1711,12 +1742,15 @@
             }
             if(this.insert && !refresh){
                 let parent=this.insert;
-                if (parent.parentNode && (parent.parentNode.nodeName === 'HTML' || isVisible(parent.parentNode, _unsafeWindow))) {
-                    while(parent && parent.nodeName != "HTML"){
-                        parent=parent.parentNode;
-                    }
-                    if(parent && parent.nodeName == "HTML"){
-                        return this.insert;
+                if (parent.parentNode) {
+                    if (parent.parentNode.nodeName === 'HTML' || parent.parentNode.nodeName === 'BODY') return this.insert;
+                    else if (isVisible(parent.parentNode, _unsafeWindow)) {
+                        while(parent && parent.nodeName != "BODY"){
+                            parent=parent.parentNode;
+                        }
+                        if(parent && parent.nodeName == "BODY"){
+                            return this.insert;
+                        }
                     }
                 }
             }
@@ -2199,11 +2233,11 @@
               top: 3px;
               right: 10px;
              }
-             #pagetual-picker>.selector{
+             #pagetual-picker .selector{
               display: inline-block;
               width: 290px;
               height: 20px;
-              max-width: 65vw;
+              max-width: calc(65vw - 50px);
               padding: 6px 12px;
               font-size: 16px;
               font-weight: 400;
@@ -2216,14 +2250,15 @@
               transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
               box-sizing: content-box;
              }
-             #pagetual-picker>.selector:focus {
+             #pagetual-picker .selector:focus {
               color: #495057;
               background-color: #fff;
               border-color: #80bdff;
               outline: 0;
               box-shadow: 0 0 0 3.2px rgb(0 123 255 / 25%);
              }
-             #pagetual-picker .xpath {
+             #pagetual-picker [type=checkbox],
+             #pagetual-picker [type=radio] {
               line-height: 20px;
               height: 25px;
               width: 25px;
@@ -2241,7 +2276,8 @@
              }
              #pagetual-picker .bottom {
               text-align: left;
-              margin-top: 10px;
+              margin: 10px 0;
+              width: 100%;
              }
              #pagetual-picker .bottom>button {
               float: right;
@@ -2276,6 +2312,13 @@
              #pagetual-picker .allpath>span.path:hover {
               color: orangered;
              }
+             #pagetual-picker .moreConfig {
+              display: flex;
+              justify-content: space-between;
+              border-top: 1px solid;
+              padding-top: 10px;
+              width: 100%;
+             }
             `;
             _GM_addStyle(cssText);
             this.mainSignDiv = this.createSignDiv();
@@ -2291,15 +2334,17 @@
                   </svg>
                 </button>
                 <div class="allpath" title="${i18n("switchSelector")}"></div>
-                <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
-                <button id="check" title="${i18n("pickerCheck")}" type="button">
-                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1609">
-                    <path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" p-id="1610">
-                    </path>
-                  </svg>
-                </button>
+                <div>
+                  <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
+                  <button id="check" title="${i18n("pickerCheck")}" type="button">
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1609">
+                      <path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" p-id="1610">
+                      </path>
+                    </svg>
+                  </button>
+                </div>
                 <div class="bottom">
-                  <input class="xpath" name="xpath" id="checkbox_id" type="checkbox">
+                  <input name="xpath" id="checkbox_id" type="checkbox">
                   <label for="checkbox_id">XPath</label>
                   <button id="edit" title="${i18n("gotoEdit")}" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4129" style="color: orangered;fill: orangered;">
@@ -2308,12 +2353,58 @@
                     </svg>
                   </button>
                 </div>
+                <div class="moreConfig">
+                  <div title="${i18n('forceStateIframe')}">
+                    <input name="forceState" id="forceStateIframe" type="radio">
+                    <label for="forceStateIframe">Iframe</label>
+                  </div>
+                  <div title="${i18n('forceStateDynamic')}">
+                    <input name="forceState" id="forceStateDynamic" type="radio">
+                    <label for="forceStateDynamic">Dynamic</label>
+                  </div>
+                  <div title="${i18n('forceStateDisable')}">
+                    <input name="forceState" id="forceStateDisable" type="radio">
+                    <label for="forceStateDisable">Disable</label>
+                  </div>
+                </div>
             `);
+            let forceStateIframe = frame.querySelector("#forceStateIframe");//forceState 1 禁用 2 强嵌 3 动态
+            let forceStateDynamic = frame.querySelector("#forceStateDynamic");
+            let forceStateDisable = frame.querySelector("#forceStateDisable");
+            let clickRadio = e => {
+                let radio = e.currentTarget.querySelector('input');
+                if (radio.checked) {
+                    forceState = "";
+                } else {
+                    switch (radio.id) {
+                        case "forceStateIframe":
+                            forceState = 2;
+                            break;
+                        case "forceStateDynamic":
+                            forceState = 3;
+                            break;
+                        case "forceStateDisable":
+                            forceState = 1;
+                            break;
+                        default:
+                            return;
+                    }
+                }
+                storage.setItem("forceState_"+location.host, forceState);
+                self.close();
+                location.reload();
+            };
+            forceStateIframe.parentNode.addEventListener("mousedown", clickRadio);
+            forceStateDynamic.parentNode.addEventListener("mousedown", clickRadio);
+            forceStateDisable.parentNode.addEventListener("mousedown", clickRadio);
+            if (forceState == 1) forceStateDisable.checked = true;
+            else if (forceState == 2) forceStateIframe.checked = true;
+            else if (forceState == 3) forceStateDynamic.checked = true;
             let closeBtn = frame.querySelector(".closePicker");
             let title = frame.querySelector(".title");
             let allpath = frame.querySelector(".allpath");
             let selectorInput = frame.querySelector(".selector");
-            let xpath = frame.querySelector(".xpath");
+            let xpath = frame.querySelector("#checkbox_id");
             let checkBtn = frame.querySelector("#check");
             let editBtn = frame.querySelector("#edit");
             closeBtn.addEventListener("click", e => {
@@ -3155,6 +3246,7 @@
                     }
                     debug(customRules);
                     storage.setItem("customRules", customRules);
+                    customRulesInput.value=JSON.stringify(customRules, null, 4);
                 }
             }catch(e){
                 debug(e);
@@ -3384,10 +3476,10 @@
                     upBtnImg=downBtnImg;
                 }
                 if(upBtnImg){
-                    upSvg=`<img src="${upBtnImg}"/>`;
+                    upSvg=`<img class="pagetual" src="${upBtnImg}"/>`;
                 }
                 if(downBtnImg){
-                    downSvg=`<img src="${downBtnImg}"/>`;
+                    downSvg=`<img class="pagetual" src="${downBtnImg}"/>`;
                 }
                 setLoadingDiv(rulesData.loadingText || i18n("loadingText"));
                 if(typeof(rulesData.opacity)=="undefined"){
@@ -3648,6 +3740,7 @@
              "Segoe UI Emoji", "Segoe UI Symbol";
            color: #ffffff;
            min-height: 70px;
+           max-width: 80%;
            line-height: 70px;
            position: fixed;
            left: 50%;
@@ -3693,6 +3786,7 @@
            }
          }
          .pagetual_loading_text {
+           white-space: nowrap;
            -webkit-animation: pagetual_loading_opacity 2.6s infinite ease-in-out;
            animation: pagetual_loading_opacity 2.6s infinite ease-in-out;
          }
@@ -3712,14 +3806,14 @@
     var loadingDiv=document.createElement("div");
     loadingDiv.style.cssText="cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
 
-    const loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e;`;
+    const loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
     function setLoadingDiv(loadingText){
-        loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`}`;
+        loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`}`;
     }
 
-    var upSvg=`<svg width="30" height="30" class="upSvg" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var upSvg=`<svg width="30" height="30" class="upSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
     var upSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
-    var downSvg=`<svg width="30" height="30" class="downSvg" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var downSvg=`<svg width="30" height="30" class="downSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
     var downSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
 
     const initStyle=`display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px 5px;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
@@ -4043,21 +4137,24 @@
         }
         if(!example || !example.parentNode)example=insert;
         let exampleStyle = _unsafeWindow.getComputedStyle(example);
-        let inTable=example.parentNode.tagName=="TABLE" ||
+        let inTable, inLi;
+        if (forceState == 2) {
+            inTable = inLi = false;
+        } else {
+            inTable=example.parentNode.tagName=="TABLE" ||
             example.tagName=="TR" ||
             example.tagName=="TBODY" ||
             exampleStyle.display=="table-row" ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
-        let inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
-        if(forceState==2){
-            inTable=inLi=false;
+            inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
         }
         let pageBar=document.createElement(inTable?"tr":(inLi?"li":"div"));
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
         let pageText=document.createElement("a");
         let pageNum;
+        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
         pageBar.className="pagetual_pageBar";
         pageBar.id="pagetual_pageBar"+curPage;
         pageBar.setAttribute("translate", "no");
@@ -4137,87 +4234,95 @@
             if (nextPageBar) {
                 scrollToPageBar(nextPageBar);
             } else {
-                let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-                window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                let nextEle = pageBar.parentNode.nextElementSibling;
+                if (nextEle) scrollToPageBar(nextEle);
+                else {
+                    window.scrollTo({ top: scrollH || 9999999, behavior: 'smooth'});
+                }
             }
         });
         pageText.insertBefore(preBtn, pageText.firstChild);
         pageText.insertBefore(nextBtn, pageText.firstChild);
         pageBar.appendChild(downSpan);
-        let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
-        let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
-        pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
-        if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
-            pageBar.style.gridColumnStart=1;
-            pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
-        }
-        if(inTable){
-            example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
-            if(example.tagName=="TBODY")example=example.querySelector("tr");
-            let preTr=example;
-            while(preTr && preTr.children.length==0)preTr=preTr.previousElementSibling;
-            if(preTr)example=preTr;
-            let tdNum=0;
-            if (exampleStyle.display=="table-row") {
-                [].forEach.call(example.children, el=>{
-                    tdNum+=el.colSpan||1;
-                });
-            } else {
-                [].forEach.call(example.children, el=>{
-                    if(el.tagName=="TD" || el.tagName=="TH"){
-                        tdNum+=el.colSpan||1;
-                    }
-                });
+        if (forceState == 2) {
+            pageBar.style.width = "99%";
+        } else {
+            let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
+            let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
+            pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
+            pageBar.style.margin='0 5px';
+            if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
+                pageBar.style.gridColumnStart=1;
+                pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
             }
-            pageBar.style.display="table-row";
-            pageBar.style.backgroundColor="unset";
-            pageBar.style.lineHeight="20px";
-            pageBar.style.boxShadow="";
-            let td=document.createElement("td");
-            td.colSpan=tdNum||1;
-            let inTd=document.createElement("div");
-            inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
-            inTd.style.borderRadius="20px";
-            inTd.style.padding="0 0";
-            inTd.style.margin="0";
-            inTd.style.lineHeight="20px";
-            inTd.style.textAlign="center";
-            inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
-            inTd.appendChild(upSpan);
-            inTd.appendChild(pageText);
-            if(pageNum)inTd.appendChild(pageNum);
-            inTd.appendChild(downSpan);
-            td.appendChild(inTd);
-            pageBar.appendChild(td);
-        }else if(inLi){
-            example=example.tagName=="LI"?example:example.previousElementSibling;
-            pageBar.style.display=getComputedStyle(example).display;
-            pageBar.style.backgroundColor="unset";
-            pageBar.style.lineHeight="20px";
-            pageBar.style.boxShadow="";
-            pageBar.style.height="35px";
-            let td=document.createElement("td");
-            td.colSpan=example.children.length;
-            td.style.width='100%';
-            let inTd=document.createElement("div");
-            inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
-            inTd.style.borderRadius="20px";
-            inTd.style.margin="0"
-            inTd.style.padding="0 0";
-            inTd.style.textAlign="center";
-            inTd.style.minWidth="150px";
-            inTd.appendChild(upSpan);
-            inTd.appendChild(pageText);
-            inTd.style.width='calc(100% - 20px)';
-            inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
-            if(pageNum)inTd.appendChild(pageNum);
-            inTd.appendChild(downSpan);
-            if (pageBar.style.display === 'table-row') {
+            if(inTable){
+                example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
+                if(example.tagName=="TBODY")example=example.querySelector("tr");
+                let preTr=example;
+                while(preTr && preTr.children.length==0)preTr=preTr.previousElementSibling;
+                if(preTr)example=preTr;
+                let tdNum=0;
+                if (exampleStyle.display=="table-row") {
+                    [].forEach.call(example.children, el=>{
+                        tdNum+=el.colSpan||1;
+                    });
+                } else {
+                    [].forEach.call(example.children, el=>{
+                        if(el.tagName=="TD" || el.tagName=="TH"){
+                            tdNum+=el.colSpan||1;
+                        }
+                    });
+                }
+                pageBar.style.display="table-row";
+                pageBar.style.backgroundColor="unset";
+                pageBar.style.lineHeight="20px";
+                pageBar.style.boxShadow="";
+                let td=document.createElement("td");
+                td.colSpan=tdNum||1;
+                let inTd=document.createElement("div");
+                inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
+                inTd.style.borderRadius="20px";
+                inTd.style.padding="0 0";
+                inTd.style.margin="0";
+                inTd.style.lineHeight="20px";
+                inTd.style.textAlign="center";
+                inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+                inTd.appendChild(upSpan);
+                inTd.appendChild(pageText);
+                if(pageNum)inTd.appendChild(pageNum);
+                inTd.appendChild(downSpan);
                 td.appendChild(inTd);
                 pageBar.appendChild(td);
-            } else {
-                inTd.style.width='100%';
-                pageBar.appendChild(inTd);
+            }else if(inLi){
+                example=example.tagName=="LI"?example:example.previousElementSibling;
+                pageBar.style.display=getComputedStyle(example).display;
+                pageBar.style.backgroundColor="unset";
+                pageBar.style.lineHeight="20px";
+                pageBar.style.boxShadow="";
+                pageBar.style.height="35px";
+                let td=document.createElement("td");
+                td.colSpan=example.children.length;
+                td.style.width='100%';
+                let inTd=document.createElement("div");
+                inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
+                inTd.style.borderRadius="20px";
+                inTd.style.margin="0"
+                inTd.style.padding="0 0";
+                inTd.style.textAlign="center";
+                inTd.style.minWidth="150px";
+                inTd.appendChild(upSpan);
+                inTd.appendChild(pageText);
+                inTd.style.width='calc(100% - 20px)';
+                inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+                if(pageNum)inTd.appendChild(pageNum);
+                inTd.appendChild(downSpan);
+                if (pageBar.style.display === 'table-row') {
+                    td.appendChild(inTd);
+                    pageBar.appendChild(td);
+                } else {
+                    inTd.style.width='100%';
+                    pageBar.appendChild(inTd);
+                }
             }
         }
 
@@ -4229,9 +4334,9 @@
         });
         downSpan.addEventListener("click", e=>{
             changeStop(true);
-            pageBar.title=i18n(isPause?"enable":"disable");
-            document.body.scrollTop=9999999;
-            document.documentElement.scrollTop=9999999;
+            pageBar.title = i18n(isPause ? "enable" : "disable");
+            document.body.scrollTop = scrollH || 9999999;
+            document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
             e.stopPropagation();
         });
@@ -4256,7 +4361,6 @@
             }
         }
 
-        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
         let posEle=pageBar.nextElementSibling||pageBar;
         while(posEle && !posEle.offsetParent){
             posEle=posEle.previousElementSibling||posEle.parentNode;
@@ -4331,7 +4435,7 @@
         if(ruleParser.curSiteRule.sandbox!=false){
             iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         }
-        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
         let waitTime=100,checkEval;
         if(ruleParser.curSiteRule.waitElement){
             checkEval = doc => {
@@ -4574,7 +4678,7 @@
             emuIframe.width = '100%';
             emuIframe.height = '0';
             emuIframe.frameBorder = '0';
-            emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;';
+            emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
                     try{
@@ -4863,6 +4967,19 @@
                     }catch(e){
                         debug(e);
                     }
+                }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
+                    forceIframe(nextLink, (iframe, eles)=>{
+                        loadPageOver();
+                        let pageBar=createPageBar(nextLink);
+                        if(pageBar)iframe.parentNode.insertBefore(pageBar, iframe);
+                        if(autoLoadNum>=0){
+                            if(autoLoadNum!=0 && --autoLoadNum==0){
+                                autoLoadNum=-1;
+                            }else{
+                                setTimeout(() => nextPage(), 1);
+                            }
+                        }
+                    });
                 }else if((forceState==3||ruleParser.curSiteRule.action==1) && !isJs){
                     requestFromIframe(nextLink, (doc, eles)=>{
                         loadPageOver();
@@ -4876,19 +4993,6 @@
                                 }else{
                                     setTimeout(() => nextPage(), 1);
                                 }
-                            }
-                        }
-                    });
-                }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
-                    forceIframe(nextLink, (iframe, eles)=>{
-                        loadPageOver();
-                        let pageBar=createPageBar(nextLink);
-                        if(pageBar)iframe.parentNode.insertBefore(pageBar, iframe);
-                        if(autoLoadNum>=0){
-                            if(autoLoadNum!=0 && --autoLoadNum==0){
-                                autoLoadNum=-1;
-                            }else{
-                                setTimeout(() => nextPage(), 1);
                             }
                         }
                     });
@@ -4932,7 +5036,7 @@
     function init(){
         try{
             if(_unsafeWindow.initedPagetual){
-                alert('Duplicate Pagetual have been installed, check your script manager!');
+                showTips(i18n('duplicate'));
                 return;
             }
             _unsafeWindow.initedPagetual=true;
