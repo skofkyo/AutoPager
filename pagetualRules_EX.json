@@ -1,5 +1,47 @@
 [
     {
+        "name": "cahdroid",
+        "url": "^https?://download\\.cahdroid\\.com/",
+        "include": ".pagination",
+        "pageElement": ".relat,.post-show",
+        "rate": 3,
+        "pageBar": 0
+    },
+    {
+        "name": "4download",
+        "url": "^https?://4download\\.net/",
+        "include": ".pagi-nav.clearfix.ignore-select",
+        "pageElement": ".short-item",
+        "rate": 3,
+        "pageBar": 0
+    },
+    {
+        "name": "亿破姐&电脑系统吧",
+        "url": "^https?://www\\.(ypojie|dnxitong)\\.com/",
+        "include": ".pagination",
+        "pageElement": "article[class*='excerpt']",
+        "rate": 3,
+        "pageBar": 0
+    },
+    {
+        "name": "KaranPc",
+        "url": "^https?://karanpc\\.com/",
+        "include": "#nav-below",
+        "nextLink": "a.next",
+        "pageElement": "article[id^='post']",
+        "rate": 3,
+        "pageBar": 0
+    },
+    {
+        "name": "阿榮福利味",
+        "url": "^https?://www\\.azofreeware\\.com/",
+        "include": "#blog-pager-older-link",
+        "nextLink": ".blog-pager-older-link",
+        "pageElement": ".blog-posts.hfeed",
+        "rate": 3,
+        "pageBar": 0
+    },
+    {
         "name": "軟體部落",
         "action": 2,
         "url": "^https?://softblog\\.tw/",
@@ -12,11 +54,11 @@
     },
     {
         "name": "mobile01",
-        "url": "^https?://www\\.mobile01\\.com/(topiclist|forumtopic|topicdetail)\\.php",
-        "nextLink": "a.c-pagination--next,li.is-active+li>a",
-        "pageElement": ".l-listTable__tr,.l-articlePage",
-        "wait": 1000,
-        "sleep": 1000
+        "url": "^https?://www\\.mobile01\\.com/",
+        "nextLink": "a.c-pagination.c-pagination--next,li.is-active+li>a",
+        "pageElement": ".l-listTable__tbody,div.l-articlePage:has(>.l-articlePage__author)",
+        "sleep": 3000,
+        "pageBar": 0
     },
     {
         "name": "巴哈姆特 - 內文",
@@ -49,6 +91,11 @@
         "loadMore": ".ias_trigger>a"
     },
     {
+        "name": "漫畫櫃 - 手機版 点击查看下20条记录",
+        "url": "^https://m\\.manhuagui\\.com/(list|update|rank)/",
+        "loadMore": ".more-go"
+    },
+    {
         "name": "嗨皮漫画 - 更新頁",
         "url": "^https://m\\.happymh\\.com/latest$",
         "loadMore": ".more-div-btn"
@@ -56,18 +103,21 @@
     {
         "name": "R3SUB - 搜索",
         "url": "^https?://r3sub\\.com/search\\.php",
-        "exampleUrl": "https://r3sub.com/search.php?s=king",
         "nextLink": "li.active+li>a",
         "pageElement": ".movie.movie--preview.ddd",
         "pageBar": 0
     },
     {
         "name": "SubHD",
-        "url": "^https?://subhd(tw)?\\.(tv|com|la|cc|me)/(zu|search)/",
+        "url": "^https?://subhd(tw)?\\.(tv|com|la|cc|me)/(zu|sub|search)/",
+        "include": "nav.clearfix",
         "pageElement": ".bg-white.shadow-sm.rounded-3",
         "insert": "nav.clearfix",
         "insertPos": 1,
-        "pageBar": 0
+        "css": ".col-lg-3.pt-5{display:none!important}",
+        "rate": 3,
+        "pageBar": 0,
+        "sleep": 1000
     },
     {
         "name": "A4k 字幕网",
@@ -82,6 +132,21 @@
         "nextLink": "li.disabled+li>a",
         "pageElement": ".list>ul>li:not(.first)",
         "pageBar": 0
+    },
+    {
+        "name": "bt1207",
+        "url": "^https://.+bt1207",
+        "nextLinkByJs": "let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
+        "pageElement": "ul.list-unstyled"
+    },
+    {
+        "name": "RARBG",
+        "url": "^https?://rarbg\\.to/",
+        "include": "#pager_links",
+        "nextLink": "#pager_links>a[title='next page']",
+        "pageElement": "table.lista2t tr.lista2",
+        "pageBar": 0,
+        "sleep": 1000
     },
     {
         "name": "limetorrents.cc",
@@ -106,15 +171,16 @@
     },
     {
         "name": "牛C網 - 美圖列表",
-        "url": "^https?://niuc1.com/sex",
+        "url": "^https?://niuc1\\.com/sex",
         "pageElement": ".cat_list",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "牛C網 - 看圖",
         "url": "^https?://niuc1\\.com/.*\\.html",
         "pageElement": "div.panel-body.single.mt-2 > p",
-        "pageBar": 0,
+        "pageBar": 1,
+        "autoLoadNum": 10,
         "rate": 3
     },
     {
@@ -154,7 +220,7 @@
         "action": 1,
         "nextLink": "#url_ne",
         "pageElement": ".listbg0",
-        "wait": 500,
+        "wait": 1000,
         "sleep": 500,
         "pageBar": 0
     },
@@ -166,18 +232,46 @@
         "pageBar": 0
     },
     {
-        "name": "BOOK☆WALKER",
+        "name": "BOOK☆WALKER TW 更多",
+        "url": "^https?://www\\.bookwalker\\.com\\.tw/more/",
+        "nextLink": "a[rel='next']",
+        "pageElement": ".bw_main2 > div:nth-child(2)",
+        "replaceElement": [
+            ".bw_main2 > div:first-child",
+            ".bw_main2 > div:last-child"
+        ],
+        "css": ".ad5_aside{display: none!important;}",
+        "pageBar": 1,
+        "rate": 3
+    },
+    {
+        "name": "BOOK☆WALKER TW",
+        "url": "^https?://www\\.bookwalker\\.com\\.tw/search",
+        "nextLink": "a[rel='next']",
+        "pageElement": ".bookdesc2.clearfix ",
+        "replaceElement": [
+            ".bw_main2 > div:first-child",
+            ".bw_main2 > div:last-child"
+        ],
+        "pageBar": 1,
+        "rate": 3
+    },
+    {
+        "name": "BOOK☆WALKER JP",
         "url": "^https?://bookwalker\\.jp/(category|search|new)/",
         "nextLink": ".o-pager-next>a",
         "pageElement": ".o-contents-section__body",
+        "replaceElement": [
+            ".o-list--menu",
+            ".o-list--footer"
+        ],
         "pageBar": 0
     },
     {
         "name": "二次元動漫 - 閱讀",
         "url": "^https?://www\\.2animx\\.com/index-look-name",
         "nextLink": "//a[text()='下一頁'][not(starts-with(@href,'javascript'))]",
-        "pageElement": "#ComicPic",
-        "rate": 3
+        "pageElement": "#ComicPic"
     },
     {
         "name": "二次元動漫 - 清單",
@@ -190,6 +284,7 @@
         "action": 1,
         "nextLink": ".next",
         "pageElement": ".main_img",
+        "pageBarText": 1,
         "rate": 3
     },
     {
@@ -362,6 +457,7 @@
         "insert": "#pagination",
         "insertPos": 1,
         "pageBar": 0,
+        "autoLoadNum": 5,
         "rate": 3
     },
     {
@@ -380,32 +476,42 @@
     },
     {
         "name": "小黃書 - 搜索",
-        "url": "^https?://tw\\.xchina\\.co/search/.*/.*\\.html",
+        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/search/.*/.*\\.html",
+        "nextLink": "a.next",
         "pageElement": ".article.result",
-        "pageBar": 0
+        "pageBar": 0,
+        "autoLoadNum": 2,
+        "rate": 3
     },
     {
         "name": "小黃書 - 原圖瀏覽",
-        "url": "^https?://tw\\.xchina\\.co/photoShow",
+        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photoShow",
         "nextLink": ".image > a:not([href^='j']):nth-child(4)",
         "pageElement": ".container > img",
+        "css": ".index,.image > a:nth-child(3),.image > a:nth-child(4){display: none!important;}.container>img {max-width: 99% !important;display: block !important;margin: 0 auto !important;}",
         "pageBar": 0,
+        "autoLoadNum": 2000,
         "rate": 3
     },
     {
         "name": "小黃書 - 圖片清單瀏覽",
-        "url": "^https?://tw\\.xchina\\.co/photo/",
+        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
         "exampleUrl": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
+        "nextLink": "a.next",
         "pageElement": ".photos > a",
-        "css": ".photos > div.item {display: none}",
+        "css": ".photos > div.item {display: none!important;}",
         "pageBar": 0,
+        "autoLoadNum": 10,
         "rate": 3
     },
     {
         "name": "小黃書 - 分類",
-        "url": "^https?://tw\\.xchina\\.co/(photos|videos|models)/",
+        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/(photos|videos|models)/",
+        "nextLink": "a.next",
         "pageElement": ".list>.item,.videos",
-        "pageBar": 0
+        "pageBar": 0,
+        "autoLoadNum": 2,
+        "rate": 3
     },
     {
         "name": "hitxhot - 寫真",
@@ -414,7 +520,7 @@
         "pageElement": ".contentme>img",
         "insert": ".contentme>br:last-child",
         "insertPos": 1,
-        "css": ".coveringtrailer,div.contain.refill,div.relatedvideos.contain.refill.reller {display: none}",
+        "css": ".coveringtrailer,div.contain.refill,div.relatedvideos.contain.refill.reller {display: none!important;}",
         "pageBar": 0,
         "rate": 3
     },
@@ -433,16 +539,29 @@
         "pageBar": 0
     },
     {
-        "name": "性愛套圖",
-        "url": "^https?://myjkwd\\.com/",
-        "pageElement": "div.bloglist > ul,.entry>center,.entry>img",
+        "name": "性愛套圖 - 內文",
+        "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
+        "pageElement": ".entry>center,.entry>img",
         "pageBar": 0,
+        "autoLoadNum": 200,
+        "rate": 3
+    },
+    {
+        "name": "性愛套圖 - 列表",
+        "url": "^https?://myjkwd.com/e/action/ListInfo",
+        "pageElement": ".bloglist > ul",
+        "pageBar": 0,
+        "autoLoadNum": 2,
         "rate": 3
     },
     {
         "name": "小說狂人",
         "url": "^https?://czbooks\\.net/n/\\w+/\\w+",
         "pageElement": ".name,.content",
+        "replaceElement": [
+            ".chapter-detail>.nav.chapter-nav",
+            "#mm-5>.nav"
+        ],
         "pageBar": 0
     },
     {
@@ -451,18 +570,61 @@
         "action": 1,
         "nextLink": "#read_next",
         "pageElement": "#divContent > h3,#bookContent",
+        "replaceElement": "#read-page>.rp-switch",
+        "pageBar": 0
+    },
+    {
+        "name": "UU看書 - 書籍列表",
+        "url": "^https?://www\\.uukanshu\\.com/list/",
+        "pageElement": ".content.clearfix>span",
+        "replaceElement": "#page",
+        "pageBar": 0
+    },
+    {
+        "name": "UU看書 - 閱讀",
+        "url": "^https?://www\\.uukanshu\\.com/b/",
+        "action": 1,
+        "nextLink": "#next",
+        "pageElement": ".h1title,.contentbox",
+        "replaceElement": ".fanye",
+        "pageBar": 0
+    },
+    {
+        "name": "UU看書網uuks.org手機版 - 閱讀",
+        "url": "^https?://m\\.uuks\\.org/b/",
+        "nextLink": "#read_next",
+        "pageElement": "#top,#bookContent",
+        "replaceElement": [
+            "#read>.rp-switch",
+            "#read-page>.rp-switch"
+        ],
+        "css": "#read-page .iconback,#read-page .iconhome{display: none!important;}",
+        "insert": "#read-page>.rp-switch",
+        "insertPos": 1,
+        "pageBar": 0
+    },
+    {
+        "name": "UU看書網uuks.org - 閱讀",
+        "url": "^https?://www\\.uuks\\.org/b/",
+        "nextLink": "#next",
+        "pageElement": ".h1title,#contentbox",
+        "replaceElement": ".fanye",
+        "insert": ".fanye",
+        "insertPos": 1,
         "pageBar": 0
     },
     {
         "name": "愛下電子書 - 閱讀",
         "url": "^https?://tw\\.ixdzs\\.com/read/\\d+/\\w+\\.html",
         "pageElement": "#page",
+        "replaceElement": ".page-d.page-turn",
         "pageBar": 0
     },
     {
-        "name": "愛下電子書 - 清單",
+        "name": "愛下電子書 - 書籍列表",
         "url": "^https?://tw\\.ixdzs\\.com/(sort|hot|end)/",
         "pageElement": ".u-list",
+        "replaceElement": ".page>.pagei",
         "pageBar": 0
     }
 ]
