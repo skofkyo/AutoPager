@@ -1,23 +1,165 @@
 [
     {
-        "name": "cahdroid",
-        "example": "https://download.cahdroid.com/",
-        "url": "^https?://download\\.cahdroid\\.com/",
+        "name": "快看 - 分類 - 輔助出現&page=",
+        "example": "https://www.kuaikanmanhua.com/tag/0",
+        "url": "^https?://www\\.kuaikanmanhua\\.com/tag/0$",
+        "autoClick": "a[href='/tag/0\\?region=1&pays=0&state=0&sort=1&page=1']"
+    },
+    {
+        "name": "快看 - 分類",
+        "example": "https://www.kuaikanmanhua.com/tag/0?region=1&pays=0&state=0&sort=1&page=1",
+        "url": "^https?://www\\.kuaikanmanhua\\.com/tag/\\d+\\?",
+        "action": 1,
+        "nextLinkByUrl": [
+            "&page=(\\d+)$",
+            "&page={$1+1}",
+            "ul.pagination>li:not(.disabled):last-child"
+        ],
+        "pageElement": ".tagContent.cls ",
+        "replaceElement": ".TagPages.pagesBox",
+        "pageBar": 1
+    },
+    {
+        "name": "快看 - 閱讀",
+        "example": "https://www.kuaikanmanhua.com/web/comic/190217/",
+        "url": "^https?://www\\.kuaikanmanhua\\.com/web/comic/\\d+",
+        "action": 1,
+        "nextLink": "//a[text()='下一话']",
+        "pageElement": ".imgList",
+        "replaceElement": ".AdjacentChapters",
+        "css": ".giude{display:none!important}",
+        "pageBar": 1,
+        "pageBarText": 1
+    },
+    {
+        "name": "尤物妹妹圖 - 分類",
+        "example": "http://www.ywmmt.com/html/mm/1_1.html",
+        "url": "^https?://www\\.ywmmt\\.com/mm/",
+        "include": "#list",
+        "nextLinkByUrl": [
+            "(/mm/)(\\d+)_(\\d+)\\.html$",
+            "$1$2_{$3+1}.html",
+            "[title='尾页']"
+        ],
+        "pageElement": "#list",
+        "replaceElement": ".pagelist",
+        "pageBar": 1,
+        "rate": 3
+    },
+    {
+        "name": "秀人集 - 搜索",
+        "example": "https://www.xiurenb.cc/plus/search/index.asp?keyword=XiuRen",
+        "url": "^https?://www\\.xiurenb\\.cc/plus/search/",
+        "include": ".list>.node",
+        "nextLink": "a.current+a",
+        "pageElement": ".list>.node",
+        "replaceElement": ".page",
+        "pageBar": 1
+    },
+    {
+        "name": "秀人集 - 看圖",
+        "example": "https://www.xiurenb.cc/XiuRen/11496.html",
+        "url": "^https?://www\\.xiurenb\\.cc/",
+        "include": ".item_info",
+        "nextLink": "//a[text()='下页']",
+        "pageElement": ".content>p",
+        "replaceElement": ".page",
+        "autoLoadNum": 50,
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "秀人集 - 分類",
+        "example": "https://www.xiurenb.cc/XiuRen/",
+        "url": "^https?://www\\.xiurenb\\.cc/",
+        "include": "div.page+ul.update_area_lists",
+        "nextLink": "//a[text()='下页']",
+        "pageElement": "div.page+ul.update_area_lists",
+        "replaceElement": "div.page",
+        "pageBar": 1
+    },
+    {
+        "name": "秀人美女網 - 搜索",
+        "example": "https://www.xrmn5.com/plus/search/index.asp?keyword=XiuRen",
+        "url": "^https?://www\\.xrmn5\\.com/plus/search/",
+        "include": ".list>.node",
+        "nextLink": "a.current+a",
+        "pageElement": ".list>.node",
+        "replaceElement": "div.page",
+        "pageBar": 1
+    },
+    {
+        "name": "秀人美女網 - 看圖",
+        "example": "https://www.xrmn5.com/XiuRen/2022/202211480.html",
+        "url": "^https?://www\\.xrmn5\\.com/",
+        "include": ".item_info",
+        "nextLink": "//a[text()='下页']",
+        "pageElement": "div.item_info+div",
+        "replaceElement": "div.page",
+        "autoLoadNum": 50,
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
+        "name": "秀人美女網 - 分類",
+        "example": "https://www.xrmn5.com/XiuRen/",
+        "url": "^https?://www\\.xrmn5\\.com/",
+        "include": "script+ul.update_area_lists",
+        "nextLink": "//a[text()='下页']",
+        "pageElement": "script+ul.update_area_lists",
+        "replaceElement": "div.page",
+        "pageBar": 1
+    },
+    {
+        "name": "nneex.xyz",
+        "example": "https://nneex.xyz/",
+        "url": "^https?://nneex\\.xyz",
         "include": ".pagination",
+        "nextLink": "//a[@class='active']/parent::li/following-sibling::li/a",
+        "pageElement": ".main.margin-top-sm>.hex,.hot-keywords",
+        "replaceElement": ".pagination",
+        "pageAction": "[].forEach.call(eles,ele=>{[].forEach.call(ele.querySelectorAll('div.media.loading'),div=>{div.style.backgroundImage=`url(\"${div.dataset.thumb}\")`;div.setAttribute('class','media')});[].forEach.call(ele.querySelectorAll('div.media[data-src]'),div=>{div.style.width=div.dataset.width;div.style.height=div.dataset.height+'px';div.style.backgroundImage=`url(\"${div.dataset.src}\")`;div.removeAttribute('data-src');div.removeAttribute('data-height');div.removeAttribute('data-width')})})",
+        "pageBar": 1
+    },
+    {
+        "name": "Pornhub",
+        "example": "https://cn.pornhub.com/",
+        "url": "^https?://.*pornhub\\.com/video",
+        "nextLink": ".page_next>a",
+        "pageElement": "#videoCategory,#videoSearchResult",
+        "replaceElement": ".pagination3.paginationGated",
+        "pageBar": 1
+    },
+    {
+        "name": "XVIDEOS",
+        "example": "https://www.xvideos.com/",
+        "url": "^https?://www\\.xvideos\\.com",
+        "include": ".pagination",
+        "nextLink": "//li[(a/@class='active')]/following-sibling::li/a",
+        "pageElement": ".mozaique.cust-nb-cols",
+        "replaceElement": ".pagination",
+        "pageBar": 1
+    },
+    {
+        "name": "cahdroid",
+        "example": "https://cahdroid.com/",
+        "url": "^https?://cahdroid\\.com/",
+        "include": ".pagination",
+        "nextLink": "span.page-numbers.current+a",
         "pageElement": ".relat,.post-show",
         "replaceElement": ".pagination",
-        "rate": 3,
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "4download",
         "example": "https://4download.net/software/",
         "url": "^https?://4download\\.net/",
         "include": ".pagi-nav.clearfix.ignore-select",
+        "nextLink": "span.pnext>a",
         "pageElement": ".short-item",
         "replaceElement": ".pagi-nav",
-        "rate": 3,
-        "pageBar": 0
+        "rate": 2,
+        "pageBar": 1
     },
     {
         "name": "億破姐&電腦系統吧",
@@ -217,18 +359,30 @@
         "rate": 3
     },
     {
+        "name": "動漫花園",
+        "example": "http://share.dmhy.org/topics/list/sort_id/2",
+        "url": "^https?://share\\.dmhy\\.org",
+        "action": 1,
+        "nextLink": "//a[text()='下一頁']",
+        "pageElement": "thead+tbody",
+        "replaceElement": ".table.clear>.nav_title,script+.nav_title",
+        "rate": 3,
+        "pageBar": 1
+    },
+    {
         "name": "愛戀動漫&MioBT",
         "example": "http://www.kisssub.org/，http://miobt.com/",
         "url": "^https?://(www\\.)?(kisssub|miobt)\\.(org|com)",
+        "nextLink": "span.current+a",
         "pageElement": "#data_list>tr",
         "replaceElement": ".pages.clear",
         "pageBar": 1,
         "rate": 3
     },
     {
-        "name": "牛C網 - 美圖列表",
+        "name": "牛C網 - 列表",
         "example": "https://niuc1.com/sex",
-        "url": "^https?://niuc1\\.com/sex",
+        "url": "^https?://niuc1\\.com/(blog|sex|pornhub|apps)",
         "nextLink": "span.current+a",
         "pageElement": ".cat_list",
         "replaceElement": ".posts-nav",
@@ -239,6 +393,7 @@
         "name": "牛C網 - 看圖",
         "example": "https://niuc1.com/66470.html",
         "url": "^https?://niuc1\\.com/\\d+\\.html",
+        "include": ".page-nav",
         "nextLink": "span+a",
         "pageElement": "div.panel-body.single.mt-2 > p",
         "replaceElement": ".page-nav",
@@ -439,9 +594,11 @@
         "name": "www.ka234.cc - 看圖",
         "example": "https://www.ka234.cc/z/65/31923.html",
         "url": "^https?://www\\.ka234\\.cc/z/\\d+/\\d+\\.html",
+        "include": "#main+.content",
         "nextLink": "//a[text()='下一页']",
-        "pageElement": ".content>img",
+        "pageElement": "#main+.content",
         "replaceElement": "#page",
+        "autoLoadNum": 20,
         "pageBar": 0,
         "rate": 3
     },
@@ -449,8 +606,9 @@
         "name": "www.ka234.cc - 分類",
         "example": "https://www.ka234.cc/z/86/",
         "url": "^https?://www\\.ka234\\.cc/(z|plus)/(new|\\d+|search)",
+        "include": "div.title.nomore+div",
         "nextLink": "//a[text()='下一页']",
-        "pageElement": ".item.clearfix",
+        "pageElement": "div.title.nomore+div",
         "replaceElement": ".pages",
         "pageBar": 1
     },
@@ -492,7 +650,7 @@
         "nextLink": "li.next>a",
         "pageElement": ".container.exemptComicList",
         "replaceElement": ".container>.page-all",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "拷貝漫畫 - 推薦頁",
@@ -501,15 +659,26 @@
         "nextLink": "li.next>a",
         "pageElement": ".container.correlationList",
         "replaceElement": ".container>.page-all",
-        "pageBar": 0
+        "css": ".pagetual_pageBar {margin: -10px 0 20px 0 !important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "Nyaa",
+        "example": "https://sukebei.nyaa.si/",
+        "url": "^https?://(sukebei\\.)?nyaa\\.si/",
+        "nextLink": "a[rel='next'], li.next>a",
+        "pageElement": "table.torrent-list>tbody>tr",
+        "replaceElement": "ul.pagination",
+        "pageBar": 1
     },
     {
         "name": "U9A9",
         "example": "https://u9a9.net/",
         "url": "^https?://u9a9\\.(com|cc|net|xyz)",
+        "nextLink": "li.active+li>a",
         "pageElement": "table>tbody",
         "replaceElement": "nav>.pagination",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "SpankBang PS",
@@ -518,7 +687,7 @@
         "nextLink": ".next>a",
         "pageElement": "ul.results",
         "replaceElement": ".pagination",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "SpankBang",
@@ -527,7 +696,7 @@
         "nextLink": ".next>a",
         "pageElement": ".video-list.video-rotate.video-list-with-ads",
         "replaceElement": ".pagination",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "MISSAV",
@@ -585,7 +754,7 @@
         "nextLink": "li.active+li>a",
         "pageElement": ".posts.clearfix",
         "replaceElement": ".pagination",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "加勒逼A片網",
@@ -594,7 +763,7 @@
         "nextLink": ".next>a",
         "pageElement": "#content>.post.f",
         "replaceElement": ".page-navigator",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "NETFLAV",
@@ -656,7 +825,7 @@
         "url": "^https?://x5av\\.com/e/(action|search)/",
         "pageElement": ".videos-container",
         "replaceElement": ".pagination",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "javbangers.com",
@@ -665,7 +834,7 @@
         "nextLink": "li.page-current+li.page>a",
         "pageElement": ".porntrex-box,.box",
         "replaceElement": ".pagination",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "HOTGIRL.asia - 清單",
@@ -696,7 +865,8 @@
         "nextLink": "li.active+li>a",
         "pageElement": ".columns .column",
         "replaceElement": ".navigation",
-        "pageBar": 1
+        "history": 1,
+        "pageBar": 0
     },
     {
         "name": "imgasd",
@@ -809,6 +979,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".bloglist > ul",
         "replaceElement": ".pageLink",
+        "css": ".pagetual_pageBar{margin:10px auto auto auto !important;}",
         "pageBar": 1
     },
     {
@@ -823,9 +994,6 @@
             ".container>div>ul.nav",
             "#mm-5 > ul"
         ],
-        "waitElement": [
-            "#mm-5 > ul"
-        ],
         "pageBar": 0
     },
     {
@@ -834,7 +1002,9 @@
         "url": "^https?://czbooks\\.net/c/\\w+",
         "nextLink": ".container>ul.nav+ul>li.active:not(.menu-item)+li>a",
         "pageElement": "ul.nav.novel-list.style-default",
-        "replaceElement": ".nav.paginate"
+        "replaceElement": ".nav.paginate",
+        "css": ".pagetual_pageBar+.novel-list.style-default{margin-top:8px!important;}",
+        "pageBar": 1
     },
     {
         "name": "UU看書 - 手機版 - 閱讀",
@@ -900,7 +1070,7 @@
         "example": "https://tw.ixdzs.com/read/38804/p5.html",
         "url": "^https?://tw\\.ixdzs\\.com/read/\\d+/\\w+\\.html",
         "history": 2,
-        "nextLink": "//a[text()='下一章']",
+        "nextLink": "a.chapter-paging.chapter-next",
         "pageElement": "#page",
         "replaceElement": ".page-d.page-turn",
         "pageBar": 0
@@ -912,6 +1082,6 @@
         "nextLink": "a.num.current+a",
         "pageElement": ".u-list",
         "replaceElement": "div.panel+div>.pagei",
-        "pageBar": 0
+        "pageBar": 1
     }
 ]
