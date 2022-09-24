@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.17
+// @version      1.9.31.35
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -172,6 +172,7 @@
                 autoLoadNum:"自动加载指定页数",
                 inputPageNum:"输入页码跳转",
                 enableHistory:"翻页后写入历史记录",
+                enableHistoryAfterInsert:"拼接后立即写入历史记录，否则浏览完毕后再行写入",
                 initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                 preload:"翻页前预读下一页，加速浏览",
                 click2ImportRule:"点击下方添加特殊规则库，并静待更新成功：",
@@ -250,6 +251,7 @@
                 autoLoadNum:"自動加載指定頁數",
                 inputPageNum:"輸入頁碼跳轉",
                 enableHistory:"翻頁后寫入歷史記錄",
+                enableHistoryAfterInsert:"拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
                 initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
                 preload:"翻頁前預讀下一頁，加速瀏覽",
                 click2ImportRule:"點擊下方添加特殊規則庫，并靜待更新成功：",
@@ -327,6 +329,7 @@
                 autoLoadNum:"指定したページ数を自動的に読み込みます",
                 inputPageNum:"ジャンプするページ番号を入力",
                 enableHistory:"ページめくり後の履歴を書く",
+                enableHistoryAfterInsert: "スプライシングの直後に履歴レコードを書き込みます。それ以外の場合は、閲覧後に書き込みます",
                 initRun:"Webページを開いた直後にページをめくる",
                 preload:"事前に次のページを読む",
                 click2ImportRule:"以下をクリックして、ルールベースを追加します：",
@@ -405,6 +408,7 @@
                 autoLoadNum:"Количество для предварительной загрузки страниц",
                 inputPageNum:"Введите номер страницы для перехода",
                 enableHistory:"Записать историю после переключения страниц",
+                enableHistoryAfterInsert: "Записать запись истории сразу после сплайсинга, в противном случае запишите после просмотра",
                 initRun:"Переключать страницы сразу после открытия",
                 preload:"Предварительная загрузка следующей страницы для ускорения",
                 click2ImportRule:"Нажмите, чтобы импортировать ссылку базовых правил, затем дождитесь завершения обновления:",
@@ -482,6 +486,7 @@
                 autoLoadNum:"Amount for preload pages",
                 inputPageNum:"Enter page number to jump",
                 enableHistory:"Write history after page turning",
+                enableHistoryAfterInsert: "Write history immediately after splicing, otherwise write after browsing",
                 initRun:"Turn pages immediately after opening",
                 preload:"Preload next page for speeding up",
                 click2ImportRule:"Click to import base rules link, then wait until the update is complete:",
@@ -531,7 +536,7 @@
                 `%c【Pagetual v.${_GM_info.script.version}】 debug`,
                 'color: yellow;font-size: x-large;font-weight: bold;'
             );
-            console.debug(str);
+            console.log(str);
         }
     };
 
@@ -785,39 +790,43 @@
 
     class RuleParser {
         constructor() {
-            this.hpRules=[];
-            this.customRules=[];
-            this.rules=[];
-            this.pageDoc=document;
-            this.nextLinkHref=null;
-            this.nextTitle="";
-            this.oldUrl="";
-            this.curUrl=location.href;
-            this.curSiteRule={};
+            this.hpRules = [];
+            this.smartRules = [];
+            this.customRules = [];
+            this.rules = [];
+            this.pageDoc = document;
+            this.nextLinkHref = null;
+            this.nextTitle = "";
+            this.oldUrl = "";
+            this.curUrl = location.href;
+            this.curSiteRule = {};
         }
 
-        initSavedRules(callback){
-            var self=this;
-            storage.getItem("hpRules", hpRules=>{
-                if(hpRules)self.hpRules=hpRules;
-                storage.getItem("customRules", customRules=>{
-                    if(customRules)self.customRules=customRules;
-                    storage.getItem("rules", rules=>{
-                        if(rules)self.rules=rules;
-                        callback();
+        initSavedRules(callback) {
+            var self = this;
+            storage.getItem("smartRules", smartRules => {
+                if (smartRules) self.smartRules = smartRules;
+                storage.getItem("hpRules", hpRules => {
+                    if (hpRules) self.hpRules = hpRules;
+                    storage.getItem("customRules", customRules => {
+                        if (customRules) self.customRules = customRules;
+                        storage.getItem("rules", rules => {
+                            if (rules) self.rules = rules;
+                            callback();
+                        });
                     });
                 });
             });
         }
 
         saveCurSiteRule(){
-            if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl || this.curSiteRule.url.length<13)return;
+            /*if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl || this.curSiteRule.url.length<13)return;
             this.hpRules=this.hpRules.filter(item=>{return item&&item.url!=this.curSiteRule.url});
             this.hpRules.unshift(this.curSiteRule);
             if(this.hpRules.length>30){
                 this.hpRules.pop();
             }
-            storage.setItem("hpRules", this.hpRules);
+            storage.setItem("hpRules", this.hpRules);*/
         }
 
         requestJSON(url, callback){
@@ -927,32 +936,52 @@
             return true;
         }
 
+        scrollToShow(sel, doc) {
+            let exclude = getElement(sel, doc);
+            if (exclude) {
+                var actualTop = exclude.offsetTop;
+                var current = exclude.offsetParent;
+                while(current !== null){
+                    actualTop += current.offsetTop;
+                    current = current.offsetParent;
+                }
+                doc.body.scrollTop = 0;
+                doc.documentElement.scrollTop = 0;
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop;
+                    doc.documentElement.scrollTop = actualTop;
+                }, 1);
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop + 10;
+                    doc.documentElement.scrollTop = actualTop + 10;
+                }, 2);
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop + 50;
+                    doc.documentElement.scrollTop = actualTop + 50;
+                }, 3);
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop + 200;
+                    doc.documentElement.scrollTop = actualTop + 200;
+                }, 4);
+                return false;
+            }
+            return true;
+        }
+
         waitElement(doc, selArr) {
             if (!selArr) selArr = this.curSiteRule.waitElement;
             if (selArr[0].trim()) {
                 let include = getElement(selArr[0], doc);
-                if (!include) return false;
+                if (!include) {
+                    if (selArr.length == 2 && selArr[1].trim()) {
+                        this.scrollToShow(selArr[1], doc);
+                    }
+                    return false;
+                }
             }
             if (doc === document) return true;
-            if (selArr.length==2 && selArr[1].trim()) {
-                let exclude = getElement(selArr[1], doc);
-                if (exclude) {
-                    var actualTop = exclude.offsetTop;
-                    var current = exclude.offsetParent;
-                    while(current !== null){
-                        actualTop += current.offsetTop;
-                        current = current.offsetParent;
-                    }
-                    doc.body.scrollTop = 0;
-                    doc.documentElement.scrollTop = 0;
-                    doc.body.scrollTop = actualTop;
-                    doc.documentElement.scrollTop = actualTop;
-                    doc.body.scrollTop = actualTop + 10;
-                    doc.documentElement.scrollTop = actualTop + 10;
-                    doc.body.scrollTop = actualTop + 50;
-                    doc.documentElement.scrollTop = actualTop + 50;
-                    doc.body.scrollTop = actualTop + 200;
-                    doc.documentElement.scrollTop = actualTop + 200;
+            if (selArr.length == 2 && selArr[1].trim()) {
+                if (!this.scrollToShow(selArr[1], doc)) {
                     return false;
                 }
             }
@@ -1044,24 +1073,31 @@
                 return false;
             }
 
-            for(let i in this.hpRules){
-                let rule=this.hpRules[i];
-                if(!rule || !rule.url)continue;
-                if(rule.singleUrl){
-                    if(location.origin+location.pathname==rule.url){
+            for (let i in this.hpRules) {
+                let rule = this.hpRules[i];
+                if (!rule || !rule.url) continue;
+                if (rule.singleUrl) {
+                    continue;
+                }
+                if (checkRule(rule)) return;
+            }
+            for (let i in this.customRules) {
+                let rule = this.customRules[i];
+                if (!rule || !rule.url) continue;
+                if (checkRule(rule)) return;
+            }
+            for (let i in this.smartRules) {
+                let rule = this.smartRules[i];
+                if (!rule || !rule.url) continue;
+                if (rule.singleUrl) {
+                    if (location.origin + location.pathname == rule.url) {
                         setRule(rule);
                         return;
                     }
                     continue;
                 }
-                if(checkRule(rule))return;
             }
-            for(let i in this.customRules){
-                let rule=this.customRules[i];
-                if(!rule || !rule.url)continue;
-                if(checkRule(rule))return;
-            }
-            let r=0;
+            let r = 0;
             function searchByTime(){
                 setTimeout(()=>{
                     let end=r+50;
@@ -1082,6 +1118,44 @@
                 },1);
             }
             searchByTime();
+        }
+
+        replaceElement(doc) {
+            if (!doc || doc === document) return;
+            let replaceElementSel = this.curSiteRule.replaceElement;
+            if (replaceElementSel) {
+                if (!Array.isArray(replaceElementSel)) {
+                    replaceElementSel = [replaceElementSel];
+                }
+                replaceElementSel.forEach(sel => {
+                    let pageEles = getAllElements(sel, document);
+                    let replaceEles = getAllElements(sel, doc);
+                    for (let i = 0; i < pageEles.length; i++) {
+                        let replaceEle = replaceEles[i];
+                        let pageEle = pageEles[i];
+                        if (replaceEle) {
+                            pageEle.parentNode.replaceChild(replaceEle, pageEle);
+                        } else break;
+                    }
+                });
+            }
+        }
+
+        refreshByClick() {
+            let refreshByClickSel = this.curSiteRule.refreshByClick;
+            if (refreshByClickSel) {
+                document.addEventListener("click", e => {
+                    let checkEles = getAllElements(refreshByClickSel, document);
+                    for (let i = 0; i < checkEles.length; i++) {
+                        if (checkEles[i] === e.target) {
+                            urlChanged = true;
+                            isPause = true;
+                            if (!ruleParser.nextLinkHref) isLoading = false;
+                            break;
+                        }
+                    }
+                });
+            }
         }
 
         getPageElement(doc, curWin, dontFind) {
@@ -1143,7 +1217,7 @@
                         debug(self.curSiteRule.pageElement);
                         return [body];
                     }
-                    if(ele.tagName=="FORM"){
+                    if(ele.tagName=="FORM" && ele.parentNode!=document.body){
                         self.curSiteRule.pageElement=geneSelector(ele)+">*";
                         debug(self.curSiteRule.pageElement);
                         return ele.children;
@@ -1208,7 +1282,7 @@
                     if (curMaxEle) {
                         for(i = 0; i < ele.children.length; i++) {
                             let curNode = ele.children[i];
-                            if (curMaxEle != curNode && curNode.className && curNode.style.display !== 'none' && curMaxEle.className == curNode.className){
+                            if (curMaxEle != curNode && curNode.className && curNode.style.display !== 'none' && curMaxEle.className == curNode.className && curMaxEle.tagName == curNode.tagName){
                                 hasSameClass = true;
                                 break;
                             }
@@ -1272,7 +1346,7 @@
                     });
                 }
             }
-            this.lazyImgAction(pageElement);
+            if (doc !== document) this.lazyImgAction(pageElement);
             return pageElement;
         }
 
@@ -1288,7 +1362,7 @@
                 }
             }
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
-            let url=this.curUrl.replace("#!","").replace("index.php?","?");
+            let url = this.curUrl.replace("index.php?","?");
             let _url=url.replace(/\.s?html?$/i,"");
             let pageNum=1,preStr="",afterStr="";
             let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
@@ -1312,21 +1386,28 @@
                 body.querySelector("ul.pagination>li.active+li>a")||
                 body.querySelector(".pagination a[rel=next]")||
                 body.querySelector(".pagination-nav__item--next>a")||
-                body.querySelector("a[title='Next page']")||
                 body.querySelector("a.pageright")||
                 body.querySelector(".page-numbers.current+a")||
+                body.querySelector("a[title='Next page']")||
+                body.querySelector("[title='Next page']")||
+                body.querySelector("[title='下一页']")||
+                body.querySelector("[title='下一頁']")||
+                body.querySelector("input[value='next']")||
+                body.querySelector("input[value='Next page']")||
+                body.querySelector("input[value='下一页']")||
+                body.querySelector("input[value='下一頁']")||
+                body.querySelector("a#pb_next")||
                 body.querySelector("a#rightFix")||
+                body.querySelector("a#btnPreGn")||
+                body.querySelector("a.page-next")||
+                body.querySelector("a.pages-next")||
+                body.querySelector("a.page.right")||
                 body.querySelector("a#next")||
                 body.querySelector(".next>a")||
                 body.querySelector(".next>button")||
                 body.querySelector("a[alt=next]")||
                 body.querySelector("button.next")||
                 body.querySelector("[title=next]")||
-                body.querySelector("[title='Next page']")||
-                body.querySelector("a#btnPreGn")||
-                body.querySelector("a.page-next")||
-                body.querySelector("a.pages-next")||
-                body.querySelector("a.page.right")||
                 getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
             if(!next){
                 let nexts=body.querySelectorAll("a.next");
@@ -1415,7 +1496,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後次][一1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
+                            if(/^[下后後次][一1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»" || aTag.innerText==">>"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -1435,7 +1516,7 @@
                     }
                     if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#")continue;
                     if(!next4 && aTag.href.length<250){
-                        let _aHref=aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?");
+                        let _aHref=aTag.href.replace("?&","?").replace("index.php?","?");
                         let _aHrefTrim=_aHref;
                         if(preStr)_aHrefTrim=_aHrefTrim.replace(preStr,"");
                         if(afterStr)_aHrefTrim=_aHrefTrim.replace(afterStr,"");
@@ -1548,50 +1629,66 @@
         }
 
         getNextLink(doc) {
-            let nextLink=null,page,href;
-            let getNextLinkByForm=(form,n)=>{
-                let params=[];
-                [].forEach.call(form.querySelectorAll("input"), input=>{
-                    if(n && /^(p|page)$/i.test(input.name)){
-                        params.push('p='+n);
-                    }else{
-                        params.push(input.name+'='+input.value);
+            let nextLink = null, page, href;
+            let getNextLinkByForm = (form, n) => {
+                let params = [];
+                [].forEach.call(form.querySelectorAll("input"), input => {
+                    if (n && /^(p|page)$/i.test(input.name)) {
+                        params.push('p=' + n);
+                    } else {
+                        params.push(input.name + '=' + input.value);
                     }
                 });
-                return form.action+'?'+params.join('&');
+                return form.action + '?' + params.join('&');
             };
-            if(this.curSiteRule.pageElementByJs){
-                this.nextLinkHref="#";
+            if (this.curSiteRule.pageElementByJs) {
+                this.nextLinkHref = "#";
                 return true;
-            }else if(this.curSiteRule.nextLinkByJs){
-                try{
-                    let targetUrl=((typeof _unsafeWindow.pagetualNextLinkByJs=='undefined') ? Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
-                    if(targetUrl)nextLink={href:targetUrl};
-                }catch(e){
+            } else if (this.curSiteRule.nextLinkByJs) {
+                try {
+                    let targetUrl = ((typeof _unsafeWindow.pagetualNextLinkByJs == 'undefined') ? Function("doc", '"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
+                    if (targetUrl) nextLink = {href: targetUrl};
+                } catch(e) {
                     debug(e);
                 }
-            }else if(this.curSiteRule.nextLinkByUrl){
-                let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0],"i"), this.curSiteRule.nextLinkByUrl[1]);
-                if(targetUrl != this.curUrl){
-                    let reps=targetUrl.match(/{.*?}/g);
-                    if(reps){
-                        reps.forEach(rep=>{
-                            let code=rep.replace("{","").replace("}","").replace(/\(\)/g, "0");
-                            let result=code.match(/^(\d*)\+1$/);
-                            if(result){
-                                result=parseInt(result[1]||1)+1;
-                            }else{
-                                try{
-                                    result=Function('"use strict";return ' + code)();
-                                }catch(e){
+            } else if (this.curSiteRule.nextLinkByUrl) {
+                let targetUrl = this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0], "i"), this.curSiteRule.nextLinkByUrl[1]);
+                if (targetUrl != this.curUrl) {
+                    let includeSel = this.curSiteRule.nextLinkByUrl[2];
+                    let excludeSel = this.curSiteRule.nextLinkByUrl[3];
+                    if (includeSel) {
+                        includeSel = includeSel.trim();
+                        if (!getElement(includeSel, doc)) {
+                            this.nextLinkHref=false;
+                            return null;
+                        }
+                    }
+                    if (excludeSel) {
+                        excludeSel = excludeSel.trim();
+                        if (getElement(excludeSel, doc)) {
+                            this.nextLinkHref=false;
+                            return null;
+                        }
+                    }
+                    let reps = targetUrl.match(/{.*?}/g);
+                    if (reps) {
+                        reps.forEach(rep => {
+                            let code = rep.replace("{","").replace("}", "").replace(/\(\)/g, "0");
+                            let result = code.match(/^(\d*)\+1$/);
+                            if (result) {
+                                result = parseInt(result[1] || 1) + 1;
+                            } else {
+                                try {
+                                    result = Function('"use strict";return ' + code)();
+                                } catch(e) {
                                     debug(e);
                                 }
                             }
-                            targetUrl=targetUrl.replace(rep, result);
+                            targetUrl = targetUrl.replace(rep, result);
                         });
                     }
                 }
-                nextLink={href:targetUrl};
+                nextLink = {href: targetUrl};
             } else if (this.curSiteRule.nextLink) {
                 let nextLinkSel = this.curSiteRule.nextLink;
                 if (nextLinkSel != "0" && nextLinkSel != 0) {
@@ -1614,7 +1711,7 @@
                         this.nextLinkHref=false;
                         return null;
                     }else if(doc==document){
-                        if((!nextLink.href || /^javascript:|#$/.test(nextLink.href)) && !isVisible(nextLink, _unsafeWindow)){
+                        if(!isVisible(nextLink, _unsafeWindow)){
                             this.nextLinkHref=false;
                             return null;
                         }else{
@@ -1806,6 +1903,7 @@
                 }
             }
             this.openInNewTab(eles);
+            this.replaceElement(doc);
         }
 
         openInNewTab(eles){
@@ -1825,29 +1923,45 @@
             }
         }
 
-        lazyImgAction(eles){
-            if (!eles || eles.length==0) return;
-            let lazyImgSrc=this.curSiteRule.lazyImgSrc;
-            if (lazyImgSrc===0 || lazyImgSrc==='0') return;
+        lazyImgAction(eles) {
+            if (!eles || eles.length == 0) return;
+            let lazyImgSrc = this.curSiteRule.lazyImgSrc;
+            if (lazyImgSrc === 0 || lazyImgSrc === '0') return;
             let setLazyImg = img => {
                 let realSrc;
                 if (lazyImgSrc) {
-                    realSrc = img.getAttribute(lazyImgSrc);
-                    img.removeAttribute(lazyImgSrc);
+                    if (!Array.isArray(lazyImgSrc)) {
+                        lazyImgSrc = [lazyImgSrc];
+                    }
+                    realSrc = img.getAttribute(lazyImgSrc[0]);
+                    if (lazyImgSrc.length == 2) {
+                        let removeProps = lazyImgSrc[1].split(",");
+                        removeProps.forEach(prop => {
+                            img.removeAttribute(prop.trim());
+                        });
+                    }
                 }
                 if (!realSrc) {
                     if (img.getAttribute("_src") && !img.src) {
                         realSrc = img.getAttribute("_src");
-                    } else if (img.dataset && img.dataset.original) {
-                        realSrc = img.dataset.original;
-                    } else if (img.dataset && img.dataset.lazy) {
-                        realSrc = img.dataset.lazy;
-                    } else if (img.dataset && img.dataset.src) {
-                        realSrc = img.dataset.src;
-                    } else if (img._lazyrias && img._lazyrias.srcset) {
+                    } else if (img.dataset) {
+                        if (img.dataset.original) {
+                            realSrc = img.dataset.original;
+                        } else if (img.dataset.lazySrc) {
+                            realSrc = img.dataset.lazySrc;
+                        } else if (img.dataset.lazy) {
+                            realSrc = img.dataset.lazy;
+                        } else if (img.dataset.src) {
+                            realSrc = img.dataset.src;
+                        } else if (img.dataset.origFile) {
+                            realSrc = img.dataset.origFile;
+                        }
+                    }
+                    if (!realSrc && img._lazyrias && img._lazyrias.srcset) {
                         realSrc = img._lazyrias.srcset[img._lazyrias.srcset.length - 1];
-                    } else if (img.dataset && img.dataset.origFile) {
-                        realSrc = img.dataset.origFile;
+                    }
+                    if (realSrc) {
+                        img.removeAttribute("srcset");
                     } else if (img.srcset) {
                         var srcs = img.srcset.split(/[xw],/), largeSize = 0;
                         srcs.forEach(srci => {
@@ -1914,10 +2028,17 @@
                     return;
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
-                if(self.curSiteRule && !self.curSiteRule.singleUrl && self.curSiteRule.url.length>13){
-                    self.hpRules=self.hpRules.filter(item=>{return item&&item.url!=self.curSiteRule.url});
+                if (self.curSiteRule.singleUrl) {
+                    self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
+                    self.smartRules.unshift(self.curSiteRule);
+                    if (self.smartRules.length > 100) {
+                        self.smartRules.pop();
+                    }
+                    storage.setItem("smartRules", self.smartRules);
+                } else if (self.curSiteRule && self.curSiteRule.url.length > 13) {
+                    self.hpRules = self.hpRules.filter(item => {return item && item.url != self.curSiteRule.url});
                     self.hpRules.unshift(self.curSiteRule);
-                    if(self.hpRules.length>30){
+                    if (self.hpRules.length > 30) {
                         self.hpRules.pop();
                     }
                     storage.setItem("hpRules", self.hpRules);
@@ -1943,6 +2064,7 @@
                     }
                 }
                 self.getNextLink(document);
+                self.refreshByClick();
                 callback();
             });
         }
@@ -1955,7 +2077,7 @@
             }
         }
 
-        async insertPage(doc, eles, url, callback, tried){
+        async insertPage(doc, eles, url, callback, tried) {
             this.oldUrl=this.curUrl;
             let oldTitle=this.pageDoc.title;
             this.pageDoc=doc;
@@ -2010,22 +2132,31 @@
                 document.documentElement.scrollTop=curScroll;
             }
             this.pageAction(doc, newEles);
-            if(this.oldUrl!=location.href){
-                let isJs=/^(javascript|#)/.test(this.oldUrl.replace(location.href,""));
-                let enableHistory = this.curSiteRule.history;
-                if (enableHistory == 1) {
-                    enableHistory = true;
-                } else if (enableHistory == 0) {
-                    enableHistory = false;
-                } else {
-                    enableHistory = rulesData.enableHistory;
-                }
-                if(enableHistory && !isJs){
-                    _unsafeWindow.history.replaceState(undefined, oldTitle, this.oldUrl);
-                    document.title=oldTitle;
+            let enableHistory = this.curSiteRule.history;
+            let enableHistoryAfterInsert = false;
+            if (enableHistory == 1) {
+                enableHistory = true;
+            } else if (enableHistory == 2) {
+                enableHistory = true;
+                enableHistoryAfterInsert = true;
+            } else if (enableHistory == 0) {
+                enableHistory = false;
+            } else {
+                enableHistory = rulesData.enableHistory;
+                enableHistoryAfterInsert = rulesData.enableHistoryAfterInsert;
+            }
+            if (enableHistory) {
+                let historyUrl = enableHistoryAfterInsert ? this.curUrl : this.oldUrl;
+                if(historyUrl != location.href) {
+                    let isJs=/^(javascript|#)/.test(historyUrl.replace(location.href, ""));
+                    if(!isJs){
+                        let historyTitle = enableHistoryAfterInsert ? doc.title : oldTitle;
+                        _unsafeWindow.history.replaceState(undefined, historyTitle, historyUrl);
+                        document.title = historyTitle;
+                    }
                 }
             }
-            isLoading=false;
+            isLoading = false;
             return true;
         }
     }
@@ -2455,18 +2586,21 @@
             });
             editBtn.addEventListener("click", e => {
                 let editTemp;
-                if(ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl){
-                    editTemp=ruleParser.curSiteRule;
-                }else{
-                    editTemp={
+                if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl) {
+                    editTemp = ruleParser.curSiteRule;
+                } else {
+                    editTemp = {
                         name: document.title,
-                        url: "^"+location.origin.replace(/\./g,"\\.")
+                        url: "^" + location.origin.replace(/^https?/, "https?").replace(/\./g,"\\.") + "/"
                     };
                 }
                 if (selectorInput.value) {
                     editTemp.pageElement = selectorInput.value;
                 }
-                rulesData.editTemp=editTemp;
+                delete editTemp.from;
+                delete editTemp.type;
+                delete editTemp.updatedAt;
+                rulesData.editTemp = editTemp;
                 storage.setItem("rulesData", rulesData);
                 _GM_openInTab(configPage, {active: true});
             });
@@ -2686,6 +2820,7 @@
                 document.querySelector("#saveBtn").onclick=e=>{
                     try{
                         storage.setItem("hpRules", []);
+                        storage.setItem("smartRules", []);
                         let customRules=editor.get();
                         if(!customRules){
                             storage.setItem("customRules", "");
@@ -2759,6 +2894,7 @@
                             }
                             storage.setItem("customRules", ruleParser.customRules);
                             storage.setItem("hpRules", []);
+                            storage.setItem("smartRules", []);
                             showTips(i18n("importSucc"));
                         }else{
                             rules=rules.split("\n");
@@ -3168,6 +3304,7 @@
         let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
         let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
+        let enableHistoryAfterInsertInput=createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert===true);
         let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab!=false);
         let hideLoadingIconInput=createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon!=false);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
@@ -3236,6 +3373,7 @@
         saveBtn.onclick=e=>{
             try{
                 storage.setItem("hpRules", []);
+                storage.setItem("smartRules", []);
                 if(customRulesInput.value==""){
                     storage.setItem("customRules", "");
                 }else{
@@ -3260,6 +3398,7 @@
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
             rulesData.enableDebug=enableDebugInput.checked;
             rulesData.enableHistory=enableHistoryInput.checked;
+            rulesData.enableHistoryAfterInsert=enableHistoryAfterInsertInput.checked;
             rulesData.openInNewTab=openInNewTabInput.checked;
             rulesData.hideLoadingIcon=hideLoadingIconInput.checked;
             rulesData.initRun=initRunInput.checked;
@@ -3327,6 +3466,7 @@
         inUpdate=true;
         let ruleIndex=ruleUrls.length-1;
         storage.setItem("hpRules", []);
+        storage.setItem("smartRules", []);
         function addNextRule(){
             if(ruleIndex<0){
                 let now=new Date().getTime();
@@ -3705,10 +3845,10 @@
          .pagetual_pageBar a:hover>span {
            opacity: 1;
          }
-         .pagetual_pageBar a:hover>span.prev {
+         .pagetual_pageBar a:hover>span.prevScreen {
            margin-top: -30px!important;
          }
-         .pagetual_pageBar a:hover>span.next {
+         .pagetual_pageBar a:hover>span.nextScreen {
            margin-top: 30px!important;
          }
          .pagetual_pageBar span>svg {
@@ -3868,18 +4008,21 @@
             return rv;
         };
     };
-    history.pushState = _wr('pushState');
-    window.addEventListener('pushState', function(e) {
-        urlChanged=true;
-        isPause=true;
-        setTimeout(()=>{
-            if(location.href==configPage || guidePage.test(location.href)){
+    var changeHandler = e => {
+        urlChanged = true;
+        isPause = true;
+        setTimeout(() => {
+            lastActiveUrl = location.href;
+            if (location.href == configPage || guidePage.test(location.href)) {
                 location.reload();
-            }else if(!ruleParser.ruleMatch(ruleParser.curSiteRule)){
+            } else if (!ruleParser.ruleMatch(ruleParser.curSiteRule)) {
                 initPage();
             }
+            if (!ruleParser.nextLinkHref) isLoading = false;
         },1);
-    });
+    };
+    history.pushState = _wr('pushState');
+    window.addEventListener('pushState', changeHandler);
 
     function initListener(){
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
@@ -3901,12 +4044,14 @@
             }
         };
         let scrollHandler = e=>{
-            if(urlChanged){
+            if(urlChanged && !isLoading){
                 ruleParser.initPage(()=>{
-                    if(ruleParser.nextLinkHref)initView();
+                    if(ruleParser.nextLinkHref){
+                        initView();
+                    }
+                    isPause=false;
                 });
                 urlChanged=false;
-                isPause=false;
             }
             if(isPause)return;
             if(!loading){
@@ -3998,6 +4143,13 @@
                 window.location.href = nextLink;
             }
         };
+        if (ruleParser.curSiteRule.listenHashChange) {
+            window.addEventListener('hashchange', () => {
+                urlChanged = true;
+                isPause = true;
+                if (!ruleParser.nextLinkHref) isLoading = false;
+            }, false);
+        }
         let manualMode = typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode;
         if (manualMode) {
             document.addEventListener('keydown', e => {
@@ -4208,12 +4360,12 @@
         let preBtn=document.createElement("span");
         preBtn.innerHTML="∧";
         preBtn.title="Prev page";
-        preBtn.className="prev";
+        preBtn.className="prevScreen";
         preBtn.style.cssText="text-align: center;right: unset; float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
         let nextBtn=document.createElement("span");
         nextBtn.innerHTML="∨";
         nextBtn.title="Next page";
-        nextBtn.className="next";
+        nextBtn.className="nextScreen";
         nextBtn.style.cssText="text-align: center;right: unset; float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
         let localPage=curPage;
         preBtn.addEventListener("click", e=>{
@@ -4237,6 +4389,7 @@
                 let nextEle = pageBar.parentNode.nextElementSibling;
                 if (nextEle) scrollToPageBar(nextEle);
                 else {
+                    scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
                     window.scrollTo({ top: scrollH || 9999999, behavior: 'smooth'});
                 }
             }
@@ -4277,6 +4430,7 @@
                 pageBar.style.backgroundColor="unset";
                 pageBar.style.lineHeight="20px";
                 pageBar.style.boxShadow="";
+                pageBar.style.height="35px";
                 let td=document.createElement("td");
                 td.colSpan=tdNum||1;
                 let inTd=document.createElement("div");
@@ -4335,6 +4489,7 @@
         downSpan.addEventListener("click", e=>{
             changeStop(true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
+            scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
             document.body.scrollTop = scrollH || 9999999;
             document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
@@ -4424,18 +4579,18 @@
 
     var failFromIframe=0;
     var inCors=false;
+    var checkRemoveIntv;
     function requestFromIframe(url, callback){
         url=url.replace(/#[^#]*/,"");
-        let orgPage,curPage;
         let iframe = document.createElement('iframe');
         iframe.name = 'pagetual-iframe';
         iframe.width = '100%';
-        iframe.height = '0';
+        iframe.height = '1000';
         iframe.frameBorder = '0';
         if(ruleParser.curSiteRule.sandbox!=false){
             iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         }
-        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
+        iframe.style.cssText = 'margin:0!important;padding:0!important;;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;';
         let waitTime=100,checkEval;
         if(ruleParser.curSiteRule.waitElement){
             checkEval = doc => {
@@ -4452,12 +4607,23 @@
                 waitTime=ruleParser.curSiteRule.wait;
             }
         }
-        let loadedHandler=e=>{
+        if (checkRemoveIntv) clearInterval(checkRemoveIntv);
+        checkRemoveIntv = setInterval(() => {
+            if (!iframe || !document.body.contains(iframe)) {
+                clearInterval(checkRemoveIntv);
+                loadPageOver();
+            }
+        }, 500);
+        let loadedHandler = e => {
             if(e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load')return;
+            clearInterval(checkRemoveIntv);
             window.removeEventListener('message', loadedHandler, false);
             iframe.removeEventListener('load', loadedHandler, false);
             let tryTimes=0;
             function checkIframe(){
+                if (urlChanged || isPause) {
+                    return callback(false, false);
+                }
                 try{
                     let doc=iframe.contentDocument || iframe.contentWindow.document;
                     let base=doc.querySelector("base");
@@ -4514,7 +4680,7 @@
 
     var emuIframe,lastActiveUrl;
     function emuPage(callback){
-        let orgPage=null,orgContent=null,preContent=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
+        let orgPage=null,orgContent=null,preContent=null,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
         function returnFalse(log){
             debug(log);
             isPause=true;
@@ -4525,7 +4691,7 @@
             }
         }
         function checkPage(){
-            if(isPause)return;
+            if(isPause)return loadPageOver();
             try{
                 iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             }catch(e){
@@ -4541,7 +4707,7 @@
             }else if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
                     try{
-                        checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
+                        checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc", '"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
                     }catch(e){
                         debug(e);
                     }
@@ -4574,6 +4740,7 @@
                     }
                 }
                 if(checkEval && !checkEval(iframeDoc)){
+                    waitTimes=10;
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
@@ -4679,24 +4846,24 @@
             emuIframe.height = '0';
             emuIframe.frameBorder = '0';
             emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
-            emuIframe.addEventListener("load", e=>{
-                setTimeout(()=>{
-                    try{
-                        iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-                    }catch(e){
+            emuIframe.addEventListener("load", e => {
+                setTimeout(() => {
+                    try {
+                        iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
+                    } catch(e) {
                         returnFalse("Stop as cors");
                         return;
                     }
-                    let code=ruleParser.curSiteRule.init;
-                    if(code){
-                        try{
+                    let code = ruleParser.curSiteRule.init;
+                    if (code) {
+                        try {
                             Function('doc','win','iframe','"use strict";' + code)(iframeDoc, iframeDoc.defaultView, emuIframe);
-                        }catch(e){
+                        } catch(e) {
                             debug(e);
                         }
                     }
-                    if(loaded)return;
-                    loaded=true;
+                    if (loaded) return;
+                    loaded = true;
                     checkPage();
                 },500);
             });
@@ -4704,6 +4871,8 @@
             emuIframe.src=lastActiveUrl.replace(/#[^#]*/,"");
             document.body.appendChild(emuIframe);
         }else{
+            let targetSrc = lastActiveUrl.replace(/#[^#]*/,"");
+            if (emuIframe.src != targetSrc) emuIframe.src = targetSrc;
             checkPage();
         }
     }
@@ -4947,7 +5116,8 @@
                 if(ruleParser.curSiteRule.pageElementByJs){
                     var over=ele=>{
                         loadPageOver();
-                        if(ele){
+                        if (urlChanged || isPause) return;
+                        if (ele) {
                             createPageBar(nextLink);
                             ruleParser.insertPage(null, ele, nextLink, null, true);
                             if(autoLoadNum>=0){
@@ -4970,12 +5140,13 @@
                 }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
                     forceIframe(nextLink, (iframe, eles)=>{
                         loadPageOver();
-                        let pageBar=createPageBar(nextLink);
-                        if(pageBar)iframe.parentNode.insertBefore(pageBar, iframe);
-                        if(autoLoadNum>=0){
-                            if(autoLoadNum!=0 && --autoLoadNum==0){
+                        if (urlChanged || isPause) return;
+                        let pageBar = createPageBar(nextLink);
+                        if (pageBar) iframe.parentNode.insertBefore(pageBar, iframe);
+                        if (autoLoadNum >= 0) {
+                            if (autoLoadNum != 0 && --autoLoadNum == 0) {
                                 autoLoadNum=-1;
-                            }else{
+                            } else {
                                 setTimeout(() => nextPage(), 1);
                             }
                         }
@@ -4983,7 +5154,8 @@
                 }else if((forceState==3||ruleParser.curSiteRule.action==1) && !isJs){
                     requestFromIframe(nextLink, (doc, eles)=>{
                         loadPageOver();
-                        if(eles){
+                        if (urlChanged || isPause) return;
+                        if (eles) {
                             ruleParser.insertPage(doc, eles, nextLink, ()=>{
                                 createPageBar(nextLink);
                             }, true);
@@ -5000,7 +5172,8 @@
                     if(!isJs){
                         requestDoc(nextLink, (eles)=>{
                             loadPageOver();
-                            if(eles){
+                            if (urlChanged || isPause) return;
+                            if (eles) {
                                 createPageBar(nextLink);
                                 if(autoLoadNum>=0){
                                     if(autoLoadNum!=0 && --autoLoadNum==0){
@@ -5014,7 +5187,8 @@
                     }else{
                         emuPage((doc, eles)=>{
                             loadPageOver();
-                            if(eles){
+                            if (urlChanged || isPause) return;
+                            if (eles) {
                                 ruleParser.insertPage(doc, eles, "", ()=>{
                                     createPageBar(nextLink);
                                 }, true);
