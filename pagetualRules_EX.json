@@ -1,21 +1,46 @@
 [
     {
-        "name": "快看 - 分類 - 輔助出現&page=",
+        "name": "Hanime1",
+        "example": "https://hanime1.me/search?genre=%E8%A3%8F%E7%95%AA&duration=&sort=&query=&year=&month=",
+        "url": "^https?://hanime1\\.me/(search|comics)",
+        "nextLink": "a[rel='next']",
+        "pageElement": ".home-rows-videos-wrapper>a,.content-padding-new,.comics-related-wrapper>.comic-rows-videos-div",
+        "replaceElement": ".pagination",
+        "wait": "let img=doc.querySelector('img');return img!=null",
+        "pageAction": "let imgs=document.querySelectorAll('.comic-rows-videos-div img');[].forEach.call(imgs,function(img){if(img){img.src=img.dataset.srcset;img.srcset=img.dataset.srcset;img.classList.remove('lazy')}});",
+        "css": ".home-rows-videos-div{margin-bottom:10px!important;}.search-pagination{margin-top:-50px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "筆趣影視",
+        "example": "http://biquys.com/acg/y2022/",
+        "url": "^https?://(www\\.)?biquys.com/(acg|zongyi|mov|tv)/",
+        "action": 1,
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".index-tj",
+        "replaceElement": ".page",
+        "wait": "let img=doc.querySelector('ul.main img');return img!=null",
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}.mb {margin-bottom: 10px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "快看 - 分類輔助",
         "example": "https://www.kuaikanmanhua.com/tag/0",
         "url": "^https?://www\\.kuaikanmanhua\\.com/tag/0$",
-        "autoClick": "a[href='/tag/0\\?region=1&pays=0&state=0&sort=1&page=1']"
+        "autoClick": "a[title='全部']"
     },
     {
         "name": "快看 - 分類",
         "example": "https://www.kuaikanmanhua.com/tag/0?region=1&pays=0&state=0&sort=1&page=1",
         "url": "^https?://www\\.kuaikanmanhua\\.com/tag/\\d+\\?",
         "action": 1,
+        "init": "let link=document.querySelectorAll('.headerContent > div > ul > li:nth-child(2) > a');[].forEach.call(link,function(a){if(a){a.href=\"/tag/0\\?region=1&pays=0&state=0&sort=1&page=1\"}});",
         "nextLinkByUrl": [
             "&page=(\\d+)$",
             "&page={$1+1}",
             "ul.pagination>li:not(.disabled):last-child"
         ],
-        "pageElement": ".tagContent.cls ",
+        "pageElement": ".tagContent.cls",
         "replaceElement": ".TagPages.pagesBox",
         "pageBar": 1
     },
@@ -32,18 +57,28 @@
         "pageBarText": 1
     },
     {
+        "name": "尤物妹妹圖 - 看圖",
+        "example": "http://www.ywmmt.com/html/meinvpp/20221025/139582.html",
+        "url": "^https?://www\\.[a-z]+\\.com/.+\\d+\\.html$",
+        "include": "#dtag+.page,script+.interestline,.interestline+.nav",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "#picg img",
+        "replaceElement": "#cpcpc+.pagelist",
+        "css": "#picg img{filter: blur(0px)!important;}div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2,#d5tig,#pcapicb,#google_translate_element{display:none!important}",
+        "autoLoadNum": 100,
+        "pageBar": 0,
+        "rate": 3
+    },
+    {
         "name": "尤物妹妹圖 - 分類",
         "example": "http://www.ywmmt.com/html/mm/1_1.html",
-        "url": "^https?://www\\.ywmmt\\.com/mm/",
-        "include": "#list",
-        "nextLinkByUrl": [
-            "(/mm/)(\\d+)_(\\d+)\\.html$",
-            "$1$2_{$3+1}.html",
-            "[title='尾页']"
-        ],
-        "pageElement": "#list",
+        "url": "^https?://www\\.[a-z]+\\.com/(s\\.asp\\?act=|.+\\d+\\.html)",
+        "include": "body>#list>ul>li>a,.pagelist a[title='尾页']",
+        "nextLink": "//p/u/following-sibling::a",
+        "pageElement": "body>#list>ul>li:not([id^='listmt'])",
         "replaceElement": ".pagelist",
-        "pageBar": 1,
+        "css": "#bdssx,#listmt,#listmt2,#listmt3,#listmt4{display:none!important}",
+        "pageBar": 0,
         "rate": 3
     },
     {
@@ -76,6 +111,7 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": "div.page+ul.update_area_lists",
         "replaceElement": "div.page",
+        "css": ".pagetual_pageBar{margin-top: -10px!important;margin-bottom: 0px!important;}.update_area_lists{margin-top: 0px!important;margin-bottom: 0px!important;}",
         "pageBar": 1
     },
     {
@@ -108,6 +144,7 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": "script+ul.update_area_lists",
         "replaceElement": "div.page",
+        "css": ".pagetual_pageBar{margin-top: -10px!important;margin-bottom: -10px!important;}.update_area_lists{margin-top: -10px!important;margin-bottom: 0px!important;}",
         "pageBar": 1
     },
     {
@@ -118,7 +155,7 @@
         "nextLink": "//a[@class='active']/parent::li/following-sibling::li/a",
         "pageElement": ".main.margin-top-sm>.hex,.hot-keywords",
         "replaceElement": ".pagination",
-        "pageAction": "[].forEach.call(eles,ele=>{[].forEach.call(ele.querySelectorAll('div.media.loading'),div=>{div.style.backgroundImage=`url(\"${div.dataset.thumb}\")`;div.setAttribute('class','media')});[].forEach.call(ele.querySelectorAll('div.media[data-src]'),div=>{div.style.width=div.dataset.width;div.style.height=div.dataset.height+'px';div.style.backgroundImage=`url(\"${div.dataset.src}\")`;div.removeAttribute('data-src');div.removeAttribute('data-height');div.removeAttribute('data-width')})})",
+        "pageAction": "[].forEach.call(eles,ele=>{[].forEach.call(ele.querySelectorAll('div.media.loading'),div=>{div.style.backgroundImage=`url(\"${div.dataset.thumb}\")`;div.classList.remove('loading')});[].forEach.call(ele.querySelectorAll('div.media[data-src]'),div=>{div.style.width=div.dataset.width;div.style.height=div.dataset.height+'px';div.style.backgroundImage=`url(\"${div.dataset.src}\")`;div.removeAttribute('data-src');div.removeAttribute('data-height');div.removeAttribute('data-width')})})",
         "pageBar": 1
     },
     {
@@ -128,6 +165,7 @@
         "nextLink": ".page_next>a",
         "pageElement": "#videoCategory,#videoSearchResult",
         "replaceElement": ".pagination3.paginationGated",
+        "css": ".pagetual_pageBar{margin-top: -12px!important;}.pagetual_pageBar+ul{padding-top: 2px!important;}",
         "pageBar": 1
     },
     {
@@ -138,6 +176,7 @@
         "nextLink": "//li[(a/@class='active')]/following-sibling::li/a",
         "pageElement": ".mozaique.cust-nb-cols",
         "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar+div{margin-top: -10px!important;}",
         "pageBar": 1
     },
     {
@@ -148,6 +187,7 @@
         "nextLink": "span.page-numbers.current+a",
         "pageElement": ".relat,.post-show",
         "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:10px!important;}",
         "pageBar": 1
     },
     {
@@ -159,6 +199,7 @@
         "pageElement": ".short-item",
         "replaceElement": ".pagi-nav",
         "rate": 2,
+        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:18px!important;}",
         "pageBar": 1
     },
     {
@@ -169,7 +210,8 @@
         "pageElement": "article[class^='excerpt excerpt-']",
         "replaceElement": ".pagination",
         "rate": 3,
-        "pageBar": 0
+        "css": ".pagetual_pageBar{margin-top:12px!important;}",
+        "pageBar": 1
     },
     {
         "name": "KaranPc",
@@ -179,17 +221,19 @@
         "nextLink": "a.next",
         "pageElement": "article[id^='post']",
         "replaceElement": "#nav-below",
-        "pageBar": 0
+        "css": ".pagetual_pageBar{margin-top:-6px!important;}",
+        "pageBar": 1
     },
     {
         "name": "阿榮福利味",
-        "example": "https://karanpc.com/windows/download-managers/",
+        "example": "https://www.azofreeware.com/",
         "url": "^https?://www\\.azofreeware\\.com/",
         "include": "#blog-pager-older-link",
         "nextLink": ".blog-pager-older-link",
         "pageElement": ".blog-posts.hfeed",
         "replaceElement": "#blog-pager",
-        "pageBar": 0
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}",
+        "pageBar": 1
     },
     {
         "name": "軟體部落",
@@ -199,7 +243,8 @@
         "nextLink": "a.next",
         "pageElement": "#blog-entries",
         "replaceElement": ".oceanwp-pagination.clr",
-        "pageBar": 0
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}",
+        "pageBar": 1
     },
     {
         "name": "Mobile01 - 內文",
@@ -220,7 +265,7 @@
         "nextLink": "li.l-pagination__page.is-active+li>a",
         "pageElement": ".l-listTable__tbody",
         "replaceElement": ".l-tabulate__action",
-        "pageBar": 0,
+        "pageBar": 1,
         "rate": 3,
         "sleep": 2000
     },
@@ -234,7 +279,8 @@
             "div.forum-ad_top+section>.c-section__main>#BH-pagebtn",
             "section+section>.c-section__main>#BH-pagebtn"
         ],
-        "pageBar": 0
+        "css": ".pagetual_pageBar{margin-bottom:10px!important;}",
+        "pageBar": 1
     },
     {
         "name": "巴哈姆特 - 文章列表",
@@ -247,7 +293,7 @@
             ".b-popular.popular+.b-pager.pager"
         ],
         "pageAction": "Forum.B.lazyThumbnail();Forum.Common.drawNoImageCanvas();",
-        "pageBar": 0
+        "pageBar": 1
     },
     {
         "name": "94i.in - 自動簽到",
@@ -286,6 +332,7 @@
         "nextLink": "li.active+li>a",
         "pageElement": ".movie.movie--preview.ddd",
         "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:10px!important;}.pagetual_pageBar+.movie{margin-top:-2px!important;}",
         "pageBar": 1
     },
     {
@@ -297,7 +344,7 @@
         "replaceElement": ".pagination",
         "insert": "nav.clearfix",
         "insertPos": 1,
-        "css": ".col-lg-3.pt-5{display:none!important}",
+        "css": ".col-lg-3.pt-5{display:none!important}.pagetual_pageBar{margin-top:-10px!important;}",
         "rate": 3,
         "pageBar": 1,
         "sleep": 1000
@@ -326,7 +373,8 @@
         "url": "^https?://.*bt1207.+/",
         "nextLinkByJs": "let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
         "pageElement": "ul.list-unstyled",
-        "replaceElement": "nav>.pagination"
+        "replaceElement": "nav>.pagination",
+        "css": ".pagetual_pageBar+.list-unstyled{margin-top:0px!important;}"
     },
     {
         "name": "RARBG",
@@ -355,6 +403,7 @@
         "nextLink": "//div[@class='page']/a[text()='▶' or text()='下一页']",
         "pageElement": "#threadlist",
         "replaceElement": "div+div.page",
+        "css": ".pagetual_pageBar+div{margin-top:-10px!important;}",
         "pageBar": 1,
         "rate": 3
     },
@@ -380,6 +429,18 @@
         "rate": 3
     },
     {
+        "name": "牛C網 - 正文",
+        "example": "https://niuc1.com/67307.html",
+        "url": "^https?://niuc1\\.com/\\d+\\.html",
+        "action": 1,
+        "include": "#comments.comments",
+        "nextLink": ".nav.previous>a",
+        "pageElement": ".panel.card,.single-top-area.text-sm.card.mt-4",
+        "replaceElement": "..near-navigation.rounded.mt-4.py-2",
+        "css": "#content > main > div.content-wrap > div > h4,h4+div,#comments.comments{display: none!important;}",
+        "pageBar": 1
+    },
+    {
         "name": "牛C網 - 列表",
         "example": "https://niuc1.com/sex",
         "url": "^https?://niuc1\\.com/(blog|sex|pornhub|apps)",
@@ -387,6 +448,7 @@
         "pageElement": ".cat_list",
         "replaceElement": ".posts-nav",
         "pageAction": "lazyLoadInstance.update();",
+        "css": ".pagetual_pageBar {margin-top: -4px!important;}",
         "pageBar": 1
     },
     {
@@ -408,6 +470,7 @@
         "nextLink": "li.active+li>a",
         "pageElement": ".post-list,.models-list",
         "replaceElement": "nav>.pagination",
+        "css": ".pagetual_pageBar+div {margin-top: -10px!important;}",
         "pageBar": 1
     },
     {
@@ -436,7 +499,8 @@
         "nextLink": "//a[text()='Next']",
         "pageElement": "div.card.mb-3,.columns.is-multiline",
         "replaceElement": "nav.pagination",
-        "pageBar": 0
+        "css": ".pagetual_pageBar {margin: -10px 0 21px 0 !important;}",
+        "pageBar": 1
     },
     {
         "name": "onejav.com - 首頁",
@@ -483,7 +547,7 @@
             ".bw_main2 > div:first-child",
             ".bw_main2 > div:last-child"
         ],
-        "css": ".ad5_aside,.aside_innerad{display: none!important;}",
+        "css": ".ad5_aside,.aside_innerad{display: none!important;}.pagetual_pageBar+div {margin-top: -4px !important;}",
         "pageBar": 1,
         "rate": 3
     },
@@ -497,6 +561,7 @@
             ".bw_main2 > div:first-child",
             ".bw_main2 > div:last-child"
         ],
+        "css": ".pagetual_pageBar {margin-top: -15px !important;}.pagetual_pageBar+div {padding-top: 5px !important;}",
         "pageBar": 1,
         "rate": 3
     },
@@ -510,6 +575,7 @@
             ".o-list--menu",
             ".o-list--footer"
         ],
+        "css": ".pagetual_pageBar {margin-top: 10px !important;}.pagetual_pageBar+div {margin-top: 0px !important;}",
         "pageBar": 1
     },
     {
@@ -549,6 +615,7 @@
         "nextLink": "//a[text()=' > ']",
         "pageElement": ".box.container",
         "replaceElement": "section+footer",
+        "css": ".pagetual_pageBar {margin-top: -10px !important;}.pagetual_pageBar+section {margin-top: 5px !important;}",
         "pageBar": 1
     },
     {
@@ -568,16 +635,19 @@
         "nextLink": "//a[text()=' > ']",
         "pageElement": ".view-body",
         "replaceElement": "div+footer",
+        "css": ".pagetual_pageBar+div {margin-top: -4px !important;}",
         "pageBarText": 1
     },
     {
         "name": "微圖坊 - 看圖",
-        "example": "https://www.v2ph.com/album/a8no6e5a.html",
-        "url": "^https?://www\\.v2ph\\.com/album/\\w+\\.html",
+        "example": "https://www.v2ph.com/album/[^/]+",
+        "url": "^https?://www\\.v2ph\\.com/album/",
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".photos-list",
         "replaceElement": ".pagination",
+        "pageAction": "let imgs=document.querySelectorAll('.photos-list img');[].forEach.call(imgs,function(img){if(img){img.style.opacity=1}});",
         "pageBar": 0,
+        "autoLoadNum": 10,
         "rate": 3
     },
     {
@@ -587,7 +657,8 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": "h1+.albums-list",
         "replaceElement": ".pagination",
-        "css": ".pagetual_pageBar {margin: 10px 0 0 0 !important;}",
+        "pageAction": "let imgs=document.querySelectorAll('.albums-list img');[].forEach.call(imgs,function(img){if(img){img.style.opacity=1}});",
+        "css": ".pagetual_pageBar {margin-top: 5px!important;}.pagetual_pageBar+div {margin-top: -8px!important;}",
         "pageBar": 1
     },
     {
@@ -610,6 +681,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "div.title.nomore+div",
         "replaceElement": ".pages",
+        "css": ".pagetual_pageBar+div {margin-top: -5px !important;}",
         "pageBar": 1
     },
     {
@@ -696,21 +768,23 @@
         "nextLink": ".next>a",
         "pageElement": ".video-list.video-rotate.video-list-with-ads",
         "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar+div {margin-top: -5px !important;}",
         "pageBar": 1
     },
     {
         "name": "MISSAV",
-        "url": "^https?://missav.com/(search|chinese|new|release|uncensored|siro|luxugana|maan|scute|ara|fc2|heyzo|tokyohot|caribbeancomcaribbeancom|1pondo|caribbeancom|caribbeancompr|10musume|pacopacomama|gachinco|xxxav|marriedslash|naughty4610|naughty0930|madoutwav|actresses)",
         "example": "https://missav.com/fc2",
+        "url": "^https?://missav.com/(search|chinese|new|release|uncensored|siro|luxugana|maan|scute|ara|fc2|heyzo|tokyohot|caribbeancomcaribbeancom|1pondo|caribbeancom|caribbeancompr|10musume|pacopacomama|gachinco|xxxav|marriedslash|naughty4610|naughty0930|madoutwav|actresses)",
         "nextLink": "a[rel='next']",
         "pageElement": "div.grid.grid-cols-2.md\\:grid-cols-3.xl\\:grid-cols-4.gap-5 > div,div.max-w-full.p-8.text-nord4.bg-nord1.rounded-lg",
         "replaceElement": "nav.flex",
+        "css": ".pagetual_pageBar {margin-top: -15px !important;margin-bottom: -5px !important;}",
         "pageBar": 1
     },
     {
         "name": "愛污傳媒",
-        "url": "^https?://www\\.aiwu.*\\.(info|top|com)/index\\.php/",
         "example": "https://www.aiwu333.top/",
+        "url": "^https?://www\\.aiwu.*\\.(info|top|com)/index\\.php/",
         "nextLink": "a[title='Go to next page!']",
         "pageElement": ".grid.mx-auto.videos",
         "replaceElement": ".pagination.justify-content-center",
@@ -744,7 +818,7 @@
         "nextLink": "a.page-link[rel='next']",
         "pageElement": ".page-content > .col,.page-content > .col-12",
         "replaceElement": ".pagination.pagination-sm",
-        "css": "div.category-page.video-list-item.col-xl-3.col-lg-2.col-md-3.col-sm-6.col-6.mb-2{display:none!important}",
+        "css": "div.category-page.video-list-item.col-xl-3.col-lg-2.col-md-3.col-sm-6.col-6.mb-2{display:none!important}.pagetual_pageBar+div{margin-top:-6px!important;}",
         "pageBar": 1
     },
     {
@@ -754,6 +828,7 @@
         "nextLink": "li.active+li>a",
         "pageElement": ".posts.clearfix",
         "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:-12px!important;}",
         "pageBar": 1
     },
     {
@@ -775,6 +850,7 @@
             "a[aria-current='true']+a",
             "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
         ],
+        "css": ".grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}",
         "pageBar": 1
     },
     {
@@ -795,7 +871,7 @@
             ".lazyload-placeholder"
         ],
         "pageAction": "[].forEach.call(eles, ele=>{[].forEach.call(ele.querySelectorAll('img.jss29'), img=>{img.setAttribute('class','jss28')})})",
-        "css": ".lazyload-wrapper+span.jss28{display:none!important;}",
+        "css": ".lazyload-wrapper+span.jss28{display:none!important;}.pagetual_pageBar{margin-top:10px!important;}",
         "pageBar": 1
     },
     {
@@ -816,7 +892,7 @@
             ".lazyload-placeholder"
         ],
         "pageAction": "[].forEach.call(eles, ele=>{[].forEach.call(ele.querySelectorAll('img.jss29'), img=>{img.setAttribute('class','jss28')})})",
-        "css": ".lazyload-wrapper+span.jss28{display:none!important;}",
+        "css": ".lazyload-wrapper+span.jss28{display:none!important;}.pagetual_pageBar{margin-top:10px!important;}",
         "pageBar": 1
     },
     {
@@ -834,6 +910,7 @@
         "nextLink": "li.page-current+li.page>a",
         "pageElement": ".porntrex-box,.box",
         "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar+div{margin-top:-5px!important;}",
         "pageBar": 1
     },
     {
@@ -843,6 +920,7 @@
         "nextLink": "li.active+li>a",
         "pageElement": ".vl-item,.movies-list,#myimg",
         "replaceElement": "#pagination",
+        "css": ".pagetual_pageBar+div{margin-top:-10px!important;}",
         "pageBar": 1
     },
     {
@@ -856,6 +934,7 @@
         "insertPos": 1,
         "css": "#footer,#commentfb,.content-kuss{display: none!important;}",
         "pageBar": 0,
+        "autoLoadNum": 10,
         "rate": 3
     },
     {
@@ -873,7 +952,7 @@
         "example": "https://imgasd.com/",
         "url": "^https?://imgasd\\.com",
         "nextLink": "a.active+a",
-        "pageElement": ".list",
+        "pageElement": ".list>li",
         "replaceElement": ".pagination",
         "pageBar": 1
     },
@@ -941,6 +1020,7 @@
         "insertPos": 1,
         "css": ".coveringtrailer,div.contain.refill,div.relatedvideos.contain.refill.reller {display: none!important;}",
         "pageBar": 0,
+        "autoLoadNum": 100,
         "rate": 3
     },
     {
@@ -954,6 +1034,18 @@
         "pageBar": 0
     },
     {
+        "name": "YINGPIAN影片社",
+        "example": "https://yingpian89.com/",
+        "url": "^https?://(yingpian89|69avfilm).com/",
+        "nextLink": "a[rel='next'],.nav-previous>a",
+        "pageElement": "div[id^='post-']",
+        "replaceElement": ".wp-pagenavi",
+        "wait": "let img=doc.querySelector('#content img');return img!=null",
+        "css": "#China-AddThis,#China-AddThis+div,#comments-div,#respond{display:none!important}",
+        "rate": 3,
+        "pageBar": 1
+    },
+    {
         "name": "國模網",
         "example": "https://gm23.xyz/",
         "url": "^https?://gm\\d+\\.xyz/",
@@ -963,7 +1055,7 @@
         "pageBar": 1
     },
     {
-        "name": "性愛套圖 - 內文",
+        "name": "性愛套圖 - 看圖",
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=21644",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "nextLink": "//a[text()='下一页']",
