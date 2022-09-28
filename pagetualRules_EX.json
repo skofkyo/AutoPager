@@ -1,5 +1,187 @@
 [
     {
+        "name": "fc2hub",
+        "example": "https://fc2hub.com/",
+        "url": "^https?://fc2hub\\.com/",
+        "action": 2,
+        "nextLink": "a[rel='next']",
+        "pageElement": "#content > div > div.row > div.col-sm-12.col-md-12.col-xl-10 > div.row:not([style]):not(.justify-content-center)",
+        "css": "inIframe:iframe{margin: 0px 0px 0rem!important;}#content > div > div.row > div.d-none.d-xl-block.col-xl-2{display:none!important;}.col-xl-10{flex:0 0 100%!important;max-width:100%!important}",
+        "pageBar": 1
+    },
+    {
+        "name": "PPP.Porn - 搜索",
+        "example": "https://ppp.porn/search/FC2PPV/",
+        "url": "^https?://ppp\\.porn/search",
+        "nextLink": "//li[(a/@class='pagination__item  pagination__item--selected')]/following-sibling::li/a",
+        "pageElement": "#list_videos_videos_list_search_result_items",
+        "css": ".pagetual_pageBar{margin-top:-30px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "PPP.Porn",
+        "example": "https://ppp.porn/",
+        "url": "^https?://ppp\\.porn/(new|hot|categories)",
+        "nextLink": "//li[(a/@class='pagination__item  pagination__item--selected')]/following-sibling::li/a",
+        "pageElement": "#list_videos_latest_videos_list_items",
+        "replaceElement": "nav.pagination",
+        "css": ".pagetual_pageBar{margin-top:-30px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "PPP.Porn - 首頁(載入更多 …)",
+        "example": "https://ppp.porn/",
+        "url": "^https?://ppp\\.porn/$",
+        "loadMore": ".btn.btn--sm"
+    },
+    {
+        "name": "magnetdl.com",
+        "example": "www.magnetdl.com",
+        "url": "^https?://www\\.magnetdl\\.com/",
+        "nextLink": "id('pages')/a[contains(string(),'>')]",
+        "pageElement": ".download>tbody>tr:nth-last-child(n+4)",
+        "replaceElement": "#pages",
+        "pageBar": 1
+    },
+    {
+        "name": "tokyomotion - 首頁",
+        "example": "https://www.tokyomotion.net/",
+        "url": "^https?://www\\.tokyomotion\\.net/$",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".col-sm-12>.row>.col-sm-12>.row",
+        "replaceElement": ".pagination",
+        "sleep": 2000,
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "tokyomotion",
+        "example": "https://www.tokyomotion.net/videos",
+        "url": "^https?://www\\.tokyomotion\\.net/(videos|albums)",
+        "nextLink": "ul.pagination:not(.pagination-lg) li.active+li>a",
+        "pageElement": ".well.well-sm+.row,#wrapper>.container>.row .row",
+        "replaceElement": ".pagination",
+        "sleep": 2000,
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "tokyomotion - 相簿原圖",
+        "example": "https://www.tokyomotion.net/photo/884869/",
+        "url": "^https?://www\\.tokyomotion\\.net/photo",
+        "nextLink": "//a[text()='下一步']",
+        "pageElement": ".thumb-overlay",
+        "replaceElement": ".clearfix+div.pull-left+div",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "tokyomotion - 相簿",
+        "example": "https://www.tokyomotion.net/album/67719",
+        "url": "^https?://www\\.tokyomotion\\.net/album/\\d+",
+        "nextLink": "ul.pagination:not(.pagination-lg) li.active+li>a",
+        "pageElement": ".row>div[id^=album_photo_]",
+        "replaceElement": ".pagination",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "7mmtv",
+        "example": "https://7mmtv.sx/zh/uncensored_random/all/index.html",
+        "url": "^https?://7mmtv\\.sx/",
+        "nextLink": "li.current+li>a",
+        "pageElement": ".row.content",
+        "replaceElement": "nav.pagination-row",
+        "pageBar": 1
+    },
+    {
+        "name": "tktube",
+        "example": "https://www.tktube.com/categories/fc2/",
+        "url": "^https?://www\\.tktube\\.com/",
+        "nextLink": ".next>a",
+        "pageElement": "#list_videos_common_videos_list_items,#list_videos_videos_list_search_result_items",
+        "replaceElement": "#list_videos_common_videos_list_pagination,#list_videos_videos_list_search_result_pagination",
+        "css": ".pagetual_pageBar{margin-top:10px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "playav",
+        "example": "https://playav.tv/category/chinese-model",
+        "url": "^https?://playav\\.tv/",
+        "nextLink": "//li[(a/@class='current')]/following-sibling::li/a",
+        "pageElement": ".page-header+div",
+        "replaceElement": ".pagination",
+        "pageAction": "let imgs=document.querySelectorAll('.post-thumbnail-container>img');[].forEach.call(imgs,function(img){if(img){img.setAttribute('class','loaded')}});",
+        "pageBar": 1
+    },
+    {
+        "name": "RIRI TV",
+        "example": "https://ri1.site/?filter=latest",
+        "url": "^https?://ri1\\.site/",
+        "nextLink": "//li[(a/@class='current')]/following-sibling::li/a",
+        "pageElement": ".page-header+div",
+        "replaceElement": ".pagination",
+        "pageAction": "let imgs=document.querySelectorAll('.video-preview+img');[].forEach.call(imgs,function(img){if(img){img.setAttribute('class','loaded')}});",
+        "pageBar": 1
+    },
+    {
+        "name": "JAVCT",
+        "example": "https://javct.net/uncensored",
+        "url": "^https?://javct\\.net/",
+        "nextLink": "li.paginator__item.paginator__item--next>a",
+        "pageElement": ".container>.row.row--grid",
+        "replaceElement": ".paginator",
+        "pageBar": 1
+    },
+    {
+        "name": "Jable - 分類2",
+        "example": "https://jable.tv/tags",
+        "url": "^https?://jable\\.tv/tags",
+        "nextLink": "//li[(span/@class='page-link active disabled')]/following-sibling::li/a",
+        "pageElement": ".container>section>div",
+        "pageBar": 1
+    },
+    {
+        "name": "Jable - 分類1",
+        "example": "https://jable.tv/new-release/",
+        "url": "^https?://jable\\.tv/(new|hot)",
+        "nextLink": "//li[(span/@class='page-link active disabled')]/following-sibling::li/a",
+        "pageElement": ".container>section>div:last-child",
+        "pageBar": 1
+    },
+    {
+        "name": "javpark.net",
+        "example": "https://javpark.net/category/movie/",
+        "url": "^https?://javpark\\.net/category/",
+        "action": 1,
+        "nextLink": "a.next.page-numbers",
+        "pageElement": "#main",
+        "replaceElement": "nav.navigation.pagination",
+        "css": ".pagetual_pageBar+#main{margin-top:-20px!important;}",
+        "pageBar": 1
+    },
+    {
+        "name": "壹纳网 - 內文",
+        "example": "https://yinaw.com/23035.html",
+        "url": "^https?://yinaw\\.com/\\d+\\.html",
+        "nextLink": ".fenye span+a",
+        "pageElement": ".article-content>p,.article-content>h2,.article-content>#erphpdown",
+        "replaceElement": ".fenye",
+        "pageBar": 0
+    },
+    {
+        "name": "壹纳网 - 文章",
+        "example": "https://yinaw.com/",
+        "url": "^https?://yinaw\\.com/",
+        "nextLink": ".next-page>a",
+        "pageElement": ".excerpt",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar+.excerpt{margin-top:-2px!important;}",
+        "pageBar": 1
+    },
+    {
         "name": "Hanime1",
         "example": "https://hanime1.me/search?genre=%E8%A3%8F%E7%95%AA&duration=&sort=&query=&year=&month=",
         "url": "^https?://hanime1\\.me/(search|comics)",
@@ -7,7 +189,7 @@
         "pageElement": ".home-rows-videos-wrapper>a,.content-padding-new,.comics-related-wrapper>.comic-rows-videos-div",
         "replaceElement": ".pagination",
         "wait": "let img=doc.querySelector('img');return img!=null",
-        "pageAction": "let imgs=document.querySelectorAll('.comic-rows-videos-div img');[].forEach.call(imgs,function(img){if(img){img.src=img.dataset.srcset;img.srcset=img.dataset.srcset;img.classList.remove('lazy')}});",
+        "pageAction": "let imgs=document.querySelectorAll('.videos-list img:not([class])');[].forEach.call(imgs,function(img){if(img){img.src=img.dataset.srcset;img.srcset=img.dataset.srcset;img.classList.remove('lazy')}});",
         "css": ".home-rows-videos-div{margin-bottom:10px!important;}.search-pagination{margin-top:-50px!important;}",
         "pageBar": 1
     },
@@ -64,22 +246,23 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#picg img",
         "replaceElement": "#cpcpc+.pagelist",
-        "css": "#picg img{filter: blur(0px)!important;}div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2,#d5tig,#pcapicb,#google_translate_element{display:none!important}",
-        "autoLoadNum": 100,
+        "css": "#picg img{filter: blur(0px)!important;}.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2,#d5tig,#pcapicb,#google_translate_element{display:none!important}",
         "pageBar": 0,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "尤物妹妹圖 - 分類",
         "example": "http://www.ywmmt.com/html/mm/1_1.html",
-        "url": "^https?://www\\.[a-z]+\\.com/(s\\.asp\\?act=|.+\\d+\\.html)",
+        "url": "^https?://www\\.[a-z]+\\.com/(s\\.asp|.+\\d+\\.html)",
         "include": "body>#list>ul>li>a,.pagelist a[title='尾页']",
         "nextLink": "//p/u/following-sibling::a",
         "pageElement": "body>#list>ul>li:not([id^='listmt'])",
         "replaceElement": ".pagelist",
-        "css": "#bdssx,#listmt,#listmt2,#listmt3,#listmt4{display:none!important}",
-        "pageBar": 0,
-        "rate": 3
+        "css": "[href='https://www.358a.vip/tm110/?lineCode=tm110'],#span_xzappsq,#span_listp,#bdssx,#listmt,#listmt2,#listmt3,#listmt4,#listmmt2,#xzappsq,#listp,#listja{display:none!important}",
+        "initRun": 1,
+        "autoLoadNum": 1,
+        "pageBar": 0
     },
     {
         "name": "秀人集 - 搜索",
@@ -99,9 +282,9 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": ".content>p",
         "replaceElement": ".page",
-        "autoLoadNum": 50,
         "pageBar": 0,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "秀人集 - 分類",
@@ -132,9 +315,9 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": "div.item_info+div",
         "replaceElement": "div.page",
-        "autoLoadNum": 50,
         "pageBar": 0,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "秀人美女網 - 分類",
@@ -153,7 +336,7 @@
         "url": "^https?://nneex\\.xyz",
         "include": ".pagination",
         "nextLink": "//a[@class='active']/parent::li/following-sibling::li/a",
-        "pageElement": ".main.margin-top-sm>.hex,.hot-keywords",
+        "pageElement": ".margin-top-sm>.hex,.hot-keywords",
         "replaceElement": ".pagination",
         "pageAction": "[].forEach.call(eles,ele=>{[].forEach.call(ele.querySelectorAll('div.media.loading'),div=>{div.style.backgroundImage=`url(\"${div.dataset.thumb}\")`;div.classList.remove('loading')});[].forEach.call(ele.querySelectorAll('div.media[data-src]'),div=>{div.style.width=div.dataset.width;div.style.height=div.dataset.height+'px';div.style.backgroundImage=`url(\"${div.dataset.src}\")`;div.removeAttribute('data-src');div.removeAttribute('data-height');div.removeAttribute('data-width')})})",
         "pageBar": 1
@@ -161,9 +344,10 @@
     {
         "name": "Pornhub",
         "example": "https://cn.pornhub.com/",
-        "url": "^https?://.*pornhub\\.com/video",
+        "url": "^https?://.*pornhub\\.com/",
+        "action": 1,
         "nextLink": ".page_next>a",
-        "pageElement": "#videoCategory,#videoSearchResult",
+        "pageElement": "#videoCategory,#videoSearchResult,.videoList,.homeSection",
         "replaceElement": ".pagination3.paginationGated",
         "css": ".pagetual_pageBar{margin-top: -12px!important;}.pagetual_pageBar+ul{padding-top: 2px!important;}",
         "pageBar": 1
@@ -252,19 +436,29 @@
         "url": "^https?://www\\.mobile01\\.com/topicdetail",
         "nextLink": "li.l-pagination__page.is-active+li>a",
         "pageElement": "//div[(div/@class='l-articlePage__author') and @class='l-articlePage']",
-        "replaceElement": ".u-gapTop--lg.u-gapBottom--max.u-tac.article_end",
+        "replaceElement": ".l-content__main > div:nth-child(1) > div > div.l-navigation__item.l-navigation__item--min,.u-gapTop--lg.u-gapBottom--max.u-tac.article_end",
         "pageBar": 0,
-        "rate": 3,
+        "rate": 2,
+        "sleep": 1000
+    },
+    {
+        "name": "Mobile01 - 手機版內文",
+        "example": "https://m.mobile01.com/topicdetail.php?f=300&t=6660682",
+        "url": "^https?://m\\.mobile01\\.com/topicdetail",
+        "nextLink": ".c-pagination.c-pagination--next",
+        "pageElement": ".u-gapNextV--lg>.u-gapNextV--md",
+        "replaceElement": ".u-gapNextV--lg.u-tac",
+        "pageBar": 0,
+        "rate": 2,
         "sleep": 1000
     },
     {
         "name": "Mobile01 - 文章列表",
         "example": "https://www.mobile01.com/topiclist.php?f=300",
-        "url": "^https?://www\\.mobile01\\.com/(forumtopic|topiclist)",
-        "include": ".l-tabulate__action",
-        "nextLink": "li.l-pagination__page.is-active+li>a",
-        "pageElement": ".l-listTable__tbody",
-        "replaceElement": ".l-tabulate__action",
+        "url": "^https?://(www|m)\\.mobile01\\.com/(forumtopic|topiclist)",
+        "nextLink": "li.l-pagination__page.is-active+li>a,.c-pagination.c-pagination--next",
+        "pageElement": ".l-listTable__tbody,.u-gapNextV--lg>.u-gapNextV--lg>div[class$='u-gapNextV--lg'] .l-articleList",
+        "replaceElement": ".l-tabulate__action,.l-pagination",
         "pageBar": 1,
         "rate": 3,
         "sleep": 2000
@@ -304,7 +498,7 @@
     {
         "name": "四季線上 - 懷舊戲劇分類",
         "example": "https://www.4gtv.tv/classicdrama",
-        "url": "^https://www\\.4gtv\\.tv/classicdrama",
+        "url": "^https://(www|m)\\.4gtv\\.tv/classicdrama",
         "loadMore": "#more"
     },
     {
@@ -320,7 +514,7 @@
         "loadMore": ".more-go"
     },
     {
-        "name": "嗨皮漫画 - 更新頁",
+        "name": "嗨皮漫畫 - 更新頁",
         "example": "https://m.happymh.com/latest",
         "url": "^https://m\\.happymh\\.com/latest$",
         "loadMore": ".more-div-btn"
@@ -421,24 +615,13 @@
     {
         "name": "愛戀動漫&MioBT",
         "example": "http://www.kisssub.org/，http://miobt.com/",
-        "url": "^https?://(www\\.)?(kisssub|miobt)\\.(org|com)",
+        "url": "^https?://(www\\.|m\\.)?(kisssub|miobt)\\.(org|com)",
+        "action": 1,
         "nextLink": "span.current+a",
-        "pageElement": "#data_list>tr",
+        "pageElement": "#data_list>tr,.lists",
         "replaceElement": ".pages.clear",
         "pageBar": 1,
-        "rate": 3
-    },
-    {
-        "name": "牛C網 - 正文",
-        "example": "https://niuc1.com/67307.html",
-        "url": "^https?://niuc1\\.com/\\d+\\.html",
-        "action": 1,
-        "include": "#comments.comments",
-        "nextLink": ".nav.previous>a",
-        "pageElement": ".panel.card,.single-top-area.text-sm.card.mt-4",
-        "replaceElement": "..near-navigation.rounded.mt-4.py-2",
-        "css": "#content > main > div.content-wrap > div > h4,h4+div,#comments.comments{display: none!important;}",
-        "pageBar": 1
+        "rate": 2
     },
     {
         "name": "牛C網 - 列表",
@@ -455,13 +638,24 @@
         "name": "牛C網 - 看圖",
         "example": "https://niuc1.com/66470.html",
         "url": "^https?://niuc1\\.com/\\d+\\.html",
-        "include": ".page-nav",
         "nextLink": "span+a",
         "pageElement": "div.panel-body.single.mt-2 > p",
         "replaceElement": ".page-nav",
         "pageBar": 0,
-        "autoLoadNum": 20,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "牛C網 - 正文",
+        "example": "https://niuc1.com/67307.html",
+        "url": "^https?://niuc1\\.com/\\d+\\.html",
+        "action": 1,
+        "exclude": ".page-nav.text-center.my-3",
+        "nextLink": ".nav.previous>a",
+        "pageElement": ".panel.card,.single-top-area.text-sm.card.mt-4",
+        "replaceElement": ".near-navigation.rounded.mt-4.py-2",
+        "css": "#content > main > div.content-wrap > div > h4,h4+div,#comments.comments{display: none!important;}",
+        "pageBar": 1
     },
     {
         "name": "HPJAV",
@@ -489,7 +683,7 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".yps",
         "replaceElement": ".row+.ad-list+.row.text-center.fanye>ul.text-center",
-        "css": ".pagetual_pageBar {margin: 15px 0 0 0 !important;}",
+        "css": ".pagetual_pageBar {margin-top: 15px !important;}",
         "pageBar": 1
     },
     {
@@ -499,7 +693,7 @@
         "nextLink": "//a[text()='Next']",
         "pageElement": "div.card.mb-3,.columns.is-multiline",
         "replaceElement": "nav.pagination",
-        "css": ".pagetual_pageBar {margin: -10px 0 21px 0 !important;}",
+        "css": ".pagetual_pageBar {margin-top: -10px !important;margin-bottom: 21px !important;}",
         "pageBar": 1
     },
     {
@@ -512,8 +706,10 @@
         "name": "飛極速線上",
         "example": "http://www.fjisu2.com/acg/japan/",
         "url": "^https?://(www\\.)?(fjisu|feijisu)\\d+\\.com/\\w+/\\w+/",
-        "pageElement": ".b-listtab",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".b-listtab,.th_a+div",
         "replaceElement": ".pages",
+        "css": ".pagetual_pageBar+div {margin-top: -10px !important;}",
         "pageBar": 1
     },
     {
@@ -541,34 +737,53 @@
         "name": "BOOK☆WALKER TW 更多",
         "example": "https://www.bookwalker.com.tw/more/index/1",
         "url": "^https?://www\\.bookwalker\\.com\\.tw/more/",
-        "nextLink": "a[rel='next']",
-        "pageElement": ".bw_main2 > div:nth-child(2)",
+        "action": 1,
+        "nextLink": "//li[(span/@class='active')]/following-sibling::li/a",
+        "pageElement": ".bw_main2 > div:nth-child(2),.row.listbox.clearfix+.row.mar0pad0",
         "replaceElement": [
             ".bw_main2 > div:first-child",
-            ".bw_main2 > div:last-child"
+            ".bw_main2 > div:last-child",
+            ".pagebar"
         ],
-        "css": ".ad5_aside,.aside_innerad{display: none!important;}.pagetual_pageBar+div {margin-top: -4px !important;}",
+        "wait": 500,
         "pageBar": 1,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": 1
     },
     {
         "name": "BOOK☆WALKER TW",
         "example": "https://www.bookwalker.com.tw/search?m=2&series_display=1&vertical=0&order=sell_desc&s=19",
         "url": "^https?://www\\.bookwalker\\.com\\.tw/search",
-        "nextLink": "a[rel='next']",
-        "pageElement": ".bookdesc2.clearfix ",
+        "action": 1,
+        "nextLink": "//li[(span/@class='active')]/following-sibling::li/a",
+        "pageElement": ".bookdesc2.clearfix,.row.listbox.clearfix+.row.mar0pad0",
         "replaceElement": [
             ".bw_main2 > div:first-child",
-            ".bw_main2 > div:last-child"
+            ".bw_main2 > div:last-child",
+            ".pagebar"
         ],
-        "css": ".pagetual_pageBar {margin-top: -15px !important;}.pagetual_pageBar+div {padding-top: 5px !important;}",
+        "wait": 500,
         "pageBar": 1,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": 1
+    },
+    {
+        "name": "BOOK☆WALKER JP - 手機版",
+        "example": "https://bookwalker.jp/new/?qsto=st2",
+        "url": "^https?://bookwalker\\.jp/(category|search|new)/",
+        "include": ".o-pager-box",
+        "nextLink": "li.o-select-box+li>a",
+        "pageElement": ".a-result-wrap,#js-display-style__list-wrap",
+        "replaceElement": ".o-pager-box",
+        "css": ".pagetual_pageBar {margin-top: 5px !important;}",
+        "pageBar": 1,
+        "rate": 2
     },
     {
         "name": "BOOK☆WALKER JP",
         "example": "https://bookwalker.jp/new/?qsto=st2",
         "url": "^https?://bookwalker\\.jp/(category|search|new)/",
+        "include": ".o-list--menu,.o-list--footer",
         "nextLink": ".o-pager-next>a",
         "pageElement": ".o-contents-section__body",
         "replaceElement": [
@@ -640,15 +855,15 @@
     },
     {
         "name": "微圖坊 - 看圖",
-        "example": "https://www.v2ph.com/album/[^/]+",
-        "url": "^https?://www\\.v2ph\\.com/album/",
+        "example": "https://www.v2ph.com/album/SSA-392",
+        "url": "^https?://www\\.v2ph\\.com/album/[^/]+",
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".photos-list",
         "replaceElement": ".pagination",
-        "pageAction": "let imgs=document.querySelectorAll('.photos-list img');[].forEach.call(imgs,function(img){if(img){img.style.opacity=1}});",
+        "pageAction": "let imgs=document.querySelectorAll('.photos-list img:not([style])');[].forEach.call(imgs,function(img){if(img){img.style.opacity=1}});",
         "pageBar": 0,
-        "autoLoadNum": 10,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "微圖坊 - 分類",
@@ -657,7 +872,7 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": "h1+.albums-list",
         "replaceElement": ".pagination",
-        "pageAction": "let imgs=document.querySelectorAll('.albums-list img');[].forEach.call(imgs,function(img){if(img){img.style.opacity=1}});",
+        "pageAction": "let imgs=document.querySelectorAll('.albums-list img:not([style])');[].forEach.call(imgs,function(img){if(img){img.style.opacity=1}});",
         "css": ".pagetual_pageBar {margin-top: 5px!important;}.pagetual_pageBar+div {margin-top: -8px!important;}",
         "pageBar": 1
     },
@@ -669,9 +884,9 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#main+.content",
         "replaceElement": "#page",
-        "autoLoadNum": 20,
         "pageBar": 0,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "www.ka234.cc - 分類",
@@ -687,31 +902,32 @@
     {
         "name": "極品性感美女 - 搜索",
         "example": "https://www.jpmn5.com/plus/search/index.asp?keyword=XiuRen",
-        "url": "^https?://www\\.(jpxgyw|jpmn5|xgyw|xgmn5|nvshenheji|mntup|xgmn|mn5|jpxgmn)\\.(com|cc|org|top)/plus/search",
+        "url": "^https?://www\\.(jpmn5|jpxgyw|jpmn5|xgyw|xgmn5|nvshenheji|mntup|xgmn|mn5|jpxgmn)\\.(com|cc|org|top)/plus/search",
         "nextLink": ".current+a",
         "pageElement": ".node",
         "replaceElement": ".node+.pagination",
-        "css": ".pagetual_pageBar {margin: -5px 0 15px 0 !important;}",
+        "css": ".pagetual_pageBar {margin-top: -5px !important;margin-bottom: 15px !important;}",
         "pageBar": 1
     },
     {
         "name": "極品性感美女 - 看圖",
         "example": "https://www.jpmn5.com/Xiuren/Xiuren23112.html",
-        "url": "^https?://www\\.(jpxgyw|jpmn5|xgyw|xgmn5|nvshenheji|mntup|xgmn|mn5|jpxgmn)\\.(com|cc|org|top)/\\w+/\\w+\\.html",
+        "url": "^https?://www\\.(jpmn5|jpxgyw|jpmn5|xgyw|xgmn5|nvshenheji|mntup|xgmn|mn5|jpxgmn)\\.(com|cc|org|top)/\\w+/\\w+\\.html",
         "nextLink": ".current+a",
         "pageElement": "div.pagination+p",
         "replaceElement": ".pagination",
-        "autoLoadNum": 50,
-        "pageBar": 0
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "極品性感美女 - 分類",
         "example": "https://www.jpmn5.com/Xiuren/",
-        "url": "^https?://www\\.(jpxgyw|jpmn5|xgyw|xgmn5|nvshenheji|mntup|xgmn|mn5|jpxgmn)\\.(com|cc|org|top)/\\w+/",
+        "url": "^https?://www\\.(jpmn5|jpxgyw|jpmn5|xgyw|xgmn5|nvshenheji|mntup|xgmn|mn5|jpxgmn)\\.(com|cc|org|top)/\\w+/",
         "nextLink": ".current+a",
         "pageElement": ".widget-title",
         "replaceElement": ".pagination",
-        "css": ".pagetual_pageBar {margin: -15px 0 5px 0 !important;}",
+        "css": ".pagetual_pageBar {margin-top: -15px !important;margin-bottom: 5px !important;}",
         "pageBar": 1
     },
     {
@@ -731,7 +947,7 @@
         "nextLink": "li.next>a",
         "pageElement": ".container.correlationList",
         "replaceElement": ".container>.page-all",
-        "css": ".pagetual_pageBar {margin: -10px 0 20px 0 !important;}",
+        "css": ".pagetual_pageBar {margin-top: -10px !important;margin-bottom: 20px !important;}",
         "pageBar": 1
     },
     {
@@ -822,6 +1038,12 @@
         "pageBar": 1
     },
     {
+        "name": "Supjav 自動點擊server ST",
+        "example": "https://supjav.com/ja/180989.html",
+        "url": "^https?://supjav\\.com/ja/\\d+\\.html",
+        "autoClick": "body > div.main > div > div.video-wrap > div.left > div.btns > div > a:nth-child(4),body > div.main > div > div.video-wrap > div.left > div.btns.active > div:nth-child(2) > div.cd-server.active > a:nth-child(3)"
+    },
+    {
         "name": "Supjav",
         "example": "https://supjav.com/ja/category/uncensored-jav",
         "url": "^https?://supjav\\.com/(\\w+/)?(\\?s=|popular|category)",
@@ -906,7 +1128,7 @@
     {
         "name": "javbangers.com",
         "example": "https://www.javbangers.com/latest-updates/",
-        "url": "^https?://www\\.javbangers\\.com/(latest|top|most|albums)",
+        "url": "^https?://www\\.javbangers\\.com/",
         "nextLink": "li.page-current+li.page>a",
         "pageElement": ".porntrex-box,.box",
         "replaceElement": ".pagination",
@@ -934,8 +1156,8 @@
         "insertPos": 1,
         "css": "#footer,#commentfb,.content-kuss{display: none!important;}",
         "pageBar": 0,
-        "autoLoadNum": 10,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "Gdaily",
@@ -954,6 +1176,7 @@
         "nextLink": "a.active+a",
         "pageElement": ".list>li",
         "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:-10px !important;margin-bottom:10px !important;}",
         "pageBar": 1
     },
     {
@@ -961,11 +1184,12 @@
         "example": "https://tw.xchina.co/search/keyword-%E4%B8%9D%E8%A2%9C/mode-photo.html",
         "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/search/.*/.*\\.html",
         "nextLink": "a.next",
-        "pageElement": ".article.result",
+        "pageElement": ".article.result>.list",
         "replaceElement": [
             "div.article:not(.result)+div.pager",
             "div.article.result+div.pager"
         ],
+        "css": ".pagetual_pageBar+div{margin-top:-10px !important;}",
         "pageBar": 1,
         "rate": 3
     },
@@ -978,8 +1202,8 @@
         "replaceElement": ".image>.index",
         "css": ".image > a:nth-child(3),.image > a:nth-child(4){display: none!important;}.container>img {max-width: 99% !important;display: block !important;margin: 0 auto !important;}",
         "pageBar": 0,
-        "autoLoadNum": 2000,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "小黃書 - 圖片清單瀏覽",
@@ -993,8 +1217,8 @@
         ],
         "css": ".photos > div.item {display: none!important;}",
         "pageBar": 0,
-        "rate": 3,
-        "autoLoadNum": 10
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "小黃書 - 分類",
@@ -1015,13 +1239,12 @@
         "url": "^https?://hitxhot\\.com/gallerys/",
         "nextLink": "//a[text()='Next >']",
         "pageElement": ".contentme>img",
-        "replaceElement": ".pag>.pagination-site",
+        "replaceElement": ".pag>.pagination-site,.c-denomination.s-denomination",
         "insert": ".contentme>br:last-child",
         "insertPos": 1,
-        "css": ".coveringtrailer,div.contain.refill,div.relatedvideos.contain.refill.reller {display: none!important;}",
         "pageBar": 0,
-        "autoLoadNum": 100,
-        "rate": 3
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "hitxhot - 清單",
@@ -1029,7 +1252,7 @@
         "url": "^https?://hitxhot\\.com/",
         "include": ".pag>.pagination-site",
         "nextLink": "//a[text()='Next »']",
-        "pageElement": ".videos",
+        "pageElement": ".videos>.thumb-view",
         "replaceElement": ".pag>.pagination-site",
         "pageBar": 0
     },
@@ -1055,14 +1278,26 @@
         "pageBar": 1
     },
     {
+        "name": "性愛套圖 - 搜索",
+        "example": "https://myjkwd.com/e/search/result/?searchid=7898",
+        "url": "^https?://myjkwd\\.com/e/search/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "table.box > tbody > tr:nth-child(1) > td>h2.r,table.box > tbody > tr:nth-child(1) > td> table:not([width='100%'])",
+        "replaceElement": ".list_page",
+        "css": "body > table.top,body > table:nth-child(2),body > table.nav{display:none!important;}",
+        "pageBar": 0
+    },
+    {
         "name": "性愛套圖 - 看圖",
-        "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=21644",
+        "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=21703",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".entry>center,.entry>img",
         "replaceElement": ".pageLink",
+        "css": "aside.side{display:none!important;}.main-content{margin-left:0px!important;}",
         "pageBar": 0,
-        "autoLoadNum": 200
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
         "name": "性愛套圖 - 列表",
@@ -1071,7 +1306,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".bloglist > ul",
         "replaceElement": ".pageLink",
-        "css": ".pagetual_pageBar{margin:10px auto auto auto !important;}",
+        "css": ".pagetual_pageBar{margin-top:10px !important;}aside.side{display:none!important;}.main-content{margin-left:0px!important;}body{background:#EDEDED!important;}",
         "pageBar": 1
     },
     {
@@ -1110,13 +1345,10 @@
         "pageBar": 0
     },
     {
-        "name": "UU看書 - 書籍列表",
-        "example": "https://www.uukanshu.com/list/xuanhuan-1.html",
-        "url": "^https?://(www|tw)\\.uukanshu\\.com/list/",
-        "nextLink": "//a[text()='下一頁' or text()='下一页']",
-        "pageElement": ".content.clearfix>span",
-        "replaceElement": "#page",
-        "pageBar": 0
+        "name": "UU看書手機版 - 列表(加載更多小說)",
+        "example": "https://t.uukanshu.com/booklist.aspx?c=1",
+        "url": "^https?://(t|sj)\\.uukanshu\\.com/(booklist|quanben|)\\.aspx",
+        "loadMore": "#showMore"
     },
     {
         "name": "UU看書 - 閱讀",
@@ -1127,6 +1359,15 @@
         "nextLink": "#next",
         "pageElement": ".h1title,.contentbox",
         "replaceElement": ".fanye",
+        "pageBar": 0
+    },
+    {
+        "name": "UU看書 - 書籍列表",
+        "example": "https://www.uukanshu.com/list/xuanhuan-1.html",
+        "url": "^https?://(www|tw)\\.uukanshu\\.com/list/",
+        "nextLink": "//a[text()='下一頁' or text()='下一页']",
+        "pageElement": ".content.clearfix>span",
+        "replaceElement": "#page",
         "pageBar": 0
     },
     {
