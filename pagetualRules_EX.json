@@ -1,9 +1,238 @@
 [
     {
+        "name": "BAOBUA.COM - 看圖",
+        "example": "https://www.baobua.com/post/eVFpTk1INFBPRjdSMTRTYUxNYXRMbTU4cERheVgzS1VvZWlPREFRakpNODlTTnN1SnBrKzZPaW85dFJEWEd5SlVxMCtlc244OXNiSENkZ0ZaQVZnQmc9PQ==",
+        "url": "^https?://www\\.baobua\\.com/post/",
+        "nextLink": ".current+a,.current+.dots+a",
+        "pageElement": ".entry-content.read-details",
+        "replaceElement": "nav.pagination,.trail-items",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let brs=document.querySelectorAll('.entry-content.read-details>br');let ads=document.querySelectorAll('.entry-content.read-details>div#ad-ex');[].forEach.call(brs,function(br){br.remove()});[].forEach.call(ads,function(div){div.remove()});",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "BAOBUA.COM - 搜索",
+        "example": "https://www.baobua.com/?cat=Tm1ydGlaZ1A2YWM3a3BvYWh6L3dIdz09",
+        "url": "^https?://www\\.baobua\\.com/\\?cat=",
+        "action": 1,
+        "nextLinkByUrl": [
+            "(\\?cat=[^&]+)(\\&page=(\\d+))?$",
+            "$1&page={($3.0||1)+1}",
+            ".next.page-numbers"
+        ],
+        "pinUrl": true,
+        "pageElement": "main#main",
+        "replaceElement": "nav.pagination",
+        "wait": 500
+    },
+    {
+        "name": "BAOBUA.COM - 影片分類",
+        "example": "https://www.baobua.com/video/index.html",
+        "url": "^https?://www\\.baobua\\.com/video/index\\.html",
+        "action": 1,
+        "wait": 500,
+        "nextLinkByUrl": [
+            "html(\\?&page=(\\d+))?$",
+            "html?&page={($2.0||1)+1}",
+            ".next.page-numbers"
+        ],
+        "pinUrl": true,
+        "pageElement": "main#main",
+        "replaceElement": "nav.pagination"
+    },
+    {
+        "name": "BAOBUA.COM - 圖片分類",
+        "example": "https://www.baobua.com/?page=1",
+        "url": "^https?://www\\.baobua\\.com/\\?page=",
+        "action": 1,
+        "nextLinkByUrl": [
+            "page=(\\d+)$",
+            "page={$1+1}",
+            ".next.page-numbers"
+        ],
+        "pinUrl": true,
+        "pageElement": "main#main",
+        "replaceElement": "nav.pagination"
+    },
+    {
+        "name": "HOTGIRLchina - 看圖",
+        "example": "https://hotgirlchina.com/imiss-vol-691-lavinia%e8%82%89%e8%82%89-39-photos/",
+        "url": "^https?://hotgirlchina\\.com/",
+        "nextLink": ".nextpostslink",
+        "pageElement": ".entry-inner>p",
+        "replaceElement": "nav.pagination",
+        "css": "[class^='boxzilla']{display:none!important}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "HOTGIRLchina - 搜索",
+        "example": "https://hotgirlchina.com/?s=IMISS",
+        "url": "^https?://hotgirlchina\\.com/(page/(\\d+)/)?\\?s=",
+        "nextLinkByUrl": [
+            "(page/(\\d+)/)?(\\?s=\\w+)$",
+            "page/{($2.0||1)+1}/$3",
+            ".nextpostslink"
+        ],
+        "pageElement": "#grid-wrapper",
+        "replaceElement": "nav.pagination",
+        "css": "[class^='boxzilla']{display:none!important}"
+    },
+    {
+        "name": "HOTGIRLchina - 分類",
+        "example": "https://hotgirlchina.com/tag/imiss/",
+        "url": "^https?://hotgirlchina\\.com/",
+        "nextLink": ".nextpostslink",
+        "pageElement": "#grid-wrapper",
+        "replaceElement": "nav.pagination",
+        "css": "[class^='boxzilla']{display:none!important}"
+    },
+    {
+        "name": "色情圖片網 - 分類",
+        "example": "https://www.photos18.com/cat/5",
+        "url": "^https?://www\\.photos18\\.com/cat/",
+        "nextLink": ".next>a",
+        "pageElement": "#videos",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "爱美女网 - 搜索",
+        "example": "http://www.imn5.net/plus/search/index.asp?keyword=XiuRen",
+        "url": "^https?://www\\.imn5\\.net/plus/search/",
+        "nextLink": "a.current+a",
+        "pageElement": ".list>.node",
+        "replaceElement": ".page",
+        "css": ".pagetual_pageBar{margin-top:0px!important}.pagetual_pageBar+.node{margin-top:-10px!important}section.container>p{display:none!important}"
+    },
+    {
+        "name": "爱美女网 - 看圖",
+        "example": "http://www.imn5.net/XiuRen/XiuRen/11535.html",
+        "url": "^https?://www\\.imn5\\.net/",
+        "init": "let brs=document.querySelectorAll('p br');[].forEach.call(brs,function(br){br.remove()});",
+        "nextLink": "//a[text()='下页']",
+        "pageElement": ".imgwebp>p>img",
+        "replaceElement": ".page",
+        "css": "section.container>p{display:none!important}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "爱美女网 - 分類",
+        "example": "http://www.imn5.net/XiuRen/XiuRen/",
+        "url": "^https?://www\\.imn5\\.net/",
+        "nextLink": "//a[text()='下页']",
+        "pageElement": ".excerpts>.excerpt",
+        "replaceElement": ".page",
+        "css": ".pagetual_pageBar{margin-top:-20px!important}section.container>p{display:none!important}"
+    },
+    {
+        "name": "MM131美女图片手機版 - 看圖",
+        "example": "https://m.mmm131.com/xinggan/5775_4.html",
+        "url": "^https?://m\\.mmm131\\.com/.+\\html$",
+        "nextLink": "//a[text()='下一张']",
+        "pageElement": ".post-content",
+        "replaceElement": ".paging",
+        "css": ".bannert_ios,.bannerb_ios,.tips{display:none!important}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let links=document.querySelectorAll('.post-content>a[href]');[].forEach.call(links,function(a){a.removeAttribute('href')});",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "MM131美女图片手機版 - 首頁",
+        "example": "https://m.mmm131.com/xinggan/",
+        "url": "^https?://m\\.mmm131\\.com/$",
+        "css": ".bannert_ios,.bannerb_ios,.tips{display:none!important}",
+        "loadMore": "#webpage>span"
+    },
+    {
+        "name": "MM131美女图片 - 看圖",
+        "example": "https://www.mmm131.com/xinggan/5774.html",
+        "url": "^https?://www\\.mmm131\\.com/.+\\html$",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".content-pic",
+        "replaceElement": ".content-page",
+        "css": ".content-tips{display:none!important}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let links=document.querySelectorAll('.content-pic>a[href]');[].forEach.call(links,function(a){a.removeAttribute('href')});",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "MM131美女图片 - 列表",
+        "example": "https://www.mmm131.com/xinggan/",
+        "url": "^https?://www\\.mmm131\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "//dl[@class='list-left public-box']/dd[(a/@target)]",
+        "replaceElement": ".page"
+    },
+    {
+        "name": "Nsfwp",
+        "example": "https://nsfwx.pics/",
+        "url": "^https?://nsfwx\\.pics/",
+        "nextLink": "a.next",
+        "pageElement": "article[id^='post']",
+        "replaceElement": ".pag-wrapper",
+        "css": ".pagetual_pageBar{margin-top:-40px!important;margin-bottom:15px!important}"
+    },
+    {
+        "name": "推图网 - 美女",
+        "example": "https://www.tuiimg.com/meinv/2641/",
+        "url": "^https?://(www|m)\\.tuiimg\\.com/meinv/\\d+/",
+        "nextLink": "0",
+        "autoClick": "#allbtn"
+    },
+    {
+        "name": "推图网手機版",
+        "example": "https://m.tuiimg.com/meinv/",
+        "url": "^https?://m\\.tuiimg\\.com/",
+        "nextLink": ".now+a",
+        "pageElement": "#main",
+        "replaceElement": ".page",
+        "lazyImgSrc": "realsrc"
+    },
+    {
+        "name": "推图网",
+        "example": "https://www.tuiimg.com/meinv/",
+        "url": "^https?://www\\.tuiimg\\.com/",
+        "nextLink": "em+a",
+        "pageElement": ".beauty>ul,.main>ul",
+        "replaceElement": ".page",
+        "css": ".beauty>.pagetual_pageBar+ul{padding-top:15px!important}.main>ul+.pagetual_pageBar{margin-top:10px!important}.main>.pagetual_pageBar+ul{margin-top:-14px!important}"
+    },
+    {
+        "name": "Mrcong - 看圖",
+        "example": "https://mrcong.com/",
+        "url": "^https?://mrcong\\.com/",
+        "init": "let brs=document.querySelectorAll('p>br');[].forEach.call(brs,function(br){br.remove()});",
+        "nextLink": ".page-link>span+a",
+        "pageElement": "p>img",
+        "replaceElement": ".page-link",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "Mrcong",
+        "example": "https://mrcong.com/",
+        "url": "^https?://mrcong\\.com/",
+        "nextLink": ".current+a",
+        "pageElement": "article.item-list",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "爱看 INS",
+        "example": "https://www.ikanins.com/",
+        "url": "^https?://www\\.ikanins\\.com/",
+        "nextLink": "a[rel='next']",
+        "pageElement": "#masonry",
+        "replaceElement": ".wp-pagenavi"
+    },
+    {
         "name": "Dmmtu 美女图 - 看圖",
         "example": "https://www.dmmtu.com/xiezhen/25837.html",
         "url": "^https?://www\\.dmmtu\\.com/",
-        "nextLink": ".link_pages b+a",
+        "nextLink": "//a[text()='下一页']",
         "pageElement": ".main-body>img",
         "replaceElement": ".link_pages",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
@@ -14,7 +243,7 @@
         "name": "Dmmtu 美女图 - 分類",
         "example": "https://www.dmmtu.com/new/",
         "url": "^https?://www\\.dmmtu\\.com/",
-        "nextLink": "#pagenavi b+a",
+        "nextLink": "//a[text()='下一页']",
         "pageElement": "#postlist",
         "replaceElement": "#pagenavi"
     },
@@ -32,7 +261,7 @@
         "example": "https://www.jpmn8.com/Xrqj/XiuRen/19379.html",
         "url": "^https?://www\\.jpmn8\\.com/",
         "init": "let brs=document.querySelectorAll('p br');[].forEach.call(brs,function(br){br.remove()});",
-        "nextLink": "a.current+a",
+        "nextLink": "//a[text()='下一页']",
         "pageElement": "p img",
         "replaceElement": ".pagination1",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
@@ -43,7 +272,7 @@
         "name": "Jpmn8 精品美女吧 - 分類",
         "example": "https://www.jpmn8.com/Xrqj/XiuRen/",
         "url": "^https?://www\\.jpmn8\\.com/",
-        "nextLink": "a.current+a",
+        "nextLink": "//a[text()='下一页']",
         "pageElement": ".container>.excerpt",
         "replaceElement": ".pagination1",
         "css": ".pagetual_pageBar{margin-top:-20px!important}"
@@ -119,8 +348,8 @@
         "name": "蕾丝猫 - 圖片",
         "example": "https://www.lesmao.site/thread-31035-1-1.html",
         "url": "^https?://www\\.(lsm|lesmao|lsmpx)\\.(site|me|pro|co|com|org)/thread",
-        "nextLink": "strong+a",
-        "pageElement": "#thread-pic li",
+        "nextLink": "strong+a,a.r",
+        "pageElement": "#thread-pic li,#pic",
         "replaceElement": "#thread-page",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
@@ -159,7 +388,7 @@
     },
     {
         "name": "优美图库 - 圖片",
-        "example": "www.umei.cc",
+        "example": "https://www.umei.cc/meinvtupian/xingganmeinv/255974.htm",
         "url": "^https?://(www\\.)?(umeitu|umei)\\.(com|fun|cc)/",
         "include": ".pages",
         "nextLink": "li.thisclass+li>a",
@@ -171,7 +400,7 @@
     },
     {
         "name": "优美图库 - 分類",
-        "example": "www.umei.cc",
+        "example": "https://www.umei.cc/meinvtupian/xingganmeinv/",
         "url": "^https?://(www\\.)?(umeitu|umei)\\.(com|fun|cc)/",
         "include": "#pageNum",
         "nextLink": ".thisclass+a",
@@ -493,7 +722,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#picg img",
         "replaceElement": "span+.pagelist",
-        "css": "#picg img{max-width: 99% !important;display: block !important;margin: 0 auto !important;filter: blur(0px)!important;}.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2,#d5tig,#pcapicb,#google_translate_element{display:none!important}",
+        "css": "#picg img:hover{transform: none!important}#picg img{max-width: 99% !important;display: block !important;margin: 0 auto !important;filter: blur(0px)!important;}.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2,#d5tig,#pcapicb,#google_translate_element{display:none!important}",
         "pageAction": "let link=document.querySelectorAll('#picg a');[].forEach.call(link,function(a){a.removeAttribute('href');a.removeAttribute('title')});let imgs=document.querySelectorAll('#picg img[alt]');[].forEach.call(imgs,function(img){img.removeAttribute('alt')});document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
@@ -1475,6 +1704,7 @@
         "name": "性愛套圖 - 看圖",
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=20737",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
+        "init": "function getElementByXpath(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}var n=getElementByXpath('//center/text()');var n2=getElementByXpath('//center/center/text()');n.remove();n2.remove();",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".entry>center>center>img,.entry>center>img,.entry>img",
         "replaceElement": ".pageLink",
@@ -1608,6 +1838,7 @@
         "name": "UU看書網uuks.org手機版 - 閱讀",
         "example": "https://m.uuks.org/b/59/731.html",
         "url": "^https?://m\\.uuks\\.org/b/",
+        "action": 1,
         "history": 2,
         "nextLink": "#read_next",
         "pageElement": "#top,#bookContent",
@@ -1624,6 +1855,7 @@
         "name": "UU看書網uuks.org - 閱讀",
         "example": "https://www.uuks.org/b/53487/668581.html",
         "url": "^https?://www\\.uuks\\.org/b/",
+        "action": 1,
         "history": 2,
         "nextLink": "#next",
         "pageElement": ".h1title,#contentbox",
@@ -1634,7 +1866,7 @@
     },
     {
         "name": "愛下電子書 - 閱讀",
-        "example": "https://tw.ixdzs.com/read/38804/p5.html",
+        "example": "https://tw.ixdzs.com/read/38804/p1.html",
         "url": "^https?://tw\\.ixdzs\\.com/read/\\d+/\\w+\\.html",
         "history": 2,
         "nextLink": "a.chapter-paging.chapter-next",
