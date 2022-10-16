@@ -1,5 +1,122 @@
 [
     {
+        "name": "動漫狂 - 閱讀",
+        "example": "https://www.cartoonmad.cc/comic/115210632012001.html",
+        "url": "^https?://www\\.cartoonmad\\.cc/comic/\\d+\\.html",
+        "init": "let link=document.querySelector('body>table>tbody>tr:nth-child(4)>td>table>tbody>tr:nth-child(1)>td:nth-child(1)>a');let link2=document.querySelector('body>table>tbody>tr:nth-child(3)>td>a');if(link){link.removeAttribute('href')}else if(link2){link2.removeAttribute('href')}",
+        "nextLink": "a.onpage+a[href$='html']",
+        "pageElement": "img[onload],img[oncontextmenu]",
+        "replaceElement": "//tr[(td/a/@class='onpage')] | //select[@name='jump']",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": "img[onload],img[oncontextmenu]{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12']{display:none!important}"
+    },
+    {
+        "name": "動漫狂 - 分類",
+        "example": "https://www.cartoonmad.com/hotrank.html",
+        "url": "^https?://www\\.cartoonmad\\.com/(hotrank|topcm|newcm|comic\\d+)\\.html",
+        "nextLink": "a.onpage+a",
+        "pageElement": "td[align='right']>table[border='0']",
+        "replaceElement": "td[align='right']>table:last-child"
+    },
+    {
+        "name": "極速漫畫手機版 - 閱讀",
+        "example": "https://m.1kkk.com/ch1063-1331307/",
+        "url": "^https?://m\\.1kkk\\.com/(ch|vol)\\d+-\\d+(-p\\d+)?/",
+        "action": 1,
+        "nextLinkByUrl": [
+            "/((ch|vol)\\d+-\\d+)(-p(\\d+))?",
+            "/$1-p{($4.0||1)+1}",
+            "",
+            ".main-404-img"
+        ],
+        "pageElement": "#cp_img,.main-404-img",
+        "lazyImgSrc": "0",
+        "rate": 3,
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": ".main-404-img,.view-bottom-bar > li:nth-child(2),.view-bottom-bar > li:nth-child(3){display:none!important}.view-bottom-bar li{width:50%!important}"
+    },
+    {
+        "name": "極速漫畫 - 單行本閱讀",
+        "example": "https://www.1kkk.com/vol1-4761/",
+        "url": "^https?://www\\.1kkk\\.com/vol\\d+-\\d+/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "#cp_image",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "rate": 3,
+        "css": ".view-comment{display:none!important}"
+    },
+    {
+        "name": "極速漫畫 - 連載閱讀",
+        "example": "https://www.1kkk.com/ch1063-1331307/",
+        "url": "^https?://www\\.1kkk\\.com/ch\\d+-\\d+(-p\\d+)?/",
+        "nextLink": "span.current+a",
+        "pageElement": "#cp_image",
+        "replaceElement": ".chapterpager",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "rate": 3,
+        "css": ".view-comment{display:none!important}"
+    },
+    {
+        "name": "極速漫畫 - 分類",
+        "example": "https://www.1kkk.com/manhua-list/",
+        "url": "^https?://www\\.1kkk\\.com/manhua-([a-z]+/|list-area|list-tag|list-char)",
+        "nextLink": "//a[text()=' > ']",
+        "pageElement": ".box-body"
+    },
+    {
+        "name": "90漫畫網手機版 - 分類",
+        "example": "http://m.90mh.com/update/",
+        "url": "^https?://m\\.90mh\\.com/(update|list)/",
+        "nextLink": "#update_list li.next>a,#w0 li.next>a",
+        "pageElement": ".UpdateList,#w0>.clearfix",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar+.UpdateList{margin-top:-0px!important}"
+    },
+    {
+        "name": "90漫畫網 - 分類",
+        "example": "http://www.90mh.com/update/",
+        "url": "^https?://www\\.90mh\\.com/(update|list)/",
+        "nextLink": "li.next>a",
+        "pageElement": "#contList",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:-10px!important}"
+    },
+    {
+        "name": "dm5 動漫屋 - 手機版閱讀",
+        "example": "https://m.dm5.com/m1331307/",
+        "url": "^https?://m\\.dm5\\.com/m\\d+(-p\\d+)?/",
+        "action": 1,
+        "nextLinkByUrl": [
+            "/(m\\d+)(-p(\\d+))?",
+            "/$1-p{($3.0||1)+1}",
+            "",
+            ".main-404-img"
+        ],
+        "pageElement": "#cp_img,.main-404-img",
+        "lazyImgSrc": "0",
+        "rate": 3,
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": ".main-404-img,.view-bottom-bar > li:nth-child(2),.view-bottom-bar > li:nth-child(3){display:none!important}.view-bottom-bar li{width:50%!important}"
+    },
+    {
+        "name": "dm5 動漫屋 - 閱讀",
+        "example": "https://www.dm5.com/m1331307/",
+        "url": "^https?://www\\.dm5\\.com/m\\d+/",
+        "nextLink": "span.current+a",
+        "pageElement": "#cp_image",
+        "replaceElement": ".chapterpager",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "rate": 3,
+        "css": ".view-comment{display:none!important}"
+    },
+    {
+        "name": "dm5 動漫屋 - 分類",
+        "example": "https://www.dm5.com/manhua-list/",
+        "url": "^https?://www\\.dm5\\.com/manhua-([a-z]+/|list-area|list-tag|list-char)",
+        "nextLink": "//a[text()=' > ']",
+        "pageElement": ".box-body"
+    },
+    {
         "name": "無限動漫手機版 - 漫畫閱讀",
         "example": "https://8.twobili.com/comic/insurance_1475.html?ch=1",
         "url": "^https?://8\\.twobili\\.com/comic/\\w+\\.html\\?ch=\\d+(-\\d+)?$",
@@ -1096,7 +1213,7 @@
     {
         "name": "MEITU131",
         "example": "https://www.meitu131.com/rank/dalu/",
-        "url": "^https?://www\\.meitu131\\.com/(rank|meinv|shouji|sucai|nvshen|hot)/([a-z]+)?",
+        "url": "^https?://www\\.meitu131\\.com/(e/search|rank|meinv|shouji|sucai|nvshen|hot)/([a-z]+)?",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".details>ul,.cover-list",
         "replaceElement": "#pages",
@@ -1106,7 +1223,7 @@
     {
         "name": "Make Girls",
         "example": "https://asdcosplay.com/category/collections/djawa/",
-        "url": "^https?://asdcosplay\\.com/",
+        "url": "^https?://asdcosplay\\.com/(\\?s=|category)?",
         "nextLink": "a.next",
         "pageElement": "article.post",
         "replaceElement": ".nav-links",
@@ -1115,25 +1232,28 @@
     {
         "name": "Asian Girls",
         "example": "https://allasiangirls.net/category/free-content/",
-        "url": "^https?://allasiangirls\\.net/",
+        "url": "^https?://allasiangirls\\.net/(category|\\?s=)",
         "nextLink": "a.next",
-        "pageElement": "[id^='row'].row>.post-item",
+        "pageElement": "//div[(div/@class='col post-item')]",
         "replaceElement": ".page-numbers",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": ".post-item {height: 370px;min-height: 370px;margin-bottom:0px!important}",
+        "initRun": 1,
+        "autoLoadNum": 1
     },
     {
         "name": "Yellow Fever",
         "example": "https://yellowfever18.com/chinese/",
-        "url": "^https?://yellowfever18\\.com/",
+        "url": "^https?://yellowfever18\\.com/(tag|chinese|korean|japanese|\\?s=)",
         "nextLink": "a.next",
         "pageElement": ".jeg_block_container",
         "replaceElement": ".jeg_block_navigation",
-        "css": ".pagetual_pageBar{margin-top:-25px!important}"
+        "css": ".pagetual_pageBar{margin-top:-20px!important;margin-bottom:0px!important}.pagetual_pageBar+div{margin-top:-2px!important}"
     },
     {
         "name": "ASD ASFD CN",
         "example": "https://asdasfd.net/",
-        "url": "^https?://asdasfd\\.net/",
+        "url": "^https?://asdasfd\\.net/(category|\\?s=)",
         "nextLink": "//a[text()='Older posts']",
         "pageElement": "article.post",
         "replaceElement": ".navigation",
@@ -1151,7 +1271,7 @@
     {
         "name": "NudeBird",
         "example": "https://nudebird.biz/",
-        "url": "^https?://nudebird\\.biz/",
+        "url": "^https?://nudebird\\.biz/(tag|category|\\?s=)?",
         "nextLink": "li.current+li>a",
         "pageElement": ".excerpt",
         "replaceElement": ".pagination",
@@ -1160,14 +1280,14 @@
     {
         "name": "NUDECOSPLAY",
         "example": "https://nudecosplaygirls.com/",
-        "url": "^https?://nudecosplaygirls\\.com/",
+        "url": "^https?://nudecosplaygirls\\.com/(category)?",
         "nextLink": "a.next",
         "pageElement": ".g1-collection-viewport",
         "replaceElement": ".g1-pagination",
         "css": ".pagetual_pageBar{margin-top:-30px!important}"
     },
     {
-        "name": "Nlegs - 圖",
+        "name": "Nlegs - 圖 (高清打包下載使用 - 图聚合展示by xhua)",
         "example": "https://www.nlegs.com/girls/2022/10/01/28219.html",
         "url": "^https?://www\\.nlegs\\.com/girls/",
         "nextLink": "li.active+li>a",
@@ -1196,7 +1316,7 @@
     {
         "name": "NongMo.Zone",
         "example": "http://www.ilovexs.com/",
-        "url": "^https?://www\\.ilovexs\\.com/",
+        "url": "^https?://www\\.ilovexs\\.com/(category)?",
         "nextLink": ".nav-next>a",
         "pageElement": ".col-lg-4",
         "replaceElement": ".nav-links",
@@ -1205,10 +1325,17 @@
         "autoLoadNum": 1
     },
     {
-        "name": "4KUP",
-        "example": "https://www.4kup.net/search?updated-max=2022-08-19T02%3A12%3A00-07%3A00&max-results=18&page=2",
-        "url": "^https?://www\\.4kup\\.net/",
-        "nextLink": "span+a",
+        "name": "4KUP - 圖片清單載入大圖可用Picviewer CE+打包下載",
+        "example": "https://www.4kup.net/2022/08/pure-media-vol182-bomi-bomistrys-office.html",
+        "url": "^https?://www\\.4kup\\.net/\\d+/\\d+/[^.]+\\.html$",
+        "init": "let imgs=document.querySelectorAll('#gallery img');[].forEach.call(imgs,function(img){let f=img.parentNode.nextSibling.firstChild.href;img.src=f;img.removeAttribute('data-src');img.removeAttribute('class');img.removeAttribute('loading')});",
+        "nextLink": "0"
+    },
+    {
+        "name": "4KUP - 分類",
+        "example": "https://www.4kup.net/search/label/djawa?max-results=18",
+        "url": "^https?://www\\.4kup\\.net/search",
+        "nextLink": "span.current+a",
         "pageElement": ".index-post-wrap"
     },
     {
@@ -1255,7 +1382,7 @@
     },
     {
         "name": "BAOBUA.COM - 看圖",
-        "example": "https://www.baobua.com/post/eVFpTk1INFBPRjdSMTRTYUxNYXRMbTU4cERheVgzS1VvZWlPREFRakpNODlTTnN1SnBrKzZPaW85dFJEWEd5SlVxMCtlc244OXNiSENkZ0ZaQVZnQmc9PQ==",
+        "example": "https://www.baobua.com/post/d00yYmh4WFNoZERNdFd5Q1QwNHhrNmZPZlMzUUI5UUo3OFVDRm5jWG11OFZ6aDJaeXpHdGh0Sm5sU0s4WjF5aXVIR0pLTTJvb0h3SDdlM1NSR0JxSHc9PQ==",
         "url": "^https?://www\\.baobua\\.com/post/",
         "nextLink": ".current+a,.current+.dots+a",
         "pageElement": ".entry-content.read-details",
@@ -1311,8 +1438,8 @@
     },
     {
         "name": "HOTGIRLchina - 看圖",
-        "example": "https://hotgirlchina.com/imiss-vol-691-lavinia%e8%82%89%e8%82%89-39-photos/",
-        "url": "^https?://hotgirlchina\\.com/",
+        "example": "https://hotgirlchina.com/xiuren-no-5261-zhu-ke-er-%e6%9c%b1%e5%8f%af%e5%84%bfflora-115-photos/",
+        "url": "^https?://hotgirlchina\\.com/[^/]+photos/",
         "nextLink": ".nextpostslink",
         "pageElement": ".entry-inner>p",
         "replaceElement": "nav.pagination",
@@ -1337,7 +1464,7 @@
     {
         "name": "HOTGIRLchina - 分類",
         "example": "https://hotgirlchina.com/tag/imiss/",
-        "url": "^https?://hotgirlchina\\.com/",
+        "url": "^https?://hotgirlchina\\.com/tag/",
         "nextLink": ".nextpostslink",
         "pageElement": "#grid-wrapper",
         "replaceElement": "nav.pagination",
@@ -1345,7 +1472,7 @@
     },
     {
         "name": "BeautyLeg - 圖片",
-        "example": "https://www.beautyleg6.com/xingganmeinv/201408/178.html",
+        "example": "https://www.beautyleg6.com/xingganmeinv/201407/162.html",
         "url": "^https?://www.beautyleg\\d+\\.com/.+\\.html",
         "init": "function $$x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let as=$$x(\"//div[@class='contents']/a[not(img)]\");[].forEach.call(as,function(a){a.remove()});let ams=$$(\"//div[@class='contents']/a\");[].forEach.call(ams,function(a){a.removeAttribute('href')});let brs=document.querySelectorAll('.contents br');[].forEach.call(brs,function(br){br.remove()});let ads=document.querySelectorAll('.ad');[].forEach.call(ads,function(div){div.remove()});",
         "nextLink": "//a[text()='下一页']",
@@ -1504,7 +1631,7 @@
     },
     {
         "name": "Mrcong - 看圖",
-        "example": "https://mrcong.com/",
+        "example": "https://mrcong.com/xiaoyu-vol-831-yang-chen-chen-yome-74-anh/",
         "url": "^https?://mrcong\\.com/",
         "init": "let brs=document.querySelectorAll('p>br');[].forEach.call(brs,function(br){br.remove()});",
         "nextLink": ".page-link>span+a",
@@ -1517,7 +1644,7 @@
     {
         "name": "Mrcong",
         "example": "https://mrcong.com/",
-        "url": "^https?://mrcong\\.com/",
+        "url": "^https?://mrcong\\.com/(page/\\d+/)?",
         "nextLink": ".current+a",
         "pageElement": "article.item-list",
         "replaceElement": ".pagination"
