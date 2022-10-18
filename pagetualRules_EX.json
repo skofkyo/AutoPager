@@ -13,7 +13,7 @@
     {
         "name": "動漫狂 - 分類",
         "example": "https://www.cartoonmad.com/hotrank.html",
-        "url": "^https?://www\\.cartoonmad\\.com/(hotrank|topcm|newcm|comic\\d+)\\.html",
+        "url": "^https?://www\\.cartoonmad\\.com/(hotrank|topcm|newcm|comic\\d+)(\\.\\d+)?\\.html",
         "nextLink": "a.onpage+a",
         "pageElement": "td[align='right']>table[border='0']",
         "replaceElement": "td[align='right']>table:last-child"
@@ -376,9 +376,13 @@
         "name": "漫画DB - 閱讀",
         "example": "https://www.manhuadb.com/manhua/1167/7899_120148.html",
         "url": "^https?://www\\.manhuadb\\.com/manhua/\\d+/\\w+\\.html",
-        "nextLinkByJs": "let next = doc.querySelector('option[selected]+option');if (next) return (location.origin + location.pathname.replace(/(\\d+)(_p(\\d+))?(\\.html)$/, '$1') + '_p' + next.value + '.html')",
+        "nextLinkByUrl": [
+            "(\\d+)(_p(\\d+))?(\\.html)$",
+            "$1_p{($3.0||1)+1}$4",
+            "select>option:last-child:not(selected)"
+        ],
         "pageElement": ".show-pic",
-        "replaceElement": ".pagination,.d-none.d-sm-block",
+        "replaceElement": ".pagination,.c_nav_page",
         "rate": 3,
         "pageAction": "$('.pagetual_pageBar').remove();",
         "css": "#left,#right{display:none!important}.row>*{padding:0px!important}"
@@ -515,7 +519,7 @@
         "example": "http://www.kumw5.com/24186/1259138.html",
         "url": "^https?://www\\.(kumw|kuman)\\d+\\.com/\\d+/\\d+\\.html$",
         "action": 1,
-        "nextLink": "a.next",
+        "nextLink": "a.next[href$='html']",
         "pageElement": ".main_img",
         "replaceElement": ".chapend",
         "pageBarText": 1
@@ -534,7 +538,7 @@
         "example": "http://m.kumw5.com/25387/1391493.html",
         "url": "^https?://m\\.(kumw|kuman)\\d+\\.com/\\d+/\\d+\\.html",
         "action": 1,
-        "nextLink": "li.end-itm.next>a",
+        "nextLink": "li.end-itm.next>a[href$='html']",
         "pageElement": ".main_img",
         "replaceElement": ".chapter-end",
         "pageBarText": 1
@@ -569,7 +573,7 @@
         "url": "^https?://www\\.kuaikanmanhua\\.com/web/comic/\\d+",
         "history": 2,
         "action": 1,
-        "nextLink": "//a[text()='下一话']",
+        "nextLink": "//a[not(@href='javascript:void(0);') and text()='下一话']",
         "pageElement": ".imgList",
         "replaceElement": ".AdjacentChapters",
         "css": ".giude{display:none!important}",
@@ -898,7 +902,64 @@
         "loadMore": "#moreBtn"
     },
     {
-        "name": "Pic Yailay",
+        "name": "Kemono - post",
+        "example": "https://kemono.party/fantia/user/17148/post/1528173",
+        "url": "^https?://kemono\\.party/fantia/user/\\d+/post/\\d+$",
+        "nextLink": ".post__nav-item>a.next",
+        "pageElement": ".post__header,.post__body",
+        "replaceElement": ".post__nav-links,.post__footer"
+    },
+    {
+        "name": "Kemono - user",
+        "example": "https://kemono.party/fantia/user/17148?o=0",
+        "url": "^https?://kemono\\.party/fantia/user/\\d+\\?o=",
+        "nextLink": "a.pagination-button-after-current",
+        "stopSign": [
+            "",
+            "li.pagination-button-disabled.pagination-button-current+li.pagination-button-disabled.pagination-button-after-current"
+        ],
+        "pageElement": ".card-list__items>article",
+        "replaceElement": "#paginator-top,#paginator-bottom",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
+    },
+    {
+        "name": "Kemono - posts",
+        "example": "https://kemono.party/posts",
+        "url": "^https?://kemono\\.party/posts",
+        "nextLink": "a.pagination-button-after-current",
+        "stopSign": [
+            "",
+            ".card-list__item--no-results"
+        ],
+        "pageElement": ".card-list.card-list--legacy",
+        "replaceElement": "#paginator-top,#paginator-bottom"
+    },
+    {
+        "name": "全图网 - 圖片",
+        "example": "http://qq.quantuwang1.com/m/fb9deaa66efefa21.html",
+        "url": "^https?://(q|qq|t|w|m)\\.(quantuwang1|54mn)\\.(com|cc)/m/",
+        "init": "let link=document.querySelector('.index_c_img>a');link.removeAttribute('href')",
+        "nextLink": "span+a",
+        "pageElement": ".index_c_img img[alt],.index_c_img>p",
+        "insert": ".index_c_img",
+        "insertPos": 2,
+        "replaceElement": ".index_c_page",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "body>[style*='z-index'],img[src*='/aaa/']{display:none!important}body{padding-bottom:0px!important}"
+    },
+    {
+        "name": "全图网 - 分類",
+        "example": "http://qq.quantuwang1.com/meinv/taotu/",
+        "url": "^https?://(q|qq|t|w|m)\\.(quantuwang1|54mn)\\.(com|cc)/meinv/",
+        "nextLink": "span+a",
+        "pageElement": ".index_middle_c",
+        "replaceElement": ".index_c_page,.list_page",
+        "css": "body>[style*='z-index'],img[src*='/aaa/']{display:none!important}"
+    },
+    {
+        "name": "Pic Yailay - 圖片",
         "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html",
         "url": "^https?://pic\\.yailay\\.com/articles",
         "nextLink": "//a[text()='Next >']",
@@ -1287,7 +1348,7 @@
         "css": ".pagetual_pageBar{margin-top:-30px!important}"
     },
     {
-        "name": "Nlegs - 圖 (高清打包下載使用 - 图聚合展示by xhua)",
+        "name": "Nlegs - 圖 (高清打包下載使用图聚合展示by xhua)",
         "example": "https://www.nlegs.com/girls/2022/10/01/28219.html",
         "url": "^https?://www\\.nlegs\\.com/girls/",
         "nextLink": "li.active+li>a",
@@ -1980,11 +2041,11 @@
     },
     {
         "name": "黃色倉庫",
-        "example": "http://2279ck.cc/vodtype/10.html",
+        "example": "http://2346ck.cc/vodtype/10.html",
         "url": "^https?://[^/]+/(vodtype|vodsearch)/.+\\.html",
         "include": ".container>.row>.stui-warp-content>.stui-pannel.clearfix>.stui-pannel-bd>ul.stui-vodlist.clearfix,.stui-pannel-ft>ul.stui-page.text-center.clearfix",
         "action": 2,
-        "nextLink": "li.active+li>a",
+        "nextLink": "li.hidden-xs.active+li>a",
         "pageElement": ".stui-pannel-bd",
         "replaceElement": ".stui-pannel-ft",
         "pageAction": "let iftames=document.querySelectorAll('iframe[name]');[].forEach.call(iftames,function(iftame){iftame.style.margin='0 0 2px'});",
@@ -1994,11 +2055,10 @@
         "name": "fc2hub",
         "example": "https://fc2hub.com/",
         "url": "^https?://fc2hub\\.com/",
-        "action": 2,
+        "action": 1,
         "nextLink": "a[rel='next']",
-        "pageElement": "#content > div > div.row > div.col-sm-12.col-md-12.col-xl-10 > div.row:not([style]):not(.justify-content-center)",
-        "pageAction": "let iftames=document.querySelectorAll('iframe[name]');[].forEach.call(iftames,function(iftame){iftame.style.margin='0 0 2px'});",
-        "css": "inIframe:#content > div > div.row > div.d-none.d-xl-block.col-xl-2{display:none!important;}.col-xl-10{flex:0 0 100%!important;max-width:100%!important}"
+        "pageElement": "//div[(div/div/@class='card shadow') and @class='row']",
+        "replaceElement": ".pagination"
     },
     {
         "name": "PPP.Porn - 搜索",
@@ -2074,10 +2134,18 @@
         "css": ".pagetual_pageBar{margin-top:-10px!important;}"
     },
     {
-        "name": "7mmtv",
+        "name": "7mmtv - 漫畫",
+        "example": "https://0vrlcn.7mmtv.sx/zh/hcomic_content/4162/content.html",
+        "url": "^https?://\\w+\\.7mmtv\\.sx/(zh|en|ja|ko)/hcomic_content/",
+        "init": "let _img='';for(let i=1;i<=Large_cgurl.length-1;i++){_img+=`<img src=\"${Large_cgurl[i]}\"class=\"img-responsive\">`};document.getElementById('show_cg_html').innerHTML=_img;",
+        "css": ".ut1_img_content_js,.fullcomics-controls,.video-introduction-images-row>center>*:not(#content) {display: none !important;}.img-responsive{max-width:100%}",
+        "nextLink": "0"
+    },
+    {
+        "name": "7mmtv - 分類",
         "example": "https://7mmtv.sx/zh/uncensored_random/all/index.html",
-        "url": "^https?://7mmtv\\.sx/",
-        "nextLink": "li.current+li>a",
+        "url": "^https?://7mmtv\\.sx/(zh|en|ja|ko)/[a-z]+_(random|list)/",
+        "nextLink": ".previous-next a",
         "pageElement": ".row.content",
         "replaceElement": "nav.pagination-row"
     },
@@ -2087,8 +2155,7 @@
         "url": "^https?://www\\.tktube\\.com/",
         "nextLink": ".next>a",
         "pageElement": "#list_videos_common_videos_list_items,#list_videos_videos_list_search_result_items",
-        "replaceElement": "#list_videos_common_videos_list_pagination,#list_videos_videos_list_search_result_pagination",
-        "css": ".pagetual_pageBar{margin-top:10px!important;}"
+        "replaceElement": "#list_videos_common_videos_list_pagination,#list_videos_videos_list_search_result_pagination"
     },
     {
         "name": "playav",
@@ -2097,7 +2164,8 @@
         "nextLink": "//li[(a/@class='current')]/following-sibling::li/a",
         "pageElement": ".page-header+div",
         "replaceElement": ".pagination",
-        "pageAction": "let imgs=document.querySelectorAll('.post-thumbnail-container>img');[].forEach.call(imgs,function(img){if(img){img.setAttribute('class','loaded')}});"
+        "pageAction": "let imgs=document.querySelectorAll('.post-thumbnail-container>img:not(.loaded)');[].forEach.call(imgs,function(img){if(img){img.setAttribute('class','loaded')}});",
+        "css": "#dclm_modal_screen,#dclm_modal_content{display:none!important}"
     },
     {
         "name": "RIRI TV",
@@ -2106,7 +2174,7 @@
         "nextLink": "//li[(a/@class='current')]/following-sibling::li/a",
         "pageElement": ".page-header+div",
         "replaceElement": ".pagination",
-        "pageAction": "let imgs=document.querySelectorAll('.video-preview+img');[].forEach.call(imgs,function(img){if(img){img.setAttribute('class','loaded')}});"
+        "pageAction": "let imgs=document.querySelectorAll('.video-preview+img:not(.loaded)');[].forEach.call(imgs,function(img){if(img){img.setAttribute('class','loaded')}});"
     },
     {
         "name": "JAVCT",
@@ -3363,8 +3431,8 @@
     },
     {
         "name": "牛C網 - 列表",
-        "example": "https://niuc1.com/sex",
-        "url": "^https?://niuc1\\.com/(blog|sex|pornhub|apps)",
+        "example": "https://niuc.icu/sex",
+        "url": "^https?://niuc\\.icu/(blog|sex|pornhub|apps)",
         "nextLink": "span.current+a",
         "pageElement": ".cat_list",
         "replaceElement": ".posts-nav",
@@ -3373,8 +3441,8 @@
     },
     {
         "name": "牛C網 - 看圖",
-        "example": "https://niuc1.com/64438.html",
-        "url": "^https?://niuc1\\.com/\\d+\\.html",
+        "example": "https://niuc.icu/64438.html",
+        "url": "^https?://niuc\\.icu/\\d+\\.html",
         "nextLink": "span+a",
         "pageElement": "div.panel-body.single.mt-2 > p",
         "replaceElement": ".page-nav",
@@ -3385,8 +3453,8 @@
     },
     {
         "name": "牛C網 - 正文",
-        "example": "https://niuc1.com/67307.html",
-        "url": "^https?://niuc1\\.com/\\d+\\.html",
+        "example": "https://niuc.icu/67307.html",
+        "url": "^https?://niuc\\.icu/\\d+\\.html",
         "action": 1,
         "exclude": ".page-nav",
         "nextLink": ".nav.previous>a",
@@ -3682,12 +3750,14 @@
         "name": "NETFLAV",
         "example": "https://netflav.com/uncensored",
         "url": "^https://netflav\\.com/",
-        "nextLink": "#general-pagination>div>a[aria-current='true']+a",
+        "action": 1,
+        "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + '?page=' + next.getAttribute('value'))",
         "pageElement": ".video_grid_container>.grid_root",
         "waitElement": [
             "a[aria-current='true']+a",
             "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
         ],
+        "replaceElement": "#general-pagination",
         "css": ".grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}"
     },
     {
@@ -3875,7 +3945,7 @@
     },
     {
         "name": "hitxhot - 寫真",
-        "example": "https://hitxhot.com/gallerys/V2RseGhqL1RsU3NlbjVrT0RpWkdwQT09.html",
+        "example": "https://hitxhot.com/gallerys/TUNPcCtCSVhEMXNPZU52TWI2ZnB2Zz09.html",
         "url": "^https?://hitxhot\\.com/gallerys/",
         "action": 1,
         "nextLink": "//a[contains(text(),'Next')]",
@@ -4046,6 +4116,45 @@
         "css": "img{opacity:1!important}"
     },
     {
+        "name": "和圖書手機版 -閱讀",
+        "example": "https://m.hetubook.com/book/5849/4387851.html",
+        "url": "^https?://m\\.hetubook\\.com/book2?/\\d+/\\d+\\.html",
+        "action": 1,
+        "nextLink": "a#next",
+        "pageElement": ".title>h2,#content",
+        "waitElement": [
+            "",
+            ".cmask"
+        ],
+        "replaceElement": "#spage",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": ".body>h2{text-align:center!important;}"
+    },
+    {
+        "name": "和圖書 -閱讀",
+        "example": "https://www.hetubook.com/book/5849/4387851.html",
+        "url": "^https?://www\\.hetubook\\.com/book2?/\\d+/\\d+\\.html",
+        "action": 1,
+        "nextLink": "a#next",
+        "pageElement": "#content",
+        "waitElement": [
+            "",
+            ".mask.mask2"
+        ],
+        "replaceElement": "#right",
+        "autoClick": ".code",
+        "css": "#center{display:contents!important}"
+    },
+    {
+        "name": "和圖書 -分類",
+        "example": "https://www.hetubook.com/book/index.php",
+        "url": "^https?://www\\.hetubook\\.com/book2?/index\\.php",
+        "nextLink": "span.current+a",
+        "pageElement": "#list",
+        "replaceElement": ".page",
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}"
+    },
+    {
         "name": "小說狂人 - 閱讀",
         "example": "https://czbooks.net/n/ul6pe/ukcme",
         "url": "^https?://czbooks\\.net/n/\\w+/\\w+",
@@ -4053,20 +4162,40 @@
         "history": 2,
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".name,.content",
-        "replaceElement": [
-            ".container>div>ul.nav",
-            "#mm-5 > ul"
-        ],
+        "replaceElement": ".container .chapter-nav,.main>.chapter-nav,#mm-5>.chapter-nav",
         "pageAction": "$('.pagetual_pageBar').remove();"
     },
     {
         "name": "小說狂人 - 書籍分類",
         "example": "https://czbooks.net/c/xuanhuan/finish",
         "url": "^https?://czbooks\\.net/c/\\w+",
-        "nextLink": ".container>ul.nav+ul>li.active:not(.menu-item)+li>a",
-        "pageElement": "ul.nav.novel-list.style-default",
+        "nextLink": ".nav.paginate>li.active+li>a",
+        "pageElement": ".novel-list",
         "replaceElement": ".nav.paginate",
         "css": ".pagetual_pageBar+.novel-list.style-default{margin-top:8px!important;}"
+    },
+    {
+        "name": "無限小說 - 閱讀",
+        "example": "https://www.8book.com/read/125687/?312407",
+        "url": "^https?://www\\.8book\\.com/read/",
+        "action": 1,
+        "history": 2,
+        "nextLink": "span.next>a",
+        "pageElement": "//div[(div/@id='subtitle')] | id('text')",
+        "waitElement": [
+            "#text>br"
+        ],
+        "replaceElement": "//div[@class='row mx-0 read_btn_gp']",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": "#text>br:nth-child(even){display:none!important}#subtitle{margin-bottom:0px!important}"
+    },
+    {
+        "name": "無限小說 - 書籍分類",
+        "example": "https://www.8book.com/booklists/update/",
+        "url": "^https?://www\\.8book\\.com/booklists/(update|newrelease|finish|list|\\d+)/",
+        "nextLink": "li[onclick]+li>a",
+        "pageElement": ".row>div.p-2",
+        "replaceElement": ".row>li"
     },
     {
         "name": "UU看書 - 手機版 - 閱讀",
@@ -4114,10 +4243,7 @@
         "history": 2,
         "nextLink": "#read_next",
         "pageElement": "#top,#bookContent",
-        "replaceElement": [
-            "#read>.rp-switch",
-            "#read-page>.rp-switch"
-        ],
+        "replaceElement": "#read>.rp-switch,#read-page>.rp-switch",
         "css": "#read-page .iconback,#read-page .iconhome{display: none!important;}",
         "insert": "#read-page>.rp-switch",
         "insertPos": 1,
