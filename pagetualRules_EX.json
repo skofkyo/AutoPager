@@ -889,6 +889,323 @@
         "loadMore": "#moreBtn"
     },
     {
+        "name": "gogo人体艺术",
+        "example": "https://gogortrt.com/gmgqdd/",
+        "url": "^https?://gogortrt\\.com/[a-z]+/",
+        "include": ".index_list",
+        "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
+        "pageElement": ".ulPic",
+        "replaceElement": ".pages",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": "iframe{height:55px!important}"
+    },
+    {
+        "name": "956体艺术 - 圖片",
+        "example": "https://956n.com/rbddszysz/1398/",
+        "url": "^https?://956[a-z]{1,2}\\.com/[a-z]+/\\d+/(\\d+\\.html$)?",
+        "init": "let ah=document.querySelector('.content a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
+        "pageElement": ".content img[alt]",
+        "replaceElement": ".page",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "956人体艺术",
+        "example": "https://956n.com/rbddszysz/",
+        "url": "^https?://956[a-z]{1,2}\\.com/",
+        "exclude": ".title",
+        "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
+        "pageElement": "//ul[(li/a/@title)]",
+        "replaceElement": ".page",
+        "css": ".pagetual_pageBar{margin-top:0px!important;margin-bottom:0px!important}"
+    },
+    {
+        "name": "666人体艺术 - 圖片",
+        "example": "https://6666rt.com/ArtZG/2152/1.html",
+        "url": "^https?://[6]{3,4}[a-z]{2}\\.com/[a-zA-Z]+/\\d+/\\d+\\.html",
+        "init": "let ah=document.querySelector('.imgbox>a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页 >>' and contains(@href,'html')]",
+        "pageElement": ".imgbox img[alt]",
+        "replaceElement": ".page,span>h1,.www",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}"
+    },
+    {
+        "name": "666人体艺术",
+        "example": "https://6666rt.com/ArtZG/",
+        "url": "^https?://[6]{3,4}[a-z]{2}\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".tpm02>.fzltp>ul",
+        "replaceElement": ".pagelist"
+    },
+    {
+        "name": "64体艺术 - 圖片",
+        "example": "http://www.64ay.com/xxrtddbkxb/313.html",
+        "url": "^https?://www\\.64[a-z]{2}\\.com/[a-z]+/\\d+(_\\d+)?\\.html",
+        "init": "let ah=document.querySelector('.tu>a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".tu img[alt]",
+        "replaceElement": ".page-show",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}"
+    },
+    {
+        "name": "64人体艺术",
+        "example": "http://www.64ay.com/xxrtddbkxb/",
+        "url": "^https?://www\\.64[a-z]{2}\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".tu_list",
+        "replaceElement": ".page-show",
+        "css": ".wzlist{height:auto!important}"
+    },
+    {
+        "name": "98体艺术 - 圖片",
+        "example": "http://www.98ah.com/GOGOqqddgqrt/415.html",
+        "url": "^https?://www\\.98[a-z]{2}\\.com/[a-z]+/\\d+(_\\d+)?\\.html",
+        "init": "let ah=document.querySelector('.content-pic>a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".content-pic img[alt]",
+        "replaceElement": ".page-show",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}"
+    },
+    {
+        "name": "98人体艺术",
+        "example": "http://www.98ah.com/gogoltmnysxz/",
+        "url": "^https?://www\\.98[a-z]{2}\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".main>dl>dd",
+        "replaceElement": ".page-show"
+    },
+    {
+        "name": "54体艺术 - 圖片",
+        "example": "http://www.54aj.com/gogogmbspqq/432.html",
+        "url": "^https?://www\\.54[a-z]{2}\\.com/[a-z]+/\\d+(_\\d+)?\\.html",
+        "init": "let ah=document.querySelector('.content>a:not([href*=tags])');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".content img[alt]",
+        "replaceElement": ".page",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "54人体艺术",
+        "example": "http://www.54aj.com/gogogmbspqq/",
+        "url": "^https?://www\\.54[a-z]{2}\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "//div[(li/a/img/@alt) and @class='yyy']",
+        "replaceElement": ".page"
+    },
+    {
+        "name": "48人体艺术 - 圖片",
+        "example": "http://www.48gd.com/yyrtdd/448.html",
+        "url": "^https?://www\\.48[a-z]{2}\\.com/[a-z]+/\\d+(_\\d+)?\\.html",
+        "init": "let ah=document.querySelector('#content>a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "#content img[alt]",
+        "replaceElement": ".pagelist,h3",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "48人体艺术",
+        "example": "http://www.48gd.com/qltysz/",
+        "url": "^https?://www\\.48[a-z]{2}\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".grid",
+        "replaceElement": ".pagelist"
+    },
+    {
+        "name": "42人体艺术 - 圖片",
+        "example": "http://www.42jd.com/ddrGOGOtysgq/417.html",
+        "url": "^https?://www\\.42[a-z]{2}\\.com/[a-z]+/\\d+(_\\d+)?\\.html",
+        "action": 1,
+        "init": "let ah=document.querySelector('.imgbox>a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".imgbox img[alt]",
+        "replaceElement": ".pagelist,.imgbox>h1",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "42人体艺术 - 搜索",
+        "example": "http://www.42jd.com/plus/search.php?keyword=%E7%BE%8E%E5%A5%B3&searchtype=titlekeyword&channeltype=0&orderby=&kwtype=0&pagesize=24&typeid=0&TotalResult=50&PageNo=1",
+        "url": "^https?://www\\.[0-9]{2}[a-z]{2}\\.com/plus/search\\.php",
+        "action": 1,
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "//ul[(li/a/@title)]",
+        "replaceElement": ".page-show"
+    },
+    {
+        "name": "42人体艺术",
+        "example": "http://www.42jd.com/ddxxltmnrt/",
+        "url": "^https?://www\\.42[a-z]{2}\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".fzltp>ul",
+        "replaceElement": ".pagelist"
+    },
+    {
+        "name": "36人体艺术 - 圖片",
+        "example": "www.36ut.com，xixirt.org",
+        "url": "^https?://(www\\.)?(36[a-z]{2}|xixirt)\\.(com|org)/[a-z]+/(\\d+/|\\d+(_\\d+)?\\.html)",
+        "action": 1,
+        "init": "let ah=document.querySelector('.pp>a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".pp img",
+        "replaceElement": ".page-show",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "36人体艺术",
+        "example": "www.36ut.com，xixirt.org",
+        "url": "^https?://(www\\.)?(36[a-z]{2}|xixirt)\\.(com|org)/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".detail-list",
+        "replaceElement": ".page-show",
+        "css": ".pagetual_pageBar{margin-top:-10px!important}"
+    },
+    {
+        "name": "23人体艺术 - 圖片",
+        "example": "http://www.23fe.com/gogoddppys/435.html",
+        "url": "^https?://www\\.23[a-z]{2}\\.com/[a-z]+/\\d+(_\\d+)?\\.html",
+        "action": 1,
+        "init": "let ah=document.querySelector('#content-p a');ah.removeAttribute('href')",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "#content-p img",
+        "replaceElement": ".gengduo",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "img[alt]{margin-bottom:0px!important}"
+    },
+    {
+        "name": "23人体艺术",
+        "example": "http://www.23fe.com/gogoddppys/",
+        "url": "^https?://www\\.23[a-z]{2}\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".fitCont_2>ul",
+        "replaceElement": ".gengduo"
+    },
+    {
+        "name": "AJ人体艺术 - 圖片",
+        "example": "https://www.02aj.com/yzrt/8674_2.html",
+        "url": "^https?://www\\.02aj\\.com/[a-z]+/\\d+(_\\d+)?\\.html",
+        "action": 1,
+        "init": "let ahs=document.querySelectorAll('.content>a');[].forEach.call(ahs,a=>{a.removeAttribute('href')});",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".content img",
+        "replaceElement": ".paging",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "img[alt]{margin-bottom:0px!important}"
+    },
+    {
+        "name": "AJ人体艺术",
+        "example": "https://www.02aj.com/yzrt/",
+        "url": "^https?://www\\.\\d+aj\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "//div[(div/div/a/img/@alt) and @class='list']",
+        "replaceElement": ".page-list",
+        "css": ".pagetual_pageBar{margin-top:-10px!important}"
+    },
+    {
+        "name": "139人体艺术手機版 - 圖片",
+        "example": "https://m.139tu.com/rtysyz/20200710/7479.html",
+        "url": "^https?://(m|wap)\\.([0-9]{2,4}[a-z]{1,5}|[a-z]{2,5}[0-9]{1,3}|\\d+aj|\\d+|xixirt|gogortrt|7m11)\\.(com|org)/[a-zA-Z]+/(\\d+/(\\d+\\.html$)?|\\d+(_\\d+)?\\.html$|\\d+/\\d+(_\\d+)?\\.html$)",
+        "init": "let ahs=document.querySelectorAll('.tal a');[].forEach.call(ahs,a=>{a.removeAttribute('href')});",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".tal img[alt]",
+        "replaceElement": ".page,body>[style='font-size:14px;'],.tip",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "[style='margin:3px 0 0 0;']{display:none!important}img[alt]{opacity: 1!important}"
+    },
+    {
+        "name": "139人体艺术手機版",
+        "example": "88rtys.com，https://m.139tu.com/rtysyz/",
+        "url": "^https?://(m|wap)\\.([0-9]{2,4}[a-z]{1,5}|[a-z]{2,5}[0-9]{1,3}|\\d+aj|\\d+|xixirt|gogortrt|7m11)\\.(com|org)/",
+        "include": ".page-show",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".listmain",
+        "replaceElement": ".page-show",
+        "lazyImgSrc": "lazysrc",
+        "css": "[style='margin:3px 0 0 0;']{display:none!important}img[alt]{opacity: 1!important}"
+    },
+    {
+        "name": "139人体艺术 - 圖片",
+        "example": "https://www.139tu.com/rtysyz/20210829/8674_2.html",
+        "url": "^https?://www\\.139tu\\.com/[a-z]+/\\d+/\\d+(_\\d+)?\\.html",
+        "action": 1,
+        "init": "let ahs=document.querySelectorAll('.img_box>a');[].forEach.call(ahs,a=>{a.removeAttribute('href')});",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".img_box img",
+        "replaceElement": "#pages",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "139人体艺术",
+        "example": "88rtys.com，https://www.139tu.com/rtysyz/",
+        "url": "^https?://www\\.139tu\\.com/",
+        "include": ".list_tags",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".list-box",
+        "replaceElement": "#pages",
+        "lazyImgSrc": "data-echo",
+        "css": ".pagetual_pageBar{margin-top:4px!important}"
+    },
+    {
+        "name": "GOGO人体艺术 - 圖片",
+        "example": "http://www.gogort2.com/html/yazhou/9988.html",
+        "url": "^https?://www\\.gogort\\d?\\.com/html/[a-z]+/\\d+(_\\d+)?\\.html$",
+        "action": 1,
+        "init": "let ahs=document.querySelectorAll('.main>div>a[title]');[].forEach.call(ahs,a=>{a.removeAttribute('href')});",
+        "nextLink": "span+a:not(.a1)",
+        "pageElement": "//div[@class='main']/div[(a/@title)]//img",
+        "replaceElement": "//div[(a/@class='a1')]",
+        "css": ".main>iframe{display:none!important}iframe{height:55px!important}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "GOGO人体艺术 - 搜索",
+        "example": "http://www.gogort2.com/index.php?m=search&c=index&a=init&typeid=&siteid=1&q=%B4%F3%B5%A8",
+        "url": "^https?://www\\.gogort\\d?\\.com/index\\.php\\?m=search",
+        "nextLink": "span+a:not(.a1)",
+        "pageElement": ".search_content",
+        "replaceElement": ".pages",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "GOGO人体艺术",
+        "example": "http://www.gogort2.com/html/yazhou/index_2.html",
+        "url": "^https?://www\\.gogort\\d?\\.com/html/[a-z]+/(index_\\d+\\.html)?",
+        "include": ".index_list",
+        "nextLink": "span+a:not(.a1)",
+        "pageElement": ".ulPic",
+        "replaceElement": ".pages",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": "iframe{height:55px!important}"
+    },
+    {
         "name": "图集岛",
         "example": "https://www.tujidao03.com/u/?action=gengxin",
         "url": "^https?://www\\.tujidao\\d+\\.com/",
@@ -1497,7 +1814,7 @@
     {
         "name": "HOTGIRLchina - 看圖",
         "example": "https://hotgirlchina.com/xiuren-no-5261-zhu-ke-er-%e6%9c%b1%e5%8f%af%e5%84%bfflora-115-photos/",
-        "url": "^https?://hotgirlchina\\.com/[^/]+photos/",
+        "url": "^https?://hotgirlchina\\.com/.+photos/",
         "nextLink": ".nextpostslink",
         "pageElement": ".entry-inner>p",
         "replaceElement": "nav.pagination",
@@ -1622,11 +1939,22 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "MM131美女图片手機版 - 首頁",
+        "name": "MM131美女图片手機版 - 分類",
         "example": "https://m.mmm131.com/xinggan/",
+        "url": "^https?://m\\.mmm131\\.com/",
+        "include": "#listm",
+        "init": "let nops=document.querySelectorAll('.post.nop');[].forEach.call(nops,article=>{article.classList.remove('nop')});",
+        "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
+        "pageElement": ".post",
+        "replaceElement": "#webpage",
+        "pageAction": "let nops=document.querySelectorAll('.post.nop');[].forEach.call(nops,article=>{article.classList.remove('nop')});"
+    },
+    {
+        "name": "MM131美女图片手機版 - 首頁",
+        "example": "https://m.mmm131.com/",
         "url": "^https?://m\\.mmm131\\.com/$",
         "css": ".bannert_ios,.bannerb_ios,.tips{display:none!important}",
-        "loadMore": "#webpage>span"
+        "nextLinkByJs": "homemore();"
     },
     {
         "name": "MM131美女图片 - 看圖",
@@ -2091,8 +2419,8 @@
         "name": "YavTube",
         "example": "https://yavtube.com/",
         "url": "^https?://yavtube\\.com/",
-        "nextLink": "li.active+li>a",
-        "pageElement": ".item-list",
+        "nextLink": "li.active+li.wave-effect>a",
+        "pageElement": "ul.item-list",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar{margin-top:-5px!important}"
     },
@@ -3055,15 +3383,6 @@
         "pageElement": ".video-box",
         "replaceElement": "#pagination",
         "css": ".pagetual_pageBar{margin-top: -10px!important;margin-bottom: 10px!important;}"
-    },
-    {
-        "name": "PornHub photo",
-        "example": "https://zh.xhamster.com/photos/gallery/15940406/513046620",
-        "url": "^https?://.*pornhub\\.com/photo/\\d+",
-        "nextLink": ".arrowRight",
-        "pageElement": ".centerImage img",
-        "replaceElement": ".arrowLeft,.arrowRight",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "PornHub photo",
