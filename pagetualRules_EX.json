@@ -1947,7 +1947,9 @@
         "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
         "pageElement": ".post",
         "replaceElement": "#webpage",
-        "pageAction": "let nops=document.querySelectorAll('.post.nop');[].forEach.call(nops,article=>{article.classList.remove('nop')});"
+        "lazyImgSrc": "data-img",
+        "pageAction": "let nops=document.querySelectorAll('.post.nop');[].forEach.call(nops,article=>{article.classList.remove('nop')});",
+        "css": "#sbtn,#spn,#xbtn{display:inline!important}#listm{display:none!important}"
     },
     {
         "name": "MM131美女图片手機版 - 首頁",
@@ -2323,7 +2325,7 @@
     {
         "name": "24fa",
         "example": "https://www.24fa.com/n93763c49.aspx",
-        "url": "^https?://(www\\.)?24fa.?\\.[^/]+/m?n\\d+",
+        "url": "^https?://(www\\.)?24fa[^/]+/m?n\\d+",
         "init": "let brs=document.querySelectorAll('#content br');[].forEach.call(brs,br=>{br.remove()});",
         "nextLink": "li.p_current+li>a",
         "pageElement": "#content img",
@@ -2725,9 +2727,14 @@
     },
     {
         "name": "hitomi",
-        "example": "https://hitomi.la/",
-        "url": "^https?://hitomi\\.la/(\\?page=)?$",
+        "example": "https://hitomi.la/?page=2",
+        "url": "^https?://hitomi\\.la/(\\?page=\\d+)?$",
         "action": 1,
+        "nextLinkByUrl": [
+            "la/(\\?page=(\\d+))?$",
+            "la/?page={($2.0||1)+1}",
+            ".page-container>ul>li:last-child>a"
+        ],
         "pageElement": ".gallery-content",
         "replaceElement": ".page-container",
         "waitElement": [
@@ -4088,18 +4095,49 @@
         "replaceElement": ".page-navigator"
     },
     {
-        "name": "NETFLAV",
-        "example": "https://netflav.com/uncensored",
-        "url": "^https://netflav\\.com/",
+        "name": "NETFLAV3",
+        "example": "https://netflav.com/all?genre=%E6%80%A7%E6%84%9F%E7%9A%84&page=2",
+        "url": "^https://netflav\\.com/all\\?(genre|actress)=.+(&page=\\d+)?$",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href)')});",
         "action": 1,
-        "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + '?page=' + next.getAttribute('value'))",
-        "pageElement": ".video_grid_container>.grid_root",
+        "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + location.search.replace(/&page=\\d+/,'') + '&page=' + next.getAttribute('value'))",
+        "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root grid_wide']",
         "waitElement": [
             "a[aria-current='true']+a",
             "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
         ],
         "replaceElement": "#general-pagination",
-        "css": ".grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}"
+        "css": ".pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}"
+    },
+    {
+        "name": "NETFLAV2",
+        "example": "https://netflav.com/uncensored?genre=FC2PPV",
+        "url": "^https://netflav\\.com/(censored|uncensored|chinese-sub|actress)\\?genre=[^&]+(&page=\\d+)?$",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href)')});",
+        "action": 1,
+        "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + location.search.replace(/&page=\\d+/,'') + '&page=' + next.getAttribute('value'))",
+        "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root']",
+        "waitElement": [
+            "a[aria-current='true']+a",
+            "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
+        ],
+        "replaceElement": "#general-pagination",
+        "css": ".pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}"
+    },
+    {
+        "name": "NETFLAV1",
+        "example": "https://netflav.com/uncensored",
+        "url": "^https://netflav\\.com/(censored|uncensored|chinese-sub|actress)(\\?page=\\d+)?$",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href)')});",
+        "action": 1,
+        "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + '?page=' + next.getAttribute('value'))",
+        "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root'] | //div[(div/a[@href]/div/img[@class='ui image'])]",
+        "waitElement": [
+            "a[aria-current='true']+a",
+            "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
+        ],
+        "replaceElement": "#general-pagination",
+        "css": "div[style]+.pagetual_pageBar{margin-top:-30px!important;margin-bottom:20px!important}.pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}div[style]>div[style]:nth-child(31),div[style]>div[style]:nth-child(32),div[style]>div[style]:nth-child(33),div[style]>div[style]:nth-child(34),div[style]>div[style]:nth-child(35){display:none!important}"
     },
     {
         "name": "avple.tv - 類別",
@@ -4144,17 +4182,27 @@
     {
         "name": "X5AV",
         "example": "https://x5av.com/e/action/ListInfo/?classid=2",
-        "url": "^https?://x5av\\.com/e/(action|search)/",
+        "url": "^https?://x5av\\.com/(e|popular)/((action|search)/)?",
         "pageElement": ".videos-container",
-        "replaceElement": ".pagination"
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:-5px!important}"
+    },
+    {
+        "name": "javbangers.com - 相簿圖片清單載入全部大圖",
+        "example": "https://www.javbangers.com/albums/1293/fc2-ppv-2414851-college-student-reimi-chan-21/",
+        "url": "^https?://www\\.javbangers\\.com/albums/\\d+/[^/]+/",
+        "nextLink": "0",
+        "init": "setTimeout(()=>{let imgs=document.querySelectorAll('.images .thumb.lazy-load');[].forEach.call(imgs,img=>{let f=img.parentNode.href;if(f){img.src=f;img.removeAttribute('data-original');img.style.display='inline'}})},1000)"
     },
     {
         "name": "javbangers.com",
         "example": "https://www.javbangers.com/latest-updates/",
         "url": "^https?://www\\.javbangers\\.com/",
+        "include": ".pagination",
         "nextLink": "li.page-current+li.page>a",
-        "pageElement": ".porntrex-box,.box",
+        "pageElement": ".porntrex-box .video-item,.box .item",
         "replaceElement": ".pagination",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "css": ".pagetual_pageBar+div{margin-top:-5px!important;}"
     },
     {
