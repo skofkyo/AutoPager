@@ -4098,7 +4098,7 @@
         "name": "NETFLAV3",
         "example": "https://netflav.com/all?genre=%E6%80%A7%E6%84%9F%E7%9A%84&page=2",
         "url": "^https://netflav\\.com/all\\?(genre|actress)=.+(&page=\\d+)?$",
-        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href)')});",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href')});",
         "action": 1,
         "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + location.search.replace(/&page=\\d+/,'') + '&page=' + next.getAttribute('value'))",
         "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root grid_wide']",
@@ -4113,7 +4113,7 @@
         "name": "NETFLAV2",
         "example": "https://netflav.com/uncensored?genre=FC2PPV",
         "url": "^https://netflav\\.com/(censored|uncensored|chinese-sub|actress)\\?genre=[^&]+(&page=\\d+)?$",
-        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href)')});",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href')});",
         "action": 1,
         "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + location.search.replace(/&page=\\d+/,'') + '&page=' + next.getAttribute('value'))",
         "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root']",
@@ -4128,7 +4128,7 @@
         "name": "NETFLAV1",
         "example": "https://netflav.com/uncensored",
         "url": "^https://netflav\\.com/(censored|uncensored|chinese-sub|actress)(\\?page=\\d+)?$",
-        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href)')});",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href')});",
         "action": 1,
         "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + '?page=' + next.getAttribute('value'))",
         "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root'] | //div[(div/a[@href]/div/img[@class='ui image'])]",
@@ -4137,7 +4137,7 @@
             "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
         ],
         "replaceElement": "#general-pagination",
-        "css": "div[style]+.pagetual_pageBar{margin-top:-30px!important;margin-bottom:20px!important}.pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}div[style]>div[style]:nth-child(31),div[style]>div[style]:nth-child(32),div[style]>div[style]:nth-child(33),div[style]>div[style]:nth-child(34),div[style]>div[style]:nth-child(35){display:none!important}"
+        "css": "div[style]+.pagetual_pageBar{margin-top:-30px!important;margin-bottom:20px!important}.pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}div[style]>div[style]:nth-child(n+31):nth-child(-n+35){display:none!important}"
     },
     {
         "name": "avple.tv - 類別",
@@ -4669,6 +4669,15 @@
         "nextLink": "a.num.current+a",
         "pageElement": ".u-list",
         "replaceElement": "div.panel+div>.pagei"
+    },
+    {
+        "name": "google search mobile",
+        "action": 0,
+        "url": "^https://(?:www\\.)?google\\..*/search",
+        "pageElement": "id('rso')/div|id('rso')/style",
+        "insert": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
+        "nextLink": 0,
+        "loadMore": "div[role='progressbar']+a[role='button']"
     },
     {
         "name": "Google Search",
