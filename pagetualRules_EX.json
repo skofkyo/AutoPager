@@ -60,8 +60,17 @@
         "name": "極速漫畫 - 分類",
         "example": "https://www.1kkk.com/manhua-list/",
         "url": "^https?://www\\.1kkk\\.com/manhua-([a-z]+/|list-area|list-tag|list-char)",
+        "init": "let as=document.querySelectorAll('.cat-filter a');[].forEach.call(as,a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 500)')});",
         "nextLink": "//a[text()=' > ']",
-        "pageElement": ".box-body"
+        "pageElement": ".box-body",
+        "replaceElement": ".page-pagination"
+    },
+    {
+        "name": "極速漫畫 - 分類輔助",
+        "example": "https://www.1kkk.com/manhua-list/",
+        "url": "^https?://www\\.1kkk\\.com/manhua-([a-z]+/|list-area|list-tag|list-char)",
+        "init": "let as=document.querySelectorAll('.cat-filter a');[].forEach.call(as,a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 500)')});",
+        "autoClick": "none"
     },
     {
         "name": "90漫畫網手機版 - 分類",
@@ -113,8 +122,17 @@
         "name": "dm5 動漫屋 - 分類",
         "example": "https://www.dm5.com/manhua-list/",
         "url": "^https?://www\\.dm5\\.com/manhua-([a-z]+/|list-area|list-tag|list-char)",
+        "init": "let as=document.querySelectorAll('.cat-filter a');[].forEach.call(as,a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 1000)')});",
         "nextLink": "//a[text()=' > ']",
-        "pageElement": ".box-body"
+        "pageElement": ".box-body",
+        "replaceElement": ".page-pagination"
+    },
+    {
+        "name": "dm5 動漫屋 - 分類輔助",
+        "example": "https://www.dm5.com/manhua-list/",
+        "url": "^https?://www\\.dm5\\.com/manhua-([a-z]+/|list-area|list-tag|list-char)",
+        "init": "let as=document.querySelectorAll('.cat-filter a');[].forEach.call(as,a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 1000)')});",
+        "autoClick": "none"
     },
     {
         "name": "無限動漫手機版 - 漫畫閱讀",
@@ -205,7 +223,7 @@
     },
     {
         "name": "無限動漫 - 分類",
-        "example": "https://www.comicabc.com/comic/58-1.html",
+        "example": "https://www.comicabc.com/comic/6-1.html",
         "url": "^https?://www\\.comicabc\\.com/comic/[a-z0-9-]+\\.html",
         "nextLink": "//a[(span/@class='mdi mdi-skip-next')]",
         "pageElement": ".default_row_width>.p-0",
@@ -256,7 +274,7 @@
         "nextLink": "//a[@href][text()='下一页']",
         "pageElement": ".comicpage img,#cp_img>img",
         "replaceElement": ".fanye,.view-bottom-bar,.view-fix-top-bar,.view-fix-bottom-bar",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".comicpage img {max-width: 100% !important;margin: 0 auto !important;}"
@@ -384,7 +402,7 @@
         "pageElement": ".show-pic",
         "replaceElement": ".pagination,.c_nav_page",
         "rate": 3,
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "css": "nav.d-none+div.row,#left,#right{display:none!important}.row>*{padding:0px!important}"
     },
     {
@@ -394,7 +412,7 @@
         "nextLink": "a[title='下一页']",
         "pageElement": ".comic-main-section>*",
         "replaceElement": ".pagination",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "快岸漫画 - 閱讀 - 單擊、兩側模式(只支持網站的刷新模式:1)",
@@ -507,7 +525,7 @@
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
-        "name": "二次元動漫 - 清單",
+        "name": "二次元動漫 - 分類",
         "example": "https://www.2animx.com/index-html-status-1",
         "url": "^https?://www\\.2animx\\.com/index-html-status",
         "nextLink": "//a[text()='下一頁']",
@@ -525,7 +543,7 @@
         "pageBarText": 1
     },
     {
-        "name": "酷漫屋 - 清單",
+        "name": "酷漫屋 - 分類",
         "example": "http://www.kumw5.com/sort/13-1.html",
         "url": "^https?://www\\.(kumw|kuman)\\d+\\.com/(sort|rank)/",
         "nextLink": "//a[text()=' > ']",
@@ -544,7 +562,7 @@
         "pageBarText": 1
     },
     {
-        "name": "酷漫屋手機版 - 清單",
+        "name": "酷漫屋手機版 - 分類",
         "example": "http://m.kumw5.com/rank/5-1.html",
         "url": "^https?://m\\.(kumw|kuman)\\d+\\.com/(sort|rank)/",
         "nextLink": "//a[text()=' > ']",
@@ -584,6 +602,15 @@
         "url": "^https?://www\\.kuaikanmanhua\\.com/",
         "init": "let link=document.querySelector('.headerContent > div > ul > li:nth-child(2) > a');link.href=\"/tag/0\\?region=1&pays=0&state=0&sort=1&page=1\";link.removeAttribute('target')",
         "autoClick": "none"
+    },
+    {
+        "name": "comic.bh3.com",
+        "example": "https://comic.bh3.com/book/1001/1",
+        "url": "^https?://comic\\.bh3\\.com/book/\\d+/\\d+",
+        "nextLinkByJs": "let n=doc.querySelector('.comic-wrapper>a:last-child');if(n){return location.origin+n.href.split('\\'')[3]}",
+        "pageElement": "img.comic_img,.comic-wrapper>.read-next",
+        "replaceElement": ".comic-wrapper>a:last-child,.header_word",
+        "css": ".comic-wrapper {overflow-y: initial !important;} .comic_img{display: inline;}"
     },
     {
         "name": "言耽社 - 閱讀",
@@ -735,8 +762,8 @@
     },
     {
         "name": "AGE 动漫",
-        "example": "https://www.agemys.cc/catalog/all-all-all-all-all-time-1",
-        "url": "^https?://www\\.agemys\\.cc/",
+        "example": "https://www.agemys.net/catalog/all-all-all-all-all-time-1",
+        "url": "^https?://www\\.agemys\\.[^/]+/",
         "nextLink": "id('container')//div[@class='blockcontent']/div[@style][not(@class)]/li/a[contains(text(), '下一页')]",
         "pageElement": "#container .blockcontent1>div, #container .blockcontent>ul:not(.search-list)>li",
         "replaceElement": "#container .blockcontent>div[style]:not([class])"
@@ -775,14 +802,14 @@
         "pageElement": ".list-container>li,.video-list,.img-mode",
         "replaceElement": ".page-list",
         "css": ".pagetual_pageBar{margin-top:-5px!important}",
-        "pageAction": "let imgs=document.querySelectorAll(\".scale-img[style*='_w360']\");[].forEach.call(imgs,div=>{let s=div.getAttribute('style');let sm=s.match(/_w360/);let o=s.replace('_w360','');if(sm){div.style=o}});"
+        "pageAction": "let imgs=document.querySelectorAll(\".scale-img[style*='_w360']\");[].forEach.call(imgs,div=>{let s=div.getAttribute('style');let sm=s.match(/_w360/);let o=s.replace('_w360','');if(sm){div.style=o}});setTimeout(()=>{let ls=document.querySelectorAll('.page-num-list li:not([class])');let ll=location.origin+location.pathname;[].forEach.call(ls,li=>{let p=li.innerText;let llp=ll+'?page='+p;let ps='location.replace('+`'` + llp + `'`+')';li.setAttribute('onclick',ps);});let h=document.querySelector('.page-list>li:nth-child(1)');let gohp='location.replace('+`'` + ll + `'`+')';h.setAttribute('onclick',gohp);let n=document.querySelector('.page-list>li:nth-child(2)');let np=document.querySelector('.cur-page+li');if(n&&np){let nll=ll+'?page='+np.innerText;let next='location.replace('+`'` + nll + `'`+')';n.setAttribute('onclick',next);}else{n.removeAttribute('onclick')}},500)"
     },
     {
         "name": "Vilipix",
         "example": "https://www.vilipix.com/new",
         "url": "^https?://www\\.vilipix\\.com/",
         "action": 2,
-        "nextLinkByJs": "let next = doc.querySelector('li.number.active+li.number'); if (next) return (location.origin + location.pathname + '?p=' + next.textContent)",
+        "nextLinkByJs": "let next = doc.querySelector('li.number.active+li.number'); if (next) return location.origin + location.pathname + '?p=' + next.innerText",
         "pageElement": ".illust-content",
         "replaceElement": ".pagination-box",
         "pageAction": "let iftames=document.querySelectorAll('iframe[name]');[].forEach.call(iftames,iftame=>{iftame.style.margin='0 0 -10px'});"
@@ -835,11 +862,11 @@
         "nextLink": "a.next",
         "pageElement": ".post-box-list",
         "replaceElement": ".pagination_wrap",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "马克喵",
-        "example": "https://www.macat.vip/",
+        "example": "https://www.macat.vip/%e5%ad%97%e4%bd%93",
         "url": "^https?://www\\.macat\\.vip/",
         "include": ".posts-wrapper.row",
         "nextLink": ".next",
@@ -1353,7 +1380,7 @@
         "nextLink": "a.next",
         "pageElement": ".row>.col-md-3",
         "replaceElement": ".pagination",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "留园酷18",
@@ -1416,7 +1443,7 @@
         "nextLink": "//a[text()='下一张>']",
         "pageElement": ".photo-box picture",
         "replaceElement": ".tools row",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -1433,7 +1460,7 @@
         "nextLink": ".now-page+a",
         "pageElement": ".info-imtg-box>img",
         "replaceElement": ".pagebar",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".img-next{display:none!important}"
@@ -1454,7 +1481,7 @@
         "init": "let as=document.querySelectorAll('#post_content a');[].forEach.call(as,a=>{a.removeAttribute('href');a.removeAttribute('title')});let brs=document.querySelectorAll('#post_content br');[].forEach.call(brs,br=>{br.remove()})",
         "pageElement": "#post_content img",
         "replaceElement": ".pagelist",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -1474,7 +1501,7 @@
         "nextLink": "//div[@class='page-show' or contains(@class,'article-page')]/a[contains(@href,'html') and text()='下一页']",
         "pageElement": ".hh+.pp img[alt],.clearfix.arcmain img",
         "replaceElement": ".page-show,h1>span",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".pgg1+.hh{display:none!important}"
@@ -1552,7 +1579,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".container-inner-fix-m>img",
         "replaceElement": ".pagination",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -1649,7 +1676,7 @@
         "nextLink": "li.current+li>a",
         "pageElement": ".excerpt",
         "replaceElement": ".pagination",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "NUDECOSPLAY",
@@ -1762,7 +1789,7 @@
         "nextLink": ".current+a,.current+.dots+a",
         "pageElement": ".entry-content.read-details",
         "replaceElement": "nav.pagination,.trail-items",
-        "pageAction": "$('.pagetual_pageBar').remove();let brs=document.querySelectorAll('.entry-content.read-details>br');let ads=document.querySelectorAll('.entry-content.read-details>div#ad-ex');[].forEach.call(brs,br=>{br.remove()});[].forEach.call(ads,div=>{div.remove()});",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();et brs=document.querySelectorAll('.entry-content.read-details>br');let ads=document.querySelectorAll('.entry-content.read-details>div#ad-ex');[].forEach.call(brs,br=>{br.remove()});[].forEach.call(ads,div=>{div.remove()});",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".wp-block-image{margin-bottom:0!important}"
@@ -1874,7 +1901,7 @@
         "nextLink": ".current+a",
         "pageElement": "#content img",
         "replaceElement": ".nav-links",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -1912,7 +1939,7 @@
         "pageElement": ".imgwebp>p>img",
         "replaceElement": ".page",
         "css": "section.container>p{display:none!important}",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -1967,7 +1994,7 @@
         "pageElement": ".content-pic img",
         "replaceElement": ".content-page",
         "css": ".content-tips{display:none!important}.content-pic img{margin-top:0px!important}",
-        "pageAction": "$('.pagetual_pageBar').remove()",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2027,7 +2054,7 @@
         "nextLink": ".page-link>span+a",
         "pageElement": "p>img",
         "replaceElement": ".page-link",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2046,7 +2073,7 @@
         "nextLink": "#pages>span +a:not(.a1), a.cur+a",
         "pageElement": "#hgallery>img",
         "replaceElement": "#pages",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "#hgallery img{margin:0px!important}"
@@ -2067,7 +2094,7 @@
         "nextLink": ".pagination-box li.active+li>a",
         "pageElement": ".gallery-detail-img,.gallery-img",
         "replaceElement": ".pagination-box",
-        "pageAction": "$('.pagetual_pageBar').remove();let as=document.querySelectorAll('.gallery-img');[].forEach.call(as,a=>{a.removeAttribute('href')});",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let as=document.querySelectorAll('.gallery-img');[].forEach.call(as,a=>{a.removeAttribute('href')});",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".book-list>div[style]{display:none!important}"
@@ -2147,7 +2174,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "p img",
         "replaceElement": ".pagination1",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2173,7 +2200,7 @@
         ],
         "pageElement": ".post img",
         "replaceElement": "h1.h3",
-        "pageAction": "$('.pagetual_pageBar').remove();let imgs=document.querySelectorAll('.post img[title]');[].forEach.call(imgs,img=>{img.removeAttribute('title')})",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let imgs=document.querySelectorAll('.post img[title]');[].forEach.call(imgs,img=>{img.removeAttribute('title')})",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2219,7 +2246,7 @@
             ".picsbox img[style]"
         ],
         "css": ".picsbox img{opacity: 1!important}.national-day,.picpege{display:none!important}",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2262,7 +2289,7 @@
         "nextLink": "span+a",
         "pageElement": ".article-content img",
         "replaceElement": ".nav-links.page_imges",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2284,7 +2311,7 @@
         "nextLink": "li.thisclass+li>a",
         "pageElement": ".big-pic>a",
         "replaceElement": ".pages",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2306,7 +2333,7 @@
         "pageElement": "#display_image_detail img",
         "replaceElement": "script+#paginator,#detail_tag+div+div",
         "css": "#display_image_detail a[id]{display:none!important}",
-        "pageAction": "$('.pagetual_pageBar').remove()",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2331,7 +2358,7 @@
         "pageElement": "#content img",
         "replaceElement": ".pager",
         "css": "img{margin-top:0px!important;margin-bottom:1px!important}",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2421,6 +2448,7 @@
         "name": "YavTube",
         "example": "https://yavtube.com/",
         "url": "^https?://yavtube\\.com/",
+        "exclude": ".model-wrapper",
         "nextLink": "li.active+li.wave-effect>a",
         "pageElement": "ul.item-list",
         "replaceElement": ".pagination",
@@ -2450,7 +2478,7 @@
         "nextLink": "//a[text()='下一步']",
         "pageElement": ".thumb-overlay",
         "replaceElement": ".clearfix+div.pull-left+div",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2461,7 +2489,7 @@
         "nextLink": "ul.pagination:not(.pagination-lg) li.active+li>a",
         "pageElement": ".row>div[id^=album_photo_]",
         "replaceElement": ".pagination",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2558,7 +2586,7 @@
         "nextLink": ".fenye span+a",
         "pageElement": ".article-content>p,.article-content>h2,.article-content>#erphpdown",
         "replaceElement": ".fenye",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "壹纳网 - 文章",
@@ -2895,7 +2923,7 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": ".content img",
         "replaceElement": ".page",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2927,7 +2955,7 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": ".content img",
         "replaceElement": "div.page",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3512,6 +3540,15 @@
         "replaceElement": ".page"
     },
     {
+        "name": "果核剥壳",
+        "example": "https://www.ghxi.com/category/all/pcsoft",
+        "url": "^https?://www\\.ghxi\\.com/",
+        "nextLink": "a.next",
+        "pageElement": "ul.post-loop>.item",
+        "replaceElement": ".pagination",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
+    },
+    {
         "name": "億破姐&電腦系統吧",
         "example": "http://www.dnxitong.com/soft/",
         "url": "^https?://www\\.(ypojie|dnxitong)\\.com/",
@@ -3567,7 +3604,7 @@
         "nextLink": ".c-pagination.c-pagination--next",
         "pageElement": ".u-gapNextV--lg>.u-gapNextV--md",
         "replaceElement": ".u-gapNextV--lg.u-tac",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "rate": 2,
         "sleep": 1000
     },
@@ -3578,7 +3615,7 @@
         "nextLink": "li.l-pagination__page.is-active+li>a",
         "pageElement": "//div[(div/@class='l-articlePage__author') and @class='l-articlePage']",
         "replaceElement": ".l-content__main > div:nth-child(1) > div > div.l-navigation__item.l-navigation__item--min,.u-gapTop--lg.u-gapBottom--max.u-tac.article_end",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "rate": 2,
         "sleep": 1000
     },
@@ -3787,7 +3824,7 @@
         "pageElement": "div.panel-body.single.mt-2 > p",
         "replaceElement": ".page-nav",
         "css": ".alignnone,p{margin:0!important}",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3812,7 +3849,7 @@
         "css": ".pagetual_pageBar+div {margin-top: -10px!important;}"
     },
     {
-        "name": "HPJAV",
+        "name": "CableAV",
         "example": "https://cableav.tv/playlist/lk4cv1f3j1v/",
         "url": "^https?://cableav\\.tv/",
         "nextLink": "span.current+a",
@@ -3945,7 +3982,7 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".photos-list",
         "replaceElement": ".pagination",
-        "pageAction": "$('.pagetual_pageBar').remove();let imgs=document.querySelectorAll('.photos-list img:not([style])');[].forEach.call(imgs,img=>{img.src=img.dataset.src;img.style.opacity=1});",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let imgs=document.querySelectorAll('.photos-list img:not([style])');[].forEach.call(imgs,img=>{img.src=img.dataset.src;img.style.opacity=1});",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".album-photo {margin: 0!important;}"
@@ -3979,7 +4016,7 @@
         "nextLink": ".current+a",
         "pageElement": ".article-content img",
         "replaceElement": ".pagination",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4063,13 +4100,43 @@
         "css": ".pagetual_pageBar {margin-bottom: 15px !important;}"
     },
     {
+        "name": "AVPRO - 搜索",
+        "example": "https://avpro.cc/search?keyword=%E7%BE%8E%E5%A5%B3&page_id=1",
+        "url": "^https?://avpro\\.cc/search",
+        "nextLinkByUrl": [
+            "(keyword=[^&]+)(&page_id=(\\d+))?$",
+            "$1&page_id={($3.0||1)+1}",
+            "li.active+li>a:not([title='Last Page']"
+        ],
+        "pageElement": ".videos-latest-list",
+        "replaceElement": ".pagination,.showing_pages",
+        "pageAction": "setTimeout(()=>{let as=document.querySelectorAll('a.waves-effect:not([title])');let ls=location.search.replace(/&page_id=\\d+/,'');[].forEach.call(as,a=>{let p=a.innerText;let ap=ls+'&page_id='+p;a.href=ap;a.removeAttribute('onclick')});let fp=document.querySelector(\"a[title='First Page']\");fp.href=ls;fp.removeAttribute('onclick');let cp=document.querySelector(\"li.active>a\").innerText;let app=document.querySelector(\"a[title='Previous Page']\");if(app!=null){let pp=cp-1;app.href=ls+'&page_id='+pp;app.removeAttribute('onclick')}let np=document.querySelector(\"li.active+li>a\").innerText;let anp=document.querySelector(\"a[title='Next Page']\");if(anp!=null){anp.href=ls+'&page_id='+np;anp.removeAttribute('onclick')}let lp=document.querySelector('.showing_pages').innerText;let match=lp.match(/of (\\d+)/);let alp=document.querySelector(\"a[title='Last Page']\");alp.href=ls+'&page_id='+match[1];alp.removeAttribute('onclick')},1000)"
+    },
+    {
+        "name": "AVPRO",
+        "example": "https://avpro.cc/videos/category/847?page_id=1",
+        "url": "^https?://avpro\\.cc/",
+        "nextLink": "a[title='Next Page']",
+        "pageElement": ".videos-latest-list",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:0px!important;margin-bottom:0px!important}.pagetual_pageBar+div{margin-top:5px!important}"
+    },
+    {
+        "name": "AV時間",
+        "example": "https://avtime.tv/category/28/",
+        "url": "^https?://avtime\\.tv/",
+        "nextLink": "//li[(span) and @class='page-item']/following-sibling::li[1]/a",
+        "pageElement": "//div[(div/div/div/@class='img-box cover-md')]",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:-15px!important}"
+    },
+    {
         "name": "癡漢隊長",
         "example": "https://javcaptain.com/uncensored",
-        "url": "^https?://javcaptain\\.com/(en/|ja/|zh/|ko/)?(censored|uncensored|western|fc2|hanime|search)",
+        "url": "^https?://javcaptain\\.com/(en/|ja/|zh/|ko/)?(rank/|series/)?(censored|uncensored|western|fc2|hanime|search)",
         "nextLink": "a.page-link[rel='next']",
-        "pageElement": ".page-content > .col,.page-content > .col-12",
-        "replaceElement": ".pagination.pagination-sm",
-        "css": "div.category-page.video-list-item.col-xl-3.col-lg-2.col-md-3.col-sm-6.col-6.mb-2{display:none!important}.pagetual_pageBar+div{margin-top:-6px!important;}"
+        "pageElement": "//div[contains(@class,'card-deck')]",
+        "replaceElement": ".pagination.pagination-sm"
     },
     {
         "name": "Supjav 自動點擊server ST",
@@ -4098,45 +4165,48 @@
         "name": "NETFLAV3",
         "example": "https://netflav.com/all?genre=%E6%80%A7%E6%84%9F%E7%9A%84&page=2",
         "url": "^https://netflav\\.com/all\\?(genre|actress)=.+(&page=\\d+)?$",
-        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href')});",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=document.querySelectorAll('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');[].forEach.call(as,a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
         "action": 1,
         "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + location.search.replace(/&page=\\d+/,'') + '&page=' + next.getAttribute('value'))",
-        "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root grid_wide']",
+        "pageElement": ".video_grid_container>.grid_root",
         "waitElement": [
             "a[aria-current='true']+a",
             "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
         ],
         "replaceElement": "#general-pagination",
+        "pageAction": "setTimeout(()=>{let as=document.querySelectorAll('#general-pagination a');[].forEach.call(as,a=>{let link=location.origin+location.pathname+location.search.replace(/&page=\\d+/,'')+'&page='+a.getAttribute('value');a.href=link});}, 200)",
         "css": ".pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}"
     },
     {
         "name": "NETFLAV2",
         "example": "https://netflav.com/uncensored?genre=FC2PPV",
         "url": "^https://netflav\\.com/(censored|uncensored|chinese-sub|actress)\\?genre=[^&]+(&page=\\d+)?$",
-        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href')});",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=document.querySelectorAll('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');[].forEach.call(as,a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
         "action": 1,
         "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + location.search.replace(/&page=\\d+/,'') + '&page=' + next.getAttribute('value'))",
-        "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root']",
+        "pageElement": ".video_grid_container>.grid_root",
         "waitElement": [
             "a[aria-current='true']+a",
             "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
         ],
         "replaceElement": "#general-pagination",
+        "pageAction": "setTimeout(()=>{let as=document.querySelectorAll('#general-pagination a');[].forEach.call(as,a=>{let link=location.origin+location.pathname+location.search.replace(/&page=\\d+/,'')+'&page='+a.getAttribute('value');a.href=link});}, 200)",
         "css": ".pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}"
     },
     {
         "name": "NETFLAV1",
         "example": "https://netflav.com/uncensored",
         "url": "^https://netflav\\.com/(censored|uncensored|chinese-sub|actress)(\\?page=\\d+)?$",
-        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','document.URL=location.href')});let as=document.querySelectorAll('a.desktop_header_item');[].forEach.call(as,a=>{a.setAttribute('onclick','document.URL=location.href')});",
+        "init": "let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");[].forEach.call(ds,div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=document.querySelectorAll('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');[].forEach.call(as,a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
         "action": 1,
         "nextLinkByJs": "let next = doc.querySelector('a.active.item+a.item:not(.icon)'); if (next) return (location.origin + location.pathname + '?page=' + next.getAttribute('value'))",
-        "pageElement": "//div[@class='video_grid_container']/div[@class='grid_root'] | //div[(div/a[@href]/div/img[@class='ui image'])]",
+        "pageElement": "//div[@class='video_grid_container']/div[contains(@class,'grid_root')] | //div[(div/a[@href]/div/img[@class='ui image'])]",
         "waitElement": [
             "a[aria-current='true']+a",
             "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
         ],
         "replaceElement": "#general-pagination",
+        "pageAction": "setTimeout(()=>{let as=document.querySelectorAll('#general-pagination a');[].forEach.call(as,a=>{let link=location.origin+location.pathname+'?page='+a.getAttribute('value');a.href=link});}, 200)",
         "css": "div[style]+.pagetual_pageBar{margin-top:-30px!important;margin-bottom:20px!important}.pagetual_pageBar{margin-top:0px!important}.grid_root{margin-bottom:10px!important;}#general-pagination{margin-top:30px!important;}div[style]>div[style]:nth-child(n+31):nth-child(-n+35){display:none!important}"
     },
     {
@@ -4224,7 +4294,7 @@
         "insert": "#pagination",
         "insertPos": 1,
         "css": "#footer,#commentfb,.content-kuss{display: none!important;}",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4268,7 +4338,7 @@
         "pageElement": ".container > img",
         "replaceElement": ".image>.index",
         "css": ".image > a:nth-child(3),.image > a:nth-child(4){display: none!important;}.container>img {max-width: 99% !important;display: block !important;margin: 0 auto !important;}",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4300,7 +4370,7 @@
             "div.article>div.pager:last-child"
         ],
         "css": ".photos > div.item {display: none!important;}",
-        "pageAction": "$('.pagetual_pageBar').remove();let psb=document.querySelectorAll('.photos figure.item');[].forEach.call(psb,figure=>{let s=figure.getAttribute('style');let sr=s.replace('_600x0','');figure.style=sr});",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let psb=document.querySelectorAll('.photos figure.item');[].forEach.call(psb,figure=>{let s=figure.getAttribute('style');let sr=s.replace('_600x0','');figure.style=sr});",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4316,7 +4386,7 @@
             "div.article>div.pager:last-child"
         ],
         "css": ".photos > div.item {display: none!important;}",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4417,7 +4487,7 @@
         "nextLink": "#pt_next",
         "pageElement": "header#top,#chaptercontent",
         "replaceElement": ".Readpage",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "css": "#chaptercontent p[style],#chaptercontent p[style]+p,#chaptercontent+#top a,[style='text-align: left;color: #028aa0;font-size: 18px;font-weight:bold;']{display: none!important;}#chaptercontent+#top{height:30px!important;line-height:30px!important}",
         "initRun": 1,
         "autoLoadNum": 1
@@ -4430,7 +4500,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "//div[@id='chapterlist']/p[(a/@title)]",
         "replaceElement": ".listpage",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "css": "#chapterlist>p[style]{display:none!important;}"
     },
     {
@@ -4449,7 +4519,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".bookname>h1,#content",
         "replaceElement": ".bottem1,bottem2",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "css": "#content+h1{padding-top:20px;text-align:center}"
     },
     {
@@ -4471,7 +4541,7 @@
         "pageElement": "h1,#TextContent",
         "replaceElement": ".mlfy_page+.mlfy_page",
         "css": ".mlfy_main h1{padding-bottom:0px!important;border-bottom:none!important}#TextContent > p:nth-child(2),#TextContent > p:nth-child(3){display: none!important;}",
-        "pageAction": "$('.pagetual_pageBar').remove();function $x(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}var n=$x(\"//div[@id='TextContent']/text()[9]\");n.remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();function $x(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}var n=$x(\"//div[@id='TextContent']/text()[9]\");n.remove();"
     },
     {
         "name": "歡喜冤家小說網 - 書籍分類",
@@ -4491,7 +4561,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".bookname>h1,#content",
         "replaceElement": ".bottem1,.bottem2",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "css": "#content+h1{font:35px 雅黑;padding-top:20px;text-align:center}"
     },
     {
@@ -4552,7 +4622,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".name,.content",
         "replaceElement": ".container .chapter-nav,.main>.chapter-nav,#mm-5>.chapter-nav",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "小說狂人 - 書籍分類",
@@ -4596,7 +4666,7 @@
         "nextLink": "#read_next",
         "pageElement": "#divContent > h3,#bookContent",
         "replaceElement": "#read-page>.rp-switch",
-        "pageAction": "$('.pagetual_pageBar').remove();$('.ad_content').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelector('.ad_content').remove();"
     },
     {
         "name": "UU看書手機版 - 列表(加載更多小說)",
@@ -4613,7 +4683,7 @@
         "nextLink": "#next",
         "pageElement": ".h1title,.contentbox",
         "replaceElement": ".fanye",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "UU看書 - 書籍列表",
@@ -4622,7 +4692,7 @@
         "nextLink": "//a[text()='下一頁' or text()='下一页']",
         "pageElement": ".content.clearfix>span",
         "replaceElement": "#page",
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "UU看書網uuks.org手機版 - 閱讀",
@@ -4636,7 +4706,7 @@
         "css": "#read-page .iconback,#read-page .iconhome{display: none!important;}",
         "insert": "#read-page>.rp-switch",
         "insertPos": 1,
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "UU看書網uuks.org - 閱讀",
@@ -4649,7 +4719,7 @@
         "replaceElement": ".fanye",
         "insert": ".fanye",
         "insertPos": 1,
-        "pageAction": "$('.pagetual_pageBar').remove();"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "愛下電子書 - 閱讀",
@@ -4659,7 +4729,7 @@
         "nextLink": "a.chapter-paging.chapter-next",
         "pageElement": "#page .page-content",
         "replaceElement": ".page-d.page-turn,.page-d-top,.read-next,.read-pre,.read-prog-info",
-        "pageAction": "$('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "css": ".page-content{margin-top:.16rem!important}"
     },
     {
