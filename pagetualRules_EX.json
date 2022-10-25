@@ -362,7 +362,7 @@
         "name": "木马漫画 - 閱讀 - 去頁碼停止自動匹配",
         "example": "https://www.omyschool.com/article_detail/1/653844/%E6%B5%B7%E8%B3%8A%E7%8E%8B/1055%E8%A9%B1%20%E6%96%B0%E6%99%82%E4%BB%A3/",
         "url": "^https?://www\\.omyschool\\.com/article_detail/\\d+/\\d+/",
-        "init": "function $$x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let ps=$$x(\"//div[(span) and contains(@class,'wrap_img')]\");[].forEach.call(ps,div=>{div.remove()});",
+        "init": "function $x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let ps=$x(\"//div[(span) and contains(@class,'wrap_img')]\");[].forEach.call(ps,div=>{div.remove()});",
         "nextLink": "0"
     },
     {
@@ -1873,9 +1873,10 @@
     },
     {
         "name": "BeautyLeg - 圖片",
-        "example": "http://www.beautyleg6.com/xingganmeinv/201407/162.html",
+        "example": "http://www.beautyleg6.com/xingganmeinv/201406/133.html",
+        "enable": 1,
         "url": "^https?://www.beautyleg\\d+\\.com/.+\\.html",
-        "init": "function $$x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let as=$$x(\"//div[@class='contents']/a[not(img)]\");[].forEach.call(as,a=>{a.remove()});let ams=$$(\"//div[@class='contents']/a\");[].forEach.call(ams,a=>{a.removeAttribute('href')});let brs=document.querySelectorAll('.contents br');[].forEach.call(brs,br=>{br.remove()});let ads=document.querySelectorAll('.ad');[].forEach.call(ads,div=>{div.remove()});",
+        "init": "function $x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let as=$x(`//div[@class='contents']/a[not(img)]`);[].forEach.call(as,a=>{a.remove()});let ams=$x(`//div[@class='contents']/a`);[].forEach.call(ams,a=>{a.removeAttribute('href')});let brs=$x(`//div[@class='contents']/br`);[].forEach.call(brs,br=>{br.remove()});let ads=$x(`//div[@class='ad']`);[].forEach.call(ads,div=>{div.remove()});",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".contents img",
         "replaceElement": ".page",
@@ -3147,6 +3148,7 @@
         "url": "^https?://85tube\\.com/",
         "nextLink": ".next>a",
         "pageElement": "#list_videos_most_recent_videos_items,#list_videos_latest_videos_list_items,#list_videos_common_videos_list_items",
+        "replaceElement": ".pagination",
         "css": ".pagetual_pageBar{margin-top:10px!important}"
     },
     {
@@ -3169,10 +3171,10 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "BuzzAV - album 相簿清單直接載入大圖可透過Picviewer CE+打包下載",
+        "name": "BuzzAV - album(有頁碼條) 相簿清單直接載入大圖可透過Picviewer CE+打包下載",
         "enable": 1,
         "example": "https://www.buzzav.com/album/260/jk",
-        "url": "^https?://www\\.buzzav\\.com/album/",
+        "url": "^https?://www\\.buzzav\\.com/album/\\d+",
         "nextLink": ".page-item.active+li>a",
         "pageElement": ".row>.col-12>.row.content-row",
         "replaceElement": ".pagination,.well-info",
@@ -3181,7 +3183,7 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "BuzzAV - album 相簿清單直接載入大圖可透過Picviewer CE+打包下載",
+        "name": "BuzzAV - album(無頁碼條) 相簿清單直接載入大圖可透過Picviewer CE+打包下載",
         "enable": 1,
         "example": "https://www.buzzav.com/album/280/%E7%9C%8B%E7%9D%80%E6%9D%A5%E6%84%9F%E8%A7%89%E4%BA%86-%E4%B8%80%E4%B8%AA%E5%8F%AA%E8%83%BD%E8%87%AA%E5%B7%B1%E8%A7%A3%E5%86%B3%E4%BA%86-%E5%B0%8F%E5%93%A5%E5%93%A5%E6%9C%89%E7%A9%BA%E6%9D%A5%E9%99%AA%E9%99%AA",
         "url": "^https?://www\\.buzzav\\.com/album/\\d+",
@@ -3340,33 +3342,55 @@
         "pageAction": "EPtbnsStandardRebind()"
     },
     {
-        "name": "xHamster",
+        "name": "xHamster gallery",
+        "example": "https://zh.xhamster.com/photos/gallery/15952229/513274272",
+        "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos/gallery/",
+        "nextLink": ".fotorama__arr--next",
+        "stopSign": [
+            [
+                ".photo-amounts-info",
+                "^(\\d+)"
+            ],
+            [
+                ".photo-amounts-info",
+                "(\\d+)$"
+            ]
+        ],
+        "pageElement": ".fotorama__active>img",
+        "replaceElement": ".gallery-thumbs,.photo-amounts-info",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "#photo_slider *{overflow: initial !important;position: initial !important;}.fotorama__stage{height:auto!important;}.fotorama__loaded--img:not(.fotorama__active){display:none!important}.fotorama__img {max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
+    },
+    {
+        "name": "xHamster photos",
         "example": "https://zh.xhamster.com/photos",
-        "url": "^https?://.+xhamster\\.com/photos",
+        "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/photos",
         "nextLink": "li.next>a",
         "pageElement": ".thumb-list.gallery.thumb-list--sidebar",
         "replaceElement": ".pager-section"
     },
     {
-        "name": "xHamster",
+        "name": "xHamster channels",
         "example": "https://zh.xhamster.com/channels",
-        "url": "^https?://.+xhamster\\.com/channels",
+        "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/channels",
         "nextLink": "li.next>a",
         "pageElement": ".best-list-block>.width-wrap>.channels-thumbs",
         "replaceElement": ".pager-section"
     },
     {
-        "name": "xHamster",
+        "name": "xHamster creators",
         "example": "https://zh.xhamster.com/creators",
-        "url": "^https?://.+xhamster\\.com/creators",
+        "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/creators",
         "nextLink": "li.next>a",
         "pageElement": ".best-list-block>.width-wrap>.thumb-container",
         "replaceElement": ".pager-section"
     },
     {
-        "name": "xHamster",
+        "name": "xHamster pornstars",
         "example": "https://zh.xhamster.com/pornstars",
-        "url": "^https?://.+xhamster\\.com/pornstars",
+        "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/pornstars",
         "nextLink": "li.next>a",
         "pageElement": ".thumb-container",
         "replaceElement": ".pager-section"
@@ -3374,7 +3398,8 @@
     {
         "name": "xHamster",
         "example": "https://zh.xhamster.com/newest",
-        "url": "^https?://.+xhamster\\.com/(newest)?",
+        "url": "^https?://([a-z]{2}\\.)?xhamster\\.com/(newest)?",
+        "exclude": ".fotorama__img",
         "nextLink": "li.next>a",
         "pageElement": ".thumb-list",
         "replaceElement": ".pager-section"
@@ -3421,37 +3446,62 @@
         "name": "YouPorn",
         "example": "https://www.youporn.com/recommended/",
         "url": "^https?://www\\.youporn\\.com/",
-        "nextLink": "a[aria-label='Next page']",
-        "pageElement": ".video-box",
+        "nextLink": "a[href][aria-label='Next page']",
+        "pinUrl": true,
+        "pageElement": ".full-row-thumbs>[data-espnode='videobox'],.channelLists .full-row-channel,.all-erotica-section>.erotica-box,.fifteen-column .porn-star-list",
         "replaceElement": "#pagination",
-        "css": ".pagetual_pageBar{margin-top: -10px!important;margin-bottom: 10px!important;}"
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "PornHub photo",
-        "example": "https://cn.pornhub.com/photo/824223631",
-        "url": "^https?://.*pornhub\\.com/photo/\\d+",
+        "example": "https://cn.pornhub.com/photo/825175581",
+        "url": "^https?://([a-z]{2}\\.)?pornhub\\.com/photo/\\d+",
+        "init": "document.querySelector('.centerImage>a:nth-child(3)').removeAttribute('href')",
         "nextLink": ".arrowRight",
+        "stopSign": [
+            [
+                ".itemCount",
+                "(\\d+)$"
+            ],
+            [
+                ".itemCount",
+                "^(\\d+)"
+            ]
+        ],
         "pageElement": ".centerImage img",
-        "replaceElement": ".arrowLeft,.arrowRight",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
+        "replaceElement": ".arrowLeft,.arrowRight,.thumbSliderButtons,.thumbSliderContent,.itemCount",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": ".arrowLeft,.arrowRight{display:none!important}#photoImageSection img{margin:0!important}"
+    },
+    {
+        "name": "PornHub album",
+        "example": "https://cn.pornhub.com/album/10042641",
+        "url": "^https?://([a-z]{2}\\.)?pornhub\\.com/album/",
+        "nextLink": ".page_next>a",
+        "pageElement": ".photosAlbumsListing",
+        "replaceElement": ".paginationGated",
+        "pageInit": "let imgs=doc.querySelectorAll('.js_lazy_bkg');[].forEach.call(imgs,div=>{div.style.backgroundImage=`url('${div.dataset.bkg}')`});"
     },
     {
         "name": "PornHub albums",
         "example": "https://cn.pornhub.com/albums?ref=porndude",
-        "url": "^https?://.*pornhub\\.com/albums",
+        "url": "^https?://([a-z]{2}\\.)?pornhub\\.com/albums\\?",
         "nextLink": ".page_next>a",
         "pageElement": ".photoAlbumListContainer",
-        "replaceElement": ".pagination3.paginationGated",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let imgs=document.querySelectorAll('.js_lazy_bkg');[].forEach.call(imgs,div=>{div.style.backgroundImage=`url('${div.dataset.bkg}')`});"
+        "replaceElement": ".paginationGated",
+        "pageInit": "let imgs=doc.querySelectorAll('.js_lazy_bkg');[].forEach.call(imgs,div=>{div.style.backgroundImage=`url('${div.dataset.bkg}')`});",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "Pornhub",
         "example": "https://cn.pornhub.com/",
-        "url": "^https?://.*pornhub\\.com/",
+        "url": "^https?://([a-z]{2}\\.)?pornhub\\.com/",
         "action": 1,
         "nextLink": ".page_next>a",
         "pageElement": "#videoCategory,#videoSearchResult,.videoList,.homeSection",
-        "replaceElement": ".pagination3.paginationGated",
+        "replaceElement": ".paginationGated",
         "css": ".pagetual_pageBar{margin-top: -12px!important;}.pagetual_pageBar+ul{padding-top: 2px!important;}"
     },
     {
@@ -3459,7 +3509,7 @@
         "example": "https://www.xvideos.com/",
         "url": "^https?://www\\.(xvideos|xnxx)\\.com",
         "include": ".pagination",
-        "nextLink": "//li[(a/@class='active')]/following-sibling::li/a",
+        "nextLink": "//li[(a/@class='active')]/following-sibling::li[1]/a",
         "pageElement": ".mozaique.cust-nb-cols",
         "replaceElement": ".pagination",
         "pageAction": "xv.thumb_block_initiator.init_listing();",
@@ -3576,9 +3626,9 @@
         "css": ".pagetual_pageBar{margin-top:-6px!important;}"
     },
     {
-        "name": "阿榮福利味",
+        "name": "Blogger",
         "example": "https://www.azofreeware.com/",
-        "url": "^https?://www\\.azofreeware\\.com/",
+        "url": "^https?://[^/]+/",
         "include": "#blog-pager-older-link",
         "nextLink": ".blog-pager-older-link",
         "pageElement": ".blog-posts.hfeed",
@@ -3608,7 +3658,7 @@
         "name": "Mobile01 - 手機版內文",
         "example": "https://m.mobile01.com/topicdetail.php?f=300&t=6660682",
         "url": "^https?://m\\.mobile01\\.com/topicdetail",
-        "nextLink": ".c-pagination.c-pagination--next",
+        "nextLink": ".c-pagination--next",
         "pageElement": ".u-gapNextV--lg>.u-gapNextV--md",
         "replaceElement": ".u-gapNextV--lg.u-tac",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
@@ -3621,7 +3671,7 @@
         "url": "^https?://www\\.mobile01\\.com/topicdetail",
         "nextLink": "li.l-pagination__page.is-active+li>a",
         "pageElement": "//div[(div/@class='l-articlePage__author') and @class='l-articlePage']",
-        "replaceElement": ".l-content__main > div:nth-child(1) > div > div.l-navigation__item.l-navigation__item--min,.u-gapTop--lg.u-gapBottom--max.u-tac.article_end",
+        "replaceElement": "ul.l-pagination",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "rate": 2,
         "sleep": 1000
@@ -3630,7 +3680,7 @@
         "name": "Mobile01 - 文章列表",
         "example": "https://www.mobile01.com/topiclist.php?f=300",
         "url": "^https?://(www|m)\\.mobile01\\.com/(forumtopic|topiclist)",
-        "nextLink": "li.l-pagination__page.is-active+li>a,.c-pagination.c-pagination--next",
+        "nextLink": "li.l-pagination__page.is-active+li>a,.c-pagination--next",
         "pageElement": ".l-listTable__tbody,.u-gapNextV--lg>.u-gapNextV--lg>div[class$='u-gapNextV--lg'] .l-articleList",
         "replaceElement": ".l-tabulate__action,.l-pagination",
         "rate": 3,
@@ -3875,7 +3925,7 @@
     {
         "name": "jav9999",
         "example": "https://jav9999.com/uded/1",
-        "url": "^https?://jav9999\\.com/(1|uded|amateur|chinese|actress|wuman)?",
+        "url": "^https?://jav9999\\.com/(1|uded|amateur|chinese|actress|wuman|search)?",
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".yps",
         "replaceElement": ".row+.ad-list+.row.text-center.fanye>ul.text-center",
@@ -3884,7 +3934,7 @@
     {
         "name": "onejav.com",
         "example": "https://onejav.com/new",
-        "url": "^https?://onejav\\.com/(new|popular|tag|actress)",
+        "url": "^https?://onejav\\.com/(new|popular|tag|actress|search)",
         "nextLink": "//a[text()='Next']",
         "pageElement": "div.card.mb-3,.columns.is-multiline",
         "replaceElement": "nav.pagination",
@@ -3989,10 +4039,11 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".photos-list",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let imgs=document.querySelectorAll('.photos-list img:not([style])');[].forEach.call(imgs,img=>{img.src=img.dataset.src;img.style.opacity=1});",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "lazyImgSrc": "data-src",
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": ".album-photo {margin: 0!important;}"
+        "css": ".album-photo {margin: 0!important;}img{opacity:1!important}"
     },
     {
         "name": "微圖坊 - 分類",
@@ -4001,8 +4052,7 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": "h1+.albums-list",
         "replaceElement": ".pagination",
-        "pageAction": "let imgs=document.querySelectorAll('.albums-list img:not([style])');[].forEach.call(imgs,img=>{if(img){img.style.opacity=1}});",
-        "css": ".pagetual_pageBar {margin-top: 5px!important;}.pagetual_pageBar+div {margin-top: -8px!important;}"
+        "css": ".pagetual_pageBar {margin-top: 5px!important;}.pagetual_pageBar+div {margin-top: -8px!important;}img{opacity:1!important}"
     },
     {
         "name": "極品性感美女 - 搜索",
@@ -4023,7 +4073,7 @@
         "nextLink": ".current+a",
         "pageElement": ".article-content img",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let imgs=document.querySelectorAll('article img[alt]');[].forEach.call(imgs,img=>{img.removeAttribute('title')});",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4064,8 +4114,8 @@
     {
         "name": "SpankBang",
         "example": "https://jp.spankbang.com/trending_videos/",
-        "url": "^https?://.*spankbang\\.com/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)",
-        "nextLink": ".next>a",
+        "url": "^https?://([a-z]{2}\\.)?spankbang\\.com/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)",
+        "nextLink": ".next>a,a.next",
         "pageElement": ".video-list.video-rotate.video-list-with-ads",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar+div {margin-top: -5px !important;}"
@@ -4081,7 +4131,7 @@
     },
     {
         "name": "愛污傳媒",
-        "example": "https://www.aiwu333.top/",
+        "example": "https://www.aiwu333.top/index.php/&m=vodtype/mdapp52.html",
         "url": "^https?://www\\.aiwu.*\\.(info|top|com)/index\\.php/",
         "nextLink": "a[title='Go to next page!']",
         "pageElement": ".grid.mx-auto.videos",
@@ -4105,6 +4155,15 @@
         "pageElement": ".videoGroup>#app",
         "replaceElement": "div.av",
         "css": ".pagetual_pageBar {margin-bottom: 15px !important;}"
+    },
+    {
+        "name": "AV RBO",
+        "example": "https://avbro.top/index.php/vod/type/id/12.html",
+        "url": "^https?://avbro\\.top/index\\.php/vod/",
+        "nextLink": ".page>li.active+li>a",
+        "pageElement": ".vodlist.clearfix",
+        "replaceElement": ".page",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
         "name": "AVPRO - 搜索",
@@ -4457,16 +4516,17 @@
         "example": "https://myjkwd.com/e/search/result/?searchid=7898",
         "url": "^https?://myjkwd\\.com/e/search/",
         "nextLink": "//a[text()='下一页']",
-        "pageElement": "table.box > tbody > tr:nth-child(1) > td>h2.r,table.box > tbody > tr:nth-child(1) > td> table:not([width='100%'])",
+        "pageElement": "h2.r,table[width^='8']",
         "replaceElement": ".list_page",
-        "css": "body > table.top,body > table:nth-child(2),body > table.nav{display:none!important;}td{font:12px/1.5 Verdana,Arial,Helvetica,sans-serif,'微软雅黑'!important}",
+        "css": "table.nav,table[width^='8'] tr:nth-child(1){display:none!important;}td{font:12px/1.5 Verdana,Arial,Helvetica,sans-serif,'微软雅黑'!important}",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "性愛套圖 - 看圖",
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=20737",
+        "enable": 1,
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
-        "init": "function $x(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}var n=$x('//center/text()');var n2=$x('//center/center/text()');n.remove();n2.remove();",
+        "init": "let e = document.querySelector('.entry');e.innerHTML = e.innerHTML.replace(`\"&gt;`,'');",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".entry img",
         "replaceElement": ".pageLink",
@@ -4502,8 +4562,9 @@
     {
         "name": "博仕書屋手機版 - 小說章節",
         "example": "https://m.77z5.com/boshi/28_28437/all.html",
+        "enable": 1,
         "url": "^https?://m\\.(boshisw|77z5)\\.com/boshi/\\w+/(all|p\\d+)\\.html",
-        "init": "let brs=document.querySelectorAll('body>br');[].forEach.call(brs,br=>{br.remove()});let bs=document.querySelectorAll('body>b');[].forEach.call(bs,b=>{b.remove()});function $x(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}var n=$x('/html/body/text()[1]');var n2=$x('/html/body/text()[2]');var n3=$x('/html/body/text()[3]');n.remove();n2.remove();n3.remove();",
+        "init": "let b = document.querySelector('body');b.innerHTML = b.innerHTML.replace(`<br>\n<b>Warning</b>:  iconv() expects parameter 3 to be string, array given in <b>/www/wwwroot/m.boshisw.com/17mb/class/function.php</b> on line <b>14</b><br>`,'');",
         "nextLink": "//a[text()='下一页']",
         "pageElement": "//div[@id='chapterlist']/p[(a/@title)]",
         "replaceElement": ".listpage",
@@ -4540,15 +4601,16 @@
     {
         "name": "歡喜冤家小說網 - 閱讀",
         "example": "https://www.huanxiyuanjia.com/12_12849/5258090.html",
+        "enable": 1,
         "url": "^https?://www.huanxiyuanjia.com/[0-9_]+/\\d+\\.html",
+        "init": "let t = document.querySelector('#TextContent');t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
         "action": 1,
         "history": 2,
-        "init": "function $x(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}var n=$x(\"//div[@id='TextContent']/text()[9]\");n.remove();",
         "nextLink": "#next_url",
-        "pageElement": "h1,#TextContent",
+        "pageElement": "h1,#TextContent>p:nth-child(n+8):nth-child(-n+999)",
         "replaceElement": ".mlfy_page+.mlfy_page",
-        "css": ".mlfy_main h1{padding-bottom:0px!important;border-bottom:none!important}#TextContent > p:nth-child(2),#TextContent > p:nth-child(3){display: none!important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();function $x(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}var n=$x(\"//div[@id='TextContent']/text()[9]\");n.remove();"
+        "css": ".mlfy_main h1{padding-bottom:0px!important;border-bottom:none!important}#TextContent>p:nth-child(n+2):nth-child(-n+3){display: none!important;}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
         "name": "歡喜冤家小說網 - 書籍分類",
