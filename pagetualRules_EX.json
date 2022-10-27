@@ -793,11 +793,12 @@
         "example": "https://www.yystv.cn/docs",
         "url": "^https?://www\\.yystv\\.cn/",
         "action": 1,
+        "wait": 1000,
         "nextLinkByJs": "let next = doc.querySelector('.cur-page+li'); if (next) return location.origin + location.pathname + '?page=' + next.innerText",
         "pageElement": ".list-container>li,.video-list,.img-mode",
         "replaceElement": ".page-list",
         "css": ".pagetual_pageBar{margin-top:-5px!important}",
-        "pageAction": "let imgs=document.querySelectorAll(\".scale-img[style*='_w360']\");[].forEach.call(imgs,div=>{let s=div.getAttribute('style');let sm=s.match(/_w360/);let o=s.replace('_w360','');if(sm){div.style=o}});setTimeout(()=>{let ls=document.querySelectorAll('.page-num-list li:not([class])');let ll=location.pathname;[].forEach.call(ls,li=>{let p=li.innerText;let llp=ll+'?page='+p;let ps=`location.href='` + llp + `'`;li.setAttribute('onclick',ps)});let h=document.querySelector('.page-list>li:nth-child(1)');let gohp=`location.href='` + ll + `'`;h.setAttribute('onclick',gohp);let n=document.querySelector('.page-list>li:nth-child(2)');let np=document.querySelector('.cur-page+li');if(n&&np){let nll=ll+'?page='+np.innerText;let next=`location.href='` + nll + `'`;n.setAttribute('onclick',next)}else{n.removeAttribute('onclick')}},500)"
+        "pageAction": "setTimeout(()=>{let ls=document.querySelectorAll('.page-num-list li:not([class])');let ll=location.pathname;[].forEach.call(ls,li=>{let p=li.innerText;let llp=ll+'?page='+p;let ps=`location.href='` + llp + `'`;li.setAttribute('onclick',ps)});let h=document.querySelector('.page-list>li:nth-child(1)');let gohp=`location.href='` + ll + `'`;h.setAttribute('onclick',gohp);let n=document.querySelector('.page-list>li:nth-child(2)');let np=document.querySelector('.cur-page+li');if(n&&np){let nll=ll+'?page='+np.innerText;let next=`location.href='` + nll + `'`;n.setAttribute('onclick',next)}else{n.removeAttribute('onclick')}},500)"
     },
     {
         "name": "Vilipix",
@@ -811,11 +812,13 @@
     },
     {
         "name": "吐槽弹幕网 - 搜索页",
-        "example": "https://www.tucao.lol/index.php?m=search&c=index&a=init2&catid=0&time=&order=inputtime&username=&tag=&q=%E4%B8%96%E7%95%8C",
-        "url": "^https?://www\\.tucao\\.lol/index\\.php\\?m=search",
-        "nextLink": "//a[@class='a1'][contains(text(), '下一页')]",
-        "pageElement": ".search_list",
-        "replaceElement": ".pages"
+        "example": "https://www.tucao.lol/index.php?m=content&c=search&a=init&catid=24&dosubmit=1&orderby=a.id+DESC&info%5Btitle%5D=%E8%BD%AC%E7%94%9F&page=3",
+        "action": 1,
+        "url": "^https?://www\\.tucao\\.lol/index\\.php\\?",
+        "nextLink": "//a[@class='a1' and contains(text(), '下一页')]",
+        "pageElement": "//div[div[@class='search_info']]",
+        "replaceElement": ".newpages",
+        "css": ".pagetual_pageBar{margin-bottom:0px!important}.pagetual_pageBar+div{margin-top:10px!important}"
     },
     {
         "name": "吐槽弹幕网",
@@ -830,7 +833,8 @@
         "example": "http://www.zzzfun.com/vod_type_id_1.html",
         "url": "^https?://www\\.zzzfun\\.com/",
         "nextLink": "//a[text()='下一页']",
-        "pageElement": ".main-guide"
+        "pageElement": ".main-guide",
+        "replaceElement": "#page"
     },
     {
         "name": "91 美剧网",
@@ -893,7 +897,8 @@
         "example": "https://www.novipnoad.com/movie/",
         "url": "^https?://www\\.novipnoad\\.com/",
         "nextLink": "a.nextpostslink",
-        "replaceElement": "#js-list-page"
+        "replaceElement": "//div[div/div/div[starts-with(@id,'post')]]",
+        "css": ".pagetual_pageBar{margin-top:-15px!important}"
     },
     {
         "name": "115看劇 - 分類",
@@ -901,6 +906,7 @@
         "url": "^https?://115kanju\\.com/",
         "nextLink": "li[title='下一页']",
         "pageElement": "//body/div/div[1]/div/div[9]",
+        "replaceElement": ".ant-pagination",
         "css": ".pagetual_pageBar{margin-bottom:20px!important}"
     },
     {
@@ -1298,7 +1304,7 @@
         "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html",
         "url": "^https?://pic\\.yailay\\.com/articles",
         "nextLink": "//a[text()='Next >']",
-        "pageElement": ".videos>img+br,.videos>img",
+        "pageElement": ".videos img[onerror]+br,.videos img[onerror]",
         "replaceElement": ".entry-title,.dept-ct.show-less,.pagination",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
@@ -1307,7 +1313,7 @@
     {
         "name": "Pic Yailay",
         "example": "https://pic.yailay.com/?page=1",
-        "url": "^https?://pic\\.yailay\\.com/(\\?page=\\d+)?$",
+        "url": "^https?://pic\\.yailay\\.com/",
         "nextLink": ".nextpostslink",
         "pageElement": ".columleft>.video-artic",
         "replaceElement": ".pagination"
@@ -1329,7 +1335,7 @@
         "example": "https://imhentai.xxx/gallery/928466/",
         "url": "^https?://imhentai\\.xxx/gallery/\\d+/$",
         "nextLink": "0",
-        "init": "setTimeout(()=>{document.querySelector('#load_all').click()},200)"
+        "init": "setTimeout(()=>{document.querySelector('#load_all').click()},1000)"
     },
     {
         "name": "imhentai.xxx",
@@ -1505,6 +1511,7 @@
         "name": "爱美女",
         "example": "www.2meinv.com，wap.2meinv.com",
         "url": "^https?://(www|wap)\\.2meinv\\.com/(search|tags|index)?",
+        "exclude": ".title,h1>span",
         "nextLink": "//a[contains(@href,'html') and text()='下一页']",
         "pageElement": "ul.detail-list, .arcmain li, #listcon>ul",
         "replaceElement": ".page-show, .article-page"
@@ -1592,7 +1599,8 @@
         "url": "^https?://dongtidemimi\\.org/(category|\\?s=)",
         "nextLink": "a.next",
         "pageElement": "ul.post-loop.post-loop-image.cols-4,.post-loop-default",
-        "replaceElement": ".pagination"
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
         "name": "MEITU131 - 看圖",
@@ -1610,6 +1618,7 @@
         "name": "MEITU131",
         "example": "https://www.meitu131.com/rank/dalu/",
         "url": "^https?://www\\.meitu131\\.com/(e/search|rank|meinv|shouji|sucai|nvshen|hot)/([a-z]+)?",
+        "exclude": "h1",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".details>ul,.cover-list",
         "replaceElement": "#pages",
@@ -1726,14 +1735,15 @@
         "url": "^https?://www\\.4kup\\.net/\\d+/\\d+/[^.]+\\.html$",
         "init": "let imgs=document.querySelectorAll('#gallery img');[].forEach.call(imgs,img=>{let f=img.parentNode.nextSibling.firstChild.href;img.src=f;img.removeAttribute('data-src');img.removeAttribute('class');img.removeAttribute('loading')});",
         "nextLink": "0",
-        "css": ".caption{display:none!important}"
+        "css": ".caption{display:none!important}#gallery>.item{width:100%!important;height: auto!important;}"
     },
     {
         "name": "4KUP - 分類",
         "example": "https://www.4kup.net/search/label/djawa?max-results=18",
         "url": "^https?://www\\.4kup\\.net/search",
-        "nextLink": "span.current+a",
-        "pageElement": ".index-post-wrap"
+        "nextLink": "span.current+a,.blog-pager-older-link",
+        "pageElement": ".index-post-wrap",
+        "replaceElement": "#blog-pager"
     },
     {
         "name": "Goddess247",
@@ -2445,8 +2455,8 @@
     },
     {
         "name": "YavTube",
-        "example": "https://yavtube.com/",
-        "url": "^https?://yavtube\\.com/",
+        "example": "https://yavtube.com/，https://r18hub.com/",
+        "url": "^https?://(yavtube|r18hub)\\.com/",
         "exclude": ".model-wrapper",
         "nextLink": "li.active+li.wave-effect>a",
         "pageElement": "ul.item-list",
@@ -2552,7 +2562,8 @@
         "url": "^https?://javct\\.net/",
         "nextLink": "li.paginator__item.paginator__item--next>a",
         "pageElement": ".container>.row.row--grid",
-        "replaceElement": ".paginator"
+        "replaceElement": ".paginator",
+        "css": ".pagetual_pageBar{margin-top:-20px!important}"
     },
     {
         "name": "Jable",
@@ -3647,6 +3658,24 @@
         "replaceElement": ".pagination"
     },
     {
+        "name": "小众软件",
+        "example": "https://www.appinn.com/abouttime/amp/",
+        "url": "^https?://www\\.appinn\\.com/",
+        "nextLink": "a.next,.next>a",
+        "pageElement": "article,.amp-post-title,.amp-featured-image,.cntn-wrp",
+        "replaceElement": "#pagination,.pagination,.sp-lt,.s_stk",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "Winaero",
+        "example": "https://winaero.com/category/windows-10/",
+        "url": "^https?://winaero\\.com/",
+        "nextLink": "a.next",
+        "pageElement": "#main>article",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
         "name": "cahdroid",
         "example": "https://cahdroid.com/",
         "url": "^https?://cahdroid\\.com/",
@@ -4401,7 +4430,8 @@
             ".lazyload-wrapper>img",
             ".lazyload-placeholder"
         ],
-        "pageAction": "let imgs=document.querySelectorAll('img.jss29');[].forEach.call(imgs,img=>{img.setAttribute('class','jss28')});setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let lp=location.pathname;let lps=lp.split('/');[].forEach.call(bs,button=>{let pn=button.innerHTML.match(/^(\\d+)/);let link='/'+lps[1]+'/'+lps[2]+'/'+pn[1]+'/'+lps[4];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.innerHTML.match(/^(\\d+)/)[1];let p=cpn-1;let link='/'+lps[1]+'/'+lps[2]+'/'+p+'/'+lps[4];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.firstChild.innerHTML.match(/^(\\d+)/)[1];let link='/'+lps[1]+'/'+lps[2]+'/'+npn+'/'+lps[4];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
+        "pageInit": "let imgs=doc.querySelectorAll('img.jss29');[].forEach.call(imgs,img=>{img.setAttribute('class','jss28')});",
+        "pageAction": "setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let lp=location.pathname;let lps=lp.split('/');[].forEach.call(bs,button=>{let pn=button.innerHTML.match(/^(\\d+)/);let link='/'+lps[1]+'/'+lps[2]+'/'+pn[1]+'/'+lps[4];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.innerHTML.match(/^(\\d+)/)[1];let p=cpn-1;let link='/'+lps[1]+'/'+lps[2]+'/'+p+'/'+lps[4];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.firstChild.innerHTML.match(/^(\\d+)/)[1];let link='/'+lps[1]+'/'+lps[2]+'/'+npn+'/'+lps[4];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
         "css": ".lazyload-wrapper+span.jss28{display:none!important;}.pagetual_pageBar{margin-top:10px!important;}"
     },
     {
@@ -4421,7 +4451,8 @@
             ".lazyload-wrapper>img",
             ".lazyload-placeholder"
         ],
-        "pageAction": "let imgs=document.querySelectorAll('img.jss29');[].forEach.call(imgs,img=>{img.setAttribute('class','jss28')});setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let ls=location.search;let m=ls.match(/^(\\?key=)([^&]+)(&page=)(\\d+)(&sort=date|&sort=view_count|&sort=favorite)/);[].forEach.call(bs,button=>{let pn=button.innerHTML.match(/^(\\d+)/)[1];let link=m[1]+m[2]+m[3]+pn+m[5];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.innerHTML.match(/^(\\d+)/)[1];let p=cpn-1;let link=m[1]+m[2]+m[3]+p+m[5];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.firstChild.innerHTML.match(/^(\\d+)/)[1];let link=m[1]+m[2]+m[3]+npn+m[5];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
+        "pageInit": "let imgs=doc.querySelectorAll('img.jss29');[].forEach.call(imgs,img=>{img.setAttribute('class','jss28')});",
+        "pageAction": "setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let ls=location.search;let m=ls.match(/^(\\?key=)([^&]+)(&page=)(\\d+)(&sort=date|&sort=view_count|&sort=favorite)/);[].forEach.call(bs,button=>{let pn=button.innerHTML.match(/^(\\d+)/)[1];let link=m[1]+m[2]+m[3]+pn+m[5];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.innerHTML.match(/^(\\d+)/)[1];let p=cpn-1;let link=m[1]+m[2]+m[3]+p+m[5];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.firstChild.innerHTML.match(/^(\\d+)/)[1];let link=m[1]+m[2]+m[3]+npn+m[5];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
         "css": ".lazyload-wrapper+span.jss28{display:none!important;}.pagetual_pageBar{margin-top:10px!important;}"
     },
     {
