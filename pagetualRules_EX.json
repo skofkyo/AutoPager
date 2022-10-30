@@ -1,5 +1,110 @@
 [
     {
+        "name": "漫畫屋 - 閱讀",
+        "example": "https://mh5.tw/series-wunalfy-484928-1-%E4%B8%8D%E5%B9%B8%E8%81%B7%E6%A5%AD%E7%9A%84%E5%B9%B8%E9%81%8B?",
+        "url": "^https?://mh5\\.tw/series",
+        "nextLink": "a.cur+a",
+        "pageElement": ".ptview>img:not([style])",
+        "replaceElement": ".setnmh-pagedos",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();setTimeout(()=>{let last=document.querySelector('.setnmh-readagin');let lastimg=document.querySelector('.ptview>img:last-child');let p=document.createElement('p');p.innerText='本話/集已達最後一頁';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';if(last){lastimg.parentNode.insertBefore(p,lastimg);lastimg.remove()}},200)",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": ".setnmh-seebox img{margin-bottom:0!important;box-shadow:none!important}"
+    },
+    {
+        "name": "漫畫屋 - 分類",
+        "example": "https://mh5.tw/allcartoonlist",
+        "url": "^https?://mh5\\.tw/allcartoonlist",
+        "nextLink": "a.cur+a",
+        "pageElement": "dl.alllist",
+        "replaceElement": "div.num",
+        "css": ".pagetual_pageBar{margin-bottom:0px!important}.pagetual_pageBar+dl{margin-top:-10px!important}"
+    },
+    {
+        "name": "七夕漫画 - 閱讀",
+        "example": "http://qiximh1.com/21429/1416794.html",
+        "url": "^https?://qiximh\\d+\\.com/\\d+/\\d+\\.html",
+        "nextLink": "//a[div/span[text()='下一篇'] and contains(@href,'html')]",
+        "pageElement": ".chapter_content>.comic_chapter_content",
+        "replaceElement": ".bottom_menu",
+        "pageBarText": 1,
+        "css": ".chapter_content_img{opacity:1!important}"
+    },
+    {
+        "name": "zero搬运网 - PC版閱讀去頁碼壓縮圖片上下邊界",
+        "example": "http://www.zerobywgeat.com/plugin.php?id=jameson_manhua&a=read&zjid=346233",
+        "url": "^https?://www\\.zerobywgeat\\.com/plugin\\.php",
+        "nextLink": "0",
+        "css": ".uk-text-center.xg1.xs2{display:none!important}img[id]{margin-top:0px!important;margin-bottom:0px!important}"
+    },
+    {
+        "name": "漫画猫 - 分類",
+        "example": "http://www.zerobywgeat.com/",
+        "url": "^https?://www\\.zerobywgeat\\.com/",
+        "nextLink": "a.nxt",
+        "pageElement": "//div[div[contains(@class,'mbm')] and contains(@class,'rootcate')]",
+        "replaceElement": ".pg.page",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "漫画猫 - 閱讀 (僅適用左右翻頁模式)",
+        "example": "https://www.maofly.com/manga/39027/515484.html",
+        "url": "^https?://www\\.maofly\\.com/manga/",
+        "nextLinkByUrl": [
+            "(/\\d+)(_(\\d+))?\\.html$",
+            "$1_{($3.0||1)+1}.html",
+            ".show-pic:not([src$='undefined'])"
+        ],
+        "pageElement": ".show-pic",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let last=document.querySelector(`.show-pic[src$='undefined']`);if(last){let p=document.createElement('p');p.innerText='本章节已达最后一页';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';last.parentNode.insertBefore(p,last);last.remove()}",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "a[onclick],a[href*='false']{display:none!important}"
+    },
+    {
+        "name": "漫画猫 - 分類",
+        "example": "https://www.maofly.com/update.html",
+        "url": "^https?://www\\.maofly\\.com/(update|list)",
+        "nextLink": "//a[text()=' 下一页']",
+        "pageElement": "//div[(div/a/img) and @class='row m-0'] | //div[(a/img) and contains(@class,'media')] | //div[(a/img) and contains(@class,'media')]/following-sibling::hr[1]",
+        "replaceElement": ".pagination",
+        "css": ".row+.pagetual_pageBar{margin-top:-2px!important}hr+.pagetual_pageBar{display:none!important}"
+    },
+    {
+        "name": "Xmanhua - PC版閱讀",
+        "example": "https://xmanhua.com/m251094/",
+        "url": "^https?://xmanhua\\.com/m\\d+/",
+        "nextLink": ".chapterpage.now+a",
+        "pageElement": "#cp_image",
+        "replaceElement": ".reader-bottom",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "rate": 3
+    },
+    {
+        "name": "Mangabz - PC版閱讀",
+        "example": "https://www.mangabz.com/m38701/",
+        "url": "^https?://www\\.mangabz\\.com/m\\d+(-p\\d+)?/",
+        "nextLinkByUrl": [
+            "(/m\\d+)(-p(\\d+))?/$",
+            "$1-p{($3.0||1)+1}/"
+        ],
+        "stopSign": "let c = doc.querySelector('#lbcurrentpage').innerText; if (c == MANGABZ_IMAGE_COUNT) return true;",
+        "pageElement": "#cp_image",
+        "replaceElement": "#lbcurrentpage",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "rate": 3,
+        "css": ".readForm img{margin:0!important}a[href^='j']{display:none!important}"
+    },
+    {
+        "name": "Mangabz / Xmanhua - 分類",
+        "example": "https://www.mangabz.com/manga-list-0-0-0/",
+        "url": "^https?://(www\\.)?(mangabz|xmanhua)\\.com/manga-list",
+        "nextLink": "//div[contains(@class,'page-pagination')]//a[contains(text(), '>')]",
+        "pageElement": "ul.mh-list",
+        "replaceElement": ".page-pagination",
+        "css": ".mh-list{padding-bottom:0px!important}.pagetual_pageBar+.mh-list{padding-top:0px!important}.pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
         "name": "動漫狂 - 閱讀",
         "url": "^https?://www\\.cartoonmad\\.cc/comic/\\d+\\.html",
         "init": "let link=document.querySelector('body>table>tbody>tr:nth-child(4)>td>table>tbody>tr:nth-child(1)>td:nth-child(1)>a');let link2=document.querySelector('body>table>tbody>tr:nth-child(3)>td>a');if(link){link.removeAttribute('href')}else if(link2){link2.removeAttribute('href')}",
@@ -31,7 +136,7 @@
         "pageElement": "#cp_img,.main-404-img",
         "lazyImgSrc": "0",
         "rate": 3,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let last=document.querySelector('.main-404-img');if(last){let para=document.createElement('p');para.innerText='本章節已達最後一頁';para.style='height: 40px;line-height: 40px;text-align: center;';last.parentNode.insertBefore(para,last);last.remove()}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let last=document.querySelector('.main-404-img');if(last){let p=document.createElement('p');p.innerText='本章節已達最後一頁';p.style='height: 40px;line-height: 40px;text-align: center;';last.parentNode.insertBefore(p,last);last.remove()}",
         "css": ".main-404-img,.view-bottom-bar > li:nth-child(2),.view-bottom-bar > li:nth-child(3){display:none!important}.view-bottom-bar li{width:50%!important}"
     },
     {
@@ -39,7 +144,9 @@
         "example": "https://www.1kkk.com/vol1-4761/",
         "url": "^https?://www\\.1kkk\\.com/vol\\d+-\\d+/",
         "nextLink": "//a[text()='下一页']",
+        "stopSign": "let c = doc.querySelector('span.current').innerText; if (c == DM5_IMAGE_COUNT) return true;",
         "pageElement": "#cp_image",
+        "replaceElement": ".chapterpager",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "rate": 3,
         "css": ".view-comment{display:none!important}"
@@ -282,13 +389,13 @@
         "css": ".pagetual_pageBar+.UpdateList{margin-top:-0px!important}"
     },
     {
-        "name": "90漫畫網 / 优酷漫画 / 前未漫画 - 漫畫閱讀(直接加載整個章節的圖片)",
-        "example": "http://www.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html，http://www.ykmh.com/manhua/yiquanchaoren/145.html，https://www.qianwee.com/manhua/mushenji/245914.html",
-        "url": "^https?://www\\.(90mh|ykmh|qianwee)\\.com/manhua/",
-        "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let imghost=pageImage.match(/^(https?:\\/\\/[^/]+\\/)/)[1];if(location.hostname=='www.qianwee.com'){_img+=`<img src=\"${chapterImages[i]}\">`}else if(location.hostname=='www.ykmh.com'){_img+=`<img src=\"${imghost}${chapterImages[i]}\">`}else{_img+=`<img src=\"${imghost}${chapterPath}${chapterImages[i]}\">`}};document.querySelector('#images').innerHTML=_img",
+        "name": "90漫畫網 / 优酷漫画 / 前未漫画 / 最漫画 / 漫画芯 - 漫畫閱讀(直接加載整個章節的圖片)",
+        "example": "http://www.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html，http://www.ykmh.com/manhua/yiquanchaoren/145.html，https://www.qianwee.com/manhua/mushenji/245914.html，https://www.zuimh.com/manhua/gongzibiexiule/1454909.html",
+        "url": "^https?://www\\.(90mh|ykmh|qianwee|zuimh|mhxin)\\.com/manhua/",
+        "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let imghost=pageImage.match(/^(https?:\\/\\/[^/]+\\/)/)[1];if(location.hostname=='www.qianwee.com' || location.hostname=='www.zuimh.com' || location.hostname=='www.mhxin.com'){_img+=`<img src=\"${chapterImages[i]}\">`}else if(location.hostname=='www.ykmh.com'){_img+=`<img src=\"${imghost}${chapterImages[i]}\">`}else{_img+=`<img src=\"${imghost}${chapterPath}${chapterImages[i]}\">`}};document.querySelector('#images').innerHTML=_img",
         "nextLink": "0",
         "pinUrl": true,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;}"
     },
     {
         "name": "90漫畫網 - 分類",
@@ -315,9 +422,9 @@
         "nextLink": "0"
     },
     {
-        "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 - 分類",
-        "example": "www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com",
-        "url": "^https?://www\\.(ykmh|qianwee|100fanwo|izhegu)\\.com/",
+        "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 - 分類",
+        "example": "www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com",
+        "url": "^https?://www\\.(ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin)\\.com/",
         "nextLink": "li.next>a",
         "pageElement": "li.item-lg, .list-comic",
         "replaceElement": "ul.pagination",
@@ -337,17 +444,17 @@
         "nextLink": "0"
     },
     {
-        "name": "漫画星球 / 6 漫画 - PC版閱讀 - 圖片提前全部載入",
+        "name": "漫画星球PC版 / 6 漫画PC版 / 奇漫屋手機版 - 閱讀 - 圖片提前全部載入",
         "example": "http://www.mhxqiu1.com/22914/1235326.html",
-        "url": "^https?://www\\.(mhxqiu1|sixmh7)\\.com/\\d+/\\d+\\.html",
-        "init": "setTimeout(()=>{let imgs=document.querySelectorAll('img.lazy');[].forEach.call(imgs,img=>{img.referrerPolicy='no-referrer';let f=img.getAttribute('data-src');img.src=f});let ps=document.querySelectorAll('p.num');[].forEach.call(ps,p=>{p.style.display='none';p.nextSibling.style.display='none'})},1000)",
+        "url": "^https?://(www\\.)?(mhxqiu1|sixmh7|qiman\\d+)\\.com/\\d+/\\d+\\.html",
+        "init": "setTimeout(()=>{if(location.hostname=='qiman57.com'){let imgs=document.querySelectorAll('img.lazy[data-original]');[].forEach.call(imgs,img=>{let f=img.getAttribute('data-original');img.src=f;img.removeAttribute('data-original');img.removeAttribute('style')})}else{let imgs=document.querySelectorAll('img.lazy');[].forEach.call(imgs,img=>{img.referrerPolicy='no-referrer';let f=img.getAttribute('data-src');img.src=f})}let ps=document.querySelectorAll('p.num');[].forEach.call(ps,p=>{p.style.display='none';p.nextSibling.style.display='none'})},1000)",
         "nextLink": "0",
         "css": "body.view .logo-sub-wrap{display:none!important}.loaded.lazy {max-width: 100% !important;margin: 0 auto !important;}"
     },
     {
-        "name": "漫画星球 / 6 漫画 - 手機版分類",
+        "name": "漫画星球 / 6 漫画 / 奇漫屋 - 手機版分類",
         "example": "m.mhxqiu1.com，m.sixmh7.com",
-        "url": "^https?://m\\.(sixmh7|mhxqiu1)\\.com/(sort|rank)/",
+        "url": "^https?://(m\\.)?(sixmh7|mhxqiu1|qiman\\d+)\\.com/(sort|rank)/",
         "loadMore": ".getmore,.getmore1",
         "nextLink": "0"
     },
