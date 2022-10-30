@@ -72,13 +72,14 @@
     },
     {
         "name": "Xmanhua - PC版閱讀",
-        "example": "https://xmanhua.com/m251094/",
-        "url": "^https?://xmanhua\\.com/m\\d+/",
+        "example": "https://xmanhua.com/m10344/",
+        "url": "^https?://xmanhua\\.com/m\\d+(-p\\d+)?/",
         "nextLink": ".chapterpage.now+a",
         "pageElement": "#cp_image",
         "replaceElement": ".reader-bottom",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
-        "rate": 3
+        "rate": 3,
+        "css": ".container{width:auto!important}#cp_img img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "Mangabz - PC版閱讀",
@@ -93,11 +94,11 @@
         "replaceElement": "#lbcurrentpage",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "rate": 3,
-        "css": ".readForm img{margin:0!important}a[href^='j']{display:none!important}"
+        "css": "a[href^='j']{display:none!important}.container{width:auto!important}#cp_img img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "Mangabz / Xmanhua - 分類",
-        "example": "https://www.mangabz.com/manga-list-0-0-0/",
+        "example": "https://www.mangabz.com/manga-list-0-0-0/，https://xmanhua.com/manga-list-0-0-0/",
         "url": "^https?://(www\\.)?(mangabz|xmanhua)\\.com/manga-list",
         "nextLink": "//div[contains(@class,'page-pagination')]//a[contains(text(), '>')]",
         "pageElement": "ul.mh-list",
