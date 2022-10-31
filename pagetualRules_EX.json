@@ -1,8 +1,40 @@
 [
     {
+        "name": "漫畫櫃 - 手機版閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
+        "example": "https://m.manhuagui.com/comic/19430/220363.html",
+        "url": "^https?://m\\.manhuagui\\.com/comic/",
+        "nextLink": "0",
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain + imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#manga').innerHTML=_img},0)",
+        "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page{display:none!important}"
+    },
+    {
+        "name": "漫畫櫃 - 手機版 點選檢視下20條記錄",
+        "example": "https://m.manhuagui.com/list/update.html",
+        "url": "^https://m\\.manhuagui\\.com/(list|update|rank)/",
+        "loadMore": ".more-go"
+    },
+    {
+        "name": "漫畫櫃 - 閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
+        "example": "https://www.manhuagui.com/comic/19430/219425.html",
+        "url": "^https?://(tw|www)\\.manhuagui\\.com/comic/",
+        "nextLink": "0",
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.files.length;i++){_img+=`<img src=\"${domain + imgData.path + imgData.files[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#mangaBox').innerHTML=_img},0)",
+        "css": ".title>div:not(.fr)>span,#pageSelect,.main-btn>a[href^='j'],.pager>a[href*='goPage'],.pager>span{display:none!important}#mangaBox>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+    },
+    {
+        "name": "漫畫屋 - 分類",
+        "example": "https://www.manhuagui.com/list/lianzai/",
+        "url": "^https?://(www|tw)\\.manhuagui\\.com/list/",
+        "nextLink": "span.current+a",
+        "pageElement": "#contList",
+        "replaceElement": ".pager-cont,.result-count",
+        "css": ".pagetual_pageBar{margin-top:-10px!important}"
+    },
+    {
         "name": "漫畫屋 - 閱讀",
         "example": "https://mh5.tw/series-wunalfy-484928-1-%E4%B8%8D%E5%B9%B8%E8%81%B7%E6%A5%AD%E7%9A%84%E5%B9%B8%E9%81%8B?",
         "url": "^https?://mh5\\.tw/series",
+        "pinUrl": true,
         "nextLink": "a.cur+a",
         "pageElement": ".ptview>img:not([style])",
         "replaceElement": ".setnmh-pagedos",
@@ -38,7 +70,7 @@
         "css": ".uk-text-center.xg1.xs2{display:none!important}img[id]{margin-top:0px!important;margin-bottom:0px!important}"
     },
     {
-        "name": "漫画猫 - 分類",
+        "name": "zero搬运网 - 分類",
         "example": "http://www.zerobywgeat.com/",
         "url": "^https?://www\\.zerobywgeat\\.com/",
         "nextLink": "a.nxt",
@@ -74,6 +106,7 @@
         "name": "Xmanhua - PC版閱讀",
         "example": "https://xmanhua.com/m10344/",
         "url": "^https?://xmanhua\\.com/m\\d+(-p\\d+)?/",
+        "pinUrl": true,
         "nextLink": ".chapterpage.now+a",
         "pageElement": "#cp_image",
         "replaceElement": ".reader-bottom",
@@ -85,6 +118,7 @@
         "name": "Mangabz - PC版閱讀",
         "example": "https://www.mangabz.com/m38701/",
         "url": "^https?://www\\.mangabz\\.com/m\\d+(-p\\d+)?/",
+        "pinUrl": true,
         "nextLinkByUrl": [
             "(/m\\d+)(-p(\\d+))?/$",
             "$1-p{($3.0||1)+1}/"
@@ -103,7 +137,7 @@
         "nextLink": "//div[contains(@class,'page-pagination')]//a[contains(text(), '>')]",
         "pageElement": "ul.mh-list",
         "replaceElement": ".page-pagination",
-        "css": ".mh-list{padding-bottom:0px!important}.pagetual_pageBar+.mh-list{padding-top:0px!important}.pagetual_pageBar{margin-top:0px!important}"
+        "css": ".mh-list{padding-bottom:0px!important}.pagetual_pageBar+.mh-list{padding-top:10px!important}.pagetual_pageBar{margin-top:0px!important}"
     },
     {
         "name": "動漫狂 - 閱讀",
@@ -4125,12 +4159,6 @@
         "loadMore": ".ias_trigger>a"
     },
     {
-        "name": "漫畫櫃 - 手機版 點選檢視下20條記錄",
-        "example": "https://m.manhuagui.com/list/update.html",
-        "url": "^https://m\\.manhuagui\\.com/(list|update|rank)/",
-        "loadMore": ".more-go"
-    },
-    {
         "name": "嗨皮漫畫 - 給本王顯示全部章節",
         "example": "https://m.happymh.com/manga/daiwangraoming",
         "url": "^https://m\\.happymh\\.com/manga/",
@@ -4608,7 +4636,8 @@
     {
         "name": "Supjav 自動點擊server ST(需要背景打開連結，等網頁載入結束後，再切換分頁才有效)",
         "url": "^https?://supjav\\.com/(zh/|ja/)?\\d+\\.html",
-        "autoClick": "//a[text()='ST']"
+        "autoClick": "//a[text()='ST']",
+        "pinUrl": true
     },
     {
         "name": "Supjav",
