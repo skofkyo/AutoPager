@@ -12,9 +12,13 @@
         "loadMore": ".more-div-btn"
     },
     {
-        "name": "嗨皮漫畫 - 閱讀停止自動匹配",
+        "name": "嗨皮漫畫 - 閱讀 - 手動翻頁",
+        "example": "https://m.happymh.com/manga/shishijilingdishejishi",
         "url": "^https://m\\.happymh\\.com/reads/",
-        "nextLink": "0"
+        "init": "setTimeout(()=>{let p=document.querySelector(`footer p:nth-child(2)>a[href*='reads']`);if(p){p.classList.add('MuiButton-containedPrimary')}let n=document.querySelector(`footer a[href*='readMore']`);if(n){n.classList.remove('MuiButton-containedPrimary');n.firstChild.innerText='^_^感谢阅读~已经没有下一话了哦~';let f=document.querySelector('footer>article');let p=document.createElement('p');let c=f.firstChild.getAttribute('class');p.setAttribute('class',c);p.innerHTML=f.lastChild.firstChild.outerHTML;p.firstChild.href='https://m.happymh.com/';p.firstChild.firstChild.innerText='返回主页';f.insertBefore(p,f.firstChild)}},1000)",
+        "nextLink": "//a[span[text()='下一话'] and contains(@href,'reads')]",
+        "pinUrl": true,
+        "manualMode": true
     },
     {
         "name": "看漫画 - 手機版閱讀 - 只留下一章按鈕並加大，在底部添加返回目錄 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
