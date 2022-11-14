@@ -212,33 +212,23 @@
         "pageBarText": 1
     },
     {
-        "name": "Xmanhua - PC版閱讀",
+        "name": "Xmanhua - PC版閱讀 - 雙擊下一話，鍵盤左右鍵上下話",
         "example": "https://xmanhua.com/m10344/",
         "url": "^https?://xmanhua\\.com/m\\d+(-p\\d+)?/",
         "include": ".reader-bottom-page-list",
         "pinUrl": true,
-        "nextLink": ".chapterpage.now+a",
-        "pageElement": "#cp_image",
-        "replaceElement": ".reader-bottom",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "rate": 3,
+        "init": "function getX(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function getCss(element){return document.querySelector(element)}function getCssAll(element){return document.querySelectorAll(element)}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=getX(\"//a[img[contains(@src,'right-2')]]\");if(n){n.click()}else{alert('沒有下一話了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=getX(\"//a[img[contains(@src,'right-2')]]\");if(n){n.click()}else{alert('沒有下一話了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=getX(\"//a[img[contains(@src,'right-1')]]\");if(p){p.click()}else{alert('沒有上一話了！')}}};document.addEventListener('keydown',prev);setTimeout(()=>{document.body.style.overflow='scroll';getCss('#showimage').removeAttribute('class');getCss('#showimage').setAttribute('style','text-align:center;font-size:2em;color:#FFFFFF;margin-top:64px');getCssAll('.container').forEach(e=>{e.setAttribute('style','width: auto!important;')});getCss(\".reader-bottom-page\").remove();getCss('#cp_img').innerHTML='';for(let i=1;i<=XMANHUA_IMAGE_COUNT;i++){setTimeout(()=>{$.ajax({url:'chapterimage.ashx',data:{cid:XMANHUA_CID,page:i,key:'',_cid:XMANHUA_CID,_mid:XMANHUA_MID,_dt:XMANHUA_VIEWSIGN_DT,_sign:XMANHUA_VIEWSIGN},type:'GET',success:function(msg){let imgSrc='<img src=\"'+eval(msg)[0]+'\">';$('#cp_img').append(imgSrc)}})},500*i)}},0)",
+        "nextLink": "0",
         "css": ".container{width:auto!important}#cp_img img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
-        "name": "Mangabz - PC版閱讀",
+        "name": "Mangabz - PC版閱讀 - 雙擊下一話，鍵盤左右鍵上下話",
         "example": "https://www.mangabz.com/m38701/",
         "url": "^https?://www\\.mangabz\\.com/m\\d+(-p\\d+)?/",
         "include": ".container",
         "pinUrl": true,
-        "nextLinkByUrl": [
-            "(/m\\d+)(-p(\\d+))?/$",
-            "$1-p{($3.0||1)+1}/"
-        ],
-        "stopSign": "let c = doc.querySelector('#lbcurrentpage').innerText; if (c == MANGABZ_IMAGE_COUNT) return true;",
-        "pageElement": "#cp_image",
-        "replaceElement": "#lbcurrentpage",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "rate": 3,
+        "init": "function getX(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function getCss(element){return document.querySelector(element)}function getCssAll(element){return document.querySelectorAll(element)}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=getX(\"//a[img[contains(@src,'xiayizhang')]]\");if(n){n.click()}else{alert('沒有下一話了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=getX(\"//a[img[contains(@src,'xiayizhang')]]\");if(n){n.click()}else{alert('沒有下一話了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=getX(\"//a[img[contains(@src,'shangyizhang')]]\");if(p){p.click()}else{alert('沒有上一話了！')}}};document.addEventListener('keydown',prev);setTimeout(()=>{document.body.style.overflow='scroll';getCss('#showimage').removeAttribute('class');getCss('#showimage').setAttribute('style','text-align:center;font-size:2em;color:#FFFFFF;');getCssAll('.container').forEach(e=>{e.setAttribute('style','width: auto!important;')});getCss(\"a[href*='ShowPre']\").remove();getCss(\"span[class^='bottom-page']\").remove();getCss(\"a[href*='ShowNext']\").remove();getCss('#cp_img').innerHTML='';for(let i=1;i<=MANGABZ_IMAGE_COUNT;i++){setTimeout(()=>{$.ajax({url:'chapterimage.ashx',data:{cid:MANGABZ_CID,page:i,key:'',_cid:MANGABZ_CID,_mid:MANGABZ_MID,_dt:MANGABZ_VIEWSIGN_DT,_sign:MANGABZ_VIEWSIGN},type:'GET',success:function(msg){let imgSrc='<img src=\"'+eval(msg)[0]+'\">';$('#cp_img').append(imgSrc)}})},500*i)}},0)",
+        "nextLink": "0",
         "css": "a[href^='j']{display:none!important}.container{width:auto!important}#cp_img img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
@@ -287,29 +277,13 @@
         "css": ".view-bottom-bar>li:nth-child(n+2):nth-child(-n+3),.view-fix-bottom-bar>a:nth-child(2),.guide{display:none!important}.view-bottom-bar li{width:50%!important}.view-fix-bottom-bar>a{width:25%!important}"
     },
     {
-        "name": "極速漫畫 - 單行本閱讀",
-        "example": "https://www.1kkk.com/vol1-4761/",
-        "url": "^https?://www\\.1kkk\\.com/vol\\d+-\\d+/",
-        "init": "document.body.style.overflow='scroll'",
-        "nextLink": "//a[text()='下一页']",
-        "stopSign": "let c = doc.querySelector('span.current').innerText; if (c == DM5_IMAGE_COUNT) return true;",
-        "pageElement": "#cp_image",
-        "replaceElement": ".chapterpager",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "rate": 3,
-        "css": ".view-comment{display:none!important}"
-    },
-    {
-        "name": "極速漫畫 - 連載閱讀",
-        "example": "https://www.1kkk.com/ch1063-1331307/",
-        "url": "^https?://www\\.1kkk\\.com/ch\\d+-\\d+(-p\\d+)?/",
-        "init": "document.body.style.overflow='scroll'",
-        "nextLink": "span.current+a",
-        "pageElement": "#cp_image",
-        "replaceElement": ".chapterpager",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "rate": 3,
-        "css": ".view-comment{display:none!important}"
+        "name": "dm5 動漫屋 / 極速漫畫 - PC版閱讀 - 雙擊下一章，鍵盤左右鍵上下章",
+        "example": "https://www.dm5.com/m1331307/，https://www.1kkk.com/ch1063-1331307/，https://www.1kkk.com/vol1-4761/",
+        "url": "^https?://(www|tel|en)?\\.(dm5|1kkk)\\.(com|cn)/(m|ch|vol)\\d+",
+        "pinUrl": true,
+        "init": "function getX(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=getX(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=getX(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=getX(\"//a[text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);document.body.style.overflow='scroll';document.querySelector('#showimage').style='margin:5px auto 0px;min-height:1330px;max-width:1000px;';setTimeout(()=>{document.querySelector('#cp_img').innerHTML='';for(let i=1;i<=DM5_IMAGE_COUNT;i++){setTimeout(()=>{let mkey='';if($('#dm5_key').length>0){mkey=$('#dm5_key').val()}$.ajax({url:'chapterfun.ashx',data:{cid:DM5_CID,page:i,key:mkey,language:1,gtk:6,_cid:DM5_CID,_mid:DM5_MID,_dt:DM5_VIEWSIGN_DT,_sign:DM5_VIEWSIGN},type:'GET',success:function(msg){let imgSrc='<img src=\"'+eval(msg)[0]+'\">';$('#cp_img').append(imgSrc)}})},1000*i)}},0)",
+        "nextLink": "0",
+        "css": ".view-comment{display:none!important}#cp_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "極速漫畫 - 分類",
@@ -320,18 +294,6 @@
         "pinUrl": true,
         "pageElement": ".box-body",
         "replaceElement": ".page-pagination"
-    },
-    {
-        "name": "dm5 動漫屋 - 閱讀",
-        "example": "https://www.dm5.com/m1331307/",
-        "url": "^https?://www\\.dm5\\.[a-z]{2,3}/m\\d+/",
-        "init": "document.body.style.overflow='scroll'",
-        "nextLink": "span.current+a",
-        "pageElement": "#cp_image",
-        "replaceElement": ".chapterpager",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "rate": 3,
-        "css": ".view-comment{display:none!important}"
     },
     {
         "name": "dm5 動漫屋 - 分類",
@@ -1000,7 +962,7 @@
         "nextLink": "//a[text()=' 下一页']",
         "pageElement": "//div[(div/a/img) and @class='row m-0'] | //div[(a/img) and contains(@class,'media')] | //div[(a/img) and contains(@class,'media')]/following-sibling::hr[1]",
         "replaceElement": ".pagination",
-        "css": ".row+.pagetual_pageBar{margin-top:-2px!important}hr+.pagetual_pageBar{display:none!important}"
+        "css": ".row+.pagetual_pageBar{margin-top:-1px!important;margin-bottom:15px!important}hr+.pagetual_pageBar{display:none!important}"
     },
     {
         "name": "漫画DB - 閱讀",
@@ -1032,7 +994,7 @@
         "url": "^https?://www\\.kanbook\\.net/",
         "include": "nav+.container-fluid+.container-fluid",
         "pinUrl": true,
-        "init": "setTimeout(()=>{function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev)},1100);function dcnext(e){let n=document.querySelector('.next_part');if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);setTimeout(()=>{let imgData=[];if(is_refresh==0){for(let i=0;i<pageNum;i++){imgData.push(Gm.getImgUrl(comic_id+'/'+version_id+'/'+part_id+'/'+my_sha2(x_tokens[i])))}}else{for(let i=0;i<data.url.length;i++){imgData.push(Gm.getImgUrl(data.url[i]))}}let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};document.querySelector('nav+.container-fluid+.container-fluid').innerHTML=_img},1000)",
+        "init": "setTimeout(()=>{function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev)},1100);function dcnext(e){let n=document.querySelector('.next_part');if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);setTimeout(()=>{document.querySelector('nav+.container-fluid+.container-fluid').innerHTML='';let imgData=[];if(is_refresh==0){for(let i=0;i<pageNum;i++){imgData.push(Gm.getImgUrl(comic_id+'/'+version_id+'/'+part_id+'/'+my_sha2(x_tokens[i])))}}else{for(let i=0;i<data.url.length;i++){imgData.push(Gm.getImgUrl(data.url[i]))}}for(let i=0;i<imgData.length;i++){setTimeout(()=>{let imgSrc='<img src=\"'+imgData[i]+'\">';$('nav+.container-fluid+.container-fluid').append(imgSrc)},3000*i)}},1000)",
         "nextLink": "0",
         "manualMode": true,
         "css": "nav+.container-fluid+.container-fluid>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}h2~span:not(.h4),.ppre,.pnext,#page-selector,.pagination>a:nth-child(1)~*:not(.next_part){display:none!important}.container-fluid{max-width:1000px}"
