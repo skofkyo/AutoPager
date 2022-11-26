@@ -144,13 +144,15 @@
         "name": "看漫画手機版 - 漫画大全 檢視下20條記錄",
         "example": "https://m.manhuagui.com/list/update.html",
         "url": "^https://m\\.manhuagui\\.com/list/",
-        "loadMore": "#more:not([style*='none'])>.more-go"
+        "loadMore": "#more:not([style*='none'])>.more-go",
+        "css": "body>center>center>ins{display:none!important}"
     },
     {
         "name": "看漫画手機版 - 最新更新/排行榜/書架/搜索 檢視下20條記錄",
         "example": "https://m.manhuagui.com/list/update.html",
         "url": "^https://m\\.manhuagui\\.com/(update|rank|user|s)/",
-        "nextLinkByJs": "let more = document.querySelector(`#more:not([style*='none'])>.more-go`); if (more) more.click()"
+        "nextLinkByJs": "let more = document.querySelector(`#more:not([style*='none'])>.more-go`); if (more) more.click()",
+        "css": "body>center>center>ins{display:none!important}"
     },
     {
         "name": "看漫画 - 閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
@@ -1482,7 +1484,7 @@
         ],
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.main_img');if(c.length>2){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>2){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".img_Page,.morepl{display:none!important}"
+        "css": ".img_Page,.morepl,#adhtml{display:none!important}"
     },
     {
         "name": "酷漫屋手機版 - 分類",
