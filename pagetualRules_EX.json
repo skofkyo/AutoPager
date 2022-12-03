@@ -2728,8 +2728,8 @@
         "pageElement": "#imgshow img",
         "replaceElement": ".bb ul,.hddiv+span",
         "css": "#imgshow img {max-width: 100%;}",
-        "rate": 3,
-        "pageBar": 0
+        "pageBar": 0,
+        "rate": 3
     },
     {
         "name": "24tupian - 圖片清單",
@@ -2749,6 +2749,37 @@
         "replaceElement": ".page"
     },
     {
+        "name": "新老友图社 - 看圖",
+        "example": "https://m.xtushe.com/photo/10377.html",
+        "url": "^https?://m\\.xtushe\\.com/photo/\\w+\\.html",
+        "nextLink": "li.next>a[title='下一张']",
+        "pageElement": "#content-photo>img",
+        "replaceElement": "#content-title,.pagebreak",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "新老友图社",
+        "example": "https://m.xtushe.com/catalog/xinggan.html",
+        "url": "^https?://m\\.xtushe\\.com/",
+        "nextLink": "li.next>a[title='下一页']",
+        "pageElement": "#content-list",
+        "replaceElement": ".pagebreak",
+        "css": ".book-list>*{display:block!important}"
+    },
+    {
+        "name": "爱看图吧 - 看圖",
+        "example": "https://www.9iktb.com/gallery/46215",
+        "url": "^https?://www\\.9iktb\\.com/gallery/",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".gallery-detail-img",
+        "replaceElement": ".pagination",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
         "name": "爱看图吧",
         "example": "https://www.9iktb.com/galleryList/",
         "url": "^https?://www\\.9iktb\\.com/(galleryList|search)",
@@ -2758,12 +2789,30 @@
         "css": ".book-list>*{display:block!important}"
     },
     {
+        "name": "美女目录网 - 圖片列表模式載入原圖",
+        "example": "https://www.girldir.com/photos/aozhongmaqin_list/",
+        "url": "^https?://[^/]+/photos/",
+        "include": [
+            "//nav[@id='topNavBar']/a[@class='navbar-brand']/img[@src='/assets/logo.png']",
+            ".page-item.active",
+            "nav.pagination"
+        ],
+        "action": 1,
+        "init": "document.querySelectorAll('source').forEach(e=>{e.remove()});document.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.match(/https?:\\/\\/[^/]+\\/upload\\/[^.]+\\.[a-z]{3}/)[0]})",
+        "nextLink": "li.page-item.active+li>a",
+        "pageElement": ".photo-list.row",
+        "replaceElement": "nav.pagination",
+        "pageInit": "doc.querySelectorAll('source').forEach(e=>{e.remove()});doc.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.match(/https?:\\/\\/[^/]+\\/upload\\/[^.]+\\.[a-z]{3}/)[0]})"
+    },
+    {
         "name": "美女目录网 - 圖片",
-        "example": "http://www.mnmulu.com/photos/lichengmin_1156859/",
-        "url": "^https?://www\\.mnmulu\\.com/photos/",
-        "init": "let link = document.querySelector('.photo-box > a');link.removeAttribute('href');",
+        "example": "http://www.girldir.com/photos/lichengmin_1156859/",
+        "url": "^https?://[^/]+/photos/",
+        "include": "//title[contains(text(), '美女目录网')]",
+        "action": 1,
+        "init": "let link = document.querySelector('.photo-box > a');link.removeAttribute('href');document.querySelector('source').remove()",
         "nextLink": "//a[text()='下一张>']",
-        "pageElement": ".photo-box picture",
+        "pageElement": ".photo-box picture img[alt]",
         "replaceElement": ".tools row",
         "pageBar": 0,
         "initRun": 1,
@@ -2771,9 +2820,44 @@
     },
     {
         "name": "美女目录网 - 分類停止自動匹配",
-        "example": "http://www.mnmulu.com/star/v_siwa/",
-        "url": "^https?://www\\.mnmulu\\.com/star/",
+        "example": "http://www.girldir.com/star/v_siwa/",
+        "url": "^https?://[^/]+/star/",
+        "include": "//title[contains(text(), '美女目录网')]",
         "nextLink": "0"
+    },
+    {
+        "name": "3G 壁纸 - 圖片",
+        "example": "https://www.3gbizhi.com/meinv/mn1869.html",
+        "url": "^https?://www\\.3gbizhi\\.com/meinv/\\w+\\.html",
+        "init": "document.querySelector('#showimg').appendChild(document.querySelector('#showpicnow'));",
+        "nextLink": "a.next",
+        "stopSign": [
+            [
+                ".showtitle>h2",
+                "(\\d+)"
+            ],
+            [
+                ".showtitle>h2",
+                "\\/(\\d+)"
+            ]
+        ],
+        "pageElement": "#showpicnow",
+        "replaceElement": "h2,.showpicboxw",
+        "insert": "#showimg",
+        "insertPos": 2,
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": ".morew,#showimg>a{display:none!important}"
+    },
+    {
+        "name": "3G 壁纸",
+        "example": "https://www.3gbizhi.com/meinv/",
+        "url": "^https?://www\\.3gbizhi\\.com/",
+        "nextLink": "#pageNum span+a",
+        "pageElement": "//ul[@class='cl'][li/a[@class='imgw']/div[@class='img']/img]",
+        "replaceElement": "#pageNum",
+        "css": ".pagetual_pageBar{margin-top:-8px!important}"
     },
     {
         "name": "nvsheng - 圖片",
@@ -2810,10 +2894,12 @@
     {
         "name": "遛无写真",
         "example": "https://www.6evu.com/jgmntp",
-        "url": "^https?://www\\.6evu\\.com/(jgmntp|zhonguo|xzzh|twmn|riben|tag|\\?s=)",
+        "url": "^https?://www\\.6evu\\.com/",
+        "include": ".pagination",
         "nextLink": "a.next",
         "pageElement": "#post_container",
-        "replaceElement": ".pagination"
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:-8px!important}"
     },
     {
         "name": "爱美女 - 看圖",
@@ -2822,7 +2908,7 @@
         "init": "let link=document.querySelector('.hh+.pp > a');let link2=document.querySelector('.clearfix.arcmain a');if(link){link.removeAttribute('href')}else{link2.removeAttribute('href')}",
         "nextLink": "//div[@class='page-show' or contains(@class,'article-page')]/a[contains(@href,'html') and text()='下一页']",
         "pageElement": ".hh+.pp img[alt],.clearfix.arcmain img",
-        "replaceElement": ".page-show,h1>span",
+        "replaceElement": ".page-show,h1>span,.article-page",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
@@ -3021,6 +3107,29 @@
         "pageBar": 0
     },
     {
+        "name": "NUDECOSPLAY - 圖片",
+        "example": "https://nudecosplaygirls.com/%e4%b9%a0%e5%91%86%e5%91%86-%e5%88%bb%e6%99%b4/",
+        "url": "^https?://nudecosplaygirls\\.com/",
+        "include": [
+            ".entry-content img[decoding='async']:not(.lazy)"
+        ],
+        "pinUrl": true,
+        "init": "let imgs=document.querySelectorAll(\".entry-content img[decoding='async']\");let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){let p=parseInt(i)+1;if(i<9){p='00'+p}else if(i<99){p='0'+p}let alt=document.querySelector('h1.entry-title').innerText+'_P'+p;_img+=`<img src='${imgData[i]}'alt='${alt}'>`};document.querySelector('.entry-content').innerHTML=_img;",
+        "css": ".entry-content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#secondary{display:none!important}h1.g1-mega{text-align:center}"
+    },
+    {
+        "name": "NUDECOSPLAY - 圖片",
+        "example": "https://nudecosplaygirls.com/haneame-summer/",
+        "url": "^https?://nudecosplaygirls\\.com/",
+        "include": [
+            ".entry-content",
+            "img[decoding='async'].lazy"
+        ],
+        "pinUrl": true,
+        "init": "let imgs=document.querySelectorAll('img.lazy');let imgData=[];let altData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){let p=parseInt(i)+1;if(i<9){p='00'+p}else if(i<99){p='0'+p}let alt=document.querySelector('h1.entry-title').innerText+'_P'+p;_img+=`<img src='${imgData[i]}'alt='${alt}'>`};document.querySelector('.entry-content').innerHTML=_img;",
+        "css": ".entry-content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#secondary{display:none!important}h1.g1-mega{text-align:center}"
+    },
+    {
         "name": "NUDECOSPLAY",
         "example": "https://nudecosplaygirls.com/",
         "url": "^https?://nudecosplaygirls\\.com/(category)?",
@@ -3049,7 +3158,7 @@
     },
     {
         "name": "Mitaku - 看圖",
-        "example": "https://mitaku.net/",
+        "example": "https://mitaku.net/ero-cosplay/byoru-riamu-yumemi-nekomini/",
         "url": "^https?://mitaku\\.net/",
         "include": ".msacwl-slider-wrap",
         "pinUrl": true,
@@ -3092,6 +3201,14 @@
         "nextLink": "span.current+a,.blog-pager-older-link",
         "pageElement": ".index-post-wrap",
         "replaceElement": "#blog-pager"
+    },
+    {
+        "name": "Goddess247 - 圖片",
+        "example": "https://goddess247.com/xiuren%e7%a7%80%e4%ba%ba%e7%bd%91-no-5576-shi-shi-kiki/",
+        "url": "^https?://goddess247\\.com/",
+        "include": "//p[img[@data-lazy-src]]",
+        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}let imgp=gx('//p[img[@data-lazy-src]]');let t=document.querySelector('h1.elementor-heading-title.elementor-size-large').innerText;let imgs=document.querySelectorAll('p>img[alt][data-lazy-src]');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('data-lazy-src'))};let _img='';for(let i=0;i<imgData.length;i++){let p=parseInt(i)+1;if(i<9){p='00'+p}else if(i<99){p='0'+p}let alt=t+'_P'+p;_img+=`<img src='${imgData[i]}'alt='${alt}'>`};imgp.innerHTML=_img;",
+        "pinUrl": true
     },
     {
         "name": "Goddess247",
@@ -3188,6 +3305,50 @@
         ],
         "pageElement": "main#main",
         "replaceElement": "nav.pagination"
+    },
+    {
+        "name": "BaoBua.Com - 看圖",
+        "example": "https://blog.baobua.com/mlem/6350798069264574102~rogle-song-hana-%EC%86%A1%ED%95%98%EB%82%98-leggings",
+        "url": "^https?://(blog|fb)\\.baobua\\.com/",
+        "include": "img[data-original]",
+        "pinUrl": true,
+        "init": "document.querySelector('#fix_scale').setAttribute('id','fix');let fimgs=document.querySelectorAll('.article-content img[data-original]');let _img='';for(let i=0;i<fimgs.length;i++){let imgSrc=fimgs[i].getAttribute('data-original');let p=parseInt(i)+1;if(i<9){p='0'+p}let alt=document.querySelector('h1').innerText.match(/[^@]+/)[0].trim()+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};document.querySelector('.article-body').innerHTML=_img;"
+    },
+    {
+        "name": "BaoBua.Com - 搜索",
+        "example": "https://blog.baobua.com/mlem?cat=korean",
+        "url": "^https?://blog\\.baobua\\.com/mlem\\?cat=",
+        "include": ".pagination-custom",
+        "action": 1,
+        "wait": 1000,
+        "nextLinkByUrl": [
+            "(cat=[^&]+)(&page=(\\d+))?$",
+            "$1&page={$3+1}",
+            "span.nextPage"
+        ],
+        "pageElement": ".hc-tabcontent",
+        "replaceElement": ".pagination-custom",
+        "initRun": 1,
+        "autoLoadNum": 4,
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "BaoBua.Com - 分類",
+        "example": "https://blog.baobua.com/mlem",
+        "url": "^https?://blog\\.baobua\\.com/mlem",
+        "include": ".pagination-custom",
+        "action": 1,
+        "wait": 1000,
+        "nextLinkByUrl": [
+            "mlem(\\?&page=(\\d+))?$",
+            "mlem?&page={$2+1}",
+            "span.nextPage"
+        ],
+        "pageElement": ".hc-tabcontent",
+        "replaceElement": ".pagination-custom",
+        "initRun": 1,
+        "autoLoadNum": 4,
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
         "name": "HOTGIRLchina - 看圖",
@@ -5207,7 +5368,8 @@
         "example": "https://www.jpmn5.com/Xiuren/",
         "url": "^https?://[^/]+/\\w+/",
         "include": [
-            "body>.container>.content-wrap>.content>.speedbar+.widget-title,.widget-title+.pagination",
+            "body>.container>.content-wrap>.content>.speedbar+.widget-title",
+            ".widget-title+.pagination",
             "//title[contains(text(), '极品性感美女')]"
         ],
         "nextLink": ".current+a",
@@ -5511,56 +5673,75 @@
         "css": ".pagetual_pageBar{margin-top:-10px !important;margin-bottom:10px !important;}"
     },
     {
+        "name": "Taotuxp.com - 看圖",
+        "example": "https://www.taotucc.com/252555.html",
+        "url": "^https?://www\\.taotucc\\.com/\\d+\\.html",
+        "nextLink": ".pagelist>span+a",
+        "pageElement": "#post_content>p",
+        "replaceElement": ".pagelist",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "#post_content img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#content p{margin:0!important}"
+    },
+    {
+        "name": "Taotuxp.com - 分類",
+        "example": "https://www.taotucc.com/",
+        "url": "^https?://www\\.taotucc\\.com/",
+        "nextLink": "a.current+a",
+        "pageElement": "#post_container",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:-8px!important}"
+    },
+    {
+        "name": "超级美女图库 - 看圖",
+        "example": "https://www.2avtt.com/xingan/54985.html",
+        "url": "^https?://www\\.2avtt\\.com/",
+        "action": 1,
+        "init": "document.querySelector('#nextPageTagA').removeAttribute('href');",
+        "nextLink": "li.thisclass+li>a",
+        "pageElement": "#photoMain img[alt]",
+        "replaceElement": ".page,.local>span",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "div[align='center']+div[align='center'],#photoMain br{display:none!important}"
+    },
+    {
+        "name": "超级美女图库 - 分類",
+        "example": "https://www.2avtt.com/xingan/",
+        "url": "^https?://www\\.2avtt\\.com/",
+        "nextLink": "li.thisclass+li>a",
+        "pageElement": "//div[@class='col-left-right'][div/div[@align='center']/following-sibling::div[1]/div[@class='item']]",
+        "replaceElement": ".page",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "Xgirls - 看圖",
+        "example": "https://xgirlscollection.com/collection/2015",
+        "url": "^https?://xgirlscollection\\.com/",
+        "nextLink": "//a[i[@class='fa fa-angle-right']]",
+        "pageElement": "img[id].collection-image",
+        "replaceElement": ".pagination",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "Xgirls - 分類",
+        "example": "https://xgirlscollection.com/collections",
+        "url": "^https?://xgirlscollection\\.com/",
+        "nextLink": "//a[i[@class='fa fa-angle-right']]",
+        "pageElement": "//div[@class='container']/div[@class='row']/div/div[div/div[@class='card-wrapper']/div[@class='card-img']/a/img][@class='row']",
+        "replaceElement": ".pagination"
+    },
+    {
         "name": "Porn Pics - 圖片清單載入大圖",
         "example": "https://www.pornpics.com/galleries/brunette-asian-girl-yui-uehara-gives-a-blowjob-and-gets-fucked-by-two-knobs-29982680/",
         "url": "^https?://www\\.pornpics\\.com/galleries/[^/]+/",
         "include": "a[data-tid]",
         "pinUrl": true,
         "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.parentNode.href})"
-    },
-    {
-        "name": "BaoBua.Com - 看圖",
-        "example": "https://blog.baobua.com/mlem/6350798069264574102~rogle-song-hana-%EC%86%A1%ED%95%98%EB%82%98-leggings",
-        "url": "^https?://(blog|fb)\\.baobua\\.com/",
-        "include": "img[data-original]",
-        "pinUrl": true,
-        "init": "document.querySelector('#fix_scale').setAttribute('id','fix');let fimgs=document.querySelectorAll('.article-content img[data-original]');let _img='';for(let i=0;i<fimgs.length;i++){let imgSrc=fimgs[i].getAttribute('data-original');let p=parseInt(i)+1;if(i<9){p='0'+p}let alt=document.querySelector('h1').innerText.match(/[^@]+/)[0].trim()+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};document.querySelector('.article-body').innerHTML=_img;"
-    },
-    {
-        "name": "BaoBua.Com - 搜索",
-        "example": "https://blog.baobua.com/mlem?cat=korean",
-        "url": "^https?://blog\\.baobua\\.com/mlem\\?cat=",
-        "include": ".pagination-custom",
-        "action": 1,
-        "wait": 1000,
-        "nextLinkByUrl": [
-            "(cat=[^&]+)(&page=(\\d+))?$",
-            "$1&page={$3+1}",
-            "span.nextPage"
-        ],
-        "pageElement": ".hc-tabcontent",
-        "replaceElement": ".pagination-custom",
-        "initRun": 1,
-        "autoLoadNum": 4,
-        "css": ".pagetual_pageBar{margin-top:0px!important}"
-    },
-    {
-        "name": "BaoBua.Com - 分類",
-        "example": "https://blog.baobua.com/mlem",
-        "url": "^https?://blog\\.baobua\\.com/mlem",
-        "include": ".pagination-custom",
-        "action": 1,
-        "wait": 1000,
-        "nextLinkByUrl": [
-            "mlem(\\?&page=(\\d+))?$",
-            "mlem?&page={$2+1}",
-            "span.nextPage"
-        ],
-        "pageElement": ".hc-tabcontent",
-        "replaceElement": ".pagination-custom",
-        "initRun": 1,
-        "autoLoadNum": 4,
-        "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
         "name": "优丝库HD - 日韓看圖 - 完全免VIP需有全部的預覽圖",
@@ -5686,6 +5867,24 @@
         "pageElement": ".videos>.thumb-view",
         "replaceElement": ".pag>.pagination-site",
         "pageBar": 0
+    },
+    {
+        "name": "女神研究所",
+        "example": "https://www.simracingzone.net/",
+        "url": "^https?://www\\.simracingzone\\.net/",
+        "nextLink": "span.current+a",
+        "pageElement": "#index_ajax_list",
+        "replaceElement": ".nav-links",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "秘图社",
+        "example": "https://www.sssins.com/，https://www.nicesss.com/",
+        "url": "^https?://www\\.(sssins|nicesss)\\.com/",
+        "nextLink": "//li[span[@aria-current='page']]/following-sibling::li[1]/a",
+        "pageElement": ".posts-wrapper",
+        "replaceElement": "ul.page-numbers",
+        "css": ".pagetual_pageBar{margin-top:-16px!important}"
     },
     {
         "name": "YINGPIAN影片社",
