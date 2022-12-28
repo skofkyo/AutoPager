@@ -2255,6 +2255,18 @@
         "css": ".pagetual_pageBar{margin:-10px 3% 10px!important;width:94%!important}"
     },
     {
+        "name": "gogo人体艺术 - 圖片",
+        "example": "https://gogortrt.com/gmgqdd/1305/",
+        "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/\\d+/",
+        "init": "let a=document.querySelector('.main>div:not(.atc_new_head)>a');a.outerHTML=a.innerHTML;",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".main>div:not(.atc_new_head):not(.keywords) img[alt]",
+        "replaceElement": ".Mrlsr55,.RlpeZsp,.cgdijkn,.d70rZyL,.i09cWt8,.pages,.pfb45A1,.vd7O8HI,.wpwRCvy,.zrLIsoJ",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
         "name": "gogo人体艺术",
         "example": "https://gogortrt.com/gmgqdd/",
         "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/",
@@ -2552,14 +2564,24 @@
         "autoLoadNum": "0"
     },
     {
+        "name": "GOGO人体艺术 - 標籤",
+        "example": "http://www.gogort2.net/index.php?m=content&c=tag&a=lists&tag=%B3%AC%B4%F3%B3%DF%B6%C8",
+        "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/index\\.php\\?m=content&c=tag",
+        "nextLink": "span+a:not(.a1)",
+        "pageElement": ".search_list ul",
+        "replaceElement": ".pages",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "10"
+    },
+    {
         "name": "GOGO人体艺术 - 搜索",
         "example": "http://www.gogort2.com/index.php?m=search&c=index&a=init&typeid=&siteid=1&q=%B4%F3%B5%A8",
         "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/index\\.php\\?m=search",
         "nextLink": "span+a:not(.a1)",
         "pageElement": ".search_content",
         "replaceElement": ".pages",
-        "pageBar": 0,
-        "css": ".pagetual_pageBar{margin-top:0px!important}"
+        "pageBar": 0
     },
     {
         "name": "GOGO人体艺术",
@@ -2659,8 +2681,8 @@
     },
     {
         "name": "Pic Yailay - 圖片",
-        "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html",
-        "url": "^https?://pic\\.yailay\\.com/articles",
+        "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html，https://nungvl.net/gallerys/87379.cg?page=1",
+        "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/(articles|gallerys)",
         "pinUrl": true,
         "nextLink": "//a[text()='Next >']",
         "pageElement": "img[onerror]+br,img[onerror]",
@@ -2673,7 +2695,7 @@
     {
         "name": "Pic Yailay",
         "example": "https://pic.yailay.com/?page=1",
-        "url": "^https?://pic\\.yailay\\.com/",
+        "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/",
         "nextLink": ".pagination-next",
         "pageElement": ".blog",
         "replaceElement": ".pagination",
@@ -4277,6 +4299,30 @@
         "replaceElement": ".paginator"
     },
     {
+        "name": "松鼠症倉庫 - 閱讀",
+        "example": "https://ahri8.top/readOnline2.php?ID=90518&host_id=0",
+        "url": "^https?://[^/]+/readOnline\\d\\.php\\?ID=\\d+",
+        "include": [
+            "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫')]",
+            "[id^='image_width']"
+        ],
+        "pinUrl": true,
+        "init": "let _img='';for(let i=0;i<Original_Image_List.length;i++){let imgSrc=HTTP_IMAGE+Original_Image_List[i].new_filename+'_w1500.'+Original_Image_List[i].extension;_img+=`<img src='${imgSrc}'>`};document.querySelector('#Big_Image').innerHTML=_img;",
+        "nextLink": "0",
+        "css": "#Big_Image>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#content>[style^='text-align']{display:none!important}"
+    },
+    {
+        "name": "松鼠症倉庫",
+        "example": "https://ahri8.top/dnew.php?t=1669824000",
+        "url": "^https?://[^/]+/dnew\\.php",
+        "include": "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫')]",
+        "action": 1,
+        "nextLink": ".pagination li.active+li>a",
+        "pageElement": "#gallery",
+        "replaceElement": ".pagination",
+        "css": "#content>[style^='text-align']{display:none!important}"
+    },
+    {
         "name": "绅士会所",
         "example": "www.hentaiclub.net，www.sshs.club",
         "url": "^https?://www\\.(hentaiclub|sshs)\\.(net|club)/",
@@ -5292,7 +5338,7 @@
     {
         "name": "牛C網 - 列表",
         "example": "https://niuc.icu/sex",
-        "url": "^https?://niuc(\\d+)?\\.[a-z]{2,3}/(blog|sex|pornhub|apps)",
+        "url": "^https?://niuc[^/]+/(blog|sex|pornhub|apps)",
         "init": "document.querySelectorAll('a[data-src]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`})",
         "nextLink": "span.current+a",
         "pageElement": ".cat_list",
@@ -5302,8 +5348,9 @@
     },
     {
         "name": "牛C網 - 看圖",
-        "example": "https://niuc.icu/64438.html",
-        "url": "^https?://niuc(\\d+)?\\.[a-z]{2,3}/\\d+\\.html",
+        "example": "https://niuc.icu/78111.html",
+        "url": "^https?://niuc[^/]+/\\d+\\.html",
+        "init": "document.querySelectorAll('a.js').forEach(e=>{e.outerHTML=e.innerHTML})",
         "nextLink": "span+a",
         "pageElement": "div.panel-body.single.mt-2 > p",
         "replaceElement": ".page-nav",
@@ -5315,7 +5362,7 @@
     {
         "name": "牛C網 - 正文",
         "example": "https://niuc.icu/67307.html",
-        "url": "^https?://niuc(\\d+)?\\.[a-z]{2,3}/\\d+\\.html",
+        "url": "^https?://niuc[^/]+/\\d+\\.html",
         "action": 1,
         "exclude": ".page-nav",
         "nextLink": ".nav.previous>a",
