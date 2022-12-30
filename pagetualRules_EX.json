@@ -2883,8 +2883,11 @@
         "name": "3G 壁纸 - 圖片",
         "example": "https://www.3gbizhi.com/meinv/mn1869.html",
         "url": "^https?://www\\.3gbizhi\\.com/meinv/\\w+\\.html",
-        "init": "document.querySelector('#showimg').appendChild(document.querySelector('#showpicnow'));",
-        "nextLink": "a.next",
+        "init": "function ge(e){return document.querySelector(e)}ge('#showimg').appendChild(ge('#showpicnow'));document.querySelectorAll('#showimg>a').forEach(e=>{e.remove()})",
+        "nextLinkByUrl": [
+            "/([^_]+)(_(\\d+))?\\.html$",
+            "/$1_{$3+1}.html"
+        ],
         "stopSign": [
             [
                 ".showtitle>h2",
