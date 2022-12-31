@@ -2668,6 +2668,29 @@
         "replaceElement": ".pagenav-clear"
     },
     {
+        "name": "美女图片网 - 圖片",
+        "example": "https://www.mevtu.com/xingganmm/15275.html",
+        "url": "^https?://www\\.mevtu\\.com/",
+        "include": ".page_imges",
+        "init": "let a=document.querySelector('.imageclick-href');a.outerHTML=a.innerHTML;",
+        "nextLink": "span.current+a:not(.prev)",
+        "pageElement": "#image_div img[alt]",
+        "replaceElement": ".nav-links,.mbx-nav-right",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "#content>a{display:none!important}"
+    },
+    {
+        "name": "美女图片网 - 分類",
+        "example": "https://www.mevtu.com/",
+        "url": "^https?://www\\.mevtu\\.com/",
+        "include": ".nav-links",
+        "nextLink": "span.current+a",
+        "pageElement": "#index_ajax_list",
+        "replaceElement": ".nav-links"
+    },
+    {
         "name": "Pic Yailay - 圖片",
         "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html，https://nungvl.net/gallerys/87379.cg?page=1",
         "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/(articles|gallerys)",
@@ -3087,6 +3110,28 @@
         "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
+        "name": "MEITU131 - 手機版看圖",
+        "example": "https://m.meitu131.com/meinv/8140/",
+        "url": "^https?://m\\.meitu131\\.com/",
+        "include": ".uk-article",
+        "init": "document.querySelectorAll('.uk-article-bd a').forEach(e=>{e.outerHTML=e.innerHTML})",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".uk-article-bd img[alt]",
+        "replaceElement": ".uk-page",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "MEITU131 手機版",
+        "example": "https://m.meitu131.com/meinv/",
+        "url": "^https?://m\\.meitu131\\.com/",
+        "exclude": ".uk-article",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".uk-container",
+        "replaceElement": ".uk-page"
+    },
+    {
         "name": "MEITU131 - 看圖",
         "example": "https://www.meitu131.com/meinv/7672/",
         "url": "^https?://www\\.meitu131\\.com/meinv/\\d+",
@@ -3108,6 +3153,52 @@
         "replaceElement": "#pages",
         "lazyImgSrc": "data-echo",
         "css": ".cover-list+.pagetual_pageBar{margin-top:0px!important}.pagetual_pageBar+.cover-list{margin-top:-4px!important}"
+    },
+    {
+        "name": "亿图全景图库 - 手機版看圖",
+        "example": "https://m.yeitu.com/meinv/xinggan/20221205_32251.html",
+        "url": "^https?://m\\.yeitu\\.com/",
+        "include": ".uk-article",
+        "init": "let a=document.querySelector('.gallery-item>a');a.outerHTML=a.innerHTML;",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".gallery-item img[alt]",
+        "replaceElement": ".yt-pages,.imageset-current",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "亿图全景图库手機版",
+        "example": "https://m.yeitu.com/meinv/xinggan/",
+        "url": "^https?://m.yeitu.com/",
+        "include": ".uk-pagination",
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".uk-container>ul",
+        "replaceElement": ".uk-pagination"
+    },
+    {
+        "name": "亿图全景图库 - 看圖",
+        "example": "https://www.yeitu.com/meinv/xinggan/20220725_31887.html",
+        "url": "^https?://www\\.yeitu\\.com/",
+        "include": ".img_content",
+        "init": "let a=document.querySelector('.img_box>a');a.outerHTML=a.innerHTML;",
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".img_box img[alt]",
+        "replaceElement": "#pages,.imageset-current",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "亿图全景图库",
+        "example": "https://www.yeitu.com/meinv/xinggan/",
+        "url": "^https?://www\\.yeitu\\.com/",
+        "include": "#pages",
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".list-box-p",
+        "replaceElement": "#pages",
+        "lazyImgSrc": "data-echo",
+        "css": ".pagetual_pageBar{margin-top:-8px!important}"
     },
     {
         "name": "Make Girls",
@@ -5546,8 +5637,12 @@
     },
     {
         "name": "愛污傳媒",
-        "example": "https://www.aiwu333.top/index.php/&m=vodtype/mdapp52.html",
-        "url": "^https?://www\\.aiwu.*\\.(info|top|com)/index\\.php/",
+        "example": "https://aiwucm.com/",
+        "url": "aiwu",
+        "include": [
+            "//title[contains(text(),'爱污传媒')]",
+            ".pagination.justify-content-center"
+        ],
         "nextLink": "a[title='Go to next page!']",
         "pageElement": ".grid.mx-auto.videos",
         "replaceElement": ".pagination.justify-content-center",
@@ -6006,7 +6101,7 @@
         "waitElement": [
             "img.cr_only"
         ],
-        "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');let p=document.querySelector('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};document.querySelector('.body .article:not(.ad)').innerHTML=aimg;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}",
+        "init": "function ge(e){return document.querySelector(e)}let bs = ge('body[style]');if(bs)bs.removeAttribute('style');let p=ge('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.body .article:not(.ad)').innerHTML=aimg;let p=ge('#pagetual-preload');if(p)p.remove()}",
         "nextLink": "a.next",
         "pageElement": ".photos > a",
         "replaceElement": [
@@ -6014,7 +6109,7 @@
             "div.article>div.pager:last-child"
         ],
         "css": ".photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords){display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.body .article:not(.ad)>a>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
-        "pageAction": "document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=document.querySelector(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};document.querySelector('.body .article:not(.ad)').innerHTML=aimg;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}},1000)",
+        "pageAction": "function ge(e){return document.querySelector(e)}document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=ge(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.body .article:not(.ad):not(.action)').innerHTML = aimg;let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
         "initRun": 1,
         "autoLoadNum": "0"
     },
