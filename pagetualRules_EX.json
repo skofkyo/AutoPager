@@ -35,11 +35,11 @@
         "url": "^https://(www|tw|cn)\\.(webmota|baozimh)\\.com/comic/chapter/[^/]+/\\w+\\.html",
         "history": 2,
         "pinUrl": true,
-        "init": "function geAll(e){return document.querySelectorAll(e)}geAll('.mobadsq').forEach(e=>{e.remove()});let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
         "nextLink": "#next-chapter",
         "pageElement": ".chapter-main>.next_chapter,.chapter-main>.comic-contain",
         "replaceElement": "//head/title | //span[@class='title'] | //div[@class='comic-chapter']/div[@class='next_chapter'] | //div[@class='bottom-bar']",
-        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}geAll('.mobadsq').forEach(e=>{e.remove()});let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
+        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
         "pageAction": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let nc=gx(\"//div[starts-with(@class,'chapter-main')]/div[@class='next_chapter']/a[contains(text(),'點擊進入上一頁')]\");if(nc){geAll('.chapter-main>.next_chapter').forEach(e=>{e.remove()});geAll('.pagetual_pageBar').forEach(e=>{e.remove()})}},0);setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>4){gx(\"//ul[@class='comic-contain']\").remove()}let p=geAll('.pagetual_pageBar');if(p.length>4){p[0].remove()}},200)",
         "pageBarText": 1,
         "rate": 3,
@@ -2668,6 +2668,28 @@
         "replaceElement": ".pagenav-clear"
     },
     {
+        "name": "俊美图 - 圖片",
+        "example": "https://www.meijuntu.com/beauty/wanghongnenmo_abbyliya_wanmeishencainvshen_mistar_vol_144.html",
+        "url": "^https?://www\\.meijuntu\\.com/",
+        "include": ".next_picture",
+        "init": "document.querySelectorAll('.pictures>a').forEach(e=>{e.remove()})",
+        "nextLink": ".pages>span +a:not(.a1)",
+        "pageElement": ".pictures>img[alt]",
+        "replaceElement": ".pages",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "俊美图 - 分類",
+        "example": "https://www.meijuntu.com/beauty/",
+        "url": "^https?://www\\.meijuntu\\.com/",
+        "exclude": ".next_picture",
+        "nextLink": ".pages>span +a:not(.a1)",
+        "pageElement": ".pic-list>ul>*",
+        "replaceElement": ".pages"
+    },
+    {
         "name": "美女图片网 - 圖片",
         "example": "https://www.mevtu.com/xingganmm/15275.html",
         "url": "^https?://www\\.mevtu\\.com/",
@@ -3114,7 +3136,7 @@
         "example": "https://m.meitu131.com/meinv/8140/",
         "url": "^https?://m\\.meitu131\\.com/",
         "include": ".uk-article",
-        "init": "document.querySelectorAll('.uk-article-bd a').forEach(e=>{e.outerHTML=e.innerHTML})",
+        "init": "let a=document.querySelector('.uk-article-bd a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".uk-article-bd img[alt]",
         "replaceElement": ".uk-page",
@@ -4665,7 +4687,7 @@
     },
     {
         "name": "秀人集 - 搜索",
-        "example": "https://www.xiurenb.cc/plus/search/index.asp?keyword=XiuRen",
+        "example": "https://www.xiurenb.vip/plus/search/index.asp?keyword=XiuRen",
         "url": "^https?://www\\.xiurenb\\.[a-z]{2,3}/plus/search/",
         "include": ".list>.node",
         "nextLink": "a.current+a",
@@ -4674,7 +4696,7 @@
     },
     {
         "name": "秀人集 - 看圖",
-        "example": "https://www.xiurenb.cc/XiuRen/11496.html",
+        "example": "https://www.xiurenb.vip/XiuRen/11496.html",
         "url": "^https?://www\\.xiurenb\\.[a-z]{2,3}/",
         "include": ".item_info",
         "init": "document.querySelectorAll('.content br').forEach(br=>{br.remove()})",
@@ -4687,7 +4709,7 @@
     },
     {
         "name": "秀人集 - 分類",
-        "example": "https://www.xiurenb.cc/XiuRen/",
+        "example": "https://www.xiurenb.vip/XiuRen/",
         "url": "^https?://www\\.xiurenb\\.[a-z]{2,3}/",
         "include": "div.page+ul.update_area_lists",
         "nextLink": "//a[text()='下页']",
@@ -4757,27 +4779,29 @@
         "name": "NEXE channels/models",
         "example": "https://nnwjs.top/models",
         "url": "^https?://[^/]+/(models|channels)",
+        "pinUrl": true,
         "include": [
             "//title[contains(text(),'NEXE')]",
             "//body/div[@class='top-nav']//img[@src='/templates/neon/static/logo.png']"
         ],
         "exclude": "iframe[src]",
-        "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
+        "nextLink": "//li[a/@class='active']/following-sibling::li[1][not(@title)]/a",
         "pageElement": ".margin-top-sm>.hex,.padding-lr-sm>.hex",
         "replaceElement": ".pagination",
-        "pageInit": "doc.querySelectorAll('div.media[data-src]').forEach(div=>{div.style.width=div.dataset.width;div.style.height=div.dataset.height+'px';div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.removeAttribute('data-height');div.removeAttribute('data-width')})",
-        "css": ".pagetual_pageBar{margin-top:-20px!important}"
+        "pageInit": "doc.querySelectorAll('div.media[data-src]').forEach(div=>{div.style.width=div.dataset.width;div.style.height=div.dataset.height+'px';div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.removeAttribute('data-height');div.removeAttribute('data-width');div.classList.remove('loading')})",
+        "css": "h2~.pagetual_pageBar{margin-top:-20px!important}.pagetual_pageBar{margin-top:2px!important}"
     },
     {
         "name": "NEXE",
         "example": "https://nnwjs.top/",
-        "url": "^https?://[^/]+/(best|search|index)?",
+        "url": "^https?://[^/]+/(best.+|search.+|index.+|amateur.+|danmaku.*)?$",
+        "pinUrl": true,
         "include": [
             "//title[contains(text(),'NEXE')]",
             "//body/div[@class='top-nav']//img[@src='/templates/neon/static/logo.png']"
         ],
         "exclude": "iframe[src]",
-        "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
+        "nextLink": "//li[a/@class='active']/following-sibling::li[1][not(@title)]/a",
         "pageElement": ".margin-top-sm>.hex,.hot-keywords",
         "replaceElement": ".pagination",
         "pageInit": "doc.querySelectorAll('div.media[data-thumb]').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.classList.remove('loading')})",
@@ -5920,6 +5944,44 @@
         "pageElement": "#post_container",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar{margin-top:-8px!important}"
+    },
+    {
+        "name": "超级美女图库 - 手機版看圖",
+        "example": "https://m.2avtt.com/xiuren/56166.html",
+        "url": "^https?://m\\.[^/]+/",
+        "include": "//title[contains(text(),'超级美女图库')]",
+        "action": 1,
+        "init": "document.querySelectorAll('.wallpaper-container br').forEach(e=>{e.remove()});let a=document.querySelector('.wallpaper-container>a');a.outerHTML=a.innerHTML;",
+        "nextLinkByUrl": [
+            "/([^_]+)(_(\\d+))?\\.html$",
+            "/$1_{$3+1}.html"
+        ],
+        "stopSign": [
+            [
+                ".title>h2>em",
+                "(\\d+)"
+            ],
+            [
+                ".title>h2>i",
+                "(\\d+)"
+            ]
+        ],
+        "pageElement": ".wallpaper-container img",
+        "replaceElement": ".title>h2>em",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "strong,.wallpaper-container+div[align]{display:none!important}"
+    },
+    {
+        "name": "超级美女图库 - 手機版分類",
+        "example": "https://www.2avtt.com/xingan/",
+        "url": "^https?://m\\.[^/]+/",
+        "include": "//title[contains(text(),'超级美女图库')]",
+        "nextLink": "//a[@class='last' and text()='下一页']",
+        "pageElement": "//div[(span) and @class='items']",
+        "replaceElement": "p.action",
+        "css": ".pagetual_pageBar{margin-top:20px!important;margin-bottom:0px!important}"
     },
     {
         "name": "超级美女图库 - 看圖",
