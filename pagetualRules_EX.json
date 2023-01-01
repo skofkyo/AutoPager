@@ -662,6 +662,26 @@
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
     },
     {
+        "name": "亲亲漫画 - 手機版閱讀",
+        "example": "https://m.acgqd.com/manhua/39305/1277010.html",
+        "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
+        "pinUrl": true,
+        "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let host=pageImage.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('#images').innerHTML=_img;",
+        "nextLinkByJs": "if(nextChapterData.id>0)return comicUrl+nextChapterData.id+'.html'",
+        "manualMode": true,
+        "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*{display:none!important}#action li{width:50%!important}"
+    },
+    {
+        "name": "亲亲漫画 - PC版閱讀",
+        "example": "https://www.acgqd.com/manhua/39305/1277010.html",
+        "url": "^https?://www\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
+        "pinUrl": true,
+        "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let host=pageImage.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('.comic_wraCon').innerHTML=_img;",
+        "nextLink": "span.next>a",
+        "manualMode": true,
+        "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next{width:auto!important;min-width:auto!important}"
+    },
+    {
         "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 - 分類",
         "example": "www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgqd.com",
         "url": "^https?://www\\.(ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acgqd)\\.com/",
