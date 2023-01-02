@@ -4438,6 +4438,50 @@
         "css": ".pagetual_pageBar+.excerpt{margin-top:-2px!important;}"
     },
     {
+        "name": "klmanga - 漫畫閱讀",
+        "example": "https://klmanga.net/bsaq-i-became-a-magical-cheat-loli-witch-my-different-world-life-with-my-reincarnation-privilege-creation-magic-and-the-seed-of-magic-manga-chapter-5.html",
+        "url": "^https?://klmanga\\.net/",
+        "pinUrl": true,
+        "action": 1,
+        "history": 2,
+        "nextLinkByUrl": [
+            "(chapter-(\\d+))",
+            "chapter-{$2+1}",
+            "//option[@selected]/preceding-sibling::option[1]"
+        ],
+        "pageElement": "center .chapter-content",
+        "replaceElement": ".navbar-nav"
+    },
+    {
+        "name": "Rawkuma - 漫畫閱讀",
+        "example": "https://rawkuma.com/mikata-ga-yowa-sugite-hojo-mahou-ni-toushite-ita-kyuutei-mahou-shi-tsuihou-sarete-saikyou-wo-mezasu-chapter-1/",
+        "url": "^https?://rawkuma\\.com/",
+        "pinUrl": true,
+        "action": 1,
+        "history": 2,
+        "nextLink": ".ch-next-btn",
+        "pageElement": "#readerarea",
+        "replaceElement": ".chnav.ctop"
+    },
+    {
+        "name": "manga1001 - 漫畫閱讀",
+        "url": "^https?://manga1001\\.in/chapters/",
+        "pinUrl": true,
+        "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')})",
+        "nextLink": "a[rel='next']",
+        "manualMode": true
+    },
+    {
+        "name": "MANGAROW - 漫畫閱讀",
+        "url": "^https?://mangarow\\.org/chapters/",
+        "pinUrl": true,
+        "history": 2,
+        "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')})",
+        "nextLink": "a[rel='next']",
+        "pageElement": ".container-chapter-reader",
+        "replaceElement": "//div[div/div/select]"
+    },
+    {
         "name": "MANGA1000 - 漫畫閱讀",
         "example": "https://manga1000.top/197/8175/",
         "url": "^https?://manga1000\\.top/\\d+/\\d+/",
