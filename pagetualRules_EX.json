@@ -43,13 +43,13 @@
         "pinUrl": true,
         "init": "function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
         "nextLink": "#next-chapter",
-        "pageElement": ".chapter-main>.next_chapter,.chapter-main>.comic-contain",
+        "pageElement": ".comic-contain",
         "replaceElement": "//head/title | //span[@class='title'] | //div[@class='comic-chapter']/div[@class='next_chapter'] | //div[@class='bottom-bar']",
         "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
-        "pageAction": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let nc=gx(\"//div[starts-with(@class,'chapter-main')]/div[@class='next_chapter']/a[contains(text(),'點擊進入上一頁')]\");if(nc){geAll('.chapter-main>.next_chapter').forEach(e=>{e.remove()});geAll('.pagetual_pageBar').forEach(e=>{e.remove()})}},0);setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>4){gx(\"//ul[@class='comic-contain']\").remove()}let p=geAll('.pagetual_pageBar');if(p.length>4){p[0].remove()}},200)",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar a').forEach(a =>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(a.href)==true)a.parentNode.remove()});setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},200)",
         "pageBarText": 1,
         "rate": 3,
-        "css": ".mobadsq,.chapter-main>.next_chapter{display:none!important}ul{margin-block-start:-2px!important;margin-block-end:2px!important}.pagetual_pageBar{margin-top:7px!important}"
+        "css": ".mobadsq{display:none!important}ul{margin-block-start:-2px!important;margin-block-end:2px!important}.pagetual_pageBar{margin-top:7px!important}"
     },
     {
         "name": "包子漫畫2 - 閱讀",
@@ -285,6 +285,20 @@
         "css": ".mh-list{padding-bottom:0px!important}.pagetual_pageBar+.mh-list{padding-top:10px!important}.pagetual_pageBar{margin-top:0px!important}"
     },
     {
+        "name": "风之动漫 - 閱讀",
+        "example": "https://manhua.fffdm.com/2/1040/，https://www.fffdm.com/manhua/132/222/",
+        "url": "^https?://(manhua|www)\\.fffdm\\.com/(manhua/)?\\d+/\\d+/",
+        "pinUrl": true,
+        "init": "let loop=setInterval(()=>{let a=document.querySelector('#mhpic').parentNode;if(a){a.nextElementSibling.remove();a.outerHTML=a.innerHTML;clearInterval(loop)}},100)",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "#mhpic",
+        "replaceElement": ".text-xl,.navigation",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "#mhpic{border:none!important;padding:0!important;border-radius:0px!important}#main>div>div:not([id]){display:none!important}"
+    },
+    {
         "name": "動漫狂 - 閱讀",
         "url": "^https?://www\\.cartoonmad\\.cc/comic/\\d+\\.html",
         "init": "document.onkeydown = null;function ge(e){return document.querySelector(e)}let _src=ge('img[onload],img[oncontextmenu]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let _img='';for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}_img+=`<img src='${imgSrc}' onload>`};ge('img[onload],img[oncontextmenu]').parentNode.outerHTML=_img;let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
@@ -508,7 +522,7 @@
         "url": "^https?://www\\.chashengchen\\.com/manhua/\\w+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(function(){let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages = ([^;]+)/)[1]);if(imgData.length==ge('#images').querySelectorAll('img').length){let _img='';for(let i=0;i<imgData.length;i++){if(imgData[i].indexOf('http')!=-1){_img+=`<img src='${imgData[i]}'>`}else{_img+=`<img src='${SinConf.resHost[0].domain}${imgData[i]}'>`}};ge('#images').innerHTML=_img;clearInterval(interval)}},1000);",
+        "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(()=>{let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages = ([^;]+)/)[1]);if(imgData.length==ge('#images').querySelectorAll('img').length){let _img='';for(let i=0;i<imgData.length;i++){if(imgData[i].indexOf('http')!=-1){_img+=`<img src='${imgData[i]}'>`}else{_img+=`<img src='${SinConf.resHost[0].domain}${imgData[i]}'>`}};ge('#images').innerHTML=_img;clearInterval(interval)}},1000);",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let url=eval(code.split(';')[6]);let next=eval(code.split(';')[12]);if(next.id>0)return url+next.id+'.html'",
         "pageElement": "#images",
         "replaceElement": "head>title,h1",
@@ -542,7 +556,7 @@
         "url": "^https?://www\\.laimanhua\\.net/kanmanhua/\\w+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(function(){let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let base64=eval(code.match(/picTree[^;]+/g)[0]);let images=base64_decode(base64).split('$qingtiandy$');let host=getpicdamin();if(images.length==ge('#pic-list').querySelectorAll('img').length){let _img='';for(let i=0;i<images.length;i++){let imgSrc=encodeURI(host+images[i]);_img+=`<img src='${imgSrc}'>`};ge('#pic-list').innerHTML=_img;clearInterval(interval)}},1000);",
+        "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(()=>{let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let base64=eval(code.match(/picTree[^;]+/g)[0]);let images=base64_decode(base64).split('$qingtiandy$');let host=getpicdamin();if(images.length==ge('#pic-list').querySelectorAll('img').length){let _img='';for(let i=0;i<images.length;i++){let imgSrc=encodeURI(host+images[i]);_img+=`<img src='${imgSrc}'>`};ge('#pic-list').innerHTML=_img;clearInterval(interval)}},1000);",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextUrlid/)>-1).innerHTML;let next=eval(code.trim().replaceAll('var','').match(/^[^,]+/)[0]);if(next>0)return location.href.replace(/\\d+\\.html$/,'')+next+'.html'",
         "pageElement": "#pic-list",
         "replaceElement": "head>title,h1",
@@ -557,7 +571,7 @@
         "url": "^https?://www\\.(xlsmh|85iu)\\.com/manhua/\\w+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(function(){let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages = ([^;]+)/)[1]);if(imgData.length==ge('#images').querySelectorAll('img').length){let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};ge('#images').innerHTML=_img;clearInterval(interval)}},1000);",
+        "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(()=>{let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages = ([^;]+)/)[1]);if(imgData.length==ge('#images').querySelectorAll('img').length){let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};ge('#images').innerHTML=_img;clearInterval(interval)}},1000);",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let url=eval(code.split(';')[6]);let next=eval(code.split(';')[12]);if(next.id>0)return url+next.id+'.html'",
         "pageElement": "#images",
         "replaceElement": "head>title,h1",
@@ -5006,7 +5020,7 @@
         "example": "https://orzqwq.com/manga/pixiv-dogvahkiin-cg-934423-2/japanese/?style=list",
         "url": "^https?://orzqwq\\.com/",
         "include": "//option[@selected and text()='List style']",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let interval=setInterval(function(){let Img=geAll('img[id][data-src]')[0];if(Img){let path=Img.getAttribute('data-src').trim().replace(/\\d+\\.[a-z]{3}$/,'');let imgs=geAll('img[id][data-src]').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};geAll('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let interval=setInterval(()=>{let Img=geAll('img[id][data-src]')[0];if(Img){let path=Img.getAttribute('data-src').trim().replace(/\\d+\\.[a-z]{3}$/,'');let imgs=geAll('img[id][data-src]').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};geAll('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
         "nextLink": "0",
         "css": ".entry-content img{display: block!important; margin: 0 auto!important;}"
     },
@@ -5015,7 +5029,7 @@
         "example": "https://orzqwq.com/manga/pixiv-dogvahkiin-cg-934423-2/japanese/p/1/",
         "url": "^https?://orzqwq\\.com/",
         "include": "//option[@selected and text()='Paged style']",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let interval=setInterval(function(){let _src=geAll('img[id][data-src]')[0].src;if(_src){let path=_src.replace(/\\d+\\.[a-z]{3}$/,'');let imgs=geAll('.select-pagination')[0].querySelectorAll('option').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};geAll('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let interval=setInterval(()=>{let _src=geAll('img[id][data-src]')[0].src;if(_src){let path=_src.replace(/\\d+\\.[a-z]{3}$/,'');let imgs=geAll('.select-pagination')[0].querySelectorAll('option').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};geAll('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
         "nextLink": "0",
         "css": ".page-link-hover,.select-pagination{display:none!important}.entry-content img{display: block!important; margin: 0 auto!important;}"
     },
@@ -5193,7 +5207,7 @@
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": "section.container>p{display:none!important}"
+        "css": ".item_title>[id],section.container>p{display:none!important}"
     },
     {
         "name": "秀人集 / 秀人美女網 / 爱美女网 - 分類",
@@ -5784,6 +5798,27 @@
         "replaceElement": ".pager-section"
     },
     {
+        "name": "GavPorn 相冊",
+        "example": "https://cav103.com/albums/549/jk8/",
+        "url": "^https?://cav\\w+\\.com/albums/",
+        "include": ".block-album>.album-holder>.images",
+        "pinUrl": true,
+        "init": "document.querySelectorAll('a[data-fancybox-type]').forEach(a=>{a.outerHTML=`<img src='${a.href}'>`})",
+        "css": ".images img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.content>.top,.sponsor{display:none!important}"
+    },
+    {
+        "name": "色色啦",
+        "example": "https://www.seselah.com/",
+        "url": "^https?://www\\.seselah\\.com/",
+        "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.getAttribute('data-src');e.classList.add('loaded');e.previousElementSibling.setAttribute('srcset',e.previousElementSibling.getAttribute('data-srcset'))})",
+        "nextLink": "li.active+li>a",
+        "pageElement": "//div[a/div/picture]",
+        "replaceElement": ".pagination",
+        "pageInit": "doc.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.getAttribute('data-src');e.classList.add('loaded');e.previousElementSibling.setAttribute('srcset',e.previousElementSibling.getAttribute('data-srcset'))})",
+        "pageBar": 0,
+        "css": ".ads{display:none!important}"
+    },
+    {
         "name": "91Porn",
         "example": "http://91porn.com/index.php",
         "url": "^https?://(0118\\.)?(91porn|workarea7)\\.(com|live)/",
@@ -5882,6 +5917,14 @@
         "pageElement": "#videoCategory,#videoSearchResult,.videoList,.homeSection",
         "replaceElement": ".paginationGated",
         "css": ".pagetual_pageBar{margin-top: -12px!important;}.pagetual_pageBar+ul{padding-top: 2px!important;}"
+    },
+    {
+        "name": "multi.xnxx.com gallery",
+        "example": "https://multi.xnxx.com/gallery/1119940/2676/my_wife_she_is_cute_gallery_4_6/10/",
+        "url": "^https?://multi\\.xnxx\\.com/gallery/",
+        "pinUrl": true,
+        "init": "document.querySelectorAll('.galleryPage .boxImg').forEach(e=>{e.outerHTML=`<img src='${e.getAttribute('data-src')}'>`})",
+        "css": ".galleryPage img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "XVIDEOS",
@@ -6234,9 +6277,9 @@
         "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
     },
     {
-        "name": "Supjav 自動點擊server ST(需要背景打開連結，等網頁載入結束後，再切換分頁才有效)",
+        "name": "Supjav 自動點擊SERVER TV播放按鈕",
         "url": "^https?://supjav\\.com/(zh/|ja/)?\\d+\\.html",
-        "autoClick": "//a[text()='ST']",
+        "init": "let loop=setInterval(()=>{let play=document.querySelector('#vserver.play-button');if(play){play.click();clearInterval(loop)}},100)",
         "pinUrl": true
     },
     {
@@ -6656,7 +6699,7 @@
             "div.article:not(.result)+div.pager",
             "div.article.result+div.pager"
         ],
-        "css": ".pagetual_pageBar+div{margin-top:-5px !important;}.slider-ad,.jquery-modal.blocker.current,.article.ad,.body>*:not(.article):not(.pager){display:none!important}",
+        "css": ".pagetual_pageBar+div{margin-top:-5px !important;}.slider-ad,.jquery-modal.blocker.current,.article.ad,.body>*:not(.article):not(.pager),.banner_ad{display:none!important}",
         "rate": 3
     },
     {
@@ -6682,7 +6725,7 @@
         "waitElement": [
             "img.cr_only"
         ],
-        "init": "function ge(e){return document.querySelector(e)}let bs = ge('body[style]');if(bs)bs.removeAttribute('style');let p=ge('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.photos').parentNode.innerHTML=aimg;let p=ge('#pagetual-preload');if(p)p.remove()}",
+        "init": "function ge(e){return document.querySelector(e)}let bs = ge('body[style]');if(bs)bs.removeAttribute('style');let p=ge('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.photos').outerHTML=aimg;let p=ge('#pagetual-preload');if(p)p.remove()}",
         "nextLink": "a.next",
         "pageElement": ".photos > a",
         "replaceElement": [
@@ -6690,7 +6733,7 @@
             "div.article>div.pager:last-child"
         ],
         "css": ".photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords),.photoMask,.banner_ad{display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.body .article:not(.ad)>a>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
-        "pageAction": "function ge(e){return document.querySelector(e)}document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=ge(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.photos').parentNode.innerHTML = aimg;let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
+        "pageAction": "function ge(e){return document.querySelector(e)}document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=ge(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.photos').outerHTML= aimg;let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -6708,7 +6751,7 @@
             "div.article>div.pager:last-child"
         ],
         "rate": 3,
-        "css": ".pagetual_pageBar{margin-bottom:5px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current{display:none!important}"
+        "css": ".pagetual_pageBar{margin-bottom:5px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current,.banner_ad{display:none!important}"
     },
     {
         "name": "hitxhot - 寫真",
@@ -6766,8 +6809,10 @@
         "pageElement": "div[id^='post-']",
         "replaceElement": ".wp-pagenavi",
         "wait": "let img=doc.querySelector('#content img');return img!=null",
-        "css": "#China-AddThis,#China-AddThis+div,#comments-div,#respond{display:none!important}",
-        "rate": 3
+        "rate": 3,
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#China-AddThis,#China-AddThis+div,#comments-div,#respond{display:none!important}"
     },
     {
         "name": "國模網",
