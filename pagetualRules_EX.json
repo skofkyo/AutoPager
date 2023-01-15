@@ -36,6 +36,14 @@
         "css": "#root>div>header+div{display:none!important}"
     },
     {
+        "name": "包子漫畫 - 查看全部章節",
+        "example": "https://www.baozimh.com/comic/dawangraoming-yuedongwenhua",
+        "url": "^https://(www|tw|cn)\\.(webmota|baozimh)\\.com/comic/",
+        "include": "#button_show_all_chatper",
+        "nextLink": "0",
+        "autoClick": "#button_show_all_chatper"
+    },
+    {
         "name": "包子漫畫 - 閱讀",
         "example": "https://www.webmota.com/comic/chapter/dawangraoming-yuedongwenhua/0_0.html",
         "url": "^https://(www|tw|cn)\\.(webmota|baozimh)\\.com/comic/chapter/[^/]+/\\w+\\.html",
@@ -46,7 +54,7 @@
         "pageElement": ".comic-contain",
         "replaceElement": "//head/title | //span[@class='title'] | //div[@class='comic-chapter']/div[@class='next_chapter'] | //div[@class='bottom-bar']",
         "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar a').forEach(a =>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(a.href)==true)a.parentNode.remove()});setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},200)",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar a').forEach(a =>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(a.href))a.parentNode.remove()});setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>10){c[0].remove()}geAll('.pagetual_pageBar+.pagetual_pageBar').forEach(e =>{e.previousElementSibling.remove()})},200)",
         "pageBarText": 1,
         "rate": 3,
         "css": ".mobadsq{display:none!important}ul{margin-block-start:-2px!important;margin-block-end:2px!important}.pagetual_pageBar{margin-top:7px!important}"
@@ -75,7 +83,7 @@
         "replaceElement": "nav.ct-pagination,.paging-navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:6px}"
+        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "GODA漫画  - 閱讀",
@@ -99,7 +107,7 @@
         "replaceElement": "nav.ct-pagination,.paging-navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-20px!important;margin-bottom:0px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:6px}"
+        "css": ".pagetual_pageBar{margin-top:-20px!important;margin-bottom:0px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
@@ -2419,7 +2427,7 @@
         "replaceElement": "#nav-below",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:2px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "Blogger",
@@ -2454,7 +2462,7 @@
         "replaceElement": ".oceanwp-pagination.clr",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:1px;margin-bottom:3px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Gdaily",
@@ -2955,7 +2963,7 @@
         ],
         "pinUrl": true,
         "nextLink": "0",
-        "init": "function ge(e){return document.querySelector(e)}let end=ge('.index_c_page>a:last-child').innerText;let m=ge('.index_c_img img').src.match(/(^.+)(\\d+)(\\.[a-z]{3}$)/);let path=m[1];let start=m[2];let ex=m[3];let max=parseInt(end)+parseInt(start)-1;let _img='';for(let i=start;i<=max;i++){let imgSrc=path+i+ex;let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let alt=ge('.index_c_title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};ge('.index_c_img').innerHTML=_img;",
+        "init": "function ge(e){return document.querySelector(e)}let end=ge('.index_c_page>a:last-child').innerText;let m=ge('.index_c_img img').src.match(/(^.+\\/)(\\d+)(\\.[a-z]{3}$)/);let path=m[1];let start=m[2];let ex=m[3];let max=parseInt(end)+parseInt(start)-1;let _img='';for(let i=start;i<=max;i++){let imgSrc=path+i+ex;let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let alt=ge('.index_c_title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};ge('.index_c_img').innerHTML=_img;",
         "css": "body>[style*='z-index'],img[src*='/aaa/'],.index_c_page{display:none!important}body{padding-bottom:0px!important}"
     },
     {
@@ -3061,7 +3069,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:2px;margin-bottom:5px}.spa-title,.spa-title+div{display:none!important}.columns:not(:last-child),.items-row{margin-bottom:0px!important}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}.spa-title,.spa-title+div{display:none!important}.columns:not(:last-child),.items-row{margin-bottom:0px!important}"
     },
     {
         "name": "imhentai.xxx - 圖片",
@@ -3321,7 +3329,7 @@
         "replaceElement": ".pagebar",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "遛无写真 - 看圖",
@@ -3602,7 +3610,7 @@
         "replaceElement": ".page-numbers",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:2px;margin-bottom:5px}.post-item {height: 370px;min-height: 370px;margin-bottom:0px!important}",
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}.post-item {height: 370px;min-height: 370px;margin-bottom:0px!important}",
         "initRun": 1,
         "autoLoadNum": 1
     },
@@ -3627,7 +3635,7 @@
         "replaceElement": ".navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "NudeBird",
@@ -3638,7 +3646,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "NUDECOSPLAY - 圖片",
@@ -3712,7 +3720,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:2px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "NongMo.Zone",
@@ -3772,7 +3780,7 @@
         "replaceElement": "nav.pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:2px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "Buon Dua - 看圖",
@@ -3830,7 +3838,7 @@
         "wait": 500,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:1px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "BAOBUA.COM - 影片分類",
@@ -3848,7 +3856,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:1px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "BAOBUA.COM - 圖片分類",
@@ -3865,7 +3873,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:1px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "BaoBua.Com - 看圖",
@@ -4694,7 +4702,7 @@
         "pageInit": "doc.querySelectorAll('.post-thumbnail-container>img:not(.loaded)').forEach(img=>{if(img){img.setAttribute('class','loaded')}})",
         "pageBar": 0,
         "sideController": true,
-        "css": "#dclm_modal_screen,#dclm_modal_content{display:none!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
+        "css": "#dclm_modal_screen,#dclm_modal_content{display:none!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "JAVCT",
@@ -5987,7 +5995,7 @@
         "replaceElement": "nav>.pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "CableAV",
@@ -6379,9 +6387,7 @@
         ],
         "pageInit": "doc.querySelectorAll('img.jss29').forEach(img=>{img.setAttribute('class','jss28');img.src=img.src})",
         "pageAction": "setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let lp=location.pathname;let lps=lp.split('/');[].forEach.call(bs,button=>{let pn=button.textContent;let link='/'+lps[1]+'/'+lps[2]+'/'+pn+'/'+lps[4];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.textContent;let p=cpn-1;let link='/'+lps[1]+'/'+lps[2]+'/'+p+'/'+lps[4];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.textContent;let link='/'+lps[1]+'/'+lps[2]+'/'+npn+'/'+lps[4];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
-        "pageBar": 0,
-        "sideController": true,
-        "css": ".lazyload-wrapper+span.jss28{display:none!important}#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
+        "css": ".lazyload-wrapper+span.jss28{display:none!important}"
     },
     {
         "name": "avple.tv - 搜索",
@@ -6401,9 +6407,7 @@
         ],
         "pageInit": "doc.querySelectorAll('img.jss29').forEach(img=>{img.setAttribute('class','jss28');img.src=img.src})",
         "pageAction": "setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let ls=location.search;let m=ls.match(/^(\\?key=)([^&]+)(&page=)(\\d+)(&sort=date|&sort=view_count|&sort=favorite)/);[].forEach.call(bs,button=>{let pn=button.textContent;let link=m[1]+m[2]+m[3]+pn+m[5];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.textContent;let p=cpn-1;let link=m[1]+m[2]+m[3]+p+m[5];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.textContent;let link=m[1]+m[2]+m[3]+npn+m[5];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
-        "pageBar": 0,
-        "sideController": true,
-        "css": ".lazyload-wrapper+span.jss28{display:none!important;}#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
+        "css": ".lazyload-wrapper+span.jss28{display:none!important;}"
     },
     {
         "name": "X5AV",
@@ -6581,7 +6585,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:2px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "Porn Pics - 圖片清單載入大圖",
@@ -6824,7 +6828,7 @@
         "replaceElement": "#nav-below",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "性趣套圖 - 搜索",
@@ -7206,6 +7210,30 @@
         "example": "https://www.69shu.com/top/0.htm",
         "url": "^https?://www\\.69shu\\.com/top/",
         "nextLink": "0"
+    },
+    {
+        "name": "天天看小說 - 顯示全部目錄",
+        "example": "https://tw.ttkan.co/novel/chapters/yedemingmingshu-huishuohuadezhouzi",
+        "url": "^https?://[^/]+/novel/chapters/",
+        "include": [
+            "//title[contains(text(),'天天看小說') or contains(text(),'天天看小说')]",
+            "#button_show_all_chatper"
+        ],
+        "nextLink": "0",
+        "autoClick": "#button_show_all_chatper"
+    },
+    {
+        "name": "天天看小說 - 閱讀",
+        "example": "https://tw.bg3.co/novel/pagea/yedemingmingshu-huishuohuadezhouzi_1.html",
+        "url": "^https?://[^/]+/novel/pagea/[^.]+\\.html",
+        "include": "//title[contains(text(),'天天看小說') or contains(text(),'天天看小说')]",
+        "action": 1,
+        "history": 2,
+        "nextLink": ".next_page_links>a[href$='html']",
+        "pageElement": ".title,.content",
+        "replaceElement": "head>title,.prev_page,.next_page_links",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('amp-addthis').forEach(e =>{e.remove()});let h=geAll('.title');let t=geAll('.content');if(t.length>2){h[0].remove();t[0].remove()}",
+        "pageBar": 0
     },
     {
         "name": "小說狂人 - 閱讀",
