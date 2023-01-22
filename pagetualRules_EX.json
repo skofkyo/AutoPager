@@ -8,19 +8,39 @@
         "pinUrl": true
     },
     {
+        "name": "Steam Wallpaper Engine",
+        "example": "https://steamcommunity.com/id/officialSqueak/myworkshopfiles/?appid=431960",
+        "url": "^https?://steamcommunity\\.com/",
+        "include": ".workshopBrowsePaging",
+        "nextLink": "a.pagebtn:last-child",
+        "pageElement": ".workshopBrowseItems",
+        "replaceElement": ".workshopBrowsePaging",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
         "name": "大树漫画 - 閱讀",
         "example": "https://www.dashumanhua.com/comic/shendijianglinwoyouyiwanshuxingdian/read-1.html",
         "url": "^https://www\\.dashumanhua\\.com/comic/[^/]+/read-\\d+\\.html",
+        "pinUrl": true,
         "action": 1,
         "history": 2,
-        "nextLink": "//a[text()='下一话']",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};let loop=setInterval(()=>{if(imgData.length<geAll('#pic-list')[0].querySelectorAll('img').length){document.querySelector('#pic-list>img:last-child').remove()}if(geAll('#pic-list').length>2){clearInterval(loop)}},50)",
+        "nextLink": ".next>a.tan:not(.hui)",
         "pageElement": "#pic-list",
         "replaceElement": "head>title,h2,.prev,.huiname,.next,.setnmh-pagedos",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#pic-list').innerHTML=_img;",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000)",
         "pageNum": "read-{$p}\\.html$",
         "rate": 3,
-        "css": "#pic-list img{box-shadow:none!important}"
+        "css": "#pic-list img{box-shadow:none!important}.setnmh-seebox>*:first-child:not(.loading-box),.loading-box,.aboutmh>*:last-child{display:none!important}"
+    },
+    {
+        "name": "大树漫画 - 目錄",
+        "example": "https://www.dashumanhua.com/comic/shendijianglinwoyouyiwanshuxingdian/",
+        "url": "^https?://www\\.dashumanhua\\.com/",
+        "include": "//a[text()='开始阅读']",
+        "autoClick": "//div[span[text()='全部目录']]",
+        "css": "[class^='ad']{display:none!important}"
     },
     {
         "name": "大树漫画 - 分類",
