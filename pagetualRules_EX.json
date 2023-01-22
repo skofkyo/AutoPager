@@ -8,6 +8,32 @@
         "pinUrl": true
     },
     {
+        "name": "大树漫画 - 閱讀",
+        "example": "https://www.dashumanhua.com/comic/shendijianglinwoyouyiwanshuxingdian/read-1.html",
+        "url": "^https://www\\.dashumanhua\\.com/comic/[^/]+/read-\\d+\\.html",
+        "action": 1,
+        "history": 2,
+        "nextLink": "//a[text()='下一话']",
+        "pageElement": "#pic-list",
+        "replaceElement": "head>title,h2,.prev,.huiname,.next,.setnmh-pagedos",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#pic-list').innerHTML=_img;",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000)",
+        "pageNum": "read-{$p}\\.html$",
+        "rate": 3,
+        "css": "#pic-list img{box-shadow:none!important}"
+    },
+    {
+        "name": "大树漫画 - 分類",
+        "example": "https://www.dashumanhua.com/category/all/",
+        "url": "^https?://www\\.dashumanhua\\.com/",
+        "nextLink": "//a[text()='下页']",
+        "pageElement": "//dt[div[@class='img']/a/img[@alt]]",
+        "replaceElement": ".mypage",
+        "pageBar": 0,
+        "sideController": true,
+        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+    },
+    {
         "name": "Manga Koma 閱讀",
         "example": "https://mangakoma01.com/manga/pick-me-up-direa-ying-xiongno-chengri-shanggari/1hua/25650",
         "url": "^https?://mangakoma\\d+\\.com/",
@@ -599,11 +625,11 @@
         "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(()=>{let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let base64=eval(code.match(/picTree[^;]+/g)[0]);let images=base64_decode(base64).split('$qingtiandy$');let host=getpicdamin();if(images.length==ge('#pic-list').querySelectorAll('img').length){let _img='';for(let i=0;i<images.length;i++){let imgSrc=encodeURI(host+images[i]);_img+=`<img src='${imgSrc}'>`};ge('#pic-list').innerHTML=_img;clearInterval(interval)}},1000);",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextUrlid/)>-1).innerHTML;let next=eval(code.trim().replaceAll('var','').match(/^[^,]+/)[0]);if(next>0)return location.href.replace(/\\d+\\.html$/,'')+next+'.html'",
         "pageElement": "#pic-list",
-        "replaceElement": "head>title,h1",
+        "replaceElement": "head>title,h1,#position>b",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let base64=eval(code.match(/picTree[^;]+/g)[0]);let images=base64_decode(base64).split('$qingtiandy$');let host=getpicdamin();let _img='';for(let i=0;i<images.length;i++){let imgSrc=encodeURI(host+images[i]);_img+=`<img src='${imgSrc}'>`};doc.querySelector('#pic-list').innerHTML=_img;",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".img_info{display:none!important}#pic-list>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
+        "css": ".img_info{display:none!important}#pic-list>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}.pagetual_pageBar+.img-box{margin-top:0px!important}"
     },
     {
         "name": "漫画吧手機版 - 閱讀",
@@ -1705,7 +1731,7 @@
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": ".e>h1,.e>p,.fb-share-button,#index_mian,.c>.fanye,.c>select,#k_zsy{display:none!important}#img_ad_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+        "css": ".e>h1,.e>p,.fb-share-button,#index_mian,.c>.fanye,.c>select,#k_zsy,.lookpage{display:none!important}#img_ad_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "二次元動漫 - 分類",
@@ -3795,7 +3821,7 @@
         "example": "https://www.nlegs.com/girls/2022/10/01/28219.html",
         "url": "^https?://www\\.nlegs\\.com/girls/[^.]+\\.html",
         "pinUrl": true,
-        "init": "function get(url){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let imgRes=res.querySelector('.img-res');if(imgRes){return imgRes.outerHTML}else{location.reload()}})}let loop=setInterval(()=>{let last=document.querySelector('#dnav li.active:last-child');if(last){clearInterval(loop);let imgs=document.querySelectorAll('.thumbnail');for(let i=0;i<imgs.length;i++){setTimeout(async()=>{imgs[i].parentNode.outerHTML=await get(imgs[i].href)},i*3000)}}},100)",
+        "init": "function get(url){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let imgRes=res.querySelector('.img-res');if(imgRes){return imgRes.outerHTML}else{location.reload()}})}let loop=setInterval(()=>{let last=document.querySelector('#dnav li.active:last-child');if(last){clearInterval(loop);let imgs=document.querySelectorAll('.thumbnail');for(let i=0;i<imgs.length;i++){setTimeout(async()=>{imgs[i].parentNode.outerHTML=await get(imgs[i].href)},i*2000)}}},100)",
         "nextLink": "li.active+li>a",
         "pageElement": "//div[div/a/@class='thumbnail']",
         "replaceElement": "#dnav",
