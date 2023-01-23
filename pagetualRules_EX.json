@@ -2570,6 +2570,18 @@
         "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
+        "name": "FC Portables",
+        "example": "https://www.fcportables.com/",
+        "url": "^https?://www\\.fcportables\\.com/",
+        "nextLink": "a.next",
+        "pageElement": "article[class^='post']",
+        "replaceElement": ".pagination",
+        "pageInit": "doc.querySelectorAll('a.img-holder').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`;a.classList.add('b-loaded');a.removeAttribute('data-src')})",
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+    },
+    {
         "name": "KaranPc",
         "example": "https://karanpc.com/windows/download-managers/",
         "url": "^https?://karanpc\\.com/",
@@ -6138,7 +6150,7 @@
         "name": "PornHub album",
         "example": "https://cn.pornhub.com/album/10042641",
         "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/album/",
-        "nextLink": ".page_next>a",
+        "nextLink": ".page_next:not(.disabled)>a",
         "pageElement": ".photosAlbumsListing",
         "replaceElement": ".paginationGated",
         "pageInit": "doc.querySelectorAll('.js_lazy_bkg').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.bkg}')`})"
@@ -6147,7 +6159,7 @@
         "name": "PornHub albums",
         "example": "https://cn.pornhub.com/albums?ref=porndude",
         "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/albums\\?",
-        "nextLink": ".page_next>a",
+        "nextLink": ".page_next:not(.disabled)>a",
         "pageElement": ".photoAlbumListContainer",
         "replaceElement": ".paginationGated",
         "pageInit": "doc.querySelectorAll('.js_lazy_bkg').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.bkg}')`})",
@@ -6158,7 +6170,7 @@
         "example": "https://cn.pornhub.com/",
         "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/",
         "action": 1,
-        "nextLink": ".page_next>a",
+        "nextLink": ".page_next:not(.disabled)>a",
         "pageElement": "#videoCategory,#videoSearchResult,.videoList,.homeSection",
         "replaceElement": ".paginationGated",
         "css": ".pagetual_pageBar{margin-top: -12px!important;}.pagetual_pageBar+ul{padding-top: 2px!important;}"
@@ -6391,12 +6403,70 @@
         "replaceElement": "nav>.pagination"
     },
     {
+        "name": "Jerk-Off Instruction",
+        "example": "https://joi-me.com/lastnews/",
+        "url": "^https?://joi-me\\.com",
+        "action": "1",
+        "nextLink": ".page_next>a",
+        "pageElement": "#container",
+        "replaceElement": ".navigation",
+        "css": ".pagetual_pageBar+*{margin-top:-20px!important}"
+    },
+    {
+        "name": "Mixfemdomcc",
+        "example": "https://mixfemdomcc.com/lastnews/",
+        "url": "^https?://mixfemdomcc.com/",
+        "nextLink": ".nnext>a",
+        "pageElement": ".gray-block",
+        "replaceElement": ".basenavi",
+        "pageAction": "eval(document.querySelector('.gray-block>script').innerHTML)",
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+    },
+    {
+        "name": "Femdom",
+        "example": "https://femdomup.net/lastnews/",
+        "url": "^https?://femdomup\\.net/",
+        "nextLink": "//a[text()='Next']",
+        "pageElement": "article.shortstory",
+        "replaceElement": ".navigation",
+        "pageAction": "jQuery('.img-video').on('mouseenter touchstart',function(){jQuery(this).find('img').each(function(){var videoSrc=jQuery(this).attr('data-prev');if(GetFormat()==\"mp4\"){videoSrc=videoSrc.replace(\"webm\",\"mp4\")}if(videoSrc==null){return false}else{jQuery(this).parent('.img-video').addClass('prev');jQuery(this).parent().prepend(\"<video muted='muted' autoplay loop src='\"+videoSrc+\"' webkit-playsinline='true' playsinline='true'></video>\");jQuery(\".shortstory img\").not(this).parent().children(\"video\").remove();jQuery(\".shortstory img\").not(this).parent().removeClass('prev')}})});",
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
+    },
+    {
+        "name": "xstarshub",
+        "example": "https://xstarshub.com/",
+        "url": "^https?://xstarshub.com/",
+        "nextLink": "a.next",
+        "pageElement": ".posts-list>article",
+        "replaceElement": ".nav-links",
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
+    },
+    {
+        "name": "New Videos",
+        "example": "https://watchporn.to/latest-updates/",
+        "url": "^https?://watchporn\\.to/",
+        "action": 2,
+        "nextLink": "//a[text()='Next']",
+        "pageElement": ".list-videos",
+        "replaceElement": ".pagination",
+        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='-10px 0 2px'});",
+        "css": "inIframe:.content{padding:0!important}"
+    },
+    {
         "name": "SpankBang",
         "example": "https://jp.spankbang.com/trending_videos/",
         "url": "^https?://([a-z]{2}\\.)?spankbang\\.com/",
-        "nextLink": ".next>a,a.next",
+        "pinUrl": true,
+        "nextLink": ".next:not(.disabled)>a,a.next",
         "pageElement": ".video-list .video-item[id],#pornstars ul.results li",
         "replaceElement": ".pagination",
+        "pageAction": "image_rotate('.video-rotate .thumb')",
         "pageBar": 0,
         "sideController": true,
         "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
@@ -7700,6 +7770,15 @@
         "nextLink": "strong+a",
         "pageElement": "#content",
         "css": ".pagetual_pageBar{margin-bottom:0px!important}"
+    },
+    {
+        "name": "google search mobile",
+        "action": 0,
+        "url": "^https://(?:www\\.)?google\\..*/search",
+        "pageElement": "id('rso')/div|id('rso')/style",
+        "insert": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
+        "nextLink": 0,
+        "loadMore": "div[role='progressbar']+a[role='button']"
     },
     {
         "name": "Google Search",
