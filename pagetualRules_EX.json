@@ -8,13 +8,23 @@
         "pinUrl": true
     },
     {
-        "name": "Steam Wallpaper Engine",
-        "example": "https://steamcommunity.com/id/officialSqueak/myworkshopfiles/?appid=431960",
+        "name": "99images",
+        "example": "https://www.99images.com/celebrities/aisha-sharma",
+        "url": "^https?://www.99images.com/",
+        "action": 1,
+        "init": "document.querySelectorAll('.gallery-images-container').forEach(e=>{e.nextElementSibling.remove()})",
+        "nextLink": "a[rel='next']",
+        "pageElement": ".gallery-images-container",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "steamcommunity.com",
         "url": "^https?://steamcommunity\\.com/",
         "include": ".workshopBrowsePaging",
         "nextLink": "a.pagebtn:last-child",
         "pageElement": ".workshopBrowseItems",
         "replaceElement": ".workshopBrowsePaging",
+        "pageAction": "document.querySelectorAll('.workshopBrowseItems>script').forEach(e=>{eval(e.innerHTML)})",
         "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
@@ -24,13 +34,13 @@
         "pinUrl": true,
         "action": 1,
         "history": 2,
-        "init": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};let loop=setInterval(()=>{if(imgData.length<geAll('#pic-list')[0].querySelectorAll('img').length){document.querySelector('#pic-list>img:last-child').remove()}if(geAll('#pic-list').length>2){clearInterval(loop)}},50)",
+        "init": "function ge(e){return document.querySelector(e)}function geAll(e){return document.querySelectorAll(e)}let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};ge('#pic-list').innerHTML=_img;let loop=setInterval(()=>{if(imgData.length<geAll('#pic-list')[0].querySelectorAll('img').length){ge('#pic-list>img:last-child').remove()}if(geAll('#pic-list').length>2){clearInterval(loop)}},50);$('head').append('<style>#pre-loading+#pic-list>img:nth-child('+imgData.length+')~* {display:none!important}</style>')",
         "nextLink": ".next>a.tan:not(.hui)",
         "pageElement": "#pic-list",
         "replaceElement": "head>title,h2,.prev,.huiname,.next,.setnmh-pagedos",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#pic-list').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000)",
-        "pageNum": "read-{$p}\\.html$",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000);geAll('.pagetual_pageBar a[title]').forEach(e=>{e.setAttribute('title',e.getAttribute('title').match(/[^（]+/)[0]);e.innerHTML=e.innerHTML.replace(/（.+大树漫画/,'')})",
+        "pageBarText": 1,
         "rate": 3,
         "css": "#pic-list img{box-shadow:none!important}.setnmh-seebox>*:first-child:not(.loading-box),.loading-box,.aboutmh>*:last-child{display:none!important}"
     },
