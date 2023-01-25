@@ -5380,10 +5380,10 @@
     {
         "name": "Hanime1 - 圖片清單檢視全部",
         "example": "https://hanime1.me/comic/65225",
-        "url": "^https?://imhentai\\.xxx/gallery/\\d+/$",
+        "url": "^https?://hanime1\\.me/comic/\\d+$",
         "pinUrl": true,
         "nextLink": "0",
-        "init": "let loop=setInterval(()=>{let b=document.querySelector('#load_all:not([style])');if(b){b.click()}if(!b){clearInterval(loop)}},2000)"
+        "init": "let loop=setInterval(()=>{let b=document.querySelector(\"#comics-thumbnail-show-btn-wrapper:not([style*='none'])\");if(b){b.querySelector('#show-all-comics-btn').click()}if(!b){clearInterval(loop)}},2000)"
     },
     {
         "name": "Hanime1",
