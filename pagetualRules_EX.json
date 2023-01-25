@@ -3055,14 +3055,14 @@
         "css": "iframe{height:55px!important}"
     },
     {
-        "name": "图集岛",
+        "name": "图集岛 - 載入VIP破解腳本",
         "example": "https://www.tujidao03.com/u/?action=gengxin",
         "url": "^https?://www\\.tujidao\\d+\\.com/",
-        "action": 2,
+        "init": "fetch('https://greasyfork.org/scripts/420397-%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3vip/code/%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3VIP.user.js').then(res=>res.text()).then((res)=>{eval(res)})",
         "nextLink": ".num+.next",
         "pageElement": ".hezi>ul",
         "replaceElement": "#pages",
-        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 0 2px'});"
+        "pageAction": "fetch('https://greasyfork.org/scripts/420397-%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3vip/code/%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3VIP.user.js').then(res=>res.text()).then((res)=>{eval(res)})"
     },
     {
         "name": "Kemono - post",
@@ -3232,7 +3232,8 @@
         "example": "https://imhentai.xxx/gallery/928466/",
         "url": "^https?://imhentai\\.xxx/gallery/\\d+/$",
         "pinUrl": true,
-        "init": "setTimeout(()=>{document.querySelector('#load_all').click()},1000)"
+        "nextLink": "0",
+        "init": "let loop=setInterval(()=>{let b=document.querySelector('#load_all:not([style])');if(b){b.click()}if(!b){clearInterval(loop)}},2000)"
     },
     {
         "name": "imhentai.xxx",
@@ -3256,6 +3257,16 @@
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "#content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+    },
+    {
+        "name": "nhentai - 圖片清單載入大圖",
+        "example": "https://nhentai.net/g/438743/",
+        "url": "^https?://nhentai\\.[a-z]{3}/g/\\d+/$",
+        "include": ".thumbs",
+        "init": "document.querySelector('.thumbs').removeAttribute('style');function get(url){return fetch(url).then(res=>res.text()).then((res)=>{let doc=new DOMParser().parseFromString(res,'text/html');let imgRes=doc.querySelector('#image-container img');if(imgRes){return imgRes.outerHTML}else{location.reload()}})}let imgs=document.querySelectorAll('.gallerythumb');for(let i=0;i<imgs.length;i++){setTimeout(async()=>{imgs[i].innerHTML=await get(imgs[i].href)},i*333)}",
+        "nextLink": "0",
+        "autoClick": "#show-all-images-button",
+        "css": ".thumb-container{width:100%!important;margin:0px!important}.thumbs img{margin:-1px!important;padding:0px!important;border-radius:0!important}"
     },
     {
         "name": "nhentai",
@@ -3299,8 +3310,9 @@
         "name": "asiantolick - 清單大圖",
         "example": "https://asiantolick.com/post-16288/djawa-photo-son-ye-eun-",
         "url": "^https?://asiantolick\\.com/post",
-        "init": "document.querySelectorAll('#wrap_post img').forEach(img=>{img.src=img.parentElement.getAttribute('data-src');img.removeAttribute('data-src')})",
-        "pinUrl": true
+        "init": "document.querySelectorAll('div[data-src][onclick]').forEach(e=>{e.outerHTML=`<img src='${e.dataset.src}'>`})",
+        "pinUrl": true,
+        "css": "#post_content img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#touch_to_see{display:none!important}"
     },
     {
         "name": "24tupian - 圖片原圖",
@@ -3971,6 +3983,7 @@
         "url": "^https?://www\\.4kup\\.net/\\d+/\\d+/[^.]+\\.html$",
         "init": "document.querySelectorAll('#gallery img').forEach(img=>{img.src=img.parentNode.nextSibling.firstChild.href;img.removeAttribute('data-src');img.removeAttribute('class');img.removeAttribute('loading')})",
         "pinUrl": true,
+        "nextLink": "0",
         "css": ".caption{display:none!important}#gallery>.item{width:100%!important;height: auto!important;}"
     },
     {
@@ -4889,11 +4902,10 @@
         "example": "https://7mmtv.sx/zh/uncensored_random/all/index.html",
         "url": "^https?://7mmtv\\.sx/(zh|en|ja|ko)/[a-z]+_(random|list)/",
         "nextLink": "li.page-item.current+li.page-item>a",
-        "pageElement": ".row.content>*",
+        "pageElement": ".row.content",
         "replaceElement": "nav.pagination-row",
-        "pageBar": 0,
-        "sideController": true,
-        "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let ps=geAll('.row.content');let last=ps.length-1;ps[last].querySelectorAll('.video').forEach(div=>{div.onmouseenter=e=>{let v=div.querySelector('video[data-src]');v.setAttribute('src',v.getAttribute('data-src'));$(v).css({visibility:'visible'});let l=div.querySelector('.video-loader');$(l).css({visibility:'visible'});setTimeout(()=>{$(l).css({visibility:'hidden'})},500)};div.onmouseleave=e=>{let v=div.querySelector('video[data-src]');let l=div.querySelector('.video-loader');v.setAttribute('src','');v.setAttribute('style','');$(l).css({visibility:'hidden'})}})",
+        "css": ".pagetual_pageBar{margin-top:-10px!important}"
     },
     {
         "name": "tktube",
@@ -5090,7 +5102,10 @@
         "url": "^https?://(www\\.)?(wnacg|htcomic)\\.[^/]+/(albums|search|photos-index)",
         "nextLink": "span.thispage+a",
         "pageElement": "li.gallary_item",
-        "replaceElement": ".paginator"
+        "replaceElement": ".paginator",
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
     },
     {
         "name": "松鼠症倉庫 - 閱讀",
@@ -5363,6 +5378,14 @@
         "autoLoadNum": "0"
     },
     {
+        "name": "Hanime1 - 圖片清單檢視全部",
+        "example": "https://hanime1.me/comic/65225",
+        "url": "^https?://imhentai\\.xxx/gallery/\\d+/$",
+        "pinUrl": true,
+        "nextLink": "0",
+        "init": "let loop=setInterval(()=>{let b=document.querySelector('#load_all:not([style])');if(b){b.click()}if(!b){clearInterval(loop)}},2000)"
+    },
+    {
         "name": "Hanime1",
         "example": "https://hanime1.me/search?genre=%E8%A3%8F%E7%95%AA&duration=&sort=&query=&year=&month=",
         "url": "^https?://hanime1\\.me/(search|comics)",
@@ -5502,8 +5525,7 @@
         "name": "yinmh - 移除lazy直接載入圖片",
         "example": "https://www.yinmh.com/149201.html",
         "url": "^https?://www\\.yinmh\\.com/\\d+\\.html",
-        "init": "document.querySelectorAll(`.image img.lazy[img^='h']`).forEach(img=>{img.src=img.getAttribute('img');img.removeAttribute('class');img.removeAttribute('img')})",
-        "css": ".b300{display:none!important}",
+        "init": "setTimeout(()=>{document.querySelectorAll(`.image img.lazy[img^='h']`).forEach(img=>{img.src=img.getAttribute('img');img.removeAttribute('class');img.removeAttribute('img')})},1000);setTimeout(()=>{document.querySelectorAll(`.image img.lazy`).forEach(img=>{img.src=img.src})},12000)",
         "pinUrl": true
     },
     {
@@ -5876,13 +5898,15 @@
         "css": ".pagetual_pageBar{margin-top:-16px!important}"
     },
     {
-        "name": "Hentai Anime Zone",
-        "example": "https://hentaianimezone.com/",
-        "url": "^https?://hentaianimezone\\.com/",
-        "nextLink": ".navigation>span+a",
-        "pageElement": ".thumb",
-        "replaceElement": ".navigation",
-        "css": ".pagetual_pageBar{margin-top:-4px!important}"
+        "name": "Hentai Anime Zone / HentaiDLs / Hentai-Hot",
+        "example": "https://hentaianimezone.com/，https://hentaidls.com/，https://hentai-hot.com/",
+        "url": "^https?://(hentaianimezone|hentaidls|hentai-hot)\\.com/",
+        "nextLink": ".navigation>span+a,.nav-links>span.current+a,.pagi-nav span.pnext>a",
+        "pageElement": "#dle-content>article,.writemag-compact-post-wrapper,.skladchik-item",
+        "replaceElement": ".navigation,.nav-links,.pagi-nav",
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
     },
     {
         "name": "Latino Hentai",
@@ -5944,12 +5968,13 @@
         "css": "#photobitlefta,#photobitrighta{display:none!important}#gridphoto *{overflow: initial !important;position: initial !important;}img[alt]{max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
     },
     {
-        "name": "EPORNER - gallery圖片清單載入大圖 (需要下載時再開啟 有些圖幾百張 每張還好幾MB)",
-        "example": "https://www.eporner.com/gallery/CnsAnA1o4OS/Asian-Sexy-Girl-02/",
-        "enable": 0,
+        "name": "EPORNER - gallery圖片清單1秒載入3張大圖",
+        "example": "https://www.eporner.com/gallery/z5BA6pUNvdW/Blacqkl-Angela/",
         "url": "^https?://[a-z]{2,3}\\.eporner\\.com/gallery/",
-        "init": "document.querySelectorAll('.photosgrid img[alt]').forEach(img=>{img.src=img.src.replace('_296x1000','')})",
-        "pinUrl": true
+        "exclude": ".photosgrid img[alt][src$='gif']",
+        "init": "let imgs=document.querySelectorAll('.photosgrid img[alt]');for(let i=0;i<imgs.length;i++){setTimeout(()=>{imgs[i].src=imgs[i].src.replace('_296x1000','')},i*333)}",
+        "pinUrl": true,
+        "css": "#container.photosgrid{display:block!important}"
     },
     {
         "name": "EPORNER",
@@ -6733,7 +6758,8 @@
         "example": "https://www.javbangers.com/albums/1293/fc2-ppv-2414851-college-student-reimi-chan-21/",
         "url": "^https?://www\\.javbangers\\.com/albums/\\d+/[^/]+/",
         "pinUrl": true,
-        "init": "setTimeout(()=>{document.querySelectorAll('.images .thumb.lazy-load').forEach(img=>{let f=img.parentNode.href;if(f){img.src=f;img.removeAttribute('data-original');img.style.display='inline'}})},1000)"
+        "init": "let imgs=document.querySelectorAll('.images .thumb.lazy-load');for(let i=0;i<imgs.length;i++){setTimeout(()=>{let f=imgs[i].parentNode.href;if(f){imgs[i].src=f;imgs[i].removeAttribute('data-original');imgs[i].style.display='inline'}},i*300)}",
+        "css": ".block-album .images a.item{display:block!important}.images img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "javbangers.com",
@@ -6757,11 +6783,12 @@
     },
     {
         "name": "HOTGIRL.asia - 寫真",
-        "example": "https://hotgirl.asia/xiuren%e7%a7%80%e4%ba%ba%e7%bd%91-no-4438-%e7%bb%ae%e9%87%8c%e5%98%89/",
+        "example": "https://hotgirl.asia/imiss%e7%88%b1%e8%9c%9c%e7%a4%be-vol-693-lavinia%e8%82%89%e8%82%89/",
         "url": "^https?://hotgirl\\.asia/[^/]+/",
         "include": ".mx-auto",
+        "init": "document.querySelectorAll('img[alt][data-src]').forEach(e=>{e.src=e.dataset.src});document.querySelectorAll(\"img[alt][src^='data']\").forEach(e=>{e.parentNode.remove()})",
         "nextLink": "li.active+li>a",
-        "pageElement": ".galeria_img",
+        "pageElement": "//div[@class='galeria_img'][img[@data-src]]",
         "replaceElement": "#pagination",
         "css": "#footer,#commentfb,.content-kuss{display: none!important;}",
         "pageBar": 0,
@@ -6773,7 +6800,7 @@
         "example": "https://hotgirl.asia/yuna-%ec%9c%a0%eb%82%98-saint-photolife-habibi/?stype=slideshow",
         "url": "^https?://hotgirl\\.asia/",
         "include": "#carouselImageIndicators",
-        "init": "let images=document.querySelectorAll('.item img');let imgData=[];for(let i=0;i<images.length;i++){imgData.push(images[i].src)};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};document.querySelector('#carouselImageIndicators').innerHTML=_img;",
+        "init": "let images=document.querySelectorAll('.item img[data-src]');let imgData=[];for(let i=0;i<images.length;i++){imgData.push(images[i].dataset.src)};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};document.querySelector('#carouselImageIndicators').innerHTML=_img;",
         "nextLink": "0",
         "css": "#carouselImageIndicators>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -7151,10 +7178,10 @@
     },
     {
         "name": "性趣套圖 - 看圖",
-        "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=20737",
+        "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=23726",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "pinUrl": true,
-        "init": "function ge(e){return document.querySelector(e)}let e=ge('.entry');e.innerHTML=e.innerHTML.replace(`\"&gt;`,'');function get(url){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let img=res.querySelector('.entry img');ge('.entry img').parentNode.appendChild(img)})}let max=ge('.pageLink>a>b').innerHTML;for(let i=1;i<max;i++){let link=location.href+'&page='+i;setTimeout(()=>{get(link)},i*500)}",
+        "init": "function ge(e){return document.querySelector(e)}let e=ge('.entry');e.innerHTML=e.innerHTML.replace(`\"&gt;`,'');function get(url){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let img=res.querySelector('.entry img');ge('.entry img').parentNode.appendChild(img)})}let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let link=location.href+'&page='+i;setTimeout(()=>{get(link)},i*200)}let loop=setInterval(()=>{let imgs=document.querySelectorAll('.entry img');if(imgs.length==max){clearInterval(loop);let over=document.createElement('p');over.innerText='图片已全部爬取完毕';over.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(over)}},1000)",
         "nextLink": "//div[@class='nextinfo']/p[contains(text(),'上一')]/a",
         "manualMode": true,
         "css": "aside.side,.pageLink{display:none!important;}.main-content{margin-left:0px!important;}"
