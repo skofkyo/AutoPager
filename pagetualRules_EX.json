@@ -8,6 +8,18 @@
         "pinUrl": true
     },
     {
+        "name": "greasyfork - 反饋",
+        "example": "https://greasyfork.org/zh-TW/scripts/438684-pagetual/feedback",
+        "url": "^https?://greasyfork\\.org/.+/scripts/.+/feedback",
+        "pinUrl": true,
+        "nextLink": "em.current+a",
+        "pageElement": ".script-discussion-list",
+        "replaceElement": ".pagination",
+        "pageBar": 0,
+        "sideController": true,
+        "css": "#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}"
+    },
+    {
         "name": "大树漫画 - 閱讀",
         "example": "https://www.dashumanhua.com/comic/shendijianglinwoyouyiwanshuxingdian/read-1.html",
         "url": "^https://www\\.dashumanhua\\.com/comic/[^/]+/read-\\d+\\.html",
@@ -41,7 +53,7 @@
         "replaceElement": ".mypage",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Manga Koma 閱讀",
@@ -151,7 +163,7 @@
         "replaceElement": "nav.ct-pagination,.paging-navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "GODA漫画  - 閱讀",
@@ -175,7 +187,7 @@
         "replaceElement": "nav.ct-pagination,.paging-navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-20px!important;margin-bottom:0px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
@@ -623,7 +635,7 @@
         "replaceElement": "head>title,#mangaTitle",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/mhInfo/)>-1).innerHTML.trim().slice(11, -1);let json=JSON.parse(code);let host=ge('#manga img').src.match(/^https?:\\/\\/[^/]+/)[0];let _img='';for(let i=0;i<json.images.length;i++){let imgSrc=host+json.path+json.images[i];_img+=`<img src='${imgSrc}'>`};ge('#manga').innerHTML=_img;",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#manga');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
-        "pageBarText": "let t=doc.querySelector('#mangaTitle');if(t)return t.innerHTML.replace(/.+<.+>/g,'')",
+        "pageBarText": "let t=doc.querySelector('#mangaTitle');if(t)return t.innerHTML.replace(/.+<.+>/g,'').trim()",
         "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,[id^='jusha']{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
     },
     {
@@ -2342,8 +2354,9 @@
     },
     {
         "name": "厂长资源",
-        "example": "https://www.czspp.com/",
-        "url": "^https?://www\\.czspp\\.com/",
+        "example": "https://czzy01.com/",
+        "url": "^https?://[^/]+/",
+        "include": "//title[contains(text(),'厂长资源')]",
         "nextLink": ".current+a",
         "pageElement": ".bt_img>ul",
         "replaceElement": ".pagenavi_txt",
@@ -2408,7 +2421,7 @@
         "replaceElement": "#pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "小众软件",
@@ -2547,7 +2560,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "億破姐&電腦系統吧",
@@ -2571,7 +2584,7 @@
         "pageInit": "doc.querySelectorAll('a.img-holder').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`;a.classList.add('b-loaded');a.removeAttribute('data-src')})",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "KaranPc",
@@ -2583,7 +2596,7 @@
         "replaceElement": "#nav-below",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Blogger",
@@ -3802,7 +3815,7 @@
         "sideController": true,
         "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}.post-item {height: 370px;min-height: 370px;margin-bottom:0px!important}",
         "initRun": 1,
-        "autoLoadNum": 1
+        "autoLoadNum": 4
     },
     {
         "name": "Yellow Fever",
@@ -3814,7 +3827,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "ASD ASFD CN",
@@ -3825,7 +3838,7 @@
         "replaceElement": ".navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "NudeBird",
@@ -3997,7 +4010,7 @@
         "replaceElement": "nav[aria-label='Pagination']",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "4KUP - 圖片清單載入大圖",
@@ -4017,7 +4030,7 @@
         "replaceElement": "#blog-pager",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Goddess247 - 圖片",
@@ -4102,7 +4115,7 @@
         "wait": 500,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "BAOBUA.COM - 影片分類",
@@ -4120,7 +4133,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "BAOBUA.COM - 圖片分類",
@@ -4137,7 +4150,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "BaoBua.Com - 看圖",
@@ -6482,7 +6495,7 @@
         "pageAction": "eval(document.querySelector('.gray-block>script').innerHTML)",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Femdom",
@@ -6664,7 +6677,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "加勒逼A片網",
@@ -6782,7 +6795,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "javbangers.com - 相冊圖片清單載入全部大圖",
@@ -7148,7 +7161,7 @@
         "replaceElement": ".pag>.pagination-site",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "女神研究所",
@@ -7276,7 +7289,7 @@
         "autoLoadNum": 4,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "BOOK☆WALKER TW",
@@ -7289,7 +7302,7 @@
         "autoLoadNum": 2,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "BOOK☆WALKER JP - 手機版",
