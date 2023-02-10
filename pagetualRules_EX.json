@@ -89,13 +89,10 @@
         "loadMore": ".more-div-btn"
     },
     {
-        "name": "嗨皮漫畫 - 閱讀 - 手動翻頁 - 雙擊前往下一話，鍵盤左右鍵上下話",
+        "name": "嗨皮漫畫 - 閱讀 - 禁用",
         "example": "https://m.happymh.com/manga/shishijilingdishejishi",
         "url": "^https://m\\.happymh\\.com/reads/",
-        "init": "let ge=e=>document.querySelector(e);let gx=x=>document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;function next(e){let key=window.event?e.keyCode:e.which;if(key=='39'){let n=gx(\"//a[span[text()='下一话' or text()='下一話'] and contains(@href,'reads')]\");if(n){n.click()}else{alert('沒有下一话了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key=='37'){let p=gx(\"//a[span[text()='上一话' or text()='上一話'] and contains(@href,'reads')]\");if(p){p.click()}else{alert('沒有上一话了！')}}};document.addEventListener('keydown',prev);function dcnext(){ge('footer a').click()}document.addEventListener('dblclick',dcnext);let loop=setInterval(()=>{let p=ge('footer p:nth-child(2)>a[href*=reads]');if(p){clearInterval(loop);p.classList.add('MuiButton-containedPrimary');let f=ge('footer>article');let pnc=f.lastChild.cloneNode(true);pnc.firstChild.href='/latest';pnc.firstChild.firstChild.innerText='更新';f.appendChild(pnc);let pbc=f.lastChild.cloneNode(true);pbc.firstChild.href='/bookcase';pbc.firstChild.firstChild.innerText='收藏';f.appendChild(pbc);let n=ge('footer a[href*=readMore]');if(n){n.classList.remove('MuiButton-containedPrimary');n.firstChild.innerText='^_^感谢您的阅读~已经没有下一话了哦~'}}},100);let loop2=setInterval(()=>{let set=ge('[id^=imageLoader]');if(set){clearInterval(loop2);let imgs=set.parentNode.children;let n=imgs.length-1;let ms=Math.ceil(1000/n);for(let i=1;i<=n;i++){setTimeout(()=>{imgs[i].scrollIntoView();if(i==n){window.scrollTo(0,0)}},i*ms)}}},100);",
-        "nextLink": "0",
-        "pinUrl": true,
-        "css": "#root>div>header+div{display:none!important}"
+        "nextLink": "0"
     },
     {
         "name": "包子漫畫 - 查看全部章節",
@@ -2983,14 +2980,12 @@
         "css": "iframe{height:55px!important}"
     },
     {
-        "name": "图集岛 - 載入VIP破解腳本",
+        "name": "图集岛",
         "example": "https://www.tujidao03.com/u/?action=gengxin",
         "url": "^https?://www\\.tujidao\\d+\\.com/",
-        "init": "fetch('https://greasyfork.org/scripts/420397-%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3vip/code/%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3VIP.user.js').then(res=>res.text()).then((res)=>{eval(res)})",
         "nextLink": ".num+.next",
         "pageElement": ".hezi>ul",
-        "replaceElement": "#pages",
-        "pageAction": "fetch('https://greasyfork.org/scripts/420397-%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3vip/code/%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3VIP.user.js').then(res=>res.text()).then((res)=>{eval(res)})"
+        "replaceElement": "#pages"
     },
     {
         "name": "Kemono - post",
@@ -6945,7 +6940,7 @@
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=23726",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "pinUrl": true,
-        "init": "function ge(e){return document.querySelector(e)}let entry=ge('.entry');entry.innerHTML=entry.innerHTML.replace(`\"&gt;`,'');function get(url,p,max){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let img=res.querySelector('.entry img');ge('.entry img').parentNode.appendChild(img);if(p==max-1){let loop=setInterval(()=>{if(document.querySelectorAll('.entry img').length==max){clearInterval(loop);let over=document.createElement('p');over.innerText='图片已全部爬取完毕';over.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(over)}},1000)}})}let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let link=location.href+'&page='+i;setTimeout(()=>{get(link,i,max)},i*500)}",
+        "init": "const ge=e=>document.querySelector(e);let e=ge('.entry');e.innerHTML=e.innerHTML.replace(`\"&gt;`,'');const getImg=url=>{fetch(url).then(res=>res.text()).then((res)=>{let data=new DOMParser().parseFromString(res,'text/html');let img=data.querySelector('.entry img');let x=ge('.load');x.parentNode.insertBefore(img,x)})};let Load=document.createElement('p');Load.className='load';Load.innerText='Loading...';Load.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(Load);let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let url=location.href+'&page='+i;setTimeout(()=>{getImg(url)},i*500)}let loop=setInterval(()=>{let ps=document.querySelectorAll('.entry img').length;if(ps>1){ge('.load').innerText='Loading Page '+ps+'/'+max;}if(ps==max){clearInterval(loop)}},1000)",
         "nextLink": "//div[@class='nextinfo']/p[contains(text(),'上一')]/a",
         "manualMode": true,
         "css": "aside.side,.pageLink{display:none!important;}.main-content{margin-left:0px!important;}"
