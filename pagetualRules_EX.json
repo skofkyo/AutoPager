@@ -3,26 +3,28 @@
         "name": "菜鸟工具 - JS/CSS/JSON/HTML 調整為上下欄",
         "enable": 1,
         "example": "https://c.runoob.com/front-end/51/，https://c.runoob.com/front-end/52/，https://c.runoob.com/front-end/7683/，https://c.runoob.com/front-end/47/",
-        "url": "^https://c\\.runoob\\.com/front-end/(47|51|52|7683)/",
+        "url": "^https?://c\\.runoob\\.com/front-end/(47|51|52|7683)/",
         "init": "if(location.href.indexOf('7683')==-1){clearAll()}document.querySelectorAll('div.col-md-6').forEach(div=>{div.setAttribute('class','code');div.style='width:100%;max-width:100%;position:relative;padding-right:15px;padding-left:15px;'})",
         "pinUrl": true
     },
     {
         "name": "開車漫画 - 閱讀",
         "example": "https://18p.fun/ForInject/Chapter/?id=641992",
-        "url": "^https://(18p\\.fun|www\\.gohaveababy\\.com)/(ForInject/|Article/)",
+        "url": "^https?://(www\\.)?(18p|gohaveababy|imynest|healthway|beforeout)\\.[a-z]{2,5}/(ForInject/|Article/|content/)",
         "pinUrl": true,
         "history": 2,
-        "init": "let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('img[data-src]');if(set){clearInterval(loop);if(location.hostname=='www.gohaveababy.com'){location.replace('https://18p.fun/ForInject/Chapter/?id='+window.$_curChap.id)};document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src});function hidetoolbar(){var e=e||window.event;if(e.wheelDelta<0||e.detail>0){ge('[my-id=header]').setAttribute('style','top: -60px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}else{ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}};document.addEventListener('wheel',hidetoolbar);document.addEventListener('DOMMouseScroll',hidetoolbar);function showtoolbar(){let t=ge('[my-id=header][style]');if(t){ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}else{ge('[my-id=header]').setAttribute('style','top: -60px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}};ge('[class^=pictures]').addEventListener('click',showtoolbar)}},100);",
-        "nextLinkByJs": "let ge=e=>doc.querySelector(e);let np=ge('img[src*=pnext]');let nc=ge('img[src*=pend]');if(np&&np.parentNode.getAttribute('data-url')){return np.parentNode.getAttribute('data-url')}else if(nc&&nc.parentNode.getAttribute('data-url')){return nc.parentNode.getAttribute('data-url')}",
+        "action": 1,
+        "init": "let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('img[data-src]');if(set){clearInterval(loop);if(location.hostname!='18p.fun'&&window.$_curChap){location.replace('https://18p.fun/ForInject/Chapter/?id='+window.$_curChap.id)};document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src});let hasTouchEvents=()=>{if(('ontouchstart'in window)||(navigator.maxTouchPoints>0)||(navigator.msMaxTouchPoints>0)){return true}return false};let toggleToolbar=()=>{var e=e||window.event;if(e.wheelDelta<0||e.detail>0){ge('[my-id=header]').setAttribute('style','top: -64px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}else{ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}};if(hasTouchEvents()===false){document.addEventListener('wheel',toggleToolbar);document.addEventListener('DOMMouseScroll',toggleToolbar)}ge('[class^=pictures]').addEventListener('click',()=>{let t=ge('[my-id=header][style]');if(t){ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}else{ge('[my-id=header]').setAttribute('style','top: -60px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}})}},200);",
+        "nextLinkByJs": "let next=doc.querySelector('[class^=picnexta]>a');if(next&&next.dataset.url)return next.dataset.url",
         "pageElement": "[class^=pictures]>img[data-src]",
-        "replaceElement": "head>title,h1",
-        "pageAction": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar a').forEach(e=>{if(/pi=/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('[class^=pictures]>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "replaceElement": "[class^=footerbox] li:nth-child(n+3):nth-child(-n+6)",
+        "pageInit": "document.querySelector('h1').outerHTML=doc.querySelector('h1').outerHTML;let a=document.querySelector('[class^=picnexta]>a');let ra=doc.querySelector('[class^=picnexta]>a');a.dataset.url=ra.dataset.url;a.innerHTML=ra.innerHTML;",
+        "pageAction": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar a').forEach(e=>{if(/pi=/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('[class^=pictures]>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}};setTimeout(()=>{gae('div[class^=picnexta],[class^=footerbox] li:nth-child(n+3):nth-child(-n+6)').forEach(e=>{e.addEventListener('click',()=>{let a=e.querySelector('a');if(a.dataset.url){location.replace(a.dataset.url)}})});ge('[class^=footerbox] li:nth-child(7)').addEventListener('click',()=>{location.replace('https://18p.fun/book/'+window.$_curChap.bookid)})},200)",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText.split('\"')[2].replace(/第\\d页?頁?$/,'').trim();"
     },
     {
         "name": "開車漫画 - 分類",
-        "example": "https://18p.fun/library/?cid=3&tid=1698",
+        "example": "https://18p.fun/library/?cid=3&tid=1702",
         "url": "^https?://18p\\.fun/",
         "nextLink": "li.current+li>a",
         "pageElement": "#itemlist",
@@ -31,7 +33,7 @@
     {
         "name": "大树漫画 - 閱讀",
         "example": "https://www.dashumanhua.com/comic/douluodalu5zhongshengtangsan/read-0.html",
-        "url": "^https://www\\.dashumanhua\\.com/comic/[^/]+/read-\\d+\\.html",
+        "url": "^https?://www\\.dashumanhua\\.com/comic/[^/]+/read-\\d+\\.html",
         "pinUrl": true,
         "history": 2,
         "init": "let ge=e=>document.querySelector(e);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let E=ge('#pic-list');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);$('head').append('<style>#pre-loading+#pic-list>img:nth-child('+imgData.length+')~* {display:none!important}</style>')",
@@ -100,25 +102,25 @@
     {
         "name": "嗨皮漫畫 - 給本王顯示全部章節",
         "example": "https://m.happymh.com/manga/daiwangraoming",
-        "url": "^https://m\\.happymh\\.com/manga/",
+        "url": "^https?://m\\.happymh\\.com/manga/",
         "autoClick": "#expandButton"
     },
     {
         "name": "嗨皮漫畫 - 更新頁",
         "example": "https://m.happymh.com/latest",
-        "url": "^https://m\\.happymh\\.com/latest$",
+        "url": "^https?://m\\.happymh\\.com/latest$",
         "loadMore": ".more-div-btn"
     },
     {
         "name": "嗨皮漫畫 - 閱讀 - 禁用",
         "example": "https://m.happymh.com/manga/shishijilingdishejishi",
-        "url": "^https://m\\.happymh\\.com/reads/",
+        "url": "^https?://m\\.happymh\\.com/reads/",
         "enable": "0"
     },
     {
         "name": "包子漫畫分類 - 漫畫在新分頁打開",
         "example": "https://www.webmota.com/",
-        "url": "^https://[^/]+/",
+        "url": "^https?://[^/]+/",
         "include": [
             "//title[contains(text(),'包子漫畫') or contains(text(),'包子漫画')]",
             ".comics-card"
@@ -133,7 +135,7 @@
     {
         "name": "包子漫畫 - 查看全部章節",
         "example": "https://www.baozimh.com/comic/dawangraoming-yuedongwenhua",
-        "url": "^https://[^/]+/comic/",
+        "url": "^https?://[^/]+/comic/",
         "include": [
             "//title[contains(text(),'包子漫畫') or contains(text(),'包子漫画')]",
             "#button_show_all_chatper"
@@ -144,7 +146,7 @@
     {
         "name": "包子漫畫 - 閱讀",
         "example": "https://www.kukuc.co/comic/chapter/dawangraoming-yuedongwenhua/0_0.html",
-        "url": "^https://[^/]+/comic/chapter/[^/]+/\\w+\\.html",
+        "url": "^https?://[^/]+/comic/chapter/[^/]+/\\w+\\.html",
         "include": [
             "//title[contains(text(),'包子漫畫') or contains(text(),'包子漫画')]",
             ".chapter-main.scroll-mode>.comic-contain amp-img>img[amp-img-id]"
@@ -210,7 +212,7 @@
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
         "example": "https://www.colamanhua.com/15177/1/2.html",
-        "url": "^https://www\\.colamanhua\\.com/\\w+/\\d+/\\d+\\.html",
+        "url": "^https?://www\\.colamanhua\\.com/\\w+/\\d+/\\d+\\.html",
         "init": "let gx=x=>document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[contains(@href,'html') and text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);",
         "nextLink": "0",
         "pinUrl": true,
@@ -244,7 +246,7 @@
     {
         "name": "看漫画手機版 - 最新更新/排行榜/書架/搜索/漫画大全 檢視下20條記錄 - 漫畫在新分頁打開",
         "example": "https://m.manhuagui.com/list/update.html",
-        "url": "^https://m\\.manhuagui\\.com/",
+        "url": "^https?://m\\.manhuagui\\.com/",
         "exclude": [
             "#manga",
             "#chapter"
@@ -2530,9 +2532,9 @@
         "name": "docs.oracle.com",
         "example": "https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html",
         "url": "^https?://docs\\.oracle\\.com/",
+        "action": 2,
         "nextLink": "//a[text()='Next']",
-        "pageElement": ".chapter",
-        "css": "div.chapter div.toc{top: auto;}"
+        "pageElement": ".chapter,.index,.appendix"
     },
     {
         "name": "w3school.com.cn",
@@ -2677,7 +2679,7 @@
     {
         "name": "94i.in - 自動簽到",
         "example": "https://94i.in/",
-        "url": "^https://94i\\.in/",
+        "url": "^https?://94i\\.in/",
         "autoClick": "#pper_a:not([style='display: none;'])"
     },
     {
@@ -4488,7 +4490,7 @@
     {
         "name": "MM 范 - 圖片",
         "example": "https://www.95mm.tv/65309.html",
-        "url": "^https://www\\.95mm\\.\\w+/\\w+\\.html",
+        "url": "^https?://www\\.95mm\\.\\w+/\\w+\\.html",
         "init": "let a=document.querySelector('.post a');a.outerHTML=a.innerHTML;",
         "include": ".post img[alt]",
         "nextLinkByUrl": [
@@ -4516,7 +4518,7 @@
     {
         "name": "MM 范",
         "example": "https://www.95mm.org/qingchun",
-        "url": "^https://www\\.95mm\\.org/(qingchun|sifang|xinggan|tag)?",
+        "url": "^https?://www\\.95mm\\.org/(qingchun|sifang|xinggan|tag)?",
         "include": ".dposts-ajax-load",
         "loadMore": ".dposts-ajax-load"
     },
@@ -4749,7 +4751,7 @@
     {
         "name": "r18.clickme.net",
         "example": "https://r18.clickme.net/c/new",
-        "url": "^https://r18\\.clickme\\.net/",
+        "url": "^https?://r18\\.clickme\\.net/",
         "nextLink": "li.active+li>a",
         "pageElement": "#article-list",
         "replaceElement": "#pages"
@@ -4757,7 +4759,7 @@
     {
         "name": "fc2cm 去模糊",
         "example": "https://fc2cm.com/?c=sensen321&nc=0",
-        "url": "^https://fc2cm\\.com/",
+        "url": "^https?://fc2cm\\.com/",
         "pinUrl": true,
         "nextLink": "span+a",
         "pageElement": "#contentInner aside dl",
@@ -6157,7 +6159,7 @@
     {
         "name": "麻豆社,草麻豆",
         "example": "https://madou.club/，https://xxxmadou.com/",
-        "url": "^https://(madou|xxxmadou|)\\.(club|com)/",
+        "url": "^https?://(madou|xxxmadou|)\\.(club|com)/",
         "loadMore": ".ias_trigger>a"
     },
     {
@@ -6531,7 +6533,7 @@
     {
         "name": "加勒逼A片網",
         "example": "https://159i.com/video/",
-        "url": "^https://159i\\.com/video/((category|search)/.+/)?$",
+        "url": "^https?://159i\\.com/video/((category|search)/.+/)?$",
         "nextLink": ".next>a",
         "pageElement": "#content>.post.f",
         "replaceElement": ".page-navigator",
@@ -6540,7 +6542,7 @@
     {
         "name": "NETFLAV3",
         "example": "https://netflav.com/all?genre=%E6%80%A7%E6%84%9F%E7%9A%84&page=2",
-        "url": "^https://(www\\.)?netflav\\.com/all\\?(genre|actress)=.+(&page=\\d+)?$",
+        "url": "^https?://(www\\.)?netflav\\.com/all\\?(genre|actress)=.+(&page=\\d+)?$",
         "init": "let gae=e=>document.querySelectorAll(e);let ds=document.querySelectorAll(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=document.querySelectorAll('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
         "action": 1,
         "nextLinkByJs": "let next=doc.querySelector('a.active.item+a.item:not(.icon)');if(next)return location.origin+location.pathname+location.search.replace(/&page=\\d+/,'')+'&page='+next.getAttribute('value')",
@@ -6557,7 +6559,7 @@
     {
         "name": "NETFLAV2",
         "example": "https://netflav.com/uncensored?genre=FC2PPV",
-        "url": "^https://(www\\.)?netflav\\.com/(censored|uncensored|chinese-sub|actress)\\?genre=[^&]+(&page=\\d+)?$",
+        "url": "^https?://(www\\.)?netflav\\.com/(censored|uncensored|chinese-sub|actress)\\?genre=[^&]+(&page=\\d+)?$",
         "init": "let gae=e=>document.querySelectorAll(e);let ds=gae(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=gae('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
         "action": 1,
         "nextLinkByJs": "let next=doc.querySelector('a.active.item+a.item:not(.icon)');if(next)return location.origin+location.pathname+location.search.replace(/&page=\\d+/,'')+'&page='+next.getAttribute('value')",
@@ -6574,7 +6576,7 @@
     {
         "name": "NETFLAV1",
         "example": "https://netflav.com/uncensored",
-        "url": "^https://(www\\.)?netflav\\.com/(censored|uncensored|chinese-sub|actress)(\\?page=\\d+)?$",
+        "url": "^https?://(www\\.)?netflav\\.com/(censored|uncensored|chinese-sub|actress)(\\?page=\\d+)?$",
         "init": "let gae=e=>document.querySelectorAll(e);let ds=gae(\"div[class^='genre_filter_item']\");ds.forEach(div=>{div.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});let as=gae('.desktop_header_root>div>a.desktop_header_item:not([href=\"/\"])');as.forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});",
         "action": 1,
         "nextLinkByJs": "let next=doc.querySelector('a.active.item+a.item:not(.icon)');if(next)return location.origin+location.pathname+'?page='+next.getAttribute('value')",
@@ -6591,7 +6593,7 @@
     {
         "name": "avple.tv - 類別",
         "example": "https://avple.tv/tags/135/1/date",
-        "url": "^https://avple\\.tv/tags/\\d+/\\d+/\\w+$",
+        "url": "^https?://avple\\.tv/tags/\\d+/\\d+/\\w+$",
         "action": 1,
         "nextLinkByUrl": [
             "(/\\d+/)(\\d+)(/\\w+)$",
@@ -6612,7 +6614,7 @@
         "name": "avple.tv - 搜索",
         "example": "https://avple.tv/search?key=FC2PPV&page=1&sort=date",
         "action": 1,
-        "url": "^https://avple\\.tv/search\\?key=",
+        "url": "^https?://avple\\.tv/search\\?key=",
         "nextLinkByUrl": [
             "(&page=)(\\d+)(&.+)$",
             "$1{$2+1}$3",
@@ -7444,7 +7446,7 @@
     },
     {
         "name": "稷下書院 - 閱讀",
-        "example": "https://www.novel543.com/1004298677/8001_1.html",
+        "example": "08001_1.html",
         "url": "^https?://www\\.novel543\\.com/\\d+/\\w+\\.html",
         "history": 2,
         "init": "let h=document.querySelector('h1');h.innerText=h.innerText.split('-')[1].trim();let c=document.querySelectorAll('.content>*');let b=c.length-5;for(let i=b;i<c.length;i++){c[i].remove()}",
@@ -7714,7 +7716,7 @@
     {
         "name": "google search mobile",
         "action": 0,
-        "url": "^https://(?:www\\.)?google\\..*/search",
+        "url": "^https?://(?:www\\.)?google\\..*/search",
         "pageElement": "id('rso')/div|id('rso')/style",
         "insert": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
         "nextLink": 0,
