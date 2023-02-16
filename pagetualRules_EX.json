@@ -13,22 +13,22 @@
         "url": "^https?://(www\\.)?(18p|gohaveababy|imynest|healthway|beforeout)\\.[a-z]{2,5}/(ForInject/|Article/|content/)",
         "pinUrl": true,
         "history": 2,
-        "action": 1,
-        "init": "let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('img[data-src]');if(set){clearInterval(loop);if(location.hostname!='18p.fun'&&window.$_curChap){location.replace('https://18p.fun/ForInject/Chapter/?id='+window.$_curChap.id)};document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src});let hasTouchEvents=()=>{if(('ontouchstart'in window)||(navigator.maxTouchPoints>0)||(navigator.msMaxTouchPoints>0)){return true}return false};let toggleToolbar=()=>{var e=e||window.event;if(e.wheelDelta<0||e.detail>0){ge('[my-id=header]').setAttribute('style','top: -64px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}else{ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}};if(hasTouchEvents()===false){document.addEventListener('wheel',toggleToolbar);document.addEventListener('DOMMouseScroll',toggleToolbar)}ge('[class^=pictures]').addEventListener('click',()=>{let t=ge('[my-id=header][style]');if(t){ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}else{ge('[my-id=header]').setAttribute('style','top: -60px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}})}},200);",
+        "init": "let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('img[data-src]');if(set){clearInterval(loop);if(location.hostname!='18p.fun'&&window.$_curChap){location.replace('https://18p.fun/ForInject/Chapter/?id='+window.$_curChap.id)};document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src});let hasTouchEvents=()=>{if(('ontouchstart'in window)||(navigator.maxTouchPoints>0)||(navigator.msMaxTouchPoints>0)){return true}return false};let toggleToolbar=()=>{var e=e||window.event;if(e.wheelDelta<0||e.detail>0){ge('[my-id=header]').setAttribute('style','top: -60px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}else{ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}};if(hasTouchEvents()===false){document.addEventListener('wheel',toggleToolbar);document.addEventListener('DOMMouseScroll',toggleToolbar)}ge('[class^=pictures]').addEventListener('click',()=>{let t=ge('[my-id=header][style]');if(t){ge('[my-id=header]').removeAttribute('style');ge('[class^=footerbox]').removeAttribute('style')}else{ge('[my-id=header]').setAttribute('style','top: -60px;');ge('[class^=footerbox]').setAttribute('style','display:none;')}})}},200);",
         "nextLinkByJs": "let next=doc.querySelector('[class^=picnexta]>a');if(next&&next.dataset.url)return next.dataset.url",
         "pageElement": "[class^=pictures]>img[data-src]",
         "replaceElement": "[class^=footerbox] li:nth-child(n+3):nth-child(-n+6)",
-        "pageInit": "document.querySelector('h1').outerHTML=doc.querySelector('h1').outerHTML;let a=document.querySelector('[class^=picnexta]>a');let ra=doc.querySelector('[class^=picnexta]>a');a.dataset.url=ra.dataset.url;a.innerHTML=ra.innerHTML;",
-        "pageAction": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar a').forEach(e=>{if(/pi=/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('[class^=pictures]>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}};setTimeout(()=>{gae('div[class^=picnexta],[class^=footerbox] li:nth-child(n+3):nth-child(-n+6)').forEach(e=>{e.addEventListener('click',()=>{let a=e.querySelector('a');if(a.dataset.url){location.replace(a.dataset.url)}})});ge('[class^=footerbox] li:nth-child(7)').addEventListener('click',()=>{location.replace('https://18p.fun/book/'+window.$_curChap.bookid)})},200)",
-        "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText.split('\"')[2].replace(/第\\d页?頁?$/,'').trim();"
+        "pageInit": "document.querySelector('h1').outerHTML=doc.querySelector('h1').outerHTML;let na=document.querySelector('[class^=picnexta]');let a=na.querySelector('a');let rna=doc.querySelector('[class^=picnexta]');let ra=rna.querySelector('a');if(ra&&ra.dataset.url){a.dataset.url=ra.dataset.url;a.innerHTML=ra.innerHTML}else{na.innerHTML=rna.innerHTML}",
+        "pageAction": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar a').forEach(e=>{if(/pi=/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('[class^=pictures]>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}};setTimeout(()=>{gae('div[class^=picnexta],[class^=footerbox] li:nth-child(n+3):nth-child(-n+6)').forEach(e=>{e.addEventListener('click',()=>{let a=e.querySelector('a');if(a&&a.dataset.url){location.replace(a.dataset.url)}})});ge('[class^=footerbox] li:nth-child(7)').addEventListener('click',()=>{location.replace('https://18p.fun/book/'+window.$_curChap.bookid)})},200)",
+        "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText.split('\"')[2].replace(/第\\d+页?頁?$/,'').trim();"
     },
     {
         "name": "開車漫画 - 分類",
         "example": "https://18p.fun/library/?cid=3&tid=1702",
         "url": "^https?://18p\\.fun/",
-        "nextLink": "li.current+li>a",
-        "pageElement": "#itemlist",
-        "replaceElement": ".page"
+        "init": "let openInNewTab=()=>document.querySelectorAll('#itemlist li>a:not([target=_blank])').forEach(a=>{a.setAttribute('target','_blank')});openInNewTab();new MutationObserver(()=>{openInNewTab()}).observe(document.body,{childList:true,subtree:true});",
+        "nextLink": "0",
+        "loadMore": ".loadmore>button",
+        "css": ".page{display:none!important}.loadmore{display:block!important}"
     },
     {
         "name": "大树漫画 - 閱讀",
@@ -7446,7 +7446,7 @@
     },
     {
         "name": "稷下書院 - 閱讀",
-        "example": "08001_1.html",
+        "example": "https://www.novel543.com/1004298677/8001_1.html",
         "url": "^https?://www\\.novel543\\.com/\\d+/\\w+\\.html",
         "history": 2,
         "init": "let h=document.querySelector('h1');h.innerText=h.innerText.split('-')[1].trim();let c=document.querySelectorAll('.content>*');let b=c.length-5;for(let i=b;i<c.length;i++){c[i].remove()}",
