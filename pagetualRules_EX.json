@@ -1190,12 +1190,14 @@
         "history": 2,
         "pinUrl": true,
         "action": 1,
+        "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.removeAttribute('data-src')})",
         "nextLink": "//a[i[@class='ift-next']]",
         "pageElement": ".main_img",
         "replaceElement": "head>title,.chapter_title,.bottom-nav,.bottom_menu",
+        "pageInit": "doc.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.removeAttribute('data-src')})",
         "pageAction": "let gae=e=>document.querySelectorAll(e);let cs=gae('.main_img');let last=cs.length-1;cs[last].addEventListener('click',()=>{let t=document.querySelector('.nav-box.show_nav');if(t){$('.nav-box').removeClass('show_nav');$('.bottom-box').removeClass('show_footer')}else{$('.nav-box').addClass('show_nav');$('.bottom-box').addClass('show_footer')}});let c=gae('.main_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
         "pageBarText": "let t=doc.querySelector('.chapter_title');if(t)return t.innerText",
-        "css": "#adhtml{display:none!important}"
+        "css": "#adhtml,.pinglunadd-btn{display:none!important}"
     },
     {
         "name": "七夕漫画手機版 / 漫画星球手機版 - 点击加载更多",
@@ -2265,7 +2267,7 @@
         "example": "https://anime1.me/",
         "url": "^https?://anime1\\.me/",
         "nextLink": "a.next",
-        "pageElement": "#table-list>tbody"
+        "pageElement": "#table-list>tbody>tr"
     },
     {
         "name": "233 动漫 - 排行榜",
@@ -7021,12 +7023,12 @@
         "css": ".banner_ad{display:none!important}"
     },
     {
-        "name": "小黃書 - 成人小說目錄",
-        "example": "https://tw.xchina.co/fiction/id-64036d06046a5.html",
-        "url": "^https?://(tw\\.)?xchina\\.co/fiction/id-\\w+\\.html",
+        "name": "小黃書 - 模特、小說目錄",
+        "example": "https://tw.xchina.co/fiction/id-64036d06046a5.html，https://tw.xchina.co/model/id-605849cd980ad.html",
+        "url": "^https?://(tw\\.)?xchina\\.co/(fiction|model)/id-\\w+\\.html",
         "pinUrl": true,
         "nextLink": "0",
-        "css": ".banner_ad{display:none!important}"
+        "css": ".aside>.center,.banner_ad{display:none!important}"
     },
     {
         "name": "小黃書 - 搜索",
@@ -7079,18 +7081,18 @@
     {
         "name": "小黃書 - 分類",
         "example": "https://tw.xchina.co/photos/kind-2.html，https://8se.me/photos/model-61be1af337a19.html",
-        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/(photos|videos|models|fictions)",
+        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/(photos|videos|models|fictions|torrents)",
         "exclude": "body>.image",
         "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
         "pinUrl": true,
         "nextLink": "a.next",
-        "pageElement": ".list>.item,.list>.fiction,.videos",
+        "pageElement": ".list>.item,.list>.fiction,.list>.torrent,.videos>.item",
         "replaceElement": [
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
         "rate": 3,
-        "css": ".pagetual_pageBar{margin-bottom:5px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current,.banner_ad{display:none!important}"
+        "css": ".pagetual_pageBar{margin-bottom:5px!important}.videos .pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current,.banner_ad,.tips,.aside>.center{display:none!important}"
     },
     {
         "name": "hitxhot - 寫真",
