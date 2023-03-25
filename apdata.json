@@ -55,7 +55,7 @@
 			"replaceE": "//div[div[@id='chapterpager']]",
 			"scrollE": "#cc99",
 			"scriptT": 2,
-			"interval": 10000,
+			"interval": 5000,
 			"scrollD": 5000
 		},
 		"function": {
