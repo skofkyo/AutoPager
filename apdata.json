@@ -42,7 +42,7 @@
 			"tel.dm5.com",
 			"www.1kkk.com"
 		],
-		"url": "if(fun.getCSS('#chapterpager')){const ge=e=>document.querySelector(e);document.body.style.overflow='scroll';ge('#cp_img').innerHTML='';const getData=async(page)=>{if(page>DM5_IMAGE_COUNT)return;if(!mkey){var mkey='';}let apiUrl=location.origin+location.pathname+'chapterfun.ashx'+`?cid=${DM5_CID}&page=${page}&key=${mkey}&language=1>k=6&_cid=${DM5_CID}&_mid=${DM5_MID}&_dt=${DM5_VIEWSIGN_DT}&_sign=${DM5_VIEWSIGN}`;let res=await fetch(apiUrl);let resText=await res.text();let imgSrc=await eval(resText)[0];let img=new Image();img.src=imgSrc;ge('#cp_img').appendChild(img);page++;await getData(page)};getData(1);return true}",
+		"url": "if(fun.getCSS('#chapterpager')){const ge=e=>document.querySelector(e);document.body.style.overflow='scroll';ge('#cp_img').innerHTML='';const getData=async(page)=>{if(page>DM5_IMAGE_COUNT)return;if(!mkey){var mkey='';}let apiUrl=location.origin+location.pathname+'chapterfun.ashx'+`?cid=${DM5_CID}&page=${page}&key=${mkey}&language=1>k=6&_cid=${DM5_CID}&_mid=${DM5_MID}&_dt=${DM5_VIEWSIGN_DT}&_sign=${DM5_VIEWSIGN}`;let res=await fetch(apiUrl);let resText=await res.text();let imgSrc=await eval(resText)[0];let img=new Image();img.src=imgSrc;ge('#cp_img').appendChild(img);page++;getData(page)};getData(1);return true}",
 		"style": "a[href^='j'],.chapterpager{display:none!important}#cp_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
 		"history": true,
 		"pager": {
@@ -55,11 +55,11 @@
 			"replaceE": "//div[div[@id='chapterpager']]",
 			"scrollE": "#cc99",
 			"scriptT": 2,
-			"interval": 5000,
-			"scrollD": 4000
+			"interval": 10000,
+			"scrollD": 5000
 		},
 		"function": {
-			"aF": "const ge=e=>document.querySelector(e);const getData=async(page)=>{if(page>DM5_IMAGE_COUNT)return;if(!mkey){var mkey='';}let apiUrl=location.origin+location.pathname+'chapterfun.ashx'+`?cid=${DM5_CID}&page=${page}&key=${mkey}&language=1>k=6&_cid=${DM5_CID}&_mid=${DM5_MID}&_dt=${DM5_VIEWSIGN_DT}&_sign=${DM5_VIEWSIGN}`;let res=await fetch(apiUrl);let resText=await res.text();let imgSrc=await eval(resText)[0];let img=new Image();img.src=imgSrc;ge('#cp_img').appendChild(img);page++;await getData(page)};getData(1);"
+			"aF": "const ge=e=>document.querySelector(e);const getData=async(page)=>{if(page>DM5_IMAGE_COUNT)return;if(!mkey){var mkey='';}let apiUrl=location.origin+location.pathname+'chapterfun.ashx'+`?cid=${DM5_CID}&page=${page}&key=${mkey}&language=1>k=6&_cid=${DM5_CID}&_mid=${DM5_MID}&_dt=${DM5_VIEWSIGN_DT}&_sign=${DM5_VIEWSIGN}`;let res=await fetch(apiUrl);let resText=await res.text();let imgSrc=await eval(resText)[0];let img=new Image();img.src=imgSrc;ge('#cp_img').appendChild(img);page++;getData(page)};getData(1);"
 		}
 	},
 	"www.shein.tw": {
