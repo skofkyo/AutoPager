@@ -278,6 +278,7 @@
             "//title[contains(text(),'包子漫畫') or contains(text(),'包子漫画')]",
             ".chapter-main.scroll-mode>.comic-contain amp-img>img[amp-img-id]"
         ],
+        "history": 2,
         "action": 1,
         "pinUrl": true,
         "init": "let gae=e=>document.querySelectorAll(e);let E=gae('.comic-contain')[0];let F=new DocumentFragment();let imgs=gae('.comic-contain amp-img');imgs.forEach(e=>{let img=new Image();img.className='comic-contain__item';img.src=e.getAttribute('src');F.appendChild(img)});E.innerHTML='';E.appendChild(F);let loop=setInterval(()=>{let set=document.querySelector('#interstitial_fade');if(set){clearInterval(loop);set.remove()}},100);setTimeout(()=>{if(loop)clearInterval(loop)},5000)",
@@ -2851,6 +2852,12 @@
         "replaceElement": ".sidebar-box"
     },
     {
+        "name": "极简插件",
+        "example": "https://chrome.zzzmh.cn/#/extension",
+        "url": "^https?://chrome\\.zzzmh\\.cn/",
+        "pageAction": "[...document.querySelectorAll('.v-card .v-image__image--preload')].forEach(div=>{let encode=div.parentNode.parentNode.parentNode.href.split('/').pop();let pngUrl=`https://cdn3.zzzmh.cn/v2/crx/${encode}/logo/thumb.png/thumb`;let jpgUrl=`https://cdn3.zzzmh.cn/v2/crx/${encode}/logo/thumb.jpg/thumb`;let temp=new Image();temp.src=pngUrl;temp.onload=()=>{div.style.backgroundImage=`url('${pngUrl}')`;div.classList.remove('v-image__image--preload');temp=null;};temp.onerror=()=>{div.style.backgroundImage=`url('${jpgUrl}')`;div.classList.remove('v-image__image--preload');temp=null;};});"
+    },
+    {
         "name": "奔跑中的奶酪",
         "example": "http://www.runningcheese.com/",
         "url": "^https?://www\\.runningcheese\\.com/",
@@ -4154,12 +4161,12 @@
         "example": "https://www.nlegs.com/girls/2022/10/01/28219.html",
         "url": "^https?://www\\.nlegs\\.com/girls/[^.]+\\.html",
         "nextLink": "li.active+li>a",
-        "pageElement": "//div[div/a/@class='thumbnail']",
+        "pageElement": "//div[a/div[contains(@style,'thumb') and span]]",
         "replaceElement": "#dnav",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": ".img-res{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+        "css": ".col-md-12.col-xs-12>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "Nlegs",
