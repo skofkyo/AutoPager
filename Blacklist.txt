@@ -289,6 +289,8 @@ KuKu动漫閱讀
 8Comic無限動漫閱讀
 *://www.comicabc.com/online/new-*
 *://www.comicabc.com/ReadComic/*
+*://a.twobili.com/online/new-*
+*://a.twobili.com/ReadComic/*
 
 奇漫屋閱讀
 *://*qiman59.com/*/*.html
