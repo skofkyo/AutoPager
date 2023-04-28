@@ -21,7 +21,7 @@ DM5/極速閱讀
 /(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}\/m?n\w+\.aspx/
 
 HotAsiaGirl圖片
-/^https?:\/\/hotgirl\.asia\/[^/]+\/$
+/^https?:\/\/hotgirl\.asia\/[^/]+\/$/
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
 
@@ -177,6 +177,7 @@ BAOBUA.COM
 
 HOTGIRLchina
 *://hotgirlchina.com/*-photos*/
+
 idol.gravureprincess.date
 *://idol.gravureprincess.date/*/*/*.html
 
