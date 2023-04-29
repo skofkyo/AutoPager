@@ -23,6 +23,11 @@ DM5/極速閱讀
 HotAsiaGirl圖片
 /^https?:\/\/hotgirl\.asia\/[^/]+\/$/
 
+PimpAndHost
+/pimpandhost\.com\/album\/\d+/
+
+/twhentai.com\/hentai_manga\/\d+\/$/
+
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
 
     {
@@ -211,6 +216,9 @@ xHamster
 PornHub
 *pornhub.com/album/*
 
+Pictoa
+*://www.pictoa.com/albums/*/*.html
+
 Hentai Image
 *://hentai-img.com/image/*/
 *://hentai-cosplays.com/image/*/
@@ -242,6 +250,9 @@ IMHentai
 7mmtv
 *7mmtv.sx/*hcomic_content/*/content.html
 
+18H
+*://18h.mm-cg.com/*18H_content/*/content.html
+
 丽图·污漫画
 *://litu100.xyz/comic/id-*/*.html
 
@@ -259,6 +270,17 @@ ACG漫画网
 
 Orzqwq
 *://orzqwq.com/manga/*/
+
+18H 宅宅愛動漫
+*://18h.animezilla.com/manga/*
+
+HO5HO
+*://www.ho5ho.com/*/*/server*/*/*/
+
+亚洲漫画走廊
+*://asiacomics.com/chapter/*
+
+
 
 漫畫類
 
