@@ -23,9 +23,10 @@ DM5/極速閱讀
 HotAsiaGirl圖片
 /^https?:\/\/hotgirl\.asia\/[^/]+\/$/
 
-PimpAndHost
+PimpAndHost相簿
 /pimpandhost\.com\/album\/\d+/
 
+TWHentai圖片清單頁
 /twhentai.com\/hentai_manga\/\d+\/$/
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
@@ -43,7 +44,7 @@ PimpAndHost
         "include": "//a[@data-title and picture/source]"
     },
 
-東方永頁黑名單
+東方永頁機黑名單
 
 老司機類
 
