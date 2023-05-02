@@ -1,3 +1,5 @@
+2023/05/02 23:12
+
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
 東方永頁機設定excludes
@@ -27,22 +29,37 @@ PimpAndHost相簿
 /pimpandhost\.com\/album\/\d+/
 
 TWHentai圖片清單頁
-/twhentai.com\/hentai_manga\/\d+\/$/
+/twhentai\.com\/hentai_manga\/\d+\/$/
+
+Xiutaku
+/^https?:\/\/xiutaku\.com\/\d+$/
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
 
     {
-        "name": "怠惰聚圖排除1 ",
+        "name": "怠惰聚圖Sexyxbody格式排除1 ",
         "enable": 0,
         "url": "^https?://\\w{2}\\.(bunnyxgirl|letsgirlz|bestxleg)\\.com/",
         "include": ".separator>a"
     },
     {
-        "name": "怠惰聚圖排除2 ",
+        "name": "怠惰聚圖Sexyxbody格式排除2 ",
         "enable": 0,
         "url": "^https?://\\w{2}\\.(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic)\\.com/[^/]+/\\w+",
         "include": "//a[@data-title and picture/source]"
     },
+    {
+        "name": "怠惰聚圖免費私房圖格式排除1",
+        "enable": 0,
+        "url": "^https?://[^/]+/\\w+/\\w+/\\d+/\\d+\\.html$",
+        "include": "#picg,.pagelist"
+    },
+    {
+        "name": "怠惰聚圖免費私房圖格式排除2 ",
+        "enable": 0,
+        "url": "^https?://[^/]+/\\w+/\\d+\\.html$",
+        "include": "#picg,.pagelist"
+    }
 
 東方永頁機黑名單
 
@@ -243,6 +260,18 @@ SexyGirl
 
 SexyAsianGirl
 *://www.sexyasiangirl.xyz/album/*.html
+
+Chinese Beauties
+*://sxchinesegirlz.one/*/*/*/*/
+
+图宅网
+*://www.tuzac.com/file/*
+
+秀窝
+*://www.xiuwo.net/tu/*.html
+
+秀人图集
+*://xiuren0.com/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
