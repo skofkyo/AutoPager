@@ -1,4 +1,4 @@
-2023/05/03 02:57
+2023/05/05 02:24
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -54,13 +54,19 @@ Xiutaku
         "name": "怠惰聚圖免費私房圖格式排除1",
         "enable": 0,
         "url": "^https?://[^/]+/\\w+/\\w+/\\d+/\\d+\\.html$",
-        "include": "#picg,.pagelist"
+        "include": [
+            "#picg",
+            ".pagelist"
+        ]
     },
     {
         "name": "怠惰聚圖免費私房圖格式排除2 ",
         "enable": 0,
         "url": "^https?://[^/]+/\\w+/\\d+\\.html$",
-        "include": "#picg,.pagelist"
+        "include": [
+            "#picg",
+            ".pagelist"
+        ]
     }
 
 =========================東方永頁機黑名單=========================
@@ -109,7 +115,10 @@ NứngVL
 *://www.jpmn8.cc/*/*/*.html
 
 爱美女网
-*://www.xrmnw.xyz/*/*/*.html
+*://www.imn5.net/*/*/*.html
+
+秀爱美女网
+*://www.2mn.cc/mm/*.html
 
 美人图
 *://meirentu.cc/pic/*.html
@@ -122,6 +131,9 @@ NứngVL
 
 微圖坊
 *://*v2ph.*/album/*
+
+美图乐
+*://www.meitule.cc/photo/*.html
 
 COSPLAY ZIP
 *://www.coszip.com/*.html
@@ -223,6 +235,7 @@ Kemono
 
 俊美图
 *://www.meijuntu.com/*/*.html
+*://www.jeya.de/*/*.html
 
 美女图片网
 *://www.mevtu.com/*/*.html
@@ -274,6 +287,18 @@ Chinese Beauties
 
 秀人图集
 *://xiuren0.com/*.html
+
+柠檬皮
+*://www.cybesx.com/*.html
+
+MM5MM5美女图片
+*://www.mm5mm5.com/mm/*
+
+依依图片网
+*://www.eemm.cc/pic/*.html
+
+MM1311
+*://www.mm1311.net/*/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
