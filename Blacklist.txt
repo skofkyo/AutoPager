@@ -1,4 +1,4 @@
-2023/05/05 02:48
+2023/05/06 02:30
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -127,6 +127,7 @@ NứngVL
 
 性感美女写真
 *://www.xgmn*.com/*/*.html
+*://www.xgyw.net/*/*.html
 
 爱看美女网
 *://www.ikmn.vip/*/*.html
@@ -225,6 +226,7 @@ BAOBUA.COM
 
 HOTGIRLchina
 *://hotgirlchina.com/*-photos*/
+*://theasiagirl.com/*-photos*/
 
 idol.gravureprincess.date
 *://idol.gravureprincess.date/*/*/*.html
@@ -378,7 +380,7 @@ ACG漫画网
 *://www.acgxmh.com/*/*.html
 
 紳士漫畫
-*://www.wnacg.org/photos-index-aid-*.html
+*://www.wnacg.*/photos-index-aid-*.html
 
 松鼠症倉庫
 *://ahri8.top/readOnline2.php?ID=*
