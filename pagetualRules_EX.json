@@ -1,5 +1,35 @@
 [
     {
+        "name": "怠惰聚圖Sexyxbody格式排除1 ",
+        "enable": 0,
+        "url": "^https?://\\w{2}\\.(bunnyxgirl|letsgirlz|bestxleg)\\.com/",
+        "include": ".separator>a"
+    },
+    {
+        "name": "怠惰聚圖Sexyxbody格式排除2 ",
+        "enable": 0,
+        "url": "^https?://\\w{2}\\.(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic)\\.com/[^/]+/\\w+",
+        "include": "//a[@data-title and picture/source]"
+    },
+    {
+        "name": "怠惰聚圖免費私房圖格式排除1",
+        "enable": 0,
+        "url": "^https?://[^/]+/\\w+/\\w+/\\d+/\\d+\\.html$",
+        "include": [
+            "#picg",
+            ".pagelist"
+        ]
+    },
+    {
+        "name": "怠惰聚圖免費私房圖格式排除2 ",
+        "enable": 0,
+        "url": "^https?://[^/]+/\\w+/\\d+\\.html$",
+        "include": [
+            "#picg",
+            ".pagelist"
+        ]
+    },
+    {
         "name": "ICONFINDER ",
         "enable": 0,
         "example": "https://www.iconfinder.com/search?q=Download",
@@ -3398,7 +3428,7 @@
         "example": "https://www.tujidao03.com/u/?action=gengxin",
         "url": "^https?://www\\.tujidao\\d+\\.com/",
         "nextLink": ".num+.next",
-        "pageElement": ".hezi>ul",
+        "pageElement": "div.hezi>ul>li",
         "replaceElement": "#pages"
     },
     {
@@ -5306,6 +5336,13 @@
         "replaceElement": ".page.bigpage"
     },
     {
+        "name": "ACGN小鎮/皮皮动漫社",
+        "example": "https://www.bbsacgn.com/，https://pipidm.top/，https://www.pipidm.top/",
+        "url": "^https?://(www\\.bbsacgn\\.com|pipidm\\.top|www\\.pipidm\\.top)/",
+        "pageElement": ".posts-wrapper.scroll>*",
+        "replaceElement": ".pagination"
+    },
+    {
         "name": "18x78",
         "example": "https://18x78.com/",
         "url": "^https?://18x78\\.com/",
@@ -6429,6 +6466,14 @@
         "pageAction": "xv.thumb_block_initiator.init_listing()"
     },
     {
+        "name": "麻豆村",
+        "example": "https://madoucun.com/",
+        "url": "^https?://madoucun\\.com/",
+        "pageElement": ".hl-list-item",
+        "replaceElement": ".hl-page-wrap",
+        "pageInit": "doc.querySelectorAll('a[data-original]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.original}')`})"
+    },
+    {
         "name": "麻豆社,草麻豆",
         "example": "https://madou.club/，https://xxxmadou.com/",
         "url": "^https?://(madou|xxxmadou|)\\.(club|com)/",
@@ -6565,6 +6610,14 @@
         "pageElement": "//div[(div/div/div/a/@class='media-cover') and contains(@class,'albums-list')]",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar {margin-top: 5px!important;}.pagetual_pageBar+div {margin-top: -8px!important;}img{opacity:1!important}"
+    },
+    {
+        "name": "美图乐 - 分類",
+        "example": "https://www.meitule.cc/i/",
+        "url": "^https?://www\\.meitule\\.cc/",
+        "pageElement": ".list-item",
+        "replaceElement": ".page",
+        "css": ".list-img img{opacity:1!important}"
     },
     {
         "name": "極品性感美女 - 搜索",
@@ -8112,29 +8165,5 @@
         "pageElement": ".row>.index-card-box",
         "replaceElement": ".v-pagination",
         "pageAction": "[...document.querySelectorAll('.v-card .v-image__image--preload')].forEach(div=>{let encode=div.parentNode.parentNode.parentNode.href.split('/').pop();let pngUrl=`https://cdn3.zzzmh.cn/v2/crx/${encode}/logo/thumb.png/thumb`;let jpgUrl=`https://cdn3.zzzmh.cn/v2/crx/${encode}/logo/thumb.jpg/thumb`;let temp=new Image();temp.src=pngUrl;temp.onload=()=>{div.style.backgroundImage=`url('${pngUrl}')`;div.classList.remove('v-image__image--preload');temp=null;};temp.onerror=()=>{div.style.backgroundImage=`url('${jpgUrl}')`;div.classList.remove('v-image__image--preload');temp=null;};});"
-    },
-    {
-        "name": "怠惰聚圖Sexyxbody格式排除1 ",
-        "enable": 0,
-        "url": "^https?://\\w{2}\\.(bunnyxgirl|letsgirlz|bestxleg)\\.com/",
-        "include": ".separator>a"
-    },
-    {
-        "name": "怠惰聚圖Sexyxbody格式排除2 ",
-        "enable": 0,
-        "url": "^https?://\\w{2}\\.(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic)\\.com/[^/]+/\\w+",
-        "include": "//a[@data-title and picture/source]"
-    },
-    {
-        "name": "怠惰聚圖免費私房圖格式排除1",
-        "enable": 0,
-        "url": "^https?://[^/]+/\\w+/\\w+/\\d+/\\d+\\.html$",
-        "include": "#picg,.pagelist"
-    },
-    {
-        "name": "怠惰聚圖免費私房圖格式排除2 ",
-        "enable": 0,
-        "url": "^https?://[^/]+/\\w+/\\d+\\.html$",
-        "include": "#picg,.pagelist"
     }
 ]
