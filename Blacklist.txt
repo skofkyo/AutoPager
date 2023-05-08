@@ -105,7 +105,7 @@ NứngVL
 *://www.jpmn8.cc/*/*/*.html
 
 爱美女网
-*://www.imn5.net/*/*/*.html
+*://www.imn5.*/*/*/*.html
 
 秀爱美女网
 *://www.2mn.cc/mm/*.html
@@ -604,7 +604,7 @@ http://www.17fuman.com/*/*/*.html
 *://www.xiuren5.vip/*/*.html
 *://www.xrmnw.xyz/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
-*://www.imn5.net/*/*/*.html
+*://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
 *://www.xrmnw.xyz/*/*/*.html
 *://www.ikmn.vip/*/*.html
