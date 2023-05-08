@@ -1,4 +1,4 @@
-2023/05/08 02:04
+2023/05/08 23:24
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -534,6 +534,12 @@ http://www.17fuman.com/*/*/*.html
 
 733动漫閱讀
 *://www.733.so/mh/*/*.html
+
+酷酷屋閱讀
+*://www.kukuwumh.com/manhua/*/*.html
+
+拼拼漫画閱讀
+*://www.pinmh.com/manhua/*/*.html
 
 漫画160閱讀
 *://www.mh160.cc/kanmanhua/*/*.html
