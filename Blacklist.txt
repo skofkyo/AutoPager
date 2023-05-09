@@ -1,4 +1,4 @@
-2023/05/08 23:24
+2023/05/10 04:52
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -290,6 +290,9 @@ MM1311
 
 18AV
 *18av.mm-cg.com/*cg_content/*/content.html
+
+洛秀网
+*://loxiu.com/post/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -738,3 +741,4 @@ http://www.17fuman.com/*/*/*.html
 *18av.mm-cg.com/*cg_content/*/content.html
 *jmwu.vip/chapter/*.html
 *://foamgirl.net/*.html
+*://loxiu.com/post/*.html
