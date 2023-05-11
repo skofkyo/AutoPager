@@ -1,4 +1,4 @@
-2023/05/10 04:52
+2023/05/12 05:04
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -76,6 +76,9 @@ nlegs.com
 8色人体摄影
 *://8se.me/photo/*
 *://*.8se.me/photo/*
+
+JavSX.com
+*://w3.javsx.com/photos/*.html
 
 Hit-x-Hot
 *://www.hitxhot.org/gallerys/*.html*
@@ -208,6 +211,11 @@ HOTGIRLchina
 *://hotgirlchina.com/*-photos*/
 *://theasiagirl.com/*-photos*/
 *://anhsec.com/*-photos*/
+*://sex4viet.com/*-photos*/
+*://cutexinh.com/*-photos*/
+*://cutexinh.com/*-anh*/
+*://vuxinh.com/*-photos*/
+*://vuxinh.com/*-anh*/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -243,6 +251,9 @@ xHamster
 PornHub
 *pornhub.com/album/*
 
+xher.net
+*://xher.net/index.php?/category/*
+
 Pictoa
 *://www.pictoa.com/albums/*/*.html
 
@@ -253,6 +264,7 @@ Hentai Image
 
 ImageFap
 *://www.imagefap.com/gallery/*
+*://www.imagefap.com/pictures/*
 *://www.imagefap.com/photo/*
 
 BuzzAV
@@ -598,6 +610,7 @@ http://www.17fuman.com/*/*/*.html
 *://*.xchina.co/photo/*
 *://8se.me/photo/*
 *://*.8se.me/photo/*
+*://w3.javsx.com/photos/*.html
 *://www.hitxhot.org/gallerys/*.html*
 *://www.depvailon.com/*.html
 *://pic.yailay.com/articles/*.html
@@ -642,6 +655,11 @@ http://www.17fuman.com/*/*/*.html
 *://hotgirlchina.com/*-photos*/
 *://theasiagirl.com/*-photos*/
 *://anhsec.com/*-photos*/
+*://sex4viet.com/*-photos*/
+*://cutexinh.com/*-photos*/
+*://cutexinh.com/*-anh*/
+*://vuxinh.com/*-photos*/
+*://vuxinh.com/*-anh*/
 *://idol.gravureprincess.date/*/*/*.html
 *://www.micmicidol.club/*/*/*.html
 *://kemono.party/*/user/*/post/*
@@ -742,3 +760,4 @@ http://www.17fuman.com/*/*/*.html
 *jmwu.vip/chapter/*.html
 *://foamgirl.net/*.html
 *://loxiu.com/post/*.html
+*://xher.net/index.php?/category/*
