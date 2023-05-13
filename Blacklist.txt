@@ -1,4 +1,4 @@
-2023/05/12 05:04
+2023/05/13 21:05
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -168,6 +168,9 @@ BeautyLeg
 爱看 INS
 *://www.ikanins.com/*/
 
+劍心回憶
+*://kenshin.hk/*/*/*/*/
+
 Dmmtu 美女图
 *://www.dmmtu.com/*/*.html
 
@@ -225,6 +228,9 @@ idol.gravureprincess.date
 
 MIC MIC IDOL
 *://www.micmicidol.club/*/*/*.html
+
+グラビア週刊誌 9
+*://gravurezasshi9.doorblog.jp/archives/*.html
 
 Kemono
 *://kemono.party/*/user/*/post/*
@@ -761,3 +767,5 @@ http://www.17fuman.com/*/*/*.html
 *://foamgirl.net/*.html
 *://loxiu.com/post/*.html
 *://xher.net/index.php?/category/*
+*://gravurezasshi9.doorblog.jp/archives/*.html
+*://kenshin.hk/*/*/*/*/
