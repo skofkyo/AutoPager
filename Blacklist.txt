@@ -1,4 +1,4 @@
-2023/05/13 21:05
+2023/05/16 00:05
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -235,6 +235,9 @@ MIC MIC IDOL
 Kemono
 *://kemono.party/*/user/*/post/*
 
+Coomer
+*://coomer.party/*/user/*/post/*
+
 俊美图
 *://www.meijuntu.com/*/*.html
 *://www.jeya.de/*/*.html
@@ -247,6 +250,7 @@ Kemono
 
 性趣套图
 *://myjkwd.com/e/action/ShowInfo.php?*
+*://534798.xyz/e/action/ShowInfo.php?*
 
 牛C网导航
 *://niuc*.com/*.html
@@ -669,9 +673,11 @@ http://www.17fuman.com/*/*/*.html
 *://idol.gravureprincess.date/*/*/*.html
 *://www.micmicidol.club/*/*/*.html
 *://kemono.party/*/user/*/post/*
+*://coomer.party/*/user/*/post/*
 *://www.meijuntu.com/*/*.html
 *://www.mevtu.com/*/*.html
 *://myjkwd.com/e/action/ShowInfo.php?*
+*://534798.xyz/e/action/ShowInfo.php?*
 *://niuc*.com/*.html
 *xhamster.com/photos/gallery*
 *pornhub.com/album/*
