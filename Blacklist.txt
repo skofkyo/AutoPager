@@ -1,4 +1,4 @@
-2023/05/16 00:05
+2023/05/17 00:34
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -316,6 +316,9 @@ MM1311
 洛秀网
 *://loxiu.com/post/*.html
 
+Xasiat
+*://www.xasiat.com/albums/*
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -439,7 +442,7 @@ Manhuagui看漫画閱讀
 *manmanju.com/comiclist/*/*/*.htm
 
 KuKu动漫閱讀
-*ikukudm.com/comiclist/*/*/*.htm
+*kukudm.com/comiclist/*/*/*.htm
 
 8Comic無限動漫手機版閱讀
 *://8.twobili.com/comic/insurance_*
@@ -598,7 +601,7 @@ http://www.17fuman.com/*/*/*.html
 *://ani.gamer.com.tw/animeVideo.php*
 *://manga.bilibili.com/mc*/*?from=manga_detail
 *manmanju.com/comiclist/*/*/*.htm
-*ikukudm.com/comiclist/*/*/*.htm
+*kukudm.com/comiclist/*/*/*.htm
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
 *://tw.baozimh.com/*
@@ -775,3 +778,4 @@ http://www.17fuman.com/*/*/*.html
 *://xher.net/index.php?/category/*
 *://gravurezasshi9.doorblog.jp/archives/*.html
 *://kenshin.hk/*/*/*/*/
+*://www.xasiat.com/albums/*
