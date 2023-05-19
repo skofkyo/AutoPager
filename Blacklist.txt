@@ -97,6 +97,7 @@ NứngVL
 
 新闻吧
 *://www.xinwenba.net/plus/view-*.html
+*://m.xwbar.com/plus/view-*.html
 
 秀人集
 *://www.xiuren5.vip/*/*.html
@@ -139,16 +140,18 @@ COSPLAY ZIP
 *://www.3gbizhi.com/meinv/*/pic*.html
 
 亿图全景图库
-*://www.yeitu.com/meinv/*/*.html
+*://*.yeitu.com/meinv/*/*.html
 
 优美图库
-*://www.umei.cc/meinvtupian/*/*.htm
+*://*.umei.cc/meinvtupian/*/*.htm
 
 MEITU131
 *://www.meitu131.net/meinv/*/
+*://m.meitu131.net/meinv/*/
 
 爱美女
 *://www.2meinv.com/article-*.html
+*://wap.2meinv.com/article-*.html
 
 美图录
 *://meitulu.me/item/*.html
@@ -164,6 +167,7 @@ MEITU131
 
 BeautyLeg
 *://www.beautyleg6.com/*/*/*.html
+*m.beautyleg6.com/view.php?aid=*
 
 爱看 INS
 *://www.ikanins.com/*/
@@ -190,7 +194,7 @@ MM范
 *://www.taotu8.xyz/*/*/*.html
 
 推图网
-*://www.tuiimg.com/meinv/*/
+*://*.tuiimg.com/meinv/*/
 
 XXIAV寫真館
 *://www.xxiav.com/html/*/*/*.html
@@ -302,7 +306,7 @@ Chinese Beauties
 *://www.cybesx.com/*.html
 
 MM5MM5美女图片
-*://www.mm5mm5.com/mm/*
+*://*.mm5mm5.com/mm/*
 
 依依图片网
 *://www.eemm.cc/pic/*.html
@@ -440,9 +444,12 @@ Manhuagui看漫画閱讀
 
 漫漫聚閱讀
 *manmanju.com/comiclist/*/*/*.htm
+*m.ikkdm.com/comiclist/*/*/*.htm
 
 KuKu动漫閱讀
 *kukudm.com/comiclist/*/*/*.htm
+*.ihhmh.com/comiclist/*/*/*.htm
+*.wap.ikukudm.com/comiclist/*/*/*.htm
 
 8Comic無限動漫手機版閱讀
 *://8.twobili.com/comic/insurance_*
@@ -601,7 +608,10 @@ http://www.17fuman.com/*/*/*.html
 *://ani.gamer.com.tw/animeVideo.php*
 *://manga.bilibili.com/mc*/*?from=manga_detail
 *manmanju.com/comiclist/*/*/*.htm
+*m.ikkdm.com/comiclist/*/*/*.htm
 *kukudm.com/comiclist/*/*/*.htm
+*.ihhmh.com/comiclist/*/*/*.htm
+*.wap.ikukudm.com/comiclist/*/*/*.htm
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
 *://tw.baozimh.com/*
@@ -630,6 +640,7 @@ http://www.17fuman.com/*/*/*.html
 *://nungvl.net/gallerys/*.cg
 *://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
+*://m.xwbar.com/plus/view-*.html
 *://www.xiuren5.vip/*/*.html
 *://www.xrmnw.xyz/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
@@ -643,16 +654,19 @@ http://www.17fuman.com/*/*/*.html
 *://www.meitule.cc/photo/*.html
 *://www.win4000.com/meinv*.html
 *://www.3gbizhi.com/meinv/*/pic*.html
-*://www.yeitu.com/meinv/*/*.html
-*://www.umei.cc/meinvtupian/*/*.htm
+*://*.yeitu.com/meinv/*/*.html
+*://*.umei.cc/meinvtupian/*/*.htm
 *://www.meitu131.net/meinv/*/
+*://m.meitu131.net/meinv/*/
 *://www.2meinv.com/article-*.html
+*://wap.2meinv.com/article-*.html
 *://meitulu.me/item/*.html
 *://mm.tvv.tw/archives/*.html
 *nvsheng.cc/m*/*.html
 *://www.6evu.com/*.html
 *://m.xsnvshen.co/album/*
 *://www.beautyleg6.com/*/*/*.html
+*m.beautyleg6.com/view.php?aid=*
 *://www.ikanins.com/*/
 *://www.dmmtu.com/*/*.html
 *://www.haonvshen.com/gallery/*.html
@@ -660,7 +674,7 @@ http://www.17fuman.com/*/*/*.html
 *://www.taotucc.com/*.html
 *://www.95mm.tv/*.html
 *://www.taotu8.xyz/*/*/*.html
-*://www.tuiimg.com/meinv/*/
+*://*.tuiimg.com/meinv/*/
 *://www.xxiav.com/html/*/*/*.html
 *://xgirlscollection.com/collection/*
 *://www.4khd.com/*/*/*/*.html
@@ -770,7 +784,7 @@ http://www.17fuman.com/*/*/*.html
 *://www.cybesx.com/*.html
 *://www.mm1311.net/*/*.html
 *://www.eemm.cc/pic/*.html
-*://www.mm5mm5.com/mm/*
+*://*.mm5mm5.com/mm/*
 *18av.mm-cg.com/*cg_content/*/content.html
 *jmwu.vip/chapter/*.html
 *://foamgirl.net/*.html
