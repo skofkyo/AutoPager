@@ -1,4 +1,4 @@
-2023/05/20 22:53
+2023/05/21 21:09
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -100,7 +100,7 @@ NứngVL
 *://m.xwbar.com/plus/view-*.html
 
 秀人集
-*://www.xiuren5.vip/*/*.html
+*://www.xiuren5.*/*/*.html
 
 秀人美女網
 *://www.xrmnw.xyz/*/*/*.html
@@ -492,7 +492,10 @@ LINE WEBTOON
 *://www.manhua456.com/manhua/*/*.html
 
 90漫画閱讀
-*://www.90mh.com/manhua/*/*.html
+*://*.90mh.com/manhua/*/*.html
+
+漫画1234閱讀
+*://*.ymh1234.com/comic/*/*.html
 
 优酷漫画閱讀
 *://www.ykmh.com/manhua/*/*.html
@@ -641,7 +644,7 @@ http://www.17fuman.com/*/*/*.html
 *://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
-*://www.xiuren5.vip/*/*.html
+*://www.xiuren5.*/*/*.html
 *://www.xrmnw.xyz/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
 *://www.imn5.*/*/*/*.html
