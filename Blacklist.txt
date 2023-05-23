@@ -1,4 +1,4 @@
-2023/05/21 21:09
+2023/05/23 21:15
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -40,7 +40,7 @@ Xiutaku
 /^https?:\/\/www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com\/\w+\/\w+\/\d+\/\d+\.html$/
 
 免費私房圖仿站
-/^https?:\/\/www\.(rosi8|sfjpg)\.com\/\w+\/\d+\.html$/
+/^https?:\/\/(www\.rosi8\.com|www\.sfjpg\.com|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)\/\w+\/\d+\.html$/
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
 
@@ -323,6 +323,15 @@ MM1311
 Xasiat
 *://www.xasiat.com/albums/*
 
+找套图
+*://www.zhaotaotu.cc/thread-*.htm
+
+尤美图库
+*://www.umeitu.com/img/*.html
+
+精选美女网
+*://www.jxmm.net/pic/*.html
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -464,13 +473,13 @@ KuKu动漫閱讀
 *://*qiman59.com/*/*.html
 
 漫画星球閱讀
-*://www.mhxqiu2.com/*/*.html
+*://*.mhxqiu2.com/*/*.html
 
 6漫画閱讀
-*://www.6mh*.com/*/*.html
+*://*.6mh*.com/*/*.html
 
 动漫之家閱讀
-*://www.*dmzj.com/view/*
+*://*.*dmzj.com/view/*
 *://manhua.dmzj.com/*/*.shtml
 
 LINE WEBTOON
@@ -478,6 +487,7 @@ LINE WEBTOON
 
 動漫狂閱讀
 *://www.cartoonmad.com/comic/*.html
+*://www.cartoonmad.com/m/comic/*.html
 
 動漫戲說閱讀
 *://comic.acgn.cc/view-*.htm
@@ -489,7 +499,7 @@ LINE WEBTOON
 *.gufengmh.com/manhua/*/*.html
 
 漫画456閱讀
-*://www.manhua456.com/manhua/*/*.html
+*://*.manhua456.com/manhua/*/*.html
 
 90漫画閱讀
 *://*.90mh.com/manhua/*/*.html
@@ -498,37 +508,34 @@ LINE WEBTOON
 *://*.ymh1234.com/comic/*/*.html
 
 优酷漫画閱讀
-*://www.ykmh.com/manhua/*/*.html
-
-前未漫画閱讀
-*://www.qianmh.com/manhua/*/*.html
+*://*.ykmh.com/manhua/*/*.html
 
 漫画芯閱讀
-*://www.mhxin.com/manhua/*/*.html
+*://*.mhxin.com/manhua/*/*.html
 
 蔷薇漫画閱讀
-*://www.qwmanhua.com/manhua/*/*.html
+*://*.qwmanhua.com/manhua/*/*.html
 
 最漫画閱讀
-*://www.zuimh.com/manhua/*/*.html
+*://*.zuimh.com/manhua/*/*.html
 
 爱米推漫画閱讀
-*://www.imitui.com/manhua/*/*.html
+*://*.imitui.com/manhua/*/*.html
 
 下拉式漫画閱讀
-*://www.xlsmh.com/manhua/*/*.html
+*://*.xlsmh.com/manhua/*/*.html
 
 漫画吧閱讀
-*://www.dmhua8.com/manhua/*/*.html
+*://*.dmhua8.com/manhua/*/*.html
 
 漫画连閱讀
-*://www.100mhl.com/manhua/*/*.html
+*://*.100mhl.com/manhua/*/*.html
 
 来漫画閱讀
-*://www.laimanhua8.com/kanmanhua/*/*.html
+*://*.laimanhua8.com/kanmanhua/*/*.html
 
 奇妙漫画閱讀
-*://www.qmiaomh.com/manhua/*/*.html
+*://*.qmiaomh.com/manhua/*/*.html
 
 漫客栈閱讀
 *://www.mkzhan.com/*/*.html
@@ -538,16 +545,13 @@ LINE WEBTOON
 *://www.manhw.com/index.php/chapter/*
 
 爱国漫閱讀
-*://www.aiguoman.com/chapter/*.html
+*://*.aiguoman.com/chapter/*.html
 
 新新漫画閱讀
 *77mh.xyz/*/*.html
 
 仙漫网閱讀
-*://www.xianmanwang.com/*/*.html
-
-漫画牛閱讀
-*://www.manhua666.com/*/*.html#p=*
+*://*.xianmanwang.com/*/*.html
 
 大树漫画閱讀
 *://www.dashumanhua.com/comic/*/read-*.html
@@ -562,7 +566,7 @@ GODA漫画閱讀
 *://mh5.tw/series-*
 
 七夕漫画閱讀
-*://www.qiximh*.com/*/*.html
+*://*.qiximh*.com/*/*.html
 
 爱漫之家閱讀
 http://www.17fuman.com/*/*/*.html
@@ -571,16 +575,16 @@ http://www.17fuman.com/*/*/*.html
 *://www.73mh.net/mh/*/*
 
 733动漫閱讀
-*://www.733.so/mh/*/*.html
+*://*.733.so/mh/*/*.html
 
 酷酷屋閱讀
-*://www.kukuwumh.com/manhua/*/*.html
+*://*.kukuwumh.com/manhua/*/*.html
 
 拼拼漫画閱讀
-*://www.pinmh.com/manhua/*/*.html
+*://*.pinmh.com/manhua/*/*.html
 
 漫画160閱讀
-*://www.mh160.cc/kanmanhua/*/*.html
+*://*.mh160.cc/kanmanhua/*/*.html
 
 木马漫画閱讀
 *://www.omyschool.com/article_detail/*/*/*/
@@ -595,13 +599,13 @@ http://www.17fuman.com/*/*/*.html
 *://haoman8.com/comic/*/*
 
 拷貝漫畫閱讀
-*://www.copymanga.site/comic/*/chapter/*
+*://*copymanga.site/comic/*/chapter/*
 
 二次元動漫閱讀
 *://www.2animx.com/index-look-name-*
 
 酷漫屋閱讀
-*://www.kumw*.com/*/*.html
+*://*.kumw*.com/*/*.html
 
 快看漫画閱讀
 *://www.kuaikanmanhua.com/web/comic/*
@@ -796,3 +800,6 @@ http://www.17fuman.com/*/*/*.html
 *://gravurezasshi9.doorblog.jp/archives/*.html
 *://kenshin.hk/*/*/*/*/
 *://www.xasiat.com/albums/*
+*://www.zhaotaotu.cc/thread-*.htm
+*://www.umeitu.com/img/*.html
+*://www.jxmm.net/pic/*.html
