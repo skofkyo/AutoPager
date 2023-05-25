@@ -1,4 +1,4 @@
-2023/05/23 21:15
+2023/05/26 02:43
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -41,6 +41,12 @@ Xiutaku
 
 免費私房圖仿站
 /^https?:\/\/(www\.rosi8\.com|www\.sfjpg\.com|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)\/\w+\/\d+\.html$/
+
+嘿～色女孩
+/^https?:\/\/heysexgirl\.com\/archives\/\d+$/
+
+Models Vibe
+/https?:\/\/www\.modelsvibe\.com\/[^/]+\/$/
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
 
@@ -149,6 +155,9 @@ MEITU131
 *://www.meitu131.net/meinv/*/
 *://m.meitu131.net/meinv/*/
 
+晴空头像图库
+*.qq7k.com/*/*/*.html
+
 爱美女
 *://www.2meinv.com/article-*.html
 *://wap.2meinv.com/article-*.html
@@ -223,6 +232,8 @@ HOTGIRLchina
 *://cutexinh.com/*-anh*/
 *://vuxinh.com/*-photos*/
 *://vuxinh.com/*-anh*/
+*://girlxinhxinh.com/*-photos*/
+*://girlxinhxinh.com/*-anh*/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -332,6 +343,15 @@ Xasiat
 精选美女网
 *://www.jxmm.net/pic/*.html
 
+Forum Girl
+*://www.superbeautygirlx.com/*/*/*.html
+
+美妹妹
+*://www.meimeimei.org/*/*/
+
+Anh VL
+*://xem.anhvl.net/*/
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -382,7 +402,7 @@ gogo人体艺术
 *://*7m11.com/*/*/
 *://*61ak.com/*/*/
 *://*34bu.com/*/*/
-*://*344F.com/*/*/
+*://*344f.com/*/*/
 *://*23bp.com/*/*/
 *://*rty6.com/*/*/
 *://*22gs.com/*/*/
@@ -694,6 +714,8 @@ http://www.17fuman.com/*/*/*.html
 *://cutexinh.com/*-anh*/
 *://vuxinh.com/*-photos*/
 *://vuxinh.com/*-anh*/
+*://girlxinhxinh.com/*-photos*/
+*://girlxinhxinh.com/*-anh*/
 *://idol.gravureprincess.date/*/*/*.html
 *://www.micmicidol.club/*/*/*.html
 *://kemono.party/*/user/*/post/*
@@ -803,3 +825,7 @@ http://www.17fuman.com/*/*/*.html
 *://www.zhaotaotu.cc/thread-*.htm
 *://www.umeitu.com/img/*.html
 *://www.jxmm.net/pic/*.html
+*.qq7k.com/*/*/*.html
+*://www.superbeautygirlx.com/*/*/*.html
+*://www.meimeimei.org/*/*/
+*://xem.anhvl.net/*/
