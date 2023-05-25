@@ -367,6 +367,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
 <h2>老司機類內置規則支持列表</h2>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
+<br>
     <table>
         <thead>
             <tr>
@@ -1056,6 +1057,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
 <h2>H漫類內置規則支持列表</h2>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
+<br>
     <table>
         <thead>
             <tr>
@@ -1234,6 +1236,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
 <p>2023/05/17，增加了腳本選項，可以直接開啟所有的漫畫類規則，方便自己重新測試規則，和有需要的用戶不用一個一個開那麼麻煩。</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
+<br>
     <table>
         <thead>
             <tr>
@@ -1509,6 +1512,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
 <h2>輔助類內置規則支持列表</h2>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
+<br>
     <table>
         <thead>
             <tr>
