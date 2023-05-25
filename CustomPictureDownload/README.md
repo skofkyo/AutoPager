@@ -11,7 +11,7 @@
 2023/05/13
 腳本增加了全局開關選項，可以不用搜索規則對各別站點進行修改，不需要時記得關閉。
 
-可用規則示例：
+<h1>可用規則示例：</h1>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
     <pre>
@@ -113,51 +113,64 @@
 }]
 </pre>
 </details>
-內置函式：
+<h1>內置函式：</h1>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
-    <pre>
-//可使用在規則init、imgs、customTitle
+可使用在規則init、imgs、customTitle
+<pre>
 //返回一個指定元素，支持CSS/Xpath選擇器
-fun.ge('元素選擇器', 搭配fun.doc()(可省略)))
-
+fun.ge("ele");
+fun.ge("ele", doc);
+</pre>
+<pre>
 //返回所有指定元素，支持CSS/Xpath選擇器
-fun.gae('元素選擇器', 搭配fun.doc()(可省略)))
-
+fun.gae("ele");
+fun.gae("ele", doc);
+</pre>
+<pre>
 //取得元素的字串
-fun.geT('元素選擇器',mode)
-mode
-1返回指定元素的字串(預設)
-2返回指定元素的上一個元素的字串
-3返回指定元素的上上一個元素的字串
-
+//mode
+//1返回指定元素的字串(預設)
+//2返回指定元素的上一個元素的字串
+//3返回指定元素的上上一個元素的字串
+fun.geT("ele");
+fun.geT("ele", 1);
+fun.geT("ele", 2);
+fun.geT("ele", 3);
+</pre>
+<pre>
 //取得元素屬性的值
 fun.attr('元素','屬性')
-
+</pre>
+<pre>
 //對document.title的字串修改
+//mode
+//0返回【刪除指定字串的標題(預設)】
+//1返回【字串切割取[0]去前後空白】
+//2返回【字串切割[0] + '字串' + 字串切割[1]】
+//3返回【字串切割[1] + '字串' + 字串切割[0]】
 fun.title('字串',mode)
-mode
-0返回【刪除指定字串的標題(預設)】
-1返回【字串切割取[0]去前後空白】
-2返回【字串切割[0] + '字串' + 字串切割[1]】
-3返回【字串切割[1] + '字串' + 字串切割[0]】
-
+</pre>
+<pre>
 //將字串解析成document物件
+//搭配fetch(url).then(res => res.text())返回的原始碼使用
 fun.doc('字串')
-搭配fetch(url).then(res => res.text())返回的原始碼使用
-或串接
 fetch(url).then(res => res.text()).then(res => {
     let doc = fun.doc(res);
     let ele = fun.ge(ele, doc);
     return ele
 })
-
+</pre>
+<pre>
 //將字串解析成xml物件
 fun.xml('字串')
-
+</pre>
+<pre>
 //使用Promise包裝GM_xmlhttpRequest
 fun.xhr(url, type = 'text', referer = location.href)
-用fetch(url)遇到需要CORS時改用這個
+</pre>
+<pre>
+//用fetch(url)遇到需要CORS時改用這個
 fun.xhr(url)
 fun.xhr(url, "document").then(doc => {
     console.log("測試doc", doc);
@@ -165,23 +178,29 @@ fun.xhr(url, "document").then(doc => {
 fun.xhr(url, "json").then(json => {
     console.log("測試json", json);
 })
-
+</pre>
+<pre>
 //顯示簡短訊息
 fun.show('字串',1000(顯示的時間,0持續顯示));
-
+</pre>
+<pre>
 //延遲運行async/await
 await fun.delay(time);
-
+</pre>
+<pre>
 //等待元素async/await
 await fun.waitEle(ele, max = 200, doc = document)
-間隔100毫秒判斷一次，有元素返回true超過循環次數返回false。
-所以可以這樣用
+</pre>
+<pre>
+//間隔100毫秒判斷一次，有元素返回true超過循環次數返回false。
+//所以可以這樣用
 if (await fun.waitEle(ele)) {
     code
 } else {
     code
 }
-
+</pre>
+<pre>
 //函式搭配，多元素點擊，如簽到任務
 init: async () => {
     if (fun.ge(ele)) {
@@ -193,28 +212,34 @@ init: async () => {
         }
     }
 }
-
+</pre>
+<pre>
 //等同eval()
 fun.run('代碼')
-
+</pre>
+<pre>
 //移除元素
 fun.remove('ele', time = 0)
-
-//插入樣式
+</pre>
+<pre>
+//插入樣式，需要先用JS判斷的情況用這個
 fun.css('css')
-需要先用JS判斷的情況用這個
-
+</pre>
+<pre>
 //xhr抓取元素，不局限於圖片(靜態，可跨域)
+//links網址陣列
+//eles要抓的元素
+//"targetEle"清空此元素放入allEle
+//["targetEle", pos] 此元素位置pos，0裡面1之前2之後
 fun.getEle(links, eles, targetEle, removeEle = null)
-links網址陣列
-eles要抓的元素
-"targetEle"清空此元素放入allEle
-["targetEle", pos] 此元素位置pos，0裡面1之前2之後
-
+</pre>
+<pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
+//max填入用fun.geT()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 fun.getImg('圖片元素選擇器',max ,mode ,['圖片網址用來替換的字串','圖片網址要被替換的字串'])
-max填入用fun.geT()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 fun.getImg(ele, max, mode = 1, rText = [null, null])
+</pre>
+<pre>
 網址頁碼數字遞增模式
 第一頁 ==> 第二頁
 mode1(預設)
@@ -266,64 +291,67 @@ mode19
 -1 ==> -2
 mode20
  ==> -p-2
-
+</pre>
+<pre>
+//fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間。
 fun.getImgO('圖片元素選擇器', max, mode, ['圖片網址用來替換的字串', '圖片網址要被替換的字串'], time(延遲請求下一頁的時間預設200毫秒), '替換頁碼條元素', 0(不顯示獲取訊息))
 fun.getImgO(img, maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
-基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間。
-
+</pre>
+<pre>
+//fun.getImgIframe基本同fun.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
 fun.getImgIframe('圖片元素選擇器', max, mode, ['圖片網址用來替換的字串', '圖片網址要被替換的字串'], '替換頁碼條元素', time(給予框架讀取的時間), 0 不顯示獲取訊息)
 fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
-基本同fun.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
-
+</pre>
+<pre>
+//fun.getImgA
+//mode
+//0多線程(預設)
+//1單線程
+//3單線程不將A元素替換成圖片元素
+//A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
+//A元素參數可以傳入自己創建的網址陣列
 fun.getImgA('圖片元素選擇器', 'A元素選擇器', mode, ['圖片網址要替換的字串', '圖片網址要被替換的字串'], 0 不顯示獲取訊息)
-mode
-0多線程(預設)
-1單線程
-3單線程不將A元素替換成圖片元素
-A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 fun.getImgA(img, A, one = 0, rText = [null, null], showMsg = 1)
-A元素參數可以傳入自己創建的網址陣列
-
+</pre>
+<pre>
+//翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
 fun.getNP('元素選擇器', '下一頁元素', '判斷為最後一頁的元素', '頁碼條元素', time(延遲請求下一頁的時間預設0毫秒), dataset = null, msg = 1)
-翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
-用在規則init
+//用在規則init
 fun.getNP(ele, nextLinkEle, lastEle, paginationEle, time);
 fun.getNP(ele, nextLinkEle);
-
-用在規則imgs，需要用async/await
-
+//用在規則imgs，需要用async/await
 //應用在包子漫畫的用法
 imgs: async () => {
     await fun.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter");
     let arr = [...fun.gae(".comic-contain amp-img")].map(e => e.getAttribute("src"));
     return [...new Set(arr)]
 }
-
-應用在小黃書的用法
+//應用在小黃書的用法
 imgs: async () => {
     await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager");
     return [...fun.gae(".cr_only")].map(e => e.src.replace("_600x0", ""));
 }
 </pre>
 </details>
-腳本的操作步驟方式
-點擊圖示、確定、確定，3步開始下載
-右鍵點擊圖示、確定，2步驟複製圖片網址，如果設置了insertImg，按右鍵是插入圖片，第二次按是複製圖片網址。
-中鍵點擊圖示捲動至第一張大圖
 
-腳本有綁定按鍵
-數字鍵0下載壓縮、數字鍵1複製圖片網址、數字鍵2捲動至第一張大圖
-按0、Enter、Enter，3步驟開始下載。
-按1、Enter，2步驟複製圖片網址。
-如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。
-按2前往插入的第一張大圖
+<h1>腳本的操作步驟方式：</h1>
+<p>點擊圖示、確定、確定，3步開始下載</p>
+<p>右鍵點擊圖示、確定，2步驟複製圖片網址，如果設置了insertImg，按右鍵是插入圖片，第二次按是複製圖片網址。</p>
+<p>中鍵點擊圖示捲動至第一張大圖</p>
 
-2023/05/13
-修改中鍵功能為捲動至第一張大圖，綁定快捷鍵數字鍵2
-2023/05/15
-如果規則imgs是函式省略輸入選擇器這一步。
+<h1>腳本有綁定按鍵</h1>
+<p>數字鍵0下載壓縮、數字鍵1複製圖片網址、數字鍵2捲動至第一張大圖</p>
+<p>按0、Enter、Enter，3步驟開始下載。</p>
+<p>按1、Enter，2步驟複製圖片網址。</p>
+<p>如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
+<p>按2前往插入的第一張大圖</p>
 
-圖介：
+<p>2023/05/13</p>
+<p>修改中鍵功能為捲動至第一張大圖，綁定快捷鍵數字鍵2</p>
+<p>2023/05/15</p>
+<p>如果規則imgs是函式省略輸入選擇器這一步。</p>
+
+<h1>圖介：</h1>
 <p>在頁面左下添加了一個圖片下載按鈕</p>
 <img src="https://i.imgur.com/TxnEvTk.png">
 <p>點擊後會彈出確認窗輸入CSS和Xpath選擇圖片元素。</p>
