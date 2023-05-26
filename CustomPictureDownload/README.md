@@ -239,10 +239,8 @@ fun.getEle(links, eles, targetEle, removeEle = null)
 //max填入用fun.geT()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 fun.getImg('圖片元素選擇器',max ,mode ,['圖片網址用來替換的字串','圖片網址要被替換的字串'])
 fun.getImg(ele, max, mode = 1, rText = [null, null])
-</pre>
-<pre>
-網址頁碼數字遞增模式
-第一頁 ==> 第二頁
+//網址頁碼數字遞增模式
+//第一頁 ==> 第二頁
 mode1(預設)
 .html ==> .html?page=2
  ==> ?page=2
@@ -1251,7 +1249,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://www.copymanga.site/">拷貝漫畫</a></td>
-                <td><a href="https://copymanga.site/">copymanga.site</a>，向下滾動隱藏工具列</td>
+                <td><a href="https://copymanga.site/">copymanga.site</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
             </tr>
             <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
@@ -1259,11 +1257,11 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="http://www.manmanju.com/">漫漫聚</a></td>
-                <td>閱讀頁添加了下一話鏈接</td>
+                <td><a href="http://m.manmanju.com/">m.manmanju.com</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="http://manhua.kukudm.com/">KuKu动漫</a></td>
-                <td>閱讀頁添加了下一話鏈接</td>
+                <td><a href="http://m.ikukudm.com/">m.ikukudm.com</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
@@ -1284,31 +1282,31 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://www.mangabz.com/">Mangabz</a></td>
-                <td>向下滾動隱藏工具列，預設關閉</td>
+                <td>PC版向下滾動隱藏工具列，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://xmanhua.com/">Xmanhua</a></td>
-                <td>向下滾動隱藏工具列，預設關閉</td>
+                <td>PC版向下滾動隱藏工具列，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.dm5.com/">DM5</a></td>
-                <td>m.dm5.com，預設關閉</td>
+                <td><a href="https://m.dm5.com/">m.dm5.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://hk.1kkk.com/">極速</a></td>
-                <td>m.1kkk.com，預設關閉</td>
+                <td><a href="https://m.1kkk.com/">m.1kkk.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.qiman59.com/">奇漫屋</a></td>
-                <td>m.qiman59.com，預設關閉</td>
+                <td><a href="http://m.qiman59.com/">m.qiman59.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.mhxqiu2.com/">漫画星球</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://m.mhxqiu2.com/">m.mhxqiu2.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.6mh67.com/">6漫画</a></td>
-                <td>m.6mh67.com，預設關閉</td>
+                <td><a href="http://m.6mh67.com/">m.6mh67.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.manben.com/">漫本</a></td>
@@ -1316,11 +1314,11 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://www.dmzj.com/">动漫之家</a></td>
-                <td>manhua.dmzj.com，m.dmzj.com，預設關閉</td>
+                <td><a href="https://manhua.dmzj.com/">manhua.dmzj.com</a>，<a href="https://m.dmzj.com/">m.dmzj.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
-                <td>m.manhuagui.com，預設關閉</td>
+                <td><a href="https://m.manhuagui.com/">m.manhuagui.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.baozimh.com/">包子漫画</a></td>
@@ -1344,67 +1342,67 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="http://www.acgud.com/">亲亲漫画</a></td>
-                <td>m.acgud.com，預設關閉</td>
+                <td><a href="http://m.acgud.com/">m.acgud.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.gufengmh.com/">古风漫画网</a></td>
-                <td>m.gufengmh.com，預設關閉</td>
+                <td><a href="https://m.gufengmh.com/">m.gufengmh.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.manhua456.com/">漫画456</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://www.manhua456.com/">漫画456</a></td>
+                <td><a href="https://m.manhua456.com/">m.manhua456.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.90mh.com/">90漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://wap.90mh.com/">wap.90mh.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.ymh1234.com/">漫画1234</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://www.ymh1234.com/">漫画1234</a></td>
+                <td><a href="https://m.ymh1234.com/">m.ymh1234.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.ykmh.com/">优酷漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://h5.ykmh.com/">h5.ykmh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.mhxin.com/">漫画芯</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.mhxin.com/">m.mhxin.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.qwmanhua.com/">蔷薇漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.qwmanhua.com/">m.qwmanhua.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.zuimh.com/">最漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.zuimh.com/">m.zuimh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.imitui.com/">爱米推漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.imitui.com/">m.imitui.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.xlsmh.com/">下拉式漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.xlsmh.com/">m.xlsmh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.dmhua8.com/">漫画吧</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.dmhua8.com/">m.dmhua8.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.100mhl.com/">漫画连</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.pinmh.com/">拼拼漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.pinmh.com/">m.pinmh.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.laimanhua8.com/">来漫画</a></td>
-                <td>預設關閉，2023/05/07 blocked?</td>
+                <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
+                <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，預設關閉，2023/05/07 blocked?</td>
             </tr>
             <tr>
                 <td><a href="https://www.qmiaomh.com/">奇妙漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.mkzhan.com/">漫客栈</a></td>
@@ -1416,15 +1414,15 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://www.aiguoman.com/">爱国漫</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.aiguoman.com/">m.aiguoman.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.77mh.xyz/">新新漫画</a></td>
-                <td>m.77mh.xyz，預設關閉</td>
+                <td><a href="https://m.77mh.xyz/">m.77mh.xyz</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.xianmanwang.com/">仙漫网</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://m.xianmanwang.com/">m.xianmanwang.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
@@ -1444,11 +1442,11 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="http://www.qiximh2.com/">七夕漫画</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://m.qiximh2.com/">m.qiximh2.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.17fuman.com/">爱漫之家</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://www.17fuman.com/">爱漫之家</a></td>
+                <td><pre>www2.17fuman.com，www.fumanhua-1.com，www.fumanhua-2.com，www.fumanhua-3.com，www2.fumanhua-1.com，m.fumanhua-1.com，m.fumanhua44.com，m.fumanhua66.com，m.fumanhua77.com，m1.fumanhua-1.com，m1.fumanhua44.com，m1.fumanhua66.com，m1.fumanhua77.com</pre>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.73mh.net/">73漫画</a></td>
@@ -1459,12 +1457,12 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.kukuwumh.com/">酷酷屋</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://www.kukuwumh.com/">酷酷屋</a></td>
+                <td><a href="http://m.kukuwumh.com/">m.kukuwumh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.mh160.cc/">漫画160</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.omyschool.com/">木马漫画</a></td>
@@ -1488,7 +1486,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="http://www.kumw7.com/">酷漫屋</a></td>
-                <td>預設關閉</td>
+                <td><a href="http://m.kumw7.com/">m.kumw7.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://kanbook.net/">快岸漫画</a></td>
