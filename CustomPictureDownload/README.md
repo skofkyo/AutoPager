@@ -29,7 +29,7 @@
         code
     },
     imgs: "#TheImg", //CSS選擇器
-    imgs: "//img[@id='TheImg']", //XPath選擇器
+    imgs: "//img[@id="TheImg"]", //XPath選擇器
     //IMG、DIV、A，3種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
     imgs: "js;code", //也可透過JS代碼自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變量或透過api取得的json。
     imgs: () => {
@@ -47,12 +47,12 @@
         return code
     },
     autoDownload: [1, time], //1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
-    next: "//a[text()='下一章']", //設定下一頁元素綁定右方向鍵點擊下一頁。
+    next: "//a[text()="下一章"]", //設定下一頁元素綁定右方向鍵點擊下一頁。
     next: () => {
         …code;
         return link
     },
-    prev: "//a[text()='上一章']", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
+    prev: "//a[text()="上一章"]", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //插入自訂樣式，基本上就是用來隱藏廣告用的。
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
     autoClick: ["元素", 1000], //元素,延遲毫秒時間(預設1000)
@@ -122,11 +122,13 @@
 //返回一個指定元素，支持CSS/Xpath選擇器
 fun.ge("ele");
 fun.ge("ele", doc);
+fun.ge("ele", node);
 </pre>
 <pre>
 //返回所有指定元素，支持CSS/Xpath選擇器
 fun.gae("ele");
 fun.gae("ele", doc);
+fun.gae("ele", node);
 </pre>
 <pre>
 //取得元素的字串
@@ -141,21 +143,21 @@ fun.geT("ele", 3);
 </pre>
 <pre>
 //取得元素屬性的值
-fun.attr('元素','屬性')
+fun.attr("元素","屬性")
 </pre>
 <pre>
 //對document.title的字串修改
 //mode
 //0返回【刪除指定字串的標題(預設)】
 //1返回【字串切割取[0]去前後空白】
-//2返回【字串切割[0] + '字串' + 字串切割[1]】
-//3返回【字串切割[1] + '字串' + 字串切割[0]】
-fun.title('字串',mode)
+//2返回【字串切割[0] + "字串" + 字串切割[1]】
+//3返回【字串切割[1] + "字串" + 字串切割[0]】
+fun.title("字串",mode)
 </pre>
 <pre>
 //將字串解析成document物件
 //搭配fetch(url).then(res => res.text())返回的原始碼使用
-fun.doc('字串')
+fun.doc("字串")
 fetch(url).then(res => res.text()).then(res => {
     let doc = fun.doc(res);
     let ele = fun.ge(ele, doc);
@@ -164,13 +166,11 @@ fetch(url).then(res => res.text()).then(res => {
 </pre>
 <pre>
 //將字串解析成xml物件
-fun.xml('字串')
+fun.xml("字串")
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
-fun.xhr(url, type = 'text', referer = location.href)
-</pre>
-<pre>
+fun.xhr(url, type = "text", referer = location.href)
 //用fetch(url)遇到需要CORS時改用這個
 fun.xhr(url)
 fun.xhr(url, "document").then(doc => {
@@ -182,7 +182,7 @@ fun.xhr(url, "json").then(json => {
 </pre>
 <pre>
 //顯示簡短訊息
-fun.show('字串',1000(顯示的時間,0持續顯示));
+fun.show("字串",1000(顯示的時間,0持續顯示));
 </pre>
 <pre>
 //延遲運行async/await
@@ -191,8 +191,6 @@ await fun.delay(time);
 <pre>
 //等待元素async/await
 await fun.waitEle(ele, max = 200, doc = document)
-</pre>
-<pre>
 //間隔100毫秒判斷一次，有元素返回true超過循環次數返回false。
 //所以可以這樣用
 if (await fun.waitEle(ele)) {
@@ -216,15 +214,15 @@ init: async () => {
 </pre>
 <pre>
 //等同eval()
-fun.run('代碼')
+fun.run("代碼")
 </pre>
 <pre>
 //移除元素
-fun.remove('ele', time = 0)
+fun.remove("ele", time = 0)
 </pre>
 <pre>
 //插入樣式，需要先用JS判斷的情況用這個
-fun.css('css')
+fun.css("css")
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片(靜態，可跨域)
@@ -237,7 +235,7 @@ fun.getEle(links, eles, targetEle, removeEle = null)
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
 //max填入用fun.geT()取得最大頁數的數字，或想辦法算出最大頁數的數字。
-fun.getImg('圖片元素選擇器',max ,mode ,['圖片網址用來替換的字串','圖片網址要被替換的字串'])
+fun.getImg("圖片元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"])
 fun.getImg(ele, max, mode = 1, rText = [null, null])
 //網址頁碼數字遞增模式
 //第一頁 ==> 第二頁
@@ -250,11 +248,11 @@ mode3
 .html ==> _1.html
 mode4
 / ==> /2/
-mode'4'
+mode"4"
  ==> /2
 mode5
 .html ==> -2.html
-mode'5'
+mode"5"
 -1.html ==> -2.html
 mode6
 ?p=1 ==> ?p=2
@@ -293,12 +291,12 @@ mode20
 </pre>
 <pre>
 //fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間。
-fun.getImgO('圖片元素選擇器', max, mode, ['圖片網址用來替換的字串', '圖片網址要被替換的字串'], time(延遲請求下一頁的時間預設200毫秒), '替換頁碼條元素', 0(不顯示獲取訊息))
+fun.getImgO("圖片元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
 fun.getImgO(img, maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 </pre>
 <pre>
 //fun.getImgIframe基本同fun.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
-fun.getImgIframe('圖片元素選擇器', max, mode, ['圖片網址用來替換的字串', '圖片網址要被替換的字串'], '替換頁碼條元素', time(給予框架讀取的時間), 0 不顯示獲取訊息)
+fun.getImgIframe("圖片元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
 fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
 </pre>
 <pre>
@@ -309,14 +307,14 @@ fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
 //3單線程不將A元素替換成圖片元素
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
-fun.getImgA('圖片元素選擇器', 'A元素選擇器', mode, ['圖片網址要替換的字串', '圖片網址要被替換的字串'], 0 不顯示獲取訊息)
+fun.getImgA("圖片元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
 fun.getImgA(img, A, one = 0, rText = [null, null], showMsg = 1)
 </pre>
 <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
-fun.getNP('元素選擇器', '下一頁元素', '判斷為最後一頁的元素', '頁碼條元素', time(延遲請求下一頁的時間預設0毫秒), dataset = null, msg = 1)
+fun.getNP("元素選擇器", "下一頁元素", "判斷為最後一頁的元素", "頁碼條元素", time(延遲請求下一頁的時間預設0毫秒), dataset = null, msg = 1)
 //用在規則init
-fun.getNP(ele, nextLinkEle, lastEle, paginationEle, time);
+fun.getNP(ele, nextLinkEle, lastEle, paginationEle, time, dataset, msg);
 fun.getNP(ele, nextLinkEle);
 //用在規則imgs，需要用async/await
 //應用在包子漫畫的用法
@@ -747,7 +745,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://www.modelsvibe.com/">Models Vibe</a></td>
-                <td>首頁loadmore的xhr會403，網址後面加/page/3/有可能變正常了，分類列表ajax沒做好，翻頁規則已提交東方永頁機</td>
+                <td>ajax沒做好，翻頁規則已提交東方永頁機</td>
             </tr>
             <tr>
                 <td><a href="https://www.asianude4u.net/">Asianude4u</a></td>
@@ -927,6 +925,10 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://sexygirlspics.com/">SexyGirlsPics</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://www.coszaixian.vip/">cos在线</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1140,6 +1142,10 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             <tr>
                 <td><a href="https://orzqwq.com/">Orzqwq</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://18p.fun/">開車漫畫</a></td>
+                <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
             </tr>
             <tr>
                 <td><a href="http://www.wnacg.com/">紳士漫畫</a></td>
@@ -1546,6 +1552,10 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             <tr>
                 <td>letsupload.cc</td>
                 <td>自動下載</td>
+            </tr>
+            <tr>
+                <td>94i.in</td>
+                <td>自動簽到</td>
             </tr>
             <tr>
                 <td>supjav.com</td>
