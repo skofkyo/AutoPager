@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.6.5.1
+// @version            1.1.7.1
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數350+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数350+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
