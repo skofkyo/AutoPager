@@ -1,4 +1,4 @@
-2023/05/26 02:43
+2023/06/06 01:58
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -71,6 +71,9 @@ Models Vibe
 
 nlegs.com
 *://www.nlegs.com/girls/*.html
+https://www.honeyleg.com/article/*.html
+https://www.ladylap.com/show/*
+https://www.nuyet.com/gallery/*
 
 24tupian.org
 *://www.24tupian.org/hd2/*.html
@@ -90,13 +93,13 @@ Hit-x-Hot
 *://www.hitxhot.org/gallerys/*.html*
 
 DEPVAILON
-*://www.depvailon.com/*.html
+*://www.depvailon.com/*.html*
 
 Pic Yailay
-*://pic.yailay.com/articles/*.html
+*://pic.yailay.com/articles/*.html*
 
 NứngVL
-*://nungvl.net/gallerys/*.cg
+*://nungvl.net/gallerys/*.cg*
 
 萝丝派
 *://www.yylsp.com/*.html
@@ -124,7 +127,7 @@ NứngVL
 *://meirentu.cc/pic/*.html
 
 性感美女写真
-*://www.xgmn*.com/*/*.html
+*://www.xgmn*.*/*/*.html
 *://www.xgyw.net/*/*.html
 
 爱看美女网
@@ -297,6 +300,12 @@ BuzzAV
 
 SexyGirl
 *://sexygirl.cc/a/*.html
+
+photo.camcam.cc
+/^http://photo\.camcam\.cc/[^/]+/$/
+
+dongojyousan.com
+*://www.dongojyousan.com/articles/*.html
 
 SexyAsianGirl
 *://www.sexyasiangirl.xyz/album/*.html
@@ -489,6 +498,13 @@ KuKu动漫閱讀
 *://a.twobili.com/online/new-*
 *://a.twobili.com/ReadComic/*
 
+风之动漫
+https://www.fffdm.com/manhua/*
+https://manhua.fffdm.com/*/*/
+
+大古漫画
+https://*.dagumanhua.net/manhua/*/*.html
+
 奇漫屋閱讀
 *://*qiman59.com/*/*.html
 
@@ -523,6 +539,12 @@ LINE WEBTOON
 
 90漫画閱讀
 *://*.90mh.com/manhua/*/*.html
+
+98漫畫網
+*://www.98comic.com/comic/*/*.html
+
+57漫画网
+http://*.wuqimh.net/*/*.html
 
 漫画1234閱讀
 *://*.ymh1234.com/comic/*/*.html
@@ -654,7 +676,13 @@ http://www.17fuman.com/*/*/*.html
 *://www.comicabc.com/ReadComic/*
 *://a.twobili.com/online/new-*
 *://a.twobili.com/ReadComic/*
+https://www.fffdm.com/manhua/*
+https://manhua.fffdm.com/*/*/
+https://*.dagumanhua.net/manhua/*/*.html
 *://www.nlegs.com/girls/*.html
+https://www.honeyleg.com/article/*.html
+https://www.ladylap.com/show/*
+https://www.nuyet.com/gallery/*
 *://www.24tupian.org/hd2/*.html
 *://xchina.co/photo/*
 *://*.xchina.co/photo/*
@@ -662,9 +690,9 @@ http://www.17fuman.com/*/*/*.html
 *://*.8se.me/photo/*
 *://w3.javsx.com/photos/*.html
 *://www.hitxhot.org/gallerys/*.html*
-*://www.depvailon.com/*.html
-*://pic.yailay.com/articles/*.html
-*://nungvl.net/gallerys/*.cg
+*://www.depvailon.com/*.html*
+*://pic.yailay.com/articles/*.html*
+*://nungvl.net/gallerys/*.cg*
 *://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
@@ -829,3 +857,20 @@ http://www.17fuman.com/*/*/*.html
 *://www.superbeautygirlx.com/*/*/*.html
 *://www.meimeimei.org/*/*/
 *://xem.anhvl.net/*/
+*://www.dongojyousan.com/articles/*.html
+/^http://photo\.camcam\.cc/[^/]+/$/
+/^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
+/^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
+/^https?://(www\.)?xmanhua\.com/m\d+(-p\d+)?//
+/^https?://(www\.)?manben\.com/m\d+(-p\d+)?//
+/^https?://(www|tel|en|cnc|hk|m)?\.?(dm5|1kkk)\.(com|cn)/(m|ch|vol|other)[-_0-9]+//
+/(www\.)?(tuao8?|tumm|\d+mm|luge8?)\.[a-z]{2,3}/(post|web)//
+/(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}/m?n\w+\.aspx/
+/^https?://hotgirl\.asia/[^/]+/$/
+/pimpandhost\.com/album/\d+/
+/twhentai\.com/hentai_manga/\d+/$/
+/^https?://xiutaku\.com/\d+$/
+/^https?://www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com/\w+/\w+/\d+/\d+\.html$/
+/^https?://(www\.rosi8\.com|www\.sfjpg\.com|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
+/^https?://heysexgirl\.com/archives/\d+$/
+/https?://www\.modelsvibe\.com/[^/]+/$/
