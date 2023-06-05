@@ -1,3 +1,4 @@
+
 如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。
 寫這個腳本的緣由是，想讓下載、複製鏈接不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。
 
@@ -261,6 +262,8 @@ mode7
 .html ==> .html/2
 mode8
 ==> &page=1
+mode"8"
+==> &page=2
 mode9
 .html ==> _2.html
 mode10
@@ -357,8 +360,8 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/05/26 02:43</p>
-https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
+<p>2023/06/06 01:58</p>
+https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
 <details>
@@ -462,7 +465,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="http://www.mfsft.com/">免费私房图</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/mfsft.txt">同系列網站166個</a>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a>
                     ，發布頁，<a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>，
                     相似仿站，<a href="https://www.rosi8.com/">www.rosi8.com</a>，<a href="https://www.sfjpg.com/">www.sfjpg.com</a>，<a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>，<a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
                 </td>
@@ -652,6 +655,10 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.dongojyousan.com/">dongojyousan.com</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://sexygirl.cc/">SexyGirl</a></td>
                 <td></td>
             </tr>
@@ -788,6 +795,10 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://photo.camcam.cc/">photo.camcam.cc</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://everia.club/">Everia.club</a></td>
                 <td></td>
             </tr>
@@ -846,7 +857,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://kemono.party/fantia/user/17148/post/1633768">Kemono</a></td>
-                <td>coomer.party</td>
+                <td><a href="https://coomer.party/">Coomer</a></td>
             </tr>
             <tr>
                 <td><a href="https://hentai-img.com/">Hentai Image</a></td>
@@ -1045,11 +1056,11 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://cn.angirlz.com/">Sexyxbody</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/Sexyxbody.txt">另同系列網站40個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Sexyxbody.txt">另同系列網站40個</a></td>
             </tr>
             <tr>
                 <td><a href="https://gogortrt.com/">gogo人体艺术</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/gogort.txt">另同系列網站44個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站44個</a></td>
             </tr>
         </tbody>
     </table>
@@ -1144,12 +1155,20 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://hdporncomics.com/">HDpornComics</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://xlecx.one/">XlecX</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://18p.fun/">開車漫畫</a></td>
                 <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
             </tr>
             <tr>
                 <td><a href="http://www.wnacg.com/">紳士漫畫</a></td>
-                <td>作用在圖片清單、下拉閱讀頁，<a href="http://m.wnacg.com/">m.wnacg.com</a>，<a href="http://www.wnacglink.top/">紳士漫畫</a></td>
+                <td>作用在圖片清單、下拉閱讀頁，<a href="http://m.wnacg.com/">m.wnacg.com</a>，<a href="http://wn01.ru/">wn01.ru</a>，<a href="http://wn02.ru/">wn02.ru</a></td>
             </tr>
             <tr>
                 <td><a href="https://ahri8.top/">松鼠症倉庫</a></td>
@@ -1174,6 +1193,10 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             <tr>
                 <td><a href="https://www.yinmh.com/">淫漫画</a></td>
                 <td><a href="https://www.yinmh.top/">www.yinmh.top</a>，<a href="https://www.yinmh.xyz/">www.yinmh.xyz</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.comicun.com/">漫畫聯合國</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://litu100.xyz/">丽图·污漫画</a></td>
@@ -1270,6 +1293,14 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
                 <td><a href="http://m.ikukudm.com/">m.ikukudm.com</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
+                <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
+                <td>閱讀頁添加了下一話鏈接，很多404...</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.dagumanhua.net/">大古漫画</a></td>
+                <td><a href="https://m.dagumanhua.net/">m.dagumanhua.net</a>，閱讀頁添加了下一話鏈接</td>
+            </tr>
+            <tr>
                 <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
                 <td></td>
             </tr>
@@ -1347,6 +1378,18 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
                 <td>預設關閉</td>
             </tr>
             <tr>
+                <td><a href="http://www.98comic.com/">98漫畫網</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.guoman8.cc/">国漫吧</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.wuqimh.net/">57漫画网</a></td>
+                <td><a href="http://m.wuqimh.net/">m.wuqimh.net</a>，預設關閉</td>
+            </tr>
+            <tr>
                 <td><a href="http://www.acgud.com/">亲亲漫画</a></td>
                 <td><a href="http://m.acgud.com/">m.acgud.com</a>，預設關閉</td>
             </tr>
@@ -1416,7 +1459,7 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td><a href="https://www.mhua5.com/">漫画屋</a></td>
-                <td><a href="https://www.manhw.com/">www.manhw.com</a>，預設關閉</td>
+                <td><a href="https://www.360mh.cc/">www.360mh.cc</a>，<a href="https://www.manhw.com/">www.manhw.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.aiguoman.com/">爱国漫</a></td>
@@ -1461,6 +1504,14 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             <tr>
                 <td><a href="https://www.733.so/">733动漫</a></td>
                 <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.mhko.net/">漫画库</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.bengou.co/">笨狗漫画</a></td>
+                <td><a href="https://m.bengou.co/">m.bengou.co</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.kukuwumh.com/">酷酷屋</a></td>
@@ -1531,6 +1582,10 @@ https://github.com/skofkyo/AutoPager/blob/main/Blacklist.txt
             </tr>
             <tr>
                 <td>ouo.io</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>cuty.io</td>
                 <td>自動跳轉</td>
             </tr>
             <tr>
