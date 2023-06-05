@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.6.4
+// @version            1.1.6.5
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數350+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数350+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -15,7 +15,7 @@
 // @exclude            *addthis*
 // @exclude            *www.youtube.com*
 // @exclude            *video.ngamgaixinh.us*
-// @exclude            *www.facebook.com/v10.0/plugins/*
+// @exclude            *www.facebook.com/*/plugins/*
 // @exclude            *18p.fun/ForInject/SetHistory/*
 // @icon               data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAtFBMVEVEREAAAABEREBEREAuuaIzqpkvr58yiHgzhnY6kYM7mYI4kog4s6A2tpo0r544ooo2nY40sJw0sp00rZg1sJw0sZ0zsp01sZw0sZw0rZk1sJw1sZw1rZk0sp00rpk1sp01sZs1rpk1rpk0sp01spw1sJ00rZo1rZk1rpo0r5k0sJw0sZ01r5o0sZw0rpk0sp01sZ01sJw1spw1r5k1sp01sZw0sZ01sZw1rpk1sp01sZw1r5pUzpTcAAAAOXRSTlMAAAUGCw8QERIUFxgbHB0hIieqq6yvtLa3vb/AwMHCxMXFxsfIyc3Oz+zt7vDx8fL4+Pn5+vr7/v7AEFI4AAABR0lEQVR42qWT11bDMAxApbhsmm5KKVD2KiUQwpD1///FkZcSmh4e8FOsex3LsgymPy6ISkRyA4FlWMRXomIyQOg/SbyKAmSOE2Ip02UOYxf/DILNjOOEWLnAEAqio0MMAzJjTAZh1p0SrYCIuu0cMZc9JbENXLa1NWGdI1nWeQuXGPzBTdzC8ws52UI5MwchrA/VTOuTEP9fFyTG7E+R9q8JLsbW1UHzU8HHrCuU1fyToDlB43xRqMUgfc+/KA77fZrWSH/47zPlzOcpJxG8u32r/OEg5SRCqO/WTeT3+5oTuP4LxrXnd5F7waZ+wM5c+NVeujMRrDYMYueE+VK5E5r3uzOb7TbvHH7f/1pP/L8nU9u38Nwyy8OZdjfwY+ZnmPinp28y3mglNeERDJYy/9A3GYVS+GMPMB+uyL67/qO68Mb8MurBD7foVTtvIbtnAAAAAElFTkSuQmCC
 // @license            MIT
@@ -38,14 +38,15 @@
         zip: true, //true圖片下載後壓縮打包，false批量下載圖片，無法全自動下載
         autoDownload: 0, //站點全局自動下載開關0關1開，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有NEXT時自動下載的延遲秒數
-        comic: 0, //1，忽視漫畫站點開關選項，啟用所有漫畫類規則
-        touch: true //true開啟false關閉，觸控裝置雙擊前往下一頁
+        comic: 1, //1，忽視漫畫站點開關選項，啟用所有漫畫類規則
+        doubleTouchNext: true //true開啟false關閉，觸控裝置雙擊前往下一頁
     };
     const siteUrl = location.href;
     let siteData = {};
     let siteJson = null;
     let globalImgArray = [];
     let customTitle = null;
+    let downloading = false;
     let errorNum = 0;
     //const loading_bak = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAAJYCAAAAACbDccAAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cDDhUEC4m58W4AAAABb3JOVAHPoneaAAAF+UlEQVR42u3SQQkAMAzAwPo3MatVEQblTkEemQeB+R3ATcYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBLGImEsEsYiYSwSxiJhLBILoeSc6MiLXg0AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDMtMTRUMjE6MDM6NDcrMDA6MDBTB1yAAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTAzLTE0VDIxOjAzOjQ3KzAwOjAwIlrkPAAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyMy0wMy0xNFQyMTowNDoxMSswMDowMLyj5cQAAAAASUVORK5CYII=";
     //const loading_bak = "https://i.imgur.com/TBOypzv.gif"; //透明灰圈 800*800
@@ -344,8 +345,8 @@
         css: "#footer~div[id][class]{display:none!important}",
         category: "nsfw2"
     }, {
-        name: "Hit-x-Hot www.hitxhot.org / www.depvailon.com pic.yailay.com nungvl.net",
-        reg: /((www|pic)\.)?(hitxhot|depvailon|yailay|nungvl)\.(com|org|net)\/(?!\?page=|\?m=|hot|top).+(\.html)?/,
+        name: "Hit-x-Hot www.hitxhot.org www.depvailon.com pic.yailay.com",
+        reg: /(www\.hitxhot\.org|www\.depvailon\.com|pic\.yailay\.com)\/(gallerys|articles)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$/,
         imgs: () => {
             let max;
             try {
@@ -354,6 +355,54 @@
                 max = 1
             }
             return fun.getImg(".contentme img,.contentme2 img", max);
+        },
+        insertImg: [".contentme,.contentme2", 1],
+        customTitle: "return document.title.split('|')[0].slice(10).trim()",
+        css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw2"
+    }, {
+        name: "Hit-x-HotM www.hitxhot.org www.depvailon.com pic.yailay.com",
+        reg: /(www\.hitxhot\.org|www\.depvailon\.com|pic\.yailay\.com)\/(gallerys|articles)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html\?m=1$/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT("h1,h2").match(/\d+$/)[0]
+            } catch (e) {
+                max = 1
+            }
+            return fun.getImg(".contentme img,.contentme2 img", max, "8");
+        },
+        insertImg: [".contentme,.contentme2", 1],
+        customTitle: "return document.title.split('|')[0].slice(10).trim()",
+        css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw2"
+    }, {
+        name: "NứngVL.net nungvl.net",
+        reg: /nungvl\.net\/gallerys\/\d+\.cg$/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT("h1,h2").match(/\d+$/)[0]
+            } catch (e) {
+                max = 1
+            }
+            return fun.getImg(".contentme img,.contentme2 img", max);
+        },
+        insertImg: [".contentme,.contentme2", 1],
+        customTitle: "return document.title.split('|')[0].slice(10).trim()",
+        css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw2"
+    }, {
+        name: "NứngVL.netM nungvl.net",
+        reg: /nungvl\.net\/gallerys\/\d+\.cg\?m=1$/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT("h1,h2").match(/\d+$/)[0]
+            } catch (e) {
+                max = 1
+            }
+            return fun.getImg(".contentme img,.contentme2 img", max, "8");
         },
         insertImg: [".contentme,.contentme2", 1],
         customTitle: "return document.title.split('|')[0].slice(10).trim()",
@@ -380,7 +429,7 @@
     }, {
         name: "留园酷 https://www.cool18.com/",
         reg: /(www\.cool18\.com\/bbs\d*\/index\.php\?app=forum&act=threadview&tid=\d+|wap\.cool18\.com\/index\.php\?app=index&act=view&cid=\d+)/,
-        imgs: "img[mydatasrc],#shownewsc img",
+        imgs: "img[mydatasrc],#shownewsc img,.show_content img",
         customTitle: () => {
             return fun.geT(".show_content b,h1.article-tit").replace(/(\s?\.?)?\s?\(\d+P\)\s?/i, "");
         },
@@ -1601,6 +1650,18 @@
         css: ".affs{display:none!important}",
         category: "nsfw2"
     }, {
+        name: "photo.camcam.cc",
+        reg: /photo\.camcam\.cc\/[^/]+\/$/,
+        imgs: "a.rgg-img",
+        insertImg: [
+            [".rgg-imagegrid", 2], 2
+        ],
+        go: 1,
+        next: "a[rel=prev]",
+        prev: "a[rel=next]",
+        customTitle: "return  fun.geT('.page-title')",
+        category: "nsfw2"
+    }, {
         name: "Everia.club",
         reg: /everia\.club\/\d+\/\d+\/\d+\/[^/]+\//,
         imgs: ".wp-block-image img",
@@ -1613,6 +1674,23 @@
         next: "//a[text()='Previous']",
         prev: "//a[text()='Next']",
         category: "nsfw2"
+    }, {
+        name: "dongojyousan.com",
+        reg: /www\.dongojyousan\.com\/articles\/\w+\.html$/i,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT(".entry-title>a").match(/Page\s1\/(\d+)/)[1];
+            } catch (e) {
+                max = 1
+            }
+            return fun.getImg(".entry-content img", max)
+        },
+        insertImg: [".entry-content", 2],
+        customTitle: () => {
+            return fun.geT(".entry-title>a").split("|")[0].trim()
+        },
+        category: "nsfw1"
     }, {
         name: "Anh VL xem.anhvl.net",
         reg: /xem\.anhvl\.net\/[^/]+\/$/,
@@ -1705,7 +1783,7 @@
         init: () => {
             let p = fun.ge("//p[contains(text(),'寫真')]");
             if (p) {
-                let tE = fun.ge(".entry-content");
+                let tE = fun.ge(".entry-content,.post-page-content");
                 tE.parentNode.insertBefore(p, tE);
             }
             let links = [...fun.gae("//a[button[contains(text(),'寫真')]]")].map(e => e.href);
@@ -3562,7 +3640,31 @@
         },
         category: "hcomic"
     }, {
-        name: "Doujins清單頁 doujins.com",
+        name: "HDpornComics圖片清單頁 hdporncomics.com",
+        reg: /hdporncomics\.com\/[^/]+\/([^/]+\/)?$/i,
+        include: ".my-gallery.scrollmenu",
+        imgs: ".my-gallery a[data-size]",
+        insertImg: [
+            [".postContent>.items-center,#likeDislikeVue", 2], 2
+        ],
+        go: 1,
+        customTitle: () => {
+            return fun.geT("#infoBox>h1").replace(" – Gay Manga", "").replace(" Comic Porn", "");
+        },
+        category: "hcomic"
+    }, {
+        name: "HDpornComics閱讀頁 hdporncomics.com",
+        reg: /hdporncomics\.com\/manhwa\/[^/]+\/chapter/i,
+        imgs: "#imageContainer>img",
+        autoDownload: [0],
+        next: "//a[contains(text(),'Next')]",
+        prev: "//a[contains(text(),'Prev')]",
+        customTitle: () => {
+            return fun.geT(".list-reset li:nth-child(5)>a") + " - " + fun.geT("option[selected]");
+        },
+        category: "hcomic"
+    }, {
+        name: "Doujins圖片清單頁 doujins.com",
         reg: /doujins\.com\/.+\/.+/i,
         include: "#thumbnails",
         imgs: ".swiper-wrapper>div:not(:first-of-type):not(:last-of-type) .swiper-lazy",
@@ -3641,6 +3743,34 @@
         //one: 1,
         category: "hcomic"
     }, {
+        name: "XlecX xlecx.one",
+        reg: /xlecx\.one\/[\w-]+\.html$/,
+        imgs: ".ug-thumb-image",
+        insertImg: [
+            [".page__col-left", 0], 2
+        ],
+        customTitle: () => {
+            return fun.geT(".page__col-left>h1");
+        },
+        category: "hcomic"
+    }, {
+        name: "HentaiPorns hentaiporns.net",
+        reg: /hentaiporns\.net\/[\w-]+\/$/,
+        include: ".gallery",
+        imgs: ".gallery-item a",
+        insertImg: [
+            [".gallery", 0], 2
+        ],
+        go: 1,
+        customTitle: () => {
+            try {
+                return fun.geT("#gn+h1");
+            } catch (e) {
+                return fun.geT("#gn,.entry-title");
+            }
+        },
+        category: "hcomic"
+    }, {
         name: "H漫畫貼圖 - 7mmtv.sx",
         reg: /7mmtv\.sx\/.*hcomic/,
         imgs: () => {
@@ -3694,6 +3824,17 @@
         insertImg: [".left", 2],
         customTitle: "return fun.geT('.box>h1');",
         category: "hcomic"
+    }, {
+        name: "漫畫聯合國 www.comicun.com",
+        enable: 0,
+        reg: /www\.comicun\.com\/index-look(-cid)?-name-.+/,
+        init: "$(document).unbind('click');",
+        imgs: () => {
+            let max = $("#total").val();
+            return fun.getImg("#ComicPic", max, 20);
+        },
+        insertImg: [".e", 1],
+        category: "comic"
     }, {
         name: "丽图·污漫画 litu100.xyz",
         reg: /litu\d+\.xyz\/comic\/id-\w+\/\d+\.html/,
@@ -3753,6 +3894,7 @@
         },
         insertImg: ["#img_list", 2],
         customTitle: "return fun.title(' - 列表',1);",
+        css: "#img_list{max-width: 60% !important;margin: 0 auto !important;}",
         category: "nsfw2"
     }, {
         name: "VN漫画网 下拉阅读 www.vnacg.com",
@@ -3808,7 +3950,7 @@
         category: "hcomic"
     }, {
         name: "禁漫屋 jmwu.vip m.jmwu.vip",
-        reg: /jmwu\.vip\/chapter\/[\w-]+\.html/,
+        reg: /jmwu\.\w+\/chapter\/[\w-]+\.html/,
         imgs: "img[data-original]",
         autoDownload: [0],
         next: "a[data-value=next]",
@@ -3816,6 +3958,13 @@
         customTitle: () => {
             return fun.title(/ – White|-禁漫屋|-\[| “/, 1);
         },
+        category: "hcomic"
+    }, {
+        name: "Roku Hentai rokuhentai.com",
+        reg: /rokuhentai\.com\/\w+\/\d+$/,
+        imgs: ".site-reader__image",
+        insertImg: [".site-reader", 2],
+        css: ".site-reader--right-to-left,.site-reader--left-to-right{overflow-x:auto!important;overflow-y:auto!important}.site-reader{padding-bottom:0px!important}.site-reader{display:block!important;}",
         category: "hcomic"
     }, {
         name: "177 漫画/XXIAV寫真館 www.177pica.com www.177picyy.com www.xxiav.com",
@@ -4566,8 +4715,7 @@
         init: async () => {
             let url = await siteData.next();
             if (url) {
-                let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
-                fun.ge("//tr[td[a[@class='onpage']]]").insertAdjacentHTML("afterend", text);
+                fun.addNextHtml(url, "//tr[td[a[@class='onpage']]]", 1);
             }
         },
         imgs: () => {
@@ -4633,6 +4781,38 @@
         prev: ".display_left>a",
         customTitle: "return fun.geT('.hotrmtexth1>a');",
         css: ".btn_wrap{display:none!important}",
+        category: "comic"
+    }, {
+        name: "98漫畫網 www.98comic.com",
+        enable: 0,
+        reg: /www\.98comic\.com\/comic\/\d+\/\w+\.html$/,
+        imgs: () => {
+            return cInfo.fs.map(e => "https://www.98comic.com/g.php?" + cInfo.cid + "/" + e);
+        },
+        insertImg: ["//td[img[@id='manga']]", 2],
+        autoDownload: [0],
+        next: ".nextC",
+        prev: ".prevC",
+        customTitle: () => {
+            return cInfo.btitle + " - " + cInfo.ctitle
+        },
+        css: ".bd_960_90{display:none!important}",
+        category: "comic"
+    }, {
+        name: "57漫画网 www.wuqimh.net m.wuqimh.net 国漫吧 www.guoman8.cc",
+        enable: 0,
+        reg: /((www|m)\.wuqimh\.net)|www\.guoman8\.cc\/\d+\/\d+\.html$/,
+        imgs: () => {
+            return cInfo.fs;
+        },
+        insertImg: ["//td[img[@id='manga']]", 2],
+        autoDownload: [0],
+        next: ".nextC",
+        prev: ".prevC",
+        customTitle: () => {
+            return cInfo.btitle + " - " + cInfo.ctitle
+        },
+        css: ".bd_960_90,body>section{display:none!important}",
         category: "comic"
     }, {
         name: "亲亲漫画/古风漫画网 www.acgud.com m.acgqd.com www.gufengmh.com m.gufengmh.com",
@@ -4705,10 +4885,9 @@
         init: "$(document).unbind('keydown');$(document).unbind('keyup');$('#images').unbind('click');",
         imgs: async () => {
             let url = await siteData.next();
-            let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
             if (location.hostname == "www.ymh1234.com") {
                 if (url) {
-                    fun.ge("#images").insertAdjacentHTML("afterend", text);
+                    fun.addNextHtml(url, "#images", 1)
                 }
             }
             return chapterImages.map(e => SinConf.resHost[0].domain + "/" + chapterPath + e);
@@ -4752,8 +4931,7 @@
         init: () => {
             let url = siteData.next();
             if (url) {
-                let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
-                fun.ge("#chapter-image").insertAdjacentHTML("afterend", text);
+                fun.addNextHtml(url, "#chapter-image", 1)
             }
         },
         imgs: () => {
@@ -4883,9 +5061,9 @@
         css: "#addMoney,#images~div[style*=blur]{display:none!important}",
         category: "comic"
     }, {
-        name: "蔷薇漫画M / 爱米推漫画M / 下拉式漫画M / 奇妙漫画M m.qwmanhua.com m.imitui.com m.xlsmh.com m.qmiaomh.com",
+        name: "蔷薇漫画M / 爱米推漫画M / 下拉式漫画M / 奇妙漫画M m.qwmanhua.com m.imitui.com m.xlsmh.com m.qmiaomh.com ikr.ejujiu.com",
         enable: 0,
-        reg: /(m\.qwmanhua\.com|m\.imitui\.com|m\.xlsmh\.com|m\.qmiaomh\.com)\/manhua\/\w+\/\d+\.html/i,
+        reg: /(m\.qwmanhua\.com|m\.imitui\.com|m\.xlsmh\.com|m\.qmiaomh\.com|ikr\.ejujiu\.com)\/manhua\/\w+\/\d+\.html/i,
         imgs: () => {
             let imgs = [...fun.gae("#images img[onclick],#scroll-image img[onclick]")];
             fun.remove("#scroll-image");
@@ -5008,9 +5186,9 @@
         customTitle: "return fun.title(' - ',1)",
         category: "comic"
     }, {
-        name: "漫画屋 www.mhua5.com www.manhw.com",
+        name: "漫画屋 www.mhua5.com www.manhw.com www.360mh.cc",
         enable: 0,
-        reg: /www\.(mhua5|manhw)\.com\/(chapter.+\.html|index\.php\/chapter\/\d+)/i,
+        reg: /www\.(mhua5|manhw|360mh)\.(com|cc)\/(chapter.+\.html|index\.php\/chapter\/\d+)/i,
         include: ".rd-article-wr",
         imgs: "img[data-original]:not([data-original*='/template/pc/default/'])",
         insertImg: [".rd-article-wr", 2],
@@ -5021,13 +5199,15 @@
         customTitle: () => {
             if (/www\.mhua5\.com/.test(location.host)) {
                 return fun.title(" - ", 1)
+            } else if (/www\.360mh\.cc/.test(location.host)) {
+                return fun.geT(".j-comic-title") + " - " + fun.geT(".last-crumb")
             } else {
                 return fun.title("下", 1)
             }
         },
         category: "comic"
     }, {
-        name: "漫画屋 www.mhua5.com www.manhw.com",
+        name: "漫画屋M www.mhua5.com www.manhw.com",
         enable: 0,
         reg: /www\.(mhua5|manhw)\.com\/(chapter.+\.html|index\.php\/chapter\/\d+)/i,
         imgs: ".comic-page img,#cp_img img[data-original]",
@@ -5054,6 +5234,8 @@
         customTitle: () => {
             if (/www\.mhua5\.com/.test(location.host)) {
                 return fun.title(" - 漫画屋")
+            } else if (/www\.360mh\.cc/.test(location.host)) {
+                return null
             } else {
                 return fun.title(" 下", 1)
             }
@@ -5115,8 +5297,7 @@
         init: async () => {
             let url = await siteData.next();
             if (url) {
-                let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
-                document.body.insertAdjacentHTML("beforeend", text);
+                fun.addNextHtml(url, "body", 2)
             }
         },
         imgs: () => {
@@ -5181,8 +5362,7 @@
         init: async () => {
             let url = await siteData.next();
             if (url) {
-                let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
-                fun.ge(".bottom .subNav").insertAdjacentHTML("afterend", text);
+                fun.addNextHtml(url, ".bottom .subNav", 1)
             }
         },
         imgs: () => {
@@ -5374,8 +5554,7 @@
         reg: /(www|m)\d?\.(17fuman|fumanhua-?\d+)\.com\/\w+\/\d+\/\d+\.html/i,
         init: "document.onkeydown=null",
         imgs: () => {
-            let imgData = base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$");
-            return imgData.map(e => qTcms_m_weburl + e);
+            return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => qTcms_m_weburl + e);
         },
         insertImg: ["//td[img[@id='qTcms_pic']]", 2],
         autoDownload: [0],
@@ -5401,8 +5580,7 @@
         reg: /(www\.733\.so|www\.mh160\.cc)\/(mh|kanmanhua)\/\w+\/\d+\.html/i,
         init: "document.onkeydown=null",
         imgs: () => {
-            let imgData = base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$");
-            return imgData.map(e => f_qTcms_Pic_curUrl_realpic(e));
+            return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => f_qTcms_Pic_curUrl_realpic(e));
         },
         insertImg: ["//td[//img[@onclick]]", 2],
         autoDownload: [0],
@@ -5444,6 +5622,85 @@
         customTitle: () => {
             return qTcms_S_m_name + " - " + qTcms_S_m_playm
         },
+        category: "comic"
+    }, {
+        name: "漫画库 www.mhko.net",
+        enable: 0,
+        reg: /www\.mhko\.net\/comic\/\d+\/\d+\.html/i,
+        init: () => {
+            document.onkeydown = null;
+            let url = siteData.next();
+            if (url) {
+                fun.addNextHtml(url, ".tbCenter", 1)
+            }
+        },
+        imgs: () => {
+            return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$");
+        },
+        insertImg: ["//td[img[@id='qTcms_pic']]", 2],
+        autoDownload: [0],
+        next: () => {
+            if (qTcms_Pic_nextArr !== "") {
+                return location.origin + qTcms_Pic_nextArr
+            } else {
+                return null
+            }
+        },
+        prev: 1,
+        customTitle: () => {
+            return qTcms_S_m_name + " - " + qTcms_S_m_playm
+        },
+        css: ".iFloat,#mypic_k0{display:none!important}",
+        category: "comic"
+    }, {
+        name: "笨狗漫画 www.bengou.co m.bengou.co",
+        enable: 0,
+        reg: /(www|m)\.bengou\.co\/\w+\/\w+\/\d+\.html/i,
+        init: () => {
+            document.onkeydown = null;
+        },
+        imgs: () => {
+            return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => f_qTcms_Pic_curUrl_realpic(e));
+        },
+        insertImg: ["//td[img[@id='qTcms_pic']]", 2],
+        autoDownload: [0],
+        next: () => {
+            if (qTcms_Pic_nextArr !== "") {
+                return location.origin + qTcms_Pic_nextArr
+            } else {
+                return null
+            }
+        },
+        prev: 1,
+        customTitle: () => {
+            return qTcms_S_m_name + " - " + qTcms_S_m_playm
+        },
+        css: "#mypic_k0{display:none!important}",
+        category: "comic"
+    }, {
+        name: "星辰漫画网 www.xcmh.com m.xcmh.com",
+        enable: 1,
+        reg: /(www|m)\.xcmh\.com\/\w+\/\w+\/\d+\.html/i,
+        init: () => {
+            document.onkeydown = null;
+        },
+        imgs: () => {
+            return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => location.origin + f_qTcms_Pic_curUrl_realpic(e));
+        },
+        insertImg: ["//td[img[@id='qTcms_pic']]", 2],
+        autoDownload: [0],
+        next: () => {
+            if (qTcms_Pic_nextArr !== "") {
+                return location.origin + qTcms_Pic_nextArr
+            } else {
+                return null
+            }
+        },
+        prev: 1,
+        customTitle: () => {
+            return qTcms_S_m_name + " - " + qTcms_S_m_playm
+        },
+        css: "#mypic_k0{display:none!important}",
         category: "comic"
     }, {
         name: "酷酷屋 www.kukuwumh.com m.kukuwumh.com",
@@ -5536,7 +5793,7 @@
         enable: 1,
         reg: /(www\.)?copymanga\.site\/comic\/\w+\/chapter\/.+/,
         delay: 300,
-        init: () => {
+        init: async () => {
             document[_0x1f93("0x1b")][_0x1f93("0x27")] = null;
             $(document).unbind("click");
             $(document).unbind("keydown");
@@ -5564,17 +5821,20 @@
                 }
             };
             document.addEventListener("keydown", keyhidetoolbar);
+            let api = location.href.replace(/.*?(?=\/comic\/)/, "https://api.copymanga.site/api/v3");
+            let json = await fetch(api).then(res => res.json());
+            siteJson = json;
+            debug("\n此站JSON資料\n", json);
         },
         imgs: () => {
-            let api = location.href.replace(/.*?(?=\/comic\/)/, "https://api.copymanga.site/api/v3");
-            return fetch(api).then(res => res.json()).then(json => json.results.chapter.contents.map(e => e.url));
+            return siteJson.results.chapter.contents.map(e => e.url);
         },
         insertImg: [".comicContent-list", 2],
         autoDownload: [0],
         next: "//a[text()='下一話'][starts-with(@href,'/comic/')]",
         prev: "//a[text()='上一話'][starts-with(@href,'/comic/')]",
         customTitle: () => {
-            return fun.geT('h4.header').replace(/\//, " - ");
+            return siteJson.results.comic.name + " - " + siteJson.results.chapter.name;
         },
         css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}.header+div[style],.comicContainerAds{display:none!important}",
         category: "comic"
@@ -5914,6 +6174,129 @@
         css: ".page{display:none!important}.loadmore{display:block!important}",
         category: "comic"
     }, {
+        name: "风之动漫 www.fffdm.com",
+        enable: 1,
+        reg: /(www\.fffdm\.com|manhua\.fffdm\.com)\/(manhua\/)?\d+\/[\w-]+\/$/i,
+        init: async () => {
+            let s = location.pathname.split("/").slice(-3);
+            let mhId = s[0];
+            let mhcId = s[1];
+            let api = `https://${location.hostname}/api/manhua/${mhId}/${mhcId}`;
+            let json = await fetch(api).then(res => res.json());
+            debug("\n此站JSON資料\n", json);
+            siteJson = json;
+            let url = await siteData.next();
+            if (url) {
+                let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
+                fun.ge("#mh").insertAdjacentHTML("afterend", text);
+                fun.ge("#mh+div").addEventListener("click", () => {
+                    setTimeout(() => {
+                        location.reload()
+                    }, 200)
+                })
+            }
+        },
+        imgs: async () => {
+            if (await fun.waitEle("#mhpic", 30)) {
+                let host = fun.ge("#mhpic").src.match(/^https?:\/\/[^/]+\//i);
+                return siteJson.cont.map(e => host + e);
+            } else {
+                return []
+            }
+        },
+        insertImg: ["#mh", 2],
+        next: () => {
+            let comicListUrl = location.href.replace(/[\w-]+\/$/i, "");
+            let chapter = location.href.match(/[\w-]+\/$/)[0];
+            let nextXPath = `//div[@id='content']/li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
+            return fun.xhr(comicListUrl, "document").then(doc => {
+                let next = fun.ge(nextXPath, doc);
+                if (next) {
+                    return comicListUrl + next.getAttribute("href");
+                } else {
+                    return null;
+                }
+            })
+        },
+        prev: 1,
+        customTitle: () => {
+            return fun.title("第1页", 1)
+        },
+        category: "comic"
+    }, {
+        name: "大古漫画 www.dagumanhua.net",
+        enable: 1,
+        reg: /www\.dagumanhua\.net\/manhua\/\d+\/\d+\.html$/i,
+        init: async () => {
+            document.onkeydown = null;
+            document.onkeyup = null;
+            let url = await siteData.next();
+            if (url) {
+                fun.addNextHtml(url, ".mh_list", 1)
+            }
+        },
+        imgs: () => {
+            let max = fun.ge("//script[contains(text(),'totalpage')]").innerHTML.match(/totalpage\s?=\s?(\d+)/)[1];
+            return fun.getImg(".mh_list img", max, 9)
+        },
+        insertImg: [".mh_list", 2],
+        next: () => {
+            let comicListUrl = location.href.replace(/\d+\.html$/, "");
+            let chapter = location.pathname;
+            let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
+            return fun.xhr(comicListUrl, "document").then(doc => {
+                let next = fun.ge(nextXPath, doc);
+                if (next) {
+                    return location.origin + next.getAttribute("href");
+                } else {
+                    return null;
+                }
+            })
+        },
+        prev: 1,
+        customTitle: () => {
+            return fun.geT(".mh_cont>h1")
+        },
+        category: "comic"
+    }, {
+        name: "大古漫画M m.dagumanhua.net",
+        enable: 1,
+        reg: /m\.dagumanhua\.net\/manhua\/\d+\/\d+\.html$/i,
+        init: async () => {
+            let url = await siteData.next();
+            if (url) {
+                fun.addNextHtml(url, "#content,.content", 1)
+            }
+        },
+        imgs: async () => {
+            await fun.getNP("#content img,.content img", "//a[@href and text()='下一页']", null, ".pager,.cpages", 0, null, 0);
+            return [...fun.gae("#content img,.content img")]
+        },
+        insertImg: ["#content,.content", 1],
+        next: () => {
+            let comicListUrl = location.href.replace(/\d+\.html$/, "");
+            let chapter = location.pathname;
+            let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
+            return fun.xhr(comicListUrl, "document").then(doc => {
+                let next = fun.ge(nextXPath, doc);
+                if (next) {
+                    return location.origin + next.getAttribute("href");
+                } else {
+                    return null;
+                }
+            })
+        },
+        prev: "//a[@href and text()='上一章']",
+        customTitle: () => {
+            try {
+                return fun.geT(".cont_tit strong")
+            } catch (e) {
+                return fun.geT("#bookname") + " - " + fun.geT(".headline")
+            }
+        },
+        css: "#content~a,.content~a,.apjg{display:none!important}",
+        category: "comic"
+    }, {
         name: "漫畫類 自動展開目錄",
         enable: 1,
         icon: 0,
@@ -5957,7 +6340,17 @@
         reg: /^https?:\/\/ouo\./,
         init: async () => {
             let ele = "#btn-main:not(.disabled)";
-            if (await fun.waitEle(ele)) elementClick(ele);
+            if (await fun.waitEle(ele)) fun.ge(ele).click();
+        },
+        category: "none"
+    }, {
+        name: "cuty.io 自動跳轉",
+        icon: 0,
+        key: 0,
+        reg: /^https:\/\/cutt?y\.(io|app)\/\w+/i,
+        init: async () => {
+            let ele = "//button[@id='submit-button' and text()= 'Continue' or text()= 'I am not a robot' or text()= 'Go ->']";
+            if (await fun.waitEle(ele)) fun.ge(ele).click();
         },
         category: "none"
     }, {
@@ -6056,14 +6449,14 @@
                     if (mode === 1) {
                         //【.html ==> .html?page=2】第一頁 ==> 第二頁
                         //【 ==> ?page=2】第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\?page=\d+$/, '') + "?page=" + i));
+                        resArr.push(html(siteUrl.replace(/\?page=\d+$/, "") + "?page=" + i));
                     } else if (mode === 2) {
                         //【.html ==> /2.html】 第一頁 ==> 第二頁
                         resArr.push(html(siteUrl.slice(0, -5) + "/" + i + ".html"));
                     } else if (mode === 3) {
                         //【.html ==> _1.html】  第一頁 ==> 第二頁
-                        //resArr.push(html(siteUrl.replace(/(_\d+)?\.html$/, '') + "_" + (i - 1) + ".html"));
-                        resArr.push(html(siteUrl.replace(/\.html$/, '') + "_" + (i - 1) + ".html"));
+                        //resArr.push(html(siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + (i - 1) + ".html"));
+                        resArr.push(html(siteUrl.replace(/\.html$/, "") + "_" + (i - 1) + ".html"));
                     } else if (mode === 4) {
                         //【/ ==> /2/】  第一頁 ==> 第二頁
                         resArr.push(html(siteUrl.slice(0, -1) + "/" + i + "/"));
@@ -6072,58 +6465,61 @@
                         resArr.push(html(siteUrl + "/" + i));
                     } else if (mode === 5) {
                         //【.html ==> -2.html】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\.html$/, '') + "-" + i + ".html"));
+                        resArr.push(html(siteUrl.replace(/\.html$/, "") + "-" + i + ".html"));
                     } else if (mode === "5") {
                         //【-1.html ==> -2.html】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/(-\d+)?\.html$/, '') + "-" + i + ".html"));
+                        resArr.push(html(siteUrl.replace(/(-\d+)?\.html$/, "") + "-" + i + ".html"));
                     } else if (mode === 6) {
                         //【?p=1 ==> ?p=2】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\?p=\d+$/, '') + "?p=" + i));
+                        resArr.push(html(siteUrl.replace(/\?p=\d+$/, "") + "?p=" + i));
                     } else if (mode === 7) {
                         //【/1 ==> /2】  第一頁 ==> 第二頁
                         //【.html ==> .html/2】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\/\d+$/, '') + "/" + i));
+                        resArr.push(html(siteUrl.replace(/\/\d+$/, "") + "/" + i));
                     } else if (mode === 8) {
                         //【 ==> &page=1】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/&page=\d+$/, '') + "&page=" + (i - 1)));
+                        resArr.push(html(siteUrl.replace(/&page=\d+$/, "") + "&page=" + (i - 1)));
+                    } else if (mode === "8") {
+                        //【 ==> &page=2】  第一頁 ==> 第二頁
+                        resArr.push(html(siteUrl.replace(/&page=\d+$/, "") + "&page=" + i));
                     } else if (mode === 9) {
                         //【.html ==> _2.html】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/(_\d+)?\.html$/, '') + "_" + i + ".html"));
+                        resArr.push(html(siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + i + ".html"));
                     } else if (mode === 10) {
                         //【.html ==> .html/2】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\.html(\/\d+)?$/, '') + ".html/" + i));
+                        resArr.push(html(siteUrl.replace(/\.html(\/\d+)?$/, "") + ".html/" + i));
                     } else if (mode === 11) {
                         //【/ ==> /2.html】  第一頁 ==> 第二頁
                         //【/1.html ==> /2.html】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\/(\d+\.html)?$/, '') + "/" + i + ".html"));
+                        resArr.push(html(siteUrl.replace(/\/(\d+\.html)?$/, "") + "/" + i + ".html"));
                     } else if (mode === 12) {
                         //【/ ==> /2.htm】  第一頁 ==> 第二頁
                         //【/1.htm ==> /2.htm】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\/(\d+\.htm)?$/, '') + "/" + i + ".htm"));
+                        resArr.push(html(siteUrl.replace(/\/(\d+\.htm)?$/, "") + "/" + i + ".htm"));
                     } else if (mode === 13) {
                         //【-1-* ==> -2-*】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/-\d+-[^-]+$/, '') + "-" + i));
+                        resArr.push(html(siteUrl.replace(/-\d+-[^-]+$/, "") + "-" + i));
                     } else if (mode === 14) {
                         //【/1/ ==> /2/】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\/\d+\/$/, '') + "/" + i + "/"));
+                        resArr.push(html(siteUrl.replace(/\/\d+\/$/, "") + "/" + i + "/"));
                     } else if (mode === 15) {
                         //【/index.html ==> /index_2.html】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, '') + "/index_" + i + ".html"));
+                        resArr.push(html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/index_" + i + ".html"));
                     } else if (mode === 16) {
                         //【 ==> /2#list】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, '') + "/" + i + "#list"));
+                        resArr.push(html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/" + i + "#list"));
                     } else if (mode === 17) {
                         //【.htm ==> _2.htm】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/(_\d+)?\.htm$/, '') + "_" + i + ".htm"));
+                        resArr.push(html(siteUrl.replace(/(_\d+)?\.htm$/, "") + "_" + i + ".htm"));
                     } else if (mode === 18) {
                         //【/ ==> /page/2/】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/\/(page\/\d+\/)?$/, '') + "/page/" + i + "/"));
+                        resArr.push(html(siteUrl.replace(/\/(page\/\d+\/)?$/, "") + "/page/" + i + "/"));
                     } else if (mode === 19) {
                         //【-1 ==> -2】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/-\d+$/, '') + "-" + i));
+                        resArr.push(html(siteUrl.replace(/-\d+$/, "") + "-" + i));
                     } else if (mode === 20) {
                         //【 ==> -p-2】  第一頁 ==> 第二頁
-                        resArr.push(html(siteUrl.replace(/-p-\d+$/, '') + "-p-" + i));
+                        resArr.push(html(siteUrl.replace(/-p-\d+$/, "") + "-p-" + i));
                     }
                 }
             }
@@ -6196,13 +6592,13 @@
                     if (mode === 1) {
                         //【.html ==> .html?page=2】第一頁 ==> 第二頁
                         //【 ==> ?page=2】第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\?page=\d+$/, '') + "?page=" + i));
+                        resArr.push(await html(siteUrl.replace(/\?page=\d+$/, "") + "?page=" + i));
                     } else if (mode === 2) {
                         //【.html ==> /2.html】 第一頁 ==> 第二頁
                         resArr.push(await html(siteUrl.slice(0, -5) + "/" + i + ".html"));
                     } else if (mode === 3) {
                         //【.html ==> _1.html】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/(_\d+)?\.html$/, '') + "_" + (i - 1) + ".html"));
+                        resArr.push(await html(siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + (i - 1) + ".html"));
                     } else if (mode === 4) {
                         //【/ ==> /2/】  第一頁 ==> 第二頁
                         resArr.push(await html(siteUrl.slice(0, -1) + "/" + i + "/"));
@@ -6211,58 +6607,61 @@
                         resArr.push(await html(siteUrl + "/" + i));
                     } else if (mode === 5) {
                         //【.html ==> -2.html】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\.html$/, '') + "-" + i + ".html"));
+                        resArr.push(await html(siteUrl.replace(/\.html$/, "") + "-" + i + ".html"));
                     } else if (mode === "5") {
                         //【-1.html ==> -2.html】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/(-\d+)?\.html$/, '') + "-" + i + ".html"));
+                        resArr.push(await html(siteUrl.replace(/(-\d+)?\.html$/, "") + "-" + i + ".html"));
                     } else if (mode === 6) {
                         //【?p=1 ==> ?p=2】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\?p=\d+$/, '') + "?p=" + i));
+                        resArr.push(await html(siteUrl.replace(/\?p=\d+$/, "") + "?p=" + i));
                     } else if (mode === 7) {
                         //【/1 ==> /2】  第一頁 ==> 第二頁
                         //【.html ==> .html/2】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\/\d+$/, '') + "/" + i));
+                        resArr.push(await html(siteUrl.replace(/\/\d+$/, "") + "/" + i));
                     } else if (mode === 8) {
                         //【 ==> &page=1】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/&page=\d+$/, '') + "&page=" + (i - 1)));
+                        resArr.push(await html(siteUrl.replace(/&page=\d+$/, "") + "&page=" + (i - 1)));
+                    } else if (mode === "8") {
+                        //【 ==> &page=2】  第一頁 ==> 第二頁
+                        resArr.push(await html(siteUrl.replace(/&page=\d+$/, "") + "&page=" + i));
                     } else if (mode === 9) {
                         //【.html ==> _2.html】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/(_\d+)?\.html$/, '') + "_" + i + ".html"));
+                        resArr.push(await html(siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + i + ".html"));
                     } else if (mode === 10) {
                         //【.html ==> .html/2】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\.html(\/\d+)?$/, '') + ".html/" + i));
+                        resArr.push(await html(siteUrl.replace(/\.html(\/\d+)?$/, "") + ".html/" + i));
                     } else if (mode === 11) {
                         //【/ ==> /2.html】  第一頁 ==> 第二頁
                         //【/1.html ==> /2.html】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\/(\d+\.html)?$/, '') + "/" + i + ".html"));
+                        resArr.push(await html(siteUrl.replace(/\/(\d+\.html)?$/, "") + "/" + i + ".html"));
                     } else if (mode === 12) {
                         //【/ ==> /2.htm】  第一頁 ==> 第二頁
                         //【/1.htm ==> /2.htm】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\/(\d+\.htm)?$/, '') + "/" + i + ".htm"));
+                        resArr.push(await html(siteUrl.replace(/\/(\d+\.htm)?$/, "") + "/" + i + ".htm"));
                     } else if (mode === 13) {
                         //【-1-* ==> -2-*】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/-\d+-[^-]+$/, '') + "-" + i));
+                        resArr.push(await html(siteUrl.replace(/-\d+-[^-]+$/, "") + "-" + i));
                     } else if (mode === 14) {
                         //【/1/ ==> /2/】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\/\d+\/$/, '') + "/" + i + "/"));
+                        resArr.push(await html(siteUrl.replace(/\/\d+\/$/, "") + "/" + i + "/"));
                     } else if (mode === 15) {
                         //【/index.html ==> /index_2.html】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, '') + "/index_" + i + ".html"));
+                        resArr.push(await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/index_" + i + ".html"));
                     } else if (mode === 16) {
                         //【 ==> /2#list】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, '') + "/" + i + "#list"));
+                        resArr.push(await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/" + i + "#list"));
                     } else if (mode === 17) {
                         //【.htm ==> _2.htm】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/(_\d+)?\.htm$/, '') + "_" + i + ".htm"));
+                        resArr.push(await html(siteUrl.replace(/(_\d+)?\.htm$/, "") + "_" + i + ".htm"));
                     } else if (mode === 18) {
                         //【/ ==> /page/2/】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/\/(page\/\d+\/)?$/, '') + "/page/" + i + "/"));
+                        resArr.push(await html(siteUrl.replace(/\/(page\/\d+\/)?$/, "") + "/page/" + i + "/"));
                     } else if (mode === 19) {
                         //【-1 ==> -2】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/-\d+$/, '') + "-" + i));
+                        resArr.push(await html(siteUrl.replace(/-\d+$/, "") + "-" + i));
                     } else if (mode === 20) {
                         //【 ==> -p-2】  第一頁 ==> 第二頁
-                        resArr.push(await html(siteUrl.replace(/-p-\d+$/, '') + "-p-" + i));
+                        resArr.push(await html(siteUrl.replace(/-p-\d+$/, "") + "-p-" + i));
                     }
                 }
             }
@@ -6350,13 +6749,13 @@
                     if (mode === 1) {
                         //【.html ==> .html?page=2】第一頁 ==> 第二頁
                         //【 ==> ?page=2】第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\?page=\d+$/, '') + "?page=" + i, i);
+                        await html(siteUrl.replace(/\?page=\d+$/, "") + "?page=" + i, i);
                     } else if (mode === 2) {
                         //【.html ==> /2.html】 第一頁 ==> 第二頁
                         await html(siteUrl.slice(0, -5) + "/" + i + ".html", i);
                     } else if (mode === 3) {
                         //【.html ==> _1.html】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/(_\d+)?\.html$/, '') + "_" + (i - 1) + ".html", i);
+                        await html(siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + (i - 1) + ".html", i);
                     } else if (mode === 4) {
                         //【/ ==> /2/】  第一頁 ==> 第二頁
                         await html(siteUrl.slice(0, -1) + "/" + i + "/", i);
@@ -6365,58 +6764,61 @@
                         await html(siteUrl + "/" + i);
                     } else if (mode === 5) {
                         //【.html ==> -2.html】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\.html$/, '') + "-" + i + ".html");
+                        await html(siteUrl.replace(/\.html$/, "") + "-" + i + ".html");
                     } else if (mode === "5") {
                         //【-1.html ==> -2.html】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/(-\d+)?\.html$/, '') + "-" + i + ".html");
+                        await html(siteUrl.replace(/(-\d+)?\.html$/, "") + "-" + i + ".html");
                     } else if (mode === 6) {
                         //【?p=1 ==> ?p=2】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\?p=\d+$/, '') + "?p=" + i, i);
+                        await html(siteUrl.replace(/\?p=\d+$/, "") + "?p=" + i, i);
                     } else if (mode === 7) {
                         //【/1 ==> /2】  第一頁 ==> 第二頁
                         //【.html ==> .html/2】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\/\d+$/, '') + "/" + i, i);
+                        await html(siteUrl.replace(/\/\d+$/, "") + "/" + i, i);
                     } else if (mode === 8) {
                         //【 ==> &page=1】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/&page=\d+$/, '') + "&page=" + (i - 1), i);
+                        await html(siteUrl.replace(/&page=\d+$/, "") + "&page=" + (i - 1), i);
+                    } else if (mode === "8") {
+                        //【 ==> &page=2】  第一頁 ==> 第二頁
+                        await html(siteUrl.replace(/&page=\d+$/, "") + "&page=" + i, i);
                     } else if (mode === 9) {
                         //【.html ==> _2.html】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/(_\d+)?\.html$/, '') + "_" + i + ".html", i);
+                        await html(siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + i + ".html", i);
                     } else if (mode === 10) {
                         //【.html ==> .html/2】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\.html(\/\d+)?$/, '') + ".html/" + i, i);
+                        await html(siteUrl.replace(/\.html(\/\d+)?$/, "") + ".html/" + i, i);
                     } else if (mode === 11) {
                         //【/ ==> /2.html】  第一頁 ==> 第二頁
                         //【/1.html ==> /2.html】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\/(\d+\.html)?$/, '') + "/" + i + ".html", i);
+                        await html(siteUrl.replace(/\/(\d+\.html)?$/, "") + "/" + i + ".html", i);
                     } else if (mode === 12) {
                         //【/ ==> /2.htm】  第一頁 ==> 第二頁
                         //【/1.htm ==> /2.htm】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\/(\d+\.htm)?$/, '') + "/" + i + ".htm", i);
+                        await html(siteUrl.replace(/\/(\d+\.htm)?$/, "") + "/" + i + ".htm", i);
                     } else if (mode === 13) {
                         //【-1-* ==> -2-*】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/-\d+-[^-]+$/, '') + "-" + i, i);
+                        await html(siteUrl.replace(/-\d+-[^-]+$/, "") + "-" + i, i);
                     } else if (mode === 14) {
                         //【/1/ ==> /2/】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\/\d+\/$/, '') + "/" + i + "/");
+                        await html(siteUrl.replace(/\/\d+\/$/, "") + "/" + i + "/");
                     } else if (mode === 15) {
                         //【/index.html ==> /index_2.html】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, '') + "/index_" + i + ".html");
+                        await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/index_" + i + ".html");
                     } else if (mode === 16) {
                         //【 ==> /2#list】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, '') + "/" + i + "#list");
+                        await html(siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/" + i + "#list");
                     } else if (mode === 17) {
                         //【.htm ==> _2.htm】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/(_\d+)?\.htm$/, '') + "_" + i + ".htm");
+                        await html(siteUrl.replace(/(_\d+)?\.htm$/, "") + "_" + i + ".htm");
                     } else if (mode === 18) {
                         //【/ ==> /page/2/】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/\/(page\/\d+\/)?$/, '') + "/page/" + i + "/");
+                        await html(siteUrl.replace(/\/(page\/\d+\/)?$/, "") + "/page/" + i + "/");
                     } else if (mode === 19) {
                         //【-1 ==> -2】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/-\d+$/, '') + "-" + i);
+                        await html(siteUrl.replace(/-\d+$/, "") + "-" + i);
                     } else if (mode === 20) {
                         //【 ==> -p-2】  第一頁 ==> 第二頁
-                        await html(siteUrl.replace(/-p-\d+$/, '') + "-p-" + i);
+                        await html(siteUrl.replace(/-p-\d+$/, "") + "-p-" + i);
                     }
                 }
             }
@@ -6663,7 +7065,7 @@
                 return;
             }
         },
-        getEle: async (links, elements, targetEle, removeEle = null) => {
+        getEle: async (links, elements, targetEle, removeEles = null) => {
             if (fun.ge('.CustomPictureDownloadImage')) return;
             let resArr = [];
             let xhrNum = 0;
@@ -6693,8 +7095,8 @@
                     ele.innerHTML = "";
                     ele.appendChild(fragment);
                 }
-                if (removeEle) {
-                    fun.remove(removeEle);
+                if (removeEles) {
+                    fun.remove(removeEles);
                 }
             })
         },
@@ -6752,7 +7154,7 @@
                             errorNum += 1;
                             resolve();
                             setTimeout(() => {
-                                debug(`\n怠惰Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src.replace('-scaled', ''), index));
+                                debug(`\n怠惰Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src.replace("-scaled", ""), index));
                             }, 1000);
                             temp = null;
                         };
@@ -6853,7 +7255,7 @@
         },
         geT: (ele, mode = 1) => {
             if (mode == 1) {
-                return fun.ge(ele).innerText.replace(/\s?第.+画\s?/, '');
+                return fun.ge(ele).innerText.replace(/\s?第.+画\s?/, "");
             } else if (mode == 2) {
                 return fun.ge(ele).previousElementSibling.innerText;
             } else if (mode == 3) {
@@ -6926,11 +7328,11 @@
                         entry.target.onerror = (error) => {
                             if (errorNum > 10) return;
                             errorNum += 1;
-                            error.target.dataset.src = error.target.dataset.src.replace('-scaled', '');
+                            error.target.dataset.src = error.target.dataset.src.replace("-scaled", "");
                             error.target.src = loading_bak;
                             setTimeout(() => {
                                 debug(`\nimagesObserver重新載入出錯圖片：\n${realSrc}`);
-                                error.target.src = realSrc.replace('-scaled', '');
+                                error.target.src = realSrc.replace("-scaled", "");
                             }, 1000);
                         };
                     }
@@ -6953,11 +7355,6 @@
             style.className = "CustomPictureDownloadStyle";
             style.innerHTML = css;
             document.head.appendChild(style);
-        },
-        AUrl: url => {
-            let a = document.createElement("a");
-            a.href = url;
-            return a;
         },
         script: (code, src = 0) => {
             let script = document.createElement("script");
@@ -7021,6 +7418,25 @@
                     e.remove()
                 });
             }, time)
+        },
+        addNextHtml: (url, ele, pos) => {
+            let _pos;
+            switch (pos) {
+                case 0:
+                    _pos = "beforebegin"; //在元素之前。
+                    break;
+                case 1:
+                    _pos = "afterend"; //在元素之後。
+                    break;
+                case 2:
+                    _pos = "beforeend"; //在 元素裡面，最後一個子元素之後。
+                    break;
+                case 3:
+                    _pos = "afterbegin"; //在元素裡面，第一個子元素之前。
+                    break;
+            }
+            let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
+            fun.ge(ele).insertAdjacentHTML(_pos, text);
         }
     };
 
@@ -7139,6 +7555,18 @@
         });
     };
 
+    const saveData = (blob, fileName) => {
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => {
+            URL.revokeObjectURL(blob);
+        }, 1000);
+    };
+
     const getImgs = async selector => {
         let imgs;
         if (ge(".CustomPictureDownloadImage")) {
@@ -7164,8 +7592,8 @@
     };
 
     const imgZipDownload = async () => {
-        if (/\d+/.test(ge(".customPicDownloadMsg").innerText)) {
-            alert("下載&壓縮中請勿重複操作！");
+        if (downloading) {
+            alert("下載&壓縮中請稍後再操作！");
             return;
         }
         let selector, titleText;
@@ -7187,6 +7615,7 @@
         }
         let imgs = await getImgs(selector);
         globalImgArray = imgs;
+        downloading = true;
 
         if (imgs.length > 0 && titleText != null && titleText != "") {
             debug("\nimgZipDownload()：", imgs);
@@ -7234,6 +7663,7 @@
                 debug("\nErrorDataArray：", errorDataArray);
                 if (errorDataArray.length > 0) {
                     downloadNum = 0;
+                    downloading = false;
                     fun.show(`下載失敗了${errorDataArray.length}張不壓縮`, 3000);
                     setTimeout(() => {
                         fun.show("建議F5後重新下載", 0);
@@ -7269,20 +7699,14 @@
                                 binary: true
                             });
                         } else {
-                            let a = document.createElement("a");
-                            let objectURL = URL.createObjectURL(blobDataArray[i].blob);
-                            a.href = objectURL;
-                            a.download = title + "_" + fileName;
-                            document.body.appendChild(a);
-                            a.click();
-                            a.remove();
-                            URL.revokeObjectURL(blobDataArray[i].blob);
+                            saveData(blobDataArray[i].blob, title + "_" + fileName);
+                            await fun.delay(100, 0);
                             if (i === blobDataArray.length - 1) {
                                 promiseBlobArray = [];
                                 downloadNum = 0;
+                                downloading = false;
                                 fun.hide();
                             }
-                            await fun.delay(100, 0);
                         }
                     }
                     if (options.zip) {
@@ -7291,19 +7715,12 @@
                         }, (metadata) => {
                             fun.show("壓縮進度: " + metadata.percent.toFixed(2) + " %", 0);
                         }).then(async data => {
+                            debug("\nZIP壓縮檔數據：", data);
+                            saveData(data, `${title} [${imgsNum}P].zip`);
                             promiseBlobArray = [];
                             downloadNum = 0;
-                            debug("\nZIP壓縮檔數據：", data);
+                            downloading = false;
                             fun.hide();
-                            let a = document.createElement("a");
-                            a.href = URL.createObjectURL(data);
-                            a.download = `${title} [${imgsNum}P].zip`;
-                            document.body.appendChild(a);
-                            a.click();
-                            a.remove();
-                            setTimeout(() => {
-                                URL.revokeObjectURL(data);
-                            }, 5000);
                             let autoDownload = siteData.autoDownload;
                             let next = siteData.next;
                             if (next && autoDownload) {
@@ -7340,6 +7757,7 @@
                 } else {
                     promiseBlobArray = [];
                     downloadNum = 0;
+                    downloading = false;
                     showMsg("下載失敗數據為空...");
                 }
             });
@@ -7349,6 +7767,10 @@
     };
 
     const copyImgSrcText = async () => {
+        if (downloading) {
+            alert("下載&壓縮中請稍後再操作！");
+            return;
+        }
         let selector;
         if (typeof siteData.imgs == "function") {
             selector = siteData.imgs;
@@ -7457,6 +7879,14 @@
         document.body.appendChild(img);
     };
 
+
+    const hasTouchEvents = () => {
+        if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) {
+            return true;
+        }
+        return false;
+    };
+
     const elementClick = ele => {
         let dispatchTouchEvent = (_ele, type) => {
             let touchEvent = document.createEvent("UIEvent");
@@ -7467,16 +7897,11 @@
             }];
             _ele.dispatchEvent(touchEvent);
         };
-        dispatchTouchEvent(ele, "touchstart");
-        dispatchTouchEvent(ele, "touchend");
-        ele.click();
-    };
-
-    const hasTouchEvents = () => {
-        if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) {
-            return true;
+        if (hasTouchEvents()) {
+            dispatchTouchEvent(ele, "touchstart");
+            dispatchTouchEvent(ele, "touchend");
         }
-        return false;
+        ele.click();
     };
 
     const addReturnTopButton = () => {
@@ -7658,7 +8083,7 @@
                         }
                     }
                 };
-                if (hasTouchEvents() && options.touch) {
+                if (hasTouchEvents() && options.doubleTouchNext) {
                     document.addEventListener("dblclick", () => {
                         callback();
                     });
