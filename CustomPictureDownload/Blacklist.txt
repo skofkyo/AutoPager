@@ -1,4 +1,4 @@
-2023/06/06 01:58
+2023/06/09 18:47
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -625,6 +625,27 @@ http://www.17fuman.com/*/*/*.html
 拼拼漫画閱讀
 *://*.pinmh.com/manhua/*/*.html
 
+零点漫画閱讀
+*://*.0dmh.com/manhua/*/*.html
+
+雪儿漫画閱讀
+*://*.xuermh.com/manhua/*/*.html
+
+狗狗漫画閱讀
+*://*.gougoumh.com/manhua/*/*.html
+
+奇奇漫画閱讀
+*://*.qimhua.com/manhua/*/*.html
+
+悠闲漫画閱讀
+*://*.yxtun.com/manhua/*/*.html
+
+不卡漫画閱讀
+*://*.bukamh.com/manhua/*/*.html
+
+多熙漫画閱讀
+*://*.duoximh.com/manhua/*/*.html
+
 漫画160閱讀
 *://*.mh160.cc/kanmanhua/*/*.html
 
@@ -633,6 +654,9 @@ http://www.17fuman.com/*/*/*.html
 
 砂之船动漫家閱讀
 *://www.szcdmj.com/szcchapter/*
+
+雪人漫画閱讀
+*://www.xuerenmanhua.com/chapter/*
 
 好漫6閱讀
 *://www.haoman6.com/chapter/*
