@@ -3,11 +3,11 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.8
-// @description        專注於寫真、H漫、漫畫的網站，目前規則數350+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @version            1.1.9
+// @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
-// @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数350+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
-// @description:zh-TW  專注於寫真、H漫、漫畫的網站，目前規則數350+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
+// @description:zh-TW  專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @author             tony0809
 // @match              *://*/*
 // @exclude            *hcaptcha*
@@ -345,7 +345,7 @@
         css: "#footer~div[id][class]{display:none!important}",
         category: "nsfw2"
     }, {
-        name: "Hit-x-Hot www.hitxhot.org www.depvailon.com pic.yailay.com",
+        name: "Hit-x-Hot www.hitxhot.org www.depvailon.com pic.yailay.com nungvl.net",
         reg: /(www\.hitxhot\.org|pic\.yailay\.com)\/(gallerys|articles)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$/,
         imgs: () => {
             let max;
@@ -361,7 +361,7 @@
         css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
-        name: "Hit-x-HotM www.hitxhot.org www.depvailon.com pic.yailay.com",
+        name: "Hit-x-HotM www.hitxhot.org www.depvailon.com pic.yailay.com nungvl.net",
         reg: /(www\.hitxhot\.org|pic\.yailay\.com)\/(gallerys|articles)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html\?m=1$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html\?m=1$|nungvl\.net\/gallerys\/\d+\.cg\?m=1$/,
         imgs: () => {
             let max;
@@ -1512,8 +1512,8 @@
         customTitle: "return fun.geT('h1');",
         category: "nsfw1"
     }, {
-        name: "4KHD www.4khd.com",
-        reg: /www\.4khd\.com\/\d+\/\d+\/\d+\/.+\.html/,
+        name: "4KHD www.4khd.com www.4kep.com",
+        reg: /www\.4k(hd|ep)\.com\/\d+\/\d+\/\d+\/.+\.html/,
         imgs: async () => {
             await fun.getNP("#basicExample>a,.wp-block-image", ".current+li>a", null, ".page-link-box");
             return fun.getImgA("#gallery a", "#basicExample>a,.wp-block-image", 0)
@@ -3917,6 +3917,16 @@
         css: "#content>.col-lg-12,[id^=read_online_ads_area],#Big_Image~*{display:none!important}",
         category: "hcomic"
     }, {
+        name: "Caitlin.top",
+        reg: /caitlin\.top\/index\.php\?route=comic\/readOnline&comic_id=\d+/,
+        imgs: () => {
+            return Image_List.map(e => location.protocol + HTTP_IMAGE + e.sort + "." + e.extension);
+        },
+        insertImg: ["#Big_Image", 2],
+        customTitle: "return fun.geT('.page-header');",
+        css: "#content>.col-lg-12,[id^=read_online_ads_area],#Big_Image~*{display:none!important}",
+        category: "hcomic"
+    }, {
         name: "禁漫屋 jmwu.vip m.jmwu.vip",
         reg: /jmwu\.\w+\/chapter\/[\w-]+\.html/,
         imgs: "img[data-original]",
@@ -4045,13 +4055,13 @@
     }, {
         name: "Orzqwq List模式 orzqwq.com",
         reg: /orzqwq\.com\/manga\/.+style=list/,
+        include: "//option[@selected and text()='List style']",
         imgs: async () => {
             fun.show("等待關鍵元素中...", 0);
             await fun.waitEle(".img-responsive", 600);
             fun.hide();
             return [...fun.gae("img[data-src]")]
         },
-        include: "//option[@selected and text()='List style']",
         insertImg: [".reading-content", 2],
         customTitle: "return fun.geT('.breadcrumb>li:nth-child(2)').trim();",
         category: "hcomic"
@@ -6410,9 +6420,7 @@
         key: 0,
         reg: /^https?:\/\/m\.4khd\.com\//,
         init: () => {
-            setInterval(() => {
-                fun.ge("//a[text()='GET LINK']").click();
-            }, 200);
+            location.href = fun.ge("//a[text()='GET LINK']").href;
         },
         category: "none"
     }, {
@@ -8054,8 +8062,6 @@
 
     for (let i = 0; i < customData.length; i++) {
         if (customData[i].reg.test(siteUrl)) {
-            if (!ge(".customPicDownloadMsg")) fun.addCustomPicDownloadMsg();
-            if (!ge(".CustomPictureDownloadStyle")) fun.css(style);
             let delay = customData[i].delay;
             if (delay) {
                 await fun.delay(delay, 0);
@@ -8087,6 +8093,8 @@
                 }
             }
             siteData = customData[i];
+            if (!ge(".customPicDownloadMsg")) fun.addCustomPicDownloadMsg();
+            if (!ge(".CustomPictureDownloadStyle")) fun.css(style);
             if (customData[i].imgs) {
                 options.default = customData[i].imgs;
                 debug(`\nCSS/Xpath/JS選擇器：${options.default}`);
