@@ -1327,7 +1327,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.yymanhua.com/">yymanhua</a></td>
-                <td><a href="預設關閉</td>
+                <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.qiman59.com/">奇漫屋</a></td>
