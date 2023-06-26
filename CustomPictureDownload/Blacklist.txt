@@ -1,4 +1,4 @@
-2023/06/09 18:47
+2023/06/26 22:35
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -11,6 +11,9 @@ Mangabz閱讀
 
 Xmanhua閱讀
 /^https?:\/\/(www\.)?xmanhua\.com\/m\d+(-p\d+)?\//
+
+yymanhua
+/^https?:\/\/(www\.)?yymanhua\.com\/m\d+(-p\d+)?\//
 
 漫本閱讀
 /^https?:\/\/(www\.)?manben\.com\/m\d+(-p\d+)?\//
@@ -33,14 +36,14 @@ PimpAndHost相簿
 TWHentai圖片清單頁
 /twhentai\.com\/hentai_manga\/\d+\/$/
 
-Xiutaku
-/^https?:\/\/xiutaku\.com\/\d+$/
+Xiutaku/Kostaku
+/^https?:\/\/(xiutaku\.com|kostaku\.art)\/\d+$/
 
 免費私房圖
 /^https?:\/\/www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com\/\w+\/\w+\/\d+\/\d+\.html$/
 
 免費私房圖仿站
-/^https?:\/\/(www\.rosi8\.com|www\.sfjpg\.com|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)\/\w+\/\d+\.html$/
+/^https?:\/\/(www\.rosi8\.net|www\.sfjpg\.com|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)\/\w+\/\d+\.html$/
 
 嘿～色女孩
 /^https?:\/\/heysexgirl\.com\/archives\/\d+$/
@@ -112,7 +115,7 @@ NứngVL
 *://www.xiuren5.*/*/*.html
 
 秀人美女網
-*://www.xrmnw.xyz/*/*/*.html
+*://www.xrmn01.vip/*/*/*.html
 
 精品美女吧
 *://www.jpmn8.cc/*/*/*.html
@@ -131,13 +134,13 @@ NứngVL
 *://www.xgyw.net/*/*.html
 
 爱看美女网
-*://www.ikmn.vip/*/*.html
+*://www.ikmn*.vip/*/*.html
 
 微圖坊
 *://*v2ph.*/album/*
 
 美图乐
-*://www.meitule.cc/photo/*.html
+*://www.meitule.*/photo/*.html
 
 COSPLAY ZIP
 *://www.coszip.com/*.html
@@ -442,6 +445,9 @@ ACG漫画网
 松鼠症倉庫
 *://ahri8.top/readOnline2.php?ID=*
 
+Caitlin.top
+*caitlin.top/index.php?route=comic/readOnline*
+
 177漫画
 *://www.177pic*.com/html/*/*/*.html
 
@@ -721,22 +727,21 @@ https://www.nuyet.com/gallery/*
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
 *://www.xiuren5.*/*/*.html
-*://www.xrmnw.xyz/*/*/*.html
+*://www.xrmn01.vip/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
-*://www.xrmnw.xyz/*/*/*.html
-*://www.ikmn.vip/*/*.html
+*://www.ikmn5.vip/*/*.html
 *://meirentu.cc/pic/*.html
 *://www.xgmn*.com/*/*.html
 *://*v2ph.*/album/*
-*://www.meitule.cc/photo/*.html
+*://www.meitule.*/photo/*.html
 *://www.win4000.com/meinv*.html
 *://www.3gbizhi.com/meinv/*/pic*.html
 *://*.yeitu.com/meinv/*/*.html
 *://*.umei.cc/meinvtupian/*/*.htm
-*://www.meitu131.net/meinv/*/
-*://m.meitu131.net/meinv/*/
+*://www.meitu131.*/meinv/*/
+*://m.meitu131.*/meinv/*/
 *://www.2meinv.com/article-*.html
 *://wap.2meinv.com/article-*.html
 *://meitulu.me/item/*.html
@@ -751,7 +756,7 @@ https://www.nuyet.com/gallery/*
 *://www.haonvshen.com/gallery/*.html
 *://jablehk.com/*/*
 *://www.taotucc.com/*.html
-*://www.95mm.tv/*.html
+*://www.95mm.*/*.html
 *://www.taotu8.xyz/*/*/*.html
 *://*.tuiimg.com/meinv/*/
 *://www.xxiav.com/html/*/*/*.html
@@ -844,6 +849,7 @@ https://www.nuyet.com/gallery/*
 *://www.acgxmh.com/*/*.html
 *://www.wnacg.*/photos-index-aid-*.html
 *://ahri8.top/readOnline2.php?ID=*
+*caitlin.top/index.php?route=comic/readOnline*
 *://www.177pic*.com/html/*/*/*.html
 *://www.18mh.cc/index-look-name-*-id-*
 *://18h.animezilla.com/manga/*
@@ -886,6 +892,7 @@ https://www.nuyet.com/gallery/*
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
 /^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?xmanhua\.com/m\d+(-p\d+)?//
+/^https?://(www\.)?yymanhua\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?manben\.com/m\d+(-p\d+)?//
 /^https?://(www|tel|en|cnc|hk|m)?\.?(dm5|1kkk)\.(com|cn)/(m|ch|vol|other)[-_0-9]+//
 /(www\.)?(tuao8?|tumm|\d+mm|luge8?)\.[a-z]{2,3}/(post|web)//
@@ -893,8 +900,8 @@ https://www.nuyet.com/gallery/*
 /^https?://hotgirl\.asia/[^/]+/$/
 /pimpandhost\.com/album/\d+/
 /twhentai\.com/hentai_manga/\d+/$/
-/^https?://xiutaku\.com/\d+$/
+/^https?://(xiutaku\.com|kostaku\.art)/\d+$/
 /^https?://www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com/\w+/\w+/\d+/\d+\.html$/
-/^https?://(www\.rosi8\.com|www\.sfjpg\.com|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
+/^https?://(www\.rosi8\.net|www\.sfjpg\.com|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
 /^https?://heysexgirl\.com/archives/\d+$/
 /https?://www\.modelsvibe\.com/[^/]+/$/
