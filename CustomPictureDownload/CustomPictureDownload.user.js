@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.10
+// @version            1.1.11
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1275,15 +1275,19 @@
         name: "Asianude4u www.asianude4u.net",
         reg: /www\.asianude4u\.net\/.+\/.+\/$/,
         imgs: () => {
-            let arr = [...fun.gae(".wp-block-image>a,.mgl-img-container>a")].map(e => e.href);
-            try {
-                arr = arr.sort((a, b) => {
-                    return a.split("/").pop().match(/\d+/)[0] - b.split("/").pop().match(/\d+/)[0]
-                })
-            } catch (e) {
-                arr = arr
+            if (fun.ge(".wp-block-image a[href*=attachment_id]")) {
+                return [...fun.gae(".wp-block-image img[data-id]")];
+            } else {
+                let arr = [...fun.gae(".wp-block-image>a,.mgl-img-container>a")].map(e => e.href);
+                try {
+                    arr = arr.sort((a, b) => {
+                        return a.split("/").pop().match(/\d+/)[0] - b.split("/").pop().match(/\d+/)[0]
+                    })
+                } catch (e) {
+                    arr = arr
+                }
+                return arr;
             }
-            return arr;
         },
         //insertImg: ["//li[img[@id='bigImg']]", 1],
         insertImg: [
@@ -1354,8 +1358,10 @@
     }, {
         name: "套图网 taotu.uk",
         reg: /taotu\.uk\/\w+\.html/i,
-        imgs: ".entry-content img",
-        customTitle: "return fun.geT('.post-title>a');",
+        imgs: ".post_container img",
+        customTitle: "return fun.geT('.post_container_title>h1');",
+        next: ".prev_next_box.nav_previous>a",
+        prev: ".prev_next_box.nav_next>a",
         category: "nsfw1"
     }, {
         name: "Taotuxp.com www.taotucc.com",
