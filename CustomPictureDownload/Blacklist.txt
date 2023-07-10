@@ -1,4 +1,4 @@
-2023/06/26 22:35
+2023/07/10 22:38
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -112,7 +112,7 @@ NứngVL
 *://m.xwbar.com/plus/view-*.html
 
 秀人集
-*://www.xiuren5.*/*/*.html
+*://www.xiuren*.*/*/*.html
 
 秀人美女網
 *://www.xrmn01.vip/*/*/*.html
@@ -441,6 +441,7 @@ ACG漫画网
 
 紳士漫畫
 *://www.wnacg.*/photos-index-aid-*.html
+https://www.htmanga*.top/photos-index-aid-*.html
 
 松鼠症倉庫
 *://ahri8.top/readOnline2.php?ID=*
@@ -481,6 +482,9 @@ HO5HO
 *://cn.kukuc.co/*
 *://tw.kukuc.co/*
 *://www.kukuc.co/*
+*://cn.czmanga.com/*
+*://tw.czmanga.com/*
+*://www.czmanga.com/*
 
 Manhuagui看漫画閱讀
 *m.manhuagui.com/comic/*/*.html
@@ -700,6 +704,9 @@ http://www.17fuman.com/*/*/*.html
 *://cn.kukuc.co/*
 *://tw.kukuc.co/*
 *://www.kukuc.co/*
+*://cn.czmanga.com/*
+*://tw.czmanga.com/*
+*://www.czmanga.com/*
 *m.manhuagui.com*
 *://8.twobili.com/comic/insurance_*
 *://www.comicabc.com/online/new-*
