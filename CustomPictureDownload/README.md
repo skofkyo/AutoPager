@@ -360,7 +360,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/06/26 22:35</p>
+<p>2023/07/10 22:38</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -394,10 +394,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.24tupian.org/">24tupian</a></td>
                 <td>請使用專用腳本，<a href="https://greasyfork.org/scripts/464745">greasyfork.org/scripts/464745</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://acg.coserbox.net/">CoserBOX</a></td>
-                <td><a href="https://acg.coser.love/">acg.coser.love</a>，<a href="https://coserbox.org/">coserbox.org</a>，<a href="https://onlyfans.cx/">onlyfans.cx</a>，免積分需有第一張預覽圖</td>
             </tr>
             <tr>
                 <td><a href="https://yskhd.com/">优丝库HD</a></td>
@@ -862,8 +858,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.eporner.com/pics/">EPORNER</a></td>
                 <td>www.eporner.com/profile/namaiki/uploaded-pics/
-                    www.eporner.com/profile/janekhansen/watched-pics/
-                    www.eporner.com/profile/JORGE2030/uploaded-pics/
                 </td>
             </tr>
             <tr>
