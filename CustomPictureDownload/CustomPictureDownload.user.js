@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.11
+// @version            1.1.12
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -64,7 +64,7 @@
         reg: /(xchina|8se)\.(co|me)\/photo\/id-\w+\.html/, //網址正則匹配
         include: ".photos>a",
         imgs: () => {
-            let numP = fun.geT("div[target][title]").match(/\d+/)[0];
+            let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
             let max = Math.ceil(numP / 18);
             return fun.getImg("img.cr_only", max, 2, ["_600x0", ""]); //xhr併發請求抓取所有頁面的圖片元素
         },
@@ -118,7 +118,7 @@
         reg: /(xchina|8se)\.(co|me)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         imgs: async () => {
-            let numP = fun.geT("div[target][title]").match(/\d+/)[0];
+            let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
             let max = Math.ceil(numP / 18);
             if (max > 1 && [...fun.gae(".photos>a")].length < 19) {
                 let links = [];
@@ -4581,14 +4581,23 @@
         enable: 0,
         reg: /www\.i?dmzj\.com\/view\/\w+\/\d+\.html/,
         init: "$('body').unbind('keydown');",
-        imgs: () => {
-            return picArry.map(e => 'https://images.idmzj.com/' + decodeURI(e).replace(/amp;/g, ''));
+        imgs: async () => {
+            await fun.waitEle(".head_wz a[id]");
+            let timestamp = fun.geT("//script[contains(text(),'timestamp')]").match(/timestamp:(\d+)/)[1];
+            let comicId = fun.attr(".head_wz a[id]","id");
+            let chapterId = location.href.split("/").pop().match(/\d+/)[0];
+            let api = `https://www.dmzj.com/api/v1/comic1/chapter/detail?channel=pc&app_name=dmzj&version=1.0.0&timestamp=${timestamp}&uid&comic_id=${comicId}&chapter_id=${chapterId}`;
+            let json = await fetch(api).then(res => res.json());
+            return json.data.chapterInfo.page_url;
         },
         insertImg: [".comic_wraCon", 2],
         autoDownload: [0],
-        next: ".next>a",
-        prev: ".pre>a",
-        customTitle: "return fun.geT('.head_title');",
+        next: "a.btm_chapter_btn.fr",
+        prev: "a.btm_chapter_btn.fl",
+        customTitle: async () => {
+            await fun.waitEle(".head_wz a[id]");
+            return fun.geT('.head_title');
+        },
         category: "comic"
     }, {
         name: "Manhuagui看漫画M https://m.manhuagui.com/comic/17023/176171.html",
@@ -4735,7 +4744,7 @@
             }).then(res => res.json()).then(json => json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid));
         },
         customTitle: async () => {
-            await fun.delay(1500, 0);
+            await fun.delay(2000, 0);
             return fun.geT("li.breadcrumbs__item:nth-child(3)>a").trim() + " - " + fun.geT("li.breadcrumbs__item:nth-child(5)>div").trim()
         },
         one: 1,
