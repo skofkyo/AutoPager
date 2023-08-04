@@ -436,8 +436,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgmn08.com/">性感美女写真</a></td>
-                <td><a href="https://www.xgyw.net/">www.xgyw.net</a></td>
+                <td><a href="https://www.xgyw09.xyz/">性感美女写真</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn5.vip/">爱看美女网</a></td>
@@ -529,6 +529,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://ribi.me/">驲哔么</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://51sex.vip/">51sex</a></td>
+                <td>分類沒做好，寫真從網址後面的數字3開始遞增，79XX部。</td>
             </tr>
             <tr>
                 <td><a href="https://www.2meinv.com/">爱美女</a></td>
@@ -735,7 +739,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://sxchinesegirlz.one/">Chinese Beauties</a></td>
+                <td><a href="https://sxchinesegirlz01.xyz/">Chinese Beauties</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -796,6 +800,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://everia.club/">Everia.club</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.everiaclub.com/">Everia club</a></td>
                 <td></td>
             </tr>
             <tr>
