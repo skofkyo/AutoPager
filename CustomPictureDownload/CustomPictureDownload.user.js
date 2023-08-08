@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.13
+// @version            1.1.14
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -971,7 +971,12 @@
             let links = [];
             links.push(location.href);
             let url = location.href.replace(/\?amp=1$/, "");
-            let max = fun.geT(".page_nav.next", 2);
+            let max;
+            try {
+                max = fun.geT(".page_nav.next", 2);
+            } catch (e) {
+                max = fun.geT(".pagination-post>*:last-child");
+            }
             for (let i = 2; i <= max; i++) {
                 links.push(url + "/" + i + "?amp=1")
             }
@@ -979,9 +984,9 @@
         },
         insertImg: ["//p[amp-img]", 1],
         autoDownload: [0],
-        next: ".prev-post",
-        prev: ".next-post",
-        customTitle: "return fun.geT('h1.jeg_post_title');",
+        next: ".prev-post,.post-prev>a",
+        prev: ".next-post,.next-post>a",
+        customTitle: "return fun.geT('h1.jeg_post_title,h1.entry-title');",
         css: "pre[style]+p,figure.wp-block-image,.jeg_pagelinks{display:none!important}",
         category: "nsfw2"
     }, {
@@ -1535,6 +1540,19 @@
         next: ".previous>a",
         prev: ".next>a",
         customTitle: "return fun.geT('h1.entry-title');",
+        category: "nsfw2"
+    }, {
+        name: "nudeslegion.com",
+        reg: /nudeslegion.com\/[a-z-]+\/$/i,
+        include: ".msacwl-slider-wrap",
+        imgs: () => {
+            return [...fun.gae(".msacwl-img")].slice(1, -1)
+        },
+        insertImg: [
+            [".msacwl-slider-wrap", 2], 2
+        ],
+        customTitle: "return fun.geT('h1.entry-title');",
+        css: "footer+script+div[id]{display:none!important}",
         category: "nsfw2"
     }, {
         name: "MrCong.com",
