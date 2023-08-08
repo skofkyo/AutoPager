@@ -1,4 +1,4 @@
-2023/07/10 22:38
+2023/08/8 16:24
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -130,8 +130,7 @@ NứngVL
 *://meirentu.cc/pic/*.html
 
 性感美女写真
-*://www.xgmn*.*/*/*.html
-*://www.xgyw.net/*/*.html
+*://www.xgyw*.*/*/*.html
 
 爱看美女网
 *://www.ikmn*.vip/*/*.html
@@ -144,6 +143,7 @@ NứngVL
 
 COSPLAY ZIP
 *://www.coszip.com/*.html
+*://www.coszip.com/*.html*amp=1
 
 美桌
 *://www.win4000.com/meinv*.html
@@ -314,7 +314,7 @@ SexyAsianGirl
 *://www.sexyasiangirl.xyz/album/*.html
 
 Chinese Beauties
-*://sxchinesegirlz.one/*/*/*/*/
+*://sxchinesegirlz01.xyz/*/*/*/*/
 
 图宅网
 *://www.tuzac.com/file/*
@@ -485,6 +485,9 @@ HO5HO
 *://cn.czmanga.com/*
 *://tw.czmanga.com/*
 *://www.czmanga.com/*
+*://cn.dzmanga.com/*
+*://tw.dzmanga.com/*
+*://www.dzmanga.com/*
 
 Manhuagui看漫画閱讀
 *m.manhuagui.com/comic/*/*.html
@@ -864,6 +867,7 @@ https://www.nuyet.com/gallery/*
 *://orzqwq.com/manga/*/
 *://asiacomics.com/chapter/*
 *://www.coszip.com/*.html
+*://www.coszip.com/*.html*amp=1
 *://www.pictoa.com/albums/*/*.html
 *://www.imagefap.com/gallery/*
 *://www.imagefap.com/photo/*
