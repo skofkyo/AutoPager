@@ -475,6 +475,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://556123.xyz/">开始涩涩</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://www.446m.com/">萌图社</a></td>
                 <td></td>
             </tr>
@@ -492,6 +496,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.tuzac.com/">图宅网</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://www.qixianzi.com/">七仙子图片</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -780,6 +788,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://mitaku.net/">Mitaku</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://nudeslegion.com/">Nudeslegion</a></td>
                 <td></td>
             </tr>
             <tr>
