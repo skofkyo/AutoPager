@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.14
+// @version            1.1.15
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1221,6 +1221,18 @@
         customTitle: "return fun.geT('.post-info-text');",
         category: "nsfw1"
     }, {
+        name: "开始涩涩 556123.xyz",
+        reg: /https?:\/\/556123\.xyz\/index\.php\/archives\/\d+\//,
+        imgs: ".post-item-img.lazy",
+        insertImg: [
+            [".post-tags", 2], 2
+        ],
+        go: 1,
+        customTitle: () => {
+            return fun.title(" - 开始涩涩").replace(/\(\d+\s?photos\)/, "").trim();
+        },
+        category: "nsfw1"
+    }, {
         name: "秀色女神 www.xsnvshen.co",
         reg: /www\.xsnvshen\.(co|com)\/album\/\d+/,
         imgs: () => {
@@ -1543,7 +1555,7 @@
         category: "nsfw2"
     }, {
         name: "nudeslegion.com",
-        reg: /nudeslegion.com\/[a-z-]+\/$/i,
+        reg: /nudeslegion.com\/[0-9a-z-]+\/$/i,
         include: ".msacwl-slider-wrap",
         imgs: () => {
             return [...fun.gae(".msacwl-img")].slice(1, -1)
@@ -2044,6 +2056,22 @@
         },
         css: ".content-container .content{margin-right:0px!important}.fdp-click-area,.ad-side-right,.footer{display:none!important}",
         category: "nsfw2"
+    }, {
+        name: "七仙子图片 www.qixianzi.com",
+        reg: /www\.qixianzi\.com\/\w+\/\d+\.html$/,
+        imgs: async () => {
+            let a = fun.ge(".picture_content>a");
+            a.outerHTML = a.innerHTML;
+            await fun.getNP(".picture_content img", "//a[text()='下一页']", null, ".pagination");
+            return [...fun.gae(".picture_content img")]
+        },
+        insertImg: [".picture_content", 2],
+        next: "//li[contains(text(),'上一篇')]/a",
+        prev: "//li[contains(text(),'下一篇')]/a",
+        customTitle: () => {
+            return fun.geT("h1.diy-h1").replace(/\d+p/i, "").trim();
+        },
+        category: "nsfw1"
     }, {
         name: "嘿～色女孩 heysexgirl.com",
         reg: /heysexgirl\.com\/archives\/\d+$/,
