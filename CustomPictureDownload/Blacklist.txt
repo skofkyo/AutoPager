@@ -1,4 +1,4 @@
-2023/08/8 16:24
+2023/08/10 14:24
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -318,6 +318,9 @@ Chinese Beauties
 
 图宅网
 *://www.tuzac.com/file/*
+
+七仙子图片
+*://www.qixianzi.com/*/*.html
 
 秀窝
 *://www.xiuwo.net/tu/*.html
@@ -899,6 +902,7 @@ https://www.nuyet.com/gallery/*
 *://www.meimeimei.org/*/*/
 *://xem.anhvl.net/*/
 *://www.dongojyousan.com/articles/*.html
+*://www.qixianzi.com/*/*.html
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
 /^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
