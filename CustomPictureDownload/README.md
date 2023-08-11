@@ -392,10 +392,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>請使用專用腳本，<a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.24tupian.org/">24tupian</a></td>
-                <td>請使用專用腳本，<a href="https://greasyfork.org/scripts/464745">greasyfork.org/scripts/464745</a></td>
-            </tr>
-            <tr>
                 <td><a href="https://yskhd.com/">优丝库HD</a></td>
                 <td>免VIP</td>
             </tr>
