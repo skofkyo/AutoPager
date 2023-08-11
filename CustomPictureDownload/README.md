@@ -360,7 +360,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/07/10 22:38</p>
+<p>2023/08/10 14:24</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -390,6 +390,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.nlegs.com/">NLegs</a></td>
                 <td>請使用專用腳本，<a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.24tupian.org/">24tupian</a></td>
+                <td>請使用專用腳本，<a href="https://greasyfork.org/scripts/464745">greasyfork.org/scripts/464745</a></td>
             </tr>
             <tr>
                 <td><a href="https://yskhd.com/">优丝库HD</a></td>
@@ -463,7 +467,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://www.mfsft.com/">免费私房图</a></td>
                 <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a>
                     ，發布頁，<a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>，
-                    相似仿站，<a href="https://www.rosi8.net/">www.rosi8.net</a>，<a href="https://www.sfjpg.com/">www.sfjpg.com</a>，<a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>，<a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
+                    相似仿站，<a href="https://www.rosi8.net/">www.rosi8.net</a>，<a href="https://www.sfjpg.com/">www.sfjpg.com</a>，<a href="https://www.sfjpg.net/">www.sfjpg.net</a>，<a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>，<a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
                 </td>
             </tr>
             <tr>
@@ -479,11 +483,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://baoruba.com/">私图网</a></td>
+                <td><a href="https://baoruba.com/">私图网</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://www.umeitu.com/">尤美图库</a></td>
+                <td><a href="https://www.umeitu.com/">尤美图库</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -491,15 +495,19 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://www.tuzac.com/">图宅网</a></td>
+                <td><a href="https://www.tuzac.com/">图宅网</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://www.qixianzi.com/">七仙子图片</a></td>
+                <td><a href="https://www.kkc3.com/">咔咔西三</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://heysexgirl.com/">嘿～色女孩</a></td>
+                <td><a href="https://www.qixianzi.com/">七仙子图片</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://heysexgirl.com/">嘿～色女孩</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -624,6 +632,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://diskgirl.com/imageslist">硬盘少女</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.meinvku.org.cn/">美女图片库</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1054,7 +1066,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://cn.angirlz.com/">Sexyxbody</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Sexyxbody.txt">另同系列網站40個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Sexyxbody.txt">另同系列網站52個</a></td>
             </tr>
             <tr>
                 <td><a href="https://gogortrt.com/">gogo人体艺术</a></td>
@@ -1303,6 +1315,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.dagumanhua.net/">m.dagumanhua.net</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
+                <td><a href="https://dogemanga.com/">漫畫狗</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
                 <td></td>
             </tr>
@@ -1358,6 +1374,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.dmzj.com/">动漫之家</a></td>
                 <td><a href="https://manhua.dmzj.com/">manhua.dmzj.com</a>，<a href="https://m.dmzj.com/">m.dmzj.com</a>，預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.manhuadb.com/">漫画DB</a></td>
+                <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
