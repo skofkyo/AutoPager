@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.16
+// @version            1.1.17
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -37,7 +37,7 @@
         //default: "js;return [...document.images];",
         zip: true, //true圖片下載後壓縮打包，false批量下載圖片，無法全自動下載
         file_extension: "zip", //zip or cbz
-        autoDownload: 0, //站點全局自動下載開關0關1開，需要customData也有autoDownload
+        autoDownload: 1, //站點全局自動下載開關0關1開，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有NEXT時自動下載的延遲秒數
         comic: 0, //1，忽視漫畫站點開關選項，啟用所有漫畫類規則
         doubleTouchNext: true //true開啟false關閉，觸控裝置雙擊前往下一頁
@@ -4259,6 +4259,17 @@
         reg: /bad\.news\/mh\/view\/id-\d+/,
         imgs: ".img-responsive",
         one: 1,
+        category: "hcomic"
+    }, {
+        name: "H漫画 mhdnf.xyz",
+        reg: /https?:\/\/mhdnf\.xyz\/play\?linkId=\d+&bookId=\d+&path=\d+&key=.+/,
+        imgs: "#imgList>img:not([src*=QRCode])",
+        next: "//a[text()='下一話']",
+        prev: "//a[text()='上一話']",
+        autoDownload: [0],
+        customTitle: () => {
+            return fun.attr("meta[name='apple-mobile-web-app-title']","content")
+        },
         category: "hcomic"
     }, {
         name: "嗨皮漫畫閱讀 https://m.happymh.com/manga/daiwangraoming",
