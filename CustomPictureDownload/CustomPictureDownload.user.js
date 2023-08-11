@@ -37,7 +37,7 @@
         //default: "js;return [...document.images];",
         zip: true, //true圖片下載後壓縮打包，false批量下載圖片，無法全自動下載
         file_extension: "zip", //zip or cbz
-        autoDownload: 1, //站點全局自動下載開關0關1開，需要customData也有autoDownload
+        autoDownload: 0, //站點全局自動下載開關0關1開，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有NEXT時自動下載的延遲秒數
         comic: 0, //1，忽視漫畫站點開關選項，啟用所有漫畫類規則
         doubleTouchNext: true //true開啟false關閉，觸控裝置雙擊前往下一頁
@@ -213,38 +213,6 @@
             return fun.attr(".img-fluid", "alt").replace(/\[福利COS\]\s?/, "");
         },
         category: "nsfw1"
-    }, {
-        name: "CoserBOX - 免積分(需要有正確的第一張圖) acg.coserbox.net acg.coser.love coserbox.org  onlyfans.cx picacg.org loli.pub",
-        enable: 0,
-        reg: /((coserbox|picacg)\.org|acg\.coser\.love|onlyfans\.cx|loli\.pub|(acg\.)?coserbox\.net)\/image\/\w+(\.html)?/i,
-        exclude: "#lightgallery img[data-src][width='540'][height='382']",
-        imgs: () => {
-            let ps = fun.geT(".list>li:nth-child(2)").match(/\d+/)[0];
-            let img = fun.ge("img.lazyload");
-            let m = img.dataset.src.match(/^(.+\/)(\d+)(\.[a-z]{3,4})$/i);
-            let path = m[1];
-            let start = m[2];
-            let ex = m[3];
-            let arr = [];
-            if (start == 0) {
-                for (let i = start; i < ps; i++) {
-                    arr.push(path + i + ex)
-                }
-            } else if (start == 1) {
-                for (let i = start; i <= ps; i++) {
-                    arr.push(path + i + ex)
-                }
-            } else if (start > 1) {
-                for (let i = start; i < (parseInt(start) + parseInt(ps)); i++) {
-                    arr.push(path + i + ex)
-                }
-            }
-            return arr;
-        },
-        insertImg: ["#lightgallery", 2],
-        customTitle: "return fun.geT('h1');",
-        css: ".plan.plan--best,.ad_card{display:none!important}.article__content img{margin-bottom:2px!important;border-radius:0!important}",
-        category: "nsfw2"
     }, {
         name: "优丝库HD - 免VIP yskhd.com",
         reg: /yskhd\.com\/archives\/\d+/i,
@@ -1579,9 +1547,9 @@
         insertImg: [
             [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image"], 2
         ],
-        autoDownload: [0],
-        next: "a[rel=prev]",
-        prev: "a[rel=next]",
+        //autoDownload: [0],
+        //next: "a[rel=prev]",
+        //prev: "a[rel=next]",
         customTitle: () => {
             return fun.geT("h3.wp-block-post-title").replace(/\[(\d+)?mb-\d+photos\]/i, "");
         },
