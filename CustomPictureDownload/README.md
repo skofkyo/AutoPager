@@ -1261,6 +1261,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://mhdnf.xyz/">H漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://madoucun.com/arttype/47.html">麻豆村浅看色漫</a></td>
                 <td></td>
             </tr>
