@@ -476,6 +476,9 @@ HO5HO
 禁漫屋
 *jmwu.vip/chapter/*.html
 
+H漫画
+*://mhdnf.xyz/play?linkId=*
+
 漫畫類
 
 包子漫画
@@ -865,6 +868,7 @@ https://www.nuyet.com/gallery/*
 *7mmtv.sx/*hcomic_content/*/content.html
 *://18h.mm-cg.com/*18H_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
+*://mhdnf.xyz/play?linkId=*
 *://www.acgxmh.com/*/*.html
 *://www.wnacg.*/photos-index-aid-*.html
 *://ahri8.top/readOnline2.php?ID=*
