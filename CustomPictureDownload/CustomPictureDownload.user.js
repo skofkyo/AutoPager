@@ -258,7 +258,12 @@
             let max = fun.gae(".gallery-item").length;
             let url = fun.ge(".gallery-item a").href;
             let m = url.match(/^(.+\/)([\w-]+)(\.[a-z]{3,4})$/i);
-            let path = m[1];
+            let path;
+            try {
+                path = m[1];
+            } catch (e) {
+                return arr
+            }
             let fileName = m[2];
             let ex = m[3];
             let blur = fun.ge(".gallery-blur-item");
@@ -1365,9 +1370,23 @@
         name: "套图网 taotu.uk",
         reg: /taotu\.uk\/\w+\.html/i,
         imgs: ".post_container img",
-        customTitle: "return fun.geT('.post_container_title>h1');",
+        autoDownload: [0],
         next: ".prev_next_box.nav_previous>a",
         prev: ".prev_next_box.nav_next>a",
+        customTitle: "return fun.geT('.post_container_title>h1');",
+        category: "nsfw1"
+    }, {
+        name: "套圖TAOTU.ORG taotu.org",
+        reg: /https?:\/\/(\w{2}\.)?taotu\.org\/[\w-]+\/[^\/]+\/[^\/]+\//i,
+        imgs: "a[data-fancybox=gallery]",
+        insertImg: [
+            ["#wrapper-footer", 2], 2
+        ],
+        autoDownload: [0],
+        next: ".next a",
+        prev: ".prev a",
+        customTitle: "return fun.geT('.suit_title>h1');",
+        go: 1,
         category: "nsfw1"
     }, {
         name: "Taotuxp.com www.taotucc.com",
@@ -1497,6 +1516,29 @@
         customTitle: () => {
             return fun.geT("h1.entry-title").replace(/\s?“[^”]+”/, "").trim();
         },
+        category: "nsfw2"
+    }, {
+        name: "X Cosplay xcosplay.top",
+        reg: /xcosplay\.top\/\d+\/\d+\/\d+\//,
+        imgs: ".galeria_img>img",
+        autoDownload: [0],
+        next: "a[rel=prev]",
+        prev: "a[rel=next]",
+        customTitle: "return fun.geT('h1.entry-title');",
+        category: "nsfw1"
+    }, {
+        name: "AsiaOnTop asiaon.top",
+        reg: /https?:\/\/asiaon\.top\/[^\/]+\/$/,
+        include: ".modula-items",
+        imgs: "a[data-image-id]",
+        insertImg: [
+            [".modula-items", 2], 2
+        ],
+        autoDownload: [0],
+        next: "a#prepost",
+        prev: "a#nextpost",
+        customTitle: "return fun.geT('.single_post_title_main').replace(':',' -');",
+        go: 1,
         category: "nsfw2"
     }, {
         name: "Mitaku mitaku.net",
@@ -2003,7 +2045,7 @@
         },
         category: "nsfw1"
     }, {
-        name: "美女图片库 www.meinvku.org.cn",
+        name: "美女库 www.meinvku.org.cn",
         reg: /www\.meinvku\.org\.cn\/album\/\d+(\.html)?$/,
         imgs: () => {
             let a = fun.ge("#img_src");
@@ -2466,6 +2508,16 @@
         customTitle: "return fun.geT('.photoAlbumTitleV2').trim()",
         category: "nsfw2"
     }, {
+        name: "MrDeepFakes mrdeepfakes.com",
+        reg: /https?:\/\/mrdeepfakes\.com\/photo\/\d+\//,
+        imgs: "a[data-fancybox-type=image]",
+        insertImg: [
+            [".info-holder", 2], 1
+        ],
+        customTitle: "return fun.geT('.headline>h1')",
+        go: 1,
+        category: "nsfw2"
+    }, {
         name: "PicHunter www.pichunter.com",
         reg: /www\.pichunter\.com\/gallery\/\d+\/.+/,
         imgs: ".flex-images figure>a",
@@ -2898,7 +2950,15 @@
         name: "girlgirlgo.org girlgirlgo.net girlgirlgo.top girlgirlgo.icu girlgirlgo.biz girlygirlpic.com",
         reg: /https?:\/\/\w{2}\.(girlgirlgo|girlygirlpic)\.(org|net|icu|com|biz|top)\/a\/\w+/,
         imgs: ".figure-link",
-        next: "a[rel=next]",
+        next: async () => {
+            await fun.waitEle("a[rel=next]", 30);
+            let next = fun.ge("a[rel=next]");
+            if (next) {
+                return next.href
+            } else {
+                return null
+            }
+        },
         prev: "a[rel=prev]",
         customTitle: async () => {
             await fun.waitEle(".figure-link");
@@ -3857,6 +3917,40 @@
         },
         category: "hcomic"
     }, {
+        name: "8muses comics.8muses.com",
+        reg: /https?:\/\/comics\.8muses\.com\/comics\/album\/[\w-]+\/[\w-]+\//i,
+        include: ".gallery",
+        exclude: ".image-title>.title-text",
+        imgs: () => {
+            let th = [...fun.gae("img[data-src]")].map(e => e.dataset.src.replace("/image/th/", "https://comics.8muses.com/image/fl/"));
+            let arr = [];
+            let loadnum = 0;
+            for (let i in th) {
+                let promise = new Promise(resolve => {
+                    let temp = new Image();
+                    temp.src = th[i];
+                    temp.onload = () => {
+                        loadnum++;
+                        fun.show(`loading ${loadnum}/${th.length}`, 0);
+                        resolve(th[i]);
+                    }
+                    temp.onerror = () => {
+                        loadnum++;
+                        fun.show(`loading ${loadnum}/${th.length}`, 0);
+                        resolve(th[i].replace("/fl/", "/fm/"));
+                    }
+                });
+                arr.push(promise)
+            }
+            return Promise.all(arr)
+        },
+        insertImg: [
+            [".gallery", 2], 1
+        ],
+        go: 1,
+        css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
+        category: "hcomic"
+    }, {
         name: "H漫畫貼圖 - 7mmtv.sx",
         reg: /7mmtv\.sx\/.*hcomic/,
         imgs: () => {
@@ -4229,14 +4323,14 @@
         one: 1,
         category: "hcomic"
     }, {
-        name: "H漫画 mhdnf.xyz",
-        reg: /https?:\/\/mhdnf\.xyz\/play\?linkId=\d+&bookId=\d+&path=\d+&key=.+/,
+        name: "H漫画 mhdnf.xyz www.mhdnf.xyz mhqwe.xyz www.mhqwe.xyz",
+        reg: /https?:\/\/(www\.)?(mhdnf|mhqwe)\.xyz\/play\?linkId=\d+&bookId=\d+&path=\d+&key=.+/,
         imgs: "#imgList>img:not([src*=QRCode])",
         next: "//a[text()='下一話']",
         prev: "//a[text()='上一話']",
         autoDownload: [0],
         customTitle: () => {
-            return fun.attr("meta[name='apple-mobile-web-app-title']","content")
+            return fun.attr("meta[name='apple-mobile-web-app-title']", "content")
         },
         category: "hcomic"
     }, {
@@ -8421,7 +8515,6 @@
                 if (typeof next === "function") {
                     link = await next();
                 } else if (typeof next === "string") {
-                    await fun.waitEle(next, 30);
                     link = fun.ge(next);
                 }
                 debug("\n怠惰NEXT\n", link);
