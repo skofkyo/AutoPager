@@ -591,6 +591,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.95mm.me/">MM 范</a></td>
                 <td></td>
             </tr>
@@ -631,7 +635,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.meinvku.org.cn/">美女图片库</a></td>
+                <td><a href="https://www.meinvku.org.cn/">美女库</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -791,6 +795,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://asiaon.top/">AsiaOnTop</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://mitaku.net/">Mitaku</a></td>
                 <td></td>
             </tr>
@@ -800,6 +808,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://buondua.com/">Buon Dua</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://xcosplay.top/">X Cosplay</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -895,6 +907,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://cn.pornhub.com/albums">PornHub</a></td>
                 <td>很容易被短暫封IP...</td>
+            </tr>
+            <tr>
+                <td><a href="https://mrdeepfakes.com/photos">MrDeepFakes</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://xher.net/">xher.net</a></td>
@@ -1169,6 +1185,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://hentaiporns.net/">HentaiPorns</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://comics.8muses.com/">8muses</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://18p.fun/">開車漫畫</a></td>
                 <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
             </tr>
@@ -1258,7 +1282,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://mhdnf.xyz/">H漫画</a></td>
-                <td></td>
+                <td><a href="https://www.mhdnf.xyz/">www.mhdnf.xyz</a>，<a href="https://mhqwe.xyz/">mhqwe.xyz</a>，<a href="https://www.mhqwe.xyz/">www.mhqwe.xyz</a></td>
             </tr>
             <tr>
                 <td><a href="https://madoucun.com/arttype/47.html">麻豆村浅看色漫</a></td>
