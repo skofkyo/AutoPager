@@ -1,4 +1,4 @@
-2023/08/11 13:52
+2023/08/17 22:32
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -174,8 +174,8 @@ MEITU131
 小姐姐
 *nvsheng.cc/m*/*.html
 
-遛无写真
-*://www.6evu.com/*.html
+美女云图网
+*://www.c0h.net/*.html
 
 秀色女神
 *://m.xsnvshen.co/album/*
@@ -228,6 +228,7 @@ Buon Dua
 
 BAOBUA.COM
 *://www.baobua.net/post/*
+*baobua.com/post/*
 
 HOTGIRLchina
 *://hotgirlchina.com/*-photos*/
@@ -369,6 +370,18 @@ Forum Girl
 
 Anh VL
 *://xem.anhvl.net/*/
+
+美女秀
+*www.22mm.net/a/*.html
+
+内涵吧
+*www.neihantu.net/zhainannvshen/*.html
+
+赞MM
+*www.zanmm.com/tupian/*.html
+
+福利姬美图
+*fuligirl.net/albums/*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -618,7 +631,7 @@ http://*.wuqimh.net/*/*.html
 *77mh.xyz/*/*.html
 
 仙漫网閱讀
-*://*.xianmanwang.com/*/*.html
+*://*.gaonaojin.com/*/*.html
 
 大树漫画閱讀
 *://www.dashumanhua.com/comic/*/read-*.html
@@ -701,9 +714,15 @@ http://www.17fuman.com/*/*/*.html
 快看漫画閱讀
 *://www.kuaikanmanhua.com/web/comic/*
 
+漫画牛閱讀
+*manhua666.com/*/*.html
+
+漫画台閱讀
+manhuatai.org/manhua/*/*.html
 
 ====================自用完整黑名單====================
 *://ani.gamer.com.tw/animeVideo.php*
+*://*copymanga.site/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
 *manmanju.com/comiclist/*/*/*.htm
 *m.ikkdm.com/comiclist/*/*/*.htm
@@ -722,6 +741,9 @@ http://www.17fuman.com/*/*/*.html
 *://cn.czmanga.com/*
 *://tw.czmanga.com/*
 *://www.czmanga.com/*
+*://cn.dzmanga.com/*
+*://tw.dzmanga.com/*
+*://www.dzmanga.com/*
 *m.manhuagui.com*
 *://8.twobili.com/comic/insurance_*
 *://www.comicabc.com/online/new-*
@@ -748,14 +770,14 @@ https://www.nuyet.com/gallery/*
 *://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
-*://www.xiuren5.*/*/*.html
+*://www.xiuren*.*/*/*.html
 *://www.xrmn01.vip/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
 *://www.ikmn5.vip/*/*.html
 *://meirentu.cc/pic/*.html
-*://www.xgmn*.com/*/*.html
+*://www.xgyw*.*/*/*.html
 *://*v2ph.*/album/*
 *://www.meitule.*/photo/*.html
 *://www.win4000.com/meinv*.html
@@ -769,10 +791,9 @@ https://www.nuyet.com/gallery/*
 *://meitulu.me/item/*.html
 *://mm.tvv.tw/archives/*.html
 *nvsheng.cc/m*/*.html
-*://www.6evu.com/*.html
+*://www.c0h.net/*.html
 *://m.xsnvshen.co/album/*
 *://www.beautyleg6.com/*/*/*.html
-*m.beautyleg6.com/view.php?aid=*
 *://www.ikanins.com/*/
 *://www.dmmtu.com/*/*.html
 *://www.haonvshen.com/gallery/*.html
@@ -784,7 +805,7 @@ https://www.nuyet.com/gallery/*
 *://www.xxiav.com/html/*/*/*.html
 *://xgirlscollection.com/collection/*
 *://www.4khd.com/*/*/*/*.html
-*://buondua.com/*-photos-*
+/://buondua.com/[^\\?]+/
 *://hotgirlchina.com/*-photos*/
 *://theasiagirl.com/*-photos*/
 *://anhsec.com/*-photos*/
@@ -858,7 +879,7 @@ https://www.nuyet.com/gallery/*
 *://*7m11.com/*/*/
 *://*61ak.com/*/*/
 *://*34bu.com/*/*/
-*://*344F.com/*/*/
+*://*344f.com/*/*/
 *://*23bp.com/*/*/
 *://*rty6.com/*/*/
 *://*22gs.com/*/*/
@@ -871,6 +892,7 @@ https://www.nuyet.com/gallery/*
 *://mhdnf.xyz/play?linkId=*
 *://www.acgxmh.com/*/*.html
 *://www.wnacg.*/photos-index-aid-*.html
+https://www.htmanga*.top/photos-index-aid-*.html
 *://ahri8.top/readOnline2.php?ID=*
 *caitlin.top/index.php?route=comic/readOnline*
 *://www.177pic*.com/html/*/*/*.html
@@ -883,12 +905,13 @@ https://www.nuyet.com/gallery/*
 *://www.coszip.com/*.html*amp=1
 *://www.pictoa.com/albums/*/*.html
 *://www.imagefap.com/gallery/*
+*://www.imagefap.com/pictures/*
 *://www.imagefap.com/photo/*
 *://www.buzzav.com/album/*
 *://sexygirl.cc/a/*.html
 *://kanmeitu1.cc/p/*.html
 *://www.sexyasiangirl.xyz/album/*.html
-*://sxchinesegirlz.one/*/*/*/*/
+*://sxchinesegirlz01.xyz/*/*/*/*/
 *://www.tuzac.com/file/*
 *://www.xiuwo.net/tu/*.html
 *://xiuren0.com/*.html
@@ -914,6 +937,12 @@ https://www.nuyet.com/gallery/*
 *://www.dongojyousan.com/articles/*.html
 *://www.qixianzi.com/*/*.html
 *://www.meinvku.org.cn/album/*
+*www.22mm.net/a/*.html
+*www.neihantu.net/zhainannvshen/*.html
+*www.zanmm.com/tupian/*.html
+*fuligirl.net/albums/*
+*://www.baobua.net/post/*
+*baobua.com/post/*
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
 /^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
