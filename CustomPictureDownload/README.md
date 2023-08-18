@@ -475,6 +475,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://dongti.blog.2nt.com/">胴体的诱惑</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://556123.xyz/">开始涩涩</a></td>
                 <td></td>
             </tr>
@@ -657,6 +661,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.neihantu.net/zhainannvshen/">内涵吧</a></td>
                 <td><a href="https://wap.neihantu.net/zhainannvshen/">wap.neihantu.net</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://jrants.com/">青年美圖</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="http://inewgirl.com/">女神社</a></td>
@@ -1422,10 +1430,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.manben.com/">漫本</a></td>
                 <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.dmzj.com/">动漫之家</a></td>
-                <td><a href="https://manhua.dmzj.com/">manhua.dmzj.com</a>，<a href="https://m.dmzj.com/">m.dmzj.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.manhuadb.com/">漫画DB</a></td>
