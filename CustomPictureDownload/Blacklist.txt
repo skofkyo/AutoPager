@@ -1,4 +1,4 @@
-2023/08/17 22:32
+2023/08/19 22:43
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -290,9 +290,9 @@ Pictoa
 *://www.pictoa.com/albums/*/*.html
 
 Hentai Image
-*://hentai-img.com/image/*/
-*://hentai-cosplays.com/image/*/
-*://porn-images-xxx.com/image/*/
+*://*hentai-img.com/image/*/
+*://*hentai-cosplays.com/image/*/
+*://*porn-images-xxx.com/image/*/
 
 ImageFap
 *://www.imagefap.com/gallery/*
@@ -391,6 +391,12 @@ Anh VL
 
 咔咔西三
 *www.kkc3.com/file/*
+
+韩剧组
+*www.hanjuzu.com/handetail-*.html
+
+好圖屋
+*haotuwu.com/*/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -842,9 +848,9 @@ https://www.nuyet.com/gallery/*
 *://niuc*.com/*.html
 *xhamster.com/photos/gallery*
 *pornhub.com/album/*
-*://hentai-img.com/image/*/
-*://hentai-cosplays.com/image/*/
-*://porn-images-xxx.com/image/*/
+*://*hentai-img.com/image/*/
+*://*hentai-cosplays.com/image/*/
+*://*porn-images-xxx.com/image/*/
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
 *://www.54aj.com/*/*.html
@@ -963,6 +969,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *jrants.com/*.html
 *taotu.org/*/*/
 *www.kkc3.com/file/*
+*www.hanjuzu.com/handetail-*.html
+*www.haotuwu.com/*/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
