@@ -360,7 +360,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/08/17 22:32</p>
+<p>2023/08/19 22:43</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -389,7 +389,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.nlegs.com/">NLegs</a></td>
-                <td>請使用專用腳本，<a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a></td>
+                <td><a href="https://www.honeyleg.com/">HoneyLeg</a>，<a href="https://www.ladylap.com/">Lady Lap</a>，<a href="https://www.nuyet.com/">Nuyet</a>，請使用專用腳本，<a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a></td>
             </tr>
             <tr>
                 <td><a href="https://yskhd.com/">优丝库HD</a></td>
@@ -475,6 +475,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.sdxt.org/">深度学堂</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.haotuwu.com/">好圖屋</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.tujigu.top/">爱图集谷</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://dongti.blog.2nt.com/">胴体的诱惑</a></td>
                 <td></td>
             </tr>
@@ -508,7 +520,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.qixianzi.com/">七仙子图片</a></td>
-                <td></td>
+                <td><a href="https://www.qixianzi.com/e/wap/">www.qixianzi.com/e/wap/</a></td>
             </tr>
             <tr>
                 <td><a href="https://heysexgirl.com/">嘿～色女孩</a></td>
@@ -588,6 +600,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://kenshin.hk/category/jnews/photoalbum/">劍心回憶</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.hanjuzu.com/hantype/23.html">韩剧组</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1230,7 +1246,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.wnacg.com/">紳士漫畫</a></td>
-                <td>作用在圖片清單、下拉閱讀頁，<a href="http://m.wnacg.com/">m.wnacg.com</a>，<a href="http://wn01.ru/">wn01.ru</a>，<a href="http://wn02.ru/">wn02.ru</a></td>
+                <td>作用在圖片清單、下拉閱讀頁，<a href="http://m.wnacg.com/">m.wnacg.com</a>，<a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>，<a href="http://wn01.ru/">wn01.ru</a>，<a href="http://wn02.ru/">wn02.ru</a></td>
             </tr>
             <tr>
                 <td><a href="https://ahri8.top/">松鼠症倉庫</a></td>
