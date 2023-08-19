@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.18
+// @version            1.1.19
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -209,6 +209,7 @@
         name: "驲哔么 ribi.me",
         reg: /ribi\.me\/text\/\d+\/1$/,
         imgs: ".img-fluid",
+        insertImg: [".container", 1],
         customTitle: () => {
             return fun.attr(".img-fluid", "alt").replace(/\[福利COS\]\s?/, "");
         },
@@ -1143,6 +1144,24 @@
         customTitle: "return fun.geT('.top-title');",
         category: "nsfw1"
     }, {
+        name: "爱图集谷 www.tujigu.top",
+        reg: /www\.tujigu\.top\/photo\/.+/,
+        imgs: ".entry-body img",
+        insertImg: [".entry-body", 2],
+        customTitle: "return fun.geT('.entry-title');",
+        category: "nsfw1"
+    }, {
+        name: "jk-coser www.jk-coser.com",
+        reg: /www.\jk-coser\.com\/m\d\/\d+\.html/,
+        imgs: ".image_div img",
+        autoDownload: [0],
+        next: ".article-nav-prev a,.nav-links .next",
+        prev: 1,
+        customTitle: () => {
+            return fun.geT(".item_title>h1").replace(/\/?\(\d+P\)/i, "").trim();
+        },
+        category: "nsfw1"
+    }, {
         name: "赞MM www.zanmm.com",
         reg: /www\.zanmm\.com\/tupian\/\d+\.html/,
         imgs: () => {
@@ -1278,11 +1297,45 @@
         customTitle: "return fun.geT('.post-info-text');",
         category: "nsfw1"
     }, {
+        name: "深度学堂 www.sdxt.org",
+        reg: /www\.sdxt\.org\/\d+.html/,
+        imgs: () => {
+            return [...fun.gae("p[data-src]")].map(e => "https:" + e.dataset.src)
+        },
+        insertImg: [".post-content", 2],
+        autoDownload: [0],
+        next: ".entry-page-prev",
+        prev: ".entry-page-next",
+        customTitle: "return fun.geT('.post-title');",
+        css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw1"
+    }, {
         name: "胴体的诱惑 dongti.blog.2nt.com",
         reg: /dongti\.blog\.2nt\.com\/blog-entry-\d+.html/,
         imgs: ".inner-contents img",
         customTitle: () => {
             return fun.geT("#entry-title").replace(/\[\d+P-[\d\.]+MB?\]/i, "").trim();
+        },
+        category: "nsfw1"
+    }, {
+        name: "好圖屋 www.haotuwu.com m.haotuwu.com",
+        reg: /(www|m)\.haotuwu\.com\/\w+\/\d+\.html/,
+        imgs: () => {
+            let links = [];
+            links.push(location.href);
+            let url = location.href.replace(".html", "");
+            let max = fun.geT(".suoyou").match(/\d+\/(\d+)/)[1];
+            for (let i = 2; i <= max; i++) {
+                links.push(url + "/page/" + i + ".html")
+            }
+            return fun.getImgA("#showimg img,.img-box img", links);
+        },
+        insertImg: ["#showimg,.img-box", 2],
+        autoDownload: [0],
+        next: "//div[contains(text(),'上一篇')]/a | //span[contains(text(),'上一篇')]/following-sibling::a[1]",
+        prev: "//div[contains(text(),'下一篇')]/a | //span[contains(text(),'下一篇')]/following-sibling::a[1]",
+        customTitle: () => {
+            return fun.geT(".showtitle>h2,.imgTitle-name");
         },
         category: "nsfw1"
     }, {
@@ -1989,6 +2042,21 @@
         },
         category: "nsfw1"
     }, {
+        name: "韩剧组 https://www.hanjuzu.com/hantype/23.html",
+        reg: /www\.hanjuzu\.com\/handetail-\d+\.html/,
+        imgs: () => {
+            let max = fun.geT(".num").match(/\d+\/(\d+)/)[1];
+            return fun.getImg(".hl-article-box>img", max, )
+        },
+        insertImg: [".hl-article-box", 1],
+        autoDownload: [0],
+        next: ".hl-next",
+        prev: ".hl-prev",
+        customTitle: () => {
+            return fun.geT(".hl-article-title")
+        },
+        category: "nsfw1"
+    }, {
         name: "Gravia gravia.site",
         reg: /gravia\.site\/box\/show\.php\?id=\d+$/,
         imgs: ".slideshow .item>img",
@@ -2244,6 +2312,15 @@
         prev: "//li[contains(text(),'下一篇')]/a",
         customTitle: () => {
             return fun.geT("h1.diy-h1").replace(/\d+p/i, "").trim();
+        },
+        category: "nsfw1"
+    }, {
+        name: "七仙子图片M www.qixianzi.com/e/wap/",
+        reg: /www\.qixianzi\.com\/e\/wap\/show\.php\?/,
+        imgs: ".arcmain img",
+        insertImg: [".arcmain", 1],
+        customTitle: () => {
+            return fun.geT(".header>span");
         },
         category: "nsfw1"
     }, {
@@ -4262,15 +4339,15 @@
         },
         category: "hcomic"
     }, {
-        name: "紳士漫畫 圖片清單頁 www.wnacg.com www.wnacg.org m.wnacg.org m.wnacg.com www.wnacglink.top wn01.ru wn02.ru www.htmanga3.top www.htmanga4.top www.htmanga5.top",
-        reg: /(www\.wnacg\.com|www\.wnacg\.org|m\.wnacg\.com|m\.wnacg\.org|www\.htmanga\d\.top)\/photos-index(-page-\d+)?-aid-\d+\.html/,
+        name: "紳士漫畫 圖片清單頁 www.wnacg.com www.wnacg.org m.wnacg.org m.wnacg.com www.wnacglink.top wn01.ru wn02.ru www.htmanga3.top www.htmanga4.top www.htmanga5.top www.hentaicomic.ru",
+        reg: /(www\.wnacg\.com|www\.wnacg\.org|m\.wnacg\.com|m\.wnacg\.org|www\.htmanga\d\.top|www\.hentaicomic\.ru)\/photos-index(-page-\d+)?-aid-\d+\.html/,
         icon: 0,
         key: 0,
         init: "fun.getNP('.gallary_item','.thispage+a',null,'.paginator',0,null,0)",
         category: "nsfw2"
     }, {
         name: "紳士漫畫 下拉閱讀頁 www.wnacg.com www.wnacg.org m.wnacg.org m.wnacg.com",
-        reg: /(www\.wnacg\.com|www\.wnacg\.org|m\.wnacg\.com|m\.wnacg\.org|www\.htmanga\d\.top)\/photos-(slide|slidelow)-aid-\d+\.html/,
+        reg: /(www\.wnacg\.com|www\.wnacg\.org|m\.wnacg\.com|m\.wnacg\.org|www\.htmanga\d\.top|www\.hentaicomic\.ru)\/photos-(slide|slidelow)-aid-\d+\.html/,
         imgs: () => {
             return imglist.map(e => e.url);
         },
