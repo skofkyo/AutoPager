@@ -408,7 +408,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xiuren5.cc/">秀人集</a></td>
+                <td><a href="https://www.xiuren09.xyz/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -416,7 +416,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmnw.xyz/">秀人美女網</a></td>
+                <td><a href="https://www.xrmn02.cc/">秀人美女網</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -424,7 +424,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.imn5.net/">爱美女网</a></td>
+                <td><a href="https://www.imn5.cc/">爱美女网</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -432,7 +432,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgyw09.xyz/">性感美女写真</a></td>
+                <td><a href="https://www.xgyw02.co/">极品性感美女</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -460,7 +460,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.v2ph.net/">www.v2ph.net</a>，<a href="https://www.v2ph.ru/">www.v2ph.ru</a>，需註冊，大尺度非VIP只能抓到20~30張</td>
             </tr>
             <tr>
-                <td><a href="https://www.meitule.cc/">美图乐</a></td>
+                <td><a href="https://www.meitule.net/">美图乐</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -751,7 +751,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.3gbizhi.com/meinv">3G壁纸v</a></td>
+                <td><a href="https://www.3gbizhi.com/meinv">3G壁纸</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -764,7 +764,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.4khd.com/">4KHD</a></td>
-                <td></td>
+                <td><a href="https://www.4kep.com/">www.4kep.com</a>，<a href="https://xjav.cc/">xjav.cc</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.4kup.net/">4KUP</a></td>
@@ -776,6 +776,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.coszip.com/">COSPLAY ZIP</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://cosporn.online/">萝莉少女</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1001,15 +1005,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://www.coszaixian.vip/">cos在线</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.smutpond.com/">SMUTPOND</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.smutpond.com/">GirlsReleased</a></td>
+                <td><a href="https://girlsreleased.com/">GirlsReleased</a></td>
                 <td>圖床imgadult無法外連，但可以下載。</td>
             </tr>
             <tr>
@@ -1021,7 +1021,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>輔助點擊，能在gallery頁進行下載，沒有gallery只有單張圖，可以在eropics批量複製鏈接給JDownloader下載</td>
             </tr>
             <tr>
-                <td><a href="http://ngamgaixinh.us/">Ngắm Gái Xinh</a></td>
+                <td><a href="https://ngamgaixinh.us/">Ngắm Gái Xinh</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1153,7 +1153,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同上</td>
             </tr>
             <tr>
-                <td><a href="http://www.3hentai1.buzz/">3hentai</a></td>
+                <td><a href="https://3hentai.net/">3hentai</a></td>
                 <td>同上</td>
             </tr>
             <tr>
@@ -1281,7 +1281,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.acgxmh.com/">ACG漫画网</a></td>
+                <td><a href="https://www.acgomh.com/">ACG漫画网</a></td>
                 <td><a href="https://www.porn-comic.com/">www.porn-comic.com</a>，<a href="https://www.cool-manga.com/">www.cool-manga.com</a></td>
             </tr>
             <tr>
