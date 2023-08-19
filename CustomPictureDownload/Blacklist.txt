@@ -115,7 +115,7 @@ NứngVL
 *://www.xiuren*.*/*/*.html
 
 秀人美女網
-*://www.xrmn01.vip/*/*/*.html
+*://www.xrmn02.cc/*/*/*.html
 
 精品美女吧
 *://www.jpmn8.cc/*/*/*.html
@@ -166,7 +166,7 @@ MEITU131
 
 爱美女
 *://www.2meinv.com/article-*.html
-*://wap.2meinv.com/article-*.html
+*://mm.2meinv.com/article-*.html
 
 美图录
 *://meitulu.me/item/*.html
@@ -309,7 +309,7 @@ photo.camcam.cc
 /^http://photo\.camcam\.cc/[^/]+/$/
 
 dongojyousan.com
-*://www.dongojyousan.com/articles/*.html
+*://www.dongojyousan.com/articles/*.html*
 
 SexyAsianGirl
 *://www.sexyasiangirl.xyz/album/*.html
@@ -339,10 +339,10 @@ MM5MM5美女图片
 *://*.mm5mm5.com/mm/*
 
 依依图片网
-*://www.eemm.cc/pic/*.html
+*://*.eemm.cc/pic/*.html
 
 MM1311
-*://www.mm1311.net/*/*.html
+*://*.mm1311.net/*/*.html
 
 18AV
 *18av.mm-cg.com/*cg_content/*/content.html
@@ -360,7 +360,7 @@ Xasiat
 *://www.umeitu.com/img/*.html
 
 精选美女网
-*://www.jxmm.net/pic/*.html
+*://*.jxmm.net/pic/*.html
 
 Forum Girl
 *://www.superbeautygirlx.com/*/*/*.html
@@ -375,13 +375,22 @@ Anh VL
 *www.22mm.net/a/*.html
 
 内涵吧
-*www.neihantu.net/zhainannvshen/*.html
+*.neihantu.net/zhainannvshen/*.html
 
 赞MM
 *www.zanmm.com/tupian/*.html
 
 福利姬美图
 *fuligirl.net/albums/*
+
+青年美圖
+*jrants.com/*.html
+
+套圖TAOTU.ORG
+*taotu.org/*/*/
+
+咔咔西三
+*www.kkc3.com/file/*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -446,6 +455,9 @@ H漫類
 IMHentai
 *://imhentai.xxx/view/*/*/
 
+Pururin
+*pururin.to/read/*
+
 7mmtv
 *7mmtv.sx/*hcomic_content/*/content.html
 
@@ -491,6 +503,12 @@ HO5HO
 
 H漫画
 *://mhdnf.xyz/play?linkId=*
+
+漫畫聯合國
+*www.comicun.com/index-look*
+
+H漫画
+/^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 
 漫畫類
 
@@ -549,9 +567,6 @@ https://*.dagumanhua.net/manhua/*/*.html
 6漫画閱讀
 *://*.6mh*.com/*/*.html
 
-动漫之家閱讀
-*://*.*dmzj.com/view/*
-*://manhua.dmzj.com/*/*.shtml
 
 漫画DB
 *://www.manhuadb.com/manhua/*/*.html
@@ -771,7 +786,7 @@ https://www.nuyet.com/gallery/*
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
 *://www.xiuren*.*/*/*.html
-*://www.xrmn01.vip/*/*/*.html
+*://www.xrmn02.cc/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
@@ -787,7 +802,7 @@ https://www.nuyet.com/gallery/*
 *://www.meitu131.*/meinv/*/
 *://m.meitu131.*/meinv/*/
 *://www.2meinv.com/article-*.html
-*://wap.2meinv.com/article-*.html
+*://mm.2meinv.com/article-*.html
 *://meitulu.me/item/*.html
 *://mm.tvv.tw/archives/*.html
 *nvsheng.cc/m*/*.html
@@ -886,6 +901,7 @@ https://www.nuyet.com/gallery/*
 *://*44aq.com/*/*/
 *://*28xv.com/*/*/
 *://imhentai.xxx/view/*/*/
+*pururin.to/read/*
 *7mmtv.sx/*hcomic_content/*/content.html
 *://18h.mm-cg.com/*18H_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
@@ -916,11 +932,12 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.xiuwo.net/tu/*.html
 *://xiuren0.com/*.html
 *://www.cybesx.com/*.html
-*://www.mm1311.net/*/*.html
-*://www.eemm.cc/pic/*.html
+*://*.mm1311.net/*/*.html
+*://*.eemm.cc/pic/*.html
 *://*.mm5mm5.com/mm/*
 *18av.mm-cg.com/*cg_content/*/content.html
 *jmwu.vip/chapter/*.html
+*www.comicun.com/index-look*
 *://foamgirl.net/*.html
 *://loxiu.com/post/*.html
 *://xher.net/index.php?/category/*
@@ -929,20 +946,24 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.xasiat.com/albums/*
 *://www.zhaotaotu.cc/thread-*.htm
 *://www.umeitu.com/img/*.html
-*://www.jxmm.net/pic/*.html
+*://*.jxmm.net/pic/*.html
 *.qq7k.com/*/*/*.html
 *://www.superbeautygirlx.com/*/*/*.html
 *://www.meimeimei.org/*/*/
 *://xem.anhvl.net/*/
-*://www.dongojyousan.com/articles/*.html
+*://www.dongojyousan.com/articles/*.html*
 *://www.qixianzi.com/*/*.html
 *://www.meinvku.org.cn/album/*
 *www.22mm.net/a/*.html
-*www.neihantu.net/zhainannvshen/*.html
+*.neihantu.net/zhainannvshen/*.html
 *www.zanmm.com/tupian/*.html
 *fuligirl.net/albums/*
 *://www.baobua.net/post/*
 *baobua.com/post/*
+*jrants.com/*.html
+*taotu.org/*/*/
+*www.kkc3.com/file/*
+/^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
 /^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
