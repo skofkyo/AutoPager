@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.19
+// @version            1.1.20
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1154,12 +1154,14 @@
         name: "jk-coser www.jk-coser.com",
         reg: /www.\jk-coser\.com\/m\d\/\d+\.html/,
         imgs: ".image_div img",
+        insertImg: [".image_div", 2],
         autoDownload: [0],
         next: ".article-nav-prev a,.nav-links .next",
         prev: 1,
         customTitle: () => {
             return fun.geT(".item_title>h1").replace(/\/?\(\d+P\)/i, "").trim();
         },
+        css: ".content_left img{cursor:unset}",
         category: "nsfw1"
     }, {
         name: "赞MM www.zanmm.com",
@@ -1300,7 +1302,16 @@
         name: "深度学堂 www.sdxt.org",
         reg: /www\.sdxt\.org\/\d+.html/,
         imgs: () => {
-            return [...fun.gae("p[data-src]")].map(e => "https:" + e.dataset.src)
+            return [...fun.gae("p[data-src]")].map(e => {
+                let src = e.dataset.src;
+                if (/^http/.test(src)) {
+                    return src
+                } else if (/^\/\//.test(src)) {
+                    return "https:" + src
+                } else {
+                    return null
+                }
+            })
         },
         insertImg: [".post-content", 2],
         autoDownload: [0],
@@ -1320,6 +1331,7 @@
     }, {
         name: "好圖屋 www.haotuwu.com m.haotuwu.com",
         reg: /(www|m)\.haotuwu\.com\/\w+\/\d+\.html/,
+        include: ".suoyou",
         imgs: () => {
             let links = [];
             links.push(location.href);
