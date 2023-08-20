@@ -376,8 +376,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         </thead>
         <tbody>
             <tr>
-                <td><a href="https://xchina.co/">小黃書</a></td>
-                <td></td>
+                <td><a href="https://xchina.biz/">小黃書</a></td>
+                <td><a href="https://xchina.co/">xchina.co</a></td>
             </tr>
             <tr>
                 <td><a href="https://8se.me/">8色人體攝影</a></td>
