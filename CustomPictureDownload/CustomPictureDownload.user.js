@@ -5358,9 +5358,9 @@
         css: ".bd_960_90{display:none!important}",
         category: "comic"
     }, {
-        name: "57漫画网 www.wuqimh.net m.wuqimh.net 国漫吧 www.guoman8.cc",
+        name: "57漫画网 www.wuqimh.net m.wuqimh.net 国漫吧 www.guoman8.cc m.guoman8.cc",
         enable: 0,
-        reg: /((www|m)\.wuqimh\.net)|www\.guoman8\.cc\/\d+\/\d+\.html$/,
+        reg: /((www|m)\.wuqimh\.net)|(www|m)\.guoman8\.cc\/\d+\/\d+\.html$/,
         imgs: () => {
             return cInfo.fs;
         },
@@ -5371,7 +5371,7 @@
         customTitle: () => {
             return cInfo.btitle + " - " + cInfo.ctitle
         },
-        css: ".bd_960_90,body>section{display:none!important}",
+        css: ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo),footer~*{display:none!important}",
         category: "comic"
     }, {
         name: "亲亲漫画/古风漫画网 www.acgud.com m.acgqd.com www.gufengmh.com m.gufengmh.com",
@@ -5411,9 +5411,15 @@
         reg: /www\.manhua456\.com\/manhua\/\w+\/\d+\.html/,
         init: "setTimeout(()=>{$(document).unbind('keyup');$(document).unbind('keydown')},4000)",
         imgs: () => {
-            return chapterImages;
+            return chapterImages.map(e => {
+                if (/^http/.test(e)) {
+                    return e
+                } else {
+                    return SinConf.resHost1 + "/" + chapterPath + e
+                }
+            });
         },
-        insertImg: ["#images", 2, 4000],
+        insertImg: ["#images", 2],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: "return fun.title(' - ',3);",
@@ -5426,7 +5432,13 @@
         delay: 300,
         init: "$('#images').unbind('click');",
         imgs: () => {
-            return chapterImages.map(e => SinConf.resHost[0].domain + "/" + chapterPath + e);
+            return chapterImages.map(e => {
+                if (/^http/.test(e)) {
+                    return e
+                } else {
+                    return SinConf.resHost1 + "/" + chapterPath + e
+                }
+            });
         },
         insertImg: ["#images", 2],
         next: "//a[text()='下一章']",
@@ -5471,9 +5483,9 @@
         },
         category: "comic"
     }, {
-        name: "90漫画 www.90mh.com",
+        name: "90漫画 www.90mh.com www.90mh.org",
         enable: 0,
-        reg: /www\.90mh\.com\/manhua\/\w+\/\d+\.html/i,
+        reg: /www\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
         imgs: () => {
             return chapterImages.map(e => SinConf.resHost[0].domain + "/" + chapterPath + e);
         },
@@ -5484,9 +5496,9 @@
         customTitle: "return fun.title(' - ',3);",
         category: "comic"
     }, {
-        name: "90漫画 wap.90mh.com",
+        name: "90漫画M wap.90mh.com m.90mh.org",
         enable: 0,
-        reg: /wap\.90mh\.com\/manhua\/\w+\/\d+\.html/i,
+        reg: /(wap|m)\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
         init: () => {
             let url = siteData.next();
             if (url) {
@@ -5564,6 +5576,7 @@
         },
         prev: 1,
         customTitle: "return fun.title('在线',1);",
+        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not(.customPicDownloadMsg):not(#customPicDownload),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
         category: "comic"
     }, {
         name: "最漫画M / 拼拼漫画M m.zuimh.com m.pinmh.com",
@@ -5578,6 +5591,7 @@
         next: "//a[text()='下一章'][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: "return fun.title('在线',1);",
+        css: "body{padding:0!important}div[style*='text-align'],.UnderPage~*:not(.customPicDownloadMsg):not(#customPicDownload){display:none!important}",
         category: "comic"
     }, {
         name: "零点漫画M m.0dmh.com",
@@ -5592,6 +5606,7 @@
         next: "//a[text()='下一章'][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: "return fun.title('-零点漫画').trim();",
+        css: ".action-list li{width:50% !important}div[style*='text-align'],.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
         category: "comic"
     }, {
         name: "漫画吧M / 漫画连M m.dmhua8.com m.100mhl.com",
@@ -5631,12 +5646,12 @@
                 return document.title.replace("-漫画连", "")
             }
         },
-        css: "#addMoney,#images~div[style*=blur]{display:none!important}",
+        css: "#addMoney,#images~div[style*=blur],div[style*='text-align: left;']{display:none!important}",
         category: "comic"
     }, {
-        name: "蔷薇漫画M/爱米推漫画M/下拉式漫画M/奇妙漫画M/冰氪漫画M/狗狗漫画M/奇奇漫画M/悠闲漫画M/不卡漫画M/多熙漫画M m.qwmanhua.com m.imitui.com m.xlsmh.com m.qmiaomh.com ikr.ejujiu.com m.gougoumh.com m.qimhua.com m.yxtun.com m.bukamh.com m.duoximh.com",
+        name: "蔷薇漫画M/爱米推漫画M/下拉式漫画M/奇妙漫画M/冰氪漫画M/狗狗漫画M/奇奇漫画M/悠闲漫画M/不卡漫画M/多熙漫画M m.qwmanhua.com m.imitui.com m.xlsmh.com m.qmiaomh.com m.icekr.com m.gougoumh.com m.qimhua.com m.yxtun.com m.bukamh.com m.duoximh.com",
         enable: 0,
-        reg: /(m\.qwmanhua\.com|m\.imitui\.com|m\.xlsmh\.com|m\.qmiaomh\.com|ikr\.ejujiu\.com|m\.gougoumh\.com|m\.qimhua\.com|m\.yxtun\.com|m\.bukamh\.com|m\.duoximh\.com)\/manhua\/\w+\/\d+\.html/i,
+        reg: /(m\.qwmanhua\.com|m\.imitui\.com|m\.xlsmh\.com|m\.qmiaomh\.com|m\.icekr\.com|m\.gougoumh\.com|m\.qimhua\.com|m\.yxtun\.com|m\.bukamh\.com|m\.duoximh\.com)\/manhua\/\w+\/\d+\.html/i,
         imgs: () => {
             let imgs = [...fun.gae("#images img:not([src*=loading]),#scroll-image img")];
             fun.remove("#scroll-image");
@@ -5669,6 +5684,7 @@
                 return fun.title('在线', 1);
             }
         },
+        css: "body{padding:0!important}.UnderPage~*:not(.customPicDownloadMsg):not(#customPicDownload),.bottom~*:not(.customPicDownloadMsg):not(#customPicDownload),div[style*='text-align: left;']{display:none!important}",
         category: "comic"
     }, {
         name: "前未漫画/漫画芯/蔷薇漫画/最漫画/爱米推漫画/下拉式漫画/漫画吧/漫画连/拼拼漫画/零点漫画/雪儿漫画/狗狗漫画/奇奇漫画/悠闲漫画/不卡漫画/多熙漫画 www.qianmh.com www.mhxin.com www.qwmanhua.com www.zuimh.com www.imitui.com www.xlsmh.com www.dmhua8.com www.100mhl.com www.pinmh.com www.0dmh.com www.xuermh.com www.gougoumh.com www.qimhua.com www.yxtun.com www.bukamh.com www.duoximh.com",
@@ -5714,7 +5730,7 @@
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: "return fun.geT('h1').replace('>',' - ').trim()",
-        css: "#action li:nth-child(2),#action li:nth-child(3),span.right{display:none!important}#action li{width:50%!important}",
+        css: "div[style*='text-align: left;'],#action li:nth-child(2),#action li:nth-child(3),span.right{display:none!important}#action li{width:50%!important}",
         category: "comic"
     }, {
         name: "来漫画 www.laimanhua8.com",
@@ -5816,16 +5832,24 @@
         },
         category: "comic"
     }, {
-        name: "漫画屋M www.mhua5.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net",
+        name: "漫画屋M www.mhua5.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net m.mkzhan.com",
         enable: 0,
-        reg: /www\.(mhua5|manhw)\.com\/(chapter.+\.html|index\.php\/chapter\/\d+)|www\.360mh\.cc\/chapter-\d+.html|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$/i,
+        reg: /www\.(mhua5|manhw)\.com\/(chapter.+\.html|index\.php\/chapter\/\d+)|www\.360mh\.cc\/chapter-\d+.html|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$|m\.mkzhan\.com\/\d+\/\d+.html/i,
         imgs: ".comic-page img,#cp_img img[data-original]",
         insertImg: [".comic-list,#cp_img", 0],
         autoDownload: [0],
-        next: () => {
+        next: async () => {
             if (/www\.mhua5\.com|www\.360mh\.cc|www\.bingmh\.com/.test(location.host)) {
                 let next = fun.attr(".next-chapter", "_href");
                 if (next !== "") {
+                    return location.origin + next;
+                } else {
+                    return null
+                }
+            } else if (/m\.mkzhan\.com/.test(location.host)) {
+                await fun.waitEle(".next-chapter[data-href]", 10)
+                let next = fun.ge(".next-chapter").dataset.href;
+                if (next !== "" || next != 0) {
                     return location.origin + next;
                 } else {
                     return null
@@ -5837,7 +5861,7 @@
                 } else {
                     return null
                 }
-            } else if (/www\.manshiduo\.net/.test(location.host)) {
+            } else if (/www\.manshiduo\.net|www\.manhw\.com/.test(location.host)) {
                 let next = fun.attr(".next-chapter", "_href");
                 if (next !== "") {
                     return location.origin + next;
@@ -5857,6 +5881,8 @@
         customTitle: () => {
             if (/www\.mhua5\.com|www\.manhw\.com/.test(location.host)) {
                 return fun.title(" - 漫画屋").replace("-", " - ")
+            } else if (/m\.mkzhan\.com/.test(location.host)) {
+                return fun.title(" - 漫客栈").trim()
             } else if (/www\.360mh\.cc/.test(location.host)) {
                 return shareArr[0].match(/《([^》]+)/)[1] + " - " + fun.geT(".comic-name")
             } else if (/www\.bingmh\.com/.test(location.host)) {
@@ -5894,18 +5920,19 @@
         enable: 0,
         reg: /(www|m)\.77mh\.[a-z]{2,3}\/\d+\/\d+\.html/i,
         init: "try{$(document).unbind('keydown');$(document).unbind('keyup')}catch(e){}",
-        imgs: () => {
+        imgs: async () => {
+            await fun.delay(1000);
             let imgData = msg.split("|");
             let arr = [];
-            imgData.forEach(e => {
+            for (let i in imgData) {
                 let imgSrc;
                 if (location.hostname.indexOf("m.77mh") != -1) {
-                    imgSrc = ImgSvrList + e
+                    imgSrc = ImgSvrList + imgData[i]
                 } else {
-                    imgSrc = img_qianz + e
+                    imgSrc = img_qianz + imgData[i]
                 }
                 arr.push(imgSrc)
-            });
+            }
             return arr
         },
         insertImg: ["#comicImg,.mg-co", 2],
@@ -6208,9 +6235,9 @@
         customTitle: "return fun.geT('.p_select>h2')+' - '+fun.geT('.v-page>span')",
         category: "comic"
     }, {
-        name: "733 动漫/漫画160 www.733.so www.mh160.cc",
+        name: "漫画160 www.mh160.cc",
         enable: 0,
-        reg: /(www\.733\.so|www\.mh160\.cc)\/(mh|kanmanhua)\/\w+\/\d+\.html/i,
+        reg: /www\.mh160\.cc\/kanmanhua\/\d+\/\d+\.html/i,
         init: "document.onkeydown=null",
         imgs: () => {
             return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => f_qTcms_Pic_curUrl_realpic(e));
@@ -6221,6 +6248,22 @@
         prev: "#k_Pic_backArr",
         customTitle: () => {
             return qTcms_S_m_name + " - " + qTcms_S_m_playm
+        },
+        category: "comic"
+    }, {
+        name: "733 动漫 www.733.so",
+        enable: 0,
+        reg: /www\.733\.so\/mh\/\d+\/\d+\/1\.html/i,
+        imgs: () => {
+            let doc = fun.doc(temp_pic_all);
+            return [...doc.images];
+        },
+        insertImg: ["#pic_box p", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一话']",
+        prev: "//a[text()='上一话']",
+        customTitle: () => {
+            return fun.geT(".p_select>h2") + " - " + fun.geT(".v-page .ispubu")
         },
         category: "comic"
     }, {
@@ -6308,7 +6351,7 @@
         customTitle: () => {
             return qTcms_S_m_name + " - " + qTcms_S_m_playm
         },
-        css: "#mypic_k0{display:none!important}",
+        css: ".action-list li{width:50% !important}#mypic_k0,.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
         category: "comic"
     }, {
         name: "星辰漫画网 www.xcmh.com m.xcmh.com",
@@ -6624,6 +6667,7 @@
         name: "快岸漫画 kanbook.net",
         enable: 0,
         reg: /kanbook\.net\/comic\/\d+\/\d+/,
+        delay: 1000,
         init: "$(document).unbind('keydown');$(document).unbind('keyup');",
         imgs: () => {
             let arr = [];
