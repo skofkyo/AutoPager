@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.20
+// @version            1.1.22
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -60,9 +60,9 @@
     //const loading_bak = "https://i.imgur.com/0acxdnF.gif"; //透明灰點 240*240
     //自定義站點規則
     const customData = [{
-        name: "小黃書/8色人體攝影 xchina.co/8se.me", //按數字鍵1、Enter插入圖片(手動模式)，按0、Enter、Enter壓縮打包下載
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //按數字鍵1、Enter插入圖片(手動模式)，按0、Enter、Enter壓縮打包下載
         enable: 0, //0此規則禁用 1啟用
-        reg: /(xchina|8se)\.(co|me)\/photo\/id-\w+\.html/, //網址正則匹配
+        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/, //網址正則匹配
         include: ".photos>a",
         imgs: () => {
             let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
@@ -84,9 +84,9 @@
         css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
-        name: "小黃書/8色人體攝影 xchina.co/8se.me", //xhr翻頁模式，翻完所有預覽圖後，立刻在預覽縮圖下面插入全部大圖
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，翻完所有預覽圖後，立刻在預覽縮圖下面插入全部大圖
         enable: 0,
-        reg: /(xchina|8se)\.(co|me)\/photo\/id-\w+\.html/,
+        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         imgs: async () => {
             await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager"); //xhr翻頁模式聚集所有預覽圖
@@ -101,9 +101,9 @@
         css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
-        name: "小黃書/8色人體攝影 xchina.co/8se.me", //xhr翻頁模式，聚集所有預覽圖，手動插入全部大圖，圖片量是幾百張的比較不會卡，不插大圖也能下載
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，聚集所有預覽圖，手動插入全部大圖，圖片量是幾百張的比較不會卡，不插大圖也能下載
         enable: 0,
-        reg: /(xchina|8se)\.(co|me)\/photo\/id-\w+\.html/,
+        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         init: "fun.getNP('.photos>a','.pager a[current=true]+a:not(.next)',null,'.pager');",
         imgs: async () => {
@@ -114,9 +114,9 @@
         css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
-        name: "小黃書/8色人體攝影 xchina.co/8se.me",
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me",
         enable: 1,
-        reg: /(xchina|8se)\.(co|me)\/photo\/id-\w+\.html/,
+        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         imgs: async () => {
             let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
