@@ -340,11 +340,12 @@ imgs: async () => {
 <p>中鍵點擊圖示捲動至第一張大圖</p>
 
 <h1>腳本有綁定按鍵</h1>
-<p>數字鍵0下載壓縮、數字鍵1複製圖片網址、數字鍵2捲動至第一張大圖</p>
+<p>數字鍵0下載壓縮、數字鍵1複製圖片網址、數字鍵2捲動至第一張大圖、數字鍵3一鍵下載</p>
 <p>按0、Enter、Enter，3步驟開始下載。</p>
 <p>按1、Enter，2步驟複製圖片網址。</p>
 <p>如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
 <p>按2前往插入的第一張大圖</p>
+<p>按3，一鍵下載，跳過圖片選擇器和自定義標題。</p>
 
 <p>2023/05/13，修改中鍵功能為捲動至第一張大圖，綁定快捷鍵數字鍵2</p>
 <p>2023/05/15，如果規則imgs是函式省略輸入選擇器這一步。</p>
@@ -752,7 +753,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://avjb.com/albums/">AVJB</a></td>
-                <td></td>
+                <td><a href="https://bav24.xyz/albums/">bav24.xyz</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.qinimg.com/">Qinimg</a></td>
@@ -1241,6 +1242,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://rokuhentai.com/">Roku Hentai</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://18p.fun/">開車漫畫</a></td>
                 <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
             </tr>
@@ -1430,6 +1435,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.yymanhua.com/">yymanhua</a></td>
                 <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://m.dmzj.com/">动漫之家M</a></td>
+                <td><a href="https://m.idmzj.com/">m.idmzj.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.qiman59.com/">奇漫屋</a></td>
@@ -1629,7 +1638,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://baozimh.org/">包子漫畫</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://hi.godamanga.com/">hi.godamanga.com</a>，<a href="https://godamanga.art/">godamanga.art</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://mh5.tw/">漫畫屋</a></td>
