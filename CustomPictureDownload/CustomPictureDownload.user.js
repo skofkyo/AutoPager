@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.22
+// @version            1.1.23
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -48,6 +48,7 @@
     let globalImgArray = [];
     let customTitle = null;
     let downloading = false;
+    let fastDownload = false;
     let errorNum = 0;
     //const loading_bak = "data:image/png;base64,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";
     //const loading_bak = "https://i.imgur.com/TBOypzv.gif"; //透明灰圈 800*800
@@ -670,6 +671,10 @@
     }, {
         name: "51sex 51sex.vip",
         reg: /51sex\.vip\/pic\/\d+/i,
+        init: () => {
+            let url = siteData.next();
+            fun.addNextHtml(url, ".headling_main", 1, "下一篇");
+        },
         imgs: () => {
             let max;
             try {
@@ -686,11 +691,12 @@
         insertImg: [".headling_main", 2],
         next: () => {
             let num = location.href.match(/\d+$/)[0];
-            return location.href.replace(/\d+$/, "") + (parseInt(num) + 1)
+            return location.href.replace(/\d+$/, "") + (parseInt(num) - 1)
         },
         customTitle: () => {
             return fun.geT('.headling_word_main_box_title').replace(/\[\d+P\]/i, "").replace(/\d+P$/i, "").replace(/\(\d+P\)/i, "").trim();
         },
+        css: ".headling_main{height:auto}",
         category: "nsfw1"
     }, {
         name: "美图乐 www.meitule.cc www.meitule.net",
@@ -783,7 +789,7 @@
         },
         insertImg: [".entry-content", 1],
         customTitle: () => {
-            return fun.geT(".entry-title").replace(/\(\d+P\)/gi, "").trim();
+            return fun.geT(".entry-title").replace(/\(\d+P\)|\[\d+P\]/gi, "").trim();
         },
         category: "nsfw2"
     }, {
@@ -2420,8 +2426,8 @@
         customTitle: "return fun.geT('h1');",
         category: "nsfw2"
     }, {
-        name: "AVJB https://avjb.com/albums/",
-        reg: /avjb\.com\/albums\/\d+\/[\w-]+\/$/i,
+        name: "AVJB https://avjb.com/albums/ https://bav24.xyz/albums/",
+        reg: /(avjb\.com|bav24\.xyz)\/albums\/\d+\/[\w-]+\/$/i,
         imgs: ".images>a",
         insertImg: [
             [".sponsor", 2], 2
@@ -2607,7 +2613,7 @@
         name: "Elite Babes www.elitebabes.com PmateHunter pmatehunter.com www.jperotica.com www.metarthunter.com www.femjoyhunter.com",
         reg: /(www\.)?(elitebabes|pmatehunter|jperotica|metarthunter|femjoyhunter)\.com\/.+\//,
         exclude: "#content video",
-        imgs: ".list-gallery a",
+        imgs: ".list-gallery a[data-fancybox]",
         insertImg: [
             [".list-gallery", 2], 2
         ],
@@ -2935,12 +2941,12 @@
         category: "nsfw2"
     }, {
         name: "Hentai Image hentai-img.com hentai-cosplays.com porn-images-xxx.com",
-        reg: /(hentai-img|hentai-cosplays|porn-images-xxx)\.com\/image\/[^/]+\/$/,
+        reg: /(hentai-img|hentai-cosplays|porn-images-xxx)\.com\/image\/[^/]+\//,
         include: "//a[text()='DETAIL PAGE' or text()='詳細へ' or text()='详细信息页面']",
         imgs: () => {
             let max;
             try {
-                max = fun.geT("//span[a[text()='next' or text()='次へ' or text()='下一个']]/preceding-sibling::span[1]");
+                max = fun.geT("//span[a[text()='next' or text()='prochain' or text()='次へ' or text()='下一个']]/preceding-sibling::span[1]");
             } catch (e) {
                 try {
                     max = fun.geT("#page h3").match(/\d+$/)[0];
@@ -2948,18 +2954,18 @@
                     max = 1;
                 }
             }
-            let links = [];
+            let srcs = [];
             let mode = location.href.split("/").slice(0, -1).pop();
-            let url = location.href.replace(/[\w-]+\/$/i, "");
+            let firstSrc = fun.ge("#display_image_detail a").href;
+            let path = firstSrc.replace(/(image-)?\d+\.\w+$/i, "");
             for (let i = 1; i <= max; i++) {
                 if (/image/.test(mode)) {
-                    links.push(url + "image-" + String(i).padStart(3, "0") + "/")
+                    srcs.push(path + "image-" + String(i).padStart(3, "0") + ".jpg")
                 } else {
-                    links.push(url + i + "/")
+                    srcs.push(path + i + ".jpg")
                 }
             }
-            return fun.getImgA("#display_image_detail img,#detail_list img", links, 0, [/\/p=(700|305)/, ""]);
-            //return fun.getImg("#display_image_detail img,#detail_list img", max, 14, [/\/p=(700|305)/, ""]);
+            return srcs;
         },
         insertImg: ["#display_image_detail,#detail_list", 2],
         customTitle: () => {
@@ -5055,6 +5061,23 @@
         },
         category: "comic"
     }, {
+        name: "动漫之家M m.idmzj.com",
+        enable: 0,
+        reg: /m\.i?dmzj\.com\/view\/\d+\/\d+\.html/,
+        init: "$('body').unbind('keydown');",
+        imgs: () => {
+            let code = [...document.scripts].find(s => s.innerHTML.search(/initData/) > -1).innerHTML;
+            let arr = fun.run(code.match(/page_url.+(\[.+\])/)[1]);
+            return arr;
+        },
+        insertImg: ["#commicBox", 2],
+        autoDownload: [0],
+        next: ".afterChapter",
+        prev: ".beforeChapter",
+        customTitle: "return fun.title('-',1);",
+        css: "#khdDown,.appTil{display:none!important}",
+        category: "comic"
+    }, {
         name: "漫画星球M m.mhxqiu2.com",
         enable: 0,
         reg: /m\.mhxqiu\d\.com\/\d+\/\d+\.html/,
@@ -6136,24 +6159,24 @@
     }, {
         name: "GODA漫画 godamanga.com",
         enable: 0,
-        reg: /(godamanga|cocomanga)\.\w+\/manga\/[\w-]+\/\w+\//i,
+        reg: /(godamanga|cocomanga)\.\w+\/manga\/[0-9a-z-]+\/[0-9a-z-_]+/i,
         delay: 300,
         imgs: "//img[@decoding and @layout] | //img[@decoding and contains(@class,'img_content_jpg')]",
         insertImg: ["//div[div[div[div[div[img[@decoding and @layout]]]]]] | //div[div[div[div[div[img[@decoding and contains(@class,'img_content_jpg')]]]]]]", 2],
         autoDownload: [0],
-        next: "//a[span[text()='下一话']]",
-        prev: "//a[span[text()='上一话']]",
+        next: "//a[span[text()='下一话']] | //a[span[text()='NEXT']]",
+        prev: "//a[span[text()='上一话']] | //a[span[text()='PREV']]",
         customTitle: "return fun.geT('h1')",
         category: "comic"
     }, {
-        name: "包子漫畫 baozimh.org",
+        name: "包子漫畫 baozimh.org hi.godamanga.com godamanga.art",
         enable: 0,
-        reg: /baozimh\.org\/manga\/.+\/\w+\//i,
+        reg: /(baozimh\.org|hi\.godamanga\.com|godamanga\.art)\/manga\/[0-9a-z-]+\/[0-9a-z-_]+/i,
         imgs: "//img[@decoding and @alt]",
         insertImg: ["//div[div[img[@decoding and @alt]]]", 2],
         autoDownload: [0],
-        next: "//a[span[text()='下一话']]",
-        prev: "//a[span[text()='上一话']]",
+        next: "//a[span[text()='下一话']] | //a[span[text()='NEXT']]",
+        prev: "//a[span[text()='上一话']] | //a[span[text()='PREV']]",
         customTitle: "return fun.geT('h1')",
         category: "comic"
     }, {
@@ -8351,22 +8374,32 @@
             return;
         }
         let selector, titleText;
-        if (!siteData.autoDownload || siteData.autoDownload && siteData.autoDownload[0] != 1 && options.autoDownload != 1) {
+        if (fastDownload) {
             if (typeof siteData.imgs == "function") {
                 selector = siteData.imgs;
             } else {
-                selector = await prompt("請輸入自訂CSS/Xpath選擇器：\n範例：img#TheImg OR //img[@id='TheImg']\n也能使用JS代碼自己生成的IMG元素陣列\n範例：js;return [...document.images];", options.default);
+                selector = options.default;
             }
-            titleText = await prompt("請輸入自訂壓縮檔資料夾名稱", (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim()));
-        } else if (siteData.autoDownload) {
-            if (siteData.autoDownload[0] == 1 || options.autoDownload == 1) {
-                selector = siteData.imgs;
-                titleText = (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim());
-            } else {
-                debug("未開啟自動下載");
-                return;
+            titleText = (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim());
+        } else {
+            if (!siteData.autoDownload || siteData.autoDownload && siteData.autoDownload[0] != 1 && options.autoDownload != 1) {
+                if (typeof siteData.imgs == "function") {
+                    selector = siteData.imgs;
+                } else {
+                    selector = await prompt("請輸入自訂CSS/Xpath選擇器：\n範例：img#TheImg OR //img[@id='TheImg']\n也能使用JS代碼自己生成的IMG元素陣列\n範例：js;return [...document.images];", options.default);
+                }
+                titleText = await prompt("請輸入自訂壓縮檔資料夾名稱", (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim()));
+            } else if (siteData.autoDownload) {
+                if (siteData.autoDownload[0] == 1 || options.autoDownload == 1) {
+                    selector = siteData.imgs;
+                    titleText = (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim());
+                } else {
+                    debug("未開啟自動下載");
+                    return;
+                }
             }
         }
+
         let imgs = await getImgs(selector);
         globalImgArray = imgs;
         downloading = true;
@@ -8981,6 +9014,7 @@
             document.addEventListener('keydown', (event) => {
                 switch (event.keyCode) {
                     case 96: //數字鍵0
+                        fastDownload = false;
                         imgZipDownload();
                         break;
                     case 97: //數字鍵1
@@ -8988,6 +9022,10 @@
                         break;
                     case 98: //數字鍵2
                         goToNo1Img(0);
+                        break;
+                    case 99: //數字鍵3
+                        fastDownload = true;
+                        imgZipDownload();
                         break;
                 }
             });
