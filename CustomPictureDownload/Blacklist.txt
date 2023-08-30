@@ -1,4 +1,4 @@
-2023/08/19 22:43
+2023/08/30 22:11
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -130,10 +130,10 @@ NứngVL
 *://meirentu.cc/pic/*.html
 
 性感美女写真
-*://www.xgyw*.*/*/*.html
+*://www.xg*.*/*/*.html
 
 爱看美女网
-*://www.ikmn*.vip/*/*.html
+*://www.ikmn*.*/*/*.html
 
 微圖坊
 *://*v2ph.*/album/*
@@ -796,9 +796,9 @@ https://www.nuyet.com/gallery/*
 *://www.jpmn8.cc/*/*/*.html
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
-*://www.ikmn5.vip/*/*.html
+*://www.ikmn*.*/*/*.html
 *://meirentu.cc/pic/*.html
-*://www.xgyw*.*/*/*.html
+*://www.xg*.*/*/*.html
 *://*v2ph.*/album/*
 *://www.meitule.*/photo/*.html
 *://www.win4000.com/meinv*.html
