@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.23
+// @version            1.1.24
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -467,8 +467,9 @@
         css: "img[alt]~br{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "极品性感美女 www.xgmn08.com www.xgyw09.xyz www.xgyw02.co",
-        reg: /www\.(xgmn|xgyw)\d+\.\w+\/\w+\/\w+\.html/i,
+        name: "极品性感美女 www.xgmn08.com www.xgyw09.xyz www.xgyw02.co www.xg02.xyz",
+        reg: /www\.xg\w+\.\w+\/\w+\/\w+\.html/i,
+        include: "//div[@class='toptip']/a[text()='极品性感美女']",
         imgs: () => {
             let max = fun.geT("a.current~*:last-child", 2);
             return fun.getImg('.article-content img[alt]', max, 3);
@@ -1330,14 +1331,23 @@
         name: "胴体的诱惑 dongti.blog.2nt.com",
         reg: /dongti\.blog\.2nt\.com\/blog-entry-\d+.html/,
         imgs: ".inner-contents img",
+        autoDownload: [0],
+        next: "//a[div[@class='pager_entry-box next-justify']]",
+        prev: "//a[div[@class='pager_entry-image-prev']]",
         customTitle: () => {
             return fun.geT("#entry-title").replace(/\[\d+P-[\d\.]+MB?\]/i, "").trim();
         },
         category: "nsfw1"
     }, {
         name: "好圖屋 www.haotuwu.com m.haotuwu.com",
-        reg: /(www|m)\.haotuwu\.com\/\w+\/\d+\.html/,
+        reg: /(www|m)\.haotuwu\.com\/\w+\/\d+(\/page\/\d+)?(\.html)?$/,
         include: ".suoyou",
+        init: () => {
+            let url = location.href;
+            if (/\/page\/\d+/.test(url)) {
+                location.href = url.replace(/\/page\/\d+/, "");
+            }
+        },
         imgs: () => {
             let links = [];
             links.push(location.href);
@@ -1793,9 +1803,9 @@
         insertImg: [
             [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image"], 2
         ],
-        //autoDownload: [0],
-        //next: "a[rel=prev]",
-        //prev: "a[rel=next]",
+        autoDownload: [0],
+        next: ".post-navigation-link-previous>a",
+        prev: ".post-navigation-link-next>a",
         customTitle: () => {
             return fun.geT("h3.wp-block-post-title").replace(/\[(\d+)?mb-\d+photos\]|\[\d+photos\]/i, "").trim();
         },
@@ -4375,7 +4385,7 @@
         category: "nsfw2"
     }, {
         name: "VN漫画网 下拉阅读 www.vnacg.com",
-        reg: /www\.vnacg\.com\/show\/\d+\.html/,
+        reg: /(www|m)\.vnacg\.com\/show\/\d+\.html/,
         imgs: async () => {
             fun.show("獲取資料中...", 0);
             let api = `/e/extend/api/show.php?id=${info.id}&page=`;
@@ -4393,7 +4403,7 @@
             }
             return Promise.all(resArr).then(data => data.flat().map(e => e.src))
         },
-        insertImg: [".show", 2],
+        insertImg: [".show,.read", 2],
         customTitle: "return fun.title('_免费阅读',1);",
         category: "hcomic"
     }, {
@@ -4627,11 +4637,30 @@
         name: "H漫画 mhdnf.xyz www.mhdnf.xyz mhqwe.xyz www.mhqwe.xyz",
         reg: /https?:\/\/(www\.)?(mhdnf|mhqwe)\.xyz\/play\?linkId=\d+&bookId=\d+&path=\d+&key=.+/,
         imgs: "#imgList>img:not([src*=QRCode])",
+        autoDownload: [0],
         next: "//a[text()='下一話']",
         prev: "//a[text()='上一話']",
-        autoDownload: [0],
         customTitle: () => {
             return fun.attr("meta[name='apple-mobile-web-app-title']", "content")
+        },
+        category: "hcomic"
+    }, {
+        name: "JComic jcomic.net",
+        reg: /https?:\/\/jcomic\.net\/page\/[^\/]+$/,
+        imgs: ".comic-view",
+        customTitle: () => {
+            return fun.geT("//ol/li[2]/a")
+        },
+        category: "hcomic"
+    }, {
+        name: "JComic jcomic.net",
+        reg: /https?:\/\/jcomic\.net\/page\/[^\/]+\/[0-9\.]+$/,
+        imgs: ".comic-view",
+        autoDownload: [0],
+        next: "//button[text()='下一章']",
+        prev: "//button[text()='上一章']",
+        customTitle: () => {
+            return fun.geT("//ol/li[2]/a") + " - " + fun.geT("//ol/li[3]")
         },
         category: "hcomic"
     }, {
@@ -8380,7 +8409,7 @@
             } else {
                 selector = options.default;
             }
-            titleText = (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim());
+            titleText = (customTitle.replace(/[\/\?<>\\:\*\|":]/g, " ") || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim());
         } else {
             if (!siteData.autoDownload || siteData.autoDownload && siteData.autoDownload[0] != 1 && options.autoDownload != 1) {
                 if (typeof siteData.imgs == "function") {
@@ -8388,11 +8417,11 @@
                 } else {
                     selector = await prompt("請輸入自訂CSS/Xpath選擇器：\n範例：img#TheImg OR //img[@id='TheImg']\n也能使用JS代碼自己生成的IMG元素陣列\n範例：js;return [...document.images];", options.default);
                 }
-                titleText = await prompt("請輸入自訂壓縮檔資料夾名稱", (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim()));
+                titleText = await prompt("請輸入自訂壓縮檔資料夾名稱", (customTitle.replace(/[\/\?<>\\:\*\|":]/g, " ") || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim()));
             } else if (siteData.autoDownload) {
                 if (siteData.autoDownload[0] == 1 || options.autoDownload == 1) {
                     selector = siteData.imgs;
-                    titleText = (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").trim());
+                    titleText = (customTitle.replace(/[\/\?<>\\:\*\|":]/g, " ") || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim());
                 } else {
                     debug("未開啟自動下載");
                     return;
@@ -8549,6 +8578,7 @@
                 }
             });
         } else {
+            downloading = false;
             showMsg("已取消");
         }
     };
