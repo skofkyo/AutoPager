@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/08/19 22:43</p>
+<p>2023/08/30 22:11</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -409,7 +409,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xiuren09.xyz/">秀人集</a></td>
+                <td><a href="https://www.xiuren08.xyz/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -437,7 +437,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.ikmn5.vip/">爱看美女网</a></td>
+                <td><a href="https://www.ikmn5.cc/">爱看美女网</a></td>
                 <td>不支持預覽版頁面</td>
             </tr>
             <tr>
@@ -1263,7 +1263,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.vnacg.com/">VN漫画网</a></td>
-                <td>作用在下拉閱讀頁</td>
+                <td><a href="https://m.vnacg.com/">m.vnacg.com</a>，作用在下拉閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://7mmtv.sx/zh/hcomic_random/all/index.html">7mmtv</a></td>
@@ -1312,6 +1312,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.177pica.com/">177漫画</a></td>
                 <td>www.177picyy.com</td>
+            </tr>
+            <tr>
+                <td><a href="https://jcomic.net/">JComic</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://18h.animezilla.com/">18H 宅宅愛動漫</a></td>
