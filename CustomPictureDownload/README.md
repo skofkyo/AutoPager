@@ -433,7 +433,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgyw02.co/">极品性感美女</a></td>
+                <td><a href="https://www.xg02.xyz/">极品性感美女</a></td>
                 <td></td>
             </tr>
             <tr>
