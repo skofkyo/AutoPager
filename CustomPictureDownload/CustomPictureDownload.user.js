@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.24
+// @version            1.1.25
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -67,7 +67,7 @@
         include: ".photos>a",
         imgs: () => {
             let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
-            let max = Math.ceil(numP / 18);
+            let max = Math.ceil(numP / 19);
             return fun.getImg("img.cr_only", max, 2, ["_600x0", ""]); //xhr併發請求抓取所有頁面的圖片元素
         },
         insertImg: ["//div[div[@class='photos']]", 1], //清空元素內容把所有圖片插入到此元素 0手動插入模式 1自動插入模式 2自動插入Lazyloading模式
@@ -121,8 +121,8 @@
         include: ".photos>a",
         imgs: async () => {
             let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
-            let max = Math.ceil(numP / 18);
-            if (max > 1 && [...fun.gae(".photos>a")].length < 19) {
+            let max = Math.ceil(numP / 19);
+            if (max > 1 && [...fun.gae(".photos>a")].length < 20) {
                 let links = [];
                 let url = location.href.replace(".html", "");
                 for (let i = 2; i <= max; i++) {
@@ -4657,8 +4657,15 @@
         reg: /https?:\/\/jcomic\.net\/page\/[^\/]+\/[0-9\.]+$/,
         imgs: ".comic-view",
         autoDownload: [0],
-        next: "//button[text()='下一章']",
-        prev: "//button[text()='上一章']",
+        next: () => {
+            let next = fun.ge("//a[button[text()='下一章']]");
+            if (next && next.href != location.href) {
+                return next.href
+            } else {
+                return null
+            }
+        },
+        prev: 1,
         customTitle: () => {
             return fun.geT("//ol/li[2]/a") + " - " + fun.geT("//ol/li[3]")
         },
