@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/08/30 22:11</p>
+<p>2023/09/06 20:49</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -437,7 +437,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.ikmn5.cc/">爱看美女网</a></td>
+                <td><a href="https://www.ikmn01.cc/">爱看美女网</a></td>
                 <td>不支持預覽版頁面</td>
             </tr>
             <tr>
@@ -638,6 +638,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.qq7k.com/mntp/">晴空头像图库</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.930tu.com//">930图片网</a></td>
+                <td><a href="https://m.930tu.com//">m.930tu.com</a></td>
             </tr>
             <tr>
                 <td><a href="http://www.xxiav.com/">XXIAV寫真館</a></td>
