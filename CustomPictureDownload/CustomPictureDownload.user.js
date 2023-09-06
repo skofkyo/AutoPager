@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.25
+// @version            1.1.26
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -82,7 +82,7 @@
             }
             return title;
         },
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
         name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，翻完所有預覽圖後，立刻在預覽縮圖下面插入全部大圖
@@ -99,7 +99,7 @@
         ],
         go: 1,
         customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
         name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，聚集所有預覽圖，手動插入全部大圖，圖片量是幾百張的比較不會卡，不插大圖也能下載
@@ -112,7 +112,7 @@
         },
         insertImg: ["//div[div[@class='photos']]", 0],
         customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
         name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me",
@@ -137,7 +137,7 @@
         ],
         go: 1,
         customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
         topButton: true,
         category: "nsfw2"
     }, {
@@ -486,8 +486,8 @@
         css: ".article-header>a,.article-content br,img[src*='zz1.gif']{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "爱看美女网 www.ikmn.vip",
-        reg: /www\.ikmn\d?\.\w+\/\w+\/\d+\.html/i,
+        name: "爱看美女网 www.ikmn.vip www.ikmn01.cc",
+        reg: /www\.ikmn(\d+)?\.\w+\/\w+\/\d+\.html/i,
         imgs: () => {
             let max = fun.geT(".pagebar>*:last-child", 2);
             return fun.getImg('.info-imtg-box img[alt]', max, 3);
@@ -927,6 +927,24 @@
         prev: 1,
         customTitle: "return fun.geT('.m-article>h1');",
         css: "#bigImg{margin:0px!important}",
+        category: "nsfw1"
+    }, {
+        name: "930图片网 www.930tu.com m.930tu.com",
+        reg: /(www|m)\.930tu\.com\/\w+\/\w+\/\d+.html$/i,
+        include: ".page a,a[title=Page]",
+        init: () => {
+            let a = fun.ge(".pic-main a,.pic-m a");
+            a.outerHTML = a.innerHTML;
+        },
+        imgs: () => {
+            let max = fun.ge("//a[text()='尾页']").href.match(/_(\d+)/)[1];
+            return fun.getImg(".pic-main img,.pic-m img", max, 9);
+        },
+        insertImg: [".pic-main,.pic-m", 1],
+        autoDownload: [0],
+        next: "//a[@class='pic-next']|//a[text()='下一组图']",
+        prev: "//a[@class='pic-prew']|//a[text()='上一组图']",
+        customTitle: "return fun.geT('.pic h1,.tit-m h1');",
         category: "nsfw1"
     }, {
         name: "爱美女 www.2meinv.com",
@@ -1803,9 +1821,9 @@
         insertImg: [
             [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image"], 2
         ],
-        autoDownload: [0],
-        next: ".post-navigation-link-previous>a",
-        prev: ".post-navigation-link-next>a",
+        //autoDownload: [0],
+        //next: ".post-navigation-link-previous>a",
+        //prev: ".post-navigation-link-next>a",
         customTitle: () => {
             return fun.geT("h3.wp-block-post-title").replace(/\[(\d+)?mb-\d+photos\]|\[\d+photos\]/i, "").trim();
         },
@@ -1842,7 +1860,15 @@
             } catch (e) {
                 max = 1
             }
-            return fun.getImg(".contentme img", max);
+            if (/\?m=1/.test(siteUrl)) {
+                let links = [];
+                for (let i = 1; i <= max; i++) {
+                    links.push(siteUrl + "&page=" + i)
+                }
+                return fun.getImgA(".contentme img", links);
+            } else {
+                return fun.getImg(".contentme img", max);
+            }
         },
         insertImg: [".contentme", 2],
         customTitle: () => {
