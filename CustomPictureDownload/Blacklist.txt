@@ -1,4 +1,4 @@
-2023/08/30 22:11
+2023/09/06 20:49
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -163,6 +163,9 @@ MEITU131
 
 晴空头像图库
 *.qq7k.com/*/*/*.html
+
+930图片网
+*.930tu.com/*/*/*.html
 
 爱美女
 *://www.2meinv.com/article-*.html
@@ -954,6 +957,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.umeitu.com/img/*.html
 *://*.jxmm.net/pic/*.html
 *.qq7k.com/*/*/*.html
+*.930tu.com/*/*/*.html
 *://www.superbeautygirlx.com/*/*/*.html
 *://www.meimeimei.org/*/*/
 *://xem.anhvl.net/*/
