@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.26
+// @version            1.1.27
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -560,8 +560,8 @@
         customTitle: "return fun.geT('.article-header>h1').replace('(mitaku.net)','').trim();",
         category: "nsfw1"
     }, {
-        name: "私图网 baoruba.com",
-        reg: /baoruba\.com\/bb\d+\.html/i,
+        name: "私图网 baoruba.com tukuku.cc",
+        reg: /(baoruba\.com|tukuku\.cc)\/(bb|t)\d+\.html/i,
         imgs: "img[decoding]",
         customTitle: "return fun.title(' - 私图网');",
         css: "[id].widget_text{display:none!important}",
@@ -819,8 +819,66 @@
         css: "union[id],.pag-ts,.contentpage{display:none!important}",
         category: "nsfw1"
     }, {
+        name: "可爱小图 www.keaitupian.com m.keaitupian.com",
+        reg: /(www|m)\.keaitupian\.com\/pic\/\d+\.html/,
+        imgs: () => {
+            try {
+                let max = fun.geT(".entry-title,.desk-tit>h1").match(/\/(\d+)/)[1];
+                let links = [];
+                links.push(siteUrl)
+                let url = siteUrl.replace(".html", "");
+                for (let i = 1; i < max; i++) {
+                    links.push(url + "-" + i + ".html")
+                }
+                return fun.getImgA(".entry-content img,#content_pic img", links);
+            } catch (e) {
+                return [...fun.gae(".entry-content img,#content_pic img")]
+            }
+        },
+        insertImg: [".entry-content,#content_pic", 1],
+        customTitle: () => {
+            return fun.geT(".entry-title,.desk-tit>h1").replace(/（\d+\/\d+）/, "").trim();
+        },
+        category: "nsfw1"
+    }, {
+        name: "回车桌面 www.enterdesk.com m.enterdesk.com",
+        reg: /^https?:\/\/((m\.)?mm?\.|www\.)enterdesk\.com\/\w+\/[0-9-]+\.html/,
+        include: ".arc_pandn .swiper-wrapper img,.marc_pandn .swiper-wrapper img",
+        imgs: () => {
+            return [...fun.gae(".arc_pandn .swiper-wrapper img,.marc_pandn .swiper-wrapper img")].map(e => e.src.replace("_360_360", ""))
+        },
+        insertImg: [".arc_main_pic,.marc_img", 2],
+        autoDownload: [0],
+        next: "//a[div[text()='下一组']]|//div[@id='next_pics']",
+        prev: 1,
+        customTitle: "return fun.geT('.arc_location>a:last-child,.m_h1>a');",
+        category: "nsfw1"
+    }, {
+        name: "女人吧 www.nvhai8.com m.nvhai8.com",
+        reg: /^https?:\/\/(www|m)\.nvhai8\.com\/body\/\d+\/\d+\.htm/,
+        imgs: () => {
+            try {
+                let max = fun.geT(".imgfooter>a").match(/\d+/)[0];
+                let links = [];
+                links.push(siteUrl)
+                let url = siteUrl.replace(".htm", "");
+                for (let i = 1; i < max; i++) {
+                    links.push(url + "_" + i + ".htm")
+                }
+                return fun.getImgA(".remark img,.ui-article-detail img", links);
+            } catch (e) {
+                return [...fun.gae(".remark img,.ui-article-detail img")]
+            }
+        },
+        insertImg: [".remark,.ui-article-detail", 2],
+        autoDownload: [0],
+        next: "//label[contains(text(),'下一篇')]/preceding-sibling::a[1]",
+        prev: "//label[contains(text(),'上一篇')]/following-sibling::a[1]",
+        customTitle: "return fun.geT('.text_content>h1,h1');",
+        category: "nsfw1"
+    }, {
         name: "3G 壁纸 https://www.3gbizhi.com/meinv",
-        reg: /(www|m)\.3gbizhi\.com\/meinv\/(\w+\/)?\w+\.html/,
+        reg: /(www|m|desk)\.3gbizhi\.com\/meinv\/(\w+\/)?\w+\.html/,
         imgs: () => {
             return fun.getImgA('#contpic,#mobile_c_img>img', '.swiper-slide:not(:first-child) a');
         },
@@ -1273,7 +1331,7 @@
         },
         imgs: () => {
             let max = fun.geT(".pagelist font~*:last-child", 2);
-            return fun.getImgO("#picg img[alt]", max, 9, [null, null], 200, ".page .pagelist", 0);
+            return fun.getImgO("#picg img[alt]", max, 9, [null, null], 400, ".page .pagelist", 0);
         },
         insertImg: ["#picg", 1],
         autoDownload: [0],
@@ -2944,6 +3002,14 @@
         go: 1,
         category: "nsfw2"
     }, {
+        name: "美女集社 www.meinv.im",
+        reg: /www\.meinv\.im\/article\/\d+\//,
+        imgs: "#img-box img",
+        customTitle: () => {
+            return fun.geT(".focusbox-title")
+        },
+        category: "nsfw1"
+    }, {
         name: "色情圖片網 www.photos18.com",
         reg: /www\.photos18\.com\/\w+\/\w+/i,
         imgs: ".imgHolder a[data-fancybox]",
@@ -4401,7 +4467,7 @@
         category: "nsfw2"
     }, {
         name: "紳士漫畫 下拉閱讀頁 www.wnacg.com www.wnacg.org m.wnacg.org m.wnacg.com",
-        reg: /(www\.wnacg\.com|www\.wnacg\.org|m\.wnacg\.com|m\.wnacg\.org|www\.htmanga\d\.top|www\.hentaicomic\.ru)\/photos-(slide|slidelow)-aid-\d+\.html/,
+        reg: /(www\.wnacg\.com|www\.wnacg\.org|m\.wnacg\.com|m\.wnacg\.org|www\.htmanga\d\.top|www\.hentaicomic\.ru)\/photos-(slide|slidelow|list)-aid-\d+\.html/,
         imgs: () => {
             return imglist.map(e => e.url);
         },
@@ -4780,11 +4846,11 @@
         openInNewTab: ".home-banner a:not([target=_blank]),.manga-rank a:not([target=_blank]),.manga-cover a:not([target=_blank])",
         category: "comic"
     }, {
-        name: "COLAMANHUA www.colamanhua.com", //方向鍵上一章下一章、反反偵錯，新版blob格式下載不了...Picviewer CE+可以
+        name: "COLAMANHUA www.colamanhua.com www.colamanga.com", //方向鍵上一章下一章、反反偵錯，新版blob格式下載不了...Picviewer CE+可以
         enable: 1,
         icon: 0,
         key: 0,
-        reg: /www\.colamanhua\.com\/manga-.+\.html$/,
+        reg: /www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/,
         init: "Function.prototype.constructor=()=>{}",
         imgs: ".mh_comicpic>img[src]:not([src^=blob])",
         next: "//a[text()='下一章']",
