@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/06 20:49</p>
+<p>2023/09/09 00:25</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -501,7 +501,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://baoruba.com/">私图网</a></td>
-                <td></td>
+                <td><a href="https://tukuku.cc/">tukuku.cc</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.umeitu.com/">尤美图库</a></td>
@@ -640,8 +640,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.930tu.com//">930图片网</a></td>
-                <td><a href="https://m.930tu.com//">m.930tu.com</a></td>
+                <td><a href="https://www.930tu.com/">930图片网</a></td>
+                <td><a href="https://m.930tu.com/">m.930tu.com</a></td>
             </tr>
             <tr>
                 <td><a href="http://www.xxiav.com/">XXIAV寫真館</a></td>
@@ -774,6 +774,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.3gbizhi.com/meinv">3G壁纸</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.enterdesk.com/">回车桌面</a></td>
+                <td><a href="https://m.enterdesk.com/">m.enterdesk.com</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.keaitupian.com/">可爱小图</a></td>
+                <td><a href="https://m.keaitupian.com/">m.keaitupian.com</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.nvhai8.com/">女人吧</a></td>
+                <td><a href="https://m.nvhai8.com/">m.nvhai8.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://mrcong.com/">MrCong</a></td>
@@ -1076,6 +1088,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.tuao.one/">凸凹吧</a></td>
                 <td>同網頁格式，<a href="https://www.63mm.cc/">www.63mm.cc</a>，<a href="https://www.97mm.cc/">www.97mm.cc</a>，<a href="https://www.luge8.co/">www.luge8.co</a>，<a href="https://luge8.co/">luge8.co</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.meinv.im/">美女集社</a></td>
+                <td>很久沒新圖了</td>
             </tr>
             <tr>
                 <td><a href="https://xjjtk.link/">小姐姐图库</a></td>
@@ -1412,7 +1428,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.colamanhua.com/">COLAMANHUA</a></td>
+                <td><a href="https://www.colamanga.com/">COLAMANGA</a></td>
                 <td>方向鍵上下章，需手動觸發載入全部圖片，下載只支援較舊的頁面，blob加密?下載需使用Picviewer CE+</td>
             </tr>
             <tr>
