@@ -1,4 +1,4 @@
-2023/09/06 20:49
+2023/09/09 00:25
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -400,6 +400,15 @@ Anh VL
 
 好圖屋
 *haotuwu.com/*/*.html
+
+可爱小图
+*keaitupian.com/pic/*.html
+
+回车桌面
+*enterdesk.com/*/*.html
+
+女人吧
+*nvhai8.com/body/*/*.htm
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -975,6 +984,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *www.kkc3.com/file/*
 *www.hanjuzu.com/handetail-*.html
 *www.haotuwu.com/*/*.html
+*keaitupian.com/pic/*.html
+*enterdesk.com/*/*.html
+*nvhai8.com/body/*/*.htm
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
