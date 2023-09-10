@@ -1669,6 +1669,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
+                <td><a href="https://godamanga.com/">GODA漫畫</a></td>
+                <td><a href="https://cn.godamanga.site/">cn.godamanga.site</a>，<a href="https://cocomanga.org/">cocomanga.org</a>，預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://baozimh.org/">包子漫畫</a></td>
+                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，預設關閉</td>
+            </tr>
+            <tr>
                 <td><a href="https://mh5.tw/">漫畫屋</a></td>
                 <td>預設關閉</td>
             </tr>
