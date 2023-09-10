@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/09 00:25</p>
+<p>2023/09/10 23:18</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -433,7 +433,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xg02.xyz/">极品性感美女</a></td>
+                <td><a href="https://www.xg05.xyz/">极品性感美女</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -512,6 +512,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="http://www.meituku.org/">美图库</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.tuzac.com/">图宅网</a></td>
                 <td></td>
             </tr>
@@ -581,7 +585,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xiuwo.net/">秀窝</a></td>
-                <td></td>
+                <td><a href="https://rmm8.com//">RMM吧</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xsnvshen.co/">秀色女神</a></td>
@@ -808,6 +812,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://baobua.com/">baobua.com</a>，<a href="https://fb.baobua.net/">fb.baobua.net</a>，<a href="https://vn.baobua.net/">vn.baobua.net</a>，<a href="https://www.baobua.net/">www.baobua.net</a></td>
             </tr>
             <tr>
+                <td><a href="https://redbust.com/">RedBust</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.coszip.com/">COSPLAY ZIP</a></td>
                 <td></td>
             </tr>
@@ -950,6 +958,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://m.phimvuspot.com/">PhimVu</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://cutegirlsaddict.blogspot.com/">CUTE GIRLS ADDICT</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1118,8 +1130,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
-                <td><a href="https://www.c0h.net/">美女云图网</a></td>
-                <td>很久沒新圖了</td>
+                <td><a href="https://www.6evu.com/">遛无写真</a></td>
+                <td><a href="https://www.6kpo.com/">KP写真</a>，<a href="https://www.c0h.net/">美女云图网</a>，<a href="https://www.3tck.com/category/mntp">tck天天番号</a>，<a href="https://www.4tck.com/category/mntp">4tck番号库</a>，<a href="https://www.5tck.com/category/mntp">5tck天天番号</a>，<a href="https://www.6tck.com/">6K美女</a>，<a href="https://www.7tck.com/category/mntp">7tck番号网</a>，<a href="https://www.1tu5.com/category/mntp">1凸5宅男福利</a>，<a href="https://www.1plq.com/">有脾气美图</a></td>
             </tr>
             <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
@@ -1416,8 +1428,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>直接點進閱讀頁需要重要重新載入，建議新分頁開啟，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
-                <td><a href="https://www.dagumanhua.net/">大古漫画</a></td>
-                <td><a href="https://m.dagumanhua.net/">m.dagumanhua.net</a>，閱讀頁添加了下一話鏈接</td>
+                <td><a href="https://www.dgmanhua.com/">大古漫画</a></td>
+                <td><a href="https://m.dgmanhua.net/">m.dgmanhua.net</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="https://dogemanga.com/">漫畫狗</a></td>
@@ -1465,8 +1477,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.idmzj.com/">m.idmzj.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.qiman59.com/">奇漫屋</a></td>
-                <td><a href="http://m.qiman59.com/">m.qiman59.com</a>，預設關閉</td>
+                <td><a href="http://www.qiman52.com/">奇漫屋</a></td>
+                <td><a href="http://m.qiman52.com/">m.qiman52.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.mhxqiu2.com/">漫画星球</a></td>
@@ -1655,14 +1667,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
                 <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://godamanga.com/">GODA漫画</a></td>
-                <td><a href="https://cn.godamanga.art/">cn.godamanga.art</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://baozimh.org/">包子漫畫</a></td>
-                <td><a href="https://hi.godamanga.com/">hi.godamanga.com</a>，<a href="https://godamanga.art/">godamanga.art</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://mh5.tw/">漫畫屋</a></td>
