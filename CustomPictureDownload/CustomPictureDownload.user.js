@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.28
+// @version            1.1.29
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -6338,6 +6338,53 @@
         customTitle: "return fun.title('\（',1)",
         category: "comic"
     }, {
+        name: "GODA漫画 cocomanga.org godamanga.art",
+        enable: 0,
+        reg: /https?:\/\/(cocomanga\.org|godamanga\.art)\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+(\/|\.html)$/i,
+        delay: 300,
+        imgs: "//img[@decoding and @layout] | //img[@decoding and contains(@class,'img_content_jpg')]",
+        insertImg: ["//div[div[div[div[div[img[@decoding and @layout]]]]]] | //div[div[div[div[div[img[@decoding and contains(@class,'img_content_jpg')]]]]]]", 2],
+        autoDownload: [0],
+        next: "//a[span[text()='下一话']] | //a[span[text()='NEXT']]",
+        prev: "//a[span[text()='上一话']] | //a[span[text()='PREV']]",
+        customTitle: "return fun.geT('h1')",
+        category: "comic"
+    }, {
+        name: "GODA漫畫 godamanga.com cn.godamanga.site gd.godamanga.art 包子漫畫 baozimh.org bz.godamanga.art cn.baozimh.org ",
+        enable: 0,
+        reg: /https?:\/\/(gd|bz)\.godamanga\.art\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+/i,
+        init: async () => {
+            let script = "//script[contains(text(),'currentManga')]";
+            await fun.waitEle(script);
+            let code = fun.geT(script);
+            let id = code.match(/\\"id\\":(\d+)/)[1];
+            let api = `https://papi.mgsearcher.com/api/chapters/${id}?fields[0]=chapter_img&encodeValuesOnly=true`;
+            siteJson = await fetch(api, {
+                "headers": {
+                    "Authorization": "Bearer b69efef9280150ba3c29ebd02f1dd08b78d9d76a646fea85442c8f806f0037512d3bfab40a27528769b52373f9857edae1b8d74a3198c60f583f223bcccd8fde586cbc8420570a34570b62d2bef66c6aa82da8a3fd0c3dd2dedb18b8ea276f55d56151fe72317f2f38c9f888475f7433e24edebd7775c4aafa98ec9694789da9"
+                }
+            }).then(res => res.json());
+        },
+        imgs: async () => {
+            await fun.waitEle(".touch-manipulation");
+            return siteJson.data.attributes.chapter_img.map(e => e.url)
+        },
+        insertImg: [".touch-manipulation", 2],
+        autoDownload: [0],
+        next: () => {
+            let next = fun.ge("//a[button[text()='下一話' or text()='下一话']]");
+            if (next) {
+                return next.href
+            } else {
+                return null
+            }
+        },
+        prev: 1,
+        customTitle: () => {
+            return fun.geT("ol.inline-flex>li:nth-child(2) a") + " - " + fun.geT("ol.inline-flex>li:nth-child(3) a")
+        },
+        category: "comic"
+    }, {
         name: "漫畫屋 mh5.tw",
         enable: 0,
         reg: /mh5\.tw\/(series|seriesvip)-\w+-\d+-\d+/i,
@@ -7331,6 +7378,7 @@
         name: "網址清單新分頁開啟",
         icon: 0,
         key: 0,
+        delay: 1000,
         reg: /github\.com\/skofkyo\/AutoPager\/tree\/main\/CustomPictureDownload/,
         openInNewTab: ".entry-content a[href]:not([target=_blank]):not([id])",
         category: "none"
