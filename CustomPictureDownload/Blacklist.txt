@@ -1,4 +1,4 @@
-2023/09/09 00:25
+2023/09/10 23:18
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -66,6 +66,12 @@ Models Vibe
         "enable": 0,
         "url": "^https?://\\w{2}\\.(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic)\\.com/[^/]+/\\w+",
         "include": "//a[@data-title and picture/source]"
+    },
+    {
+        "name": "怠惰聚圖RedBust格式排除 ",
+        "enable": 0,
+        "url": "^https?://redbust\\.com/[a-z0-9-]+/",
+        "include": ".entry-inner img"
     }
 
 =========================東方永頁機黑名單=========================
@@ -177,8 +183,13 @@ MEITU131
 小姐姐
 *nvsheng.cc/m*/*.html
 
-美女云图网
+遛无写真
+*://www.6evu.com/*.html
+*://www.6kpo.com/*.html
 *://www.c0h.net/*.html
+*://www.*tck.com/*.html
+*://www.1tu5.com/*.html
+*://www.1plq.com/*.html
 
 秀色女神
 *://m.xsnvshen.co/album/*
@@ -331,6 +342,9 @@ Chinese Beauties
 
 秀窝
 *://www.xiuwo.net/tu/*.html
+
+RMM吧
+*rmm8.com/tu/*.html
 
 秀人图集
 *://xiuren0.com/*.html
@@ -574,7 +588,7 @@ https://www.fffdm.com/manhua/*
 https://manhua.fffdm.com/*/*/
 
 大古漫画
-https://*.dagumanhua.net/manhua/*/*.html
+https://*.dgmanhua.com/manhua/*/*.html
 
 奇漫屋閱讀
 *://*qiman59.com/*/*.html
@@ -785,7 +799,7 @@ manhuatai.org/manhua/*/*.html
 *://a.twobili.com/ReadComic/*
 https://www.fffdm.com/manhua/*
 https://manhua.fffdm.com/*/*/
-https://*.dagumanhua.net/manhua/*/*.html
+https://*.dgmanhua.com/manhua/*/*.html
 *://www.nlegs.com/girls/*.html
 https://www.honeyleg.com/article/*.html
 https://www.ladylap.com/show/*
@@ -824,7 +838,12 @@ https://www.nuyet.com/gallery/*
 *://meitulu.me/item/*.html
 *://mm.tvv.tw/archives/*.html
 *nvsheng.cc/m*/*.html
+*://www.6kpo.com/*.html
 *://www.c0h.net/*.html
+*://www.6evu.com/*.html
+*://www.*tck.com/*.html
+*://www.1tu5.com/*.html
+*://www.1plq.com/*.html
 *://m.xsnvshen.co/album/*
 *://www.beautyleg6.com/*/*/*.html
 *://www.ikanins.com/*/
@@ -948,6 +967,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://sxchinesegirlz01.xyz/*/*/*/*/
 *://www.tuzac.com/file/*
 *://www.xiuwo.net/tu/*.html
+*rmm8.com/tu/*.html
 *://xiuren0.com/*.html
 *://www.cybesx.com/*.html
 *://*.mm1311.net/*/*.html
