@@ -425,7 +425,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.imn5.cc/">爱美女网</a></td>
+                <td><a href="https://www.imn5.xyz/">爱美女网</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -585,7 +585,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xiuwo.net/">秀窝</a></td>
-                <td><a href="https://rmm8.com//">RMM吧</a></td>
+                <td><a href="https://rmm8.com/">RMM吧</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xsnvshen.co/">秀色女神</a></td>
@@ -712,7 +712,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.x6o.com/topics/14#articles">x6o</a></td>
+                <td><a href="https://x6o.com/topics/14#articles">x6o</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1429,7 +1429,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.dgmanhua.com/">大古漫画</a></td>
-                <td><a href="https://m.dgmanhua.net/">m.dgmanhua.net</a>，閱讀頁添加了下一話鏈接</td>
+                <td><a href="https://m.dgmanhua.com/">m.dgmanhua.com</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="https://dogemanga.com/">漫畫狗</a></td>
