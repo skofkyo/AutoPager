@@ -1551,7 +1551,7 @@
             }
             return fun.getImg(".contents img[alt]", max, 9);
         },
-        insertImg: [".contents", 1],
+        insertImg: [".contents", 2],
         autoDownload: [0],
         next: ".pre>a",
         prev: ".next>a",
@@ -1589,6 +1589,7 @@
     }, {
         name: "Asianude4u www.asianude4u.net",
         reg: /www\.asianude4u\.net\/.+\/.+\/$/,
+        exclude: "//a[@rel='category tag' and text()='Videos']",
         imgs: () => {
             if (fun.ge(".wp-block-image a[href*=attachment_id]")) {
                 return [...fun.gae(".wp-block-image img[data-id]")];
@@ -2386,7 +2387,7 @@
         category: "nsfw1"
     }, {
         name: "x6o https://www.x6o.com/topics/14#articles",
-        reg: /www\.x6o\.com\/articles\/\d+/,
+        reg: /(www\.)?x6o\.com\/articles\/\d+/,
         delay: 300,
         imgs: ".content img",
         customTitle: () => {
@@ -2416,11 +2417,20 @@
     }, {
         name: "美女库 www.meinvku.org.cn",
         reg: /www\.meinvku\.org\.cn\/album\/\d+(\.html)?$/,
-        imgs: () => {
+        imgs: async () => {
+            let firstImg = fun.ge("#img_src img").src;
+            let path = firstImg.match(/.+\//)[0];
+            let arr = [];
+            let max = fun.geT("//span[contains(text(),'页次')]").match(/\/(\d+)/)[1];
+            for (let i = 1; i <= max; i++) {
+                arr.push(path + i + ".jpg")
+            }
             let a = fun.ge("#img_src");
             if (a) {
                 a.outerHTML = `<div class="CustomPictureBox">${fun.ge("img", a).outerHTML}</div>`;
             }
+            return arr
+            /*
             let links = [];
             let url = location.href;
             links.push(url);
@@ -2429,6 +2439,11 @@
                 links.push(url + "/page/" + i + ".html")
             }
             return fun.getImgA(".post-content img", links);
+            */
+            /*
+            await fun.getNP(".CustomPictureBox img,#img_src img", ".pagination li.active+li>a", null, ".pagination", 0, null, 0);
+            return [...fun.gae(".CustomPictureBox img")]
+            */
         },
         insertImg: [".CustomPictureBox", 1],
         css: ".CustomPictureBox>img{max-width:100%}",
@@ -2768,6 +2783,7 @@
         imgs: () => {
             return fun.getImgA('#imagelink>img', '.thumbs>a')
         },
+        go: 1,
         insertImg: [
             ["#content>*:last-child", 2], 2
         ],
@@ -2971,6 +2987,7 @@
     }, {
         name: "Pornpaw 圖片清單頁 www.pornpaw.com",
         reg: /www\.pornpaw\.com\/gallery\/[\w-]+\.html/i,
+        delay: 500,
         imgs: () => {
             return [...fun.gae("img[data-src]")].map(e => e.dataset.src.replace("x160.", "."));
         },
@@ -3207,6 +3224,16 @@
             [".gallery-info", 2], 1
         ],
         go: 1,
+        category: "nsfw2"
+    }, {
+        name: "Girlsreleased 載入更多",
+        icon: 0,
+        key: 0,
+        delay: 1000,
+        reg: /girlsreleased\.com\//,
+        include: "//button[text()='more']",
+        observerClick: "//button[text()='more']",
+        openInNewTab: ".content .main a",
         category: "nsfw2"
     }, {
         name: "Girlsreleased",
@@ -5294,6 +5321,7 @@
         customTitle: () => {
             return fun.title(" - 漫畫狗")
         },
+        comic: ".CustomPictureBox{height:auto!important}",
         category: "comic"
     }, {
         name: "Manhuagui看漫画M https://m.manhuagui.com/comic/17023/176171.html",
@@ -7226,31 +7254,31 @@
         enable: 1,
         icon: 0,
         reg: /m\.(dgmanhua|dagumanhua)\.\w+\/manhua\/\d+\/\d+\.html$/i,
-        //         init: async () => {
-        //             let url = await siteData.next();
-        //             if (url) {
-        //                 fun.addNextHtml(url, "#content,.content", 1)
-        //             }
-        //         },
+        init: async () => {
+            let url = await siteData.next();
+            if (url) {
+                fun.addNextHtml(url, "#content,.content", 1)
+            }
+        },
         imgs: async () => {
             await fun.getNP("#content img,.content img", "//a[@href and text()='下一页']", null, ".pager,.cpages", 0, null, 0);
             return [...fun.gae("#content img,.content img")]
         },
         insertImg: ["#content,.content", 1],
-        //         next: () => {
-        //             let comicListUrl = location.href.replace(/\d+\.html$/, "");
-        //             let chapter = location.pathname;
-        //             let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
-        //             return fun.xhr(comicListUrl, "document").then(doc => {
-        //                 let next = fun.ge(nextXPath, doc);
-        //                 if (next) {
-        //                     return location.origin + next.getAttribute("href");
-        //                 } else {
-        //                     return null;
-        //                 }
-        //             })
-        //         },
-        next: "//a[@href and text()='下一章']",
+        next: () => {
+            let comicListUrl = location.href.replace(/\d+\.html$/, "");
+            let chapter = location.pathname;
+            let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
+            return fun.xhr(comicListUrl, "document").then(doc => {
+                let next = fun.ge(nextXPath, doc);
+                if (next) {
+                    return location.origin + next.getAttribute("href");
+                } else {
+                    return null;
+                }
+            })
+        },
+        //next: "//a[@href and text()='下一章']",
         prev: "//a[@href and text()='上一章']",
         customTitle: () => {
             try {
