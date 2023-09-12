@@ -61,7 +61,7 @@
     loadMore: "元素", //監聽scroll事件，滾至頁面底部時點擊元素，能簡單做到自動載入更多
     openInNewTab: ".manga-cover>a:not([target=_blank])", //指定的A元素在新分頁開啟
     topButton: true, //添加返回頂部按鈕
-    one: 1, //0多線程，1使用單線程下載，有些網站限制連接數，併發請求容易出錯。
+    threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
     fetch: 1, //使用Fetch API下載圖片，需要網站有支援CORS，如小黃書，4KHD
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.4khd.com/"或空""
     category: "comic" //類別(非必須)
@@ -104,7 +104,7 @@
     loadMore: "",
     openInNewTab: "",
     topButton: true,
-    one: 1,
+    threading: 1,
     fetch: 1,
     referer: "src",
     category: ""
@@ -1747,6 +1747,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.kumw9.com/">酷漫屋</a></td>
                 <td><a href="http://m.kumw9.com/">m.kumw9.com</a>，預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="http://qumanku.com/">速漫库</a></td>
+                <td><a href="http://www.sumanku.com/">www.sumanku.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://kanbook.net/">快岸漫画</a></td>
