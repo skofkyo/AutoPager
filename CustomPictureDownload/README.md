@@ -1413,7 +1413,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
-                <td>有限制連線數，最多只能同時載5話</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="http://www.manmanju.com/">漫漫聚</a></td>
