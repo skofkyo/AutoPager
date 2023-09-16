@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.29
+// @version            1.1.30
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -386,7 +386,7 @@
         next: "//span[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: "return fun.geT('.item_title>h1');",
-        //threading: 10,
+        //threading: 4,
         css: ".content br{display:none!important}",
         category: "nsfw1"
     }, {
@@ -404,7 +404,7 @@
         customTitle: () => {
             return fun.geT(".item_title>h1").replace(/\d+P$/i, "");
         },
-        //threading: 10,
+        //threading: 4,
         css: ".item_title>a,.content br{display:none!important}",
         category: "nsfw1"
     }, {
@@ -422,7 +422,7 @@
         customTitle: () => {
             return fun.geT(".article-title").replace(/\d+P$/i, "");
         },
-        //threading: 10,
+        //threading: 4,
         category: "nsfw1",
         css: ".content br{display:none!important}"
     }, {
@@ -440,7 +440,7 @@
         customTitle: () => {
             return fun.geT(".focusbox h1+div").replace(/\d+P$/i, "");
         },
-        //threading: 10,
+        //threading: 4,
         css: ".imgwebp br,img[src*='zz2.gif']{display:none!important}",
         category: "nsfw1"
     }, {
@@ -458,7 +458,7 @@
         customTitle: () => {
             return fun.geT(".item_title>h1").replace(/\d+P$/i, "");
         },
-        //threading: 10,
+        //threading: 4,
         css: "img[alt]~br{display:none!important}",
         category: "nsfw1"
     }, {
@@ -477,7 +477,7 @@
         customTitle: () => {
             return fun.geT(".article-title").replace(/\d+p$/i, "");
         },
-        //threading: 10,
+        //threading: 4,
         css: ".article-header>a,.article-content br,img[src*='zz1.gif']{display:none!important}",
         category: "nsfw1"
     }, {
@@ -496,7 +496,7 @@
         customTitle: () => {
             return fun.geT("h1").replace(/\d+p$/i, "");
         },
-        //threading: 10,
+        //threading: 4,
         category: "nsfw1"
     }, {
         name: "美女秀 www.22mm.net",
@@ -1372,7 +1372,7 @@
         },
         imgs: () => {
             let max = fun.geT(".pagelist font~*:last-child", 2);
-            return fun.getImgO("#picg img[alt]", max, 9, [null, null], 400, ".page .pagelist", 0);
+            return fun.getImgO("#picg img[alt]", max, 9, [null, null], 600, ".page .pagelist", 0);
         },
         insertImg: ["#picg", 1],
         autoDownload: [0],
@@ -4052,7 +4052,7 @@
         insertImg: ["#gdt", 1],
         customTitle: "return fun.geT('#gn');",
         css: "div.gdtm,div.gdtl{text-align:center!important;float:unset!important;margin:2px 0px!important;width:100%!important;height:auto!important}",
-        threading: 8,
+        threading: 1,
         category: "hcomic"
     }, {
         name: "nhentai圖片清單頁 nhentai.net nyahentai.red www.hentai.name nhentai.xxx nhentai.to nhentai.website",
@@ -4063,7 +4063,7 @@
         insertImg: [".thumbs,#thumbnail-container", 1],
         autoClick: ["#show-all-images-button"],
         customTitle: "try{return fun.geT('h2.title,h2')}catch(e){return fun.geT('h1.title,h1')}",
-        threading: 4,
+        threading: 2,
         css: ".thumb-container{width:100%!important;margin:0px!important}.thumbs img{padding:0px!important;border-radius:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
         category: "hcomic"
     }, {
@@ -5490,7 +5490,7 @@
                 if (new RegExp(chapterId).test(chapters[i].id)) {
                     try {
                         let nextId = chapters[parseInt(i) + 1].id;
-                        nextUrl = siteUrl.replace(new RegExp(`/${chapterId}/`), `/${nextId}/`)
+                        nextUrl = siteUrl.replace(new RegExp(`/${chapterId}/`), `/${nextId}/`).replace(/\?page=\d+/, "")
                     } catch (e) {
                         nextUrl = null
                     }
