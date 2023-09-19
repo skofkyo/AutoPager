@@ -49,6 +49,7 @@
     let promiseBlobArray = [];
     let customTitle = null;
     let downloading = false;
+    let fetching = false;
     let fastDownload = false;
     let currentDownloadThread = 0;
     let downloadNum = 0;
@@ -2831,7 +2832,7 @@
             fun.gae("img.thumb[data-original]").forEach(img => {
                 img.src = img.dataset.original;
             });
-            fun.remove(".sponsor,.footer-margin")
+            fun.remove(".sponsor,.footer-margin");
         },
         imgs: ".images>a",
         insertImg: [
@@ -2851,8 +2852,11 @@
         include: "#list_albums_common_albums_list_pagination",
         init: () => {
             setInterval(() => {
-                fun.remove("//div[iframe] | //iframe")
-            }, 300);
+                fun.remove("//div[iframe] | //iframe");
+                if (document.body.getAttribute("class").length > 13) {
+                    document.body.setAttribute("class", "big-container");
+                }
+            }, 500);
         },
         observerClick: ".load-more>a",
         category: "nsfw2"
@@ -7493,6 +7497,7 @@
 
     const fun = {
         getImg: async (img, maxPage = 1, mode = 1, rText = [null, null]) => {
+            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
             fun.show("獲取圖片元素中...", 0);
             let imgsArray = [];
@@ -7596,6 +7601,7 @@
                 }
             }
             await Promise.all(resArr).then(htmls => {
+                fetching = false;
                 fun.hide();
                 for (let i = 0; i < htmls.length; i++) {
                     let doc = fun.doc(htmls[i]);
@@ -7617,6 +7623,7 @@
             return imgsArray;
         },
         getImgO: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1) => {
+            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
             if (msg == 1) fun.show("獲取圖片元素中...", 0);
             let imgsArray = [];
@@ -7739,6 +7746,7 @@
                 }
             }
             await Promise.all(resArr).then(htmls => {
+                fetching = false;
                 fun.hide();
                 for (let i = 0; i < htmls.length; i++) {
                     let doc = fun.doc(htmls[i]);
@@ -7760,6 +7768,7 @@
             return imgsArray;
         },
         getImgIframe: async (img, maxPage = 1, mode = 1, rText = [null, null], paginationEle = null, time = 500, showMsg = 1) => {
+            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
             if (showMsg == 1) fun.show("獲取圖片元素中...", 0);
             let imgsArray = [];
@@ -7897,9 +7906,11 @@
                 }
             }
             debug("\nfun.getImgiframe() 聚集的所有IMG", imgsArray);
+            fetching = false;
             return imgsArray;
         },
         getImgA: async (img, link, one = 0, rText = [null, null], showMsg = 1) => { //從指定的所有鏈接抓圖片
+            fetching = true;
             if (showMsg == 1) fun.show("獲取圖片元素中...", 0);
             let links, linksNum;
             if (typeof link == "function") {
@@ -7975,6 +7986,7 @@
                 }
             }
             await Promise.all(resArr).then(htmls => {
+                fetching = false;
                 fun.hide();
                 for (let i = 0; i < htmls.length; i++) {
                     let doc = fun.doc(htmls[i]);
@@ -8057,6 +8069,7 @@
         getNP: async (picsEle, nextLinkEle, lastEle = null, paginationEle = null, time = 0, dataset = null, mag = 1) => {
             //翻頁模式聚集所有圖片或是預覽縮圖然後fun.getImgA()
             //用在規則init，fun.getNP(picsEle, nextLinkEle, lastEle, paginationEle, time);
+            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return;
             if (mag == 1) fun.show("獲取下一頁中...", 0);
             const getNextPagePics = async url => {
@@ -8094,6 +8107,7 @@
                         });
                     }
                     if (lastPage) {
+                        fetching = false;
                         if (mag == 1) fun.show("獲取下一頁結束");
                         return;
                     }
@@ -8117,6 +8131,7 @@
                         }
                         await getNextPagePics(nextlink);
                     } else {
+                        fetching = false;
                         if (mag == 1) fun.show("獲取下一頁結束");
                         return;
                     }
@@ -8139,11 +8154,13 @@
                 }
                 await getNextPagePics(nextlink);
             } else {
+                fetching = false;
                 if (mag == 1) fun.show("獲取下一頁結束");
                 return;
             }
         },
         getEle: async (links, elements, targetEle, removeEles = null) => {
+            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return;
             let resArr = [];
             let xhrNum = 0;
@@ -8158,6 +8175,7 @@
                 resArr.push(res)
             }
             await Promise.all(resArr).then(arr => arr.flat()).then(eles => {
+                fetching = false;
                 fun.hide();
                 let ele;
                 let fragment = new DocumentFragment();
@@ -8594,6 +8612,9 @@
                 blob: blob,
                 picNum: picNum
             };
+        }).catch(error => {
+            currentDownloadThread--
+            debug(`fetchData() Error: ${error}`);
         });
     };
 
@@ -8685,6 +8706,10 @@
     const imgZipDownload = async () => {
         if (downloading) {
             alert("下載&壓縮中請稍後再操作！");
+            return;
+        }
+        if (fetching) {
+            alert("獲取圖片中請稍後再操作！");
             return;
         }
         let selector, titleText;
@@ -8864,6 +8889,10 @@
     const copyImgSrcText = async () => {
         if (downloading) {
             alert("下載&壓縮中請稍後再操作！");
+            return;
+        }
+        if (fetching) {
+            alert("獲取圖片中請稍後再操作！");
             return;
         }
         let selector;
