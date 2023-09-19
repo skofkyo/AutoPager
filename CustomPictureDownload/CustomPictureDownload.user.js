@@ -516,6 +516,20 @@
         css: "union{display:none!important}",
         category: "nsfw1"
     }, {
+        name: "优美图录 umei.net",
+        reg: /umei\.net\/\w+\/\d+\.html/i,
+        imgs: () => {
+            //let max = fun.ge("//a[text()='尾页']").href.match(/_(\d+)/)[1];
+            let max = fun.geT(".item_info span");
+            return fun.getImg(".image_div img", max, 9);
+        },
+        insertImg: [".image_div", 2],
+        customTitle: () => {
+            return fun.geT(".item_title>h1");
+        },
+        css: ".content_left img{cursor:unset}",
+        category: "nsfw1"
+    }, {
         name: "秀人图集 xiuren0.com",
         reg: /xiuren\d\.com\/\d+\.html/i,
         include: ".article-paging>*:last-child",
@@ -1082,6 +1096,28 @@
         customTitle: "return fun.geT('h1.post-title');",
         category: "nsfw2"
     }, {
+        name: "妞妞之家 niuniuhome.club",
+        reg: /niuniuhome\.club\/[^\/]+\/$/,
+        imgs: ".entry-content img",
+        customTitle: "return fun.geT('.post-title');",
+        category: "nsfw1"
+    }, {
+        name: "PixiBB www.pixibb.com",
+        reg: /www\.pixibb\.com\/album\//,
+        imgs: () => {
+            let arr = [...fun.gae(".list-item-image img")].map(e => e.src.replace(".md.", "."));
+            arr = arr.sort((a, b) => {
+                return a.match(/---(\d+)/)[1] - b.match(/---(\d+)/)[1]
+            });
+            return arr
+        },
+        insertImg: [
+            [".pad-content-listing", 2], 2
+        ],
+        go: 1,
+        topButton: true,
+        category: "nsfw1"
+    }, {
         name: "COSPLAY ZIP www.coszip.com",
         reg: /www\.coszip\.com\/\d+\.html$/,
         imgs: () => {
@@ -1422,7 +1458,7 @@
         },
         insertImg: ["#img-box", 2],
         customTitle: () => {
-            return fun.geT(".focusbox-title");
+            return fun.geT(".focusbox-title").replace(/\[\d+P\]/i, "").replace(/\d+P/i, "").trim();
         },
         category: "nsfw1"
     }, {
