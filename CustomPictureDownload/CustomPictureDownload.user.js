@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.30
+// @version            1.1.31
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -636,7 +636,7 @@
         imgs: () => {
             let numP = fun.geT("dd:last-child").match(/\d+/)[0];
             let max = Math.ceil(numP / 10);
-            return fun.getImgO(".album-photo img[alt]", max, 1, [null, null], 200, ".pagination", 0);
+            return fun.getImgO(".album-photo img[alt]", max, 1, [null, null], 600, ".pagination", 0);
         },
         insertImg: [".photos-list", 2],
         customTitle: "return fun.geT('h1');",
@@ -1407,6 +1407,23 @@
         },
         css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>center,#d5tig,#pcapicb,#pcapic,#google_translate_element,#d5a>*:not([id]):not([class]),union[id]{display:none !important}",
         category: "nsfw2"
+    }, {
+        name: "爱妹子 xx.knit.bid",
+        reg: /xx\.knit\.bid\/article\/\d+\//,
+        imgs: async () => {
+            let max;
+            try {
+                max = fun.geT("li.next-page", 2)
+            } catch (e) {
+                max = 1
+            }
+            return fun.getImg(".item-image img", max)
+        },
+        insertImg: ["#img-box", 2],
+        customTitle: () => {
+            return fun.geT(".focusbox-title");
+        },
+        category: "nsfw1"
     }, {
         name: "萌图社 www.446m.com 446m.com",
         reg: /https?:\/\/(www\.)?446m\.com\/index\.php\/\w+\/\d+\.html/,
@@ -7481,6 +7498,7 @@
             let imgsArray = [];
             let fetchNum = 0;
             const html = url => fetch(url).then(res => res.arrayBuffer()).then(buffer => {
+                debug(`\nfun.getImg() URL`, url);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
                 let doc = fun.doc(htmlText);
@@ -7606,6 +7624,7 @@
             const html = async (url, id = 1) => {
                 await fun.delay(time, 0);
                 return fetch(url).then(async res => {
+                    debug(`\nfun.getImgO() URL`, url);
                     if (res.status === 403) {
                         fun.show("403，未登錄網站?", 3000);
                     }
@@ -7746,6 +7765,7 @@
             let imgsArray = [];
             let fetchNum = 0;
             const html = (url, id = 0) => fetch(url).then(res => res.arrayBuffer()).then(buffer => {
+                debug(`\nfun.getImgIframe() URL`, url);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
                 return htmlText;
@@ -8130,6 +8150,7 @@
             fun.show("獲取元素中...", 0);
             for (let i in links) {
                 let res = fun.xhr(links[i], "document").then(doc => {
+                    debug(`\nfun.getEle() URL`, links[i]);
                     fun.show(`獲取元素中${xhrNum+=1}/${links.length}`, 0);
                     debug(`fun.getEle()\n${decodeURI(links[i])}\n`, doc);
                     return [...fun.gae(elements, doc)];
