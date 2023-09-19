@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/10 23:18</p>
+<p>2023/09/20 00:15</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -446,6 +446,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.2mn.cc/">秀爱美女网</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://umei.net/">优美图录</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -601,6 +605,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.meimeimei.org/">美妹妹</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://niuniuhome.club/">妞妞之家</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -816,7 +824,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://baobua.com/">baobua.com</a>，<a href="https://fb.baobua.net/">fb.baobua.net</a>，<a href="https://vn.baobua.net/">vn.baobua.net</a>，<a href="https://www.baobua.net/">www.baobua.net</a></td>
             </tr>
             <tr>
-                <td><a href="https://redbust.com/">RedBust</a></td>
+                <td><a href="https://www.pixibb.com/">PixiBB</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -825,6 +833,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://cosporn.online/">萝莉少女</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://redbust.com/">RedBust</a></td>
                 <td></td>
             </tr>
             <tr>
