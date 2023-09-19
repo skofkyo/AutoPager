@@ -472,6 +472,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 </td>
             </tr>
             <tr>
+                <td><a href="https://xx.knit.bid/">爱妹子</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://mmm.red/">妹妹美</a></td>
                 <td></td>
             </tr>
