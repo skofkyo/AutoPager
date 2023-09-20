@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/20 00:15</p>
+<p>2023/09/21 01:16</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -712,6 +712,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同上</td>
             </tr>
             <tr>
+                <td><a href="https://ijjiao.com/people">街角图片社</a></td>
+                <td>需透過微信公眾號取得密碼登錄</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.evacg.org/">E次元</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://pic.3loumao.org/">3楼猫图库</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.cybesx.com/">柠檬皮</a></td>
                 <td></td>
             </tr>
@@ -886,6 +898,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://cosplaytele.com/">Cosplaytele</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.simply-cosplay.com/galleries/new">Simply Cosplay</a></td>
+                <td>SAP網頁，需新分頁開啟Gallery</td>
             </tr>
             <tr>
                 <td><a href="https://asiaon.top/">AsiaOnTop</a></td>
