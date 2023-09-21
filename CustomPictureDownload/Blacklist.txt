@@ -1,10 +1,10 @@
-2023/09/21 01:16
+2023/09/21 22:10
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
 ====================東方永頁機設定excludes====================
 E-Hentai清單頁
-/^https?:\/\/(e-hentai|exhentai)\.org\/g\/\w+\/\w+\/$/
+/^https?:\/\/(e-hentai|exhentai)\.org\/(lofi\/)?g\/\w+\/\w+\/$/
 
 Mangabz閱讀
 /^https?:\/\/(www\.)?mangabz\.com\/m\d+(-p\d+)?\//
@@ -158,7 +158,7 @@ COSPLAY ZIP
 *://www.3gbizhi.com/meinv/*/pic*.html
 
 亿图全景图库
-*://*.yeitu.com/meinv/*/*.html
+*://*.yeitu.com/*/*/*.html
 
 优美图库
 *://*.umei.cc/meinvtupian/*/*.htm
@@ -230,6 +230,7 @@ XXIAV寫真館
 
 Xgirls
 *://xgirlscollection.com/collection/*
+*img3xgirls.com/album/*
 
 Mitaku
 *://mitaku.net/*/*/
@@ -276,7 +277,8 @@ Coomer
 
 俊美图
 *://www.meijuntu.com/*/*.html
-*://www.jeya.de/*/*.html
+*://www.junmeitu.com/*/*.html
+*://www.jeya.*/*/*.html
 
 美女图片网
 *://www.mevtu.com/*/*.html
@@ -363,6 +365,7 @@ MM1311
 
 18AV
 *18av.mm-cg.com/*cg_content/*/content.html
+*18av.mm-cg.com/*.html
 
 洛秀网
 *://loxiu.com/post/*.html
@@ -396,6 +399,9 @@ Anh VL
 
 赞MM
 *www.zanmm.com/tupian/*.html
+
+恩图集
+*www.entuji.com/*/*.html
 
 福利姬美图
 *fuligirl.net/albums/*
@@ -435,6 +441,9 @@ PixiBB
 
 Simply Cosplay
 *www.simply-cosplay.com*
+
+福利图
+*fulitu.me/*/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -506,7 +515,7 @@ Pururin
 *7mmtv.sx/*hcomic_content/*/content.html
 
 18H
-*://18h.mm-cg.com/*18H_content/*/content.html
+*://18h.mm-cg.com/*_content/*/content.html
 
 丽图·污漫画
 *://litu100.xyz/comic/id-*/*.html
@@ -841,7 +850,7 @@ https://www.nuyet.com/gallery/*
 *://www.meitule.*/photo/*.html
 *://www.win4000.com/meinv*.html
 *://www.3gbizhi.com/meinv/*/pic*.html
-*://*.yeitu.com/meinv/*/*.html
+*://*.yeitu.com/*/*/*.html
 *://*.umei.cc/meinvtupian/*/*.htm
 *://www.meitu131.*/meinv/*/
 *://m.meitu131.*/meinv/*/
@@ -868,6 +877,7 @@ https://www.nuyet.com/gallery/*
 *://*.tuiimg.com/meinv/*/
 *://www.xxiav.com/html/*/*/*.html
 *://xgirlscollection.com/collection/*
+*img3xgirls.com/album/*
 *://www.4khd.com/*/*/*/*.html
 /://buondua.com/[^\\?]+/
 *://hotgirlchina.com/*-photos*/
@@ -885,6 +895,8 @@ https://www.nuyet.com/gallery/*
 *://kemono.party/*/user/*/post/*
 *://coomer.party/*/user/*/post/*
 *://www.meijuntu.com/*/*.html
+*://www.junmeitu.com/*/*.html
+*://www.jeya.*/*/*.html
 *://www.mevtu.com/*/*.html
 *://myjkwd.com/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
@@ -952,7 +964,7 @@ https://www.nuyet.com/gallery/*
 *://imhentai.xxx/view/*/*/
 *pururin.to/read/*
 *7mmtv.sx/*hcomic_content/*/content.html
-*://18h.mm-cg.com/*18H_content/*/content.html
+*://18h.mm-cg.com/*_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
 *://mhdnf.xyz/play?linkId=*
 *://www.acgxmh.com/*/*.html
@@ -986,6 +998,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://*.eemm.cc/pic/*.html
 *://*.mm5mm5.com/mm/*
 *18av.mm-cg.com/*cg_content/*/content.html
+*18av.mm-cg.com/*.html
 *jmwu.vip/chapter/*.html
 *www.comicun.com/index-look*
 *://foamgirl.net/*.html
@@ -1023,6 +1036,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *umei.net/tupian/*.html
 *reprint-kh.com/archives/*
 *www.simply-cosplay.com*
+*www.entuji.com/*/*.html
+*fulitu.me/*/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
