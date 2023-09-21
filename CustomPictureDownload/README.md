@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/21 01:16</p>
+<p>2023/09/21 22:10</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -449,6 +449,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://fulitu.me/">福利图</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://weme2.com/">微密猫</a></td>
+                <td><a href="https://weme.su/">weme.su</a>，<a href="https://wememiao.com/">wememiao.com</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://umei.net/">优美图录</a></td>
                 <td></td>
             </tr>
@@ -517,6 +525,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.zhaotaotu.cc/">找套图</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.douhua520.com/">豆花520</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -589,7 +601,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.zanmm.com/">赞MM</a></td>
-                <td></td>
+                <td><a href="https://www.entuji.com/">恩图集</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xiuwo.net/">秀窝</a></td>
@@ -793,7 +805,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.yeitu.com/meinv/">亿图全景图库</a></td>
-                <td></td>
+                <td><a href="https://www.yeitu.com/dongman/cosplay/">COSPLAY</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.umei.cc/meinvtupian/">优美图库</a></td>
@@ -814,6 +826,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.nvhai8.com/">女人吧</a></td>
                 <td><a href="https://m.nvhai8.com/">m.nvhai8.com</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://xiuren.biz/">Xiuren</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://mrcong.com/">MrCong</a></td>
@@ -977,6 +993,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.micmicidol.club/">MIC MIC IDOL</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://ivphoto.tistory.com/">IVPhoto_Gravure</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1155,7 +1175,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xgirlscollection.com/">Xgirls</a></td>
-                <td>很久沒新圖了</td>
+                <td><a href="https://www.img3xgirls.com/">www.img3xgirls.com</a>，很久沒新圖了</td>
             </tr>
             <tr>
                 <td><a href="https://www.haonvshen.com/">好女神网</a></td>
@@ -1171,6 +1191,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.xiuren.org/">Xiuren 秀人网</a></td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.mm1311.net/">MM1311</a></td>
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
@@ -1214,7 +1238,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://e-hentai.org/">E-Hentai</a></td>
-                <td>作用在圖片清單頁，<a href="https://exhentai.org/">exhentai.org</a></td>
+                <td>作用在圖片清單頁，<a href="https://exhentai.org/">exhentai.org</a>，<a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a></td>
             </tr>
             <tr>
                 <td><a href="https://nhentai.net/">nhentai</a></td>
