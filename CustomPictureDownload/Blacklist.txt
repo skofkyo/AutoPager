@@ -119,9 +119,10 @@ NứngVL
 
 秀人集
 *://www.xiuren*.*/*/*.html
+*://www.xr*.xyz/*/*.html
 
 秀人美女網
-*://www.xrmn02.cc/*/*/*.html
+*://www.xrmn*.cc/*/*/*.html
 
 精品美女吧
 *://www.jpmn8.cc/*/*/*.html
@@ -839,7 +840,8 @@ https://www.nuyet.com/gallery/*
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
 *://www.xiuren*.*/*/*.html
-*://www.xrmn02.cc/*/*/*.html
+*://www.xr*.xyz/*/*.html
+*://www.xrmn*.cc/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
