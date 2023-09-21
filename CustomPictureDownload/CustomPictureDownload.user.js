@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.32
+// @version            1.1.33
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -393,8 +393,8 @@
         customTitle: "return fun.geT('.entry-title');",
         category: "nsfw2"
     }, {
-        name: "秀人集 www.xiuren5.com www.xiuren5.vip www.xiuren5.cc",
-        reg: /www\.xiuren\d+\.\w+\/\w+\/\d+\.html/i,
+        name: "秀人集 www.xiuren5.com www.xiuren5.vip www.xiuren5.cc www.xr01.xyz",
+        reg: /www\.(xiuren\d+|xr\d+)\.\w+\/\w+\/\d+\.html/i,
         imgs: () => {
             let max = fun.geT(".page a:last-child", 2);
             return fun.getImg('.content>p img[alt]', max, 3);
@@ -1030,7 +1030,7 @@
         reg: /(www|m)\.meitu131\.(com|net)\/meinv\/\d+\//,
         imgs: () => {
             let max = fun.geT("a[title],.uk-page>span").match(/\/(\d+)/)[1];
-            return fun.getImg(".work-content img[alt],.uk-article-bd img", max, 15);
+            return fun.getImg(".work-content img,.uk-article-bd img", max, 15);
         },
         insertImg: [".work-content>p,.uk-article-bd", 1],
         customTitle: "return fun.geT('.contitle-box>h1,h1.uk-article-title');",
@@ -1299,7 +1299,7 @@
         name: "女神社 nshens.com inewgirl.com",
         reg: /(nshens\.com|inewgirl\.com)\/\d+\/\d+\/\d+\/[^/]+$/,
         exclude: ".justify-center>button>.v-btn__content",
-        delay: 300,
+        delay: 500,
         imgs: () => {
             fun.show("獲取資料中...", 0);
             let links = [];
@@ -1326,7 +1326,7 @@
     }, {
         name: "女神社 nshens.com inewgirl.com lovens.cc",
         reg: /(nshens\.com|inewgirl\.com)\/latestpost$/,
-        delay: 300,
+        delay: 500,
         icon: 0,
         key: 0,
         observerClick: "//button[span[text()='加載更多'] or span[text()='加载更多'] or span[text()='Load More'] or span[text()='Tải thêm']]",
@@ -1335,7 +1335,7 @@
         name: "Chottie chottie.com", //很多都需要VIP，不然只會重複抓到第一頁的圖片
         reg: /chottie\.com\/blog\/(\w{2}\/)?archives\/\d+$/,
         exclude: ".justify-center>button>.v-btn__content",
-        delay: 300,
+        delay: 500,
         imgs: () => {
             fun.show("獲取資料中...", 0);
             let links = [];
@@ -1370,14 +1370,16 @@
     }, {
         name: "街角图片社 ijjiao.com",
         reg: /https?:\/\/ijjiao\.com\/\d+\/\d+\/\d+\/album/,
+        include: ".v-pagination",
         exclude: "//span[text()='加载更多']",
-        delay: 300,
+        delay: 500,
         imgs: () => {
             let max = fun.geT("//li[button[@aria-label='Next page']]", 2);
             let links = [];
-            links.push(siteUrl);
+            let url = siteUrl.replace(/\/\d+$/, "");
+            links.push(url);
             for (let i = 2; i <= max; i++) {
-                links.push(siteUrl + "/" + i)
+                links.push(url + "/" + i)
             }
             fun.show("獲取資料中...", 0);
             let resArr = [];
@@ -1388,7 +1390,7 @@
                     let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
                     let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
                     if (photoList.length < 1) {
-                        alert("登錄狀態已失效！請重新登錄。");
+                        alert("登錄狀態已失效！請手動點擊第2頁，觸發密碼輸入框重新登錄。");
                     }
                     return photoList;
                 });
@@ -1971,6 +1973,9 @@
     }, {
         name: "SexyAsianGirl www.sexyasiangirl.xyz",
         reg: /www\.sexyasiangirl\.xyz\/album\/\d+\.html/,
+        init: () => {
+            fun.remove("//article/div[a[img]]")
+        },
         imgs: () => {
             let max;
             try {
@@ -2924,7 +2929,7 @@
         },
         insertImg: [".entry-content", 1],
         customTitle: () => {
-            return document.title.replace(/\s?\[\d+P\]/i, "").trim()
+            return document.title.replace(/\s?\[[0-9p\s]+\]|\［\d+P\］/i, "").trim()
         },
         category: "nsfw2"
     }, {
@@ -3155,9 +3160,10 @@
         name: "Pictoa www.pictoa.com",
         reg: /www\.pictoa\.com\/(thumbs|albums)\/.+\.html/i,
         imgs: () => {
-            return [...fun.gae(".thumb-nav img[data-src]")].map(e => e.dataset.src.replace("thumbs/", "").replace("t1.pictoa.com", "s1.pictoa.com"));
+            let links = [...fun.gae(".thumb-nav-img a")].map(e => e.href);
+            return fun.getImgA("#player img", links)
         },
-        insertImg: ["#player", 1],
+        insertImg: ["#player", 2],
         customTitle: "return fun.geT('.title>h1')",
         css: "#gallery #player{cursor:unset!important}",
         category: "nsfw2"
