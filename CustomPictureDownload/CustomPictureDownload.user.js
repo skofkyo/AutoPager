@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.31
+// @version            1.1.32
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1223,6 +1223,27 @@
         category: "nsfw1"
     }, {
         name: "COSPLAY ZIP www.coszip.com",
+        reg: /www\.coszip\.com\/\d+\.html$/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT(".pagination-post>*:last-child");
+            } catch (e) {
+                max = 1;
+            }
+            return fun.getImg(".post-content img", max, 7);
+        },
+        insertImg: [
+            [".post-content", 0], 1
+        ],
+        autoDownload: [0],
+        next: ".post-prev>a",
+        prev: ".post-next>a",
+        customTitle: "return fun.geT('h1.entry-title');",
+        css: "pre[style]+p,figure.wp-block-image,.jeg_pagelinks,.pagination-post{display:none!important}",
+        category: "nsfw2"
+    }, {
+        name: "COSPLAY ZIP M www.coszip.com",
         reg: /www\.coszip\.com\/\d+\.html\?amp=1$/,
         imgs: () => {
             let links = [];
