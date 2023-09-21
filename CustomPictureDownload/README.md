@@ -417,7 +417,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn02.cc/">秀人美女網</a></td>
+                <td><a href="https://www.xrmn03.cc/">秀人美女網</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1191,10 +1191,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.xiuren.org/">Xiuren 秀人网</a></td>
-                <td>很久沒新圖了</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.mm1311.net/">MM1311</a></td>
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
