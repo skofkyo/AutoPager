@@ -431,7 +431,7 @@
         reg: /www\.jpmn8\.\w+\/\w+\/\w+\/\d+\.html/i,
         imgs: () => {
             let max = fun.geT(".pagination1 a:last-child", 2);
-            return fun.getImg('.content p img[alt]', max, 3);
+            return fun.getImg(".content p img[alt]", max, 3);
             //return fun.getImgO(".content p img[alt]", max, 3, [null, null], 0, ".pagination1", 0);
         },
         insertImg: ["//div[p[img[@alt and @title]]]", 2],
@@ -534,6 +534,37 @@
         css: "union{display:none!important}",
         category: "nsfw1"
     }, {
+        name: "福利图 fulitu.me",
+        reg: /fulitu\.me\/pic\/\d+\.html/i,
+        imgs: () => {
+            let max = fun.geT("//a[text()='下页']", 2);
+            return fun.getImg(".content_left img", max, 5);
+        },
+        insertImg: [".content_left", 2],
+        autoDownload: [0],
+        next: "//span[contains(text(),'下一篇')]/a",
+        prev: "//span[contains(text(),'上一篇')]/a",
+        customTitle: () => {
+            return fun.geT(".item_title>h1").replace(/\d+P$/i, "").trim();
+        },
+        category: "nsfw1",
+        css: ".content br{display:none!important}"
+    }, {
+        name: "微密猫 wememiao.com weme.su weme2.com",
+        reg: /(wememiao\.com|weme\.su|weme2\.com)\/archives\/\d+/i,
+        imgs: "a[data-fancybox]",
+        insertImg: [
+            [".single-content .article-tags", 2], 2
+        ],
+        autoDownload: [0],
+        next: ".article-nav-prev a",
+        prev: ".article-nav-next a",
+        customTitle: () => {
+            return fun.geT(".article-title").replace(/\[[0-9a-z-\.\s]+\]/i, "").trim();
+        },
+        go: 1,
+        category: "nsfw1"
+    }, {
         name: "优美图录 umei.net",
         reg: /umei\.net\/\w+\/\d+\.html/i,
         imgs: () => {
@@ -600,6 +631,17 @@
         imgs: ".message>img:not(:first-of-type)",
         customTitle: () => {
             return fun.geT(".media-body>h4").replace(/\(\d+P\)/i, "");
+        },
+        category: "nsfw1"
+    }, {
+        name: "豆花520 www.douhua520.com",
+        reg: /www\.douhua520\.com\/p\/\d+/i,
+        imgs: () => {
+            return [...document.querySelectorAll(".tm-container-content div>.img-fluid")].map(e => encodeURI("https://www.douhua520.com/" + e.alt))
+        },
+        insertImg: ["//div[div[div[img[@class='img-fluid']]]]", 2],
+        customTitle: () => {
+            return fun.geT(".tm-container-content h2.tm-text-primary");
         },
         category: "nsfw1"
     }, {
@@ -933,10 +975,16 @@
         category: "nsfw1"
     }, {
         name: "亿图全景图库 https://www.yeitu.com/meinv/",
-        reg: /(www|m)\.yeitu\.com\/meinv\/\w+\/\w+\.html/,
+        reg: /(www|m)\.yeitu\.com\/\w+\/\w+\/\w+\.html/,
         imgs: () => {
             let max = fun.geT(".imageset-sum,span.num").match(/\/\s?(\d+)/)[1];
-            return fun.getImg(".img_box img[alt],.gallery-item img[alt],.article-show img", max, 3);
+            let links = [];
+            links.push(siteUrl);
+            let url = siteUrl.replace(".html", "");
+            for (let i = 2; i <= max; i++) {
+                links.push(url + "_" + i + ".html");
+            }
+            return fun.getImgA(".img_box img[alt],.gallery-item img[alt],.article-show img", links)
         },
         insertImg: [".img_box,.gallery-item,.article-show", 1],
         customTitle: "return fun.geT('#title>h1,h1.article-title,.article-info>h1');",
@@ -1352,6 +1400,7 @@
         name: "新美图录 www.xinmeitulu.com",
         reg: /www\.xinmeitulu\.com\/photo\/.+/,
         imgs: "img[data-original]",
+        insertImg: [".text-center", 2],
         customTitle: "return fun.geT('h1.h3');",
         category: "nsfw1"
     }, {
@@ -1385,8 +1434,8 @@
         css: ".content_left img{cursor:unset}",
         category: "nsfw1"
     }, {
-        name: "赞MM www.zanmm.com",
-        reg: /www\.zanmm\.com\/tupian\/\d+\.html/,
+        name: "赞MM www.zanmm.com 恩图集 www.entuji.com",
+        reg: /www\.zanmm\.com\/tupian\/\d+\.html|www\.entuji\.com\/\w+\/\d+\.html/,
         imgs: () => {
             let max = fun.geT("//p[contains(text(),'图片数量')]").match(/\d+/)[0];
             return fun.getImg("#showimg img", max, 9)
@@ -1873,19 +1922,19 @@
         category: "nsfw1"
     }, {
         name: "18AV https://18av.mm-cg.com/zh/cg_random/all/index.html",
-        reg: /18av\.mm-cg\.com\/(\w{2}\/)?\w+\/\d+\/content\.html/,
-        include: ".sel_enlarge_page",
+        reg: /18av\.mm-cg\.com\/(\w{2}\/)?\w+\/\d+\/content\.html|18av\.mm-cg\.com\/.+\.html/,
+        include: ".sel_enlarge_page,.sel_enlarge",
         imgs: () => {
             return Large_cgurl;
         },
-        insertImg: ["#show_cg_html", 2],
+        insertImg: ["#show_cg_html,#showcg_container", 2],
         customTitle: () => {
-            return fun.geT('.archive-title>h1').replace(/\s?\[\d+p\]|\s?\(\d+p\)/i, "");
+            return fun.geT('.archive-title>h1,h1').replace(/\s?\[\d+p\]|\s?\(\d+p\)/i, "").trim();
         },
         category: "nsfw1"
     }, {
-        name: "Xgirls xgirlscollection.com",
-        reg: /xgirlscollection\.com\/collection\/\d+/,
+        name: "Xgirls xgirlscollection.com img3xgirls.com",
+        reg: /(xgirlscollection\.com|img3xgirls\.com)\/(collection|album)\/\d+/,
         imgs: () => {
             let max;
             try {
@@ -1893,7 +1942,7 @@
             } catch (e) {
                 max = 1
             }
-            return fun.getImg("img[id].collection-image", max)
+            return fun.getImg("img[id].collection-image,.album-image[data-pin-media]", max)
         },
         insertImg: ["//div[img[@data-pin-url]]", 1],
         customTitle: "return fun.geT('.container>h1');",
@@ -2023,6 +2072,18 @@
         },
         insertImg: ["//p[img[@decoding]]", 1],
         customTitle: "return fun.geT('h1');",
+        category: "nsfw1"
+    }, {
+        name: "Xiuren xiuren.biz",
+        reg: /https?:\/\/xiuren\.biz\/[^\/]+\//,
+        include: ".content-inner a[data-lbwps-srcsmall]",
+        imgs: ".content-inner a[data-lbwps-srcsmall]",
+        autoDownload: [0],
+        next: "a.post.prev-post",
+        prev: "a.post.next-post",
+        customTitle: () => {
+            return fun.geT('h1.jeg_post_title').replace(/\d+P/i, "");
+        },
         category: "nsfw1"
     }, {
         name: "4KHD www.4khd.com www.4kep.com xjav.cc",
@@ -2405,6 +2466,14 @@
         },
         category: "nsfw2"
     }, {
+        name: "IVPhoto_Gravure ivphoto.tistory.com",
+        reg: /ivphoto\.tistory\.com\/(m\/)?\d+/,
+        imgs: ".imageblock img",
+        customTitle: () => {
+            return fun.geT('.tit_blogview,.hgroup h1').replace(/\[\d+p\]/i, "").trim()
+        },
+        category: "nsfw1"
+    }, {
         name: "MIC MIC IDOL www.micmicidol.club",
         reg: /www\.micmicidol\.club\/\d+\/\d+\/.+\.html/,
         imgs: ".entry-content a[href]",
@@ -2460,8 +2529,8 @@
         customTitle: "return fun.geT('.entry-title').replace('-套图之家','');",
         category: "nsfw1"
     }, {
-        name: "俊美图 www.meijuntu.com www.jeya.de",
-        reg: /(www\.meijuntu\.com|www\.jeya\.de)\/\w+\/\w+\.html/i,
+        name: "俊美图 www.meijuntu.com www.junmeitu.com www.jeya.de www.jeya.jp",
+        reg: /(www\.meijuntu\.com|www\.junmeitu\.com|www\.jeya\.\w+)\/\w+\/\w+\.html/i,
         imgs: () => {
             let max;
             try {
@@ -4171,14 +4240,47 @@
         reg: /(e-hentai|exhentai).org\/g\/\d+\/\w+\/$/,
         imgs: async () => {
             await fun.getNP(".gdtm,.gdtl", ".ptds+td>a", null, "//tr[td[@class='ptds']]");
-            [...fun.gae(".gdtm>div,.gdtl>div")].forEach(e => {
-                e.removeAttribute("style")
-            });
-            return fun.getImgA("#img", ".gdtm a,.gdtl a", 1, [null, null], 0)
+            fun.show("獲取圖片中...", 0);
+            let links = [...fun.gae(".gdtm a,.gdtl a")];
+            let xhrNum = 0;
+            let resArr = [];
+            for (let i in links) {
+                let res = await fun.xhr(links[i].href, "document").then(doc => fun.ge("#img", doc));
+                fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
+                resArr.push(res)
+            }
+            return Promise.all(resArr)
         },
-        insertImg: ["#gdt", 1],
+        insertImg: [
+            ["#gdt", 0], 2
+        ],
         customTitle: "return fun.geT('#gn');",
-        css: "div.gdtm,div.gdtl{text-align:center!important;float:unset!important;margin:2px 0px!important;width:100%!important;height:auto!important}",
+        go: 1,
+        threading: 1,
+        category: "hcomic"
+    }, {
+        name: "E-Hentai圖片清單頁 https://e-hentai.org/lofi/",
+        reg: /https?:\/\/e-hentai\.org\/lofi\/g\/\w+\/\w+\//,
+        imgs: async () => {
+            await fun.getNP(".gi", "//a[text()='Next Page >']", null, "#ia");
+            fun.show("獲取圖片中...", 0);
+            let links = [...fun.gae(".gi>a")];
+            let xhrNum = 0;
+            let resArr = [];
+            for (let i in links) {
+                let res = await fun.xhr(links[i].href, "document").then(doc => fun.ge("#sm", doc));
+                fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
+                resArr.push(res)
+            }
+            return Promise.all(resArr)
+        },
+        insertImg: [
+            ["#ia", 2], 2
+        ],
+        customTitle: () => {
+            return fun.title(" - E-Hentai", 1).replace(/\|.+/, "").trim();
+        },
+        go: 1,
         threading: 1,
         category: "hcomic"
     }, {
@@ -4566,7 +4668,7 @@
         category: "hcomic"
     }, {
         name: "18H 18h.mm-cg.com",
-        reg: /18h\.mm-cg\.com\/(zh\/?)18H_content\/\d+\/content\.html/,
+        reg: /18h\.mm-cg\.com\/(zh\/?)\w+_content\/\d+\/content\.html/i,
         imgs: () => {
             return Large_cgurl;
         },
@@ -8157,7 +8259,7 @@
         },
         checkDataset: ele => {
             if (ele.tagName == "IMG" || ele.tagName == "DIV" || ele.tagName == "A") {
-                const setArr = ["data-src", "data-original", "data-url", "data-thumb", "data-echo", "data-ecp", "data-lazyload-src", "data-lazy-src", "data-lazy", "lazysrc", "data-lazyload", "file", "zoomfile", "data-lbwps-srcsmall", "original", "mydatasrc", "ess-data", "data-cfsrc"];
+                const setArr = ["data-src", "data-original", "data-url", "data-thumb", "data-echo", "data-ecp", "data-lazyload-src", "data-lazy-src", "data-lazy", "lazysrc", "data-lazyload", "file", "zoomfile", "data-lbwps-srcsmall", "original", "mydatasrc", "ess-data", "data-cfsrc", "data-pin-media"];
                 for (let i = 0; i < setArr.length; i++) {
                     let imgSrc = ele.getAttribute(setArr[i]);
                     if (imgSrc) {
@@ -8176,6 +8278,7 @@
             //翻頁模式聚集所有圖片或是預覽縮圖然後fun.getImgA()
             //用在規則init，fun.getNP(picsEle, nextLinkEle, lastEle, paginationEle, time);
             fetching = true;
+            let nextlink = "";
             if (fun.ge('.CustomPictureDownloadImage')) return;
             if (mag == 1) fun.show("獲取下一頁中...", 0);
             const getNextPagePics = async url => {
@@ -8219,7 +8322,6 @@
                     }
                     if (nextPage) {
                         await fun.delay(time, 0);
-                        let nextlink;
                         if (nextPage.dataset.url) {
                             if (!/^http/.test(nextPage.dataset.url)) return;
                             nextlink = nextPage.dataset.url;
@@ -8235,6 +8337,11 @@
                                 nextlink = nextPage.getAttribute("href");
                             }
                         }
+                        if (url == nextlink) {
+                            fetching = false;
+                            if (mag == 1) fun.show("獲取下一頁結束");
+                            return;
+                        }
                         await getNextPagePics(nextlink);
                     } else {
                         fetching = false;
@@ -8246,7 +8353,6 @@
             let next = fun.ge(nextLinkEle);
             if (next) {
                 await fun.delay(time, 0);
-                let nextlink;
                 if (next.dataset.url) {
                     if (!/^http/.test(next.dataset.url)) return;
                     nextlink = next.dataset.url;
@@ -8314,6 +8420,7 @@
                     continue;
                 }
             }
+            srcArr = [...new Set(srcArr)];
             let fragment = new DocumentFragment();
             for (let i = 0; i < srcArr.length; i++) {
                 let img = new Image();
@@ -8432,6 +8539,7 @@
                 debug("\nfun.immediateInsertImg() 沒有圖片元素");
                 return;
             }
+            imgSrcArray = [...new Set(imgSrcArray)];
             globalImgArray = imgSrcArray;
             fun.insertImg(globalImgArray, siteData.insertImg[0], siteData.insertImg[1]);
             imgSrcArray = null;
@@ -9030,6 +9138,7 @@
             showMsg("沒有任何圖片元素...");
             return;
         }
+        imgSrcArray = [...new Set(imgSrcArray)];
         globalImgArray = imgSrcArray;
         if (!fun.ge(".CustomPictureDownloadImage") && siteData.insertImg) {
             fun.insertImg(globalImgArray, siteData.insertImg[0], siteData.insertImg[1]);
