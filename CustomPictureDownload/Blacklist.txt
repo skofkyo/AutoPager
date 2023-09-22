@@ -1,4 +1,4 @@
-2023/09/21 22:10
+2023/09/22 22:22
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -132,6 +132,9 @@ NứngVL
 
 秀爱美女网
 *://www.2mn.cc/mm/*.html
+
+秀套图吧
+*://www.taotu8.cc/mm/*.html
 
 美人图
 *://meirentu.cc/pic/*.html
@@ -564,6 +567,9 @@ H漫画
 H漫画
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 
+韩国污漫画
+/(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)/chapter/\d+/
+
 漫畫類
 
 包子漫画
@@ -620,7 +626,6 @@ https://*.dgmanhua.com/manhua/*/*.html
 
 6漫画閱讀
 *://*.6mh*.com/*/*.html
-
 
 漫画DB
 *://www.manhuadb.com/manhua/*/*.html
@@ -1040,6 +1045,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *www.simply-cosplay.com*
 *www.entuji.com/*/*.html
 *fulitu.me/*/*.html
+*://www.taotu8.cc/mm/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
@@ -1058,3 +1064,4 @@ https://www.htmanga*.top/photos-index-aid-*.html
 /^https?://(www\.rosi8\.net|www\.sfjpg\.(com|net)|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
 /^https?://heysexgirl\.com/archives/\d+$/
 /https?://www\.modelsvibe\.com/[^/]+/$/
+/(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)/chapter/\d+/
