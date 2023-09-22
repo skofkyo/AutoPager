@@ -1374,8 +1374,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.ikanmh.xyz/">韩国污漫画</a></td>
-                <td></td>
+                <td><a href="http://www.ikanmh.xyz/">韩国污漫画</a></td>
+                <td>網址發布頁：<a href="http://www.hmfby.com/">www.hmfby.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://jmwu.vip/">禁漫屋</a></td>
