@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/21 22:10</p>
+<p>2023/09/22 22:22</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -446,6 +446,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.2mn.cc/">秀爱美女网</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.taotu8.cc/">秀套图吧</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1234,11 +1238,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://e-hentai.org/">E-Hentai</a></td>
-                <td>作用在圖片清單頁，<a href="https://exhentai.org/">exhentai.org</a>，<a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a></td>
+                <td>作用在圖片清單頁，<a href="https://exhentai.org/">exhentai.org</a>，<a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。</td>
             </tr>
             <tr>
                 <td><a href="https://nhentai.net/">nhentai</a></td>
-                <td>作用在圖片清單頁，<a href="https://nyahentai.red/">nyahentai.red</a>，<a href="https://www.hentai.name/">www.hentai.name</a>，<a href="https://nhentai.website/">nhentai.website</a>，<a href="https://nhentai.xxx/">nhentai.xxx</a>，<a href="https://nhentai.to/">nhentai.to</a>
+                <td>作用在圖片清單頁，<a href="https://nyahentai.red/">nyahentai.red</a>，<a href="https://www.hentai.name/">www.hentai.name</a>，<a href="https://nhentai.xxx/">nhentai.xxx</a>，<a href="https://nhentai.to/">nhentai.to</a>
                 </td>
             </tr>
             <tr>
@@ -1270,16 +1274,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同上</td>
             </tr>
             <tr>
+                <td><a href="http://imhentai.xxx/">IMHentai</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
                 <td><a href="http://nhentai.com/">nhentai.com</a></td>
                 <td>作用在閱讀頁，直接從預覽縮圖進入需要重新載入，建議新分頁開啟閱讀頁</td>
             </tr>
             <tr>
-                <td><a href="http://imhentai.xxx/">IMHentai</a></td>
-                <td>作用在閱讀頁</td>
-            </tr>
-            <tr>
                 <td><a href="https://hentai2read.com/">Hentai2Read</a></td>
-                <td>同上</td>
+                <td>作用在閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://pururin.to/">Pururin</a></td>
