@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.33
+// @version            1.1.34
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -672,8 +672,8 @@
         },
         category: "nsfw1"
     }, {
-        name: "秀爱美女网 www.2mn.cc",
-        reg: /www\.2mn\.cc\/mm\/\d+\.html/i,
+        name: "秀爱美女网 www.2mn.cc 秀套图吧 www.taotu8.cc",
+        reg: /(www\.2mn\.cc|www\.taotu8\.cc)\/mm\/\d+\.html/i,
         imgs: () => {
             let max;
             try {
@@ -1373,7 +1373,7 @@
         include: ".v-pagination",
         exclude: "//span[text()='加载更多']",
         delay: 500,
-        imgs: () => {
+        imgs: async () => {
             let max = fun.geT("//li[button[@aria-label='Next page']]", 2);
             let links = [];
             let url = siteUrl.replace(/\/\d+$/, "");
@@ -1381,22 +1381,34 @@
             for (let i = 2; i <= max; i++) {
                 links.push(url + "/" + i)
             }
-            fun.show("獲取資料中...", 0);
-            let resArr = [];
-            let xhrNum = 0;
-            for (let i = 0; i < links.length; i++) {
-                let res = fun.xhr(links[i], "document").then(doc => {
-                    fun.show(`獲取資料中${xhrNum+=1}/${links.length}`, 0);
-                    let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
-                    let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
-                    if (photoList.length < 1) {
-                        alert("登錄狀態已失效！請手動點擊第2頁，觸發密碼輸入框重新登錄。");
-                    }
-                    return photoList;
-                });
-                resArr.push(res)
+            fun.show("確認登錄狀態中...", 0);
+            let check = await fun.xhr(links[1], "document").then(doc => {
+                let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
+                let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
+                if (photoList.length < 1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            if (check) {
+                fun.show("獲取資料中...", 0);
+                let resArr = [];
+                let xhrNum = 0;
+                for (let i = 0; i < links.length; i++) {
+                    let res = fun.xhr(links[i], "document").then(doc => {
+                        fun.show(`獲取資料中${xhrNum+=1}/${links.length}`, 0);
+                        let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
+                        let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
+                        return photoList;
+                    });
+                    resArr.push(res)
+                }
+                return Promise.all(resArr).then(data => data.flat().map(e => e.photourl));
+            } else {
+                alert("登錄狀態已失效！請手動點擊第2頁，觸發密碼輸入框重新登錄。");
+                return [];
             }
-            return Promise.all(resArr).then(data => data.flat().map(e => e.photourl));
         },
         insertImg: ["//div[div[@class='image-item']]", 2],
         customTitle: "return fun.geT('h3');",
@@ -4272,9 +4284,12 @@
             let xhrNum = 0;
             let resArr = [];
             for (let i in links) {
-                let res = await fun.xhr(links[i].href, "document").then(doc => fun.ge("#img", doc));
-                fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
-                resArr.push(res)
+                let res = fetch(links[i].href).then(res => res.text()).then(text => {
+                    fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
+                    return fun.ge("#img", fun.doc(text));
+                });
+                resArr.push(res);
+                await fun.delay(100, 0);
             }
             return Promise.all(resArr)
         },
@@ -4295,9 +4310,12 @@
             let xhrNum = 0;
             let resArr = [];
             for (let i in links) {
-                let res = await fun.xhr(links[i].href, "document").then(doc => fun.ge("#sm", doc));
-                fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
-                resArr.push(res)
+                let res = fetch(links[i].href).then(res => res.text()).then(text => {
+                    fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
+                    return fun.ge("#sm", fun.doc(text))
+                });
+                resArr.push(res);
+                await fun.delay(100, 0);
             }
             return Promise.all(resArr)
         },
@@ -4311,16 +4329,38 @@
         threading: 1,
         category: "hcomic"
     }, {
-        name: "nhentai圖片清單頁 nhentai.net nyahentai.red www.hentai.name nhentai.xxx nhentai.to nhentai.website",
-        reg: /(nhentai\.net|nyahentai\.red|www\.hentai\.name|nhentai\.xxx|nhentai\.to|nhentai\.website)\/g\/\d+\/?$/,
-        imgs: () => {
-            return fun.getImgA("#image-container img", "a.gallerythumb", 1, [null, null], 0);
+        name: "nhentai圖片清單頁 nhentai.net nyahentai.red www.hentai.name nhentai.xxx nhentai.to",
+        reg: /(nhentai\.net|nyahentai\.red|www\.hentai\.name|nhentai\.xxx|nhentai\.to)\/g\/\d+\/?$/,
+        imgs: async () => {
+            fun.show("獲取圖片中...", 0);
+            if (/nhentai\.net/.test(siteUrl)) {
+                let links = [...fun.gae("a.gallerythumb")];
+                let xhrNum = 0;
+                let resArr = [];
+                for (let i in links) {
+                    let url = links[i].href;
+                    let res = fetch(url).then(res => res.text()).then(text => {
+                        fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
+                        return fun.ge("#image-container img", fun.doc(text))
+                    });
+                    resArr.push(res);
+                    await fun.delay(300, 0);
+                }
+                return Promise.all(resArr)
+            } else if (/nyahentai\.red|nhentai\.xxx|nhentai\.to/.test(siteUrl)) {
+                return [...fun.gae(".thumbs img,.thumb-container img")].map(e => e.dataset.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png"));
+            } else if (/www\.hentai\.name/.test(siteUrl)) {
+                return [...fun.gae(".thumb-container img")].map(e => e.src.replace("_thumb\.jpg", ".jpg"));
+            }
         },
-        insertImg: [".thumbs,#thumbnail-container", 1],
+        insertImg: [
+            [".thumbs,#thumbnail-container", 0], 2
+        ],
         autoClick: ["#show-all-images-button"],
         customTitle: "try{return fun.geT('h2.title,h2')}catch(e){return fun.geT('h1.title,h1')}",
         threading: 2,
-        css: ".thumb-container{width:100%!important;margin:0px!important}.thumbs img{padding:0px!important;border-radius:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
+        go: 1,
+        topButton: true,
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/圖片清單頁showAll cathentai.net hentaibeeg.com hentaicolor.net",
@@ -4340,13 +4380,30 @@
     }, {
         name: "3hentai圖片清單頁 www.3hentai1.buzz 3hentai.net",
         reg: /(www\.3hentai1\.buzz|3hentai\.net)\/\??d\/\d+$/,
-        imgs: () => {
-            return fun.getImgA(".js-main-img", ".single-thumb>a", 1, [null, null], 0);
+        imgs: async () => {
+            let links = [...fun.gae(".single-thumb>a")];
+            let xhrNum = 0;
+            let resArr = [];
+            for (let i in links) {
+                let url = links[i].href;
+                let res = fetch(url).then(res => res.text()).then(text => {
+                    fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
+                    return fun.ge(".js-main-img", fun.doc(text))
+                });
+                resArr.push(res);
+                await fun.delay(100, 0);
+            }
+            return Promise.all(resArr)
+            //return fun.getImgA(".js-main-img", ".single-thumb>a", 1, [null, null], 0);
         },
-        insertImg: ["#thumbnail-gallery", 1],
+        insertImg: [
+            ["#thumbnail-gallery", 0], 2
+        ],
         customTitle: "try{return fun.geT('#main-info>h2')}catch(e){return fun.geT('#main-info>h1')}",
+        go: 1,
+        topButton: true,
         threading: 4,
-        css: "#header-ban-agsy,#middle-ban-agsy,#footer-ban-agsy{display:none!important}.single-thumb-col{padding:0px!important;width:100%!important}",
+        //css: "#header-ban-agsy,#middle-ban-agsy,#footer-ban-agsy{display:none!important}.single-thumb-col{padding:0px!important;width:100%!important}",
         category: "hcomic"
     }, {
         name: "HentaiFox圖片清單頁 hentaifox.com",
@@ -4356,24 +4413,32 @@
             fun.show("等待關鍵元素中...", 0);
             await fun.waitEle(".view_group[style]");
             fun.hide();
-            return fun.getImgA("#gimg", ".g_thumb>a", 1, [null, null], 0);
+            return [...fun.gae(".gallery_thumb img")].map(e => e.dataset.src.replace("t.", "."));
+            //return fun.getImgA("#gimg", ".g_thumb>a", 1, [null, null], 0);
         },
-        insertImg: ["#append_thumbs", 1],
+        insertImg: [
+            ["#append_thumbs", 0], 2
+        ],
         autoClick: ["#load_all"],
         customTitle: "return fun.geT('.info>h1')",
+        go: 1,
+        topButton: true,
         threading: 4,
-        css: ".gallery_thumb{margin:0!important;width:100%!important}",
         category: "hcomic"
     }, {
         name: "HentaiFox圖片清單頁 hentaifox.com",
         reg: /hentaifox\.com\/gallery\/\d+\/$/,
         imgs: () => {
-            return fun.getImgA("#gimg", ".g_thumb>a", 1, [null, null], 0);
+            return [...fun.gae(".gallery_thumb img")].map(e => e.dataset.src.replace("t.", "."));
+            //return fun.getImgA("#gimg", ".g_thumb>a", 1, [null, null], 0);
         },
-        insertImg: ["#append_thumbs", 1],
+        insertImg: [
+            ["#append_thumbs", 0], 2
+        ],
         customTitle: "return fun.geT('.info>h1')",
+        go: 1,
+        topButton: true,
         threading: 4,
-        css: ".gallery_thumb{margin:0!important;width:100%!important}",
         category: "hcomic"
     }, {
         name: "Pururin圖片清單頁 pururin.to",
@@ -4572,7 +4637,7 @@
         name: "Hanime1圖片清單頁 https://hanime1.me/comics",
         reg: /hanime1\.me\/comic\/\d+$/,
         imgs: () => {
-            return [...fun.gae(".comics-thumbnail-wrapper img[data-srcset]")].map(e => e.dataset.srcset.replace("t.n", "i.n").replace("t.jpg", ".jpg"));
+            return [...fun.gae(".comics-thumbnail-wrapper img[data-srcset]")].map(e => e.dataset.srcset.replace("t.n", "i.n").replace("t.jpg", ".jpg").replace("t.png", ".png"));
         },
         insertImg: [".comics-thumbnail-wrapper", 2, 1000],
         autoClick: "#show-all-comics-btn",
@@ -4582,11 +4647,43 @@
         css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
-        name: "IMHentai imhentai.xxx load_all",
+        name: "IMHentai imhentai.xxx 圖片清單頁",
         reg: /imhentai\.xxx\/gallery\/\d+\//,
-        icon: 0,
-        key: 0,
-        observerClick: "#load_all",
+        delay: 1000,
+        autoClick: "#load_all",
+        imgs: async () => {
+            await fun.delay(3000);
+            /*
+            let links = [...fun.gae("#append_thumbs a")];
+            let xhrNum = 0;
+            let resArr = [];
+            for (let i in links) {
+                let url = links[i].href;
+                let res = fetch(url).then(res => res.text()).then(text => {
+                    fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
+                    return fun.ge("#gimg", fun.doc(text))
+                });
+                resArr.push(res);
+                await fun.delay(300, 0);
+            }
+            return Promise.all(resArr)
+            */
+            return [...fun.gae("#append_thumbs img")].map(e => e.dataset.src.replace("t.jpg", ".jpg").replace("t.png", ".png"));
+        },
+        insertImg: [
+            ["#append_thumbs", 0], 2
+        ],
+        customTitle: () => {
+            let t = fun.geT(".subtitle");
+            if (t.length > 0) {
+                return t
+            } else {
+                return fun.geT('h1').replace(/\||\+/g, "")
+            }
+        },
+        go: 1,
+        topButton: true,
+        threading: 4,
         category: "hcomic"
     }, {
         name: "IMHentai imhentai.xxx",
@@ -4682,10 +4779,16 @@
         name: "H漫畫貼圖 - 7mmtv.sx",
         reg: /7mmtv\.sx\/.*hcomic/,
         imgs: () => {
-            return Large_cgurl.map(e => {
+            let arr = Large_cgurl.map(e => {
                 if (/imgur/.test(e)) return e;
                 return null
             });
+            arr = arr.filter(item => item);
+            if (arr.length == 0) {
+                return Large_cgurl
+            } else {
+                return arr
+            }
         },
         insertImg: ["#show_cg_html", 1],
         customTitle: () => {
@@ -4755,13 +4858,14 @@
         customTitle: "return fun.geT('.breadcrumb span:nth-child(2)').replace('首页','');",
         category: "hcomic"
     }, {
-        name: "韩国污漫画 www.ikanmh.xyz",
-        reg: /www\.ikanmh\.xyz\/chapter\/\d+/,
+        name: "韩国污漫画 www.ikanmh.xyz www.hmfby.com",
+        reg: /(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)\/chapter\/\d+/,
         imgs: "img[data-original]",
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: "return fun.geT('h1.title');",
+        referer: "src",
         category: "hcomic"
     }, {
         name: "Avbebe.com https://avbebe.com/archives/category/%e6%88%90%e4%ba%bah%e6%bc%ab%e7%95%ab",
@@ -8731,7 +8835,7 @@
                 }, 100);
             });
         },
-        checkThread: async () => {
+        checkDownloadThread: async () => {
             return await new Promise(resolve => {
                 let loop = setInterval(() => {
                     if (currentDownloadThread <= options.threading) {
@@ -9004,7 +9108,7 @@
                     debug("\nimgZipDownload() imgs 格式錯誤！", imgs[i]);
                     continue;
                 }
-                await fun.checkThread();
+                await fun.checkDownloadThread();
                 if (siteData.fetch == 1) {
                     promiseBlob = fetchData(imgSrc, picNum, imgsNum);
                 } else {
