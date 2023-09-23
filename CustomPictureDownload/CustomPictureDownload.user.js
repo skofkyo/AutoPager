@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.34
+// @version            1.1.35
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -716,7 +716,7 @@
         insertImg: [".photos-list", 2],
         customTitle: "return fun.geT('h1');",
         css: ".albums-list img,.photos-list img{opacity:1!important}",
-        threading: 4,
+        threading: 3,
         category: "nsfw2"
     }, {
         name: "柠檬皮 www.cybesx.com",
@@ -4296,9 +4296,17 @@
         insertImg: [
             ["#gdt", 0], 2
         ],
-        customTitle: "return fun.geT('#gn');",
+        customTitle: () => {
+            let t = fun.geT("#gj");
+            if (t.length > 0) {
+                return t
+            } else {
+                return fun.geT("#gn").replace(/\|.+/, "").trim();
+            }
+        },
         go: 1,
-        threading: 1,
+        topButton: true,
+        threading: 2,
         category: "hcomic"
     }, {
         name: "E-Hentai圖片清單頁 https://e-hentai.org/lofi/",
@@ -4326,7 +4334,8 @@
             return fun.title(" - E-Hentai", 1).replace(/\|.+/, "").trim();
         },
         go: 1,
-        threading: 1,
+        topButton: true,
+        threading: 2,
         category: "hcomic"
     }, {
         name: "nhentai圖片清單頁 nhentai.net nyahentai.red www.hentai.name nhentai.xxx nhentai.to",
@@ -5099,7 +5108,7 @@
         insertImg: ["#comicImages", 2],
         customTitle: "return fun.title('|',1);",
         css: "body{overflow:unset!important}",
-        threading: 4,
+        threading: 3,
         category: "hcomic"
     }, {
         name: "Orzqwq List模式 orzqwq.com",
@@ -5698,7 +5707,7 @@
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: "return fun.geT('#mangaTitle');",
-        threading: 4,
+        threading: 3,
         css: ".action-list li{width:50% !important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,.clickforceads{display:none !important}",
         category: "comic"
     }, {
@@ -5722,7 +5731,7 @@
         },
         insertImg: ["#tbBox", 2],
         autoDownload: [0],
-        threading: 4,
+        threading: 3,
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: "return fun.geT('h1>a') + ' - ' + fun.geT('h2');",
@@ -5864,7 +5873,7 @@
             await fun.delay(2000, 0);
             return fun.geT("li.breadcrumbs__item:nth-child(3)>a").trim() + " - " + fun.geT("li.breadcrumbs__item:nth-child(5)>div").trim()
         },
-        threading: 5,
+        threading: 4,
         category: "comic"
     }, {
         name: "LINE WEBTOON / 咚漫 www.webtoons.com www.dongmanmanhua.cn https://www.webtoons.com/zh-hant/time-slip/estatedeveloper/%E7%AC%AC1%E8%A9%B1/viewer?title_no=4354&episode_no=1",
@@ -6029,6 +6038,7 @@
         name: "漫画456 www.manhua456.com",
         enable: 0,
         reg: /www\.manhua456\.com\/manhua\/\w+\/\d+\.html/,
+        delay: 1000,
         init: "setTimeout(()=>{$(document).unbind('keyup');$(document).unbind('keydown')},4000)",
         imgs: async () => {
             await fun.waitEle("//script[contains(text(),'chapterImages')]")
@@ -6312,7 +6322,7 @@
         css: "body{padding:0!important}.UnderPage~*:not(.customPicDownloadMsg):not(#customPicDownload),.bottom~*:not(.customPicDownloadMsg):not(#customPicDownload),div[style*='text-align: left;']{display:none!important}",
         category: "comic"
     }, {
-        name: "前未漫画/漫画芯/蔷薇漫画/最漫画/爱米推漫画/下拉式漫画/漫画吧/漫画连/拼拼漫画/零点漫画/雪儿漫画/狗狗漫画/奇奇漫画/悠闲漫画/不卡漫画/多熙漫画 www.qianmh.com www.mhxin.com www.qwmanhua.com www.zuimh.com www.imitui.com www.xlsmh.com www.dmhua8.com www.100mhl.com www.pinmh.com www.0dmh.com www.xuermh.com www.gougoumh.com www.qimhua.com www.yxtun.com www.bukamh.com www.duoximh.com",
+        name: "前未漫画/漫画芯/蔷薇漫画/最漫画/爱米推漫画/下拉式漫画/漫画吧/漫画连/拼拼漫画/零点漫画/雪儿漫画/狗狗漫画/奇奇漫画/悠闲漫画/不卡漫画/多熙漫画 www.qianmh.com www.mhxin.com www.qwmanhua.com www.zuimh.com www.imitui.com imitui.com www.xlsmh.com www.dmhua8.com www.100mhl.com www.pinmh.com www.0dmh.com www.xuermh.com www.gougoumh.com www.qimhua.com www.yxtun.com www.bukamh.com www.duoximh.com",
         enable: 0,
         reg: /www\.(mhxin|qianmh|qwmanhua|zuimh|imitui|xlsmh|dmhua8|100mhl|pinmh|0dmh|xuermh|gougoumh|qimhua|yxtun|bukamh|duoximh)\.com\/manhua\/\w+\/\d+\.html/i,
         init: "try{$(document).unbind('keydown');$(document).unbind('keyup')}catch(e){}",
@@ -6414,12 +6424,16 @@
         name: "漫客栈 www.mkzhan.com",
         enable: 0,
         reg: /www\.mkzhan\.com\/\d+\/\d+\.html/i,
-        imgs: () => {
+        init: async () => {
             let lps = location.pathname.split("/");
             let comic_id = lps[1];
             let chapter_id = lps[2].match(/\d+/)[0];
             let apiUrl = `https://comic.mkzcdn.com/chapter/content/v1/?chapter_id=${chapter_id}&comic_id=${comic_id}&format=1&quality=1&type=1`;
-            return fetch(apiUrl).then(res => res.json()).then(json => json.data.page.map(e => e.image));
+            siteJson = await fetch(apiUrl).then(res => res.json());
+            debug("\n此頁JSON資料\n", siteJson);
+        },
+        imgs: () => {
+            return siteJson.data.page.map(e => e.image);
         },
         insertImg: ["#pages-tpl", 1],
         autoDownload: [0],
@@ -6429,16 +6443,16 @@
         customTitle: "return fun.title(' - ',1)",
         category: "comic"
     }, {
-        name: "漫画屋 www.mhua5.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net",
+        name: "漫画屋 www.mhua5.com www.mhw1.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net mh.manhw.com",
         enable: 0,
-        reg: /www\.(mhua5|manhw|360mh)\.(com|cc)\/(chapter.+\.html|index\.php\/chapter\/\d+)|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$/i,
+        reg: /www\.(mhua5|mhw1|manhw|360mh)\.(com|cc)\/(chapter.+\.html|index\.php\/chapter\/\d+)|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$|mh\.manhw\.com\/index\.php\/chapter\/\d+$/i,
         include: ".rd-article-wr",
         init: () => {
             fun.gae("img[data-original]").forEach(e => {
                 new Image().src = e.dataset.original
             })
         },
-        imgs: "img[data-original]:not([data-original*='/template/pc/default/'])",
+        imgs: "img[data-original]:not([data-original*='/template/pc/default/']),.lazy-read:not([data-original*='/template/pc/default/'])",
         insertImg: [".rd-article-wr", 0],
         autoDownload: [0],
         next: ".rd-aside a.j-rd-next",
@@ -6455,6 +6469,7 @@
                 return fun.title(/下拉|在线/, 1).replace("-", " - ")
             }
         },
+        css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "漫画屋M www.mhua5.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net m.mkzhan.com",
@@ -6785,10 +6800,15 @@
                     "Authorization": "Bearer b69efef9280150ba3c29ebd02f1dd08b78d9d76a646fea85442c8f806f0037512d3bfab40a27528769b52373f9857edae1b8d74a3198c60f583f223bcccd8fde586cbc8420570a34570b62d2bef66c6aa82da8a3fd0c3dd2dedb18b8ea276f55d56151fe72317f2f38c9f888475f7433e24edebd7775c4aafa98ec9694789da9"
                 }
             }).then(res => res.json());
+            debug("\n此頁JSON資料\n", siteJson)
         },
         imgs: async () => {
             await fun.waitEle(".touch-manipulation");
-            return siteJson.data.attributes.chapter_img.map(e => e.url)
+            if (siteJson.data == null) {
+                return []
+            } else {
+                return siteJson.data.attributes.chapter_img.map(e => e.url)
+            }
         },
         insertImg: [".touch-manipulation", 2],
         autoDownload: [0],
@@ -6877,7 +6897,7 @@
         enable: 0,
         reg: /www\.73mh\.net\/mh\/\w+\//i,
         imgs: ".v_con_box img",
-        insertImg: [".v_con_box", 2],
+        insertImg: ["section .v_con_box", 2],
         autoDownload: [0],
         next: "//a[text()='下一话']",
         prev: "//a[text()='上一话']",
@@ -6886,7 +6906,7 @@
     }, {
         name: "漫画160 www.mh160.cc",
         enable: 0,
-        reg: /www\.mh160\.cc\/kanmanhua\/\d+\/\d+\.html/i,
+        reg: /www\.mh160\.cc\/kanmanhua\/\w+\/\d+\.html/i,
         init: "document.onkeydown=null",
         imgs: () => {
             return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => f_qTcms_Pic_curUrl_realpic(e));
@@ -6960,7 +6980,11 @@
             }
         },
         imgs: () => {
-            return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$");
+            try {
+                return base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$");
+            } catch (e) {
+                return window.atob(qTcms_S_m_murl_e).split("$qingtiandy$");
+            }
         },
         insertImg: ["//td[img[@id='qTcms_pic']]", 2],
         autoDownload: [0],
@@ -7661,6 +7685,10 @@
         icon: 0,
         reg: /m\.(dgmanhua|dagumanhua)\.\w+\/manhua\/\d+\/\d+\.html$/i,
         init: async () => {
+            let content = fun.ge("#content,.content");
+            if (content) {
+                content.innerHTML = fun.ge("img", content).outerHTML
+            }
             let url = await siteData.next();
             if (url) {
                 fun.addUrlHtml(url, "#content,.content", 1)
@@ -7693,7 +7721,7 @@
                 return fun.geT("#bookname") + " - " + fun.geT(".headline")
             }
         },
-        css: "#content~a,.content~a,.apjg,.pager a:nth-child(n+2):nth-child(-n+3){display:none!important}.pager a{width:44%!important}",
+        css: "#content~a,.content~a,.apjg,.pager a:nth-child(n+2):nth-child(-n+3){display:none!important}.pager a{width:44%!important}#content,.content{width:100%}",
         category: "comic"
     }, {
         name: "漫畫類 自動展開目錄",
