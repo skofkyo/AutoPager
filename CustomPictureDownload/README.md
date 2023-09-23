@@ -409,7 +409,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xiuren08.xyz/">秀人集</a></td>
+                <td><a href="https://www.xr01.xyz/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1689,8 +1689,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.mhua5.com/">漫画屋</a></td>
-                <td><a href="https://www.manhw.com/">www.manhw.com</a>，預設關閉</td>
+                <td><a href="https://www.mhw1.com/">漫画屋</a></td>
+                <td><a href="http://mh.manhw.com/">mh.manhw.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.360mh.cc/">360漫画</a></td>
@@ -1737,8 +1737,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.qiximh2.com/">七夕漫画</a></td>
-                <td><a href="http://m.qiximh2.com/">m.qiximh2.com</a>，預設關閉</td>
+                <td><a href="http://www.qiximh4.com/">七夕漫画</a></td>
+                <td><a href="http://m.qiximh4.com/">m.qiximh4.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.17fuman.com/">爱漫之家</a></td>
@@ -1749,8 +1749,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.733.so/">733动漫</a></td>
-                <td><a href="https://m.733.so/">m.733.so</a>，預設關閉</td>
+                <td><a href="http://www.733.so/">733动漫</a></td>
+                <td><a href="http://m.733.so/">m.733.so</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.mhko.net/">漫画库</a></td>
@@ -1777,7 +1777,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.xuerenmanhua.com/">雪人漫画</a></td>
+                <td><a href="http://www.xuerenmanhua.com/">雪人漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
@@ -1785,8 +1785,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.manhua666.com/">www.manhua666.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://manhuatai.org/">漫画台</a></td>
-                <td><a href="https://www.manhuatai.org/">www.manhuatai.org</a>，預設關閉</td>
+                <td><a href="http://manhuatai.org/">漫画台</a></td>
+                <td><a href="http://www.manhuatai.org/">www.manhuatai.org</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.haoman6.com/">好漫6</a></td>
