@@ -541,7 +541,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tuzac.com/">图宅网</a></td>
-                <td></td>
+                <td><a href="https://dev.tuzac.com/">dev.tuzac.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.kkc3.com/">咔咔西三</a></td>
@@ -654,6 +654,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
+                <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，VIP資源須登錄。</td>
             </tr>
             <tr>
                 <td><a href="https://www.95mm.me/">MM 范</a></td>
@@ -781,7 +785,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.28tyu.com/">苍井优图片</a></td>
-                <td></td>
+                <td><a href="https://www.28wer.com/">www.28wer.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.photos18.com/">色情圖片網</a></td>
@@ -1156,6 +1160,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.tuao.one/">凸凹吧</a></td>
                 <td>同網頁格式，<a href="https://www.63mm.cc/">www.63mm.cc</a>，<a href="https://www.97mm.cc/">www.97mm.cc</a>，<a href="https://www.luge8.co/">www.luge8.co</a>，<a href="https://luge8.co/">luge8.co</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.yyzhenshun.com/">YY美女图片</a></td>
+                <td><a href="https://www.mmdabaobei.com/">美眉大宝贝</a>，很久沒新圖了</td>
             </tr>
             <tr>
                 <td><a href="https://www.meinv.im/">美女集社</a></td>
