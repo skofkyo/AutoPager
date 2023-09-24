@@ -433,11 +433,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xg05.xyz/">极品性感美女</a></td>
+                <td><a href="https://www.xg07.xyz/">极品性感美女</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.ikmn01.cc/">爱看美女网</a></td>
+                <td><a href="https://www.ikmn03.cc/">爱看美女网</a></td>
                 <td>不支持預覽版頁面</td>
             </tr>
             <tr>
@@ -451,6 +451,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.taotu8.cc/">秀套图吧</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.kaka234.cc/">卡卡美女网</a></td>
+                <td><a href="https://m.kaka234.cc/">m.kaka234.cc</a></td>
             </tr>
             <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
@@ -657,7 +661,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
-                <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，VIP資源須登錄。</td>
+                <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，VIP資源需登錄。</td>
             </tr>
             <tr>
                 <td><a href="https://www.95mm.me/">MM 范</a></td>
@@ -714,6 +718,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.eemm.cc/">依依图片网</a></td>
                 <td>www.jxmm.net</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.nitutu.com/meinvtupian/">妮兔美图</a></td>
+                <td><a href="https://m.nitutu.com/meinvtupian/">m.nitutu.com</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.xintp.com/meinv/">犀牛图片网</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.neihantu.net/zhainannvshen/">内涵吧</a></td>
@@ -1167,6 +1179,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.meinv.im/">美女集社</a></td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.ikmt.net/">爱看美图网</a></td>
+                <td><a href="http://m.ikmt.net/">m.ikmt.net</a>，很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.uyn8.cn/">牛牛美图</a></td>
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
