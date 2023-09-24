@@ -484,7 +484,7 @@
         css: "img[alt]~br{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "极品性感美女 www.xgmn08.com www.xgyw09.xyz www.xgyw02.co www.xg05.xyz",
+        name: "极品性感美女 www.xg07.xyz",
         reg: /www\.xg\w+\.\w+\/\w+\/\w+\.html/i,
         include: "//div[@class='toptip']/a[text()='极品性感美女']",
         imgs: () => {
@@ -503,7 +503,7 @@
         css: ".article-header>a,.article-content br,img[src*='zz1.gif']{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "爱看美女网 www.ikmn.vip www.ikmn01.cc",
+        name: "爱看美女网 www.ikmn03.cc",
         reg: /www\.ikmn(\d+)?\.\w+\/\w+\/\d+\.html/i,
         imgs: () => {
             let max = fun.geT(".pagebar>*:last-child", 2);
@@ -535,6 +535,34 @@
             return fun.geT(".item_title>h1");
         },
         css: "union{display:none!important}",
+        category: "nsfw1"
+    }, {
+        name: "卡卡美女网 www.kaka234.cc m.kaka234.cc",
+        reg: /https?:\/\/(www|m)\.kaka234\.cc\/HTM\/pic\/\w+\/\d+\/\d+\/\d+\.html/i,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT(".dede_pages li>a,.article_page li>a").match(/\d+/)[0];
+            } catch (e) {
+                max = 1
+            }
+            return fun.getImg(".content img,.ArticleImageBox img", max, 9);
+        },
+        insertImg: ["//div[@class='content'] | //div[div[@class='ArticleImageBox']]", 2],
+        autoDownload: [0],
+        next: () => {
+            let next = fun.ge("//li[contains(text(),'上一篇')]/a");
+            if (next) {
+                return next.href
+            } else {
+                return null
+            }
+        },
+        prev: 1,
+        customTitle: () => {
+            return fun.geT(".Title>h1,.PsBox");
+        },
+        css: ".m_adv{display:none!important}",
         category: "nsfw1"
     }, {
         name: "福利图 fulitu.me",
@@ -1499,6 +1527,7 @@
         insertImg: [
             ["#main", 2], 2
         ],
+        go: 1,
         customTitle: "return fun.geT('.title>h1');",
         category: "nsfw1"
     }, {
@@ -2464,14 +2493,14 @@
         name: "劍心回憶 https://kenshin.hk/category/jnews/photoalbum/",
         reg: /kenshin\.hk\/\d+\/\d+\/\d+\/[^/]+\/$/,
         include: "//div[@class='entry-utility']/a[1][text()='寫真組圖'] | //div[@class='cat-tags']/a[1][text()='寫真組圖']",
-        init: () => {
+        init: async () => {
             let p = fun.ge("//p[contains(text(),'寫真')]");
             if (p) {
                 let tE = fun.ge(".entry-content,.post-page-content");
                 tE.parentNode.insertBefore(p, tE);
             }
             let links = [...fun.gae("//a[button[contains(text(),'寫真')]]")].map(e => e.href);
-            fun.getEle(links, ".entry-content>p>img,.post-page-content>p>img,.videoWrapper", ".entry-content,.post-page-content");
+            await fun.getEle(links, ".entry-content>p>img,.post-page-content>p>img,.videoWrapper", ".entry-content,.post-page-content");
         },
         imgs: ".entry-content>img,.post-page-content>img",
         customTitle: () => {
@@ -2858,6 +2887,7 @@
         customTitle: () => {
             return fun.geT(".wzy_tit");
         },
+        css: "body>section[id],a[href*=download]{display:none!important}header{margin-top:0px!important}",
         category: "nsfw1"
     }, {
         name: "写真圣地 www.xzsd1.com",
@@ -2876,6 +2906,69 @@
             return fun.geT("h1.h3").replace(/\[\d+P\]/i, "");
         },
         category: "nsfw2"
+    }, {
+        name: "爱看美图网 www.ikmt.net m.ikmt.net",
+        reg: /(www|m)\.ikmt\.net\/\w+\/\w+\/\d+\/\d+\.html/i,
+        imgs: () => {
+            let mouse_page = fun.ge("#mouse_page");
+            if (mouse_page) {
+                let max;
+                try {
+                    max = fun.geT("//li[a[text()='下一页']]", 2);
+                } catch (e) {
+                    max = fun.geT("//a[text()='下一张']", 2).match(/\/(\d+)/)[1];
+                }
+                return fun.getImg("#picBody img,.post-content img", max, 9)
+            } else {
+                return [...fun.gae("#picBody img,.post-content img")]
+            }
+        },
+        insertImg: ["#picBody,.post-content", 2],
+        autoDownload: [0],
+        next: "//div[contains(text(),'上一篇')]/a",
+        prev: "//div[contains(text(),'下一篇')]/a",
+        customTitle: "return fun.geT('.articleV2Title>h1,.mm-title');",
+        category: "nsfw1"
+    }, {
+        name: "妮兔美图 www.nitutu.com m.nitutu.com",
+        reg: /(www|m)\.nitutu\.com\/\w+\/\w+\/\d+\.html/i,
+        imgs: () => {
+            let max = totalpage;
+            return fun.getImg(".pic-body img,.picshow-second img", max, 9)
+        },
+        insertImg: [".pic-body,.picshow-second", 2],
+        autoDownload: [0],
+        next: "//li[@class='next']/a | //a[text()='下一篇']",
+        prev: "//li[@class='prev']/a | //a[text()='上一篇']",
+        customTitle: () => {
+            return fun.geT(".pictitle>h1,.picart-title").replace(/\[\d+P\]/i, "");
+        },
+        category: "nsfw1"
+    }, {
+        name: "犀牛图片网 www.xintp.com",
+        reg: /www\.xintp\.com\/(\w+\/\w+\/\d+\.html|\w+\/\d+\.html)/i,
+        imgs: () => {
+            let page = fun.ge(".page-links");
+            if (page) {
+                let max = fun.geT(".page-links>a.post-page-numbers:last-child", 2);
+                return fun.getImg(".single-content img", max, 7)
+            } else {
+                return [...fun.gae(".single-content img")]
+            }
+        },
+        insertImg: [
+            [".single-content", 0, ".wp-block-image,.single-content>p~p:not(#customPicDownloadEnd)"], 2
+        ],
+        customTitle: () => {
+            return fun.geT(".entry-title");
+        },
+        category: "nsfw1"
+    }, {
+        name: "牛牛美图 www.uyn8.cn",
+        reg: /www\.uyn8\.cn\/archives\/\d+/i,
+        imgs: ".entry-content img",
+        customTitle: "return fun.geT('.entry-title');",
+        category: "nsfw1"
     }, {
         name: "小姐姐图库 xjjtk.link",
         reg: /xjjtk\.link\/posts\/\w+\/$/i,
@@ -4705,7 +4798,8 @@
         category: "hcomic"
     }, {
         name: "Simply Hentai圖片清單頁 www.simply-hentai.com",
-        reg: /www\.simply-hentai\.com\/\d-original-work\/.+/i,
+        reg: /www\.simply-hentai\.com\/[0-9a-z-]+\/.+/i,
+        include: "//main[@class='container' and div[div[a[div[@class='image-wrapper' and img]]]]]",
         exclude: "nav.pagination,#reader-image",
         imgs: () => {
             return [...fun.gae("img[data-src]")].map(e => e.dataset.src.replace("small_thumb_", ""));
@@ -4869,6 +4963,7 @@
     }, {
         name: "H漫畫貼圖 - 7mmtv.sx",
         reg: /7mmtv\.sx\/.*hcomic/,
+        include: "//script[contains(text(),'Large_cgurl')]",
         imgs: () => {
             let arr = Large_cgurl.map(e => {
                 if (/imgur/.test(e)) return e;
@@ -5812,6 +5907,7 @@
             return json.files.map(e => `${domain+json.path+e}?e=${json.sl.e}&m=${json.sl.m}`);
         },
         insertImg: ["#tbBox", 2],
+        msg: 0,
         autoDownload: [0],
         threading: 3,
         next: "//a[text()='下一章']",
@@ -7781,6 +7877,7 @@
             return [...fun.gae("#content img,.content img")]
         },
         insertImg: ["#content,.content", 1],
+        msg: 0,
         next: () => {
             let comicListUrl = location.href.replace(/\d+\.html$/, "");
             let chapter = location.pathname;
@@ -8730,13 +8827,13 @@
                     if (typeof ele[2] != "undefined") {
                         fun.remove(ele[2]);
                     }
-                    fun.show("已聚集所有圖片");
+                    if (siteData.msg != 0) fun.show("已聚集所有圖片");
                     if (siteData.go == 1) goToNo1Img();
                 } else if (typeof ele == "string") {
                     thisEle = fun.ge(ele);
                     thisEle.innerHTML = "";
                     thisEle.appendChild(fragment);
-                    fun.show("已聚集所有圖片");
+                    if (siteData.msg != 0) fun.show("已聚集所有圖片");
                 } else {
                     fun.show("用來定位插入的元素不存在", 3000);
                     debug("\nfun.insertImg() ele參數錯誤，或用來定位插入的元素不存在。");
