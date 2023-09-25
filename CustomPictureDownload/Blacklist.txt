@@ -1,4 +1,4 @@
-2023/09/22 22:22
+2023/09/26 01:00
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -462,6 +462,15 @@ Simply Cosplay
 犀牛图片网
 *www.xintp.com/*/*/*.html
 
+CUTE GIRLS ADDICT
+*cutegirlsaddict.blogspot.com/*/*/*.html*
+
+美女写真
+*portrait.knit.bid/*/*
+
+套图之家
+*://taotuhome.com/*.html
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -614,6 +623,8 @@ KuKu动漫閱讀
 *kukudm.com/comiclist/*/*/*.htm
 *.ihhmh.com/comiclist/*/*/*.htm
 *.wap.ikukudm.com/comiclist/*/*/*.htm
+*mh123.dypro.xyz/comiclist/*/*/*.htm
+
 
 8Comic無限動漫手機版閱讀
 *://8.twobili.com/comic/insurance_*
@@ -816,6 +827,7 @@ manhuatai.org/manhua/*/*.html
 *kukudm.com/comiclist/*/*/*.htm
 *.ihhmh.com/comiclist/*/*/*.htm
 *.wap.ikukudm.com/comiclist/*/*/*.htm
+*mh123.dypro.xyz/comiclist/*/*/*.htm
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
 *://tw.baozimh.com/*
@@ -1064,6 +1076,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *.ikmt.net/*/*/*/*.html
 *.nitutu.com/*/*/*.html
 *www.xintp.com/*/*/*.html
+*cutegirlsaddict.blogspot.com/*/*/*.html*
+*portrait.knit.bid/*/*
+*://taotuhome.com/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
