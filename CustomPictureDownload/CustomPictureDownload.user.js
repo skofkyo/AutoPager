@@ -3,7 +3,7 @@
 // @name:en            CustomPictureDownload
 // @name:zh-CN         怠惰輔助&聚图&下载
 // @name:zh-TW         怠惰輔助&聚圖&下載
-// @version            1.1.36
+// @version            1.2.0
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Custom Picture Download
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -412,7 +412,7 @@
         css: ".content br{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "秀人美女網 www.xrmnw.xyz www.xrmn01.vip www.xrmn02.cc",
+        name: "秀人美女網 www.xrmnw.xyz www.xrmn01.vip www.xrmn03.cc",
         reg: /(www\.xrmnw\.\w+|www.xrmn\d+.\w+)\/\w+\/\d+\/\d+\.html/i,
         imgs: () => {
             let max = fun.geT(".page a:last-child", 2);
@@ -427,7 +427,7 @@
             return fun.geT(".item_title>h1").replace(/\d+P$/i, "");
         },
         //threading: 4,
-        css: ".item_title>a,.content br{display:none!important}",
+        css: ".item_title>a,.content br,.bottom_fixed{display:none!important}",
         category: "nsfw1"
     }, {
         name: "精品美女吧 www.jpmn8.cc",
@@ -500,7 +500,7 @@
             return fun.geT(".article-title").replace(/\d+p$/i, "");
         },
         //threading: 4,
-        css: ".article-header>a,.article-content br,img[src*='zz1.gif']{display:none!important}",
+        css: ".article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed{display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱看美女网 www.ikmn03.cc",
@@ -820,7 +820,7 @@
         css: ".headling_main{height:auto}",
         category: "nsfw1"
     }, {
-        name: "美图乐 www.meitule.cc www.meitule.net",
+        name: "美图乐 www.meitule.net",
         reg: /www\.meitule\.\w+\/photo\/\d+\.html/i,
         imgs: () => {
             let max;
@@ -839,7 +839,7 @@
         name: "美桌 http://www.win4000.com/meitu.html",
         reg: /www\.win4000\.com\/meinv\d+\.html/,
         imgs: () => {
-            return fun.getImgA(".pic-large", "#scroll>li:not(.current)>a", 3);
+            return fun.getImgA(".pic-large", "#scroll>li:not(.current)>a", 200);
         },
         insertImg: ["#pic-meinv", 2],
         autoDownload: [0],
@@ -932,7 +932,7 @@
             for (let i = 1; i < max; i++) {
                 links.push(location.href + "/" + i);
             }
-            return fun.getImgA("div>a>img", links);
+            return fun.getImgA("div>a>img", links, 333);
         },
         insertImg: ["//div[a[img]]", 2],
         customTitle: "return fun.geT('.content>h1');",
@@ -950,7 +950,7 @@
                 for (let i = 1; i < max; i++) {
                     links.push(url + "-" + i + ".html")
                 }
-                return fun.getImgA(".entry-content img,#content_pic img", links);
+                return fun.getImgA(".entry-content img,#content_pic img", links, 1000);
             } catch (e) {
                 return [...fun.gae(".entry-content img,#content_pic img")]
             }
@@ -1020,7 +1020,7 @@
             for (let i = 2; i <= max; i++) {
                 links.push(url + "_" + i + ".html");
             }
-            return fun.getImgA(".img_box img[alt],.gallery-item img[alt],.article-show img", links)
+            return fun.getImgA(".img_box img[alt],.gallery-item img[alt],.article-show img", links, 333)
         },
         insertImg: [".img_box,.gallery-item,.article-show", 1],
         customTitle: "return fun.geT('#title>h1,h1.article-title,.article-info>h1');",
@@ -1066,7 +1066,17 @@
         reg: /(www|m)\.meitu131\.(com|net)\/meinv\/\d+\//,
         imgs: () => {
             let max = fun.geT("a[title],.uk-page>span").match(/\/(\d+)/)[1];
-            return fun.getImg(".work-content img,.uk-article-bd img", max, 15);
+            let links = [];
+            let url = location.href.replace(/index(\w+)?\.html$/, "");
+            for (let i = 1; i <= max; i++) {
+                if (i == 1) {
+                    links.push(url + "index.html")
+                } else {
+                    links.push(url + "index_" + i + ".html")
+                }
+            }
+            return fun.getImgA(".work-content img,.uk-article-bd img", links, 333);
+            //return fun.getImg(".work-content img,.uk-article-bd img", max, 15);
         },
         insertImg: [".work-content>p,.uk-article-bd", 1],
         customTitle: "return fun.geT('.contitle-box>h1,h1.uk-article-title');",
@@ -1143,6 +1153,7 @@
         prev: "//a[@class='active' and contains(text(),'上一篇')] | //a[@class='active' and contains(text(),'上一组')]",
         //css: ".picTip.r5,.page-show>a:not(.active){display:none!important}",
         customTitle: "return fun.title('_',1);",
+        css: "body>a{display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱美女M wap.2meinv.com mm.2meinv.com",
@@ -1247,6 +1258,7 @@
         imgs: async () => {
             fun.show("等待關鍵元素中...", 0);
             await fun.waitEle(".swipe-area img", 600);
+            fun.hide();
             return [...fun.gae(".swiper-slide img")].map(e => e.dataset.src.replace("small_square_", ""));
         },
         insertImg: ["//div[div[div[div[@class='image-wrapper']]]]", 2],
@@ -1354,7 +1366,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr).then(data => data.flat().map(e => e.photourl))
+            return Promise.all(resArr).then(data => {
+                fun.hide();
+                return data.flat().map(e => e.photourl)
+            })
         },
         insertImg: ["//div[a[div[@class='v-image v-responsive theme--light']]]", 2],
         customTitle: "return fun.geT('h3');",
@@ -1397,7 +1412,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr).then(data => data.flat())
+            return Promise.all(resArr).then(data => {
+                fun.hide();
+                return data.flat()
+            })
         },
         insertImg: ["//div[a[div[@class='v-image v-responsive theme--light']]]", 2],
         //css: ".text-center{display:none!important}",
@@ -1440,8 +1458,12 @@
                     });
                     resArr.push(res)
                 }
-                return Promise.all(resArr).then(data => data.flat().map(e => e.photourl));
+                return Promise.all(resArr).then(data => {
+                    fun.hide();
+                    return data.flat().map(e => e.photourl)
+                });
             } else {
+                fun.hide();
                 alert("登錄狀態已失效！請手動點擊第2頁，觸發密碼輸入框重新登錄。");
                 return [];
             }
@@ -1466,7 +1488,7 @@
                     links.push(url + i + ".html");
                 }
             }
-            return fun.getImgA(".img>img", links)
+            return fun.getImgA(".img>img", links, 100)
         },
         insertImg: [".txt_tcontent", 1],
         autoDownload: [0],
@@ -1522,7 +1544,10 @@
                 resArr.push(res);
                 await fun.delay(200, 0);
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: [
             ["#main", 2], 2
@@ -1710,6 +1735,24 @@
         insertImg: ["#img-box", 2],
         customTitle: () => {
             return fun.geT(".focusbox-title").replace(/\[\d+P\]/i, "").replace(/\d+P/i, "").trim();
+        },
+        category: "nsfw1"
+    }, {
+        name: "美女写真 portrait.knit.bid",
+        reg: /portrait\.knit\.bid\/\w+\/\d+$/,
+        imgs: async () => {
+            let max = fun.geT("//li[a[text()='下页']]", 2);
+            let links = [];
+            for (let i = 1; i <= max; i++) {
+                links.push(siteUrl + "?page=" + i)
+            }
+            return fun.getImgA(".container>.container>img", links, 300);
+        },
+        insertImg: [
+            [".container>.container>nav", 2, "nav[aria-label=pagination],.img-fluid"], 2
+        ],
+        customTitle: () => {
+            return fun.geT(".container h1");
         },
         category: "nsfw1"
     }, {
@@ -2008,7 +2051,7 @@
         customTitle: "return fun.geT('h1');",
         category: "nsfw1"
     }, {
-        name: "MM 范 www.95mm.tv",
+        name: "MM 范 www.95mm.vip",
         reg: /www\.95mm\.\w+\/\d+\.html/,
         init: "$(document).unbind('keydown');$(document).unbind('keyup');",
         imgs: () => {
@@ -2432,8 +2475,8 @@
         css: "#popupContact,.float-ck-center-lt{display:none!important}",
         category: "nsfw2"
     }, {
-        name: "Phym18 phym18.tube https://phym18.tube/tag/%E1%BA%A3nh-sex",
-        reg: /phym18\.tube\/anh\/[^/]+$/,
+        name: "Phym18 phym18.org https://phym18.org/tag/%E1%BA%A3nh-sex",
+        reg: /phym18\.org\/anh\/[^/]+$/,
         imgs: () => {
             try {
                 let url = location.href;
@@ -2688,6 +2731,7 @@
         name: "美女图片网 www.mevtu.com",
         reg: /www\.mevtu\.com\/\w+\/\d+\.html/i,
         include: ".next-cat",
+        exclude: ".guest_link",
         imgs: () => {
             let max;
             try {
@@ -2947,11 +2991,15 @@
     }, {
         name: "犀牛图片网 www.xintp.com",
         reg: /www\.xintp\.com\/(\w+\/\w+\/\d+\.html|\w+\/\d+\.html)/i,
-        imgs: () => {
+        imgs: async () => {
             let page = fun.ge(".page-links");
             if (page) {
+                /*
                 let max = fun.geT(".page-links>a.post-page-numbers:last-child", 2);
                 return fun.getImg(".single-content img", max, 7)
+                */
+                await fun.getNP(".single-content img", "//span[@class='post-page-numbers current']/following-sibling::a[span][1]", null, ".page-links");
+                return [...fun.gae(".single-content img")]
             } else {
                 return [...fun.gae(".single-content img")]
             }
@@ -3062,7 +3110,7 @@
         reg: /cutegirlsaddict\.blogspot\.com\/\d+\/\d+\/[a-z0-9-]+\.html/i,
         imgs: ".separator>a",
         customTitle: () => {
-            return fun.geT("h1.post-title").trim();
+            return fun.geT("h1.post-title,h3.entry-title").trim();
         },
         category: "nsfw1"
     }, {
@@ -3182,19 +3230,9 @@
         name: "FreeXcafe www.freexcafe.com",
         reg: /www\.freexcafe\.com\/erotica\/[\w-]+\/[\w-]+\/index\.php/,
         imgs: () => {
-            return fun.getImgA('#imagelink>img', '.thumbs>a')
+            return fun.getImgA('#imagelink>img', '.thumbs>a', 500)
         },
         go: 1,
-        insertImg: [
-            ["#content>*:last-child", 2], 2
-        ],
-        category: "nsfw2"
-    }, {
-        name: "FreeXcafe www.freexcafe.com",
-        reg: /www\.freexcafe\.com\/erotica\/[\w-]+\/[\w-]+\/index\.php/,
-        imgs: () => {
-            return fun.getImgA("#imagelink>img", ".thumbs>a")
-        },
         insertImg: [
             ["#content>*:last-child", 2], 2
         ],
@@ -3292,7 +3330,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr).then(data => data.flat().map(e => e.imageURL))
+            return Promise.all(resArr).then(data => {
+                fun.hide();
+                return data.flat().map(e => e.imageURL)
+            })
         },
         init: "fun.remove('.mixed-list>.flex-element')",
         insertImg: [
@@ -3316,8 +3357,7 @@
         name: "PornHub photo pornhub.com/albums", //很容易會被短暫封IP
         enable: 1,
         reg: /pornhub\.com\/album\/\d+/,
-        //imgs: "js;return fun.getImgA('#photoImageSection img', '.js_lazy_bkg a',[2,1000]);",
-        imgs: "js;return fun.getImgA('#photoImageSection img', '.js_lazy_bkg a');",
+        imgs: "js;return fun.getImgA('#photoImageSection img', '.js_lazy_bkg a', 200);",
         insertImg: [
             [".photoBlockBox .clear", 1], 1
         ],
@@ -3341,6 +3381,7 @@
         insertImg: [
             [".flex-images", 2], 1
         ],
+        go: 1,
         customTitle: "return fun.geT('h1')",
         category: "nsfw2"
     }, {
@@ -3427,6 +3468,7 @@
                     fun.show(`獲取圖片中${n+=1}/${max}`, 0);
                 }
             }
+            fun.hide();
             return arr
         },
         insertImg: [".mainouter", 1],
@@ -3554,7 +3596,7 @@
                 tE.parentNode.insertBefore(ele, tE);
             }
         },
-        imgs: () => {
+        imgs: async () => {
             let max;
             try {
                 max = fun.geT("#paginator>*:last-child", 3);
@@ -3565,7 +3607,15 @@
                     max = 1;
                 }
             }
-            return fun.getImg(".icon-overlay img", max, 18, [/\/p=(700|305)/, ""]);
+            let links = [];
+            let url = location.href.replace(/\/(page\/\d+\/)?$/, "");
+            for (let i = 1; i <= max; i++) {
+                links.push(url + "/page/" + i + "/")
+            }
+            let arr = await fun.getImgA(".icon-overlay img", links, 200);
+            arr = arr.map(e => e.replace(/\/p=(700|305)/, ""));
+            return arr;
+            //return fun.getImg(".icon-overlay img", max, 18, [/\/p=(700|305)/, ""]);
         },
         insertImg: ["#display_image_detail,#detail_list", 2],
         autoDownload: [0],
@@ -3655,6 +3705,7 @@
                     let temp = new Image();
                     temp.src = tempSrc;
                     temp.onload = () => {
+                        fun.hide();
                         let w = temp.width;
                         if (w > 200) {
                             resolve(images.map(e => e.src.replace("https://imx.to/u/t/", "https://i.imx.to/i/")));
@@ -3703,7 +3754,10 @@
                 });
                 resArr.push(res);
             }
-            return Promise.all(resArr);
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: [
             [".entry-footer", 2], 2
@@ -3803,6 +3857,7 @@
                     fun.show(`獲取圖片中${n+=1}/${max}`, 0);
                 }
             }
+            fun.hide();
             arr = arr.map(e => e.src);
             return [...new Set(arr)]
         },
@@ -4466,7 +4521,10 @@
                 resArr.push(res);
                 await fun.delay(100, 0);
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: [
             ["#gdt", 0], 2
@@ -4500,7 +4558,10 @@
                 resArr.push(res);
                 await fun.delay(100, 0);
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: [
             ["#ia", 2], 2
@@ -4516,8 +4577,8 @@
         name: "nhentai圖片清單頁 nhentai.net nyahentai.red www.hentai.name nhentai.xxx nhentai.to",
         reg: /(nhentai\.net|nyahentai\.red|www\.hentai\.name|nhentai\.xxx|nhentai\.to)\/g\/\d+\/?$/,
         imgs: async () => {
-            fun.show("獲取圖片中...", 0);
             if (/nhentai\.net/.test(siteUrl)) {
+                fun.show("獲取圖片中...", 0);
                 let links = [...fun.gae("a.gallerythumb")];
                 let xhrNum = 0;
                 let resArr = [];
@@ -4530,7 +4591,10 @@
                     resArr.push(res);
                     await fun.delay(300, 0);
                 }
-                return Promise.all(resArr)
+                return Promise.all(resArr).then(arr => {
+                    fun.hide();
+                    return arr
+                });
             } else if (/nyahentai\.red|nhentai\.xxx|nhentai\.to/.test(siteUrl)) {
                 return [...fun.gae(".thumbs img,.thumb-container img")].map(e => e.dataset.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png"));
             } else if (/www\.hentai\.name/.test(siteUrl)) {
@@ -4545,6 +4609,7 @@
         threading: 2,
         go: 1,
         topButton: true,
+        css: ".advt{display:none!important}",
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/圖片清單頁showAll cathentai.net hentaibeeg.com hentaicolor.net",
@@ -4565,20 +4630,7 @@
         name: "3hentai圖片清單頁 www.3hentai1.buzz 3hentai.net",
         reg: /(www\.3hentai1\.buzz|3hentai\.net)\/\??d\/\d+$/,
         imgs: async () => {
-            let links = [...fun.gae(".single-thumb>a")];
-            let xhrNum = 0;
-            let resArr = [];
-            for (let i in links) {
-                let url = links[i].href;
-                let res = fetch(url).then(res => res.text()).then(text => {
-                    fun.show(`獲取圖片中${xhrNum+=1}/${links.length}`, 0);
-                    return fun.ge(".js-main-img", fun.doc(text))
-                });
-                resArr.push(res);
-                await fun.delay(100, 0);
-            }
-            return Promise.all(resArr)
-            //return fun.getImgA(".js-main-img", ".single-thumb>a", 1, [null, null], 0);
+            return fun.getImgA(".js-main-img", ".single-thumb>a", 100);
         },
         insertImg: [
             ["#thumbnail-gallery", 0], 2
@@ -4598,7 +4650,7 @@
             await fun.waitEle(".view_group[style]");
             fun.hide();
             return [...fun.gae(".gallery_thumb img")].map(e => e.dataset.src.replace("t.", "."));
-            //return fun.getImgA("#gimg", ".g_thumb>a", 1, [null, null], 0);
+            //return fun.getImgA("#gimg", ".g_thumb>a", 300);
         },
         insertImg: [
             ["#append_thumbs", 0], 2
@@ -4614,7 +4666,7 @@
         reg: /hentaifox\.com\/gallery\/\d+\/$/,
         imgs: () => {
             return [...fun.gae(".gallery_thumb img")].map(e => e.dataset.src.replace("t.", "."));
-            //return fun.getImgA("#gimg", ".g_thumb>a", 1, [null, null], 0);
+            //return fun.getImgA("#gimg", ".g_thumb>a", 300);
         },
         insertImg: [
             ["#append_thumbs", 0], 2
@@ -4751,6 +4803,7 @@
             let url = fun.ge(".gallery-image-container a").href;
             let doc = await fun.xhr(url, "document");
             let data = [...doc.scripts].find(s => s.innerHTML.search(/startingPage/) > -1).innerHTML.replace(/\\/g, "").match(/\[{.+"}]/)[0];
+            fun.hide();
             return JSON.parse(data).map(e => e.src)
         },
         insertImg: [
@@ -4851,7 +4904,10 @@
                 resArr.push(res);
                 await fun.delay(300, 0);
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
             */
             return [...fun.gae("#append_thumbs img")].map(e => e.dataset.src.replace("t.jpg", ".jpg").replace("t.png", ".png"));
         },
@@ -4952,7 +5008,10 @@
                 });
                 arr.push(promise)
             }
-            return Promise.all(arr)
+            return Promise.all(arr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: [
             [".gallery", 2], 1
@@ -5025,11 +5084,48 @@
     }, {
         name: "漫畫聯合國 www.comicun.com",
         reg: /www\.comicun\.com\/index-look(-cid)?-name-.+/,
-        init: "$(document).unbind('click');",
+        init: () => {
+            $(document).unbind('click');
+            if (/index-look-cid-name-/.test(siteUrl)) {
+                let arr = siteUrl.split("-");
+                let text = "";
+                for (let i = 0; i < arr.length; i++) {
+                    if (i == 7) {
+                        text += arr[i]
+                    } else if (i == 5) {
+                        text += "cid-" + arr[i] + "-"
+                    } else if (i != 2) {
+                        text += arr[i] + "-"
+                    }
+                }
+                location.href = decodeURI(text)
+            }
+        },
         imgs: () => {
             let max = $("#total").val();
             return fun.getImg("#ComicPic", max, 20);
         },
+        autoDownload: [0],
+        next: () => {
+            let next = fun.ge("//a[text()='下一章']");
+            if (next) {
+                let arr = next.href.split("-");
+                let text = "";
+                for (let i = 0; i < arr.length; i++) {
+                    if (i == 7) {
+                        text += arr[i]
+                    } else if (i == 5) {
+                        text += "cid-" + arr[i] + "-"
+                    } else if (i != 2) {
+                        text += arr[i] + "-"
+                    }
+                }
+                return decodeURI(text)
+            } else {
+                return null
+            }
+        },
+        prev: 1,
         insertImg: [".e", 1],
         css: "body{overflow:unset!important}",
         category: "comic"
@@ -5113,7 +5209,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr).then(data => data.flat().map(e => e.src))
+            return Promise.all(resArr).then(data => {
+                fun.hide();
+                return data.flat().map(e => e.src)
+            })
         },
         insertImg: [".show,.read", 2],
         customTitle: "return fun.title('_免费阅读',1);",
@@ -5174,7 +5273,7 @@
         reg: /rokuhentai\.com\/\w+\/\d+$/,
         imgs: ".site-reader__image",
         insertImg: [".site-reader", 2],
-        css: ".site-reader--right-to-left,.site-reader--left-to-right{overflow-x:auto!important;overflow-y:auto!important}.site-reader{padding-bottom:0px!important}.site-reader{display:block!important;}",
+        css: ".site-reader--right-to-left,.site-reader--left-to-right{overflow-x:auto!important;overflow-y:auto!important}.site-reader{padding-bottom:0px!important}.site-reader{display:block!important;}.site-bottom-ad-slot{display:none!important}",
         category: "hcomic"
     }, {
         name: "177 漫画/XXIAV寫真館 www.177pica.com www.177picyy.com www.xxiav.com",
@@ -5570,7 +5669,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: ["#cp_img", 2],
         autoDownload: [0],
@@ -5648,7 +5750,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: ["#cp_img", 2],
         autoDownload: [0],
@@ -5674,7 +5779,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: ["#cp_img", 2],
         autoDownload: [0],
@@ -5766,7 +5874,10 @@
                 });
                 resArr.push(res)
             }
-            return Promise.all(resArr)
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         insertImg: ["#cp_img", 2],
         autoDownload: [0],
@@ -6623,7 +6734,7 @@
     }, {
         name: "漫画屋 www.mhua5.com www.mhw1.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net mh.manhw.com",
         enable: 0,
-        reg: /www\.(mhua5|mhw1|manhw|360mh)\.(com|cc)\/(chapter.+\.html|index\.php\/chapter\/\d+)|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$|mh\.manhw\.com\/index\.php\/chapter\/\d+$/i,
+        reg: /www\.(mhua5|mhw\d|manhw|360mh)\.(com|cc)\/(chapter.+\.html|index\.php\/chapter\/\d+)|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$|mh\.manhw\.com\/index\.php\/chapter\/\d+$/i,
         include: ".rd-article-wr",
         init: () => {
             fun.gae("img[data-original]").forEach(e => {
@@ -6637,9 +6748,9 @@
         prev: ".rd-aside a.j-rd-prev",
         autoClick: "//div[@class='rd-aside__item j-rd-mod'][span[text()='卷轴']]",
         customTitle: () => {
-            if (/www\.mhua5\.com/.test(location.host)) {
+            if (/www\.mhua5\.com|www\.mhw\d\.com/.test(location.host)) {
                 return fun.title(" - 漫画屋").replace("-", " - ")
-            } else if (/www\.manhw\.com/.test(location.host)) {
+            } else if (/www\.manhw\.com|mh\.manhw\.com/.test(location.host)) {
                 return fun.attr("meta[name=description]", "content").split(" - 漫画屋")[0].replace("当前阅读的是", "").replace("的", " - ");
             } else if (/www\.360mh\.cc/.test(location.host)) {
                 return fun.geT(".j-comic-title") + " - " + fun.geT(".last-crumb")
@@ -6650,14 +6761,14 @@
         css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
-        name: "漫画屋M www.mhua5.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net m.mkzhan.com",
+        name: "漫画屋M www.mhua5.com www.manhw.com www.360mh.cc www.mhzj54.com www.bingmh.com www.manshiduo.net m.mkzhan.com mh.manhw.com www.mhw1.com",
         enable: 0,
-        reg: /www\.(mhua5|manhw)\.com\/(chapter.+\.html|index\.php\/chapter\/\d+)|www\.360mh\.cc\/chapter-\d+.html|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$|m\.mkzhan\.com\/\d+\/\d+.html/i,
+        reg: /(www\.(mhua5|manhw)\.com|mh\.manhw\.com)\/(chapter.+\.html|index\.php\/chapter\/\d+)|(www\.360mh\.cc|www\.mhw\d\.com)\/chapter-\d+.html|www\.mhzj54\.com\/chapter\/\d+$|www\.bingmh\.com\/chapter\/\d+\.html$|www\.manshiduo\.net\/chapter_\d+\.html$|m\.mkzhan\.com\/\d+\/\d+.html/i,
         imgs: ".comic-page img,#cp_img img[data-original]",
         insertImg: [".comic-list,#cp_img", 0],
         autoDownload: [0],
         next: async () => {
-            if (/www\.mhua5\.com|www\.360mh\.cc|www\.bingmh\.com/.test(location.host)) {
+            if (/www\.mhua5\.com|www\.360mh\.cc|www\.bingmh\.com|www\.mhw\d\.com/.test(location.host)) {
                 let next = fun.attr(".next-chapter", "_href");
                 if (next !== "") {
                     return location.origin + next;
@@ -6679,7 +6790,7 @@
                 } else {
                     return null
                 }
-            } else if (/www\.manshiduo\.net|www\.manhw\.com/.test(location.host)) {
+            } else if (/www\.manshiduo\.net|www\.manhw\.com|mh\.manhw\.com/.test(location.host)) {
                 let next = fun.attr(".next-chapter", "_href");
                 if (next !== "") {
                     return location.origin + next;
@@ -6697,11 +6808,11 @@
         },
         prev: 1,
         customTitle: () => {
-            if (/www\.mhua5\.com|www\.manhw\.com/.test(location.host)) {
+            if (/www\.mhua5\.com|www\.manhw\.com|mh\.manhw\.com/.test(location.host)) {
                 return fun.title(" - 漫画屋").replace("-", " - ")
             } else if (/m\.mkzhan\.com/.test(location.host)) {
                 return fun.title(" - 漫客栈").trim()
-            } else if (/www\.360mh\.cc/.test(location.host)) {
+            } else if (/www\.360mh\.cc|www\.mhw\d\.com/.test(location.host)) {
                 return shareArr[0].match(/《([^》]+)/)[1] + " - " + fun.geT(".comic-name")
             } else if (/www\.bingmh\.com/.test(location.host)) {
                 return fun.geT("title+title").split("在线")[0].replace("-", " - ").trim()
@@ -6796,7 +6907,10 @@
                 });
                 resArr.push(res);
             }
-            return Promise.all(resArr);
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         autoDownload: [0],
         next: () => {
@@ -6831,9 +6945,9 @@
         css: "body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}",
         category: "comic"
     }, {
-        name: "漫漫聚M/KuKu动漫M m.manmanju.com s1.m.ikkdm.com s2.m.ikkdm.com 1pc570gfrd9z.ihhmh.com s2.wap.ikukudm.com s3.wap.ikukudm.com",
+        name: "漫漫聚M/KuKu动漫M m.manmanju.com s1.m.ikkdm.com s2.m.ikkdm.com 1pc570gfrd9z.ihhmh.com s2.wap.ikukudm.com s3.wap.ikukudm.com mh123.dypro.xyz",
         enable: 1,
-        reg: /(m\.manmanju\.com|\w+\.ihhmh\.com|s\d\.m\.ikkdm\.com|s\d.wap.ikukudm.com)\/comiclist\/\d+\/\d+\/1\.htm/i,
+        reg: /(m\.manmanju\.com|\w+\.ihhmh\.com|s\d\.m\.ikkdm\.com|s\d.wap.ikukudm.com|mh123\.dypro\.xyz)\/comiclist\/\d+\/\d+\/1\.htm/i,
         include: ".classBox img,.imgBox",
         init: async () => {
             let url = await siteData.next();
@@ -6866,7 +6980,10 @@
             }
             fun.remove("//a[img] | //ul[center[li]]");
             fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
-            return Promise.all(resArr);
+            return Promise.all(resArr).then(arr => {
+                fun.hide();
+                return arr
+            });
         },
         next: () => {
             let comicListUrl = fun.ge(".subNav a").href;
@@ -7903,6 +8020,15 @@
         css: "#content~a,.content~a,.apjg,.pager a:nth-child(n+2):nth-child(-n+3){display:none!important}.pager a{width:44%!important}#content,.content{width:100%}",
         category: "comic"
     }, {
+        name: "大古漫画M m.dgmanhua.com loadMore",
+        enable: 1,
+        icon: 0,
+        key: 0,
+        reg: /m\.(dgmanhua|dagumanhua)\.\w+\/manhua\//i,
+        include: "//div[text()='点击加载更多']",
+        observerClick: "//div[text()='点击加载更多']",
+        category: "comic"
+    }, {
         name: "漫畫類 自動展開目錄",
         enable: 1,
         icon: 0,
@@ -8043,12 +8169,17 @@
 
     const fun = {
         getImg: async (img, maxPage = 1, mode = 1, rText = [null, null]) => {
-            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
+            fetching = true;
             fun.show("獲取圖片元素中...", 0);
             let imgsArray = [];
             let fetchNum = 0;
-            const html = url => fetch(url).then(res => res.arrayBuffer()).then(buffer => {
+            const html = url => fetch(url).then(res => {
+                if (res.status > 400) {
+                    debug(`\nfun.getImg()連線錯誤碼：${res.status}\n`, url);
+                }
+                return res.arrayBuffer()
+            }).then(buffer => {
                 debug(`\nfun.getImg() URL`, url);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
@@ -8169,8 +8300,8 @@
             return imgsArray;
         },
         getImgO: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1) => {
-            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
+            fetching = true;
             if (msg == 1) fun.show("獲取圖片元素中...", 0);
             let imgsArray = [];
             let fetchNum = 0;
@@ -8314,8 +8445,8 @@
             return imgsArray;
         },
         getImgIframe: async (img, maxPage = 1, mode = 1, rText = [null, null], paginationEle = null, time = 500, showMsg = 1) => {
-            fetching = true;
             if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
+            fetching = true;
             if (showMsg == 1) fun.show("獲取圖片元素中...", 0);
             let imgsArray = [];
             let fetchNum = 0;
@@ -8455,7 +8586,8 @@
             fetching = false;
             return imgsArray;
         },
-        getImgA: async (img, link, one = 0, rText = [null, null], showMsg = 1) => { //從指定的所有鏈接抓圖片
+        getImgA: async (img, link, mode = 0, rText = [null, null], showMsg = 1) => { //從指定的所有鏈接抓圖片
+            if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
             fetching = true;
             if (showMsg == 1) fun.show("獲取圖片元素中...", 0);
             let links, linksNum;
@@ -8475,7 +8607,12 @@
             debug("\nfun.getImgA() links", links);
             let imgsArray = [];
             let fetchNum = 0;
-            const html = url => fetch(url).then(res => res.arrayBuffer()).then(buffer => {
+            const html = url => fetch(url).then(res => {
+                if (res.status > 400) {
+                    debug(`\nfun.getImgA()連線錯誤碼：${res.status}\n`, url);
+                }
+                return res.arrayBuffer()
+            }).then(buffer => {
                 if (showMsg == 1) fun.show(`獲取圖片中${fetchNum+=1}/${linksNum}`, 0);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
@@ -8486,13 +8623,21 @@
             const resArr = [];
             if (typeof link != "object") resArr.push(html(siteUrl));
             for (let i = 0; i < links.length; i++) {
-                if (one == 0) {
+                if (mode == 0) {
                     if (links[i].tagName == "A") {
                         resArr.push(html(links[i].href))
                     } else if (/^http/.test(links[i])) {
                         resArr.push(html(links[i]))
                     }
-                } else if (one == 1 || one == 3) {
+                } else if (mode >= 100) {
+                    if (links[i].tagName == "A") {
+                        await fun.delay(mode, 0);
+                        resArr.push(html(links[i].href))
+                    } else if (/^http/.test(links[i])) {
+                        await fun.delay(mode, 0);
+                        resArr.push(html(links[i]))
+                    }
+                } else if (mode == 1) {
                     let res;
                     if (links[i].tagName == "A") {
                         res = await html(links[i].href);
@@ -8500,35 +8645,28 @@
                         res = await html(links[i]);
                     }
                     resArr.push(res);
-                    if (one == 1) {
-                        let doc = fun.doc(res);
-                        debug(`\nfun.getImgA()單線程模式 DOM\n${links[i].href}`, doc);
-                        if (!fun.ge(img, doc) && location.host == "www.nlegs.com") {
-                            fun.show("人機驗證?按F5", 0);
-                            //fun.ge(link).click();
-                            return;
+                    let doc = fun.doc(res);
+                    debug(`\nfun.getImgA()單線程模式 DOM\n${links[i].href}`, doc);
+                    let imgs = [...fun.gae(img, doc)];
+                    let _img = "";
+                    for (let p = 0; p < imgs.length; p++) {
+                        let imgSrc;
+                        let check = fun.checkImgSrc(imgs[p], rText);
+                        if (check.ok) {
+                            imgSrc = check.src;
+                            /*
+                            let blob = await GMGetData(imgSrc);
+                            let objectURL = await URL.createObjectURL(blob.blob);
+                            imgSrc = objectURL;
+                            */
+                            debug("\nfun.getImgA() 單線程模式imgSrc", imgSrc);
+                        } else {
+                            debug("\nfun.getImgA() 單線程模式出錯", imgs[p]);
+                            continue;
                         }
-                        let imgs = [...fun.gae(img, doc)];
-                        let _img = "";
-                        for (let p = 0; p < imgs.length; p++) {
-                            let imgSrc;
-                            let check = fun.checkImgSrc(imgs[p], rText);
-                            if (check.ok) {
-                                imgSrc = check.src;
-                                /*
-                                let blob = await GMGetData(imgSrc);
-                                let objectURL = await URL.createObjectURL(blob.blob);
-                                imgSrc = objectURL;
-                                */
-                                debug("\nfun.getImgA() 單線程模式imgSrc", imgSrc);
-                            } else {
-                                debug("\nfun.getImgA() 單線程模式出錯", imgs[p]);
-                                continue;
-                            }
-                            _img += `<img class="CustomPictureDownloadImage" src="${imgSrc}">`;
-                        }
-                        links[i].outerHTML = _img;
+                        _img += `<img class="CustomPictureDownloadImage" src="${imgSrc}">`;
                     }
+                    links[i].outerHTML = _img;
                 }
             }
             await Promise.all(resArr).then(htmls => {
@@ -8536,7 +8674,7 @@
                 fun.hide();
                 for (let i = 0; i < htmls.length; i++) {
                     let doc = fun.doc(htmls[i]);
-                    if (one != 1) debug(`\nfun.getImgA() DOM${i}`, doc);
+                    if (mode != 1) debug(`\nfun.getImgA() DOM${i}`, doc);
                     let imgs = [...fun.gae(img, doc)];
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
@@ -8549,7 +8687,6 @@
                     }
                 }
             });
-            if (fun.ge('.CustomPictureDownloadImage')) return [...fun.gae('.CustomPictureDownloadImage')];
             debug("\nfun.getImgA 聚集的所有IMG", imgsArray);
             return imgsArray;
         },
@@ -8827,13 +8964,13 @@
                     if (typeof ele[2] != "undefined") {
                         fun.remove(ele[2]);
                     }
-                    if (siteData.msg != 0) fun.show("已聚集所有圖片");
+                    if (siteData.msg != 0 && siteData.category != "comic") fun.show("已聚集所有圖片");
                     if (siteData.go == 1) goToNo1Img();
                 } else if (typeof ele == "string") {
                     thisEle = fun.ge(ele);
                     thisEle.innerHTML = "";
                     thisEle.appendChild(fragment);
-                    if (siteData.msg != 0) fun.show("已聚集所有圖片");
+                    if (siteData.msg != 0 && siteData.category != "comic") fun.show("已聚集所有圖片");
                 } else {
                     fun.show("用來定位插入的元素不存在", 3000);
                     debug("\nfun.insertImg() ele參數錯誤，或用來定位插入的元素不存在。");
@@ -9063,6 +9200,9 @@
                         "User-Agent": navigator.userAgent
                     },
                     onload: data => {
+                        if (data.status > 400) {
+                            debug(`\nfun.xhr()連線錯誤碼：${data.status}\n`, url);
+                        }
                         resolve(data.response);
                     },
                     onerror: error => {
@@ -9647,7 +9787,7 @@
     text-align: center;
     margin: 5px auto!important;
 }
-#customPicDownloadEnd~*:not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]) {
+#customPicDownloadEnd~*:not(.row):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]) {
     display: none!important;
 }
 .customPicDownloadLoading {
