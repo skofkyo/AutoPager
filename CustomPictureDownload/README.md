@@ -307,7 +307,7 @@ fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
 //mode
 //0多線程(預設)
 //1單線程
-//3單線程不將A元素替換成圖片元素
+//數字大於等於100，請求間隔模式單位毫秒。
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
 fun.getImgA("圖片元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/22 22:22</p>
+<p>2023/09/26 01:00</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -493,6 +493,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xx.knit.bid/">爱妹子</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://portrait.knit.bid/">美女写真</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -664,7 +668,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，VIP資源需登錄。</td>
             </tr>
             <tr>
-                <td><a href="https://www.95mm.me/">MM 范</a></td>
+                <td><a href="https://www.95mm.vip/">MM 范</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -781,6 +785,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xem.anhvl.net/">Anh VL</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://phym18.org/">Phym18</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1505,7 +1513,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://manhua.kukudm.com/">KuKu动漫</a></td>
-                <td><a href="http://m.ikukudm.com/">m.ikukudm.com</a>，閱讀頁添加了下一話鏈接</td>
+                <td><a href="http://m.ikuku.cc/">m.ikuku.cc</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
