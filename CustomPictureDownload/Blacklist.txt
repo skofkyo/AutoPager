@@ -1,4 +1,4 @@
-2023/09/26 01:00
+2023/09/26 23:20
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -547,7 +547,7 @@ Pururin
 *://litu100.xyz/comic/id-*/*.html
 
 ACG漫画网
-*://www.acgxmh.com/*/*.html
+*://www.acgomh.com/*/*.html
 
 紳士漫畫
 *://www.wnacg.*/photos-index-aid-*.html
@@ -999,7 +999,7 @@ https://www.nuyet.com/gallery/*
 *://18h.mm-cg.com/*_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
 *://mhdnf.xyz/play?linkId=*
-*://www.acgxmh.com/*/*.html
+*://www.acgomh.com/*/*.html
 *://www.wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
 *://ahri8.top/readOnline2.php?ID=*
