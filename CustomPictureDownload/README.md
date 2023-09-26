@@ -311,7 +311,7 @@ fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
 fun.getImgA("圖片元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
-fun.getImgA(img, A, one = 0, rText = [null, null], showMsg = 1)
+fun.getImgA(img, A, mode = 0, rText = [null, null], showMsg = 1)
 </pre>
 <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
@@ -361,7 +361,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/26 01:00</p>
+<p>2023/09/26 23:20</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -945,7 +945,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.simply-cosplay.com/galleries/new">Simply Cosplay</a></td>
-                <td>SAP網頁，需新分頁開啟Gallery</td>
+                <td>SAP，只支持galleries類別。</td>
             </tr>
             <tr>
                 <td><a href="https://asiaon.top/">AsiaOnTop</a></td>
