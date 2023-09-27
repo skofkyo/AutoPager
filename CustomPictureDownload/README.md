@@ -421,10 +421,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.jpmn8.cc/">精品美女吧</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.imn5.xyz/">爱美女网</a></td>
                 <td></td>
             </tr>
@@ -454,7 +450,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.kaka234.cc/">卡卡美女网</a></td>
-                <td><a href="https://m.kaka234.cc/">m.kaka234.cc</a></td>
+                <td><a href="https://m.kaka234.cc/">m.kaka234.cc</a>，China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
@@ -504,23 +500,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.sdxt.org/">深度学堂</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.haotuwu.com/">好圖屋</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.tujigu.top/">爱图集谷</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://dongti.blog.2nt.com/">胴体的诱惑</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://556123.xyz/">开始涩涩</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -565,10 +549,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.cos6.net/">绅士猫</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://madoucun.com/arttype/56.html">麻豆村Cosplay</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -656,12 +636,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://taotu.uk/">套图网</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
-                <td></td>
+                <td><a href="https://taotu.org/m/">taotu.org/m/</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
@@ -788,7 +764,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://phym18.org/">Phym18</a></td>
+                <td><a href="https://phym18.org/tag/%E1%BA%A3nh-sex">Phym18</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -816,16 +792,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://niuc3.com/sex">牛C网导航</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://xiuseaa.com/">羞涩姬</a></td>
                 <td><a href="https://xiusea.com/">xiusea.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://avjb.com/albums/">AVJB</a></td>
-                <td><a href="https://bav24.xyz/albums/">bav24.xyz</a></td>
+                <td><a href="https://avjb.github.io/">網址發佈頁1</a>，<a href="https://bitbucket.org/free890722/avjb/src/master/README.md">網址發佈頁2</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.qinimg.com/">Qinimg</a></td>
@@ -841,7 +813,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.3gbizhi.com/meinv">3G壁纸</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.enterdesk.com/">回车桌面</a></td>
@@ -868,8 +840,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.4khd.com/">4KHD</a></td>
-                <td><a href="https://www.4kep.com/">www.4kep.com</a>，<a href="https://xjav.cc/">xjav.cc</a></td>
+                <td><a href="https://xjav.cc/">4KHD</a></td>
+                <td><a href="https://www.4khd.com/">www.4khd.com</a>，<a href="https://www.4kep.com/">www.4kep.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.4kup.net/">4KUP</a></td>
@@ -969,7 +941,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://vuxinh.com/">vuxinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a></td>
+                <td><a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -1054,8 +1026,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.eporner.com/pics/">EPORNER</a></td>
-                <td>www.eporner.com/profile/namaiki/uploaded-pics/
-                </td>
+                <td><a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xasiat.com/albums/">Xasiat</a></td>
@@ -1178,10 +1149,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>幾乎都需要VIP</td>
             </tr>
             <tr>
-                <td><a href="https://www.tuao.one/">凸凹吧</a></td>
-                <td>同網頁格式，<a href="https://www.63mm.cc/">www.63mm.cc</a>，<a href="https://www.97mm.cc/">www.97mm.cc</a>，<a href="https://www.luge8.co/">www.luge8.co</a>，<a href="https://luge8.co/">luge8.co</a></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.yyzhenshun.com/">YY美女图片</a></td>
                 <td><a href="https://www.mmdabaobei.com/">美眉大宝贝</a>，很久沒新圖了</td>
             </tr>
@@ -1203,10 +1170,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.mevtu.com/">美女图片网</a></td>
-                <td>很久沒新圖了</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.xzsd1.com/">写真圣地</a></td>
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
