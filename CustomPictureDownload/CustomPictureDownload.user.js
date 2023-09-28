@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name               怠惰輔助&聚圖&下載
-// @name:en            CustomPictureDownload
-// @name:zh-CN         怠惰輔助&聚图&下载
-// @name:zh-TW         怠惰輔助&聚圖&下載
+// @name               圖片全載
+// @name:en            Full picture load
+// @name:zh-CN         图片全载
+// @name:zh-TW         圖片全載
 // @version            1.2.0
-// @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
-// @description:en     Custom Picture Download
-// @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，透过选择器圈选图片，能聚集分页的所有图片到当前页面里，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
-// @description:zh-TW  專注於寫真、H漫、漫畫的網站，目前規則數400+，透過選擇器圈選圖片，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @description:en     Load all pictures for picture websites, and can also compress and package them for download.
+// @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
+// @description:zh-TW  專注於寫真、H漫、漫畫的網站，目前規則數400+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @author             tony0809
 // @match              *://*/*
 // @exclude            *hcaptcha*
@@ -28,6 +28,7 @@
 // @grant              unsafeWindow
 // @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js
+// @require            https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
 // ==/UserScript==
 
 (async () => {
@@ -62,9 +63,9 @@
     const loading_bak = "data:image/gif;base64,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83uGje9+g7TK7znAs/1N/3BQTmbMt6lvwRde10/Xu89+ZrjEJ07xilv84hjPuMY3zvGOe/zjIA+5yEdO8pKb/OQoT7nKV87ylrv85TCPucxnTvOa2/zmOM+5znfO8577/OdAD7rQh070ohv96EhPutKXzvSmO/3pUI+61KdO9apb/epYz7rWt871rnv962APu9jHTvaym/3saE+72tfO9ra7/e1wj7vc5073utv97njPu973zve++/3vgA+84AdP+MIb/vCIT7ziF8/4xjv+8ZCPvOQnT/nKW/7ymM+85jfP+c57/vOgD73oR0/60pv+9KhPvepXz/rWu/71sI+97GdP+9rb/va4z73ud8/73pH7/vfAD77wh0/84hv/+MhPvvKXz/zmO//50I++9KdP/epb//rYz772t8/97nv/++APv/jHT/7ym//86E+/+tfP/va7//3wj7/850//+tv//vjPv/73z//++///ABiAAjiABFiABniACJiACriADNiADviAEBiBEjiBFFiBFniBGJiBGriBHNiBHviBIBiCFxEIACH5BAUKAGgALCwBjAACATABAAf/gGiCg4SFhoeIiYqLjI2JAQYGHhgaEC8FHBQfOhaOnp+goaKjpKWmp6iKAausra0GNDEUJ52ptre4ubq7vGiuv8CrGCksG2e9yMnKy8yOwc/ABjgsHc3W19jZo9DcwCsiJ9ri4+TW3ee/IyI65e3u76Xo8q4YLtXw+Pn6gvP9rS8Dju0bSBCbv4PCKCwoyLAhL4QQDXCQ4LCixXgQIT6YeLGjx0UZQz7wUeujyY8hUxpQwOCkS4spY6748LJmwZg4SdyzyfMdTpwPXLTsSXTcz58oMhRdavAozgY+hjKdiszpURoIqGrdlaJECRIQNHhoYBXhAyBb0yKTkOGDghgQ/wyURRdDqtq7vDp8EEGD7NxgNC7gHYxsgQwRK/7+8mCDsONeHShAUMyqAYjHmHd1UJCYso/MoHOdKPBAcQm7oVOXsrDDw18SC1XLLsUABIa5EErO3g2q9m2rKCjyHv6JAQXXTjUIJ86ckQQYfpHqbk790IbJRyHErs690BkKpX/mQN29+wUSR1OUXz/ojILoKTmwn5+hc0wW89lbwPG0cf71O8AHkQc7/cfdAOGFhMJ2BlaXwQgxFdBgeR3YlxFaE+pTQgExiLADCwNkwKA1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";
     //自定義站點規則
     const customData = [{
-        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //按數字鍵1、Enter插入圖片(手動模式)，按0、Enter、Enter壓縮打包下載
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me", //按數字鍵1、Enter插入圖片(手動模式)，按0、Enter、Enter壓縮打包下載
         enable: 0, //0此規則禁用 1啟用
-        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/, //網址正則匹配
+        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/, //網址正則匹配
         include: ".photos>a",
         imgs: () => {
             let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
@@ -86,9 +87,9 @@
         css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
-        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，翻完所有預覽圖後，立刻在預覽縮圖下面插入全部大圖
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me", //xhr翻頁模式，翻完所有預覽圖後，立刻在預覽縮圖下面插入全部大圖
         enable: 0,
-        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/,
+        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         imgs: async () => {
             await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager"); //xhr翻頁模式聚集所有預覽圖
@@ -105,7 +106,7 @@
     }, {
         name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，聚集所有預覽圖，手動插入全部大圖，圖片量是幾百張的比較不會卡，不插大圖也能下載
         enable: 0,
-        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/,
+        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         init: "fun.getNP('.photos>a','.pager a[current=true]+a:not(.next)',null,'.pager');",
         imgs: async () => {
@@ -116,9 +117,9 @@
         css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.customPicDownloadMsg):not(#customPicDownload):not(a),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
-        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me",
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me",
         enable: 1,
-        reg: /(xchina|8se)\.(co|me|biz)\/photo\/id-\w+\.html/,
+        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         imgs: async () => {
             let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
@@ -221,7 +222,7 @@
         reg: /yskhd\.com\/archives\/\d+/i,
         exclude: "#menu-item-57917[class*=current]",
         imgs: () => {
-            return [...fun.gae(".article-content img[loading]")].map(e => e.src.replace("-285x285", ""));
+            return [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", ""));
         },
         insertImg: [
             [".article-act", 1], 2
@@ -239,7 +240,7 @@
         reg: /yskhd\.com\/archives\/\d+/i,
         include: "#menu-item-57917[class*=current]",
         imgs: () => {
-            return [...fun.gae(".article-content img[loading]")].map(e => e.src.replace("-285x285", "-scaled"));
+            return [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", "-scaled"));
         },
         insertImg: [
             [".article-act", 1], 2
@@ -952,29 +953,6 @@
         customTitle: "return fun.geT('.arc_location>a:last-child,.m_h1>a');",
         category: "nsfw1"
     }, {
-        name: "女人吧 www.nvhai8.com m.nvhai8.com",
-        reg: /^https?:\/\/(www|m)\.nvhai8\.com\/body\/\d+\/\d+\.htm/,
-        imgs: () => {
-            try {
-                let max = fun.geT(".imgfooter>a").match(/\d+/)[0];
-                let links = [];
-                links.push(siteUrl)
-                let url = siteUrl.replace(".htm", "");
-                for (let i = 1; i < max; i++) {
-                    links.push(url + "_" + i + ".htm");
-                }
-                return fun.getImgA(".remark img,.ui-article-detail img", links);
-            } catch (e) {
-                return [...fun.gae(".remark img,.ui-article-detail img")];
-            }
-        },
-        insertImg: [".remark,.ui-article-detail", 2],
-        autoDownload: [0],
-        next: "//label[contains(text(),'下一篇')]/preceding-sibling::a[1]",
-        prev: "//label[contains(text(),'上一篇')]/following-sibling::a[1]",
-        customTitle: "return fun.geT('.text_content>h1,h1');",
-        category: "nsfw1"
-    }, {
         name: "3G 壁纸 https://www.3gbizhi.com/meinv",
         reg: /(www|m|desk)\.3gbizhi\.com\/meinv\/(\w+\/)?\w+\.html/,
         imgs: () => {
@@ -1232,6 +1210,7 @@
         name: "3楼猫图库 pic.3loumao.org",
         reg: /pic\.3loumao\.org\/[a-z-]+\/\d+\.html/i,
         imgs: "article img",
+        insertImg: ["//p[img]", 2],
         customTitle: "return fun.geT('h1');",
         category: "nsfw1"
     }, {
@@ -2096,6 +2075,35 @@
             return fun.geT("#main h1").replace(/（\d+月\d+打赏群资源）|\[\d+P(\d+v)?-\d+MB\]|\[\d+P\]|\d+mb|\s?\d+p/gi, "").trim();
         },
         category: "nsfw2"
+    }, {
+        name: "顶尖美女图 djjpg.com",
+        reg: /https?:\/\/djjpg\.com\/\d+.html/,
+        imgs: ".post-countent-data img",
+        autoDownload: [0],
+        next: "//a[div[h5[text()=' 上一篇']]]",
+        prev: "//a[div[h5[text()=' 下一篇']]]",
+        customTitle: () => {
+            return fun.geT('.multi-single-header>h1').replace(/\（\d+\/\d+\）|(\s–\s)?\(\d+P\)/i, "").trim();
+        },
+        category: "nsfw1"
+    }, {
+        name: "秀人图吧 www.502x.com",
+        reg: /https?:\/\/www\.502x\.com\/\w+\/\d+\.html/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT("a.prev", 2);
+            } catch (e) {
+                max = 1;
+            }
+            return fun.getImg("#image_div img", max, 9);
+        },
+        insertImg: ["#image_div", 2],
+        customTitle: () => {
+            return fun.geT(".item_title>h1");
+        },
+        css: ".affs{display:none!important}",
+        category: "nsfw1"
     }, {
         name: "Nude Bird nudebird.biz",
         reg: /nudebird\.biz\/.+\//,
@@ -3487,7 +3495,7 @@
             }
             let srcs = [];
             let mode = location.href.split("/").slice(0, -1).pop();
-            let firstSrc = fun.ge("#display_image_detail a").href;
+            let firstSrc = fun.ge("#display_image_detail a,#detail_list a").href;
             let path = firstSrc.replace(/(image-)?\d+\.\w+$/i, "");
             for (let i = 1; i <= max; i++) {
                 if (/image/.test(mode)) {
@@ -4457,7 +4465,7 @@
             return fun.getImgA("#img", ".gdtm a,.gdtl a", 100);
         },
         insertImg: [
-            ["#gdt", 0], 3
+            ["#gdt", 0], 2
         ],
         customTitle: () => {
             let t = fun.geT("#gj").replace(/\//, "");
@@ -4481,7 +4489,7 @@
             return fun.getImgA("#sm", ".gi>a", 100);
         },
         insertImg: [
-            ["#ia", 2], 3
+            ["#ia", 2], 2
         ],
         customTitle: () => {
             return fun.title(" - E-Hentai", 1).replace(/\|.+/, "").replace(/\//, "").trim();
@@ -4979,18 +4987,22 @@
         name: "漫畫聯合國 www.comicun.com",
         reg: /www\.comicun\.com\/index-look(-cid)?-name-.+/,
         FixURL: url => {
-            let arr = url.split("-");
-            let str = "";
-            for (let i = 0; i < arr.length; i++) {
-                if (i == 7) {
-                    str += arr[i];
-                } else if (i == 5) {
-                    str += "cid-" + arr[i] + "-";
-                } else if (i != 2) {
-                    str += arr[i] + "-";
+            if (/index-look-cid-name-/.test(url)) {
+                let arr = url.split("-");
+                let str = "";
+                for (let i = 0; i < arr.length; i++) {
+                    if (i == 7) {
+                        str += arr[i];
+                    } else if (i == 5) {
+                        str += "cid-" + arr[i] + "-";
+                    } else if (i != 2) {
+                        str += arr[i] + "-";
+                    }
                 }
+                return decodeURI(str);
+            } else {
+                return decodeURI(url);
             }
-            return decodeURI(str);
         },
         init: () => {
             $(document).unbind("click");
@@ -5364,6 +5376,17 @@
         },
         category: "hcomic"
     }, {
+        name: "琴瑟漫畫 sixcomic.com 琴瑟書庫 sixacg.com",
+        reg: /https?:\/\/(sixcomic\.com|sixacg\.com)\/chapter\/\d+$/,
+        imgs: ".comicpage img:not([data-original*='qssk.top']),#cp_img img:not([data-original*='qssk.top'])",
+        autoDownload: [0],
+        next: "//a[@href and not(starts-with(@href,'java')) and text()='下一章']",
+        prev: "//a[@href and not(starts-with(@href,'java')) and text()='上一章']",
+        customTitle: () => {
+            return fun.title(/免费阅读|在线阅读/, 1);
+        },
+        category: "hcomic"
+    }, {
         name: "嗨皮漫畫閱讀 https://m.happymh.com/manga/daiwangraoming",
         enable: 0,
         icon: 0,
@@ -5449,11 +5472,18 @@
     }, {
         name: "COLAMANHUA www.colamanhua.com www.colamanga.com", //方向鍵上一章下一章、反反偵錯，新版blob格式下載不了...Picviewer CE+可以
         enable: 1,
-        icon: 0,
-        key: 0,
         reg: /www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/,
         init: "Function.prototype.constructor=()=>{}",
-        imgs: ".mh_comicpic>img[src]:not([src^=blob])",
+        imgs: () => {
+            let blob = fun.ge(".mh_comicpic img[src^=blob]");
+            let imgs;
+            if (blob) {
+                imgs = [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
+            } else {
+                imgs = [...fun.gae(".mh_comicpic img[src]")];
+            }
+            return imgs
+        },
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         css: ".mh_wrap{width:100%!important;min-width:100%!important}",
@@ -7656,8 +7686,6 @@
     }, {
         name: "漫蛙 manwa.me", //方向鍵上一章下一章、清除擋廣告警告、向下滾動隱藏工具列、反反偵錯，下載不了
         enable: 1,
-        icon: 0,
-        key: 0,
         reg: /manwa\.me\/chapter\/\d+(\?img_host=\d)?$/,
         init: () => {
             Function.prototype.constructor = () => {};
@@ -7710,9 +7738,9 @@
                 });
             }
         },
-        //imgs: "js;return [...fun.gae('.content-img[src^=blob]')].map(e=>e.src)",
-        //imgs: "js;const get=async()=>{let imgs=[...fun.gae('.content-img[data-r-src]')];for(let i=0;i<imgs.length;i++){imgs[i].scrollIntoView();await fun.delay(50)}imgs[0].scrollIntoView();return[...fun.gae('.content-img[src^=blob]')].map(e=>e.src)};return get();",
-        //imgs: "js;return[...fun.gae('.content-img[data-r-src]')].map(e=>e.dataset.rSrc)",
+        imgs: () => {
+            return [...fun.gae(".content-img[src^=blob]")].map(e => fun.imgToBlobURL(e));
+        },
         next: ".view-fix-bottom-bar-item-menu-next",
         prev: ".view-fix-bottom-bar-item-menu-prev",
         customTitle: "return fun.title('在线阅读',1)",
@@ -8173,12 +8201,12 @@
                 str_10: "whether to copy link to clipboard?",
                 str_11: "Copied",
                 str_12: "Only link can be copied",
-                str_13: "Please enter the number of images",
+                str_13: "Please enter the number of pictures",
                 str_14: "Get next page...",
                 str_15: "Get next page end",
                 str_16: "Get Element...",
                 str_17: "Get Element ",
-                str_18: "All images gathered",
+                str_18: "All pictures gathered",
                 str_19: "element does not exist",
                 str_20: "No image",
                 str_21: "Delay",
@@ -8212,7 +8240,7 @@
                 str_49: "Get Pictureing Please try again later!",
                 str_50: "Please enter selector：\nexample：img#TheImg OR //img[@id='TheImg']",
                 str_51: "Please enter a custom zip file folder name",
-                str_52: "number of images"
+                str_52: "Number of pictures"
             };
             break;
     }
@@ -8915,7 +8943,7 @@
             for (let i in links) {
                 let res = fun.xhr(links[i], "document").then(doc => {
                     debug(`\nfun.getEle() URL`, links[i]);
-                    fun.show(`${displayLanguage.str_16}${xhrNum+=1}/${links.length}`, 0);
+                    fun.show(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
                     debug(`fun.getEle()\n${decodeURI(links[i])}\n`, doc);
                     return [...fun.gae(elements, doc)];
                 });
@@ -9202,18 +9230,11 @@
             style.innerHTML = css;
             document.head.appendChild(style);
         },
-        script: (code, src = 0) => {
+        script: code => {
             let script = document.createElement("script");
-            if (src == 0) {
-                script.id = "CustomPictureDownloadScript";
-                script.type = "text/javascript";
-                script.innerHTML = code;
-            } else if (src == 1) {
-                //script.src = "https://code.jquery.com/jquery-3.6.4.js";
-                script.src = "https://code.jquery.com/jquery-3.6.4.min.js";
-            } else if (src == 2) {
-                script.src = "https://html2canvas.hertzen.com/dist/html2canvas.min.js";
-            }
+            script.id = "CustomPictureDownloadScript";
+            script.type = "text/javascript";
+            script.innerHTML = code;
             document.body.appendChild(script);
         },
         delay: async (time, msg = 1) => {
@@ -9296,6 +9317,29 @@
             }
             let html = `<div style="padding: 20px 0; text-align: center;"><a href="${url}"style="font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
             fun.ge(ele).insertAdjacentHTML(_pos, html);
+        },
+        dataURLtoBlobURL: dataurl => {
+            let arr = dataurl.split(","),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return URL.createObjectURL(new Blob([u8arr], {
+                type: mime
+            }));
+        },
+        imgToBlobURL: (img, type = "image/png") => {
+            let canvas = document.createElement("canvas");
+            //canvas.width = img.width;
+            //canvas.height = img.height;
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            canvas.getContext("2d").drawImage(img, 0, 0);
+            let dataUrl = canvas.toDataURL(type);
+            return fun.dataURLtoBlobURL(dataUrl);
         }
     };
 
