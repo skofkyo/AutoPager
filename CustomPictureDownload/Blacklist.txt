@@ -1,4 +1,4 @@
-2023/09/26 23:20
+2023/09/28 23:33
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -471,6 +471,12 @@ CUTE GIRLS ADDICT
 套图之家
 *://taotuhome.com/*.html
 
+秀人图吧
+*://www.502x.com/*/*.html
+
+顶尖美女图
+*://djjpg.com/*.html
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -572,7 +578,7 @@ Orzqwq
 *://18h.animezilla.com/manga/*
 
 HO5HO
-*://www.ho5ho.com/*/*/server*/*/*/
+*://www.ho5ho.com/*/*/server*
 
 亚洲漫画走廊
 *://asiacomics.com/chapter/*
@@ -591,6 +597,15 @@ H漫画
 
 韩国污漫画
 /(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)/chapter/\d+/
+
+H漫画 123548.xyz
+*123548.xyz/e/action/ShowInfo.php*
+
+琴瑟漫畫
+*://sixcomic.com/chapter/*
+
+琴瑟書庫
+*://sixacg.com/chapter/*
 
 漫畫類
 
@@ -1007,7 +1022,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.177pic*.com/html/*/*/*.html
 *://www.18mh.cc/index-look-name-*-id-*
 *://18h.animezilla.com/manga/*
-*://www.ho5ho.com/*/*/server*/*/*/
+*://www.ho5ho.com/*/*/server*
 *://orzqwq.com/manga/*/
 *://asiacomics.com/chapter/*
 *://www.coszip.com/*.html
@@ -1079,6 +1094,11 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *cutegirlsaddict.blogspot.com/*/*/*.html*
 *portrait.knit.bid/*/*
 *://taotuhome.com/*.html
+*123548.xyz/e/action/ShowInfo.php*
+*://sixcomic.com/chapter/*
+*://sixacg.com/chapter/*
+*://www.502x.com/*/*.html
+*://djjpg.com/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
