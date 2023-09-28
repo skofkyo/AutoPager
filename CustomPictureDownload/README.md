@@ -1,9 +1,10 @@
 
 如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。
+
 寫這個腳本的緣由是，想讓下載、複製鏈接不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。
 
 <h1>簡介：</h1>
-聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT能做到自動化下載，支援自定義規則方便重複使用，後續擴充規則更容易。
+聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支援自定義規則方便重複使用，後續擴充規則更容易。
 
 用戶寫的規則請自行另外備份，規則只會寫死在腳本裡不會線上規則化，腳本更新就會覆蓋規則。
 
@@ -335,8 +336,8 @@ imgs: async () => {
 </details>
 
 <h1>腳本的操作步驟方式：</h1>
-<p>點擊圖示、確定、確定，3步開始下載</p>
-<p>右鍵點擊圖示、確定，2步驟複製圖片網址，如果設置了insertImg，按右鍵是插入圖片，第二次按是複製圖片網址。</p>
+<p>點擊左下圖示、確定、確定，3步開始下載</p>
+<p>右鍵點擊圖示、確定，2步驟複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
 <p>中鍵點擊圖示捲動至第一張大圖</p>
 
 <h1>腳本有綁定按鍵</h1>
@@ -344,11 +345,8 @@ imgs: async () => {
 <p>按0、Enter、Enter，3步驟開始下載。</p>
 <p>按1、Enter，2步驟複製圖片網址。</p>
 <p>如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
-<p>按2前往插入的第一張大圖</p>
-<p>按3，一鍵下載，跳過圖片選擇器和自定義標題。</p>
-
-<p>2023/05/13，修改中鍵功能為捲動至第一張大圖，綁定快捷鍵數字鍵2</p>
-<p>2023/05/15，如果規則imgs是函式省略輸入選擇器這一步。</p>
+<p>按2捲動至腳本插入的第一張大圖</p>
+<p>按3，一鍵下載，跳過圖片選擇器和自定義標題的步驟。</p>
 
 <h1>圖介：</h1>
 <p>在頁面左下添加了一個圖片下載按鈕</p>
@@ -361,7 +359,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/26 23:20</p>
+<p>2023/09/28 23:33</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -413,10 +411,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://xiuren0.com/">秀人图集</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.xrmn03.cc/">秀人美女網</a></td>
                 <td></td>
             </tr>
@@ -446,6 +440,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.taotu8.cc/">秀套图吧</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://www.502x.com/">秀人图吧</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -824,8 +822,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.keaitupian.com/">m.keaitupian.com</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.nvhai8.com/">女人吧</a></td>
-                <td><a href="https://m.nvhai8.com/">m.nvhai8.com</a></td>
+                <td><a href="https://djjpg.com/">顶尖美女图</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://xiuren.biz/">Xiuren</a></td>
@@ -1401,6 +1399,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>www.177picyy.com</td>
             </tr>
             <tr>
+                <td><a href="https://sixcomic.com/">琴瑟漫畫</a></td>
+                <td><a href="https://sixacg.com/">琴瑟書庫</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://jcomic.net/">JComic</a></td>
                 <td></td>
             </tr>
@@ -1430,10 +1432,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://123548.xyz/">H漫画 123548.xyz</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://madoucun.com/arttype/47.html">麻豆村浅看色漫</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1468,7 +1466,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
-                <td></td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="http://www.manmanju.com/">漫漫聚</a></td>
@@ -1496,12 +1494,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.colamanga.com/">COLAMANGA</a></td>
-                <td>方向鍵上下章，需手動觸發載入全部圖片，下載只支援較舊的頁面，blob加密?下載需使用Picviewer CE+</td>
+                <td>方向鍵上下章，下載需先手動觸發全部載入圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
             </tr>
             <tr>
                 <td><a href="https://manwa.me/">漫蛙</a></td>
                 <td>uBlock加信任名單<pre>https://manwa.me/chapter/*</pre>
-閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，blob加密?下載需使用Picviewer CE+</td>
+閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先手動觸發全部載入圖片，函式使用到canvas需要繪製過程會有點卡。</td>
             </tr>
             <tr>
                 <td><a href="https://m.happymh.com/">嗨皮漫畫</a></td>
