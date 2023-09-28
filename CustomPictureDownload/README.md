@@ -838,8 +838,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://xjav.cc/">4KHD</a></td>
-                <td><a href="https://www.4khd.com/">www.4khd.com</a>，<a href="https://www.4kep.com/">www.4kep.com</a></td>
+                <td><a href="https://www.4khd.com/">4KHD</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.4kup.net/">4KUP</a></td>
