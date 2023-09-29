@@ -359,7 +359,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/28 23:33</p>
+<p>2023/09/29 20:56</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -376,7 +376,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://xchina.biz/">小黃書</a></td>
-                <td><a href="https://xchina.co/">xchina.co</a></td>
+                <td><a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.fun/">xchina.fun</a></td>
             </tr>
             <tr>
                 <td><a href="https://8se.me/">8色人體攝影</a></td>
@@ -1443,7 +1443,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 </details>
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
-<p>2023/05/07，Mangabz/Xmanhua/DM5/極速/PC版，改成併發請求圖片鏈接，大幅減少了獲取資料的時間。</p>
 <p>2023/05/17，增加了腳本選項，可以直接開啟所有的漫畫類規則，方便自己重新測試規則，和有需要的用戶不用一個一個開那麼麻煩。</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
