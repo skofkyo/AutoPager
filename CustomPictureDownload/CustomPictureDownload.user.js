@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.2.1
+// @version            1.2.2
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -184,6 +184,41 @@
         //css: ".col-md-2.col-sm-4.col-xs-12{width:1000px!important;height:auto!important;display:block!important;margin:0 auto !important;float: none!important;}",
         category: "nsfw2"
     }, {
+        name: "雅拉伊 www.yalayi.com 免VIP僅支援圖片簡單命名數字遞增的。",
+        reg: /https?:\/\/www\.yalayi\.com\/gallery\/\d+\.html/i,
+        imgs: async () => {
+            await fun.waitEle(".bigimg>img");
+            let max = fun.ge(".tishiwenzi-box").innerText.match(/\d+/)[0];
+            let firstImg = fun.ge(".bigimg>img");
+            let path = firstImg.dataset.original.match(/.+\//)[0];
+            let testArr = [path + "1.jpg", path + "01.jpg", path + "001.jpg", path + "0001.jpg"];
+            let ok = false;
+            let padStart;
+            for (let i in testArr) {
+                if (await fun.checkImg(testArr[i])) {
+                    ok = true;
+                    padStart = parseInt(i) + 1;
+                }
+            }
+            let arr = [];
+            if (ok) {
+                arr.push(firstImg.src);
+                for (let i = 1; i <= max; i++) {
+                    let src = path + String(i).padStart(padStart, "0") + ".jpg";
+                    arr.push(src);
+                }
+                return arr;
+            } else {
+                return arr;
+            }
+        },
+        insertImg: [".bigimg", 2],
+        customTitle: () => {
+            return fun.title(" - ", 3);
+        },
+        threading: 4,
+        category: "nsfw1"
+    }, {
         name: "JKF www.jkforum.net",
         reg: /www\.jkforum\.net\/thread/,
         imgs: "img[id^=aimg]",
@@ -218,8 +253,8 @@
         },
         category: "nsfw1"
     }, {
-        name: "优丝库HD - 免VIP yskhd.com",
-        reg: /yskhd\.com\/archives\/\d+/i,
+        name: "优丝库HD - 免VIP yskhd.com ysk567.com",
+        reg: /(yskhd\.com|ysk567\.com)\/archives\/\d+/i,
         exclude: "#menu-item-57917[class*=current]",
         imgs: () => {
             return [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", ""));
@@ -236,8 +271,8 @@
         },
         category: "nsfw1"
     }, {
-        name: "优丝库HD - 日韓免VIP yskhd.com",
-        reg: /yskhd\.com\/archives\/\d+/i,
+        name: "优丝库HD - 日韓免VIP yskhd.com ysk567.com",
+        reg: /(yskhd\.com|ysk567\.com)\/archives\/\d+/i,
         include: "#menu-item-57917[class*=current]",
         imgs: () => {
             return [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", "-scaled"));
@@ -1308,20 +1343,20 @@
         name: "女神社 nshens.com inewgirl.com",
         reg: /(nshens\.com|inewgirl\.com)\/\d+\/\d+\/\d+\/[^/]+$/,
         exclude: ".justify-center>button>.v-btn__content",
-        delay: 500,
+        delay: 800,
         imgs: () => {
             fun.show(displayLanguage.str_05, 0);
             let links = [];
             let resArr = [];
-            let xhrNum = 0;
+            let fetchNum = 0;
             let max = fun.geT(".v-pagination li:last-child", 2);
             links.push(location.href);
             for (let i = 2; i <= max; i++) {
                 links.push(location.href + "/" + i)
             }
             for (let i in links) {
-                let res = fun.urlDoc(links[i]).then(doc => {
-                    fun.show(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
+                let res = fun.fetchDoc(links[i]).then(doc => {
+                    fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
                     return fun.run(code.match(/photoList:([^\]]+\])/)[1]);
                 });
@@ -1347,20 +1382,20 @@
         name: "Chottie chottie.com", //很多都需要VIP，不然只會重複抓到第一頁的圖片
         reg: /chottie\.com\/blog\/(\w{2}\/)?archives\/\d+$/,
         exclude: ".justify-center>button>.v-btn__content",
-        delay: 500,
+        delay: 800,
         imgs: () => {
             fun.show(displayLanguage.str_05, 0);
             let links = [];
             let resArr = [];
-            let xhrNum = 0;
+            let fetchNum = 0;
             let max = fun.geT(".v-pagination li:last-child", 2);
             links.push(location.href);
             for (let i = 2; i <= max; i++) {
                 links.push(location.href + "/" + i)
             }
             for (let i in links) {
-                let res = fun.urlDoc(links[i]).then(doc => {
-                    fun.show(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
+                let res = fun.fetchDoc(links[i]).then(doc => {
+                    fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let code, imgs;
                     try {
                         code = [...doc.scripts].find(s => s.innerHTML.search(/imgList/) > -1).innerHTML;
@@ -1387,7 +1422,7 @@
         reg: /https?:\/\/ijjiao\.com\/\d+\/\d+\/\d+\/album/,
         include: ".v-pagination",
         exclude: "//span[text()='加载更多']",
-        delay: 500,
+        delay: 800,
         imgs: async () => {
             let max = fun.geT("//li[button[@aria-label='Next page']]", 2);
             let links = [];
@@ -1397,7 +1432,7 @@
                 links.push(url + "/" + i)
             }
             fun.show(displayLanguage.str_07, 0);
-            let check = await fun.urlDoc(links[1]).then(doc => {
+            let check = await fun.fetchDoc(links[1]).then(doc => {
                 let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
                 let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
                 if (photoList.length < 1) {
@@ -1409,10 +1444,10 @@
             if (check) {
                 fun.show(displayLanguage.str_05, 0);
                 let resArr = [];
-                let xhrNum = 0;
+                let fetchNum = 0;
                 for (let i = 0; i < links.length; i++) {
-                    let res = fun.urlDoc(links[i]).then(doc => {
-                        fun.show(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
+                    let res = fun.fetchDoc(links[i]).then(doc => {
+                        fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                         let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
                         let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
                         return photoList;
@@ -1466,7 +1501,7 @@
             if (pages.length > 0 && liImgs.length < 21) {
                 fun.show(displayLanguage.str_08, 0);
                 for (let i in pages) {
-                    await fun.urlDoc(pages[i].href).then(doc => {
+                    await fun.fetchDoc(pages[i].href).then(doc => {
                         [...fun.gae(".mtp>li", doc)].forEach(ele => {
                             fun.ge(".mtp").appendChild(ele);
                         });
@@ -3233,7 +3268,7 @@
             let resArr = [];
             let fetchNum = 0;
             for (let i = 0; i < links.length; i += 16) {
-                let res = fun.urlDoc(links[i]).then(doc => {
+                let res = fun.fetchDoc(links[i]).then(doc => {
                     fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${Math.ceil(links.length/16)}`, 0);
                     return JSON.parse(fun.ge("#initials-script", doc).innerHTML.replace(/window.initials=|;/g, "")).photosGalleryModel.photos.items;
                 });
@@ -3357,13 +3392,15 @@
         reg: /www\.imagefap\.com\/(gallery|pictures)\/\d+/i,
         icon: 0,
         key: 0,
-        init: "fun.getNP('//tr[td[@id]]','b+a.link3',null,'#gallery>font>span');",
+        init: () => {
+            fun.getNP('//tr[td[@id]]', 'b+a.link3', null, '#gallery>font>span');
+        },
         category: "nsfw2"
     }, {
         name: "ImageFap www.imagefap.com",
         reg: /www\.imagefap\.com\/photo\/\d+\//i,
         imgs: async () => {
-            let max = parseInt(fun.ge("a.prev[title=Previous]").href.split("#")[1]) + 1;
+            let max = fun.ge("div[data-total]").dataset.total;
             await fun.waitEle(".image-wrapper img");
             let arr = [];
             arr.push(fun.ge(".image-wrapper img").cloneNode(true));
@@ -3371,7 +3408,7 @@
             let n = 1;
             for (let i = 1; i < max; i++) {
                 fun.ge("a.next[title=Next]").click();
-                await fun.delay(200, 0);
+                await fun.delay(1000, 0);
                 if (await fun.waitEle(".image-wrapper img")) {
                     arr.push(fun.ge(".image-wrapper img").cloneNode(true));
                     fun.show(`${displayLanguage.str_02}${n+=1}/${max}`, 0);
@@ -3527,7 +3564,7 @@
                 let timeId = setTimeout(() => {
                     location.reload();
                 }, 30000);
-                let lastFileName = await fun.urlDoc(lastUrl).then(doc => {
+                let lastFileName = await fun.fetchDoc(lastUrl).then(doc => {
                     clearTimeout(timeId);
                     let ele = [...fun.gae(".icon-overlay img", doc)].pop();
                     let fileName = ele.src.match(/.+\/(.+)/)[1];
@@ -4687,7 +4724,7 @@
         imgs: async () => {
             fun.show("獲取數據中...", 0);
             let url = fun.ge(".gallery-image-container a").href;
-            let doc = await fun.urlDoc(url);
+            let doc = await fun.fetchDoc(url);
             let data = [...doc.scripts].find(s => s.innerHTML.search(/startingPage/) > -1).innerHTML.replace(/\\/g, "").match(/\[{.+"}]/)[0];
             fun.hide();
             return JSON.parse(data).map(e => e.src);
@@ -4778,12 +4815,12 @@
         imgs: async () => {
             /*
             let links = [...fun.gae("#append_thumbs a")];
-            let xhrNum = 0;
+            let fetchNum = 0;
             let resArr = [];
             for (let i in links) {
                 let url = links[i].href;
-                let res = fun.urlDoc(url).then(doc => {
-                    fun.show(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
+                let res = fun.fetchDoc(url).then(doc => {
+                    fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
                     return fun.ge("#gimg", doc);
                 });
                 resArr.push(res);
@@ -5458,7 +5495,6 @@
         reg: /www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/,
         init: async () => {
             Function.prototype.constructor = () => {};
-            //await fun.scrollEles(".mh_comicpic img");
         },
         imgs: async () => {
             let blob = fun.ge(".mh_comicpic img[src^=blob]");
@@ -5473,12 +5509,13 @@
             }
             return imgs;
         },
+        scrollEle: [".mh_comicpic img", 600],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: () => {
             return fun.title(" COLAMANGA", 1);
         },
-        threading: 4,
+        threading: 10,
         css: ".mh_wrap{width:100%!important;min-width:100%!important}",
         category: "comic"
     }, {
@@ -5912,9 +5949,9 @@
         observerClick: "#more:not([style*=none])>.more-go",
         category: "comic"
     }, {
-        name: "Manhuagui看漫画 https://www.manhuagui.com/comic/11230/114301.html",
+        name: "Manhuagui看漫画 www.manhuagui.com tw.manhuagui.com",
         enable: 0,
-        reg: /www\.manhuagui\.com\/comic\/\d+\/\d+.html/,
+        reg: /(www|tw)\.manhuagui\.com\/comic\/\d+\/\d+.html/,
         init: "$(document).unbind('keydown');",
         imgs: () => {
             let code = [...document.scripts].find(s => s.innerHTML.search(/x6c/) > -1).innerHTML.slice(26, -1);
@@ -6113,9 +6150,9 @@
         autoDownload: [0],
         next: async () => {
             let lastPage = fun.ge(".onpage").parentNode.lastElementChild.previousElementSibling;
-            return await fun.urlDoc(lastPage.href).then(async doc => {
+            return await fun.fetchDoc(lastPage.href).then(async doc => {
                 let ele = fun.ge("body>table>tbody>tr:nth-child(3)>td>a", doc);
-                return await fun.urlDoc(ele.href).then(doc => {
+                return await fun.fetchDoc(ele.href).then(doc => {
                     let next = fun.ge(".pages", doc);
                     if (next) {
                         return next.href;
@@ -6810,36 +6847,7 @@
             }
         },
         imgs: () => {
-            fun.show(displayLanguage.str_05, 0);
-            let max = fun.geT("//td[input]").match(/共(\d+)/)[1];
-            let links = [];
-            let url = location.href.replace(/1\.htm$/, "");
-            for (let i = 1; i <= max; i++) {
-                links.push(url + i + ".htm");
-            }
-            let resArr = [];
-            let xhrNum = 0;
-            let host;
-            try {
-                host = m2022;
-            } catch (e) {
-                host = m201304d;
-            }
-            for (let i in links) {
-                let res = fun.urlDoc(links[i]).then(doc => {
-                    fun.show(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
-                    let script = fun.ge("//script[contains(text(),'document.write')]", doc);
-                    let arr = script.innerText.split("'><")[1].split("/");
-                    arr[0] = arr[0].split('\"')[2];
-                    let src = host + arr.join("/");
-                    return src;
-                });
-                resArr.push(res);
-            }
-            return Promise.all(resArr).then(arr => {
-                fun.hide();
-                return arr;
-            });
+            return fun.getKukuSrc();
         },
         autoDownload: [0],
         next: () => {
@@ -6853,7 +6861,7 @@
                 host = 3;
             }
             let nextXPath = `//dd[a[contains(@href,'${chapterId}')]]/following-sibling::dd[1]/a[${host}]`;
-            return fun.urlDoc(siteData.comicListUrl()).then(doc => {
+            return fun.fetchDoc(siteData.comicListUrl()).then(doc => {
                 let next = fun.ge(nextXPath, doc);
                 if (next) {
                     return next.href;
@@ -6882,44 +6890,15 @@
             tE.parentNode.insertBefore(nav, tE);
         },
         imgs: () => {
-            fun.show(displayLanguage.str_05, 0);
-            let max = fun.geT(".bottom .subNav").match(/\/(\d+)/)[1];
-            let links = [];
-            let url = location.href.replace(/1\.htm$/, "");
-            for (let i = 1; i <= max; i++) {
-                links.push(url + i + ".htm");
-            }
-            let resArr = [];
-            let xhrNum = 0;
-            let host;
-            try {
-                host = m2022;
-            } catch (e) {
-                host = m201304d;
-            }
-            for (let i in links) {
-                let res = fun.urlDoc(links[i]).then(doc => {
-                    fun.show(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
-                    let script = fun.ge("//script[contains(text(),'document.write')]", doc);
-                    let arr = script.innerText.split("'><")[1].split("/");
-                    arr[0] = arr[0].split('\"')[2];
-                    let src = host + arr.join("/");
-                    return src;
-                });
-                resArr.push(res);
-            }
             fun.remove("//a[img] | //ul[center[li]]");
             fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
-            return Promise.all(resArr).then(arr => {
-                fun.hide();
-                return arr;
-            });
+            return fun.getKukuSrc();
         },
         next: () => {
             let comicListUrl = fun.ge(".subNav a").href;
             let chapterId = location.href.split("/")[5];
             let nextXPath = `//li[a[contains(@href,'${chapterId}')]]/preceding-sibling::li[1]/a`;
-            return fun.urlDoc(comicListUrl).then(doc => {
+            return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
                 if (next) {
                     return next.href;
@@ -7870,7 +7849,7 @@
             let comicListUrl = location.href.replace(/[\w-]+\/$/i, "");
             let chapter = location.href.match(/[\w-]+\/$/)[0];
             let nextXPath = `//div[@id='content']/li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
-            return fun.urlDoc(comicListUrl).then(doc => {
+            return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
                 if (next) {
                     return comicListUrl + next.getAttribute("href");
@@ -7905,7 +7884,7 @@
             let comicListUrl = location.href.replace(/\d+\.html$/, "");
             let chapter = location.pathname;
             let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
-            return fun.urlDoc(comicListUrl).then(doc => {
+            return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
                 if (next) {
                     return location.origin + next.getAttribute("href");
@@ -7944,7 +7923,7 @@
             let comicListUrl = location.href.replace(/\d+\.html$/, "");
             let chapter = location.pathname;
             let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
-            return fun.urlDoc(comicListUrl).then(doc => {
+            return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
                 if (next) {
                     return location.origin + next.getAttribute("href");
@@ -8161,7 +8140,8 @@
                 str_51: "請輸入自訂壓縮檔資料夾名稱",
                 str_52: "聚圖數量",
                 str_53: "圖片繪製中...",
-                str_54: "403，未登錄網站?"
+                str_54: "403，未登錄網站?",
+                str_55: "下載載入中..."
             };
             break;
         case "zh-CN":
@@ -8219,7 +8199,8 @@
                 str_51: "请输入自定义压缩档文件夹名称",
                 str_52: "聚图数量",
                 str_53: "图片绘制中...",
-                str_54: "403，未登录网站?"
+                str_54: "403，未登录网站?",
+                str_55: "下载加载中..."
             };
             break;
         default:
@@ -8277,7 +8258,8 @@
                 str_51: "Please enter a custom zip file folder name",
                 str_52: "Number of pictures",
                 str_53: "Picture drawing...",
-                str_54: "403，Not logged in to website?"
+                str_54: "403，Not logged in to website?",
+                str_55: "Download Loading..."
             };
             break;
     }
@@ -9299,6 +9281,21 @@
                 }, 100);
             });
         },
+        checkImg: src => {
+            fun.show("確認圖片狀態中...", 0);
+            return new Promise(resolve => {
+                let temp = new Image();
+                temp.src = src;
+                temp.onload = () => {
+                    fun.hide();
+                    resolve(true);
+                }
+                temp.onerror = () => {
+                    fun.hide();
+                    resolve(false);
+                }
+            });
+        },
         checkDownloadThread: async () => {
             return await new Promise(resolve => {
                 let loop = setInterval(() => {
@@ -9331,11 +9328,97 @@
                 });
             });
         },
-        urlDoc: url => {
-            return fetch(url).then(res => res.arrayBuffer()).then(buffer => {
+        xhrDoc: (url, referer = location.href) => {
+            return new Promise((resolve, reject) => {
+                _GM_xmlhttpRequest({
+                    method: "GET",
+                    url: url,
+                    responseType: "arraybuffer",
+                    headers: {
+                        "Referer": referer,
+                        "User-Agent": navigator.userAgent
+                    },
+                    onload: data => {
+                        if (data.status > 400) {
+                            debug(`\nfun.xhrDoc()連線錯誤碼：${data.status}\n`, url);
+                        }
+                        let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
+                        let htmlText = decoder.decode(data.response);
+                        let doc = fun.doc(htmlText);
+                        resolve(doc);
+                    },
+                    onerror: error => {
+                        reject(error);
+                    }
+                });
+            });
+        },
+        fetchDoc: url => {
+            return fetch(url).then(res => {
+                if (res.status > 400) {
+                    debug(`\nfun.fetchDoc()連線錯誤碼：${res.status}\n`, url);
+                }
+                return res.arrayBuffer();
+            }).then(buffer => {
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
                 return fun.doc(htmlText);
+            });
+        },
+        getKukuSrc: () => {
+            let timeId = setTimeout(() => {
+                location.reload();
+            }, 10000);
+            fun.show(displayLanguage.str_05, 0);
+            let max;
+            try {
+
+                max = fun.geT("//td[input]").match(/共(\d+)/)[1];
+            } catch (e) {
+                max = fun.geT(".bottom .subNav").match(/\/(\d+)/)[1];
+            }
+            let links = [];
+            let url = location.href.replace(/1\.htm$/, "");
+            for (let i = 1; i <= max; i++) {
+                links.push(url + i + ".htm");
+            }
+            let resArr = [];
+            let fetchNum = 0;
+            let host;
+            try {
+                host = m2022;
+            } catch (e) {
+                host = m201304d;
+            }
+            for (let i in links) {
+                let res = fun.fetchDoc(links[i]).then(doc => {
+                    fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                    let script = [...doc.scripts].find(s => s.innerText.search(/document\.write/) > -1).innerText;
+                    let arr = script.split("'><");
+                    let pathArr;
+                    let pathArr2;
+                    if (arr.length == 4) {
+                        pathArr = arr[0].split("/");
+                        pathArr2 = arr[2].split("/");
+                    } else if (arr.length == 5) {
+                        pathArr = arr[1].split("/");
+                        pathArr2 = arr[3].split("/");
+                    } else {
+                        return host;
+                    }
+                    pathArr[0] = pathArr[0].match(/\w+$/)[0];
+                    pathArr2[0] = pathArr2[0].match(/\w+$/)[0];
+                    let src = host + pathArr.join("/");
+                    let src2 = host + pathArr2.join("/");
+                    console.log(`${links[i]}\n`, `圖片路徑2：${src2}`);
+                    return src;
+                });
+                resArr.push(res);
+            }
+            return Promise.all(resArr).then(arr => {
+                clearTimeout(timeId);
+                fun.hide();
+                return arr;
             });
         },
         remove: (ele, time = 0) => {
@@ -9390,12 +9473,17 @@
         scrollEles: async (ele, ms = 100) => {
             let eles = [...fun.gae(ele)];
             for (let i in eles) {
-                eles[i].scrollIntoView();
+                eles[i].scrollIntoView({
+                    behavior: "smooth",
+                    block: "end"
+                });
                 await fun.delay(ms, 0);
             }
+            /*
             window.scrollTo({
                 top: 0
             });
+            */
         }
     };
 
@@ -9603,7 +9691,7 @@
             let title = titleText;
             const zip = new JSZip();
             const zipFolder = zip.folder(`${title} [${imgsNum}P]`);
-            fun.show("0101010101...", 0);
+            fun.show(displayLanguage.str_55, 0);
 
             for (let i = 0; i < imgs.length; i++) {
                 let n = parseInt(i) + 1;
@@ -9823,6 +9911,13 @@
                     behavior: "smooth"
                 });
             }, time);
+        }
+    };
+
+    const autoScrollEles = () => {
+        let arr = siteData.scrollEle;
+        if (arr) {
+            fun.scrollEles(arr[0], arr[1]);
         }
     };
 
@@ -10207,6 +10302,9 @@
                     case 99: //數字鍵3
                         fastDownload = true;
                         imgZipDownload();
+                        break;
+                    case 100: //數字鍵4
+                        autoScrollEles();
                         break;
                 }
             });
