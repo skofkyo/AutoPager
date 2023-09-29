@@ -1,4 +1,4 @@
-2023/09/28 23:33
+2023/09/29 20:56
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -88,8 +88,8 @@ https://www.nuyet.com/gallery/*
 *://www.24tupian.org/hd2/*.html
 
 小黃書
-*://xchina.co/photo/*
-*://*.xchina.co/photo/*
+*://xchina.*/photo/*
+*://*.xchina.*/photo/*
 
 8色人体摄影
 *://8se.me/photo/*
@@ -872,8 +872,8 @@ https://www.honeyleg.com/article/*.html
 https://www.ladylap.com/show/*
 https://www.nuyet.com/gallery/*
 *://www.24tupian.org/hd2/*.html
-*://xchina.co/photo/*
-*://*.xchina.co/photo/*
+*://xchina.*/photo/*
+*://*.xchina.*/photo/*
 *://8se.me/photo/*
 *://*.8se.me/photo/*
 *://w3.javsx.com/photos/*.html
