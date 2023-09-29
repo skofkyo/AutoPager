@@ -391,8 +391,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.honeyleg.com/">HoneyLeg</a>，<a href="https://www.ladylap.com/">Lady Lap</a>，<a href="https://www.nuyet.com/">Nuyet</a>，請使用專用腳本，<a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a></td>
             </tr>
             <tr>
+                <td><a href="https://www.yalayi.com/">雅拉伊</a></td>
+                <td>免VIP僅支援圖片是簡單命名數字遞增的。</td>
+            </tr>
+            <tr>
                 <td><a href="https://yskhd.com/">优丝库HD</a></td>
-                <td>免VIP</td>
+                <td><a href="https://ysk567.com/">ysk567.com</a>，免VIP</td>
             </tr>
             <tr>
                 <td><a href="https://luohuaxiu.com/">洛花秀</a></td>
@@ -1550,7 +1554,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
-                <td><a href="https://m.manhuagui.com/">m.manhuagui.com</a>，預設關閉</td>
+                <td><a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>，<a href="https://m.manhuagui.com/">m.manhuagui.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.baozimh.com/">包子漫画</a></td>
