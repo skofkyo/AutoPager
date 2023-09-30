@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.2.2
+// @version            1.2.3
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -195,9 +195,12 @@
             let ok = false;
             let padStart;
             for (let i in testArr) {
-                if (await fun.checkImg(testArr[i])) {
+                let obj = await fun.checkImgStatus(testArr[i]);
+                console.log(`確認圖片[${i}]`, obj);
+                if (obj.ok) {
                     ok = true;
                     padStart = parseInt(i) + 1;
+                    break;
                 }
             }
             let arr = [];
@@ -374,7 +377,7 @@
             }
             return fun.getImg(".contentme img,.contentme2 img", max);
         },
-        insertImg: [".contentme,.contentme2", 1],
+        insertImg: [".contentme,.contentme2", 2],
         customTitle: "return document.title.split('|')[0].slice(10).trim()",
         css: "#customPicDownloadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
@@ -663,7 +666,7 @@
             let max = fun.geT(".pagination-list>span:last-child");
             return fun.getImg(".article-fulltext img", max);
         },
-        insertImg: [".article-fulltext", 1],
+        insertImg: [".article-fulltext", 2],
         customTitle: "return fun.geT('.article-header>h1').replace('(mitaku.net)','').trim();",
         category: "nsfw1"
     }, {
@@ -1167,6 +1170,7 @@
     }, {
         name: "绅士猫 www.cos6.net",
         reg: /www\.cos6\.net\/\d+\.html/,
+        exclude: ".tinymce-hide",
         imgs: ".wp-posts-content img[data-src]",
         insertImg: [".bialty-container", 2],
         autoDownload: [0],
@@ -2000,19 +2004,6 @@
         },
         category: "nsfw1"
     }, {
-        name: "套圖吧 www.taotu8.xyz",
-        reg: /www\.taotu8\.xyz\/(\w+\/\w+\/\w+\.html|\w+\/\d+\.html)/,
-        init: "$(document).unbind('keydown');",
-        imgs: () => {
-            let max = fun.geT("#allnum");
-            return fun.getImg(".picsbox img[alt]", max, 9);
-        },
-        insertImg: [".picsbox center", 1],
-        customTitle: () => {
-            return fun.geT(".picmainer>h1").replace(/（\d+\/\d+）$/, "");
-        },
-        category: "nsfw1"
-    }, {
         name: "推图网 https://www.tuiimg.com/meinv/",
         reg: /(www|m)\.tuiimg\.com\/meinv\/\d+\//,
         init: "goshowall();",
@@ -2259,13 +2250,6 @@
         fetch: 1,
         //threading: 4,
         css: ".popup,.wp-container-13{display:none!important}.CustomPictureDownloadImage{max-width:100%!important}",
-        category: "nsfw2"
-    }, {
-        name: "Forum Girl www.superbeautygirlx.com",
-        reg: /www\.superbeautygirlx\.com\/\d+\/\d+\/[^.]+\.html/,
-        imgs: ".separator>a",
-        next: ".blog-pager-older-link",
-        prev: ".blog-pager-newer-link",
         category: "nsfw2"
     }, {
         name: "Buon Dua buondua.com",
@@ -2691,34 +2675,6 @@
         customTitle: "return fun.geT('h1.title');",
         category: "nsfw1"
     }, {
-        name: "美女图片网 www.mevtu.com",
-        reg: /www\.mevtu\.com\/\w+\/\d+\.html/i,
-        include: ".next-cat",
-        exclude: ".guest_link",
-        imgs: () => {
-            let max;
-            try {
-                max = fun.geT('.nav-links>*:last-child', 2);
-            } catch (e) {
-                max = 1;
-            };
-            return fun.getImg('#image_div img[alt]', max, 9);
-        },
-        insertImg: [".content", 1],
-        autoDownload: [0],
-        next: ".post_hyh>a",
-        prev: 1,
-        customTitle: () => {
-            return fun.geT(".item_title>h1").replace(/\(\d+P\)/i, "");
-        },
-        category: "nsfw1"
-    }, {
-        name: "美女图片网 美图分享 www.mevtu.com",
-        reg: /www\.mevtu\.com\/picture\/\d+\.html/i,
-        imgs: "img.alignnone",
-        customTitle: "return fun.geT('.item_title>h1');",
-        category: "nsfw1"
-    }, {
         name: "x6o https://x6o.com/topics/14#articles",
         reg: /(www\.)?x6o\.com\/articles\/\d+/,
         delay: 300,
@@ -2973,12 +2929,6 @@
         customTitle: () => {
             return fun.geT(".entry-title");
         },
-        category: "nsfw1"
-    }, {
-        name: "牛牛美图 www.uyn8.cn",
-        reg: /www\.uyn8\.cn\/archives\/\d+/i,
-        imgs: ".entry-content img",
-        customTitle: "return fun.geT('.entry-title');",
         category: "nsfw1"
     }, {
         name: "小姐姐图库 xjjtk.link",
@@ -3460,14 +3410,6 @@
         go: 1,
         category: "nsfw2"
     }, {
-        name: "美女集社 www.meinv.im",
-        reg: /www\.meinv\.im\/article\/\d+\//,
-        imgs: "#img-box img",
-        customTitle: () => {
-            return fun.geT(".focusbox-title");
-        },
-        category: "nsfw1"
-    }, {
         name: "色情圖片網 www.photos18.com",
         reg: /www\.photos18\.com\/\w+\/\w+/i,
         imgs: ".imgHolder a[data-fancybox]",
@@ -3486,7 +3428,7 @@
         category: "nsfw2"
     }, {
         name: "BuzzAV www.buzzav.com",
-        reg: /www\.buzzav\.com\/album\/\d+\//,
+        reg: /old\.buzzav\.com\/album\/\d+\//,
         imgs: async () => {
             await fun.getNP("//div[a[div[img[contains(@id,'album_photo')]]]]", ".pagination li.active+li>a", null, ".d-sm-block>.pagination");
             return [...fun.gae("[id^=album_photo]")].map(e => e.src.replace("tmb/", ""));
@@ -3669,18 +3611,12 @@
             let images = [...fun.gae(ele)];
             if (/imx\.to/.test(src)) {
                 let tempSrc = src.replace("https://imx.to/u/t/", "https://i.imx.to/i/");
-                return new Promise(resolve => {
-                    fun.show("Loading...", 0);
-                    let temp = new Image();
-                    temp.src = tempSrc;
-                    temp.onload = () => {
-                        fun.hide();
-                        let w = temp.width;
-                        if (w > 200) {
-                            resolve(images.map(e => e.src.replace("https://imx.to/u/t/", "https://i.imx.to/i/")));
-                        } else {
-                            resolve(images.map(e => e.src.replace("/t/", "/i/")));
-                        }
+                return new Promise(async resolve => {
+                    let obj = await fun.checkImgStatus(tempSrc);
+                    if (obj.ok && obj.width > 200) {
+                        resolve(images.map(e => e.src.replace("https://imx.to/u/t/", "https://i.imx.to/i/")));
+                    } else {
+                        resolve(images.map(e => e.src.replace("/t/", "/i/")));
                     }
                 });
             } else if (/imgadult\.com/.test(src)) {
@@ -3700,7 +3636,7 @@
     }, {
         name: "Eropics eropics.to eropics.co",
         reg: /eropics\.\w+\/\d+\/\d+\/\d+\//i,
-        include: "a[href*='pixhost.to'],a[href*='www.turboimagehost.com'],a[href*='vipr.im'],a[href*='imgbox.com'],a[href*='www.imagevenue.com']",
+        include: "a[href*='pixhost.to'],a[href*='www.turboimagehost.com'],a[href*='imgbox.com'],a[href*='www.imagevenue.com']",
         imgs: () => {
             if (fun.gae("a[href*='imx.to']").length > 3) {
                 let yes = confirm(displayLanguage.str_10);
@@ -3733,7 +3669,6 @@
         ],
         go: 1,
         referer: "src",
-        //referrerpolicy: 0,
         customTitle: "return fun.geT('h1.entry-title');",
         category: "nsfw2"
     }, {
@@ -3764,15 +3699,6 @@
         icon: 0,
         key: 0,
         autoClick: ".button.blue.large,#continuebutton,a[title='Show gallery']",
-        category: "nsfw2"
-    }, {
-        name: "Bunkr bunkr-albums.io",
-        reg: /bunkr\.la\/a\/\w+/,
-        imgs: ".grid-images_box a:not([href*=mp4]):not([href*=rar]):not([href*=zip])",
-        insertImg: [
-            [".grid-images", 2], 2
-        ],
-        go: 1,
         category: "nsfw2"
     }, {
         name: "Ngắm Gái Xinh ngamgaixinh.us",
@@ -3875,7 +3801,7 @@
             }
             return fun.getImg("//a[@data-title and picture/source]", max, 16);
         },
-        insertImg: [".main-image", 1],
+        insertImg: [".main-image", 2],
         customTitle: async () => {
             return fun.geT(".main-title").split(' No.')[0].trim();
         },
@@ -3907,7 +3833,7 @@
             return fun.getImg(".separator>a", max, 16);
         },
         insertImg: [
-            [".album-post-body .clear,.album-post-share-wrap", 1, "div[itemprop='description articleBody'],.album-post-body>*:not(.album-post-inner):not(.album-post-share-wrap):not(.CustomPictureDownloadImage):not(#customPicDownloadEnd)"], 1
+            [".album-post-body .clear,.album-post-share-wrap", 1, "div[itemprop='description articleBody'],.album-post-body>*:not(.album-post-inner):not(.album-post-share-wrap):not(.CustomPictureDownloadImage):not(#customPicDownloadEnd)"], 2
         ],
         customTitle: "return fun.geT('.breadcrumbs>span:last-child');",
         category: "nsfw2"
@@ -3933,7 +3859,7 @@
             }
             return fun.getImg("//a[@data-title and picture/source]", max, 16);
         },
-        insertImg: [".hero+.hero,.entry-content,.d-flex>.col-24,.album-post", 1],
+        insertImg: [".hero+.hero,.entry-content,.d-flex>.col-24,.album-post", 2],
         customTitle: "return fun.geT('.entry-title,.album-title,.album-post-title,.col-12>h1').split(' No.')[0].trim();",
         css: ".flex-grid:not(.masonry){display:block!important;}",
         category: "nsfw2"
@@ -3947,7 +3873,7 @@
             let max = fun.gae(".p_select option").length;
             return fun.getImg(".tal a>img[alt]", max, 11);
         },
-        insertImg: [".tal", 1],
+        insertImg: [".tal", 2],
         category: "nsfw2"
     }, {
         name: "gogo人体艺术M2",
@@ -3956,7 +3882,7 @@
             let max = fun.gae(".p_select option").length;
             return fun.getImg(".tal a>img[alt]", max, 9);
         },
-        insertImg: [".tal", 1],
+        insertImg: [".tal", 2],
         css: "div[style='margin:3px 0 0 0;']{display:none!important}",
         category: "nsfw2"
     }, {
@@ -3966,7 +3892,7 @@
             let max = fun.geT(".article_page a").match(/\/(\d+)/)[1];
             return fun.getImg(".tal a>img[alt]", max, 11);
         },
-        insertImg: [".tal", 1],
+        insertImg: [".tal", 2],
         customTitle: "return fun.title('-第1张',1)",
         css: "div[style='margin:2px 0 0 0;']{display:none!important}",
         category: "nsfw2"
@@ -3977,7 +3903,7 @@
             let max = fun.geT("//span[@class='current']/preceding-sibling::a|//a[@class='thisclass']/preceding-sibling::a").match(/\d+/)[0];
             return fun.getImg(".main>div>a>img[alt],.warp .content>a>img[alt]", max, 11);
         },
-        insertImg: ["//div[contains(@class,'main')]/div/a/parent::* | //div[contains(@class,'content') and a/img[@alt]]", 1],
+        insertImg: ["//div[contains(@class,'main')]/div/a/parent::* | //div[contains(@class,'content') and a/img[@alt]]", 2],
         autoDownload: [0],
         next: ".crc_l_pic.left>a:not([href^=j])",
         prev: ".crc_r_pic.right>a:not([href^=j])",
@@ -3990,7 +3916,7 @@
             let max = fun.geT(".main span", 2).match(/\d+/)[0];
             return fun.getImg(".main>div>a>img[alt]", max, 11);
         },
-        insertImg: ["//div[contains(@class,'main')]/div[a/img[@alt]]", 1],
+        insertImg: ["//div[contains(@class,'main')]/div[a/img[@alt]]", 2],
         autoDownload: [0],
         next: ".crc_l_pic.left>a:not([href^=j])",
         prev: ".crc_r_pic.right>a:not([href^=j])",
@@ -4012,7 +3938,7 @@
             let max = fun.geT(".page>span#hover", 3).match(/\d+$/)[0];
             return fun.getImg(".imgbox>a>img[alt]", max, 11);
         },
-        insertImg: ["//div[@class='imgbox' and a/img[@alt]]", 1],
+        insertImg: ["//div[@class='imgbox' and a/img[@alt]]", 2],
         customTitle: "return fun.geT('.contitle h1>a');",
         css: "#customPicDownloadEnd{color:rgb(0, 0, 0)}",
         category: "nsfw2"
@@ -4027,7 +3953,7 @@
         },
         //insertImg: [".boxx ul", 1],
         insertImg: [
-            [".footdh", 1], 1
+            [".footdh", 1], 2
         ],
         go: 1,
         autoDownload: [0],
@@ -4056,7 +3982,7 @@
             let max = fun.geT(".pagelist>a").match(/\d+/)[0];
             return fun.getImg(".imgbox>a>img[alt]", max, 11);
         },
-        insertImg: ["//div[contains(@class,'imgbox') and a/img[@alt]]", 1],
+        insertImg: ["//div[contains(@class,'imgbox') and a/img[@alt]]", 2],
         autoDownload: [0],
         next: ".zuopre>a",
         prev: ".younext>a",
@@ -4069,7 +3995,7 @@
             let max = fun.geT(".page-show>span.current", 2).match(/\d+/)[0];
             return fun.getImg(".tu>a>img[alt]", max, 9);
         },
-        insertImg: ["//div[@class='tu' and a/img[@alt]]", 1],
+        insertImg: ["//div[@class='tu' and a/img[@alt]]", 2],
         autoDownload: [0],
         next: "//div[contains(text(),'下一')]/a[1]",
         prev: "//div[contains(text(),'上一')]/a[2]",
@@ -4082,7 +4008,7 @@
             let max = fun.geT(".page-show>span.current", 2).match(/\d+/)[0];
             return fun.getImg(".tu>a>img[alt]", max, 11);
         },
-        insertImg: ["//div[contains(@class,'tu') and a/img[@alt]]", 1],
+        insertImg: ["//div[contains(@class,'tu') and a/img[@alt]]", 2],
         autoDownload: [0],
         next: "//div[contains(text(),'下一')]/a[1]",
         prev: "//div[contains(text(),'上一')]/a[2]",
@@ -4095,7 +4021,7 @@
             let max = fun.geT(".current", 2).match(/\d+/)[0];
             return fun.getImg(".content-pic img[alt]", max, 9);
         },
-        insertImg: [".content-pic", 1],
+        insertImg: [".content-pic", 2],
         autoDownload: [0],
         next: "//div[contains(text(),'下一')]/a[1]",
         prev: "//div[contains(text(),'下一')]/a[2]",
@@ -4108,7 +4034,7 @@
             let max = fun.geT("#hover", 2).match(/\d+/)[0];
             return fun.getImg(".content img[alt]", max, 9);
         },
-        insertImg: [".content", 1],
+        insertImg: [".content", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4121,7 +4047,7 @@
             let max = fun.geT("#hover", 2).match(/\d+/)[0];
             return fun.getImg(".content img[alt]", max, 11);
         },
-        insertImg: [".content", 1],
+        insertImg: [".content", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4135,7 +4061,7 @@
             let max = fun.geT('.pagelist>strong', 2).match(/\d+/)[0];
             return fun.getImg('#content img[alt]', max, 9);
         },
-        insertImg: ["#content", 1],
+        insertImg: ["#content", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4148,7 +4074,7 @@
             let max = fun.geT(".pagelist>a").match(/\d+/)[0];
             return fun.getImg("#content img[alt]", max, 11);
         },
-        insertImg: ["#content", 1],
+        insertImg: ["#content", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4161,7 +4087,7 @@
             let max = fun.geT(".pagelist>.curent", 2).match(/\d+/)[0];
             return fun.getImg(".imgbox img[alt]", max, 9);
         },
-        insertImg: [".imgbox", 1],
+        insertImg: [".imgbox", 2],
         autoDownload: [0],
         next: "//li[contains(text(),'下一')]/a",
         prev: "//li[contains(text(),'上一')]/a",
@@ -4175,7 +4101,7 @@
             let max = fun.geT(".page-show>.current", 2).match(/\d+/)[0];
             return fun.getImg(".pp.hh img[alt]", max, 9);
         },
-        insertImg: [".pp.hh", 1],
+        insertImg: [".pp.hh", 2],
         customTitle: "return fun.geT('.des>h1').split(',')[0];",
         category: "nsfw2"
     }, {
@@ -4186,7 +4112,7 @@
             let max = fun.geT(".page-show>.current", 2).match(/\d+/)[0];
             return fun.getImg(".pp.hh img[alt]", max, 11);
         },
-        insertImg: [".pp.hh", 1],
+        insertImg: [".pp.hh", 2],
         customTitle: "return fun.geT('.des>h1').split(',')[0];",
         category: "nsfw2"
     }, {
@@ -4196,7 +4122,7 @@
             let max = fun.geT(".page-show>a,.page>a").match(/\d+/)[0];
             return fun.getImg(".content img[alt]", max, 11);
         },
-        insertImg: [".content", 1],
+        insertImg: [".content", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4209,7 +4135,7 @@
             let max = fun.geT(".page-show>a").match(/\d+/)[0];
             return fun.getImg(".content-pic img[alt],#bomei img[alt]", max, 11);
         },
-        insertImg: [".content-pic,#bomei", 1],
+        insertImg: [".content-pic,#bomei", 2],
         autoDownload: [0],
         next: ".updown>a,#prenext a",
         prev: 1,
@@ -4222,7 +4148,7 @@
             let max = fun.geT(".page-show>a").match(/\d+/)[0];
             return fun.getImg("#bomei img[alt]", max, 11);
         },
-        insertImg: ["#bomei", 1],
+        insertImg: ["#bomei", 2],
         autoDownload: [0],
         next: "#prenext a",
         prev: "#prenext li:last-child>a",
@@ -4235,7 +4161,7 @@
             let max = fun.geT(".page-show>a").match(/\d+/)[0];
             return fun.getImg(".content-pic img[alt],#bomei img[alt]", max, 11);
         },
-        insertImg: [".content-pic", 1],
+        insertImg: [".content-pic", 2],
         autoDownload: [0],
         next: ".updown>a",
         prev: 1,
@@ -4248,7 +4174,7 @@
             let max = fun.geT(".thispg", 2).match(/\d+/)[0];
             return fun.getImg("#content-p img[alt]", max, 9);
         },
-        insertImg: ["#content-p", 1],
+        insertImg: ["#content-p", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4261,7 +4187,7 @@
             let max = fun.geT(".thisclass", 2).match(/\d+/)[0];
             return fun.getImg(".content img[alt]", max, 9);
         },
-        insertImg: [".content", 1],
+        insertImg: [".content", 2],
         autoDownload: [0],
         next: "//div[contains(text(),'下一')]/a",
         prev: "//div[contains(text(),'上一')]/a",
@@ -4275,7 +4201,7 @@
             let max = fun.geT(".thisclass", 2).match(/\d+/)[0];
             return fun.getImg(".content img[alt]", max, 11);
         },
-        insertImg: [".content a", 1],
+        insertImg: [".content a", 2],
         autoDownload: [0],
         next: ".updown a",
         prev: ".updown span:last-child>a",
@@ -4288,7 +4214,7 @@
             let max = fun.geT(".thisclass", 2).match(/\d+/)[0];
             return fun.getImg(".picbox img[alt]", max, 11);
         },
-        insertImg: [".picbox", 1],
+        insertImg: [".picbox", 2],
         autoDownload: [0],
         next: ".page+.content-msg a",
         prev: 1,
@@ -4301,7 +4227,7 @@
             let max = fun.geT(".page a").match(/\d+/)[0];
             return fun.getImg(".picbox img[alt]", max, 11);
         },
-        insertImg: [".picbox", 1],
+        insertImg: [".picbox", 2],
         autoDownload: [0],
         next: ".updown_r>a",
         prev: ".updown_l>a",
@@ -4314,7 +4240,7 @@
             let max = fun.geT("#hover", 2).match(/\d+/)[0];
             return fun.getImg(".img_content img[alt]", max, 9);
         },
-        insertImg: [".img_content", 1],
+        insertImg: [".img_content", 2],
         customTitle: "return fun.geT('#title>h1');",
         category: "nsfw2"
     }, {
@@ -4324,14 +4250,14 @@
             let max = fun.geT(".current", 2).match(/\d+/)[0];
             return fun.getImg(".content_pic img[alt]", max, 11);
         },
-        insertImg: [".content_pic", 1],
+        insertImg: [".content_pic", 2],
         customTitle: "return fun.geT('.content>h1>a');",
         category: "nsfw2"
     }, {
         name: "488人体艺术 488xm.com",
         reg: /488xm\.com\/\w+\/\d+\//i,
         imgs: "js;let max=fun.geT('.pagelist>strong',2).match(/\\d+/)[0];return fun.getImg('#content img[alt]',max,11);",
-        insertImg: ["#content", 1],
+        insertImg: ["#content", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4344,7 +4270,7 @@
             let max = fun.geT(".pagination>a").match(/\d+/)[0];
             return fun.getImg("#gallery img[alt]", max, 11);
         },
-        insertImg: ["#gallery", 1],
+        insertImg: ["#gallery", 2],
         autoDownload: [0],
         next: ".other-prev a",
         prev: ".other-next a",
@@ -4357,7 +4283,7 @@
             let max = fun.geT(".pagination>a").match(/\d+/)[0];
             return fun.getImg("#gallery img[alt]", max, 11);
         },
-        insertImg: ["#gallery", 1],
+        insertImg: ["#gallery", 2],
         autoDownload: [0],
         next: ".other-prev a",
         prev: ".other-next a",
@@ -4370,7 +4296,7 @@
             let max = fun.geT(".content-page>a").match(/\d+/)[0];
             return fun.getImg("#content img[alt]", max, 11);
         },
-        insertImg: ["#content", 1],
+        insertImg: ["#content", 2],
         customTitle: "return fun.title(/ - 西西| - 711/,1);",
         category: "nsfw2"
     }, {
@@ -4380,7 +4306,7 @@
             let max = fun.geT(".bigpages>a").match(/\d+/)[0];
             return fun.getImg("#showimages img[alt]", max, 11);
         },
-        insertImg: ["#showimages", 1],
+        insertImg: ["#showimages", 2],
         autoDownload: [0],
         next: "#pageNum a",
         prev: 1,
@@ -4393,7 +4319,7 @@
             let max = fun.geT(".pages a").match(/\d+/)[0];
             return fun.getImg(".section.fix.tc img[alt]", max, 11);
         },
-        insertImg: [".section.fix.tc", 1],
+        insertImg: [".section.fix.tc", 2],
         autoDownload: [0],
         next: ".arcLocal.r a",
         prev: 1,
@@ -4406,7 +4332,7 @@
             let max = fun.geT(".page a").match(/\d+/)[0];
             return fun.getImg("#content-p img[alt]", max, 11);
         },
-        insertImg: ["#content-p", 1],
+        insertImg: ["#content-p", 2],
         customTitle: "return fun.title(',',1);",
         category: "nsfw2"
     }, {
@@ -4416,7 +4342,7 @@
             let max = fun.geT(".pages a").match(/\d+/)[0];
             return fun.getImg(".image-view img[alt]", max, 11);
         },
-        insertImg: [".image-view", 1],
+        insertImg: [".image-view", 2],
         autoDownload: [0],
         next: ".i-digg>.article-adbottom a",
         prev: 1,
@@ -4429,7 +4355,7 @@
             let max = fun.geT(".gengduo a").match(/\d+/)[0];
             return fun.getImg("#content-p img[alt]", max, 11);
         },
-        insertImg: ["#content-p p", 1],
+        insertImg: ["#content-p p", 2],
         autoDownload: [0],
         next: ".gg a",
         prev: 1,
@@ -4442,7 +4368,7 @@
             let max = fun.geT(".page-show>a").match(/\d+/)[0];
             return fun.getImg(".content img[alt]", max, 11);
         },
-        insertImg: [".content", 1],
+        insertImg: [".content", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
@@ -4455,7 +4381,7 @@
             let max = fun.geT(".page a").match(/\d+/)[0];
             return fun.getImg(".content img[alt]", max, 11);
         },
-        insertImg: [".content", 1],
+        insertImg: [".content", 2],
         autoDownload: [0],
         next: ".page+.page a",
         prev: ".page+.page a+a",
@@ -4468,7 +4394,7 @@
             let max = fun.geT(".page a").match(/\d+/)[0];
             return fun.getImg(".imgTip+a>img[alt]", max, 11);
         },
-        insertImg: [".imgTip+a", 1],
+        insertImg: [".imgTip+a", 2],
         autoDownload: [0],
         next: ".updown_r>a",
         prev: ".updown_l>a",
@@ -4878,7 +4804,7 @@
     }, {
         name: "XlecX xlecx.one",
         reg: /xlecx\.one\/[\w-]+\.html$/,
-        imgs: ".ug-thumb-image",
+        imgs: ".ug-thumb-image,img[data-src]",
         insertImg: [
             [".page__col-left", 0], 2
         ],
@@ -4957,7 +4883,7 @@
                 return arr;
             }
         },
-        insertImg: ["#show_cg_html", 1],
+        insertImg: ["#show_cg_html", 2],
         customTitle: () => {
             return fun.title(" - 7mmtv.sx", 1).replace(/\s?\(\d+P\)/i, "");
         },
@@ -4969,7 +4895,7 @@
         imgs: () => {
             return Large_cgurl;
         },
-        insertImg: ["#show_cg_html", 1],
+        insertImg: ["#show_cg_html", 2],
         customTitle: "return fun.title('-',1);",
         category: "hcomic"
     }, {
@@ -5372,7 +5298,7 @@
     }, {
         name: "JComic jcomic.net",
         reg: /https?:\/\/jcomic\.net\/page\/[^\/]+$/,
-        imgs: ".comic-view",
+        imgs: ".comic-view,.comic-thumb",
         customTitle: () => {
             return fun.geT("//ol/li[2]/a");
         },
@@ -5380,7 +5306,7 @@
     }, {
         name: "JComic jcomic.net",
         reg: /https?:\/\/jcomic\.net\/page\/[^\/]+\/[0-9\.]+$/,
-        imgs: ".comic-view",
+        imgs: ".comic-view,.comic-thumb",
         autoDownload: [0],
         next: () => {
             let next = fun.ge("//a[button[text()='下一章']]");
@@ -6847,7 +6773,7 @@
             }
         },
         imgs: () => {
-            return fun.getKukuSrc();
+            return fun.getKukudmSrc();
         },
         autoDownload: [0],
         next: () => {
@@ -6875,7 +6801,7 @@
         css: "body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}",
         category: "comic"
     }, {
-        name: "漫漫聚M/KuKu动漫M m.manmanju.com s1.m.ikkdm.com s2.m.ikkdm.com 1pc570gfrd9z.ihhmh.com s2.wap.ikukudm.com s3.wap.ikukudm.com mh123.dypro.xyz",
+        name: "漫漫聚M/KuKu动漫M m.manmanju.com m.ikuku.cc s1.m.ikkdm.com s2.m.ikkdm.com 1pc570gfrd9z.ihhmh.com s2.wap.ikukudm.com s3.wap.ikukudm.com mh123.dypro.xyz",
         enable: 1,
         reg: /(m\.manmanju\.com|\w+\.ihhmh\.com|s\d\.m\.ikkdm\.com|s\d.wap.ikukudm.com|mh123\.dypro\.xyz)\/comiclist\/\d+\/\d+\/1\.htm/i,
         include: ".classBox img,.imgBox",
@@ -6892,7 +6818,7 @@
         imgs: () => {
             fun.remove("//a[img] | //ul[center[li]]");
             fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
-            return fun.getKukuSrc();
+            return fun.getKukudmSrc();
         },
         next: () => {
             let comicListUrl = fun.ge(".subNav a").href;
@@ -8141,7 +8067,8 @@
                 str_52: "聚圖數量",
                 str_53: "圖片繪製中...",
                 str_54: "403，未登錄網站?",
-                str_55: "下載載入中..."
+                str_55: "下載載入中...",
+                str_56: "確認圖片狀態中..."
             };
             break;
         case "zh-CN":
@@ -8200,7 +8127,8 @@
                 str_52: "聚图数量",
                 str_53: "图片绘制中...",
                 str_54: "403，未登录网站?",
-                str_55: "下载加载中..."
+                str_55: "下载加载中...",
+                str_56: "确认图片状态中..."
             };
             break;
         default:
@@ -8259,7 +8187,8 @@
                 str_52: "Number of pictures",
                 str_53: "Picture drawing...",
                 str_54: "403，Not logged in to website?",
-                str_55: "Download Loading..."
+                str_55: "Download Loading...",
+                str_56: "Check picture statusing..."
             };
             break;
     }
@@ -8960,7 +8889,7 @@
             let xhrNum = 0;
             fun.show(displayLanguage.str_16, 0);
             for (let i in links) {
-                let res = fun.xhr(links[i], "document").then(doc => {
+                let res = fun.xhrDoc(links[i]).then(doc => {
                     debug(`\nfun.getEle() URL`, links[i]);
                     fun.show(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
                     debug(`fun.getEle()\n${decodeURI(links[i])}\n`, doc);
@@ -9010,11 +8939,9 @@
                 if (mode == 2 || mode == 3) {
                     img.src = loading_bak;
                     img.dataset.src = srcArr[i];
-                    if (siteData.referrerpolicy == 0) img.setAttribute("referrerpolicy", "no-referrer");
                     fun.imagesObserver.observe(img);
                 } else {
                     img.src = srcArr[i];
-                    if (siteData.referrerpolicy == 0) img.setAttribute("referrerpolicy", "no-referrer");
                     img.onerror = error => {
                         if (errorNum > 10) return;
                         errorNum += 1;
@@ -9281,23 +9208,31 @@
                 }, 100);
             });
         },
-        checkImg: src => {
-            fun.show("確認圖片狀態中...", 0);
+        checkImgStatus: src => {
+            fun.show(displayLanguage.str_56, 0);
             return new Promise(resolve => {
                 let temp = new Image();
                 temp.src = src;
                 temp.onload = () => {
                     fun.hide();
-                    resolve(true);
+                    resolve({
+                        ok: true,
+                        src: src,
+                        width: temp.width,
+                        height: temp.height
+                    });
                 }
                 temp.onerror = () => {
                     fun.hide();
-                    resolve(false);
+                    resolve({
+                        ok: false,
+                        src: src
+                    });
                 }
             });
         },
-        checkDownloadThread: async () => {
-            return await new Promise(resolve => {
+        checkDownloadThread: () => {
+            return new Promise(resolve => {
                 let loop = setInterval(() => {
                     if (currentDownloadThread <= options.threading) {
                         clearInterval(loop);
@@ -9365,14 +9300,13 @@
                 return fun.doc(htmlText);
             });
         },
-        getKukuSrc: () => {
+        getKukudmSrc: async () => {
             let timeId = setTimeout(() => {
                 location.reload();
             }, 10000);
             fun.show(displayLanguage.str_05, 0);
             let max;
             try {
-
                 max = fun.geT("//td[input]").match(/共(\d+)/)[1];
             } catch (e) {
                 max = fun.geT(".bottom .subNav").match(/\/(\d+)/)[1];
@@ -9384,42 +9318,50 @@
             }
             let resArr = [];
             let fetchNum = 0;
-            let host;
-            try {
-                host = m2022;
-            } catch (e) {
-                host = m201304d;
-            }
             for (let i in links) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
                     fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let script = [...doc.scripts].find(s => s.innerText.search(/document\.write/) > -1).innerText;
                     let arr = script.split("'><");
-                    let pathArr;
-                    let pathArr2;
+                    let pathArr1, pathArr2;
                     if (arr.length == 4) {
-                        pathArr = arr[0].split("/");
+                        pathArr1 = arr[0].split("/");
                         pathArr2 = arr[2].split("/");
                     } else if (arr.length == 5) {
-                        pathArr = arr[1].split("/");
+                        pathArr1 = arr[1].split("/");
                         pathArr2 = arr[3].split("/");
                     } else {
-                        return host;
+                        return null;
                     }
-                    pathArr[0] = pathArr[0].match(/\w+$/)[0];
+                    let host1 = fun.run(pathArr1[0].split("+")[1]);
+                    let host2 = fun.run(pathArr2[0].split("+")[1]);
+                    pathArr1[0] = pathArr1[0].match(/\w+$/)[0];
                     pathArr2[0] = pathArr2[0].match(/\w+$/)[0];
-                    let src = host + pathArr.join("/");
-                    let src2 = host + pathArr2.join("/");
-                    console.log(`${links[i]}\n`, `圖片路徑2：${src2}`);
-                    return src;
+                    let src1 = host1 + pathArr1.join("/");
+                    let src2 = host2 + pathArr2.join("/");
+                    return {
+                        src1: src1,
+                        src2: src2
+                    };
                 });
                 resArr.push(res);
             }
-            return Promise.all(resArr).then(arr => {
+            let allSrc = await Promise.all(resArr).then(arr => {
                 clearTimeout(timeId);
                 fun.hide();
                 return arr;
             });
+            debug("\nfun.getKukudmSrc() > allSrc\n", allSrc);
+            try {
+                let obj = await fun.checkImgStatus(allSrc[0].src1);
+                if (obj.ok) {
+                    return allSrc.map(e => e.src1);
+                } else {
+                    return allSrc.map(e => e.src2);
+                }
+            } catch (e) {
+                return [];
+            }
         },
         remove: (ele, time = 0) => {
             setTimeout(() => {
