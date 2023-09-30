@@ -39,6 +39,7 @@
         …code;
         return arr;
     },
+    scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵4
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
@@ -83,6 +84,7 @@
     imgs: () => {
         code
     },
+    scrollEle: ["", 500],
     insertImg: ["", 0, time],
     insertImg: [
         ["", 1, ""], 2, time
@@ -227,6 +229,17 @@ fun.remove("ele", time = 0)
 fun.css("css")
 </pre>
 <pre>
+//確認圖片狀態屬性 返回一個obj
+fun.checkImgStatus(src)
+返回
+{
+ok:true/false,成功讀取true失敗false
+width:width,//成功返回圖片寬屬性
+height:height//成功返回圖片高屬性
+}
+
+</pre>
+<pre>
 //xhr抓取元素，不局限於圖片(靜態，可跨域)
 //links網址陣列
 //eles要抓的元素
@@ -359,7 +372,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/29 20:56</p>
+<p>2023/09/30 23:54</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -1112,7 +1125,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
-                <td>有韓系套圖，只支持全部使用pixhost、turboimagehost、vipr、imgbox圖床的頁面，imx可以用JDownloader下載</td>
+                <td>有韓系套圖，只支持全部使用pixhost、turboimagehost、imgbox圖床的頁面，imx可以用JDownloader下載</td>
             </tr>
             <tr>
                 <td><a href="https://imx.to/">imx.to</a></td>
@@ -1139,14 +1152,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.superbeautygirlx.com/">Forum Girl</a></td>
-                <td>大圖預覽不全，需要煩人的跳轉取得免空下載鏈接。</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.taotu8.xyz/">套圖吧</a></td>
-                <td>完整圖片都需要付費</td>
-            </tr>
-            <tr>
                 <td><a href="https://cydmyz.com/">ACG 资源网</a></td>
                 <td>幾乎都需要VIP</td>
             </tr>
@@ -1155,23 +1160,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.mmdabaobei.com/">美眉大宝贝</a>，很久沒新圖了</td>
             </tr>
             <tr>
-                <td><a href="https://www.meinv.im/">美女集社</a></td>
-                <td>很久沒新圖了</td>
-            </tr>
-            <tr>
                 <td><a href="http://www.ikmt.net/">爱看美图网</a></td>
                 <td><a href="http://m.ikmt.net/">m.ikmt.net</a>，很久沒新圖了</td>
             </tr>
             <tr>
-                <td><a href="https://www.uyn8.cn/">牛牛美图</a></td>
-                <td>很久沒新圖了</td>
-            </tr>
-            <tr>
                 <td><a href="https://xjjtk.link/">小姐姐图库</a></td>
-                <td>很久沒新圖了</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.mevtu.com/">美女图片网</a></td>
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
@@ -1207,7 +1200,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>感覺沒在更新圖了</td>
             </tr>
             <tr>
-                <td><a href="https://www.buzzav.com/albums">Buzzav</a></td>
+                <td><a href="https://old.buzzav.com/albums">Buzzav</a></td>
                 <td></td>
             </tr>
             <tr>
