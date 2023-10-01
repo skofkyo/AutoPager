@@ -422,7 +422,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/09/30 23:54</p>
+<p>2023/10/02 00:43</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -471,7 +471,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hitxhot.org/">Hit-x-Hot</a></td>
-                <td>同格式，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a></td>
+                <td>同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xr01.xyz/">秀人集</a></td>
@@ -677,6 +677,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://aitu.men/">爱图门</a></td>
+                <td><a href="https://jaoren.com/">佼人馆</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://niuniuhome.club/">妞妞之家</a></td>
                 <td></td>
             </tr>
@@ -750,6 +754,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://diskgirl.com/imageslist">硬盘少女</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.wai76.com/">心动美图</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -909,7 +917,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.4kup.net/">4KUP</a></td>
+                <td><a href="https://4kup.net/">4KUP</a></td>
                 <td>高解析原圖需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
@@ -954,6 +962,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://jablehk.com/">Jablehk</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https:/tangmoc.com/">TangMoc</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https:/luvbp.com/">LUVBP</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1443,7 +1459,15 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.177pica.com/">177漫画</a></td>
-                <td>www.177picyy.com</td>
+                <td><a href="http://www.177picyy.com/">www.177picyy.com</a></td>
+            </tr>
+            <tr>
+                <td><a href="http://1zse.com/">一之涩漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://naluhd.com/">那露漫画</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://sixcomic.com/">琴瑟漫畫</a></td>
