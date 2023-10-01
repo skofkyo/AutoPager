@@ -1,4 +1,4 @@
-2023/09/30 23:54
+2023/10/02 00:43
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -56,22 +56,28 @@ Models Vibe
 =========================東方永頁機禁用規則=========================
 
     {
-        "name": "怠惰聚圖Sexyxbody格式排除1 ",
+        "name": "圖片全載Sexyxbody格式排除1 ",
         "enable": 0,
         "url": "^https?://\\w{2}\\.(bunnyxgirl|letsgirlz|bestxleg)\\.com/",
         "include": ".separator>a"
     },
     {
-        "name": "怠惰聚圖Sexyxbody格式排除2 ",
+        "name": "圖片全載Sexyxbody格式排除2 ",
         "enable": 0,
         "url": "^https?://\\w{2}\\.(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic)\\.com/[^/]+/\\w+",
         "include": "//a[@data-title and picture/source]"
     },
     {
-        "name": "怠惰聚圖RedBust格式排除 ",
+        "name": "圖片全載RedBust格式排除 ",
         "enable": 0,
         "url": "^https?://redbust\\.com/[a-z0-9-]+/",
         "include": ".entry-inner img"
+    },
+    {
+        "name": "圖片全載心动美图格式排除 ",
+        "enable": 0,
+        "url": "^https://www\\.wai76\\.com/[^/]+/",
+        "include": ".entry-content"
     }
 
 =========================東方永頁機黑名單=========================
@@ -106,6 +112,9 @@ DEPVAILON
 
 Pic Yailay
 *://pic.yailay.com/articles/*.html*
+
+Kaizty
+*://www.kaizty.com/photos/*.html*
 
 NứngVL
 *://nungvl.net/gallerys/*.cg*
@@ -477,6 +486,18 @@ CUTE GIRLS ADDICT
 顶尖美女图
 *://djjpg.com/*.html
 
+TangMoc
+*://tangmoc.com/blog/show/*/view
+
+LUVBP
+*://luvbp.com/*/
+
+爱图门
+*://aitu.men/*/*.html
+
+佼人馆
+*://jaoren.com/*/*.html
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -609,6 +630,12 @@ JComic
 
 琴瑟書庫
 *://sixacg.com/chapter/*
+
+一之涩漫画
+*://1zse.com/index.php/*.html
+
+那露漫画
+*://naluhd.com/index.php/*.html
 
 漫畫類
 
@@ -1098,11 +1125,18 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *portrait.knit.bid/*/*
 *://taotuhome.com/*.html
 *123548.xyz/e/action/ShowInfo.php*
+*://tangmoc.com/blog/show/*/view
 *://sixcomic.com/chapter/*
 *://sixacg.com/chapter/*
 *://www.502x.com/*/*.html
 *://djjpg.com/*.html
 *jcomic.net/page/*
+*://luvbp.com/*/
+*://www.kaizty.com/photos/*.html*
+*://aitu.men/*/*.html
+*://jaoren.com/*/*.html
+*://1zse.com/index.php/*.html
+*://naluhd.com/index.php/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
