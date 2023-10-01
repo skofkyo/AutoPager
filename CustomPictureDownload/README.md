@@ -245,20 +245,20 @@ height:height//成功返回圖片高屬性
 </pre>
 <pre>
 //網頁圖片元素是透過canvas繪製，src屬性開頭是blob:的，只能通過再繪製轉換來取得。
-fun.imgToBlobURL(img, mode , type = "image/jpeg");
+fun.imgToBlobURL(img, mode = 1 , type = "image/jpeg");
 //canvas、img元素
-//mode1寬高取元素的width和height
-//mode2寬高取元素的naturalWidth和naturalHeight
+//mode1寬高取元素的naturalWidth和naturalHeight
+//mode2寬高取元素的width和height
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL
 //範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e ,2));
 </pre>
 <pre>
 //包裝fun.imgToBlobURL函式。
-fun.imgBlobArr(img, mode , type = "image/jpeg");
+fun.imgBlobArr(img, mode = 1 , type = "image/jpeg");
 //canvas、img 元素選擇器
-//mode1寬高取元素的width和height
-//mode2寬高取元素的naturalWidth和naturalHeight
+//mode1寬高取元素的naturalWidth和naturalHeight
+//mode2寬高取元素的width和height
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL陣列
 //範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]", 2);
