@@ -121,7 +121,6 @@
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
-可使用在規則init、imgs、customTitle
 <pre>
 //返回一個指定元素，支持CSS/Xpath選擇器
 fun.ge("ele");
@@ -173,18 +172,6 @@ fetch(url).then(res => res.text()).then(res => {
 fun.xml("字串")
 </pre>
 <pre>
-//使用Promise包裝GM_xmlhttpRequest
-fun.xhr(url, type = "text", referer = location.href)
-//用fetch(url)遇到需要CORS時改用這個
-fun.xhr(url)
-fun.xhr(url, "document").then(doc => {
-    console.log("測試doc", doc);
-})
-fun.xhr(url, "json").then(json => {
-    console.log("測試json", json);
-})
-</pre>
-<pre>
 //顯示簡短訊息
 fun.show("字串",1000(顯示的時間,0持續顯示));
 </pre>
@@ -229,6 +216,24 @@ fun.remove("ele", time = 0)
 fun.css("css")
 </pre>
 <pre>
+//插入A元素
+fun.addUrlHtml(url, ele, pos, text)
+//url 網址
+//ele 元素選擇器
+//pos
+//0在元素之前
+//1在元素之後
+//2在元素裡面，最後一個子元素之後
+//3在元素裡面，第一個子元素之前。
+//text 字串
+</pre>
+<pre>
+//依序滾動元素
+fun.scrollEles(ele, ms = 100)
+//ele 元素選擇器
+//ms 滾動的間隔時間
+</pre>
+<pre>
 //確認圖片狀態屬性 返回一個obj
 fun.checkImgStatus(src)
 返回
@@ -237,7 +242,52 @@ ok:true/false,成功讀取true失敗false
 width:width,//成功返回圖片寬屬性
 height:height//成功返回圖片高屬性
 }
-
+</pre>
+<pre>
+//網頁圖片元素是透過canvas繪製，src屬性開頭是blob:的，只能通過再繪製轉換來取得。
+fun.imgToBlobURL(img, mode , type = "image/jpeg");
+//canvas、img元素
+//mode1寬高取元素的width和height
+//mode2寬高取元素的naturalWidth和naturalHeight
+//type轉換的圖片類型"image/jpeg"、"image/png"
+//返回BlobURL
+//範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e ,2));
+</pre>
+<pre>
+//包裝fun.imgToBlobURL函式。
+fun.imgBlobArr(img, mode , type = "image/jpeg");
+//canvas、img 元素選擇器
+//mode1寬高取元素的width和height
+//mode2寬高取元素的naturalWidth和naturalHeight
+//type轉換的圖片類型"image/jpeg"、"image/png"
+//返回BlobURL陣列
+//範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]", 2);
+//範例2：fun.imgBlobArr(".image>img");
+</pre>
+<pre>
+//使用Promise包裝GM_xmlhttpRequest
+//需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
+fun.xhr(url, type = "text", referer = location.href, ua)
+fun.xhr(url, "document").then(doc => {
+    console.log("測試doc", doc);
+})
+fun.xhr(url, "json").then(json => {
+    console.log("測試json", json);
+})
+</pre>
+<pre>
+//使用Promise包裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼。
+fun.xhrDoc(url, referer, ua)
+fun.xhrDoc(url).then(doc => {
+    console.log("測試doc", doc);
+})
+</pre>
+<pre>
+//使用Fetch API，返回經過文字編碼的document，避免字元亂碼。
+fun.fetchDoc(url)
+fun.fetchDoc(url).then(doc => {
+    console.log("測試doc", doc);
+})
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片(靜態，可跨域)
