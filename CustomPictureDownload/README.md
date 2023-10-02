@@ -422,7 +422,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/02 00:43</p>
+<p>2023/10/02 23:27</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -471,7 +471,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hitxhot.org/">Hit-x-Hot</a></td>
-                <td>同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a></td>
+                <td>同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xr01.xyz/">秀人集</a></td>
@@ -650,7 +650,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xinmeitulu.com/">新美图录</a></td>
-                <td></td>
+                <td><a href="https://www.twlegs.com/">臺灣美腿女郎</a></td>
             </tr>
             <tr>
                 <td><a href="https://meitulu.me/">美图录</a></td>
@@ -669,6 +669,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://xiurenwang.me/">秀人网</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.xiurenugril.com/">秀人图</a></td>
+                <td>只支援免費</td>
+            </tr>
+            <tr>
                 <td><a href="https://loxiu.com/">洛秀网</a></td>
                 <td></td>
             </tr>
@@ -679,6 +687,9 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://aitu.men/">爱图门</a></td>
                 <td><a href="https://jaoren.com/">佼人馆</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://nsphb.com/">女神排行榜</a></td>
             </tr>
             <tr>
                 <td><a href="https://niuniuhome.club/">妞妞之家</a></td>
@@ -757,7 +768,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.wai76.com/">心动美图</a></td>
+                <td><a href="https://www.wai77.com/">心动美图</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -854,7 +865,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.28tyu.com/">苍井优图片</a></td>
-                <td><a href="https://www.28wer.com/">www.28wer.com</a></td>
+                <td><a href="https://www.28wer.com/">www.28wer.com</a>，<a href="https://sldlxz.com/">sldlxz.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.photos18.com/">色情圖片網</a></td>
@@ -969,6 +980,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https:/www.hotgirlpix.com/">Hot Girl Pix</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https:/luvbp.com/">LUVBP</a></td>
                 <td></td>
             </tr>
@@ -1014,6 +1029,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://buondua.com/">Buon Dua</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://hotgirl.biz/">Hotgirl.biz</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://xlust.org/">XLUST.ORG</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1073,6 +1096,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.qiuyeshudian.com/">J M G T</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.micmicidol.club/">MIC MIC IDOL</a></td>
                 <td></td>
             </tr>
@@ -1103,11 +1130,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hentai-img.com/">Hentai Image</a></td>
-                <td><a href="https://hentai-cosplays.com/">hentai-cosplays.com</a>，<a href="https://porn-images-xxx.com/">porn-images-xxx.com</a></td>
+                <td><a href="https://hentai-cosplays.com/">hentai-cosplays.com</a>，<a href="https://porn-images-xxx.com/">porn-images-xxx.com</a>，<a href="https://porn-gravure-idol.com/">porn-gravure-idol.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.eporner.com/pics/">EPORNER</a></td>
-                <td><a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a></td>
+                <td><a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>，<a href="https://www.eporner.com/profile/trevor221/uploaded-pics//">trevor221</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xasiat.com/albums/">Xasiat</a></td>
@@ -1890,6 +1917,25 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://ac.qq.com/">腾讯漫画</a></td>
                 <td>預設關閉</td>
+            </tr>
+        </tbody>
+    </table>
+</details>
+<h2>AI繪圖類內置規則支持列表</h2>
+<details>
+    <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
+<br>
+    <table>
+        <thead>
+            <tr>
+                <th><strong>網站</strong></th>
+                <th><strong>備註</strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="https://civitai.com/">Civitai</a></td>
+                <td>SPA網頁，只支持Models頁和Posts頁，Models需手動插入圖片，切換圖片版本後，再手動插入當前版本的圖片。</td>
             </tr>
         </tbody>
     </table>
