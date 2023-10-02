@@ -1,4 +1,4 @@
-2023/10/02 00:43
+2023/10/02 23:27
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -118,6 +118,9 @@ Kaizty
 
 NứngVL
 *://nungvl.net/gallerys/*.cg*
+
+Lootiu.Com
+*://lootiu.com/gallery/*.cfg*
 
 萝丝派
 *://www.yylsp.com/*.html
@@ -325,6 +328,7 @@ Hentai Image
 *://*hentai-img.com/image/*/
 *://*hentai-cosplays.com/image/*/
 *://*porn-images-xxx.com/image/*/
+*://*porn-gravure-idol.com/image/*/
 
 ImageFap
 *://www.imagefap.com/gallery/*
@@ -497,6 +501,15 @@ LUVBP
 
 佼人馆
 *://jaoren.com/*/*.html
+
+女神排行榜
+*://nsphb.com/*/*.html
+
+秀人图
+*://www.xiurenugril.com/*.html
+
+Hot Girl Pix
+*://www.hotgirlpix.com/p/*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -911,6 +924,7 @@ https://www.nuyet.com/gallery/*
 *://www.depvailon.com/*.html*
 *://pic.yailay.com/articles/*.html*
 *://nungvl.net/gallerys/*.cg*
+*://lootiu.com/gallery/*.cfg*
 *://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
@@ -983,6 +997,7 @@ https://www.nuyet.com/gallery/*
 *://*hentai-img.com/image/*/
 *://*hentai-cosplays.com/image/*/
 *://*porn-images-xxx.com/image/*/
+*://*porn-gravure-idol.com/image/*/
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
 *://www.54aj.com/*/*.html
@@ -1137,6 +1152,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://jaoren.com/*/*.html
 *://1zse.com/index.php/*.html
 *://naluhd.com/index.php/*.html
+*://nsphb.com/*/*.html
+*://www.xiurenugril.com/*.html
+*://www.hotgirlpix.com/p/*
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
