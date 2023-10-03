@@ -3,11 +3,11 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.2.6
-// @description        專注於寫真、H漫、漫畫的網站，目前規則數400+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @version            1.2.7
+// @description        專注於寫真、H漫、漫畫的網站，目前規則數450+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
-// @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数400+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
-// @description:zh-TW  專注於寫真、H漫、漫畫的網站，目前規則數400+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数450+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
+// @description:zh-TW  專注於寫真、H漫、漫畫的網站，目前規則數450+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @author             tony0809
 // @match              *://*/*
 // @exclude            *hcaptcha*
@@ -2067,10 +2067,22 @@
         customTitle: "return fun.geT('h1');",
         category: "nsfw1"
     }, {
+        name: "นางแบบคือลือ modelsexyth.com",
+        reg: /^https:\/\/modelsexyth\.com\/[^\/]+\/$/,
+        imgs: "//img[@decoding]",
+        insertImg: [
+            ["//div[div[div[img[@decoding]]]]", 0, "//div[img[@decoding] and @class ='elementor-widget-container']"], 2
+        ],
+        customTitle: () => {
+            return fun.geT("h1.elementor-heading-title>a").replace(/\(\d+p\)/i, "").trim();
+        },
+        css: ".elementor-element-2060f59,.elementor-element-f838527,.elementor-element-988fdac,.elementor-element-3b501ba{display:none!important}#customPicDownloadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw1"
+    }, {
         name: "Hot Girl Pix www.hotgirlpix.com",
         reg: /^https:\/\/www\.hotgirlpix\.com\/p\//,
         imgs: () => {
-            return fun.getImgA("article img", "#singlePostPagination a");
+            return fun.getImgA("article img", "#singlePostPagination a", 300);
         },
         insertImg: ["article", 2],
         customTitle: "return fun.geT('#singlePostTitle');",
@@ -2919,7 +2931,7 @@
         imgs: async () => {
             let a = fun.ge(".picture_content>a");
             a.outerHTML = a.innerHTML;
-            await fun.getNP(".picture_content img", "//a[text()='下一页']", null, ".pagination");
+            await fun.getNP(".picture_content img", "//a[text()='下一页']", null, ".pagination", 0, null, 0);
             return [...fun.gae(".picture_content img")];
         },
         insertImg: [".picture_content", 2],
@@ -8198,13 +8210,14 @@
         name: "google search loadmore",
         icon: 0,
         key: 0,
+        enable: 1,
         reg: /^https:\/\/(?:www\.)?google\..*\/search/,
         include: "a[aria-label='更多搜尋結果']",
         observerClick: "//a[@aria-label='更多搜尋結果' and div[not(@style='display: none;')]]",
         openInNewTab: "#center_col a[ping][data-ctpacw]",
         category: "none"
     }, {
-        name: "測試",
+        name: "測試 test",
         reg: /^https?:\/\/\w+\.hathitrust\.org\/cgi\/pt\?id=/,
         imgs: () => {
             return fun.imgBlobArr(".image>img");
@@ -8215,7 +8228,7 @@
     }, {
         name: "Civitai models civitai.com",
         reg: /^https:\/\/civitai\.com\/models\/\d+/,
-        delay: 1000,
+        delay: 2000,
         init: async () => {
             await fun.waitEle(".mantine-u0eh0m");
             let div = document.createElement("div");
@@ -8229,6 +8242,7 @@
         repeat: 1,
         insertImg: [".imgBox", 3],
         go: 1,
+        fetch: 1,
         customTitle: () => {
             return fun.geT(".mantine-Title-root").replace(/\|\s/, "") + " - " + fun.geT(".mantine-z8ikjj");
         },
@@ -8236,14 +8250,15 @@
     }, {
         name: "Civitai posts civitai.com",
         reg: /^https:\/\/civitai\.com\/posts\/\d+/,
-        delay: 1000,
+        delay: 2000,
         imgs: () => {
-            return [...fun.gae(".mantine-1qyctxk")].map(e => e.src.replace(/\/width=\d+\//, "/").replace("transcode=true,width=450", "transcode=true"));
+            return [...fun.gae("a[rel='nofollow noindex'] img")].map(e => e.src.replace(/\/width=\d+\//, "/").replace("transcode=true,width=450", "transcode=true"));
         },
         insertImg: [
             [".mantine-Stack-root", 0], 2
         ],
         go: 1,
+        fetch: 1,
         category: "AI"
     }];
 
@@ -10243,6 +10258,7 @@
 #customPicDownloadEnd {
     font-size: 20px;
     height: 30px;
+    width: 100%;
     line-height: 30px;
     text-align: center;
     margin: 5px auto!important;
