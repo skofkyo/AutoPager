@@ -976,7 +976,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https:/tangmoc.com/">TangMoc</a></td>
+                <td><a href="https://tangmoc.com/">TangMoc</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://modelsexyth.com/">นางแบบคือลือ</a></td>
                 <td></td>
             </tr>
             <tr>
