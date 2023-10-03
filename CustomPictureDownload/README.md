@@ -1493,6 +1493,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://www.177picyy.com/">www.177picyy.com</a></td>
             </tr>
             <tr>
+                <td><a href="https://boylove.cc/">香香腐宅</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://sesemanhua.com/">色色漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://18jin.top/">韓漫天堂</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://1zse.com/">一之涩漫画</a></td>
                 <td></td>
             </tr>
@@ -1824,7 +1836,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://godamanga.com/">GODA漫畫</a></td>
-                <td><a href="https://cn.godamanga.site/">cn.godamanga.site</a>，<a href="https://cocomanga.org/">cocomanga.org</a>，預設關閉</td>
+                <td><a href="https://cn.godamanga.site/">cn.godamanga.site</a>，<a href="https://cocomanga.org/">cocomanga.org</a>，<a href="https://nav.telltome.net/">发布页
+</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://baozimh.org/">包子漫畫</a></td>
