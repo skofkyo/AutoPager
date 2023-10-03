@@ -5537,6 +5537,28 @@
         },
         category: "hcomic"
     }, {
+        name: "色色漫画 sesemanhua.com",
+        reg: /^https:\/\/sesemanhua\.com\/index\.php\/chapter\/\d+/,
+        imgs: ".rd-article-wr img",
+        autoDownload: [0],
+        next: ".j-rd-next",
+        prev: ".j-rd-prev",
+        customTitle: () => {
+            return fun.geT(".comic-title>a");
+        },
+        category: "hcomic"
+    }, {
+        name: "韓漫天堂 18jin.top",
+        reg: /^https:\/\/18jin\.top\/index\.php\/chapter\/\d+/,
+        imgs: ".rd-article-wr img",
+        autoDownload: [0],
+        next: ".j-rd-next",
+        prev: ".j-rd-prev",
+        customTitle: () => {
+            return fun.geT(".j-comic-title") + " - " + fun.geT(".comic-title>a");
+        },
+        category: "hcomic"
+    }, {
         name: "琴瑟漫畫 sixcomic.com 琴瑟書庫 sixacg.com",
         reg: /https?:\/\/(sixcomic\.com|sixacg\.com)\/chapter\/\d+$/,
         imgs: ".comicpage img:not([data-original*='qssk.top']),#cp_img img:not([data-original*='qssk.top'])",
@@ -5545,6 +5567,17 @@
         prev: "//a[@href and not(starts-with(@href,'java')) and text()='上一章']",
         customTitle: () => {
             return fun.title(/免费阅读|在线阅读/, 1);
+        },
+        category: "hcomic"
+    }, {
+        name: "香香腐宅 boylove.cc boylove1.mobi",
+        reg: /https:\/\/boylove\d?\.\w+\/home\/book\/capter\/id\/\d+/,
+        imgs: "img[data-original]",
+        autoDownload: [0],
+        next: "a[data-value=next]",
+        prev: "a[data-value=prev]",
+        customTitle: () => {
+            return fun.geT(".title a").trim();
         },
         category: "hcomic"
     }, {
@@ -7127,9 +7160,9 @@
         customTitle: "return fun.geT('h1')",
         category: "comic"
     }, {
-        name: "GODA漫畫 godamanga.com cn.godamanga.site gd.godamanga.art 包子漫畫 baozimh.org bz.godamanga.art cn.baozimh.org ",
+        name: "GODA漫畫 godamanga.com cn.godamanga.site gd.godamanga.art cn.godamanga.art cn.godamanga.com 包子漫畫 baozimh.org bz.godamanga.art cn.baozimh.org",
         enable: 0,
-        reg: /https?:\/\/(gd|bz)\.godamanga\.art\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+/i,
+        reg: /https?:\/\/((www|gd|bz|cn)\.)(baozimh|godamanga)\.(art|com|org)\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+/i,
         init: async () => {
             let script = "//script[contains(text(),'currentManga')]";
             await fun.waitEle(script);
