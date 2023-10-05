@@ -244,7 +244,7 @@ height:height//成功返回圖片高屬性
 }
 </pre>
 <pre>
-//網頁圖片元素是透過canvas繪製，src屬性開頭是blob:的，只能通過再繪製轉換來取得。
+//網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得。
 fun.imgToBlobURL(img, mode = 1 , type = "image/jpeg");
 //canvas、img元素
 //mode1寬高取元素的naturalWidth和naturalHeight
@@ -1149,8 +1149,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://bitchesgirls.com/">BITCHES GIRLS</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://cn.pornhub.com/albums">PornHub</a></td>
                 <td>很容易被短暫封IP...</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.erome.com/">EroMe</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://mrdeepfakes.com/photos">MrDeepFakes</a></td>
@@ -1158,6 +1166,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xher.net/">xher.net</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://topleaks.net/">Onlyfans Leaks</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1170,6 +1182,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.freexcafe.com/">FreeXcafe</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://dirtychicks.net/photo-gallery/">DirtyChicks</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://amateurlikes.com/">Amateur Likes</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1302,6 +1322,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://multi.xnxx.com/">multi.xnxx.com</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://akedsex.pics/">Nakedsex</a></td>
                 <td></td>
             </tr>
             <tr>
