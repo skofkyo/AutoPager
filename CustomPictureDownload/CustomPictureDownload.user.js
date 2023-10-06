@@ -49,7 +49,7 @@
     const siteUrl = window.location.href;
     let siteData = {};
     let siteJson = null;
-    const language = navigator.language;
+    const language = window.navigator.language;
     let displayLanguage = {};
     let globalImgArray = [];
     let promiseBlobArray = [];
@@ -1233,7 +1233,6 @@
             } else {
                 return fun.getImgA(".post-content amp-img", ".pagination-post>a");
             }
-
             /*
             let links = [];
             let resArr = [];
@@ -1304,7 +1303,7 @@
             let max = fun.geT(".v-pagination li:last-child", 2);
             links.push(location.href);
             for (let i = 2; i <= max; i++) {
-                links.push(location.href + "/" + i)
+                links.push(location.href + "/" + i);
             }
             for (let i in links) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
@@ -1343,7 +1342,7 @@
             let max = fun.geT(".v-pagination li:last-child", 2);
             links.push(location.href);
             for (let i = 2; i <= max; i++) {
-                links.push(location.href + "/" + i)
+                links.push(location.href + "/" + i);
             }
             for (let i in links) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
@@ -1596,7 +1595,7 @@
             });
             fun.remove("iframe", 2000);
         },
-        imgs: () => fun.getImgO("#picg img[alt]", fun.geT(".pagelist font~*:last-child", 2), 9, [null, null], 600, ".page .pagelist", 0),
+        imgs: () => fun.getImgO("#picg img[alt]", fun.geT(".pagelist font~*:last-child", 2), 9, [null, null], 800, ".page .pagelist", 0),
         insertImg: ["#picg", 1],
         autoDownload: [0],
         next: "//div[@class='b' and contains(text(),'上一')]/a",
@@ -1771,9 +1770,9 @@
         next: () => {
             let next = fun.ge("a.f-r.l3");
             if (next) {
-                return next.href
+                return next.href;
             } else {
-                return null
+                return null;
             }
         },
         prev: 1,
@@ -2990,7 +2989,7 @@
         include: ".gallery-section",
         imgs: async () => {
             await fun.getNP(".photo-thumb", "//div[@class='gallery-section']//li[a[contains(@class,'active')]]/following-sibling::li[1]/a", null, ".gallery-section .pager-section");
-            fun.gae(".photo-thumb").forEach(ele => {
+            [...fun.gae(".photo-thumb")].forEach(ele => {
                 let width, height;
                 if (parseInt(ele.dataset.w) > parseInt(ele.dataset.h)) {
                     width = 374;
@@ -3263,6 +3262,19 @@
         name: "fuskator.com 大圖頁",
         reg: /fuskator\.com\/[\w-]+\/[\w-~]+\/index\.html/i,
         imgs: "img.full",
+        category: "nsfw2"
+    }, {
+        name: "TOKYO Motion www.tokyomotion.net",
+        reg: /^https:\/\/www\.tokyomotion\.net\/album\/\d+\/.+/,
+        imgs: async () => {
+            await fun.getNP("div[id^=album_photo]", ".pagination li.active+li>a", null, ".pagination");
+            return [...fun.gae(".thumb-overlay img")].map(e => e.src.replace("tmb/", ""));
+        },
+        insertImg: [
+            ["//div[div[div[contains(@id,'album_photo')]]]", 0], 2
+        ],
+        go: 1,
+        customTitle: () => [...fun.gae(".pull-left")][2].innerText.trim(),
         category: "nsfw2"
     }, {
         name: "javbangers.com",
@@ -5012,20 +5024,14 @@
         init: "setTimeout(()=>{$(document).unbind('keydown');$(document).unbind('click')},1000)",
         imgs: async () => {
             await fun.waitEle("#mobileImages .lillie", 11);
-            let arr = [];
-            let imgs = galleryinfo.files.length;
-            for (let i = 0; i < imgs; i++) {
-                let html = make_image_element(galleryinfo["id"], our_galleryinfo[i], no_webp);
-                arr.push(html.querySelector("img"));
-            }
             fun.ge("#comicImages").setAttribute("class", "fitVertical");
             fun.ge("#mobileImages").setAttribute("class", "hidden");
-            return arr;
+            return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo["id"], our_galleryinfo[i], "webp", undefined, "a"));
         },
         insertImg: ["#comicImages", 2],
         customTitle: () => fun.title("|", 1),
-        css: "body{overflow:unset!important}",
-        threading: 3,
+        css: "body{overflow:unset!important}#customPicDownloadEnd{color:rgb(255, 255, 255)}",
+        threading: 5,
         category: "hcomic"
     }, {
         name: "Orzqwq List模式 orzqwq.com",
@@ -5096,6 +5102,7 @@
         name: "JComic jcomic.net",
         reg: /https?:\/\/jcomic\.net\/page\/[^\/]+$/,
         imgs: ".comic-view,.comic-thumb",
+        threading: 10,
         customTitle: () => fun.geT("//ol/li[2]/a"),
         category: "hcomic"
     }, {
@@ -5112,6 +5119,7 @@
             }
         },
         prev: 1,
+        threading: 10,
         customTitle: () => fun.geT("//ol/li[2]/a") + " - " + fun.geT("//ol/li[3]"),
         category: "hcomic"
     }, {
@@ -5119,7 +5127,7 @@
         reg: /^https?:\/\/1zse\.com\/index\.php\/\d+\.html/,
         imgs: () => {
             let max = fun.ge("a.last").href.split("/").pop();
-            return fun.getImg(".context img", max, 7)
+            return fun.getImg(".context img", max, 7);
         },
         insertImg: [".context", 2],
         autoDownload: [0],
@@ -5804,7 +5812,7 @@
         name: "Komiic komiic.com",
         enable: 1,
         reg: /komiic\.com\/comic\/\d+\/chapter\//,
-        imgs: () => {
+        imgs: async () => {
             let chapterId = siteUrl.match(/chapter\/(\d+)\/images/)[1];
             let body = {
                 operationName: "imagesByChapterId",
@@ -5813,13 +5821,15 @@
                 },
                 query: "query imagesByChapterId($chapterId: ID!) {\n  imagesByChapterId(chapterId: $chapterId) {\n    id\n    kid\n    height\n    width\n    __typename\n  }\n}\n"
             };
-            return fetch("/api/query", {
+            let json = await fetch("/api/query", {
                 "headers": {
                     "content-type": "application/json"
                 },
                 "body": JSON.stringify(body),
                 "method": "POST"
-            }).then(res => res.json()).then(json => json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid));
+            }).then(res => res.json());
+            debug("\nimages JSON\n", json);
+            return json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid);
         },
         autoDownload: [0],
         next: async () => {
@@ -5838,6 +5848,7 @@
                 "body": JSON.stringify(body),
                 "method": "POST"
             }).then(res => res.json());
+            debug("\nchapter JSON\n", json);
             let chapterId = siteUrl.match(/chapter\/(\d+)\/images/)[1];
             let chapters = json.data.chaptersByComicId;
             let nextUrl;
@@ -6282,7 +6293,7 @@
             if (/xlsmh|qmiaomh|gougoumh|qimhua|yxtun|bukamh|duoximh/.test(host)) {
                 return fun.geT("#panel-title span,.title3 span").replace(">", " - ");
             } else {
-                return fun.title('在线', 1);
+                return fun.title("在线", 1);
             }
         },
         css: "body{padding:0!important}.UnderPage~*:not(.customPicDownloadMsg):not(#customPicDownload),.bottom~*:not(.customPicDownloadMsg):not(#customPicDownload),div[style*='text-align: left;']{display:none!important}",
@@ -6408,7 +6419,7 @@
         init: () => {
             fun.gae("img[data-original]").forEach(e => {
                 new Image().src = e.dataset.original;
-            })
+            });
         },
         imgs: "img[data-original]:not([data-original*='/template/pc/default/']),.lazy-read:not([data-original*='/template/pc/default/'])",
         insertImg: [".rd-article-wr", 0],
