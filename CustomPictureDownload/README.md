@@ -12,7 +12,7 @@
 當修改了腳本選項或站點規則啟用了自動下載時，站點規則insertImg的自動插入圖片將無效，瀏覽器的下載設定需關閉下載前詢問儲存位置和設定好預設的下載路徑，全自動需要有NEXT做搭配，每個站點第一次啟用時需等待連續下載2~3次後，觸發瀏覽器詢問是否同意允許下載多個檔案，需同意後後續才能成功下載，並且讓分頁保持在前景運行不然壓縮進度會停住，可以開一個獨立視窗一個分頁用作下載用，最好的方式是拉兩個視窗一個佔1/3畫面掛下載一個佔3/2畫面瀏覽。
 <p>2023/05/13，腳本增加了全局開關選項，可以不用搜索規則對各別站點進行修改，不需要時記得關閉。</p>
 
-<h1>可用規則示例：</h1>
+<h1>圖片全載規則示例：</h1>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
@@ -115,6 +115,79 @@
     name: "規則3",
     …
 }]
+</pre>
+</details>
+<h1>自動翻頁規則示例：</h1>
+<details>
+    <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
+<br>
+<p>簡易實現自動翻頁功能，無法暫停，需要功能更強大完善的請使用東方永頁機、自動無縫翻頁。</p>
+<pre>
+變量doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
+舉例選取元素
+doc.querySelector(selector)
+[...doc.querySelectorAll(selector)]
+fun.ge(selector, doc)
+[...fun.gae(selector, doc)]
+</pre>
+<pre>
+{
+    name: "哈哈漫画 www.hahacomic.com 分類自動翻頁",
+    enable: 1,
+    reg: /^https:\/\/www\.hahacomic\.com\/manhua\/list\.html/,
+    icon: 0,
+    key: 0,
+    autoPager: {
+        ele: ".mdui-col-lg-2",
+        observer: ".mdui-col-lg-2",
+        next: () => {
+            let next = doc.querySelector("span.current+a");
+            if (next) {
+                let num = next.getAttribute("href").match(/\d+/)[0];
+                return location.href.replace(/\?page=\d+/, "") + "?page=" + num;
+            } else {
+                return null;
+            }
+        },
+        re: ".pages",
+        history: 1
+    },
+    category: "autoPager"
+}, {
+    name: "規則範例",
+    enable: 1,
+    reg: /^https:\/\/.+/,
+    icon: 0,
+    key: 0,
+    autoPager: {
+        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁
+        waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器
+        ele: "selector", //下一頁主體元素選擇器
+        ele: () => { 
+            code
+        },
+        next: "selector", //下一頁A元素選擇器
+        next: () => { 
+            code
+            return url
+        },
+        re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
+        observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
+        bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設1000可省略
+        sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略
+        history: 1, //1翻頁後添加瀏覽器歷史紀錄，不需要則省略
+        msg: 0, //自動翻頁載入中的訊息，0不顯示，1顯示(預設可省略)
+        lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
+        script: "selector", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
+        bF: () => {
+            //插入下一頁元素之前要執行的代碼，不需要則省略
+        },
+        aF: () => { 
+             //插入下一頁元素之後要執行的代碼，不需要則省略
+        }
+    },
+    category: "autoPager"
+}
 </pre>
 </details>
 <h1>內置函式：</h1>
@@ -422,7 +495,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/02 23:27</p>
+<p>2023/10/09 23:48</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -437,6 +510,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>Telegram Web</td>
+                <td>從Telegram網頁版上的telegra.ph下載圖片，會被CentBrowser(5.0.1002.354)瀏覽器判斷為不安全封鎖下載，請自行決定是否保留檔案，從<a href="https://tgstat.com/">TGStat</a>搜索cosplay、nsfw、Cosplay鉴赏
+，可以挖到不少你懂得。</td>
+            </tr>
             <tr>
                 <td><a href="https://xchina.biz/">小黃書</a></td>
                 <td><a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.fun/">xchina.fun</a></td>
@@ -490,7 +568,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xg07.xyz/">极品性感美女</a></td>
+                <td><a href="https://www.xgyw.pro/">极品性感美女</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1100,6 +1178,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://mabui-onna.com/">マブい女画像集</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://dog-sokuhou.com/">ドッグ速報</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.qiuyeshudian.com/">J M G T</a></td>
                 <td></td>
             </tr>
@@ -1157,6 +1243,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>很容易被短暫封IP...</td>
             </tr>
             <tr>
+                <td><a href="https://bunkr-albums.io/">Bunkr</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.erome.com/">EroMe</a></td>
                 <td></td>
             </tr>
@@ -1170,6 +1260,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://topleaks.net/">Onlyfans Leaks</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.tokyomotion.net/albums">TOKYO Motion</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1517,8 +1611,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://www.177picyy.com/">www.177picyy.com</a></td>
             </tr>
             <tr>
+                <td><a href="https://www.99hanman.top/">久久漫画网</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://boylove.cc/">香香腐宅</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://yidan.in/">一耽女孩</a></td>
+                <td>SPA網頁，限定Mobile</td>
             </tr>
             <tr>
                 <td><a href="https://sesemanhua.com/">色色漫画</a></td>
@@ -1626,6 +1728,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.ponpomu.com/">白绒Yuri</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://terra-historicus.hypergryph.com/">明日方舟泰拉记事社</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
                 <td></td>
             </tr>
@@ -1712,6 +1822,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.98comic.com/">98漫畫網</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.qt1588.com/">爱看漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
@@ -1815,6 +1929,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉</td>
             </tr>
             <tr>
+                <td><a href="http://comics.veryim.com/">非常爱漫网</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
                 <td><a href="https://m.icekr.com/">冰氪漫画</a></td>
                 <td>預設關閉</td>
             </tr>
@@ -1828,6 +1946,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.360mh.cc/">360漫画</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.38manhua.com/">38漫画网</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="http://797mh.com/">久久漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
@@ -1942,6 +2068,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://qumanku.com/">速漫库</a></td>
                 <td><a href="http://www.sumanku.com/">www.sumanku.com</a>，預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.hahacomic.com/">哈哈漫画</a></td>
+                <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://kanbook.net/">快岸漫画</a></td>
