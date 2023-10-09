@@ -1,4 +1,4 @@
-2023/10/02 23:27
+2023/10/09 23:48
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -511,6 +511,19 @@ LUVBP
 Hot Girl Pix
 *://www.hotgirlpix.com/p/*
 
+TOKYO Motion
+*://www.tokyomotion.net/album/*/*
+
+BITCHES GIRLS
+*://bitchesgirls.com/*/*/
+
+マブい女画像集
+*://mabui-onna.com/blog-entry-*.html
+
+Bunkr
+*bunkr-albums.io*
+*bunkrr.su/a/*
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -568,7 +581,6 @@ gogo人体艺术
 *://*44aq.com/*/*/
 *://*28xv.com/*/*/
 
-
 H漫類
 
 IMHentai
@@ -619,6 +631,7 @@ HO5HO
 
 禁漫屋
 *jmwu.vip/chapter/*.html
+*88comic.vip/chapter/*.html
 
 H漫画
 *://mhdnf.xyz/play?linkId=*
@@ -668,6 +681,9 @@ JComic
 *://cn.dzmanga.com/*
 *://tw.dzmanga.com/*
 *://www.dzmanga.com/*
+*://cn.dociy.net/*
+*://tw.dociy.net/*
+*://www.dociy.net/*
 
 Manhuagui看漫画閱讀
 *m.manhuagui.com/comic/*/*.html
@@ -901,6 +917,9 @@ manhuatai.org/manhua/*/*.html
 *://cn.dzmanga.com/*
 *://tw.dzmanga.com/*
 *://www.dzmanga.com/*
+*://cn.dociy.net/*
+*://tw.dociy.net/*
+*://www.dociy.net/*
 *m.manhuagui.com*
 *://8.twobili.com/comic/insurance_*
 *://www.comicabc.com/online/new-*
@@ -1092,6 +1111,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *18av.mm-cg.com/*cg_content/*/content.html
 *18av.mm-cg.com/*.html
 *jmwu.vip/chapter/*.html
+*88comic.vip/chapter/*.html
 *www.comicun.com/index-look*
 *://foamgirl.net/*.html
 *://loxiu.com/post/*.html
@@ -1155,6 +1175,11 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://nsphb.com/*/*.html
 *://www.xiurenugril.com/*.html
 *://www.hotgirlpix.com/p/*
+*://www.tokyomotion.net/album/*/*
+*://bitchesgirls.com/*/*/
+*://mabui-onna.com/blog-entry-*.html
+*bunkr-albums.io*
+*bunkrr.su/a/*
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
