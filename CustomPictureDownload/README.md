@@ -160,12 +160,13 @@ fun.ge(selector, doc)
     icon: 0,
     key: 0,
     autoPager: {
-        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁
-        waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器
+        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁。
+        waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
         ele: "selector", //下一頁主體元素選擇器
         ele: () => { 
             code
         },
+        pos: ["selector", 0], //[插入下一頁主體元素的基準元素, 0裡面1之前]，預設為主體元素最後一個之後，可省略。
         next: "selector", //下一頁A元素選擇器
         next: () => { 
             code
@@ -173,9 +174,9 @@ fun.ge(selector, doc)
         },
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
-        bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設1000可省略
-        sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略
-        history: 1, //1翻頁後添加瀏覽器歷史紀錄，不需要則省略
+        bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設1000可省略。
+        sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略。
+        history: 1, //1翻頁後添加瀏覽器歷史紀錄，不需要則省略。
         msg: 0, //自動翻頁載入中的訊息，0不顯示，1顯示(預設可省略)
         lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
         script: "selector", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
