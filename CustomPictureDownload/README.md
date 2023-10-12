@@ -157,16 +157,19 @@ fun.ge(selector, doc)
     name: "規則範例",
     enable: 1,
     reg: /^https:\/\/.+/,
-    icon: 0,
-    key: 0,
+    icon: 0, //不顯示圖片全載的icon
+    key: 0, //不綁定圖片全載的快捷鍵
     autoPager: {
         mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁。
         waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
         ele: "selector", //下一頁主體元素選擇器
         ele: () => { 
+            //2種寫法
+            //1.創建元素和插入元素皆由此函式完成
+            //2.創建元素陣列返回元素陣列，搭配pos決定元素插入位置
             code
         },
-        pos: ["selector", 0], //[插入下一頁主體元素的基準元素, 0裡面1之前]，預設為主體元素最後一個之後，可省略。
+        pos: ["selector", 0], //[插入下一頁主體元素的基準元素, 0裡面1之前2之後]，預設為主體元素最後一個之後，可省略。
         next: "selector", //下一頁A元素選擇器
         next: () => { 
             code
@@ -174,10 +177,29 @@ fun.ge(selector, doc)
         },
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
+        stop: () => {
+            //根據判斷結果返回真假值停止翻頁。
+            code
+            if (code) {
+                return true
+            }
+            return false
+        },
+        showTitle: 0, //0不顯示下一頁的標題分隔條，顯示則省略。
+        title: () => {
+            //自定義標題分隔條要顯示的文字，不使用則省略。
+            code
+            return titleText
+            //先經過代碼判斷返回obj。
+            return {
+                ok: (true添加標題,false不添加),
+                text: titleText
+            }
+        },
         bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設1000可省略。
         sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略。
         history: 1, //1翻頁後添加瀏覽器歷史紀錄，不需要則省略。
-        msg: 0, //自動翻頁載入中的訊息，0不顯示，1顯示(預設可省略)
+        loading: "msg", //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息
         lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
         script: "selector", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
         bF: () => {
@@ -496,7 +518,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/09 23:48</p>
+<p>2023/10/12 23:29</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 
 <h2>老司機類內置規則支持列表</h2>
@@ -512,7 +534,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         </thead>
         <tbody>
             <tr>
-                <td>Telegram Web</td>
+                <td><a href="https://web.telegram.org/k//">Telegram Web</a></td>
                 <td>從Telegram網頁版上的telegra.ph下載圖片，會被CentBrowser(5.0.1002.354)瀏覽器判斷為不安全封鎖下載，請自行決定是否保留檔案，從<a href="https://tgstat.com/">TGStat</a>搜索cosplay、nsfw、Cosplay鉴赏
 ，可以挖到不少你懂得。</td>
             </tr>
@@ -553,7 +575,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr01.xyz/">秀人集</a></td>
+                <td><a href="https://www.xr02.xyz/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -641,7 +663,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://mmm.red/">妹妹美</a></td>
-                <td></td>
+                <td>完整圖片需要登錄</td>
             </tr>
             <tr>
                 <td><a href="https://www.haotuwu.com/">好圖屋</a></td>
@@ -673,7 +695,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.meituku.org/">美图库</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.tuzac.com/">图宅网</a></td>
@@ -700,6 +722,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>封鎖部分地區，需要VPN才看的到圖片</td>
             </tr>
             <tr>
+                <td><a href="https://www.nvhai8.com/">女人吧</a></td>
+                <td><a href="https://m.nvhai8.com/">m.nvhai8.com</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.jkforum.net/">JKF</a></td>
                 <td>貼圖區</td>
             </tr>
@@ -721,7 +747,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://51sex.vip/">51sex</a></td>
-                <td>分類沒做好，寫真從網址後面的數字3開始遞增，79XX部。</td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.2meinv.com/">爱美女</a></td>
@@ -972,7 +998,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.umei.cc/meinvtupian/">优美图库</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.3gbizhi.com/meinv">3G壁纸</a></td>
@@ -985,10 +1011,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.keaitupian.com/">可爱小图</a></td>
                 <td><a href="https://m.keaitupian.com/">m.keaitupian.com</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://djjpg.com/">顶尖美女图</a></td>
-                <td></td>
             </tr>
             <tr>
                 <td><a href="https://xiuren.biz/">Xiuren</a></td>
@@ -1044,7 +1066,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.modelsvibe.com/">Models Vibe</a></td>
-                <td>ajax沒做好，翻頁規則已提交東方永頁機</td>
+                <td>分類添加了自動翻頁功能</td>
             </tr>
             <tr>
                 <td><a href="https://www.asianude4u.net/">Asianude4u</a></td>
@@ -1063,11 +1085,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https:/www.hotgirlpix.com/">Hot Girl Pix</a></td>
+                <td><a href="https://www.hotgirlpix.com/">Hot Girl Pix</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https:/luvbp.com/">LUVBP</a></td>
+                <td><a href="https://luvbp.com/">LUVBP</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1245,7 +1267,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://bunkr-albums.io/">Bunkr</a></td>
-                <td></td>
+                <td>列表添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.erome.com/">EroMe</a></td>
@@ -1253,10 +1275,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://mrdeepfakes.com/photos">MrDeepFakes</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://xher.net/">xher.net</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1364,7 +1382,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://cydmyz.com/">ACG 资源网</a></td>
+                <td><a href="https://meituzyw.com/">ACG 资源网</a></td>
                 <td>幾乎都需要VIP</td>
             </tr>
             <tr>
@@ -1417,10 +1435,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://multi.xnxx.com/">multi.xnxx.com</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://akedsex.pics/">Nakedsex</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2072,7 +2086,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.hahacomic.com/">哈哈漫画</a></td>
-                <td>預設關閉</td>
+                <td>預設關閉，漫畫列表添加自動翻頁功能</td>
             </tr>
             <tr>
                 <td><a href="https://kanbook.net/">快岸漫画</a></td>
@@ -2126,6 +2140,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td>m.4khd.com</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>4kup.net</td>
                 <td>自動跳轉</td>
             </tr>
             <tr>
