@@ -1,4 +1,4 @@
-2023/10/09 23:48
+2023/10/12 23:29
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -47,9 +47,6 @@ Xiutaku/Kostaku
 
 嘿～色女孩
 /^https?:\/\/heysexgirl\.com\/archives\/\d+$/
-
-Models Vibe
-/https?:\/\/www\.modelsvibe\.com\/[^/]+\/$/
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
 
@@ -524,6 +521,9 @@ Bunkr
 *bunkr-albums.io*
 *bunkrr.su/a/*
 
+Models Vibe
+*www.modelsvibe.com*
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -662,6 +662,9 @@ JComic
 
 那露漫画
 *://naluhd.com/index.php/*.html
+
+久久漫画网
+*://www.99hanman.top/chapter/*
 
 漫畫類
 
@@ -1137,11 +1140,13 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *fuligirl.net/albums/*
 *://www.baobua.net/post/*
 *baobua.com/post/*
+*://www.baobua.net/post/*
+*baobua.com/post/*
 *jrants.com/*.html
 *taotu.org/*/*/
 *www.kkc3.com/file/*
 *www.hanjuzu.com/handetail-*.html
-*www.haotuwu.com/*/*.html
+*haotuwu.com/*/*.html
 *keaitupian.com/pic/*.html
 *enterdesk.com/*/*.html
 *nvhai8.com/body/*/*.htm
@@ -1156,16 +1161,17 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *.ikmt.net/*/*/*/*.html
 *.nitutu.com/*/*/*.html
 *www.xintp.com/*/*/*.html
+*m.dgmanhua.com*
 *cutegirlsaddict.blogspot.com/*/*/*.html*
 *portrait.knit.bid/*/*
 *://taotuhome.com/*.html
 *123548.xyz/e/action/ShowInfo.php*
-*://tangmoc.com/blog/show/*/view
 *://sixcomic.com/chapter/*
 *://sixacg.com/chapter/*
 *://www.502x.com/*/*.html
 *://djjpg.com/*.html
 *jcomic.net/page/*
+*://tangmoc.com/blog/show/*/view
 *://luvbp.com/*/
 *://www.kaizty.com/photos/*.html*
 *://aitu.men/*/*.html
@@ -1180,9 +1186,10 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://mabui-onna.com/blog-entry-*.html
 *bunkr-albums.io*
 *bunkrr.su/a/*
+*://www.99hanman.top/chapter/*
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
-/^https?://(e-hentai|exhentai)\.org/g/\w+/\w+/$/
+/^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
 /^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?xmanhua\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?yymanhua\.com/m\d+(-p\d+)?//
@@ -1197,5 +1204,5 @@ https://www.htmanga*.top/photos-index-aid-*.html
 /^https?://www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com/\w+/\w+/\d+/\d+\.html$/
 /^https?://(www\.rosi8\.net|www\.sfjpg\.(com|net)|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
 /^https?://heysexgirl\.com/archives/\d+$/
-/https?://www\.modelsvibe\.com/[^/]+/$/
+*www.modelsvibe.com*
 /(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)/chapter/\d+/
