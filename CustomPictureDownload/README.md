@@ -162,6 +162,7 @@ fun.ge(selector, doc)
     autoPager: {
         mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁。
         waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
+        loadTime: 200, //mode為1時給iframe框架讀取的時間，預設200可省略。
         ele: "selector", //下一頁主體元素選擇器
         ele: () => { 
             //2種寫法
@@ -821,6 +822,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://zipaipic.com/">自拍图库</a></td>
+                <td>自拍图库.com</td>
+            </tr>
+            <tr>
                 <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
                 <td><a href="https://taotu.org/m/">taotu.org/m/</a></td>
             </tr>
@@ -1214,7 +1219,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.micmicidol.club/">MIC MIC IDOL</a></td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://ivphoto.tistory.com/">IVPhoto_Gravure</a></td>
