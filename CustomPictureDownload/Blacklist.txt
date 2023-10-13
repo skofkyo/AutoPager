@@ -280,7 +280,7 @@ idol.gravureprincess.date
 *://idol.gravureprincess.date/*/*/*.html
 
 MIC MIC IDOL
-*://www.micmicidol.club/*/*/*.html
+*www.micmicidol.club*
 
 グラビア週刊誌 9
 *://gravurezasshi9.doorblog.jp/archives/*.html
@@ -1004,7 +1004,7 @@ https://www.nuyet.com/gallery/*
 *://girlxinhxinh.com/*-photos*/
 *://girlxinhxinh.com/*-anh*/
 *://idol.gravureprincess.date/*/*/*.html
-*://www.micmicidol.club/*/*/*.html
+*www.micmicidol.club*
 *://kemono.party/*/user/*/post/*
 *://coomer.party/*/user/*/post/*
 *://www.meijuntu.com/*/*.html
