@@ -33,7 +33,7 @@
 
 (async () => {
     "use strict";
-    const options = {
+    let options = {
         enable: 0, //0為白名單模式根據自訂義規則啟用，1為全局啟用
         icon: 1, //是否顯示左下圖示0關1開
         threading: 32, //最大下載線程數
@@ -44,8 +44,17 @@
         autoDownload: 0, //站點全局自動下載開關0關1開，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有NEXT時自動下載的延遲秒數
         comic: 0, //1，忽視漫畫站點開關選項，啟用所有漫畫類規則
-        doubleTouchNext: true //true開啟false關閉，觸控裝置雙擊前往下一頁
+        doubleTouchNext: true, //true開啟false關閉，觸控裝置雙擊前往下一頁
+        zoom: 9 //1 ~ 10 插入的圖片縮放，10 = 100%，9 = 90%
     };
+    let getOptionsData = localStorage.getItem("FullPictureLoadOptions");
+    if (getOptionsData === null && options.autoDownload !== 1) {
+        let jsonStr = JSON.stringify(options);
+        localStorage.setItem("FullPictureLoadOptions", jsonStr);
+    } else if (options.autoDownload !== 1) {
+        let optionsJson = JSON.parse(getOptionsData);
+        options = optionsJson;
+    }
     const siteUrl = window.location.href;
     let siteData = {};
     let siteJson = null;
@@ -1984,6 +1993,17 @@
         customTitle: () => fun.geT(".c-post-hero__title"),
         category: "nsfw1"
     }, {
+        name: "自拍图库 自拍图库.com zipaipic.com",
+        reg: /^https:\/\/.*(zipaitk|zipaipic).com\/content_\d+\.html/i,
+        imgs: ".showimg",
+        insertImg: ["#imgviewer", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一组']",
+        prev: "//a[text()='上一组']",
+        customTitle: () => fun.geT(".ttle").replace(/\n|\d+p/gi, "").trim(),
+        css: "a[rel]{display:none!important}",
+        category: "nsfw2"
+    }, {
         name: "套圖TAOTU.ORG taotu.org",
         reg: /https?:\/\/(\w{2}\.)?taotu\.org\/[\w-]+\//i,
         include: ".piclist",
@@ -2615,6 +2635,37 @@
         insertImg: [".entry-content", 2],
         customTitle: () => fun.geT(".entry-title").trim(),
         category: "nsfw2"
+    }, {
+        name: "MIC MIC IDOL www.micmicidol.club",
+        reg: /^https:\/\/www\.micmicidol\.club\/(\?m=1)?$|^https:\/\/www\.micmicidol\.club\/search/,
+        icon: 0,
+        key: 0,
+        autoPager: {
+            mode: 1,
+            ele: ".blog-posts",
+            next: "a.blog-pager-older-link",
+            observer: ".blog-posts",
+            re: "#blog-pager",
+            stop: () => {
+                let ele = fun.ge(".date-outer", doc);
+                if (!ele) {
+                    return true
+                }
+                return false
+            },
+            history: 1,
+            title: () => {
+                let num;
+                if (/start=/.test(nextLink)) {
+                    num = parseInt(nextLink.match(/start=(\d+)/)[1]) / 50 + 1;
+                } else {
+                    num = 1;
+                }
+                return doc.title + ` - Page ${num}`;
+            }
+        },
+        openInNewTab: ".date-outer a[href]",
+        category: "autoPager"
     }, {
         name: "Kemono https://kemono.party/fantia/user/17148/post/1633768 coomer.party",
         reg: /(kemono\.party|kemono\.su|coomer\.party)\/.+post/,
@@ -8275,7 +8326,9 @@
                 str_56: "確認圖片狀態中...",
                 str_57: "自動翻頁載入中...",
                 str_58: "已到達最後一頁",
-                str_59: "沒有任何主體元素"
+                str_59: "沒有任何主體元素",
+                str_60: "圖片縮放",
+                str_61: "取消縮放"
             };
             break;
         case "zh-CN":
@@ -8338,7 +8391,9 @@
                 str_56: "确认图片状态中...",
                 str_57: "自动翻页加载中...",
                 str_58: "已到达最后一页",
-                str_59: "没有任何主体元素"
+                str_59: "没有任何主体元素",
+                str_60: "图片缩放",
+                str_61: "取消缩放"
             };
             break;
         default:
@@ -8401,7 +8456,9 @@
                 str_56: "Check picture statusing...",
                 str_57: "AutoPager Loading...",
                 str_58: "Reached the last page",
-                str_59: "no main element"
+                str_59: "no main element",
+                str_60: "Image zoom",
+                str_61: "Cancel zoom"
             };
             break;
     }
@@ -9242,6 +9299,7 @@
                     if (!doc) {
                         resolve(fun.doc("none"));
                     }
+                    fun.delay(siteData.autoPager.loadTime || 200);
                     if (typeof ele === "string") {
                         await fun.waitEle(ele, 600, doc);
                     }
@@ -9267,12 +9325,17 @@
                 nextLink = nextcode;
             } else if (typeof siteData.autoPager.next === "string") {
                 let nextEle = fun.ge(siteData.autoPager.next, doc);
-                if (nextLink === nextEle.href) {
+                try {
+                    if (nextLink === nextEle.href) {
+                        return null;
+                    }
+                } catch (error) {
+                    debug("\nfun.getNextLink() ERROR\n", error);
                     return null;
                 }
                 nextLink = nextEle.href;
                 const nh = nextEle.host,
-                    lh = location.host;
+                      lh = location.host;
                 if (nh !== lh) {
                     nextLink = nextLink.replace(nh, lh);
                 }
@@ -9394,6 +9457,10 @@
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
                 img.className = "FullPictureLoadImage";
+                if (options.zoom < 10 && options.zoom > 0) {
+                    img.style.width = `${options.zoom * 10}%`;
+                    img.style.height = "auto";
+                }
                 if (mode == 2 || mode == 3) {
                     img.src = loading_bak;
                     img.dataset.src = srcArr[i];
@@ -10361,6 +10428,28 @@
         }
     };
 
+    const toggleZoom = () => {
+        if (!fetching && options.zoom <= 10 && options.zoom > 1) {
+            options.zoom = options.zoom -= 1;
+            let jsonStr = JSON.stringify(options);
+            localStorage.setItem("FullPictureLoadOptions", jsonStr);
+            [...fun.gae(".FullPictureLoadImage")].forEach(img =>{
+                img.style.width = `${options.zoom * 10}%`;
+            });
+            fun.show(`${displayLanguage.str_60} ${options.zoom * 10}%`);
+        } else {
+            cancelZoom();
+        }
+    };
+
+    const cancelZoom = () => {
+        options.zoom = 10;
+        let jsonStr = JSON.stringify(options);
+        localStorage.setItem("FullPictureLoadOptions", jsonStr);
+        $(".FullPictureLoadImage").removeAttr("style");
+        fun.show(displayLanguage.str_61);
+    };
+
     const addFullPictureLoadButton = () => {
         let img = new Image();
         img.id = "FullPictureLoad";
@@ -10435,19 +10524,21 @@
     z-index: 99;
     opacity: 0.5;
 }
+
 #FullPictureLoad {
-    width: 32px!important;
-    height: 32px!important;
-    position: fixed!important;
-    bottom: 20px!important;
-    left: 20px!important;
-    border-radius: unset!important;
-    z-index:2147483647!important;
-    opacity: 0.8!important;
-    display: block!important;
+    width: 32px !important;
+    height: 32px !important;
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 20px !important;
+    border-radius: unset !important;
+    z-index: 2147483647 !important;
+    opacity: 0.8 !important;
+    display: block !important;
 }
+
 .FullPictureLoadMsg {
-    font-family: Arial,sans-serif!important;
+    font-family: Arial, sans-serif !important;
     font-size: 26px;
     font-weight: bold;
     text-align: center;
@@ -10458,56 +10549,63 @@
     top: 30%;
     left: 50%;
     margin-left: -170px;
-    padding: 0px!important;
+    padding: 0px !important;
     background-color: #000;
     border: 1px solid #303030;
     border-radius: 10px;
     position: fixed;
-    z-index:2147483647;
+    z-index: 2147483647;
     opacity: 0.7;
 }
+
 .FullPictureLoadImage {
     width: auto;
     height: auto;
     max-width: 100%;
-    display: block!important;
+    display: block !important;
     opacity: 1 !important;
-    border:none!important;
-    border-radius: unset!important;
-    padding:0!important;
-    margin: 0 auto!important;
+    border: none !important;
+    border-radius: unset !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
 }
+
 .FullPictureLoadImage[src*="i.imgur.com"] {
-    min-height: 400px!important;
+    min-height: 400px !important;
 }
+
 #FullPictureLoadEnd {
     font-size: 20px;
     height: 30px;
     width: 100%;
     line-height: 30px;
     text-align: center;
-    margin: 5px auto!important;
+    margin: 5px auto !important;
 }
+
 #FullPictureLoadEnd~*:not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]) {
-    display: none!important;
+    display: none !important;
 }
+
 .FullPictureLoadLoading {
     font-size: 20px;
-	text-align: center;
+    text-align: center;
     height: 30px;
     line-height: 30px;
-    margin: 5px auto!important;
-    border: none!important;
+    margin: 5px auto !important;
+    border: none !important;
 }
+
 #FullPictureLoad~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords) {
-    display:none!important;
+    display: none !important;
 }
+
 .autoPagerTitle {
     width: auto;
     height: 30px;
     font-size: 18px;
     color: black;
-    font-family: Arial,sans-serif!important;
+    font-family: Arial, sans-serif !important;
     line-height: 29px;
     text-align: center;
     overflow: hidden;
@@ -10522,21 +10620,23 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
     border-radius: 5px;
 }
+
 .autoPagerTitle a:-webkit-any-link {
-    font-family: Arial,sans-serif!important;
+    font-family: Arial, sans-serif !important;
     color: black;
 }
+
 .autoPagerLoading {
     width: auto;
     height: auto;
-    display: block!important;
+    display: block !important;
     opacity: 1 !important;
-    border:none!important;
-    border-radius: unset!important;
-    padding:0!important;
-    margin: 20px auto!important;
+    border: none !important;
+    border-radius: unset !important;
+    padding: 0 !important;
+    margin: 20px auto !important;
 }
-    `;
+                `;
 
     for (let i = 0; i < customData.length; i++) {
         if (customData[i].reg.test(siteUrl)) {
@@ -10814,6 +10914,12 @@
                         break;
                     case 100: //數字鍵4
                         autoScrollEles();
+                        break;
+                    case 109: //數字鍵-
+                        toggleZoom();
+                        break;
+                    case 107: //數字鍵+
+                        cancelZoom();
                         break;
                 }
             });
