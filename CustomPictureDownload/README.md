@@ -669,10 +669,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://mmm.red/">妹妹美</a></td>
-                <td>完整圖片需要登錄</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.haotuwu.com/">好圖屋</a></td>
                 <td></td>
             </tr>
