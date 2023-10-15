@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.2
+// @version            1.4.3
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數450+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数450+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -11246,7 +11246,7 @@
     <input id="FullPictureLoadOptionsExtension">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">自動下載 (1：開、0：關) 按數字鍵的/停止取消，</font><font color="red">移動裝置勿用!</font></p>
+    <p><font color="black">自動下載 (1：開、0：關) 按數字鍵的/停止取消，</font><font color="red">移動裝置勿用!!!</font></p>
     <input id="FullPictureLoadOptionsAutoDownload">
 </div>
 <div style="width: 100%;">
@@ -11335,8 +11335,9 @@
 
 #FullPictureLoadOptions {
     text-align: center;
-    width: 380px !important;
-    height: 538px !important;
+    width: auto !important;
+    max-width: 400px !important;
+    height: auto !important;
     position: fixed !important;
     top: 10%;
     left: 50%;
@@ -11350,7 +11351,7 @@
 
 #FullPictureLoadOptions * {
     font: unset !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji" !important;
+    font-family: Arial, sans-serif !important;
     font-size: 12px !important;
     float: none !important;
     line-height: 18px !important;
@@ -11363,6 +11364,7 @@
     width: 114px;
     margin-left: 2px;
     margin-right: 2px;
+    margin-bottom: 4px !important;
     display: inline-block;
     border: 1px solid #a0a0a0 !important;
     background-color: transparent !important;
@@ -11370,7 +11372,7 @@
 
 #FullPictureLoadOptions input {
     color: #000000 !important;
-    height: 22px !important;
+    height: 20px !important;
     width: 360px !important;
     border: 1px solid #a0a0a0 !important;
     background-color: transparent !important;
