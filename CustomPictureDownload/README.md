@@ -9,8 +9,7 @@
 用戶寫的規則請自行另外備份，規則只會寫死在腳本裡不會線上規則化，腳本更新就會覆蓋規則。
 
 <h1>關於自動下載：</h1>
-當修改了腳本選項或站點規則啟用了自動下載時，站點規則insertImg的自動插入圖片將無效，瀏覽器的下載設定需關閉下載前詢問儲存位置和設定好預設的下載路徑，全自動需要有NEXT做搭配，每個站點第一次啟用時需等待連續下載2~3次後，觸發瀏覽器詢問是否同意允許下載多個檔案，需同意後後續才能成功下載，並且讓分頁保持在前景運行不然壓縮進度會停住，可以開一個獨立視窗一個分頁用作下載用，最好的方式是拉兩個視窗一個佔1/3畫面掛下載一個佔3/2畫面瀏覽。
-<p>2023/05/13，腳本增加了全局開關選項，可以不用搜索規則對各別站點進行修改，不需要時記得關閉。</p>
+當修改了腳本UI選項設定或腳本內的站點規則啟用了自動下載時，站點規則insertImg的自動插入圖片將無效，瀏覽器的下載設定需關閉下載前詢問儲存位置和設定好預設的下載路徑，全自動需要有NEXT做搭配，每個站點第一次啟用時需等待連續下載2~3次後，觸發瀏覽器詢問是否同意允許下載多個檔案，需同意後後續才能成功下載，並且讓分頁保持在前景運行不然壓縮進度會停住，可以開一個獨立視窗一個分頁用作下載用，最好的方式是拉兩個視窗一個佔1/3畫面掛下載一個佔3/2畫面瀏覽。
 
 <h1>圖片全載規則示例：</h1>
 <details>
@@ -506,7 +505,8 @@ imgs: async () => {
 
 <p>數字鍵0下載壓縮、數字鍵1複製圖片網址、數字鍵2捲動至第一張大圖、數字鍵3一鍵下載</p>
 <p>數字鍵5切換圖片顯示模式，原始和4圖並排，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
-<p>減鍵圖片以10%為單位縮小，會記憶縮放比例、加鍵恢復為自動</p>
+<p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例、數字鍵 + 加鍵恢復為自動</p>
+<p><font color="#FF0000">數字鍵 / 除鍵初始化當前網站的設定，也用於取消自動下載。</font></p>
 
 <p>按0、Enter、Enter，3步驟開始下載。</p>
 <p>按1、Enter，2步驟複製圖片網址。</p>
@@ -849,7 +849,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.qq7k.com/mntp/">晴空头像图库</a></td>
-                <td></td>
+                <td><a href="https://m.qq7k.com/mntp/">m.qq7k.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.930tu.com/">930图片网</a></td>
@@ -1209,10 +1209,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://mabui-onna.com/">マブい女画像集</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://dog-sokuhou.com/">ドッグ速報</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1705,7 +1701,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 </details>
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
-<p>2023/05/17，增加了腳本選項，可以直接開啟所有的漫畫類規則，方便自己重新測試規則，和有需要的用戶不用一個一個開那麼麻煩。</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
@@ -1895,18 +1890,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.zuimh.com/">m.zuimh.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.imitui.com/">爱米推漫画</a></td>
-                <td><a href="https://m.imitui.com/">m.imitui.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.xlsmh.com/">下拉式漫画</a></td>
-                <td><a href="https://m.xlsmh.com/">m.xlsmh.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.dmhua8.com/">漫画吧</a></td>
-                <td><a href="https://m.dmhua8.com/">m.dmhua8.com</a>，預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.100mhl.com/">漫画连</a></td>
                 <td><a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉</td>
             </tr>
@@ -1927,28 +1910,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.gougoumh.com/">m.gougoumh.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.qimhua.com/">奇奇漫画</a></td>
-                <td><a href="https://m.qimhua.com/">m.qimhua.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.yxtun.com/">悠闲漫画</a></td>
-                <td><a href="https://m.yxtun.com/">m.yxtun.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.bukamh.com/">不卡漫画</a></td>
-                <td><a href="https://m.bukamh.com/">m.bukamh.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.duoximh.com/main/recent/">多熙漫画</a></td>
-                <td><a href="https://m.duoximh.com/update/">m.duoximh.com</a>，預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
                 <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，預設關閉，2023/05/07 blocked?</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.qmiaomh.com/">奇妙漫画</a></td>
-                <td><a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://comics.veryim.com/">非常爱漫网</a></td>
@@ -1983,10 +1946,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.bingmh.com/">布丁漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.manshiduo.net/">漫士多</a></td>
                 <td>預設關閉</td>
             </tr>
@@ -2000,7 +1959,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.gaonaojin.com/">仙漫网</a></td>
-                <td><a href="https://m.gaonaojin.com/">m.xianmanwang.com</a>，預設關閉</td>
+                <td><a href="https://m.gaonaojin.com/">m.gaonaojin.com</a>，預設關閉，PC版下架的漫畫移動版可能還在。</td>
             </tr>
             <tr>
                 <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
@@ -2024,28 +1983,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://m.qiximh4.com/">m.qiximh4.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.17fuman.com/">爱漫之家</a></td>
-                <td><pre>www2.17fuman.com，www.fumanhua-1.com，www.fumanhua-2.com，www.fumanhua-3.com，www2.fumanhua-1.com，m.fumanhua-1.com，m.fumanhua44.com，m.fumanhua66.com，m.fumanhua77.com，m1.fumanhua-1.com，m1.fumanhua44.com，m1.fumanhua66.com，m1.fumanhua77.com</pre>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.73mh.net/">73漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.733.so/">733动漫</a></td>
-                <td><a href="http://m.733.so/">m.733.so</a>，預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.mhko.net/">漫画库</a></td>
                 <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.bengou.co/">笨狗漫画</a></td>
-                <td><a href="https://m.bengou.co/">m.bengou.co</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.kukuwumh.com/">酷酷屋</a></td>
-                <td><a href="http://m.kukuwumh.com/">m.kukuwumh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.mh160.cc/">漫画160</a></td>
