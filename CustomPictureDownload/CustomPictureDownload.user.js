@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.5
+// @version            1.4.6
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數450+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数450+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -554,6 +554,13 @@
     }, {
         name: "卡卡美女网 www.kaka234.cc m.kaka234.cc",
         reg: /https?:\/\/(www|m)\.kaka234\.cc\/HTM\/pic\/\w+\/\d+\/\d+\/\d+\.html/i,
+        init: () => {
+            let ele = fun.ge(".PsBox");
+            if (ele) {
+                let eleParent = ele.parentNode;
+                eleParent.parentNode.insertBefore(ele.cloneNode(true), eleParent);
+            }
+        },
         imgs: () => {
             let max;
             try {
@@ -1142,6 +1149,7 @@
         next: ".preandnext:not(.connext)>a",
         prev: ".preandnext.connext>a[href$=htm]",
         customTitle: () => fun.geT("#photos>h1"),
+        css: ".photo img {max-width:100% !important}",
         category: "nsfw1"
     }, {
         name: "优美图库M wap.umei.cc",
@@ -1163,7 +1171,7 @@
         },
         prev: 1,
         customTitle: () => fun.geT(".title>h1"),
-        css: "#maincont>div,dl:nth-child(n+1):nth-child(-n+2){display:none!important}",
+        css: "#maincont>div:not(#FullPictureLoadImgBox),dl:nth-child(n+1):nth-child(-n+2){display:none!important}",
         category: "nsfw1"
     }, {
         name: "MEITU131 www.meitu131.net/nvshen/ www.meitu131.net/meinv/ www.meitu131.net/jigou/ m.meitu131.net",
@@ -9887,7 +9895,7 @@
                 }
                 nextLink = nextEle.href;
                 const nh = nextEle.host,
-                    lh = location.host;
+                      lh = location.host;
                 if (nh !== lh) {
                     nextLink = nextLink.replace(nh, lh);
                 }
@@ -11133,9 +11141,9 @@
             if (options.column == 2 || siteData.column == 2 || siteData.category == "comic") {
                 width = "48.8%";
             } else if (options.column == 3 || siteData.column == 3) {
-                width = "33%";
+                width = "32%";
             } else if (options.column == 5 || siteData.column == 5) {
-                width = "19.5%";
+                width = "19.2%";
             } else {
                 if (hasTouchEvents()) {
                     width = "24%";
@@ -11271,8 +11279,6 @@
     const FullPictureLoadOptionsMainHtmlSrt = `
 <div style="width: 100%;">
     <p><font color="black">Full picture load 選項</font></p>
-    <p><font color="black">當前網站 ( 0：根據規則啟用、1：無規則也啟用 )</font></p>
-    <input id="FullPictureLoadOptionsEnable">
 </div>
 <div style="width: 100%;">
     <p><font color="black">左下圖示 ( 0：關、1：開 )</font></p>
@@ -11322,7 +11328,6 @@
     document.body.appendChild(FullPictureLoadOptionsMain);
 
     const setValue = () => {
-        ge("#FullPictureLoadOptionsEnable").value = options.enable;
         ge("#FullPictureLoadOptionsIcon").value = options.icon;
         ge("#FullPictureLoadOptionsThreading").value = options.threading;
         ge("#FullPictureLoadOptionsZip").value = options.zip;
@@ -11349,7 +11354,6 @@
 
     $("#FullPictureLoadOptionsSaveBtn").on("click", (event) => {
         event.preventDefault();
-        options.enable = ge("#FullPictureLoadOptionsEnable").value;
         options.icon = ge("#FullPictureLoadOptionsIcon").value;
         options.threading = ge("#FullPictureLoadOptionsThreading").value;
         options.zip = ge("#FullPictureLoadOptionsZip").value;
