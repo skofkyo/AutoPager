@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.6
+// @version            1.4.7
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數450+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数450+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -8997,18 +8997,6 @@
     }
     //console.log("\ndisplayLanguage\n", displayLanguage);
 
-    try {
-        GM_registerMenuCommand("設定", () => {
-            $("#FullPictureLoadOptions").removeAttr("style");
-        });
-    } catch (e) {
-        try {
-            GM.registerMenuCommand("設定", () => {
-                $("#FullPictureLoadOptions").removeAttr("style");
-            });
-        } catch (e) {}
-    }
-
     let _GM_xmlhttpRequest;
     if (typeof GM_xmlhttpRequest != "undefined") {
         _GM_xmlhttpRequest = GM_xmlhttpRequest;
@@ -9895,7 +9883,7 @@
                 }
                 nextLink = nextEle.href;
                 const nh = nextEle.host,
-                      lh = location.host;
+                    lh = location.host;
                 if (nh !== lh) {
                     nextLink = nextLink.replace(nh, lh);
                 }
@@ -10807,6 +10795,8 @@
         return imgs;
     };
 
+    let countdownTime1, countdownTime2;
+
     const imgZipDownload = async () => {
         if (downloading) {
             alert(displayLanguage.str_48);
@@ -10888,6 +10878,9 @@
                 debug("\nNewDataArray：", blobDataArray);
                 debug("\nErrorDataArray：", errorDataArray);
                 if (errorDataArray.length > 0) {
+                    options.autoDownload = 0;
+                    let jsonStr = JSON.stringify(options);
+                    localStorage.setItem("FullPictureLoadOptions", jsonStr);
                     downloadNum = 0;
                     downloading = false;
                     fun.show(`${displayLanguage.str_27}${errorDataArray.length}${displayLanguage.str_28}`, 3000);
@@ -10961,11 +10954,11 @@
                                     let countdownNum = max;
                                     fun.show(`${displayLanguage.str_32}${max}${displayLanguage.str_33}`, 0);
                                     for (let i = 1; i < max; i++) {
-                                        setTimeout(() => {
+                                        countdownTime1 = setTimeout(() => {
                                             fun.show(`${displayLanguage.str_32}${countdownNum-=1}${displayLanguage.str_33}`, 0);
                                         }, i * 1000);
                                     }
-                                    setTimeout(() => {
+                                    countdownTime2 = setTimeout(() => {
                                         if (typeof next === "function") {
                                             fun.show(displayLanguage.str_34);
                                             location.href = ele;
@@ -10976,6 +10969,9 @@
                                     }, max * 1000);
                                 } else if (!ele && siteData.autoDownload[0] == 1 || !ele && options.autoDownload == 1) {
                                     fun.show(displayLanguage.str_36, 0);
+                                    options.autoDownload = 0;
+                                    let jsonStr = JSON.stringify(options);
+                                    localStorage.setItem("FullPictureLoadOptions", jsonStr);
                                 }
                             }
                         });
@@ -11297,15 +11293,15 @@
     <input id="FullPictureLoadOptionsExtension">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">自動下載 (1：開、0：關) 按數字鍵的/停止取消，</font><font color="red">移動裝置勿用!!!</font></p>
+    <p><font color="black">自動下載 (1：開、0：關) </font><font color="red">快捷鍵 [ ctrl + . ] 開始或取消</font></p>
     <input id="FullPictureLoadOptionsAutoDownload">
 </div>
 <div style="width: 100%;">
     <p><font color="black">自動下載倒數秒數</font></p>
     <input id="FullPictureLoadOptionsCountdown">
 </div>
-<div style="width: 100%;">
-    <p><font color="black">漫畫類規則開關 ( 0：維持關閉、1：啟用當前漫畫站規則 )</font></p>
+<div style="width: 100%; display: none;">
+    <p><font color="black">當前漫畫站規則 ( 0：維持關閉、1：啟用 )</font></p>
     <input id="FullPictureLoadOptionsComic">
 </div>
 <div style="width: 100%;">
@@ -11585,9 +11581,13 @@
     border: 1px solid #a0a0a0 !important;
 }
                 `;
-
+    let showOptions = false;
     for (let i = 0; i < customData.length; i++) {
         if (customData[i].reg.test(siteUrl)) {
+            showOptions = true;
+            if (customData[i].category === "comic" && customData[i].enable === 0) {
+                $("#FullPictureLoadOptions>div:nth-child(8)").show();
+            }
             let delay = customData[i].delay;
             if (delay) {
                 await fun.delay(delay, 0);
@@ -11840,6 +11840,58 @@
         debug("\n列出未分類規則", noneData);
     }
 
+    if (showOptions) {
+        try {
+            GM_registerMenuCommand("設定", () => {
+                $("#FullPictureLoadOptions").removeAttr("style");
+            });
+        } catch (e) {
+            try {
+                GM.registerMenuCommand("設定", () => {
+                    $("#FullPictureLoadOptions").removeAttr("style");
+                });
+            } catch (e) {}
+        }
+    }
+
+    if (!ge(".FullPictureLoadStyle")) fun.css(style);
+
+    let autoDownload = siteData.autoDownload;
+
+    if (hasTouchEvents() || !autoDownload) {
+        $("#FullPictureLoadOptions>div:nth-child(n+6):nth-child(-n+7)").hide();
+    }
+
+    if (!hasTouchEvents()) {
+        $("#FullPictureLoadOptions>div:nth-child(9)").hide();
+    }
+
+    if (autoDownload) {
+        document.addEventListener("keydown", event => {
+            if (ge("#FullPictureLoadOptions:not([style])")) {
+                return;
+            }
+            if (event.ctrlKey && event.key == ".") {
+                if (options.autoDownload === 0) {
+                    fun.show("即將開始自動下載!!!", 0);
+                    options.autoDownload = 1;
+                    let jsonStr = JSON.stringify(options);
+                    localStorage.setItem("FullPictureLoadOptions", jsonStr);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    options.autoDownload = 0;
+                    clearTimeout(countdownTime1);
+                    clearTimeout(countdownTime2);
+                    let jsonStr = JSON.stringify(options);
+                    localStorage.setItem("FullPictureLoadOptions", jsonStr);
+                    location.reload();
+                }
+            }
+        });
+    }
+
     if (options.enable == 1) {
         if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
         if (!ge(".FullPictureLoadStyle")) fun.css(style);
@@ -11892,7 +11944,5 @@
             return;
         } else if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
     }
-
-    if (!ge(".FullPictureLoadStyle")) fun.css(style);
 
 })();
