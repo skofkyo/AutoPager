@@ -39,6 +39,7 @@
         return arr;
     },
     scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵4
+    button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]插入圖片後添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
@@ -84,6 +85,7 @@
         code
     },
     scrollEle: ["", 500],
+    button: [4, "24%", 1],
     insertImg: ["", 0, time],
     insertImg: [
         ["", 1, ""], 2, time
@@ -503,10 +505,11 @@ imgs: async () => {
 
 <h1>腳本有綁定按鍵</h1>
 
-<p>數字鍵0下載壓縮、數字鍵1複製圖片網址、數字鍵2捲動至第一張大圖、數字鍵3一鍵下載</p>
-<p>數字鍵5切換圖片顯示模式，原始和4圖並排，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
+<p>數字鍵 0 下載壓縮、數字鍵 1 複製圖片網址、數字鍵 2 捲動至第一張大圖、數字鍵 3一鍵下載</p>
+<p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
 <p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例、數字鍵 + 加鍵恢復為自動</p>
-<p><font color="#FF0000">數字鍵 / 除鍵初始化當前網站的設定，也用於取消自動下載。</font></p>
+<p>數字鍵 * 乘鍵顯示選項設定。</p>
+<p>數字鍵 / 除鍵初始化當前網站的設定，也用於取消自動下載。</p>
 
 <p>按0、Enter、Enter，3步驟開始下載。</p>
 <p>按1、Enter，2步驟複製圖片網址。</p>
@@ -1701,6 +1704,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 </details>
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
+<p>如有需要請透過UI選項設定開啟，或幹脆修改腳本，也需要關閉東方永頁機或加自己加黑名單，不然會衝突。</p>
+<p>透過UI開啟當前漫畫站規則的步驟 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 漫畫規則填1 > 保存設定</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
@@ -1722,7 +1727,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
-                <td>SPA網頁</td>
+                <td>SPA網頁，只有下載功能</td>
             </tr>
             <tr>
                 <td><a href="http://www.manmanju.com/">漫漫聚</a></td>
@@ -1767,7 +1772,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://m.happymh.com/">嗨皮漫畫</a></td>
-                <td>閱讀、展開目錄、自動點擊載入、漫畫鏈接新分頁打開，預設關閉</td>
+                <td>圖片手動插入、閱讀、展開目錄、自動點擊載入、漫畫鏈接新分頁打開，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.mangabz.com/">Mangabz</a></td>
@@ -1963,12 +1968,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
-                <td>預設關閉</td>
+                <td>預設關閉，部分漫畫雖然被下架但代碼資料還在，依然能插入圖片</td>
             </tr>
             <tr>
                 <td><a href="https://godamanga.com/">GODA漫畫</a></td>
                 <td><a href="https://cn.godamanga.site/">cn.godamanga.site</a>，<a href="https://cocomanga.org/">cocomanga.org</a>，<a href="https://nav.telltome.net/">发布页
-</a>，預設關閉</td>
+</a>，預設關閉，插入圖片後元素會被重置，只有下載功能。</td>
             </tr>
             <tr>
                 <td><a href="https://baozimh.org/">包子漫畫</a></td>
