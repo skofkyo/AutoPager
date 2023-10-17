@@ -5598,7 +5598,7 @@
         button: [4],
         insertImg: ["#img_list", 2],
         customTitle: () => fun.title(" - 列表", 1),
-        category: "nsfw2"
+        category: "hcomic"
     }, {
         name: "VN漫画网 下拉阅读 www.vnacg.com",
         reg: /(www|m)\.vnacg\.com\/show\/\d+\.html/,
@@ -11170,17 +11170,36 @@
             imgBox.id = "FullPictureLoadImgBox";
             imgBox.style.width = "100%";
             imgBox.style.maxWidth = "1400px";
-            imgBox.style.backgroundColor = "#FAFAFB";
-            [...gae(".FullPictureLoadImage:not(.small)")].forEach(e => {
+            imgBox.style.backgroundColor = "#F6F6F6";
+            let srcArr1 = [...gae(".FullPictureLoadImage:not(.small)")].map(e => { //取得目前圖片網址的陣列
+                if (e.dataset.src) {
+                    return e.dataset.src;
+                } else {
+                    return e.src;
+                }
+            });
+            let srcArr2 = srcArr1.map((item, index, arr) => { //圖片網址陣列單雙對換用於漫畫式閱讀
+                if (parseInt(index) % 2 == 0) { //圖片網址陣列裡的單數張
+                    if ((parseInt(index) + 1) == arr.length) {
+                        return arr[index]; //最後一張是單數張則返回此圖片網址
+                    } else {
+                        return arr[parseInt(index) + 1]; //是單數則返回後一個
+                    }
+                } else { //圖片網址陣列裡的雙數張
+                    return arr[parseInt(index) - 1]; //是雙數則返回前一個
+                }
+            });
+            let srcArr;
+            if (siteData.category == "comic" || (options.column == 2 && siteData.category == "hcomic")) {
+                srcArr = srcArr2; //漫畫類用單雙對換的圖片網址並排後閱讀順序會是右至左跟漫畫書一樣
+            } else {
+                srcArr = srcArr1; //閱讀順序左至右
+            }
+            srcArr.forEach(e => {
                 let img = new Image();
                 img.className = "FullPictureLoadImage small";
-                if (e.dataset.src) {
-                    img.src = loading_bak;
-                    img.dataset.src = e.dataset.src;
-                } else {
-                    img.src = loading_bak;
-                    img.dataset.src = e.src;
-                }
+                img.src = loading_bak;
+                img.dataset.src = e;
                 fun.imagesObserver.observe(img);
                 let item = document.createElement("div");
                 item.style.width = width;
@@ -11334,6 +11353,7 @@
 <div style="width: 100%;">
     <p><font color="black">當前網站圖片並排模式顯示數量 ( 2、3、4、5 ) comic類固定為2</font></p>
     <input id="FullPictureLoadOptionsColumn">
+    <p><font color="black">PS:comic類並排後為右至左的漫讀模式 hcomic類也設定為2將套用</font></p>
 </div>
 <button id="FullPictureLoadOptionsCancelBtn"><font color="black">取消 (Esc)</font></button>
 <button id="FullPictureLoadOptionsResetBtn"><font color="black">重置設定</font></button>
