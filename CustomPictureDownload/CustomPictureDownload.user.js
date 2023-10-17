@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.8
+// @version            1.4.10
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數450+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数450+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -11128,6 +11128,7 @@
             if (options.zoom == 0) {
                 cancelZoom();
             }
+            ge("#FullPictureLoadOptionsZoom").value = options.zoom;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             if (options.zoom > 0) {
@@ -11234,6 +11235,7 @@
         }
         if (ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = 0;
+            ge("#FullPictureLoadOptionsZoom").value = options.zoom;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             $(".FullPictureLoadImage:not(.small)").removeAttr("style");
