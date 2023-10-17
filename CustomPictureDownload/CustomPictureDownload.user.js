@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.7
+// @version            1.4.8
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數450+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数450+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -47,8 +47,8 @@
         autoDownloadCountdown: 5, //有有效的NEXT時自動下載的倒數秒數
         comic: 0, //1，忽視漫畫站點開關選項，啟用漫畫規則
         doubleTouchNext: true, //true開啟false關閉，觸控裝置雙擊前往下一頁
-        zoom: 0, //1 ~ 10 插入的圖片縮放，10 = 100%，9 = 90%，0 = auto
-        column: 4 //並排顯示數量2、3、4、5
+        zoom: 0, //1 ~ 10 腳本插入的圖片縮放比例，10 = 100%，9 = 90%，0 = auto
+        column: 4 //圖片並排顯示的數量2、3、4、5
     };
     let getOptionsData = localStorage.getItem("FullPictureLoadOptions");
     if (getOptionsData === null && options.autoDownload !== 1) {
@@ -57,7 +57,7 @@
     } else if (options.autoDownload !== 1) {
         let optionsJson = JSON.parse(getOptionsData);
         options = optionsJson;
-        console.log("optionsJson", optionsJson);
+        console.log("Full Picture Load Options Json\n", optionsJson);
     }
 
     const siteUrl = window.location.href;
@@ -370,6 +370,7 @@
         imgs: () => fun.getImgA("#content img", ".pager a:not([title])"),
         button: [4],
         insertImg: ["#content", 1],
+        autoDownload: [0],
         next: ".prevNews>a",
         prev: ".nextNews>a",
         customTitle: () => fun.geT("h1"),
@@ -1809,6 +1810,7 @@
         next: "//div[@class='b' and contains(text(),'上一')]/a",
         prev: "//div[@class='b' and contains(text(),'下一')]/a",
         customTitle: () => fun.geT("h1").replace(/\/(\d+P)?|\||第\d+页/gi, "").trim(),
+        topButton: true,
         css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,.interestline+.nav~*:not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions){display:none !important}",
         category: "nsfw2"
     }, {
@@ -1832,6 +1834,7 @@
         next: "//div[@class='b' and contains(text(),'上一')]/a",
         prev: "//div[@class='b' and contains(text(),'下一')]/a",
         customTitle: () => fun.geT("h1").replace(/\/(\d+P)?/i, ""),
+        topButton: true,
         css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>center,#d5tig,#pcapicb,#pcapic,#google_translate_element,#d5a>*:not([id]):not([class]),union[id]{display:none !important}",
         category: "nsfw2"
     }, {
@@ -2840,7 +2843,7 @@
         css: ".post img{max-width:100% !important}",
         category: "nsfw2"
     }, {
-        name: "MIC MIC IDOL www.micmicidol.club",
+        name: "MIC MIC IDOL www.micmicidol.club 分類自動翻頁",
         reg: /^https:\/\/www\.micmicidol\.club\/(\?m=1)?$|^https:\/\/www\.micmicidol\.club\/search/,
         icon: 0,
         key: 0,
@@ -4320,7 +4323,7 @@
         customTitle: () => fun.geT(".main-title").split(" No.")[0].trim(),
         category: "nsfw1"
     }, {
-        name: "cn.angirlz.com",
+        name: "cn.angirlz.com", //SPA
         reg: /https?:\/\/\w{2}\.angirlz\.com\/album\/\w+/,
         imgs: async () => {
             if (await fun.waitEle(".loading[style$=hidden]")) {
@@ -4334,38 +4337,43 @@
         customTitle: () => fun.geT("h1"),
         category: "nsfw2"
     }, {
-        name: "bunnyxgirl.com letsgirlz.com",
-        reg: /https?:\/\/(bunnyxgirl|letsgirlz)\.com\/[^/]+\/.+/,
+        name: "bunnyxgirl.com letsgirlz.com bootyxgirl.com xbeautyzone.com",
+        reg: /https?:\/\/(bunnyxgirl|letsgirlz|bootyxgirl|xbeautyzone)\.com\/[^/]+\/.+/,
         include: ".separator>a",
         imgs: ".separator>a",
+        button: [4],
+        insertImg: [
+            [".album-post-inner,.album-postmeta-primarypix", 2, ".separator"], 2
+        ],
         customTitle: () => fun.geT(".breadcrumbs>span:last-child"),
         category: "nsfw2"
     }, {
-        name: "cn.bunnyxgirl.com cn.letsgirlz.com cn.bestxleg.com",
-        reg: /https?:\/\/\w{2}\.(bunnyxgirl|letsgirlz|bestxleg)\.com\/[^/]+\/\w+/,
+        name: "cn.bunnyxgirl.com cn.letsgirlz.com cn.bestxleg.com cn.xbeautyzone.com",
+        reg: /https?:\/\/\w{2}\.(bunnyxgirl|letsgirlz|bestxleg|xbeautyzone)\.com\/[^/]+\/\w+/,
         include: ".separator>a",
         imgs: () => fun.getImg(".separator>a", (fun.geT(".nav-links>*:last-child", 2) || 1), 16),
-        button: [4],
         insertImg: [
             [".album-post-body .clear,.album-post-share-wrap", 1, "div[itemprop='description articleBody'],.album-post-body>*:not(.album-post-inner):not(.album-post-share-wrap):not(.FullPictureLoadImage):not(#FullPictureLoadEnd)"], 2
         ],
         customTitle: () => fun.geT(".breadcrumbs>span:last-child"),
         category: "nsfw2"
     }, {
-        name: "kawaiix.com kawaiixpic.com www.peachgirlz.com peachgirlz.com pantyxart.com beautyxpic.com cutexpic.com assgirlz.com beautifulmetas.com pantyxgirl.com greatxpic.com xartpic.com perfectxpic.com bestxboobs.com artthong.com hotbeautypic.com greatxgirl.com",
-        reg: /https?:\/\/(r18\.|www\.)?(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|assgirlz|beautifulmetas|pantyxgirl|greatxpic|xartpic|perfectxpic|bestxboobs|artthong|hotbeautypic|greatxgirl)\.com\/[^/]+\/.+/,
+        name: "kawaiix.com kawaiixgirl.com kawaiixpic.com kinkygirlz.com kawaiimetas.com eroticxgirl.com sexyxpic.com hottyxpic.com thongxxx.com juicexgirl.com eroticxpic.com bustyxgirl.com beautyxgirl.com bellexpic.com pantyxpic.com www.peachgirlz.com peachgirlz.com pantyxart.com beautyxpic.com cutemetas.com cutexpic.com perfectxbody.com sexyqgirl.com bestxhips.com assgirlz.com beautifulmetas.com pantyxgirl.com greatxpic.com xartpic.com perfectxpic.com bestxboobs.com artthong.com hotbeautypic.com greatxgirl.com asianxpic.com bestxleg.com tokyohotgirl.com bestxass.com",
+        reg: /https?:\/\/(r18\.|www\.)?(kawaiix|kawaiixgirl|kawaiixpic|kinkygirlz|kawaiimetas|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|assgirlz|beautifulmetas|pantyxgirl|greatxpic|xartpic|perfectxpic|bestxboobs|artthong|hotbeautypic|greatxgirl|asianxpic|bestxleg|tokyohotgirl|bestxass)\.com\/[^/]+\/.+/,
         include: "//a[@data-title and picture/source]",
         imgs: "//a[@data-title and picture/source]",
-        customTitle: () => fun.title(/( - Kawa| - Peach| - Panty| - Beauty| - Cute| - Ass| - Beaut| - Great| - Xart| - Perfect| - Art| - GreatXGirl)/i, 1).replace(/\s?\(\d+\s?photos\)/, "").trim(),
+        button: [4],
+        insertImg: [".hero+.hero,.entry-content,.d-flex>.col-24,.album-post,.album-h1", 2],
+        customTitle: () => fun.title(/( - Kawa| - KinkyGirlz| - BelleXPic| - Peach| - Panty| - Beauty| - Cute| - Ass| - Beaut| - Great| - Xart| - Perfect| - Art| - GreatXGirl)/i, 1).replace(/\s?\(\d+\s?photos\)/, "").trim(),
         category: "nsfw2"
     }, {
-        name: "cn.kawaiix.com cn.kawaiixpic.com cn.peachgirlz.com cn.pantyxart.com cn.beautyxpic.com cn.cutexpic.com cn.perfectxbody.com cn.sexyqgirl.com cn.bestxhips.com cn.bestxass.com cn.assgirlz.com cn.bestxbum.com cn.eroticxpic.com cn.xxxthong.com cn.thongxgirl.com cn.bestxlingerie.com cn.sexyxart.com cn.hotxhips.com cn.hotbeautypic cn.greatxgirl.com",
-        reg: /https?:\/\/\w{2}\.(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic|greatxgirl)\.com\/[^/]+\/\w+/,
+        name: "cn.kawaiix.com cn.kawaiixgirl.com cn.kawaiixpic.com cn.kinkygirlz.com cn.kawaiimetas.com cn.eroticxgirl.com cn.sexyxpic.com cn.hottyxpic.com cn.thongxxx.com cn.juicexgirl.com cn.eroticxpic.com cn.bustyxgirl.com cn.beautyxgirl.com cn.bellexpic.com cn.pantyxpic.com cn.peachgirlz.com cn.pantyxart.com cn.beautyxpic.com cn.cutemetas.com cn.cutexpic.com cn.perfectxbody.com cn.sexyqgirl.com cn.bestxhips.com cn.bestxass.com cn.assgirlz.com cn.bestxbum.com cn.eroticxpic.com cn.xxxthong.com cn.thongxgirl.com cn.bestxlingerie.com cn.sexyxart.com cn.hotxhips.com cn.hotbeautypic cn.greatxgirl.com cn.asianxpic.com cn.bootyxgirl.com cn.tokyohotgirl.com",
+        reg: /https?:\/\/\w{2}\.(kawaiix|kawaiixgirl|kawaiixpic|kinkygirlz|kawaiimetas|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic|greatxgirl|asianxpic|bootyxgirl|tokyohotgirl)\.com\/[^/]+\/\w+/,
         include: "//a[@data-title and picture/source]",
         imgs: () => fun.getImg("//a[@data-title and picture/source]", (fun.geT(".nav-links>*:last-child", 2) || 1), 16),
         button: [4],
         insertImg: [".hero+.hero,.entry-content,.d-flex>.col-24,.album-post", 2],
-        customTitle: () => fun.geT(".entry-title,.album-title,.album-post-title,.col-12>h1").split(" No.")[0].trim(),
+        customTitle: () => fun.geT(".entry-title,.album-title,.album-post-title,.col-12>h1,.album-h1").split(" No.")[0].trim(),
         css: ".flex-grid:not(.masonry){display:block!important;}",
         category: "nsfw2"
     }, {
@@ -5579,7 +5587,9 @@
         reg: /https:\/\/(wnacg\.com|www\.wnacg\.com|www\.wnacg\.org|m\.wnacg\.com|m\.wnacg\.org|www\.htmanga\d\.top|www\.hentaicomic\.ru|www\.wn3\.lol)\/photos-index(-page-\d+)?-aid-\d+\.html/,
         icon: 0,
         key: 0,
-        init: "fun.getNP('.gallary_item','.thispage+a',null,'.paginator',0,null,0)",
+        init: () => {
+            fun.getNP(".gallary_item", ".thispage+a", null, ".paginator", 0, null, 0);
+        },
         category: "nsfw2"
     }, {
         name: "紳士漫畫 下拉閱讀頁 wnacg.com www.wnacg.com www.wnacg.org m.wnacg.org m.wnacg.com www.wnacglink.top wn01.ru wn02.ru www.htmanga3.top www.htmanga4.top www.htmanga5.top www.hentaicomic.ru www.wn3.lol",
@@ -5811,7 +5821,9 @@
         reg: /orzqwq\.com\/manga\/[^/]+\/$/,
         icon: 0,
         key: 0,
-        init: "fun.getNP('.chapter-images-list>.image-item', 'li.active+li>a',null,'.pagination',0,'data-src',0)",
+        init: () => {
+            fun.getNP(".chapter-images-list>.image-item", "li.active+li>a", null, ".pagination", 0, "data-src", 0);
+        },
         category: "hcomic"
     }, {
         name: "HO5HO www.ho5ho.com",
@@ -6143,7 +6155,6 @@
     }, {
         name: "8Comic無限動漫 手機版 https://8.twobili.com/comic/insurance_103.html?ch=471",
         enable: 1,
-        icon: 1,
         reg: /8\.twobili\.com\/comic\/insurance/,
         init: () => {
             fun.ge("#pageindex").parentNode.appendChild(fun.ge("#prevvol").cloneNode(true));
@@ -6177,7 +6188,6 @@
             let n = fun.geT("#chapter");
             return t + " - " + n;
         },
-        topButton: true,
         css: ".pinch-zoom-container{height:auto !important;display:contents !important}.view_tmenu+div[style],#pagenum,[onclick^='j'],#pageindex,ico+a+.material-icons.right-logo{display:none !important}.view_menut a{width:33.3% !important;max-width:33.3% !important}",
         category: "comic"
     }, {
@@ -6517,7 +6527,8 @@
         },
         imgs: () => [...fun.gae(".site-reader__image")].map(e => e.dataset.pageImageUrl),
         button: [4, "24%", 1],
-        insertImg: [".CustomPictureBox", 1],
+        insertImg: [".CustomPictureBox", 2],
+        autoDownload: [0],
         next: () => {
             let next = fun.ge("//select[@data-kind='publication']/option[@selected]/preceding-sibling::option[1]");
             if (next) {
@@ -6528,6 +6539,7 @@
         },
         prev: 1,
         customTitle: () => fun.title(" - 漫畫狗"),
+        threading: 1,
         css: ".CustomPictureBox{height:auto!important}.fixed-bottom{display:none!important}",
         category: "comic"
     }, {
@@ -6595,7 +6607,6 @@
     }, {
         name: "Manhuagui看漫画M https://m.manhuagui.com/comic/17023/176171.html",
         enable: 0,
-        icon: 0,
         reg: /m\.manhuagui\.com\/comic\/\d+\/\d+.html/,
         imgs: () => {
             let code = [...document.scripts].find(s => s.innerHTML.search(/x6c/) > -1).innerHTML.trim().slice(26);
@@ -6643,7 +6654,6 @@
     }, {
         name: "包子漫画 閱讀 https://www.kukuc.co/comic/chapter/yushenyitongshengji-ohyeonbain/0_2.html",
         enable: 0,
-        icon: 0,
         reg: /\/comic\/chapter\/[^/]+\/\w+\.html/i,
         include: "//title[contains(text(),'包子')]",
         init: async () => {
@@ -7205,7 +7215,6 @@
     }, {
         name: "雪儿漫画M m.xuermh.com",
         enable: 0,
-        icon: 0,
         reg: /m\.xuermh\.com\/manhua\/\w+\/\d+\.html/i,
         init: async () => {
             let a = fun.ge(".erPag a");
@@ -7214,7 +7223,8 @@
             await fun.getNP(".erPag mip-link img:not([style*=position])", "//mip-link[text()='下一页'][contains(@href,'-')] | //a[text()='下一页'][contains(@href,'-')]", null, "#action", 0, null, 0);
         },
         imgs: () => [...fun.gae(".erPag mip-link img:not([style*=position])")],
-        insertImg: [".erPag", 0],
+        button: [4],
+        insertImg: [".erPag", 2],
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
@@ -8030,7 +8040,6 @@
     }, {
         name: "拷貝漫畫M www.copymanga.site copymanga.site www.mangacopy.com mangacopy.com",
         enable: 1,
-        icon: 0,
         reg: /(www\.)?copymanga\.site\/h5\/comicContent\/\w+\/.+/,
         xhr: () => {
             let s = location.href.split("/").slice(-2);
@@ -8072,6 +8081,7 @@
             }
         },
         imgs: () => siteJson.results.chapter.contents.map(e => e.url),
+        button: [4],
         insertImg: [".comicContentPopupImageList", 2],
         next: () => {
             let next = siteJson.results.chapter.next;
@@ -8501,7 +8511,6 @@
     }, {
         name: "大古漫画M m.dgmanhua.com",
         enable: 1,
-        icon: 0,
         reg: /m\.(dgmanhua|dagumanhua)\.\w+\/manhua\/\d+\/\d+\.html$/i,
         init: async () => {
             let content = fun.ge("#content,.content");
@@ -8779,6 +8788,7 @@
         go: 1,
         fetch: 1,
         customTitle: () => fun.geT(".mantine-Title-root").replace(/\|\s/, "") + " - " + fun.geT(".mantine-z8ikjj"),
+        observerTitle: true,
         category: "AI"
     }, {
         name: "Civitai posts civitai.com",
@@ -10018,7 +10028,7 @@
                 btn0.id = "FullPictureLoadOptionsBtn";
                 btn0.style.width = width;
                 btn0.style.height = "24px";
-                btn0.innerText = "腳本選項";
+                btn0.innerText = "腳本選項(*)";
                 $(btn0).on("click", (event) => {
                     event.preventDefault();
                     $("#FullPictureLoadOptions").removeAttr("style");
@@ -10028,7 +10038,7 @@
                 btn1.id = "FullPictureLoadToggleImgModeBtn";
                 btn1.style.width = width;
                 btn1.style.height = "24px";
-                btn1.innerText = "切換模式";
+                btn1.innerText = "切換模式(5)";
                 $(btn1).on("click", (event) => {
                     event.preventDefault();
                     toggleImgMode();
@@ -10038,7 +10048,7 @@
                 btn2.id = "FullPictureLoadToggleZoomeBtn";
                 btn2.style.width = width;
                 btn2.style.height = "24px";
-                btn2.innerText = "比例縮放";
+                btn2.innerText = "比例縮放(-)";
                 $(btn2).on("click", (event) => {
                     event.preventDefault();
                     toggleZoom();
@@ -10048,7 +10058,7 @@
                 btn3.id = "FullPictureLoadCancelZoomBtn";
                 btn3.style.width = width;
                 btn3.style.height = "24px";
-                btn3.innerText = "取消縮放";
+                btn3.innerText = "取消縮放(+)";
                 $(btn3).on("click", (event) => {
                     event.preventDefault();
                     cancelZoom();
@@ -10736,7 +10746,16 @@
                         });
                         getDataMsg(displayLanguage.str_25, picNum, imgsNum);
                     } else {
+                        let htmlText = "none";
+                        let doc = "none";
+                        if (blob.type == "text/html") {
+                            htmlText = blob.text();
+                            doc = fun.doc(htmlText);
+                        }
                         resolve({
+                            htmlText: htmlText,
+                            doc: doc,
+                            blob: blob,
                             error: "下載錯誤",
                             picNum: picNum,
                             src: srcUrl
@@ -11277,7 +11296,7 @@
     <p><font color="black">Full picture load 選項</font></p>
 </div>
 <div style="width: 100%;">
-    <p><font color="black">左下圖示 ( 0：關、1：開 )</font></p>
+    <p><font color="black">左下圖示 ( 0：關、1：開 ) PS:優先級別低於內置規則</font></p>
     <input id="FullPictureLoadOptionsIcon">
 </div>
 <div style="width: 100%;">
@@ -11297,7 +11316,7 @@
     <input id="FullPictureLoadOptionsAutoDownload">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">自動下載倒數秒數</font></p>
+    <p><font color="black">自動下載倒數秒數 PS:優先級別低於內置規則</font></p>
     <input id="FullPictureLoadOptionsCountdown">
 </div>
 <div style="width: 100%; display: none;">
@@ -11313,10 +11332,10 @@
     <input id="FullPictureLoadOptionsZoom">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">當前網站圖片並排顯示數量 ( 2、3、4、5 ) comic類固定為2</font></p>
+    <p><font color="black">當前網站圖片並排模式顯示數量 ( 2、3、4、5 ) comic類固定為2</font></p>
     <input id="FullPictureLoadOptionsColumn">
 </div>
-<button id="FullPictureLoadOptionsCancelBtn"><font color="black">取消</font></button>
+<button id="FullPictureLoadOptionsCancelBtn"><font color="black">取消 (Esc)</font></button>
 <button id="FullPictureLoadOptionsResetBtn"><font color="black">重置設定</font></button>
 <button id="FullPictureLoadOptionsSaveBtn"><font color="black">保存設定</font></button>
 `;
@@ -11339,7 +11358,7 @@
 
     $("#FullPictureLoadOptionsCancelBtn").on("click", (event) => {
         event.preventDefault();
-        ge("#FullPictureLoadOptions").style.display = "none";
+        $("#FullPictureLoadOptions").hide();
     });
 
     $("#FullPictureLoadOptionsResetBtn").on("click", (event) => {
@@ -11584,8 +11603,8 @@
     let showOptions = false;
     for (let i = 0; i < customData.length; i++) {
         if (customData[i].reg.test(siteUrl)) {
-            showOptions = true;
             if (customData[i].category === "comic" && customData[i].enable === 0) {
+                showOptions = true;
                 $("#FullPictureLoadOptions>div:nth-child(8)").show();
             }
             let delay = customData[i].delay;
@@ -11595,8 +11614,10 @@
             options.enable = 1;
             if (customData[i].enable == 0) {
                 if (options.comic == 1 && customData[i].category === "comic") {
-                    debug("漫畫類全局開啟");
+                    showOptions = true;
+                    debug("\n漫畫類預設關閉的此站規則已開啟");
                 } else {
+                    //showOptions = true;
                     options.enable = 0;
                     debug("\n此規則禁用", customData[i]);
                     continue;
@@ -11619,6 +11640,7 @@
                 }
             }
             siteData = customData[i];
+            showOptions = true;
             if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
             if (!ge(".FullPictureLoadStyle")) fun.css(style);
             if (customData[i].imgs) {
@@ -11652,12 +11674,15 @@
                 }
                 await getTitle();
                 debug(`\n自定義標題：${customTitle}`);
-                new MutationObserver(() => {
-                    getTitle();
-                }).observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
+                if (customData[i].observerTitle) {
+                    new MutationObserver(async () => {
+                        await getTitle();
+                        debug(`\n自定義標題：${customTitle}`);
+                    }).observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
             }
             let next = customData[i].next;
             if (next) {
@@ -11841,17 +11866,21 @@
     }
 
     if (showOptions) {
-        try {
-            GM_registerMenuCommand("設定", () => {
-                $("#FullPictureLoadOptions").removeAttr("style");
-            });
-        } catch (e) {
+        debug("\n圖片全載開啟了GM選單?\n", showOptions);
+        const registerMenu = () => {
             try {
-                GM.registerMenuCommand("設定", () => {
+                GM_registerMenuCommand("設定", () => {
                     $("#FullPictureLoadOptions").removeAttr("style");
                 });
-            } catch (e) {}
+            } catch (e) {
+                try {
+                    GM.registerMenuCommand("設定", () => {
+                        $("#FullPictureLoadOptions").removeAttr("style");
+                    });
+                } catch (e) {}
+            }
         }
+        registerMenu();
     }
 
     if (!ge(".FullPictureLoadStyle")) fun.css(style);
@@ -11867,12 +11896,12 @@
     }
 
     if (autoDownload) {
-        document.addEventListener("keydown", event => {
+        document.addEventListener("keydown", async event => {
             if (ge("#FullPictureLoadOptions:not([style])")) {
                 return;
             }
             if (event.ctrlKey && event.key == ".") {
-                if (options.autoDownload === 0) {
+                if (options.autoDownload == 0) {
                     fun.show("即將開始自動下載!!!", 0);
                     options.autoDownload = 1;
                     let jsonStr = JSON.stringify(options);
@@ -11882,10 +11911,13 @@
                     }, 2000);
                 } else {
                     options.autoDownload = 0;
-                    clearTimeout(countdownTime1);
-                    clearTimeout(countdownTime2);
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
+                    let endTid = setTimeout(() => {});
+                    for (let i = 0; i <= endTid; i++) {
+                        clearTimeout(i);
+                    }
+                    fun.show("已停止自動下載!!!", 0);
                     location.reload();
                 }
             }
@@ -11927,15 +11959,18 @@
                     case 106: //數字鍵*
                         $("#FullPictureLoadOptions").removeAttr("style");
                         break;
+                    case 27: //Esc
+                        $("#FullPictureLoadOptions").hide();
+                        break;
                     case 111: //數字鍵/
                         if (ge("#FullPictureLoadOptions:not([style])")) {
                             return;
                         }
                         fun.show("初始化設定");
+                        localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
                         setTimeout(() => {
-                            localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
                             location.reload();
-                        }, 1000)
+                        }, 1000);
                         break;
                 }
             });
