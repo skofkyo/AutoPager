@@ -239,7 +239,7 @@
                 return arr;
             }
         },
-        button: [4],
+        button: [4, "24%", 4],
         insertImg: [".bigimg", 2],
         customTitle: () => fun.title(" - ", 3),
         threading: 4,
@@ -1406,6 +1406,7 @@
         insertImg: [
             [".post-content", 0], 1
         ],
+        go: 1,
         autoDownload: [0],
         next: ".post-prev>a",
         prev: ".post-next>a",
@@ -1452,6 +1453,7 @@
         },
         button: [4],
         insertImg: ["//p[amp-img] | //div[@class='pagination-post aligncenter'] | //figure[amp-carousel]", 1],
+        go: 1,
         autoDownload: [0],
         next: ".prev-post,.post-prev>a",
         prev: ".next-post,.next-post>a",
@@ -1803,7 +1805,7 @@
             });
             fun.remove("iframe", 2000);
         },
-        imgs: () => fun.getImgO("#picg img[alt]", fun.geT(".pagelist font~*:last-child", 2), 9, [null, null], 800, ".page .pagelist", 0),
+        imgs: () => fun.getImgO("#picg img[alt]", fun.geT(".pagelist font~*:last-child", 2), 9, [null, null], 1000, "h1,.page .pagelist", 0),
         button: [4],
         insertImg: ["#picg", 1],
         autoDownload: [0],
@@ -1817,16 +1819,16 @@
         name: "魅狸图片网 www.rosi8.com 美女私房照 www.sfjpg.com 看妹图 www.kanmeitu.net www.kanmeitu1.cc kanmeitu.net kanmeitu1.cc",
         reg: /(www\.rosi8\.\w+|www\.sfjpg\.com|www\.sfjpg\.net|kanmeitu\.net|kanmeitu1\.cc)\/\w+\/\d+\.html$/,
         init: () => {
-            fun.gae('.b a').forEach(a => {
-                a.removeAttribute('target');
+            fun.gae(".b a").forEach(a => {
+                a.removeAttribute("target");
             });
             fun.gae("#picg a").forEach(a => {
                 a.outerHTML = a.innerHTML;
             });
         },
         imgs: () => {
-            let max = fun.geT('.pagelist span,.pagelist a[title=Page]').match(/\/(\d+)/)[1];
-            return fun.getImgO('#picg img', max, 9, [null, null], 200, '.page .pagelist', 0);
+            let max = fun.geT(".pagelist span,.pagelist a[title=Page]").match(/\/(\d+)/)[1];
+            return fun.getImgO("#picg img", max, 9, [null, null], 200, ".page .pagelist", 0);
         },
         button: [4],
         insertImg: ["#picg", 1],
@@ -2110,10 +2112,10 @@
     }, {
         name: "นางแบบคือลือ modelsexyth.com",
         reg: /^https:\/\/modelsexyth\.com\/[^\/]+\/$/,
-        imgs: "//img[@decoding]",
+        imgs: "//img[@decoding] | //a[contains(@class,'e-gallery-item')]",
         button: [4],
         insertImg: [
-            ["//div[div[div[img[@decoding]]]]", 0, "//div[img[@decoding] and @class ='elementor-widget-container']"], 2
+            ["//div[div[div[img[@decoding]]]]", 0, "//div[img[@decoding] and @class ='elementor-widget-container'] | //div[contains(@class,'elementor-widget-gallery')]"], 2
         ],
         customTitle: () => fun.geT("h1.elementor-heading-title>a").replace(/\(\d+p\)/i, "").trim(),
         css: ".elementor-element-2060f59,.elementor-element-f838527,.elementor-element-988fdac,.elementor-element-3b501ba{display:none!important}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
@@ -2585,7 +2587,7 @@
         reg: /xem\.anhvl\.net/,
         icon: 0,
         key: 0,
-        css: "#popupContact,.float-ck-center-lt{display:none!important}",
+        css: "#backgroundPopupp,#popupContact,.float-ck-center-lt{display:none!important}",
         category: "nsfw2"
     }, {
         name: "Phym18 phym18.org https://phym18.org/tag/%E1%BA%A3nh-sex",
@@ -3223,25 +3225,36 @@
                 let tE = fun.ge(".td-post-content");
                 tE.parentNode.insertBefore(ele, tE);
             }
+            let ele2 = fun.ge("//p[contains(text(),'Number of pictures')]");
+            if (ele2) {
+                if (ele2.previousSibling.tagName == "P") {
+                    ele2.previousSibling.innerHTML = ele2.previousSibling.innerHTML + "<br>" + ele2.innerText;
+                    let e = ele2.previousSibling;
+                    let te = ele2.previousSibling.parentNode;
+                    te.parentNode.insertBefore(e, te);
+                }
+            }
         },
         imgs: () => {
             if (fun.ge(".page-nav")) {
                 let max = fun.geT(".page-nav>*:last-child", 2);
                 return fun.getImg(".td-post-content img", max, 4);
             } else if (fun.ge(".td-post-content img[srcset]")) {
-                return [...fun.gae(".td-post-content img[srcset]")].map(img => {
+                let srcs = [...fun.gae(".td-post-content img[src]")].map(e => e.src);
+                let srcsets = [...fun.gae(".td-post-content img[srcset]")].map(img => {
                     let splitArr = img.getAttribute("srcset").split(",");
                     splitArr = splitArr.sort((a, b) => {
                         return a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1];
                     });
                     return splitArr.pop().trim().split(" ")[0];
                 });
+                return [...new Set(srcs.concat(srcsets))];
             } else {
                 return [...fun.gae(".td-post-content img")];
             }
         },
         button: [4],
-        insertImg: [".td-post-content", 2],
+        insertImg: [".td-post-content .tdb-block-inner", 2],
         go: 1,
         customTitle: () => fun.geT("h1.tdb-title-text"),
         category: "nsfw1"
@@ -3351,9 +3364,7 @@
         exclude: "//button[text()='Click here to continue']",
         imgs: "a.thumb-photo",
         button: [4],
-        insertImg: [
-            ["#gallery", 0], 2
-        ],
+        insertImg: ["#gallery", 2],
         go: 1,
         autoDownload: [0],
         next: "a[rel=prev]",
@@ -10169,6 +10180,30 @@
                     debug("\nfun.insertImg() ele參數錯誤，或用來定位插入的元素不存在。");
                     return;
                 }
+                let imgs = [...fun.gae(".FullPictureLoadImage:not(.small)")];
+                let imgsNum = 0;
+                document.addEventListener("keydown", event => {
+                    if (event.key == "ArrowUp") {
+                        if (imgsNum > 0 && viewMode == 0) {
+                            imgsNum -= 1;
+                            imgs[imgsNum].scrollIntoView();
+                        }
+                    } else if (event.key == "ArrowDown") {
+                        event.preventDefault();
+                        if (imgsNum < imgs.length && viewMode == 0) {
+                            imgsNum += 1;
+                            try {
+                                imgs[imgsNum].scrollIntoView();
+                            } catch (e) {
+                                imgsNum = 0;
+                                imgs[0].scrollIntoView();
+                                fun.show("返回開頭了");
+                            }
+                        }
+                    } else {
+                        imgsNum = 0 - 1;
+                    }
+                });
             } else {
                 fun.show(displayLanguage.str_20, 3000);
             }
@@ -11140,6 +11175,9 @@
         }
     };
 
+    let viewMode = 0;
+    let column;
+
     const toggleImgMode = () => {
         if (ge("#FullPictureLoadOptions:not([style])")) {
             return;
@@ -11150,17 +11188,22 @@
                 [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => {
                     e.setAttribute("style", "display:none!important;");
                 })
+                viewMode = 1;
                 fun.show("並排模式");
                 return;
             }
             let width;
             if (options.column == 2 || siteData.column == 2 || siteData.category == "comic") {
                 width = "48.8%";
+                column = 2;
             } else if (options.column == 3 || siteData.column == 3) {
                 width = "32%";
+                column = 3;
             } else if (options.column == 5 || siteData.column == 5) {
                 width = "19.2%";
+                column = 5;
             } else {
+                column = 4;
                 if (hasTouchEvents()) {
                     width = "24%";
                 } else {
@@ -11218,11 +11261,37 @@
             tE.parentNode.style.display = "block";
             [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => {
                 e.setAttribute("style", "display:none!important;");
-            })
+            });
+            viewMode = 1;
             fun.show("並排模式");
+            let imgs = [...gae(".FullPictureLoadImage.small")];
+            let imgsNum = 0;
+            document.addEventListener("keydown", event => {
+                if (event.key == "ArrowUp") {
+                    if (imgsNum > 0 && viewMode == 1) {
+                        imgsNum -= column;
+                        imgs[imgsNum].scrollIntoView();
+                    }
+                } else if (event.key == "ArrowDown") {
+                    event.preventDefault();
+                    if (imgsNum < imgs.length && imgsNum != imgs.length && viewMode == 1) {
+                        imgsNum += column;
+                        try {
+                            imgs[imgsNum].scrollIntoView();
+                        } catch (e) {
+                            imgsNum = 0;
+                            imgs[0].scrollIntoView();
+                            fun.show("返回開頭了");
+                        }
+                    }
+                } else {
+                    imgsNum = 0 - column;
+                }
+            });
         } else if (ge(".FullPictureLoadImage.small")) {
             ge("#FullPictureLoadImgBox").style.display = "none";
             $(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd").removeAttr("style");
+            viewMode = 0;
             fun.show("原始模式");
         } else {
             fun.show("請先取消圖片縮放")
