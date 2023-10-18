@@ -2149,3 +2149,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         </tbody>
     </table>
 </details>
+
+<p>提供了陽春簡易的圖片清單式閱讀模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
+
+<img src="https://i.imgur.com/XZSEU41.jpg">
+<img src="https://i.imgur.com/b9iN0X2.jpg">
+<img src="https://i.imgur.com/0QQIHcI.jpg">
+<img src="https://i.imgur.com/XkfwWok.jpg">
+<img src="https://i.imgur.com/ToftahD.jpg">
+<img src="https://i.imgur.com/xQJePAo.jpg">
