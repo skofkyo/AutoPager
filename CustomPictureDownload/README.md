@@ -522,13 +522,19 @@ imgs: async () => {
 <p>按2，捲動至腳本插入的第一張大圖</p>
 <p>按3，一鍵下載，跳過圖片選擇器和自定義標題的步驟。</p>
 
-<p>檢視模式</p>
+<p>圖片檢視模式</p>
+
 <p>1.圖片置中模式</p>
 <p>上方向鍵跳轉到目前的上一張圖、下方向鍵跳轉到目前的下一張圖</p>
+
 <p>2.圖片並排模式</p>
 <p>上方向鍵跳轉到目前的上一排圖、下方向鍵跳轉到目前的下一排圖</p>
+<p>漫畫類當跳轉至最後一排後，繼續按下方向鍵會嘗試前往下一集。</p>
 <p>所謂的目前是變量記憶的位置，並非當前瀏覽範圍的位置，滑鼠滾動變換位置不會改變變量。</p>
 <p>按了上方向鍵和下方向鍵以外的鍵後會再從頭開始跳轉。</p>
+
+<p>如漫畫站的圖片並排後，圖片高度小於大於瀏覽範圍的高度，需要手動調整瀏覽器的縮放來適配達到最佳的觀看效果。</p>
+<p>Chrome內建的縮放跨度太大，建議安裝縮放 for Google Chrome，可以以10%、5%來縮放</p>
 
 <h1>圖介：</h1>
 <p>在頁面左下添加了一個圖片下載按鈕</p>
@@ -1752,7 +1758,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
-                <td>直接點進閱讀頁需要重要重新載入，建議新分頁開啟，閱讀頁添加了下一話鏈接</td>
+                <td>直接點進閱讀頁需要重要重新載入，建議新分頁開啟，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
             </tr>
             <tr>
                 <td><a href="https://www.dgmanhua.com/">大古漫画</a></td>
@@ -2085,7 +2091,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://civitai.com/">Civitai</a></td>
-                <td>SPA網頁，只支持Models頁和Posts頁，Models需手動插入圖片，切換圖片版本後，再手動插入當前版本的圖片。</td>
+                <td>SPA網頁，只支持Models頁和Posts頁，Models需手動插入圖片，切換圖片版本後，再手動插入當前版本的圖片，支持自動顯示NSFW被模糊的圖片。</td>
             </tr>
         </tbody>
     </table>
