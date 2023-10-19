@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.12
+// @version            1.4.13
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -10965,9 +10965,19 @@
             */
         },
         CivitAiAutoShowNSFW: () => {
-            const unBlur = () => {
+            const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(siteUrl)) {
-                    let ele = [...fun.gae(".mantine-1gtzxoj,.mantine-7cmpjr,.mantine-1pj0akd")][0];
+                    let ele = [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4")][0];
+                    let elePath = fun.ge("span+svg>path", ele);
+                    if (elePath) {
+                        let d = elePath.getAttribute("d");
+                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
+                            ele.click();
+                        }
+                        await fun.delay(200);
+                    }
+                }
+                [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4")].forEach(ele => {
                     let elePath = fun.ge("span+svg>path", ele);
                     if (elePath) {
                         let d = elePath.getAttribute("d");
@@ -10975,17 +10985,7 @@
                             ele.click();
                         }
                     }
-                } else {
-                    [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym")].forEach(ele => {
-                        let elePath = fun.ge("span+svg>path", ele);
-                        if (elePath) {
-                            let d = elePath.getAttribute("d");
-                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
-                                ele.click();
-                            }
-                        }
-                    });
-                }
+                });
             };
             new MutationObserver(unBlur).observe(document.body, {
                 childList: true,
