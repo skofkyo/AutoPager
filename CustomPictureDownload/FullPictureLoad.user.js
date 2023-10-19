@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.11
+// @version            1.4.12
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -36,7 +36,7 @@
 (async () => {
     "use strict";
     let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
-        enable: 0, //0：根據規則啟用、1：無規則也啟用
+        enable: 0, //!!!維持0不要改!!!
         icon: 1, //是否顯示左下圖示0關1開
         threading: 32, //最大下載線程數
         default: "img[src]", //預設CSS/Xpath選擇器/javascript代碼
@@ -796,7 +796,7 @@
         css: "#post .post img{max-width:100% !important}",
         category: "nsfw2"
     }, {
-        name: "微圖坊 www.v2ph.com www.v2ph.net www.v2ph.ru", //大尺度非VIP只能抓20~30張
+        name: "微圖坊 www.v2ph.com www.v2ph.net www.v2ph.ru",
         reg: /v2ph\.\w+\/album\/.+/i,
         include: ".photos-list",
         init: () => {
@@ -804,10 +804,64 @@
                 location.href = location.href.replace(/\.html\?hl=.*/, ".html");
             }
         },
-        imgs: () => {
+        imgs: async () => {
             let numP = fun.geT("dd:last-child").match(/\d+/)[0];
             let max = Math.ceil(numP / 10);
-            return fun.getImgO(".album-photo img[alt]", max, 1, [null, null], 600, ".pagination", 0);
+            let links = [];
+            links.push(siteUrl);
+            for (let i = 2; i <= max; i++) {
+                links.push(siteUrl.replace(/\?page=\d+/, "") + `?page=${i}`);
+            }
+            let srcArr = [];
+            let status = 200;
+            let vip = false;
+            let fetchNum = 0;
+            fun.show(displayLanguage.str_01, 0);
+            for (let i in links) {
+                await fetch(links[i]).then(res => {
+                    if (res.status == 403) {
+                        status = 403;
+                    }
+                    fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
+                    return res.arrayBuffer();
+                }).then(buffer => {
+                    const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
+                    const htmlText = decoder.decode(buffer);
+                    const doc = fun.doc(htmlText);
+                    let vipEle = fun.ge(".lead", doc);
+                    if (vipEle) {
+                        vip = true;
+                    }
+                    let imgs = [...fun.gae(".album-photo img[alt]", doc)];
+                    let tE = [...fun.gae("div.album-photo")].pop();
+                    imgs.forEach(e => {
+                        if (e.dataset.src) {
+                            srcArr.push(e.dataset.src);
+                            e.src = e.dataset.src;
+                        } else {
+                            srcArr.push(e.src);
+                        }
+                        tE.parentNode.insertBefore(e.parentNode.cloneNode(true), tE.nextSibling);
+                    });
+                    try {
+                        fun.ge(".pagination").outerHTML = fun.ge(".pagination", doc).outerHTML;
+                    } catch (e) {}
+                });
+                if (status == 403) {
+                    setTimeout(() => {
+                        fun.show("403請先登錄網站!", 0);
+                    }, 1500);
+                    return srcArr;
+                }
+                if (vip) {
+                    setTimeout(() => {
+                        fun.show("VIP限定專輯圖片!", 10000);
+                    }, 1500);
+                    return srcArr;
+                }
+                await fun.delay(600, 0);
+            }
+            return srcArr;
         },
         button: [4],
         insertImg: [".photos-list", 2],
@@ -1805,7 +1859,52 @@
             });
             fun.remove("iframe", 2000);
         },
-        imgs: () => fun.getImgO("#picg img[alt]", fun.geT(".pagelist font~*:last-child", 2), 9, [null, null], 1000, "h1,.page .pagelist", 0),
+        //imgs: () => fun.getImgO("#picg img[alt]", fun.geT(".pagelist font~*:last-child", 2), 9, [null, null], 1000, "h1,.page .pagelist", 0),
+        imgs: async () => {
+            let max = fun.geT(".pagelist font~*:last-child", 2);
+            let links = [];
+            links.push(siteUrl.replace(/(_\d+)?\.html$/, ""));
+            let imgsArr = [];
+            for (let i = 2; i <= max; i++) {
+                links.push(siteUrl.replace(/(_\d+)?\.html$/, "") + `_${i}.html`);
+            }
+            //let fetchNum = 0;
+            //fun.show(displayLanguage.str_01, 0);
+            for (let i in links) {
+                //fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
+                let doc = await new Promise(async resolve => {
+                    for (let check = 1; check <= 100; check++) {
+                        let res = await fetch(links[i]);
+                        if (res.status == 304 || res.status == 200) {
+                            let buffer = await res.arrayBuffer();
+                            let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
+                            let htmlText = decoder.decode(buffer);
+                            let doc = fun.doc(htmlText);
+                            resolve(doc);
+                            break;
+                        } else {
+                            fun.show(`第${parseInt(i) + 1}頁403重試第${check}次`, 2900);
+                            await fun.delay(3000, 0);
+                        }
+                    }
+                });
+                let imgs = [...fun.gae("#picg img[alt]", doc)];
+                let te = [...fun.gae("#picg img[alt]")].pop();
+                imgs.forEach(e => {
+                    imgsArr.push(e.cloneNode(true));
+                    te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
+                });
+                let ne = [...fun.gae("h1,.page .pagelist")];
+                let re = [...fun.gae("h1,.page .pagelist", doc)];
+                if (ne.length == re.length) {
+                    for (let i in ne) {
+                        ne[i].outerHTML = re[i].outerHTML;
+                    }
+                }
+                await fun.delay(200, 0);
+            }
+            return imgsArr;
+        },
         button: [4],
         insertImg: ["#picg", 1],
         autoDownload: [0],
@@ -6092,6 +6191,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[span[text()='下一話' or text()='下一话']]",
+        autoNext: true,
         prev: "//a[span[text()='上一話' or text()='上一话']]",
         customTitle: () => siteJson.data.manga_name + " - " + siteJson.data.chapter_name,
         category: "comic"
@@ -6139,6 +6239,7 @@
         },
         scrollEle: [".mh_comicpic img", 600],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title(" COLAMANGA", 1),
         threading: 10,
@@ -6165,6 +6266,7 @@
         go: 1,
         autoDownload: [0],
         next: "#nextvol:not([style])",
+        autoNext: true,
         prev: "#prevvol",
         customTitle: () => {
             let t = document.title.split(" ")[0];
@@ -6202,6 +6304,7 @@
         go: 1,
         autoDownload: [0],
         next: "#nextvol:not([style])",
+        autoNext: true,
         prev: "#prevvol",
         customTitle: () => {
             let t = document.title.split(" ")[0];
@@ -6258,6 +6361,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[img[contains(@src,'xiayizhang')]][starts-with(@href,'/m')]",
+        autoNext: true,
         prev: "//a[img[contains(@src,'shangyizhang')]][starts-with(@href,'/m')]",
         customTitle: () => fun.title("_", 2).replace("漫畫", ""),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}a[href^='j']{display:none !important}body{overflow:unset!important}",
@@ -6341,6 +6445,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[img[contains(@src,'reader-bottom-right-2')]][starts-with(@href,'/m')]",
+        autoNext: true,
         prev: "//a[img[contains(@src,'reader-bottom-right-1')]][starts-with(@href,'/m')]",
         customTitle: () => fun.title('_', 2).replace("漫畫", ""),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
@@ -6372,6 +6477,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title("_", 2),
         topButton: true,
@@ -6388,6 +6494,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title("_", 2),
         css: "body{overflow:unset!important}",
@@ -6471,6 +6578,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[img[contains(@src,'reader-bottom-right-2')]][starts-with(@href,'/m')]",
+        autoNext: true,
         prev: "//a[img[contains(@src,'reader-bottom-right-1')]][starts-with(@href,'/m')]",
         customTitle: () => fun.title("_", 2).replace("漫畫", ""),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
@@ -6492,6 +6600,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章'] | //a[img[@alt='下一章']]",
+        autoNext: true,
         prev: "//a[text()='上一章'] | //a[img[@alt='上一章']]",
         customTitle: () => {
             let host = location.hostname;
@@ -6523,6 +6632,7 @@
         go: 1,
         autoDownload: [0],
         next: ".afterChapter",
+        autoNext: true,
         prev: ".beforeChapter",
         customTitle: () => fun.title("-", 1),
         css: "#khdDown,.appTil,#m_r_bottom,#m_r_panelbox,.control_panel.alpha{display:none!important}",
@@ -6565,6 +6675,7 @@
                 return null;
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.title(" - 漫畫狗"),
         threading: 1,
@@ -6647,6 +6758,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.geT("#mangaTitle"),
         threading: 3,
@@ -6677,6 +6789,7 @@
         autoDownload: [0],
         threading: 3,
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.geT("h1>a") + " - " + fun.geT("h2"),
         category: "comic"
@@ -6695,6 +6808,7 @@
         go: 1,
         autoDownload: [0],
         next: "//div[@class='next_chapter']/a[contains(text(),'下一話') or contains(text(),'下一话')]",
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.title(" - ", 3),
         css: ".chapter-main.scroll-mode~*:not(.next_chapter):not(.bottom-bar){display:none!important}",
@@ -6838,6 +6952,7 @@
                 });
             });
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.title(" - ", 2),
         category: "comic"
@@ -6861,6 +6976,7 @@
         go: 1,
         autoDownload: [0],
         next: "//td[@width='150' and a[img[@src='/image/rad.gif']]]/a",
+        autoNext: true,
         prev: "//td[@width='150' and a[img[@src='/image/rad1.gif']]]/a",
         customTitle: () => fun.title(" - ", 2),
         category: "comic"
@@ -6874,6 +6990,7 @@
         go: 1,
         autoDownload: [0],
         next: ".display_right>a",
+        autoNext: true,
         prev: ".display_left>a",
         customTitle: () => fun.geT(".hotrmtexth1>a"),
         css: ".btn_wrap{display:none!important}",
@@ -6888,6 +7005,7 @@
         go: 1,
         autoDownload: [0],
         next: ".nextC",
+        autoNext: true,
         prev: ".prevC",
         customTitle: () => cInfo.btitle + " - " + cInfo.ctitle,
         css: ".bd_960_90{display:none!important}",
@@ -6902,6 +7020,7 @@
         go: 1,
         autoDownload: [0],
         next: ".nextC",
+        autoNext: true,
         prev: ".prevC",
         customTitle: () => cInfo.btitle + " - " + cInfo.ctitle,
         css: ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo),footer~*{display:none!important}",
@@ -6928,6 +7047,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[contains(text(),'下一章')]",
+        autoNext: true,
         prev: "//a[contains(text(),'上一章')]",
         customTitle: () => {
             if (/(acg|mhd100)/.test(location.host)) {
@@ -6960,6 +7080,7 @@
         insertImg: ["#images", 2],
         go: 1,
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title(" - ", 3),
         css: ".img_land_prev,.img_land_next{display:none!important}",
@@ -6986,6 +7107,7 @@
         insertImg: ["#images", 2],
         go: 1,
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => {
             let s = pageTitle.split(" - ");
@@ -7018,6 +7140,7 @@
                 return null;
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => {
             let s = pageTitle.split(" - ");
@@ -7037,6 +7160,7 @@
         go: 1,
         autoDownload: [0],
         next: ".nextC",
+        autoNext: true,
         prev: ".prevC",
         customTitle: () => fun.title(" - ", 3),
         category: "comic"
@@ -7062,6 +7186,7 @@
                 return null;
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.title("在线", 1),
         css: ".a-90mh{display:none!important}",
@@ -7077,6 +7202,7 @@
         go: 1,
         autoDownload: [0],
         next: ".next>a",
+        autoNext: true,
         prev: ".pre>a",
         customTitle: () => fun.title(" - ", 3),
         css: ".img_land_prev,.img_land_next{display:none!important}",
@@ -7092,6 +7218,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
+        autoNext: true,
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: () => {
             let s = pageTitle.split(" - ");
@@ -7120,6 +7247,7 @@
                 return null;
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.title("在线", 1),
         css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not(.FullPictureLoadMsg):not(#FullPictureLoad),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
@@ -7136,6 +7264,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
+        autoNext: true,
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: () => fun.title("在线", 1),
         css: "body{padding:0!important}div[style*='text-align'],.UnderPage~*:not(.FullPictureLoadMsg):not(#FullPictureLoad){display:none!important}",
@@ -7152,6 +7281,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
+        autoNext: true,
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: () => fun.title("-零点漫画").trim(),
         css: ".action-list li{width:50% !important}div[style*='text-align'],.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
@@ -7186,6 +7316,7 @@
                 }
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => {
             if (location.hostname == "m.dmhua8.com") {
@@ -7226,6 +7357,7 @@
                 }
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => {
             let host = location.hostname;
@@ -7248,6 +7380,7 @@
         go: 1,
         autoDownload: [0],
         next: ".next>a,a.next,a.nextC",
+        autoNext: true,
         prev: ".pre>a,a.prev,a.prevC",
         autoClick: "#chapter-pagination:not(.active),#mode_pagination",
         customTitle: () => {
@@ -7278,6 +7411,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.geT("h1").replace(">", " - ").trim(),
         css: "div[style*='text-align: left;'],#action li:nth-child(2),#action li:nth-child(3),span.right{display:none!important}#action li{width:50%!important}",
@@ -7296,6 +7430,7 @@
         go: 1,
         autoDownload: [0],
         next: ".btn-next[href^=j]",
+        autoNext: true,
         prev: ".btn-prev",
         customTitle: () => fun.title(",", 1).replace("漫画", ""),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
@@ -7310,6 +7445,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.geT("#mangaTitle"),
         css: "#jusha1{display:none!important}",
@@ -7335,6 +7471,7 @@
         go: 1,
         autoDownload: [0],
         next: "a.next",
+        autoNext: true,
         prev: "a.prev",
         customTitle: () => fun.title(" - ", 1),
         category: "comic"
@@ -7355,6 +7492,7 @@
         go: 1,
         autoDownload: [0],
         next: ".rd-aside a.j-rd-next",
+        autoNext: true,
         prev: ".rd-aside a.j-rd-prev",
         autoClick: "//div[@class='rd-aside__item j-rd-mod'][span[text()='卷轴']]",
         customTitle: () => fun.title(" - ", 1),
@@ -7376,6 +7514,7 @@
         go: 1,
         autoDownload: [0],
         next: ".btn--next-chapter,.rd-aside a.j-rd-next",
+        autoNext: true,
         prev: ".rd-aside a.j-rd-prev",
         autoClick: "//div[@class='rd-aside__item j-rd-mod'][span[text()='卷轴']]",
         customTitle: () => {
@@ -7443,6 +7582,7 @@
                 }
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => {
             if (/www\.mhua5\.com|www\.manhw\.com|mh\.manhw\.com/.test(location.host)) {
@@ -7504,6 +7644,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[contains(text(),'下一章')]",
+        autoNext: true,
         prev: "//a[contains(text(),'上一章')]",
         customTitle: () => fun.title(" - ", 3),
         category: "comic"
@@ -7563,6 +7704,7 @@
                 }
             })
         },
+        autoNext: true,
         prev: 1,
         css: "body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}",
         category: "comic"
@@ -7614,6 +7756,7 @@
                 }
             })
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.title("在线", 1),
         css: ".imgBox{margin-bottom:0px!important}.subNav{border-top:1px solid #dcdcde}",
@@ -7628,6 +7771,7 @@
         go: 1,
         autoDownload: [0],
         next: "//li[a[@class='active']]/preceding-sibling::li[1]/a",
+        autoNext: true,
         prev: "//li[a[@class='active']]/following-sibling::li[1]/a",
         customTitle: () => fun.geT("h1.title").replace(/\(\d+\/\d+\)/, "").trim(),
         category: "comic"
@@ -7645,6 +7789,7 @@
         go: 1,
         autoDownload: [0],
         next: ".btn.next",
+        autoNext: true,
         prev: ".btn.prev",
         customTitle: () => fun.title("免费", 1),
         category: "comic"
@@ -7658,6 +7803,7 @@
         go: 1,
         autoDownload: [0],
         next: "a[rel=next][href$=html],#next_url",
+        autoNext: true,
         prev: "a[rel=prev][href$=html],#prev_url",
         customTitle: () => {
             let s = fun.geT(".info-title,.con_top").split(/\s?>/);
@@ -7678,6 +7824,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一话' and not(contains(@href,'--1'))]",
+        autoNext: true,
         prev: "//a[text()='上一话' and not(contains(@href,'--1'))]",
         customTitle: () => fun.title(/\（/, 1),
         category: "comic"
@@ -7773,6 +7920,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[img[@alt='下一章'] and contains(@href,'html')]",
+        autoNext: true,
         prev: "//a[img[@alt='上一章'] and contains(@href,'html')]",
         customTitle: () => fun.title("_", 3),
         category: "comic"
@@ -7785,6 +7933,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[p[text()='下一篇'] and contains(@href,'html')]",
+        autoNext: true,
         prev: "//a[p[text()='上一篇'] and contains(@href,'html')]",
         customTitle: () => {
             let s = document.title.replace(" - 七夕漫画", "").split("_");
@@ -7802,6 +7951,7 @@
         go: 1,
         autoDownload: [0],
         next: "#k_Pic_nextArr",
+        autoNext: true,
         prev: "#k_Pic_backArr",
         customTitle: () => fun.title(' - ', 3).replace("漫画", ""),
         css: ".bd_980_90{display:none!important}",
@@ -7815,6 +7965,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一话']",
+        autoNext: true,
         prev: "//a[text()='上一话']",
         customTitle: () => fun.geT(".p_select>h2") + " - " + fun.geT(".v-page>span"),
         category: "comic"
@@ -7829,6 +7980,7 @@
         go: 1,
         autoDownload: [0],
         next: "#k_Pic_nextArr",
+        autoNext: true,
         prev: "#k_Pic_backArr",
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         category: "comic"
@@ -7841,6 +7993,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一话']",
+        autoNext: true,
         prev: "//a[text()='上一话']",
         customTitle: () => fun.geT(".p_select>h2") + " - " + fun.geT(".v-page .ispubu"),
         category: "comic"
@@ -7853,6 +8006,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一话' and contains(@href,'html')]",
+        autoNext: true,
         prev: "//a[text()='上一话' and contains(@href,'html')]",
         customTitle: () => {
             let s = document.title.split("-");
@@ -7869,6 +8023,7 @@
         go: 1,
         autoDownload: [0],
         next: "#k_Pic_nextArr",
+        autoNext: true,
         prev: "#k_Pic_backArr",
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         category: "comic"
@@ -7901,6 +8056,7 @@
                 return null;
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         css: ".iFloat,#mypic_k0{display:none!important}",
@@ -7923,6 +8079,7 @@
                 return null;
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         css: ".action-list li{width:50% !important}#mypic_k0,.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
@@ -7945,6 +8102,7 @@
                 return null;
             }
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         css: "#mypic_k0{display:none!important}",
@@ -7959,6 +8117,7 @@
         go: 1,
         autoDownload: [0],
         next: "#k_Pic_nextArr",
+        autoNext: true,
         prev: "#k_Pic_backArr",
         customTitle: () => {
             if (/www\.kukuwumh\.com/.test(location.origin)) {
@@ -7979,6 +8138,7 @@
         go: 1,
         autoDownload: [0],
         next: ".nav_button.next",
+        autoNext: true,
         prev: ".nav_button.prev",
         customTitle: () => fun.geT("//a/span[@property and not(i)]") + " - " + fun.geT("//li/span[@property and not(i)]"),
         category: "comic"
@@ -7996,6 +8156,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一话']",
+        autoNext: true,
         prev: "//a[text()='上一话']",
         customTitle: () => fun.geT("h1.title"),
         category: "comic"
@@ -8012,6 +8173,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一话']",
+        autoNext: true,
         prev: "//a[text()='上一话']",
         customTitle: () => bookInfo.book_name + " - " + bookInfo.chapter_name,
         category: "comic"
@@ -8026,6 +8188,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => fun.geT("h1.title"),
         category: "comic"
@@ -8039,6 +8202,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章']",
+        autoNext: true,
         prev: "//a[text()='上一章']",
         customTitle: () => bookInfo.book_name + " - " + bookInfo.chapter_name,
         category: "comic"
@@ -8051,6 +8215,7 @@
         go: 1,
         autoDownload: [0],
         next: ".j-rd-next",
+        autoNext: true,
         prev: ".j-rd-prev",
         customTitle: () => fun.geT(".j-comic-title").replace("(最新在线)", "") + " - " + fun.geT(".last-crumb"),
         category: "comic"
@@ -8063,6 +8228,7 @@
         go: 1,
         autoDownload: [0],
         next: "#js_pageNextBtn",
+        autoNext: true,
         prev: "#js_pagePrevBtn",
         customTitle: () => fun.geT("#crumbComicLink") + " - " + fun.geT("#js_headChapterName"),
         category: "comic"
@@ -8115,6 +8281,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一話'][starts-with(@href,'/comic/')]",
+        autoNext: true,
         prev: "//a[text()='上一話'][starts-with(@href,'/comic/')]",
         customTitle: () => siteJson.results.comic.name + " - " + siteJson.results.chapter.name,
         topButton: true,
@@ -8188,6 +8355,7 @@
         insertImg: ["#img_ad_img", 1],
         autoDownload: [0],
         next: ".n.zhangjie",
+        autoNext: true,
         prev: ".p.zhangjie",
         customTitle: () => fun.geT(".e>p").replace(/（\d+P） - 第 \d+ \/ \d+ 頁/, ""),
         topButton: true,
@@ -8203,6 +8371,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[img[@alt='下一章']] | //a[i[@class='i-rd-next'] and contains(@href,'html')]",
+        autoNext: true,
         prev: "//a[img[@alt='上一章']] | //a[i[@class='i-rd-prev'] and contains(@href,'html')]",
         customTitle: () => {
             try {
@@ -8223,6 +8392,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[span[text()='下一章']]",
+        autoNext: true,
         prev: "//a[span[text()='上一章']]",
         customTitle: () => fun.attr("meta[itemprop=mhname]", "content") + " - " + fun.geT(".chaptitle"),
         category: "comic"
@@ -8258,6 +8428,7 @@
                 }
             });
         },
+        autoNext: true,
         prev: "//a[text()='上集']",
         customTitle: () => fun.title("-漫画DB"),
         category: "comic"
@@ -8285,6 +8456,7 @@
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章' and not(starts-with(@href,'javascript'))]",
+        autoNext: true,
         prev: "//a[text()='上一章' and not(starts-with(@href,'javascript'))]",
         customTitle: () => fun.geT("h2.h2>a") + " - " + fun.geT("span.h4:nth-child(5)"),
         //threading: 4,
@@ -8563,6 +8735,7 @@
                 }
             })
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.title("第1页", 1),
         category: "comic"
@@ -8595,6 +8768,7 @@
                 }
             })
         },
+        autoNext: true,
         prev: 1,
         customTitle: () => fun.geT(".mh_cont>h1"),
         category: "comic"
@@ -8633,6 +8807,7 @@
             })
         },
         //next: "//a[@href and text()='下一章']",
+        autoNext: true,
         prev: "//a[@href and text()='上一章']",
         customTitle: () => fun.geT("#bookname") + " - " + fun.geT(".headline"),
         css: "#content~a,.content~a,.apjg,.pager a:nth-child(n+2):nth-child(-n+3){display:none!important}.pager a{width:44%!important}#content,.content{width:100%}",
@@ -8655,6 +8830,7 @@
         insertImg: [".chapter-images", 2],
         go: 1,
         autoDownload: [0],
+        autoNext: true,
         next: "//a[label[text()='下一章'] and not(starts-with(@href,'java'))]",
         prev: "//a[label[text()='上一章'] and not(starts-with(@href,'java'))]",
         category: "comic"
@@ -8691,6 +8867,7 @@
         go: 1,
         autoDownload: [0],
         next: "//span[starts-with(@class,'next-chapter')]/a[contains(@href,'html')] | //a[p[text()='下一话'] and contains(@href,'html')]",
+        autoNext: true,
         prev: "//span[starts-with(@class,'prev-chapter')]/a[contains(@href,'html')] | //a[p[text()='上一话'] and contains(@href,'html')]",
         customTitle: () => fun.title("-在线", 1),
         category: "comic"
@@ -8872,6 +9049,7 @@
             div.className = "imgBox";
             let x = fun.ge(".mantine-u0eh0m");
             x.parentNode.insertBefore(div, x.nextSibling);
+            fun.CivitAiAutoShowNSFW();
         },
         imgs: () => [...fun.gae(".mantine-116dglk .mantine-7aj0so")].map(e => e.src.replace(/\/width=\d+\//, "/").replace("transcode=true,width=450", "transcode=true")),
         repeat: 1,
@@ -8879,15 +9057,19 @@
         insertImg: [".imgBox", 3],
         go: 1,
         fetch: 1,
-        customTitle: () => fun.geT(".mantine-Title-root").replace(/\|\s/, "") + " - " + fun.geT(".mantine-z8ikjj"),
+        customTitle: () => fun.geT(".mantine-Title-root").replace(/\|\s/, "").replace(/\//g, "-") + " - " + fun.geT(".mantine-z8ikjj"),
         observerTitle: true,
         category: "AI"
     }, {
         name: "Civitai posts civitai.com",
         reg: /^https:\/\/civitai\.com\/posts\/\d+/,
         delay: 2000,
+        init: () => {
+            fun.CivitAiAutoShowNSFW();
+        },
         imgs: async () => {
             await fun.waitEle("a[rel='nofollow noindex'] img,video[src]");
+            await fun.delay(200, 0);
             return [...fun.gae("a[rel='nofollow noindex'] img,video[src]")].map(e => e.src.replace(/\/width=\d+\//, "/").replace("transcode=true,width=450", "transcode=true"));
         },
         repeat: 1,
@@ -8897,6 +9079,16 @@
         ],
         go: 1,
         fetch: 1,
+        category: "AI"
+    }, {
+        name: "CivitAi Auto Show NSFW civitai.com",
+        reg: /^https:\/\/civitai\.com\//,
+        delay: 2000,
+        icon: 0,
+        key: 0,
+        init: () => {
+            fun.CivitAiAutoShowNSFW();
+        },
         category: "AI"
     }];
 
@@ -9984,8 +10176,8 @@
                     return null;
                 }
                 nextLink = nextEle.href;
-                const nh = nextEle.host,
-                    lh = location.host;
+                const nh = nextEle.host;
+                const lh = location.host;
                 if (nh !== lh) {
                     nextLink = nextLink.replace(nh, lh);
                 }
@@ -10289,7 +10481,7 @@
                     }
                 });
             } else {
-                fun.show(displayLanguage.str_20, 3000);
+                fun.show(displayLanguage.str_20);
             }
         },
         immediateInsertImg: async () => {
@@ -10511,8 +10703,8 @@
                 }, 100);
             });
         },
-        checkImgStatus: (src, msg = 1) => {
-            if (msg == 1) fun.show(displayLanguage.str_56, 0);
+        checkImgStatus: (src, msg = null) => {
+            fun.show(msg || displayLanguage.str_56, 0);
             return new Promise(resolve => {
                 let temp = new Image();
                 temp.src = src;
@@ -10748,6 +10940,15 @@
             fun.hide();
             return imgs;
         },
+        blobToDataURL: blob => {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    resolve(reader.result);
+                }
+                reader.readAsDataURL(blob);
+            });
+        },
         scrollEles: async (ele, ms = 100) => {
             let eles = [...fun.gae(ele)];
             for (let i in eles) {
@@ -10762,6 +10963,36 @@
                 top: 0
             });
             */
+        },
+        CivitAiAutoShowNSFW: () => {
+            const unBlur = () => {
+                if (/\/posts\/|\/models\//.test(siteUrl)) {
+                    let ele = [...fun.gae(".mantine-1gtzxoj,.mantine-7cmpjr,.mantine-1pj0akd")][0];
+                    let elePath = fun.ge("span+svg>path", ele);
+                    if (elePath) {
+                        let d = elePath.getAttribute("d");
+                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
+                            ele.click();
+                        }
+                    }
+                } else {
+                    [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym")].forEach(ele => {
+                        let elePath = fun.ge("span+svg>path", ele);
+                        if (elePath) {
+                            let d = elePath.getAttribute("d");
+                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
+                                ele.click();
+                            }
+                        }
+                    });
+                }
+            };
+            new MutationObserver(unBlur).observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+            unBlur();
         }
     };
 
@@ -11262,7 +11493,7 @@
     let viewMode = 0;
     let column;
 
-    const toggleImgMode = () => {
+    const toggleImgMode = async () => {
         if (ge("#FullPictureLoadOptions:not([style])")) {
             return;
         }
@@ -11355,11 +11586,23 @@
             fun.show("並排模式");
             let imgs = [...gae("#FullPictureLoadImgBox>div")];
             let imgsNum = 0;
+            if (imgs[0].nextSibling && siteData.category == "comic") {
+                await fun.checkImgStatus(imgs[0].nextSibling.querySelector("img").dataset.src, "Wait Loading...");
+                if (imgs[0].offsetHeight < imgs[0].nextSibling.offsetHeight) {
+                    imgs[0].style.height = (imgs[0].nextSibling.offsetHeight) + "px";
+                    let img = imgs[0].querySelector("img");
+                    await fun.checkImgStatus(img.dataset.src, "Wait Loading...");
+                    let num = (imgs[0].offsetHeight - img.height) / 2;
+                    img.style.marginTop = `${num}px`;
+                }
+                imgs[0].scrollIntoView();
+            }
             document.addEventListener("keydown", async event => {
                 if (ge("#FullPictureLoadOptions:not([style])")) {
                     return;
                 }
                 if (event.key == "ArrowUp") {
+                    event.preventDefault();
                     if (imgsNum > 0 && viewMode == 1) {
                         imgsNum -= column;
                         imgs[imgsNum].scrollIntoView();
@@ -11370,29 +11613,47 @@
                         imgsNum += column;
                         try {
                             if (imgs[imgsNum].nextSibling && siteData.category == "comic") {
-                                await fun.checkImgStatus(imgs[imgsNum].nextSibling.querySelector("img").dataset.src, 0);
+                                debug(`\n第${parseInt(imgsNum) + 1}張(左)高：${imgs[imgsNum].offsetHeight}\n第${parseInt(imgsNum) + 2}張(右)高：${imgs[imgsNum].nextSibling.offsetHeight}`);
+                                await fun.checkImgStatus(imgs[imgsNum].nextSibling.querySelector("img").dataset.src, "Wait Loading...");
                                 if (imgs[imgsNum].offsetHeight < imgs[imgsNum].nextSibling.offsetHeight) {
-                                    imgs[imgsNum].style.height = (imgs[imgsNum].nextSibling.offsetHeight - 4) + "px";
+                                    imgs[imgsNum].style.height = (imgs[imgsNum].nextSibling.offsetHeight) + "px";
                                     let img = imgs[imgsNum].querySelector("img");
-                                    await fun.checkImgStatus(img.dataset.src, 0);
+                                    await fun.checkImgStatus(img.dataset.src, "Wait Loading...");
                                     let num = (imgs[imgsNum].offsetHeight - img.height) / 2;
+                                    debug(`\n修改了之後\n第${parseInt(imgsNum) + 1}張(左)高：${imgs[imgsNum].offsetHeight}\n第${parseInt(imgsNum) + 2}張(右)高：${imgs[imgsNum].nextSibling.offsetHeight}`);
                                     img.style.marginTop = `${num}px`;
                                 }
+                            } else if (siteData.category == "comic") {
+                                imgs[imgsNum].src = imgs[imgsNum].dataset.src;
+                                await fun.checkImgStatus(imgs[imgsNum].dataset.src, "Wait Loading...");
                             }
                             imgs[imgsNum].scrollIntoView();
                         } catch (e) {
-                            if (imgs[0].nextSibling && siteData.category == "comic") {
-                                if (imgs[0].offsetHeight < imgs[0].nextSibling.offsetHeight) {
-                                    imgs[0].style.height = (imgs[0].nextSibling.offsetHeight - 4) + "px";
-                                    let img = imgs[0].querySelector("img");
-                                    await fun.checkImgStatus(img.dataset.src, 0);
-                                    let num = (imgs[0].offsetHeight - img.height) / 2;
-                                    img.style.marginTop = `${num}px`;
+                            if (siteData.autoNext && siteData.next && siteData.insertImg) {
+                                if (typeof siteData.next === "string") {
+                                    let next = fun.ge(siteData.next);
+                                    if (next) {
+                                        fun.show("前往下一集", 3000);
+                                        next.click();
+                                    } else {
+                                        imgsNum = 0 - column;
+                                        fun.show("已是最後下一集", 3000);
+                                    }
+                                } else if (typeof siteData.next === "function") {
+                                    let next = await siteData.next();
+                                    if (next) {
+                                        fun.show("前往下一集", 3000);
+                                        location.href = next;
+                                    } else {
+                                        imgsNum = 0;
+                                        fun.show("已是最後下一集", 3000);
+                                    }
                                 }
+                            } else {
+                                imgsNum = 0;
+                                imgs[0].scrollIntoView();
+                                fun.show("返回開頭了");
                             }
-                            imgsNum = 0;
-                            imgs[0].scrollIntoView();
-                            fun.show("返回開頭了");
                         }
                     }
                 } else {
@@ -11405,7 +11666,7 @@
             viewMode = 0;
             fun.show("原始模式");
         } else {
-            fun.show("請先取消圖片縮放")
+            fun.show("請先取消圖片縮放");
         }
     };
 
