@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.14
+// @version            1.4.15
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1863,7 +1863,7 @@
         imgs: async () => {
             let max = fun.geT(".pagelist font~*:last-child", 2);
             let links = [];
-            links.push(siteUrl.replace(/(_\d+)?\.html$/, ""));
+            links.push(siteUrl.replace(/(_\d+)?\.html$/, "") + ".html");
             let imgsArr = [];
             for (let i = 2; i <= max; i++) {
                 links.push(siteUrl.replace(/(_\d+)?\.html$/, "") + `_${i}.html`);
@@ -1888,6 +1888,7 @@
                         }
                     }
                 });
+                //debug(`\n${links[i]}\n`, doc);
                 let imgs = [...fun.gae("#picg img[alt]", doc)];
                 let te = [...fun.gae("#picg img[alt]")].pop();
                 imgs.forEach(e => {
@@ -1903,6 +1904,8 @@
                 }
                 await fun.delay(200, 0);
             }
+            //debug(`\n所有src\n`, imgsArr.map(e => e.src));
+            //debug(`\n去重複的src\n`, [...new Set(imgsArr.map(e => e.src))]);
             return imgsArr;
         },
         button: [4],
