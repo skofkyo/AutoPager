@@ -22,6 +22,15 @@
     icon: 0, //填0不顯示左下圖示
     key: 0, //填0不綁定快捷鍵
     reg: /www\.xxxxx\.com/, //正則表達式匹配網址
+    reg: () => {
+         //函式寫法返回布林值boolean
+        if (/^https?:\/\/www\.everiaclub\.com\/.+/.test(siteUrl)) {
+            if(!siteUrl.includes(".html")) {
+                return true;
+            }
+        }
+        return false;
+    },
     delay: 300, //延遲載入規則
     include: "元素", //網頁必須包含的元素
     exclude: "元素", //網頁要排除的元素
@@ -74,6 +83,12 @@
     icon: 0,
     key: 0,
     reg: /www\.xxxxx\.com/,
+    reg: () => {
+        if (code) {
+            return true;
+        }
+        return false;
+    },
     delay: 300,
     include: "",
     exclude: "",
@@ -184,7 +199,7 @@ fun.ge(selector, doc)
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
         stop: () => {
-            //根據判斷結果返回真假值停止翻頁。
+            //根據判斷結果返回布林值boolean停止翻頁。
             code
             if (code) {
                 return true
@@ -503,7 +518,9 @@ imgs: async () => {
 <h1>腳本的操作步驟方式：</h1>
 <p>點擊左下圖示、確定、確定，3步開始下載</p>
 <p>右鍵點擊圖示、確定，2步驟複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
+<p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
 <p>中鍵點擊圖示捲動至第一張大圖</p>
+<p>觸控裝置，長按頁面圖片元素500毫秒，規則insertImg設置為手動則插入圖片或複製圖片網址。</p>
 <h1>圖介：</h1>
 <p>在頁面左下添加了一個圖片下載按鈕</p>
 <img src="https://i.imgur.com/TxnEvTk.png">
@@ -528,6 +545,8 @@ imgs: async () => {
 <p>按1、Enter，2步驟複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
 <p>按2，捲動至腳本插入的第一張大圖</p>
 <p>按3，一鍵下載，跳過圖片選擇器和自定義標題的步驟。</p>
+<br>
+<p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
 <h1>圖片檢視模式</h1>
 <p>1.圖片置中模式</p>
 <p>上方向鍵跳轉到目前的上一張圖、下方向鍵跳轉到目前的下一張圖</p>
