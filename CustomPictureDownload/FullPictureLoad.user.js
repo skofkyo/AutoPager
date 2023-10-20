@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.13
+// @version            1.4.14
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -2615,8 +2615,8 @@
         customTitle: () => fun.geT(".page-title").replace(/\[\d+P-?\d+MB?\]/i, "").trim(),
         category: "nsfw2"
     }, {
-        name: "Everia.club",
-        reg: /everia\.club\/\d+\/\d+\/\d+\/[^/]+\//,
+        name: "Everia.club ",
+        reg: /(everia\.club|everiaeveria\.b-cdn\.net)\/\d+\/\d+\/\d+\/[^/]+\//,
         imgs: ".wp-block-image img",
         button: [4],
         insertImg: [".entry-content", 2],
@@ -2624,8 +2624,15 @@
         category: "nsfw2"
     }, {
         name: "Everia club",
-        reg: /www\.everiaclub\.com\//,
-        include: ".mainleft",
+        reg: () => {
+            if (/^https?:\/\/www\.everiaclub\.com\/.+/.test(siteUrl)) {
+                if (!siteUrl.includes(".html")) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        //exclude: ".pagination",
         imgs: ".mainleft img",
         button: [4],
         insertImg: [".mainleft", 2],
@@ -6155,10 +6162,14 @@
         },
         init: async () => {
             await siteData.xhr();
+            let fragment = new DocumentFragment();
             let imgs = siteJson.data.scans.map(e => e.url);
             imgs.forEach(url => {
-                new Image().src = url;
+                let img = new Image();
+                img.src = url;
+                fragment.appendChild(img);
             });
+            debug("\n圖片預讀\n", fragment);
             if (await fun.waitEle("#page-area")) {
                 new IntersectionObserver((entries, observer) => {
                     if (entries[0].isIntersecting) {
@@ -7706,7 +7717,7 @@
         },
         autoNext: true,
         prev: 1,
-        css: "body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}",
+        css: "body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}body{scrollbar-width:none;-ms-overflow-style:none;overflow-x:hidden;overflow-y:auto}",
         category: "comic"
     }, {
         name: "漫漫聚M/KuKu动漫M m.manmanju.com m.ikuku.cc s1.m.ikkdm.com s2.m.ikkdm.com 1pc570gfrd9z.ihhmh.com s2.wap.ikukudm.com s3.wap.ikukudm.com mh123.dypro.xyz",
@@ -10967,7 +10978,7 @@
         CivitAiAutoShowNSFW: () => {
             const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(siteUrl)) {
-                    let ele = [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4")][0];
+                    let ele = [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")][0];
                     let elePath = fun.ge("span+svg>path", ele);
                     if (elePath) {
                         let d = elePath.getAttribute("d");
@@ -10977,7 +10988,7 @@
                         await fun.delay(200);
                     }
                 }
-                [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4")].forEach(ele => {
+                [...fun.gae(".mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")].forEach(ele => {
                     let elePath = fun.ge("span+svg>path", ele);
                     if (elePath) {
                         let d = elePath.getAttribute("d");
@@ -11439,16 +11450,19 @@
         if (ge("#FullPictureLoadOptions:not([style])")) {
             return;
         }
-        let img;
+        let ele;
+        /*if (ge("#FullPictureLoadOptionsBtn")) {
+            ele = ge("#FullPictureLoadOptionsBtn");
+        } else */
         if (ge("#FullPictureLoadImgBox:not([style*=none])")) {
-            img = ge(".FullPictureLoadImage.small");
+            ele = ge(".FullPictureLoadImage.small");
         } else {
-            img = ge(".FullPictureLoadImage");
+            ele = ge(".FullPictureLoadImage");
         }
-        if (img) {
+        if (ele) {
             if (time != 0) showMsg(displayLanguage.str_46);
             setTimeout(() => {
-                img.scrollIntoView({
+                ele.scrollIntoView({
                     behavior: "smooth"
                 });
             }, time);
@@ -11571,6 +11585,7 @@
                 item.style.display = "inline-block";
                 if (siteData.category == "comic" || (options.column == 2 && siteData.category == "hcomic")) {
                     item.style.verticalAlign = "middle";
+                    //item.style.maxHeight = "99vh";
                 } else {
                     item.style.verticalAlign = "top";
                 }
@@ -11599,6 +11614,14 @@
                     let num = (imgs[0].offsetHeight - img.height) / 2;
                     img.style.marginTop = `${num}px`;
                 }
+                /*
+                let optionsBtn = ge("#FullPictureLoadOptionsBtn");
+                if (optionsBtn) {
+                    optionsBtn.scrollIntoView();
+                } else {
+                    imgs[0].scrollIntoView();
+                }
+                */
                 imgs[0].scrollIntoView();
             }
             document.addEventListener("keydown", async event => {
@@ -12078,7 +12101,13 @@
                 `;
     let showOptions = false;
     for (let i = 0; i < customData.length; i++) {
-        if (customData[i].reg.test(siteUrl)) {
+        let check = null;
+        if (typeof customData[i].reg === "object") {
+            check = customData[i].reg.test(siteUrl);
+        } else if (typeof customData[i].reg === "function") {
+            check = await customData[i].reg();
+        }
+        if (check) {
             if (customData[i].category === "comic" && customData[i].enable === 0) {
                 showOptions = true;
                 $("#FullPictureLoadOptions>div:nth-child(8)").show();
@@ -12342,7 +12371,7 @@
     }
 
     if (showOptions) {
-        debug("\n圖片全載開啟了GM選單?\n", showOptions);
+        //debug("\n圖片全載開啟了GM選單?\n", showOptions);
         const registerMenu = () => {
             try {
                 GM_registerMenuCommand("設定", () => {
@@ -12398,6 +12427,27 @@
                 }
             }
         });
+    }
+
+    if (hasTouchEvents() && siteData.insertImg) {
+        let timeId;
+        if (siteData.insertImg[1] == 0 || siteData.insertImg[1] == 3) {
+            document.addEventListener("touchstart", event => {
+                //debug("\nTouchEvent\n", event);
+                if (event.target.tagName == "IMG" && event.target.id != "FullPictureLoad") {
+                    timeId = setTimeout(() => {
+                        copyImgSrcText();
+                    }, 500);
+                }
+            });
+            document.addEventListener("touchmove", event => {
+                clearTimeout(timeId);
+            });
+            document.addEventListener("touchend", event => {
+                //debug("\nTouchEvent\n", event);
+                clearTimeout(timeId);
+            });
+        }
     }
 
     if (options.enable == 1) {
