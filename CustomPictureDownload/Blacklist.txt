@@ -1,4 +1,4 @@
-2023/10/12 23:29
+2023/10/21 20:40
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -55,13 +55,13 @@ Xiutaku/Kostaku
     {
         "name": "圖片全載Sexyxbody格式排除1 ",
         "enable": 0,
-        "url": "^https?://\\w{2}\\.(bunnyxgirl|letsgirlz|bestxleg)\\.com/",
+        "url": "^https?://\\w{2}\\.(bunnyxgirl|letsgirlz|bestxleg|xbeautyzone)\\.com/",
         "include": ".separator>a"
     },
     {
         "name": "圖片全載Sexyxbody格式排除2 ",
         "enable": 0,
-        "url": "^https?://\\w{2}\\.(kawaiix|kawaiixpic|peachgirlz|pantyxart|beautyxpic|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic)\\.com/[^/]+/\\w+",
+        "url": "^https?://\\w{2}\\.(kawaiix|kawaiixgirl|kawaiixpic|kinkygirlz|kawaiimetas|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic|greatxgirl|asianxpic|bootyxgirl|tokyohotgirl)\\.com/[^/]+/\\w+",
         "include": "//a[@data-title and picture/source]"
     },
     {
@@ -281,6 +281,9 @@ idol.gravureprincess.date
 
 MIC MIC IDOL
 *www.micmicidol.club*
+
+micmicunc
+*unc.micmicdoll.com*
 
 グラビア週刊誌 9
 *://gravurezasshi9.doorblog.jp/archives/*.html
@@ -523,6 +526,15 @@ Bunkr
 
 Models Vibe
 *www.modelsvibe.com*
+
+24cos
+*://www.24cos.org/*/*.html
+
+Chinese Nude Art Photos 
+*://chinesenudeart.blogspot.com/*/*/*.html
+
+YouFreeX
+*www.youfreex.com/file/*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1005,6 +1017,7 @@ https://www.nuyet.com/gallery/*
 *://girlxinhxinh.com/*-anh*/
 *://idol.gravureprincess.date/*/*/*.html
 *www.micmicidol.club*
+*unc.micmicdoll.com*
 *://kemono.party/*/user/*/post/*
 *://coomer.party/*/user/*/post/*
 *://www.meijuntu.com/*/*.html
@@ -1187,6 +1200,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *bunkr-albums.io*
 *bunkrr.su/a/*
 *://www.99hanman.top/chapter/*
+*://www.24cos.org/*/*.html
+*://chinesenudeart.blogspot.com/*/*/*.html
+*www.youfreex.com/file/*
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
