@@ -671,6 +671,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.kaka234.cc/">m.kaka234.cc</a>，China IP限定</td>
             </tr>
             <tr>
+                <td><a href="https://www.24tupian.org/">爱死美女图片站</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
+                <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，不支持VIP資源。</td>
+            </tr>
+            <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
                 <td></td>
             </tr>
@@ -879,10 +887,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
                 <td><a href="https://taotu.org/m/">taotu.org/m/</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
-                <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，VIP資源需登錄。</td>
             </tr>
             <tr>
                 <td><a href="https://www.95mm.vip/">MM 范</a></td>
