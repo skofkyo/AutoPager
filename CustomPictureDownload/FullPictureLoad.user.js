@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.15
+// @version            1.4.16
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -50,7 +50,7 @@
         zoom: 0, //1 ~ 10 腳本插入的圖片縮放比例，10 = 100%，9 = 90%，0 = auto
         column: 4 //圖片並排顯示的數量2、3、4、5
     };
-    let getOptionsData = localStorage.getItem("FullPictureLoadOptions");
+    const getOptionsData = localStorage.getItem("FullPictureLoadOptions");
     if (getOptionsData === null && options.autoDownload !== 1) {
         let jsonStr = JSON.stringify(options);
         localStorage.setItem("FullPictureLoadOptions", jsonStr);
@@ -797,7 +797,15 @@
         category: "nsfw2"
     }, {
         name: "微圖坊 www.v2ph.com www.v2ph.net www.v2ph.ru",
-        reg: /v2ph\.\w+\/album\/.+/i,
+        //reg: /v2ph\.\w+\/album\/.+/i,
+        reg: () => {
+            if (/v2ph\.\w+\/album\/.+/i.test(siteUrl)) {
+                if (!siteUrl.includes("?page=")) {
+                    return true;
+                }
+            }
+            return false;
+        },
         include: ".photos-list",
         init: () => {
             if (/\.html\?hl=/.test(siteUrl)) {
@@ -808,7 +816,7 @@
             let numP = fun.geT("dd:last-child").match(/\d+/)[0];
             let max = Math.ceil(numP / 10);
             let links = [];
-            links.push(siteUrl);
+            links.push(siteUrl.replace(/\?page=\d+/, ""));
             for (let i = 2; i <= max; i++) {
                 links.push(siteUrl.replace(/\?page=\d+/, "") + `?page=${i}`);
             }
@@ -828,11 +836,17 @@
                     const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                     const htmlText = decoder.decode(buffer);
                     const doc = fun.doc(htmlText);
+                    debug(`\n${links[i]}\n`, doc);
                     let vipEle = fun.ge(".lead", doc);
                     if (vipEle) {
                         vip = true;
                     }
                     let imgs = [...fun.gae(".album-photo img[alt]", doc)];
+                    if (imgs.length == 0) {
+                        debug(`\n${links[i]}\n沒有任何圖片`);
+                    } else {
+                        debug(`\n${links[i]}\n此頁圖片`, imgs);
+                    }
                     let tE = [...fun.gae("div.album-photo")].pop();
                     imgs.forEach(e => {
                         if (e.dataset.src) {
@@ -850,16 +864,24 @@
                 if (status == 403) {
                     setTimeout(() => {
                         fun.show("403請先登錄網站!", 0);
-                    }, 1500);
+                    }, 1200);
                     return srcArr;
                 }
                 if (vip) {
                     setTimeout(() => {
-                        fun.show("VIP限定專輯圖片!", 10000);
-                    }, 1500);
+                        fun.show("VIP限定專輯圖片!", 5000);
+                    }, 1200);
                     return srcArr;
                 }
                 await fun.delay(600, 0);
+            }
+            debug(`\n所有圖片\n`, srcArr);
+            debug(`\n去重複後的圖片\n`, [...new Set(srcArr)]);
+            if (numP != srcArr.length && !vip) {
+                setTimeout(() => {
+                    fun.hide();
+                    fun.show("圖片有缺，請看主控台訊息", 5000);
+                }, 1300)
             }
             return srcArr;
         },
@@ -1542,7 +1564,7 @@
         reg: /(nshens\.com|inewgirl\.com)\/\d+\/\d+\/\d+\/[^/]+$/,
         exclude: ".justify-center>button>.v-btn__content",
         delay: 800,
-        imgs: () => {
+        imgs: async () => {
             fun.show(displayLanguage.str_05, 0);
             let links = [];
             let resArr = [];
@@ -1560,10 +1582,16 @@
                 });
                 resArr.push(res);
             }
-            return Promise.all(resArr).then(data => {
+            let photourl = await Promise.all(resArr).then(data => {
                 fun.hide();
                 return data.flat().map(e => e.photourl);
             });
+            if (photourl.length > [...new Set(photourl)].length) {
+                setTimeout(() => {
+                    fun.show("VIP套圖需升級為VIP", 5000);
+                }, 1200)
+            }
+            return photourl;
         },
         button: [4],
         insertImg: ["//div[a[div[@class='v-image v-responsive theme--light']]]", 2],
@@ -1582,7 +1610,7 @@
         reg: /chottie\.com\/blog\/(\w{2}\/)?archives\/\d+$/,
         exclude: ".justify-center>button>.v-btn__content",
         delay: 800,
-        imgs: () => {
+        imgs: async () => {
             fun.show(displayLanguage.str_05, 0);
             let links = [];
             let resArr = [];
@@ -1607,10 +1635,16 @@
                 });
                 resArr.push(res);
             }
-            return Promise.all(resArr).then(data => {
+            let data = await Promise.all(resArr).then(data => {
                 fun.hide();
                 return data.flat();
             });
+            if (data.length > [...new Set(data)].length) {
+                setTimeout(() => {
+                    fun.show("VIP套圖需升級為VIP", 5000);
+                }, 1200)
+            }
+            return data;
         },
         button: [4],
         insertImg: ["//div[a[div[@class='v-image v-responsive theme--light']]]", 2],
@@ -2960,10 +2994,20 @@
         css: ".post img{max-width:100% !important}.post-body{margin:0px!important;}",
         category: "nsfw2"
     }, {
-        name: "MIC MIC IDOL www.micmicidol.club 分類自動翻頁",
-        reg: /^https:\/\/www\.micmicidol\.club\/(\?m=1)?$|^https:\/\/www\.micmicidol\.club\/search/,
+        name: "MIC MIC IDOL www.micmicidol.club micmicunc unc.micmicdoll.com 分類自動翻頁",
+        reg: /^https:\/\/www\.micmicidol\.club\/(\?m=1)?$|^https:\/\/www\.micmicidol\.club\/search|^https:\/\/unc\.micmicdoll\.com\/(\?m=1)?$|^https:\/\/unc\.micmicdoll\.com\/search/,
         icon: 0,
         key: 0,
+        init: () => {
+            if (siteUrl.includes("unc.micmicdoll.com")) {
+                setTimeout(() => {
+                    [...document.querySelectorAll("a[href*='www.micmicdoll.com']")].forEach(a => {
+                        a.href = a.href.replace("www.micmicdoll.com", "unc.micmicdoll.com");
+                    });
+                }, 1000);
+                fun.css(".autoPagerTitle{width:950px!important}");
+            }
+        },
         autoPager: {
             //mode: 1,
             ele: ".blog-posts",
@@ -2989,7 +3033,7 @@
                             let url = arr[1];
                             let alt = arr[3];
                             let img = new Image();
-                            img.src = url.replace("/s72-c/", "/w400/");
+                            img.src = url.replace("/s72-c/", "/w400/").replace("=s72-c", "=w400");
                             img.alt = alt;
                             script.parentNode.insertBefore(img, script.nextSibling);
                         }
@@ -2999,7 +3043,16 @@
             title: () => {
                 let num;
                 if (/start=/.test(nextLink)) {
-                    num = parseInt(nextLink.match(/start=(\d+)/)[1]) / 50 + 1;
+                    if (siteUrl.includes("unc.micmicdoll.com")) {
+                        num = parseInt(nextLink.match(/start=(\d+)/)[1])
+                        if (num % 2 == 0) {
+                            num = num / 50 + 1;
+                        } else {
+                            num = num / 39 + 1;
+                        }
+                    } else {
+                        num = parseInt(nextLink.match(/start=(\d+)/)[1]) / 50 + 1;
+                    }
                 } else {
                     num = 1;
                 }
@@ -3124,8 +3177,8 @@
         css: ".CustomPictureBox>img{max-width:100%}",
         category: "nsfw1"
     }, {
-        name: "图宅网 www.tuzac.com dev.tuzac.com 咔咔西三 www.kkc3.com",
-        reg: /(www\.tuzac\.com|dev\.tuzac\.com|www\.kkc3\.com)\/file\/.+/,
+        name: "图宅网 www.tuzac.com dev.tuzac.com 咔咔西三 www.kkc3.com YouFreeX www.youfreex.com",
+        reg: /(www\.tuzac\.com|dev\.tuzac\.com|www\.kkc3\.com|www\.youfreex\.com)\/file\/.+/,
         imgs: async () => {
             let a = fun.ge("#the-photo-link");
             if (a) {
@@ -3443,6 +3496,14 @@
         button: [4],
         insertImg: [".post-content", 2],
         customTitle: () => fun.geT("h1.post-title").replace(/\s?\(\d+\s?photos(\s?\+\s?\d+\s?videos?)?\)/i, ""),
+        category: "nsfw1"
+    }, {
+        name: "Chinese Nude Art Photos chinesenudeart.blogspot.com",
+        reg: /^https?:\/\/chinesenudeart\.blogspot\.com\/\d+\/\d+\/[\w-]+\.html/i,
+        imgs: ".entry-content a[href]",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: () => fun.geT("h1.entry-title").trim().replace("Chinese beautiful model Amanda -", "").replace("Beautiful Chinese girl -", "").replace("Beautiful Chinese girl ", "").replace("Chinese Beautiful girl -", "").replace(" |18+ Nude model Amateur", ""),
         category: "nsfw1"
     }, {
         name: "CUTE GIRLS ADDICT cutegirlsaddict.blogspot.com",
@@ -6200,6 +6261,7 @@
             }
         },
         imgs: () => siteJson.data.scans.map(e => e.url),
+        referrerpolicy: "origin",
         button: [4],
         insertImg: ["//article[div[contains(@id,'imageLoader')]]", 3],
         go: 1,
@@ -6286,6 +6348,7 @@
             let t = document.title.split(" ")[0];
             return `${t}-第${ch}集`;
         },
+        css: "td[style^=width]{display:none!important}",
         category: "comic"
     }, {
         name: "8Comic無限動漫 手機版 https://8.twobili.com/comic/insurance_103.html?ch=471",
@@ -8929,7 +8992,10 @@
         reg: /^https?:\/\/ouo\./,
         init: async () => {
             let ele = "#btn-main:not(.disabled)";
-            if (await fun.waitEle(ele)) fun.ge(ele).click();
+            if (await fun.waitEle(ele)) {
+                fun.ge(ele).click();
+                //elementClick(fun.ge(ele));
+            }
         },
         category: "none"
     }, {
@@ -8939,7 +9005,10 @@
         reg: /^https:\/\/cutt?y\.(io|app)\/\w+/i,
         init: async () => {
             let ele = "//button[@id='submit-button' and text()= 'Continue' or text()= 'I am not a robot' or text()= 'Go ->']";
-            if (await fun.waitEle(ele)) fun.ge(ele).click();
+            if (await fun.waitEle(ele)) {
+                fun.ge(ele).click();
+                //elementClick(fun.ge(ele));
+            }
         },
         category: "none"
     }, {
@@ -8961,6 +9030,7 @@
             for (let i in eleArr) {
                 await fun.waitEle(eleArr[i]);
                 fun.ge(eleArr[i]).click();
+                //elementClick(fun.ge(eleArr[i]));
                 await fun.delay(200);
             }
         },
@@ -8996,6 +9066,7 @@
             if (await fun.waitEle(".btn-captcha:not(.disable)")) {
                 setInterval(() => {
                     fun.ge(".btn-captcha:not(.disable)").click();
+                    //elementClick(fun.ge(".btn-captcha:not(.disable)"));
                 }, 3000);
             }
         },
@@ -9009,6 +9080,7 @@
         init: async () => {
             if (await fun.waitEle("//button[@onclick='link1sgo()'] | //button[@id='link' and contains(@style,'none')] | //a[text()='Get Link']")) {
                 fun.ge("//button[@onclick='link1sgo()'] | //a[@id='link1s'] | //a[text()='Get Link']").click();
+                //elementClick(fun.ge("//button[@onclick='link1sgo()'] | //a[@id='link1s'] | //a[text()='Get Link']"));
             }
         },
         category: "none"
@@ -9072,6 +9144,7 @@
         go: 1,
         fetch: 1,
         customTitle: () => fun.geT(".mantine-Title-root").replace(/\|\s/, "").replace(/\//g, "-") + " - " + fun.geT(".mantine-z8ikjj"),
+        openInNewTab: "a[href]:not([target=_blank])",
         observerTitle: true,
         category: "AI"
     }, {
@@ -9093,6 +9166,7 @@
         ],
         go: 1,
         fetch: 1,
+        openInNewTab: "a[href]:not([target=_blank])",
         category: "AI"
     }, {
         name: "CivitAi Auto Show NSFW civitai.com",
@@ -9103,6 +9177,7 @@
         init: () => {
             fun.CivitAiAutoShowNSFW();
         },
+        openInNewTab: "a[href]:not([target=_blank])",
         category: "AI"
     }];
 
@@ -10372,6 +10447,9 @@
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
                 img.className = "FullPictureLoadImage";
+                if (siteData.referrerpolicy) {
+                    img.setAttribute("referrerpolicy", siteData.referrerpolicy);
+                }
                 if (options.zoom <= 10 && options.zoom > 0) {
                     img.style.width = `${options.zoom * 10}%`;
                     img.style.height = "auto";
@@ -10987,6 +11065,7 @@
                         let d = elePath.getAttribute("d");
                         if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
                             ele.click();
+                            //elementClick(ele);
                         }
                         await fun.delay(200);
                     }
@@ -10997,6 +11076,7 @@
                         let d = elePath.getAttribute("d");
                         if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
                             ele.click();
+                            //elementClick(ele);
                         }
                     }
                 });
@@ -11529,15 +11609,18 @@
                 return;
             }
             let width;
-            if (options.column == 2 || siteData.column == 2 || siteData.category == "comic") {
+            if (options.column == 2 || siteData.category == "comic") {
                 width = "48.8%";
                 column = 2;
-            } else if (options.column == 3 || siteData.column == 3) {
+            } else if (options.column == 3) {
                 width = "32%";
                 column = 3;
-            } else if (options.column == 5 || siteData.column == 5) {
+            } else if (options.column == 5) {
                 width = "19.2%";
                 column = 5;
+            } else if (options.column == 6) {
+                width = "16%";
+                column = 6;
             } else {
                 column = 4;
                 if (hasTouchEvents()) {
@@ -11664,7 +11747,8 @@
                                     let next = fun.ge(siteData.next);
                                     if (next) {
                                         fun.show("前往下一集", 3000);
-                                        next.click();
+                                        //next.click();
+                                        elementClick(next);
                                     } else {
                                         imgsNum = 0 - column;
                                         fun.show("已是最後下一集", 3000);
@@ -11745,7 +11829,7 @@
     };
 
     const elementClick = ele => {
-        let dispatchTouchEvent = (_ele, type) => {
+        const dispatchTouchEvent = (_ele, type) => {
             let touchEvent = document.createEvent("UIEvent");
             touchEvent.initUIEvent(type, true, true);
             touchEvent.touches = [{
@@ -11759,6 +11843,18 @@
             dispatchTouchEvent(ele, "touchend");
         }
         ele.click();
+        /*
+        if (hasTouchEvents()) {
+            ele.dispatchEvent(new Event("touchstart"));
+            ele.dispatchEvent(new Event("touchend"));
+            //ele.click();
+            debug("\nelementClick touch事件式點擊\n", ele);
+        } else {
+            //ele.dispatchEvent(new Event("click"));
+            ele.click();
+            debug("\nelementClick click事件式點擊\n", ele);
+        }
+        */
     };
 
     const addReturnTopButton = () => {
@@ -11820,11 +11916,11 @@
     <input id="FullPictureLoadOptionsDouble">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">當前網站圖片縮放比例 ( 0 ~10 ) 10 = 100%、5 = 50%、0 = auto</font></p>
+    <p><font color="black">當前網站圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto</font></p>
     <input id="FullPictureLoadOptionsZoom">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">當前網站圖片並排模式顯示數量 ( 2、3、4、5 ) comic類固定為2</font></p>
+    <p><font color="black">當前網站圖片並排模式顯示數量 ( 2 ~ 6 ) comic類固定為 ( 2 )</font></p>
     <input id="FullPictureLoadOptionsColumn">
     <p><font color="black">PS:comic類並排後為右至左的漫讀模式 hcomic類也設定為2將套用</font></p>
 </div>
@@ -12048,9 +12144,7 @@
     line-height: 29px;
     text-align: center;
     overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+    display: block;
     margin: 10px 5px;
     border: 1px solid #e0e0e0;
     background-color: #f0f0f0;
@@ -12211,7 +12305,8 @@
                         }
                     } else if (typeof next === "string") {
                         if (link) {
-                            link.click();
+                            //link.click();
+                            elementClick(link);
                             fun.show(displayLanguage.str_35);
                         } else {
                             fun.show(displayLanguage.str_37);
@@ -12238,7 +12333,8 @@
                         event.preventDefault();
                         let ele = fun.ge(prev);
                         if (ele) {
-                            ele.click();
+                            //ele.click();
+                            elementClick(ele);
                             fun.show(displayLanguage.str_39);
                         } else {
                             fun.show(displayLanguage.str_40);
@@ -12260,11 +12356,17 @@
                 if (typeof autoClick == "object") {
                     setTimeout(() => {
                         let ele = fun.ge(autoClick[0]);
-                        if (ele) elementClick(ele);
+                        if (ele) {
+                            elementClick(ele);
+                            debug(`\n圖片全載autoClick("${autoClick}")`, ele);
+                        }
                     }, autoClick[1] || 1000);
                 } else if (typeof autoClick == "string") {
                     let ele = fun.ge(autoClick);
-                    if (ele) elementClick(ele);
+                    if (ele) {
+                        elementClick(ele);
+                        debug(`\n圖片全載autoClick("${autoClick}")`, ele);
+                    }
                 }
             }
             let observerClick = customData[i].observerClick;
@@ -12276,7 +12378,7 @@
                             if (entry.isIntersecting) {
                                 observer.unobserve(entry.target);
                                 elementClick(entry.target);
-                                debug(`圖片全載observerClick("${observerClick}")`);
+                                debug(`\n圖片全載observerClick("${observerClick}")`, entry.target);
                                 setTimeout(async () => {
                                     if (await fun.waitEle(observerClick, 30)) {
                                         observer.observe(fun.ge(observerClick));
