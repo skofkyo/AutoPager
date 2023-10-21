@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.16
+// @version            1.4.17
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -889,7 +889,7 @@
         insertImg: [".photos-list", 2],
         customTitle: () => fun.geT("h1"),
         css: ".albums-list img,.photos-list img{opacity:1!important}",
-        threading: 3,
+        threading: 10,
         category: "nsfw2"
     }, {
         name: "柠檬皮 www.cybesx.com",
@@ -1727,6 +1727,44 @@
         next: "//div[contains(text(),'上一篇')]/a[not(@href='#')]",
         prev: "//div[contains(text(),'下一篇')]/a[not(@href='#')]",
         customTitle: () => fun.geT(".bread>li:last-child>a"),
+        category: "nsfw1"
+    }, {
+        name: "爱死美女图片站 www.24tupian.org",
+        reg: /^https?:\/\/www\.24tupian\.org\/\w+\/\d+\/\d+\/\d+\.html$/,
+        include: "img[data-original*='imgs.diercun.com']",
+        imgs: async () => {
+            await new Promise(async resolve => {
+                fun.show(displayLanguage.str_08, 0);
+                for (let i = 1; i <= 100; i++) {
+                    if (fun.ge("//div[@class='moremsg'][contains(text(),'没有更多图片了')]")) {
+                        fun.hide();
+                        resolve();
+                        break;
+                    }
+                    let ele = fun.ge(".mores>a");
+                    if (ele) {
+                        ele.click();
+                    }
+                    await fun.delay(200);
+                }
+            });
+            return [...fun.gae("#piclist img[data-original]")].map(e => {
+                let arr = e.dataset.original.split("/");
+                arr[2] = arr[2].replace("imgs.diercun.com", "big.diercun.com");
+                arr[arr.length - 1] = arr[arr.length - 1].replace(/^m/, "");
+                let bigSrc = arr.join("/");
+                return bigSrc;
+            });
+        },
+        button: [4],
+        insertImg: [
+            [".mores", 2], 2
+        ],
+        go: 1,
+        topButton: true,
+        threading: 12,
+        customTitle: () => fun.geT(".gtitle1>h1"),
+        css: "body>.mask{display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱死cos美女图片站 www.24cos.org www.lovecos.net",
@@ -3503,6 +3541,9 @@
         imgs: ".entry-content a[href]",
         button: [4],
         insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: "a.blog-pager-older-link",
+        prev: "a.blog-pager-newer-link",
         customTitle: () => fun.geT("h1.entry-title").trim().replace("Chinese beautiful model Amanda -", "").replace("Beautiful Chinese girl -", "").replace("Beautiful Chinese girl ", "").replace("Chinese Beautiful girl -", "").replace(" |18+ Nude model Amateur", ""),
         category: "nsfw1"
     }, {
@@ -12251,6 +12292,7 @@
             }
             if (customData[i].threading) {
                 options.threading = customData[i].threading;
+                ge("#FullPictureLoadOptionsThreading").value = options.threading;
                 debug("\n下載線程數：" + options.threading);
             }
             let css = customData[i].css;
