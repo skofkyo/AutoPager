@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.17
+// @version            1.4.18
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1475,66 +1475,27 @@
         css: ".gallery-view .row{display:block}",
         category: "nsfw1"
     }, {
-        name: "COSPLAY ZIP www.coszip.com",
-        reg: /www\.coszip\.com\/\d+\.html$/,
-        imgs: () => fun.getImg(".post-content img", (fun.geT(".pagination-post>*:last-child") || 1), 7),
+        name: "COSPLAY ZIP coszip.com",
+        reg: /^https?:\/\/coszip\.com\/\d+\.html$/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT(".page_info").match(/\d+$/)[0];
+            } catch (e) {
+                max = 1;
+            }
+            return fun.getImg(".entry-content img", max, 7);
+        },
         button: [4],
         insertImg: [
-            [".post-content", 0], 1
+            [".entry-content", 0, "//p[img[@decoding]] | //div[contains(@class,'jeg_pagelinks')]"], 2
         ],
         go: 1,
         autoDownload: [0],
-        next: ".post-prev>a",
-        prev: ".post-next>a",
-        customTitle: () => fun.geT("h1.entry-title"),
-        css: "pre[style]+p,figure.wp-block-image,.jeg_pagelinks,.pagination-post{display:none!important}pre{white-space:pre-wrap!important}",
-        category: "nsfw2"
-    }, {
-        name: "COSPLAY ZIP M www.coszip.com",
-        reg: /www\.coszip\.com\/\d+\.html\?amp=1$/,
-        imgs: () => {
-            let slideshow = fun.ge(".slide.amp-carousel-slide");
-            if (slideshow) {
-                return [...fun.gae(".slide.amp-carousel-slide amp-img")]
-            } else {
-                return fun.getImgA(".post-content amp-img", ".pagination-post>a");
-            }
-            /*
-            let links = [];
-            let resArr = [];
-            let xhrNum = 0;
-            let url = location.href.replace(/\?amp=1$/, "");
-            links.push(url);
-            let max = [...fun.gae(".pagination-post>*")].length;
-            if (max > 1) {
-                for (let i = 2; i <= max; i++) {
-                    links.push(url + "/" + i);
-                }
-            }
-            debug("links", links);
-            fun.show(displayLanguage.str_01, 0);
-            for (let i in links) {
-                let res = fun.xhrDoc(links[i], url, PcUa).then(doc => {
-                    debug(links[i], doc);
-                    fun.show(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
-                    return [...fun.gae(".post-content img", doc)];
-                });
-                resArr.push(res);
-            }
-            return Promise.all(resArr).then(data => {
-                fun.hide();
-                return data.flat();
-            });
-            */
-        },
-        button: [4],
-        insertImg: ["//p[amp-img] | //div[@class='pagination-post aligncenter'] | //figure[amp-carousel]", 1],
-        go: 1,
-        autoDownload: [0],
-        next: ".prev-post,.post-prev>a",
-        prev: ".next-post,.next-post>a",
-        customTitle: () => fun.geT("h1.jeg_post_title,h1.entry-title"),
-        css: "pre[style]+p,figure.wp-block-image,.jeg_pagelinks{display:none!important}pre{white-space:pre-wrap!important}",
+        next: "a.prev-post",
+        prev: "a.next-post",
+        customTitle: () => fun.geT("h1.jeg_post_title"),
+        css: "pre{white-space:pre-wrap!important}",
         category: "nsfw2"
     }, {
         name: "萝莉少女 cosporn.online",
@@ -11982,9 +11943,12 @@
         ge("#FullPictureLoadOptionsComic").value = options.comic;
         ge("#FullPictureLoadOptionsDouble").value = options.doubleTouchNext;
         ge("#FullPictureLoadOptionsZoom").value = options.zoom;
-        ge("#FullPictureLoadOptionsColumn").value = options.column;
+        if (siteData.category == "comic") {
+            ge("#FullPictureLoadOptionsColumn").value = 2;
+        } else {
+            ge("#FullPictureLoadOptionsColumn").value = options.column;
+        }
     };
-    setValue();
 
     $("#FullPictureLoadOptionsCancelBtn").on("click", (event) => {
         event.preventDefault();
@@ -12246,7 +12210,8 @@
             check = await customData[i].reg();
         }
         if (check) {
-            if (customData[i].category === "comic" && customData[i].enable === 0) {
+            let category = customData[i].category;
+            if (category === "comic" && customData[i].enable === 0) {
                 showOptions = true;
                 $("#FullPictureLoadOptions>div:nth-child(8)").show();
             }
@@ -12256,7 +12221,7 @@
             }
             options.enable = 1;
             if (customData[i].enable == 0) {
-                if (options.comic == 1 && customData[i].category === "comic") {
+                if (options.comic == 1 && category === "comic") {
                     showOptions = true;
                     debug("\n漫畫類預設關閉的此站規則已開啟");
                 } else {
@@ -12292,7 +12257,6 @@
             }
             if (customData[i].threading) {
                 options.threading = customData[i].threading;
-                ge("#FullPictureLoadOptionsThreading").value = options.threading;
                 debug("\n下載線程數：" + options.threading);
             }
             let css = customData[i].css;
@@ -12504,6 +12468,8 @@
             break;
         }
     }
+
+    setValue();
 
     if (siteData.reg) {
         debug("\n列出此站資料", siteData);
