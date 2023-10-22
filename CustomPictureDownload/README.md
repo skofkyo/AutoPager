@@ -559,6 +559,10 @@ imgs: async () => {
 <br>
 <p>如漫畫站的圖片並排後，圖片高度小於大於瀏覽範圍的高度，需要手動調整瀏覽器的縮放來適配達到最佳的觀看效果。</p>
 <p>Chrome內建的縮放跨度太大，建議安裝縮放 for Google Chrome，可以以10%、5%來縮放</p>
+
+3.Fancybox模式
+在置中模式點擊圖片開啟Fancybox圖片燈箱功能的效果
+
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
 <p>2023/10/21 20:40</p>
@@ -573,6 +577,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <img src="https://i.imgur.com/ToftahD.jpg">
 <img src="https://i.imgur.com/xQJePAo.jpg">
 <img src="https://i.imgur.com/GMsIaj9.jpg">
+<img src="https://i.imgur.com/QpxGRxN.jpg">
 <h2>老司機類內置規則支持列表</h2>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
