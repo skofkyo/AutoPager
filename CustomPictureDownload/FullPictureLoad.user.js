@@ -1488,7 +1488,7 @@
         },
         button: [4],
         insertImg: [
-            [".entry-content", 0, "//p[img[@decoding]] | //div[contains(@class,'jeg_pagelinks')]"], 2
+            [".entry-content", 0, "//p[img[@decoding]] | //figure[@class='wp-block-image'] | //div[contains(@class,'jeg_pagelinks')]"], 2
         ],
         go: 1,
         autoDownload: [0],
@@ -10463,7 +10463,7 @@
                 } else {
                     img.src = srcArr[i];
                     img.onerror = error => {
-                        if (errorNum > 10) return;
+                        if (errorNum > 50) return;
                         errorNum += 1;
                         setTimeout(() => {
                             debug(`\nfun.insertImg()重新載入出錯的圖片：\n${error.target.src}`);
@@ -10489,7 +10489,7 @@
                             temp = null;
                         };
                         temp.onerror = error => {
-                            if (errorNum > 10) return;
+                            if (errorNum > 50) return;
                             errorNum += 1;
                             resolve();
                             setTimeout(() => {
@@ -10720,7 +10720,7 @@
                             entry.target.classList.remove("error");
                         };
                         entry.target.onerror = (error) => {
-                            if (errorNum > 30) return;
+                            if (errorNum > 50) return;
                             errorNum += 1;
                             error.target.dataset.src = error.target.dataset.src.replace("-scaled", "");
                             error.target.src = loading_bak;
