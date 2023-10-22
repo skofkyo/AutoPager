@@ -665,7 +665,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.taotu8.cc/">秀套图吧</a></td>
-                <td>China IP限定</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="http://www.502x.com/">秀人图吧</a></td>
