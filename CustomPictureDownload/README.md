@@ -1101,7 +1101,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.coszip.com/">COSPLAY ZIP</a></td>
+                <td><a href="https://coszip.com/">COSPLAY ZIP</a></td>
                 <td></td>
             </tr>
             <tr>
