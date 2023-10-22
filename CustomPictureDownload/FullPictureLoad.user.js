@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.18
+// @version            1.4.19
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -31,6 +31,7 @@
 // @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 // ==/UserScript==
 
 (async () => {
@@ -106,7 +107,7 @@
             }
             return title;
         },
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
         name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me", //xhr翻頁模式，翻完所有預覽圖後，立刻在預覽縮圖下面插入全部大圖
@@ -123,7 +124,7 @@
         ],
         go: 1,
         customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
         name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，聚集所有預覽圖，手動插入全部大圖，圖片量是幾百張的比較不會卡，不插大圖也能下載
@@ -136,7 +137,7 @@
         imgs: () => [...fun.gae("img.cr_only")].map(e => e.src.replace("_600x0", "")),
         insertImg: ["//div[div[@class='photos']]", 0],
         customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
         category: "nsfw2"
     }, {
         name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me",
@@ -162,7 +163,7 @@
         ],
         go: 1,
         customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
         topButton: true,
         category: "nsfw2"
     }, {
@@ -374,7 +375,7 @@
         next: ".prevNews>a",
         prev: ".nextNews>a",
         customTitle: () => fun.geT("h1"),
-        css: "body>section[id],#footer~*:not(.FullPictureLoadMsg):not(#FullPictureLoad){display:none!important}",
+        css: "body>section[id],#footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "nsfw2"
     }, {
         name: "Hit-x-Hot www.hitxhot.org www.depvailon.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com",
@@ -485,7 +486,7 @@
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: () => fun.geT(".item_title>h1").replace(/\d+P$/i, ""),
         //threading: 4,
-        css: ".item_title>a,.content br,.bottom_fixed,body>div[id]:not(#FullPictureLoad):not(#FullPictureLoadOptions){display:none!important}",
+        css: ".item_title>a,.content br,.bottom_fixed,body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱美女网 www.imn5.net www.imn5.cc",
@@ -1518,7 +1519,7 @@
         next: "#content .g1-teaser-prev",
         prev: "#content .g1-teaser-next",
         customTitle: () => fun.geT("h1.entry-title"),
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.FullPictureLoadMsg),.code-block,#secondary{display:none!important}",
+        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
         category: "hcomic"
     }, {
         name: "女神社 nshens.com inewgirl.com",
@@ -1948,7 +1949,7 @@
         prev: "//div[@class='b' and contains(text(),'下一')]/a",
         customTitle: () => fun.geT("h1").replace(/\/(\d+P)?|\||第\d+页/gi, "").trim(),
         topButton: true,
-        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,.interestline+.nav~*:not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions){display:none !important}",
+        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,.interestline+.nav~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none !important}",
         category: "nsfw2"
     }, {
         name: "魅狸图片网 www.rosi8.com 美女私房照 www.sfjpg.com 看妹图 www.kanmeitu.net www.kanmeitu1.cc kanmeitu.net kanmeitu1.cc",
@@ -3665,7 +3666,7 @@
         ],
         go: 1,
         customTitle: () => fun.geT(".headline>h1"),
-        css: ".block-album{display:block!important}.block-album>.table,.footer~*:not(.FullPictureLoadMsg):not(#FullPictureLoad){display:none!important}",
+        css: ".block-album{display:block!important}.block-album>.table,.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "nsfw2"
     }, {
         name: "Xasiat loadMore www.xasiat.com/albums/",
@@ -5949,7 +5950,7 @@
         next: "#content .g1-teaser-next",
         prev: "#content .g1-teaser-prev",
         customTitle: () => fun.geT("h1.entry-title"),
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not(#FullPictureLoad):not(.FullPictureLoadMsg),.code-block,#secondary{display:none!important}",
+        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
         category: "hcomic"
     }, {
         name: "18H漫画 18hmanga.click",
@@ -5961,7 +5962,7 @@
         next: "#content .g1-teaser-prev",
         prev: "#content .g1-teaser-next",
         customTitle: () => fun.geT("h1.entry-title"),
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not(#FullPictureLoad):not(.FullPictureLoadMsg),.code-block,#secondary{display:none!important}",
+        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
         category: "hcomic"
     }, {
         name: "hitomi hitomi.la",
@@ -7137,7 +7138,7 @@
                 return fun.title(" - ", 3);
             }
         },
-        css: ".img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.FullPictureLoadMsg):not(#FullPictureLoad){display:none!important}#action li{width:50%!important}",
+        css: ".img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}#action li{width:50%!important}",
         category: "comic"
     }, {
         name: "漫画456 www.manhua456.com",
@@ -7329,7 +7330,7 @@
         autoNext: true,
         prev: 1,
         customTitle: () => fun.title("在线", 1),
-        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not(.FullPictureLoadMsg):not(#FullPictureLoad),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
+        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
         category: "comic"
     }, {
         name: "最漫画M / 拼拼漫画M m.zuimh.com m.pinmh.com",
@@ -7346,7 +7347,7 @@
         autoNext: true,
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: () => fun.title("在线", 1),
-        css: "body{padding:0!important}div[style*='text-align'],.UnderPage~*:not(.FullPictureLoadMsg):not(#FullPictureLoad){display:none!important}",
+        css: "body{padding:0!important}div[style*='text-align'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "comic"
     }, {
         name: "零点漫画M m.0dmh.com",
@@ -7446,7 +7447,7 @@
                 return fun.title("在线", 1);
             }
         },
-        css: "body{padding:0!important}.UnderPage~*:not(.FullPictureLoadMsg):not(#FullPictureLoad),.bottom~*:not(.FullPictureLoadMsg):not(#FullPictureLoad),div[style*='text-align: left;']{display:none!important}",
+        css: "body{padding:0!important}.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.bottom~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),div[style*='text-align: left;']{display:none!important}",
         category: "comic"
     }, {
         name: "前未漫画/漫画芯/蔷薇漫画/最漫画/爱米推漫画/下拉式漫画/漫画吧/漫画连/拼拼漫画/零点漫画/雪儿漫画/狗狗漫画/奇奇漫画/悠闲漫画/不卡漫画/多熙漫画 www.qianmh.com www.mhxin.com www.qwmanhua.com www.zuimh.com www.imitui.com imitui.com www.xlsmh.com www.dmhua8.com www.100mhl.com www.pinmh.com www.0dmh.com www.xuermh.com www.gougoumh.com www.qimhua.com www.yxtun.com www.bukamh.com www.duoximh.com",
@@ -10446,6 +10447,12 @@
                     numP--;
                     continue;
                 }
+                let a = document.createElement("a");
+                //a.className = "fancybox-pic";
+                //a.rel = "group";
+                a.dataset.fancybox = "gallery";
+                a.dataset.thumb = srcArr[i];
+                a.href = srcArr[i];
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
                 img.className = "FullPictureLoadImage";
@@ -10471,7 +10478,8 @@
                         }, 1000);
                     };
                 }
-                fragment.appendChild(img);
+                a.appendChild(img);
+                fragment.appendChild(a);
                 if (i == srcArr.length - 1) {
                     let end = document.createElement("p");
                     end.id = "FullPictureLoadEnd";
@@ -10574,6 +10582,7 @@
                         imgsNum = 0 - 1;
                     }
                 });
+                //$( ".fancybox-pic" ).fancybox();
             } else {
                 fun.show(displayLanguage.str_20);
             }
@@ -12136,7 +12145,7 @@
     border: none !important;
 }
 
-#FullPictureLoad~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords) {
+#FullPictureLoad~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.fancybox-container) {
     display: none !important;
 }
 
@@ -12200,6 +12209,10 @@
     background-color: buttonface;
     border: 1px solid #a0a0a0 !important;
 }
+.viewer-open:not(.fancybox-active) {
+    overflow: unset !important;
+    padding-right: 0px !important;
+}
                 `;
     let showOptions = false;
     for (let i = 0; i < customData.length; i++) {
@@ -12251,6 +12264,10 @@
             showOptions = true;
             if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
             if (!ge(".FullPictureLoadStyle")) fun.css(style);
+            if (!siteData.autoPager) {
+                const fancyBoxCssHtml = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">`;
+                document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
+            }
             if (customData[i].imgs) {
                 options.default = customData[i].imgs;
                 debug(`\nCSS/Xpath/JS選擇器：${options.default}`);
