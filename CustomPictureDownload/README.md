@@ -633,15 +633,15 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xr02.xyz/">秀人集</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.xrmn03.cc/">秀人美女網</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.imn5.xyz/">爱美女网</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://meirentu.cc/">美人图</a></td>
@@ -649,15 +649,15 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xgyw.pro/">极品性感美女</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn03.cc/">爱看美女网</a></td>
-                <td>不支持預覽版頁面</td>
+                <td>China IP限定，不支持預覽版頁面</td>
             </tr>
             <tr>
                 <td><a href="https://www.22mm.net/">美女秀</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.2mn.cc/">秀爱美女网</a></td>
@@ -665,11 +665,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.taotu8.cc/">秀套图吧</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="http://www.502x.com/">秀人图吧</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.kaka234.cc/">卡卡美女网</a></td>
