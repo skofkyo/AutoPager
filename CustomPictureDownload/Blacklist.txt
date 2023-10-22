@@ -164,8 +164,8 @@ Lootiu.Com
 *://www.meitule.*/photo/*.html
 
 COSPLAY ZIP
-*://www.coszip.com/*.html
-*://www.coszip.com/*.html*amp=1
+*://*coszip.com/*.html
+*://*coszip.com/*.html*amp=1
 
 美桌
 *://www.win4000.com/meinv*.html
@@ -1105,8 +1105,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.ho5ho.com/*/*/server*
 *://orzqwq.com/manga/*/
 *://asiacomics.com/chapter/*
-*://www.coszip.com/*.html
-*://www.coszip.com/*.html*amp=1
+*://*coszip.com/*.html
+*://*coszip.com/*.html*amp=1
 *://www.pictoa.com/albums/*/*.html
 *://www.imagefap.com/gallery/*
 *://www.imagefap.com/pictures/*
