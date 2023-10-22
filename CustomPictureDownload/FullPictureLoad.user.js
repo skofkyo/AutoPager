@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.19
+// @version            1.4.20
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -38,28 +38,20 @@
     "use strict";
     let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
         enable: 0, //!!!維持0不要改!!!
-        icon: 1, //是否顯示左下圖示0關1開
+        icon: 1, //是否顯示左下圖示，1：開啟、0：關閉
         threading: 32, //最大下載線程數
         default: "img[src]", //預設CSS/Xpath選擇器/javascript代碼
         //default: "js;return [...document.images];",
-        zip: true, //true圖片下載後壓縮打包，false批量下載圖片，無法全自動下載
+        zip: 1, //1：圖片下載後壓縮打包，0：批量下載圖片，無法全自動下載
         file_extension: "zip", //zip or cbz
         autoDownload: 0, //!!!維持0不要改!!!建議透過UI選項設定來開啟，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有有效的NEXT時自動下載的倒數秒數
         comic: 0, //1，忽視漫畫站點開關選項，啟用漫畫規則
-        doubleTouchNext: true, //true開啟false關閉，觸控裝置雙擊前往下一頁
+        doubleTouchNext: 1, //觸控裝置雙擊前往下一頁，1：開啟、0：關閉
         zoom: 0, //1 ~ 10 腳本插入的圖片縮放比例，10 = 100%，9 = 90%，0 = auto
-        column: 4 //圖片並排顯示的數量2、3、4、5
+        column: 4, //圖片並排顯示的數量 2 ~ 6
+        fancybox: 1 //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
     };
-    const getOptionsData = localStorage.getItem("FullPictureLoadOptions");
-    if (getOptionsData === null && options.autoDownload !== 1) {
-        let jsonStr = JSON.stringify(options);
-        localStorage.setItem("FullPictureLoadOptions", jsonStr);
-    } else if (options.autoDownload !== 1) {
-        let optionsJson = JSON.parse(getOptionsData);
-        options = optionsJson;
-        console.log("Full Picture Load Options Json\n", optionsJson);
-    }
 
     const siteUrl = window.location.href;
     let siteData = {};
@@ -6733,7 +6725,7 @@
     }, {
         name: "漫畫狗 dogemanga.com",
         enable: 1,
-        reg: /dogemanga\.com\/p\/\w+/i,
+        reg: /dogemanga\.com\/p\/[\w-]+/i,
         init: () => {
             fun.ge(".site-reader").setAttribute("class", "CustomPictureBox");
             fun.addUrlHtml("https://dogemanga.com/", ".CustomPictureBox", 1, "首頁");
@@ -10448,11 +10440,11 @@
                     continue;
                 }
                 let a = document.createElement("a");
-                //a.className = "fancybox-pic";
-                //a.rel = "group";
-                a.dataset.fancybox = "gallery";
-                a.dataset.thumb = srcArr[i];
-                a.href = srcArr[i];
+                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                    a.dataset.fancybox = "original";
+                    a.dataset.thumb = srcArr[i];
+                    a.href = srcArr[i];
+                }
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
                 img.className = "FullPictureLoadImage";
@@ -10478,8 +10470,12 @@
                         }, 1000);
                     };
                 }
-                a.appendChild(img);
-                fragment.appendChild(a);
+                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                    a.appendChild(img);
+                    fragment.appendChild(a);
+                } else {
+                    fragment.appendChild(img);
+                }
                 if (i == srcArr.length - 1) {
                     let end = document.createElement("p");
                     end.id = "FullPictureLoadEnd";
@@ -11386,7 +11382,7 @@
                             }
                         }
                         let fileName = `${blobDataArray[i].picNum}P.${ex}`;
-                        if (options.zip) {
+                        if (options.zip == 1) {
                             //console.log(`第${n}/${blobDataArray.length}張，檔案名：${fileName}，大小：${parseInt(blobDataArray[i].blob.size / 1024)} Kb`);
                             zipFolder.file(fileName, blobDataArray[i].blob, {
                                 binary: true
@@ -11402,7 +11398,7 @@
                             }
                         }
                     }
-                    if (options.zip) {
+                    if (options.zip == 1) {
                         zip.generateAsync({
                             type: "blob"
                         }, (metadata) => {
@@ -11670,6 +11666,12 @@
                 srcArr = srcArr1; //閱讀順序左至右
             }
             srcArr.forEach(e => {
+                let a = document.createElement("a");
+                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                    a.dataset.fancybox = "small";
+                    a.dataset.thumb = e;
+                    a.href = e;
+                }
                 let img = new Image();
                 img.className = "FullPictureLoadImage small";
                 img.src = loading_bak;
@@ -11688,8 +11690,14 @@
                 }
                 item.style.padding = "0.1%";
                 item.style.border = "1px solid #a0a0a0";
-                item.appendChild(img);
-                imgBox.appendChild(item);
+                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                    a.appendChild(img);
+                    item.appendChild(a);
+                    imgBox.appendChild(item);
+                } else {
+                    item.appendChild(img);
+                    imgBox.appendChild(item);
+                }
             });
             let tE = [...gae(".FullPictureLoadImage:not(.small)")].pop();
             tE.parentNode.insertBefore(imgBox, tE.nextSibling);
@@ -11903,7 +11911,7 @@
     <input id="FullPictureLoadOptionsThreading">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">壓縮打包 ( true：壓縮、false：不壓縮 (不能全自動下載) )</font></p>
+    <p><font color="black">壓縮打包 ( 1：壓縮、0：不壓縮 (不能全自動下載) )</font></p>
     <input id="FullPictureLoadOptionsZip">
 </div>
 <div style="width: 100%;">
@@ -11923,8 +11931,12 @@
     <input id="FullPictureLoadOptionsComic">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">移動裝置雙擊前往下一頁 ( true：開、false：關 )</font></p>
+    <p><font color="black">移動裝置雙擊前往下一頁 ( 1：開、0：關 )</font></p>
     <input id="FullPictureLoadOptionsDouble">
+</div>
+<div style="width: 100%;">
+    <p><font color="black">Fancybox燈箱功能 ( 1：開 (移動裝置雙擊下一頁會無效)、0：關 )</font></p>
+    <input id="FullPictureLoadOptionsFancybox">
 </div>
 <div style="width: 100%;">
     <p><font color="black">當前網站圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto</font></p>
@@ -11951,6 +11963,7 @@
         ge("#FullPictureLoadOptionsCountdown").value = options.autoDownloadCountdown;
         ge("#FullPictureLoadOptionsComic").value = options.comic;
         ge("#FullPictureLoadOptionsDouble").value = options.doubleTouchNext;
+        ge("#FullPictureLoadOptionsFancybox").value = options.fancybox;
         ge("#FullPictureLoadOptionsZoom").value = options.zoom;
         if (siteData.category == "comic") {
             ge("#FullPictureLoadOptionsColumn").value = 2;
@@ -11980,6 +11993,7 @@
         options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload").value;
         options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown").value;
         options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble").value;
+        options.fancybox = ge("#FullPictureLoadOptionsFancybox").value;
         options.zoom = ge("#FullPictureLoadOptionsZoom").value;
         options.column = ge("#FullPictureLoadOptionsColumn").value;
         let jsonStr = JSON.stringify(options);
@@ -12004,7 +12018,7 @@
     max-width: 400px !important;
     height: auto !important;
     position: fixed !important;
-    top: 10%;
+    top: 6%;
     left: 50%;
     margin-left: -190px;
     border: 1px solid #a0a0a0 !important;
@@ -12214,6 +12228,28 @@
     padding-right: 0px !important;
 }
                 `;
+    const checkOptionsData = async () => {
+        const getOptionsData = localStorage.getItem("FullPictureLoadOptions");
+        if (getOptionsData === null && options.autoDownload !== 1) {
+            let jsonStr = JSON.stringify(options);
+            localStorage.setItem("FullPictureLoadOptions", jsonStr);
+        } else if (options.autoDownload !== 1) {
+            let optionsJson = JSON.parse(getOptionsData);
+            if (optionsJson.fancybox != 1 && optionsJson.fancybox != 0) {
+                localStorage.removeItem("FullPictureLoadOptions");
+                let jsonStr = JSON.stringify(options);
+                localStorage.setItem("FullPictureLoadOptions", jsonStr);
+                if (!fun.ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
+                if (!fun.ge(".FullPictureLoadStyle")) fun.css(style);
+                fun.show("圖片全載更新已初始化設定", 3000);
+                await fun.delay(3000, 0);
+            } else {
+                options = optionsJson;
+            }
+            debug("\nFull Picture Load Options Json\n", options);
+        }
+    };
+
     let showOptions = false;
     for (let i = 0; i < customData.length; i++) {
         let check = null;
@@ -12260,6 +12296,7 @@
                     continue;
                 }
             }
+            await checkOptionsData();
             siteData = customData[i];
             showOptions = true;
             if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
@@ -12336,7 +12373,7 @@
                         }
                     }
                 };
-                if (hasTouchEvents() && options.doubleTouchNext) {
+                if (hasTouchEvents() && options.doubleTouchNext == 1) {
                     document.addEventListener("dblclick", () => {
                         callback();
                     });
