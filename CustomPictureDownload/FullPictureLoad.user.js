@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.4.20
+// @version            1.5.0
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -27,6 +27,8 @@
 // @grant              GM.xmlHttpRequest
 // @grant              GM_registerMenuCommand
 // @grant              GM.registerMenuCommand
+// @grant              GM_openInTab
+// @grant              GM.openInTab
 // @grant              unsafeWindow
 // @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
@@ -63,6 +65,7 @@
     let customTitle = null;
     let downloading = false;
     let fetching = false;
+    let fetchErrorArray = [];
     let fastDownload = false;
     let currentDownloadThread = 0;
     let downloadNum = 0;
@@ -78,17 +81,34 @@
     const autoPagerLoading = "data:image/gif;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
     //自定義站點規則
     const customData = [{
-        name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me", //按數字鍵1、Enter插入圖片(手動模式)，按0、Enter、Enter壓縮打包下載
-        enable: 0, //0此規則禁用 1啟用
-        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/, //網址正則匹配
+        name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me",
+        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/,
         include: ".photos>a",
-        imgs: () => {
+        imgs: async () => {
             let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
-            let max = Math.ceil(numP / 19);
-            return fun.getImg("img.cr_only", max, 2, ["_600x0", ""]); //xhr併發請求抓取所有頁面的圖片元素
+            let max = Math.ceil(numP / 17);
+            if (max > 1 && [...fun.gae(".photos>a")].length < 18) {
+                let links = [];
+                let url = location.href.replace(".html", "");
+                for (let i = 2; i <= max; i++) {
+                    links.push(url + "/" + i + ".html");
+                }
+                await fun.getEle(links, ".photos>a", [".photos", 0], ".pager,.photos>.item,.photos>.photoMask", 200);
+            }
+            if (parseInt(numP) != [...fun.gae("img.cr_only")].length) {
+                setTimeout(() => {
+                    fun.hide();
+                    fun.show("圖片數量不符合，請反饋", 5000);
+                }, 1500)
+            }
+            return [...fun.gae("img.cr_only")].map(e => e.src.replace("_600x0", ""));
         },
-        insertImg: ["//div[div[@class='photos']]", 1], //清空元素內容把所有圖片插入到此元素 0手動插入模式 1自動插入模式 2自動插入Lazyloading模式
-        customTitle: () => { //js代碼自訂壓縮檔和資料夾名稱
+        button: [4],
+        insertImg: [
+            ["//div[div[@class='photos']]/*[last()]", 2], 2
+        ],
+        go: 1,
+        customTitle: () => {
             let s = document.title.split("-");
             let title = "";
             if (/未分/.test(s[1])) {
@@ -99,62 +119,6 @@
             }
             return title;
         },
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
-        category: "nsfw2"
-    }, {
-        name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me", //xhr翻頁模式，翻完所有預覽圖後，立刻在預覽縮圖下面插入全部大圖
-        enable: 0,
-        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/,
-        include: ".photos>a",
-        imgs: async () => {
-            await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager"); //xhr翻頁模式聚集所有預覽圖
-            return [...fun.gae(".cr_only")].map(e => e.src.replace("_600x0", ""));
-        },
-        //insertImg: ["//div[div[@class='photos']]", 1],
-        insertImg: [
-            ["//div[div[@class='photos']]/*[last()]", 2], 2
-        ],
-        go: 1,
-        customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
-        category: "nsfw2"
-    }, {
-        name: "小黃書/8色人體攝影 xchina.co xchina.biz 8se.me", //xhr翻頁模式，聚集所有預覽圖，手動插入全部大圖，圖片量是幾百張的比較不會卡，不插大圖也能下載
-        enable: 0,
-        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/,
-        include: ".photos>a",
-        init: async () => {
-            await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager");
-        },
-        imgs: () => [...fun.gae("img.cr_only")].map(e => e.src.replace("_600x0", "")),
-        insertImg: ["//div[div[@class='photos']]", 0],
-        customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
-        category: "nsfw2"
-    }, {
-        name: "小黃書/8色人體攝影 xchina.co xchina.biz xchina.fun 8se.me",
-        enable: 1,
-        reg: /(xchina|8se)\.(co|me|biz|fun)\/photo\/id-\w+\.html/,
-        include: ".photos>a",
-        imgs: async () => {
-            let numP = fun.geT("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
-            let max = Math.ceil(numP / 19);
-            if (max > 1 && [...fun.gae(".photos>a")].length < 20) {
-                let links = [];
-                let url = location.href.replace(".html", "");
-                for (let i = 2; i <= max; i++) {
-                    links.push(url + "/" + i + ".html");
-                }
-                await fun.getEle(links, ".photos>a", [".photos", 0], ".pager,.photos>.item,.photos>.photoMask");
-            }
-            return [...fun.gae("img.cr_only")].map(e => e.src.replace("_600x0", ""));
-        },
-        button: [4],
-        insertImg: [
-            ["//div[div[@class='photos']]/*[last()]", 2], 2
-        ],
-        go: 1,
-        customTitle: "let s=document.title.split('-');let title='';if(/未分/.test(s[1])){title+=s[0].trim()}else{title+=s[1].trim()+' - ';title+=s[0].trim()}return title;",
         css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
         topButton: true,
         category: "nsfw2"
@@ -414,7 +378,7 @@
         name: "Telegram Web",
         reg: /^https:\/\/telegra\.ph\/.+/,
         imgs: ".figure_wrapper img",
-        customTitle: () => fun.geT("h1"),
+        customTitle: () => fun.geT("h1").replace(/\|/g, "").replace(/(\s?-\s?)?\d+P/i, ""),
         category: "nsfw2"
     }, {
         name: "新闻吧 https://www.xinwenba.net/web/meinv/ m.xwbar.com",
@@ -507,7 +471,7 @@
         css: "img[alt]~br{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "极品性感美女 www.xgyw.pro",
+        name: "极品性感美女 www.xgyw.in",
         reg: /www\.xg\w+\.\w+\/\w+\/\w+\.html/i,
         include: "//div[@class='toptip']/a[text()='极品性感美女']",
         imgs: () => fun.getImg('.article-content img[alt]', fun.geT("a.current~*:last-child", 2), 3),
@@ -518,7 +482,7 @@
         prev: ".article-nav-prev>a[href$=html]",
         customTitle: () => fun.geT(".article-title").replace(/\d+p$/i, ""),
         //threading: 4,
-        css: ".article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id]{display:none!important}",
+        css: ".article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id],body>.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container){display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱看美女网 www.ikmn03.cc",
@@ -747,7 +711,7 @@
         button: [4],
         insertImg: [".vipimglist", 2],
         customTitle: () => fun.title(" - 尤美图库", 1).replace(/\[\d+P\]/i, ""),
-        css: ".sb.list2>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
+        css: ".sb.list2>li:nth-child(n+2):nth-child(-n+3){display:none!important}.vipimglist img{min-height:unset!important;}",
         category: "nsfw1"
     }, {
         name: "美图库 www.meituku.org",
@@ -848,10 +812,10 @@
                         } else {
                             srcArr.push(e.src);
                         }
-                        tE.parentNode.insertBefore(e.parentNode.cloneNode(true), tE.nextSibling);
+                        if (i != 0) tE.parentNode.insertBefore(e.parentNode.cloneNode(true), tE.nextSibling);
                     });
                     try {
-                        fun.ge(".pagination").outerHTML = fun.ge(".pagination", doc).outerHTML;
+                        if (i != 0) fun.ge(".pagination").outerHTML = fun.ge(".pagination", doc).outerHTML;
                     } catch (e) {}
                 });
                 if (status == 403) {
@@ -1010,7 +974,7 @@
         category: "nsfw1"
     }, {
         name: "美桌 http://www.win4000.com/meitu.html",
-        reg: /www\.win4000\.com\/\w+\.html/,
+        reg: /www\.win4000\.com\/meinv\d+\.html/,
         imgs: () => fun.getImgA(".pic-large", "#scroll>li:not(.current)>a", 200),
         button: [4],
         insertImg: ["#pic-meinv,.pic-meinv", 2],
@@ -1084,7 +1048,7 @@
         imgs: async () => {
             let ele = fun.ge(".page-links");
             if (ele) {
-                let max = fun.geT(">a:last-child");
+                let max = fun.geT(".page-links>a:last-child");
                 return fun.getImg(".entry-content img", max, 7);
             } else {
                 return [...fun.gae(".entry-content img")];
@@ -1143,15 +1107,16 @@
         category: "nsfw1"
     }, {
         name: "回车桌面 www.enterdesk.com m.enterdesk.com",
-        reg: /^https?:\/\/((m\.)?mm?\.|www\.)enterdesk\.com\/\w+\/[0-9-]+\.html/,
-        include: ".arc_pandn .swiper-wrapper img,.marc_pandn .swiper-wrapper img",
-        imgs: () => [...fun.gae(".arc_pandn .swiper-wrapper img,.marc_pandn .swiper-wrapper img")].map(e => e.src.replace("_360_360", "")),
+        reg: /^https?:\/\/((m\.)?mm?\.|www\.|sj\.)enterdesk\.com\/\w+\/[0-9-]+\.html/,
+        include: ".arc_pandn .swiper-wrapper img,.marc_pandn .swiper-wrapper img,.arc_main_pic_img",
+        imgs: () => [...fun.gae(".arc_pandn .swiper-wrapper img,.marc_pandn .swiper-wrapper img,.arc_main_pic_img")].map(e => e.src.replace("_360_360", "")),
         button: [4],
         insertImg: [".arc_main_pic,.marc_img", 2],
         autoDownload: [0],
         next: "//a[div[text()='下一组']]|//div[@id='next_pics']",
         prev: 1,
         customTitle: () => fun.geT(".arc_location>a:last-child,.m_h1>a"),
+        css: ".marc_img img{min-height:unset!important}",
         category: "nsfw1"
     }, {
         name: "女人吧 www.nvhai8.com m.nvhai8.com",
@@ -1332,7 +1297,11 @@
         reg: /www\.2meinv\.com\/article.+\.html/,
         imgs: () => {
             let max = fun.geT(".des>h1,.post_title_topimg").match(/\/\s?(\d+)/)[1];
-            return fun.getImg(".pp.hh img[alt],#image_div img", max, 5);
+            let links = [];
+            for (let i = 1; i <= max; i++) {
+                links.push(siteUrl.replace(/\.html$/, "") + "-" + i + ".html");
+            }
+            return fun.getImgA(".pp.hh img[alt],#image_div img", links, 200);
         },
         button: [4],
         insertImg: [".pp.hh,.content", 1],
@@ -1347,7 +1316,11 @@
         reg: /mm\.2meinv\.com\/article-\d+\.html/,
         imgs: () => {
             let max = fun.geT(".article-page>*:last-child", 2);
-            return fun.getImg(".arcmain img,#image_div img", max, 5);
+            let links = [];
+            for (let i = 1; i <= max; i++) {
+                links.push(siteUrl.replace(/\.html$/, "") + "-" + i + ".html");
+            }
+            return fun.getImgA(".arcmain img,#image_div img", links, 200);
         },
         button: [4],
         insertImg: [".clearfix.arcmain,.content", 1],
@@ -1469,7 +1442,12 @@
         category: "nsfw1"
     }, {
         name: "COSPLAY ZIP coszip.com",
-        reg: /^https?:\/\/coszip\.com\/\d+\.html$/,
+        reg: /^https?:\/\/coszip\.com\/\d+\.html(#small-1)?$/,
+        init: () => {
+            if (/#small-1/.test(location.href)) {
+                location.href = location.href.replace("#small-1", "");
+            }
+        },
         imgs: () => {
             let max;
             try {
@@ -1871,10 +1849,11 @@
         next: "a[rel=prev],.article-nav-prev a",
         prev: "a[rel=next],.article-nav-next a",
         customTitle: () => fun.geT("h1").replace(/\(\d+P\)/i, "").replace(/高品质壁纸图片传疯了|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
+        css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}@media only screen and (max-width:640px){.container{max-width:100% !important}}",
         category: "nsfw1"
     }, {
         name: "原创妹子图/尤物私房图/极品美女图/免费私房图/私房网红图/尤物妹妹图 www.ycmzt.com/www.ywsft.com/www.jpmnt.com/www.mfsft.com/www.sfwht.com/www.ywmmt.com",
-        reg: /www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com\/[a-z]+\/[a-z]+\/\d+\/\w+\.html$/,
+        reg: /www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com\/[a-z]+\/[a-z]+\/\d+\/\d+\.html$/,
         include: "#picg",
         init: () => {
             fun.gae(".b a").forEach(a => {
@@ -1885,7 +1864,6 @@
             });
             fun.remove("iframe", 2000);
         },
-        //imgs: () => fun.getImgO("#picg img[alt]", fun.geT(".pagelist font~*:last-child", 2), 9, [null, null], 1000, "h1,.page .pagelist", 0),
         imgs: async () => {
             let max = fun.geT(".pagelist font~*:last-child", 2);
             let links = [];
@@ -1894,10 +1872,7 @@
             for (let i = 2; i <= max; i++) {
                 links.push(siteUrl.replace(/(_\d+)?\.html$/, "") + `_${i}.html`);
             }
-            //let fetchNum = 0;
-            //fun.show(displayLanguage.str_01, 0);
             for (let i in links) {
-                //fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
                 let doc = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
                         let res = await fetch(links[i]);
@@ -1909,29 +1884,28 @@
                             resolve(doc);
                             break;
                         } else {
-                            fun.show(`第${parseInt(i) + 1}頁403重試第${check}次`, 2900);
+                            fun.show(`第${parseInt(i) + 1}頁${res.status}重試第${check}次`, 2900);
                             await fun.delay(3000, 0);
                         }
                     }
                 });
-                //debug(`\n${links[i]}\n`, doc);
                 let imgs = [...fun.gae("#picg img[alt]", doc)];
                 let te = [...fun.gae("#picg img[alt]")].pop();
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
-                    te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
+                    if (i != 0) te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
                 });
-                let ne = [...fun.gae("h1,.page .pagelist")];
-                let re = [...fun.gae("h1,.page .pagelist", doc)];
-                if (ne.length == re.length) {
-                    for (let i in ne) {
-                        ne[i].outerHTML = re[i].outerHTML;
+                if (i != 0) {
+                    let ne = [...fun.gae("h1,.page .pagelist")];
+                    let re = [...fun.gae("h1,.page .pagelist", doc)];
+                    if (ne.length == re.length) {
+                        for (let i in ne) {
+                            ne[i].outerHTML = re[i].outerHTML;
+                        }
                     }
                 }
                 await fun.delay(200, 0);
             }
-            //debug(`\n所有src\n`, imgsArr.map(e => e.src));
-            //debug(`\n去重複的src\n`, [...new Set(imgsArr.map(e => e.src))]);
             return imgsArr;
         },
         button: [4],
@@ -1974,6 +1948,7 @@
         button: [4],
         insertImg: ["#img-box", 2],
         customTitle: () => fun.geT(".focusbox-title").replace(/\[\d+P\]/i, "").replace(/\d+P/i, "").trim(),
+        css: "a{white-space:unset!important}",
         category: "nsfw1"
     }, {
         name: "美女写真 portrait.knit.bid",
@@ -2067,8 +2042,19 @@
         },
         button: [4],
         insertImg: ["#arcbox", 1],
-        customTitle: () => fun.geT("h1"),
+        customTitle: () => fun.geT("h1>a"),
         css: "#arcbox img{max-width:100%!important;margin:10px auto!important;min-height:50px!important;min-width:50px!important}",
+        category: "nsfw1"
+    }, {
+        name: "秀色女神news www.xsnvshen.co m.xsnvshen.co",
+        reg: /https:\/\/(www|m)\.xsnvshen\.co\/news\/\d+/,
+        imgs: "#arcbox img",
+        button: [4],
+        insertImg: [
+            ["#arcbox>*:first-child", 1, "//p[img]"], 2
+        ],
+        customTitle: () => fun.geT("h1"),
+        css: "#arcbox img{max-width:100%!important;margin:auto!important;min-height:50px!important;min-width:50px!important}",
         category: "nsfw1"
     }, {
         name: "HotAsiaGirl hotgirl.asia 分頁模式",
@@ -2090,6 +2076,17 @@
         customTitle: () => fun.geT("h3"),
         css: ".galeria_img{display:none!important}",
         category: "nsfw2"
+    }, {
+        name: "HotGirl World www.hotgirl.world",
+        reg: /https:\/\/www\.hotgirl\.world\/g\/\w+\.html\//,
+        imgs: () => {
+            let max = fun.geT(".pagination__total");
+            return fun.getImg(".article__image-list img", max);
+        },
+        button: [4],
+        insertImg: [".article__image-list", 2],
+        customTitle: () => fun.geT(".article-header__title"),
+        category: "nsfw1"
     }, {
         name: "BeautyLeg www.beautyleg6.com",
         reg: /www\.beautyleg6\.com\/\w+\/\d+\/\d+\.html/i,
@@ -2138,7 +2135,7 @@
         category: "nsfw1"
     }, {
         name: "Asianude4u www.asianude4u.net",
-        reg: /www\.asianude4u\.net\/.+\/.+\/$/,
+        reg: /www\.asianude4u\.net\/.+\/.+\/(#small-1)?$/,
         exclude: "//a[@rel='category tag' and text()='Videos' or text()='Madonna-AV']",
         imgs: () => {
             if (fun.ge(".wp-block-image a[href*=attachment_id]")) {
@@ -2154,7 +2151,7 @@
         ],
         go: 1,
         customTitle: () => fun.geT("h1.entry-title"),
-        css: ".single-box{display:none!important}",
+        css: ".single-box,.entry-img-300{display:none!important}@media only screen and (max-width:409px){.entry{width:100%!important}}button.rmp_menu_trigger{z-index:100!important}",
         category: "nsfw1"
     }, {
         name: "Chinese Beauties sxchinesegirlz.one sxchinesegirlz01.xyz",
@@ -2168,6 +2165,11 @@
         name: "爱看 INS www.ikanins.com",
         reg: /www\.ikanins\.com\/[\w-]+\//,
         imgs: "img[srcset]",
+        button: [4],
+        insertImg: [
+            [".entry-content", 0, "//p[img]"], 2
+        ],
+        go: 1,
         autoDownload: [0],
         next: "a[rel=prev]",
         prev: "a[rel=next]",
@@ -2223,7 +2225,7 @@
         name: "TangMoc tangmoc.com",
         reg: /^https:\/\/tangmoc\.com\/blog\/show\/\w+\/view/,
         init: async () => {
-            fun.remove("//div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']]");
+            fun.remove("//div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]");
         },
         imgs: () => {
             let pages = fun.ge(".btn-warning+.btn-secondary");
@@ -2235,7 +2237,23 @@
         },
         button: [4],
         insertImg: ["//media[article]", 2],
+        go: 1,
         customTitle: () => fun.geT("h1"),
+        category: "nsfw1"
+    }, {
+        name: "TangMoc tangmoc.com 去廣告",
+        reg: /^https:\/\/tangmoc\.com\//,
+        icon: 0,
+        key: 0,
+        init: () => {
+            fun.remove("//div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]");
+            new MutationObserver(() => {
+                fun.remove("//div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]");
+            }).observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        },
         category: "nsfw1"
     }, {
         name: "นางแบบคือลือ modelsexyth.com",
@@ -2274,6 +2292,7 @@
         imgs: ".showimg",
         button: [4],
         insertImg: ["#imgviewer", 2],
+        go: 1,
         autoDownload: [0],
         next: "//a[text()='下一组']",
         prev: "//a[text()='上一组']",
@@ -2295,6 +2314,7 @@
         prev: ".prev a",
         customTitle: () => fun.geT(".suit_title>h1").replace(/\d+p/i, "").trim(),
         go: 1,
+        css: "#right-bottom,#ad,.ad{display:none!important;}",
         category: "nsfw1"
     }, {
         name: "Taotuxp.com www.taotucc.com",
@@ -2592,8 +2612,8 @@
         css: "#fix_scale img:hover{transform:none!important}",
         category: "nsfw2"
     }, {
-        name: "HOTGIRLchina hotgirlchina.com theasiagirl.com anhsec.com sex4viet.com cutexinh.com girlxinhxinh.com",
-        reg: /(hotgirlchina\.com|theasiagirl\.com|anhsec\.com|sex4viet\.com|cutexinh\.com|girlxinhxinh\.com)\/.+(photos?|videos?|anh)?\/?/,
+        name: "HOTGIRLchina hotgirlchina.com theasiagirl.com anhsec.com sex4viet.com cutexinh.com girlxinhxinh.com asiaceleb.com",
+        reg: /(hotgirlchina\.com|theasiagirl\.com|anhsec\.com|sex4viet\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com)\/.+(photos?|videos?|anh)?\/?/,
         include: ".entry-inner img[alt]",
         imgs: () => {
             let max;
@@ -2761,6 +2781,7 @@
         insertImg: [
             ["#dylan", 2], 1
         ],
+        go: 1,
         category: "nsfw2"
     }, {
         name: "Freejappic www.freejapanpornpics.com",
@@ -2792,7 +2813,7 @@
         category: "nsfw2"
     }, {
         name: "劍心回憶 https://kenshin.hk/category/jnews/photoalbum/",
-        reg: /kenshin\.hk\/\d+\/\d+\/\d+\/[^/]+\/$/,
+        reg: /kenshin\.hk\/\d+\/\d+\/\d+\/[^/]+\/(#small-1)?$/,
         include: "//div[@class='entry-utility']/a[1][text()='寫真組圖'] | //div[@class='cat-tags']/a[1][text()='寫真組圖']",
         init: async () => {
             let p = fun.ge("//p[contains(text(),'寫真')]");
@@ -2802,8 +2823,16 @@
             }
             let links = [...fun.gae("//a[button[contains(text(),'寫真')]]")].map(e => e.href);
             await fun.getEle(links, ".entry-content>p>img,.post-page-content>p>img,.videoWrapper", ".entry-content,.post-page-content");
+            let v = fun.ge(".videoWrapper");
+            if (v) {
+                let tE = fun.ge(".entry-content,.post-page-content");
+                tE.parentNode.insertBefore(v, tE);
+            }
         },
         imgs: ".entry-content>img,.post-page-content>img",
+        button: [4],
+        insertImg: [".entry-content,.post-page-content", 2],
+        go: 1,
         customTitle: () => fun.geT("h1.entry-title,h2.post-title").replace(/【寫真】|\s?\(\d+P,片\)/gi, ""),
         category: "nsfw1"
     }, {
@@ -2983,6 +3012,7 @@
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: () => fun.geT(".entry-title").trim(),
+        topButton: true,
         css: ".post img{max-width:100% !important}.post-body{margin:0px!important;}",
         category: "nsfw2"
     }, {
@@ -3085,13 +3115,57 @@
     }, {
         name: "俊美图 www.meijuntu.com www.junmeitu.com www.jeya.de www.jeya.jp",
         reg: /(www\.meijuntu\.com|www\.junmeitu\.com|www\.jeya\.\w+)\/\w+\/\w+\.html/i,
-        imgs: () => fun.getImg(".pictures img[alt]", (fun.geT("#pages>*:last-child", 2) || 1), 5),
+        imgs: async () => {
+            let imgsArr = [];
+            let max = fun.geT("#pages>*:last-child", 2) || 1;
+            let links = [];
+            let url = siteUrl.replace(/(-\d+)?\.html$/, "");
+            for (let i = 1; i <= max; i++) {
+                links.push(url + "-" + i + ".html");
+            }
+            for (let i in links) {
+                let doc = await new Promise(async resolve => {
+                    for (let check = 1; check <= 100; check++) {
+                        let res = await fetch(links[i]);
+                        if (res.status == 304 || res.status == 200) {
+                            let buffer = await res.arrayBuffer();
+                            let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
+                            let htmlText = decoder.decode(buffer);
+                            let doc = fun.doc(htmlText);
+                            resolve(doc);
+                            break;
+                        } else {
+                            fun.show(`第${parseInt(i) + 1}頁${res.status}重試第${check}次`, 2900);
+                            await fun.delay(3000, 0);
+                        }
+                    }
+                });
+                let imgs = [...fun.gae(".pictures img[alt]", doc)];
+                let te = [...fun.gae(".pictures img[alt]")].pop();
+                imgs.forEach(e => {
+                    imgsArr.push(e.cloneNode(true));
+                    if (i != 0) te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
+                });
+                if (i != 0) {
+                    let ne = [...fun.gae("#pages")];
+                    let re = [...fun.gae("#pages", doc)];
+                    if (ne.length == re.length) {
+                        for (let i in ne) {
+                            ne[i].outerHTML = re[i].outerHTML;
+                        }
+                    }
+                }
+                await fun.delay(1000, 0);
+            }
+            return imgsArr;
+        },
         button: [4],
         insertImg: [".pictures", 1],
         autoDownload: [0],
         next: "//span[contains(text(),'下一')]/following-sibling::a",
         prev: "//span[contains(text(),'上一')]/following-sibling::a",
         customTitle: () => fun.geT("h1.title"),
+        css: ".pre_picture,.next_picture{display:none!important}",
         category: "nsfw1"
     }, {
         name: "x6o https://x6o.com/topics/14#articles",
@@ -3120,7 +3194,7 @@
         imgs: "a[data-fancybox]",
         button: [4],
         insertImg: [
-            [".flexauto>*:last-child", 1, "a[data-fancybox]"], 2
+            [".flexauto>*:last-child", 1, "a[data-fancybox=gallery]"], 2
         ],
         customTitle: () => fun.geT(".image-title").replace(/\[\d+(\+\d+)?PB?\]|\(\d+(\+\d+)?PB?\)/i, ""),
         category: "nsfw1"
@@ -3316,6 +3390,7 @@
         next: "//li[@class='next']/a | //a[text()='下一篇']",
         prev: "//li[@class='prev']/a | //a[text()='上一篇']",
         customTitle: () => fun.geT(".pictitle>h1,.picart-title").replace(/\[\d+P\]/i, ""),
+        css: ".FullPictureLoadImage.small{width:unset!important}",
         category: "nsfw1"
     }, {
         name: "犀牛图片网 www.xintp.com",
@@ -3458,11 +3533,12 @@
         openInNewTab: ".td-module-thumb>a",
         category: "autoPager"
     }, {
-        name: "goddess247.com",
-        reg: /goddess247\.com\/.+\//,
+        name: "goddess247.com bestprettygirl.com",
+        reg: /(goddess247|bestprettygirl)\.com\/.+\//,
         imgs: ".elementor-widget-container p img[alt]",
         button: [4],
         insertImg: ["//p[img]", 2],
+        go: 1,
         customTitle: async () => {
             let ele = "#content h1.elementor-heading-title";
             await fun.waitEle(ele);
@@ -3475,6 +3551,7 @@
         imgs: ".elementor-widget-theme-post-content img",
         button: [4],
         insertImg: ["//p[img]", 2],
+        go: 1,
         customTitle: async () => {
             let ele = "#content h1.elementor-heading-title";
             await fun.waitEle(ele);
@@ -3498,7 +3575,8 @@
         autoDownload: [0],
         next: "a.blog-pager-older-link",
         prev: "a.blog-pager-newer-link",
-        customTitle: () => fun.geT("h1.entry-title").trim().replace("Chinese beautiful model Amanda -", "").replace("Beautiful Chinese girl -", "").replace("Beautiful Chinese girl ", "").replace("Chinese Beautiful girl -", "").replace(" |18+ Nude model Amateur", ""),
+        customTitle: () => fun.geT(".entry-title").trim().replace("Chinese beautiful model Amanda -", "").replace("Beautiful Chinese girl -", "").replace("Beautiful Chinese girl ", "").replace("Chinese Beautiful girl -", "").replace(" |18+ Nude model Amateur", ""),
+        css: "@media only screen and (max-width:479px){#outer-wrapper{margin:0px!important;width:100%!important}}",
         category: "nsfw1"
     }, {
         name: "CUTE GIRLS ADDICT cutegirlsaddict.blogspot.com",
@@ -4211,17 +4289,32 @@
         css: "#display_image_detail img{max-width:100% !important}",
         category: "nsfw2"
     }, {
+        name: "Hentai Cosplay www.hentaicos.com",
+        reg: /https:\/\/www\.hentaicos\.com\/\w+\/\d+\.html/,
+        include: ".main-picture",
+        imgs: () => {
+            let max = fun.geT("//a[text()='Next']", 2) || 1;
+            return fun.getImg(".main-picture img", max, 9);
+        },
+        button: [4],
+        insertImg: [".main-picture", 2],
+        next: ".next_pics>.fr>a",
+        prev: ".next_pics>.fl>a",
+        customTitle: () => fun.geT(".content-title"),
+        category: "nsfw1"
+    }, {
         name: "Fapator 圖片清單頁",
         reg: /www\.fapator\.com\/\?content_id=/i,
-        imgs: "a[data-lightbox]",
         init: () => {
             fun.remove("//div[@class='img' and a[@target and img]]");
         },
+        imgs: "a[data-lightbox]",
         button: [4],
         insertImg: [".fcon+.fapad", 1],
         next: "//a[contains(text(),'next photos')]",
         prev: 1,
         go: 1,
+        css: ".fapad{width:auto !important;height:auto !important}",
         category: "nsfw2"
     }, {
         name: "SMUTPOND www.smutpond.com",
@@ -4373,8 +4466,8 @@
         autoClick: ".button.blue.large,#continuebutton,a[title='Show gallery']",
         category: "nsfw2"
     }, {
-        name: "Ngắm Gái Xinh ngamgaixinh.us",
-        reg: /ngamgaixinh\.us\/[^/]+\/(\d+\/)?$/,
+        name: "ShowGirlx showgirlx.net",
+        reg: /https?:\/\/showgirlx\.net\/[^/]+\/(\d+\/)?$/,
         init: "Function.prototype.constructor=()=>{}",
         imgs: () => {
             return [...fun.gae(".wp-block-gallery img")].map(img => {
@@ -5321,7 +5414,7 @@
         button: [4],
         insertImg: [".img-viewer", 2],
         customTitle: () => fun.ge("[placeholder=Japanese]").value,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.box.img-reader .img-viewer{position:unset!important;white-space:unset!important}",
         category: "hcomic"
     }, {
         name: "9hentai閱讀頁 9hentai.to",
@@ -5482,6 +5575,7 @@
         imgs: () => [...fun.gae(".comics-thumbnail-wrapper img[data-srcset]")].map(e => e.dataset.srcset.replace("t.n", "i.n").replace("t.jpg", ".jpg").replace("t.png", ".png")),
         button: [4],
         insertImg: [".comics-thumbnail-wrapper", 2, 1000],
+        go: 1,
         autoClick: "#show-all-comics-btn",
         customTitle: () => fun.geT("h4.title"),
         threading: 4,
@@ -5640,7 +5734,7 @@
         button: [4],
         insertImg: ["#show_cg_html", 2],
         customTitle: () => fun.title(" - 7mmtv.sx", 1).replace(/\s?\(\d+P\)/i, ""),
-        css: ".ut1_img_content_js{display:none!important}",
+        css: ".ut1_img_content_js,.ut_cg1_top{display:none!important}",
         category: "hcomic"
     }, {
         name: "18H 18h.mm-cg.com",
@@ -5731,13 +5825,14 @@
         next: "a.next",
         prev: "a.prev",
         customTitle: () => fun.geT(".breadcrumb span:nth-child(2)").replace("首页", ""),
+        css: ".banner_ad{display:none!important;}",
         category: "hcomic"
     }, {
         name: "韩国污漫画 www.ikanmh.xyz www.hmfby.com",
         reg: /(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)\/chapter\/\d+/,
         imgs: "img[data-original]",
         button: [4],
-        insertImg: [".comicpage", 2],
+        insertImg: [".comicpage,#cp_img", 2],
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
@@ -5780,6 +5875,7 @@
         button: [4],
         insertImg: ["#img_list", 2],
         customTitle: () => fun.title(" - 列表", 1),
+        css: "div[align=center],#control_block{display:none!important;}",
         category: "hcomic"
     }, {
         name: "VN漫画网 下拉阅读 www.vnacg.com",
@@ -5849,20 +5945,6 @@
         css: "#content>.col-lg-12,[id^=read_online_ads_area],#Big_Image~*{display:none!important}",
         category: "hcomic"
     }, {
-        name: "禁漫屋 https://jmwu.cc/ jmwu.vip m.jmwu.vip 88comic.vip",
-        reg: /(jmwu|88comic)\.\w+\/chapter\/[\w-]+\.html/,
-        init: () => {
-            fun.remove("//main/div[div[a[img]]]");
-        },
-        imgs: "img[data-original]",
-        button: [4],
-        insertImg: [".reader-cartoon-chapter", 2],
-        autoDownload: [0],
-        next: "a[data-value=next]",
-        prev: "a[data-value=prev]",
-        customTitle: () => fun.title(/ – White|-禁漫屋| - 禁漫屋|-\[| “/, 1),
-        category: "hcomic"
-    }, {
         name: "Roku Hentai rokuhentai.com",
         reg: /https:\/\/rokuhentai\.com\/\w+\/\d+$/,
         imgs: ".site-reader__image",
@@ -5929,6 +6011,8 @@
         name: "色漫网 www.cartoon18.com",
         reg: /www\.cartoon18\.com\/story\/\d+\/full/,
         imgs: "img[data-src]",
+        button: [4],
+        insertImg: ["#lightgallery", 2],
         category: "hcomic"
     }, {
         name: "韓漫射 h-webtoon.com 绅士同人H漫 h-doujinshi.xyz",
@@ -6012,19 +6096,9 @@
         reg: /www\.ho5ho\.com\/.+\/.+\/server.+\//,
         include: "//script[contains(text(),'chapter_preloaded_images')]",
         imgs: () => chapter_preloaded_images,
-        insertImg: [".reading-content", 2],
-        customTitle: () => fun.geT(".breadcrumb>li:nth-child(2)").trim(),
-        category: "hcomic"
-    }, {
-        name: "亚洲漫画走廊 asiacomics.com",
-        reg: /asiacomics\.com\/chapter\/\d+/,
-        imgs: "#enc_img img[data-original]",
         button: [4],
-        insertImg: [".comicpage", 2],
-        autoDownload: [0],
-        next: "//a[text()='下一章']",
-        prev: "//a[text()='上一章']",
-        customTitle: () => fun.geT("h1.title"),
+        insertImg: [".entry-content", 2],
+        customTitle: () => fun.geT(".breadcrumb>li:nth-child(2)").trim(),
         category: "hcomic"
     }, {
         name: "成人漫画 bad.news/mh",
@@ -6099,33 +6173,117 @@
         customTitle: () => fun.geT(".article-title>a").replace(/\[\d+P\]/i, ""),
         category: "hcomic"
     }, {
-        name: "色色漫画 sesemanhua.com",
-        reg: /^https:\/\/sesemanhua\.com\/index\.php\/chapter\/\d+/,
-        imgs: ".rd-article-wr img",
+        name: "色色漫画 www.manhuasese.com 最新韩漫网 www.zuixinhanman.com",
+        reg: /^https:\/\/www\.manhuasese\.com\/index\.php\/chapter\/\d+|https:\/\/www\.zuixinhanman\.com\/chapter_\d+\.html/,
+        include: ".rd-article-wr,.comic-list",
+        imgs: ".rd-article-wr img,.comic-list img",
         button: [4],
-        insertImg: [".rd-article-wr", 2],
+        insertImg: [".rd-article-wr,.comic-list", 2],
         autoDownload: [0],
-        next: ".j-rd-next",
-        prev: ".j-rd-prev",
-        customTitle: () => fun.geT(".comic-title>a"),
+        next: ".j-rd-next,.next-btn",
+        prev: ".j-rd-prev,.prev-btn",
+        customTitle: () => fun.geT(".comic-title>a,.comic-name,.mip-shell-header-title"),
+        category: "hcomic"
+    }, {
+        name: "最新韩漫网M www.zuixinhanman.com",
+        reg: /^https:\/\/www\.zuixinhanman\.com\/chapter_\d+\.html/,
+        delay: 300,
+        imgs: "#comic_pic",
+        button: [4],
+        insertImg: [
+            [".bo_tit", 2, "#comic_pic"],
+        ],
+        autoDownload: [0],
+        next: "//a[contains(text(),'下一章')][contains(@href,'html')]",
+        prev: "//a[contains(text(),'上一章')][contains(@href,'html')]",
+        customTitle: () => fun.geT(".mip-shell-header-title"),
+        category: "hcomic"
+    }, {
+        name: "韩漫100 hanman100.com",
+        reg: /^https:\/\/hanman100\.com\/index\.php\/chapter-\d+\.html/,
+        imgs: "#img-content img,.comic-list img",
+        button: [4, "24%", 4],
+        insertImg: ["#img-content,.comic-list", 1],
+        autoDownload: [0],
+        next: ".pnext.next+a[href$=html],.next-btn",
+        prev: 1,
+        customTitle: () => fun.geT("h1.text-center,.comic-name").replace("漫画 ", ""),
+        css: "#left,#right{display:none!important;}",
+        category: "hcomic"
+    }, {
+        name: "免费韩漫看 www.hanmanfree.com",
+        reg: /^https:\/\/www\.hanmanfree\.com\/index\.php\/chapter\/\d+/,
+        imgs: "#ChapterContent img,.readForm img",
+        button: [4],
+        insertImg: ["#ChapterContent,.readForm", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章'][starts-with(@href,'/')]",
+        prev: "//a[text()='上一章'][starts-with(@href,'/')]",
+        customTitle: () => {
+            if (fun.ge("#ChapterContent")) {
+                return fun.geT(".arthor") + " - " + fun.geT(".title");
+            } else {
+                return fun.title("免费观看 ");
+            }
+        },
+        category: "hcomic"
+    }, {
+        name: "韩漫推荐 okhanman.com",
+        reg: /^https:\/\/okhanman\.com\/index\.php\/chapter\/\d+/,
+        include: "//div/div[@style]/img[@style]",
+        imgs: "//div/div[@style]/img[@style]",
+        button: [4],
+        insertImg: ["//div[div[@style]/img[@style]]", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章'][starts-with(@href,'/')]",
+        prev: "//a[text()='上一章'][starts-with(@href,'/')]",
+        customTitle: () => fun.geT("h1[style]"),
+        category: "hcomic"
+    }, {
+        name: "韩漫推荐M okhanman.com",
+        reg: /^https:\/\/okhanman\.com\/index\.php\/chapter\/\d+/,
+        imgs: ".chapterbox img",
+        button: [4],
+        insertImg: [
+            [".chapterbox>*:first-child", 1, ".pic"], 2
+        ],
+        autoDownload: [0],
+        next: "//a[text()='继续阅读下一章节']",
+        prev: 1,
+        customTitle: () => fun.title("韩漫 "),
         category: "hcomic"
     }, {
         name: "韓漫天堂 18jin.top",
         reg: /^https:\/\/18jin\.top\/index\.php\/chapter\/\d+/,
-        imgs: ".rd-article-wr img",
+        imgs: () => {
+            if (fun.ge(".rd-article-wr")) {
+                return [...fun.gae(".rd-article-wr img")];
+            } else {
+                return [...fun.gae(".comic-list img:not([src$='empty.png'])")];
+            }
+        },
         button: [4],
-        insertImg: [".rd-article-wr", 2],
+        insertImg: [".rd-article-wr,.comic-list", 1],
         autoDownload: [0],
-        next: ".j-rd-next",
-        prev: ".j-rd-prev",
-        customTitle: () => fun.geT(".j-comic-title") + " - " + fun.geT(".comic-title>a"),
+        next: ".j-rd-next,.next-btn",
+        prev: ".j-rd-prev,.prev-btn",
+        customTitle: () => {
+            if (fun.ge(".rd-article-wr")) {
+                return fun.geT(".j-comic-title") + " - " + fun.geT(".comic-title>a")
+            } else {
+                let t = fun.geT("h1.comic-name");
+                let tArr = t.split("：");
+                return tArr[1] + " - " + tArr[0]
+            }
+        },
+        css: ".image-container{display:none!important;}",
         category: "hcomic"
     }, {
         name: "琴瑟漫畫 sixcomic.com 琴瑟書庫 sixacg.com",
         reg: /^https?:\/\/(sixcomic\.com|sixacg\.com)\/chapter\/\d+$/,
         imgs: ".comicpage img:not([data-original*='qssk.top']),#cp_img img:not([data-original*='qssk.top'])",
         button: [4],
-        insertImg: [".comicpage", 2],
+        insertImg: [".comicpage,#cp_img", 2],
         autoDownload: [0],
         next: "//a[@href and not(starts-with(@href,'java')) and text()='下一章']",
         prev: "//a[@href and not(starts-with(@href,'java')) and text()='上一章']",
@@ -8948,7 +9106,7 @@
         enable: 1,
         icon: 0,
         key: 0,
-        reg: /((mangabz|xmanhua|dm5|1kkk|qiman\d+|mhxqiu\d|6mh\d+|manben|mkzhan|xianmanwang|qiximh\d|kumw\d)\.com\/[\w-]+\/$)|(m\.dmzj\.com|m\.ymh1234\.com)\/(info|comic)\/\d+\.html$|(acgud|manhua456|mhxin|qwmanhua|zuimh|imitui|xlsmh|dmhua8|pinmh|qmiaomh|dashumanhua|kukuwumh|mh160|szcdmj|haoman6)\.(com|cc)\/(comic|manhua|manga|kanmanhua|szcbook)\/[\w-]+\/?$|www\.mhua5\.com\/[\w-]+\.html|m\.aiguoman\.com\/comic\/\w+|(www|m)\.77mh\.\w+\/colist_\d+\.html|www\.manhw\.com\/index\.php\/comic\/\w+$/,
+        reg: /((mangabz|xmanhua|dm5|1kkk|qiman\d+|mhxqiu\d|6mh\d+|manben|mkzhan|xianmanwang|qiximh\d|kumw\d|sumanku)\.com\/[\w-]+\/$)|(m\.dmzj\.com|m\.ymh1234\.com)\/(info|comic)\/\d+\.html$|(acgud|manhua456|mhxin|qwmanhua|zuimh|imitui|xlsmh|dmhua8|pinmh|qmiaomh|dashumanhua|kukuwumh|mh160|szcdmj|haoman6)\.(com|cc)\/(comic|manhua|manga|kanmanhua|szcbook)\/[\w-]+\/?$|www\.mhua5\.com\/[\w-]+\.html|m\.aiguoman\.com\/comic\/\w+|(www|m)\.77mh\.\w+\/colist_\d+\.html|www\.manhw\.com\/index\.php\/comic\/\w+$/,
         init: async () => {
             if (location.hostname == "m.acgud.com") {
                 fun.css(".Introduct_Sub{background:url(https://m.idmzj.com/images/int_bg.png)!important;background-size:100% 100%!important}");
@@ -8957,7 +9115,7 @@
                 await fun.delay(600, 0);
             }
         },
-        autoClick: "a.detail-list-form-more,a.detail-list-more,.deatil-list-more>a,.detail-more,.moreChapter,.show-more,a#zhankai,.gengduo_dt1>button,.morechapter>button,.gengduo_dt1>a,.chapterList+.more,li.add,a.extend,a.action-collapse:not(.on),.chapter__more .down,.listmore,.more.chapLiList-cont>a,.m-load-more-sm>a,.more>a,.allmulu,.show-more>a,.morechp,.nnmore>a",
+        autoClick: "span.more,a.detail-list-form-more,a.detail-list-more,.deatil-list-more>a,.detail-more,.moreChapter,.show-more,a#zhankai,.gengduo_dt1>button,.morechapter>button,.gengduo_dt1>a,.chapterList+.more,li.add,a.extend,a.action-collapse:not(.on),.chapter__more .down,.listmore,.more.chapLiList-cont>a,.m-load-more-sm>a,.more>a,.allmulu,.show-more>a,.morechp,.nnmore>a",
         css: ".comic-info-box+a,.cartoon-introduction.cmg,.cartoon-introduction+a,.msloga,.comic_intro>a,.Introduct+a,[class^='ad']{display:none!important}",
         category: "comic"
     }, {
@@ -9375,27 +9533,62 @@
     }
     //console.log("\ndisplayLanguage\n", displayLanguage);
 
-    let _GM_xmlhttpRequest;
+    let _GM_xmlhttpRequest, _GM_openInTab;
     if (typeof GM_xmlhttpRequest != "undefined") {
         _GM_xmlhttpRequest = GM_xmlhttpRequest;
     } else if (typeof GM != "undefined" && typeof GM.xmlHttpRequest != "undefined") {
         _GM_xmlhttpRequest = GM.xmlHttpRequest;
     }
 
+    if (typeof GM_openInTab != 'undefined') {
+        _GM_openInTab = GM_openInTab;
+    } else if (typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
+        _GM_openInTab = GM.openInTab;
+    } else {
+        _GM_openInTab = fun.openInTab;
+    }
+
+    const fancyboxBlackList = () => {
+        const list = [
+            "copymanga.site", //拷貝漫畫
+            "mangacopy.com",
+            "51sex.vip", //51sex
+            "nudebird.biz", //Nude Bird
+            "cosplaytele.com", //Cosplaytele
+            "xlust.org", //XLUST.ORG
+            "www.xiuren.org", //Xiuren 秀人网
+            "www.comicun.com", //www.comicun.com
+            "www.zuixinhanman.com" //最新韩漫网M
+        ];
+        for (let i in list) {
+            if (location.host.includes(list[i]) === true) {
+                debug("\n已列入fancybox關閉的網站");
+                return true;
+            }
+        }
+        return false;
+    };
+
     const fun = {
-        getImg: async (img, maxPage = 1, mode = 1, rText = [null, null]) => {
-            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage")];
+        getImg: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 100) => {
+            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
             fetching = true;
             fun.show(displayLanguage.str_01, 0);
             let imgsArray = [];
             let fetchNum = 0;
             const html = url => fetch(url).then(res => {
-                if (res.status > 400) {
+                debug(`\nfun.getImg() URL`, url);
+                if (res.status >= 400) {
                     debug(`\nfun.getImg()連線錯誤碼：${res.status}\n`, url);
+                    let obj = {
+                        fn: "fun.getImg()",
+                        url: url,
+                        status: res.status
+                    };
+                    fetchErrorArray.push(obj);
                 }
                 return res.arrayBuffer()
             }).then(buffer => {
-                debug(`\nfun.getImg() URL`, url);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
                 /*
@@ -9492,6 +9685,7 @@
                         //【 ==> -p-2】  第一頁 ==> 第二頁
                         resArr.push(html(siteUrl.replace(/-p-\d+$/, "") + "-p-" + i));
                     }
+                    await fun.delay(time, 0);
                 }
             }
             await Promise.all(resArr).then(htmls => {
@@ -9513,21 +9707,34 @@
                     }
                 }
             });
-            debug("\nfun.getImg() 聚集的所有IMG", imgsArray);
+            debug("\nfun.getImg() 聚集的所有圖片網址", imgsArray);
+            debug("\nfun.getImg() 去重複後的圖片網址", [...new Set(imgsArray)]);
+            if (fetchErrorArray.length > 0) {
+                debug(`\nfetchErrorArray\n`, fetchErrorArray);
+                setTimeout(() => {
+                    fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                }, 1500);
+            }
             return imgsArray;
         },
         getImgO: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 200, replaceElement = null, msg = 1) => {
-            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage")];
+            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
             fetching = true;
             if (msg == 1) fun.show(displayLanguage.str_01, 0);
             let imgsArray = [];
             let fetchNum = 0;
             const html = async (url, id = 1) => {
                 await fun.delay(time, 0);
-                return fetch(url).then(async res => {
+                return fetch(url).then(res => {
                     debug(`\nfun.getImgO() URL`, url);
-                    if (res.status === 403) {
-                        fun.show(displayLanguage.str_54, 3000);
+                    if (res.status >= 400) {
+                        debug(`\nfun.getImgO()連線錯誤碼：${res.status}\n`, url);
+                        let obj = {
+                            fn: "fun.getImgO()",
+                            url: url,
+                            status: res.status
+                        };
+                        fetchErrorArray.push(obj);
                     }
                     return res.arrayBuffer();
                 }).then(buffer => {
@@ -9662,10 +9869,16 @@
                 }
             });
             debug("\nfun.getImgO() 聚集的所有IMG", imgsArray);
+            if (fetchErrorArray.length > 0) {
+                debug(`\nfetchErrorArray\n`, fetchErrorArray);
+                setTimeout(() => {
+                    fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                }, 1500);
+            }
             return imgsArray;
         },
         getImgIframe: async (img, maxPage = 1, mode = 1, rText = [null, null], paginationEle = null, time = 500, showMsg = 1) => {
-            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage")];
+            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
             fetching = true;
             if (showMsg == 1) fun.show(displayLanguage.str_01, 0);
             let imgsArray = [];
@@ -9807,7 +10020,7 @@
             return imgsArray;
         },
         getImgA: async (img, link, mode = 0, rText = [null, null], showMsg = 1) => { //從指定的所有鏈接抓圖片
-            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage")];
+            if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
             fetching = true;
             if (showMsg == 1) fun.show(displayLanguage.str_01, 0);
             let links, linksNum;
@@ -9828,10 +10041,17 @@
             let imgsArray = [];
             let fetchNum = 0;
             const html = url => fetch(url).then(res => {
-                if (res.status > 400) {
+                debug(`\nfun.getImgA() URL`, url);
+                if (res.status >= 400) {
                     debug(`\nfun.getImgA()連線錯誤碼：${res.status}\n`, url);
+                    let obj = {
+                        fn: "fun.getImgA()",
+                        url: url,
+                        status: res.status
+                    };
+                    fetchErrorArray.push(obj);
                 }
-                return res.arrayBuffer()
+                return res.arrayBuffer();
             }).then(buffer => {
                 if (showMsg == 1) fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${linksNum}`, 0);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
@@ -9908,6 +10128,12 @@
                 }
             });
             debug("\nfun.getImgA 聚集的所有IMG", imgsArray);
+            if (fetchErrorArray.length > 0) {
+                debug(`\nfetchErrorArray\n`, fetchErrorArray);
+                setTimeout(() => {
+                    fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                }, 1500);
+            }
             return imgsArray;
         },
         checkImgSrc: (ele, rText = [null, null]) => {
@@ -9977,7 +10203,18 @@
             let nextlink = "";
             if (mag == 1) fun.show(displayLanguage.str_14, 0);
             const getNextPagePics = async url => {
-                await fetch(url).then(res => res.arrayBuffer()).then(buffer => {
+                await fetch(url).then(res => {
+                    if (res.status >= 400) {
+                        debug(`\nfun.getNP()連線錯誤碼：${res.status}\n`, url);
+                        let obj = {
+                            fn: "fun.getNP()",
+                            url: url,
+                            status: res.status
+                        };
+                        fetchErrorArray.push(obj);
+                    }
+                    return res.arrayBuffer();
+                }).then(buffer => {
                     const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                     const htmlText = decoder.decode(buffer);
                     return htmlText;
@@ -10330,7 +10567,7 @@
             history.pushState(null, title, url);
             document.title = title;
         },
-        getEle: async (links, elements, targetEle, removeEles = null) => {
+        getEle: async (links, elements, targetEle, removeEles = null, time = 100) => {
             if (fun.ge(".FullPictureLoadImage")) return;
             fetching = true;
             let resArr = [];
@@ -10344,6 +10581,7 @@
                     return [...fun.gae(elements, doc)];
                 });
                 resArr.push(res);
+                await fun.delay(time, 0);
             }
             await Promise.all(resArr).then(arr => arr.flat()).then(eles => {
                 fetching = false;
@@ -10366,7 +10604,13 @@
                 if (removeEles) {
                     fun.remove(removeEles);
                 }
-            })
+                if (fetchErrorArray.length > 0) {
+                    debug(`\nfetchErrorArray\n`, fetchErrorArray);
+                    setTimeout(() => {
+                        fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                    }, 1500);
+                }
+            });
         },
         insertImg: (imgsArray, ele, mode = 1) => {
             let srcArr = [];
@@ -10434,13 +10678,14 @@
                 fragment.appendChild(btn3);
             }
             let numP = srcArr.length;
+            let blackList = fancyboxBlackList();
             for (let i = 0; i < srcArr.length; i++) {
                 if (/\.mp4$|\.webm$/.test(srcArr[i])) {
                     numP--;
                     continue;
                 }
                 let a = document.createElement("a");
-                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                if (options.fancybox == 1 && !blackList) {
                     a.dataset.fancybox = "original";
                     a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
@@ -10470,7 +10715,7 @@
                         }, 1000);
                     };
                 }
-                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                if (options.fancybox == 1 && !blackList) {
                     a.appendChild(img);
                     fragment.appendChild(a);
                 } else {
@@ -10619,6 +10864,8 @@
                 debug("\nfun.immediateInsertImg() 沒有圖片元素");
                 return;
             }
+            debug("fun.immediateInsertImg() 要插入的所有圖片網址", imgSrcArray);
+            debug("fun.immediateInsertImg() 要插入的去重複後的圖片網址", [...new Set(imgSrcArray)]);
             imgSrcArray = [...new Set(imgSrcArray)];
             globalImgArray = imgSrcArray;
             fun.insertImg(globalImgArray, siteData.insertImg[0], siteData.insertImg[1]);
@@ -10868,8 +11115,14 @@
                         "User-Agent": ua
                     },
                     onload: data => {
-                        if (data.status > 400) {
+                        if (data.status >= 400) {
                             debug(`\nfun.xhrDoc()連線錯誤碼：${data.status}\n`, url);
+                            let obj = {
+                                fn: "fun.xhrDoc()",
+                                url: url,
+                                status: data.status
+                            };
+                            fetchErrorArray.push(obj);
                         }
                         let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                         let htmlText = decoder.decode(data.response);
@@ -10884,8 +11137,14 @@
         },
         fetchDoc: url => {
             return fetch(url).then(res => {
-                if (res.status > 400) {
+                if (res.status >= 400) {
                     debug(`\nfun.fetchDoc()連線錯誤碼：${res.status}\n`, url);
+                    let obj = {
+                        fn: "fun.fetchDoc()",
+                        url: url,
+                        status: res.status
+                    };
+                    fetchErrorArray.push(obj);
                 }
                 return res.arrayBuffer();
             }).then(buffer => {
@@ -11063,6 +11322,15 @@
             });
             */
         },
+        openInTab: (url, target = "_blank") => {
+            let a = document.createElement("a");
+            a.href = url;
+            a.target = target;
+            a.style = "display: none;";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        },
         CivitAiAutoShowNSFW: () => {
             const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(siteUrl)) {
@@ -11099,7 +11367,7 @@
 
     const debug = (str, obj = "", title = "debug") => {
         console.log(
-            `%c[Custom Picture Download] ${title}:`,
+            `%c[Full Picture Load] ${title}:`,
             "background-color: #C9FFC9;",
             str, obj
         );
@@ -11311,30 +11579,35 @@
         downloading = true;
 
         if (imgs.length > 0 && titleText != null && titleText != "") {
-            debug("\nimgZipDownload()：", imgs);
-            const imgsNum = imgs.length;
+            debug("\nimgZipDownload() imgs：", imgs);
+            fun.show(displayLanguage.str_55, 0);
+            let imgsSrcArr = imgs.map(img => {
+                let check = fun.checkImgSrc(img);
+                if (check.ok) {
+                    return check.src;
+                } else {
+                    debug("\nimgZipDownload() imgs 格式錯誤！", img);
+                    return null;
+                }
+            }).filter(item => item);
+            debug("\nimgZipDownload() 所有圖片網址：", imgsSrcArr);
+            debug("\nimgZipDownload() 去重複後的圖片網址：", [...new Set(imgsSrcArr)]);
+            imgsSrcArr = [...new Set(imgsSrcArr)];
+
+            const imgsNum = imgsSrcArr.length;
             let title = titleText;
             const zip = new JSZip();
             const zipFolder = zip.folder(`${title} [${imgsNum}P]`);
-            fun.show(displayLanguage.str_55, 0);
 
-            for (let i = 0; i < imgs.length; i++) {
+            for (let i = 0; i < imgsSrcArr.length; i++) {
                 let n = parseInt(i) + 1;
                 let picNum = getNum(i);
                 let promiseBlob;
-                let imgSrc;
-                let check = fun.checkImgSrc(imgs[i]);
-                if (check.ok) {
-                    imgSrc = check.src;
-                } else {
-                    debug("\nimgZipDownload() imgs 格式錯誤！", imgs[i]);
-                    continue;
-                }
                 await fun.checkDownloadThread();
                 if (siteData.fetch == 1) {
-                    promiseBlob = fetchData(imgSrc, picNum, imgsNum);
+                    promiseBlob = fetchData(imgsSrcArr[i], picNum, imgsNum);
                 } else {
-                    promiseBlob = GMGetData(imgSrc, picNum, imgsNum);
+                    promiseBlob = GMGetData(imgsSrcArr[i], picNum, imgsNum);
                 }
                 promiseBlobArray.push(promiseBlob);
             }
@@ -11605,12 +11878,19 @@
             fun.show("請先手動插入圖片");
             return;
         }
-        if (ge(".FullPictureLoadImage:not(.small):not([style])")) {
+        if (ge(".FullPictureLoadImage:not(.small):not([style*=none])")) {
             if (ge("#FullPictureLoadImgBox")) {
                 ge("#FullPictureLoadImgBox").style.display = "block";
                 [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => {
-                    e.setAttribute("style", "display:none!important;");
-                })
+                    if (e.tagName == "IMG") {
+                        e.setAttribute("style", "display:none!important;");
+                        if (options.zoom > 0) {
+                            e.style.width = `${options.zoom * 10}%`;
+                        }
+                    } else {
+                        e.setAttribute("style", "display:none!important;");
+                    }
+                });
                 viewMode = 1;
                 fun.show("並排模式");
                 return;
@@ -11665,9 +11945,10 @@
             } else {
                 srcArr = srcArr1; //閱讀順序左至右
             }
+            let blackList = fancyboxBlackList();
             srcArr.forEach(e => {
                 let a = document.createElement("a");
-                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                if (options.fancybox == 1 && !blackList) {
                     a.dataset.fancybox = "small";
                     a.dataset.thumb = e;
                     a.href = e;
@@ -11690,7 +11971,7 @@
                 }
                 item.style.padding = "0.1%";
                 item.style.border = "1px solid #a0a0a0";
-                if (options.fancybox == 1 && !/(www\.)?copymanga\.site|(www\.)mangacopy\.com/.test(location.host)) {
+                if (options.fancybox == 1 && !blackList) {
                     a.appendChild(img);
                     item.appendChild(a);
                     imgBox.appendChild(item);
@@ -11699,12 +11980,19 @@
                     imgBox.appendChild(item);
                 }
             });
-            let tE = [...gae(".FullPictureLoadImage:not(.small)")].pop();
-            tE.parentNode.insertBefore(imgBox, tE.nextSibling);
+            let tE = fun.ge("#FullPictureLoadEnd");
+            tE.parentNode.insertBefore(imgBox, tE);
             tE.parentNode.style.textAlign = "center";
             tE.parentNode.style.display = "block";
             [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => {
-                e.setAttribute("style", "display:none!important;");
+                if (e.tagName == "IMG") {
+                    e.setAttribute("style", "display:none!important;");
+                    if (options.zoom > 0) {
+                        e.style.width = `${options.zoom * 10}%`;
+                    }
+                } else {
+                    e.setAttribute("style", "display:none!important;");
+                }
             });
             viewMode = 1;
             fun.show("並排模式");
@@ -11796,10 +12084,13 @@
         } else if (ge(".FullPictureLoadImage.small")) {
             ge("#FullPictureLoadImgBox").style.display = "none";
             $(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd").removeAttr("style");
+            if (options.zoom > 0) {
+                [...gae(".FullPictureLoadImage:not(.small)")].forEach(img => {
+                    img.style.width = `${options.zoom * 10}%`;
+                });
+            }
             viewMode = 0;
             fun.show("原始模式");
-        } else {
-            fun.show("請先取消圖片縮放");
         }
     };
 
@@ -11812,7 +12103,9 @@
             ge("#FullPictureLoadOptionsZoom").value = options.zoom;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
-            $(".FullPictureLoadImage:not(.small)").removeAttr("style");
+            [...gae(".FullPictureLoadImage:not(.small)")].forEach(e => {
+                e.style.width = "";
+            });
             fun.show(displayLanguage.str_61);
         }
     };
@@ -11900,14 +12193,14 @@
     FullPictureLoadOptionsMain.style.display = "none";
     const FullPictureLoadOptionsMainHtmlSrt = `
 <div style="width: 100%;">
-    <p><font color="black">Full Picture Load 選項</font></p>
+    <p><font color="black">當前網站 Full Picture Load 選項</font></p>
 </div>
 <div style="width: 100%;">
     <p><font color="black">左下圖示 ( 0：關、1：開 ) PS:優先級別低於內置規則</font></p>
     <input id="FullPictureLoadOptionsIcon">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">當前網站最大下載線程數 ( 1 ~ 32 ) PS:優先級別低於內置規則</font></p>
+    <p><font color="black">最大下載線程數 ( 1 ~ 32 ) PS:優先級別低於內置規則</font></p>
     <input id="FullPictureLoadOptionsThreading">
 </div>
 <div style="width: 100%;">
@@ -11939,11 +12232,11 @@
     <input id="FullPictureLoadOptionsFancybox">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">當前網站圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto</font></p>
+    <p><font color="black">圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto</font></p>
     <input id="FullPictureLoadOptionsZoom">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">當前網站圖片並排模式顯示數量 ( 2 ~ 6 ) comic類固定為 ( 2 )</font></p>
+    <p><font color="black">圖片並排模式顯示數量 ( 2 ~ 6 ) comic類固定為 ( 2 )</font></p>
     <input id="FullPictureLoadOptionsColumn">
     <p><font color="black">PS:comic類並排後為右至左的漫讀模式 hcomic類也設定為2將套用</font></p>
 </div>
@@ -11963,7 +12256,11 @@
         ge("#FullPictureLoadOptionsCountdown").value = options.autoDownloadCountdown;
         ge("#FullPictureLoadOptionsComic").value = options.comic;
         ge("#FullPictureLoadOptionsDouble").value = options.doubleTouchNext;
-        ge("#FullPictureLoadOptionsFancybox").value = options.fancybox;
+        if (fancyboxBlackList()) {
+            ge("#FullPictureLoadOptionsFancybox").value = "0";
+        } else {
+            ge("#FullPictureLoadOptionsFancybox").value = options.fancybox;
+        }
         ge("#FullPictureLoadOptionsZoom").value = options.zoom;
         if (siteData.category == "comic") {
             ge("#FullPictureLoadOptionsColumn").value = 2;
@@ -12002,6 +12299,10 @@
     });
 
     const style = `
+.fancybox-container {
+    z-index: 2147483647 !important;
+}
+
 .FullPictureLoadImageReturnTop {
     position: fixed;
     right: 10px;
@@ -12133,10 +12434,6 @@
     margin: 0 auto !important;
 }
 
-.FullPictureLoadImage[src*="i.imgur.com"] {
-    min-height: 400px !important;
-}
-
 #FullPictureLoadEnd {
     font-size: 20px;
     height: 30px;
@@ -12146,7 +12443,7 @@
     margin: 5px auto !important;
 }
 
-#FullPictureLoadEnd~*:not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]) {
+#FullPictureLoadEnd~*:not(#FullPictureLoadOptions):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(a[href='javascript:void(0);']):not(div[class^=fancybox]):not(div[tabindex]):not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]):not(a.zwf):not(p) {
     display: none !important;
 }
 
@@ -12159,7 +12456,7 @@
     border: none !important;
 }
 
-#FullPictureLoad~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.fancybox-container) {
+#FullPictureLoad~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(div[class^=fancybox]):not(div[tabindex]):not(#spotlight) {
     display: none !important;
 }
 
@@ -12241,15 +12538,13 @@
                 localStorage.setItem("FullPictureLoadOptions", jsonStr);
                 if (!fun.ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
                 if (!fun.ge(".FullPictureLoadStyle")) fun.css(style);
-                fun.show("圖片全載更新已初始化設定", 3000);
-                await fun.delay(3000, 0);
+                debug("圖片全載更新已初始化設定");
             } else {
                 options = optionsJson;
             }
             debug("\nFull Picture Load Options Json\n", options);
         }
     };
-
     let showOptions = false;
     for (let i = 0; i < customData.length; i++) {
         let check = null;
@@ -12270,8 +12565,10 @@
             }
             options.enable = 1;
             if (customData[i].enable == 0) {
+                await checkOptionsData();
                 if (options.comic == 1 && category === "comic") {
                     showOptions = true;
+                    options.enable = 1;
                     debug("\n漫畫類預設關閉的此站規則已開啟");
                 } else {
                     //showOptions = true;
@@ -12279,6 +12576,9 @@
                     debug("\n此規則禁用", customData[i]);
                     continue;
                 }
+            }
+            if (customData[i].enable != 0) {
+                await checkOptionsData();
             }
             let include = customData[i].include;
             if (include) {
@@ -12296,7 +12596,6 @@
                     continue;
                 }
             }
-            await checkOptionsData();
             siteData = customData[i];
             showOptions = true;
             if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
@@ -12544,10 +12843,18 @@
                 GM_registerMenuCommand("設定", () => {
                     $("#FullPictureLoadOptions").removeAttr("style");
                 });
+                GM_registerMenuCommand("💬 反饋", () => {
+                    //fun.openInTab("https://greasyfork.org/scripts/463305/feedback");
+                    _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
+                });
             } catch (e) {
                 try {
                     GM.registerMenuCommand("設定", () => {
                         $("#FullPictureLoadOptions").removeAttr("style");
+                    });
+                    GM.registerMenuCommand("💬 反饋", () => {
+                        //fun.openInTab("https://greasyfork.org/scripts/463305/feedback");
+                        _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
                     });
                 } catch (e) {}
             }
@@ -12616,6 +12923,8 @@
             });
         }
     }
+
+    debug("\n最終options物件\n", options);
 
     if (options.enable == 1) {
         if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
