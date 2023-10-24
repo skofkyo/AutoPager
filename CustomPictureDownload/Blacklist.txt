@@ -1,4 +1,4 @@
-2023/10/21 20:40
+2023/10/25 00:42
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -164,8 +164,7 @@ Lootiu.Com
 *://www.meitule.*/photo/*.html
 
 COSPLAY ZIP
-*://*coszip.com/*.html
-*://*coszip.com/*.html*amp=1
+*://*coszip.com/*.html*
 
 美桌
 *://www.win4000.com/meinv*.html
@@ -218,7 +217,7 @@ BeautyLeg
 *://www.ikanins.com/*/
 
 劍心回憶
-*://kenshin.hk/*/*/*/*/
+*://kenshin.hk/*/*/*/*/*
 
 Dmmtu 美女图
 *://www.dmmtu.com/*/*.html
@@ -431,7 +430,7 @@ Anh VL
 *jrants.com/*.html
 
 套圖TAOTU.ORG
-*taotu.org/*/*/
+*taotu.org/*/*/*
 
 咔咔西三
 *www.kkc3.com/file/*
@@ -531,10 +530,16 @@ Models Vibe
 *://www.24cos.org/*/*.html
 
 Chinese Nude Art Photos 
-*://chinesenudeart.blogspot.com/*/*/*.html
+*://chinesenudeart.blogspot.com/*/*/*.html*
 
 YouFreeX
 *www.youfreex.com/file/*
+
+Hentai Cosplay
+*://www.hentaicos.com/*/*.html
+
+HotGirl World
+*://www.hotgirl.world/g/*.html/
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -677,6 +682,21 @@ JComic
 
 久久漫画网
 *://www.99hanman.top/chapter/*
+
+色色漫画
+*://www.manhuasese.com/index.php/chapter/*
+
+最新韩漫网
+*://www.zuixinhanman.com/chapter_*.html
+
+韩漫100
+*://hanman100.com/index.php/chapter-*.html
+
+免费韩漫看
+*://www.hanmanfree.com/index.php/chapter/*
+
+韩漫推荐
+*://okhanman.com/index.php/chapter/*
 
 漫畫類
 
@@ -1105,8 +1125,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.ho5ho.com/*/*/server*
 *://orzqwq.com/manga/*/
 *://asiacomics.com/chapter/*
-*://*coszip.com/*.html
-*://*coszip.com/*.html*amp=1
+*://*coszip.com/*.html*
 *://www.pictoa.com/albums/*/*.html
 *://www.imagefap.com/gallery/*
 *://www.imagefap.com/pictures/*
@@ -1133,7 +1152,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://loxiu.com/post/*.html
 *://xher.net/index.php?/category/*
 *://gravurezasshi9.doorblog.jp/archives/*.html
-*://kenshin.hk/*/*/*/*/
+*://kenshin.hk/*/*/*/*/*
 *://www.xasiat.com/albums/*
 *://www.zhaotaotu.cc/thread-*.htm
 *://www.umeitu.com/img/*.html
@@ -1156,7 +1175,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.baobua.net/post/*
 *baobua.com/post/*
 *jrants.com/*.html
-*taotu.org/*/*/
+*taotu.org/*/*/*
 *www.kkc3.com/file/*
 *www.hanjuzu.com/handetail-*.html
 *haotuwu.com/*/*.html
@@ -1201,8 +1220,15 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *bunkrr.su/a/*
 *://www.99hanman.top/chapter/*
 *://www.24cos.org/*/*.html
-*://chinesenudeart.blogspot.com/*/*/*.html
+*://chinesenudeart.blogspot.com/*/*/*.html*
 *www.youfreex.com/file/*
+*://www.manhuasese.com/index.php/chapter/*
+*://www.zuixinhanman.com/chapter_*.html
+*://hanman100.com/index.php/chapter-*.html
+*://www.hanmanfree.com/index.php/chapter/*
+*://okhanman.com/index.php/chapter/*
+*://www.hentaicos.com/*/*.html
+*://www.hotgirl.world/g/*.html/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
