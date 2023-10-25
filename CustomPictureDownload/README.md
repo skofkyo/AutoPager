@@ -1,7 +1,16 @@
 <h1>提醒：</h1>
 <p>2023/10/24</p>
 <p>1.5.0開始改動太多，使用低於1.5.0的版本升級後，如遇到任何問題請先手動重置設定，如左下圖示不見了，快捷鍵沒有反應，切換顯示按鈕沒反應等等...</p>
-
+<br>
+<p>紳士漫畫wnacg，由於新增的Fancybox功能的緣故，新的元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
+<pre>
+https://m.wnacg.com/photos-slide-aid-*.html
+https://www.wnacg.com/photos-slide-aid-*.html
+</pre>
+<p>Fancybox功能在少部份網站上無效原因不明，有列了是不使用Fancybox的網站，如下。</p>
+<pre>
+51sex、Nude Bird、Cosplaytele、XLUST.ORG、Xiuren 秀人网、最新韩漫网M
+</pre>
 <h1>簡介：</h1>
 寫這個腳本的緣由是，想讓下載、複製鏈接不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。
 
@@ -50,7 +59,7 @@
         …code;
         return arr;
     },
-    scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵4
+    scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵6
     button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]插入圖片後添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
@@ -157,8 +166,6 @@ fun.ge(selector, doc)
     name: "哈哈漫画 www.hahacomic.com 分類自動翻頁",
     enable: 1,
     reg: /^https:\/\/www\.hahacomic\.com\/manhua\/list\.html/,
-    icon: 0,
-    key: 0,
     autoPager: {
         ele: ".mdui-col-lg-2",
         observer: ".mdui-col-lg-2",
@@ -179,8 +186,6 @@ fun.ge(selector, doc)
     name: "規則範例",
     enable: 1,
     reg: /^https:\/\/.+/,
-    icon: 0, //不顯示圖片全載的icon
-    key: 0, //不綁定圖片全載的快捷鍵
     autoPager: {
         mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁。
         waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
@@ -539,6 +544,7 @@ imgs: async () => {
 <p>數字鍵 1 複製圖片網址或手動模式的插入圖片</p>
 <p>數字鍵 2 捲動至第一張大圖</p>
 <p>數字鍵 3 一鍵下載</p>
+<p>數字鍵 4 捲動至最後一張大圖</p>
 <p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
 <p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例、數字鍵 + 加鍵恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
@@ -568,10 +574,10 @@ imgs: async () => {
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/25 00:42</p>
+<p>2023/10/26 00:43</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
-<p>陽春簡易的圖片清單式閱讀模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
+<p>陽春簡易的圖片清單式瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
 <img src="https://i.imgur.com/XZSEU41.jpg">
 <img src="https://i.imgur.com/b9iN0X2.jpg">
@@ -636,7 +642,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr02.xyz/">秀人集</a></td>
+                <td><a href="https://www.xr03.xyz/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -645,7 +651,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.imn5.xyz/">爱美女网</a></td>
-                <td>China IP限定</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://meirentu.cc/">美人图</a></td>
@@ -1312,7 +1318,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://kemono.party/fantia/user/17148/post/1633768">Kemono</a></td>
-                <td><a href="https://kemono.su/">kemono.su</a>，<a href="https://coomer.party/">coomer.party</a></td>
+                <td><a href="https://kemono.su/">kemono.su</a>，<a href="https://coomer.party/">coomer.party</a>，<a href="https://coomer.su/">coomer.su</a></td>
             </tr>
             <tr>
                 <td><a href="https://hentai-img.com/">Hentai Image</a></td>
@@ -1818,7 +1824,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
-                <td>直接點進閱讀頁需要重要重新載入，建議新分頁開啟，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
+                <td>SPA網頁，建議新分頁開啟，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
             </tr>
             <tr>
                 <td><a href="https://www.dgmanhua.com/">大古漫画</a></td>
