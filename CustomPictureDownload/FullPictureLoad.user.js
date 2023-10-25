@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.5.0
+// @version            1.5.1
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -119,7 +119,7 @@
             }
             return title;
         },
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(a):not(.fancybox-container),.photoMask,.banner_ad{display: none!important;}",
         topButton: true,
         category: "nsfw2"
     }, {
@@ -331,7 +331,7 @@
         next: ".prevNews>a",
         prev: ".nextNews>a",
         customTitle: () => fun.geT("h1"),
-        css: "body>section[id],#footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
+        css: "body>section[id],#footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "nsfw2"
     }, {
         name: "Hit-x-Hot www.hitxhot.org www.depvailon.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com",
@@ -422,6 +422,12 @@
         name: "秀人集 www.xr02.xyz",
         reg: /www\.(xiuren\d+|xr\d+)\.\w+\/\w+\/\d+\.html/i,
         imgs: () => fun.getImg('.content>p img[alt]', fun.geT(".page a:last-child", 2), 3),
+        init: () => {
+            let pag = [...fun.gae(".page")];
+            if (pag.length > 0) {
+                pag[0].remove();
+            }
+        },
         button: [4],
         insertImg: ["//div[p[img[@alt and @title]]]", 2],
         autoDownload: [0],
@@ -442,7 +448,7 @@
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: () => fun.geT(".item_title>h1").replace(/\d+P$/i, ""),
         //threading: 4,
-        css: ".item_title>a,.content br,.bottom_fixed,body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
+        css: ".item_title>a,.content br,.bottom_fixed,body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱美女网 www.imn5.net www.imn5.cc",
@@ -474,6 +480,19 @@
         name: "极品性感美女 www.xgyw.in",
         reg: /www\.xg\w+\.\w+\/\w+\/\w+\.html/i,
         include: "//div[@class='toptip']/a[text()='极品性感美女']",
+        init: () => {
+            let pag = [...fun.gae(".pagination")];
+            if (pag.length > 0) {
+                pag[0].remove();
+            }
+            let p = [...fun.gae("//article/p[not(img)]")];
+            if (p.length > 0) {
+                let te = fun.ge(".article-content");
+                p.forEach(e => {
+                    te.parentNode.insertBefore(e, te);
+                })
+            }
+        },
         imgs: () => fun.getImg('.article-content img[alt]', fun.geT("a.current~*:last-child", 2), 3),
         button: [4, "22%"],
         insertImg: ["//p[img[@alt]]", 2],
@@ -482,12 +501,18 @@
         prev: ".article-nav-prev>a[href$=html]",
         customTitle: () => fun.geT(".article-title").replace(/\d+p$/i, ""),
         //threading: 4,
-        css: ".article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id],body>.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(a):not(.fancybox-container){display:none!important}",
+        css: ".article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id],body>.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(a):not(.fancybox-container){display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱看美女网 www.ikmn03.cc",
         reg: /www\.ikmn(\d+)?\.\w+\/\w+\/\d+\.html/i,
         include: ".info-pagebar>a",
+        init: () => {
+            let pag = [...fun.gae(".pagebar")];
+            if (pag.length > 0) {
+                pag[0].remove();
+            }
+        },
         imgs: () => fun.getImg('.info-imtg-box img[alt]', fun.geT(".pagebar>*:last-child", 2), 3),
         button: [4],
         insertImg: ["//p[img[@alt]]", 2],
@@ -686,6 +711,7 @@
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: () => fun.title(" - 私图网"),
+        go: 1,
         css: "[id].widget_text,.gridmode-post-thumbnail-single,.gridbit-thumbnail-alignwide{display:none!important}",
         category: "nsfw1"
     }, {
@@ -912,8 +938,6 @@
     }, {
         name: "51sex 51sex.vip 分類自動翻頁",
         reg: /https?:\/\/51sex\.vip\/category\/\d+/i,
-        icon: 0,
-        key: 0,
         init: () => {
             let pathnameArr = location.pathname.split("/");
             if (pathnameArr.length == 3) {
@@ -1056,6 +1080,9 @@
         },
         button: [4],
         insertImg: [".entry-content", 1],
+        autoDownload: [0],
+        next: "span.prev>a",
+        prev: "span.next>a",
         customTitle: () => fun.geT(".entry-title").replace(/\(\d+P\)|\[\d+P\]|\[\d+P\/\d+1M\]/gi, "").trim(),
         category: "nsfw2"
     }, {
@@ -1489,7 +1516,7 @@
         next: "#content .g1-teaser-prev",
         prev: "#content .g1-teaser-next",
         customTitle: () => fun.geT("h1.entry-title"),
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
+        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
         category: "hcomic"
     }, {
         name: "女神社 nshens.com inewgirl.com",
@@ -1915,7 +1942,7 @@
         prev: "//div[@class='b' and contains(text(),'下一')]/a",
         customTitle: () => fun.geT("h1").replace(/\/(\d+P)?|\||第\d+页/gi, "").trim(),
         topButton: true,
-        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,.interestline+.nav~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none !important}",
+        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,.interestline+.nav~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container){display:none !important}",
         category: "nsfw2"
     }, {
         name: "魅狸图片网 www.rosi8.com 美女私房照 www.sfjpg.com 看妹图 www.kanmeitu.net www.kanmeitu1.cc kanmeitu.net kanmeitu1.cc",
@@ -2085,6 +2112,7 @@
         },
         button: [4],
         insertImg: [".article__image-list", 2],
+        go: 1,
         customTitle: () => fun.geT(".article-header__title"),
         category: "nsfw1"
     }, {
@@ -3018,8 +3046,6 @@
     }, {
         name: "MIC MIC IDOL www.micmicidol.club micmicunc unc.micmicdoll.com 分類自動翻頁",
         reg: /^https:\/\/www\.micmicidol\.club\/(\?m=1)?$|^https:\/\/www\.micmicidol\.club\/search|^https:\/\/unc\.micmicdoll\.com\/(\?m=1)?$|^https:\/\/unc\.micmicdoll\.com\/search/,
-        icon: 0,
-        key: 0,
         init: () => {
             if (siteUrl.includes("unc.micmicdoll.com")) {
                 setTimeout(() => {
@@ -3085,10 +3111,13 @@
         category: "autoPager"
     }, {
         name: "Kemono https://kemono.party/fantia/user/17148/post/1633768 coomer.party",
-        reg: /(kemono\.party|kemono\.su|coomer\.party)\/.+post/,
+        reg: /(kemono\.party|kemono\.su|coomer\.party|coomer\.su)\/.+post/,
         imgs: "a.fileThumb.image-link",
         button: [4],
-        insertImg: [".post__files", 2],
+        insertImg: [
+            [".post__body", 0], 2
+        ],
+        go: 1,
         autoDownload: [0],
         next: "a.next",
         prev: "a.prev",
@@ -3450,6 +3479,7 @@
     }, {
         name: "Models Vibe www.modelsvibe.com",
         reg: /https?:\/\/www\.modelsvibe\.com\/[^/]+\/$/,
+        include: ".td-post-content img",
         init: () => {
             let ele = fun.ge("//p[br and not(contains(text(),'[ad_1]'))]");
             if (ele) {
@@ -3496,8 +3526,6 @@
     }, {
         name: "Models Vibe www.modelsvibe.com 分類自動翻頁",
         reg: /https:\/\/www\.modelsvibe\.com\/(albums\/.+)?(page\/\d+\/)?$/,
-        icon: 0,
-        key: 0,
         init: () => {
             if (/page\/\d+\//.test(location.pathname)) {
                 currentPageNum = parseInt(location.pathname.match(/\/page\/(\d+)/)[1]);
@@ -3512,6 +3540,7 @@
                 let url = location.href.replace(/page\/\d+\/?/, "") + `page/${currentPageNum += 1}/`;
                 return url;
             },
+            re: ".page-nav",
             stop: () => {
                 let error = fun.ge(".td-404-title", doc);
                 if (error) {
@@ -3736,7 +3765,7 @@
         ],
         go: 1,
         customTitle: () => fun.geT(".headline>h1"),
-        css: ".block-album{display:block!important}.block-album>.table,.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
+        css: ".block-album{display:block!important}.block-album>.table,.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "nsfw2"
     }, {
         name: "Xasiat loadMore www.xasiat.com/albums/",
@@ -4554,8 +4583,6 @@
     }, {
         name: "Bunkr bunkr-albums.io 列表自動翻頁",
         reg: /^https:\/\/bunkr-albums\.io\//,
-        icon: 0,
-        key: 0,
         autoPager: {
             ele: ".table-auto>tbody",
             next: "a.bg-gray-300+a",
@@ -6026,7 +6053,7 @@
         next: "#content .g1-teaser-next",
         prev: "#content .g1-teaser-prev",
         customTitle: () => fun.geT("h1.entry-title"),
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
+        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
         category: "hcomic"
     }, {
         name: "18H漫画 18hmanga.click",
@@ -6038,7 +6065,7 @@
         next: "#content .g1-teaser-prev",
         prev: "#content .g1-teaser-next",
         customTitle: () => fun.geT("h1.entry-title"),
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
+        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container),.code-block,#secondary{display:none!important}",
         category: "hcomic"
     }, {
         name: "hitomi hitomi.la",
@@ -6191,7 +6218,7 @@
         imgs: "#comic_pic",
         button: [4],
         insertImg: [
-            [".bo_tit", 2, "#comic_pic"],
+            [".bo_tit", 2, "#comic_pic"], 2,
         ],
         autoDownload: [0],
         next: "//a[contains(text(),'下一章')][contains(@href,'html')]",
@@ -7288,7 +7315,7 @@
                 return fun.title(" - ", 3);
             }
         },
-        css: ".img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}#action li{width:50%!important}",
+        css: ".img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}#action li{width:50%!important}",
         category: "comic"
     }, {
         name: "漫画456 www.manhua456.com",
@@ -7480,7 +7507,7 @@
         autoNext: true,
         prev: 1,
         customTitle: () => fun.title("在线", 1),
-        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
+        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
         category: "comic"
     }, {
         name: "最漫画M / 拼拼漫画M m.zuimh.com m.pinmh.com",
@@ -7497,7 +7524,7 @@
         autoNext: true,
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: () => fun.title("在线", 1),
-        css: "body{padding:0!important}div[style*='text-align'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
+        css: "body{padding:0!important}div[style*='text-align'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container){display:none!important}",
         category: "comic"
     }, {
         name: "零点漫画M m.0dmh.com",
@@ -7597,7 +7624,7 @@
                 return fun.title("在线", 1);
             }
         },
-        css: "body{padding:0!important}.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),.bottom~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(#FullPictureLoadOptions):not(.fancybox-container),div[style*='text-align: left;']{display:none!important}",
+        css: "body{padding:0!important}.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container),.bottom~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(.fancybox-container),div[style*='text-align: left;']{display:none!important}",
         category: "comic"
     }, {
         name: "前未漫画/漫画芯/蔷薇漫画/最漫画/爱米推漫画/下拉式漫画/漫画吧/漫画连/拼拼漫画/零点漫画/雪儿漫画/狗狗漫画/奇奇漫画/悠闲漫画/不卡漫画/多熙漫画 www.qianmh.com www.mhxin.com www.qwmanhua.com www.zuimh.com www.imitui.com imitui.com www.xlsmh.com www.dmhua8.com www.100mhl.com www.pinmh.com www.0dmh.com www.xuermh.com www.gougoumh.com www.qimhua.com www.yxtun.com www.bukamh.com www.duoximh.com",
@@ -9068,8 +9095,6 @@
         name: "哈哈漫画 www.hahacomic.com 分類自動翻頁",
         enable: 1,
         reg: /^https:\/\/www\.hahacomic\.com\/manhua\/list\.html/,
-        icon: 0,
-        key: 0,
         autoPager: {
             ele: ".mdui-col-lg-2",
             observer: ".mdui-col-lg-2",
@@ -9120,15 +9145,11 @@
         category: "comic"
     }, {
         name: "94i.in 自動簽到",
-        icon: 0,
-        key: 0,
         reg: /^https?:\/\/94i\.in\//,
         autoClick: "#pper_a:not([style='display: none;'])",
         category: "none"
     }, {
         name: "Supjav 立即顯示影片縮圖",
-        icon: 0,
-        key: 0,
         delay: 300,
         reg: /^https?:\/\/supjav\.com\/(zh\/|ja\/)?\d+\.html/,
         init: async () => {
@@ -9140,8 +9161,6 @@
         category: "none"
     }, {
         name: "ouo.io 自動跳轉",
-        icon: 0,
-        key: 0,
         reg: /^https?:\/\/ouo\./,
         init: async () => {
             let ele = "#btn-main:not(.disabled)";
@@ -9153,8 +9172,6 @@
         category: "none"
     }, {
         name: "cuty.io 自動跳轉",
-        icon: 0,
-        key: 0,
         reg: /^https:\/\/cutt?y\.(io|app)\/\w+/i,
         init: async () => {
             let ele = "//button[@id='submit-button' and text()= 'Continue' or text()= 'I am not a robot' or text()= 'Go ->']";
@@ -9166,8 +9183,6 @@
         category: "none"
     }, {
         name: "m.4khd.com 自動跳轉",
-        icon: 0,
-        key: 0,
         reg: /^https?:\/\/m\.4khd\.com\//,
         init: () => {
             location.href = fun.ge("//a[text()='GET LINK']").href;
@@ -9175,8 +9190,6 @@
         category: "none"
     }, {
         name: "4kup.net 自動跳轉",
-        icon: 0,
-        key: 0,
         reg: /^https:\/\/4kup\.net\/getlink\/$/,
         init: async () => {
             let eleArr = ["#output:not([style*=none]) button", "#gotolink:not([disabled])"];
@@ -9190,29 +9203,21 @@
         category: "none"
     }, {
         name: "MediaFire 自動下載",
-        icon: 0,
-        key: 0,
         reg: /^https?:\/\/www\.mediafire\.com\//,
         autoClick: ".download_link:not(.started) #downloadButton",
         category: "none"
     }, {
         name: "anonfiles 自動下載",
-        icon: 0,
-        key: 0,
         reg: /^https?:\/\/anonfiles\.com\//,
         autoClick: ["#download-url"],
         category: "none"
     }, {
         name: "letsupload 自動下載",
-        icon: 0,
-        key: 0,
         reg: /^https?:\/\/letsupload\.cc\//,
         autoClick: ["#download-url"],
         category: "none"
     }, {
         name: "stfly.me 半自動跳轉",
-        icon: 0,
-        key: 0,
         reg: /^http/,
         include: "img[src^='https://stfly.me/']",
         init: async () => {
@@ -9226,8 +9231,6 @@
         category: "none"
     }, {
         name: "link1s 自動跳轉",
-        icon: 0,
-        key: 0,
         reg: /^http/,
         include: "a.site-logo[href='https://link1s.com/'],a.logo-image[href='https://link1s.com/']",
         init: async () => {
@@ -9239,16 +9242,12 @@
         category: "none"
     }, {
         name: "網址清單新分頁開啟",
-        icon: 0,
-        key: 0,
         delay: 1000,
         reg: /github\.com\/skofkyo\/AutoPager\/tree\/main\/CustomPictureDownload/,
         openInNewTab: ".entry-content a[href]:not([target=_blank]):not([id])",
         category: "none"
     }, {
         name: "google search loadmore",
-        icon: 0,
-        key: 0,
         enable: 1,
         reg: /^https:\/\/(?:www\.)?google\..*\/search/,
         include: "a[aria-label='更多搜尋結果']",
@@ -9257,6 +9256,7 @@
         category: "none"
     }, {
         name: "測試 test",
+        enable: 0,
         reg: /^https?:\/\/\w+\.hathitrust\.org\/cgi\/pt\?id=/,
         imgs: () => {
             return fun.imgBlobArr(".image>img");
@@ -9334,6 +9334,14 @@
         category: "AI"
     }];
 
+    const debug = (str, obj = "", title = "debug") => {
+        console.log(
+            `%c[Full Picture Load] ${title}:`,
+            "background-color: #C9FFC9;",
+            str, obj
+        );
+    };
+
     switch (language) {
         case "zh-TW":
             displayLanguage = {
@@ -9397,7 +9405,9 @@
                 str_58: "已到達最後一頁",
                 str_59: "沒有任何主體元素",
                 str_60: "圖片縮放",
-                str_61: "取消縮放"
+                str_61: "取消縮放",
+                str_62: "前往第一張圖",
+                str_63: "前往最後一張圖"
             };
             break;
         case "zh-CN":
@@ -9462,7 +9472,9 @@
                 str_58: "已到达最后一页",
                 str_59: "没有任何主体元素",
                 str_60: "图片缩放",
-                str_61: "取消缩放"
+                str_61: "取消缩放",
+                str_62: "前往第一张图",
+                str_63: "前往最后一张图"
             };
             break;
         default:
@@ -9527,7 +9539,9 @@
                 str_58: "Reached the last page",
                 str_59: "no main element",
                 str_60: "Image zoom",
-                str_61: "Cancel zoom"
+                str_61: "Cancel zoom",
+                str_62: "Go to first image",
+                str_63: "Go to last image"
             };
             break;
     }
@@ -9548,16 +9562,58 @@
         _GM_openInTab = fun.openInTab;
     }
 
-    const fancyboxBlackList = () => {
+    const addJqueryLibrarys = async () => {
+        const jsdelivrLibrarys = [
+            "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
+            "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js",
+            "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
+        ];
+        const bootcdnLibrarys = [
+            "https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js",
+            "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js",
+            "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css"
+        ];
+        const check = await fetch(jsdelivrLibrarys[0]).then(res => res.status);
+        let librarysArr;
+        if (check == 200) {
+            librarysArr = jsdelivrLibrarys;
+        } else {
+            librarysArr = bootcdnLibrarys;
+        }
+        for (let i in librarysArr) {
+            if (librarysArr[i].includes(".min.js")) {
+                const script = document.createElement("script");
+                await fetch(librarysArr[i]);
+                script.src = librarysArr[i];
+                document.body.appendChild(script);
+            } else if (librarysArr[i].includes(".min.css")) {
+                const fancyBoxCssHtml = `<link href="${librarysArr[i]}" rel="stylesheet">`;
+                document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
+            }
+        }
+    };
+
+    const fancyboxErrorList = () => {
         const list = [
             "copymanga.site", //拷貝漫畫
-            "mangacopy.com",
+            "mangacopy.com"
+        ];
+        for (let i in list) {
+            if (location.host.includes(list[i]) === true) {
+                debug("\nfancybox無效，直接注入函示庫。");
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const fancyboxBlackList = () => {
+        const list = [
             "51sex.vip", //51sex
             "nudebird.biz", //Nude Bird
             "cosplaytele.com", //Cosplaytele
             "xlust.org", //XLUST.ORG
             "www.xiuren.org", //Xiuren 秀人网
-            "www.comicun.com", //www.comicun.com
             "www.zuixinhanman.com" //最新韩漫网M
         ];
         for (let i in list) {
@@ -9570,7 +9626,7 @@
     };
 
     const fun = {
-        getImg: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 100) => {
+        getImg: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 50) => {
             if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
             fetching = true;
             fun.show(displayLanguage.str_01, 0);
@@ -10686,7 +10742,7 @@
                 }
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
-                    a.dataset.fancybox = "original";
+                    a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
                 }
@@ -11365,14 +11421,6 @@
         }
     };
 
-    const debug = (str, obj = "", title = "debug") => {
-        console.log(
-            `%c[Full Picture Load] ${title}:`,
-            "background-color: #C9FFC9;",
-            str, obj
-        );
-    };
-
     const ge = css => document.querySelector(css);
     const gae = css => document.querySelectorAll(css);
     const gx = xpath => document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -11832,6 +11880,23 @@
         }
     };
 
+    const goToImg = img => {
+        let ele = null;
+        if (ge("#FullPictureLoadImgBox:not([style*=none])") && img == "first") {
+            ele = ge(".FullPictureLoadImage.small");
+        } else if (img == "first") {
+            ele = ge(".FullPictureLoadImage:not(.small)");
+        }
+        if (ge("#FullPictureLoadImgBox:not([style*=none])") && img == "last") {
+            ele = [...gae(".FullPictureLoadImage.small")].pop();
+        } else if (img == "last") {
+            ele = [...gae(".FullPictureLoadImage:not(.small)")].pop();
+        }
+        if (ele) {
+            ele.scrollIntoView();
+        }
+    };
+
     const autoScrollEles = () => {
         if (ge("#FullPictureLoadOptions:not([style])")) {
             return;
@@ -11949,7 +12014,7 @@
             srcArr.forEach(e => {
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
-                    a.dataset.fancybox = "small";
+                    a.dataset.fancybox = "FullPictureLoadImageSmall";
                     a.dataset.thumb = e;
                     a.href = e;
                 }
@@ -12113,10 +12178,12 @@
     const addFullPictureLoadButton = () => {
         let img = new Image();
         img.id = "FullPictureLoad";
+        img.className = "FullPictureLoadFixedBtn";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACFlBMVEVEREAAAABEREBEREBUXnFTXXBTXG5VXXJUXHFUW28grV0grV0hrl4hrV0hq10iql0oomAhrV2BiZiAiJd/h5V+h5Uiq16OlaKNlKGMk5+Mkp+KkZ89p28nq2Hp9+/n9u3t8PHs7/Dg9Ojp7O3d8+bo7O3o6+zn6+3m6uzl6evX8OLV8OHi5ujh5efO7dze4uTe4ePb3+LY3eDX29/W2t7T19u35Mu25Mr01lqw4sbz1Vmv4sXA1NWs4cPw0lnv0lmp4MCk3r3ozVuh3buu0M6vz83kylugysefycadx8OexsOdxsOF0qZ6zp5pyJK1p2S0pmOsoGRWv4SLlKEmuZpBsnc5t3AmuJmQi2ont5kmtpcptJiOiWg0tWwytGorr5Yqr5YsrpUws2kqrJRNmpMusmcsqpIuqJMssWkqsWQqsGUnsGUzoI8lsGGAf2wkr2Ekr2BzfI0irl8hrl5ye4x9fGogrWAhrV03mIwgrF9xeoshq10gql8dp2ccp2cdpmkcnIUanIYcm4QRoIUTnoURn4QdmYM/h4QcmIMSnYMXmoMWmoIbloIclYJDgYIYl4EaloAek4IfkYFqbm0jjoBqbW0ni4ApiX9Hd35kanBjaXBhaG9MbnpOanhOaXhPaHdDbXZHanZGanRLZnZJZ3RSYnVMZXRPY3ROY3VSYXRQYnRTYHRVX3NUX3RSYHNUXnNTXXJTXXFME6frAAAAHnRSTlMAAAUGZ2dqeHh7lrzNzc7O3O/09PT19fn5+fn5/f4hZOrvAAAB1UlEQVR42oWTzYoTQRSFv6q6RqOoqBicTTCKK1cOURBGBV9AXCgu9Vl8FF/ApcshI4qKgrtBByZK0HSGmMxkMrF/qq6LTjptErGX5zu3uu65dY3TYCh9ag2UNPsfjnmpZW4MgBbaIy/6PCnxvL7gEQhJ7AruAqifcZ96EHDX67ngKgCJn/k3B6AC1O9Cj9ri/2mBsZIf9iLi0rMFDhhjbO6NsL9er+CQG3pYMT+XuGVmuH9SzPF7S/UONDfUHl44/6A24wfdpMgsSO6tP52ffxjF6cUT056MBdxf/cVRzP6PiQG8KhZMJedhewik0QT43RsBQUEwLufZx53Td85p7wCwEu+Fs6qAGBsA1aO3XUZbG/EAsAJJlM/MGgOoDltdYNTam3JIOlVmOaj2N/sAjHf9lGdBqwACmmi0FU/TOWxfEY483o/9tcuvJBXU+90PaZHf5NtVFzTL+N7bqD4GS9DRmzl3btJWk2WFIKradqX8LfudU3VKBuKd0vwc+HCjNDJhkJXfB6jq+wZJBSAT5MmKN1/la7sJ+jmsiyQrdkZo9N819FNnXcSZFTt1rGnXhl/G6a26IP/YOXczi5prQmFY3snbkzNSXGyBV+28p+nNF+vn2h97PvHD5SOHkgAAAABJRU5ErkJggg==";
         img.setAttribute("title", displayLanguage.str_47);
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => {
+            fastDownload = false;
             imgZipDownload();
         });
         img.addEventListener("mousedown", (event) => {
@@ -12130,6 +12197,24 @@
             }
         });
         document.body.appendChild(img);
+        let img2 = new Image();
+        img2.id = "FullPictureLoadGoToFirstImage";
+        img2.className = "FullPictureLoadFixedBtn";
+        img2.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA7BJREFUWEetl29olVUYwH/n3jvvGpp/WtNlIdoK1MJazBwO0/mlZqFgRCgGfZC7TTbwixqbMnPiHIIwmdd9MYiMhD4o6gqirenGsoF/MLfaahFz3a1Shlv7e9/3yHnnxXvv3vee96574P3wcp4/v/M8z3nOOQK3o67Oj2+0EMlWPKxEkg3Wp0YIQQiTLgQXCWc0UV4+4ca00Ao1HM3G8B0CuROYp5WfFhgGcQ5v+FMCFaFEOs4An1WlM+6vRIq9QIZLx/Fiowh5kvSJaj6uGrezYQ9QX7sEYV4A3pyl43i160jPNvbsG4ifmAlwquZVfDQieV7nfJE/3RJ5MGG7uFh1wT3CFFF24E70RCyAWrnH7NA5V0pH8gooW51r2Tp19wYHO1qROmIFYXryoiPxBEDlfCz9B13YlULd+s0EVq6JcdfQdZvytu/1EHCdp8Y3RmriCUDwWDVSVOgq1s55RMc1hJBHKfmkUulNA1hbzftbomp3Wnk8sEuIUbxGjtqi0wCnjwdBFjut3q3z5CIhzlC6v0Qw3eH+cWoyyTpPAmKYcMazgtM17wCNTk0iUc51Re8iHUWC+pozCAJ2DeL/OHcVCUmDIFjTgmRDPMDB3HzUl4qxq7mR87//MtOU4KpKQTfwUvTsgjl+QrtK8Qr9WeUGsG2gn02Xz9uJ9iiAYWBu9OwbmYtp36YOv9SM/8JTZH1ez5RpxhscsQWYP8fPnzsCZPh8MQph0+THv0MULFlqS9Y60M+6rGx8Hk/M/Nlf71B87Ts7HQtgRgqUZNkruZxYt/Fxp4JJ0+Cj5m/IeXoB1XkFtgCVHa10Dt2ndu0GcuYvtGR+fvAvO5uu0DV03yEFDkWopNVqtix70QrdFz2d9D4cYt+atQkBam//ZEFvXrqMCcPg2sA95zxaReiwDZ203AC4rhxrGyZoRHaGUgoARdpWHA+RQoDHrVh50BxG0RApBAhSeqDU9XEcgUgRwAhpRg67KwaTupAoiD2rX+dk/ibbOtvb3kz93Zv6GhTiECX7jyjBpK9k+Yufo+W9D22dvHXpK9oH/9IAiDYyxwr5oGoyFkD9ubyUfln4Lu+veDnG0de93exouqxz3kdaOE+FPiI4q2u5OqRKVr3G2y8st+x82/cHwc5bGDLRvVj0Ycgtia/lEayUP0xEG2nh7dErd45AZCY1T7MRhKjlmbHjkZzH50h/4M/ucfoQOEeacdhu1dEQeoCItPPzXCVenTj9SNmJ4BLeRS0EAlP6/QiPAMXOipDq4W0VAAAAAElFTkSuQmCC";
+        img2.setAttribute("title", displayLanguage.str_62);
+        img2.addEventListener("click", () => {
+            goToImg("first");
+        });
+        document.body.appendChild(img2);
+        let img3 = new Image();
+        img3.id = "FullPictureLoadGoToLastImage";
+        img3.className = "FullPictureLoadFixedBtn";
+        img3.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA6lJREFUWEfFl21IlWcYx3/3c46vayG1lq5i5FablrQFbon2oiOYzlgfgsY2gvrinCQEwzayklI69SVQPMdDH4KJMkZBoxf6kpkYVjK32FqgtiGbs8xczeF0O5477ucknZfnzaPUDc+n57ru/++67uu6XwROh9+fwNToRiRbECIbWAIsBQQwhGCIILcRfEcgtY3KykknUytn63GibjH/uw4CnwDz7cyf/B8D0YIrcIiyfUNWPuYA39Yk8iBlL1JWAfMcCkebjSPkcZIna9lZM2E0hzGAHrX7NMj8OIWj3a4jta1UVN2N/hEL0ODJwSXOg1xmJu4SgvLst3h/2XLd5OLvv+H75UempDTnFfxBgBJ2f/lTuFEkQCjybitx5dxaVMq2zJURYqd+7eXjtnPWCVMQQS03PBNPAdSaj6S02aU9b/ErXNnykaHQxrPf0HXvT7tVu07KxKbpmngK4Du6HykP2XlXrHqb43mFhmZ7ui7TeOsHuylAyDrKv6pWhiGAUKv1O6n2qjXvUJtbYChS3d3JsZs37AFgHNfU66pFQwBejxcod+I5RwAq9iY+31suqK9Pwj1+H3jx2QIwRiB1kcDrKQYuOBFXNnOXAV2xRNDoaUJQ9lwAJH6Bz3MFyQYzgPXpS0lyubg0OIDaZpxkIHN+Gp+uyCZB0zg/cIdrwybHgaBDLUEvsCIaICttIS1FH7B6wUv6r/5Hf1F1o4PstIWWXdD/90O+LiwmUXPpfgr6i2vtNPzcYxRjnwIYM2q/pvWb2fVGToRTIBjUoylIVydx7Oi8O8i6lzNwa1rEz/FAgFdb/Tz6L+aE/scQQKVueEcFL7gTnJaGrV3emRa+H7kXbacDGC7B5dLt5JtEaqsWZaAOqYxmLw9jM9BnWoTbX3uT5sKSmWoZ2h/u6UJ9MUMvQpM2VFtkff57lGWtmRWE//ZNKq9e0osxZuhtaLERzRbCUjxEU2K7FccL4UD8yVasOLxHfSA/M8v1TCEciIcdRkrVX5fBlH4cp84Wwpl49HGsVH1HapFin1XF2WXCobjBhUSpnqxJ5t/kduDdeCAci4PJlUypNh5LRwt2I/UXj+lQmTicW8DuVWt1m4ZbPezv7jRutfBZLC+l04bqWu7mgh2EMl+QlKx7jU4avjkiA3B0LZ92UZkQwTN2yzGDHWoGD5PpWVVNTCRVI8Ueq+6wgYjzaRY+q96i7gMg1ePU0b0RmIPHaXRooctrEZIP0chCkgH6p0bcz/PHF6yIkDG/FFMAAAAASUVORK5CYII=";
+        img3.setAttribute("title", displayLanguage.str_63);
+        img3.addEventListener("click", () => {
+            goToImg("last");
+        });
+        document.body.appendChild(img3);
     };
 
 
@@ -12367,14 +12452,25 @@
 }
 
 #FullPictureLoad {
+    bottom: 24px !important;
+}
+
+#FullPictureLoadGoToLastImage {
+    bottom: 66px !important;
+}
+
+#FullPictureLoadGoToFirstImage {
+    bottom: 108px !important;
+}
+
+.FullPictureLoadFixedBtn {
+    position: fixed !important;
+    left: 24px !important;
     width: 32px !important;
     height: 32px !important;
-    position: fixed !important;
-    bottom: 20px !important;
-    left: 20px !important;
     border-radius: unset !important;
     z-index: 2147483647 !important;
-    opacity: 0.8 !important;
+    opacity: 1 !important;
     display: block !important;
 }
 
@@ -12434,6 +12530,11 @@
     margin: 0 auto !important;
 }
 
+a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadImageSmall] {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 #FullPictureLoadEnd {
     font-size: 20px;
     height: 30px;
@@ -12443,7 +12544,7 @@
     margin: 5px auto !important;
 }
 
-#FullPictureLoadEnd~*:not(#FullPictureLoadOptions):not(.FullPictureLoadMsg):not(#FullPictureLoad):not(a[href='javascript:void(0);']):not(div[class^=fancybox]):not(div[tabindex]):not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]):not(a.zwf):not(p) {
+#FullPictureLoadEnd~*:not(#FullPictureLoadOptions):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(a[href='javascript:void(0);']):not(div[class^=fancybox]):not(div[tabindex]):not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]):not(a.zwf):not(p) {
     display: none !important;
 }
 
@@ -12456,7 +12557,7 @@
     border: none !important;
 }
 
-#FullPictureLoad~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(div[class^=fancybox]):not(div[tabindex]):not(#spotlight) {
+#FullPictureLoad~*:not(.FullPictureLoadFixedBtn):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(div[class^=fancybox]):not(div[tabindex]):not(#spotlight) {
     display: none !important;
 }
 
@@ -12597,10 +12698,15 @@
                 }
             }
             siteData = customData[i];
-            showOptions = true;
+            if (siteData.category != "none") {
+                showOptions = true;
+            }
             if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
             if (!ge(".FullPictureLoadStyle")) fun.css(style);
-            if (!siteData.autoPager) {
+            if (fancyboxErrorList() && options.fancybox == 1) {
+                await addJqueryLibrarys();
+            }
+            if (!siteData.autoPager && !fancyboxErrorList() && options.fancybox == 1 && siteData.category != "none") {
                 const fancyBoxCssHtml = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">`;
                 document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
             }
@@ -12843,18 +12949,10 @@
                 GM_registerMenuCommand("設定", () => {
                     $("#FullPictureLoadOptions").removeAttr("style");
                 });
-                GM_registerMenuCommand("💬 反饋", () => {
-                    //fun.openInTab("https://greasyfork.org/scripts/463305/feedback");
-                    _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
-                });
             } catch (e) {
                 try {
                     GM.registerMenuCommand("設定", () => {
                         $("#FullPictureLoadOptions").removeAttr("style");
-                    });
-                    GM.registerMenuCommand("💬 反饋", () => {
-                        //fun.openInTab("https://greasyfork.org/scripts/463305/feedback");
-                        _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
                     });
                 } catch (e) {}
             }
@@ -12926,7 +13024,19 @@
 
     debug("\n最終options物件\n", options);
 
-    if (options.enable == 1) {
+    try {
+        GM_registerMenuCommand("💬 反饋", () => {
+            _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
+        });
+    } catch (e) {
+        try {
+            GM.registerMenuCommand("💬 反饋", () => {
+                _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
+            });
+        } catch (e) {}
+    }
+
+    if (options.enable == 1 && siteData.category != "autoPager" && siteData.category != "none") {
         if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
         if (!ge(".FullPictureLoadStyle")) fun.css(style);
         if (siteData.key != 0) {
@@ -12940,17 +13050,20 @@
                         copyImgSrcText();
                         break;
                     case 98: //數字鍵2
-                        goToNo1Img(0);
+                        goToImg("first");
                         break;
                     case 99: //數字鍵3
                         fastDownload = true;
                         imgZipDownload();
                         break;
                     case 100: //數字鍵4
-                        autoScrollEles();
+                        goToImg("last");
                         break;
                     case 101: //數字鍵5
                         toggleImgMode();
+                        break;
+                    case 102: //數字鍵6
+                        autoScrollEles();
                         break;
                     case 109: //數字鍵-
                         toggleZoom();
@@ -12979,7 +13092,9 @@
         }
         if (siteData.icon == 0) {
             return;
-        } else if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
+        } else if (options.icon == 1 || siteData.icon == 1) {
+            addFullPictureLoadButton();
+        }
     }
 
 })();
