@@ -1,4 +1,4 @@
-2023/10/25 00:42
+2023/10/26 00:43
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -288,10 +288,10 @@ micmicunc
 *://gravurezasshi9.doorblog.jp/archives/*.html
 
 Kemono
-*://kemono.party/*/user/*/post/*
+*://kemono.*/*/user/*/post/*
 
 Coomer
-*://coomer.party/*/user/*/post/*
+*://coomer.*/*/user/*/post/*
 
 俊美图
 *://www.meijuntu.com/*/*.html
@@ -1038,8 +1038,8 @@ https://www.nuyet.com/gallery/*
 *://idol.gravureprincess.date/*/*/*.html
 *www.micmicidol.club*
 *unc.micmicdoll.com*
-*://kemono.party/*/user/*/post/*
-*://coomer.party/*/user/*/post/*
+*://kemono.*/*/user/*/post/*
+*://coomer.*/*/user/*/post/*
 *://www.meijuntu.com/*/*.html
 *://www.junmeitu.com/*/*.html
 *://www.jeya.*/*/*.html
