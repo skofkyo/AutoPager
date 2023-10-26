@@ -10745,11 +10745,12 @@
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
+                    a.id = "imgLocation" + i;
                 }
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
                 img.className = "FullPictureLoadImage";
-                img.id = "imgLocation" + i;
+                
                 if (siteData.referrerpolicy) {
                     img.setAttribute("referrerpolicy", siteData.referrerpolicy);
                 }
@@ -10785,6 +10786,7 @@
                     fragment.appendChild(end);
                 }
             }
+            
             const MutationObserver_aff = () => {//观察者 MutationObserver事件
                 let slideIndex = null;
                 const ContentContainer = document.querySelector("body");
@@ -10796,26 +10798,29 @@
                 // 当观察到突变时执行的回调函数
                 const Callbacks = function (mutationsList) {
                     mutationsList.forEach(function (item, index) {
-                        // console.log("index: ", index, " - \n", item);
-                        if ("attributes" === item.type) {
-                            // console.log(item);
-                            if (
-                                item.target.className ===
-                                "fancybox-slide fancybox-slide--image fancybox-slide--current fancybox-slide--complete"
-                            ) {
-                                // console.log(' # ', item);
-                                openEvent(item);
-                            }
-                        }else if("childList"=== item.type){
-                            if (item.removedNodes.length>0 &&
-                                item.removedNodes[0].className ===
-                                "fancybox-container fancybox-is-zoomable fancybox-can-zoomIn fancybox-is-closing"
-                            ) {
-                                // console.log(' # ', item);
-                                // setTimeout(closeEvent, 1000);
-                                fun.closeEvent(slideIndex);
-                            }
+                    // console.log("index: ", index, " - \n", item);
+                    if ("attributes" === item.type) {
+                        // console.log(item);
+                        if (
+                        item.target.className ===
+                        "fancybox-slide fancybox-slide--image fancybox-slide--current fancybox-slide--complete"
+                        ) {
+                        console.log(" # ", item);
+                        openEvent(item);
+                        fun.scrollEvent(slideIndex);
                         }
+                    } else if ("childList" === item.type) {
+                        // console.log(item);
+                        if (
+                        item.removedNodes.length > 1 &&
+                        /fancybox/.test(item.removedNodes[1].className)
+                        ) {
+                        console.log(" # ", item);
+                        console.log("close - # " + slideIndex + " slide is closed!");
+                        // setTimeout(closeEvent, 1000);
+                        fun.scrollEvent(slideIndex);
+                        }
+                    }
                     });
                 };
                 // 创建一个链接到回调函数的观察者实例
@@ -10830,6 +10835,7 @@
                 }
             };
             MutationObserver_aff();
+
             const picPreload = async _srcArr => {
                 const loadImg = async (src, index) => {
                     await new Promise(resolve => {
@@ -11465,15 +11471,11 @@
             });
             unBlur();
         },
-        closeEvent: (slideIndex) => {
-            let isOpenAutoSlidingPosition = true;
-            console.log("close - # " + slideIndex + " slide is closed!");
+        scrollEvent: (slideIndex) => {
             let elementById = document.getElementById("imgLocation" + slideIndex);
             if (elementById) {
-                let behavior_ = "smooth";
-                if (isOpenAutoSlidingPosition) behavior_ = "auto";
                 elementById.scrollIntoView({
-                    block: "start",
+                    block: "center",
                     behavior: "smooth",
                     inline: "center",
                 });
