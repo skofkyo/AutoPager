@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.5.1
+// @version            1.5.2
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -536,7 +536,8 @@
         category: "nsfw1"
     }, {
         name: "卡卡美女网 www.kaka234.cc m.kaka234.cc",
-        reg: /https?:\/\/(www|m)\.kaka234\.cc\/HTM\/pic\/\w+\/\d+\/\d+\/\d+\.html/i,
+        reg: /https?:\/\/(www|m)\.kaka234\.cc\/HTM\/\w+\/\w+\/\d+\/\d+\/\d+\.html/i,
+        include: ".Title>h1,.PsBox",
         init: () => {
             let ele = fun.ge(".PsBox");
             if (ele) {
@@ -765,7 +766,7 @@
         button: [4],
         insertImg: [".sg_img", 2],
         customTitle: () => fun.geT("h1"),
-        css: "#divpsg,.tujia{display:none!important}",
+        css: "#divpsg,.tujia{display:none!important}@media screen and (max-width:780px){.sg_img img{min-height:unset!important}}",
         category: "nsfw1"
     }, {
         name: "Xiuren 秀人网 www.xiuren.org",
@@ -1300,7 +1301,7 @@
         css: "#bigImg{margin:0px!important}",
         category: "nsfw1"
     }, {
-        name: "930图片网 www.930tu.com m.930tu.com",
+        name: "930图片网 有分頁 www.930tu.com m.930tu.com",
         reg: /(www|m)\.930tu\.com\/\w+\/\w+\/\d+.html$/i,
         include: ".page a,a[title=Page]",
         init: () => {
@@ -1313,6 +1314,21 @@
         },
         button: [4],
         insertImg: [".pic-main,.pic-m", 1],
+        autoDownload: [0],
+        next: "//a[@class='pic-next']|//a[text()='下一组图']",
+        prev: "//a[@class='pic-prew']|//a[text()='上一组图']",
+        customTitle: () => fun.geT(".pic h1,.tit-m h1"),
+        css: ".pic .pic-main img{max-width:100%!important}",
+        category: "nsfw1"
+    }, {
+        name: "930图片网 無分頁 www.930tu.com m.930tu.com",
+        reg: /(www|m)\.930tu\.com\/\w+\/\w+\/\d+.html$/i,
+        include: "//p[img]",
+        imgs: ".pic-main img,.pic-m img",
+        button: [4],
+        insertImg: [
+            ["//p[img]", 1, "//p[img]"], 1
+        ],
         autoDownload: [0],
         next: "//a[@class='pic-next']|//a[text()='下一组图']",
         prev: "//a[@class='pic-prew']|//a[text()='上一组图']",
@@ -1806,7 +1822,7 @@
             return fun.getImg("#showimg img", max, 9);
         },
         button: [4],
-        insertImg: ["#showimg", 1],
+        insertImg: ["#showimg", 2],
         customTitle: () => fun.geT(".weizhi h1"),
         css: "@media only screen and (max-width:3840px){.content img{max-width:100%!important}}",
         category: "nsfw1"
@@ -1823,7 +1839,7 @@
             return fun.getImg('#showimg img', max, 9);
         },
         button: [4],
-        insertImg: ["#showimg", 1],
+        insertImg: ["#showimg", 2],
         customTitle: () => fun.geT(".weizhi h1"),
         css: "@media only screen and (max-width:3840px){.content img{max-width:100%!important}}",
         category: "nsfw1"
@@ -2068,7 +2084,9 @@
             return fun.getImg("#arcbox img.lazy", max, 6, ["thumb_600x900/", ""]);
         },
         button: [4],
-        insertImg: ["#arcbox", 1],
+        insertImg: [
+            ["#arcbox", 0, "//div[@id='arcbox']/p[img]"], 2
+        ],
         customTitle: () => fun.geT("h1>a"),
         css: "#arcbox img{max-width:100%!important;margin:10px auto!important;min-height:50px!important;min-width:50px!important}",
         category: "nsfw1"
@@ -2216,7 +2234,7 @@
         next: "//a[text()='上一组']",
         prev: 1,
         customTitle: () => fun.geT(".main-title"),
-        css: ".single .main-body img{max-width:100%!important}",
+        css: ".single .main-body img{max-width:100%!important}#showlast1{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "好女神网 www.haonvshen.com",
@@ -2384,7 +2402,7 @@
             return arr;
         },
         button: [4],
-        insertImg: ["#content", 1],
+        insertImg: ["#content", 2],
         autoDownload: [0],
         next: "#nextbtn>a",
         prev: "#prebtn>a",
@@ -2766,15 +2784,36 @@
         css: "#rtb,.float-ck-center-lt,#popupContact,#backgroundPopupp,.col-9>.col-12{display:none!important}",
         category: "nsfw2"
     }, {
+        name: "Anh VL 自動翻頁",
+        enable: 1,
+        reg: /^https:\/\/xem\.anhvl\.net\/(page\/\d+)?$/,
+        init: () => {
+            fun.remove("//div[div[a[@title='OnlyFans Videos']]] | //div[@id='tfads']");
+        },
+        autoPager: {
+            ele: "//div[@class='row space-ad'][1]/div[@class='col-6' or @class='col-5'][not(@id='tfads')]",
+            observer: "//div[@class='row space-ad'][1]/div[@class='col-6' or @class='col-5'][not(@id='tfads')]",
+            next: "a.next",
+            re: ".wp-pagenavi",
+            title: () => {
+                let t = `Page ${nextLink.match(/\d+$/)[0]}`;
+                return t;
+            },
+            history: 1
+        },
+        openInNewTab: ".space-ad a:not([target=_blank])",
+        css: ".autoPagerTitle{width:100%!important}#backgroundPopupp,#popupContact,.float-ck-center-lt,center[style*='z-index']{display:none!important}",
+        category: "autoPager"
+    }, {
         name: "Anh VL xem.anhvl.net",
         reg: /xem\.anhvl\.net/,
         icon: 0,
         key: 0,
-        css: "#backgroundPopupp,#popupContact,.float-ck-center-lt{display:none!important}",
+        css: "#backgroundPopupp,#popupContact,.float-ck-center-lt,center[style*='z-index']{display:none!important}",
         category: "nsfw2"
     }, {
-        name: "Phym18 phym18.org https://phym18.org/tag/%E1%BA%A3nh-sex",
-        reg: /phym18\.org\/anh\/[^/]+$/,
+        name: "Phym18 phym18.org https://phym18.org/tag/%E1%BA%A3nh-sex Bongda21h bongda21h.co https://bongda21h.co/anh-hot/",
+        reg: /phym18\.org\/anh\/[^/]+$|https:\/\/bongda21h\.co\/anh-hot\/[^\/]+\/$/,
         imgs: () => {
             try {
                 let url = location.href;
@@ -2791,7 +2830,41 @@
         },
         button: [4],
         insertImg: [".ndtruyen", 2],
-        css: "#wap_bottombanner,#backgroundPopupp,#popupContact{display:none!important}",
+        go: 1,
+        customTitle: () => fun.geT("h1.header-title,h1.title").replace(/\s?\(\d+\s?photos?\)|\s?\(\d+\s?photos?(\s?\+\s?\d+\s?videos?)\)/g, ""),
+        css: "#wap_bottombannerr,#wap_bottombanner,#backgroundPopupp,#popupContact,center[style*='z-index']{display:none!important}",
+        category: "nsfw2"
+    }, {
+        name: "Phym18 圖片分類自動翻頁",
+        enable: 1,
+        reg: /^https:\/\/phym18\.org\/tag\/[^n]+nh-sex/,
+        init: () => {
+            fun.remove("//div[div[a[div[text()='Free']]]]");
+        },
+        autoPager: {
+            ele: "div.item-list",
+            observer: "div.item",
+            next: "a.w-pagination-next",
+            re: ".w-pagination-wrapper",
+            lazySrc: "a[data-src]",
+            title: () => {
+                let t = `Page ${nextLink.match(/\d+$/)[0]}`;
+                return t;
+            },
+            aF: () => {
+                fun.remove("//div[div[a[div[text()='Free']]]]");
+            },
+            history: 1
+        },
+        openInNewTab: "div.item a:not([target=_blank])",
+        css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index']{display:none!important}",
+        category: "autoPager"
+    }, {
+        name: "Phym18 phym18.org bongda21h bongda21h.co",
+        reg: /phym18\.org|bongda21h\.co/,
+        icon: 0,
+        key: 0,
+        css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index']{display:none!important}",
         category: "nsfw2"
     }, {
         name: "Porn Pics www.pornpics.com",
@@ -3110,8 +3183,10 @@
         openInNewTab: ".date-outer a[href]",
         category: "autoPager"
     }, {
-        name: "Kemono https://kemono.party/fantia/user/17148/post/1633768 coomer.party",
-        reg: /(kemono\.party|kemono\.su|coomer\.party|coomer\.su)\/.+post/,
+        name: "Kemono https://kemono.su/fantia/user/17148/post/1633768 coomer.party",
+        reg: /(kemono\.party|kemono\.su|coomer\.party|coomer\.su)\/.+\/post/,
+        delay: 300,
+        include: "a.fileThumb.image-link",
         imgs: "a.fileThumb.image-link",
         button: [4],
         insertImg: [
@@ -8572,6 +8647,9 @@
             });
         },
         init: async () => {
+            if (typeof aboutBlank === "function") {
+                aboutBlank = () => {};
+            }
             siteJson = await siteData.xhr();
             debug("\n此頁JSON資料\n", siteJson);
             const addHtml = (url, text) => {
@@ -9342,6 +9420,13 @@
         );
     };
 
+    const hasTouchEvents = () => {
+        if (("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) {
+            return true;
+        }
+        return false;
+    };
+
     switch (language) {
         case "zh-TW":
             displayLanguage = {
@@ -9563,63 +9648,80 @@
     }
 
     const addJqueryLibrarys = async () => {
-        const jsdelivrLibrarys = [
-            "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
-            "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js",
-            "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
-        ];
-        const bootcdnLibrarys = [
-            "https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js",
-            "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js",
-            "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css"
-        ];
-        const check = await fetch(jsdelivrLibrarys[0]).then(res => res.status);
-        let librarysArr;
-        if (check == 200) {
-            librarysArr = jsdelivrLibrarys;
-        } else {
-            librarysArr = bootcdnLibrarys;
-        }
-        for (let i in librarysArr) {
-            if (librarysArr[i].includes(".min.js")) {
-                const script = document.createElement("script");
-                await fetch(librarysArr[i]);
-                script.src = librarysArr[i];
-                document.body.appendChild(script);
-            } else if (librarysArr[i].includes(".min.css")) {
-                const fancyBoxCssHtml = `<link href="${librarysArr[i]}" rel="stylesheet">`;
-                document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
+        try {
+            const jsdelivrLibrarys = [
+                "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
+                "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js",
+                "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
+            ];
+            const bootcdnLibrarys = [
+                "https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js",
+                "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js",
+                "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css"
+            ];
+            const check = await fetch(jsdelivrLibrarys[0]).then(res => res.status);
+            let librarysArr;
+            if (check == 200) {
+                librarysArr = jsdelivrLibrarys;
+            } else {
+                librarysArr = bootcdnLibrarys;
             }
+            for (let i in librarysArr) {
+                if (librarysArr[i].includes(".min.js")) {
+                    const script = document.createElement("script");
+                    await fetch(librarysArr[i]);
+                    script.src = librarysArr[i];
+                    document.body.appendChild(script);
+                } else if (librarysArr[i].includes(".min.css")) {
+                    const fancyBoxCssHtml = `<link href="${librarysArr[i]}" rel="stylesheet">`;
+                    document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
+                }
+            }
+        } catch (error) {
+            debug("\naddJqueryLibrarys() 注入函式庫失敗", error);
         }
     };
 
     const fancyboxErrorList = () => {
-        const list = [
-            "copymanga.site", //拷貝漫畫
-            "mangacopy.com"
-        ];
-        for (let i in list) {
-            if (location.host.includes(list[i]) === true) {
-                debug("\nfancybox無效，直接注入函示庫。");
-                return true;
+        if (!hasTouchEvents()) {
+            const list = [
+                "copymanga.site", //拷貝漫畫
+                "mangacopy.com"
+            ];
+            for (let i in list) {
+                if (location.host.includes(list[i]) === true) {
+                    debug("\nfancybox無效，直接注入函示庫。");
+                    return true;
+                }
             }
         }
         return false;
     };
 
     const fancyboxBlackList = () => {
-        const list = [
-            "51sex.vip", //51sex
-            "nudebird.biz", //Nude Bird
-            "cosplaytele.com", //Cosplaytele
-            "xlust.org", //XLUST.ORG
-            "www.xiuren.org", //Xiuren 秀人网
-            "www.zuixinhanman.com" //最新韩漫网M
-        ];
-        for (let i in list) {
-            if (location.host.includes(list[i]) === true) {
-                debug("\n已列入fancybox關閉的網站");
-                return true;
+        if (hasTouchEvents()) {
+            const list = [
+                "www.zuixinhanman.com" //最新韩漫网M
+            ];
+            for (let i in list) {
+                if (location.host.includes(list[i]) === true) {
+                    debug("\n已列入fancybox關閉的網站");
+                    return true;
+                }
+            }
+        } else {
+            const list = [
+                "51sex.vip", //51sex
+                "nudebird.biz", //Nude Bird
+                "cosplaytele.com", //Cosplaytele
+                "xlust.org", //XLUST.ORG
+                "www.xiuren.org" //Xiuren 秀人网
+            ];
+            for (let i in list) {
+                if (location.host.includes(list[i]) === true) {
+                    debug("\n已列入fancybox關閉的網站");
+                    return true;
+                }
             }
         }
         return false;
@@ -10879,7 +10981,9 @@
                         imgsNum = 0 - 1;
                     }
                 });
-                //$( ".fancybox-pic" ).fancybox();
+                [...fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage")].forEach(e => {
+                    e.style.display = "block";
+                });
             } else {
                 fun.show(displayLanguage.str_20);
             }
@@ -12200,8 +12304,10 @@
         let img2 = new Image();
         img2.id = "FullPictureLoadGoToFirstImage";
         img2.className = "FullPictureLoadFixedBtn";
+        img2.style.display = "none";
         img2.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA7BJREFUWEetl29olVUYwH/n3jvvGpp/WtNlIdoK1MJazBwO0/mlZqFgRCgGfZC7TTbwixqbMnPiHIIwmdd9MYiMhD4o6gqirenGsoF/MLfaahFz3a1Shlv7e9/3yHnnxXvv3vee96574P3wcp4/v/M8z3nOOQK3o67Oj2+0EMlWPKxEkg3Wp0YIQQiTLgQXCWc0UV4+4ca00Ao1HM3G8B0CuROYp5WfFhgGcQ5v+FMCFaFEOs4An1WlM+6vRIq9QIZLx/Fiowh5kvSJaj6uGrezYQ9QX7sEYV4A3pyl43i160jPNvbsG4ifmAlwquZVfDQieV7nfJE/3RJ5MGG7uFh1wT3CFFF24E70RCyAWrnH7NA5V0pH8gooW51r2Tp19wYHO1qROmIFYXryoiPxBEDlfCz9B13YlULd+s0EVq6JcdfQdZvytu/1EHCdp8Y3RmriCUDwWDVSVOgq1s55RMc1hJBHKfmkUulNA1hbzftbomp3Wnk8sEuIUbxGjtqi0wCnjwdBFjut3q3z5CIhzlC6v0Qw3eH+cWoyyTpPAmKYcMazgtM17wCNTk0iUc51Re8iHUWC+pozCAJ2DeL/OHcVCUmDIFjTgmRDPMDB3HzUl4qxq7mR87//MtOU4KpKQTfwUvTsgjl+QrtK8Qr9WeUGsG2gn02Xz9uJ9iiAYWBu9OwbmYtp36YOv9SM/8JTZH1ez5RpxhscsQWYP8fPnzsCZPh8MQph0+THv0MULFlqS9Y60M+6rGx8Hk/M/Nlf71B87Ts7HQtgRgqUZNkruZxYt/Fxp4JJ0+Cj5m/IeXoB1XkFtgCVHa10Dt2ndu0GcuYvtGR+fvAvO5uu0DV03yEFDkWopNVqtix70QrdFz2d9D4cYt+atQkBam//ZEFvXrqMCcPg2sA95zxaReiwDZ203AC4rhxrGyZoRHaGUgoARdpWHA+RQoDHrVh50BxG0RApBAhSeqDU9XEcgUgRwAhpRg67KwaTupAoiD2rX+dk/ibbOtvb3kz93Zv6GhTiECX7jyjBpK9k+Yufo+W9D22dvHXpK9oH/9IAiDYyxwr5oGoyFkD9ubyUfln4Lu+veDnG0de93exouqxz3kdaOE+FPiI4q2u5OqRKVr3G2y8st+x82/cHwc5bGDLRvVj0Ycgtia/lEayUP0xEG2nh7dErd45AZCY1T7MRhKjlmbHjkZzH50h/4M/ucfoQOEeacdhu1dEQeoCItPPzXCVenTj9SNmJ4BLeRS0EAlP6/QiPAMXOipDq4W0VAAAAAElFTkSuQmCC";
         img2.setAttribute("title", displayLanguage.str_62);
+
         img2.addEventListener("click", () => {
             goToImg("first");
         });
@@ -12209,20 +12315,13 @@
         let img3 = new Image();
         img3.id = "FullPictureLoadGoToLastImage";
         img3.className = "FullPictureLoadFixedBtn";
+        img3.style.display = "none";
         img3.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA6lJREFUWEfFl21IlWcYx3/3c46vayG1lq5i5FablrQFbon2oiOYzlgfgsY2gvrinCQEwzayklI69SVQPMdDH4KJMkZBoxf6kpkYVjK32FqgtiGbs8xczeF0O5477ucknZfnzaPUDc+n57ru/++67uu6XwROh9+fwNToRiRbECIbWAIsBQQwhGCIILcRfEcgtY3KykknUytn63GibjH/uw4CnwDz7cyf/B8D0YIrcIiyfUNWPuYA39Yk8iBlL1JWAfMcCkebjSPkcZIna9lZM2E0hzGAHrX7NMj8OIWj3a4jta1UVN2N/hEL0ODJwSXOg1xmJu4SgvLst3h/2XLd5OLvv+H75UempDTnFfxBgBJ2f/lTuFEkQCjybitx5dxaVMq2zJURYqd+7eXjtnPWCVMQQS03PBNPAdSaj6S02aU9b/ErXNnykaHQxrPf0HXvT7tVu07KxKbpmngK4Du6HykP2XlXrHqb43mFhmZ7ui7TeOsHuylAyDrKv6pWhiGAUKv1O6n2qjXvUJtbYChS3d3JsZs37AFgHNfU66pFQwBejxcod+I5RwAq9iY+31suqK9Pwj1+H3jx2QIwRiB1kcDrKQYuOBFXNnOXAV2xRNDoaUJQ9lwAJH6Bz3MFyQYzgPXpS0lyubg0OIDaZpxkIHN+Gp+uyCZB0zg/cIdrwybHgaBDLUEvsCIaICttIS1FH7B6wUv6r/5Hf1F1o4PstIWWXdD/90O+LiwmUXPpfgr6i2vtNPzcYxRjnwIYM2q/pvWb2fVGToRTIBjUoylIVydx7Oi8O8i6lzNwa1rEz/FAgFdb/Tz6L+aE/scQQKVueEcFL7gTnJaGrV3emRa+H7kXbacDGC7B5dLt5JtEaqsWZaAOqYxmLw9jM9BnWoTbX3uT5sKSmWoZ2h/u6UJ9MUMvQpM2VFtkff57lGWtmRWE//ZNKq9e0osxZuhtaLERzRbCUjxEU2K7FccL4UD8yVasOLxHfSA/M8v1TCEciIcdRkrVX5fBlH4cp84Wwpl49HGsVH1HapFin1XF2WXCobjBhUSpnqxJ5t/kduDdeCAci4PJlUypNh5LRwt2I/UXj+lQmTicW8DuVWt1m4ZbPezv7jRutfBZLC+l04bqWu7mgh2EMl+QlKx7jU4avjkiA3B0LZ92UZkQwTN2yzGDHWoGD5PpWVVNTCRVI8Ueq+6wgYjzaRY+q96i7gMg1ePU0b0RmIPHaXRooctrEZIP0chCkgH6p0bcz/PHF6yIkDG/FFMAAAAASUVORK5CYII=";
         img3.setAttribute("title", displayLanguage.str_63);
         img3.addEventListener("click", () => {
             goToImg("last");
         });
         document.body.appendChild(img3);
-    };
-
-
-    const hasTouchEvents = () => {
-        if (("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) {
-            return true;
-        }
-        return false;
     };
 
     const elementClick = ele => {
@@ -12281,7 +12380,7 @@
     <p><font color="black">當前網站 Full Picture Load 選項</font></p>
 </div>
 <div style="width: 100%;">
-    <p><font color="black">左下圖示 ( 0：關、1：開 ) PS:優先級別低於內置規則</font></p>
+    <p><font color="black">左下圖示按鈕 ( 0：關、1：開 ) PS:優先級別低於內置規則</font></p>
     <input id="FullPictureLoadOptionsIcon">
 </div>
 <div style="width: 100%;">
@@ -12453,6 +12552,7 @@
 
 #FullPictureLoad {
     bottom: 24px !important;
+    display: block !important;
 }
 
 #FullPictureLoadGoToLastImage {
@@ -12471,7 +12571,6 @@
     border-radius: unset !important;
     z-index: 2147483647 !important;
     opacity: 1 !important;
-    display: block !important;
 }
 
 .FullPictureLoadMsg {
