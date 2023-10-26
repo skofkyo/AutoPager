@@ -1,4 +1,4 @@
-2023/10/26 00:43
+2023/10/26 23:18
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -207,7 +207,7 @@ MEITU131
 *://www.1plq.com/*.html
 
 秀色女神
-*://m.xsnvshen.co/album/*
+*://*.xsnvshen.co/album/*
 
 BeautyLeg
 *://www.beautyleg6.com/*/*/*.html
@@ -409,7 +409,11 @@ Forum Girl
 *www.meimeimei.org/*/*/*.html
 
 Anh VL
-*://xem.anhvl.net/*/
+*://xem.anhvl.net/*
+
+
+
+
 
 美女秀
 *www.22mm.net/a/*.html
@@ -1010,7 +1014,7 @@ https://www.nuyet.com/gallery/*
 *://www.*tck.com/*.html
 *://www.1tu5.com/*.html
 *://www.1plq.com/*.html
-*://m.xsnvshen.co/album/*
+*://*.xsnvshen.co/album/*
 *://www.beautyleg6.com/*/*/*.html
 *://www.ikanins.com/*/
 *://www.dmmtu.com/*/*.html
@@ -1162,7 +1166,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.superbeautygirlx.com/*/*/*.html
 *://www.meimeimei.org/*/*/
 *www.meimeimei.org/*/*/*.html
-*://xem.anhvl.net/*/
+*://xem.anhvl.net/*
 *://www.dongojyousan.com/articles/*.html*
 *://www.qixianzi.com/*/*.html
 *://www.meinvku.org.cn/album/*
