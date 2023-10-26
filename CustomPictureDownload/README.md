@@ -574,7 +574,7 @@ imgs: async () => {
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/26 00:43</p>
+<p>2023/10/26 23:18</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單式瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1025,10 +1025,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xem.anhvl.net/">Anh VL</a></td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://phym18.org/tag/%E1%BA%A3nh-sex">Phym18</a></td>
+                <td>圖片分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://bongda21h.co/anh-hot/">Bongda21h</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1317,7 +1321,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://kemono.party/fantia/user/17148/post/1633768">Kemono</a></td>
+                <td><a href="https://kemono.su/fantia/user/17148/post/1633768">Kemono</a></td>
                 <td><a href="https://kemono.su/">kemono.su</a>，<a href="https://coomer.party/">coomer.party</a>，<a href="https://coomer.su/">coomer.su</a></td>
             </tr>
             <tr>
@@ -1824,7 +1828,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
-                <td>SPA網頁，建議新分頁開啟，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
+                <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
             </tr>
             <tr>
                 <td><a href="https://www.dgmanhua.com/">大古漫画</a></td>
