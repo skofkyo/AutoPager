@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.5.1
+// @version            1.5.2
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -10749,6 +10749,7 @@
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
                 img.className = "FullPictureLoadImage";
+                img.id = "imgLocation" + i;
                 if (siteData.referrerpolicy) {
                     img.setAttribute("referrerpolicy", siteData.referrerpolicy);
                 }
@@ -10784,6 +10785,51 @@
                     fragment.appendChild(end);
                 }
             }
+            const MutationObserver_aff = () => {//观察者 MutationObserver事件
+                let slideIndex = null;
+                const ContentContainer = document.querySelector("body");
+                const configObserver = {
+                    childList: true,
+                    subtree: true,
+                    attributeFilter: ["class"],
+                };
+                // 当观察到突变时执行的回调函数
+                const Callbacks = function (mutationsList) {
+                    mutationsList.forEach(function (item, index) {
+                        // console.log("index: ", index, " - \n", item);
+                        if ("attributes" === item.type) {
+                            // console.log(item);
+                            if (
+                                item.target.className ===
+                                "fancybox-slide fancybox-slide--image fancybox-slide--current fancybox-slide--complete"
+                            ) {
+                                // console.log(' # ', item);
+                                openEvent(item);
+                            }
+                        }else if("childList"=== item.type){
+                            if (item.removedNodes.length>0 &&
+                                item.removedNodes[0].className ===
+                                "fancybox-container fancybox-is-zoomable fancybox-can-zoomIn fancybox-is-closing"
+                            ) {
+                                // console.log(' # ', item);
+                                // setTimeout(closeEvent, 1000);
+                                fun.closeEvent(slideIndex);
+                            }
+                        }
+                    });
+                };
+                // 创建一个链接到回调函数的观察者实例
+                const Observer = new MutationObserver(Callbacks);
+                ContentContainer && Observer.observe(ContentContainer, configObserver);
+                function openEvent(item) {
+                    slideIndex =
+                        item.target.parentElement.parentElement.firstElementChild.firstElementChild.innerHTML - 1;
+                    if (slideIndex) {
+                        console.log("open - # " + slideIndex + " slide is open!");
+                    }
+                }
+            };
+            MutationObserver_aff();
             const picPreload = async _srcArr => {
                 const loadImg = async (src, index) => {
                     await new Promise(resolve => {
@@ -11418,6 +11464,22 @@
                 attributes: true
             });
             unBlur();
+        },
+        closeEvent: (slideIndex) => {
+            let isOpenAutoSlidingPosition = true;
+            console.log("close - # " + slideIndex + " slide is closed!");
+            let elementById = document.getElementById("imgLocation" + slideIndex);
+            if (elementById) {
+                let behavior_ = "smooth";
+                if (isOpenAutoSlidingPosition) behavior_ = "auto";
+                elementById.scrollIntoView({
+                    block: "start",
+                    behavior: "smooth",
+                    inline: "center",
+                });
+            } else {
+                console.error(" # ", "未定位id！");
+            }
         }
     };
 
