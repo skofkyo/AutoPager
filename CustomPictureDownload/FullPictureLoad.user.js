@@ -10745,7 +10745,7 @@
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
-                    a.id = "imgLocation" + i;
+                    a.id = "imgLocationOriginal" + i;
                 }
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
@@ -11472,7 +11472,20 @@
             unBlur();
         },
         scrollEvent: (slideIndex) => {
-            let elementById = document.getElementById("imgLocation" + slideIndex);
+            let modeName="Samll";
+            switch (viewMode) {
+                case 0: 
+                    modeName = "Original";
+                    break;
+                
+                case 1: 
+                    modeName = "Samll";
+                    break;
+                default:
+                    console.error("模式错误");
+                    break;
+            }
+            let elementById = document.getElementById(`imgLocation${modeName}` + slideIndex);
             if (elementById) {
                 elementById.scrollIntoView({
                     block: "center",
@@ -12075,11 +12088,12 @@
                 srcArr = srcArr1; //閱讀順序左至右
             }
             let blackList = fancyboxBlackList();
-            srcArr.forEach(e => {
+            srcArr.forEach((e,i) => {
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
                     a.dataset.fancybox = "FullPictureLoadImageSmall";
                     a.dataset.thumb = e;
+                    a.id = "imgLocationSamll" + i;
                     a.href = e;
                 }
                 let img = new Image();
