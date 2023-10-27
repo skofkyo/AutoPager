@@ -10847,10 +10847,12 @@
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
+                    a.id = "imgLocationOriginal" + i;
                 }
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
                 img.className = "FullPictureLoadImage";
+                
                 if (siteData.referrerpolicy) {
                     img.setAttribute("referrerpolicy", siteData.referrerpolicy);
                 }
@@ -10886,6 +10888,56 @@
                     fragment.appendChild(end);
                 }
             }
+            
+            const MutationObserver_aff = () => {//观察者 MutationObserver事件
+                let slideIndex = null;
+                const ContentContainer = document.querySelector("body");
+                const configObserver = {
+                    childList: true,
+                    subtree: true,
+                    attributeFilter: ["class"],
+                };
+                // 当观察到突变时执行的回调函数
+                const Callbacks = function (mutationsList) {
+                    mutationsList.forEach(function (item, index) {
+                    // console.log("index: ", index, " - \n", item);
+                    if ("attributes" === item.type) {
+                        // console.log(item);
+                        if (
+                        item.target.className ===
+                        "fancybox-slide fancybox-slide--image fancybox-slide--current fancybox-slide--complete"
+                        ) {
+                        console.log(" # ", item);
+                        openEvent(item);
+                        fun.scrollEvent(slideIndex);
+                        }
+                    } else if ("childList" === item.type) {
+                        // console.log(item);
+                        if (
+                        item.removedNodes.length > 1 &&
+                        /fancybox/.test(item.removedNodes[1].className)
+                        ) {
+                        console.log(" # ", item);
+                        console.log("close - # " + slideIndex + " slide is closed!");
+                        // setTimeout(closeEvent, 1000);
+                        fun.scrollEvent(slideIndex);
+                        }
+                    }
+                    });
+                };
+                // 创建一个链接到回调函数的观察者实例
+                const Observer = new MutationObserver(Callbacks);
+                ContentContainer && Observer.observe(ContentContainer, configObserver);
+                function openEvent(item) {
+                    slideIndex =
+                        item.target.parentElement.parentElement.firstElementChild.firstElementChild.innerHTML - 1;
+                    if (slideIndex) {
+                        console.log("open - # " + slideIndex + " slide is open!");
+                    }
+                }
+            };
+            MutationObserver_aff();
+
             const picPreload = async _srcArr => {
                 const loadImg = async (src, index) => {
                     await new Promise(resolve => {
@@ -11522,6 +11574,31 @@
                 attributes: true
             });
             unBlur();
+        },
+        scrollEvent: (slideIndex) => {
+            let modeName="Samll";
+            switch (viewMode) {
+                case 0: 
+                    modeName = "Original";
+                    break;
+                
+                case 1: 
+                    modeName = "Samll";
+                    break;
+                default:
+                    console.error("模式错误");
+                    break;
+            }
+            let elementById = document.getElementById(`imgLocation${modeName}` + slideIndex);
+            if (elementById) {
+                elementById.scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                    inline: "center",
+                });
+            } else {
+                console.error(" # ", "未定位id！");
+            }
         }
     };
 
@@ -12115,11 +12192,12 @@
                 srcArr = srcArr1; //閱讀順序左至右
             }
             let blackList = fancyboxBlackList();
-            srcArr.forEach(e => {
+            srcArr.forEach((e,i) => {
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
                     a.dataset.fancybox = "FullPictureLoadImageSmall";
                     a.dataset.thumb = e;
+                    a.id = "imgLocationSamll" + i;
                     a.href = e;
                 }
                 let img = new Image();
