@@ -1,4 +1,4 @@
-2023/10/26 23:18
+2023/10/29 01:54
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -544,6 +544,12 @@ Hentai Cosplay
 
 HotGirl World
 *://www.hotgirl.world/g/*.html/
+
+CosBlay
+*://cosblay.com/*.html
+
+風流雜誌
+*://trendszine.com/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1233,6 +1239,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://okhanman.com/index.php/chapter/*
 *://www.hentaicos.com/*/*.html
 *://www.hotgirl.world/g/*.html/
+*://cosblay.com/*.html
+*://trendszine.com/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
