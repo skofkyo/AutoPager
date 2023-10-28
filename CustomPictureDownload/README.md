@@ -1,7 +1,6 @@
 <h1>提醒：</h1>
 <p>2023/10/24</p>
 <p>1.5.0開始改動太多，使用低於1.5.0的版本升級後，如遇到任何問題請先手動重置設定，如左下圖示不見了，快捷鍵沒有反應，切換顯示按鈕沒反應等等...</p>
-<br>
 <p>紳士漫畫wnacg，由於新增的Fancybox功能的緣故，新的元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
 <pre>
 https://m.wnacg.com/photos-slide-aid-*.html
@@ -12,14 +11,10 @@ https://www.wnacg.com/photos-slide-aid-*.html
 51sex、Nude Bird、Cosplaytele、XLUST.ORG、Xiuren 秀人网、最新韩漫网M
 </pre>
 <h1>簡介：</h1>
-寫這個腳本的緣由是，想讓下載、複製鏈接不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。
-
-聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支援自定義規則方便重複使用，後續擴充規則更容易。
-
-用戶寫的規則請自行另外備份，規則只會寫死在腳本裡不會線上規則化，腳本更新就會覆蓋規則。
-
-如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。
-
+<p>寫這個腳本的緣由是，想讓下載、複製鏈接不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
+<p>聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支援自定義規則方便重複使用，後續擴充規則更容易。</p>
+<p>用戶寫的規則請自行另外備份，規則只會寫死在腳本裡不會線上規則化，腳本更新就會覆蓋規則。</p>
+<p>如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。</p>
 <h1>關於自動下載：</h1>
 當修改了腳本UI選項設定或腳本內的站點規則啟用了自動下載時，站點規則insertImg的自動插入圖片將無效，瀏覽器的下載設定需關閉下載前詢問儲存位置和設定好預設的下載路徑，全自動需要有NEXT做搭配，每個站點第一次啟用時需等待連續下載2~3次後，觸發瀏覽器詢問是否同意允許下載多個檔案，需同意後後續才能成功下載，並且讓分頁保持在前景運行不然壓縮進度會停住，可以開一個獨立視窗一個分頁用作下載用，最好的方式是拉兩個視窗一個佔1/3畫面掛下載一個佔3/2畫面瀏覽。
 
@@ -574,10 +569,10 @@ imgs: async () => {
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/26 23:18</p>
+<p>2023/10/29 01:54</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
-<p>陽春簡易的圖片清單式瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
+<p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
 <img src="https://i.imgur.com/XZSEU41.jpg">
 <img src="https://i.imgur.com/b9iN0X2.jpg">
@@ -658,8 +653,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgyw.in/">极品性感美女</a></td>
-                <td></td>
+                <td><a href="https://www.xgmn1.xyz/">极品性感美女</a></td>
+                <td><a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn03.cc/">爱看美女网</a></td>
@@ -980,6 +975,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://trendszine.com/">風流雜誌</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://cosblay.com/">CosBlay</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://inewgirl.com/">女神社</a></td>
                 <td><a href="https://nshens.com/">nshens.com</a>，<a href="https://lovens.cc/">lovens.cc</a>，VIP限定的沒有VIP帳號只會重複抓到第一頁的圖片</td>
             </tr>
@@ -1073,7 +1076,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.yeitu.com/meinv/">亿图全景图库</a></td>
-                <td><a href="https://www.yeitu.com/dongman/cosplay/">COSPLAY</a></td>
+                <td><a href="https://www.yeitu.com/dongman/cosplay/">COSPLAY</a>，<a href="https://m.yeitu.com/">m.yeitu.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.umei.cc/meinvtupian/">优美图库</a></td>
@@ -1081,7 +1084,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.3gbizhi.com/meinv">3G壁纸</a></td>
-                <td>China IP限定</td>
+                <td><a href="https://m.3gbizhi.com/">m.3gbizhi.com</a>，China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.enterdesk.com/">回车桌面</a></td>
@@ -1144,7 +1147,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://asiantolick.com/">Asian To Lick</a></td>
+                <td><a href="https://asiantolick.com/page/news">Asian To Lick</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1165,7 +1168,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://modelsexyth.com/">นางแบบคือลือ</a></td>
-                <td></td>
+                <td>需要透過uBlock Origin禁用javascript</td>
             </tr>
             <tr>
                 <td><a href="https://www.hotgirlpix.com/">Hot Girl Pix</a></td>
@@ -1201,7 +1204,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.simply-cosplay.com/galleries/new">Simply Cosplay</a></td>
-                <td>SAP，只支持galleries類別。</td>
+                <td>SPA網頁，只支持galleries類別。</td>
             </tr>
             <tr>
                 <td><a href="https://asiaon.top/">AsiaOnTop</a></td>
@@ -1233,7 +1236,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a></td>
+                <td><a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -1847,10 +1850,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>SPA網頁</td>
             </tr>
             <tr>
-                <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.colamanga.com/">COLAMANGA</a></td>
                 <td>方向鍵上下章，下載需先手動觸發全部載入圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
             </tr>
@@ -2133,6 +2132,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
+                <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.kuaikanmanhua.com/">快看漫画</a></td>
                 <td>預設關閉</td>
             </tr>
@@ -2179,8 +2182,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         </thead>
         <tbody>
             <tr>
-                <td>漫畫類 自動展開目錄</td>
-                <td></td>
+                <td>漫畫類</td>
+                <td>自動展開目錄</td>
             </tr>
             <tr>
                 <td>m.4khd.com</td>
