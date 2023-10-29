@@ -1,6 +1,10 @@
 <h1>提醒：</h1>
 <p>2023/10/24</p>
 <p>1.5.0開始改動太多，使用低於1.5.0的版本升級後，如遇到任何問題請先手動重置設定，如左下圖示不見了，快捷鍵沒有反應，切換顯示按鈕沒反應等等...</p>
+<p>如果嚴重到連選項設定都叫不出來，按F12 > 主控台(Console) > 下方輸入框 > 輸入下面這行代碼，然後Enter，重新載入頁面。</p>
+<pre>
+localStorage.removeItem("FullPictureLoadOptions");
+</pre>
 <p>紳士漫畫wnacg，由於新增的Fancybox功能的緣故，新的元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
 <pre>
 https://m.wnacg.com/photos-slide-aid-*.html
@@ -55,7 +59,7 @@ https://www.wnacg.com/photos-slide-aid-*.html
         return arr;
     },
     scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵6
-    button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]插入圖片後添加功能按鈕
+    button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]插入圖片也添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
@@ -569,7 +573,7 @@ imgs: async () => {
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/29 01:54</p>
+<p>2023/10/29 22:41</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1043,6 +1047,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.91tulu.com/">91图录</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://jingunav.info/index.php/arttype/109.html">人妻租借所</a></td>
                 <td></td>
             </tr>
@@ -1227,6 +1235,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://asupanpenyegar.com/">AsupanPenyegar</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://xlust.org/">XLUST.ORG</a></td>
                 <td></td>
             </tr>
@@ -1268,7 +1280,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a></td>
-                <td></td>
+                <td><a href="https://magazinejapanese5.blog.jp/">グラビア週刊誌 5</a>，<a href="https://magazinejapanese6.blog.jp/">グラビア週刊誌 6</a>，分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://eroyakuba.com/">エロ役場</a></td>
@@ -1284,6 +1296,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://reprint-kh.com/">復刻書林</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://amazon-love.com/">Love Asian Babes</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1528,8 +1544,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://cn.angirlz.com/">Sexyxbody</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Sexyxbody.txt">另同系列網站52個</a></td>
+                <td><a href="https://kawaiix.com/">KawaiiX</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Sexyxbody.txt">另同系列網站96個</a></td>
             </tr>
             <tr>
                 <td><a href="https://gogortrt.com/">gogo人体艺术</a></td>
