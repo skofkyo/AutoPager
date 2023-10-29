@@ -1,4 +1,4 @@
-2023/10/29 01:54
+2023/10/29 22:41
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -285,7 +285,11 @@ micmicunc
 *unc.micmicdoll.com*
 
 グラビア週刊誌 9
-*://gravurezasshi9.doorblog.jp/archives/*.html
+*gravurezasshi9.doorblog.jp*
+グラビア週刊誌 5
+*magazinejapanese5.blog.jp*
+グラビア週刊誌 6
+*magazinejapanese6.blog.jp*
 
 Kemono
 *://kemono.*/*/user/*/post/*
@@ -410,10 +414,6 @@ Forum Girl
 
 Anh VL
 *://xem.anhvl.net/*
-
-
-
-
 
 美女秀
 *www.22mm.net/a/*.html
@@ -550,6 +550,9 @@ CosBlay
 
 風流雜誌
 *://trendszine.com/*.html
+
+Love Asian Babes
+*amazon-love.com*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1161,7 +1164,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://foamgirl.net/*.html
 *://loxiu.com/post/*.html
 *://xher.net/index.php?/category/*
-*://gravurezasshi9.doorblog.jp/archives/*.html
+*gravurezasshi9.doorblog.jp*
+*magazinejapanese5.blog.jp*
+*magazinejapanese6.blog.jp*
 *://kenshin.hk/*/*/*/*/*
 *://www.xasiat.com/albums/*
 *://www.zhaotaotu.cc/thread-*.htm
