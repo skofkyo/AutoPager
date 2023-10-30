@@ -3,7 +3,7 @@
 // @name:en            Full picture load
 // @name:zh-CN         图片全载
 // @name:zh-TW         圖片全載
-// @version            1.5.4
+// @version            1.5.5
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1050,7 +1050,7 @@
                 return doc.title + ` - Page ${currentPageNum}`;
             }
         },
-        openInNewTab: ".headling_main_a",
+        openInNewTab: "a.headling_main_a:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "美图乐 www.meitule.net",
@@ -1160,8 +1160,8 @@
         css: ".code-block{display:none!important;}",
         category: "nsfw2"
     }, {
-        name: "CosBlay cosblay.com 風流雜誌 trendszine.com",
-        reg: /^https?:\/\/(cosblay\.com|trendszine\.com)\/\d+\.html/i,
+        name: "CosBlay cosblay.com 風流雜誌 trendszine.com 泰撲美圖 www.tiplogo.com",
+        reg: /^https?:\/\/(cosblay\.com|trendszine\.com|www\.tiplogo\.com)\/\d+\.html/i,
         imgs: () => {
             let max = fun.geT(".pgntn-page-pagination-block>*:last-child", 2) || 1;
             return fun.getImg(".entry-content img", max, 7);
@@ -1817,7 +1817,14 @@
                     await fun.delay(200);
                 }
             });
-            thumbnailsSrcArray = [...fun.gae("#piclist img[data-original]")].map(e => e.dataset.original);
+            if (options.fancybox == 1) {
+                fun.show("預覽縮圖轉DataURL中...", 0);
+                thumbnailsSrcArray = [...fun.gae("#piclist img[data-original]")].map(e => fun.xhr(e.dataset.original, "blob").then(blob => fun.blobToDataURL(blob)));
+                thumbnailsSrcArray = await Promise.all(thumbnailsSrcArray).then(arr => {
+                    fun.hide();
+                    return arr;
+                });
+            }
             return [...fun.gae("#piclist img[data-original]")].map(e => {
                 let arr = e.dataset.original.split("/");
                 arr[2] = arr[2].replace("imgs.diercun.com", "big.diercun.com");
@@ -1853,7 +1860,14 @@
                 }
                 fun.hide();
             }
-            thumbnailsSrcArray = [...fun.gae(".mtp img")].map(e => e.src);
+            if (options.fancybox == 1) {
+                fun.show("預覽縮圖轉DataURL中...", 0);
+                thumbnailsSrcArray = [...fun.gae(".mtp img")].map(e => fun.xhr(e.src, "blob").then(blob => fun.blobToDataURL(blob)));
+                thumbnailsSrcArray = await Promise.all(thumbnailsSrcArray).then(arr => {
+                    fun.hide();
+                    return arr;
+                });
+            }
             return [...fun.gae(".mtp img")].map(e => decodeURI(e.src.replace("/m", "/")));
         },
         insertImg: [
@@ -3122,6 +3136,7 @@
             history: 1,
             title: () => `Page ${fun.ge("li.current", doc).innerText}`
         },
+        openInNewTab: ".autopagerize_page_element a[href]:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "エロ役場 eroyakuba.com",
@@ -3285,7 +3300,7 @@
             ele: ".blog-posts",
             next: "a.blog-pager-older-link",
             http: "https",
-            observer: ".blog-posts",
+            observer: ".post.hentry",
             re: "#blog-pager",
             stop: () => {
                 let ele = fun.ge(".date-outer", doc);
@@ -3331,7 +3346,7 @@
                 return doc.title + ` - Page ${num}`;
             }
         },
-        openInNewTab: ".date-outer a[href]",
+        openInNewTab: ".date-outer a[href]:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "Kemono https://kemono.su/fantia/user/17148/post/1633768 coomer.party",
@@ -3722,7 +3737,7 @@
         category: "nsfw2"
     }, {
         name: "Models Vibe www.modelsvibe.com",
-        reg: /https?:\/\/www\.modelsvibe\.com\/[^/]+\/$/,
+        reg: /^https?:\/\/www\.modelsvibe\.com\/[^/]+\/$/,
         include: ".td-post-content img",
         init: () => {
             let ele = fun.ge("//p[br and not(contains(text(),'[ad_1]'))]");
@@ -3766,10 +3781,11 @@
         insertImg: [".td-post-content .tdb-block-inner", 2],
         go: 1,
         customTitle: () => fun.geT("h1.tdb-title-text"),
+        css: ".tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
         category: "nsfw1"
     }, {
         name: "Models Vibe www.modelsvibe.com 分類自動翻頁",
-        reg: /https:\/\/www\.modelsvibe\.com\/(albums\/.+)?(page\/\d+\/)?$/,
+        reg: /^https:\/\/www\.modelsvibe\.com\/(albums\/.+)?(page\/\d+\/)?$/,
         init: () => {
             if (/page\/\d+\//.test(location.pathname)) {
                 currentPageNum = parseInt(location.pathname.match(/\/page\/(\d+)/)[1]);
@@ -3779,7 +3795,7 @@
         },
         autoPager: {
             ele: ".td_flex_block:not(.td-flex-radius),.td_block_inner.tdb-block-inner",
-            observer: ".td_flex_block:not(.td-flex-radius),.td_block_inner.tdb-block-inner",
+            observer: ".td-cpt-post",
             next: () => {
                 let url = location.href.replace(/page\/\d+\/?/, "") + `page/${currentPageNum += 1}/`;
                 return url;
@@ -3803,7 +3819,13 @@
                 return doc.title.replace(" - Models Vibe", "").replace(/\s-\sPage\s\d+/, "") + ` - Page ${currentPageNum}`;
             }
         },
-        openInNewTab: ".td-module-thumb>a",
+        openInNewTab: ".td-module-thumb>a:not([target=_blank])",
+        css: ".tdi_60.td-a-rec{display:none!important;}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
+        category: "autoPager"
+    }, {
+        name: "Models Vibe www.modelsvibe.com 分類自動翻頁",
+        reg: /^https:\/\/www\.modelsvibe\.com\//,
+        css: ".tdi_60.td-a-rec{display:none!important;}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
         category: "autoPager"
     }, {
         name: "goddess247.com bestprettygirl.com",
@@ -8323,7 +8345,7 @@
         autoNext: true,
         prev: 1,
         customTitle: () => fun.title("在线", 1),
-        css: ".imgBox{margin-bottom:0px!important}.subNav{border-top:1px solid #dcdcde}",
+        css: ".imgBox{margin-bottom:0px!important}.subNav{border-top:1px solid #dcdcde}body{scrollbar-width:none;overflow-x:hidden;overflow-y:auto}",
         category: "comic"
     }, {
         name: "仙漫网 www.gaonaojin.com",
@@ -8422,6 +8444,7 @@
                 }).then(res => res.json());
                 debug("\n此頁JSON資料\n", siteJson);
             } catch (e) {}
+            fun.remove("//div[ins[@class='adsbygoogle']]");
         },
         imgs: async () => {
             await fun.waitEle(".touch-manipulation");
@@ -8435,7 +8458,8 @@
                 return [...fun.gae(".touch-manipulation img")];
             }
         },
-        //insertImg: [".touch-manipulation", 2],
+        button: [4],
+        insertImg: [".touch-manipulation", 2],
         autoDownload: [0],
         next: () => {
             let next = fun.ge("//a[button[text()='下一話' or text()='下一话']]");
@@ -9711,7 +9735,44 @@
                 str_60: "圖片縮放",
                 str_61: "取消縮放",
                 str_62: "前往第一張圖",
-                str_63: "前往最後一張圖"
+                str_63: "前往最後一張圖",
+                str_64: "即將開始自動下載!!!",
+                str_65: "已停止自動下載!!!",
+                str_66: "💬 反饋",
+                str_67: "設定",
+                str_68: "當前網站 Full Picture Load 選項",
+                str_69: "左下圖示按鈕 ( 0：關、1：開 ) PS:優先級別低於內置規則",
+                str_70: "最大下載線程數 ( 1 ~ 32 ) PS:優先級別低於內置規則",
+                str_71: "壓縮打包 ( 1：壓縮、0：不壓縮 (不能全自動下載) )",
+                str_72: "壓縮檔副檔名 ( zip 或 cbz )",
+                str_73: "自動下載 (1：開、0：關) ",
+                str_74: "快捷鍵 [ ctrl + . ] 開始或取消",
+                str_75: "自動下載倒數秒數 PS:優先級別低於內置規則",
+                str_76: "當前漫畫站規則 ( 0：維持關閉、1：啟用 )",
+                str_77: "移動裝置雙擊前往下一頁 ( 1：開、0：關 )",
+                str_78: "Fancybox燈箱功能 ( 1：開 (移動裝置雙擊下一頁會無效)、0：關 )",
+                str_79: "圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto",
+                str_80: "圖片並排模式顯示數量 ( 2 ~ 6 ) comic類固定為 ( 2 )",
+                str_81: "PS:comic類並排後為右至左的漫讀模式 hcomic類也設定為2將套用",
+                str_82: "取消 (Esc)",
+                str_83: "重置設定",
+                str_84: "保存設定",
+                str_85: "腳本選項(*)",
+                str_86: "切換模式(5)",
+                str_87: "比例縮放(-)",
+                str_88: "取消縮放(+)",
+                str_89: "暫停自動翻頁",
+                str_90: "啟用自動翻頁",
+                str_91: "初始化設定",
+                str_92: "原始模式",
+                str_93: "並排模式",
+                str_94: "返回開頭了",
+                str_95: "前往下一集",
+                str_96: "已是最後下一集",
+                str_97: "共",
+                str_98: "頁獲取出錯，建議反饋",
+                str_99: "重試第",
+                str_100: "次"
             };
             break;
         case "zh-CN":
@@ -9778,7 +9839,44 @@
                 str_60: "图片缩放",
                 str_61: "取消缩放",
                 str_62: "前往第一张图",
-                str_63: "前往最后一张图"
+                str_63: "前往最后一张图",
+                str_64: "即将开始自动下载!!!",
+                str_65: "已停止自动下载!!!",
+                str_66: "💬 反馈",
+                str_67: "设置",
+                str_68: "当前网站 Full Picture Load 选项",
+                str_69: "左下图标按钮 ( 0：关、1：开 ) PS:优先级别低于内置规则",
+                str_70: "最大下载线程数 ( 1 ~ 32 ) PS:优先级别低于内置规则",
+                str_71: "压缩打包 ( 1：压缩、0：不压缩 (不能全自动下载) )",
+                str_72: "压缩档文件扩展名 ( zip 或 cbz )",
+                str_73: "自动下载 (1：开、0：关) ",
+                str_74: "快捷键 [ ctrl + . ] 开始或取消",
+                str_75: "自动下载倒数秒数 PS:优先级别低于内置规则",
+                str_76: "当前漫画站规则 ( 0：维持关闭、1：启用 )",
+                str_77: "移动设备双击前往下一页 ( 1：开、0：关 )",
+                str_78: "Fancybox灯箱功能 ( 1：开 (移动设备双击下一页会无效)、0：关 )",
+                str_79: "图片缩放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto",
+                str_80: "图片并排模式显示数量 ( 2 ~ 6 ) comic类固定为 ( 2 )",
+                str_81: "PS:comic类并排后为右至左的漫读模式 hcomic类也设置为2将套用",
+                str_82: "取消 (Esc)",
+                str_83: "重置设置",
+                str_84: "保存设置",
+                str_85: "脚本选项(*)",
+                str_86: "切换模式(5)",
+                str_87: "比例缩放(-)",
+                str_88: "取消缩放(+)",
+                str_89: "暂停自动翻页",
+                str_90: "启用自动翻页",
+                str_91: "初始化设置",
+                str_92: "原始模式",
+                str_93: "并排模式",
+                str_94: "返回开头了",
+                str_95: "前往下一集",
+                str_96: "已是最后下一集",
+                str_97: "共",
+                str_98: "页获取出错，建议反馈",
+                str_99: "重试第",
+                str_100: "次"
             };
             break;
         default:
@@ -9845,7 +9943,44 @@
                 str_60: "Image zoom",
                 str_61: "Cancel zoom",
                 str_62: "Go to first image",
-                str_63: "Go to last image"
+                str_63: "Go to last image",
+                str_64: "Start automatic download!!!",
+                str_65: "Stop automatic download!!!",
+                str_66: "💬 Feedback",
+                str_67: "settings",
+                str_68: "Current website Full Picture Load Options",
+                str_69: "Lower left icon button ( 0：hide、1：show )",
+                str_70: "Max download thread ( 1 ~ 32 )",
+                str_71: "Compressed packaging ( 1：yes、0：no)",
+                str_72: "Compressed file extension ( zip or cbz )",
+                str_73: "Automatic download (1：open、0：off) ",
+                str_74: "shortcut key [ ctrl + . ] Start or cancel",
+                str_75: "Automatic download countdown seconds",
+                str_76: "Current Comic Site Rules ( 0：remain closed、1：open )",
+                str_77: "Double click on mobile device to go to next page ( 1：open、0：off )",
+                str_78: "Fancybox plugin ( 1：open、0：off )",
+                str_79: "Image zoom ratio ( 0 ~ 10 ) 10 = 100%、0 = auto",
+                str_80: "Number of pictures side by side ( 2 ~ 6 )",
+                str_81: "PS:Comic Category fixed to 2",
+                str_82: "Cancel (Esc)",
+                str_83: "reset",
+                str_84: "save",
+                str_85: "settings(*)",
+                str_86: "toggle(5)",
+                str_87: "zoom(-)",
+                str_88: "cancel(+)",
+                str_89: "Pause automatic page turning",
+                str_90: "Enable automatic page turning",
+                str_91: "Initialization settings",
+                str_92: "original mode",
+                str_93: "side-by-side mode",
+                str_94: "Back to the beginning",
+                str_95: "Go to next episode",
+                str_96: "It’s the last episode",
+                str_97: "have",
+                str_98: "page fetch error please feedback",
+                str_99: "Retry No.",
+                str_100: "bout"
             };
             break;
     }
@@ -9897,7 +10032,7 @@
                 }
             }
         } catch (error) {
-            debug("\naddJqueryLibrarys() 注入函式庫失敗", error);
+            console.error("\naddJqueryLibrarys() 注入函式庫失敗", error);
         }
     };
 
@@ -10007,7 +10142,7 @@
                 fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${maxPage}`, 0);
                 return htmlText;
             }).catch(error => {
-                debug(`\nfun.getImg() > fetch()出錯:\n${decodeURI(url)}`, error);
+                console.error(`\nfun.getImg() > fetch()出錯:\n${decodeURI(url)}`, error);
             });
             const resArr = [];
             resArr.push(html(siteUrl));
@@ -10115,7 +10250,7 @@
             if (fetchErrorArray.length > 0) {
                 debug(`\nfetchErrorArray\n`, fetchErrorArray);
                 setTimeout(() => {
-                    fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                    fun.show(`${displayLanguage.str_97}${fetchErrorArray.length}${displayLanguage.str_98}`, 5000);
                 }, 1500);
             }
             return imgsArray;
@@ -10169,7 +10304,7 @@
                     if (msg == 1) fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${maxPage}`, 0);
                     return htmlText;
                 }).catch(error => {
-                    debug(`\nfun.getImgO() > fetch()出錯:\n${decodeURI(url)}`, error);
+                    console.error(`\nfun.getImgO() > fetch()出錯:\n${decodeURI(url)}`, error);
                 });
             };
             const resArr = [];
@@ -10275,7 +10410,7 @@
             if (fetchErrorArray.length > 0) {
                 debug(`\nfetchErrorArray\n`, fetchErrorArray);
                 setTimeout(() => {
-                    fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                    fun.show(`${displayLanguage.str_97}${fetchErrorArray.length}${displayLanguage.str_98}`, 5000);
                 }, 1500);
             }
             return imgsArray;
@@ -10334,7 +10469,7 @@
                 });
                 if (showMsg == 1) fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${maxPage}`, 0);
             }).catch(error => {
-                debug(`\nfun.getImg() > fetch()出錯:\n${decodeURI(url)}`, error);
+                console.error(`\nfun.getImg() > fetch()出錯:\n${decodeURI(url)}`, error);
             });
             await fun.waitEle(img);
             [...fun.gae(img)].forEach(ele => {
@@ -10437,7 +10572,7 @@
                 links = [...fun.gae(link)];
                 linksNum = parseInt(links.length) + 1;
             } else {
-                debug("\nfun.getImgA() link參數錯誤");
+                console.error("\nfun.getImgA() link參數錯誤");
                 return;
             }
             debug("\nfun.getImgA() links", links);
@@ -10487,7 +10622,7 @@
                 const htmlText = decoder.decode(buffer);
                 return htmlText;
             }).catch(error => {
-                debug(`\nfun.getImgA fetch()出錯:\n${decodeURI(url)}`, error);
+                console.error(`\nfun.getImgA fetch()出錯:\n${decodeURI(url)}`, error);
             });
             const resArr = [];
             if (typeof link != "object") resArr.push(html(siteUrl));
@@ -10530,7 +10665,7 @@
                             */
                             debug("\nfun.getImgA() 單線程模式imgSrc", imgSrc);
                         } else {
-                            debug("\nfun.getImgA() 單線程模式出錯", imgs[p]);
+                            console.error("\nfun.getImgA() 單線程模式出錯", imgs[p]);
                             continue;
                         }
                         imgHtml += `<img class="FullPictureLoadImage" src="${imgSrc}">`;
@@ -10550,7 +10685,7 @@
                         if (check.ok) {
                             imgsArray.push(check.src);
                         } else {
-                            debug("\nfun.getImgA() PromiseAll出錯", imgs[p]);
+                            console.error("\nfun.getImgA() PromiseAll出錯", imgs[p]);
                             continue;
                         }
                     }
@@ -10560,7 +10695,7 @@
             if (fetchErrorArray.length > 0) {
                 debug(`\nfetchErrorArray\n`, fetchErrorArray);
                 setTimeout(() => {
-                    fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                    fun.show(`${displayLanguage.str_97}${fetchErrorArray.length}${displayLanguage.str_98}`, 5000);
                 }, 1500);
             }
             return imgsArray;
@@ -10652,7 +10787,7 @@
                                     });
                                     break;
                                 } else {
-                                    fun.show(`${res.status}重試第${retryNum += 1}次`);
+                                    fun.show(`${res.status}${displayLanguage.str_99}${retryNum += 1}${displayLanguage.str_100}`);
                                     await fun.delay(3000, 0);
                                 }
                                 if (check >= 10) {
@@ -10705,7 +10840,7 @@
                                 try {
                                     currentPageEles[i].outerHTML = nextPageEles[i].outerHTML;
                                 } catch (error) {
-                                    debug("\nfun.getNP() 替換頁碼調錯誤\n", error);
+                                    console.error("\nfun.getNP() 替換頁碼調錯誤\n", error);
                                 }
                             }
                         }
@@ -10766,6 +10901,21 @@
                 return;
             }
         },
+        toggleAutoPager: () => {
+            if (autoPager === true) {
+                autoPager = false;
+                fun.show(displayLanguage.str_89);
+                [...fun.gae(".autoPagerTitle")].forEach(e => {
+                    e.classList.add("off");
+                });
+            } else {
+                autoPager = true;
+                fun.show(displayLanguage.str_90);
+                [...fun.gae(".autoPagerTitle")].forEach(e => {
+                    e.classList.remove("off");
+                });
+            }
+        },
         autoPager: async () => {
             let url = await fun.getNextLink();
             if (!url) {
@@ -10789,7 +10939,7 @@
                 try {
                     check = await siteData.autoPager.stop();
                 } catch (error) {
-                    debug("\nsiteData.autoPager.stop() 函式錯誤\n", error);
+                    console.error("\nsiteData.autoPager.stop() 函式錯誤\n", error);
                     check = false;
                 }
                 if (check) {
@@ -10856,7 +11006,7 @@
                                 }
                             }
                         } catch (error) {
-                            debug("\nsiteData.autoPager.title() 函式錯誤\n", error);
+                            console.error("\nsiteData.autoPager.title() 函式錯誤\n", error);
                         }
                     }
                     if (add) {
@@ -10928,7 +11078,7 @@
         },
         nextObserver: new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && autoPager) {
                     observer.unobserve(entry.target);
                     fun.autoPager();
                 }
@@ -10948,7 +11098,7 @@
                         return null;
                     }
                 } catch (error) {
-                    debug("\nfun.getNextLink() ERROR\n", error);
+                    console.error("\nfun.getNextLink() ERROR\n", error);
                     return null;
                 }
                 nextLink = nextEle.href;
@@ -10977,6 +11127,9 @@
             a.href = url
             a.innerText = title;
             div.appendChild(a);
+            $(div).on("click", () => {
+                fun.toggleAutoPager();
+            });
             return div;
         },
         addLoading: () => {
@@ -11062,7 +11215,7 @@
                 if (fetchErrorArray.length > 0) {
                     debug(`\nfetchErrorArray\n`, fetchErrorArray);
                     setTimeout(() => {
-                        fun.show(`共${fetchErrorArray.length}頁獲取出錯，建議反饋`, 5000);
+                        fun.show(`${displayLanguage.str_97}${fetchErrorArray.length}${displayLanguage.str_98}`, 5000);
                     }, 1500);
                 }
             });
@@ -11074,7 +11227,7 @@
                 if (check.ok) {
                     srcArr.push(check.src);
                 } else {
-                    debug("\nfun.insertImg(imgsArray) 格式錯誤！", imgsArray[i]);
+                    console.error("\nfun.insertImg(imgsArray) 格式錯誤！", imgsArray[i]);
                     continue;
                 }
             }
@@ -11095,7 +11248,7 @@
                 btn0.id = "FullPictureLoadOptionsBtn";
                 btn0.style.width = width;
                 btn0.style.height = "24px";
-                btn0.innerText = "腳本選項(*)";
+                btn0.innerText = displayLanguage.str_85;
                 $(btn0).on("click", (event) => {
                     event.preventDefault();
                     $("#FullPictureLoadOptions").removeAttr("style");
@@ -11105,7 +11258,7 @@
                 btn1.id = "FullPictureLoadToggleImgModeBtn";
                 btn1.style.width = width;
                 btn1.style.height = "24px";
-                btn1.innerText = "切換模式(5)";
+                btn1.innerText = displayLanguage.str_86;
                 $(btn1).on("click", (event) => {
                     event.preventDefault();
                     toggleImgMode();
@@ -11115,7 +11268,7 @@
                 btn2.id = "FullPictureLoadToggleZoomeBtn";
                 btn2.style.width = width;
                 btn2.style.height = "24px";
-                btn2.innerText = "比例縮放(-)";
+                btn2.innerText = displayLanguage.str_87;
                 $(btn2).on("click", (event) => {
                     event.preventDefault();
                     toggleZoom();
@@ -11125,7 +11278,7 @@
                 btn3.id = "FullPictureLoadCancelZoomBtn";
                 btn3.style.width = width;
                 btn3.style.height = "24px";
-                btn3.innerText = "取消縮放(+)";
+                btn3.innerText = displayLanguage.str_88;
                 $(btn3).on("click", (event) => {
                     event.preventDefault();
                     cancelZoom();
@@ -11286,37 +11439,39 @@
                     picPreload(srcArr);
                 }
                 let thisEle;
-                if (typeof ele == "object") {
-                    thisEle = fun.ge(ele[0]);
-                    if (ele[1] == 0) {
+                try {
+                    if (typeof ele == "object") {
+                        thisEle = fun.ge(ele[0]);
+                        if (ele[1] == 0) {
+                            thisEle.appendChild(fragment);
+                            thisEle.style.textAlign = "center";
+                            thisEle.style.display = "block";
+                        } else if (ele[1] == 1) {
+                            thisEle.parentNode.insertBefore(fragment, thisEle);
+                            thisEle.parentNode.style.textAlign = "center";
+                            thisEle.parentNode.style.display = "block";
+                        } else if (ele[1] == 2) {
+                            thisEle.parentNode.insertBefore(fragment, thisEle.nextSibling);
+                            thisEle.parentNode.style.textAlign = "center";
+                            thisEle.parentNode.style.display = "block";
+                        }
+                        if (typeof ele[2] != "undefined") {
+                            fun.remove(ele[2]);
+                        }
+                        if (siteData.msg != 0 && siteData.category != "comic") fun.show(displayLanguage.str_18);
+                        if (siteData.go == 1) goToNo1Img();
+                    } else if (typeof ele == "string") {
+                        thisEle = fun.ge(ele);
+                        thisEle.innerHTML = "";
                         thisEle.appendChild(fragment);
                         thisEle.style.textAlign = "center";
                         thisEle.style.display = "block";
-                    } else if (ele[1] == 1) {
-                        thisEle.parentNode.insertBefore(fragment, thisEle);
-                        thisEle.parentNode.style.textAlign = "center";
-                        thisEle.parentNode.style.display = "block";
-                    } else if (ele[1] == 2) {
-                        thisEle.parentNode.insertBefore(fragment, thisEle.nextSibling);
-                        thisEle.parentNode.style.textAlign = "center";
-                        thisEle.parentNode.style.display = "block";
+                        if (siteData.msg != 0 && siteData.category != "comic") fun.show(displayLanguage.str_18);
+                        if (siteData.go == 1) goToNo1Img();
                     }
-                    if (typeof ele[2] != "undefined") {
-                        fun.remove(ele[2]);
-                    }
-                    if (siteData.msg != 0 && siteData.category != "comic") fun.show(displayLanguage.str_18);
-                    if (siteData.go == 1) goToNo1Img();
-                } else if (typeof ele == "string") {
-                    thisEle = fun.ge(ele);
-                    thisEle.innerHTML = "";
-                    thisEle.appendChild(fragment);
-                    thisEle.style.textAlign = "center";
-                    thisEle.style.display = "block";
-                    if (siteData.msg != 0 && siteData.category != "comic") fun.show(displayLanguage.str_18);
-                    if (siteData.go == 1) goToNo1Img();
-                } else {
+                } catch (error) {
                     fun.show(displayLanguage.str_19, 3000);
-                    debug("\nfun.insertImg() ele參數錯誤，或用來定位插入的元素不存在。");
+                    console.error("\nfun.insertImg() ele參數錯誤，或用來定位插入的元素不存在。", error);
                     return;
                 }
                 let imgs = [...fun.gae(".FullPictureLoadImage:not(.small)")];
@@ -11339,7 +11494,7 @@
                             } catch (e) {
                                 imgsNum = 0;
                                 imgs[0].scrollIntoView();
-                                fun.show("返回開頭了");
+                                fun.show(displayLanguage.str_94);
                             }
                         }
                     } else {
@@ -11380,7 +11535,7 @@
                     if (check.ok) {
                         imgSrcArray.push(check.src);
                     } else {
-                        debug("\nfun.immediateInsertImg() imgsArray 格式錯誤！", imgs[i]);
+                        console.error("\nfun.immediateInsertImg() imgsArray 格式錯誤！", imgs[i]);
                         continue;
                     }
                 }
@@ -11425,8 +11580,8 @@
                 } else if (mode == 3) {
                     return fun.ge(ele).previousElementSibling.previousElementSibling.innerText;
                 }
-            } catch (e) {
-                debug("\nfun.geT() ERROR\n", e);
+            } catch (error) {
+                debug("\nfun.geT() ERROR\n", error);
                 return null;
             }
         },
@@ -11696,7 +11851,7 @@
                                 });
                                 break;
                             } else {
-                                fun.show(`${res.status}重試第${retryNum += 1}次`);
+                                fun.show(`${res.status}${displayLanguage.str_99}${retryNum += 1}${displayLanguage.str_100}`);
                                 await fun.delay(3000, 0);
                             }
                             if (check >= 10) {
@@ -12024,7 +12179,7 @@
                     errorLog: error
                 });
                 getDataMsg(displayLanguage.str_26, picNum, imgsNum);
-                debug(`Fetch_API_GetData() Error: ${error}`);
+                console.error(`Fetch_API_GetData() Error: ${error}`);
             });
         })
     };
@@ -12083,7 +12238,7 @@
                         errorLog: error
                     });
                     getDataMsg(displayLanguage.str_26, picNum, imgsNum);
-                    debug(`GM_XHR_GetData() Error: ${error}`);
+                    console.error(`GM_XHR_GetData() Error: ${error}`);
                 }
             });
         });
@@ -12180,7 +12335,7 @@
                 if (check.ok) {
                     return check.src;
                 } else {
-                    debug("\nimgZipDownload() imgs 格式錯誤！", img);
+                    console.error("\nimgZipDownload() imgs 格式錯誤！", img);
                     return null;
                 }
             }).filter(item => item);
@@ -12252,7 +12407,7 @@
                             if (/^image/.test(type)) {
                                 ex = "jpg";
                             } else {
-                                debug("\nimgZipDownload() PromiseAll blob資料格式錯誤", blobDataArray);
+                                console.error("\nimgZipDownload() PromiseAll blob資料格式錯誤", blobDataArray);
                                 fun.show(displayLanguage.str_30, 0);
                                 return;
                             }
@@ -12367,7 +12522,7 @@
                 if (check.ok) {
                     imgSrc = check.src;
                 } else {
-                    debug(`\ncopyImgSrcText() imgs[${i}] 格式錯誤！`, imgs[i]);
+                    console.error(`\ncopyImgSrcText() imgs[${i}] 格式錯誤！`, imgs[i]);
                     continue;
                 }
                 imgSrcArray.push(imgSrc);
@@ -12512,7 +12667,7 @@
                     }
                 });
                 viewMode = 1;
-                fun.show("並排模式");
+                fun.show(displayLanguage.str_93);
                 return;
             }
             let width;
@@ -12617,7 +12772,7 @@
                 }
             });
             viewMode = 1;
-            fun.show("並排模式");
+            fun.show(displayLanguage.str_93);
             let imgs = [...gae("#FullPictureLoadImgBox>div")];
             let imgsNum = 0;
             if (imgs[0].nextSibling && siteData.category == "comic") {
@@ -12675,27 +12830,27 @@
                                 if (typeof siteData.next === "string") {
                                     let next = fun.ge(siteData.next);
                                     if (next) {
-                                        fun.show("前往下一集", 3000);
+                                        fun.show(displayLanguage.str_95, 3000);
                                         //next.click();
                                         elementClick(next);
                                     } else {
                                         imgsNum = 0 - column;
-                                        fun.show("已是最後下一集", 3000);
+                                        fun.show(displayLanguage.str_96, 3000);
                                     }
                                 } else if (typeof siteData.next === "function") {
                                     let next = await siteData.next();
                                     if (next) {
-                                        fun.show("前往下一集", 3000);
+                                        fun.show(displayLanguage.str_95, 3000);
                                         location.href = next;
                                     } else {
                                         imgsNum = 0;
-                                        fun.show("已是最後下一集", 3000);
+                                        fun.show(displayLanguage.str_96, 3000);
                                     }
                                 }
                             } else {
                                 imgsNum = 0;
                                 imgs[0].scrollIntoView();
-                                fun.show("返回開頭了");
+                                fun.show(displayLanguage.str_94);
                             }
                         }
                     }
@@ -12712,7 +12867,7 @@
                 });
             }
             viewMode = 0;
-            fun.show("原始模式");
+            fun.show(displayLanguage.str_92);
         }
     };
 
@@ -12830,56 +12985,56 @@
     FullPictureLoadOptionsMain.style.display = "none";
     const FullPictureLoadOptionsMainHtmlSrt = `
 <div style="width: 100%;">
-    <p><font color="black">當前網站 Full Picture Load 選項</font></p>
+    <p><font color="black">${displayLanguage.str_68}</font></p>
 </div>
 <div style="width: 100%;">
-    <p><font color="black">左下圖示按鈕 ( 0：關、1：開 ) PS:優先級別低於內置規則</font></p>
+    <p><font color="black">${displayLanguage.str_69}</font></p>
     <input id="FullPictureLoadOptionsIcon">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">最大下載線程數 ( 1 ~ 32 ) PS:優先級別低於內置規則</font></p>
+    <p><font color="black">${displayLanguage.str_70}</font></p>
     <input id="FullPictureLoadOptionsThreading">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">壓縮打包 ( 1：壓縮、0：不壓縮 (不能全自動下載) )</font></p>
+    <p><font color="black">${displayLanguage.str_71}</font></p>
     <input id="FullPictureLoadOptionsZip">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">壓縮檔副檔名 ( zip 或 cbz )</font></p>
+    <p><font color="black">${displayLanguage.str_72}</font></p>
     <input id="FullPictureLoadOptionsExtension">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">自動下載 (1：開、0：關) </font><font color="red">快捷鍵 [ ctrl + . ] 開始或取消</font></p>
+    <p><font color="black">${displayLanguage.str_73}</font><font color="red">${displayLanguage.str_74}</font></p>
     <input id="FullPictureLoadOptionsAutoDownload">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">自動下載倒數秒數 PS:優先級別低於內置規則</font></p>
+    <p><font color="black">${displayLanguage.str_75}</font></p>
     <input id="FullPictureLoadOptionsCountdown">
 </div>
 <div style="width: 100%; display: none;">
-    <p><font color="black">當前漫畫站規則 ( 0：維持關閉、1：啟用 )</font></p>
+    <p><font color="black">${displayLanguage.str_76}</font></p>
     <input id="FullPictureLoadOptionsComic">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">移動裝置雙擊前往下一頁 ( 1：開、0：關 )</font></p>
+    <p><font color="black">${displayLanguage.str_77}</font></p>
     <input id="FullPictureLoadOptionsDouble">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">Fancybox燈箱功能 ( 1：開 (移動裝置雙擊下一頁會無效)、0：關 )</font></p>
+    <p><font color="black">${displayLanguage.str_78}</font></p>
     <input id="FullPictureLoadOptionsFancybox">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto</font></p>
+    <p><font color="black">${displayLanguage.str_79}</font></p>
     <input id="FullPictureLoadOptionsZoom">
 </div>
 <div style="width: 100%;">
-    <p><font color="black">圖片並排模式顯示數量 ( 2 ~ 6 ) comic類固定為 ( 2 )</font></p>
+    <p><font color="black">${displayLanguage.str_80}</font></p>
     <input id="FullPictureLoadOptionsColumn">
-    <p><font color="black">PS:comic類並排後為右至左的漫讀模式 hcomic類也設定為2將套用</font></p>
+    <p><font color="black">${displayLanguage.str_81}</font></p>
 </div>
-<button id="FullPictureLoadOptionsCancelBtn"><font color="black">取消 (Esc)</font></button>
-<button id="FullPictureLoadOptionsResetBtn"><font color="black">重置設定</font></button>
-<button id="FullPictureLoadOptionsSaveBtn"><font color="black">保存設定</font></button>
+<button id="FullPictureLoadOptionsCancelBtn"><font color="black">${displayLanguage.str_82}</font></button>
+<button id="FullPictureLoadOptionsResetBtn"><font color="black">${displayLanguage.str_83}</font></button>
+<button id="FullPictureLoadOptionsSaveBtn"><font color="black">${displayLanguage.str_84}</font></button>
 `;
     FullPictureLoadOptionsMain.innerHTML = FullPictureLoadOptionsMainHtmlSrt;
     document.body.appendChild(FullPictureLoadOptionsMain);
@@ -13131,10 +13286,23 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
     border-radius: 5px;
 }
+.autoPagerTitle.off {
+    color: white;
+    border: 1px solid #0e0e0e;
+    background-color: #0f0f0f;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#9f9f9f), to(#0f0f0f));
+    background: -moz-linear-gradient(top, #9f9f9f, #0f0f0f);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    border-radius: 5px;
+}
 
 .autoPagerTitle a:-webkit-any-link {
     font-family: Arial, sans-serif !important;
     color: black;
+}
+
+.autoPagerTitle.off a:-webkit-any-link {
+    color: white;
 }
 
 .autoPagerLoading {
@@ -13439,6 +13607,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
                 } else {
                     const callback = async () => {
                         if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - (siteData.autoPager.bottom || 1000)) {
+                            if (!autoPager) return;
                             document.removeEventListener("scroll", callback);
                             if (autoPager) {
                                 await fun.autoPager();
@@ -13449,6 +13618,9 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
                     };
                     document.addEventListener("scroll", callback);
                 }
+                document.addEventListener("dblclick", () => {
+                    fun.toggleAutoPager();
+                });
             }
             let openInNewTab = customData[i].openInNewTab;
             if (openInNewTab) {
@@ -13500,12 +13672,12 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
         //debug("\n圖片全載開啟了GM選單?\n", showOptions);
         const registerMenu = () => {
             try {
-                GM_registerMenuCommand("設定", () => {
+                GM_registerMenuCommand(displayLanguage.str_67, () => {
                     $("#FullPictureLoadOptions").removeAttr("style");
                 });
             } catch (e) {
                 try {
-                    GM.registerMenuCommand("設定", () => {
+                    GM.registerMenuCommand(displayLanguage.str_67, () => {
                         $("#FullPictureLoadOptions").removeAttr("style");
                     });
                 } catch (e) {}
@@ -13533,7 +13705,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
             }
             if (event.ctrlKey && event.key == ".") {
                 if (options.autoDownload == 0) {
-                    fun.show("即將開始自動下載!!!", 0);
+                    fun.show(displayLanguage.str_64, 0);
                     options.autoDownload = 1;
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
@@ -13548,7 +13720,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
                     for (let i = 0; i <= endTid; i++) {
                         clearTimeout(i);
                     }
-                    fun.show("已停止自動下載!!!", 0);
+                    fun.show(displayLanguage.str_65, 0);
                     location.reload();
                 }
             }
@@ -13579,12 +13751,12 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     debug("\n最終options物件\n", options);
 
     try {
-        GM_registerMenuCommand("💬 反饋", () => {
+        GM_registerMenuCommand(displayLanguage.str_66, () => {
             _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
         });
     } catch (e) {
         try {
-            GM.registerMenuCommand("💬 反饋", () => {
+            GM.registerMenuCommand(displayLanguage.str_66, () => {
                 _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
             });
         } catch (e) {}
@@ -13635,7 +13807,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
                         if (ge("#FullPictureLoadOptions:not([style])")) {
                             return;
                         }
-                        fun.show("初始化設定");
+                        fun.show(displayLanguage.str_91);
                         localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
                         setTimeout(() => {
                             location.reload();
