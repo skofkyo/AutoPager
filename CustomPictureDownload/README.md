@@ -15,7 +15,7 @@ https://www.wnacg.com/photos-slide-aid-*.html
 51sex、Nude Bird、Cosplaytele、XLUST.ORG、Xiuren 秀人网、最新韩漫网M
 </pre>
 <h1>簡介：</h1>
-<p>寫這個腳本的緣由是，想讓下載、複製鏈接不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
+<p>寫這個腳本的緣由是，想讓下載、複製鏈結不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
 <p>聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支援自定義規則方便重複使用，後續擴充規則更容易。</p>
 <p>用戶寫的規則請自行另外備份，規則只會寫死在腳本裡不會線上規則化，腳本更新就會覆蓋規則。</p>
 <p>如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。</p>
@@ -150,8 +150,9 @@ https://www.wnacg.com/photos-slide-aid-*.html
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
-<p>簡易實現自動翻頁功能，需要動態加載的大多都翻不了，無法暫停。</p>
-<p>輔助的實驗性功能，請忽略，有自動翻頁需求請使用東方永頁機。</p>
+<p>簡易實現自動翻頁功能，圖片全載的實驗性輔助功能，需要動態加載的大多都翻不了。</p>
+<p>點擊標題分隔條和雙擊頁面空白處，暫停或啟用自動翻頁。</p>
+<p>需要更高級的自動翻頁功能請使用東方永頁機。</p>
 <pre>
 變量doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
 舉例選取元素
@@ -980,11 +981,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://trendszine.com/">風流雜誌</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://cosblay.com/">CosBlay</a></td>
-                <td></td>
+                <td><a href="https:/www.tiplogo.com/">泰撲美圖</a>，<a href="https://cosblay.com/">CosBlay</a></td>
             </tr>
             <tr>
                 <td><a href="http://inewgirl.com/">女神社</a></td>
@@ -1957,7 +1954,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://godamanga.com/">GODA漫畫</a></td>
                 <td><a href="https://cn.godamanga.site/">cn.godamanga.site</a>，<a href="https://cocomanga.org/">cocomanga.org</a>，<a href="https://nav.telltome.net/">发布页
-</a>，預設關閉，插入圖片後元素會被重置，只有下載功能。</td>
+</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://baozimh.org/">包子漫畫</a></td>
