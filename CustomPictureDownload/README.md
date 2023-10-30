@@ -981,7 +981,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://trendszine.com/">風流雜誌</a></td>
-                <td><a href="https:/www.tiplogo.com/">泰撲美圖</a>，<a href="https://cosblay.com/">CosBlay</a></td>
+                <td><a href="https://www.tiplogo.com/">泰撲美圖</a>，<a href="https://cosblay.com/">CosBlay</a></td>
             </tr>
             <tr>
                 <td><a href="http://inewgirl.com/">女神社</a></td>
