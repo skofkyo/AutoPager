@@ -1,4 +1,4 @@
-2023/10/29 22:41
+2023/10/31 04:22
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -176,7 +176,7 @@ COSPLAY ZIP
 *://*.yeitu.com/*/*/*.html
 
 优美图库
-*://*.umei.cc/meinvtupian/*/*.htm
+*://*.umei.cc/meinvtupian/*/*.htm*
 
 MEITU131
 *://www.meitu131.net/meinv/*/
@@ -551,8 +551,14 @@ CosBlay
 風流雜誌
 *://trendszine.com/*.html
 
+泰撲美圖
+*://www.tiplogo.com/*.html
+
 Love Asian Babes
 *amazon-love.com*
+
+Byoru
+*://byoru.net/*/
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -940,6 +946,9 @@ http://www.17fuman.com/*/*/*.html
 漫画台閱讀
 manhuatai.org/manhua/*/*.html
 
+哈哈漫画
+*://www.hahacomic.com/manhua/list.html*
+
 ====================自用完整黑名單====================
 *://ani.gamer.com.tw/animeVideo.php*
 *://*copymanga.site/comic/*/chapter/*
@@ -974,6 +983,7 @@ manhuatai.org/manhua/*/*.html
 *://www.comicabc.com/ReadComic/*
 *://a.twobili.com/online/new-*
 *://a.twobili.com/ReadComic/*
+*://www.hahacomic.com/manhua/list.html*
 https://www.fffdm.com/manhua/*
 https://manhua.fffdm.com/*/*/
 https://*.dgmanhua.com/manhua/*/*.html
@@ -1009,7 +1019,7 @@ https://www.nuyet.com/gallery/*
 *://www.win4000.com/meinv*.html
 *://www.3gbizhi.com/meinv/*/pic*.html
 *://*.yeitu.com/*/*/*.html
-*://*.umei.cc/meinvtupian/*/*.htm
+*://*.umei.cc/meinvtupian/*/*.htm*
 *://www.meitu131.*/meinv/*/
 *://m.meitu131.*/meinv/*/
 *://www.2meinv.com/article-*.html
@@ -1246,6 +1256,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.hotgirl.world/g/*.html/
 *://cosblay.com/*.html
 *://trendszine.com/*.html
+*://www.tiplogo.com/*.html
+*amazon-love.com*
+*://byoru.net/*/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
