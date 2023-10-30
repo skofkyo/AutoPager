@@ -574,7 +574,7 @@ imgs: async () => {
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/29 22:41</p>
+<p>2023/10/31 04:22</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1064,6 +1064,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://k55.net/arttype/2.html">K55</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://cav103.com/albums/">GavPorn相冊</a></td>
                 <td></td>
             </tr>
@@ -1132,7 +1136,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://coszip.com/">COSPLAY ZIP</a></td>
+                <td><a href="https://www.coszip.com/">COSPLAY ZIP</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1240,6 +1244,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://byoru.net/">Byoru</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://xcosplay.top/">X Cosplay</a></td>
                 <td></td>
             </tr>
@@ -1272,12 +1280,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://gravia.site/box/gate.php">Gravia</a></td>
-                <td></td>
+                <td><a href="https://www.micmicidol.club/">MIC MIC IDOL</a></td>
+                <td>分類添加了自動翻頁和<a href="https://unc.micmicdoll.com/">micmicunc</a></td>
             </tr>
             <tr>
                 <td><a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a></td>
                 <td><a href="https://magazinejapanese5.blog.jp/">グラビア週刊誌 5</a>，<a href="https://magazinejapanese6.blog.jp/">グラビア週刊誌 6</a>，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td><a href="http://gravia.site/box/gate.php">Gravia</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://eroyakuba.com/">エロ役場</a></td>
@@ -1308,10 +1320,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.micmicidol.club/">MIC MIC IDOL</a></td>
-                <td>分類添加了自動翻頁和<a href="https://unc.micmicdoll.com/">micmicunc</a></td>
-            </tr>
-            <tr>
                 <td><a href="https://ivphoto.tistory.com/">IVPhoto_Gravure</a></td>
                 <td></td>
             </tr>
@@ -1337,8 +1345,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://kemono.su/fantia/user/17148/post/1633768">Kemono</a></td>
-                <td><a href="https://kemono.su/">kemono.su</a>，<a href="https://coomer.party/">coomer.party</a>，<a href="https://coomer.su/">coomer.su</a></td>
+                <td><a href="https://kemono.su/fantia/user/17148">Kemono</a></td>
+                <td><a href="https://coomer.su/">coomer.su</a></td>
             </tr>
             <tr>
                 <td><a href="https://hentai-img.com/">Hentai Image</a></td>
@@ -1358,6 +1366,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xhamster.com/photos">xHamster</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://goodsexporn.org/">Good Sex Porn</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://r18hub.com/photos">R18hub</a></td>
                 <td></td>
             </tr>
             <tr>
