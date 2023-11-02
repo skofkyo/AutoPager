@@ -1849,6 +1849,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://copymanga.site/">copymanga.site</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
             </tr>
             <tr>
+                <td><a href="https://www.yinghuamh.net/">樱花漫画</a></td>
+                <td>圖片伺服器很不穩定，下載很容易404。</td>
+            </tr>
+            <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
                 <td>SPA網頁，只有下載功能</td>
             </tr>
