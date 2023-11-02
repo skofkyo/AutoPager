@@ -5813,7 +5813,7 @@
     }, {
         name: "AsmHentai閱讀頁 asmhentai.com",
         reg: /asmhentai\.com\/gallery\/\d+\/\d+\/$/,
-        imgs: async () => {
+        imgs: () => {
             let arr = [];
             let path = document.querySelector("#fimg").dataset.src.match(/.+\//)[0];
             let max = $("#pages").val();
@@ -8839,6 +8839,59 @@
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
+        name: "樱花漫画 www.yinghuamh.net",
+        enable: 1,
+        reg: /^https:\/\/www\.yinghuamh\.net\/comic\/\w+\/\d+\/\d+/i,
+        delay: 1000,
+        init: () => {
+            $(document).unbind("keydown");
+            $(document).unbind("keyup");
+            const hidetoolbar = () => {
+                var e = e || window.event;
+                if (e.wheelDelta < 0 || e.detail > 0) {
+                    fun.ge(".view-title").style.top = "-60px";
+                } else {
+                    fun.ge(".view-title").style.top = "0px";
+                }
+            };
+            document.addEventListener("wheel", hidetoolbar);
+            document.addEventListener("DOMMouseScroll", hidetoolbar);
+            const keyhidetoolbar = (e) => {
+                let key = window.event ? e.keyCode : e.which;
+                if (key == "34" || key == "32" || key == "40") {
+                    fun.ge(".view-title").style.top = "-60px";
+                } else {
+                    fun.ge(".view-title").style.top = "0px";
+                }
+            };
+            document.addEventListener("keydown", keyhidetoolbar);
+            if (("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) {
+                let startY, moveY, Y;
+                $("body").on("touchstart", (e) => {
+                    startY = e.originalEvent.changedTouches[0].pageY;
+                });
+                $("body").on("touchmove", (e) => {
+                    moveY = e.originalEvent.changedTouches[0].pageY;
+                    Y = moveY - startY;
+                    if (Y < 0) {
+                        fun.ge(".view-title").style.top = "-60px";
+                    } else if (Y > 0) {
+                        fun.ge(".view-title").style.top = "0px";
+                    }
+                });
+            }
+        },
+        imgs: () => x_tokens.map(e => Gm.getImgUrl(Gm.fitImgUrl(e))),
+        button: [4],
+        insertImg: ["#all", 2],
+        autoDownload: [0],
+        next: "a.next_part:not([href^=java])",
+        prev: ".paginationContent>a:first-child:not([href^=java])",
+        customTitle: () => comic_name + " - " + part_name,
+        threading: 4,
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "comic"
+    }, {
         name: "快看漫画 www.kuaikanmanhua.com",
         enable: 0,
         reg: /www\.kuaikanmanhua\.com\/web\/comic\/\d+\//,
@@ -11168,7 +11221,7 @@
                         img.classList.remove("error");
                     };
                     img.onerror = error => {
-                        if (errorNum > 50) return;
+                        if (errorNum > 100) return;
                         errorNum += 1;
                         error.target.classList.add("error");
                         setTimeout(() => {
@@ -11248,11 +11301,17 @@
                             temp = null;
                         };
                         temp.onerror = error => {
-                            if (errorNum > 50) return;
+                            if (errorNum > 100) return;
                             errorNum += 1;
                             resolve();
                             setTimeout(() => {
-                                debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src.replace("-scaled", ""), index));
+                                if (/yskhd\.com|ysk567\.com/.test(location.host)) {
+                                    debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src.replace("-scaled", ""), index));
+                                } else if (/www\.yinghuamh\.net/.test(location.host)) {
+                                    debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src.replace(Gm.getMediaHost(media), media), index));
+                                } else {
+                                    debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src, index));
+                                }
                             }, 1000);
                             temp = null;
                         };
@@ -11476,14 +11535,16 @@
                             entry.target.classList.remove("error");
                         };
                         entry.target.onerror = (error) => {
-                            if (errorNum > 50) return;
+                            if (errorNum > 100) return;
                             errorNum += 1;
                             if (/yskhd\.com|ysk567\.com/.test(location.host)) error.target.dataset.src = error.target.dataset.src.replace("-scaled", "");
+                            if (/www\.yinghuamh\.net/.test(location.host)) error.target.dataset.src = error.target.dataset.src.replace(Gm.getMediaHost(media), media);
                             error.target.src = loading_bak;
                             error.target.classList.add("error");
                             setTimeout(() => {
                                 debug(`\nimagesObserver重新載入出錯圖片：\n${realSrc}`);
                                 if (/yskhd\.com|ysk567\.com/.test(location.host)) error.target.src = realSrc.replace("-scaled", "");
+                                if (/www\.yinghuamh\.net/.test(location.host)) error.target.src = realSrc.replace(Gm.getMediaHost(media), media);
                             }, 1000);
                         };
                     }
