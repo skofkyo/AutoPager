@@ -1,4 +1,4 @@
-2023/10/31 04:22
+2023/11/03 03:17
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -155,7 +155,7 @@ Lootiu.Com
 *://www.ikmn*.*/*/*.html
 
 卡卡美女网
-*kaka234.cc/HTM/pic/*/*/*/*.html
+*kaka234.cc/HTM/pic/*/*/*.html
 
 微圖坊
 *://*v2ph.*/album/*
@@ -271,6 +271,7 @@ HOTGIRLchina
 *://vuxinh.com/*-anh*/
 *://girlxinhxinh.com/*-photos*/
 *://girlxinhxinh.com/*-anh*/
+*://thechinagirls.com/*-photos*/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -652,6 +653,7 @@ Caitlin.top
 
 18禁漫
 *://www.18mh.cc/index-look-name-*-id-*
+*://m.18mh.cc/look/name/*
 
 Orzqwq
 *://orzqwq.com/manga/*/
@@ -752,7 +754,7 @@ KuKu动漫閱讀
 *.ihhmh.com/comiclist/*/*/*.htm
 *.wap.ikukudm.com/comiclist/*/*/*.htm
 *mh123.dypro.xyz/comiclist/*/*/*.htm
-
+*m.ikuku.cc/comiclist/*/*/*.htm
 
 8Comic無限動漫手機版閱讀
 *://8.twobili.com/comic/insurance_*
@@ -959,6 +961,7 @@ manhuatai.org/manhua/*/*.html
 *.ihhmh.com/comiclist/*/*/*.htm
 *.wap.ikukudm.com/comiclist/*/*/*.htm
 *mh123.dypro.xyz/comiclist/*/*/*.htm
+*m.ikuku.cc/comiclist/*/*/*.htm
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
 *://tw.baozimh.com/*
@@ -1058,6 +1061,7 @@ https://www.nuyet.com/gallery/*
 *://vuxinh.com/*-anh*/
 *://girlxinhxinh.com/*-photos*/
 *://girlxinhxinh.com/*-anh*/
+*://thechinagirls.com/*-photos*/
 *://idol.gravureprincess.date/*/*/*.html
 *www.micmicidol.club*
 *unc.micmicdoll.com*
@@ -1144,6 +1148,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *caitlin.top/index.php?route=comic/readOnline*
 *://www.177pic*.com/html/*/*/*.html
 *://www.18mh.cc/index-look-name-*-id-*
+*://m.18mh.cc/look/name/*
 *://18h.animezilla.com/manga/*
 *://www.ho5ho.com/*/*/server*
 *://orzqwq.com/manga/*/
@@ -1214,7 +1219,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *www.entuji.com/*/*.html
 *fulitu.me/*/*.html
 *://www.taotu8.cc/mm/*.html
-*kaka234.cc/HTM/pic/*/*/*/*.html
+*kaka234.cc/HTM/pic/*/*/*.html
 *.ikmt.net/*/*/*/*.html
 *.nitutu.com/*/*/*.html
 *www.xintp.com/*/*/*.html
