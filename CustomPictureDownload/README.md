@@ -8,11 +8,13 @@ localStorage.removeItem("FullPictureLoadOptions");
 <p>紳士漫畫wnacg，由於新增的Fancybox功能的緣故，新的元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
 <pre>
 https://m.wnacg.com/photos-slide-aid-*.html
+https://m.wnacg.com/photos-slist-aid-*.html
 https://www.wnacg.com/photos-slide-aid-*.html
+https://www.wnacg.com/photos-slist-aid-*.html
 </pre>
-<p>Fancybox功能在少部份網站上無效原因不明，有列了是不使用Fancybox的網站，如下。</p>
+<p>Fancybox功能在少部份網站上無效或與網站自身的LIGHTBOX插件衝突或顯示有問題，有列了是不使用Fancybox的網站，如下。</p>
 <pre>
-51sex、Nude Bird、Cosplaytele、XLUST.ORG、Xiuren 秀人网、最新韩漫网M
+XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M
 </pre>
 <h1>簡介：</h1>
 <p>寫這個腳本的緣由是，想讓下載、複製鏈結不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
@@ -574,7 +576,7 @@ imgs: async () => {
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/10/31 04:22</p>
+<p>2023/11/03 03:17</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -586,7 +588,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <img src="https://i.imgur.com/ToftahD.jpg">
 <img src="https://i.imgur.com/xQJePAo.jpg">
 <img src="https://i.imgur.com/GMsIaj9.jpg">
-<img src="https://i.imgur.com/QpxGRxN.jpg">
+<img src="https://i.imgur.com/HvKdOeV.jpg">
 <p>※備註SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈接。</p>
 <h2>老司機類內置規則支持列表</h2>
 <details>
@@ -623,7 +625,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.yalayi.com/">雅拉伊</a></td>
-                <td>免VIP僅支援圖片是簡單命名數字遞增的。</td>
+                <td>免VIP僅支援PC版和圖片命名是簡單數字遞增的。</td>
             </tr>
             <tr>
                 <td><a href="https://yskhd.com/">优丝库HD</a></td>
@@ -853,7 +855,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xiurenugril.com/">秀人图</a></td>
+                <td><a href="https://www.xiurento.com/">秀人图</a></td>
                 <td>只支援免費</td>
             </tr>
             <tr>
@@ -1650,7 +1652,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hitomi.la/">Hitomi.la</a></td>
-                <td></td>
+                <td>同上</td>
             </tr>
             <tr>
                 <td><a href="https://orzqwq.com/">Orzqwq</a></td>
@@ -1802,7 +1804,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.18mh.cc/">18禁漫</a></td>
-                <td></td>
+                <td><a href="http://m.18mh.cc/">m.18mh.cc</a></td>
             </tr>
             <tr>
                 <td><a href="https://bad.news/mh">成人漫画</a></td>
