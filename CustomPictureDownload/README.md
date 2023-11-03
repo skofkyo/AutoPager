@@ -1,4 +1,6 @@
 <h1>提醒：</h1>
+<p>2023/11/03</p>
+<p>1.6.0開始Fancybox從3.5.7升級至5.0.24，部分網站依然調用3.5.7，網站如果有自帶LIGHTBOX之類的插件，則不調用腳本的Fancybox避免各種衝突，如有遇到FancyboxV5版圖片沒有置中錯位偏右請反饋。</p>
 <p>2023/10/24</p>
 <p>1.5.0開始改動太多，使用低於1.5.0的版本升級後，如遇到任何問題請先手動重置設定，如左下圖示不見了，快捷鍵沒有反應，切換顯示按鈕沒反應等等...</p>
 <p>如果嚴重到連選項設定都叫不出來，按F12 > 主控台(Console) > 下方輸入框 > 輸入下面這行代碼，然後Enter，重新載入頁面。</p>
@@ -7,8 +9,6 @@ localStorage.removeItem("FullPictureLoadOptions");
 </pre>
 <p>紳士漫畫wnacg，由於新增的Fancybox功能的緣故，新的元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
 <pre>
-https://m.wnacg.com/photos-slide-aid-*.html
-https://m.wnacg.com/photos-slist-aid-*.html
 https://www.wnacg.com/photos-slide-aid-*.html
 https://www.wnacg.com/photos-slist-aid-*.html
 </pre>
@@ -337,6 +337,11 @@ fun.run("代碼")
 <pre>
 //移除元素
 fun.remove("ele", time = 0)
+</pre>
+<pre>
+//清除所有setTimeout&setInterval定時器
+//用匿名函式對付匿名函式，可以解決一部份不讓人打開F12開發人員工具的問題
+fun.clearAllTimer();
 </pre>
 <pre>
 //插入樣式，需要先用JS判斷的情況用這個
@@ -900,6 +905,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://zipaipic.com/">自拍图库</a></td>
                 <td>自拍图库.com</td>
+            </tr>
+            <tr>
+                <td><a href="https://7aipai.com/">美拍 - 我自拍</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
