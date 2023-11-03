@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.0
+// @version            1.6.1
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -241,32 +241,14 @@
     }, {
         name: "优丝库HD - 免VIP yskhd.com ysk567.com",
         reg: /(yskhd\.com|ysk567\.com)\/archives\/\d+/i,
-        exclude: "#menu-item-57917[class*=current]",
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src);
-            return [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", ""));
-        },
-        button: [4],
-        insertImg: [
-            [".article-act", 1], 2
-        ],
-        go: 1,
-        autoDownload: [0],
-        next: ".article-nav-prev>a",
-        prev: ".article-nav-next>a",
-        customTitle: () => fun.geT(".article-title").replace(/\s?\[\d+P\]/i, ""),
-        fancybox: {
-            v: 3,
-            css: false
-        },
-        category: "nsfw1"
-    }, {
-        name: "优丝库HD - 日韓免VIP yskhd.com ysk567.com",
-        reg: /(yskhd\.com|ysk567\.com)\/archives\/\d+/i,
-        include: "#menu-item-57917[class*=current]",
-        imgs: () => {
-            thumbnailsSrcArray = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src);
-            return [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", ""))
+            let getRes = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", "")).map(async src => {
+                let res = await fun.xhrHEAD(src);
+                let status = res.status;
+                return status == 404 ? src.replace(/(\.[a-z]+)$/i, "-scaled$1") : src;
+            });
+            return Promise.all(getRes);
         },
         button: [4],
         insertImg: [
@@ -1103,7 +1085,7 @@
     }, {
         name: "依依图片网M m.eemm.cc 精选美女网M m.jxmm.net",
         reg: /(m\.eemm\.cc|m\.jxmm\.net)\/pic\/\d+\.html/,
-        imgs: async () => {
+        imgs: () => {
             let max = fun.geT(".contentpage").match(/\d+\/(\d+)/)[1];
             return fun.getImg(".content img", max, 9);
         },
@@ -1115,7 +1097,7 @@
     }, {
         name: "内涵吧 www.neihantu.net",
         reg: /(www|wap)\.neihantu\.net\/zhainannvshen\/\d+\.html$/,
-        imgs: async () => {
+        imgs: () => {
             let max = fun.geT("a[title=Page]>b:last-child");
             return fun.getImg("#adcon img,.newsbox img", max, 9);
         },
@@ -1129,15 +1111,7 @@
     }, {
         name: "青年美圖 jrants.com",
         reg: /^https?:\/\/jrants\.com\/\d+\.html$/,
-        imgs: async () => {
-            let ele = fun.ge(".page-links");
-            if (ele) {
-                let max = fun.geT(".page-links>a:last-child");
-                return fun.getImg(".entry-content img", max, 7);
-            } else {
-                return [...fun.gae(".entry-content img")];
-            }
-        },
+        imgs: () => fun.ge(".page-links") ? fun.getImg(".entry-content img", fun.geT(".page-links>a:last-child"), 7) : [...fun.gae(".entry-content img")],
         button: [4],
         insertImg: [".entry-content", 1],
         autoDownload: [0],
@@ -2444,7 +2418,7 @@
         init: () => {
             fun.clearAllTimer();
         },
-        imgs: "#showCon img",
+        imgs: async () => await fun.waitEle("#showCon img") ? [...fun.gae("#showCon img")] : [],
         button: [4],
         insertImg: ["#showCon", 2],
         go: 1,
@@ -8196,7 +8170,7 @@
             })
         },
         prev: 1,
-        css: "body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}body{scrollbar-width:none;-ms-overflow-style:none;overflow-x:hidden;overflow-y:auto}",
+        css: "body{background-image:unset}body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}body{scrollbar-width:none;-ms-overflow-style:none;overflow-x:hidden;overflow-y:auto}",
         category: "comic"
     }, {
         name: "漫漫聚M/KuKu动漫M m.manmanju.com m.ikuku.cc s1.m.ikkdm.com s2.m.ikkdm.com 1pc570gfrd9z.ihhmh.com s2.wap.ikukudm.com s3.wap.ikukudm.com mh123.dypro.xyz",
@@ -11329,9 +11303,13 @@
                             resolve();
                             setTimeout(() => {
                                 if (/yskhd\.com|ysk567\.com/.test(location.host)) {
-                                    debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src.replace("-scaled", ""), index));
+                                    if (/-scaled/.test(src)) {
+                                        debug(`\n圖片全載Lazyloading預讀出錯 优丝库HD 重新載入另一種圖片網址：\n${src}\nto\n${src.replace("-scaled", "")}\n`, loadImg(src.replace("-scaled", ""), index));
+                                    } else {
+                                        debug(`\n圖片全載Lazyloading預讀出錯 优丝库HD 重新載入另一種圖片網址：\n${src}\nto\n${src.replace(/(\.[a-z]+)$/i, "-scaled$1")}\n`, loadImg(src.replace(/(\.[a-z]+)$/i, "-scaled$1"), index));
+                                    }
                                 } else if (/www\.yinghuamh\.net/.test(location.host)) {
-                                    debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src.replace(Gm.getMediaHost(media), media), index));
+                                    debug(`\n圖片全載Lazyloading預讀出錯 樱花漫画 重新載入另一個圖片伺服器的圖片網址：\n${src}\nto\n${src.replace(Gm.getMediaHost(media), media)}\n`, loadImg(src.replace(Gm.getMediaHost(media), media), index));
                                 } else {
                                     debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n`, loadImg(src, index));
                                 }
@@ -11559,15 +11537,23 @@
                         };
                         entry.target.onerror = (error) => {
                             if (errorNum > 100) return;
-                            errorNum += 1;
-                            if (/yskhd\.com|ysk567\.com/.test(location.host)) error.target.dataset.src = error.target.dataset.src.replace("-scaled", "");
-                            if (/www\.yinghuamh\.net/.test(location.host)) error.target.dataset.src = error.target.dataset.src.replace(Gm.getMediaHost(media), media);
+                            if (!/yskhd\.com|ysk567\.com/.test(location.host)) errorNum += 1;
+                            if (/yskhd\.com|ysk567\.com/.test(location.host)) {
+                                /-scaled/.test(error.target.dataset.src) ? error.target.dataset.src = error.target.dataset.src.replace("-scaled", "") : error.target.dataset.src = error.target.dataset.src.replace(/(\.[a-z]+)$/i, "-scaled$1");
+                            } else if (/www\.yinghuamh\.net/.test(location.host)) {
+                                error.target.dataset.src = error.target.dataset.src.replace(Gm.getMediaHost(media), media);
+                            }
                             error.target.src = loading_bak;
                             error.target.classList.add("error");
                             setTimeout(() => {
-                                debug(`\nimagesObserver重新載入出錯圖片：\n${realSrc}`);
-                                if (/yskhd\.com|ysk567\.com/.test(location.host)) error.target.src = realSrc.replace("-scaled", "");
-                                if (/www\.yinghuamh\.net/.test(location.host)) error.target.src = realSrc.replace(Gm.getMediaHost(media), media);
+                                if (/yskhd\.com|ysk567\.com/.test(location.host)) {
+                                    debug(`\nimagesObserver 优丝库HD圖片出錯 重新載入另一種圖片網址：\n${realSrc}\nto\n${error.target.dataset.src}`);
+                                } else if (/www\.yinghuamh\.net/.test(location.host)) {
+                                    debug(`\nimagesObserver 樱花漫画圖片出錯 重新載入另一個圖片伺服器的圖片網址：\n${realSrc}\nto\n${error.target.dataset.src}`);
+                                } else {
+                                    debug(`\nimagesObserver重新載入出錯圖片：\n${realSrc}`);
+                                }
+                                error.target.src = error.target.dataset.src;
                             }, 1000);
                         };
                     }
@@ -11692,6 +11678,17 @@
                 });
             });
         },
+        xhrHEAD: url => {
+            return new Promise(resolve => {
+                _GM_xmlhttpRequest({
+                    method: "HEAD",
+                    url: url,
+                    onload: data => {
+                        resolve(data);
+                    }
+                });
+            });
+        },
         xhrDoc: (url, referer = location.href, ua = navigator.userAgent) => {
             return new Promise((resolve, reject) => {
                 _GM_xmlhttpRequest({
@@ -11790,8 +11787,15 @@
                     fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let script = [...doc.scripts].find(s => s.innerText.search(/document\.write/) > -1).innerText;
                     let arr = script.split("'><");
-                    let pathArr1, pathArr2;
-                    if (arr.length == 4) {
+                    let pathArr0, pathArr1, pathArr2;
+                    if (arr.length == 1) {
+                        let arr = script.split(`"+server+"`);
+                        if (arr.length == 2) {
+                            pathArr0 = arr[1].replace(/(\.[a-z]+).+/i, "$1").replace("\n", "");
+                        } else {
+                            return null;
+                        }
+                    } else if (arr.length == 4) {
                         pathArr1 = arr[0].split("/");
                         pathArr2 = arr[2].split("/");
                     } else if (arr.length == 5) {
@@ -11800,16 +11804,22 @@
                     } else {
                         return null;
                     }
-                    let host1 = fun.run(pathArr1[0].split("+")[1]);
-                    let host2 = fun.run(pathArr2[0].split("+")[1]);
-                    pathArr1[0] = pathArr1[0].match(/\w+$/)[0];
-                    pathArr2[0] = pathArr2[0].match(/\w+$/)[0];
-                    let src1 = host1 + pathArr1.join("/");
-                    let src2 = host2 + pathArr2.join("/");
-                    return {
-                        src1: src1,
-                        src2: src2
-                    };
+                    if (arr.length == 1) {
+                        let host0 = fun.run("server");
+                        let src0 = host0 + pathArr0;
+                        return src0;
+                    } else {
+                        let host1 = fun.run(pathArr1[0].split("+")[1]);
+                        let host2 = fun.run(pathArr2[0].split("+")[1]);
+                        pathArr1[0] = pathArr1[0].match(/\w+$/)[0];
+                        pathArr2[0] = pathArr2[0].match(/\w+$/)[0];
+                        let src1 = host1 + pathArr1.join("/");
+                        let src2 = host2 + pathArr2.join("/");
+                        return {
+                            src1: src1,
+                            src2: src2
+                        };
+                    }
                 });
                 resArr.push(res);
             }
@@ -11820,11 +11830,15 @@
             });
             debug("\nfun.getKukudmSrc() > allSrc\n", allSrc);
             try {
-                let obj = await fun.checkImgStatus(allSrc[0].src1);
-                if (obj.ok) {
-                    return allSrc.map(e => e.src1);
+                if (typeof allSrc[0] === "string") {
+                    return allSrc;
                 } else {
-                    return allSrc.map(e => e.src2);
+                    let obj = await fun.checkImgStatus(allSrc[0].src1);
+                    if (obj.ok) {
+                        return allSrc.map(e => e.src1);
+                    } else {
+                        return allSrc.map(e => e.src2);
+                    }
                 }
             } catch (e) {
                 return [];
@@ -13380,9 +13394,9 @@ switch (language) {
     };
 
     const FancyboxOptionsV3 = () => {
-        if (siteData.fancybox.js === false) return;
+        if (siteData.fancybox.js === false) return; //"download",
         let str = `
-$.fancybox.defaults.buttons = ["download", "zoom", "slideShow", "fullScreen", "thumbs", "close"];
+$.fancybox.defaults.buttons = ["zoom", "slideShow", "fullScreen", "thumbs", "close"];
 $.fancybox.defaults.loop = true;
 $.fancybox.defaults.toolbar = true;
 console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
