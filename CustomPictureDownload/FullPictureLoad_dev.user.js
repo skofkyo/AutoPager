@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name               圖片全載
-// @name:en            Full Picture Load
-// @name:zh-CN         图片全载
-// @name:zh-TW         圖片全載
+// @name               圖片全載-FancyboxV5
+// @name:en            Full Picture Load - FancyboxV5
+// @name:zh-CN         图片全载-FancyboxV5
+// @name:zh-TW         圖片全載-FancyboxV5
 // @version            1.6.0
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
@@ -2424,6 +2424,9 @@
         name: "自拍图库 自拍图库.com zipaipic.com",
         reg: /^https:\/\/[^\/]+\/content_\d+\.html/i,
         include: "//title[contains(text(),'自拍图库')]",
+        init: () => {
+            fun.clearAllTimer();
+        },
         imgs: ".showimg",
         button: [4],
         insertImg: ["#imgviewer", 2],
@@ -2434,6 +2437,23 @@
         customTitle: () => fun.geT(".ttle").replace(/\n|\d+p/gi, "").trim(),
         referer: "",
         css: "a[rel]{display:none!important}",
+        category: "nsfw2"
+    }, {
+        name: "美拍 - 我自拍 7aipai.com",
+        reg: /^https?:\/\/7aipai\.com\/\w+\/\d+\/\d+\.html/i,
+        init: () => {
+            fun.clearAllTimer();
+        },
+        imgs: "#showCon img",
+        button: [4],
+        insertImg: ["#showCon", 2],
+        go: 1,
+        autoDownload: [0],
+        next: ".article-nav-prev a",
+        prev: 1,
+        customTitle: () => fun.geT(".item_title>h1").replace(/\[\d+P\]/i, "").trim(),
+        referer: "",
+        css: ".affs{display:none!important}.content_left img{cursor:unset}",
         category: "nsfw2"
     }, {
         name: "套圖TAOTU.ORG taotu.org",
@@ -8713,6 +8733,7 @@
         },
         init: async () => {
             if (typeof aboutBlank === "function") aboutBlank = () => {};
+            fun.clearAllTimer();
             siteJson = await siteData.xhr();
             debug("\n此頁JSON資料\n", siteJson);
             const addHtml = (url, text) => {
@@ -8994,7 +9015,7 @@
             Function.prototype.constructor = () => {};
             //await fun.scrollEles(".img-content img", 200);
             fun.css(".ad-area{opacity:0!important;}#cp_img>.two-ad-area:nth-child(1)>.ad-area,#cp_img>.two-ad-area:nth-child(2){display:none!important}");
-            fun.remove(".ad-area,body>div[id]", 5000);
+            fun.remove(".ad-area,body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadScrollToTop):not(#FullPictureLoadOptions):not(a):not(*[class^=fancybox])", 5000);
             const hidetoolbar = () => {
                 var e = e || window.event;
                 if (e.wheelDelta < 0 || e.detail > 0) {
@@ -9587,8 +9608,8 @@
             Toolbar: {
                 display: {
                     left: ["infobar"],
-                    middle: [],
-                    right: ["iterateZoom", "download", "slideshow", "thumbs", "close"]
+                    middle: ["flipX", "flipY"],
+                    right: [ /*"downloa", */ "iterateZoom", "slideshow", "thumbs", "close"]
                 }
             },
             on: {
@@ -9615,8 +9636,8 @@
             Toolbar: {
                 display: {
                     left: ["infobar"],
-                    middle: ["iterateZoom", "rotateCCW", "rotateCW", "flipX", "flipY"],
-                    right: ["download", "slideshow", "fullscreen", "thumbs", "close"]
+                    middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                    right: [ /*"downloa", */ "slideshow", "fullscreen", "thumbs", "close"]
                 }
             },
             on: {
@@ -9723,7 +9744,7 @@
                 str_75: "自動下載倒數秒數 PS:優先級別低於內置規則",
                 str_76: "當前漫畫站規則 ( 0：維持關閉、1：啟用 )",
                 str_77: "移動裝置雙擊前往下一頁 ( 1：開、0：關 )",
-                str_78: "Fancybox燈箱功能 ( 1：開 (移動裝置雙擊下一頁會無效)、0：關 )",
+                str_78: "Fancybox燈箱功能 ( 1：開 、0：關 )",
                 str_79: "圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto",
                 str_80: "圖片並排模式顯示數量 ( 2 ~ 6 ) comic類固定為 ( 2 )",
                 str_81: "PS:comic類並排後為右至左的漫讀模式 hcomic類也設定為2將套用",
@@ -9827,7 +9848,7 @@
                 str_75: "自动下载倒数秒数 PS:优先级别低于内置规则",
                 str_76: "当前漫画站规则 ( 0：维持关闭、1：启用 )",
                 str_77: "移动设备双击前往下一页 ( 1：开、0：关 )",
-                str_78: "Fancybox灯箱功能 ( 1：开 (移动设备双击下一页会无效)、0：关 )",
+                str_78: "Fancybox灯箱功能 ( 1：开 、0：关 )",
                 str_79: "图片缩放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto",
                 str_80: "图片并排模式显示数量 ( 2 ~ 6 ) comic类固定为 ( 2 )",
                 str_81: "PS:comic类并排后为右至左的漫读模式 hcomic类也设置为2将套用",
@@ -11200,8 +11221,10 @@
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
+                    /*
                     a.dataset.downloadSrc = srcArr[i];
                     a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i) + 1).padStart(padStart, "0")}P`;
+                    */
                 }
                 let img = new Image();
                 img.alt = `no.${parseInt(i) + 1}`;
@@ -11979,6 +12002,22 @@
             } else {
                 console.error(" # ", "未定位id！");
             }
+        },
+        clearAllTimer: () => {
+            let endTidStr = `
+            let endTid = setTimeout(() => {});
+            for (let i = 0; i <= endTid; i++) {
+                clearTimeout(i);
+            }
+            `;
+            new Function(endTidStr)();
+            let endIidStr = `
+            let endIid = setInterval(() => {});
+            for (let i = 1; i <= endIid; i++) {
+                clearInterval(i);
+            }
+            `;
+            new Function(endIidStr)();
         }
     };
 
@@ -12537,8 +12576,10 @@
                     a.dataset.fancybox = "FullPictureLoadImageSmall";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = e;
                     a.href = e;
+                    /*
                     a.dataset.downloadSrc = e;
                     a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i) + 1).padStart(padStart, "0")}P`;
+                    */
                 }
                 let img = new Image();
                 img.className = "FullPictureLoadImage small";
