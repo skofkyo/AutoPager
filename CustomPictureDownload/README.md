@@ -398,6 +398,18 @@ fun.imgBlobArr(img, mode = 1 , type = "image/jpeg");
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
+//只取得回應標頭，不接收完整資料，快速確認鏈結的存活狀態。
+fun.xhrHEAD(url);
+let res = await fun.xhrHEAD(url);
+let status = res.status;
+if (status == 200) {
+    code
+} else if (status == 404) {
+    code
+}
+</pre>
+<pre>
+//使用Promise包裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
 fun.xhr(url, type = "text", referer = location.href, ua)
 fun.xhr(url, "document").then(doc => {
