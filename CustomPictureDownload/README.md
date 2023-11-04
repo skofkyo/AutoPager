@@ -341,7 +341,11 @@ fun.remove("ele", time = 0)
 <pre>
 //清除所有setTimeout&setInterval定時器
 //用匿名函式對付匿名函式，可以解決一部份不讓人打開F12開發人員工具的問題
-fun.clearAllTimer();
+//mode0，預設運行全部
+//mode1，Function.prototype.constructor = () => {};
+//mode2，只清setTimeout;
+//mode3，只清setInterval;
+fun.clearAllTimer(mode);
 </pre>
 <pre>
 //插入樣式，需要先用JS判斷的情況用這個
@@ -432,6 +436,17 @@ fun.fetchDoc(url)
 fun.fetchDoc(url).then(doc => {
     console.log("測試doc", doc);
 })
+</pre>
+<pre>
+//使用iframe框架，返回iframe框架的document。
+//ele指定等待到元素出現(必須)
+fun.iframeDoc(url, ele);
+</pre>
+<pre>
+//使用Fetch API搭配iframe框架，返回iframe框架的document。
+//ele指定等待到元素出現(必須)
+//fetch()取得html原始碼傳入iframe框架，需要用iframe框架網頁卻又容易卡住逾時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
+fun.iframeSrcDoc(url, ele);
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片(靜態，可跨域)
@@ -591,6 +606,7 @@ imgs: async () => {
 <br>
 <p>3.Fancybox模式</p>
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
+<p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
 <p>2023/11/03 03:17</p>
