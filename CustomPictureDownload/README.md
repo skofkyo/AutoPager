@@ -463,7 +463,7 @@ await fun.iframeDoc(url, ele);
 <pre>
 //使用Fetch API搭配iframe框架，返回iframe框架的document。
 //ele指定等待到元素出現(必須)
-//fetch()取得html原始碼傳入iframe框架，需要用iframe框架網頁卻又容易卡住逾時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
+//fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
 await fun.iframeSrcDoc(url, ele);
 </pre>
 <pre>
@@ -639,7 +639,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <img src="https://i.imgur.com/ToftahD.jpg">
 <img src="https://i.imgur.com/xQJePAo.jpg">
 <img src="https://i.imgur.com/GMsIaj9.jpg">
-<img src="https://i.imgur.com/HvKdOeV.jpg">
+<img src="https://i.imgur.com/OibRD2N.jpg">
 <p>※備註SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈接。</p>
 <h2>老司機類內置規則支持列表</h2>
 <details>
@@ -748,7 +748,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://ja.huamaobizhi.com/mixs/?page_size=24&search_tag=&tag_id=0&page=1&order_by=0&purity=1&remember_filter=1&lang=zh-CN">花猫壁纸</a></td>
-                <td>原圖沒有URL需要POST直接取得原圖的Blob很吃記憶體，只會單線程返回抓取過程需要等比較久。</td>
+                <td>原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，只會單線程返回資料，抓取過程需要等比較久。</td>
             </tr>
             <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
