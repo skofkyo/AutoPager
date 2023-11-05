@@ -1,4 +1,22 @@
 <h1>提醒：</h1>
+<p>2023/11/06</p>
+<p>腳本1.6.0+版本使用Fancybox5.0.24後，暴力猴Violentmonkey會報錯。</p>
+<p>在以下測試環境是正常的</p>
+<pre>
+FireFox 119.0 + Tampermonkey 4.19.0
+Cent Browser 5.0.1002.354 + Tampermonkey 4.19.0
+Chrome 119.0.6045.106 + Tampermonkey 4.19.0
+Edge 119.0.2151.44 + Tampermonkey 4.19.0
+</pre>
+<p>如果用戶堅持使用暴力猴Violentmonkey，腳本1.6.3+的版本只需用戶自己修改</p>
+<pre>
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js
+</pre>
+改成
+<pre>
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+</pre>
+<p>應該就能正常使用了</p>
 <p>2023/11/03</p>
 <p>1.6.0開始Fancybox從3.5.7升級至5.0.24，部分網站依然調用3.5.7，網站如果有自帶LIGHTBOX之類的插件，則不調用腳本的Fancybox避免各種衝突，如有遇到FancyboxV5版圖片沒有置中錯位偏右請反饋。</p>
 <p>2023/10/24</p>
@@ -371,7 +389,7 @@ fun.scrollEles(ele, ms = 100)
 </pre>
 <pre>
 //確認圖片狀態屬性 返回一個obj
-fun.checkImgStatus(src)
+await fun.checkImgStatus(src);
 返回
 {
 ok:true/false,成功讀取true失敗false
@@ -440,13 +458,13 @@ fun.fetchDoc(url).then(doc => {
 <pre>
 //使用iframe框架，返回iframe框架的document。
 //ele指定等待到元素出現(必須)
-fun.iframeDoc(url, ele);
+await fun.iframeDoc(url, ele);
 </pre>
 <pre>
 //使用Fetch API搭配iframe框架，返回iframe框架的document。
 //ele指定等待到元素出現(必須)
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架網頁卻又容易卡住逾時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
-fun.iframeSrcDoc(url, ele);
+await fun.iframeSrcDoc(url, ele);
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片(靜態，可跨域)
@@ -455,7 +473,7 @@ fun.iframeSrcDoc(url, ele);
 //"targetEle"清空此元素放入allEle
 //["targetEle", pos] 此元素位置pos，0裡面1之前2之後
 //time請求發送的間隔毫秒
-fun.getEle(links, eles, targetEle, removeEle = null, time = 100)
+await fun.getEle(links, eles, targetEle, removeEle = null, time = 100)
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
@@ -539,7 +557,7 @@ fun.getImgA(img, A, mode = 0, rText = [null, null], showMsg = 1)
 </pre>
 <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
-fun.getNP("元素選擇器", "下一頁元素", "判斷為最後一頁的元素", "頁碼條元素", time(延遲請求下一頁的時間預設0毫秒), dataset = null, msg = 1)
+fun.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
 //用在規則init
 fun.getNP(ele, nextLinkEle, lastEle, paginationEle, time, dataset, msg);
 fun.getNP(ele, nextLinkEle);
@@ -727,6 +745,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
                 <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，不支持VIP資源。</td>
+            </tr>
+            <tr>
+                <td><a href="https://ja.huamaobizhi.com/mixs/?page_size=24&search_tag=&tag_id=0&page=1&order_by=0&purity=1&remember_filter=1&lang=zh-CN">花猫壁纸</a></td>
+                <td>原圖沒有URL需要POST直接取得原圖的Blob很吃記憶體，只會單線程返回抓取過程需要等比較久。</td>
             </tr>
             <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
@@ -936,7 +958,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://7aipai.com/">美拍 - 我自拍</a></td>
-                <td></td>
+                <td><a href="https://35zipai.com/">35zipai.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
