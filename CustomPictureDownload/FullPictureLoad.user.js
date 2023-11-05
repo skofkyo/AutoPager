@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.2
+// @version            1.6.3
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -181,7 +181,7 @@
             let testArr = [path + "1.jpg", path + "01.jpg", path + "001.jpg", path + "0001.jpg"];
             let ok = false;
             let padStart;
-            for (let i in testArr) {
+            for (let i = 0; i < testArr.length; i++) {
                 let obj = await fun.checkImgStatus(testArr[i]);
                 console.log(`確認圖片[${i}]`, obj);
                 if (obj.ok) {
@@ -861,7 +861,7 @@
             let vip = false;
             let fetchNum = 0;
             fun.show(displayLanguage.str_01, 0);
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 await fetch(links[i]).then(res => {
                     if (res.status == 403) status = 403;
                     fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
@@ -1008,9 +1008,7 @@
                     let nextEles = [...fun.gae(".headling_main_a", doc)];
                     for (let i in currentEles) {
                         for (let n in nextEles) {
-                            if (currentEles[i].href == nextEles[n].href) {
-                                return true;
-                            }
+                            if (currentEles[i].href == nextEles[n].href) return true;
                         }
                     }
                 }
@@ -1589,7 +1587,7 @@
             for (let i = 2; i <= max; i++) {
                 links.push(location.href + "/" + i);
             }
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
                     fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let code = [...doc.scripts].find(s => s.innerHTML.search(/photoList/) > -1).innerHTML;
@@ -1635,7 +1633,7 @@
             for (let i = 2; i <= max; i++) {
                 links.push(location.href + "/" + i);
             }
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
                     fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let code, imgs;
@@ -1794,7 +1792,7 @@
             let liImgs = [...fun.gae(".mtp>li")];
             if (pages.length > 0 && liImgs.length < 21) {
                 fun.show(displayLanguage.str_08, 0);
-                for (let i in pages) {
+                for (let i = 0; i < pages.length; i++) {
                     await fun.fetchDoc(pages[i].href).then(doc => {
                         [...fun.gae(".mtp>li", doc)].forEach(ele => {
                             fun.ge(".mtp").appendChild(ele);
@@ -1826,22 +1824,48 @@
         customTitle: () => fun.geT(".tmsg>h1"),
         category: "nsfw1"
     }, {
-        name: "Huamao wallpaper 花猫壁纸 en.huamaobizhi.com 聚集的只是大一點點的預覽圖",
-        reg: /https?:\/\/en\.huamaobizhi\.com\/mix\/\d+/,
+        name: "Huamao wallpaper 花猫壁纸 en.huamaobizhi.com",
+        reg: /https?:\/\/[a-z]{2}\.huamaobizhi\.com\/mix\/\d+/,
         init: () => {
             let load = fun.ge(".load-more-photos");
             if (load) load.remove();
         },
         imgs: async () => {
             await fun.getNP(".images-card", "//a[text()='Next' or text()='下一页' or text()='次へ']");
-            return fun.getImgA("figure img", ".images-card>a", 200);
+            thumbnailsSrcArray = [...fun.gae(".images-card img")].map(e => e.dataset.src ? e.dataset.src : e.src);
+            fun.show(displayLanguage.str_05, 0);
+            let fetchNum = 0;
+            const resBlobUrl = (id) => {
+                return fetch(`https://${location.host}/normal-download/`, {
+                    "headers": {
+                        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                        "content-type": "application/x-www-form-urlencoded"
+                    },
+                    "body": `wallpaperId=${id}`,
+                    "method": "POST"
+                }).then(res => res.blob()).then(blob => {
+                    fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${IDs.length}`, 0);
+                    return URL.createObjectURL(blob);
+                });
+            };
+            let IDs = [...fun.gae("span[data-imgid]")].map(e => e.dataset.imgid);
+            let bigImgsArr = [];
+            for (let i = 0; i < IDs.length; i++) {
+                bigImgsArr.push(await resBlobUrl(IDs[i]));
+            }
+            return Promise.all(bigImgsArr).then(arr => {
+                fun.hide();
+                return arr;
+            });;
         },
+        ex: "jpg",
         button: [4],
         insertImg: [
             ["#main", 2], 2
         ],
         go: 1,
         customTitle: () => fun.geT(".title>h1"),
+        fetch: 1,
         category: "nsfw1"
     }, {
         name: "新美图录 www.xinmeitulu.com 臺灣美腿女郎 www.twlegs.com",
@@ -1972,7 +1996,7 @@
             for (let i = 2; i <= max; i++) {
                 links.push(siteUrl.replace(/(_\d+)?\.html$/, "") + `_${i}.html`);
             }
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let doc = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
                         let res = await fetch(links[i]);
@@ -2409,12 +2433,16 @@
         css: "a[rel]{display:none!important}",
         category: "nsfw2"
     }, {
-        name: "美拍 - 我自拍 7aipai.com",
-        reg: /^https?:\/\/7aipai\.com\/\w+\/\d+\/\d+\.html/i,
+        name: "美拍 - 我自拍 7aipai.com 35zipai.com",
+        reg: /^https?:\/\/(\d+aipai\.com|\d+zipai.com)\/\w+\/\d+\/\d+\.html/i,
         init: () => {
             fun.clearAllTimer();
         },
-        imgs: async () => await fun.waitEle("#showCon img") ? [...fun.gae("#showCon img")] : [],
+        imgs: async () => {
+            await fun.waitEle("#showCon img");
+            thumbnailsSrcArray = [...fun.gae("#showCon img")].map(e => /zipai/.test(e.src) ? e.src.replace(/&w=\d+/, "&w=100") : null).filter(item => item);
+            return [...fun.gae("#showCon img,#showCon video")].map(e => /zipai|\.mp4/.test(e.src) ? e.src.replace(/&output.+/, "") : null).filter(item => item);
+        },
         button: [4],
         insertImg: ["#showCon", 2],
         go: 1,
@@ -3280,13 +3308,7 @@
             http: "https",
             observer: ".post.hentry",
             re: "#blog-pager",
-            stop: () => {
-                let ele = fun.ge(".date-outer", doc);
-                if (!ele) {
-                    return true
-                }
-                return false
-            },
+            stop: () => fun.ge(".date-outer", doc) ? false : true,
             history: 1,
             aF: () => {
                 [...fun.gae("//div[@class='snips-image']/a[not(img)]")].forEach(a => {
@@ -3310,11 +3332,7 @@
                 if (/start=/.test(nextLink)) {
                     if (siteUrl.includes("unc.micmicdoll.com")) {
                         num = parseInt(nextLink.match(/start=(\d+)/)[1], 10);
-                        if (num % 2 == 0) {
-                            num = num / 50 + 1;
-                        } else {
-                            num = num / 39 + 1;
-                        }
+                        num % 2 == 0 ? num = num / 50 + 1 : num = num / 39 + 1;
                     } else {
                         num = parseInt(nextLink.match(/start=(\d+)/)[1], 10) / 50 + 1;
                     }
@@ -3381,7 +3399,7 @@
             for (let i = 1; i <= max; i++) {
                 links.push(url + "-" + i + ".html");
             }
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let doc = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
                         let res = await fetch(links[i]);
@@ -3783,10 +3801,7 @@
                 return url;
             },
             re: ".page-nav",
-            stop: () => {
-                let error = fun.ge(".td-404-title", doc);
-                return error ? true : false;
-            },
+            stop: () => fun.ge(".td-404-title", doc) ? true : false,
             history: 1,
             bF: () => {
                 [...fun.gae("span[data-img-url]", doc)].forEach(span => {
@@ -4256,7 +4271,7 @@
                 }
                 let resArr = [];
                 let fetchNum = 0;
-                for (let i in links) {
+                for (let i = 0; i < links.length; i++) {
                     let res = fun.fetchDoc(links[i]).then(doc => {
                         fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
                         return getUrls(selector, doc);
@@ -4808,7 +4823,7 @@
             let links = [...fun.gae(".entry-content a:not([href*='imx.to'])")].map(a => a.href);
             let resArr = [];
             let xhrNum = 0;
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let res = fun.xhr(links[i], "document").then(doc => {
                     fun.show(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
                     return fun.ge("#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img", doc);
@@ -5974,7 +5989,7 @@
             let links = [...fun.gae("#append_thumbs a")];
             let fetchNum = 0;
             let resArr = [];
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let url = links[i].href;
                 let res = fun.fetchDoc(url).then(doc => {
                     fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
@@ -7492,7 +7507,7 @@
             let chapterId = siteUrl.match(/chapter\/(\d+)\/images/)[1];
             let chapters = json.data.chaptersByComicId;
             let nextUrl;
-            for (let i in chapters) {
+            for (let i = 0; i < chapters.length; i++) {
                 if (new RegExp(chapterId).test(chapters[i].id)) {
                     try {
                         let nextId = chapters[parseInt(i, 10) + 1].id;
@@ -7640,9 +7655,7 @@
             if (/acg|mhd100/.test(location.host)) {
                 $("#images").unbind("click");
                 _0x5097 = null;
-                for (let i = 0; i <= 2; i++) {
-                    clearInterval(i)
-                }
+                fun.clearAllTimer(3);
             } else if (/gufengmh/.test(location.host)) {
                 $(document).unbind("keydown");
                 $(document).unbind("keyup");
@@ -8806,19 +8819,7 @@
         reg: /kanbook\.net\/comic\/\d+\/\d+/,
         delay: 1000,
         init: "$(document).unbind('keydown');$(document).unbind('keyup');",
-        imgs: () => {
-            let arr = [];
-            if (is_refresh == 0) {
-                for (let i = 0; i < pageNum; i++) {
-                    arr.push(Gm.getImgUrl(comic_id + "/" + version_id + "/" + part_id + "/" + my_sha2(x_tokens[i])));
-                }
-            } else {
-                for (let i = 0; i < data.url.length; i++) {
-                    arr.push(Gm.getImgUrl(data.url[i]));
-                }
-            }
-            return arr;
-        },
+        imgs: () => is_refresh == 0 ? x_tokens.map(e => Gm.getImgUrl(comic_id + "/" + version_id + "/" + part_id + "/" + my_sha2(e))) : data.url.map(e => Gm.getImgUrl(e)),
         button: [4],
         insertImg: ["#all", 2],
         go: 1,
@@ -9126,7 +9127,7 @@
             let testArr = hostArr.map(e => e + firstPic);
             let ok = false;
             let host;
-            for (let i in testArr) {
+            for (let i = 0; i < testArr.length; i++) {
                 let obj = await fun.checkImgStatus(testArr[i]);
                 console.log(`確認圖片[${i}]`, obj);
                 if (obj.ok) {
@@ -9236,15 +9237,7 @@
         autoPager: {
             ele: ".mdui-col-lg-2",
             observer: ".mdui-col-lg-2",
-            next: () => {
-                let next = fun.ge("span.current+a", doc);
-                if (next) {
-                    let num = next.getAttribute("href").match(/\d+/)[0];
-                    return location.href.replace(/\?page=\d+/, "") + "?page=" + num;
-                } else {
-                    return null;
-                }
-            },
+            next: () => fun.ge("span.current+a", doc) ? location.href.replace(/\?page=\d+/, "") + "?page=" + fun.ge("span.current+a", doc).getAttribute("href").match(/\d+/)[0] : null,
             re: ".pages",
             history: 1
         },
@@ -9485,11 +9478,7 @@
             let librarysArr;
             try {
                 const check = await fetch(jsdelivrLibrarys[0]).then(res => res.status);
-                if (check == 200) {
-                    librarysArr = jsdelivrLibrarys;
-                } else {
-                    librarysArr = bootcdnLibrarys;
-                }
+                check == 200 ? librarysArr = jsdelivrLibrarys : librarysArr = bootcdnLibrarys;
             } catch (error) {
                 console.error("\ncdn.jsdelivr.netV3 函式庫取得失敗", error);
                 librarysArr = bootcdnLibrarys;
@@ -9498,16 +9487,12 @@
                 if (/\.js$/.test(librarysArr[i])) {
                     if (siteData.fancybox && siteData.fancybox.js === false) continue;
                     const script = document.createElement("script");
-                    //await fetch(librarysArr[i]);
-                    //script.src = librarysArr[i];
                     const code = await fetch(librarysArr[i]).then(res => res.text());
                     script.type = "text/javascript";
                     script.innerHTML = code;
                     document.body.appendChild(script);
                 } else if (/\.css$/.test(librarysArr[i])) {
                     if (siteData.fancybox && siteData.fancybox.css !== false) {
-                        //const fancyBoxCssHtml = `<link href="${librarysArr[i]}" rel="stylesheet">`;
-                        //document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
                         const css = await fetch(librarysArr[i]).then(res => res.text());
                         fun.css(css);
                     }
@@ -9537,11 +9522,7 @@
             let librarysArr;
             try {
                 const check = await fetch(jsdelivrLibrarys[0]).then(res => res.status);
-                if (check == 200) {
-                    librarysArr = jsdelivrLibrarys;
-                } else {
-                    librarysArr = bootcdnLibrarys;
-                }
+                check == 200 ? librarysArr = jsdelivrLibrarys : librarysArr = bootcdnLibrarys;
             } catch (error) {
                 console.error("\ncdn.jsdelivr.netV5 函式庫取得失敗", error);
                 librarysArr = bootcdnLibrarys;
@@ -9549,15 +9530,11 @@
             for (let i in librarysArr) {
                 if (/\.js$/.test(librarysArr[i])) {
                     const script = document.createElement("script");
-                    //await fetch(librarysArr[i]);
-                    //script.src = librarysArr[i];
                     const code = await fetch(librarysArr[i]).then(res => res.text());
                     script.type = "text/javascript";
                     script.innerHTML = code;
                     document.body.appendChild(script);
                 } else if (/\.css$/.test(librarysArr[i])) {
-                    //const fancyBoxCssHtml = `<link href="${librarysArr[i]}" rel="stylesheet">`;
-                    //document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
                     const css = await fetch(librarysArr[i]).then(res => res.text());
                     fun.css(css);
                 }
@@ -9639,12 +9616,7 @@
         };
     }
 
-    const fancyboxBlackList = () => {
-        if (siteData.fancybox && siteData.fancybox.blacklist === 1) {
-            return true;
-        }
-        return false;
-    };
+    const fancyboxBlackList = () => siteData.fancybox && siteData.fancybox.blacklist === 1 ? true : false;
 
     switch (language) {
         case "zh-TW":
@@ -10116,16 +10088,6 @@
             }).then(buffer => {
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
-                /*
-                let doc = fun.doc(htmlText);
-                let imgs = [...doc.images];
-                for (let i in imgs) {
-                    let check = fun.checkImgSrc(imgs[i], rText);
-                    if (check.ok) {
-                        new Image().src = check.src;
-                    }
-                }
-                */
                 fun.show(`${displayLanguage.str_02}${fetchNum+=1}/${maxPage}`, 0);
                 return htmlText;
             }).catch(error => {
@@ -10148,13 +10110,7 @@
                     debug(`\nfun.getImg() DOM${i}`, doc);
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
-                        if (check.ok) {
-                            imgsArray.push(decodeURI(check.src));
-                            continue;
-                        } else {
-                            debug(`\nfun.getImg() imgs[${p}]錯誤`, imgs[p]);
-                            continue;
-                        }
+                        check.ok ? imgsArray.push(decodeURI(check.src)) : debug(`\nfun.getImg() imgs[${p}]錯誤`, imgs[p]);
                     }
                 }
             });
@@ -10193,7 +10149,7 @@
                         }
                     });
                     if (typeof replaceElement == "string") {
-                        fun.gae(".invisible", doc).forEach(ele => {
+                        [...fun.gae(".invisible", doc)].forEach(ele => {
                             ele.classList.remove("invisible");
                         });
                         let currentPageEles = [...fun.gae(replaceElement)];
@@ -10226,13 +10182,7 @@
                     debug(`\nfun.getImgO() DOM${i}`, doc);
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
-                        if (check.ok) {
-                            imgsArray.push(decodeURI(check.src));
-                            continue;
-                        } else {
-                            debug(`\nfun.getImgO() imgs[${p}]錯誤`, imgs[p]);
-                            continue;
-                        }
+                        check.ok ? imgsArray.push(decodeURI(check.src)) : debug(`\nfun.getImgO() imgs[${p}]錯誤`, imgs[p]);
                     }
                 }
             });
@@ -10250,7 +10200,7 @@
             [...fun.gae(img)].forEach(ele => {
                 imgsArray.push(ele);
             });
-            const html = async (url, id = 0) => {
+            const html = async (url, index = 0) => {
                 let targetEle = [...fun.gae(img)].pop();
                 let load = document.createElement("p");
                 load.className = "FullPictureLoadLoading";
@@ -10267,7 +10217,7 @@
                     }
                 }
                 if (doc) {
-                    debug("iframeDoc" + id, doc);
+                    debug("iframeDoc" + index, doc);
                     [...fun.gae(img, doc)].forEach(ele => {
                         imgsArray.push(ele);
                         targetEle.parentNode.insertBefore(ele.cloneNode(true), targetEle.nextSibling);
@@ -10400,12 +10350,7 @@
                     let imgs = [...fun.gae(img, doc)];
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
-                        if (check.ok) {
-                            imgsArray.push(check.src);
-                        } else {
-                            console.error("\nfun.getImgA() PromiseAll出錯", imgs[p]);
-                            continue;
-                        }
+                        check.ok ? imgsArray.push(check.src) : console.error("\nfun.getImgA() PromiseAll出錯", imgs[p]);
                     }
                 }
             });
@@ -10472,14 +10417,47 @@
                 ok: false
             };
         },
-        getNP: async (picsEle, nextLinkEle, lastEle = null, replaceElement = null, time = 0, dataset = null, mag = 1) => {
+        getNP: async (pageEle, nextLinkEle, lastEle = null, replaceElement = null, time = 0, dataset = null, mag = 1) => {
             //翻頁模式聚集所有圖片或是預覽縮圖然後fun.getImgA()
             //用在規則init，fun.getNP(picsEle, nextLinkEle, lastEle, replaceElement, time);
             if (fun.ge(".FullPictureLoadImage")) return;
             fetching = true;
-            let nextlink = "";
+            let nextlink = null;
             if (mag == 1) fun.show(displayLanguage.str_14, 0);
-            const getNextPagePics = async url => {
+            const getNextLink = async (url = "", doc = document) => {
+                if (typeof nextLinkEle === "function") {
+                    nextlink = await nextLinkEle();
+                } else if (typeof nextLinkEle === "string") {
+                    let ele = fun.ge(nextLinkEle, doc);
+                    if (ele) {
+                        if (ele.dataset.url) {
+                            if (!/^http/.test(ele.dataset.url)) return null;
+                            nextlink = ele.dataset.url;
+                        } else if (ele.tagName === "A") {
+                            nextlink = ele.href;
+                            let nh = ele.host;
+                            let lh = location.host;
+                            if (nh != lh) nextlink = nextlink.replace(nh, lh);
+                        } else {
+                            try {
+                                ele.getAttribute("href") ? nextlink = ele.getAttribute("href") : nextlink = ele.getAttribute("_href");
+                            } catch (e) {
+                                nextlink = null;
+                            }
+                        }
+                    } else {
+                        nextlink = null;
+                    }
+                } else {
+                    nextlink = null;
+                }
+                if (typeof url === "string" && typeof nextlink === "string" && (url === nextlink)) {
+                    if (mag == 1) fun.show(displayLanguage.str_15);
+                    nextlink = null;
+                }
+                return nextlink;
+            };
+            const getNextPageEles = async url => {
                 await fetch(url).then(async res => {
                     if (res.status >= 400) {
                         let resData = await fun.retryUrl(url, res, "fun.getNP()");
@@ -10502,16 +10480,15 @@
                             }
                         });
                     }
-                    debug(`\nfun.getNP() > getNextPagePics() DOM\n${decodeURI(url)}`, doc);
-                    let eles = fun.gae(picsEle, doc);
-                    let nextPage = fun.ge(nextLinkEle, doc);
+                    debug(`\nfun.getNP() > getNextPageEles() DOM\n${decodeURI(url)}`, doc);
+                    let eles = [...fun.gae(pageEle, doc)];
                     let lastPage = null;
                     if (lastEle) lastPage = fun.ge(lastEle, doc);
                     let fragment = new DocumentFragment();
                     eles.forEach(ele => {
                         fragment.appendChild(ele.cloneNode(true));
                     });
-                    let targetEle = [...fun.gae(picsEle)].pop();
+                    let targetEle = [...fun.gae(pageEle)].pop();
                     targetEle.parentNode.insertBefore(fragment, targetEle.nextSibling);
                     if (replaceElement) {
                         let currentPageEles = [...fun.gae(replaceElement)];
@@ -10522,7 +10499,7 @@
                                 try {
                                     currentPageEles[i].outerHTML = nextPageEles[i].outerHTML;
                                 } catch (error) {
-                                    console.error("\nfun.getNP() 替換頁碼調錯誤\n", error);
+                                    console.error("\nfun.getNP() 替換元素錯誤\n", error);
                                 }
                             }
                         }
@@ -10532,29 +10509,10 @@
                         if (mag == 1) fun.show(displayLanguage.str_15);
                         return;
                     }
-                    if (nextPage) {
+                    nextlink = await getNextLink(url, doc);
+                    if (nextlink) {
                         await fun.delay(time, 0);
-                        if (nextPage.dataset.url) {
-                            if (!/^http/.test(nextPage.dataset.url)) return;
-                            nextlink = nextPage.dataset.url;
-                        } else {
-                            try {
-                                nextlink = nextPage.href;
-                                let nh = nextPage.host;
-                                let lh = location.host;
-                                if (nh != lh) {
-                                    nextlink = nextlink.replace(nh, lh);
-                                }
-                            } catch (e) {
-                                nextlink = nextPage.getAttribute("href");
-                            }
-                        }
-                        if (url == nextlink) {
-                            fetching = false;
-                            if (mag == 1) fun.show(displayLanguage.str_15);
-                            return;
-                        }
-                        await getNextPagePics(nextlink);
+                        await getNextPageEles(nextlink);
                     } else {
                         fetching = false;
                         if (mag == 1) fun.show(displayLanguage.str_15);
@@ -10562,25 +10520,15 @@
                     }
                 });
             };
-            let next = fun.ge(nextLinkEle);
-            if (next) {
+            nextlink = await getNextLink();
+            if (nextlink) {
                 await fun.delay(time, 0);
-                if (next.dataset.url) {
-                    if (!/^http/.test(next.dataset.url)) return;
-                    nextlink = next.dataset.url;
-                } else {
-                    nextlink = next.href;
-                    let nh = next.host;
-                    let lh = location.host;
-                    if (nh != lh) nextlink = nextlink.replace(nh, lh);
-                }
-                await getNextPagePics(nextlink);
+                await getNextPageEles(nextlink);
             } else {
                 fetching = false;
                 if (mag == 1) fun.show(displayLanguage.str_15);
                 return;
             }
-            fun.fetchErrorMsg();
         },
         toggleAutoPager: () => {
             if (autoPager === true) {
@@ -10632,7 +10580,7 @@
             }
             if (siteData.autoPager.script) {
                 let scripts = [...fun.gae(siteData.autoPager.script, doc)];
-                for (let i in scripts) {
+                for (let i = 0; i < scripts.length; i++) {
                     if (scripts[i].src) {
                         await fun.script(scripts[i].src, 1, 1);
                     } else {
@@ -10643,7 +10591,7 @@
             }
             if (siteData.autoPager.lazySrc) {
                 let eles = [...fun.gae(siteData.autoPager.lazySrc, doc)];
-                for (let i in eles) {
+                for (let i = 0; i < eles.length; i++) {
                     let check = fun.checkDataset(eles[i]);
                     if (check.ok) {
                         if (eles[i].tagName === "IMG") {
@@ -10654,14 +10602,10 @@
                     }
                 }
             }
-            if (typeof siteData.autoPager.bF === "function") {
-                await siteData.autoPager.bF();
-            }
+            if (typeof siteData.autoPager.bF === "function") await siteData.autoPager.bF();
             let newEle, tE;
             if (typeof siteData.autoPager.ele === "function" && siteData.autoPager.pos || typeof siteData.autoPager.ele === "string") {
-                if (typeof siteData.autoPager.ele === "function") {
-                    newEle = await siteData.autoPager.ele();
-                }
+                if (typeof siteData.autoPager.ele === "function") newEle = await siteData.autoPager.ele();
                 if (typeof siteData.autoPager.ele === "string") {
                     let nextEle = fun.ge(siteData.autoPager.ele, doc);
                     if (!nextEle) {
@@ -10721,9 +10665,7 @@
                     }
                 }
             }
-            if (typeof siteData.autoPager.aF === "function") {
-                await siteData.autoPager.aF();
-            }
+            if (typeof siteData.autoPager.aF === "function") await siteData.autoPager.aF();
             fun.removeLoading();
             if (siteData.autoPager.history == 1) fun.addHistory(doc.title, url);
             if (siteData.autoPager.observer) {
@@ -10791,7 +10733,7 @@
                 document.body.appendChild(iframe);
                 tid = setTimeout(() => {
                     resolve(null);
-                }, 3000);
+                }, 5000);
                 const call = async () => {
                     clearTimeout(tid);
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -10828,9 +10770,9 @@
         }),
         getNextLink: async () => {
             if (typeof siteData.autoPager.next === "function") {
-                let nextcode = await siteData.autoPager.next();
-                if (nextLink === nextcode) return null;
-                nextLink = nextcode;
+                let nextCode = await siteData.autoPager.next();
+                if (nextLink === nextCode) return null;
+                nextLink = nextCode;
             } else if (typeof siteData.autoPager.next === "string") {
                 let nextEle = fun.ge(siteData.autoPager.next, doc);
                 try {
@@ -10854,7 +10796,7 @@
             let div = document.createElement("div");
             div.className = "autoPagerTitle";
             let a = document.createElement("a");
-            a.href = url
+            a.href = url;
             a.innerText = title;
             div.appendChild(a);
             div.addEventListener("click", event => {
@@ -10911,7 +10853,7 @@
             let resArr = [];
             let xhrNum = 0;
             fun.show(displayLanguage.str_16, 0);
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let res = fun.xhrDoc(links[i]).then(doc => {
                     debug(`\nfun.getEle() URL`, links[i]);
                     fun.show(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
@@ -10939,9 +10881,7 @@
                     ele.innerHTML = "";
                     ele.appendChild(fragment);
                 }
-                if (removeEles) {
-                    fun.remove(removeEles);
-                }
+                if (removeEles) fun.remove(removeEles);
                 fun.fetchErrorMsg();
             });
         },
@@ -10949,12 +10889,7 @@
             let srcArr = [];
             for (let i = 0; i < imgsArray.length; i++) {
                 let check = fun.checkImgSrc(imgsArray[i]);
-                if (check.ok) {
-                    srcArr.push(check.src);
-                } else {
-                    console.error("\nfun.insertImg(imgsArray) 格式錯誤！", imgsArray[i]);
-                    continue;
-                }
+                check.ok ? srcArr.push(check.src) : console.error("\nfun.insertImg(imgsArray) 格式錯誤！", imgsArray[i]);
             }
             srcArr = [...new Set(srcArr)];
             let fragment = new DocumentFragment();
@@ -10969,48 +10904,49 @@
                 if (typeof siteData.button[1] === "string") {
                     width = siteData.button[1];
                 }
-                let btn0 = document.createElement("button");
-                btn0.id = "FullPictureLoadOptionsBtn";
-                btn0.style.width = width;
-                btn0.style.height = "24px";
-                btn0.innerText = displayLanguage.str_85;
-                btn0.addEventListener("click", event => {
-                    event.preventDefault();
-                    fun.ge("#FullPictureLoadOptions").removeAttribute("style");
+                const buttonObj = [{
+                    id: "FullPictureLoadOptionsBtn",
+                    text: displayLanguage.str_85,
+                    fn: event => {
+                        event.preventDefault();
+                        fun.ge("#FullPictureLoadOptions").removeAttribute("style");
+                    }
+                }, {
+                    id: "FullPictureLoadToggleImgModeBtn",
+                    text: displayLanguage.str_86,
+                    fn: event => {
+                        event.preventDefault();
+                        toggleImgMode();
+                    }
+                }, {
+                    id: "FullPictureLoadToggleZoomeBtn",
+                    text: displayLanguage.str_87,
+                    fn: event => {
+                        event.preventDefault();
+                        toggleZoom();
+                    }
+                }, {
+                    id: "FullPictureLoadCancelZoomBtn",
+                    text: displayLanguage.str_88,
+                    fn: event => {
+                        event.preventDefault();
+                        cancelZoom();
+                    }
+                }];
+                const createButton = obj => {
+                    let button = document.createElement("button");
+                    button.id = obj.id;
+                    button.style.width = width;
+                    button.style.height = "24px";
+                    button.innerText = obj.text;
+                    button.addEventListener("click", obj.fn);
+                    fragment.appendChild(button);
+                };
+                [...buttonObj].forEach(obj => {
+                    createButton(obj);
                 });
-                fragment.appendChild(btn0);
-                let btn1 = document.createElement("button");
-                btn1.id = "FullPictureLoadToggleImgModeBtn";
-                btn1.style.width = width;
-                btn1.style.height = "24px";
-                btn1.innerText = displayLanguage.str_86;
-                btn1.addEventListener("click", event => {
-                    event.preventDefault();
-                    toggleImgMode();
-                });
-                fragment.appendChild(btn1);
-                let btn2 = document.createElement("button");
-                btn2.id = "FullPictureLoadToggleZoomeBtn";
-                btn2.style.width = width;
-                btn2.style.height = "24px";
-                btn2.innerText = displayLanguage.str_87;
-                btn2.addEventListener("click", event => {
-                    event.preventDefault();
-                    toggleZoom();
-                });
-                fragment.appendChild(btn2);
-                let btn3 = document.createElement("button");
-                btn3.id = "FullPictureLoadCancelZoomBtn";
-                btn3.style.width = width;
-                btn3.style.height = "24px";
-                btn3.innerText = displayLanguage.str_88;
-                btn3.addEventListener("click", event => {
-                    event.preventDefault();
-                    cancelZoom();
-                });
-                fragment.appendChild(btn3);
             }
-            let numP = srcArr.length;
+            let noVideoNum = [...srcArr].filter(src => !/youtube|\.mp4$|\.webm$/.test(src)).length;
             let blackList = fancyboxBlackList();
             if (options.fancybox == 1 && thumbnailsSrcArray.length > 0) {
                 if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(location.host) || !/^data/.test(thumbnailsSrcArray[0])) {
@@ -11030,15 +10966,21 @@
             debug("插入圖片最後確認 srcArr", srcArr);
             let padStart = String(srcArr.length).length;
             for (let i = 0; i < srcArr.length; i++) {
-                if (/\.mp4$|\.webm$/.test(srcArr[i])) {
-                    numP--;
+                if (/youtube|\.mp4$|\.webm$/.test(srcArr[i])) {
+                    let video = document.createElement("video");
+                    video.src = srcArr[i];
+                    video.controls = true;
+                    video.loop = false;
+                    video.autoplay = false;
+                    video.style = "height: 500px;width: 100%;max-width:100%";
+                    fragment.appendChild(video);
                     continue;
                 }
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
                     a.id = "imgLocationOriginal" + i;
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
-                    thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = srcArr[i];
+                    thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
                     /*
                     a.dataset.downloadSrc = srcArr[i];
@@ -11078,13 +11020,11 @@
                 } else {
                     fragment.appendChild(img);
                 }
-                if (i == srcArr.length - 1) {
-                    let end = document.createElement("p");
-                    end.id = "FullPictureLoadEnd";
-                    end.innerText = `${displayLanguage.str_52}：${numP}P`;
-                    fragment.appendChild(end);
-                }
             }
+            let end = document.createElement("p");
+            end.id = "FullPictureLoadEnd";
+            end.innerText = `${displayLanguage.str_52}：${noVideoNum}P`;
+            fragment.appendChild(end);
 
             const MutationObserver_aff = () => { //观察者 MutationObserver事件
                 const openEvent = () => {
@@ -11095,7 +11035,7 @@
                     } else if (fun.ge("badge.b-black.counter") !== null) {
                         slideIndex = parseInt(fun.geT("badge.b-black.counter").match(/\d+/)[0], 10) - 1;
                     }
-                    if (slideIndex) {
+                    if (typeof slideIndex === "number") {
                         console.log("open - # " + slideIndex + " slide is open!");
                     }
                 };
@@ -11118,7 +11058,7 @@
                             }
                         } else if (item.type === "childList") {
                             // console.log(item);
-                            if (item.removedNodes.length > 1 && /fancybox/.test(item.removedNodes[1].className)) {
+                            if (item.removedNodes.length > 1 && /fancybox|swiper/.test(item.removedNodes[1].className)) {
                                 console.log(" # ", item);
                                 console.log("close - # " + slideIndex + " slide is closed!");
                                 // setTimeout(closeEvent, 1000);
@@ -11165,8 +11105,7 @@
                 };
                 debug("\n圖片全載Lazyloading開始預讀");
                 for (let src = 0; src < _srcArr.length; src++) {
-                    if (/\.mp4$|\.webm$/.test(_srcArr[src])) {
-                        numP--;
+                    if (/youtube|\.mp4$|\.webm$/.test(_srcArr[src])) {
                         continue;
                     }
                     await loadImg(_srcArr[src], src);
@@ -11175,22 +11114,22 @@
             };
             if (srcArr.length > 0) {
                 if (siteData.insertImg[1] == 2 || siteData.insertImg[1] == 3) picPreload(srcArr);
-                let thisEle;
+                let targetEle;
                 try {
                     if (typeof ele == "object") {
-                        thisEle = fun.ge(ele[0]);
+                        targetEle = fun.ge(ele[0]);
                         if (ele[1] == 0) {
-                            thisEle.appendChild(fragment);
-                            thisEle.style.textAlign = "center";
-                            thisEle.style.display = "block";
+                            targetEle.appendChild(fragment);
+                            targetEle.style.textAlign = "center";
+                            targetEle.style.display = "block";
                         } else if (ele[1] == 1) {
-                            thisEle.parentNode.insertBefore(fragment, thisEle);
-                            thisEle.parentNode.style.textAlign = "center";
-                            thisEle.parentNode.style.display = "block";
+                            targetEle.parentNode.insertBefore(fragment, targetEle);
+                            targetEle.parentNode.style.textAlign = "center";
+                            targetEle.parentNode.style.display = "block";
                         } else if (ele[1] == 2) {
-                            thisEle.parentNode.insertBefore(fragment, thisEle.nextSibling);
-                            thisEle.parentNode.style.textAlign = "center";
-                            thisEle.parentNode.style.display = "block";
+                            targetEle.parentNode.insertBefore(fragment, targetEle.nextSibling);
+                            targetEle.parentNode.style.textAlign = "center";
+                            targetEle.parentNode.style.display = "block";
                         }
                         if (typeof ele[2] != "undefined") {
                             fun.remove(ele[2]);
@@ -11198,11 +11137,11 @@
                         if (siteData.msg != 0 && siteData.category != "comic") fun.show(displayLanguage.str_18);
                         if (siteData.go == 1) goToNo1Img();
                     } else if (typeof ele == "string") {
-                        thisEle = fun.ge(ele);
-                        thisEle.innerHTML = "";
-                        thisEle.appendChild(fragment);
-                        thisEle.style.textAlign = "center";
-                        thisEle.style.display = "block";
+                        targetEle = fun.ge(ele);
+                        targetEle.innerHTML = "";
+                        targetEle.appendChild(fragment);
+                        targetEle.style.textAlign = "center";
+                        targetEle.style.display = "block";
                         if (siteData.msg != 0 && siteData.category != "comic") fun.show(displayLanguage.str_18);
                         if (siteData.go == 1) goToNo1Img();
                     }
@@ -11241,7 +11180,13 @@
                 [...fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage")].forEach(e => {
                     e.style.display = "block";
                 });
-                if (options.fancybox == 1 && !blackList && !siteData.fancybox) Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
+                if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
+                    try {
+                        Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
+                    } catch (error) {
+                        debug("沒有引入FancyboxV5", error);
+                    }
+                }
             } else {
                 fun.show(displayLanguage.str_20);
             }
@@ -11268,12 +11213,7 @@
             if (imgs.length > 0) {
                 for (let i = 0; i < imgs.length; i++) {
                     let check = fun.checkImgSrc(imgs[i]);
-                    if (check.ok) {
-                        imgSrcArray.push(check.src);
-                    } else {
-                        console.error("\nfun.immediateInsertImg() imgsArray 格式錯誤！", imgs[i]);
-                        continue;
-                    }
+                    check.ok ? imgSrcArray.push(check.src) : console.error("\nfun.immediateInsertImg() imgsArray 格式錯誤！", imgs[i])
                 }
             } else {
                 fun.show(displayLanguage.str_20, 3000);
@@ -11598,7 +11538,7 @@
             }
             let resArr = [];
             let fetchNum = 0;
-            for (let i in links) {
+            for (let i = 0; i < links.length; i++) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
                     fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let script = [...doc.scripts].find(s => s.innerText.search(/document\.write/) > -1).innerText;
@@ -11844,14 +11784,26 @@
                 clearTimeout(i);
             }
             `;
-            if (mode == 0 || mode == 2) new Function(endTidStr)();
+            if (mode == 0 || mode == 2) {
+                new Function(endTidStr)();
+                let endTid = setTimeout(() => {});
+                for (let i = 0; i <= endTid; i++) {
+                    clearTimeout(i);
+                }
+            }
             let endIidStr = `
             let endIid = setInterval(() => {});
             for (let i = 1; i <= endIid; i++) {
                 clearInterval(i);
             }
             `;
-            if (mode == 0 || mode == 3) new Function(endIidStr)();
+            if (mode == 0 || mode == 3) {
+                new Function(endIidStr)();
+                let endIid = setInterval(() => {});
+                for (let i = 1; i <= endIid; i++) {
+                    clearInterval(i);
+                }
+            }
         }
     };
 
@@ -11896,7 +11848,7 @@
         } else {
             referer = location.href;
         }
-        return referer
+        return referer;
     };
 
     const Fetch_API_GetData = (srcUrl, picNum = "none", imgsNum = "none") => {
@@ -12024,8 +11976,6 @@
         return imgs;
     };
 
-    let countdownTime1, countdownTime2;
-
     const startAutoDownload = async () => {
         let autoDownload = siteData.autoDownload;
         let next = siteData.next;
@@ -12037,11 +11987,11 @@
             let countdownNum = max;
             fun.show(`${displayLanguage.str_32}${max}${displayLanguage.str_33}`, 0);
             for (let i = 1; i < max; i++) {
-                countdownTime1 = setTimeout(() => {
+                setTimeout(() => {
                     fun.show(`${displayLanguage.str_32}${countdownNum-=1}${displayLanguage.str_33}`, 0);
                 }, i * 1000);
             }
-            countdownTime2 = setTimeout(() => {
+            setTimeout(() => {
                 if (typeof next === "function") {
                     fun.show(displayLanguage.str_34);
                     location.href = ele;
@@ -12180,7 +12130,7 @@
                                 return;
                             }
                         }
-                        let fileName = `${blobDataArray[i].picNum}P.${ex}`;
+                        let fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
                         if (options.zip == 1) {
                             //console.log(`第${n}/${blobDataArray.length}張，檔案名：${fileName}，大小：${parseInt(blobDataArray[i].blob.size / 1024, 10)} Kb`);
                             zipFolder.file(fileName, blobDataArray[i].blob, {
@@ -12218,11 +12168,13 @@
                     downloadNum = 0;
                     downloading = false;
                     showMsg(displayLanguage.str_43);
+                    return;
                 }
             });
         } else {
             downloading = false;
             showMsg(displayLanguage.str_41);
+            return;
         }
     };
 
@@ -12331,8 +12283,8 @@
     };
 
     const toggleZoom = () => {
-        if (ge("#FullPictureLoadOptions:not([style])")) return;
-        if (!fetching && options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
+        if (fetching || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom == 0 ? options.zoom = 10 : options.zoom = options.zoom -= 1;
             if (options.zoom == 0) cancelZoom();
             ge("#FullPictureLoadOptionsZoom").value = options.zoom;
@@ -12348,10 +12300,10 @@
     };
 
     let viewMode = 0;
-    let column;
 
     const toggleImgMode = async () => {
-        if (ge("#FullPictureLoadOptions:not([style])")) return;
+        if (fetching || ge("#FullPictureLoadOptions:not([style])")) return;
+        let column;
         if ([...gae(".FullPictureLoadImage")].length < 1) {
             fun.show("請先手動插入圖片");
             return;
@@ -12438,7 +12390,13 @@
             });
             let tE = fun.ge("#FullPictureLoadEnd");
             tE.parentNode.insertBefore(imgBox, tE);
-            if (options.fancybox == 1 && !blackList && !siteData.fancybox) Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
+            if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
+                try {
+                    Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
+                } catch (error) {
+                    debug("沒有引入FancyboxV5", error);
+                }
+            }
             tE.parentNode.style.textAlign = "center";
             tE.parentNode.style.display = "block";
             [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => {
@@ -12585,7 +12543,6 @@
         img2.style.display = "none";
         img2.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA7BJREFUWEetl29olVUYwH/n3jvvGpp/WtNlIdoK1MJazBwO0/mlZqFgRCgGfZC7TTbwixqbMnPiHIIwmdd9MYiMhD4o6gqirenGsoF/MLfaahFz3a1Shlv7e9/3yHnnxXvv3vee96574P3wcp4/v/M8z3nOOQK3o67Oj2+0EMlWPKxEkg3Wp0YIQQiTLgQXCWc0UV4+4ca00Ao1HM3G8B0CuROYp5WfFhgGcQ5v+FMCFaFEOs4An1WlM+6vRIq9QIZLx/Fiowh5kvSJaj6uGrezYQ9QX7sEYV4A3pyl43i160jPNvbsG4ifmAlwquZVfDQieV7nfJE/3RJ5MGG7uFh1wT3CFFF24E70RCyAWrnH7NA5V0pH8gooW51r2Tp19wYHO1qROmIFYXryoiPxBEDlfCz9B13YlULd+s0EVq6JcdfQdZvytu/1EHCdp8Y3RmriCUDwWDVSVOgq1s55RMc1hJBHKfmkUulNA1hbzftbomp3Wnk8sEuIUbxGjtqi0wCnjwdBFjut3q3z5CIhzlC6v0Qw3eH+cWoyyTpPAmKYcMazgtM17wCNTk0iUc51Re8iHUWC+pozCAJ2DeL/OHcVCUmDIFjTgmRDPMDB3HzUl4qxq7mR87//MtOU4KpKQTfwUvTsgjl+QrtK8Qr9WeUGsG2gn02Xz9uJ9iiAYWBu9OwbmYtp36YOv9SM/8JTZH1ez5RpxhscsQWYP8fPnzsCZPh8MQph0+THv0MULFlqS9Y60M+6rGx8Hk/M/Nlf71B87Ts7HQtgRgqUZNkruZxYt/Fxp4JJ0+Cj5m/IeXoB1XkFtgCVHa10Dt2ndu0GcuYvtGR+fvAvO5uu0DV03yEFDkWopNVqtix70QrdFz2d9D4cYt+atQkBam//ZEFvXrqMCcPg2sA95zxaReiwDZ203AC4rhxrGyZoRHaGUgoARdpWHA+RQoDHrVh50BxG0RApBAhSeqDU9XEcgUgRwAhpRg67KwaTupAoiD2rX+dk/ibbOtvb3kz93Zv6GhTiECX7jyjBpK9k+Yufo+W9D22dvHXpK9oH/9IAiDYyxwr5oGoyFkD9ubyUfln4Lu+veDnG0de93exouqxz3kdaOE+FPiI4q2u5OqRKVr3G2y8st+x82/cHwc5bGDLRvVj0Ycgtia/lEayUP0xEG2nh7dErd45AZCY1T7MRhKjlmbHjkZzH50h/4M/ucfoQOEeacdhu1dEQeoCItPPzXCVenTj9SNmJ4BLeRS0EAlP6/QiPAMXOipDq4W0VAAAAAElFTkSuQmCC";
         img2.setAttribute("title", displayLanguage.str_62);
-
         img2.addEventListener("click", () => {
             goToImg("first");
         });
@@ -13083,11 +13040,13 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
             let num = 0;
             let loop = setInterval(() => {
                 num++;
-                if (typeof Fancybox === "function") {
-                    clearInterval(loop);
-                    resolve();
-                }
-                if (num >= 30) {
+                try {
+                    if (typeof Fancybox === "function") {
+                        clearInterval(loop);
+                        resolve();
+                    }
+                } catch (e) {}
+                if (num >= 5) {
                     clearInterval(loop);
                     resolve();
                     console.error("FancyboxV5 注入逾時");
@@ -13095,81 +13054,97 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
                 }
             }, 100);
         });
-        switch (language) {
-            case "zh-TW":
-                Fancybox.defaults.l10n = {
-                    PANUP: "上移",
-                    PANDOWN: "下移",
-                    PANLEFT: "左移",
-                    PANRIGHT: "右移",
-                    ZOOMIN: "放大",
-                    ZOOMOUT: "縮小",
-                    TOGGLEZOOM: "切換縮放等級",
-                    TOGGLE1TO1: "切換縮放等級",
-                    ITERATEZOOM: "切換縮放等級",
-                    ROTATECCW: "逆時針旋轉",
-                    ROTATECW: "順時針旋轉",
-                    FLIPX: "水平翻轉",
-                    FLIPY: "垂直翻轉",
-                    FITX: "水平適應",
-                    FITY: "垂直適應",
-                    RESET: "重設",
-                    TOGGLEFS: "切換全螢幕",
-                    CLOSE: "關閉",
-                    NEXT: "上一個",
-                    PREV: "下一個",
-                    MODAL: "使用 ESC 鍵關閉",
-                    ERROR: "發生了錯誤，請稍後再試",
-                    IMAGE_ERROR: "找不到圖像",
-                    ELEMENT_NOT_FOUND: "找不到 HTML 元素",
-                    AJAX_NOT_FOUND: "載入 AJAX 時出錯: 未找到",
-                    AJAX_FORBIDDEN: "載入 AJAX 時出錯: 被阻止",
-                    IFRAME_ERROR: "載入頁面出錯",
-                    TOGGLE_ZOOM: "切換縮放等級",
-                    TOGGLE_THUMBS: "切換縮圖",
-                    TOGGLE_SLIDESHOW: "切換幻燈片",
-                    TOGGLE_FULLSCREEN: "切換全螢幕",
-                    DOWNLOAD: "下載"
-                };
-                break;
-            case "zh-CN":
-                Fancybox.defaults.l10n = {
-                    PANUP: "上移",
-                    PANDOWN: "下移",
-                    PANLEFT: "左移",
-                    PANRIGHT: "右移",
-                    ZOOMIN: "放大",
-                    ZOOMOUT: "缩小",
-                    TOGGLEZOOM: "切换缩放级别",
-                    TOGGLE1TO1: "切换缩放级别",
-                    ITERATEZOOM: "切换缩放级别",
-                    ROTATECCW: "逆时针旋转",
-                    ROTATECW: "顺时针旋转",
-                    FLIPX: "水平翻转",
-                    FLIPY: "垂直翻转",
-                    FITX: "水平适应",
-                    FITY: "垂直适应",
-                    RESET: "重置",
-                    TOGGLEFS: "切换全屏",
-                    CLOSE: "关闭",
-                    NEXT: "上一个",
-                    PREV: "下一个",
-                    MODAL: "使用 ESC 键关闭",
-                    ERROR: "发生了错误，请稍后再试",
-                    IMAGE_ERROR: "找不到图像",
-                    ELEMENT_NOT_FOUND: "找不到 HTML 元素",
-                    AJAX_NOT_FOUND: "载入 AJAX 时出错: 未找到",
-                    AJAX_FORBIDDEN: "载入 AJAX 时出错: 被阻止",
-                    IFRAME_ERROR: "加载页面出错",
-                    TOGGLE_ZOOM: "切换缩放级别",
-                    TOGGLE_THUMBS: "切换缩略图",
-                    TOGGLE_SLIDESHOW: "切换幻灯片",
-                    TOGGLE_FULLSCREEN: "切换全屏",
-                    DOWNLOAD: "下载"
-                };
-                break;
-        };
-        debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
+        try {
+            switch (language) {
+                case "zh-TW":
+                    Fancybox.defaults.l10n = {
+                        PANUP: "上移",
+                        PANDOWN: "下移",
+                        PANLEFT: "左移",
+                        PANRIGHT: "右移",
+                        ZOOMIN: "放大",
+                        ZOOMOUT: "縮小",
+                        TOGGLEZOOM: "切換縮放等級",
+                        TOGGLE1TO1: "切換縮放等級",
+                        ITERATEZOOM: "切換縮放等級",
+                        ROTATECCW: "逆時針旋轉",
+                        ROTATECW: "順時針旋轉",
+                        FLIPX: "水平翻轉",
+                        FLIPY: "垂直翻轉",
+                        FITX: "水平適應",
+                        FITY: "垂直適應",
+                        RESET: "重設",
+                        TOGGLEFS: "切換全螢幕",
+                        CLOSE: "關閉",
+                        NEXT: "上一個",
+                        PREV: "下一個",
+                        MODAL: "使用 ESC 鍵關閉",
+                        ERROR: "發生了錯誤，請稍後再試",
+                        IMAGE_ERROR: "找不到圖像",
+                        ELEMENT_NOT_FOUND: "找不到 HTML 元素",
+                        AJAX_NOT_FOUND: "載入 AJAX 時出錯: 未找到",
+                        AJAX_FORBIDDEN: "載入 AJAX 時出錯: 被阻止",
+                        IFRAME_ERROR: "載入頁面出錯",
+                        TOGGLE_ZOOM: "切換縮放等級",
+                        TOGGLE_THUMBS: "切換縮圖",
+                        TOGGLE_SLIDESHOW: "切換幻燈片",
+                        TOGGLE_FULLSCREEN: "切換全螢幕",
+                        DOWNLOAD: "下載"
+                    };
+                    break;
+                case "zh-CN":
+                    Fancybox.defaults.l10n = {
+                        PANUP: "上移",
+                        PANDOWN: "下移",
+                        PANLEFT: "左移",
+                        PANRIGHT: "右移",
+                        ZOOMIN: "放大",
+                        ZOOMOUT: "缩小",
+                        TOGGLEZOOM: "切换缩放级别",
+                        TOGGLE1TO1: "切换缩放级别",
+                        ITERATEZOOM: "切换缩放级别",
+                        ROTATECCW: "逆时针旋转",
+                        ROTATECW: "顺时针旋转",
+                        FLIPX: "水平翻转",
+                        FLIPY: "垂直翻转",
+                        FITX: "水平适应",
+                        FITY: "垂直适应",
+                        RESET: "重置",
+                        TOGGLEFS: "切换全屏",
+                        CLOSE: "关闭",
+                        NEXT: "上一个",
+                        PREV: "下一个",
+                        MODAL: "使用 ESC 键关闭",
+                        ERROR: "发生了错误，请稍后再试",
+                        IMAGE_ERROR: "找不到图像",
+                        ELEMENT_NOT_FOUND: "找不到 HTML 元素",
+                        AJAX_NOT_FOUND: "载入 AJAX 时出错: 未找到",
+                        AJAX_FORBIDDEN: "载入 AJAX 时出错: 被阻止",
+                        IFRAME_ERROR: "加载页面出错",
+                        TOGGLE_ZOOM: "切换缩放级别",
+                        TOGGLE_THUMBS: "切换缩略图",
+                        TOGGLE_SLIDESHOW: "切换幻灯片",
+                        TOGGLE_FULLSCREEN: "切换全屏",
+                        DOWNLOAD: "下载"
+                    };
+                    break;
+            };
+            debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
+        } catch (error) {
+            if (!siteData.fancybox) {
+                try {
+                    const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css";
+                    const fancyBoxCss = await fetch(jcss).then(res => res.text());
+                    fun.css(fancyBoxCss);
+                } catch (error) {
+                    console.error("\ncdn.jsdelivr.net fancybox@3.5.7 jquery.fancybox.min.css 注入失敗", error);
+                    const bcss = "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js";
+                    const fancyBoxCss = await fetch(bcss).then(res => res.text());
+                    fun.css(fancyBoxCss);
+                }
+            }
+            debug("沒有引入FancyboxV5", error);
+        }
     };
 
     const Fancyboxi18nV3 = async () => {
@@ -13289,15 +13264,17 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             if (options.fancybox == 1 && !siteData.fancybox && category !== "none" && !siteData.autoPager) {
                 //const fancyBoxCssHtml = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css">`;
                 //document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
-                try {
-                    const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css";
-                    const fancyBoxCss = await fetch(jcss).then(res => res.text());
-                    fun.css(fancyBoxCss);
-                } catch (error) {
-                    console.error("\ncdn.jsdelivr.net CSS注入失敗", error);
-                    const bcss = "https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css";
-                    const fancyBoxCss = await fetch(bcss).then(res => res.text());
-                    fun.css(fancyBoxCss);
+                if (typeof Fancybox === "function") {
+                    try {
+                        const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css";
+                        const fancyBoxCss = await fetch(jcss).then(res => res.text());
+                        fun.css(fancyBoxCss);
+                    } catch (error) {
+                        console.error("\ncdn.jsdelivr.net CSS注入失敗", error);
+                        const bcss = "https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css";
+                        const fancyBoxCss = await fetch(bcss).then(res => res.text());
+                        fun.css(fancyBoxCss);
+                    }
                 }
                 await Fancyboxl10nV5();
             } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 5 && siteData.fancybox.insertLibrarys == 1) {
@@ -13338,7 +13315,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     } else if (typeof titleCode == "function") {
                         customTitle = await titleCode();
                     }
-                }
+                };
                 await getTitle();
                 debug(`\n自定義標題：${customTitle}`);
                 if (customData[i].observerTitle) {
@@ -13378,9 +13355,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 document.addEventListener("keydown", event => {
                     if (ge(".fancybox-container,.fancybox__container")) return;
                     let key = window.event ? event.keyCode : event.which;
-                    if (key == 39) {
-                        callback();
-                    }
+                    if (key == 39) callback();
                 });
             }
             let prev = customData[i].prev;
@@ -13440,9 +13415,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                                 elementClick(entry.target);
                                 debug(`\n圖片全載observerClick("${observerClick}")`, entry.target);
                                 setTimeout(async () => {
-                                    if (await fun.waitEle(observerClick, 30)) {
-                                        observer.observe(fun.ge(observerClick));
-                                    }
+                                    if (await fun.waitEle(observerClick, 30)) observer.observe(fun.ge(observerClick));
                                 }, 1000);
                             }
                         });
@@ -13463,11 +13436,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                             debug(`圖片全載loadMore("${loadMore}")`);
                         }
                         setTimeout(async () => {
-                            if (await fun.waitEle(loadMore, 30)) {
-                                document.addEventListener("scroll", callback);
-                            }
+                            if (await fun.waitEle(loadMore, 30)) document.addEventListener("scroll", callback);
                         }, 1000);
-                    };
+                    }
                 };
                 document.addEventListener("scroll", callback);
             }
@@ -13480,12 +13451,10 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - (siteData.autoPager.bottom || 1000)) {
                             if (!autoPager) return;
                             document.removeEventListener("scroll", callback);
-                            if (autoPager) {
-                                await fun.autoPager();
-                                await fun.delay(siteData.autoPager.sleep || 1000, 0);
-                                document.addEventListener("scroll", callback);
-                            }
-                        };
+                            await fun.autoPager();
+                            await fun.delay(siteData.autoPager.sleep || 1000, 0);
+                            document.addEventListener("scroll", callback);
+                        }
                     };
                     document.addEventListener("scroll", callback);
                 }
@@ -13559,9 +13528,11 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
 
     let autoDownload = siteData.autoDownload;
 
-    if (hasTouchEvents() || !autoDownload)[...gae("#FullPictureLoadOptions>div:nth-child(n+6):nth-child(-n+7)")].forEach(e => {
-        e.style.display = "none";
-    });
+    if (hasTouchEvents() || !autoDownload) {
+        [...gae("#FullPictureLoadOptions>div:nth-child(n+6):nth-child(-n+7)")].forEach(e => {
+            e.style.display = "none";
+        });
+    }
 
     if (!hasTouchEvents()) ge("#FullPictureLoadOptions>div:nth-child(9)").style.display = "none";
 
@@ -13592,25 +13563,23 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-    if (hasTouchEvents() && siteData.insertImg) {
+    if (hasTouchEvents() && siteData.insertImg && (siteData.insertImg[1] == 0 || siteData.insertImg[1] == 3)) {
         let timeId;
-        if (siteData.insertImg[1] == 0 || siteData.insertImg[1] == 3) {
-            document.addEventListener("touchstart", event => {
-                //debug("\nTouchEvent\n", event);
-                if (event.target.tagName == "IMG" && event.target.id != "FullPictureLoad") {
-                    timeId = setTimeout(() => {
-                        copyImgSrcText();
-                    }, 500);
-                }
-            });
-            document.addEventListener("touchmove", event => {
-                clearTimeout(timeId);
-            });
-            document.addEventListener("touchend", event => {
-                //debug("\nTouchEvent\n", event);
-                clearTimeout(timeId);
-            });
-        }
+        document.addEventListener("touchstart", event => {
+            //debug("\nTouchEvent\n", event);
+            if (event.target.tagName == "IMG" && event.target.id != "FullPictureLoad") {
+                timeId = setTimeout(() => {
+                    copyImgSrcText();
+                }, 500);
+            }
+        });
+        document.addEventListener("touchmove", event => {
+            clearTimeout(timeId);
+        });
+        document.addEventListener("touchend", event => {
+            //debug("\nTouchEvent\n", event);
+            clearTimeout(timeId);
+        });
     }
 
     debug("\n最終options物件\n", options);
