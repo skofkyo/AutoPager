@@ -1,4 +1,4 @@
-2023/11/03 03:17
+2023/11/08 01:27
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -155,7 +155,7 @@ Lootiu.Com
 *://www.ikmn*.*/*/*.html
 
 卡卡美女网
-*kaka234.cc/HTM/pic/*/*/*.html
+*kaka234.cc/HTM/*/*/*/*.html
 
 微圖坊
 *://*v2ph.*/album/*
@@ -560,6 +560,12 @@ Love Asian Babes
 
 Byoru
 *://byoru.net/*/
+
+花猫壁纸
+*huamaobizhi.com/*
+
+Fapello
+*://fapello.com/*/
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1219,7 +1225,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *www.entuji.com/*/*.html
 *fulitu.me/*/*.html
 *://www.taotu8.cc/mm/*.html
-*kaka234.cc/HTM/pic/*/*/*.html
+*kaka234.cc/HTM/*/*/*/*.html
 *.ikmt.net/*/*/*/*.html
 *.nitutu.com/*/*/*.html
 *www.xintp.com/*/*/*.html
@@ -1264,6 +1270,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.tiplogo.com/*.html
 *amazon-love.com*
 *://byoru.net/*/
+*huamaobizhi.com/*
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
