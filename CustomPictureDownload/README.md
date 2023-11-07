@@ -7,6 +7,7 @@ FireFox 119.0 + Tampermonkey 4.19.0
 Cent Browser 5.0.1002.354 + Tampermonkey 4.19.0
 Chrome 119.0.6045.106 + Tampermonkey 4.19.0
 Edge 119.0.2151.44 + Tampermonkey 4.19.0
+Kiwi Browser 116.0.5845.240 + Tampermonkey 4.19.0
 </pre>
 <p>如果用戶堅持使用暴力猴Violentmonkey，腳本1.6.3+的版本只需用戶自己修改</p>
 <pre>
@@ -16,7 +17,7 @@ Edge 119.0.2151.44 + Tampermonkey 4.19.0
 <pre>
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 </pre>
-<p>應該就能正常使用了</p>
+<p>應該就能正常使用了，相當於用戶自己降低Fancybox的版本，Fancybox的css會自動注入3.5.7版。</p>
 <p>2023/11/03</p>
 <p>1.6.0開始Fancybox從3.5.7升級至5.0.24，部分網站依然調用3.5.7，網站如果有自帶LIGHTBOX之類的插件，則不調用腳本的Fancybox避免各種衝突，如有遇到FancyboxV5版圖片沒有置中錯位偏右請反饋。</p>
 <p>2023/10/24</p>
@@ -627,7 +628,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/11/03 03:17</p>
+<p>2023/11/08 01:27</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -699,7 +700,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn03.cc/">秀人美女網</a></td>
+                <td><a href="https://www.xrmn01.xyz/">秀人美女網</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -748,7 +749,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://ja.huamaobizhi.com/mixs/?page_size=24&search_tag=&tag_id=0&page=1&order_by=0&purity=1&remember_filter=1&lang=zh-CN">花猫壁纸</a></td>
-                <td>原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，只會單線程返回資料，抓取過程需要等比較久。</td>
+                <td><a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類添加了自動翻頁。</td>
             </tr>
             <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
@@ -1106,7 +1107,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.91tulu.com/">91图录</a></td>
-                <td></td>
+                <td><a href="https://cn.w55.tv/">cn.w55.tv</a></td>
             </tr>
             <tr>
                 <td><a href="https://jingunav.info/index.php/arttype/109.html">人妻租借所</a></td>
@@ -1238,7 +1239,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://modelsexyth.com/">นางแบบคือลือ</a></td>
-                <td>需要透過uBlock Origin禁用javascript</td>
+                <td>分類添加了自動翻頁，去廣告</td>
             </tr>
             <tr>
                 <td><a href="https://www.hotgirlpix.com/">Hot Girl Pix</a></td>
@@ -1803,6 +1804,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.99hanman.top/">久久漫画网</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.91jinman.com/">91禁漫</a></td>
                 <td></td>
             </tr>
             <tr>
