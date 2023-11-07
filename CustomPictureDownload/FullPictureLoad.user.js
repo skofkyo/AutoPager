@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.3
+// @version            1.6.4
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -58,6 +58,7 @@
     let displayLanguage = {};
     let globalImgArray = [];
     let thumbnailsSrcArray = [];
+    let videosSrcArray = [];
     let promiseBlobArray = [];
     let customTitle = null;
     let downloading = false;
@@ -1477,6 +1478,79 @@
         customTitle: () => fun.title(" - PixiBB", 1),
         category: "nsfw1"
     }, {
+        name: "Luscious www.luscious.net",
+        reg: /https:\/\/www\.luscious\.net\/albums\//,
+        enable: 0,
+        init: async () => {
+            await fun.delay(2000);
+            let eleArr = [
+                "//span[text()='Display Inline']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']",
+                "//span[text()='Infinite Scroll']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']"
+            ];
+            for (let i in eleArr) {
+                if (fun.ge(eleArr[i])) {
+                    fun.ge(eleArr[i]).click();
+                    await fun.delay(500);
+                }
+            }
+            let ele = "article.o-padding-top-bottom .o-justified-grid .o-justified-box img";
+            globalImgArray = [...fun.gae(ele)].map(e => e.src);
+            new MutationObserver((mutations, observer) => {
+                globalImgArray = [...new Set(globalImgArray.concat([...fun.gae(ele)].map(e => e.src)))];
+                console.log(globalImgArray);
+                let text = fun.geT(".album-info-item");
+                let num = parseInt(text.match(/((\d+,)?\d+)\s?pictures/)[1].replace(",", ""), 10);
+                console.log(text);
+                fun.show(`MutationObserver ${globalImgArray.length}/${num}`, 0);
+                if (globalImgArray.length >= num) {
+                    fun.hide();
+                    console.log("MutationObserver 抓取結束");
+                    observer.disconnect();
+                }
+            }).observe(fun.ge("article.o-padding-top-bottom"), {
+                childList: true,
+                subtree: true
+            });
+        },
+        imgs: async () => {
+            if (fun.ge(".o-pagination-item--active+div")) {
+                fun.show(displayLanguage.str_14, 0);
+                await new Promise(async resolve => {
+                    let loop = setInterval(async () => {
+                        if (fun.ge(".o-pagination-item--active+div")) {
+                            fun.ge(".o-pagination-item--active+div").click();
+                            await fun.delay(1000, 0);
+                            await fun.waitEle("article.o-padding-top-bottom .o-justified-grid .o-justified-box img");
+                        } else {
+                            fun.show(displayLanguage.str_15, 0);
+                            clearInterval(loop);
+                            resolve();
+                        }
+                    }, 1000);
+                });
+            }
+            thumbnailsSrcArray = globalImgArray;
+            fun.show(displayLanguage.str_56, 0);
+            let bigSrcs = thumbnailsSrcArray.map(e => e.replace(/\.\d+x\d+(\.\w+)$/, "$1"));
+            let xhrNum = 0;
+            let xhrArr = [];
+            for (let i = 0; i < bigSrcs.length; i++) {
+                let xhr = fun.xhrHEAD(bigSrcs[i]).then(res => {
+                    fun.show(`fun.xhrHEAD ${xhrNum+=1}/${bigSrcs.length}`, 0);
+                    let src;
+                    res.status == 404 ? src = bigSrcs[i].replace(/\.\w+$/i, ".gif") : src = bigSrcs[i];
+                    return src;
+                });
+                xhrArr.push(xhr);
+                await fun.delay(50);
+            }
+            return Promise.all(xhrArr);
+        },
+        button: [4],
+        insertImg: ["article.o-padding-top-bottom", 2],
+        customTitle: () => fun.geT(".o-h1"),
+        category: "nsfw2"
+    }, {
         name: "E次元 www.evacg.org",
         reg: /www\.evacg\.org\/archives\/\d+/,
         include: ".wp-caption img",
@@ -1833,6 +1907,10 @@
         imgs: async () => {
             await fun.getNP(".images-card", "//a[text()='Next' or text()='下一页' or text()='次へ']");
             thumbnailsSrcArray = [...fun.gae(".images-card img")].map(e => e.dataset.src ? e.dataset.src : e.src);
+            let endTid = setTimeout(() => {});
+            for (let i = 0; i <= endTid; i++) {
+                clearTimeout(i);
+            }
             fun.show(displayLanguage.str_05, 0);
             let fetchNum = 0;
             const resBlobUrl = (id) => {
@@ -1851,7 +1929,8 @@
             let IDs = [...fun.gae("span[data-imgid]")].map(e => e.dataset.imgid);
             let bigImgsArr = [];
             for (let i = 0; i < IDs.length; i++) {
-                bigImgsArr.push(await resBlobUrl(IDs[i]));
+                bigImgsArr.push(resBlobUrl(IDs[i]));
+                await fun.delay(1500, 0);
             }
             return Promise.all(bigImgsArr).then(arr => {
                 fun.hide();
@@ -1861,12 +1940,38 @@
         ex: "jpg",
         button: [4],
         insertImg: [
-            ["#main", 2], 2
+            ["#main", 2], 0
         ],
         go: 1,
         customTitle: () => fun.geT(".title>h1"),
         fetch: 1,
         category: "nsfw1"
+    }, {
+        name: "Huamao wallpaper 花猫壁纸 en.huamaobizhi.com 分類自動翻頁",
+        enable: 1,
+        reg: /^https:\/\/[a-z]{2}\.huamaobizhi\.com\/(mixs|tags|artists|people-tags)\/\?/,
+        autoPager: {
+            ele: "//div[@class='row'][div[div[@class='mixs-card']]] | //div[@class='table-responsive table-sm-no-border'] | //div[div[div[@class='thumbnail']]] | //div[@class='tags-wrap']",
+            next: ".pagination li.active+li>a",
+            re: ".pagination",
+            title: () => "Page " + fun.ge(".pagination li.active", doc).innerText,
+            bF: () => {
+                [...fun.gae(".mixs-card-img:not(.lock)", doc)].forEach(e => {
+                    let url = e.attributes[1].value.replaceAll("'", "");
+                    e.outerHTML = `<div class="mixs-card-img" data-src="${url}" lazy="loaded" style="background-image: url(&quot;${url}&quot;);"></div>`;
+                });
+                [...fun.gae(".thumbnail .img-circle[v-lazy]", doc)].forEach(e => {
+                    let url = e.getAttribute("v-lazy").replaceAll("'", "");
+                    e.outerHTML = `<img src="${url}" alt="${e.alt}" class="img-circle" data-src="${url}" lazy="loaded">`;
+                });
+                [...fun.gae(".tags-item img[v-lazy]", doc)].forEach(e => {
+                    let url = e.getAttribute("v-lazy").replaceAll("'", "");
+                    e.outerHTML = `<img src="${url}" alt="${e.alt}" data-src="${url}" lazy="loaded">`;
+                });
+            }
+        },
+        openInNewTab: ".mixs-card-content>a:not([target=_blank])",
+        category: "autoPager"
     }, {
         name: "新美图录 www.xinmeitulu.com 臺灣美腿女郎 www.twlegs.com",
         reg: /(www\.xinmeitulu\.com|www\.twlegs\.com)\/photo\/.+/,
@@ -2076,6 +2181,9 @@
     }, {
         name: "爱妹子 xx.knit.bid",
         reg: /xx\.knit\.bid\/article\/\d+\//,
+        init: () => {
+            fun.clearAllTimer(2);
+        },
         imgs: () => fun.getImg(".item-image img", (fun.geT("li.next-page", 2) || 1)),
         button: [4],
         insertImg: ["#img-box", 2],
@@ -2385,15 +2493,83 @@
         },
         category: "nsfw1"
     }, {
+        name: "Fapello fapello.com",
+        reg: /^https:\/\/fapello\.com\/[^\/]+\/$/,
+        init: async () => {
+            if (fun.ge("#showmore")) {
+                scrollMore = () => {};
+                fun.remove("#showmore");
+                const fn = (doc) => {
+                    let ele = fun.ge("#showmore", doc);
+                    return ele.dataset.page == ele.dataset.max ? true : false;
+                }
+                await fun.getNP("#content>div", "#next_page>a", fn);
+                fun.remove("#next_page");
+            }
+        },
+        imgs: () => {
+            let imgSrcs = [...fun.gae("#content>div")].map(node => {
+                if (fun.ge("img[src*='icon-play.svg']", node)) {
+                    let videoSrc = fun.ge("img", node).src.replace("https://fapello.com/", "https://cdn.fapello.com/").replace("_300px", "").replace(/\.jpg$/i, ".mp4");
+                    videosSrcArray.push(videoSrc);
+                    return null;
+                } else {
+                    thumbnailsSrcArray.push(fun.ge("img", node).src);
+                    let imgSrc = fun.ge("img", node).src.replace("_300px", "");
+                    return imgSrc;
+                }
+            }).filter(item => item);
+            console.log("videosSrcArray", videosSrcArray);
+            console.log("thumbnailsSrcArray", thumbnailsSrcArray);
+            console.log("imgSrcs", imgSrcs);
+            return imgSrcs;
+        },
+        button: [4],
+        insertImg: ["#content", 2],
+        downloadVideo: true,
+        category: "nsfw2"
+    }, {
         name: "นางแบบคือลือ modelsexyth.com",
         reg: /^https:\/\/modelsexyth\.com\/[^\/]+\/$/,
+        include: "//div[div[div[img[@decoding]]]]",
+        init: () => {
+            fun.clearAllTimer();
+        },
         imgs: "//img[@decoding] | //a[contains(@class,'e-gallery-item')]",
         button: [4],
         insertImg: [
             ["//div[div[div[img[@decoding]]]]", 0, "//div[img[@decoding] and @class ='elementor-widget-container'] | //div[contains(@class,'elementor-widget-gallery')]"], 2
         ],
         customTitle: () => fun.geT("h1.elementor-heading-title>a").replace(/\(\d+p\)/i, "").trim(),
-        css: ".elementor-element-2060f59,.elementor-element-f838527,.elementor-element-988fdac,.elementor-element-3b501ba{display:none!important}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        css: ".elementor-element-2aa59471,.elementor-element-2060f59,.elementor-element-f838527,.elementor-element-988fdac,.elementor-element-3b501ba{display:none!important}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw1"
+    }, {
+        name: "นางแบบคือลือ modelsexyth.com 分類自動翻頁",
+        enable: 1,
+        reg: /^https:\/\/modelsexyth\.com\//,
+        include: "nav.elementor-pagination",
+        init: () => {
+            fun.clearAllTimer();
+            fun.remove("//div[div[@class='elementor-element elementor-element-fb0ca65 elementor-widget elementor-widget-heading']]");
+        },
+        autoPager: {
+            ele: "#main .elementor-posts-container",
+            observer: "#main .elementor-posts-container>article",
+            next: "span.current+a:not(.next)",
+            re: "nav.elementor-pagination",
+            title: () => fun.ge("span.current", doc).innerText
+        },
+        css: ".elementor-element-2aa59471,.elementor-element-2060f59,.elementor-element-f838527,.elementor-element-988fdac,.elementor-element-3b501ba{display:none!important}.elementor-posts-container .elementor-post__thumbnail{padding-bottom:unset!important}",
+        category: "autoPager"
+    }, {
+        name: "นางแบบคือลือ modelsexyth.com 去廣告",
+        reg: /^https:\/\/modelsexyth\.com\//,
+        icon: 0,
+        key: 0,
+        init: () => {
+            fun.clearAllTimer();
+        },
+        css: ".elementor-element-2aa59471,.elementor-element-2060f59,.elementor-element-f838527,.elementor-element-988fdac,.elementor-element-3b501ba{display:none!important}.elementor-posts-container .elementor-post__thumbnail{padding-bottom:unset!important}",
         category: "nsfw1"
     }, {
         name: "Hot Girl Pix www.hotgirlpix.com",
@@ -2440,8 +2616,9 @@
         },
         imgs: async () => {
             await fun.waitEle("#showCon img");
+            videosSrcArray = [...fun.gae("#showCon video")].map(e => /\.mp4/.test(e.src) ? e.src : null).filter(item => item);
             thumbnailsSrcArray = [...fun.gae("#showCon img")].map(e => /zipai/.test(e.src) ? e.src.replace(/&w=\d+/, "&w=100") : null).filter(item => item);
-            return [...fun.gae("#showCon img,#showCon video")].map(e => /zipai|\.mp4/.test(e.src) ? e.src.replace(/&output.+/, "") : null).filter(item => item);
+            return [...fun.gae("#showCon img")].map(e => /zipai/.test(e.src) ? e.src.replace(/&output.+/, "") : null).filter(item => item);
         },
         button: [4],
         insertImg: ["#showCon", 2],
@@ -2899,6 +3076,9 @@
     }, {
         name: "Anh VL xem.anhvl.net",
         reg: /xem\.anhvl\.net\/[^/]+\/$/,
+        init: () => {
+            fun.run("$(document).off();");
+        },
         imgs: () => {
             try {
                 let url = location.href;
@@ -2922,6 +3102,7 @@
         enable: 1,
         reg: /^https:\/\/xem\.anhvl\.net\/(page\/\d+)?$|https:\/\/xem\.anhvl\.net\/category\//,
         init: () => {
+            fun.run("$(document).off();");
             fun.remove("//div[div[a[@title='OnlyFans Videos']]] | //div[@id='tfads']");
         },
         autoPager: {
@@ -2929,10 +3110,7 @@
             observer: "//div[@class='row space-ad'][1]/div[@class='col-6' or @class='col-5'][not(@id='tfads')]",
             next: "a.next",
             re: ".wp-pagenavi",
-            title: () => {
-                let t = `Page ${nextLink.match(/\d+$/)[0]}`;
-                return t;
-            },
+            title: () => "Page " + nextLink.match(/\d+$/)[0],
             history: 1
         },
         openInNewTab: ".space-ad a:not([target=_blank])",
@@ -2943,11 +3121,17 @@
         reg: /xem\.anhvl\.net/,
         icon: 0,
         key: 0,
+        init: () => {
+            fun.run("$(document).off();");
+        },
         css: "#backgroundPopupp,#popupContact,.float-ck-center-lt,center[style*='z-index']{display:none!important}",
         category: "nsfw2"
     }, {
         name: "Phym18 phym18.org https://phym18.org/tag/%E1%BA%A3nh-sex Bongda21h bongda21h.co https://bongda21h.co/anh-hot/",
         reg: /phym18\.org\/anh\/[^/]+$|https:\/\/bongda21h\.co\/anh-hot\/[^\/]+\/$/,
+        init: () => {
+            fun.run("$(document).off();");
+        },
         imgs: () => {
             try {
                 let url = location.href;
@@ -2973,6 +3157,7 @@
         enable: 1,
         reg: /^https:\/\/phym18\.org\/tag\/[^n]+nh-sex/,
         init: () => {
+            fun.run("$(document).off();");
             fun.remove("//div[div[a[div[text()='Free']]]]");
         },
         autoPager: {
@@ -2981,10 +3166,7 @@
             next: "a.w-pagination-next",
             re: ".w-pagination-wrapper",
             lazySrc: "a[data-src]",
-            title: () => {
-                let t = `Page ${nextLink.match(/\d+$/)[0]}`;
-                return t;
-            },
+            title: () => "Page " + nextLink.match(/\d+$/)[0],
             aF: () => {
                 fun.remove("//div[div[a[div[text()='Free']]]]");
             },
@@ -2998,6 +3180,9 @@
         reg: /phym18\.org|bongda21h\.co/,
         icon: 0,
         key: 0,
+        init: () => {
+            fun.run("$(document).off();");
+        },
         css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index']{display:none!important}",
         category: "nsfw2"
     }, {
@@ -3145,7 +3330,7 @@
             next: "li.current+li>a",
             re: ".pager",
             history: 1,
-            title: () => `Page ${fun.ge("li.current", doc).innerText}`
+            title: () => "Page " + fun.ge("li.current", doc).innerText
         },
         openInNewTab: ".autopagerize_page_element a[href]:not([target=_blank])",
         category: "autoPager"
@@ -3350,6 +3535,7 @@
         delay: 300,
         include: "a.fileThumb.image-link",
         imgs: () => {
+            videosSrcArray = [...fun.gae("video>source")].map(e => e.src);
             thumbnailsSrcArray = [...fun.gae("a.fileThumb.image-link>img")].map(e => {
                 if (e.dataset.src) {
                     return /^\/\//.test(e.dataset.src) ? location.protocol + e.dataset.src : e.dataset.src;
@@ -3368,6 +3554,7 @@
         next: "a.next",
         prev: "a.prev",
         customTitle: () => fun.geT(".post__title"),
+        downloadVideo: true,
         topButton: true,
         threading: 4,
         category: "nsfw2"
@@ -3714,6 +3901,17 @@
     }, {
         name: "AVJB https://avjb.com/albums/",
         reg: /https?:\/\/(avjb\.com|avjb\.fun|av\d{2}\.fun|bav\d{2}\.xyz|bbav\d{3}\.com|onebookcms\.com)\/(\w{2}\/)?albums\/\d+\/[\w-]+\/$/i,
+        init: () => {
+            new MutationObserver((mutations, observer) => {
+                if (fun.ge(".chatra--webkit")) {
+                    fun.ge(".chatra--webkit").remove();
+                    observer.disconnect();
+                }
+            }).observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        },
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".images>a>img")].map(e => e.dataset.original ? e.dataset.original : e.src);
             return [...fun.gae(".images>a")];
@@ -3724,7 +3922,23 @@
         ],
         go: 1,
         customTitle: () => fun.geT(".headline>h1"),
-        css: ".sponsor{display:none!important}",
+        css: ".sponsor,.chatra--webkit{display:none!important}",
+        category: "nsfw2"
+    }, {
+        name: "AVJB 去廣告",
+        reg: /https?:\/\/(avjb\.com|avjb\.fun|av\d{2}\.fun|bav\d{2}\.xyz|bbav\d{3}\.com|onebookcms\.com)\//i,
+        init: () => {
+            new MutationObserver((mutations, observer) => {
+                if (fun.ge(".chatra--webkit")) {
+                    fun.ge(".chatra--webkit").remove();
+                    observer.disconnect();
+                }
+            }).observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        },
+        css: ".sponsor,.chatra--webkit{display:none!important}",
         category: "nsfw2"
     }, {
         name: "Asian To Lick asiantolick.com",
@@ -4960,10 +5174,7 @@
             re: ".justify-center",
             observer: ".table-auto>tbody",
             history: 1,
-            title: () => {
-                let num = fun.ge("a.bg-gray-300", doc).innerText;
-                return `Page ${num}`;
-            }
+            title: () => "Page " + fun.ge("a.bg-gray-300", doc).innerText
         },
         category: "autoPager"
     }, {
@@ -6808,6 +7019,18 @@
             bookInfo = fun.run(bookInfo);
             return bookInfo.book_name + " - " + bookInfo.chapter_name;
         },
+        category: "hcomic"
+    }, {
+        name: "91禁漫 www.91jinman.com",
+        reg: /^https?:\/\/www\.91jinman\.com\/\d+\.html/,
+        imgs: ".wp-posts-content img",
+        button: [4],
+        insertImg: [".wp-posts-content", 2],
+        autoDownload: [0],
+        next: "//a[p[text()='上一篇']]",
+        prev: "//a[p[text()='下一篇']]",
+        customTitle: () => fun.geT(".article-title"),
+        css: ".wp-posts-content{max-height:unset!important}",
         category: "hcomic"
     }, {
         name: "嗨皮漫畫閱讀 https://m.happymh.com/manga/daiwangraoming",
@@ -10483,7 +10706,11 @@
                     debug(`\nfun.getNP() > getNextPageEles() DOM\n${decodeURI(url)}`, doc);
                     let eles = [...fun.gae(pageEle, doc)];
                     let lastPage = null;
-                    if (lastEle) lastPage = fun.ge(lastEle, doc);
+                    if (typeof lastEle === "string") {
+                        lastPage = fun.ge(lastEle, doc);
+                    } else if (typeof lastEle === "function") {
+                        lastPage = await lastEle(doc);
+                    }
                     let fragment = new DocumentFragment();
                     eles.forEach(ele => {
                         fragment.appendChild(ele.cloneNode(true));
@@ -10603,6 +10830,15 @@
                 }
             }
             if (typeof siteData.autoPager.bF === "function") await siteData.autoPager.bF();
+            if (siteData.autoPager.re) {
+                let currentPageEles = [...fun.gae(siteData.autoPager.re)];
+                let nextPageEles = [...fun.gae(siteData.autoPager.re, doc)];
+                if (currentPageEles.length === nextPageEles.length) {
+                    for (let i in currentPageEles) {
+                        currentPageEles[i].outerHTML = nextPageEles[i].outerHTML;
+                    }
+                }
+            }
             let newEle, tE;
             if (typeof siteData.autoPager.ele === "function" && siteData.autoPager.pos || typeof siteData.autoPager.ele === "string") {
                 if (typeof siteData.autoPager.ele === "function") newEle = await siteData.autoPager.ele();
@@ -10655,15 +10891,6 @@
                 }
             } else if (typeof siteData.autoPager.ele === "function") {
                 await siteData.autoPager.ele();
-            }
-            if (siteData.autoPager.re) {
-                let currentPageEles = [...fun.gae(siteData.autoPager.re)];
-                let nextPageEles = [...fun.gae(siteData.autoPager.re, doc)];
-                if (currentPageEles.length === nextPageEles.length) {
-                    for (let i in currentPageEles) {
-                        currentPageEles[i].outerHTML = nextPageEles[i].outerHTML;
-                    }
-                }
             }
             if (typeof siteData.autoPager.aF === "function") await siteData.autoPager.aF();
             fun.removeLoading();
@@ -10966,16 +11193,6 @@
             debug("插入圖片最後確認 srcArr", srcArr);
             let padStart = String(srcArr.length).length;
             for (let i = 0; i < srcArr.length; i++) {
-                if (/youtube|\.mp4$|\.webm$/.test(srcArr[i])) {
-                    let video = document.createElement("video");
-                    video.src = srcArr[i];
-                    video.controls = true;
-                    video.loop = false;
-                    video.autoplay = false;
-                    video.style = "height: 500px;width: 100%;max-width:100%";
-                    fragment.appendChild(video);
-                    continue;
-                }
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
                     a.id = "imgLocationOriginal" + i;
@@ -11019,6 +11236,19 @@
                     fragment.appendChild(a);
                 } else {
                     fragment.appendChild(img);
+                }
+            }
+            if (videosSrcArray.length > 0) {
+                debug("插入圖片最後確認 videosSrcArray", videosSrcArray);
+                for (let i = 0; i < videosSrcArray.length; i++) {
+                    let video = document.createElement("video");
+                    video.className = "FullPictureLoadVideo";
+                    video.src = videosSrcArray[i];
+                    video.controls = true;
+                    video.loop = false;
+                    video.autoplay = false;
+                    video.style = "height: 500px;width: 100%;max-width:100%";
+                    fragment.appendChild(video);
                 }
             }
             let end = document.createElement("p");
@@ -11320,7 +11550,7 @@
                     if (realSrc) {
                         entry.target.src = realSrc;
                         entry.target.onload = () => {
-                            entry.target.classList.remove("error");
+                            if (!/^data/.test(entry.target.src)) entry.target.classList.remove("error");
                         };
                         entry.target.onerror = (error) => {
                             if (errorNum > 100) return;
@@ -12065,20 +12295,35 @@
             debug("\nimgZipDownload() 去重複後的圖片網址：", [...new Set(imgsSrcArr)]);
             imgsSrcArr = [...new Set(imgsSrcArr)];
 
-            const imgsNum = imgsSrcArr.length;
+            const imgsNum = parseInt(imgsSrcArr.length, 10);
             let title = titleText;
             const zip = new JSZip();
-            const zipFolder = zip.folder(`${title} [${imgsNum}P]`);
+            let zipFolder;
+            let videosNum;
+            if (videosSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true) {
+                videosNum = parseInt(videosSrcArray.length, 10);
+                zipFolder = zip.folder(`${title} [${imgsNum}P + ${videosNum}V]`);
+            } else {
+                zipFolder = zip.folder(`${title} [${imgsNum}P]`);
+            }
             const padStart = String(imgsSrcArr.length).length;
             for (let i = 0; i < imgsSrcArr.length; i++) {
-                let n = parseInt(i, 10) + 1;
                 let picNum = getNum(i, padStart);
                 let promiseBlob;
                 await fun.checkDownloadThread();
                 siteData.fetch == 1 ? promiseBlob = Fetch_API_GetData(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_GetData(imgsSrcArr[i], picNum, imgsNum);
                 promiseBlobArray.push(promiseBlob);
             }
-
+            if (videosSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true) {
+                const padStart = String(videosNum).length;
+                for (let i = 0; i < videosSrcArray.length; i++) {
+                    let videoNum = getNum(i, padStart);
+                    let promiseBlob;
+                    await fun.checkDownloadThread();
+                    siteData.fetch == 1 ? promiseBlob = Fetch_API_GetData(videosSrcArray[i], videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_GetData(videosSrcArray[i], videoNum, imgsNum + videosNum);
+                    promiseBlobArray.push(promiseBlob);
+                }
+            }
             debug("\nPromiseBlobArray：", promiseBlobArray);
 
             Promise.all(promiseBlobArray).then(async data => {
@@ -12110,7 +12355,6 @@
                 }
                 if (blobDataArray.length > 0) {
                     for (let i = 0; i < blobDataArray.length; i++) {
-                        let n = parseInt(i, 10) + 1;
                         let ex;
                         let type = blobDataArray[i].blob.type;
                         try {
@@ -12130,7 +12374,12 @@
                                 return;
                             }
                         }
-                        let fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
+                        let fileName;
+                        if (ex == "mp4") {
+                            fileName = `${blobDataArray[i].picNum}V.${(siteData.ex || ex)}`;
+                        } else {
+                            fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
+                        }
                         if (options.zip == 1) {
                             //console.log(`第${n}/${blobDataArray.length}張，檔案名：${fileName}，大小：${parseInt(blobDataArray[i].blob.size / 1024, 10)} Kb`);
                             zipFolder.file(fileName, blobDataArray[i].blob, {
@@ -12155,7 +12404,13 @@
                             fun.show(displayLanguage.str_31 + metadata.percent.toFixed(2) + " %", 0);
                         }).then(async data => {
                             debug("\nZIP壓縮檔數據：", data);
-                            saveData(data, `${title} [${imgsNum}P].${options.file_extension}`);
+                            let fileName;
+                            if (videosSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true) {
+                                fileName = `${title} [${imgsNum}P + ${videosNum}V].${options.file_extension}`;
+                            } else {
+                                fileName = `${title} [${imgsNum}P].${options.file_extension}`;
+                            }
+                            saveData(data, fileName);
                             promiseBlobArray = [];
                             downloadNum = 0;
                             downloading = false;
@@ -12390,6 +12645,11 @@
             });
             let tE = fun.ge("#FullPictureLoadEnd");
             tE.parentNode.insertBefore(imgBox, tE);
+            if (fun.ge(".FullPictureLoadVideo")) {
+                [...fun.gae(".FullPictureLoadVideo")].forEach(e => {
+                    tE.parentNode.insertBefore(e, tE);
+                });
+            }
             if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
                 try {
                     Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
@@ -12818,7 +13078,7 @@
 
 .FullPictureLoadMsg {
     font-family: Arial, sans-serif !important;
-    font-size: 26px;
+    font-size: 24px;
     font-weight: bold;
     text-align: center;
     line-height: 50px;
