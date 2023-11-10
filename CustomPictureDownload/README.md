@@ -558,7 +558,18 @@ fun.getImgA(img, A, mode = 0, rText = [null, null], showMsg = 1)
 </pre>
 <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
-fun.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
+fun.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器或函式", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
+//判斷為最後一頁的函式舉例
+//doc是下一頁的document
+const last = doc => {
+    let ele = fun.ge("#showmore", doc);
+    return ele.dataset.page >= ele.dataset.max ? true : false;
+}
+const last = doc => {
+    let currentPage = fun.ge("#pagenum", doc).innerText.match(/\d+/)[0]; //下一頁的當前頁數
+    let totalPage = fun.ge("#pagenum", doc).innerText.match(/\/(\d+)/)[1]; //下一頁的最大頁數
+    return currentPage >= totalPage ? true : false; //當前頁數大於等於最大頁數是最後一頁
+}
 //用在規則init
 fun.getNP(ele, nextLinkEle, lastEle, paginationEle, time, dataset, msg);
 fun.getNP(ele, nextLinkEle);
@@ -578,17 +589,15 @@ imgs: async () => {
 </details>
 
 <h1>腳本的操作步驟方式：</h1>
-<p>點擊左下圖示、確定、確定，3步開始下載</p>
-<p>右鍵點擊圖示、確定，2步驟複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
+<p>點擊左下圖示、確定，2步開始下載</p>
+<p>右鍵點擊圖示複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
 <p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
-<p>中鍵點擊圖示捲動至第一張大圖</p>
+<p>中鍵點擊圖示儲存網址URLs.txt文件</p>
 <p>觸控裝置，長按頁面圖片元素500毫秒，規則insertImg設置為手動則插入圖片或複製圖片網址。</p>
 <h1>圖介：</h1>
 <p>在頁面左下添加了一個圖片下載按鈕</p>
 <img src="https://i.imgur.com/TxnEvTk.png">
-<p>點擊後會彈出確認窗輸入CSS和Xpath選擇圖片元素。</p>
-<img src="https://i.imgur.com/c0EU0Ax.png">
-<p>確認後需要再輸入資料夾名稱</p>
+<p>點擊後會彈出輸入資料夾名稱確認窗</p>
 <img src="https://i.imgur.com/M0IMf5G.png">
 <p>確認後就會開始下載壓縮打包圖片</p>
 <img src="https://i.imgur.com/m6ewqQd.png">
@@ -599,13 +608,14 @@ imgs: async () => {
 <p>數字鍵 3 一鍵下載</p>
 <p>數字鍵 4 捲動至最後一張大圖</p>
 <p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
+<p>數字鍵 7 儲存網址URLs.txt文件</p>
 <p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例、數字鍵 + 加鍵恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
 <br>
-<p>按0、Enter、Enter，3步驟開始下載。</p>
-<p>按1、Enter，2步驟複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
+<p>按0、Enter，2步驟開始下載。</p>
+<p>按1，複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
 <p>按2，捲動至腳本插入的第一張大圖</p>
 <p>按3，一鍵下載，跳過圖片選擇器和自定義標題的步驟。</p>
 <br>
@@ -641,7 +651,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <img src="https://i.imgur.com/xQJePAo.jpg">
 <img src="https://i.imgur.com/GMsIaj9.jpg">
 <img src="https://i.imgur.com/OibRD2N.jpg">
-<p>※備註SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈接。</p>
+<p>※備註SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈結。</p>
 <h2>老司機類內置規則支持列表</h2>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
@@ -696,11 +706,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr03.xyz/">秀人集</a></td>
+                <td><a href="https://www.xr05.xyz/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn01.xyz/">秀人美女網</a></td>
+                <td><a href="https://www.xrmn01.com/">秀人美女網</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1174,6 +1184,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>完整無修正的圖片需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
+                <td><a href="https://www.luscious.net/porn/cosplay-22/">Luscious</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://hotgirl.asia/">HotAsiaGirl</a></td>
                 <td></td>
             </tr>
@@ -1231,6 +1245,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://jablehk.com/">Jablehk</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://fapello.com/">Fapello</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1425,6 +1443,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.xasiat.com/albums/">Xasiat</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://thotsbay.tv/">Thotsbay</a></td>
+                <td>手動插入圖片，圖片數量超過5千，建議按7或對左下圖示按中鍵，可以儲存URLs.txt，再用Motrix或Aria2來下載。</td>
             </tr>
             <tr>
                 <td><a href="https://xhamster.com/photos">xHamster</a></td>
