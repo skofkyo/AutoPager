@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.6
+// @version            1.6.7
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -3212,10 +3212,10 @@
             await fun.getNP("#basicExample>a,figure.wp-block-image", ".current+li>a", null, ".page-link-box");
             let mobile = fun.ge("figure.wp-block-image>a");
             if (mobile) {
-                thumbnailsSrcArray = [...fun.gae("figure.wp-block-image>a>img")].map(e => e.src.replace("?w=1000", "?w=100"));
+                thumbnailsSrcArray = [...fun.gae("#basicExample>a>img,figure.wp-block-image>a>img")].map(e => e.src.replace("?w=1000", "?w=100"));
                 return [...fun.gae("figure.wp-block-image>a")];
             } else {
-                thumbnailsSrcArray = [...fun.gae("#gallery a img")].map(e => e.src.replace("?w=1000", "?w=100"));
+                thumbnailsSrcArray = [...fun.gae("#basicExample>a>img,#gallery a img")].map(e => e.src.replace("?w=1000", "?w=100"));
                 return fun.getImgA("#gallery a", "#basicExample>a");
             }
         },
@@ -6363,8 +6363,9 @@
         threading: 4,
         category: "hcomic"
     }, {
-        name: "E-Hentai圖片清單頁 https://e-hentai.org/lofi/",
+        name: "E-Hentai圖片清單頁",
         host: ["e-hentai.org"],
+        link: "https://e-hentai.org/lofi/",
         reg: /https?:\/\/e-hentai\.org\/lofi\/g\/\w+\/\w+\//,
         init: async () => {
             await fun.getNP(".gi", "//a[text()='Next Page >']", null, "#ia");
@@ -11904,13 +11905,13 @@
                 }
                 */
             }
-            debug("\nfun.insertImg()插入圖片最後確認 thumbnailsSrcArray", thumbnailsSrcArray);
-            debug("\nfun.insertImg()插入圖片最後確認 srcArr", srcArr);
+            debug("\nfun.insertImg()插入圖片最後確認 thumbnailsSrcArray\n", thumbnailsSrcArray);
+            debug("\nfun.insertImg()插入圖片最後確認 srcArr\n", srcArr);
             let padStart = String(srcArr.length).length;
             for (let i = 0; i < srcArr.length; i++) {
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
-                    a.id = "imgLocationOriginal" + i;
+                    a.id = "imgLocationOriginal_" + i;
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
@@ -12688,8 +12689,8 @@
                     console.error("模式错误");
                     break;
             }
-            debug(`imgLocation${modeName}` + slideIndex);
-            let elementById = document.getElementById(`imgLocation${modeName}` + slideIndex);
+            debug(`\nfun.scrollEvent() > imgLocation${modeName}_` + slideIndex);
+            let elementById = document.getElementById(`imgLocation${modeName}_` + slideIndex);
             if (elementById) {
                 elementById.scrollIntoView({
                     block: "center",
@@ -12924,8 +12925,8 @@
                 return null;
             }
         }).filter(item => item);
-        debug(`\ngetImgs()${getImgFn} 所有圖片網址：`, imgsSrcArr);
-        debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
+        debug(`\ngetImgs()${getImgFn} 所有圖片網址：\n`, imgsSrcArr);
+        debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：\n`, [...new Set(imgsSrcArr)]);
         imgsSrcArr = [...new Set(imgsSrcArr)];
         globalImgArray = imgsSrcArr;
         fetching = false;
@@ -13304,7 +13305,7 @@
             srcArr.forEach((e, i) => {
                 let a = document.createElement("a");
                 if (options.fancybox == 1 && !blackList) {
-                    a.id = "imgLocationSamll" + i;
+                    a.id = "imgLocationSamll_" + i;
                     a.dataset.fancybox = "FullPictureLoadImageSmall";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = e;
                     a.href = e;
