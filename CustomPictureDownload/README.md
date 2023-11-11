@@ -617,7 +617,7 @@ imgs: async () => {
 <p>按0、Enter，2步驟開始下載。</p>
 <p>按1，複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
 <p>按2，捲動至腳本插入的第一張大圖</p>
-<p>按3，一鍵下載，跳過圖片選擇器和自定義標題的步驟。</p>
+<p>按3，一鍵下載，自定義標題的步驟。</p>
 <br>
 <p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
 <h1>圖片檢視模式</h1>
@@ -862,6 +862,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xinwenba.net/web/meinv/">新闻吧</a></td>
+                <td>封鎖部分地區，需要VPN才看的到圖片</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.shzx.org/b/12-0.html">四海资讯</a></td>
                 <td>封鎖部分地區，需要VPN才看的到圖片</td>
             </tr>
             <tr>
@@ -1913,7 +1917,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 </details>
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
-<p>如有需要請透過UI選項設定開啟，或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
+<p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
 <p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 漫畫規則填1 > 保存設定</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
@@ -1932,7 +1936,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.copymanga.site/">拷貝漫畫</a></td>
-                <td><a href="https://copymanga.site/">copymanga.site</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
+                <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
             </tr>
             <tr>
                 <td><a href="https://www.yinghuamh.net/">樱花漫画</a></td>
@@ -2024,8 +2028,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.kumw9.com/">酷漫屋</a></td>
-                <td><a href="http://m.kumw9.com/">m.kumw9.com</a>，預設關閉</td>
+                <td><a href="http://www.kumwu1.com/">酷漫屋</a></td>
+                <td><a href="http://m.kumwu1.com/">m.kumwu1.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://qumanku.com/">速漫库</a></td>
@@ -2081,12 +2085,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.qiman52.com/">奇漫屋</a></td>
-                <td><a href="http://m.qiman52.com/">m.qiman52.com</a>，預設關閉</td>
+                <td><a href="http://www.qmanwu1.com/">奇漫屋</a></td>
+                <td><a href="http://m.qmanwu1.com/">m.qmanwu1.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.mhxqiu2.com/">漫画星球</a></td>
-                <td><a href="http://m.mhxqiu2.com/">m.mhxqiu2.com</a>，預設關閉</td>
+                <td><a href="http://www.mhxqiu4.com/">漫画星球</a></td>
+                <td><a href="http://m.mhxqiu4.com/">m.mhxqiu4.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.6mh67.com/">6漫画</a></td>
