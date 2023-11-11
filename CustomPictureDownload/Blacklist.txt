@@ -1,4 +1,4 @@
-2023/11/08 01:27
+2023/11/12 03:58
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -125,6 +125,10 @@ Lootiu.Com
 新闻吧
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
+
+四海资讯
+*://www.shzx.org/a/*.html
+*://m.shzx.org/a/*.html
 
 秀人集
 *://www.xiuren*.*/*/*.html
@@ -1271,6 +1275,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *amazon-love.com*
 *://byoru.net/*/
 *huamaobizhi.com/*
+*://fapello.com/*/
+*://www.shzx.org/a/*.html
+*://m.shzx.org/a/*.html
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
