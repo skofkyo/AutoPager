@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.7
+// @version            1.6.8
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -5466,54 +5466,114 @@
         referer: "src",
         category: "nsfw2"
     }, {
-        name: "Eropics",
+        name: "Eropics", // vipr.im,Imagetwist.com圖床無法外連但可以下載
         host: ["eropics.to"],
         reg: /eropics\.\w+\/\d+\/\d+\/\d+\//i,
-        include: "a[href*='pixhost.to'],a[href*='www.turboimagehost.com'],a[href*='imgbox.com'],a[href*='www.imagevenue.com']",
-        imgs: () => {
-            if (fun.gae("a[href*='imx.to']").length > 3) {
-                let yes = confirm(displayLanguage.str_10);
-                if (yes) {
+        init: () => {
+            document.addEventListener("keydown", event => {
+                if (event.ctrlKey && event.altKey && event.key == "c") {
+                    event.preventDefault();
                     let arr = [...fun.gae(".entry-content a")].map(a => a.href);
                     let str = arr.join("\n");
                     console.log(str);
                     copyToClipboard(str);
                     fun.show(displayLanguage.str_11);
                 }
-                return [];
-            }
-            let links = [...fun.gae(".entry-content a:not([href*='imx.to'])")].map(a => a.href);
-            let resArr = [];
-            let xhrNum = 0;
-            for (let i = 0; i < links.length; i++) {
-                let res = fun.xhr(links[i], "document").then(doc => {
-                    fun.show(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
-                    return fun.ge("#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img", doc);
-                });
-                resArr.push(res);
-            }
-            return Promise.all(resArr).then(arr => {
-                fun.hide();
-                return arr;
             });
+        },
+        imgs: async () => {
+            let imgsSrcArr = [];
+            let URLs = [...fun.gae(".entry-content a[href*='vipr.im'],.entry-content a[href*='pixhost.to']:not([href*='/gallery/']),.entry-content a[href*='www.turboimagehost.com'],.entry-content a[href*='imgbox.com'],.entry-content a[href*='www.imagevenue.com']")];
+            if (URLs.length > 0) {
+                let links = URLs.map(a => a.href);
+                let resArr = [];
+                let xhrNum = 0;
+                fun.show(displayLanguage.str_01, 0);
+                for (let i = 0; i < links.length; i++) {
+                    let res = fun.xhr(links[i], "document").then(doc => {
+                        fun.show(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
+                        let img = fun.ge("#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img", doc);
+                        if (img) {
+                            return img.src;
+                        } else {
+                            debug("fun.xhr() 獲取錯誤", links[i]);
+                            return null;
+                        }
+                    });
+                    resArr.push(res);
+                    await fun.delay(100);
+                }
+                await Promise.all(resArr).then(arr => {
+                    fun.hide();
+                    let thumbnails = URLs.map(e => fun.ge("img", e).src);
+                    thumbnailsSrcArray = thumbnailsSrcArray.concat(thumbnails);
+                    imgsSrcArr = imgsSrcArr.concat(arr.filter(item => item));
+                });
+            }
+            let imxURLs = [...fun.gae(".entry-content a[href*='imx.to']")];
+            if (imxURLs.length > 0) {
+                let links = imxURLs.map(a => a.href);
+                let resArr = [];
+                let xhrNum = 0;
+                fun.show(displayLanguage.str_01, 0);
+                for (let i = 0; i < links.length; i++) {
+                    let res = fun.imxXHR(links[i]).then(doc => {
+                        fun.show(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
+                        let img = fun.ge("#container img", doc);
+                        if (img) {
+                            return img.src;
+                        } else {
+                            debug("fun.imxXHR() 獲取錯誤", links[i]);
+                            return null;
+                        }
+                    });
+                    resArr.push(res);
+                    await fun.delay(100);
+                }
+                await Promise.all(resArr).then(arr => {
+                    fun.hide();
+                    //let thumbnails = arr.map(e => e.replace("/i/", "/t/"));
+                    let thumbnails = imxURLs.map(e => fun.ge("img", e).src);
+                    thumbnailsSrcArray = thumbnailsSrcArray.concat(thumbnails);
+                    imgsSrcArr = imgsSrcArr.concat(arr.filter(item => item));
+                });
+            }
+            let imageBamURLs = [...fun.gae(".entry-content a[href*='imagebam']")];
+            if (imageBamURLs.length > 0) {
+                let links = imageBamURLs.map(a => a.href);
+                let resArr = [];
+                let xhrNum = 0;
+                fun.show(displayLanguage.str_01, 0);
+                for (let i = 0; i < links.length; i++) {
+                    let res = fun.imageBamXHR(links[i]).then(doc => {
+                        fun.show(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
+                        let img = fun.ge("img.main-image", doc);
+                        if (img) {
+                            return img.src;
+                        } else {
+                            debug("fun.imageBamXHR() 獲取錯誤", links[i]);
+                            return null;
+                        }
+                    });
+                    resArr.push(res);
+                    await fun.delay(100);
+                }
+                await Promise.all(resArr).then(arr => {
+                    fun.hide();
+                    let thumbnails = imageBamURLs.map(e => fun.ge("img", e).src);
+                    thumbnailsSrcArray = thumbnailsSrcArray.concat(thumbnails);
+                    imgsSrcArr = imgsSrcArr.concat(arr.filter(item => item));
+                });
+            }
+            return imgsSrcArr;
         },
         button: [4],
         insertImg: [
-            [".entry-footer", 2], 2
+            [".entry-footer", 2], 3
         ],
         go: 1,
-        referer: "src",
+        threading: 10,
         customTitle: () => fun.geT("h1.entry-title"),
-        category: "nsfw2"
-    }, {
-        name: "Eropics",
-        host: ["eropics.to"],
-        reg: /eropics\.to\/\d+\/\d+\/\d+\//i,
-        include: "a[href*='imx.to']",
-        init: () => {
-            fun.show(displayLanguage.str_12, 5000);
-        },
-        imgs: ".entry-content p>a",
         category: "nsfw2"
     }, {
         name: "imx.to gallery",
@@ -11257,11 +11317,9 @@
                         let check = fun.checkImgSrc(imgs[p], rText);
                         if (check.ok) {
                             imgSrc = check.src;
-                            /*
-                            let blob = await GM_XHR_GetData(imgSrc);
-                            let objectURL = await URL.createObjectURL(blob.blob);
-                            imgSrc = objectURL;
-                            */
+                            //                             let blob = await GM_XHR_GetData(imgSrc);
+                            //                             let objectURL = await URL.createObjectURL(blob.blob);
+                            //                             imgSrc = objectURL;
                             debug("\nfun.getImgA() 單線程模式imgSrc", imgSrc);
                         } else {
                             console.error("\nfun.getImgA() 單線程模式出錯", imgs[p]);
@@ -11893,17 +11951,15 @@
                 if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(location.host) || !/^data/.test(thumbnailsSrcArray[0])) {
                     thumbnailsSrcArray = [...new Set(thumbnailsSrcArray)];
                 }
-                /*
-                if (!/^data/.test(thumbnailsSrcArray[0])) {
-                    let thumbnailsFragment = new DocumentFragment();
-                    for (let i in thumbnailsSrcArray) {
-                        let img = new Image();
-                        img.src = thumbnailsSrcArray[i];
-                        thumbnailsFragment.appendChild(img);
-                    }
-                    debug("\n背景預讀所有預覽縮圖\n", thumbnailsFragment);
-                }
-                */
+                //                 if (!/^data/.test(thumbnailsSrcArray[0])) {
+                //                     let thumbnailsFragment = new DocumentFragment();
+                //                     for (let i in thumbnailsSrcArray) {
+                //                         let img = new Image();
+                //                         img.src = thumbnailsSrcArray[i];
+                //                         thumbnailsFragment.appendChild(img);
+                //                     }
+                //                     debug("\n背景預讀所有預覽縮圖\n", thumbnailsFragment);
+                //                 }
             }
             debug("\nfun.insertImg()插入圖片最後確認 thumbnailsSrcArray\n", thumbnailsSrcArray);
             debug("\nfun.insertImg()插入圖片最後確認 srcArr\n", srcArr);
@@ -11915,10 +11971,8 @@
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
-                    /*
-                    a.dataset.downloadSrc = srcArr[i];
-                    a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i, 10) + 1).padStart(padStart, "0")}P`;
-                    */
+                    //a.dataset.downloadSrc = srcArr[i];
+                    //a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i, 10) + 1).padStart(padStart, "0")}P`;
                 }
                 let img = new Image();
                 img.alt = `no.${parseInt(i, 10) + 1}`;
@@ -12403,6 +12457,44 @@
                 });
             });
         },
+        imxXHR: url => {
+            return new Promise((resolve, reject) => {
+                _GM_xmlhttpRequest({
+                    method: "POST",
+                    url: url,
+                    responseType: "document",
+                    headers: {
+                        "content-type": "application/x-www-form-urlencoded"
+                    },
+                    data: "imgContinue=Continue+to+image+...+",
+                    onload: data => {
+                        resolve(data.response);
+                    },
+                    onerror: error => {
+                        reject(error);
+                    }
+                });
+            });
+        },
+        imageBamXHR: url => {
+            return new Promise((resolve, reject) => {
+                _GM_xmlhttpRequest({
+                    method: "GET",
+                    url: url,
+                    responseType: "document",
+                    headers: {
+                        "referrer": url,
+                        "referrerPolicy": "strict-origin-when-cross-origin"
+                    },
+                    onload: data => {
+                        resolve(data.response);
+                    },
+                    onerror: error => {
+                        reject(error);
+                    }
+                });
+            });
+        },
         xhrDoc: (url, referer = location.href, ua = navigator.userAgent) => {
             return new Promise((resolve, reject) => {
                 _GM_xmlhttpRequest({
@@ -12629,11 +12721,6 @@
                 });
                 await fun.delay(ms, 0);
             }
-            /*
-            window.scrollTo({
-                top: 0
-            });
-            */
         },
         openInTab: (url, target = "_blank") => {
             let a = document.createElement("a");
@@ -12769,7 +12856,7 @@
 
     const getReferer = srcUrl => {
         let referer;
-        if (siteData.referer == "src") {
+        if (/vipr\.im/.test(srcUrl) || siteData.referer == "src") {
             referer = srcUrl;
         } else if (typeof siteData.referer == "string" || siteData.referer == "") {
             referer = siteData.referer;
@@ -13032,13 +13119,6 @@
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
                     downloadNum = 0;
                     downloading = false;
-                    /*
-                    fun.show(`${displayLanguage.str_27}${errorDataArray.length}${displayLanguage.str_28}`, 3000);
-                    setTimeout(() => {
-                        fun.show(displayLanguage.str_29, 0);
-                    }, 3100);
-                    return;
-                    */
                     let yes = await confirm(`${displayLanguage.str_27}${errorDataArray.length}${displayLanguage.str_28}${displayLanguage.str_29}`);
                     if (!yes) {
                         promiseBlobArray = [];
@@ -13309,10 +13389,8 @@
                     a.dataset.fancybox = "FullPictureLoadImageSmall";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = e;
                     a.href = e;
-                    /*
-                    a.dataset.downloadSrc = e;
-                    a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i, 10) + 1).padStart(padStart, "0")}P`;
-                    */
+                    //a.dataset.downloadSrc = e;
+                    //a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i, 10) + 1).padStart(padStart, "0")}P`;
                 }
                 let img = new Image();
                 img.className = "FullPictureLoadImage small";
@@ -13535,18 +13613,16 @@
             dispatchTouchEvent(ele, "touchend");
         }
         ele.click();
-        /*
-        if (hasTouchEvents()) {
-            ele.dispatchEvent(new Event("touchstart"));
-            ele.dispatchEvent(new Event("touchend"));
-            //ele.click();
-            debug("\nelementClick touch事件式點擊\n", ele);
-        } else {
-            //ele.dispatchEvent(new Event("click"));
-            ele.click();
-            debug("\nelementClick click事件式點擊\n", ele);
-        }
-        */
+        //         if (hasTouchEvents()) {
+        //             ele.dispatchEvent(new Event("touchstart"));
+        //             ele.dispatchEvent(new Event("touchend"));
+        //             //ele.click();
+        //             debug("\nelementClick touch事件式點擊\n", ele);
+        //         } else {
+        //             //ele.dispatchEvent(new Event("click"));
+        //             ele.click();
+        //             debug("\nelementClick click事件式點擊\n", ele);
+        //         }
     };
 
     const addReturnTopButton = () => {
@@ -14199,22 +14275,18 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 await Fancyboxl10nV5();
             } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 5 && siteData.fancybox.insertLibrarys == 1) {
                 //加規則
-                /*
-                fancybox: {
-                    v: 5,
-                    insertLibrarys : 1
-                },
-                */
+                //             fancybox: {
+                //                 v: 5,
+                //                 insertLibrarys : 1
+                //             },
                 await addLibrarysV5();
                 await Fancyboxl10nV5();
             } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 3 && siteData.fancybox.insertLibrarys == 1) {
                 //加規則
-                /*
-                fancybox: {
-                    v: 3,
-                    insertLibrarys : 1
-                },
-                */
+                //             fancybox: {
+                //                 v: 3,
+                //                 insertLibrarys : 1
+                //             },
                 await addLibrarysV3();
                 Fancyboxi18nV3();
                 FancyboxOptionsV3();
