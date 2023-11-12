@@ -433,6 +433,22 @@ if (status == 200) {
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
+//針對imx.to圖床，返回有顯示圖片的document。
+fun.imxXHR(url);
+fun.imxXHR(url).then(doc => {
+    console.log("測試doc", doc);
+})
+</pre>
+<pre>
+//使用Promise包裝GM_xmlhttpRequest
+//針對www.imagebam.com圖床，返回有顯示圖片的document。
+fun.imageBamXHR(url);
+fun.imageBamXHR(url).then(doc => {
+    console.log("測試doc", doc);
+})
+</pre>
+<pre>
+//使用Promise包裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
 fun.xhr(url, type = "text", referer = location.href, ua)
 fun.xhr(url, "document").then(doc => {
@@ -638,7 +654,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/11/08 01:27</p>
+<p>2023/11/12 03:58</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -783,7 +799,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.v2ph.com/">微圖坊</a></td>
-                <td><a href="https://www.v2ph.net/">www.v2ph.net</a>，<a href="https://www.v2ph.ru/">www.v2ph.ru</a>，需註冊，大尺度非VIP只能抓到20~30張</td>
+                <td><a href="https://www.v2ph.net/">www.v2ph.net</a>，<a href="https://www.v2ph.ru/">www.v2ph.ru</a>，需註冊，大尺度非VIP只能抓到10張</td>
             </tr>
             <tr>
                 <td><a href="https://www.meitule.net/">美图乐</a></td>
@@ -866,7 +882,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.shzx.org/b/12-0.html">四海资讯</a></td>
-                <td>封鎖部分地區，需要VPN才看的到圖片</td>
+                <td>封鎖部分地區，需要VPN</td>
             </tr>
             <tr>
                 <td><a href="https://www.nvhai8.com/">女人吧</a></td>
@@ -1562,11 +1578,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
-                <td>有韓系套圖，只支持全部使用pixhost、turboimagehost、imgbox圖床的頁面，imx可以用JDownloader下載</td>
+                <td>手動插入圖片，有日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，如果沒有成功插入imx.to圖床的圖片，可以按Ctrl + Alt + C複製鏈結丟給JDownloader下載，或點開鏈結看有沒有提供Gallery，如果下載速度慢需要掛VPN</td>
             </tr>
             <tr>
                 <td><a href="https://imx.to/">imx.to</a></td>
-                <td>輔助點擊，能在gallery頁進行下載，沒有gallery只有單張圖，可以在eropics批量複製鏈接給JDownloader下載</td>
+                <td>輔助點擊，能在gallery頁進行下載，沒有gallery只有單張圖，可以在eropics按Ctrl + Alt + C複製鏈結丟給JDownloader下載</td>
             </tr>
             <tr>
                 <td><a href="https://showgirlx.net/">ShowGirlx</a></td>
