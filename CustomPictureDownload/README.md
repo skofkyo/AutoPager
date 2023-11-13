@@ -608,7 +608,7 @@ imgs: async () => {
 <p>點擊左下圖示、確定，2步開始下載</p>
 <p>右鍵點擊圖示複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
 <p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
-<p>中鍵點擊圖示儲存網址URLs.txt文件</p>
+<p>中鍵點擊圖示匯出網址URLs.txt文件</p>
 <p>觸控裝置，長按頁面圖片元素500毫秒，規則insertImg設置為手動則插入圖片或複製圖片網址。</p>
 <h1>圖介：</h1>
 <p>在頁面左下添加了一個圖片下載按鈕</p>
@@ -624,7 +624,7 @@ imgs: async () => {
 <p>數字鍵 3 一鍵下載</p>
 <p>數字鍵 4 捲動至最後一張大圖</p>
 <p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
-<p>數字鍵 7 儲存網址URLs.txt文件</p>
+<p>數字鍵 7 匯出網址URLs.txt文件</p>
 <p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例、數字鍵 + 加鍵恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
@@ -633,7 +633,7 @@ imgs: async () => {
 <p>按0、Enter，2步驟開始下載。</p>
 <p>按1，複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
 <p>按2，捲動至腳本插入的第一張大圖</p>
-<p>按3，一鍵下載，自定義標題的步驟。</p>
+<p>按3，一鍵下載，跳過自定義標題的步驟。</p>
 <br>
 <p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
 <h1>圖片檢視模式</h1>
@@ -654,7 +654,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/11/12 03:58</p>
+<p>2023/11/13 03:37</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1204,10 +1204,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>完整無修正的圖片需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
-                <td><a href="https://www.luscious.net/porn/cosplay-22/">Luscious</a></td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
                 <td><a href="https://hotgirl.asia/">HotAsiaGirl</a></td>
                 <td></td>
             </tr>
@@ -1234,6 +1230,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.coszip.com/">COSPLAY ZIP</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.luscious.net/porn/cosplay-22/">Luscious</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.imagefap.com/">ImageFap</a></td>
+                <td>只支援PC版</td>
             </tr>
             <tr>
                 <td><a href="https://cosporn.online/">萝莉少女</a></td>
@@ -1353,7 +1357,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a></td>
+                <td><a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://manhsec.com/">manhsec.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a>，<a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://chinagirly.com/">chinagirly.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -1466,11 +1470,23 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://thotsbay.tv/">Thotsbay</a></td>
-                <td>手動插入圖片，圖片數量超過5千，建議按7或對左下圖示按中鍵，可以儲存URLs.txt，再用Motrix或Aria2來下載。</td>
+                <td>手動插入圖片，圖片數量超過5千，建議按7或對左下圖示按中鍵，可以c匯出URLs.txt，再用Motrix或Aria2來下載。</td>
             </tr>
             <tr>
                 <td><a href="https://xhamster.com/photos">xHamster</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://girlsreleased.com/">GirlsReleased</a></td>
+                <td>圖床imgadult無法外連，但可以下載。</td>
+            </tr>
+            <tr>
+                <td><a href="https://eropics.to/">Eropics</a></td>
+                <td>手動插入圖片，有日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，如果沒有成功插入imx.to圖床的圖片，可以按Ctrl + Alt + C複製鏈結丟給JDownloader下載，或點開鏈結看有沒有提供Gallery，如果下載速度慢需要掛VPN</td>
+            </tr>
+            <tr>
+                <td><a href="https://imx.to/">imx.to</a></td>
+                <td>輔助點擊，能在gallery頁進行下載，沒有gallery只有單張圖，可以在eropics按Ctrl + Alt + C複製鏈結丟給JDownloader下載</td>
             </tr>
             <tr>
                 <td><a href="http://goodsexporn.org/">Good Sex Porn</a></td>
@@ -1573,18 +1589,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://girlsreleased.com/">GirlsReleased</a></td>
-                <td>圖床imgadult無法外連，但可以下載。</td>
-            </tr>
-            <tr>
-                <td><a href="https://eropics.to/">Eropics</a></td>
-                <td>手動插入圖片，有日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，如果沒有成功插入imx.to圖床的圖片，可以按Ctrl + Alt + C複製鏈結丟給JDownloader下載，或點開鏈結看有沒有提供Gallery，如果下載速度慢需要掛VPN</td>
-            </tr>
-            <tr>
-                <td><a href="https://imx.to/">imx.to</a></td>
-                <td>輔助點擊，能在gallery頁進行下載，沒有gallery只有單張圖，可以在eropics按Ctrl + Alt + C複製鏈結丟給JDownloader下載</td>
-            </tr>
-            <tr>
                 <td><a href="https://showgirlx.net/">ShowGirlx</a></td>
                 <td></td>
             </tr>
@@ -1594,10 +1598,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.pornpic.com/">PornPic</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.imagefap.com/">ImageFap</a></td>
                 <td></td>
             </tr>
             <tr>
