@@ -608,7 +608,7 @@ imgs: async () => {
 <p>點擊左下圖示、確定，2步開始下載</p>
 <p>右鍵點擊圖示複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
 <p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
-<p>中鍵點擊圖示匯出網址URLs.txt文件</p>
+<p>中鍵點擊圖示匯出網址MediaURLs.txt文件</p>
 <p>觸控裝置，長按頁面圖片元素500毫秒，規則insertImg設置為手動則插入圖片或複製圖片網址。</p>
 <h1>圖介：</h1>
 <p>在頁面左下添加了一個圖片下載按鈕</p>
@@ -624,7 +624,7 @@ imgs: async () => {
 <p>數字鍵 3 一鍵下載</p>
 <p>數字鍵 4 捲動至最後一張大圖</p>
 <p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
-<p>數字鍵 7 匯出網址URLs.txt文件</p>
+<p>數字鍵 7 匯出網址MediaURLs.txt文件</p>
 <p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例、數字鍵 + 加鍵恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
@@ -1233,7 +1233,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.luscious.net/porn/cosplay-22/">Luscious</a></td>
-                <td>SPA網頁</td>
+                <td>SPA網頁，手動插入圖片，請在第一頁做操作，有極少部分是全GIF，鏈結是取MP4檔而非GIF檔，建議按7或對左下圖示按中鍵可以匯出MediaURLs.txt，再用Motrix或Aria2來下載。</td>
             </tr>
             <tr>
                 <td><a href="https://www.imagefap.com/">ImageFap</a></td>
@@ -1470,7 +1470,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://thotsbay.tv/">Thotsbay</a></td>
-                <td>手動插入圖片，圖片數量超過5千，建議按7或對左下圖示按中鍵，可以c匯出URLs.txt，再用Motrix或Aria2來下載。</td>
+                <td>手動插入圖片，圖片數量超過5千，建議按7或對左下圖示按中鍵可以匯出MediaURLs.txt，再用Motrix或Aria2來下載。</td>
             </tr>
             <tr>
                 <td><a href="https://xhamster.com/photos">xHamster</a></td>
