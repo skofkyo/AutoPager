@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.10
+// @version            1.6.11
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -32,7 +32,7 @@
 (async () => {
     "use strict";
 
-    if (window.frameElement !== null) return; //腳本不在iframe框架裡運行
+    if (window.frameElement !== null || /iframe/.test(window.name)) return; //腳本不在iframe框架裡運行
 
     let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
         enable: 0, //!!!維持0不要改!!!
@@ -1620,9 +1620,14 @@
                     globalImgArray = [...new Set(globalImgArray.concat([...fun.gae(imgEle)].map(e => e.src)))];
                     console.log(globalImgArray);
                     let text = fun.geT(".album-info-item");
-                    let num = parseInt(text.match(/((\d+,)?\d+)\s?pictures/)[1].replace(",", ""), 10);
+                    let num;
+                    try {
+                        num = parseInt(text.match(/((\d+,)?\d+)\s?pictures/)[1].replace(",", ""), 10);
+                    } catch (e) {
+                        num = parseInt(text.match(/\d+/)[0], 10);
+                    }
                     console.log(text);
-                    fun.show(`MutationObserver(${globalImgArray.length}/${num})`, 0);
+                    //fun.show(`MutationObserver(${globalImgArray.length}/${num})`, 0);
                     if (globalImgArray.length >= num && !siteData.checkNextEle()) {
                         //fun.hide();
                         console.log("MutationObserver 抓取結束");
@@ -1701,7 +1706,7 @@
             return bigSrcs;
         },
         button: [4],
-        insertImg: ["article.o-padding-top-bottom", 2],
+        insertImg: ["article.o-padding-top-bottom", 3],
         downloadVideo: true,
         customTitle: () => fun.geT(".o-h1"),
         css: "#modal-root{display:none!important;}",
@@ -3788,35 +3793,21 @@
         host: ["www.micmicidol.club"],
         reg: /www\.micmicidol\.club\/\d+\/\d+\/.+\.html/,
         imgs: async () => {
-            thumbnailsSrcArray = [...fun.gae(".entry-content a[href*=googleusercontent]>img")].map(e => {
-                let arr = e.src.split("/");
-                arr[7] = "w100";
-                return arr.join("/");
-            });
-            let srcArr = [...fun.gae(".entry-content a[href*=googleusercontent]")].map(a => a.href);
-            let firstSrcArr = srcArr[0].split("/");
-            if (firstSrcArr.length === 9) {
-                firstSrcArr[7] = "s16000";
-                let testMaxSrc = firstSrcArr.join("/");
-                let obj = await fun.checkImgStatus(testMaxSrc);
-                debug("\n確認圖片狀態\n", obj);
-                if (obj.ok) {
-                    srcArr = srcArr.map(src => {
-                        let arr = src.split("/");
-                        arr[7] = "s16000";
-                        return arr.join("/");
-                    });
-                    return srcArr;
+            let imgsSrcArr = [...fun.gae(".entry-content a[href*=blog]")].map(a => {
+                let arr = a.href.split("/");
+                if (arr.length === 9) {
+                    arr[7] = "s16000";
+                    return arr.join("/");
                 } else {
-                    return srcArr;
+                    return a.href;
                 }
-            } else {
-                return srcArr;
-            }
+            });
+            thumbnailsSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
+            return imgsSrcArr;
         },
         button: [4],
         insertImg: [
-            [".entry-content", 0, ".entry-content a[href*=googleusercontent]:not([data-fancybox]),.entry-content br"], 2
+            [".entry-content", 0, ".entry-content a[href*=blog]:not([data-fancybox]),.entry-content br"], 2
         ],
         customTitle: () => fun.geT(".entry-title").trim(),
         topButton: true,
@@ -10909,12 +10900,12 @@
                 str_70: "Max download thread ( 1 ~ 32 )",
                 str_71: "Compressed packaging ( 1：yes、0：no)",
                 str_72: "Compressed file extension ( zip or cbz )",
-                str_73: "Automatic download (1：open、0：off) ",
+                str_73: "Automatic download (1：on、0：off) ",
                 str_74: "shortcut key [ ctrl + . ] Start or cancel",
                 str_75: "Automatic download countdown seconds",
-                str_76: "Current Comic Site Rules ( 0：remain closed、1：open )",
-                str_77: "Double click on mobile device to go to next page ( 1：open、0：off )",
-                str_78: "Fancybox plugin ( 1：open、0：off )",
+                str_76: "Comic Site Rules ( 0：remain closed、1：on )",
+                str_77: "Double click on mobile device to go to next page ( 1：on、0：off )",
+                str_78: "Fancybox plugin ( 1：on、0：off )",
                 str_79: "Image zoom ratio ( 0 ~ 10 ) 10 = 100%、0 = auto",
                 str_80: "Number of pictures side by side ( 2 ~ 6 )",
                 str_81: "PS:Comic Category fixed to 2",
@@ -10937,7 +10928,7 @@
                 str_98: "page fetch error please feedback",
                 str_99: "Retry No.",
                 str_100: "bout",
-                str_101: "URLs.txt Exported"
+                str_101: "MediaURLs.txt Exported"
             };
             break;
     }
@@ -11695,6 +11686,7 @@
             return new Promise(async resolve => {
                 let tid;
                 const iframe = document.createElement("iframe");
+                iframe.name = "FullPictureLoad-iframe";
                 iframe.id = "FullPictureLoadIframe";
                 iframe.style.display = "none";
                 iframe.src = url;
@@ -11744,6 +11736,7 @@
                     return htmlText;
                 });
                 const iframe = document.createElement("iframe");
+                iframe.name = "FullPictureLoad-iframe";
                 iframe.id = "FullPictureLoadIframe";
                 iframe.style.display = "none";
                 iframe.srcdoc = resText;
@@ -12129,7 +12122,7 @@
                     if (src == _srcArr.length - 1) debug("\n圖片全載Lazyloading預讀結束");
                 }
             };
-            if (srcArr.length > 0) {
+            if (srcArr.length > 0 || (srcArr.length >= 0 && videosSrcArray.length > 0)) {
                 if (siteData.insertImg[1] == 2 || siteData.insertImg[1] == 3) picPreload(srcArr);
                 let targetEle;
                 try {
@@ -13226,7 +13219,7 @@
         }
     };
 
-    const saveImgSrcText = async () => {
+    const exportImgSrcText = async () => {
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
         let selector;
         typeof siteData.imgs == "function" ? selector = siteData.imgs : selector = options.default;
@@ -13236,7 +13229,7 @@
             return;
         }
         let titleText = (customTitle || document.title);
-        let fileName = `${titleText}URLs.txt`;
+        let fileName = `${titleText}_MediaURLs.txt`;
         if (videosSrcArray.length > 0) {
             srcArr = srcArr.concat(videosSrcArray);
         }
@@ -13581,7 +13574,7 @@
             if (event.button == 1) {
                 event.preventDefault();
                 //goToNo1Img(0);
-                saveImgSrcText();
+                exportImgSrcText();
             }
             if (event.button == 2) {
                 event.preventDefault();
@@ -13611,7 +13604,7 @@
         img3.addEventListener("mousedown", (event) => {
             if (event.button == 2) {
                 event.preventDefault();
-                saveImgSrcText();
+                exportImgSrcText();
             }
         });
         document.body.appendChild(img3);
@@ -14640,7 +14633,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         autoScrollEles();
                         break;
                     case 103: //數字鍵7
-                        saveImgSrcText();
+                        exportImgSrcText();
                         break;
                     case 109: //數字鍵-
                         toggleZoom();
