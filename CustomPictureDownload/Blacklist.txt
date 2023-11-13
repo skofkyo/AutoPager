@@ -1,4 +1,4 @@
-2023/11/12 03:58
+2023/11/13 03:37
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -276,6 +276,9 @@ HOTGIRLchina
 *://girlxinhxinh.com/*-photos*/
 *://girlxinhxinh.com/*-anh*/
 *://thechinagirls.com/*-photos*/
+*://manhsec.com/*-photos*/
+*://asiaceleb.com/*-photos*/
+/^https://chinagirly\.com/\d+/$/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -1072,6 +1075,8 @@ https://www.nuyet.com/gallery/*
 *://girlxinhxinh.com/*-photos*/
 *://girlxinhxinh.com/*-anh*/
 *://thechinagirls.com/*-photos*/
+*://manhsec.com/*-photos*/
+*://asiaceleb.com/*-photos*/
 *://idol.gravureprincess.date/*/*/*.html
 *www.micmicidol.club*
 *unc.micmicdoll.com*
@@ -1278,6 +1283,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://fapello.com/*/
 *://www.shzx.org/a/*.html
 *://m.shzx.org/a/*.html
+/^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
