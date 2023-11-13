@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.8
+// @version            1.6.9
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -51,7 +51,7 @@
         fancybox: 1 //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
     };
 
-    const siteUrl = window.location.href;
+    const siteUrl = window.location.href.replace(/#FullPictureLoad.+$/i, "");
     let siteData = {};
     let siteJson = null;
     const language = window.navigator.language;
@@ -97,7 +97,7 @@
             //if (max > 1 && [...fun.gae(".photos>a")].length < (pageSize + 1)) {
             if (max > 1) {
                 let links = [];
-                let url = location.href.replace(".html", "");
+                let url = siteUrl.replace(".html", "");
                 for (let i = 2; i <= max; i++) {
                     links.push(url + "/" + i + ".html");
                 }
@@ -141,7 +141,7 @@
                 let max = fun.ge("//a[text()='Last']").href.match(/\d+$/)[0];
                 let links = [];
                 for (let i = 2; i <= max; i++) {
-                    links.push(location.href + "?page=" + i);
+                    links.push(siteUrl + "?page=" + i);
                 }
                 await fun.getEle(links, ".col-photos>a", [".col-photos", 0], ".pagination");
                 [...fun.gae("img[data-src]")].forEach(e => {
@@ -1051,15 +1051,15 @@
             }
             let links = [];
             for (let i = 1; i <= max; i++) {
-                links.push(location.href + "/" + i);
+                links.push(siteUrl + "/" + i);
             }
             return fun.getImgA("#bigimg", links);
         },
         button: [4, "24%"],
         insertImg: [".headling_main", 2],
         next: () => {
-            let num = location.href.match(/\d+$/)[0];
-            return location.href.replace(/\d+$/, "") + (parseInt(num, 10) - 1);
+            let num = siteUrl.match(/\d+$/)[0];
+            return siteUrl.replace(/\d+$/, "") + (parseInt(num, 10) - 1);
         },
         customTitle: () => fun.geT('.headling_word_main_box_title').replace(/\[\d+P\]/i, "").replace(/\d+P$/i, "").replace(/\(\d+P\)/i, "").trim(),
         css: ".headling_main{height:auto}",
@@ -1075,7 +1075,7 @@
             ele: ".headling_main_a",
             observer: ".headling_main_a",
             next: () => {
-                let url = location.href.match(/https?:\/\/51sex\.vip\/category\/\d+/)[0] + `/${currentPageNum += 1}`;
+                let url = siteUrl.match(/https?:\/\/51sex\.vip\/category\/\d+/)[0] + `/${currentPageNum += 1}`;
                 return url;
             },
             stop: () => {
@@ -1231,9 +1231,9 @@
         imgs: () => {
             let max = fun.geT(".contentpage>span>i").match(/\/(\d+)/)[1];
             let links = [];
-            links.push(location.href);
+            links.push(siteUrl);
             for (let i = 1; i < max; i++) {
-                links.push(location.href + "/" + i);
+                links.push(siteUrl + "/" + i);
             }
             return fun.getImgA("div>a>img", links, 333);
         },
@@ -1383,7 +1383,7 @@
         imgs: () => {
             let max = fun.geT("a[title],.uk-page>span").match(/\/(\d+)/)[1];
             let links = [];
-            let url = location.href.replace(/index(\w+)?\.html$/, "");
+            let url = siteUrl.replace(/index(\w+)?\.html$/, "");
             for (let i = 1; i <= max; i++) {
                 i == 1 ? links.push(url + "index.html") : links.push(url + "index_" + i + ".html");
             }
@@ -1820,9 +1820,9 @@
             let resArr = [];
             let fetchNum = 0;
             let max = fun.geT(".v-pagination li:last-child", 2);
-            links.push(location.href);
+            links.push(siteUrl);
             for (let i = 2; i <= max; i++) {
-                links.push(location.href + "/" + i);
+                links.push(siteUrl + "/" + i);
             }
             for (let i = 0; i < links.length; i++) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
@@ -1868,9 +1868,9 @@
             let resArr = [];
             let fetchNum = 0;
             let max = fun.geT(".v-pagination li:last-child", 2);
-            links.push(location.href);
+            links.push(siteUrl);
             for (let i = 2; i <= max; i++) {
-                links.push(location.href + "/" + i);
+                links.push(siteUrl + "/" + i);
             }
             for (let i = 0; i < links.length; i++) {
                 let res = fun.fetchDoc(links[i]).then(doc => {
@@ -2451,8 +2451,8 @@
         },
         imgs: () => {
             let links = [];
-            links.push(location.href);
-            let url = location.href.replace(".html", "");
+            links.push(siteUrl);
+            let url = siteUrl.replace(".html", "");
             let max = fun.geT(".suoyou").match(/\d+\/(\d+)/)[1];
             for (let i = 2; i <= max; i++) {
                 links.push(url + "/page/" + i + ".html");
@@ -2574,9 +2574,9 @@
         reg: /m\.beautyleg6\.com\/view\.php\?aid=\d+/,
         imgs: async () => {
             let links = [];
-            links.push(location.href);
+            links.push(siteUrl);
             for (let i = 2; i <= totalpage; i++) {
-                links.push(location.href + "&pageno=" + i);
+                links.push(siteUrl + "&pageno=" + i);
             }
             await fun.getEle(links, "#bigImg", ".show-simg", ".show-pages");
             return [...fun.gae("#bigImg")];
@@ -2774,7 +2774,7 @@
                 num = parseInt(m, 10);
             }
             let pages = Math.ceil(num / 48);
-            let actorName = location.href.split("/")[3];
+            let actorName = siteUrl.split("/")[3];
             let imgsSrcArr = [];
             let fetchNum = 0;
             fun.show(displayLanguage.str_05, 0);
@@ -3285,8 +3285,8 @@
         category: "nsfw2"
     }, {
         name: "HOTGIRLchina格式",
-        host: ["hotgirlchina.com", "thechinagirls.com", "theasiagirl.co", "manhsec.com", "sex4viet.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com"],
-        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|sex4viet\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com)\/.+(photos?|videos?|anh)?\/?/,
+        host: ["hotgirlchina.com", "thechinagirls.com", "theasiagirl.com", "manhsec.com", "sex4viet.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com"],
+        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|sex4viet\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com)\/.+(photos?|videos?|anh)?\/?/,
         include: ".entry-inner img[alt]",
         imgs: () => {
             let max;
@@ -3400,7 +3400,7 @@
         },
         imgs: () => {
             try {
-                let url = location.href;
+                let url = siteUrl;
                 let max = fun.geT(".page-links a[onclick]", 2);
                 let links = [];
                 links.push(url);
@@ -3457,7 +3457,7 @@
         },
         imgs: () => {
             try {
-                let url = location.href;
+                let url = siteUrl;
                 let max = fun.geT("select>option:last-child").match(/\d+/)[0];
                 let links = [];
                 links.push(url);
@@ -4059,7 +4059,7 @@
             return arr;
             /*
             let links = [];
-            let url = location.href;
+            let url = siteUrl;
             links.push(url);
             let max = fun.geT("//span[contains(text(),'页次')]").match(/\/(\d+)/)[1];
             for (let i = 2; i <= max; i++) {
@@ -4392,7 +4392,7 @@
             ele: ".td_flex_block:not(.td-flex-radius),.td_block_inner.tdb-block-inner",
             observer: ".td-cpt-post",
             next: () => {
-                let url = location.href.replace(/page\/\d+\/?/, "") + `page/${currentPageNum += 1}/`;
+                let url = siteUrl.replace(/page\/\d+\/?/, "") + `page/${currentPageNum += 1}/`;
                 return url;
             },
             re: ".page-nav",
@@ -5077,37 +5077,36 @@
         icon: 0,
         key: 0,
         init: () => {
-            fun.getNP('//tr[td[@id]]', 'b+a.link3', null, '#gallery>font>span');
+            fun.getNP("//tr[td[@id]]", "b+a.link3", null, "#gallery>font>span");
         },
         category: "nsfw2"
     }, {
-        name: "ImageFap www.imagefap.com",
+        name: "ImageFap",
         host: ["www.imagefap.com"],
         reg: /www\.imagefap\.com\/photo\/\d+\//i,
         imgs: async () => {
-            let max = fun.ge("div[data-total]").dataset.total;
-            await fun.waitEle(".image-wrapper img");
-            let arr = [];
-            arr.push(fun.ge(".image-wrapper img").cloneNode(true));
-            fun.show(`${displayLanguage.str_02}1/${max}`, 0);
-            let n = 1;
-            for (let i = 1; i < max; i++) {
-                fun.ge("a.next[title=Next]").click();
-                await fun.delay(1000, 0);
-                if (await fun.waitEle(".image-wrapper img")) {
-                    arr.push(fun.ge(".image-wrapper img").cloneNode(true));
-                    fun.show(`${displayLanguage.str_02}${n+=1}/${max}`, 0);
-                }
-            }
-            fun.hide();
-            return arr;
+            fun.show(displayLanguage.str_14, 0);
+            await new Promise(resolve => {
+                let loop = setInterval(() => {
+                    let next = fun.ge("a.next[title='Next Page ›']");
+                    if (next) {
+                        next.click();
+                    } else {
+                        fun.hide();
+                        clearInterval(loop);
+                        resolve();
+                    }
+                }, 1000);
+            });
+            thumbnailsSrcArray = _gallery.data.map(e => e.thumb);
+            return _gallery.data.map(e => e.original);
         },
         button: [4],
-        insertImg: [".mainouter", 1],
+        insertImg: ["//td[div[@id='slideshow']]", 2],
         customTitle: () => fun.geT("#main h1"),
         category: "nsfw2"
     }, {
-        name: "fuskator.com 圖片清單頁",
+        name: "Fuskator 圖片清單頁",
         host: ["fuskator.com"],
         reg: /fuskator\.com\/thumbs\/[\w-~]+\/[\w-~]+\.html/i,
         imgs: async () => {
@@ -5124,7 +5123,7 @@
         //customTitle: "return fun.geT('#info+h1')",
         category: "nsfw2"
     }, {
-        name: "fuskator.com 大圖頁",
+        name: "Fuskator 大圖頁",
         host: ["fuskator.com"],
         reg: /^https:\/\/fuskator\.com\//i,
         include: "//a[text()='View gallery thumbnails']",
@@ -5237,7 +5236,7 @@
             /*
             let max = document.title.split("/").pop().match(/\d+/)[0];
             let srcs = [];
-            let mode = location.href.split("/").slice(0, -1).pop();
+            let mode = siteUrl.split("/").slice(0, -1).pop();
             let firstSrc = fun.ge("#display_image_detail a,#detail_list a").href;
             let path = firstSrc.replace(/(image-)?\d+\.\w+$/i, "");
             for (let i = 1; i <= max; i++) {
@@ -5281,7 +5280,7 @@
             });
             return thumbnailsSrcArray.map(e => e.replace(/\/p=(700|305)/, ""));
             /*
-            let currentName = location.href.split("/")[4];
+            let currentName = siteUrl.split("/")[4];
             let last;
             try {
                 last = fun.ge(".paginator_page[rel=next]").previousElementSibling;
@@ -7437,7 +7436,7 @@
         autoDownload: [0],
         next: () => {
             let next = fun.ge("//a[button[text()='下一章']]");
-            return next && next.href != location.href ? next.href : null;
+            return next && next.href != siteUrl ? next.href : null;
         },
         prev: 1,
         threading: 10,
@@ -9066,7 +9065,7 @@
         reg: /(a|b|www|manhua)\.(manmanju|i?kukudm)\.com\/comiclist\/\d+\/\d+\/1\.htm/i,
         include: "td img",
         comicListUrl: () => {
-            let comicId = location.href.split("/")[4];
+            let comicId = siteUrl.split("/")[4];
             return /(www|a|b)\.manmanju\.com/.test(location.origin) ? `http://www.manmanju.com/comiclist/${comicId}/index.htm` : `http://manhua.kukudm.com/comiclist/${comicId}/index.htm`;
         },
         init: async () => {
@@ -9091,7 +9090,7 @@
         go: 1,
         autoDownload: [0],
         next: () => {
-            let chapterId = location.href.split("/")[5];
+            let chapterId = siteUrl.split("/")[5];
             let host;
             if (/www\.manmanju\.com|manhua\.kukudm\.com/.test(location.origin)) {
                 host = 1;
@@ -9141,7 +9140,7 @@
         autoDownload: [0],
         next: () => {
             let comicListUrl = fun.ge(".subNav a").href;
-            let chapterId = location.href.split("/")[5];
+            let chapterId = siteUrl.split("/")[5];
             let nextXPath = `//li[a[contains(@href,'${chapterId}')]]/preceding-sibling::li[1]/a`;
             return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
@@ -9278,7 +9277,7 @@
         reg: /mh5\.tw\/(series|seriesvip)-\w+-\d+-\d+/i,
         imgs: () => {
             let max;
-            /seriesvip/.test(location.href) ? max = fun.geT("a.cur~a:last-child") - 2 : max = fun.geT("a.cur~a:last-child") - 1;
+            /seriesvip/.test(siteUrl) ? max = fun.geT("a.cur~a:last-child") - 2 : max = fun.geT("a.cur~a:last-child") - 1;
             return fun.getImgIframe(".ptview>img[alt]:not([style])", max, 13, [null, null], ".setnmh-pagedos", 1000, 0);
         },
         insertImg: [".ptview", 1, 0],
@@ -9627,7 +9626,7 @@
             };
             document.addEventListener("keydown", keyhidetoolbar);
             let api;
-            /mangacopy/.test(location.origin) ? api = location.href.replace(/.*?(?=\/comic\/)/, "https://api.mangacopy.com/api/v3") : api = location.href.replace(/.*?(?=\/comic\/)/, "https://api.copymanga.site/api/v3");
+            /mangacopy/.test(location.origin) ? api = siteUrl.replace(/.*?(?=\/comic\/)/, "https://api.mangacopy.com/api/v3") : api = siteUrl.replace(/.*?(?=\/comic\/)/, "https://api.copymanga.site/api/v3");
             let json = await fetch(api).then(res => res.json());
             siteJson = json;
             debug("\n此頁JSON資料\n", json);
@@ -9649,7 +9648,7 @@
         enable: 1,
         reg: /(www\.)?copymanga\.site\/h5\/comicContent\/\w+\/.+/,
         xhr: () => {
-            let s = location.href.split("/").slice(-2);
+            let s = siteUrl.split("/").slice(-2);
             let api;
             /mangacopy/.test(location.origin) ? api = `https://api.mangacopy.com/api/v3/comic/${s[0]}/chapter/${s[1]}` : api = `https://api.copymanga.site/api/v3/comic/${s[0]}/chapter/${s[1]}`;
             return new Promise(resolve => {
@@ -9676,7 +9675,7 @@
                 let str = `<div style="padding: 10px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
                 fun.ge(".comicContentPopupImageList").insertAdjacentHTML("afterend", str);
             };
-            let s = location.href.split("/").slice(-2);
+            let s = siteUrl.split("/").slice(-2);
             let url = `https://${location.hostname}/h5/details/comic/${s[0]}`;
             addHtml(`https://${location.hostname}/h5/index`, "首頁");
             addHtml(url, "目錄");
@@ -9689,7 +9688,7 @@
         go: 1,
         next: () => {
             let next = siteJson.results.chapter.next;
-            return next ? location.href.replace(/[\w-]+$/, "") + next : null;
+            return next ? siteUrl.replace(/[\w-]+$/, "") + next : null;
         },
         customTitle: () => siteJson.results.comic.name + " - " + siteJson.results.chapter.name,
         css: ".comicFixed{display:none!important}",
@@ -10110,8 +10109,8 @@
         insertImg: ["#mh", 2],
         go: 1,
         next: () => {
-            let comicListUrl = location.href.replace(/[\w-]+\/$/i, "");
-            let chapter = location.href.match(/[\w-]+\/$/)[0];
+            let comicListUrl = siteUrl.replace(/[\w-]+\/$/i, "");
+            let chapter = siteUrl.match(/[\w-]+\/$/)[0];
             let nextXPath = `//div[@id='content']/li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
             return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
@@ -10137,7 +10136,7 @@
         insertImg: [".mh_list", 2],
         go: 1,
         next: () => {
-            let comicListUrl = location.href.replace(/\d+\.html$/, "");
+            let comicListUrl = siteUrl.replace(/\d+\.html$/, "");
             let chapter = location.pathname;
             let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
             return fun.fetchDoc(comicListUrl).then(doc => {
@@ -10167,7 +10166,7 @@
         insertImg: ["#content,.content", 1],
         msg: 0,
         next: () => {
-            let comicListUrl = location.href.replace(/\d+\.html$/, "");
+            let comicListUrl = siteUrl.replace(/\d+\.html$/, "");
             let chapter = location.pathname;
             let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
             return fun.fetchDoc(comicListUrl).then(doc => {
@@ -10211,7 +10210,7 @@
         autoPager: {
             ele: ".mdui-col-lg-2",
             observer: ".mdui-col-lg-2",
-            next: () => fun.ge("span.current+a", doc) ? location.href.replace(/\?page=\d+/, "") + "?page=" + fun.ge("span.current+a", doc).getAttribute("href").match(/\d+/)[0] : null,
+            next: () => fun.ge("span.current+a", doc) ? siteUrl.replace(/\?page=\d+/, "") + "?page=" + fun.ge("span.current+a", doc).getAttribute("href").match(/\d+/)[0] : null,
             re: ".pages",
             history: 1
         },
@@ -10655,7 +10654,7 @@
                 str_44: "沒有任何圖片元素...",
                 str_45: "網址已複製",
                 str_46: "即將進行捲動...",
-                str_47: "左鍵：進行下載打包壓縮\n中鍵：儲存網址URLs.txt文件\n右鍵：複製圖片網址和標題或聚集所有圖片",
+                str_47: "左鍵：進行下載打包壓縮\n中鍵：匯出網址URLs.txt文件\n右鍵：複製圖片網址和標題或聚集所有圖片",
                 str_48: "下載&壓縮中請稍後再操作！",
                 str_49: "獲取圖片中請稍後再操作！",
                 str_50: "請輸入自訂CSS/Xpath選擇器：\n範例：img#TheImg OR //img[@id='TheImg']\n也能使用JS代碼自己生成的IMG元素陣列\n範例：js;return [...document.images];",
@@ -10671,7 +10670,7 @@
                 str_60: "圖片縮放",
                 str_61: "取消縮放",
                 str_62: "前往第一張圖",
-                str_63: "左鍵：前往最後一張圖\n右鍵：儲存網址URLs.txt文件",
+                str_63: "左鍵：前往最後一張圖\n右鍵：匯出網址URLs.txt文件",
                 str_64: "即將開始自動下載!!!",
                 str_65: "已停止自動下載!!!",
                 str_66: "💬 反饋",
@@ -10709,7 +10708,7 @@
                 str_98: "頁獲取出錯，建議反饋",
                 str_99: "重試第",
                 str_100: "次",
-                str_101: "網址.txt已儲存"
+                str_101: "網址.txt已匯出"
             };
             break;
         case "zh-CN":
@@ -10760,7 +10759,7 @@
                 str_44: "没有任何图片元素...",
                 str_45: "网址已拷贝",
                 str_46: "即将进行卷动...",
-                str_47: "左键：进行下载打包压缩\n中键：存储网址URLs.txt文档\n右键：拷贝图片网址和标题或聚集所有图片",
+                str_47: "左键：进行下载打包压缩\n中键：导出网址URLs.txt文档\n右键：拷贝图片网址和标题或聚集所有图片",
                 str_48: "下载&压缩中请稍后再操作！",
                 str_49: "获取图片中请稍后再操作！",
                 str_50: "请输入自定义CSS/Xpath选择器：\n范例：img#TheImg OR //img[@id='TheImg']\n也能使用JS代码自己生成的IMG元素数组\n范例：js;return [...document.images];",
@@ -10776,7 +10775,7 @@
                 str_60: "图片缩放",
                 str_61: "取消缩放",
                 str_62: "前往第一张图",
-                str_63: "左键：前往最后一张图\n右键：存储网址URLs.txt文档",
+                str_63: "左键：前往最后一张图\n右键：导出网址URLs.txt文档",
                 str_64: "即将开始自动下载!!!",
                 str_65: "已停止自动下载!!!",
                 str_66: "💬 反馈",
@@ -10814,7 +10813,7 @@
                 str_98: "页获取出错，建议反馈",
                 str_99: "重试第",
                 str_100: "次",
-                str_101: "网址.txt已存储"
+                str_101: "网址.txt已导出"
             };
             break;
         default:
@@ -10865,7 +10864,7 @@
                 str_44: "No picture element",
                 str_45: "URLs copied ",
                 str_46: "About to scroll...",
-                str_47: "left click：Download and compress\nmiddle click：Save URLs.txt\nleft click：Copy image URL and title or aggregate images",
+                str_47: "left click：Download and compress\nmiddle click：Export URLs.txt\nleft click：Copy image URL and title or aggregate images",
                 str_48: "Downloading & compressing, please try again later!",
                 str_49: "Get Pictureing Please try again later!",
                 str_50: "Please enter selector：\nexample：img#TheImg OR //img[@id='TheImg']",
@@ -10881,7 +10880,7 @@
                 str_60: "Image zoom",
                 str_61: "Cancel zoom",
                 str_62: "Go to first image",
-                str_63: "left click：Go to last image\nleft click：Save URLs.txt",
+                str_63: "left click：Go to last image\nleft click：Export URLs.txt",
                 str_64: "Start automatic download!!!",
                 str_65: "Stop automatic download!!!",
                 str_66: "💬 Feedback",
@@ -10919,7 +10918,7 @@
                 str_98: "page fetch error please feedback",
                 str_99: "Retry No.",
                 str_100: "bout",
-                str_101: "URLs.txt saved"
+                str_101: "URLs.txt Exported"
             };
             break;
     }
@@ -10941,80 +10940,81 @@
 
     const fun = {
         getModeUrl: (mode, i) => {
+            let url = siteUrl;
             if (mode === 1) {
                 //【.html ==> .html?page=2】第一頁 ==> 第二頁
                 //【 ==> ?page=2】第一頁 ==> 第二頁
-                return siteUrl.replace(/\?page=\d+$/, "") + "?page=" + i;
+                return url.replace(/\?page=\d+$/, "") + "?page=" + i;
             } else if (mode === 2) {
                 //【.html ==> /2.html】 第一頁 ==> 第二頁
-                return siteUrl.slice(0, -5) + "/" + i + ".html";
+                return url.slice(0, -5) + "/" + i + ".html";
             } else if (mode === 3) {
                 //【.html ==> _1.html】  第一頁 ==> 第二頁
                 //return siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + (i - 1) + ".html";
-                return siteUrl.replace(/\.html$/, "") + "_" + (i - 1) + ".html";
+                return url.replace(/\.html$/, "") + "_" + (i - 1) + ".html";
             } else if (mode === 4) {
                 //【/ ==> /2/】  第一頁 ==> 第二頁
-                return siteUrl.slice(0, -1) + "/" + i + "/";
+                return url.slice(0, -1) + "/" + i + "/";
             } else if (mode === "4") {
                 //【 ==> /2】  第一頁 ==> 第二頁
-                return siteUrl + "/" + i;
+                return url + "/" + i;
             } else if (mode === 5) {
                 //【.html ==> -2.html】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\.html$/, "") + "-" + i + ".html";
+                return url.replace(/\.html$/, "") + "-" + i + ".html";
             } else if (mode === "5") {
                 //【-1.html ==> -2.html】  第一頁 ==> 第二頁
-                return siteUrl.replace(/(-\d+)?\.html$/, "") + "-" + i + ".html";
+                return url.replace(/(-\d+)?\.html$/, "") + "-" + i + ".html";
             } else if (mode === 6) {
                 //【?p=1 ==> ?p=2】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\?p=\d+$/, "") + "?p=" + i;
+                return url.replace(/\?p=\d+$/, "") + "?p=" + i;
             } else if (mode === 7) {
                 //【/1 ==> /2】  第一頁 ==> 第二頁
                 //【.html ==> .html/2】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\/\d+$/, "") + "/" + i;
+                return url.replace(/\/\d+$/, "") + "/" + i;
             } else if (mode === 8) {
                 //【 ==> &page=1】  第一頁 ==> 第二頁
-                return siteUrl.replace(/&page=\d+$/, "") + "&page=" + (i - 1);
+                return url.replace(/&page=\d+$/, "") + "&page=" + (i - 1);
             } else if (mode === "8") {
                 //【 ==> &page=2】  第一頁 ==> 第二頁
-                return siteUrl.replace(/&page=\d+$/, "") + "&page=" + i;
+                return url.replace(/&page=\d+$/, "") + "&page=" + i;
             } else if (mode === 9) {
                 //【.html ==> _2.html】  第一頁 ==> 第二頁
-                return siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + i + ".html";
+                return url.replace(/(_\d+)?\.html$/, "") + "_" + i + ".html";
             } else if (mode === 10) {
                 //【.html ==> .html/2】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\.html(\/\d+)?$/, "") + ".html/" + i;
+                return url.replace(/\.html(\/\d+)?$/, "") + ".html/" + i;
             } else if (mode === 11) {
                 //【/ ==> /2.html】  第一頁 ==> 第二頁
                 //【/1.html ==> /2.html】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\/(\d+\.html)?$/, "") + "/" + i + ".html";
+                return url.replace(/\/(\d+\.html)?$/, "") + "/" + i + ".html";
             } else if (mode === 12) {
                 //【/ ==> /2.htm】  第一頁 ==> 第二頁
                 //【/1.htm ==> /2.htm】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\/(\d+\.htm)?$/, "") + "/" + i + ".htm";
+                return url.replace(/\/(\d+\.htm)?$/, "") + "/" + i + ".htm";
             } else if (mode === 13) {
                 //【-1-* ==> -2-*】  第一頁 ==> 第二頁
-                return siteUrl.replace(/-\d+-[^-]+$/, "") + "-" + i;
+                return url.replace(/-\d+-[^-]+$/, "") + "-" + i;
             } else if (mode === 14) {
                 //【/1/ ==> /2/】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\/\d+\/$/, "") + "/" + i + "/";
+                return url.replace(/\/\d+\/$/, "") + "/" + i + "/";
             } else if (mode === 15) {
                 //【/index.html ==> /index_2.html】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/index_" + i + ".html";
+                return url.replace(/\/(index(_\d+)?\.html)?$/, "") + "/index_" + i + ".html";
             } else if (mode === 16) {
                 //【 ==> /2#list】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\/(index(_\d+)?\.html)?$/, "") + "/" + i + "#list";
+                return url.replace(/\/(index(_\d+)?\.html)?$/, "") + "/" + i + "#list";
             } else if (mode === 17) {
                 //【.htm ==> _2.htm】  第一頁 ==> 第二頁
-                return siteUrl.replace(/#$/, "").replace(/(_\d+)?\.htm$/, "") + "_" + i + ".htm";
+                return url.replace(/#$/, "").replace(/(_\d+)?\.htm$/, "") + "_" + i + ".htm";
             } else if (mode === 18) {
                 //【/ ==> /page/2/】  第一頁 ==> 第二頁
-                return siteUrl.replace(/\/(page\/\d+\/)?$/, "") + "/page/" + i + "/";
+                return url.replace(/\/(page\/\d+\/)?$/, "") + "/page/" + i + "/";
             } else if (mode === 19) {
                 //【-1 ==> -2】  第一頁 ==> 第二頁
-                return siteUrl.replace(/-\d+$/, "") + "-" + i;
+                return url.replace(/-\d+$/, "") + "-" + i;
             } else if (mode === 20) {
                 //【 ==> -p-2】  第一頁 ==> 第二頁
-                return siteUrl.replace(/-p-\d+$/, "") + "-p-" + i;
+                return url.replace(/-p-\d+$/, "") + "-p-" + i;
             }
         },
         retryUrl: async (url, res, fn) => {
@@ -12413,7 +12413,7 @@
                 }, 50);
             });
         },
-        xhr: (url, type = "text", referer = location.href, ua = navigator.userAgent) => {
+        xhr: (url, type = "text", referer = siteUrl, ua = navigator.userAgent) => {
             return new Promise((resolve, reject) => {
                 _GM_xmlhttpRequest({
                     method: "GET",
@@ -12495,7 +12495,7 @@
                 });
             });
         },
-        xhrDoc: (url, referer = location.href, ua = navigator.userAgent) => {
+        xhrDoc: (url, referer = siteUrl, ua = navigator.userAgent) => {
             return new Promise((resolve, reject) => {
                 _GM_xmlhttpRequest({
                     method: "GET",
@@ -12552,7 +12552,7 @@
                 max = fun.geT(".bottom .subNav").match(/\/(\d+)/)[1];
             }
             let links = [];
-            let url = location.href.replace(/1\.htm$/, "");
+            let url = siteUrl.replace(/1\.htm$/, "");
             for (let i = 1; i <= max; i++) {
                 links.push(url + i + ".htm");
             }
@@ -12861,7 +12861,7 @@
         } else if (typeof siteData.referer == "string" || siteData.referer == "") {
             referer = siteData.referer;
         } else {
-            referer = location.href;
+            referer = siteUrl;
         }
         return referer;
     };
