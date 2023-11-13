@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.9
+// @version            1.6.10
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -5084,22 +5084,41 @@
         name: "ImageFap",
         host: ["www.imagefap.com"],
         reg: /www\.imagefap\.com\/photo\/\d+\//i,
+        init: () => {
+            fun.remove("//td[div[@id='main']]/following-sibling::td[1] | //div[iframe]");
+            fun.ge("#main").removeAttribute("style");
+            fun.ge("//table[@width='750']").width = "1000";
+        },
         imgs: async () => {
-            fun.show(displayLanguage.str_14, 0);
-            await new Promise(resolve => {
-                let loop = setInterval(() => {
-                    let next = fun.ge("a.next[title='Next Page ›']");
-                    if (next) {
-                        next.click();
-                    } else {
-                        fun.hide();
-                        clearInterval(loop);
-                        resolve();
-                    }
-                }, 1000);
+            let max = parseInt(fun.attr("div[data-total]", "data-total"), 10);
+            let pages = Math.ceil(max / 24);
+            let m = siteUrl.match(/\/photo\/(\d+).+gid=(\d+)/);
+            let pid = m[1];
+            let gid = m[2];
+            let resArr = [];
+            let fetchNum = 0;
+            fun.show(displayLanguage.str_05, 0);
+            for (let i = 0; i < max; i += 24) {
+                let url = `${location.origin}/photo/${pid}/?gid=${gid}&idx=${i}&partial=true`;
+                let res = await fun.fetchDoc(url).then(doc => {
+                    fun.show(`${displayLanguage.str_06}${fetchNum+=1}/${pages}`, 0);
+                    return [...fun.gae(".thumbs a", doc)].map(a => {
+                        let original = a.href;
+                        let thumb = fun.ge("img", a).src;
+                        return {
+                            original: original,
+                            thumb: thumb
+                        }
+                    });
+                });
+                resArr.push(res);
+            }
+            return Promise.all(resArr).then(data => data.flat()).then(arr => {
+                let thumbs = arr.map(e => e.thumb);
+                thumbnailsSrcArray = thumbnailsSrcArray.concat(thumbs);
+                let originals = arr.map(e => e.original);
+                return originals;
             });
-            thumbnailsSrcArray = _gallery.data.map(e => e.thumb);
-            return _gallery.data.map(e => e.original);
         },
         button: [4],
         insertImg: ["//td[div[@id='slideshow']]", 2],
