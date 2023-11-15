@@ -1,4 +1,4 @@
-2023/11/13 03:37
+2023/11/15 22:56
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -191,6 +191,12 @@ MEITU131
 
 930图片网
 *.930tu.com/*/*/*.html
+
+唯一图库
+*mmonly.cc/*/*/*.html
+
+和邪社
+/^https://www\.hexieshe\.cn/\d+/$/
 
 爱美女
 *://www.2meinv.com/article-*.html
@@ -574,6 +580,9 @@ Byoru
 Fapello
 *://fapello.com/*/
 
+天极图片
+*://pic.yesky.com/*/*.shtml
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -708,6 +717,9 @@ JComic
 琴瑟書庫
 *://sixacg.com/chapter/*
 
+特漫网
+*://www.44te.com/chapter/*
+
 一之涩漫画
 *://1zse.com/index.php/*.html
 
@@ -720,6 +732,15 @@ JComic
 色色漫画
 *://www.manhuasese.com/index.php/chapter/*
 
+九妖漫画
+*://mobile.jymhapp.com/chapter/*
+
+日漫之家
+*://rimanzhijia.com/index.php/chapter/*
+
+鸟鸟韩漫
+*://nnhanman.net/comic/*/chapter-*.html
+
 最新韩漫网
 *://www.zuixinhanman.com/chapter_*.html
 
@@ -731,6 +752,9 @@ JComic
 
 韩漫推荐
 *://okhanman.com/index.php/chapter/*
+
+韩漫库
+*://se8.us/index.php/chapter/*
 
 漫畫類
 
@@ -757,6 +781,9 @@ JComic
 Manhuagui看漫画閱讀
 *m.manhuagui.com/comic/*/*.html
 *www.manhuagui.com/comic/*/*.html
+
+COCOMANGA閱讀
+*://cocomanga.xyz/comic/*/*.html
 
 漫漫聚閱讀
 *manmanju.com/comiclist/*/*/*.htm
@@ -834,9 +861,6 @@ http://*.wuqimh.net/*/*.html
 漫画芯閱讀
 *://*.mhxin.com/manhua/*/*.html
 
-蔷薇漫画閱讀
-*://*.qwmanhua.com/manhua/*/*.html
-
 最漫画閱讀
 *://*.zuimh.com/manhua/*/*.html
 
@@ -846,8 +870,8 @@ http://*.wuqimh.net/*/*.html
 下拉式漫画閱讀
 *://*.xlsmh.com/manhua/*/*.html
 
-漫画吧閱讀
-*://*.dmhua8.com/manhua/*/*.html
+果果漫画閱讀
+*://*.guoguomh.com/manhua/*/*.html
 
 漫画连閱讀
 *://*.100mhl.com/manhua/*/*.html
@@ -885,6 +909,21 @@ GODA漫画閱讀
 
 漫畫屋閱讀
 *://mh5.tw/series-*
+*://mh5.tw/seriesvip-*
+
+山立漫畫
+*://www.setnmh.com/series-*
+*://www.setnmh.com/seriesvip-*
+
+TVBS漫畫
+*://www.tvbsmh.com/series-*
+*://www.tvbsmh.com/seriesvip-*
+
+1359漫画网
+*://*.golden-koi.net/chapter/*.html*
+
+土豪漫畫網
+*://*.tuhao456.com/chapter/*.html*
 
 七夕漫画閱讀
 *://*.qiximh*.com/*/*.html
@@ -913,17 +952,11 @@ http://www.17fuman.com/*/*/*.html
 狗狗漫画閱讀
 *://*.gougoumh.com/manhua/*/*.html
 
-奇奇漫画閱讀
-*://*.qimhua.com/manhua/*/*.html
+漫画看
+*://*.mhkan.com/manhua/*/*.html
 
 悠闲漫画閱讀
 *://*.yxtun.com/manhua/*/*.html
-
-不卡漫画閱讀
-*://*.bukamh.com/manhua/*/*.html
-
-多熙漫画閱讀
-*://*.duoximh.com/manhua/*/*.html
 
 漫画160閱讀
 *://*.mh160.cc/kanmanhua/*/*.html
@@ -937,6 +970,15 @@ http://www.17fuman.com/*/*/*.html
 雪人漫画閱讀
 *://www.xuerenmanhua.com/chapter/*
 
+艾米漫画閱讀
+*://www.aimimh.com/chapter/*
+
+聚合漫画屋
+*://www.52hah.com/chapter/*
+
+酷看漫画
+*://www.kukanmanhua.com/chapter/*
+
 好漫6閱讀
 *://www.haoman6.com/chapter/*
 
@@ -949,6 +991,12 @@ http://www.17fuman.com/*/*/*.html
 二次元動漫閱讀
 *://www.2animx.com/index-look-name-*
 
+看漫畫
+*://www.k886.net/index-look-name-*
+
+奴奴漫畫
+*://www.2nunu.com/look-*
+
 酷漫屋閱讀
 *://*.kumw*.com/*/*.html
 
@@ -958,11 +1006,35 @@ http://www.17fuman.com/*/*/*.html
 漫画牛閱讀
 *manhua666.com/*/*.html
 
+爱我漫画
+*25mh.cc/manhua/*/*/*.html
+
 漫画台閱讀
 manhuatai.org/manhua/*/*.html
 
+漫画吧
+manhuab.com/manhua/*/*.html
+
+漫画哥
+*:/*.manhuag.cc/*/*/*.html
+
 哈哈漫画
 *://www.hahacomic.com/manhua/list.html*
+
+漫画皮
+*://*.iimanhuapi.com/chapter/*.html
+
+野蛮漫画
+*://yemancomic.com/chapter/*/*.html
+
+次元漫画
+*://2cycomic.com/chapter/*/*.html
+
+漫神
+*://m.mhkami.com/chapter/*/*.html
+
+风车漫画
+*://*.qyy158.com/info/*/*.html
 
 ====================自用完整黑名單====================
 *://ani.gamer.com.tw/animeVideo.php*
@@ -1283,6 +1355,18 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://fapello.com/*/
 *://www.shzx.org/a/*.html
 *://m.shzx.org/a/*.html
+*://*.iimanhuapi.com/chapter/*.html
+*://*.golden-koi.net/chapter/*.html*
+*://*.tuhao456.com/chapter/*.html*
+*://nnhanman.net/comic/*/chapter-*.html
+*://*.qyy158.com/info/*/*.html
+*://mobile.jymhapp.com/chapter/*
+*://rimanzhijia.com/index.php/chapter/*
+*://se8.us/index.php/chapter/*
+*://www.44te.com/chapter/*
+*mmonly.cc/*/*/*.html
+*://pic.yesky.com/*/*.shtml
+/^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 /^http://photo\.camcam\.cc/[^/]+/$/
