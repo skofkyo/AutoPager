@@ -1,4 +1,4 @@
-2023/11/15 22:56
+2023/11/17 02:16
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -135,7 +135,7 @@ Lootiu.Com
 *://www.xr*.xyz/*/*.html
 
 秀人美女網
-*://www.xrmn*.cc/*/*/*.html
+*://www.xrmn*.*/*/*/*.html
 
 精品美女吧
 *://www.jpmn8.cc/*/*/*.html
@@ -185,6 +185,9 @@ COSPLAY ZIP
 MEITU131
 *://www.meitu131.net/meinv/*/
 *://m.meitu131.net/meinv/*/
+
+牛图114图库
+*://www.niutu114.com/meinv/*/*/*.html
 
 晴空头像图库
 *.qq7k.com/*/*/*.html
@@ -407,6 +410,9 @@ MM1311
 洛秀网
 *://loxiu.com/post/*.html
 
+女神网
+*://m888.top/*/*.html
+
 Xasiat
 *://www.xasiat.com/albums/*
 
@@ -582,6 +588,12 @@ Fapello
 
 天极图片
 *://pic.yesky.com/*/*.shtml
+
+1000艺术摄影
+*://www.1000yishu.com/*/*/*/*.html
+
+169图片大全
+*://*.169tp.com/*/*/*/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1095,7 +1107,7 @@ https://www.nuyet.com/gallery/*
 *://m.xwbar.com/plus/view-*.html
 *://www.xiuren*.*/*/*.html
 *://www.xr*.xyz/*/*.html
-*://www.xrmn*.cc/*/*/*.html
+*://www.xrmn*.*/*/*/*.html
 *://www.jpmn8.cc/*/*/*.html
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
@@ -1366,6 +1378,10 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.44te.com/chapter/*
 *mmonly.cc/*/*/*.html
 *://pic.yesky.com/*/*.shtml
+*://m888.top/*/*.html
+*://www.1000yishu.com/*/*/*/*.html
+*://*.169tp.com/*/*/*/*.html
+*://www.niutu114.com/meinv/*/*/*.html
 /^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
