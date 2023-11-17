@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.12
+// @version            1.6.13
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -248,8 +248,8 @@
         category: "nsfw1"
     }, {
         name: "优丝库HD", //免VIP
-        host: ["yskhd.com", "ysk567.com"],
-        reg: /(yskhd\.com|ysk567\.com)\/archives\/\d+/i,
+        host: ["yskhd.com", "ysk567.com", "yskhd.xyz"],
+        reg: /(yskhd\.(com|xyz)|ysk567\.com)\/archives\/\d+/i,
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src);
             let getRes = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", "")).map(async src => {
@@ -519,7 +519,7 @@
         name: "爱美女网",
         host: ["www.imn5.xyz"],
         reg: /www\.imn5\.\w+\/\w+\/\w+\/\d+\.html/i,
-        imgs: () => fun.getImg('.imgwebp p img[alt]', fun.geT(".page a:last-child", 2), 3),
+        imgs: () => fun.getImg('.imgwebp p img[alt]', fun.geT(".page a:last-child", 2), 3, [null, null], 200),
         button: [4],
         insertImg: ["//div[p[img[@alt]]]", 2],
         autoDownload: [0],
@@ -578,7 +578,7 @@
             let pag = [...fun.gae(".pagebar")];
             if (pag.length > 0) pag[0].remove();
         },
-        imgs: () => fun.getImg('.info-imtg-box img[alt]', fun.geT(".pagebar>*:last-child", 2), 3),
+        imgs: () => fun.getImg('.info-imtg-box img[alt]', fun.geT(".pagebar>*:last-child", 2), 3, [null, null], 200),
         button: [4],
         insertImg: ["//p[img[@alt]]", 2],
         autoDownload: [0],
@@ -755,6 +755,16 @@
             v: 3,
             css: false
         },
+        category: "nsfw1"
+    }, {
+        name: "牛牛美图",
+        host: ["www.uyn8.cn"],
+        reg: /^https:\/\/www\.uyn8\.cn\/archives\/\d+/i,
+        init: "fun.clearAllTimer();",
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: () => fun.geT(".entry-title"),
         category: "nsfw1"
     }, {
         name: "微密猫",
@@ -993,7 +1003,7 @@
         threading: 10,
         category: "nsfw2"
     }, {
-        name: "柠檬皮 www.cybesx.com",
+        name: "柠檬皮",
         host: ["www.cybesx.com"],
         reg: /www\.cybesx\.com\/\d+\.html$/i,
         include: ".page-links",
@@ -1008,7 +1018,7 @@
         },
         category: "nsfw1"
     }, {
-        name: "柠檬皮 www.cybesx.com",
+        name: "柠檬皮",
         host: ["www.cybesx.com"],
         reg: /www\.cybesx\.com\/\d+\.html$/i,
         include: ".single-content img",
@@ -1397,7 +1407,17 @@
         css: ".appbox,.uk-page~section{display:none!important}.work-content img{max-width:100%!important}",
         category: "nsfw1"
     }, {
-        name: "晴空头像图库 www.qq7k.com",
+        name: "牛图114图库",
+        host: ["www.niutu114.com"],
+        reg: /^http:\/\/www\.niutu114\.com\/\w+\/\w+\/\d+\/\d+\.html/i,
+        imgs: () => fun.getImg(".work-content img", fun.geT("//a[text()='下一页']", 2) || 1, 9),
+        button: [4],
+        insertImg: [".work-content", 2],
+        customTitle: () => fun.geT(".contitle-box>h1"),
+        css: ".work-content img{max-width:100%!important}",
+        category: "nsfw1"
+    }, {
+        name: "晴空头像图库",
         host: ["www.qq7k.com"],
         reg: /www\.qq7k\.com\/\w+\/\w+\/\d+.html/i,
         init: () => {
@@ -1417,7 +1437,7 @@
         css: ".content img{cursor:unset!important;margin:0px auto!important;border:none!important}",
         category: "nsfw1"
     }, {
-        name: "晴空头像图库M m.qq7k.com",
+        name: "晴空头像图库M",
         host: ["m.qq7k.com"],
         reg: /m\.qq7k\.com\/\w+\/\w+\/\d+.html/i,
         init: () => {
@@ -1518,7 +1538,21 @@
         css: ".atlasSwiper .floatR,.atlasSwiper .floatR .previewPic{width:unset!important}",
         category: "nsfw1"
     }, {
-        name: "爱美女 www.2meinv.com",
+        name: "天极图片M",
+        host: ["wap.yesky.com"],
+        reg: /^https:\/\/wap\.yesky\.com\/pic\/\d+\/\d+\.shtml$/i,
+        init: () => {
+            globalImgArray = [...fun.gae("[data-imgid] img")];
+            fun.ge(".swiper-container").outerHTML = '<div class="imgBox"></div>';
+        },
+        imgs: () => globalImgArray,
+        button: [4],
+        insertImg: [".imgBox", 2],
+        customTitle: () => fun.geT(".atlas_introduce h1"),
+        css: "[class^=ad]{display:none!important;}",
+        category: "nsfw1"
+    }, {
+        name: "爱美女",
         host: ["www.2meinv.com"],
         reg: /www\.2meinv\.com\/article.+\.html/,
         imgs: () => {
@@ -1538,7 +1572,7 @@
         customTitle: () => fun.title("_", 1),
         category: "nsfw1"
     }, {
-        name: "爱美女M mm.2meinv.com",
+        name: "爱美女M",
         host: ["mm.2meinv.com"],
         reg: /mm\.2meinv\.com\/article-\d+\.html/,
         imgs: () => {
@@ -1558,7 +1592,8 @@
         customTitle: () => fun.title("_", 1),
         category: "nsfw1"
     }, {
-        name: "绅士猫 www.cos6.net",
+        name: "绅士猫",
+        host: "www.cos6.net",
         reg: /www\.cos6\.net\/\d+\.html/,
         exclude: ".tinymce-hide",
         imgs: ".wp-posts-content img[data-src]",
@@ -1568,6 +1603,33 @@
         next: ".article-nav>div:first-child>a[href$=html]",
         prev: ".article-nav>div:last-child>a[href$=html]",
         customTitle: () => fun.geT("h1.article-title"),
+        category: "nsfw1"
+    }, {
+        name: "涩涩乐园",
+        host: "sesew.top",
+        reg: /^https:\/\/sesew\.top\/\w+\.html/i,
+        imgs: ".wp-posts-content img[data-src]",
+        button: [4],
+        insertImg: [".wp-posts-content", 2],
+        autoDownload: [0],
+        next: ".article-nav>div:first-child>a[href$=html]",
+        prev: ".article-nav>div:last-child>a[href$=html]",
+        customTitle: () => fun.geT("h1.article-title"),
+        category: "nsfw1"
+    }, {
+        name: "男人之家",
+        host: "nanrenhome.cc",
+        reg: /^https:\/\/nanrenhome\.cc\/\d+\.html/i,
+        include: "//a[@rel='category tag'][text()='福利美图']",
+        imgs: () => {
+            let pag = fun.ge(".article-paging a[href]");
+            return pag ? fun.getImgA(".article-content img", ".article-paging a[href]") : [...fun.gae(".article-content img")];
+        },
+        button: [4],
+        insertImg: [
+            ["//article/p[img]", 2, "//article/p[img] | //div[@class='article-paging']"], 2
+        ],
+        customTitle: () => fun.geT(".article-title"),
         category: "nsfw1"
     }, {
         name: "RedBust redbust.com",
@@ -1776,6 +1838,18 @@
         button: [4],
         insertImg: [".talk_pic", 2],
         customTitle: () => fun.geT("h1"),
+        category: "nsfw1"
+    }, {
+        name: "萌次元",
+        host: ["www.mtutuu.com"],
+        reg: /^https:\/\/www\.mtutuu\.com\/\d+\.html/,
+        exclude: ".content-cap",
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [
+            ["//div[@class='entry-content']/p[img]", 2, "//div[@class='entry-content']/p[img]"], 2
+        ],
+        customTitle: () => fun.geT(".post-style-3-title"),
         category: "nsfw1"
     }, {
         name: "3楼猫图库",
@@ -2299,6 +2373,26 @@
         customTitle: () => fun.geT(".info-title>h1"),
         category: "nsfw1"
     }, {
+        name: "女神网",
+        host: ["m888.top"],
+        reg: /https:\/\/m888\.top\/\w+\/\d+\.html/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.ge("//a[text()='尾页']").href.match(/(\d+)\.html$/)[1];
+            } catch (e) {
+                max = 1;
+            }
+            return fun.getImg(".entry-content img", max, 9);
+        },
+        button: [4],
+        insertImg: [".entry-content", 1],
+        autoDownload: [0],
+        next: ".article-nav-prev a",
+        prev: ".article-nav-next a",
+        customTitle: () => fun.geT(".entry-title").replace(/\d+p/i, ""),
+        category: "nsfw1"
+    }, {
         name: "遛无写真/KP写真/美女云图网/tck天天番号/4tck番号库/5tck天天番号/6K美女/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社",
         host: ["www.6evu.com", "www.6kpo.com", "www.c0h.net", "www.3tck.com", "www.4tck.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.1tu5.com", "www.wsqap.com"],
         reg: /(www\.6evu\.com|www\.6kpo\.com|www\.c0h\.net|www\.\dtck\.com|www\.1tu5\.com|www\.1plq\.com|www\.wsqap\.com)\/\d+\.html/,
@@ -2473,6 +2567,20 @@
             v: 3,
             css: false
         },
+        category: "nsfw1"
+    }, {
+        name: "日式JK",
+        host: ["www.jk.rs"],
+        reg: /^https:\/\/www\.jk\.rs\/\d+\/\d+\/\d+\/\d+\.html/,
+        imgs: "div[data-fancybox]",
+        button: [4],
+        insertImg: ["#masonry", 2],
+        customTitle: () => fun.title(" - 日式JK"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        css: "#masonry{position:unset!important;height:unset!important}",
         category: "nsfw1"
     }, {
         name: "妹妹美",
@@ -5168,6 +5276,7 @@
         button: [4],
         insertImg: ["//td[div[@id='slideshow']]", 2],
         customTitle: () => fun.geT("#main h1"),
+        threading: 8,
         category: "nsfw2"
     }, {
         name: "Fuskator 圖片清單頁",
@@ -5757,6 +5866,26 @@
             title: () => "Page " + fun.ge("a.bg-gray-300", doc).innerText
         },
         category: "autoPager"
+    }, {
+        name: "1000艺术摄影/169图片大全",
+        host: ["www.1000yishu.com", "www.169tp.com", "wap.169tp.com"],
+        reg: /^https:\/\/(www\.1000yishu\.com|www\.169tp\.com|wap\.169tp\.com)\/\w+\/\d+\/\d+\/\d+\.html/,
+        imgs: () => {
+            let max;
+            try {
+                max = fun.geT(".pagelist a").match(/\d+/)[0];
+            } catch (e) {
+                max = 1;
+            }
+            return fun.getImg(".big-pic img,.inside_box img", max, 9);
+        },
+        button: [4],
+        insertImg: [".big-pic,.inside_box", 2],
+        autoDownload: [0],
+        next: ".fenxianga a,.pre_arct a",
+        prev: ".fenxianga a:last-child,.next_arct a",
+        css: "union{display:none!important;}",
+        category: "nsfw1"
     }, {
         name: "Girl Girl Go",
         host: ["girlgirlgo.org", "girlgirlgo.net", "girlgirlgo.top", "girlgirlgo.icu", "girlgirlgo.biz", "girlygirlpic.com"],
@@ -7804,7 +7933,7 @@
     }, {
         name: "鸟鸟韩漫",
         host: ["nnhanman.net"],
-        reg: /^https:\/\/nnhanman\.net\/comic\/[\w-]+\/chapter-\d+\.html/,
+        reg: /^https:\/\/nnhanman\.net\/comic\/[^\/]+\/chapter-\d+\.html/,
         imgs: async () => {
             if (/章$/.test(fun.geT(".BarTit>h1"))) {
                 await fun.getNP("img[data-original]", "#k_Pic_nextArr", null, "#action");
@@ -9600,7 +9729,7 @@
     }, {
         name: "1359漫画网",
         host: ["www.golden-koi.net"],
-        enable: 1,
+        enable: 0,
         reg: /^https:\/\/www\.golden-koi\.net\/chapter\/\d+\.html/i,
         init: () => {
             let next = fun.ge(siteData.next);
@@ -9618,7 +9747,7 @@
     }, {
         name: "土豪漫畫網",
         host: ["www.tuhao456.com", "tuhao456.com"],
-        enable: 1,
+        enable: 0,
         reg: /^https:\/\/(www\.)?tuhao456\.com\/chapter\/\d+\.html/i,
         imgs: () => picArry,
         button: [4],
@@ -9631,7 +9760,7 @@
     }, {
         name: "1359漫画网M/土豪漫畫網M",
         host: ["m.golden-koi.net", "m.tuhao456.com"],
-        enable: 1,
+        enable: 0,
         reg: /^https:\/\/(m\.golden-koi\.net|m\.tuhao456\.com)\/chapter\/\d+\.html/i,
         init: () => {
             fun.remove("#readModeMenu,#pagePrev,#pageNext");
@@ -10564,7 +10693,7 @@
         imgs: () => [...fun.gae("option[jhc-data]")].map(e => e.getAttribute("jhc-data").replace("-mht.middle.webp", "")),
         button: [4],
         insertImg: [".mh_list,#content", 2],
-        go: 1,
+        autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'chapter')]",
         prev: "//a[text()='上一章'][contains(@href,'chapter')]",
         customTitle: () => fun.attr("meta[name='keywords']", "content").replace(",", " - "),
@@ -10595,6 +10724,7 @@
         button: [4],
         insertImg: [".mh_list", 2],
         go: 1,
+        autoDownload: [0],
         next: () => {
             let comicListUrl = siteUrl.replace(/\d+\.html$/, "");
             let chapter = location.pathname;
@@ -10635,7 +10765,7 @@
         },
         button: [4],
         insertImg: ["#content,.content", 2],
-        msg: 0,
+        autoDownload: [0],
         next: () => {
             let comicListUrl = siteUrl.replace(/\d+\.html$/, "");
             let chapter = location.pathname;
@@ -11106,6 +11236,7 @@
                     }
                 },
                 close: (fancybox, slide) => {
+                    document.body.classList.remove("imgbox-show");
                     slideIndex = fancybox.getSlide().index;
                     fun.scrollEvent(slideIndex);
                 }
@@ -11140,6 +11271,7 @@
                     }
                 },
                 close: (fancybox, slide) => {
+                    document.body.classList.remove("imgbox-show");
                     slideIndex = fancybox.getSlide().index;
                     fun.scrollEvent(slideIndex);
                 }
@@ -11220,19 +11352,19 @@
                 str_66: "💬 反饋",
                 str_67: "設定",
                 str_68: "當前網站 Full Picture Load 選項",
-                str_69: "左下圖示按鈕 ( 0：關、1：開 ) PS:優先級別低於內置規則",
-                str_70: "最大下載線程數 ( 1 ~ 32 ) PS:優先級別低於內置規則",
-                str_71: "壓縮打包 ( 1：壓縮、0：不壓縮 )",
-                str_72: "壓縮檔副檔名 ( zip 或 cbz )",
-                str_73: "自動下載 (1：開、0：關) ",
-                str_74: "快捷鍵 [ ctrl + . ] 開始或取消",
-                str_75: "自動下載倒數秒數 PS:優先級別低於內置規則",
-                str_76: "當前漫畫站規則 ( 0：維持關閉、1：啟用 )",
-                str_77: "移動裝置雙擊前往下一頁 ( 1：開、0：關 )",
-                str_78: "Fancybox燈箱功能 ( 1：開 、0：關 )",
-                str_79: "圖片縮放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto",
-                str_80: "圖片並排模式顯示數量 ( 2 ~ 6 ) comic類固定為 ( 2 )",
-                str_81: "PS:comic類並排後為右至左的漫讀模式 hcomic類也設定為2將套用",
+                str_69: "顯示左下圖示按鈕",
+                str_70: "最大下載線程數 ( 1 ~ 32 )：",
+                str_71: "下載後壓縮打包",
+                str_72: "壓縮檔副檔名 ( zip 或 cbz )：",
+                str_73: "自動下載",
+                str_74: " ( 快捷鍵 [ ctrl + . ] 開始或取消 )",
+                str_75: "自動下載倒數秒數：",
+                str_76: "當前漫畫站點規則開關",
+                str_77: "移動裝置雙擊前往下一頁",
+                str_78: "Fancybox燈箱功能",
+                str_79: "圖片縮放比例 ( 0 ~ 10 )：",
+                str_80: "圖片並排數量 ( 2 ~ 6 )：",
+                str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
                 str_82: "取消 (Esc)",
                 str_83: "重置設定",
                 str_84: "保存設定",
@@ -11325,19 +11457,19 @@
                 str_66: "💬 反馈",
                 str_67: "设置",
                 str_68: "当前网站 Full Picture Load 选项",
-                str_69: "左下图标按钮 ( 0：关、1：开 ) PS:优先级别低于内置规则",
-                str_70: "最大下载线程数 ( 1 ~ 32 ) PS:优先级别低于内置规则",
-                str_71: "压缩打包 ( 1：压缩、0：不压缩 )",
-                str_72: "压缩档文件扩展名 ( zip 或 cbz )",
-                str_73: "自动下载 (1：开、0：关) ",
-                str_74: "快捷键 [ ctrl + . ] 开始或取消",
-                str_75: "自动下载倒数秒数 PS:优先级别低于内置规则",
-                str_76: "当前漫画站规则 ( 0：维持关闭、1：启用 )",
-                str_77: "移动设备双击前往下一页 ( 1：开、0：关 )",
-                str_78: "Fancybox灯箱功能 ( 1：开 、0：关 )",
-                str_79: "图片缩放比例 ( 0 ~ 10 ) 10 = 100%、5 = 50%、0 = auto",
-                str_80: "图片并排模式显示数量 ( 2 ~ 6 ) comic类固定为 ( 2 )",
-                str_81: "PS:comic类并排后为右至左的漫读模式 hcomic类也设置为2将套用",
+                str_69: "显示左下图标按钮",
+                str_70: "下载后最大下载线程数 ( 1 ~ 32 )：",
+                str_71: "压缩打包",
+                str_72: "压缩档文件扩展名 ( zip 或 cbz )：",
+                str_73: "自动下载",
+                str_74: " ( 快捷键 [ ctrl + . ] 开始或取消 )",
+                str_75: "自动下载倒数秒数：",
+                str_76: "当前漫画站点规则开关",
+                str_77: "移动设备双击前往下一页",
+                str_78: "Fancybox灯箱功能",
+                str_79: "图片缩放比例 ( 0 ~ 10 )：",
+                str_80: "图片并排数量 ( 2 ~ 6 )：",
+                str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
                 str_82: "取消 (Esc)",
                 str_83: "重置设置",
                 str_84: "保存设置",
@@ -11428,21 +11560,21 @@
                 str_64: "Start automatic download!!!",
                 str_65: "Stop automatic download!!!",
                 str_66: "💬 Feedback",
-                str_67: "settings",
-                str_68: "Current website Full Picture Load Options",
-                str_69: "Lower left icon button ( 0：hide、1：show )",
-                str_70: "Max download thread ( 1 ~ 32 )",
-                str_71: "Compressed packaging ( 1：yes、0：no)",
-                str_72: "Compressed file extension ( zip or cbz )",
-                str_73: "Automatic download (1：on、0：off) ",
-                str_74: "shortcut key [ ctrl + . ] Start or cancel",
-                str_75: "Automatic download countdown seconds",
-                str_76: "Comic Site Rules ( 0：remain closed、1：on )",
-                str_77: "Double click on mobile device to go to next page ( 1：on、0：off )",
-                str_78: "Fancybox plugin ( 1：on、0：off )",
-                str_79: "Image zoom ratio ( 0 ~ 10 ) 10 = 100%、0 = auto",
-                str_80: "Number of pictures side by side ( 2 ~ 6 )",
-                str_81: "PS:Comic Category fixed to 2",
+                str_67: "Settings",
+                str_68: "Current Website Full Picture Load Options",
+                str_69: "Show Lower Left Icon Button",
+                str_70: "Max Download Thread ( 1 ~ 32 )：",
+                str_71: "Compressed Packaging",
+                str_72: "Compressed File Extension(zip or cbz)：",
+                str_73: "AutoDownload",
+                str_74: " ( [ ctrl + . ] Start or Cancel)",
+                str_75: "AutoDownload Countdown Sec：",
+                str_76: "Comic Site Rules Switch",
+                str_77: "Double Click Go To Next Page",
+                str_78: "Fancybox Plugin",
+                str_79: "Image Zoom Ratio ( 0 ~ 10 )：",
+                str_80: "Number of Pictures side by side ( 2 ~ 6 )：",
+                str_81: "Comic Category fixed to 2",
                 str_82: "Cancel (Esc)",
                 str_83: "Reset",
                 str_84: "Save",
@@ -13846,9 +13978,7 @@
         } else if (img == "last") {
             ele = [...gae(".FullPictureLoadImage:not(.small)")].pop();
         }
-        if (ele) {
-            ele.scrollIntoView();
-        }
+        if (ele) ele.scrollIntoView();
     };
 
     const autoScrollEles = () => {
@@ -14195,52 +14325,40 @@
     FullPictureLoadOptionsMain.style.display = "none";
     const FullPictureLoadOptionsMainHtmlSrt = `
 <div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_68}</font></p>
+    <p>${displayLanguage.str_68}</p>
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_69}</font></p>
-    <input id="FullPictureLoadOptionsIcon">
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsIcon" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_69}
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_70}</font></p>
-    <input id="FullPictureLoadOptionsThreading">
+<div style="width: 348px; display: flex; margin-left: 6px;">
+    ${displayLanguage.str_70}<input id="FullPictureLoadOptionsThreading" style="width: 60px; margin: 0 6px !important;">
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_71}</font></p>
-    <input id="FullPictureLoadOptionsZip">
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsZip" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_71}
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_72}</font></p>
-    <input id="FullPictureLoadOptionsExtension">
+<div style="width: 348px; display: flex; margin-left: 6px;">
+    ${displayLanguage.str_72}<input id="FullPictureLoadOptionsExtension" style="width: 60px; margin: 0 6px !important;">
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_73}</font><font color="red">${displayLanguage.str_74}</font></p>
-    <input id="FullPictureLoadOptionsAutoDownload">
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsAutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_73}${displayLanguage.str_74}
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_75}</font></p>
-    <input id="FullPictureLoadOptionsCountdown">
+<div style="width: 348px; display: flex; margin-left: 6px;">
+    ${displayLanguage.str_75}<input id="FullPictureLoadOptionsCountdown" style="width: 60px; margin: 0 6px !important;">
 </div>
-<div style="width: 100%; display: none;">
-    <p><font color="black">${displayLanguage.str_76}</font></p>
-    <input id="FullPictureLoadOptionsComic">
+<div style="width: 348px; display: none;">
+    <input id="FullPictureLoadOptionsComic" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_76}
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_77}</font></p>
-    <input id="FullPictureLoadOptionsDouble">
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsDouble" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_77}
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_78}</font></p>
-    <input id="FullPictureLoadOptionsFancybox">
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_78}
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_79}</font></p>
-    <input id="FullPictureLoadOptionsZoom">
+<div style="width: 348px; display: flex; margin-left: 6px;">
+    ${displayLanguage.str_79}<input id="FullPictureLoadOptionsZoom" title="10 = 100%、5 = 50%、0 = auto" style="width: 60px; margin: 0 6px !important;">
 </div>
-<div style="width: 100%;">
-    <p><font color="black">${displayLanguage.str_80}</font></p>
-    <input id="FullPictureLoadOptionsColumn">
-    <p><font color="black">${displayLanguage.str_81}</font></p>
+<div style="width: 348px; display: flex; margin-left: 6px;">
+    ${displayLanguage.str_80}<input id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}" style="width: 60px; margin: 0 6px !important;">
 </div>
 <button id="FullPictureLoadOptionsCancelBtn"><font color="black">${displayLanguage.str_82}</font></button>
 <button id="FullPictureLoadOptionsResetBtn"><font color="black">${displayLanguage.str_83}</font></button>
@@ -14250,15 +14368,19 @@
     document.body.appendChild(FullPictureLoadOptionsMain);
 
     const setValue = () => {
-        ge("#FullPictureLoadOptionsIcon").value = options.icon;
+        ge("#FullPictureLoadOptionsIcon").checked = options.icon == 1 ? true : false;
         ge("#FullPictureLoadOptionsThreading").value = options.threading;
-        ge("#FullPictureLoadOptionsZip").value = options.zip;
+        ge("#FullPictureLoadOptionsZip").checked = options.zip == 1 ? true : false;
         ge("#FullPictureLoadOptionsExtension").value = options.file_extension;
-        ge("#FullPictureLoadOptionsAutoDownload").value = options.autoDownload;
+        ge("#FullPictureLoadOptionsAutoDownload").checked = options.autoDownload == 1 ? true : false;
         ge("#FullPictureLoadOptionsCountdown").value = options.autoDownloadCountdown;
-        ge("#FullPictureLoadOptionsComic").value = options.comic;
-        ge("#FullPictureLoadOptionsDouble").value = options.doubleTouchNext;
-        fancyboxBlackList() ? ge("#FullPictureLoadOptionsFancybox").value = 0 : ge("#FullPictureLoadOptionsFancybox").value = options.fancybox;
+        ge("#FullPictureLoadOptionsComic").checked = options.comic == 1 ? true : false;
+        ge("#FullPictureLoadOptionsDouble").checked = options.doubleTouchNext == 1 ? true : false;
+        if (fancyboxBlackList()) {
+            ge("#FullPictureLoadOptionsFancybox").checked = false;
+        } else {
+            ge("#FullPictureLoadOptionsFancybox").checked = options.fancybox == 1 ? true : false;
+        }
         ge("#FullPictureLoadOptionsZoom").value = options.zoom;
         siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn").value = 2 : ge("#FullPictureLoadOptionsColumn").value = options.column;
     };
@@ -14276,15 +14398,15 @@
 
     ge("#FullPictureLoadOptionsSaveBtn").addEventListener("click", event => {
         event.preventDefault();
-        options.icon = ge("#FullPictureLoadOptionsIcon").value;
+        options.icon = ge("#FullPictureLoadOptionsIcon").checked == true ? 1 : 0;
         options.threading = ge("#FullPictureLoadOptionsThreading").value;
-        options.zip = ge("#FullPictureLoadOptionsZip").value;
+        options.zip = ge("#FullPictureLoadOptionsZip").checked == true ? 1 : 0;
         options.file_extension = ge("#FullPictureLoadOptionsExtension").value;
-        options.comic = ge("#FullPictureLoadOptionsComic").value;
-        options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload").value;
+        options.comic = ge("#FullPictureLoadOptionsComic").checked == true ? 1 : 0;
+        options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload").checked == true ? 1 : 0;
         options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown").value;
-        options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble").value;
-        options.fancybox = ge("#FullPictureLoadOptionsFancybox").value;
+        options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble").checked == true ? 1 : 0;
+        options.fancybox = ge("#FullPictureLoadOptionsFancybox").checked == true ? 1 : 0;
         options.zoom = ge("#FullPictureLoadOptionsZoom").value;
         options.column = ge("#FullPictureLoadOptionsColumn").value;
         let jsonStr = JSON.stringify(options);
@@ -14310,13 +14432,12 @@
 
 #FullPictureLoadOptions {
     text-align: center;
-    width: auto !important;
-    max-width: 400px !important;
+    width: 360px !important;
     height: auto !important;
     position: fixed !important;
-    top: 6%;
+    top: 10%;
     left: 50%;
-    margin-left: -190px;
+    margin-left: -180px;
     border: 1px solid #a0a0a0 !important;
     border-radius: 3px !important;
     box-shadow: -2px 2px 5px rgb(0 0 0 / 30%) !important;
@@ -14327,16 +14448,17 @@
 #FullPictureLoadOptions * {
     font: unset !important;
     font-family: Arial, sans-serif !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
+    color: black;
     float: none !important;
     line-height: 18px !important;
-    margin-bottom: 1px !important;
+    margin-bottom: 4px !important;
     padding: 1px 4px !important;
     width: auto;
 }
 
 #FullPictureLoadOptions button {
-    width: 114px;
+    width: 110px;
     margin-left: 2px;
     margin-right: 2px;
     margin-bottom: 4px !important;
@@ -14347,8 +14469,7 @@
 
 #FullPictureLoadOptions input {
     color: #000000 !important;
-    height: 20px !important;
-    width: 360px !important;
+    height: 18px !important;
     border: 1px solid #a0a0a0 !important;
     background-color: transparent !important;
 }
@@ -14391,11 +14512,11 @@
     text-align: center;
     line-height: 50px;
     color: #ffffff;
-    width: 340px;
-    height: 50px;
+    width: 360px;
+    height: auto;
     top: 30%;
     left: 50%;
-    margin-left: -170px;
+    margin-left: -180px;
     padding: 0px !important;
     background-color: #000;
     border: 1px solid #303030;
@@ -14682,9 +14803,14 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
                     fun.css(fancyBoxCss);
                 } catch (error) {
                     console.error("\ncdn.jsdelivr.net fancybox@3.5.7 jquery.fancybox.min.css 注入失敗", error);
-                    const bcss = "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js";
-                    const fancyBoxCss = await fetch(bcss).then(res => res.text());
-                    fun.css(fancyBoxCss);
+                    try {
+                        const bcss = "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js";
+                        const fancyBoxCss = await fetch(bcss).then(res => res.text());
+                        fun.css(fancyBoxCss);
+                    } catch (error) {
+                        console.error("\n無法注入CSS，不使用Fancybox", error);
+                        options.fancybox = 0;
+                    }
                 }
             }
             debug("沒有引入FancyboxV5", error);
@@ -14756,7 +14882,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             let category = customData[i].category;
             if (category === "comic" && customData[i].enable === 0) {
                 showOptions = true;
-                ge("#FullPictureLoadOptions>div:nth-child(8)").style.display = "";
+                ge("#FullPictureLoadOptions>div:nth-child(8)").style.display = "flex";
             }
             let delay = customData[i].delay;
             if (delay) await fun.delay(delay, 0);
@@ -14821,7 +14947,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                             fun.css(fancyBoxCss);
                         } catch (error) {
                             console.error("\n無法注入CSS，不使用Fancybox", error);
-                            options.fancybox == 0;
+                            options.fancybox = 0;
                         }
                     }
                 }
@@ -14892,7 +15018,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         }
                     }
                 };
-                if (hasTouchEvents() && options.doubleTouchNext == 1) {
+                if (hasTouchEvents() && siteData.next && options.doubleTouchNext == 1) {
                     document.addEventListener("dblclick", () => {
                         callback();
                     });
@@ -15079,7 +15205,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-    if (!hasTouchEvents()) ge("#FullPictureLoadOptions>div:nth-child(9)").style.display = "none";
+    if (!hasTouchEvents() || (hasTouchEvents() && !siteData.next)) ge("#FullPictureLoadOptions>div:nth-child(9)").style.display = "none";
 
     if (autoDownload) {
         document.addEventListener("keydown", event => {
