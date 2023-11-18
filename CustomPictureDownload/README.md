@@ -400,20 +400,16 @@ height:height//成功返回圖片高屬性
 </pre>
 <pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得。
-fun.imgToBlobURL(img, mode = 1 , type = "image/jpeg");
+fun.imgToBlobURL(img, type = "image/jpeg");
 //img元素
-//mode1寬高取元素的naturalWidth和naturalHeight
-//mode2寬高取元素的width和height
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL
 //範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e ,2));
 </pre>
 <pre>
 //包裝fun.imgToBlobURL函式。
-fun.imgBlobArr(img, mode = 1 , type = "image/jpeg");
+fun.imgBlobArr(img, type = "image/jpeg");
 //canvas、img 元素選擇器
-//mode1寬高取元素的naturalWidth和naturalHeight
-//mode2寬高取元素的width和height
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL陣列
 //範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]", 2);
@@ -1200,12 +1196,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://yazhouseba.com/meinv/">亚洲色吧</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.1000yishu.com/">1000艺术摄影</a></td>
                 <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.169tp.com/">169图片大全</a></td>
-                <td><a href="https://www.169tp.com/xingganmeinv/">性感</a>，<a href="https://www.169tp.com/wangyouzipai/">自拍</a>，<a href="https://www.169tp.com/gaogensiwa/">丝袜</a>，<a href="https://www.169tp.com/rentiyishu/">人体</a>，<a href="https://www.169tp.com/xiyangmeinv//">西洋</a>，<a href="https://www.169tp.com/guoneimeinv/">国内</a>，</td>
+                <td><a href="https://www.169tp.com/xingganmeinv/">性感</a>，<a href="https://www.169tp.com/wangyouzipai/">自拍</a>，<a href="https://www.169tp.com/gaogensiwa/">丝袜</a>，<a href="https://www.169tp.com/rentiyishu/">人体</a>，<a href="https://www.169tp.com/xiyangmeinv//">西洋</a>，<a href="https://www.169tp.com/guoneimeinv/">国内</a></td>
             </tr>
             <tr>
                 <td><a href="https://k55.net/arttype/2.html">K55</a></td>
@@ -1322,10 +1322,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://tangmoc.com/">TangMoc</a></td>
                 <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://modelsexyth.com/">นางแบบคือลือ</a></td>
-                <td>分類添加了自動翻頁，去廣告</td>
             </tr>
             <tr>
                 <td><a href="https://www.hotgirlpix.com/">Hot Girl Pix</a></td>
@@ -1994,7 +1990,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://mhdnf.xyz/">H漫画</a></td>
-                <td><a href="https://www.mhdnf.xyz/">www.mhdnf.xyz</a>，<a href="https://mhqwe.xyz/">mhqwe.xyz</a>，<a href="https://www.mhqwe.xyz/">www.mhqwe.xyz</a></td>
+                <td><a href="https://qscxx4.com/">發佈頁</a></td>
             </tr>
             <tr>
                 <td><a href="https://123548.xyz/">H漫画 123548.xyz</a></td>
@@ -2028,7 +2024,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.copymanga.site/">拷貝漫畫</a></td>
-                <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
+                <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.copymanga.tv/">www.copymanga.tv</a>，<a href="https://copymanga.tv/">copymanga.tv</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
             </tr>
             <tr>
                 <td><a href="https://www.yinghuamh.net/">樱花漫画</a></td>
@@ -2076,12 +2072,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.colamanga.com/">COLAMANGA</a></td>
-                <td>方向鍵上下章，下載需先手動觸發全部載入圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
+                <td>方向鍵上下章，按6自動捲動等待全部圖片載入，下載需先手動觸發全部載入圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
             </tr>
             <tr>
                 <td><a href="https://manwa.me/">漫蛙</a></td>
                 <td>uBlock加信任名單<pre>https://manwa.me/chapter/*</pre>
-閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先手動觸發全部載入圖片，函式使用到canvas需要繪製過程會有點卡。</td>
+按6自動捲動等待全部圖片載入，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先手動觸發全部載入圖片，函式使用到canvas需要繪製過程會有點卡。</td>
             </tr>
             <tr>
                 <td><a href="https://m.happymh.com/">嗨皮漫畫</a></td>
