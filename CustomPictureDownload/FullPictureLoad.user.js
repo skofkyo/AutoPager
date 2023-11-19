@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.6.14
+// @version            1.6.15
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -5816,18 +5816,16 @@
         host: ["yazhouseba.com"],
         reg: /^https:\/\/yazhouseba\.com\/meinv\/[\w-]+\.html/,
         imgs: async () => {
-            let img = fun.ge(".content>.image img");
-            let path = img.src.match(/.+\//)[0];
             let pid = fun.ge("#next-url").rel;
-            let json = await fetch("https://yazhouseba.com/meinv/ajax.php", {
-                "headers": {
-                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-                    "x-requested-with": "XMLHttpRequest"
-                },
-                "body": `action=src&pid=${pid}`,
-                "method": "POST"
-            }).then(res => res.json());
-            return json.urls.map(e => path + e);
+            let json = await new Promise(resolve => {
+                $.post("ajax.php", {
+                    "action": "src",
+                    "pid": pid
+                }, data => {
+                    resolve(data);
+                }, "json");
+            });
+            return json.error_code == "0" ? json.urls.map(e => img_dir + e) : [];
         },
         button: [4],
         insertImg: [".content>.image", 2],
@@ -8031,22 +8029,37 @@
         imgs: () => fun.ge(".mh_comicpic img[src^=blob]") ? fun.imgBlobArr(".mh_comicpic img[src^=blob]") : [...fun.gae(".mh_comicpic img[src]")],
         //scrollEle: [".mh_comicpic img", 600],
         scrollEle: async () => {
-            let imgs = [...fun.gae(".mh_comicpic")];
-            for (let i = 0; i < imgs.length; i++) {
-                imgs[i].scrollIntoView();
-                await new Promise(resolve => {
-                    let timeId = setTimeout(() => {
-                        clearInterval(loop);
-                        resolve();
-                    }, 5000);
-                    let loop = setInterval(() => {
-                        if (imgs[i].querySelector("img[src]")) {
-                            clearTimeout(timeId);
+            let n = 0;
+            let timeout = false;
+            const autoScroll = async (arr, num) => {
+                for (let i = 0; i < arr.length; i++) {
+                    arr[i].scrollIntoView();
+                    fun.show(`AutoScroll ${n += 1}/${num}`, 0);
+                    await new Promise(resolve => {
+                        let timeId = setTimeout(() => {
+                            timeout = true;
                             clearInterval(loop);
                             resolve();
-                        }
-                    }, 100);
-                });
+                        }, 3000);
+                        let loop = setInterval(() => {
+                            if (arr[i].querySelector("img[src]")) {
+                                clearTimeout(timeId);
+                                clearInterval(loop);
+                                resolve();
+                            }
+                        }, 100);
+                    });
+                    if (timeout) break;
+                }
+                fun.hide();
+                if (timeout) fun.show("Timeout");
+            }
+            let imgs = [...fun.gae(".mh_comicpic")];
+            await autoScroll(imgs, imgs.length);
+            let newImgs = [...fun.gae(".mh_comicpic")];
+            if (imgs.length < newImgs.length) {
+                newImgs = newImgs.slice(imgs.length);
+                autoScroll(newImgs, imgs.length + newImgs.length);
             }
         },
         next: "//a[text()='下一章']",
@@ -8917,7 +8930,6 @@
         },
         button: [4],
         insertImg: ["#images", 2],
-        go: 1,
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title(" - ", 3),
@@ -8937,8 +8949,8 @@
             await fun.waitEle("//script[contains(text(),'chapterImages')]");
             return chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost1 + "/" + chapterPath + e);
         },
+        button: [4],
         insertImg: ["#images", 2],
-        go: 1,
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: () => {
@@ -8982,6 +8994,7 @@
         enable: 0,
         reg: /www\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
         imgs: () => chapterImages.map(e => SinConf.resHost[0].domain + "/" + chapterPath + e),
+        button: [4],
         insertImg: ["#images", 2],
         go: 1,
         autoDownload: [0],
@@ -8999,6 +9012,7 @@
             if (url) fun.addUrlHtml(url, "#chapter-image", 1);
         },
         imgs: () => fun.getImg("#chapter-image img", fun.geT("#k_total"), 5),
+        button: [4],
         insertImg: ["#chapter-image", 2],
         go: 1,
         autoDownload: [0],
@@ -9076,13 +9090,14 @@
             let max = fun.geT(".image-content p").match(/\/(\d+)/)[1];
             return fun.getImg("#image", max, 5);
         },
+        button: [4],
         insertImg: ["#images", 2],
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: () => fun.title("在线", 1),
-        css: "body{padding:0!important}div[style*='text-align'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(*[class^=fancybox]){display:none!important}",
+        css: "body{padding:0!important}div[style*='text-align']:not(#images),.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(*[class^=fancybox]){display:none!important}",
         category: "comic"
     }, {
         name: "零点漫画M",
@@ -9093,13 +9108,14 @@
             let max = Math.ceil(fun.geT("#images p").match(/\/(\d+)/)[1] / 3);
             return fun.getImg("#images img", max, 5);
         },
+        button: [4],
         insertImg: ["#images", 2],
         go: 1,
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: () => fun.title("-零点漫画").trim(),
-        css: ".action-list li{width:50% !important}div[style*='text-align'],.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
+        css: ".action-list li{width:50% !important}div[style*='text-align']:not(#images),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
         category: "comic"
     }, {
         name: "漫画连M / 果果漫画M",
@@ -9111,6 +9127,7 @@
             let max = Math.ceil(num / 5);
             return location.hostname == "m.100mhl.com" ? fun.getImg("#images img", max, 5) : fun.getImg("#images img", num, 5);
         },
+        button: [4],
         insertImg: ["#images", 2],
         go: 1,
         autoDownload: [0],
@@ -9240,6 +9257,7 @@
         enable: 0,
         reg: /^https:\/\/m\.mhkan\.com\/manhua\/\w+\/\d+\.html/i,
         imgs: () => chapterImages,
+        button: [4],
         insertImg: [".chapter-content", 2],
         autoDownload: [0],
         next: "//a[text()='下一章']",
@@ -9626,6 +9644,7 @@
         reg: /https?:\/\/(cocomanga\.org|godamanga\.art)\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+(\/|\.html)$/i,
         delay: 300,
         imgs: "//img[@decoding and @layout] | //img[@decoding and contains(@class,'img_content_jpg')]",
+        button: [4],
         insertImg: ["//div[div[div[div[div[img[@decoding and @layout]]]]]] | //div[div[div[div[div[img[@decoding and contains(@class,'img_content_jpg')]]]]]]", 2],
         autoDownload: [0],
         next: "//a[span[text()='下一话']] | //a[span[text()='NEXT']]",
@@ -9804,6 +9823,7 @@
         enable: 0,
         reg: /www\.qiximh\d+\.com\/\d+\/\d+\.html/i,
         imgs: ".main_img img",
+        button: [4, "24%", 4],
         insertImg: [".main_img", 2],
         go: 1,
         autoDownload: [0],
@@ -9817,6 +9837,7 @@
         enable: 0,
         reg: /m\.qiximh\d+\.com\/\d+\/\d+\.html/i,
         imgs: ".main_img img",
+        button: [4, "24%", 3],
         insertImg: [".main_img", 2],
         go: 1,
         autoDownload: [0],
@@ -9935,7 +9956,7 @@
         insertImg: ["//td[img[@id='qTcms_pic']]", 2],
         go: 1,
         autoDownload: [0],
-        next: () => qTcms_Pic_nextArr !== "" ? location.origin + qTcms_Pic_nextArr : null,
+        next: () => (!/^java/.test(qTcms_Pic_nextArr) && qTcms_Pic_nextArr !== "") ? location.origin + qTcms_Pic_nextArr : null,
         prev: 1,
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         css: ".iFloat,#mypic_k0{display:none!important}",
@@ -9950,7 +9971,7 @@
         insertImg: ["//td[img[@id='qTcms_pic']]", 2],
         go: 1,
         autoDownload: [0],
-        next: () => qTcms_Pic_nextArr !== "" ? location.origin + qTcms_Pic_nextArr : null,
+        next: () => (!/^java/.test(qTcms_Pic_nextArr) && qTcms_Pic_nextArr !== "") ? location.origin + qTcms_Pic_nextArr : null,
         prev: 1,
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         css: ".action-list li{width:50% !important}#mypic_k0,.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
@@ -9962,10 +9983,11 @@
         reg: /(www|m)\.xcmh\.com\/\w+\/\w+\/\d+\.html/i,
         init: "document.onkeydown=null;",
         imgs: () => base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => location.origin + f_qTcms_Pic_curUrl_realpic(e)),
+        button: [4],
         insertImg: ["//td[img[@id='qTcms_pic']]", 2],
         go: 1,
         autoDownload: [0],
-        next: () => qTcms_Pic_nextArr !== "" ? location.origin + qTcms_Pic_nextArr : null,
+        next: () => (!/^java/.test(qTcms_Pic_nextArr) && qTcms_Pic_nextArr !== "") ? location.origin + qTcms_Pic_nextArr : null,
         prev: 1,
         customTitle: () => qTcms_S_m_name + " - " + qTcms_S_m_playm,
         css: "#mypic_k0{display:none!important}",
@@ -10138,8 +10160,8 @@
             siteJson = json;
             debug("\n此頁JSON資料\n", json);
         },
-        button: [4],
         imgs: () => siteJson.results.chapter.contents.map(e => e.url),
+        button: [4],
         insertImg: [".comicContent-list", 2],
         go: 1,
         autoDownload: [0],
@@ -10540,11 +10562,12 @@
             let imgs = [...fun.gae(".img-content .content-img")];
             for (let i = 0; i < imgs.length; i++) {
                 imgs[i].scrollIntoView();
+                fun.show(`AutoScroll ${parseInt(i, 10) + 1}/${imgs.length}`, 0);
                 await new Promise(resolve => {
                     let timeId = setTimeout(() => {
                         clearInterval(loop);
                         resolve();
-                    }, 5000);
+                    }, 3000);
                     let loop = setInterval(() => {
                         if (/^blob/.test(imgs[i].src)) {
                             clearTimeout(timeId);
@@ -10554,6 +10577,7 @@
                     }, 100);
                 });
             }
+            fun.hide();
         },
         next: ".view-fix-bottom-bar-item-menu-next",
         prev: ".view-fix-bottom-bar-item-menu-prev",
@@ -10894,6 +10918,33 @@
                 return data.articlename + " - " + data.chaptername_read;
             }
         },
+        category: "comic"
+    }, {
+        name: "微信公众号",
+        host: ["mp.weixin.qq.com"],
+        enable: 1,
+        reg: /^https:\/\/mp\.weixin\.qq\.com\/[^&]+&mid=\d+/,
+        imgs: "img.js_insertlocalimg",
+        category: "comic"
+    }, {
+        name: "虎扑社区",
+        host: ["bbs.hupu.com"],
+        enable: 1,
+        reg: /^https:\/\/bbs\.hupu\.com\/\d+\.html/,
+        init: () => {
+            siteJson = JSON.parse(fun.attr("#bbs-admin-main-post-container", "data-admininfo"));
+        },
+        imgs: () => {
+            let data = JSON.parse(siteJson.format);
+            if (data.imgList) {
+                return data.imgList.map(e => e.remoteUrl);
+            } else if (data.jsonV3) {
+                return data.jsonV3.content.filter(item => item.type == "image").map(e => e.attrs.src);
+            } else {
+                return [];
+            }
+        },
+        customTitle: () => siteJson.postTitle,
         category: "comic"
     }, {
         name: "漫畫類 自動展開目錄",
@@ -11351,7 +11402,7 @@
                 str_73: "自動下載",
                 str_74: " ( 快捷鍵 [ ctrl + . ] 開始或取消 )",
                 str_75: "自動下載倒數秒數：",
-                str_76: "當前漫畫站點規則開關",
+                str_76: "啟用當前漫畫站點規則",
                 str_77: "移動裝置雙擊前往下一頁",
                 str_78: "Fancybox燈箱功能",
                 str_79: "圖片縮放比例 ( 0 ~ 10 )：",
@@ -11456,7 +11507,7 @@
                 str_73: "自动下载",
                 str_74: " ( 快捷键 [ ctrl + . ] 开始或取消 )",
                 str_75: "自动下载倒数秒数：",
-                str_76: "当前漫画站点规则开关",
+                str_76: "启用当前漫画站点规则",
                 str_77: "移动设备双击前往下一页",
                 str_78: "Fancybox灯箱功能",
                 str_79: "图片缩放比例 ( 0 ~ 10 )：",
@@ -11609,81 +11660,57 @@
     const fun = {
         getModeUrl: (mode, i) => {
             let url = siteUrl;
-            if (mode === 1) {
-                //【.html ==> .html?page=2】第一頁 ==> 第二頁
-                //【 ==> ?page=2】第一頁 ==> 第二頁
-                return url.replace(/\?page=\d+$/, "") + "?page=" + i;
-            } else if (mode === 2) {
-                //【.html ==> /2.html】 第一頁 ==> 第二頁
-                return url.slice(0, -5) + "/" + i + ".html";
-            } else if (mode === 3) {
-                //【.html ==> _1.html】  第一頁 ==> 第二頁
-                //return siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + (i - 1) + ".html";
-                return url.replace(/\.html$/, "") + "_" + (i - 1) + ".html";
-            } else if (mode === 4) {
-                //【/ ==> /2/】  第一頁 ==> 第二頁
-                return url.slice(0, -1) + "/" + i + "/";
-            } else if (mode === "4") {
-                //【 ==> /2】  第一頁 ==> 第二頁
-                return url + "/" + i;
-            } else if (mode === 5) {
-                //【.html ==> -2.html】  第一頁 ==> 第二頁
-                return url.replace(/\.html$/, "") + "-" + i + ".html";
-            } else if (mode === "5") {
-                //【-1.html ==> -2.html】  第一頁 ==> 第二頁
-                return url.replace(/(-\d+)?\.html$/, "") + "-" + i + ".html";
-            } else if (mode === 6) {
-                //【?p=1 ==> ?p=2】  第一頁 ==> 第二頁
-                return url.replace(/\?p=\d+$/, "") + "?p=" + i;
-            } else if (mode === 7) {
-                //【/1 ==> /2】  第一頁 ==> 第二頁
-                //【.html ==> .html/2】  第一頁 ==> 第二頁
-                return url.replace(/\/\d+$/, "") + "/" + i;
-            } else if (mode === 8) {
-                //【 ==> &page=1】  第一頁 ==> 第二頁
-                return url.replace(/&page=\d+$/, "") + "&page=" + (i - 1);
-            } else if (mode === "8") {
-                //【 ==> &page=2】  第一頁 ==> 第二頁
-                return url.replace(/&page=\d+$/, "") + "&page=" + i;
-            } else if (mode === 9) {
-                //【.html ==> _2.html】  第一頁 ==> 第二頁
-                return url.replace(/(_\d+)?\.html$/, "") + "_" + i + ".html";
-            } else if (mode === 10) {
-                //【.html ==> .html/2】  第一頁 ==> 第二頁
-                return url.replace(/\.html(\/\d+)?$/, "") + ".html/" + i;
-            } else if (mode === 11) {
-                //【/ ==> /2.html】  第一頁 ==> 第二頁
-                //【/1.html ==> /2.html】  第一頁 ==> 第二頁
-                return url.replace(/\/(\d+\.html)?$/, "") + "/" + i + ".html";
-            } else if (mode === 12) {
-                //【/ ==> /2.htm】  第一頁 ==> 第二頁
-                //【/1.htm ==> /2.htm】  第一頁 ==> 第二頁
-                return url.replace(/\/(\d+\.htm)?$/, "") + "/" + i + ".htm";
-            } else if (mode === 13) {
-                //【-1-* ==> -2-*】  第一頁 ==> 第二頁
-                return url.replace(/-\d+-[^-]+$/, "") + "-" + i;
-            } else if (mode === 14) {
-                //【/1/ ==> /2/】  第一頁 ==> 第二頁
-                return url.replace(/\/\d+\/$/, "") + "/" + i + "/";
-            } else if (mode === 15) {
-                //【/index.html ==> /index_2.html】  第一頁 ==> 第二頁
-                return url.replace(/\/(index(_\d+)?\.html)?$/, "") + "/index_" + i + ".html";
-            } else if (mode === 16) {
-                //【 ==> /2#list】  第一頁 ==> 第二頁
-                return url.replace(/\/(index(_\d+)?\.html)?$/, "") + "/" + i + "#list";
-            } else if (mode === 17) {
-                //【.htm ==> _2.htm】  第一頁 ==> 第二頁
-                return url.replace(/#$/, "").replace(/(_\d+)?\.htm$/, "") + "_" + i + ".htm";
-            } else if (mode === 18) {
-                //【/ ==> /page/2/】  第一頁 ==> 第二頁
-                return url.replace(/\/(page\/\d+\/)?$/, "") + "/page/" + i + "/";
-            } else if (mode === 19) {
-                //【-1 ==> -2】  第一頁 ==> 第二頁
-                return url.replace(/-\d+$/, "") + "-" + i;
-            } else if (mode === 20) {
-                //【 ==> -p-2】  第一頁 ==> 第二頁
-                return url.replace(/-p-\d+$/, "") + "-p-" + i;
-            }
+            //【.html ==> .html?page=2】第一頁 ==> 第二頁
+            //【 ==> ?page=2】第一頁 ==> 第二頁
+            if (mode === 1) return url.replace(/\?page=\d+$/, "") + "?page=" + i;
+            //【.html ==> /2.html】 第一頁 ==> 第二頁
+            if (mode === 2) return url.slice(0, -5) + "/" + i + ".html";
+            //【.html ==> _1.html】  第一頁 ==> 第二頁
+            //return siteUrl.replace(/(_\d+)?\.html$/, "") + "_" + (i - 1) + ".html";
+            if (mode === 3) return url.replace(/\.html$/, "") + "_" + (i - 1) + ".html";
+            //【/ ==> /2/】  第一頁 ==> 第二頁
+            if (mode === 4) return url.slice(0, -1) + "/" + i + "/";
+            //【 ==> /2】  第一頁 ==> 第二頁
+            if (mode === "4") return url + "/" + i;
+            //【.html ==> -2.html】  第一頁 ==> 第二頁
+            if (mode === 5) return url.replace(/\.html$/, "") + "-" + i + ".html";
+            //【-1.html ==> -2.html】  第一頁 ==> 第二頁
+            if (mode === "5") return url.replace(/(-\d+)?\.html$/, "") + "-" + i + ".html";
+            //【?p=1 ==> ?p=2】  第一頁 ==> 第二頁
+            if (mode === 6) return url.replace(/\?p=\d+$/, "") + "?p=" + i;
+            //【/1 ==> /2】  第一頁 ==> 第二頁
+            //【.html ==> .html/2】  第一頁 ==> 第二頁
+            if (mode === 7) return url.replace(/\/\d+$/, "") + "/" + i;
+            //【 ==> &page=1】  第一頁 ==> 第二頁
+            if (mode === 8) return url.replace(/&page=\d+$/, "") + "&page=" + (i - 1);
+            //【 ==> &page=2】  第一頁 ==> 第二頁
+            if (mode === "8") return url.replace(/&page=\d+$/, "") + "&page=" + i;
+            //【.html ==> _2.html】  第一頁 ==> 第二頁
+            if (mode === 9) return url.replace(/(_\d+)?\.html$/, "") + "_" + i + ".html";
+            //【.html ==> .html/2】  第一頁 ==> 第二頁
+            if (mode === 10) return url.replace(/\.html(\/\d+)?$/, "") + ".html/" + i;
+            //【/ ==> /2.html】  第一頁 ==> 第二頁
+            //【/1.html ==> /2.html】  第一頁 ==> 第二頁
+            if (mode === 11) return url.replace(/\/(\d+\.html)?$/, "") + "/" + i + ".html";
+            //【/ ==> /2.htm】  第一頁 ==> 第二頁
+            //【/1.htm ==> /2.htm】  第一頁 ==> 第二頁
+            if (mode === 12) return url.replace(/\/(\d+\.htm)?$/, "") + "/" + i + ".htm";
+            //【-1-* ==> -2-*】  第一頁 ==> 第二頁
+            if (mode === 13) return url.replace(/-\d+-[^-]+$/, "") + "-" + i;
+            //【/1/ ==> /2/】  第一頁 ==> 第二頁
+            if (mode === 14) return url.replace(/\/\d+\/$/, "") + "/" + i + "/";
+            //【/index.html ==> /index_2.html】  第一頁 ==> 第二頁
+            if (mode === 15) return url.replace(/\/(index(_\d+)?\.html)?$/, "") + "/index_" + i + ".html";
+            //【 ==> /2#list】  第一頁 ==> 第二頁
+            if (mode === 16) return url.replace(/\/(index(_\d+)?\.html)?$/, "") + "/" + i + "#list";
+            //【.htm ==> _2.htm】  第一頁 ==> 第二頁
+            if (mode === 17) return url.replace(/#$/, "").replace(/(_\d+)?\.htm$/, "") + "_" + i + ".htm";
+            //【/ ==> /page/2/】  第一頁 ==> 第二頁
+            if (mode === 18) return url.replace(/\/(page\/\d+\/)?$/, "") + "/page/" + i + "/";
+            //【-1 ==> -2】  第一頁 ==> 第二頁
+            if (mode === 19) return url.replace(/-\d+$/, "") + "-" + i;
+            //【 ==> -p-2】  第一頁 ==> 第二頁
+            if (mode === 20) return url.replace(/-p-\d+$/, "") + "-p-" + i;
         },
         retryUrl: async (url, res, fn) => {
             debug(`\n${fn}連線錯誤碼：${res.status}\n`, url);
@@ -11985,9 +12012,9 @@
                         let check = fun.checkImgSrc(imgs[p], rText);
                         if (check.ok) {
                             imgSrc = check.src;
-                            //                             let blob = await GM_XHR_GetData(imgSrc);
-                            //                             let objectURL = await URL.createObjectURL(blob.blob);
-                            //                             imgSrc = objectURL;
+                            //let blob = await GM_XHR_GetData(imgSrc);
+                            //let objectURL = await URL.createObjectURL(blob.blob);
+                            //imgSrc = objectURL;
                             debug("\nfun.getImgA() 單線程模式imgSrc", imgSrc);
                         } else {
                             console.error("\nfun.getImgA() 單線程模式出錯", imgs[p]);
@@ -12621,15 +12648,15 @@
                 if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(location.host) || !/^data/.test(thumbnailsSrcArray[0])) {
                     thumbnailsSrcArray = [...new Set(thumbnailsSrcArray)];
                 }
-                //                 if (!/^data/.test(thumbnailsSrcArray[0])) {
-                //                     let thumbnailsFragment = new DocumentFragment();
-                //                     for (let i in thumbnailsSrcArray) {
-                //                         let img = new Image();
-                //                         img.src = thumbnailsSrcArray[i];
-                //                         thumbnailsFragment.appendChild(img);
-                //                     }
-                //                     debug("\n背景預讀所有預覽縮圖\n", thumbnailsFragment);
-                //                 }
+                //if (!/^data/.test(thumbnailsSrcArray[0])) {
+                //    let thumbnailsFragment = new DocumentFragment();
+                //    for (let i in thumbnailsSrcArray) {
+                //        let img = new Image();
+                //        img.src = thumbnailsSrcArray[i];
+                //        thumbnailsFragment.appendChild(img);
+                //    }
+                //    debug("\n背景預讀所有預覽縮圖\n", thumbnailsFragment);
+                //}
             }
             debug("\nfun.insertImg()插入圖片最後確認 thumbnailsSrcArray\n", thumbnailsSrcArray);
             debug("\nfun.insertImg()插入圖片最後確認 srcArr\n", srcArr);
@@ -12718,29 +12745,29 @@
                     subtree: true,
                     attributeFilter: ["class"]
                 };
-                // 当观察到突变时执行的回调函数
+                //当观察到突变时执行的回调函数
                 const Callbacks = mutationsList => {
                     mutationsList.forEach((item, index) => {
-                        // console.log("index: ", index, " - \n", item);
+                        //console.log("index: ", index, " - \n", item);
                         if (item.type === "attributes") {
-                            // console.log(item);
+                            //console.log(item);
                             if (item.target.className === "fancybox-slide fancybox-slide--image fancybox-slide--current fancybox-slide--complete" || item.target.className === "fancybox__slide has-image can-zoom_in is-selected" || item.target.className === "swiper-slide swiper-slide-active") {
                                 console.log(" # ", item);
                                 openEvent();
                                 fun.scrollEvent(slideIndex);
                             }
                         } else if (item.type === "childList") {
-                            // console.log(item);
+                            //console.log(item);
                             if (item.removedNodes.length > 1 && /fancybox|swiper/.test(item.removedNodes[1].className)) {
                                 console.log(" # ", item);
                                 console.log("close - # " + slideIndex + " slide is closed!");
-                                // setTimeout(closeEvent, 1000);
+                                //setTimeout(closeEvent, 1000);
                                 fun.scrollEvent(slideIndex);
                             }
                         }
                     });
                 };
-                // 创建一个链接到回调函数的观察者实例
+                //创建一个链接到回调函数的观察者实例
                 const Observer = new MutationObserver(Callbacks);
                 ContentContainer && Observer.observe(ContentContainer, configObserver);
             };
@@ -13408,6 +13435,20 @@
                 }
             });
         },
+        blobToJpgBlob: blob => {
+            return new Promise(resolve => {
+                let img = new Image();
+                img.src = URL.createObjectURL(blob);
+                img.onload = () => {
+                    let canvas = document.createElement("canvas");
+                    let ctx = canvas.getContext("2d");
+                    canvas.height = img.height;
+                    canvas.width = img.width;
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(resolve, "image/jpeg");
+                };
+            });
+        },
         scrollEles: async (ele, ms = 100) => {
             let eles = [...fun.gae(ele)];
             for (let i in eles) {
@@ -13827,11 +13868,11 @@
                 if (blobDataArray.length > 0) {
                     for (let i = 0; i < blobDataArray.length; i++) {
                         let ex;
-                        let type = blobDataArray[i].blob.type;
+                        let blobData = blobDataArray[i].blob;
+                        let type = blobData.type;
                         try {
-                            if (type == "application/octet-stream") {
-                                ex = "webp";
-                            } else if (type == "binary/octet-stream") {
+                            if (/octet-stream/.test(type) /* || type == "image/webp"*/ ) {
+                                blobData = await fun.blobToJpgBlob(blobData);
                                 ex = "jpg";
                             } else {
                                 ex = type.split("/")[1].match(/\w+/)[0];
@@ -13847,17 +13888,17 @@
                         }
                         let fileName;
                         if (ex == "mp4") {
-                            fileName = `${blobDataArray[i].picNum}V.${(siteData.ex || ex)}`;
+                            fileName = `${blobDataArray[i].picNum}V.${(ex)}`;
                         } else {
                             fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
                         }
                         if (options.zip == 1) {
                             //console.log(`第${n}/${blobDataArray.length}張，檔案名：${fileName}，大小：${parseInt(blobDataArray[i].blob.size / 1024, 10)} Kb`);
-                            zipFolder.file(fileName, blobDataArray[i].blob, {
+                            zipFolder.file(fileName, blobData, {
                                 binary: true
                             });
                         } else {
-                            saveData(blobDataArray[i].blob, title + "_" + fileName);
+                            saveData(blobData, title + "_" + fileName);
                             await fun.delay(200, 0);
                             if (i === blobDataArray.length - 1) {
                                 promiseBlobArray = [];
@@ -14308,16 +14349,16 @@
             dispatchTouchEvent(ele, "touchend");
         }
         ele.click();
-        //         if (hasTouchEvents()) {
-        //             ele.dispatchEvent(new Event("touchstart"));
-        //             ele.dispatchEvent(new Event("touchend"));
-        //             //ele.click();
-        //             debug("\nelementClick touch事件式點擊\n", ele);
-        //         } else {
-        //             //ele.dispatchEvent(new Event("click"));
-        //             ele.click();
-        //             debug("\nelementClick click事件式點擊\n", ele);
-        //         }
+        //if (hasTouchEvents()) {
+        //    ele.dispatchEvent(new Event("touchstart"));
+        //    ele.dispatchEvent(new Event("touchend"));
+        //    //ele.click();
+        //    debug("\nelementClick touch事件式點擊\n", ele);
+        //} else {
+        //    //ele.dispatchEvent(new Event("click"));
+        //    ele.click();
+        //    debug("\nelementClick click事件式點擊\n", ele);
+        //}
     };
 
     const addReturnTopButton = () => {
@@ -14342,7 +14383,7 @@
     const FullPictureLoadOptionsMain = document.createElement("div");
     FullPictureLoadOptionsMain.id = "FullPictureLoadOptions";
     FullPictureLoadOptionsMain.style.display = "none";
-    const FullPictureLoadOptionsMainHtmlSrt = `
+    const FullPictureLoadOptionsMainHtmlStr = `
 <div style="width: 100%;">
     <p>${displayLanguage.str_68}</p>
 </div>
@@ -14383,7 +14424,7 @@
 <button id="FullPictureLoadOptionsResetBtn"><font color="black">${displayLanguage.str_83}</font></button>
 <button id="FullPictureLoadOptionsSaveBtn"><font color="black">${displayLanguage.str_84}</font></button>
 `;
-    FullPictureLoadOptionsMain.innerHTML = FullPictureLoadOptionsMainHtmlSrt;
+    FullPictureLoadOptionsMain.innerHTML = FullPictureLoadOptionsMainHtmlStr;
     document.body.appendChild(FullPictureLoadOptionsMain);
 
     const setValue = () => {
@@ -14404,33 +14445,53 @@
         siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn").value = 2 : ge("#FullPictureLoadOptionsColumn").value = options.column;
     };
 
-    ge("#FullPictureLoadOptionsCancelBtn").addEventListener("click", event => {
-        event.preventDefault();
-        ge("#FullPictureLoadOptions").style.display = "none";
-    });
+    const FullPictureLoadOptionsButtonAddEvent = () => {
+        ge("#FullPictureLoadOptionsCancelBtn").addEventListener("click", event => {
+            event.preventDefault();
+            ge("#FullPictureLoadOptions").style.display = "none";
+        });
+        ge("#FullPictureLoadOptionsResetBtn").addEventListener("click", event => {
+            event.preventDefault();
+            localStorage.removeItem("FullPictureLoadOptions");
+            location.reload();
+        });
+        ge("#FullPictureLoadOptionsSaveBtn").addEventListener("click", event => {
+            event.preventDefault();
+            options.icon = ge("#FullPictureLoadOptionsIcon").checked == true ? 1 : 0;
+            options.threading = ge("#FullPictureLoadOptionsThreading").value;
+            options.zip = ge("#FullPictureLoadOptionsZip").checked == true ? 1 : 0;
+            options.file_extension = ge("#FullPictureLoadOptionsExtension").value;
+            options.comic = ge("#FullPictureLoadOptionsComic").checked == true ? 1 : 0;
+            options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload").checked == true ? 1 : 0;
+            options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown").value;
+            options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble").checked == true ? 1 : 0;
+            options.fancybox = ge("#FullPictureLoadOptionsFancybox").checked == true ? 1 : 0;
+            options.zoom = ge("#FullPictureLoadOptionsZoom").value;
+            options.column = ge("#FullPictureLoadOptionsColumn").value;
+            let jsonStr = JSON.stringify(options);
+            localStorage.setItem("FullPictureLoadOptions", jsonStr);
+            location.reload();
+        });
+    };
+    FullPictureLoadOptionsButtonAddEvent();
 
-    ge("#FullPictureLoadOptionsResetBtn").addEventListener("click", event => {
-        event.preventDefault();
-        localStorage.removeItem("FullPictureLoadOptions");
-        location.reload();
-    });
+    let optionsObserverTimeid = setTimeout(() => {
+        optionsObserver.disconnect();
+    }, 5000);
 
-    ge("#FullPictureLoadOptionsSaveBtn").addEventListener("click", event => {
-        event.preventDefault();
-        options.icon = ge("#FullPictureLoadOptionsIcon").checked == true ? 1 : 0;
-        options.threading = ge("#FullPictureLoadOptionsThreading").value;
-        options.zip = ge("#FullPictureLoadOptionsZip").checked == true ? 1 : 0;
-        options.file_extension = ge("#FullPictureLoadOptionsExtension").value;
-        options.comic = ge("#FullPictureLoadOptionsComic").checked == true ? 1 : 0;
-        options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload").checked == true ? 1 : 0;
-        options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown").value;
-        options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble").checked == true ? 1 : 0;
-        options.fancybox = ge("#FullPictureLoadOptionsFancybox").checked == true ? 1 : 0;
-        options.zoom = ge("#FullPictureLoadOptionsZoom").value;
-        options.column = ge("#FullPictureLoadOptionsColumn").value;
-        let jsonStr = JSON.stringify(options);
-        localStorage.setItem("FullPictureLoadOptions", jsonStr);
-        location.reload();
+    const optionsObserver = new MutationObserver((mutationsList, observer) => {
+        //網站如果使用了rocket-loader.min.js，會修改含input的HTML，導致FullPictureLoadOptions結構樣式跑掉，必須再修改回來。
+        if (fun.ge("div.icheckbox_square-blue", FullPictureLoadOptionsMain)) {
+            FullPictureLoadOptionsMain.innerHTML = FullPictureLoadOptionsMainHtmlStr;
+            FullPictureLoadOptionsButtonAddEvent();
+            setValue();
+            clearTimeout(optionsObserverTimeid);
+            observer.disconnect();
+        }
+    });
+    optionsObserver.observe(FullPictureLoadOptionsMain, {
+        childList: true,
+        subtree: true
     });
 
     const style = `
@@ -14477,7 +14538,9 @@
 }
 
 #FullPictureLoadOptions button {
-    width: 110px;
+    width: auto;
+    min-width: 102px;
+    max-width: 110px;
     margin-left: 2px;
     margin-right: 2px;
     margin-bottom: 4px !important;
@@ -14973,18 +15036,18 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 await Fancyboxl10nV5();
             } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 5 && siteData.fancybox.insertLibrarys == 1) {
                 //加規則
-                //             fancybox: {
-                //                 v: 5,
-                //                 insertLibrarys : 1
-                //             },
+                //fancybox: {
+                //    v: 5,
+                //    insertLibrarys : 1
+                //},
                 await addLibrarysV5();
                 await Fancyboxl10nV5();
             } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 3 && siteData.fancybox.insertLibrarys == 1) {
                 //加規則
-                //             fancybox: {
-                //                 v: 3,
-                //                 insertLibrarys : 1
-                //             },
+                //fancybox: {
+                //    v: 3,
+                //    insertLibrarys : 1
+                //},
                 await addLibrarysV3();
                 Fancyboxi18nV3();
                 FancyboxOptionsV3();
