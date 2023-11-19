@@ -80,6 +80,9 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         return arr;
     },
     scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵6
+    scrollEle: async () => {
+        …code;
+    },
     button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]插入圖片也添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
@@ -133,6 +136,9 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code
     },
     scrollEle: ["", 500],
+    scrollEle: async () => {
+        …code;
+    },
     button: [4, "24%", 1],
     insertImg: ["", 0, time],
     insertImg: [
@@ -1805,10 +1811,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同上</td>
             </tr>
             <tr>
-                <td><a href="https://orzqwq.com/">Orzqwq</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://hdporncomics.com/">HDpornComics</a></td>
                 <td></td>
             </tr>
@@ -2027,10 +2029,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.copymanga.tv/">www.copymanga.tv</a>，<a href="https://copymanga.tv/">copymanga.tv</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
             </tr>
             <tr>
-                <td><a href="https://www.yinghuamh.net/">樱花漫画</a></td>
-                <td>圖片伺服器很不穩定，下載很容易404。</td>
-            </tr>
-            <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
                 <td>SPA網頁，只有下載功能</td>
             </tr>
@@ -2078,6 +2076,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://manwa.me/">漫蛙</a></td>
                 <td>uBlock加信任名單<pre>https://manwa.me/chapter/*</pre>
 按6自動捲動等待全部圖片載入，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先手動觸發全部載入圖片，函式使用到canvas需要繪製過程會有點卡。</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.yinghuamh.net/">樱花漫画</a></td>
+                <td>圖片伺服器很不穩定，下載很容易404。</td>
+            </tr>
+            <tr>
+                <td>微信公众号</td>
+                <td>樱花漫画的漫畫目錄鏈結，有的直接用漢化組的公眾號發布的漫畫鏈結。</td>
+            </tr>
+            <tr>
+                <td>虎扑社区</td>
+                <td>樱花漫画的漫畫目錄鏈結，有的是導向漢化組在虎扑社区發布的帖子鏈結。</td>
             </tr>
             <tr>
                 <td><a href="https://m.happymh.com/">嗨皮漫畫</a></td>
@@ -2432,8 +2442,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.manhuab.com/">www.manhuab.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://manhuatai.org/">漫画台</a></td>
-                <td><a href="https://www.manhuatai.org/">www.manhuatai.org</a>，預設關閉</td>
+                <td><a href="http://manhuatai.org/">漫画台</a></td>
+                <td><a href="http://www.manhuatai.org/">www.manhuatai.org</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.manhuag.cc/">漫画哥</a></td>
@@ -2442,14 +2452,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.hahacomic.com/">哈哈漫画</a></td>
                 <td>預設關閉，漫畫列表添加自動翻頁功能</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.haoman6.com/">好漫6</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://haoman8.com/">好漫8</a></td>
-                <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
