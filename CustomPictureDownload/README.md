@@ -196,7 +196,7 @@ fun.ge(selector, doc)
     autoPager: {
         ele: ".mdui-col-lg-2",
         observer: ".mdui-col-lg-2",
-        next: () => {
+        next: (doc) => {
             let next = doc.querySelector("span.current+a");
             if (next) {
                 let num = next.getAttribute("href").match(/\d+/)[0];
@@ -218,7 +218,7 @@ fun.ge(selector, doc)
         waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
         loadTime: 200, //mode為1時給iframe框架讀取的時間，預設200可省略。
         ele: "selector", //下一頁主體元素選擇器
-        ele: () => { 
+        ele: (doc) => { 
             //2種寫法
             //1.創建元素和插入元素皆由此函式完成
             //2.創建元素陣列返回元素陣列，搭配pos決定元素插入位置
@@ -226,14 +226,14 @@ fun.ge(selector, doc)
         },
         pos: ["selector", 0], //[插入下一頁主體元素的基準元素, 0裡面1之前2之後]，預設為主體元素最後一個之後，可省略。
         next: "selector", //下一頁A元素選擇器
-        next: () => { 
+        next: (doc) => { 
             code
             return url
         },
         http: "https", //下一頁鏈結的傳輸協定 http/https
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
-        stop: () => {
+        stop: (doc) => {
             //根據判斷結果返回布林值boolean停止翻頁。
             code
             if (code) {
@@ -242,7 +242,7 @@ fun.ge(selector, doc)
             return false
         },
         showTitle: 0, //0不顯示下一頁的標題分隔條，顯示則省略。
-        title: () => {
+        title: (doc) => {
             //自定義標題分隔條要顯示的文字，不使用則省略。
             code
             return titleText
@@ -258,7 +258,7 @@ fun.ge(selector, doc)
         loading: "msg", //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息
         lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
         script: "selector", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
-        bF: () => {
+        bF: (doc) => {
             //插入下一頁元素之前要執行的代碼，不需要則省略
         },
         aF: () => { 
@@ -275,15 +275,15 @@ fun.ge(selector, doc)
 <br>
 <pre>
 //返回一個指定元素，支持CSS/Xpath選擇器
-fun.ge("ele");
-fun.ge("ele", doc);
-fun.ge("ele", node);
+fun.ge("selector");
+fun.ge("selector", doc);
+fun.ge("selector", node);
 </pre>
 <pre>
 //返回所有指定元素，支持CSS/Xpath選擇器
-fun.gae("ele");
-fun.gae("ele", doc);
-fun.gae("ele", node);
+fun.gae("selector");
+fun.gae("selector", doc);
+fun.gae("selector", node);
 </pre>
 <pre>
 //取得元素的字串
@@ -291,14 +291,15 @@ fun.gae("ele", node);
 //1返回指定元素的字串(預設)
 //2返回指定元素的上一個元素的字串
 //3返回指定元素的上上一個元素的字串
-fun.geT("ele");
-fun.geT("ele", 1);
-fun.geT("ele", 2);
-fun.geT("ele", 3);
+fun.geT("selector", mode = 1, doc = document);
 </pre>
 <pre>
 //取得元素屬性的值
-fun.attr("元素","屬性")
+fun.attr("selector","屬性", doc = document)
+</pre>
+<pre>
+//返回元素的圖片網址陣列
+fun.getImgsSrcArr("selector", doc = document);
 </pre>
 <pre>
 //對document.title的字串修改
@@ -307,7 +308,7 @@ fun.attr("元素","屬性")
 //1返回【字串切割取[0]去前後空白】
 //2返回【字串切割[0] + "字串" + 字串切割[1]】
 //3返回【字串切割[1] + "字串" + 字串切割[0]】
-fun.title("字串",mode)
+fun.title("字串", mode, doc = document)
 </pre>
 <pre>
 //將字串解析成document物件
@@ -325,7 +326,9 @@ fun.xml("字串")
 </pre>
 <pre>
 //顯示簡短訊息
-fun.show("字串",1000(顯示的時間,0持續顯示));
+fun.showMsg("字串",1000(顯示的時間,0持續顯示));
+//隱藏簡短訊息
+fun.hideMsg();
 </pre>
 <pre>
 //延遲運行async/await
@@ -356,7 +359,7 @@ init: async () => {
 }
 </pre>
 <pre>
-//等同eval()
+//功能基本等同eval()
 fun.run("代碼")
 </pre>
 <pre>
@@ -390,9 +393,15 @@ fun.addUrlHtml(url, ele, pos, text)
 </pre>
 <pre>
 //依序滾動元素
-fun.scrollEles(ele, ms = 100)
-//ele 元素選擇器
+//selector 元素選擇器
 //ms 滾動的間隔時間
+fun.scrollEles(selector, ms = 100)
+//依序滾動元素EX
+//selector 元素選擇器
+//time，callback判斷逾時的時間
+let callback = (ele) => fun.ge("img[src]", ele); //ele參數為捲動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
+let callback = (img) => /^blob/.test(img.src);//此例為判斷元素的src屬性是否已經轉為BlobURL
+fun.aotoScrollEles(selector, callback, time = 5000)
 </pre>
 <pre>
 //確認圖片狀態屬性 返回一個obj
@@ -406,18 +415,18 @@ height:height//成功返回圖片高屬性
 </pre>
 <pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得。
-fun.imgToBlobURL(img, type = "image/jpeg");
 //img元素
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL
+fun.imgToBlobURL(img, type = "image/jpeg");
 //範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e ,2));
 </pre>
 <pre>
 //包裝fun.imgToBlobURL函式。
-fun.imgBlobArr(img, type = "image/jpeg");
 //canvas、img 元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL陣列
+fun.imgBlobArr(img, type = "image/jpeg");
 //範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]", 2);
 //範例2：fun.imgBlobArr(".image>img");
 </pre>
@@ -476,13 +485,21 @@ fun.fetchDoc(url).then(doc => {
 </pre>
 <pre>
 //使用iframe框架，返回iframe框架的document。
-//ele指定等待到元素出現(必須)
-await fun.iframeDoc(url, ele);
+//ele元素選擇器指定等待到元素出現(必須)
+//time框架載入逾時的時間
+let callback = (doc, fun) => { //參數doc為iframe的document,fun為可調用的函式庫物件
+自由發揮
+}
+await fun.iframeDoc(url, ele, time = 5000, callback);
 </pre>
 <pre>
 //使用Fetch API搭配iframe框架，返回iframe框架的document。
-//ele指定等待到元素出現(必須)
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
+//ele元素選擇器指定等待到元素出現(必須)
+//time框架載入逾時的時間
+let callback = (doc, fun) => { //參數doc為iframe的document,fun為可調用的函式庫物件
+自由發揮
+}
 await fun.iframeSrcDoc(url, ele);
 </pre>
 <pre>
@@ -552,6 +569,9 @@ mode19
 -1 ==> -2
 mode20
  ==> -p-2
+
+//獨立出來的可調用函式，返回修改後的鏈結
+fun.getModeUrl: (url, mode, i)
 </pre>
 <pre>
 //fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間。
@@ -716,6 +736,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>免VIP</td>
             </tr>
             <tr>
+                <td><a href="https://www.hentaiclub.net/">紳士会所</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.24fa.com/c49.aspx">24FA</a></td>
                 <td></td>
             </tr>
@@ -724,12 +748,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr05.xyz/">秀人集</a></td>
-                <td></td>
+                <td><a href="https://www.2xiuren.cc/">秀人集</a></td>
+                <td><a href="https://m.xr06.xyz/">m.xr06.xyz</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xrmn01.com/">秀人美女網</a></td>
-                <td></td>
+                <td><a href="https://m.xrmn01.com/">m.xrmn01.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.imn5.xyz/">爱美女网</a></td>
@@ -740,8 +764,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgu5.com/">极品性感美女</a></td>
-                <td><a href="https://plmn5.com/">网址发布页</a></td>
+                <td><a href="https://www.xgmn3.com/">极品性感美女</a></td>
+                <td><a href="https://m.xgmn3.com/">m.xgmn3.com</a>，<a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn03.cc/">爱看美女网</a></td>
@@ -932,6 +956,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://meitulu.me/">美图录</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.tujigu.top/">爱图集谷</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1134,6 +1162,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://dimtown.com/">次元小镇</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.mtutuu.com/">萌次元</a></td>
                 <td></td>
             </tr>
@@ -1186,7 +1218,15 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://cn.w55.tv/">cn.w55.tv</a></td>
             </tr>
             <tr>
+                <td><a href="https://books.xxgirls.vip/">淫淫小说写真馆</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://jingunav.info/index.php/arttype/109.html">人妻租借所</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://xxk222.com/arttype/meinv.html">男人社区</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1527,6 +1567,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>只支援PC版</td>
             </tr>
             <tr>
+                <td><a href="https://zzup.com/user-album/3338/petmer/index.html">ZzUp.Com</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://girlsreleased.com/">GirlsReleased</a></td>
                 <td>圖床imgadult無法外連，但可以下載。</td>
             </tr>
@@ -1743,7 +1787,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://nhentai.net/">nhentai</a></td>
-                <td>作用在圖片清單頁，<a href="https://nyahentai.red/">nyahentai.red</a>，<a href="https://www.hentai.name/">www.hentai.name</a>，<a href="https://nhentai.xxx/">nhentai.xxx</a>，<a href="https://nhentai.to/">nhentai.to</a>
+                <td>作用在圖片清單頁，<a href="https://nyahentai.red/">nyahentai.red</a>，<a href="https://www.hentai.name/">www.hentai.name</a>，<a href="https://nhentai.xxx/">nhentai.xxx</a>，<a href="https://nhentai.to/">nhentai.to</a>，<a href="https://simplyhentai.org/">simplyhentai.org</a>，<a href="https://simplyhentai.red/">simplyhentai.red</a>
                 </td>
             </tr>
             <tr>
@@ -1831,6 +1875,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://hachirumi.com/">Hachirumi.com</a></td>
+                <td>SPA網頁，在閱讀頁不分章節取得所有圖片</td>
+            </tr>
+            <tr>
                 <td><a href="http://18p.fun/">開車漫畫</a></td>
                 <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
             </tr>
@@ -1844,6 +1892,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://caitlin.top/">Caitlin.top</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.apexmh.com/">頂點漫畫</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1900,6 +1952,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.91jinman.com/">91禁漫</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://xn--wgv69rba1382b.com/">漫香阁</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2008,7 +2064,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
 <p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
-<p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 勾選當前漫畫站點規則開關 > 保存設定</p>
+<p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 勾選啟用當前漫畫站點規則 > 保存設定</p>
+<p>2023/11/25 絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
@@ -2041,8 +2098,20 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://m.ikuku.cc/">m.ikuku.cc</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
+                <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
+                <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
                 <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.aiguoman.com/">爱国漫</a></td>
+                <td><a href="https://m.aiguoman.com/">m.aiguoman.com</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.mh160.cc/">漫画160</a></td>
+                <td><a href="http://m.mh160.cc/">m.mh160.cc</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.iimanhuapi.com/">漫画皮</a></td>
@@ -2059,6 +2128,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://dogemanga.com/">漫畫狗</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://www.hahacomic.com/">哈哈漫画</a></td>
+                <td>漫畫列表添加自動翻頁功能</td>
             </tr>
             <tr>
                 <td><a href="https://www.ponpomu.com/">白绒Yuri</a></td>
@@ -2083,11 +2156,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td>微信公众号</td>
-                <td>樱花漫画的漫畫目錄鏈結，有的直接用漢化組的公眾號發布的漫畫鏈結。</td>
+                <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組的公眾號發布的漫畫鏈結。</td>
             </tr>
             <tr>
                 <td>虎扑社区</td>
-                <td>樱花漫画的漫畫目錄鏈結，有的是導向漢化組在虎扑社区發布的帖子鏈結。</td>
+                <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組在虎扑社区發布的帖子鏈結。</td>
             </tr>
             <tr>
                 <td><a href="https://m.happymh.com/">嗨皮漫畫</a></td>
@@ -2154,20 +2227,20 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.acgud.com/">亲亲漫画</a></td>
-                <td><a href="http://m.acgud.com/">m.acgud.com</a>，預設關閉</td>
+                <td><a href="http://www.acgwd.com/">亲亲漫画</a></td>
+                <td><a href="http://m.acgwd.com/">m.acgwd.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.gufengmh.com/">古风漫画网</a></td>
-                <td><a href="https://m.gufengmh.com/">m.gufengmh.com</a>，預設關閉</td>
+                <td><a href="https://m.gufengmh.com/">m.gufengmh.com</a>，<a href="https://www.gf618.com/">www.gf618.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.77mh.xyz/">新新漫画</a></td>
                 <td><a href="https://m.77mh.xyz/">m.77mh.xyz</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.gaonaojin.com/">仙漫网</a></td>
-                <td><a href="https://m.gaonaojin.com/">m.gaonaojin.com</a>，預設關閉，PC版下架的漫畫移動版可能還在。</td>
+                <td><a href="https://m.gaonaojin.com/">仙漫网</a></td>
+                <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
@@ -2287,10 +2360,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.zuimh.com/">m.zuimh.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.guoguomh.com/">果果漫画</a></td>
-                <td><a href="https://m.guoguomh.com/">m.guoguomh.com</a>，預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.100mhl.com/">漫画连</a></td>
                 <td><a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉</td>
             </tr>
@@ -2315,10 +2384,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.mhkan.com/">m.mhkan.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
-                <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="http://comics.veryim.com/">非常爱漫网</a></td>
                 <td>預設關閉</td>
             </tr>
@@ -2332,7 +2397,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.mhw1.com/">漫画屋</a></td>
-                <td><a href="http://mh.manhw.com/">mh.manhw.com</a>，預設關閉</td>
+                <td><a href="http://www.cmh5.com/">www.cmh5.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.biqug.org/">笔趣阁漫画</a></td>
@@ -2355,24 +2420,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="http://www.38manhua.com/">38漫画网</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://797mh.com/">久久漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.mhzj54.com/">漫画之家</a></td>
+                <td><a href="http://797mh.com/">漫画网</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.manshiduo.net/">漫士多</a></td>
                 <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.aiguoman.com/">爱国漫</a></td>
-                <td><a href="https://m.aiguoman.com/">m.aiguoman.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://mh5.tw/">漫畫屋</a></td>
@@ -2394,19 +2447,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.mh160.cc/">漫画160</a></td>
-                <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.szcdmj.com/">砂之船动漫家</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.xuerenmanhua.com/">雪人漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.aimimh.com/">艾米漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
@@ -2422,7 +2467,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://yemancomic.com/">次元漫画</a></td>
+                <td><a href="https://2cycomic.com/">次元漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
@@ -2448,10 +2493,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.manhuag.cc/">漫画哥</a></td>
                 <td><a href="https://m.manhuag.cc/">m.manhuag.cc</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.hahacomic.com/">哈哈漫画</a></td>
-                <td>預設關閉，漫畫列表添加自動翻頁功能</td>
             </tr>
             <tr>
                 <td><a href="https://manga.bilibili.com/">哔哩哔哩漫画</a></td>
