@@ -1,4 +1,4 @@
-2023/11/17 02:16
+2023/11/28 00:11
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -125,6 +125,10 @@ Lootiu.Com
 新闻吧
 *://www.xinwenba.net/plus/view-*.html
 *://m.xwbar.com/plus/view-*.html
+
+新娱乐在线
+*://www.dv67.com/plus/view-*.html
+*://m.dv67.com/plus/view-*.html
 
 四海资讯
 *://www.shzx.org/a/*.html
@@ -274,6 +278,7 @@ BAOBUA.COM
 *baobua.com/post/*
 
 HOTGIRLchina
+/^https://hotgirlchina\.com/[^\/]+/$/
 *://hotgirlchina.com/*-photos*/
 *://theasiagirl.com/*-photos*/
 *://anhsec.com/*-photos*/
@@ -354,6 +359,9 @@ ImageFap
 *://www.imagefap.com/gallery/*
 *://www.imagefap.com/pictures/*
 *://www.imagefap.com/photo/*
+
+ZzUp.Com
+https://zzup.com/*
 
 BuzzAV
 *://*.buzzav.com/album/*
@@ -446,6 +454,9 @@ Anh VL
 
 恩图集
 *www.entuji.com/*/*.html
+
+美Girl
+*www.mhgirl.com/tuji/*.html
 
 福利姬美图
 *fuligirl.net/albums/*
@@ -594,6 +605,15 @@ Fapello
 
 169图片大全
 *://*.169tp.com/*/*/*/*.html
+
+中看图片大全
+*://www.zkjmpx.com/news/*.html
+
+eyval.net
+https://www.eyval.net/*
+
+丝袜客
+*siwake.cc*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -768,6 +788,12 @@ JComic
 韩漫库
 *://se8.us/index.php/chapter/*
 
+頂點漫畫
+*://www.apexmh.com/comic/*.html
+
+ok漫画網
+*://*.okcomic.net/*/*/*.html
+
 漫畫類
 
 包子漫画
@@ -789,6 +815,12 @@ JComic
 *://cn.dociy.net/*
 *://tw.dociy.net/*
 *://www.dociy.net/*
+
+嗨皮漫畫
+*m.happymh.com*
+
+COLAMANHUA
+/www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/
 
 Manhuagui看漫画閱讀
 *m.manhuagui.com/comic/*/*.html
@@ -1087,6 +1119,7 @@ manhuab.com/manhua/*/*.html
 https://www.fffdm.com/manhua/*
 https://manhua.fffdm.com/*/*/
 https://*.dgmanhua.com/manhua/*/*.html
+*://*.laimanhua8.com/kanmanhua/*/*.html
 *://www.nlegs.com/girls/*.html
 https://www.honeyleg.com/article/*.html
 https://www.ladylap.com/show/*
@@ -1148,6 +1181,7 @@ https://www.nuyet.com/gallery/*
 *img3xgirls.com/album/*
 *://www.4khd.com/*/*/*/*.html
 /://buondua.com/[^\\?]+/
+/^https://hotgirlchina\.com/[^\/]+/$/
 *://hotgirlchina.com/*-photos*/
 *://theasiagirl.com/*-photos*/
 *://anhsec.com/*-photos*/
@@ -1382,6 +1416,14 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.1000yishu.com/*/*/*/*.html
 *://*.169tp.com/*/*/*/*.html
 *://www.niutu114.com/meinv/*/*/*.html
+https://zzup.com/*
+*://www.apexmh.com/comic/*.html
+https://www.eyval.net/*
+*://*.okcomic.net/*/*/*.html
+*www.mhgirl.com/tuji/*.html
+*siwake.cc*
+*://www.dv67.com/plus/view-*.html
+*://m.dv67.com/plus/view-*.html
 /^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
