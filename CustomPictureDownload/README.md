@@ -676,7 +676,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/11/28 00:11</p>
+<p>2023/11/28 20:17</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -729,7 +729,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://yskhd.com/">优丝库HD</a></td>
-                <td><a href="https://yskhd.xyz/">yskhd.xyz</a>，<a href="https://ysk567.com/">ysk567.com</a>，免VIP</td>
+                <td><a href="https://yskhd.me/">yskhd.me</a>，<a href="https://ysk567.com/">ysk567.com</a>，免VIP</td>
             </tr>
             <tr>
                 <td><a href="https://luohuaxiu.com/">洛花秀</a></td>
@@ -843,6 +843,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 </td>
             </tr>
             <tr>
+                <td><a href="https://www.06se.com/">六色美图</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://xx.knit.bid/">爱妹子</a></td>
                 <td></td>
             </tr>
@@ -916,7 +920,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xinwenba.net/web/meinv/">新闻吧</a></td>
-                <td><a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>封鎖部分地區，需要VPN才看的到圖片</td>
+                <td><a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>，封鎖部分地區，需要VPN才看的到圖片</td>
             </tr>
             <tr>
                 <td><a href="https://www.shzx.org/b/12-0.html">四海资讯</a></td>
@@ -1174,8 +1178,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.cybesx.com/">柠檬皮</a></td>
-                <td></td>
+                <td><a href="https://www.emonl.com/">柠檬皮</a></td>
+                <td><a href="https://www.cybesx.com/">www.cybesx.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://pipidm.top/">皮皮动漫社</a></td>
@@ -1371,6 +1375,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://tangmoc.com/">TangMoc</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://tuyetnhan.com/">☆ Ảnh đẹp ☆</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1708,6 +1716,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://2lsp.xyz/">2LSP</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://nicegirl4u.cyou/">NICEGIRL4U</a></td>
                 <td></td>
             </tr>
             <tr>
