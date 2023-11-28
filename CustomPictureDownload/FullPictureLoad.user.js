@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.1
+// @version            1.7.2
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -265,8 +265,8 @@
         category: "nsfw1"
     }, {
         name: "优丝库HD", //免VIP
-        host: ["yskhd.com", "ysk567.com", "yskhd.xyz"],
-        reg: /(yskhd\.(com|xyz)|ysk567\.com)\/archives\/\d+/i,
+        host: ["yskhd.com", "ysk567.com", "yskhd.me"],
+        reg: /(yskhd\.(com|me)|ysk567\.com)\/archives\/\d+/i,
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src);
             let getRes = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", "")).map(async src => {
@@ -442,6 +442,7 @@
         host: ["www.xinwenba.net", "m.xwbar.com", "www.dv67.com", "m.dv67.com"],
         link: "https://www.xinwenba.net/web/meinv/",
         reg: /(www\.xinwenba\.net|m\.xwbar\.com|(www|m)\.dv67\.com)\/plus\/view-\d+-\d+\.html/,
+        include: ".main img",
         imgs: () => {
             let max;
             try {
@@ -454,8 +455,8 @@
         button: [4],
         insertImg: [".view_img", 2],
         autoDownload: [0],
-        next: ".pre_next li:last-child a",
-        prev: ".pre_next li:first-child a",
+        next: "//li[contains(text(),'上一篇')]/a",
+        prev: "//li[contains(text(),'下一篇')]/a",
         customTitle: () => fun.geT(".title>h1"),
         css: "div.web{display:none!important;}",
         category: "nsfw1"
@@ -1037,8 +1038,8 @@
         category: "nsfw2"
     }, {
         name: "柠檬皮",
-        host: ["www.cybesx.com"],
-        reg: /www\.cybesx\.com\/\d+\.html$/i,
+        host: ["www.emonl.com", "www.cybesx.com"],
+        reg: /(www\.emonl\.com|www\.cybesx\.com)\/\d+\.html$/i,
         include: ".page-links",
         exclude: ".read-point-box",
         imgs: () => fun.getImg(".single-content img", (fun.geT(".page-links>a:last-child", 2) || 1), 7),
@@ -1052,8 +1053,8 @@
         category: "nsfw1"
     }, {
         name: "柠檬皮",
-        host: ["www.cybesx.com"],
-        reg: /www\.cybesx\.com\/\d+\.html$/i,
+        host: ["www.emonl.com", "www.cybesx.com"],
+        reg: /(www\.emonl\.com|www\.cybesx\.com)\/\d+\.html$/i,
         include: ".single-content img",
         exclude: ".read-point-box",
         imgs: ".single-content img",
@@ -2563,6 +2564,21 @@
         css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>center,#d5tig,#pcapicb,#pcapic,#google_translate_element,#d5a>*:not([id]):not([class]),union[id]{display:none !important}",
         category: "nsfw2"
     }, {
+        name: "六色美图",
+        host: ["www.06se.com"],
+        reg: /^https:\/\/www\.06se\.com\/\d+\.html/,
+        imgs: ".article-content img",
+        button: [4],
+        insertImg: [
+            [".wp-posts-content", 2, ".wp-posts-content"], 2
+        ],
+        autoDownload: [0],
+        next: "//a[p[text()='上一篇']]",
+        prev: "//a[p[text()='下一篇']]",
+        customTitle: () => fun.geT(".article-title").replace(/\[\d([／\+\.\w]+)?\]\s?|【\d+P】/i, ""),
+        css: "#modal-system-notice,.container.fluid-widget{display:none!important;}",
+        category: "nsfw1"
+    }, {
         name: "丝袜客",
         host: ["siwake.cc"],
         reg: /^https:\/\/siwake\.cc\/post\//,
@@ -2849,6 +2865,26 @@
         css: ".single-box,.entry-img-300{display:none!important}@media only screen and (max-width:409px){.entry{width:100%!important}}button.rmp_menu_trigger{z-index:100!important}",
         category: "nsfw1"
     }, {
+        name: "NICEGIRL4U",
+        host: ["nicegirl4u.cyou"],
+        reg: /^https:\/\/nicegirl4u\.cyou\/[^\/]+\/$/,
+        include: ".wp-block-image>img",
+        imgs: async () => {
+            let pag = fun.ge(".page-links");
+            if (pag) {
+                let max = fun.geT(".page-links>a:last-child");
+                return fun.getImg(".wp-block-image>img", max, 14);
+            } else {
+                return [...fun.gae(".wp-block-image>img")];
+            }
+        },
+        button: [4],
+        insertImg: [
+            [".responsive-tabs-wrapper", 2], 2
+        ],
+        customTitle: () => fun.geT(".entry-title"),
+        category: "nsfw1"
+    }, {
         name: "Chinese Beauties",
         host: ["sxchinesegirlz.one", "sxchinesegirlz01.xyz"],
         reg: /sxchinesegirlz(\d+)?\.\w+\/\d+\/\d+\/\d+\/.+\/$/,
@@ -2948,6 +2984,22 @@
                 subtree: true
             });
         },
+        category: "nsfw1"
+    }, {
+        name: "☆ Ảnh đẹp ☆",
+        host: ["tuyetnhan.com"],
+        reg: /^https:\/\/tuyetnhan\.com\/[^\/]+\/$/,
+        init: () => {
+            let ele = fun.ge("//div[@class='entry-content']/p[em]");
+            if (ele) {
+                let x = fun.ge(".entry-footer");
+                x.parentNode.insertBefore(ele, x);
+            }
+        },
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: () => fun.geT(".entry-title"),
         category: "nsfw1"
     }, {
         name: "Fapello",
@@ -10044,7 +10096,7 @@ window.parent.postMessage({
             setTimeout(() => {
                 let nextDivEle = fun.ge(".bottom div");
                 let bottomEle = fun.ge(".bottom");
-                nextDivEle ? bottomEle.innerHTML = fun.ge("div", bottomEle).outerHTML + fun.ge("p", bottomEle).outerHTML : bottomEle(".bottom").innerHTML = fun.ge("p", bottomEle).outerHTML;
+                nextDivEle ? bottomEle.innerHTML = fun.ge("div", bottomEle).outerHTML + fun.ge("p", bottomEle).outerHTML : bottomEle.innerHTML = fun.ge("p", bottomEle).outerHTML;
             }, 500);
         },
         imgs: () => {
@@ -12976,7 +13028,7 @@ document.body.appendChild(text);
             if (siteData.autoPager.observer) {
                 await fun.delay(siteData.autoPager.sleep || 1000, 0);
                 let ele = [...fun.gae(siteData.autoPager.observer)].pop();
-                fun.nextObserver.observe(ele);
+                fun.autoPagerNextObserver.observe(ele);
             }
         },
         iframeDoc: (url, ele, time = 5000, callback) => {
@@ -13079,7 +13131,7 @@ document.body.appendChild(text);
                 }
             });
         },
-        nextObserver: new IntersectionObserver((entries, observer) => {
+        autoPagerNextObserver: new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && autoPager) {
                     observer.unobserve(entry.target);
@@ -13500,6 +13552,10 @@ document.body.appendChild(text);
                         imgsNum = 0 - 1;
                     }
                 });
+                if (siteData.category == "comic") {
+                    let lastImg = imgs.pop();
+                    fun.comicNextObserver.observe(lastImg);
+                }
                 [...fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage")].forEach(e => {
                     e.style.display = "block";
                 });
@@ -13641,6 +13697,30 @@ document.body.appendChild(text);
                     if (fancyboxNE && fancyboxNE.tagName == "A") {
                         let ele = fancyboxNE.firstElementChild;
                         if (ele && ele.tagName == "IMG" && ele.dataset.src) ele.src = ele.dataset.src;
+                    }
+                }
+            });
+        }),
+        comicNextObserver: new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    observer.unobserve(entry.target);
+                    if (nextLink) {
+                        const comicSpaceClickNext = () => {
+                            let click = 0;
+                            const callback = event => {
+                                if (event.keyCode == 32) {
+                                    click += 1;
+                                    if (click >= 5) {
+                                        document.removeEventListener("keydown", callback);
+                                        fun.showMsg(displayLanguage.str_34);
+                                        location.href = nextLink;
+                                    }
+                                }
+                            };
+                            document.addEventListener("keydown", callback);
+                        };
+                        comicSpaceClickNext();
                     }
                 }
             });
@@ -14836,6 +14916,10 @@ document.body.appendChild(text);
             viewMode = 1;
             fun.showMsg(displayLanguage.str_93);
             let imgs = [...gae("#FullPictureLoadImgBox>div")];
+            if (siteData.category == "comic") {
+                let lastImg = imgs.pop();
+                fun.comicNextObserver.observe(lastImg);
+            }
             let imgsNum = 0;
             if (imgs[0].nextSibling && siteData.category == "comic") {
                 await fun.checkImgStatus(imgs[0].nextSibling.querySelector("img").dataset.src, "Wait Loading...");
@@ -15327,7 +15411,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     margin: 5px auto !important;
 }
 
-#FullPictureLoadEnd~*:not(#FullPictureLoadOptions):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(a[href='javascript:void(0);']):not(.post-info):not(.post-tags):not(*[class^=fancybox]):not(div[tabindex]):not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]):not(a.zwf):not(p):not(.bo_nav) {
+#FullPictureLoadEnd~*:not(#FullPictureLoadOptions):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(a[href='javascript:void(0);']):not(.post-info):not(.post-tags):not(.article-tags):not(*[class^=fancybox]):not(div[tabindex]):not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]):not(a.zwf):not(p):not(.bo_nav) {
     display: none !important;
 }
 
@@ -15877,7 +15961,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             if (siteData.autoPager) {
                 if (siteData.autoPager.observer) {
                     let ele = [...fun.gae(siteData.autoPager.observer)].pop();
-                    if (ele) fun.nextObserver.observe(ele);
+                    if (ele) fun.autoPagerNextObserver.observe(ele);
                 } else {
                     const callback = async () => {
                         if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - (siteData.autoPager.bottom || 1000)) {
