@@ -1,4 +1,4 @@
-2023/11/28 00:11
+2023/11/28 20:17
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -400,6 +400,7 @@ RMM吧
 *://xiuren0.com/*.html
 
 柠檬皮
+*://www.emonl.com/*.html
 *://www.cybesx.com/*.html
 
 MM5MM5美女图片
@@ -1300,6 +1301,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.xiuwo.net/tu/*.html
 *rmm8.com/tu/*.html
 *://xiuren0.com/*.html
+*://www.emonl.com/*.html
 *://www.cybesx.com/*.html
 *://*.mm1311.net/*/*.html
 *://*.eemm.cc/pic/*.html
