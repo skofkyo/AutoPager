@@ -1,4 +1,4 @@
-2023/11/28 20:17
+2023/12/01 02:10
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -103,6 +103,9 @@ JavSX.com
 
 Hit-x-Hot
 *://www.hitxhot.org/gallerys/*.html*
+
+Hitxhot Album Archive II
+*://hitxhot.com/blog/*.html*
 
 DEPVAILON
 *://www.depvailon.com/*.html*
@@ -332,7 +335,10 @@ Coomer
 
 性趣套图
 *://myjkwd.com/e/action/ShowInfo.php?*
+*://enpeta.com/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
+*://539765.xyz/e/action/ShowInfo.php?*
+*://123548.xyz/e/action/ShowInfo.php?*
 
 牛C网导航
 *://niuc*.com/*.html
@@ -577,6 +583,9 @@ Hentai Cosplay
 HotGirl World
 *://www.hotgirl.world/g/*.html/
 
+1Y Beauties
+*://www.1y.is/*/*.html
+
 CosBlay
 *://cosblay.com/*.html
 
@@ -610,11 +619,51 @@ Fapello
 中看图片大全
 *://www.zkjmpx.com/news/*.html
 
+图片发达网
+*://www.tufada.com/tu*.html
+
+昆山美图网
+*://www.ksxx365.com/*/*.html
+
+桃子啦
+*://www.tzala.com/*/*.html
+
+漫爱美图
+*://www.mash120.com/*/*.html
+
+雾四图片网
+*://www.wslak.com/*/*.html
+
+屈求图库
+*://www.777url.com/*/*.html
+
 eyval.net
 https://www.eyval.net/*
 
 丝袜客
 *siwake.cc*
+
+萌妹社区
+*://www.mmav.me/photo/*.html
+
+闺秀网
+*://guixiu.org/post/*.html
+
+MOMO图库
+*://www.momotk.com/*.html
+*://momotk*.uno/*.html
+
+18少女团
+*://18cute.monster/chapter/*
+
+聚姬集
+*://18jjj.cyou/chapter/*
+
+Nuded Photo
+*://www.nudedxxx.com/photo/*.shtml
+
+51控美图网
+*://www.871651.com/*.html
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -795,6 +844,12 @@ JComic
 ok漫画網
 *://*.okcomic.net/*/*/*.html
 
+HentaiPal.com
+*hentaipal.com*
+
+狮城漫画
+*://hdcomic.com/chapter/*
+
 漫畫類
 
 包子漫画
@@ -816,6 +871,9 @@ ok漫画網
 *://cn.dociy.net/*
 *://tw.dociy.net/*
 *://www.dociy.net/*
+*://www.twmanga.com/*
+*://tw.twmanga.com/*
+*://cn.twmanga.com/*
 
 嗨皮漫畫
 *m.happymh.com*
@@ -1132,6 +1190,7 @@ https://www.nuyet.com/gallery/*
 *://*.8se.me/photo/*
 *://w3.javsx.com/photos/*.html
 *://www.hitxhot.org/gallerys/*.html*
+*://hitxhot.com/blog/*.html*
 *://www.depvailon.com/*.html*
 *://pic.yailay.com/articles/*.html*
 *://nungvl.net/gallerys/*.cg*
@@ -1206,7 +1265,10 @@ https://www.nuyet.com/gallery/*
 *://www.jeya.*/*/*.html
 *://www.mevtu.com/*/*.html
 *://myjkwd.com/e/action/ShowInfo.php?*
+*://enpeta.com/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
+*://539765.xyz/e/action/ShowInfo.php?*
+*://123548.xyz/e/action/ShowInfo.php?*
 *://niuc*.com/*.html
 *xhamster.com/photos/gallery*
 *pornhub.com/album/*
@@ -1426,6 +1488,24 @@ https://www.eyval.net/*
 *siwake.cc*
 *://www.dv67.com/plus/view-*.html
 *://m.dv67.com/plus/view-*.html
+*://www.zkjmpx.com/news/*.html
+*://www.tufada.com/tu*.html
+*hentaipal.com*
+*://www.1y.is/*/*.html
+*://www.ksxx365.com/*/*.html
+*://www.tzala.com/*/*.html
+*://www.mash120.com/*/*.html
+*://www.wslak.com/*/*.html
+*://www.777url.com/*/*.html
+*://www.mmav.me/photo/*.html
+*://hdcomic.com/chapter/*
+*://guixiu.org/post/*.html
+*://www.momotk.com/*.html
+*://momotk*.uno/*.html
+*://18cute.monster/chapter/*
+*://www.nudedxxx.com/photo/*.shtml
+*://www.871651.com/*.html
+*://18jjj.cyou/chapter/*
 /^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
