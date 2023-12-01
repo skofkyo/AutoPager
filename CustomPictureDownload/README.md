@@ -419,7 +419,7 @@ height:height//成功返回圖片高屬性
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL
 fun.imgToBlobURL(img, type = "image/jpeg");
-//範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e ,2));
+//範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
 </pre>
 <pre>
 //包裝fun.imgToBlobURL函式。
@@ -427,7 +427,7 @@ fun.imgToBlobURL(img, type = "image/jpeg");
 //type轉換的圖片類型"image/jpeg"、"image/png"
 //返回BlobURL陣列
 fun.imgBlobArr(img, type = "image/jpeg");
-//範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]", 2);
+//範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]");
 //範例2：fun.imgBlobArr(".image>img");
 </pre>
 <pre>
@@ -676,7 +676,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/01 02:10</p>
+<p>2023/12/02 01:41</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1596,7 +1596,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
-                <td>手動插入圖片，有日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，如果沒有成功插入imx.to圖床的圖片，可以按Ctrl + Alt + C複製鏈結丟給JDownloader下載，或點開鏈結看有沒有提供Gallery，如果下載速度慢需要掛VPN</td>
+                <td>手動插入圖片，有日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片，如果沒有成功插入imx.to圖床的圖片，可以按Ctrl + Alt + C複製鏈結丟給JDownloader下載，或點開鏈結看有沒有提供Gallery，如果下載速度慢需要掛VPN</td>
             </tr>
             <tr>
                 <td><a href="https://imx.to/">imx.to</a></td>
@@ -1884,7 +1884,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://cathentai.net/">Cathentai</a></td>
-                <td>作用在List Read頁，<a href="https://hentaibeeg.com/">hentaibeeg.com</a>，<a href="https://hentaicolor.net/">hentaicolor.net</a></td>
+                <td>作用在List Read頁，<a href="https://hentaibeeg.com/">hentaibeeg.com</a>，<a href="https://hentaicolor.net/">hentaicolor.net</a>，<a href="https://nyahentai.info/">nyahentai.info</a></td>
             </tr>
             <tr>
                 <td><a href="https://hanime1.me/comics">Hanime1</a></td>
@@ -2047,6 +2047,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://www.177picyy.com/">www.177picyy.com</a></td>
             </tr>
             <tr>
+                <td><a href="https://mttang.club/">漫天堂</a></td>
+                <td>作用在下拉閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://yousemanhua.com/">有色漫画网</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.99hanman.top/">久久漫画网</a></td>
                 <td></td>
             </tr>
@@ -2165,6 +2173,42 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.okcomic.net/">ok漫画網</a></td>
                 <td><a href="https://m.okcomic.net/">m.okcomic.net</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://toptoon.shop/">顶通漫画</a></td>
+                <td><a href="https://toptoon123.xyz">地址发布页</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.rhmanhua12.xyz/">H肉番动漫</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://sobt.lat/">色漫集</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://155comic.bio/">155漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://18manga.top/">18H汉化漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://hanime1.biz/home">hanime1.biz</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://javabc.club/">JavABC</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://txcomic.com/">桃心漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://javcomics.site/">日本禁漫屋</a></td>
+                <td></td>
             </tr>
         </tbody>
     </table>
