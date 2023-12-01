@@ -1,4 +1,4 @@
-2023/12/01 02:10
+2023/12/02 01:41
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -665,6 +665,9 @@ Nuded Photo
 51控美图网
 *://www.871651.com/*.html
 
+XO福利圖
+*://diedk1123-ake33i.xofulitu2za222.sbs/arttype/*
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -849,6 +852,12 @@ HentaiPal.com
 
 狮城漫画
 *://hdcomic.com/chapter/*
+
+顶通漫画
+*://toptoon*/*/*.html
+
+18H汉化漫画
+/^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/imgs\.php\?id=/
 
 漫畫類
 
@@ -1506,6 +1515,8 @@ https://www.eyval.net/*
 *://www.nudedxxx.com/photo/*.shtml
 *://www.871651.com/*.html
 *://18jjj.cyou/chapter/*
+*://diedk1123-ake33i.xofulitu2za222.sbs/arttype/*
+*://toptoon*/*/*.html
 /^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
