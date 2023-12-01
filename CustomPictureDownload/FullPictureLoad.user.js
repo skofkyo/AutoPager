@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.3
+// @version            1.7.4
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -6879,13 +6879,14 @@
     }, {
         name: "XO福利圖",
         host: ["diedk1123-ake33i.xofulitu2za222.sbs"],
+        link: "https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo",
         reg: /^https:\/\/[^\/]+\/art\/pic\/id\/\d+\/$/i,
         include: "//title[contains(text(),'XO福利圖')]",
         imgs: ".picture-wrap img",
         button: [4],
         insertImg: [".container.clearfix", 2],
         go: 1,
-        customTitle: () => fun.geT(".main-title:not(.recommend-title)").replace(/\s?-?\s?\(\d+P\)|\s?\d+P/i, ""),
+        customTitle: () => fun.geT(".main-title:not(.recommend-title)").replace(/\s?-?\s?\(\d+P\)|\[\d+[\+\.\w\s-]+\]|【\d+P】|\s?\d+P/i, ""),
         category: "nsfw2"
     }, {
         name: "XO福利圖 分類自動翻頁",
@@ -7030,7 +7031,7 @@
         button: [4],
         insertImg: ["#enc_img", 2],
         customTitle: () => fun.ge(".comic-name") ? fun.geT(".comic-name") : bookInfo.book_name,
-        css: "img{opacity:1!important;}",
+        css: "#pubcdnModal{display:none!important;}img{opacity:1!important;}",
         category: "nsfw1"
     }, {
         name: "adultspic色情成人圖片",
@@ -7155,12 +7156,12 @@
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/List Read頁",
-        host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net"],
-        reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net)\/read\/\d+\.html$/i,
+        host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net", "nyahentai.info"],
+        reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net|nyahentai\.info)\/read\/\d+\.html$/i,
         imgs: () => fun.run(fun.geT("#listImgH")),
         button: [4],
         insertImg: ["#image-container", 2],
-        customTitle: () => fun.title(/ - Cathentai| - Hentaicolor| - Hentaibeeg/, 1),
+        customTitle: () => fun.title(/ - Cathentai| - Hentaicolor| - Hentaibeeg| - Nyahentai.info/, 1),
         category: "hcomic"
     }, {
         name: "3hentai圖片清單頁",
@@ -8253,8 +8254,8 @@
         category: "hcomic"
     }, {
         name: "九妖漫画",
-        host: ["mobile.jymhapp.com"],
-        reg: /^https:\/\/mobile\.jymhapp\.com\/chapter\/\d+/,
+        host: ["mobile.jymhapp.com", "xn--ihqy4c7yra.jyaaa.info"],
+        reg: /^https:\/\/(mobile\.jymhapp\.com|xn--ihqy4c7yra\.jyaaa\.info)\/chapter\/\d+/,
         include: ".rd-article-wr,.comic-list",
         imgs: ".rd-article-wr img,.comic-list img",
         button: [4],
@@ -8604,6 +8605,220 @@
         next: "//a[text()='下一章'][@href]",
         prev: "//a[text()='上一章'][@href]",
         customTitle: () => fun.title(/免费阅读-狮城漫画|在线阅读-狮城漫画/).replace(/\s-\s\(\d+P\)-高清全集/i, ""),
+        category: "hcomic"
+    }, {
+        name: "顶通漫画",
+        host: ["toptoon.shop", "toptoon.buzz", "toptooncn.club", "toptooncn.info", "toptooncn.life", "toptooncn.top", "toptoonapp.com", "toptoon123.xyz", "toptooncn.xyz", "toptoon123.link", "toptoonapp.club"],
+        reg: /^https:\/\/toptoon(\w+)?\.\w+\/\w+\/\d+\.html/,
+        imgs: "#txtbox img",
+        button: [4],
+        insertImg: ["#txtbox", 2],
+        autoDownload: [0],
+        next: "a.nexturl.on",
+        prev: "a.prevurl.on",
+        customTitle: () => {
+            let arr = fun.geT(".place").split(" > ");
+            return arr[2] + " - " + arr[3];
+        },
+        css: ".ads_plugin,.ad-top-info{display:none!important;}",
+        category: "hcomic"
+    }, {
+        name: "H肉番动漫",
+        host: ["www.rhmanhua11.xyz", "www.rhmanhua12.xyz"],
+        reg: /^https:\/\/www\.rhmanhua(\d+)?\.xyz\/artshow-\d+\.html/,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".margin-fix img")].map(e => e.dataset.original ? e.dataset.original : e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/t(\.\w+)$/, "$1"));
+        },
+        button: [4],
+        insertImg: [".list-videos", 2],
+        go: 1,
+        category: "hcomic"
+    }, {
+        name: "色漫集",
+        host: ["sobt.lat"],
+        reg: /^https:\/\/sobt\.lat\/\w+\/[^\.]+\.html/,
+        imgs: ".post-content a",
+        button: [4],
+        insertImg: [".post-content", 2],
+        customTitle: () => fun.title(" - 色漫集"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "hcomic"
+    }, {
+        name: "155漫画",
+        host: ["155comic.bio", "155comic.cfd", "155comic.buzz", "155comic.autos", "155.lat"],
+        reg: /^https:\/\/155comic\.\w+\/\d+\.html/,
+        imgs: "#post-comic img",
+        button: [4],
+        insertImg: ["#post-comic", 2],
+        customTitle: () => fun.geT("#post-data>h1"),
+        category: "hcomic"
+    }, {
+        name: "18H汉化漫画 介紹頁",
+        host: ["18manga.top", "mt91.top", "cn18h.top"],
+        reg: /^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/cont\.php\?id=/,
+        imgs: async () => {
+            let max = fun.geT("#td-Act+#td-Series").match(/\d+/)[0];
+            let arr = [];
+            let m = fun.ge(".article-content a").href.match(/^(.+\/)(\d+)(\.\w+)$/);
+            let imgDir = m[1];
+            let ex = m[3];
+            for (let i = 1; i <= max; i++) {
+                arr.push(imgDir + i + ex);
+            }
+            return arr;
+        },
+        button: [4],
+        insertImg: [
+            [".content", 0, ".article-content>a"], 2
+        ],
+        go: 1,
+        customTitle: () => fun.geT(".article-content>h3").split("｜")[1],
+        fancybox: {
+            blacklist: 1
+        },
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.sidebar,.modown-ad{display:none!important;}.single .content{margin-right:0px!important;}",
+        category: "hcomic"
+    }, {
+        name: "18H汉化漫画 閱讀頁",
+        host: ["18manga.top", "mt91.top", "cn18h.top"],
+        reg: /^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/imgs\.php\?id=/,
+        imgs: async () => {
+            let next = fun.ge("li.active+li");
+            if (next) {
+                let last = fun.ge("//a[contains(text(),'最大頁') or contains(text(),'最大页')]");
+                let lastDoc = await fun.fetchDoc(last.href);
+                let lastFn = fun.geT("//script[contains(text(),'decodeBinaryString')]", 1, lastDoc).match(/decodeBinaryString\('[^;]+/g)[0];
+                let html = fun.run(lastFn);
+                let tempDoc = fun.doc(html);
+                let lastA = [...fun.gae("a", tempDoc)].pop();
+                let max = lastA.href.match(/(\d+)\.\w+$/)[1];
+                let arr = [];
+                let m = fun.ge("#imgs>a").href.match(/^(.+\/)(\d+)(\.\w+)$/);
+                let imgDir = m[1];
+                let ex = m[3];
+                for (let i = 1; i <= max; i++) {
+                    arr.push(imgDir + i + ex);
+                }
+                return arr;
+            } else {
+                return [...fun.gae("#imgs>a")];
+            }
+        },
+        button: [4],
+        insertImg: ["#imgs", 2],
+        customTitle: () => fun.geT(".article-content>h3"),
+        fancybox: {
+            blacklist: 1
+        },
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.sidebar,.modown-ad{display:none!important;}.single .content{margin-right:0px!important;}",
+        category: "hcomic"
+    }, {
+        name: "hanime1",
+        host: ["hanime1.biz", "h202326.xyz"],
+        reg: /^https:\/\/(hanime1\.biz|h202326\.xyz)\/book\/\d+$/,
+        init: async () => {
+            await fun.waitEle("//div[div[div[a[img[contains(@src,'合成')]]]]]");
+            fun.remove("//div[div[div[a[img[contains(@src,'合成')]]]]]");
+            await fun.delay(200);
+            fun.ge(".blog").scrollIntoView({
+                block: "end"
+            });
+        },
+        imgs: async () => {
+            await fun.waitEle(".blog_section img[title]:not([src*=cover])");
+            thumbnailsSrcArray = [...fun.gae(".blog_section img[title]:not([src*=cover])")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/t(\d+\.\w+)$/, "$1"));
+        },
+        button: [4],
+        insertImg: [
+            [".m-1>.blog_section", 2], 2
+        ],
+        go: 1,
+        customTitle: () => fun.geT(".blog_section h1"),
+        category: "hcomic"
+    }, {
+        name: "JavABC",
+        host: ["javabc.club"],
+        reg: /^https:\/\/javabc\.club\/chapter\/\d+$/i,
+        include: "#enc_img img",
+        init: () => {
+            fun.clearAllTimer();
+            fun.remove("//div[@class='comicpage']/a[img] | //div[@class='comicpage']/div[script] | //div[@id='cp_img']/a[img] | //div[@id='cp_img']/div[script]");
+        },
+        imgs: async () => {
+            await fun.getNP("#enc_img>div,#enc_img>img", "//a[text()='下一页'][@href]", null, ".fanye,.view-bottom-bar");
+            return [...fun.gae("#enc_img img")];
+        },
+        button: [4],
+        insertImg: ["#enc_img", 2],
+        customTitle: () => fun.ge(".comic-name") ? fun.geT(".comic-name") : bookInfo.book_name,
+        css: "img{opacity:1!important;}",
+        category: "hcomic"
+    }, {
+        name: "桃心漫画",
+        host: ["txcomic.com"],
+        reg: /^https:\/\/txcomic\.com\/chapter\/\d+$/i,
+        include: "#enc_img img",
+        init: () => {
+            fun.remove("//div[@class='comicpage']/a[img] | //div[@class='comicpage']/div[script] | //div[@id='cp_img']/a[img] | //div[@id='cp_img']/div[script]");
+        },
+        imgs: "#enc_img img",
+        button: [4],
+        insertImg: ["#enc_img", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章'][@href]",
+        prev: "//a[text()='上一章'][@href]",
+        customTitle: () => fun.ge(".title") ? fun.geT(".title") : bookInfo.book_name + " - " + bookInfo.chapter_name,
+        css: "#pubcdnModal{display:none!important;}",
+        category: "hcomic"
+    }, {
+        name: "日本禁漫屋",
+        host: ["javcomics.site"],
+        reg: /^https:\/\/javcomics\.site\/chapter\/\d+$/i,
+        include: "#enc_img img",
+        imgs: async () => {
+            await fun.getNP("#enc_img>div,#enc_img>img", "//a[text()='下一页'][@href]", null, ".fanye,.view-bottom-bar");
+            return [...fun.gae("#enc_img img")];
+        },
+        button: [4],
+        insertImg: ["#enc_img", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章'][@href]",
+        prev: "//a[text()='上一章'][@href]",
+        css: "img{opacity:1!important;}",
+        category: "hcomic"
+    }, {
+        name: "漫天堂 下拉閱讀頁",
+        host: ["mttang.club"],
+        reg: /^https:\/\/mttang\.club\/\?moeupup-\d+-\d+\.html$/i,
+        imgs: ".panel-body img",
+        button: [4],
+        insertImg: [".panel-body", 2],
+        customTitle: () => fun.title("-下拉观看").replace(/\s?\(\d+P\)/i, ""),
+        category: "hcomic"
+    }, {
+        name: "有色漫画网",
+        host: ["yousemanhua.com"],
+        reg: /^https:\/\/yousemanhua\.com\/index\.php\/chapter\/\d+$/i,
+        imgs: "img[data-original]:not([data-original*='empty.png'])",
+        button: [4],
+        insertImg: [".rd-article-wr,.chapter_content", 2],
+        autoDownload: [0],
+        next: "//a[contains(@class,'j-rd-next')][@_href] | //a[div[span[contains(text(),'下一篇')]]]",
+        prev: "//a[contains(@class,'j-rd-prev')][@_href] | //a[div[span[contains(text(),'上一篇')]]]",
+        customTitle: async () => {
+            if (fun.ge(".read__crumb")) {
+                let arr = fun.geT(".read__crumb").split("  ");
+                return arr[1] + " - " + arr[2];
+            } else {
+                let doc = await fun.fetchDoc(fun.ge(".nav_left>a").href);
+                return fun.title(" - 有色漫画", 0, doc) + " - " + fun.title(" - 有色漫画");
+            }
+        },
         category: "hcomic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -9381,15 +9596,15 @@ document.body.appendChild(text);
         category: "comic"
     }, {
         name: "包子漫画 閱讀",
-        host: ["cn.baozimh.com", "cn.webmota.com", "tw.baozimh.com", "tw.webmota.com", "www.baozimh.com", "www.webmota.com", "cn.kukuc.co", "tw.kukuc.co", "www.kukuc.co", "tw.czmanga.com", "cn.czmanga.com", "www.czmanga.com", "tw.dzmanga.com", "cn.dzmanga.com", "www.dzmanga.com", "tw.dociy.net", "cn.dociy.net", "www.dociy.net"],
+        host: ["cn.baozimh.com", "cn.webmota.com", "tw.baozimh.com", "tw.webmota.com", "www.baozimh.com", "www.webmota.com", "cn.kukuc.co", "tw.kukuc.co", "www.kukuc.co", "tw.czmanga.com", "cn.czmanga.com", "www.czmanga.com", "tw.dzmanga.com", "cn.dzmanga.com", "www.dzmanga.com", "tw.dociy.net", "cn.dociy.net", "www.dociy.net", "tw.twmanga.com", "cn.twmanga.com", "www.twmanga.com"],
         enable: 0,
         reg: /\/comic\/chapter\/[^/]+\/\w+\.html/i,
         include: "//title[contains(text(),'包子')]",
         init: async () => {
             fun.run("document['onkeydown']=null;");
-            await fun.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter");
+            await fun.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter,.bottom-bar-tool");
         },
-        imgs: doc => [...new Set([...fun.gae(".comic-contain amp-img", doc)].map(e => e.getAttribute("src")))],
+        imgs: doc => [...new Set([...fun.gae(".comic-contain amp-img", doc)].map(e => e.dataset.src ? e.dataset.src : e.getAttribute("src")))],
         button: [4],
         insertImg: [".comic-contain", 2],
         go: 1,
@@ -9402,7 +9617,6 @@ document.body.appendChild(text);
         category: "comic"
     }, {
         name: "包子漫画 展開目錄",
-        host: ["cn.baozimh.com", "cn.webmota.com", "tw.baozimh.com", "tw.webmota.com", "www.baozimh.com", "www.webmota.com", "cn.kukuc.co", "tw.kukuc.co", "www.kukuc.co", "tw.czmanga.com", "cn.czmanga.com", "www.czmanga.com", "tw.dzmanga.com", "cn.dzmanga.com", "www.dzmanga.com", "tw.dociy.net", "cn.dociy.net", "www.dociy.net"],
         enable: 0,
         icon: 0,
         key: 0,
@@ -9412,7 +9626,6 @@ document.body.appendChild(text);
         category: "comic"
     }, {
         name: "包子漫画，鏈接新分頁打開",
-        host: ["cn.baozimh.com", "cn.webmota.com", "tw.baozimh.com", "tw.webmota.com", "www.baozimh.com", "www.webmota.com", "cn.kukuc.co", "tw.kukuc.co", "www.kukuc.co", "tw.czmanga.com", "cn.czmanga.com", "www.czmanga.com", "tw.dzmanga.com", "cn.dzmanga.com", "www.dzmanga.com", "tw.dociy.net", "cn.dociy.net", "www.dociy.net"],
         enable: 0,
         icon: 0,
         key: 0,
@@ -13187,8 +13400,12 @@ document.body.appendChild(text);
                     let doc = fun.doc(htmlText);
                     if (!fun.ge(pageEle, doc)) {
                         for (let i = 1; i <= 10; i++) {
-                            doc = await fun.iframeDoc(url, pageEle);
-                            if (doc != null) break;
+                            doc = await fun.iframeSrcDoc(url, pageEle);
+                            if (doc != null) {
+                                break;
+                            } else {
+                                fun.remove("#FullPictureLoadIframe");
+                            }
                         }
                     }
                     if (!doc) doc = fun.doc(htmlText);
@@ -13668,6 +13885,51 @@ document.body.appendChild(text);
             }
             page == "next" ? debug(`\n${title}\n圖片全載下一頁預讀結束`) : debug(`\n${title}\n圖片全載Lazyloading預讀結束`);
         },
+        MutationObserver_aff: () => { //观察者 MutationObserver事件
+            const openEvent = () => {
+                if (fun.ge("span[data-fancybox-current-index]") !== null) {
+                    slideIndex = parseInt(fun.geT("span[data-fancybox-current-index]"), 10) - 1;
+                } else if (fun.ge("span[data-fancybox-index]") !== null) {
+                    slideIndex = parseInt(fun.geT("span[data-fancybox-index]"), 10) - 1;
+                } else if (fun.ge("badge.b-black.counter") !== null) {
+                    slideIndex = parseInt(fun.geT("badge.b-black.counter").match(/\d+/)[0], 10) - 1;
+                }
+                if (typeof slideIndex === "number") {
+                    console.log("open - # " + slideIndex + " slide is open!");
+                }
+            };
+            const ContentContainer = document.body;
+            const configObserver = {
+                childList: true,
+                subtree: true,
+                attributeFilter: ["class"]
+            };
+            //当观察到突变时执行的回调函数
+            const Callbacks = mutationsList => {
+                mutationsList.forEach((item, index) => {
+                    //console.log("index: ", index, " - \n", item);
+                    if (item.type === "attributes") {
+                        //console.log(item);
+                        if (item.target.className === "fancybox-slide fancybox-slide--image fancybox-slide--current fancybox-slide--complete" || item.target.className === "fancybox__slide has-image can-zoom_in is-selected" || item.target.className === "swiper-slide swiper-slide-active") {
+                            console.log(" # ", item);
+                            openEvent();
+                            fun.scrollEvent(slideIndex);
+                        }
+                    } else if (item.type === "childList") {
+                        //console.log(item);
+                        if (item.removedNodes.length > 1 && /fancybox|swiper/.test(item.removedNodes[1].className)) {
+                            console.log(" # ", item);
+                            console.log("close - # " + slideIndex + " slide is closed!");
+                            //setTimeout(closeEvent, 1000);
+                            fun.scrollEvent(slideIndex);
+                        }
+                    }
+                });
+            };
+            //创建一个链接到回调函数的观察者实例
+            const Observer = new MutationObserver(Callbacks);
+            ContentContainer && Observer.observe(ContentContainer, configObserver);
+        },
         insertImg: (imgsArray, ele, mode = 1) => {
             let srcArr = [];
             for (let i = 0; i < imgsArray.length; i++) {
@@ -13815,52 +14077,6 @@ document.body.appendChild(text);
             end.id = "FullPictureLoadEnd";
             end.innerText = `${displayLanguage.str_52}：${noVideoNum}P`;
             fragment.appendChild(end);
-            const MutationObserver_aff = () => { //观察者 MutationObserver事件
-                const openEvent = () => {
-                    if (fun.ge("span[data-fancybox-current-index]") !== null) {
-                        slideIndex = parseInt(fun.geT("span[data-fancybox-current-index]"), 10) - 1;
-                    } else if (fun.ge("span[data-fancybox-index]") !== null) {
-                        slideIndex = parseInt(fun.geT("span[data-fancybox-index]"), 10) - 1;
-                    } else if (fun.ge("badge.b-black.counter") !== null) {
-                        slideIndex = parseInt(fun.geT("badge.b-black.counter").match(/\d+/)[0], 10) - 1;
-                    }
-                    if (typeof slideIndex === "number") {
-                        console.log("open - # " + slideIndex + " slide is open!");
-                    }
-                };
-                const ContentContainer = document.body;
-                const configObserver = {
-                    childList: true,
-                    subtree: true,
-                    attributeFilter: ["class"]
-                };
-                //当观察到突变时执行的回调函数
-                const Callbacks = mutationsList => {
-                    mutationsList.forEach((item, index) => {
-                        //console.log("index: ", index, " - \n", item);
-                        if (item.type === "attributes") {
-                            //console.log(item);
-                            if (item.target.className === "fancybox-slide fancybox-slide--image fancybox-slide--current fancybox-slide--complete" || item.target.className === "fancybox__slide has-image can-zoom_in is-selected" || item.target.className === "swiper-slide swiper-slide-active") {
-                                console.log(" # ", item);
-                                openEvent();
-                                fun.scrollEvent(slideIndex);
-                            }
-                        } else if (item.type === "childList") {
-                            //console.log(item);
-                            if (item.removedNodes.length > 1 && /fancybox|swiper/.test(item.removedNodes[1].className)) {
-                                console.log(" # ", item);
-                                console.log("close - # " + slideIndex + " slide is closed!");
-                                //setTimeout(closeEvent, 1000);
-                                fun.scrollEvent(slideIndex);
-                            }
-                        }
-                    });
-                };
-                //创建一个链接到回调函数的观察者实例
-                const Observer = new MutationObserver(Callbacks);
-                ContentContainer && Observer.observe(ContentContainer, configObserver);
-            };
-            MutationObserver_aff();
             if (srcArr.length > 0 || (srcArr.length >= 0 && videosSrcArray.length > 0)) {
                 if (siteData.insertImg[1] == 2 || siteData.insertImg[1] == 3) fun.picPreload(srcArr);
                 let targetEle;
@@ -13940,6 +14156,7 @@ document.body.appendChild(text);
                         debug("沒有引入FancyboxV5", error);
                     }
                 }
+                fun.MutationObserver_aff();
             } else {
                 fun.showMsg(displayLanguage.str_20);
             }
@@ -14325,11 +14542,7 @@ document.body.appendChild(text);
             }, 20000);
             if (msg == 1) fun.showMsg(displayLanguage.str_05, 0);
             let max;
-            try {
-                max = fun.geT("//td[input]", 1, doc).match(/共(\d+)/)[1];
-            } catch (e) {
-                max = fun.geT(".bottom .subNav", 1, doc).match(/\/(\d+)/)[1];
-            }
+            fun.ge("//td[input]", doc) ? fun.geT("//td[input]", 1, doc).match(/共(\d+)/)[1] : max = fun.geT(".bottom .subNav", 1, doc).match(/\/(\d+)/)[1];
             let links = [];
             url = url.replace(/1\.htm$/, "");
             for (let i = 1; i <= max; i++) {
@@ -14342,11 +14555,20 @@ document.body.appendChild(text);
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let script = [...doc.scripts].find(s => s.innerText.search(/document\.write/) > -1).innerText;
                     let arr = script.split("'><");
-                    let pathArr0, pathArr1, pathArr2;
+                    let host0, pathArr0, pathArr1, pathArr2;
                     if (arr.length == 1) {
                         let arr = script.split(`"+server+"`);
                         if (arr.length == 2) {
+                            host0 = fun.run("server");
                             pathArr0 = arr[1].replace(/(\.[a-z]+).+/i, "$1").replace("\n", "");
+                        } else {
+                            return null;
+                        }
+                    } else if (arr.length == 3) {
+                        let arr = script.split("+");
+                        if (arr.length == 3) {
+                            host0 = fun.run(arr[1]);
+                            pathArr0 = arr[2].split("><")[0].slice(1, -1);
                         } else {
                             return null;
                         }
@@ -14359,8 +14581,7 @@ document.body.appendChild(text);
                     } else {
                         return null;
                     }
-                    if (arr.length == 1) {
-                        let host0 = fun.run("server");
+                    if (arr.length == 1 || arr.length == 3) {
                         let src0 = host0 + pathArr0;
                         return src0;
                     } else {
@@ -14467,6 +14688,7 @@ document.body.appendChild(text);
                     img.setAttribute("crossOrigin", "");
                 }
                 img.onload = () => {
+                    /*
                     let canvas = document.createElement("canvas");
                     let ctx = canvas.getContext("2d");
                     canvas.height = img.naturalWidth;
@@ -14476,6 +14698,16 @@ document.body.appendChild(text);
                         let blobURL = URL.revokeObjectURL(blob);
                         resolve(blobURL);
                     }, type);
+                    */
+                    const canvas = new OffscreenCanvas(img.naturalWidth, img.naturalHeight);
+                    canvas.getContext("2d").drawImage(img, 0, 0);
+                    canvas.convertToBlob({
+                        type: type,
+                        quality: 1
+                    }).then(blob => {
+                        let blobURL = URL.revokeObjectURL(blob);
+                        resolve(blobURL);
+                    });
                 };
                 img.onerror = error => {
                     reject(error);
@@ -14483,6 +14715,7 @@ document.body.appendChild(text);
             });
         },
         imgToBlobURL: (img, type = "image/jpeg") => {
+            /*
             let canvas = document.createElement("canvas");
             canvas.width = img.naturalWidth;
             canvas.height = img.naturalHeight;
@@ -14495,6 +14728,13 @@ document.body.appendChild(text);
                     resolve(blobURL);
                 }, type);
             });
+            */
+            const canvas = new OffscreenCanvas(img.naturalWidth, img.naturalHeight);
+            canvas.getContext("2d").drawImage(img, 0, 0);
+            return canvas.convertToBlob({
+                type: type,
+                quality: 1
+            }).then(blob => URL.createObjectURL(blob));
         },
         imgBlobArr: async (ele, type = "image/jpeg") => {
             let imgs;
@@ -14518,12 +14758,18 @@ document.body.appendChild(text);
                 let img = new Image();
                 img.src = URL.createObjectURL(blob);
                 img.onload = () => {
-                    let canvas = document.createElement("canvas");
-                    let ctx = canvas.getContext("2d");
-                    canvas.height = img.height;
-                    canvas.width = img.width;
-                    ctx.drawImage(img, 0, 0);
-                    canvas.toBlob(resolve, "image/jpeg");
+                    //let canvas = document.createElement("canvas");
+                    //let ctx = canvas.getContext("2d");
+                    //canvas.height = img.height;
+                    //canvas.width = img.width;
+                    //ctx.drawImage(img, 0, 0);
+                    //canvas.toBlob(resolve, "image/jpeg");
+                    const canvas = new OffscreenCanvas(img.width, img.height);
+                    canvas.getContext("2d").drawImage(img, 0, 0);
+                    canvas.convertToBlob({
+                        type: "image/jpeg",
+                        quality: 1
+                    }).then(resolve)
                 };
             });
         },
@@ -15778,6 +16024,7 @@ document.body.appendChild(text);
 a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadImageSmall] {
     padding: 0 !important;
     margin: 0 !important;
+    display: unset !important;
 }
 
 #FullPictureLoadEnd {
@@ -15871,7 +16118,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
-    display: inline-block;
+    display: inline-block !important;
     text-align: center;
     align-items: flex-start;
     cursor: default;
