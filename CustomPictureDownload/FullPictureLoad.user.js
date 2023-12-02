@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.4
+// @version            1.7.5
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1655,7 +1655,7 @@
         name: "男人社区",
         host: "xxk222.com",
         link: "https://xxk222.com/arttype/meinv.html",
-        reg: /^https:\/\/xxk222\.com\/artdetail\/\w+\.html/i,
+        reg: /^https?:\/\/xxk222\.com\/artdetail\/\w+\.html/i,
         include: "//strong[text()='美女美图']",
         imgs: async () => {
             await fun.getNP(".single-video-info-content>p,.single-video-info-content>img", ".pagination li.active+li>a", null, ".pagination");
@@ -2269,7 +2269,7 @@
             if (load) load.remove();
         },
         imgs: async () => {
-            await fun.getNP(".images-card", "//a[text()='Next' or text()='下一页' or text()='次へ']");
+            await fun.getNP(".images-card", "li.active+li>a", null, ".pagination");
             thumbnailsSrcArray = [...fun.gae(".images-card img")].map(e => e.dataset.src ? e.dataset.src : e.src);
             fun.clearAllTimer(2);
             fun.showMsg(displayLanguage.str_05, 0);
@@ -3471,7 +3471,7 @@
         host: ["www.4khd.com", "www.4kep.com", "xjav.cc", "hhhy.quest", "vxkk.cc"],
         reg: /(www\.4k(hd|ep)\.com|xjav\.cc|hhhy\.quest|vxkk\.cc)\/\d+\/\d+\/\d+\/.+\.html/,
         imgs: async () => {
-            await fun.getNP("#basicExample>a,figure.wp-block-image", ".current+li>a", null, ".page-link-box");
+            await fun.getNP("#basicExample>a,figure.wp-block-image", ".current+li>a", null, ".page-link-box", 0, null, 1, 0);
             let mobile = fun.ge("figure.wp-block-image>a");
             if (mobile) {
                 thumbnailsSrcArray = [...fun.gae("#basicExample>a>img,figure.wp-block-image>a>img")].map(e => e.src.replace("?w=1000", "?w=100"));
@@ -6071,20 +6071,6 @@
         },
         category: "nsfw2"
     }, {
-        name: "xher.net",
-        host: ["xher.net"],
-        reg: /xher\.net\/index\.php\?\/category\/\d+$/i,
-        imgs: async () => {
-            await fun.getNP("#thumbnails>li", ".pageNumberSelected+a", null, ".navigationBar");
-            return [...fun.gae("#thumbnails img")].map(e => e.src.replace("_data/i/", "").replace(/-(2s|xs|sm||me|la|xl)\./, "."));
-        },
-        button: [4],
-        insertImg: [
-            [".navigationBar", 2], 2
-        ],
-        go: 1,
-        category: "nsfw2"
-    }, {
         name: "Bunkr",
         host: ["bunkr-albums.io"],
         reg: /^https:\/\/bunkrr\.su\/a\/\w+/i,
@@ -7938,7 +7924,7 @@
         host: ["twhentai.com"],
         reg: /twhentai\.com\/hentai_manga\/\d+\/$/,
         imgs: async () => {
-            await fun.getNP(".recommended-grids:not(.english-grid)", ".pagination li.active+li:not(.disabled)>a", null, ".pagination");
+            await fun.getNP("//div[div[a[@class='thumbnail'][img]]]", ".pagination li.active+li:not(.disabled)>a", null, ".pagination");
             thumbnailsSrcArray = [...fun.gae(".recommended img")].map(e => e.src);
             return thumbnailsSrcArray.map(e => e.replace("-thumb265x385", ""));
         },
@@ -13342,7 +13328,7 @@ document.body.appendChild(text);
                 return check.ok ? check.src : null;
             }).filter(item => item);
         },
-        getNP: async (pageEle, nextLinkEle, lastEle = null, replaceElement = null, time = 0, dataset = null, mag = 1) => {
+        getNP: async (pageEle, nextLinkEle, lastEle = null, replaceElement = null, time = 0, dataset = null, mag = 1, retry = 10) => {
             //翻頁模式聚集所有圖片或是預覽縮圖然後fun.getImgA()
             //用在規則init，fun.getNP(picsEle, nextLinkEle, lastEle, replaceElement, time);
             if (fun.ge(".FullPictureLoadImage")) return;
@@ -13399,7 +13385,7 @@ document.body.appendChild(text);
                 }).then(async htmlText => {
                     let doc = fun.doc(htmlText);
                     if (!fun.ge(pageEle, doc)) {
-                        for (let i = 1; i <= 10; i++) {
+                        for (let i = 1; i <= retry; i++) {
                             doc = await fun.iframeSrcDoc(url, pageEle);
                             if (doc != null) {
                                 break;
