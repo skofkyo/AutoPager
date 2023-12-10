@@ -308,6 +308,9 @@ Mitaku
 4KHD
 *://www.4khd.com/*/*/*/*.html
 
+MissKON.com
+/^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
+
 Buon Dua
 *://buondua.com/*-photos-*
 
@@ -1594,6 +1597,7 @@ https://www.eyval.net/*
 *://m.gsrx.org/plus/view-*.html
 *://*.*tu11.com/*/*/*.html
 *erotic.pics*
+/^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
 /^https?:\/\/www\.rosi\d+\.cc\/\d+$/
 *://tupianwu.com/post/*/
