@@ -1330,8 +1330,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://mrcong.com/">MrCong</a></td>
-                <td>完整無修正的圖片需要下載，聚集的只是預覽圖</td>
+                <td><a href="https://misskon.com/">MissKON.com</a></td>
+                <td><a href="https://mrcong.com/">MrCong</a>，完整無修正的圖片需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
                 <td><a href="https://hotgirl.asia/">HotAsiaGirl</a></td>
@@ -2766,6 +2766,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td>link1s.com</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>Binto.click</td>
                 <td>自動跳轉</td>
             </tr>
             <tr>
