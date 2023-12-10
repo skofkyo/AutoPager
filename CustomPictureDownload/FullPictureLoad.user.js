@@ -2980,7 +2980,7 @@
         name: "Asianude4u",
         host: ["www.asianude4u.net"],
         reg: /www\.asianude4u\.net\/.+\/.+\/(#small-1)?$/,
-        exclude: "//a[@rel='category tag' and text()='Videos' or text()='Madonna-AV']",
+        exclude: "//a[@rel='category tag' and text()='Videos'] | //a[@rel='category tag' and text()='Madonna-AV']",
         imgs: () => fun.ge(".wp-block-image a[href*=attachment_id]") ? [...fun.gae(".wp-block-image img[data-id]")] : [...fun.gae(".wp-block-image>a,.mgl-img-container>a,.gallery a")].map(e => e.href),
         button: [4],
         //insertImg: ["//li[img[@id='bigImg']]", 1],
@@ -3010,6 +3010,16 @@
             [".responsive-tabs-wrapper", 2], 2
         ],
         customTitle: () => fun.geT(".entry-title"),
+        category: "nsfw1"
+    }, {
+        name: "Nudegirls4u",
+        host: ["nudegirls4u.com"],
+        reg: /^https?:\/\/nudegirls4u\.com\/[^\/]+\/$/,
+        imgs: ".rgg-imagegrid>a",
+        button: [4],
+        insertImg: [".rgg-container", 2],
+        customTitle: () => fun.geT(".entry-title"),
+        css: ".rgg-imagegrid{height:auto!important}",
         category: "nsfw1"
     }, {
         name: "Chinese Beauties",
@@ -3554,9 +3564,18 @@
         css: "footer+script+div[id]{display:none!important}",
         category: "nsfw2"
     }, {
-        name: "MrCong.com",
-        host: ["mrcong.com"],
-        reg: /mrcong\.com\/.+\//,
+        name: "MrCong.com/MissKON.com",
+        host: ["mrcong.com", "misskon.com"],
+        reg: /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/,
+        imgs: () => fun.getImg(".entry img[decoding]", fun.geT(".page-link>*:last-child"), 4),
+        button: [4],
+        insertImg: ["//p[img[@decoding]]", 1],
+        customTitle: () => fun.geT("h1").replace(/\(\d+\s?photos?\s?(\+\s?\d+\s?videos?)?\)/gi, "").trim(),
+        category: "nsfw1"
+    }, {
+        name: "MrCong.com/MissKON.com",
+        host: ["mrcong.com", "misskon.com"],
+        reg: /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/,
         imgs: () => fun.getImg(".entry img[decoding]", fun.geT(".page-link>*:last-child"), 4),
         button: [4],
         insertImg: ["//p[img[@decoding]]", 1],
@@ -12624,6 +12643,15 @@ document.body.appendChild(text);
         include: "a.site-logo[href='https://link1s.com/'],a.logo-image[href='https://link1s.com/']",
         init: async () => {
             if (await fun.waitEle("//button[@onclick='link1sgo()'] | //button[@id='link' and contains(@style,'none')] | //a[text()='Get Link']")) fun.ge("//button[@onclick='link1sgo()'] | //a[@id='link1s'] | //a[text()='Get Link']").click();
+        },
+        category: "none"
+    }, {
+        name: "Binto.click 自動跳轉",
+        host: ["binto.click"],
+        reg: /^https?:\/\/binto\.click\/\w+$/i,
+        include: "#go-link",
+        init: async () => {
+            if (await fun.waitEle("//a[text()='Get Link']")) location.href = fun.ge("//a[text()='Get Link']").href;
         },
         category: "none"
     }, {
