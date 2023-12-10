@@ -1,4 +1,4 @@
-2023/12/02 01:41
+2023/12/10 23:27
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -133,9 +133,44 @@ Lootiu.Com
 *://www.dv67.com/plus/view-*.html
 *://m.dv67.com/plus/view-*.html
 
+新娱乐网
+*://www.xinent.net/plus/view-*.html
+*://m.xinent.net/plus/view-*.html
+
+福建热线
+*://www.fjrx.org/plus/view-*.html
+*://m.fjrx.org/plus/view-*.html
+
+山东热线
+*://www.sdrx.org/plus/view-*.html
+*://m.sdrx.org/plus/view-*.html
+
+广西热线
+*://www.gxrx.org/plus/view-*.html
+*://m.gxrx.org/plus/view-*.html
+武汉热线
+*://www.whrx.org/plus/view-*.html
+*://m.whrx.org/plus/view-*.html
+
+天津热线
+*://www.tjrx.org/plus/view-*.html
+*://m.tjrx.org/plus/view-*.html
+
+云南热线
+*://www.ynrx.org/plus/view-*.html
+*://m.ynrx.org/plus/view-*.html
+
+甘肃热线
+*://www.gsrx.org/plus/view-*.html
+*://m.gsrx.org/plus/view-*.html
+
 四海资讯
 *://www.shzx.org/a/*.html
 *://m.shzx.org/a/*.html
+
+娱乐吧
+*://www.yuleba.org/a/*.html
+*://m.entba.net/a/*.html
 
 秀人集
 *://www.xiuren*.*/*/*.html
@@ -342,6 +377,9 @@ Coomer
 
 牛C网导航
 *://niuc*.com/*.html
+
+Erotic Pics
+*erotic.pics*
 
 xHamster
 *xhamster.com/photos/gallery*
@@ -616,26 +654,36 @@ Fapello
 169图片大全
 *://*.169tp.com/*/*/*/*.html
 
-中看图片大全
-*://www.zkjmpx.com/news/*.html
-
-图片发达网
-*://www.tufada.com/tu*.html
-
-昆山美图网
-*://www.ksxx365.com/*/*.html
+亿秀美女
+*://*.*tu11.com/*/*/*.html
 
 桃子啦
-*://www.tzala.com/*/*.html
-
-漫爱美图
-*://www.mash120.com/*/*.html
-
-雾四图片网
-*://www.wslak.com/*/*.html
-
-屈求图库
-*://www.777url.com/*/*.html
+*://www.tzala.com/book/*.html
+*://www.mash120.com/meitu/*.html
+*://www.wslak.com/tu/*.html
+*://www.777url.com/pic/*.html
+*://www.tufada.com/tu*.html
+*://www.zkjmpx.com/news/*.html
+*://www.hsnmm.com/tu/*.html
+*://www.mmdmlt.com/tp/*.html
+*://www.zlsmm.com/meitu/*.html
+*://www.xr70.com/tp/*.html
+*://www.ksxx365.com/meitu/*.html
+*://www.ksxx360.com/meitu/*.html
+*://www.ngptp.com/tp/*.html
+*://www.t7mm.com/tp/*.html
+*://www.sqhyyz.com/meitu/*.html
+*://www.gxwpjc.com/pic/*.html
+*://www.ycwlx.com/tupian/*.html
+*://www.mmxsl.com/meitu/*.html
+*://www.i9ke.com/pic/*.html
+*://www.jsjfgkgs.com/meitu/*.html
+*://www.yjpfxs.com/tu/*.html
+*://www.cmylzx.com/news/*.html
+*://www.sskge.com/tu/*.html
+*://www.t7mm.com/tp/*.html
+*://www.iduobi.com/meitu/*.html
+*://www.woxiutu.com/tupian/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -667,6 +715,15 @@ Nuded Photo
 
 XO福利圖
 *://diedk1123-ake33i.xofulitu2za222.sbs/arttype/*
+
+tu928美女写真网
+/^https?:\/\/tu928\.com\/\d+\.html/
+
+ROSI美女写真
+*://rosixiezhen.cc/rosi_mm/*.html
+
+图片屋
+*://tupianwu.com/post/*/
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -745,6 +802,9 @@ Pururin
 ACG漫画网
 *://www.acgomh.com/*/*.html
 
+禁漫天堂
+/^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
+
 紳士漫畫
 *://www.wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
@@ -798,6 +858,7 @@ JComic
 
 琴瑟漫畫
 *://sixcomic.com/chapter/*
+*://www.sixacg.org/chapter/*
 
 琴瑟書庫
 *://sixacg.com/chapter/*
@@ -1347,6 +1408,7 @@ https://www.nuyet.com/gallery/*
 *://litu100.xyz/comic/id-*/*.html
 *://mhdnf.xyz/play?linkId=*
 *://www.acgomh.com/*/*.html
+/^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
 *://www.wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
 *://ahri8.top/readOnline2.php?ID=*
@@ -1435,6 +1497,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://taotuhome.com/*.html
 *123548.xyz/e/action/ShowInfo.php*
 *://sixcomic.com/chapter/*
+*://www.sixacg.org/chapter/*
 *://sixacg.com/chapter/*
 *://www.502x.com/*/*.html
 *://djjpg.com/*.html
@@ -1497,15 +1560,8 @@ https://www.eyval.net/*
 *siwake.cc*
 *://www.dv67.com/plus/view-*.html
 *://m.dv67.com/plus/view-*.html
-*://www.zkjmpx.com/news/*.html
-*://www.tufada.com/tu*.html
 *hentaipal.com*
 *://www.1y.is/*/*.html
-*://www.ksxx365.com/*/*.html
-*://www.tzala.com/*/*.html
-*://www.mash120.com/*/*.html
-*://www.wslak.com/*/*.html
-*://www.777url.com/*/*.html
 *://www.mmav.me/photo/*.html
 *://hdcomic.com/chapter/*
 *://guixiu.org/post/*.html
@@ -1517,6 +1573,29 @@ https://www.eyval.net/*
 *://18jjj.cyou/chapter/*
 *://diedk1123-ake33i.xofulitu2za222.sbs/arttype/*
 *://toptoon*/*/*.html
+*://www.xinent.net/plus/view-*.html
+*://m.xinent.net/plus/view-*.html
+*://www.yuleba.org/a/*.html
+*://m.entba.net/a/*.html
+*://www.fjrx.org/plus/view-*.html
+*://m.fjrx.org/plus/view-*.html
+*://www.sdrx.org/plus/view-*.html
+*://m.sdrx.org/plus/view-*.html
+*://www.gxrx.org/plus/view-*.html
+*://m.gxrx.org/plus/view-*.html
+*://www.whrx.org/plus/view-*.html
+*://m.whrx.org/plus/view-*.html
+*://www.tjrx.org/plus/view-*.html
+*://m.tjrx.org/plus/view-*.html
+*://www.ynrx.org/plus/view-*.html
+*://m.ynrx.org/plus/view-*.html
+*://www.gsrx.org/plus/view-*.html
+*://m.gsrx.org/plus/view-*.html
+*://*.*tu11.com/*/*/*.html
+*erotic.pics*
+*://rosixiezhen.cc/rosi_mm/*.html
+*://tupianwu.com/post/*/
+/^https?:\/\/tu928\.com\/\d+\.html/
 /^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
