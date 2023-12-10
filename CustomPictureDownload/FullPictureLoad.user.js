@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.6
+// @version            1.7.7
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -647,8 +647,9 @@
         category: "nsfw1"
     }, {
         name: "ROSI美女写真",
-        host: ["rosixiezhen.cc"],
-        reg: /^https?:\/\/rosixiezhen\.cc\/rosi_mm\/\d+\.html/i,
+        host: ["www.rosixiezhen.cc", "rosixiezhen.cc", "www.rosi365.cc", "www.rosi360.cc", "www.2meinv.cc"],
+        reg: /^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/i,
+        exclude: "//span/a[text()='ROSI视频']",
         init: () => {
             let pag = [...fun.gae(".pagination2")];
             if (pag.length > 0) pag[0].remove();
@@ -669,6 +670,31 @@
         next: ".article-nav-prev>a",
         prev: ".article-nav-next>.a",
         customTitle: () => fun.geT(".article-title"),
+        category: "nsfw1"
+    }, {
+        name: "ROSI小莉最新写真",
+        host: ["www.rosi211.cc"],
+        reg: /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/i,
+        init: () => {
+            let pag = [...fun.gae(".wp-pagenavi")];
+            if (pag.length > 0) pag[0].remove();
+            let ele = fun.ge(".entry-header");
+            if (ele) {
+                let x = fun.ge("article.post");
+                x.parentNode.insertBefore(ele, x);
+            }
+        },
+        imgs: () => {
+            let links = [...new Set([...fun.gae(".wp-pagenavi a")].map(a => a.href))];
+            return fun.getImgA("article img", links);
+        },
+        button: [4],
+        insertImg: ["article.post", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: () => fun.geT(".entry-title"),
+        css: "@media only screen and (max-width:480px){#primary{padding:6px !important}.col-md-12{padding:0px !important}}",
         category: "nsfw1"
     }, {
         name: "闺秀网",
@@ -1773,7 +1799,7 @@
         imgs: async () => {
             await fun.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a");
             try {
-                thumbnailsSrcArray = [...fun.gae(".list-item-image img")].map(e => e.src).sort((a, b) => a.match(/-(\d+)\.md\./)[1] - b.match(/-(\d+)\.md\./)[1]);
+                thumbnailsSrcArray = [...fun.gae(".list-item-image img")].map(e => e.src.replace(/(-\d+)-1(\.md\.\w+)$/i, "$1$2")).sort((a, b) => a.match(/-(\d+)\.md\./)[1] - b.match(/-(\d+)\.md\./)[1]);
             } catch (e) {
                 thumbnailsSrcArray = [...fun.gae(".list-item-image img")].map(e => e.src).sort();
             }
