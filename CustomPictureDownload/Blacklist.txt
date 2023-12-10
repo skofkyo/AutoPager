@@ -1,4 +1,4 @@
-2023/12/10 23:27
+2023/12/11 03:43
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -720,7 +720,8 @@ tu928美女写真网
 /^https?:\/\/tu928\.com\/\d+\.html/
 
 ROSI美女写真
-*://rosixiezhen.cc/rosi_mm/*.html
+/^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
+/^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
 
 图片屋
 *://tupianwu.com/post/*/
@@ -1593,7 +1594,8 @@ https://www.eyval.net/*
 *://m.gsrx.org/plus/view-*.html
 *://*.*tu11.com/*/*/*.html
 *erotic.pics*
-*://rosixiezhen.cc/rosi_mm/*.html
+/^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
+/^https?:\/\/www\.rosi\d+\.cc\/\d+$/
 *://tupianwu.com/post/*/
 /^https?:\/\/tu928\.com\/\d+\.html/
 /^https://www\.hexieshe\.cn/\d+/$/
