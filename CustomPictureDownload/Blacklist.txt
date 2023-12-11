@@ -1,4 +1,4 @@
-2023/12/11 03:43
+2023/12/11 20:44
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -121,6 +121,9 @@ NứngVL
 
 Lootiu.Com
 *://lootiu.com/gallery/*.cfg*
+
+Depday-Info
+*://depday.info/v2/*.html*
 
 萝丝派
 *://www.yylsp.com/*.html
@@ -1597,6 +1600,7 @@ https://www.eyval.net/*
 *://m.gsrx.org/plus/view-*.html
 *://*.*tu11.com/*/*/*.html
 *erotic.pics*
+*://depday.info/v2/*.html*
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
 /^https?:\/\/www\.rosi\d+\.cc\/\d+$/
