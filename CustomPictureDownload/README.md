@@ -680,7 +680,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/11 03:43</p>
+<p>2023/12/11 20:44</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1352,6 +1352,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://4kup.net/">4KUP</a></td>
                 <td>高解析原圖需要下載，聚集的只是預覽圖</td>
+            </tr>
+            <tr>
+                <td><a href="https://imgasd.com/">Imgasd</a></td>
+                <td>預覽圖只給10張，完整需要下載。</td>
             </tr>
             <tr>
                 <td><a href="https://blog.baobua.net/mlem">BAOBUA.COM</a></td>
@@ -2755,6 +2759,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td>4kup.net</td>
                 <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>Imgasd</td>
+                <td>下載鏈結自動跳轉</td>
             </tr>
             <tr>
                 <td>ouo.io</td>
