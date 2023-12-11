@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.7
+// @version            1.7.8
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -382,9 +382,9 @@
         customTitle: () => document.title.split("|")[0].slice(10).trim(),
         category: "nsfw2"
     }, {
-        name: "www.depvailon.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com",
-        host: ["www.depvailon.com", "pic.yailay.com", "nungvl.net", "www.kaizty.com", "lootiu.com"],
-        reg: /(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$|lootiu\.com\/gallery\/.+\.cfg$|(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html\?m=1$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html\?m=1$|nungvl\.net\/gallerys\/\d+\.cg\?m=1$|lootiu\.com\/gallery\/.+\.cfg\?m=1$/i,
+        name: "www.depvailon.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com depday.info",
+        host: ["www.depvailon.com", "pic.yailay.com", "nungvl.net", "www.kaizty.com", "lootiu.com", "depday.info"],
+        reg: /(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$|lootiu\.com\/gallery\/.+\.cfg$|(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html\?m=1$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html\?m=1$|nungvl\.net\/gallerys\/\d+\.cg\?m=1$|lootiu\.com\/gallery\/.+\.cfg\?m=1$|depday\.info\/v2\/\w+\.html/i,
         imgs: () => {
             let max;
             try {
@@ -396,7 +396,7 @@
         },
         button: [4],
         insertImg: [".contentme,.contentme2", 2],
-        customTitle: () => document.title.split("|")[0].slice(10).trim(),
+        customTitle: () => document.title.split("|")[0].replace(/^[a-z-\s\.]+:/i, "").replace("NứngVL.net:", "").replace(/【\d+P】|\[\d+[\w\s\+\.]+\]/i, "").trim(),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
@@ -3573,15 +3573,6 @@
         customTitle: () => fun.geT("h1").replace(/\(\d+\s?photos?\s?(\+\s?\d+\s?videos?)?\)/gi, "").trim(),
         category: "nsfw1"
     }, {
-        name: "MrCong.com/MissKON.com",
-        host: ["mrcong.com", "misskon.com"],
-        reg: /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/,
-        imgs: () => fun.getImg(".entry img[decoding]", fun.geT(".page-link>*:last-child"), 4),
-        button: [4],
-        insertImg: ["//p[img[@decoding]]", 1],
-        customTitle: () => fun.geT("h1").replace(/\(\d+\s?photos?\s?(\+\s?\d+\s?videos?)?\)/gi, "").trim(),
-        category: "nsfw1"
-    }, {
         name: "Xiuren",
         host: ["xiuren.biz"],
         reg: /^https?:\/\/xiuren\.biz\/[^\/]+\//,
@@ -4941,6 +4932,15 @@
         prev: "a[rel=next]",
         customTitle: () => fun.geT(".entry-title"),
         category: "nsfw2"
+    }, {
+        name: "Imgasd",
+        host: ["imgasd.com"],
+        reg: /^https?:\/\/imgasd\.com\/article\/\d+$/,
+        imgs: ".imgs>img[alt]",
+        button: [4],
+        insertImg: [".imgs", 2],
+        customTitle: () => fun.geT(".content>h1"),
+        category: "nsfw1"
     }, {
         name: "Fliporn",
         host: ["fliporn.biz"],
@@ -7091,9 +7091,9 @@
         category: "nsfw2"
     }, {
         name: "魅影画廊",
-        host: ["www.wc1.es", "myhl5.uno"],
+        host: ["www.wc1.es", "myhl5.uno", "www.jb9.es"],
         link: "https://wc2.es/myhl",
-        reg: /^https?:\/\/(www\.wc1\.es|myhl\d.uno)\/\d+\.html$/i,
+        reg: /^https?:\/\/(www\.wc1\.es|myhl\d.uno|www\.jb\d\.es)\/\d+\.html$/i,
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".gallery a")].map(a => a.href);
             let xhrNum = 0;
@@ -12603,6 +12603,25 @@ document.body.appendChild(text);
                 fun.ge(eleArr[i]).click();
                 await fun.delay(200);
             }
+        },
+        category: "none"
+    }, {
+        name: "Imgasd 自動跳轉",
+        reg: /\/blog\/post\d\?slid=\w+/i,
+        init: async () => {
+            let ele = "//span[text()='Click here to continue']";
+            if (await fun.waitEle(ele)) fun.ge(ele).click();
+        },
+        category: "none"
+    }, {
+        name: "terabox.fun 自動跳轉",
+        host: ["terabox.fun"],
+        reg: /^https?:\/\/terabox\.fun\/slmiddlepage\//,
+        init: async () => {
+            let ele = ".btn.active";
+            setInterval(async () => {
+                if (await fun.waitEle(ele)) fun.ge(ele).click();
+            }, 1000);
         },
         category: "none"
     }, {
