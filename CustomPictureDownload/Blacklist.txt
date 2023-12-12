@@ -1,4 +1,4 @@
-2023/12/11 20:44
+2023/12/12 23:23
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -36,8 +36,8 @@ PimpAndHost相簿
 TWHentai圖片清單頁
 /twhentai\.com\/hentai_manga\/\d+\/$/
 
-Xiutaku/Kostaku
-/^https?:\/\/(xiutaku\.com|kostaku\.art)\/\d+$/
+Xiutaku/Kiutaku
+/^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
 
 免費私房圖
 /^https?:\/\/www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com\/\w+\/\w+\/\d+\/\d+\.html$/
@@ -315,7 +315,7 @@ MissKON.com
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 
 Buon Dua
-*://buondua.com/*-photos-*
+/buondua\.(com|us)\/(?!hot|collection)[^\?]+$/
 
 BAOBUA.COM
 *://www.baobua.net/post/*
@@ -1317,7 +1317,7 @@ https://www.nuyet.com/gallery/*
 *://xgirlscollection.com/collection/*
 *img3xgirls.com/album/*
 *://www.4khd.com/*/*/*/*.html
-/://buondua.com/[^\\?]+/
+/buondua\.(com|us)\/(?!hot|collection)[^\?]+$/
 /^https://hotgirlchina\.com/[^\/]+/$/
 *://hotgirlchina.com/*-photos*/
 *://theasiagirl.com/*-photos*/
@@ -1621,7 +1621,7 @@ https://www.eyval.net/*
 /^https?://hotgirl\.asia/[^/]+/$/
 /pimpandhost\.com/album/\d+/
 /twhentai\.com/hentai_manga/\d+/$/
-/^https?://(xiutaku\.com|kostaku\.art)/\d+$/
+/^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
 /^https?://www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com/\w+/\w+/\d+/\d+\.html$/
 /^https?://(www\.rosi8\.net|www\.sfjpg\.(com|net)|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
 /^https?://heysexgirl\.com/archives/\d+$/
