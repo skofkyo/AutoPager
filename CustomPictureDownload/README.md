@@ -680,7 +680,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/11 20:44</p>
+<p>2023/12/12 23:23</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -828,7 +828,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://kostaku.art/">Kostaku</a></td>
+                <td><a href="https://kiutaku.com/">Kiutaku</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1467,7 +1467,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://buondua.com/">Buon Dua</a></td>
-                <td></td>
+                <td><a href="https://buondua.us/">buondua.us</a></td>
             </tr>
             <tr>
                 <td><a href="https://hotgirl.biz/">Hotgirl.biz</a></td>
@@ -2248,6 +2248,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://txcomic.com/">桃心漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.topcomic.online/">嘿嘿漫画</a></td>
                 <td></td>
             </tr>
             <tr>
