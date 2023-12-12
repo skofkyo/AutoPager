@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.9
+// @version            1.7.10
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -14902,7 +14902,7 @@ document.body.appendChild(text);
             }, 20000);
             if (msg == 1) fun.showMsg(displayLanguage.str_05, 0);
             let max;
-            fun.ge("//td[input]", doc) ? fun.geT("//td[input]", 1, doc).match(/共(\d+)/)[1] : max = fun.geT(".bottom .subNav", 1, doc).match(/\/(\d+)/)[1];
+            fun.ge("//td[input]", doc) ? max = fun.geT("//td[input]", 1, doc).match(/共(\d+)/)[1] : max = fun.geT(".bottom .subNav", 1, doc).match(/\/(\d+)/)[1];
             let links = [];
             url = url.replace(/1\.htm$/, "");
             for (let i = 1; i <= max; i++) {
