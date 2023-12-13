@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.13
+// @version            1.7.14
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1781,14 +1781,15 @@
     }, {
         name: "妞妞之家",
         host: ["niuniuhome.club"],
-        reg: /niuniuhome\.club\/[^\/]+\/$/,
+        reg: /^https?:\/\/niuniuhome\.club\/[^\/]+\/$|^https?:\/\/niuniuhome\.club\/\?p=\d+$/,
         imgs: ".entry-content img",
         button: [4],
         insertImg: [".post-content", 2],
         autoDownload: [0],
         next: "a.post-nav-prev",
         prev: "a.post-nav-next",
-        customTitle: () => fun.geT(".post-title"),
+        customTitle: () => fun.geT(".post-title").replace(/\(\d+P\)/i, ""),
+        css: ".post-inner{width:98%!important;max-width:98%!important;padding:0!important}",
         category: "nsfw1"
     }, {
         name: "PixiBB",
@@ -1834,7 +1835,8 @@
             await fun.delay(2000);
             let buttonArr = [
                 "//span[text()='Display Inline']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']",
-                "//span[text()='Infinite Scroll']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']"
+                "//span[text()='Infinite Scroll']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']",
+                "//span[text()='Read Using Scrolling']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']"
             ];
             for (let i in buttonArr) {
                 if (fun.ge(buttonArr[i])) {
