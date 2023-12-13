@@ -1,4 +1,4 @@
-2023/12/12 23:23
+2023/12/13 22:25
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -731,6 +731,9 @@ ROSI美女写真
 
 图片屋
 *://tupianwu.com/post/*/
+
+妞妞之家
+*://niuniuhome.club/?p=*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1601,6 +1604,7 @@ https://www.eyval.net/*
 *://*.*tu11.com/*/*/*.html
 *erotic.pics*
 *://depday.info/v2/*.html*
+*://niuniuhome.club/?p=*
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
 /^https?:\/\/www\.rosi\d+\.cc\/\d+$/
