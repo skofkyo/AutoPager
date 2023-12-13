@@ -7355,10 +7355,15 @@
         imgs: async () => {
             fun.showMsg(displayLanguage.str_07, 0);
             let doc = await fun.fetchDoc(fun.ge(".gdtm a,.gdtl a").href);
-            let url = fun.ge("a[href*=fullimg]", doc).href;
-            let res = await fun.xhrHEAD(url);
-            let finalUrl = res.finalUrl;
-            return /login\.php/.test(finalUrl) ? fun.getImgA("#img", ".gdtm a,.gdtl a", 100) : fun.getImgA("a[href*=fullimg]", ".gdtm a,.gdtl a", 100);
+            let fullimg = fun.ge("a[href*=fullimg]", doc);
+            if (fullimg) {
+                let url = fullimg.href;
+                let res = await fun.xhrHEAD(url);
+                let finalUrl = res.finalUrl;
+                return /login\.php/.test(finalUrl) ? fun.getImgA("#img", ".gdtm a,.gdtl a", 100) : fun.getImgA("a[href*=fullimg]", ".gdtm a,.gdtl a", 100);
+            } else {
+                return fun.getImgA("#img", ".gdtm a,.gdtl a", 100);
+            }
         },
         button: [4],
         insertImg: [
