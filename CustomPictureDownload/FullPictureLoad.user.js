@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.11
+// @version            1.7.12
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -865,10 +865,10 @@
         name: "微密猫",
         host: ["wememiao.com", "wememao.com", "weme.su", "weme2.com", "weme4.com", "weme5.com", "weme6.com", "weme7.com", "weme9.com"],
         reg: /(wememiao\.com|wememao\.com|weme\.su|weme\d\.com)\/archives\/\d+/i,
-        imgs: "a[data-fancybox]",
+        imgs: "figure.wp-block-image a[data-fancybox]",
         button: [4],
         insertImg: [
-            [".article-content", 0, "figure.wp-block-image"], 2
+            [".article-content", 0, "figure.wp-block-image,.code-block"], 2
         ],
         autoDownload: [0],
         next: ".article-nav-prev a",
@@ -879,6 +879,7 @@
             v: 3,
             css: false
         },
+        css: ".code-block{display:none!important;}",
         category: "nsfw1"
     }, {
         name: "优美图录",
@@ -15338,7 +15339,7 @@ document.body.appendChild(text);
                             picNum: picNum
                         });
                         getDataMsg(displayLanguage.str_25, picNum, imgsNum);
-                    } else if (/^image|^video/.test(blob.type)) {
+                    } else if (/^image|^video|text\/base64\.jpg/.test(blob.type)) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
@@ -15559,6 +15560,8 @@ document.body.appendChild(text);
                             if (/octet-stream/.test(type) /* || type == "image/webp"*/ ) {
                                 blobData = await fun.blobToJpgBlob(blobData);
                                 ex = "jpg";
+                            } else if (/^text\/base64\.jpg/.test(type)) {
+                                ex = "jpg";
                             } else {
                                 ex = type.split("/")[1].match(/\w+/)[0];
                             }
@@ -15572,11 +15575,7 @@ document.body.appendChild(text);
                             }
                         }
                         let fileName;
-                        if (ex == "mp4") {
-                            fileName = `${blobDataArray[i].picNum}V.${(ex)}`;
-                        } else {
-                            fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
-                        }
+                        ex == "mp4" ? fileName = `${blobDataArray[i].picNum}V.${(ex)}` : fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
                         if (options.zip == 1) {
                             //console.log(`第${n}/${blobDataArray.length}張，檔案名：${fileName}，大小：${parseInt(blobDataArray[i].blob.size / 1024, 10)} Kb`);
                             zipFolder.file(fileName, blobData, {
