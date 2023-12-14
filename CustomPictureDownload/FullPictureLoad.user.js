@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.14
+// @version            1.7.15
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數500+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数500+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1821,125 +1821,40 @@
         name: "Luscious",
         host: ["www.luscious.net"],
         reg: /^https?:\/\/www\.luscious\.net\/albums\//,
-        checkNextEle: () => {
-            let ele;
-            if (fun.ge(".o-pagination-item--active")) {
-                ele = fun.ge(".o-pagination-item--active+div:not(.o-btn)");
-                return ele;
-            } else if (fun.ge(".o-pagination-mobile-items")) {
-                ele = [...fun.gae(".o-pagination-mobile-button")].slice(-2).pop();
-                return [...ele.classList].pop() == "o-btn--disabled" ? null : ele;
-            }
-        },
-        init: async () => {
-            await fun.delay(2000);
-            let buttonArr = [
-                "//span[text()='Display Inline']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']",
-                "//span[text()='Infinite Scroll']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']",
-                "//span[text()='Read Using Scrolling']/following-sibling::div[@class='o-toggle-wrapper']//div[@class='o-toggle-switch o-toggle-switch--on']"
-            ];
-            for (let i in buttonArr) {
-                if (fun.ge(buttonArr[i])) {
-                    fun.ge(buttonArr[i]).click();
-                    await fun.delay(1000, 0);
-                }
-            }
-            let imgEle = "article.o-padding-top-bottom .o-justified-grid .o-justified-box img";
-            globalImgArray = [...fun.gae(imgEle)].map(e => e.src);
-            if (siteData.checkNextEle()) {
-                new MutationObserver(async (mutations, observer) => {
-                    globalImgArray = [...new Set(globalImgArray.concat([...fun.gae(imgEle)].map(e => e.src)))];
-                    console.log(globalImgArray);
-                    let text = fun.geT(".album-info-item");
-                    let num;
-                    try {
-                        num = parseInt(text.match(/((\d+,)?\d+)\s?pictures/)[1].replace(",", ""), 10);
-                    } catch (e) {
-                        num = parseInt(text.match(/\d+/)[0], 10);
-                    }
-                    console.log(text);
-                    //fun.showMsg(`MutationObserver(${globalImgArray.length}/${num})`, 0);
-                    if (globalImgArray.length >= num && !siteData.checkNextEle()) {
-                        //fun.hideMsg();
-                        console.log("MutationObserver 抓取結束");
-                        observer.disconnect();
-                    }
-                }).observe(fun.ge("article.o-padding-top-bottom"), {
-                    childList: true,
-                    subtree: true
-                });
-            }
-        },
         imgs: async () => {
-            if (siteData.checkNextEle()) {
-                fun.showMsg(displayLanguage.str_14, 0);
-                await new Promise(async resolve => {
-                    let loop = setInterval(async () => {
-                        if (siteData.checkNextEle()) {
-                            siteData.checkNextEle().click();
-                            await fun.delay(1000, 0);
-                            await fun.waitEle("article.o-padding-top-bottom .o-justified-grid .o-justified-box img");
-                        } else {
-                            fun.showMsg(displayLanguage.str_15, 0);
-                            clearInterval(loop);
-                            resolve();
-                        }
-                    }, 2000);
-                });
-            }
-            fun.showMsg(displayLanguage.str_56, 0);
-            let testBigSrcs = globalImgArray.map(e => {
-                let storageCloud = "https://storage.bhs.cloud.ovh.net/v1/AUTH_8d36ec6c0460400ca5d88d41cb6b9cd3/images/";
-                let url = e.replace(/\.\d+x\d+(\.\w+)$/, "$1");
-                let arr = url.split("/");
-                if (arr.length == 6) {
-                    return storageCloud + arr.slice(3).join("/");
-                } else if (arr.length == 9) {
-                    return storageCloud + arr.slice(6).join("/");
-                } else {
-                    return null;
-                }
-            })
-            let xhrNum = 0;
-            let xhrArr = [];
-            for (let i = 0; i < testBigSrcs.length; i++) {
-                let xhr = fun.xhrHEAD(testBigSrcs[i]).then(async res => {
-                    fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${testBigSrcs.length})`, 0);
-                    if (res.status == 200) {
-                        return testBigSrcs[i];
-                    } else if (res.status == 404) {
-                        let mp4Src = testBigSrcs[i].replace(/\.\w+$/i, ".mp4");
-                        let mp4Res = await fun.xhrHEAD(mp4Src);
-                        if (mp4Res.status == 200) {
-                            videosSrcArray.push(mp4Src);
-                            return null;
-                        }
-                        /*
-                        await fun.delay(100);
-                        let gifSrc = testBigSrcs[i].replace(/\.\w+$/i, ".gif");
-                        let gifRes = await fun.xhrHEAD(gifSrc);
-                        if (gifRes.status == 200) return gifSrc;
-                        */
-                        await fun.delay(1000, 0);
-                        let src = testBigSrcs[i].replace(/(\.\w+)$/i, ".1680x0$1");
-                        let srcRes = await fun.xhrHEAD(src);
-                        if (srcRes.status == 200) return src;
-                        return null;
-                    } else {
-                        return null;
+            fun.showMsg(displayLanguage.str_05, 0);
+            const getApiUrl = ((id, page) => `https://apicdn.luscious.net/graphql/nobatch/?operationName=PictureListInsideAlbum&query=%20query%20PictureListInsideAlbum(%24input%3A%20PictureListInput!)%20%7B%20picture%20%7B%20list(input%3A%20%24input)%20%7B%20info%20%7B%20...FacetCollectionInfo%20%7D%20items%20%7B%20__typename%20id%20title%20description%20created%20like_status%20number_of_comments%20number_of_favorites%20moderation_status%20width%20height%20resolution%20aspect_ratio%20url_to_original%20url_to_video%20is_animated%20position%20permissions%20url%20tags%20%7B%20category%20text%20url%20%7D%20thumbnails%20%7B%20width%20height%20size%20url%20%7D%20%7D%20%7D%20%7D%20%7D%20fragment%20FacetCollectionInfo%20on%20FacetCollectionInfo%20%7B%20page%20has_next_page%20has_previous_page%20total_items%20total_pages%20items_per_page%20url_complete%20%7D%20&variables={"input":{"filters":[{"name":"album_id","value":"${id}"}],"display":"position","items_per_page":50,"page":${page}}}`);
+            let id = parseInt(new URL(fun.ge("a[href*='/read/'],.album-heading a").href).pathname.split("/")[2].match(/\d+$/)[0], 10);
+            let max = await fetch(getApiUrl(id, 1)).then(res => res.json()).then(json => json.data.picture.list.info.total_pages);
+            let fetchNum = 0;
+            let resArr = [];
+            for (let i = 1; i <= max; i++) {
+                let url = getApiUrl(id, i);
+                let res = fetch(url).then(res => {
+                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    return res.json();
+                }).then(json => json.data.picture.list.items.map(e => {
+                    return e.url_to_video ? {
+                        video: e.url_to_video
+                    } : {
+                        original: e.url_to_original,
+                        thumbnail: e.thumbnails.pop().url
                     }
-                });
-                xhrArr.push(xhr);
-                await fun.delay(100);
+                }));
+                resArr.push(res);
             }
-            let bigSrcs = await Promise.all(xhrArr).then(arr => arr.filter(item => item));
-            thumbnailsSrcArray = bigSrcs.map(e => /\.1680x0/.test(e) ? e.replace(".1680x0", ".315x0") : e.replace(/(\.\w+)$/i, ".315x0$1"));
-            return bigSrcs;
+            return Promise.all(resArr).then(data => {
+                fun.hideMsg();
+                videosSrcArray = data.flat().filter(item => item.video).map(e => e.video);
+                thumbnailsSrcArray = data.flat().filter(item => item.thumbnail).map(e => e.thumbnail);
+                return data.flat().filter(item => item.original).map(e => e.original);
+            });
         },
         button: [4],
-        insertImg: ["article.o-padding-top-bottom", 3],
+        insertImg: ["article.o-padding-top-bottom,.picture-frame-wrapper", 3],
         downloadVideo: true,
-        customTitle: () => fun.geT(".o-h1"),
+        customTitle: () => fun.geT(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a"),
+        observerTitle: true,
         css: "#modal-root{display:none!important;}",
         category: "nsfw2"
     }, {
@@ -7313,46 +7228,51 @@
         exclude: "//h1[text()='Content Warning']",
         init: async () => {
             await fun.getNP(".gdtm,.gdtl", ".ptds+td>a", null, "//tr[td[@class='ptds']]");
-            if (options.fancybox == 1) {
-                //預覽縮圖網址需要裁剪難弄...
-                let thumbnailsHeightData = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => parseInt(e.style.height.match(/\d+/)[0], 10));
-                let thumbnailUrls = [...new Set([...document.querySelectorAll(".gdtm>div,.gdtl>div")].map(div => div.getAttribute("style").split("url(")[1].split(")")[0]))];
-                let blobs = [];
-                let getThumbnai = 0;
-                for (let i = 0; i < thumbnailUrls.length; i++) {
-                    let blob = fun.xhr(thumbnailUrls[i], "blob").then(blob => {
-                        fun.showMsg(`Get Thumbnails ${getThumbnai += 1}/${thumbnailUrls.length}`, 0);
-                        return blob;
-                    });
-                    blobs.push(blob);
-                }
-                let heightIndex = 0;
-                let crop = 0;
-                await Promise.all(blobs).then(async blobArr => {
-                    fun.hideMsg();
-                    for (let i = 0; i < blobArr.length; i++) {
-                        fun.showMsg(`Thumbnails Crop ${crop += 1}/${blobArr.length}`, 0);
-                        //console.log(`預覽縮圖裁切第${crop}張`);
-                        let img = new Image();
-                        img.src = URL.createObjectURL(blobArr[i]);
-                        await new Promise((resolve, reject) => (img.onload = resolve, img.onerror = reject));
-                        for (let w = 0; w < img.width; w += 100) {
-                            let canvas = document.createElement("canvas");
-                            canvas.height = thumbnailsHeightData[heightIndex];
-                            canvas.width = 100;
-                            canvas.getContext("2d").drawImage(img, -Math.abs(w), 0);
-                            let dataURL = canvas.toDataURL("image/webp", 0.5);
-                            let thumbnailBlobURL = fun.dataURLtoBlobURL(dataURL);
-                            thumbnailsSrcArray.push(thumbnailBlobURL);
-                            //console.log(thumbnailBlobURL);
-                            heightIndex++;
-                        }
-                    }
-                });
-                fun.hideMsg();
-            }
         },
         imgs: async () => {
+            if (options.fancybox == 1) {
+                //預覽縮圖網址需要裁剪難弄...
+                if (fun.ge(".gdtm img[style],.gdtl img[style]")) {
+                    let thumbnailsHeightData = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => parseInt(e.style.height.match(/\d+/)[0], 10));
+                    let thumbnailUrls = [...new Set([...document.querySelectorAll(".gdtm>div,.gdtl>div")].map(div => div.getAttribute("style").split("url(")[1].split(")")[0]))];
+                    let blobs = [];
+                    let getThumbnai = 0;
+                    fun.showMsg("Get Thumbnailsing...", 0);
+                    for (let i = 0; i < thumbnailUrls.length; i++) {
+                        let blob = fun.xhr(thumbnailUrls[i], "blob").then(blob => {
+                            fun.showMsg(`Get Thumbnails ${getThumbnai += 1}/${thumbnailUrls.length}`, 0);
+                            return blob;
+                        });
+                        blobs.push(blob);
+                    }
+                    let heightIndex = 0;
+                    let crop = 0;
+                    await Promise.all(blobs).then(async blobArr => {
+                        fun.hideMsg();
+                        for (let i = 0; i < blobArr.length; i++) {
+                            fun.showMsg(`Thumbnails Crop ${crop += 1}/${blobArr.length}`, 0);
+                            //console.log(`預覽縮圖裁切第${crop}張`);
+                            let img = new Image();
+                            img.src = URL.createObjectURL(blobArr[i]);
+                            await new Promise((resolve, reject) => (img.onload = resolve, img.onerror = reject));
+                            for (let w = 0; w < img.width; w += 100) {
+                                let canvas = document.createElement("canvas");
+                                canvas.height = thumbnailsHeightData[heightIndex];
+                                canvas.width = 100;
+                                canvas.getContext("2d").drawImage(img, -Math.abs(w), 0);
+                                let dataURL = canvas.toDataURL("image/webp", 0.5);
+                                let thumbnailBlobURL = fun.dataURLtoBlobURL(dataURL);
+                                thumbnailsSrcArray.push(thumbnailBlobURL);
+                                //console.log(thumbnailBlobURL);
+                                heightIndex++;
+                            }
+                        }
+                    });
+                    fun.hideMsg();
+                } else {
+                    thumbnailsSrcArray = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => e.src);
+                }
+            }
             fun.showMsg(displayLanguage.str_07, 0);
             let doc = await fun.fetchDoc(fun.ge(".gdtm a,.gdtl a").href);
             let fullimg = fun.ge("a[href*=fullimg]", doc);
@@ -7509,9 +7429,9 @@
         threading: 4,
         category: "hcomic"
     }, {
-        name: "nhentai閱讀頁",
-        host: ["nhentai.com"],
-        reg: /nhentai\.com\/\w+\/comic\/[^/]+\/reader\//i,
+        name: "nhentai/HentaiHand閱讀頁",
+        host: ["nhentai.com", "hentaihand.com"],
+        reg: /(nhentai\.com|hentaihand\.com)\/\w+\/comic\/[^/]+\/reader\//i,
         imgs: ".vertical-image img[data-src]",
         button: [4],
         insertImg: [".reader", 2],
@@ -7519,6 +7439,22 @@
             await fun.delay(1000, 0);
             return fun.geT(".router-link-active")
         },
+        category: "hcomic"
+    }, {
+        name: "nhentai.xxx/lhentai.com閱讀頁",
+        host: ["nhentai.xxx", "lhentai.com"],
+        reg: /^https?:\/\/(nhentai\.xxx|lhentai\.com)\/g\/\d+\/\d+\/$/,
+        imgs: () => {
+            let imgDir = fun.ge(".fit-horizontal").src.match(/.+\//)[0];
+            return images_ext.map((e, i) => imgDir + (i + 1) + {
+                "j": ".jpg",
+                "p": ".png",
+                "b": ".bmp",
+                "g": ".gif"
+            } [e]);
+        },
+        button: [4],
+        insertImg: ["#page-container", 2],
         category: "hcomic"
     }, {
         name: "Pururin圖片清單頁",
@@ -7619,6 +7555,15 @@
         prev: "//a[text()='Previous Part']",
         customTitle: () => fun.geT("#page-title"),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "hcomic"
+    }, {
+        name: "KingComiX閱讀頁",
+        host: ["kingcomix.com"],
+        reg: /^https?:\/\/kingcomix\.com\/[^\/]+\/$/,
+        imgs: "figure img, .entry-content img.lazy",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: () => fun.geT("h1.singleTitle-h1").replace(" – Kingcomix", ""),
         category: "hcomic"
     }, {
         name: "HentaiHere閱讀頁",
@@ -7745,38 +7690,53 @@
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
+        name: "My Hentai Gallery圖片清單頁",
+        host: ["myhentaigallery.com"],
+        reg: /^https?:\/\/myhentaigallery\.com\/g\/\d+$/,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".comic-thumb>img")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace("thumbnail", "original"));
+        },
+        button: [4],
+        insertImg: [
+            ["//div[@class='comic-listing'][center[center[ul[@class='comics-grid clear']]]]", 0], 2
+        ],
+        go: 1,
+        customTitle: () => fun.geT(".comic-description>h1"),
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "hcomic"
+    }, {
+        name: "XYZ PORN COMICS圖片清單頁",
+        host: ["xyzcomics.com"],
+        reg: /^https?:\/\/xyzcomics\.com\/[^\/]+\/$/,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".jig-link>img")].map(e => e.src);
+            return [...fun.gae(".jig-link")];
+        },
+        button: [4],
+        insertImg: [
+            [".entry-content", 0], 2
+        ],
+        go: 1,
+        customTitle: () => fun.geT(".entry-title"),
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "hcomic"
+    }, {
         name: "IMHentai圖片清單頁",
         host: ["imhentai.xxx"],
         reg: /imhentai\.xxx\/gallery\/\d+\//,
         delay: 1000,
-        autoClick: "#load_all",
-        imgs: async () => {
-            /*
-            let links = [...fun.gae("#append_thumbs a")];
-            let fetchNum = 0;
-            let resArr = [];
-            for (let i = 0; i < links.length; i++) {
-                let url = links[i].href;
-                let res = fun.fetchDoc(url).then(doc => {
-                    fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
-                    return fun.ge("#gimg", doc);
-                });
-                resArr.push(res);
-                await fun.delay(300, 0);
-            }
-            return Promise.all(resArr).then(arr => {
-                fun.hideMsg();
-                return arr;
-            });
-            */
+        autoClick: ["#load_all"],
+        imgs: () => {
             thumbnailsSrcArray = [...fun.gae("#append_thumbs img")].map(e => e.dataset.src ? e.dataset.src : e.src);
-            return [...fun.gae("#append_thumbs img")].map(e => e.dataset.src.replace("t.jpg", ".jpg").replace("t.png", ".png"));
+            return fun.getImhentaiSrc()
         },
         button: [4, "100%"],
         insertImg: [
             ["#append_thumbs", 0], 2, 3000
         ],
-        customTitle: () => {
+        customTitle: async () => {
+            await fun.waitVar("g_th");
             let t = fun.geT(".subtitle");
             return t.length > 0 ? t : fun.geT('h1').replace(/\||\+/g, "");
         },
@@ -7789,9 +7749,9 @@
         host: ["imhentai.xxx"],
         reg: /imhentai\.xxx\/view\/\d+\/\d+\//,
         init: "setTimeout(()=>{fun.ge('.pre_img').removeAttribute('style');$('a.next_img').unbind('click');},1000)",
-        imgs: () => fun.getImgO("#gimg", fun.geT(".total_pages"), 14, [null, null], 0, ".nav_pagination", siteUrl, 0),
+        imgs: () => fun.getImhentaiSrc(),
         button: [4],
-        insertImg: [".pre_img", 1, 2000],
+        insertImg: [".pre_img", 2],
         customTitle: () => fun.title("-", 1),
         threading: 4,
         category: "hcomic"
@@ -14743,6 +14703,24 @@ document.body.appendChild(text);
                 }, 100);
             });
         },
+        waitVar: (declares, max = 200) => {
+            let loopNum = 0;
+            return new Promise(resolve => {
+                let loop = setInterval(() => {
+                    loopNum += 1;
+                    console.log("typeof unsafeWindow[declares]", typeof unsafeWindow[declares]);
+                    if (typeof unsafeWindow[declares] != "undefined") {
+                        clearInterval(loop);
+                        resolve(true);
+                    }
+                    if (loopNum >= max) {
+                        clearInterval(loop);
+                        debug(`fun.waitVar()達循環上限，沒有出現"${declares}"變量。`);
+                        resolve(false);
+                    }
+                }, 100);
+            });
+        },
         checkImgStatus: (src, msg = null) => {
             if (msg != 0) fun.showMsg(msg || displayLanguage.str_56, 0);
             return new Promise(resolve => {
@@ -14901,6 +14879,36 @@ document.body.appendChild(text);
                 const htmlText = decoder.decode(buffer);
                 return fun.doc(htmlText);
             });
+        },
+        getImhentaiSrc: async () => {
+            await fun.waitVar("g_th");
+            const findExt = i => {
+                const c = unsafeWindow.g_th[i][0];
+                if (c === "p") return ".png";
+                if (c === "b") return ".bmp";
+                if (c === "g") return ".gif";
+                return ".jpg";
+            };
+            const findServer = cId => {
+                if (cId > 0 && cId <= 274825) return "m1.imhentai.xxx";
+                if (cId > 274825 && cId <= 403818) return "m2.imhentai.xxx";
+                if (cId > 403818 && cId <= 527143) return "m3.imhentai.xxx";
+                if (cId > 527143 && cId <= 632481) return "m4.imhentai.xxx";
+                if (cId > 632481 && cId <= 816010) return "m5.imhentai.xxx";
+                if (cId > 816010 && cId <= 970098) return "m6.imhentai.xxx";
+                if (cId > 970098 && cId <= 1121113) return "m7.imhentai.xxx";
+                return "m8.imhentai.xxx";
+            };
+            const galleryId = fun.ge(".gview>#gallery_id,#load_id").value;
+            const imageDir = fun.ge('#image_dir,#load_dir').value;
+            const num = parseInt(fun.ge('#pages,#load_pages').value ?? "", 10);
+            const cId = parseInt(fun.ge('#u_id,#load_dir+#gallery_id').value ?? "", 10);
+            const randomServer = unsafeWindow.random_server ?? findServer(cId);
+            let arr = [];
+            for (let i = 1; i <= num; i++) {
+                arr.push(`//${randomServer}/${imageDir}/${galleryId}/${i}${findExt(i)}`)
+            }
+            return arr;
         },
         getKukudmSrc: async (url = siteUrl, doc = document, msg = 1) => {
             getImgFn += " > fun.getKukudmSrc()";
