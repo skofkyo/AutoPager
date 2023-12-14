@@ -346,6 +346,10 @@ if (await fun.waitEle(ele)) {
 }
 </pre>
 <pre>
+//等待變量async/await
+await fun.waitVar("declares", max = 200)
+</pre>
+<pre>
 //函式搭配，多元素點擊，如簽到任務
 init: async () => {
     if (fun.ge(ele)) {
@@ -1959,8 +1963,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同上</td>
             </tr>
             <tr>
-                <td><a href="http://nhentai.com/">nhentai.com</a></td>
-                <td>作用在閱讀頁，SPA網頁</td>
+                <td><a href="https://myhentaigallery.com/">My Hentai Gallery</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td><a href="https://xyzcomics.com/">XYZ PORN COMICS</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td><a href="https://nhentai.com/xxx">nhentai.com</a></td>
+                <td><a href="https://hentaihand.com/xxx">hentaihand.com</a>，作用在閱讀頁，SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://hentai2read.com/">Hentai2Read</a></td>
@@ -1984,6 +1996,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hentaihere.com/">HentaiHere</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td><a href="https://kingcomix.com/">KingComiX</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td><a href="https://lhentai.com/">lHentai</a></td>
                 <td>同上</td>
             </tr>
             <tr>
