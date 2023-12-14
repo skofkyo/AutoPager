@@ -367,6 +367,14 @@ init: async () => {
 fun.run("代碼")
 </pre>
 <pre>
+//創建空陣列，取代[] for push()的寫法
+//num陣列的長度
+fun.arr(num)
+fun.arr(num).map((_, i) => {
+    return
+})
+</pre>
+<pre>
 //移除元素
 fun.remove("ele", time = 0)
 </pre>
@@ -1900,6 +1908,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.cnjiepai.xyz/all.html">中国街拍</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://ai19.art/">Ai19 Art</a></td>
+                <td><a href="https://ainudesporn.art/">Ai art nude</a>，<a href="https://hentaimama.xyz/">Hentaimama</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://kungfutv.net/">Kungfutv</a></td>
                 <td></td>
             </tr>
         </tbody>
