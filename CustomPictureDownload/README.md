@@ -299,6 +299,7 @@ fun.attr("selector","屬性", doc = document)
 </pre>
 <pre>
 //返回元素的圖片網址陣列
+fun.getImgsSrcArr("圖片元素選擇器"或圖片元素陣列[]);
 fun.getImgsSrcArr("selector", doc = document);
 </pre>
 <pre>
@@ -600,7 +601,6 @@ fun.getImgIframe("圖片元素選擇器", max, mode, ["圖片網址用來替換�
 fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
 </pre>
 <pre>
-//fun.getImgA
 //mode
 //0多線程(預設)
 //1單線程
@@ -609,6 +609,13 @@ fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
 //A元素參數可以傳入自己創建的網址陣列
 fun.getImgA("圖片元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
 fun.getImgA(img, A, mode = 0, rText = [null, null], showMsg = 1)
+fun.getImgA("圖片元素選擇器", "A元素選擇器")
+fun.getImgA("圖片元素選擇器", [網址陣列])
+</pre>
+<pre>
+//可跨域抓圖片
+fun.getImgCorsA("圖片元素選擇器", "A元素選擇器", time = 100)
+fun.getImgCorsA("圖片元素選擇器", [網址陣列], time = 100)
 </pre>
 <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
@@ -692,7 +699,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/13 22:25</p>
+<p>2023/12/15 03:09</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1503,7 +1510,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://manhsec.com/">manhsec.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a>，<a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://chinagirly.com/">chinagirly.com</a></td>
+                <td><a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://manhsec.com/">manhsec.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a>，<a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://chinagirly.com/">chinagirly.com</a>，<a href="https://babeasia.com/">babeasia.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
