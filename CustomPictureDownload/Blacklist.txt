@@ -1,4 +1,4 @@
-2023/12/13 22:25
+2023/12/15 03:09
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -337,6 +337,7 @@ HOTGIRLchina
 *://manhsec.com/*-photos*/
 *://asiaceleb.com/*-photos*/
 /^https://chinagirly\.com/\d+/$/
+/^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -1605,6 +1606,7 @@ https://www.eyval.net/*
 *erotic.pics*
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
+/^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
 /^https?:\/\/www\.rosi\d+\.cc\/\d+$/
