@@ -699,7 +699,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/15 03:09</p>
+<p>2023/12/15 23:59</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1014,8 +1014,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xiurento.com/">秀人图</a></td>
-                <td>只支援免費</td>
+                <td><a href="https://www.aixiuren.com/">秀人图</a></td>
+                <td><a href="https://www.xiurento.com/">www.xiurento.com</a>，只支援免費</td>
             </tr>
             <tr>
                 <td><a href="https://tu928.com/">tu928美女写真网</a></td>
@@ -1445,6 +1445,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="http://youwu.asia/">尤物丧志</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://fuligirl.net/">福利姬美图</a></td>
                 <td></td>
             </tr>
@@ -1587,7 +1591,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://bestgirlsexy.com/">BestGirlSexy</a></td>
                 <td></td>
-            </tr>
             </tr>
             <tr>
                 <td><a href="https://www.eyval.net/">eyval.net</a></td>
@@ -1786,8 +1789,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://guixiu.org/">闺秀网</a></td>
-                <td></td>
+                <td><a href="https://www.guixiu.org/">闺秀网</a></td>
+                <td><a href="https://guixiu.org/">guixiu.org</a></td>
             </tr>
             <tr>
                 <td><a href="https://nicegirl4u.cyou/">NICEGIRL4U</a></td>
@@ -2311,7 +2314,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
 <p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
-<p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 勾選啟用當前漫畫站點規則 > 保存設定</p>
+<p>透過UI開啟當前漫畫站規則的步驟 ＞ 前往漫畫網站的閱讀頁面 ＞ 瀏覽器右上角腳本管理器 ＞ 圖片全載 ＞ 設定 ＞ UI ＞ 勾選啟用當前漫畫站點規則 ＞ 保存設定</p>
 <p>2023/11/25 絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
