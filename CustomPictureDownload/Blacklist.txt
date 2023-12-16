@@ -1,4 +1,4 @@
-2023/12/15 03:09
+2023/12/15 23:59
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -429,6 +429,9 @@ dongojyousan.com
 SexyAsianGirl
 *://www.sexyasiangirl.xyz/album/*.html
 
+尤物丧志
+*://youwu.asia/albums/*
+
 Chinese Beauties
 *://sxchinesegirlz01.xyz/*/*/*/*/
 
@@ -593,6 +596,7 @@ LUVBP
 
 秀人图
 *://www.xiurenugril.com/*.html
+*://www.aixiuren.com/*.html
 
 Hot Girl Pix
 *://www.hotgirlpix.com/p/*
@@ -702,7 +706,7 @@ https://www.eyval.net/*
 *://www.mmav.me/photo/*.html
 
 闺秀网
-*://guixiu.org/post/*.html
+*://*guixiu.org/post/*.html
 
 MOMO图库
 *://www.momotk.com/*.html
@@ -1522,6 +1526,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://naluhd.com/index.php/*.html
 *://nsphb.com/*/*.html
 *://www.xiurenugril.com/*.html
+*://www.aixiuren.com/*.html
 *://www.hotgirlpix.com/p/*
 *://www.tokyomotion.net/album/*/*
 *://bitchesgirls.com/*/*/
@@ -1575,7 +1580,7 @@ https://www.eyval.net/*
 *://www.1y.is/*/*.html
 *://www.mmav.me/photo/*.html
 *://hdcomic.com/chapter/*
-*://guixiu.org/post/*.html
+*://*guixiu.org/post/*.html
 *://www.momotk.com/*.html
 *://momotk*.uno/*.html
 *://18cute.monster/chapter/*
@@ -1606,6 +1611,7 @@ https://www.eyval.net/*
 *erotic.pics*
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
+*://youwu.asia/albums/*
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
