@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.19
+// @version            1.7.20
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1011,35 +1011,21 @@
         category: "nsfw2"
     }, {
         name: "微圖坊",
-        host: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru"],
-        //reg: /v2ph\.\w+\/album\/.+/i,
-        reg: () => {
-            if (/v2ph\.\w+\/album\/.+/i.test(siteUrl)) {
-                if (!siteUrl.includes("?page=")) {
-                    return true;
-                }
-            }
-            return false;
-        },
+        host: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru", "www.v2ph.ovh"],
+        reg: /^https?:\/\/www\.v2ph\.(com|net|ru|ovh)\/album\//,
         include: ".photos-list",
-        init: () => {
-            if (/\.html\?hl=/.test(siteUrl)) location.href = location.href.replace(/\.html\?hl=.*/, ".html");
-        },
         imgs: async () => {
-            let numP = fun.geT("dd:last-child").match(/\d+/)[0];
-            let max = Math.ceil(numP / 10);
-            let links = [];
-            links.push(siteUrl.replace(/\?page=\d+/, ""));
-            for (let i = 2; i <= max; i++) {
-                links.push(siteUrl.replace(/\?page=\d+/, "") + `?page=${i}`);
-            }
+            let picTotalNum = fun.geT("dd:last-child").match(/\d+/)[0];
+            let pagePicNum = [...fun.gae(".album-photo img[alt]")].length;
+            let max = Math.ceil(picTotalNum / pagePicNum);
+            let links = fun.arr(max).map((_, i) => siteUrl.replace(/\?hl=.+|\?page=\d+/, "") + `?page=${(i + 1)}`);
             let srcArr = [];
             let status = 200;
             let vip = false;
             let fetchNum = 0;
             fun.showMsg(displayLanguage.str_01, 0);
-            for (let i = 0; i < links.length; i++) {
-                await fetch(links[i]).then(res => {
+            for (let page = 0; page < links.length; page++) {
+                await fetch(links[page]).then(res => {
                     if (res.status == 403) status = 403;
                     fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
                     return res.arrayBuffer();
@@ -1047,22 +1033,17 @@
                     const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                     const htmlText = decoder.decode(buffer);
                     const doc = fun.doc(htmlText);
-                    debug(`\n${links[i]}\n`, doc);
+                    debug(`\n${links[page]}\n`, doc);
                     let vipEle = fun.ge(".lead", doc);
                     if (vipEle) vip = true;
                     let imgs = [...fun.gae(".album-photo img[alt]", doc)];
-                    imgs.length == 0 ? debug(`\n${links[i]}\n沒有任何圖片`) : debug(`\n${links[i]}\n此頁圖片`, imgs);
+                    imgs.length == 0 ? debug(`\n${links[page]}\n沒有任何圖片`) : debug(`\n${links[page]}\n此頁圖片`, imgs);
                     let tE = [...fun.gae("div.album-photo")].pop();
-                    imgs.forEach(e => {
-                        if (e.dataset.src) {
-                            srcArr.push(e.dataset.src);
-                            e.src = e.dataset.src;
-                        } else srcArr.push(e.src);
-                        if (i != 0) tE.parentNode.insertBefore(e.parentNode.cloneNode(true), tE.nextSibling);
+                    imgs.forEach(img => {
+                        img.dataset.src ? srcArr.push(img.dataset.src) : srcArr.push(img.src);
+                        if (page != 0) tE.parentNode.insertBefore(img.parentNode.cloneNode(true), tE.nextSibling);
                     });
-                    try {
-                        if (i != 0) fun.ge(".pagination").outerHTML = fun.ge(".pagination", doc).outerHTML;
-                    } catch (e) {}
+                    if (page != 0) fun.ge(".pagination").outerHTML = fun.ge(".pagination", doc).outerHTML;
                 });
                 if (status == 403) {
                     setTimeout(() => {
@@ -1078,9 +1059,7 @@
                 }
                 await fun.delay(600, 0);
             }
-            debug(`\n所有圖片\n`, srcArr);
-            debug(`\n去重複後的圖片\n`, [...new Set(srcArr)]);
-            if (numP != srcArr.length && !vip) {
+            if (picTotalNum != srcArr.length && !vip) {
                 setTimeout(() => {
                     fun.hideMsg();
                     fun.showMsg("圖片有缺，請看主控台訊息", 5000);
@@ -1092,7 +1071,7 @@
         insertImg: [".photos-list", 2],
         customTitle: () => fun.geT("h1"),
         css: ".albums-list img,.photos-list img{opacity:1!important}",
-        threading: 10,
+        threading: 8,
         category: "nsfw2"
     }, {
         name: "柠檬皮",
@@ -2818,7 +2797,7 @@
         },
         button: [4],
         insertImg: [
-            [".entry-content", 0, "//p[img] | //div[@class='page-links']"], 1
+            [".entry-content", 0, "//p[img] | //div[@class='page-links']"], 2
         ],
         customTitle: () => fun.geT(".entry-title"),
         category: "nsfw1"
