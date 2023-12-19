@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.20
+// @version            1.7.21
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1012,7 +1012,14 @@
     }, {
         name: "微圖坊",
         host: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru", "www.v2ph.ovh"],
-        reg: /^https?:\/\/www\.v2ph\.(com|net|ru|ovh)\/album\//,
+        reg: () => {
+            if (/^https?:\/\/www\.v2ph\.(com|net|ru|ovh)\/album\//.test(siteUrl)) {
+                if (!siteUrl.includes("?page=")) {
+                    return true;
+                }
+            }
+            return false;
+        },
         include: ".photos-list",
         imgs: async () => {
             let picTotalNum = fun.geT("dd:last-child").match(/\d+/)[0];
@@ -7810,6 +7817,20 @@
             [".gallery", 2], 1
         ],
         go: 1,
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "hcomic"
+    }, {
+        name: "AllPornComic",
+        host: ["allporncomic.com"],
+        reg: /^https?:\/\/allporncomic\.com\/porncomic\/[^\/]+\/[^\/]+\/$/i,
+        include: ".read-container",
+        imgs: ".wp-manga-chapter-img",
+        button: [4],
+        insertImg: [".read-container", 2],
+        autoDownload: [0],
+        next: "a.next_page",
+        prev: "a.prev_page",
+        customTitle: () => fun.geT("#chapter-heading"),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
