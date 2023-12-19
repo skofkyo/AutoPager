@@ -299,8 +299,9 @@ fun.attr("selector","屬性", doc = document)
 </pre>
 <pre>
 //返回元素的圖片網址陣列
-fun.getImgsSrcArr("圖片元素選擇器"或圖片元素陣列[]);
-fun.getImgsSrcArr("selector", doc = document);
+fun.getImgSrcArr("selector", doc = document);
+fun.getImgSrcArr("圖片元素選擇器");
+fun.getImgSrcArr([圖片元素陣列]);
 </pre>
 <pre>
 //對document.title的字串修改
@@ -852,7 +853,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.v2ph.com/">微圖坊</a></td>
-                <td><a href="https://www.v2ph.net/">www.v2ph.net</a>，<a href="https://www.v2ph.ru/">www.v2ph.ru</a>，需註冊，大尺度非VIP只能抓到10張</td>
+                <td><a href="https://www.v2ph.net/">www.v2ph.net</a>，<a href="https://www.v2ph.ru/">www.v2ph.ru</a>，<a href="https://www.v2ph.ovh/">www.v2ph.ovh</a>，需註冊，大尺度非VIP只能抓到8~10張</td>
             </tr>
             <tr>
                 <td><a href="https://www.meitule.net/">美图乐</a></td>
