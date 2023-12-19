@@ -2058,6 +2058,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://allporncomic.com/">AllPornComic</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://rokuhentai.com/">Roku Hentai</a></td>
                 <td></td>
             </tr>
