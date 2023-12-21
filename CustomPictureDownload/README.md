@@ -700,7 +700,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/15 23:59</p>
+<p>2023/12/21 22:15</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -772,16 +772,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgmn5.xyz/">极品性感美女</a></td>
-                <td><a href="https://m.xgmn3.xyz/">m.xgmn3.xyz</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
+                <td><a href="https://www.xgmn9.xyz/">极品性感美女</a></td>
+                <td><a href="https://m.xg08.xyz/">m.xg08.xyz</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xrmn01.com/">秀人美女網</a></td>
-                <td><a href="https://m.xrmn01.com/">m.xrmn01.com</a></td>
+                <td><a href="https://m.xrmn.xyz/">m.xrmn.xyz</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr07.xyz/">秀人集</a></td>
-                <td><a href="https://m.xr07.xyz/">m.xr07.xyz</a></td>
+                <td><a href="https://www.xr01.vip/">秀人集</a></td>
+                <td><a href="https://a.xiu.cloudns.org/">a.xiu.cloudns.org</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn03.cc/">爱看美女网</a></td>
@@ -876,6 +876,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xx.knit.bid/">爱妹子</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.mfpho.com/">柔丝映画</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1362,10 +1366,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.1y.is/">1Y Beauties</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.4khd.com/">4KHD</a></td>
                 <td></td>
             </tr>
@@ -1654,6 +1654,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>圖床imgadult無法外連，但可以下載。</td>
             </tr>
             <tr>
+                <td><a href="https://nsfwalbum.com/">NSFWalbum</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
                 <td>手動插入圖片，有日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片，如果沒有成功插入imx.to圖床的圖片，可以按Ctrl + Alt + C複製鏈結丟給JDownloader下載，或點開鏈結看有沒有提供Gallery，如果下載速度慢需要掛VPN</td>
             </tr>
@@ -1831,7 +1835,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.6evu.com/">遛无写真</a></td>
-                <td><a href="https://www.6kpo.com/">KP写真</a>，<a href="https://www.c0h.net/">美女云图网</a>，<a href="https://www.3tck.com/category/mntp">tck天天番号</a>，<a href="https://www.4tck.com/category/mntp">4tck番号库</a>，<a href="https://www.5tck.com/category/mntp">5tck天天番号</a>，<a href="https://www.6tck.com/">6K美女</a>，<a href="https://www.7tck.com/category/mntp">7tck番号网</a>，<a href="https://www.1tu5.com/category/mntp">1凸5宅男福利</a>，<a href="https://www.1plq.com/">有脾气美图</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式16個</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.ywsq.cc/">出物社区写真网</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.tu11.com/">亿秀美女</a></td>
@@ -1839,7 +1847,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式26個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式33個</a></td>
             </tr>
             <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
@@ -2138,6 +2146,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>作用在圖片清單頁</td>
             </tr>
             <tr>
+                <td><a href="http://cn.hentai.desi/">十八禁成人H漫</a></td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
                 <td><a href="http://www.177pica.com/">177漫画</a></td>
                 <td><a href="http://www.177picyy.com/">www.177picyy.com</a></td>
             </tr>
@@ -2311,6 +2323,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.55comic.com/">污污漫畫</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="http://400manhua.com/">400漫画网</a></td>
                 <td></td>
             </tr>
         </tbody>
