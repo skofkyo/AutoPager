@@ -1,4 +1,4 @@
-2023/12/15 23:59
+2023/12/21 22:15
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -263,6 +263,15 @@ MEITU131
 *://www.*tck.com/*.html
 *://www.1tu5.com/*.html
 *://www.1plq.com/*.html
+*://www.gr2e.com/*.html
+*://www.joerei.com/*.html
+*://www.game1313.net/*.html
+*://www.54k5.com/*.html
+*://www.0niz.com/*.html
+*://www.7k1a.com/*.html
+
+出物社区写真网
+*://www.ywsq.cc/*/*.html
 
 秀色女神
 *://*.xsnvshen.co/album/*
@@ -569,6 +578,9 @@ CUTE GIRLS ADDICT
 
 美女写真
 *portrait.knit.bid/*/*
+
+柔丝映画
+*://www.mfpho.com/*.html
 
 套图之家
 *://taotuhome.com/*.html
@@ -1612,6 +1624,14 @@ https://www.eyval.net/*
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
 *://youwu.asia/albums/*
+*://www.ywsq.cc/*/*.html
+*://www.gr2e.com/*.html
+*://www.joerei.com/*.html
+*://www.game1313.net/*.html
+*://www.54k5.com/*.html
+*://www.0niz.com/*.html
+*://www.7k1a.com/*.html
+*://www.mfpho.com/*.html
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
