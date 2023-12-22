@@ -700,7 +700,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/21 22:15</p>
+<p>2023/12/22 22:14</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -812,7 +812,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://rosixiezhen.cc/">ROSI美女写真</a></td>
+                <td><a href="http://www.rosixiezhen.cc/">ROSI美女写真</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1363,7 +1363,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hotgirl.world/">HotGirl World</a></td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.4khd.com/">4KHD</a></td>
