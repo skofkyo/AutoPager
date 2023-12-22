@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.21
+// @version            1.7.23
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -654,8 +654,8 @@
         category: "nsfw1"
     }, {
         name: "ROSI美女写真",
-        host: ["www.rosixiezhen.cc", "rosixiezhen.cc", "www.rosi365.cc", "www.rosi360.cc", "www.2meinv.cc"],
-        reg: /^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/i,
+        host: ["www.rosixiezhen.cc", "rosixiezhen.cc", "www.rosi365.cc", "www.rosi360.cc", "www.2meinv.cc", "www.silk-necktie.com"],
+        reg: /^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/i,
         exclude: "//span/a[text()='ROSI视频']",
         init: () => {
             let pag = [...fun.gae(".pagination2")];
@@ -2811,6 +2811,32 @@
             css: false
         },
         category: "nsfw1"
+    }, {
+        name: "HotGirl World 分類自動翻頁",
+        enable: 1,
+        reg: /^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/,
+        include: ".pagination",
+        init: () => {
+            [...fun.gae(".blur-image")].forEach(e => {
+                e.classList.remove("blur-image");
+            });
+        },
+        autoPager: {
+            ele: ".articles-grid",
+            observer: ".articles-grid .articles-grid__item",
+            next: ".pagination__item--active+a",
+            re: ".pagination",
+            lazySrc: "img[data-src]",
+            title: doc => "Page " + fun.geT(".pagination__item--active", 1, doc),
+            aF: () => {
+                [...fun.gae(".blur-image")].forEach(e => {
+                    e.classList.remove("blur-image");
+                });
+            },
+            history: 1
+        },
+        openInNewTab: ".articles-grid a:not([target=_blank])",
+        category: "autoPager"
     }, {
         name: "1Y Beauties",
         host: ["www.1y.is"],
@@ -4981,7 +5007,30 @@
         reg: /^https?:\/\/nsfwalbum\.com\/album\/\d+$/,
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".albumPhoto")].map(e => e.dataset.src ?? e.src);
-            return thumbnailsSrcArray.map(e => e.replace("/t/", "/i/"));
+            fun.showMsg(displayLanguage.str_05, 0);
+            let fetchNum = 0;
+            let resArr = [...fun.gae(".album .item>a")].map((a, i, arr) => {
+                let img = fun.ge("img", a);
+                let src = img.dataset.src ?? img.src;
+                if (/imx\.to/.test(src)) {
+                    return src.replace("/t/", "/i/");
+                } else {
+                    return fun.fetchDoc(a.href).then(doc => {
+                        let id = a.href.split("/").pop();
+                        let code = [...doc.scripts].find(s => s.innerText.search(/spirit/) > -1).innerText;
+                        let spirit = fun.run(code.match(/var\sspirit\s?=\s?([^;]+);/)[1]);
+                        let api = `https://nsfwalbum.com/backend.php?&spirit=${spirit}&photo=${id}`;
+                        return fetch(api).then(res => res.json()).then(json => {
+                            fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                            return json[0];
+                        });
+                    });
+                }
+            });
+            return Promise.all(resArr).then(data => {
+                fun.hideMsg();
+                return data;
+            });;
         },
         button: [4, "100%"],
         insertImg: [
@@ -5401,13 +5450,42 @@
         name: "MrDeepFakes",
         host: ["mrdeepfakes.com"],
         reg: /^https?:\/\/mrdeepfakes\.com\/photo\/\d+\//,
-        imgs: "a[data-fancybox-type=image]",
+        init: () => {
+            fun.remove(".player-adv");
+            fun.ge(".page-columns").classList.remove("page-columns");
+        },
+        imgs: () => {
+            if (fun.ge("#album_view_album_view_pagination")) {
+                fun.showMsg(displayLanguage.str_05, 0);
+                let max = parseInt(fun.geT("//li[@class='next action-item']/preceding-sibling::li[1]//span[@class='text']"), 10);
+                let fetchNum = 0;
+                let resArr = fun.arr(max).map((_, i) => {
+                    let url = siteUrl + "?mode=async&function=get_block&block_id=album_view_album_view&sort_by=&from=" + (i + 1);
+                    return fun.fetchDoc(url).then(doc => {
+                        fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                        return [...fun.gae("a[data-fancybox-type=image]", doc)].map(a => {
+                            let img = fun.ge("img", a);
+                            return {
+                                original: a.href,
+                                thumbnail: img.dataset.original ?? img.src
+                            }
+                        });
+                    });
+                });
+                return Promise.all(resArr).then(arr => {
+                    fun.hideMsg();
+                    thumbnailsSrcArray = arr.flat().map(e => e.thumbnail);
+                    return arr.flat().map(e => e.original);
+                });
+            } else {
+                thumbnailsSrcArray = [...fun.gae(".content img.thumb")].map(e => e.dataset.original ?? e.src);
+                return [...fun.gae("a[data-fancybox-type=image]")];
+            }
+        },
         button: [4],
-        insertImg: [
-            [".info-holder", 2], 1
-        ],
-        customTitle: () => fun.geT(".headline>h1"),
-        go: 1,
+        insertImg: ["#album_view_album_view", 2],
+        viewMode: 1,
+        customTitle: () => fun.geT(".player-title"),
         category: "nsfw2"
     }, {
         name: "PicHunter",
@@ -9853,6 +9931,7 @@ document.body.appendChild(text);
         prev: "//a[text()='上一章']",
         customTitle: doc => fun.geT("h1>a", 1, doc) + " - " + fun.geT("h2", 1, doc),
         preloadNext: true,
+        css: ".tbCenter{max-width:1400px!important;width:auto!important;height:auto!important}",
         category: "comic"
     }, {
         name: "包子漫画 閱讀",
@@ -14400,6 +14479,7 @@ document.body.appendChild(text);
                     }
                 }
                 if (!/tupianwu\.com/.test(location.host)) fun.MutationObserver_aff();
+                if (siteData.viewMode == 1) toggleImgMode();
             } else {
                 fun.showMsg(displayLanguage.str_20);
             }
