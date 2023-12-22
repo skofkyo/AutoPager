@@ -1,4 +1,4 @@
-2023/12/21 22:15
+2023/12/22 22:14
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -642,7 +642,8 @@ Hentai Cosplay
 *://www.hentaicos.com/*/*.html
 
 HotGirl World
-*://www.hotgirl.world/g/*.html/
+/^https?:\/\/www\.hotgirl\.world\/g\/\w+\.html\//
+/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
 
 1Y Beauties
 *://www.1y.is/*/*.html
@@ -1555,7 +1556,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.hanmanfree.com/index.php/chapter/*
 *://okhanman.com/index.php/chapter/*
 *://www.hentaicos.com/*/*.html
-*://www.hotgirl.world/g/*.html/
+/^https?:\/\/www\.hotgirl\.world\/g\/\w+\.html\//
+/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
 *://cosblay.com/*.html
 *://trendszine.com/*.html
 *://www.tiplogo.com/*.html
