@@ -755,7 +755,7 @@ ROSI美女写真
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
 
 图片屋
-*://tupianwu.com/*
+*://*tupianwu.com/*
 
 妞妞之家
 *://niuniuhome.club/?p=*
@@ -1681,7 +1681,7 @@ https://www.eyval.net/*
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
-*://tupianwu.com/*
+*://*tupianwu.com/*
 /^https?:\/\/tu928\.com\/\d+\.html/
 /^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/imgs\.php\?id=/
 /^https://www\.hexieshe\.cn/\d+/$/
