@@ -700,7 +700,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/22 22:14</p>
+<p>2023/12/25 03:14</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -772,16 +772,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgmn9.xyz/">极品性感美女</a></td>
+                <td><a href="https://www.xgmn01.cc/">极品性感美女</a></td>
                 <td><a href="https://m.xg08.xyz/">m.xg08.xyz</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn01.com/">秀人美女網</a></td>
+                <td><a href="https://www.xrmn03.com/">秀人美女網</a></td>
                 <td><a href="https://m.xrmn.xyz/">m.xrmn.xyz</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xr01.vip/">秀人集</a></td>
-                <td><a href="https://a.xiu.cloudns.org/">a.xiu.cloudns.org</a></td>
+                <td><a href="https://a.xiu.cloudns.org/">a.xiu.cloudns.org</a>，<a href="http://137.175.84.179/">137.175.84.179</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn03.cc/">爱看美女网</a></td>
@@ -1107,7 +1107,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://tupianwu.com/">图片屋</a></td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.qq7k.com/mntp/">晴空头像图库</a></td>
@@ -1246,8 +1246,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://xem.anhvl.net/">Anh VL</a></td>
-                <td>分類添加了自動翻頁</td>
+                <td><a href="https://kenh69.co/">Kenh69</a></td>
+                <td>kenh69.co</td>
             </tr>
             <tr>
                 <td><a href="https://phym18.org/tag/%E1%BA%A3nh-sex">Phym18</a></td>
@@ -1382,7 +1382,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://baobua.com/">baobua.com</a>，<a href="https://fb.baobua.net/">fb.baobua.net</a>，<a href="https://vn.baobua.net/">vn.baobua.net</a>，<a href="https://www.baobua.net/">www.baobua.net</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.pixibb.com/">PixiBB</a></td>
+                <td><a href="https://www.pixibb.com/?list=albums&sort=views_desc&page=1">PixiBB</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1462,7 +1462,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://nudecosplaygirls.com/">NUDECOSPLAY</a></td>
+                <td><a href="https://nudecosplaygirls.com/category/nude-cosplay-albums/">NUDECOSPLAY</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1515,7 +1515,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://manhsec.com/">manhsec.com</a>，<a href="https://sex4viet.com/">sex4viet.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a>，<a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://chinagirly.com/">chinagirly.com</a>，<a href="https://babeasia.com/">babeasia.com</a></td>
+                <td><a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a>，<a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://chinagirly.com/">chinagirly.com</a>，<a href="https://babeasia.com/">babeasia.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -1543,7 +1543,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.micmicidol.club/">MIC MIC IDOL</a></td>
-                <td>分類添加了自動翻頁和<a href="https://unc.micmicdoll.com/">micmicunc</a></td>
+                <td>分類添加了自動翻頁和</td>
             </tr>
             <tr>
                 <td><a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a></td>
@@ -1847,7 +1847,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式33個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式40個</a></td>
             </tr>
             <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
