@@ -9154,23 +9154,27 @@
     }, {
         name: "嗨皮漫畫更新頁，自動點擊載入更多，鏈接新分頁打開",
         host: ["m.happymh.com"],
-        enable: 0,
         reg: /m\.happymh\.com\/latest/,
+        enable: 0,
+        icon: 0,
+        key: 0,
         observerClick: ".more-div-btn",
         openInNewTab: ".manga-cover>a:not([target=_blank])",
         category: "comic"
     }, {
         name: "嗨皮漫畫展開目錄",
-        host: ["m.happymh.com"],
         reg: /m\.happymh\.com\/manga\//,
         enable: 0,
+        icon: 0,
+        key: 0,
         autoClick: "#expandButton",
         category: "comic"
     }, {
         name: "嗨皮漫畫，鏈接新分頁打開",
-        host: ["m.happymh.com"],
         reg: /m\.happymh\.com\//,
         enable: 0,
+        icon: 0,
+        key: 0,
         openInNewTab: ".home-banner a:not([target=_blank]),.manga-rank a:not([target=_blank]),.manga-cover a:not([target=_blank])",
         category: "comic"
     }, {
