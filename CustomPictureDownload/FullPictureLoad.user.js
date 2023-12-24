@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.25
+// @version            1.7.26
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -7165,16 +7165,16 @@
             });
         },
         fetch: 1,
-        css: ".hidden-lg{display:none!important;}",
+        css: ".hidden-lg:not(.panel)[style*='z-index']{display:none!important;}",
         category: "hcomic"
     }, {
         name: "禁漫天堂",
         reg: /^https?:\/\/(18comic.(vip|org)|18comic-fun\.xyz|jmcomic\d?\.me|jm-comic\d.art)\//,
         init: () => {
-            fun.remove("//div[contains(text(),'插件')] | //div[@class='col-xs-6'][div[@data-group]] | //div[@class='panel-body']//div[@data-group] | //div[@class='row'][div[div[@data-group]]][not(div[@id='album_photo_cover'])] | //div[@class='div_sticky2 hidden-lg']");
+            fun.remove("//div[contains(text(),'插件')] | //div[@class='col-xs-6'][div[@data-group]] | //div[@class='panel-body']//div[@data-group] | //div[@class='row'][div[div[@data-group]]][not(div[@id='album_photo_cover'])][not(div[*[@class='panel panel-default']])] | //div[@class='div_sticky2 hidden-lg']");
             fun.remove("#billboard-modal,#guide-modal");
         },
-        css: ".hidden-lg{display:none!important;}",
+        css: ".hidden-lg:not(.panel)[style*='z-index']{display:none!important;}",
         category: "ad"
     }, {
         name: "E-Hentai圖片清單頁",
