@@ -1,4 +1,4 @@
-2023/12/22 22:14
+2023/12/25 03:14
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -504,8 +504,8 @@ Forum Girl
 *://www.meimeimei.org/*/*/
 *www.meimeimei.org/*/*/*.html
 
-Anh VL
-*://xem.anhvl.net/*
+Kenh69
+*://kenh69.co/*
 
 美女秀
 *www.22mm.net/a/*.html
@@ -643,7 +643,7 @@ Hentai Cosplay
 
 HotGirl World
 /^https?:\/\/www\.hotgirl\.world\/g\/\w+\.html\//
-/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
+/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
 
 1Y Beauties
 *://www.1y.is/*/*.html
@@ -708,6 +708,13 @@ Fapello
 *://www.t7mm.com/tp/*.html
 *://www.iduobi.com/meitu/*.html
 *://www.woxiutu.com/tupian/*.html
+*://www.hceday.com/tp/55293.html
+*://www.fs120yy.com/tp/51547.html
+*://www.aolangde.com/meitu/55240.html
+*://www.fssrr.com/tp/54223.html
+*://www.wt768.com/meitu/*.html
+*://www.3ktu.com/tupian/*.html
+*://www.lql1.com/meitu/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -748,7 +755,7 @@ ROSI美女写真
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
 
 图片屋
-*://tupianwu.com/post/*/
+*://tupianwu.com/*
 
 妞妞之家
 *://niuniuhome.club/?p=*
@@ -1238,6 +1245,7 @@ manhuab.com/manhua/*/*.html
 *://*.qyy158.com/info/*/*.html
 
 ====================自用完整黑名單====================
+/www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/
 *://ani.gamer.com.tw/animeVideo.php*
 *://*copymanga.site/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
@@ -1267,6 +1275,9 @@ manhuab.com/manhua/*/*.html
 *://tw.dociy.net/*
 *://www.dociy.net/*
 *m.manhuagui.com*
+*://www.twmanga.com/*
+*://tw.twmanga.com/*
+*://cn.twmanga.com/*
 *://8.twobili.com/comic/insurance_*
 *://www.comicabc.com/online/new-*
 *://www.comicabc.com/ReadComic/*
@@ -1488,7 +1499,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.superbeautygirlx.com/*/*/*.html
 *://www.meimeimei.org/*/*/
 *www.meimeimei.org/*/*/*.html
-*://xem.anhvl.net/*
+*://kenh69.co/*
 *://www.dongojyousan.com/articles/*.html*
 *://www.qixianzi.com/*/*.html
 *://www.meinvku.org.cn/album/*
@@ -1557,7 +1568,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://okhanman.com/index.php/chapter/*
 *://www.hentaicos.com/*/*.html
 /^https?:\/\/www\.hotgirl\.world\/g\/\w+\.html\//
-/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
+/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
 *://cosblay.com/*.html
 *://trendszine.com/*.html
 *://www.tiplogo.com/*.html
@@ -1571,7 +1582,6 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://*.golden-koi.net/chapter/*.html*
 *://*.tuhao456.com/chapter/*.html*
 *://nnhanman.net/comic/*/chapter-*.html
-*://*.qyy158.com/info/*/*.html
 *://mobile.jymhapp.com/chapter/*
 *://rimanzhijia.com/index.php/chapter/*
 *://se8.us/index.php/chapter/*
@@ -1622,6 +1632,39 @@ https://www.eyval.net/*
 *://www.gsrx.org/plus/view-*.html
 *://m.gsrx.org/plus/view-*.html
 *://*.*tu11.com/*/*/*.html
+*://www.tzala.com/book/*.html
+*://www.mash120.com/meitu/*.html
+*://www.wslak.com/tu/*.html
+*://www.777url.com/pic/*.html
+*://www.tufada.com/tu*.html
+*://www.zkjmpx.com/news/*.html
+*://www.hsnmm.com/tu/*.html
+*://www.mmdmlt.com/tp/*.html
+*://www.zlsmm.com/meitu/*.html
+*://www.xr70.com/tp/*.html
+*://www.ksxx365.com/meitu/*.html
+*://www.ksxx360.com/meitu/*.html
+*://www.ngptp.com/tp/*.html
+*://www.t7mm.com/tp/*.html
+*://www.sqhyyz.com/meitu/*.html
+*://www.gxwpjc.com/pic/*.html
+*://www.ycwlx.com/tupian/*.html
+*://www.mmxsl.com/meitu/*.html
+*://www.i9ke.com/pic/*.html
+*://www.jsjfgkgs.com/meitu/*.html
+*://www.yjpfxs.com/tu/*.html
+*://www.cmylzx.com/news/*.html
+*://www.sskge.com/tu/*.html
+*://www.t7mm.com/tp/*.html
+*://www.iduobi.com/meitu/*.html
+*://www.woxiutu.com/tupian/*.html
+*://www.hceday.com/tp/55293.html
+*://www.fs120yy.com/tp/51547.html
+*://www.aolangde.com/meitu/55240.html
+*://www.fssrr.com/tp/54223.html
+*://www.wt768.com/meitu/*.html
+*://www.3ktu.com/tupian/*.html
+*://www.lql1.com/meitu/*.html
 *erotic.pics*
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
@@ -1636,10 +1679,11 @@ https://www.eyval.net/*
 *://www.mfpho.com/*.html
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
-/^https?:\/\/((www\.)?rosixiezhen\.cc|(www.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
-/^https?:\/\/www\.rosi\d+\.cc\/\d+$/
-*://tupianwu.com/post/*/
+/^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
+/^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
+*://tupianwu.com/*
 /^https?:\/\/tu928\.com\/\d+\.html/
+/^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/imgs\.php\?id=/
 /^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
