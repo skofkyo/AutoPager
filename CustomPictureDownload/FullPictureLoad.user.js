@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.24
+// @version            1.7.25
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -841,8 +841,8 @@
         category: "nsfw1"
     }, {
         name: "图片屋",
-        host: ["tupianwu.com"],
-        reg: /^https?:\/\/tupianwu\.com\/post\/\d+\//i,
+        host: ["www.tupianwu.com", "tupianwu.com"],
+        reg: /^https?:\/\/(www\.)?tupianwu\.com\/post\/\d+\//i,
         init: "fun.clearAllTimer();",
         autoClick: ".readmore>a",
         imgs: () => [...fun.gae(".LightGallery_Item")].map(e => e.getAttribute("lg-data-src")),
@@ -859,7 +859,7 @@
     }, {
         name: "图片屋 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/tupianwu\.com\/(page\/\d+\/)?$|^https?:\/\/tupianwu\.com\/category\/\d+\/(\d+\/)?$/,
+        reg: /^https?:\/\/(www\.)?tupianwu\.com\/(page\/\d+\/)?$|^https?:\/\/(www\.)?tupianwu\.com\/category\/\d+\/(\d+\/)?$/,
         include: ".pagebar",
         autoPager: {
             mode: 1,
@@ -13727,7 +13727,7 @@ document.body.appendChild(text);
             }
             fun.addLoading();
             if (siteData.autoPager.mode == 1) {
-                doc = await fun.iframeSrcDoc(url, (siteData.autoPager.waitEle || siteData.autoPager.ele));
+                doc = await fun.iframeSrcDoc(url, (siteData.autoPager.waitEle || siteData.autoPager.ele), 30000);
             } else {
                 try {
                     doc = await fun.fetchDoc(url, 0);
@@ -13856,7 +13856,7 @@ document.body.appendChild(text);
                 //iframe.style.display = "none";
                 iframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;';
                 document.body.appendChild(iframe);
-                tid = setTimeout(resolve(null), time);
+                tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -13878,13 +13878,9 @@ document.body.appendChild(text);
                     iframe.remove();
                 };
                 if (iframe.attachEvent) {
-                    iframe.attachEvent("onload", () => {
-                        call();
-                    });
+                    iframe.attachEvent("onload", () => call());
                 } else {
-                    iframe.onload = () => {
-                        call();
-                    };
+                    iframe.onload = () => call();
                 }
             });
         },
@@ -13911,7 +13907,7 @@ document.body.appendChild(text);
                 //iframe.style.display = "none";
                 iframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;';
                 document.body.appendChild(iframe);
-                tid = setTimeout(resolve(null), time);
+                tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -13933,13 +13929,9 @@ document.body.appendChild(text);
                     iframe.remove();
                 };
                 if (iframe.attachEvent) {
-                    iframe.attachEvent("onload", () => {
-                        call();
-                    });
+                    iframe.attachEvent("onload", () => call());
                 } else {
-                    iframe.onload = () => {
-                        call();
-                    };
+                    iframe.onload = () => call();
                 }
             });
         },
