@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.26
+// @version            1.7.27
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -543,9 +543,12 @@
                 p.forEach(e => te.parentNode.insertBefore(e, te));
             }
         },
-        imgs: () => fun.getImg('.article-content img[alt]', fun.geT("a.current~*:last-child", 2), 3, [null, null], 200),
-        button: [4, "22%"],
-        insertImg: ["//p[img[@alt]]", 2],
+        imgs: () => fun.getImg(".article-content img[alt]", fun.geT("a.current~*:last-child", 2), 3, [null, null], 200),
+        button: [4],
+        insertImg: [
+            ["//div[@class='pagination'][last()]", 1, "//p[img[@alt]]"], 2
+        ],
+        go: 1,
         autoDownload: [0],
         next: ".article-nav-next>a[href$=html]",
         prev: ".article-nav-prev>a[href$=html]",
@@ -1337,6 +1340,24 @@
         insertImg: ["//div[a[img]]", 2],
         customTitle: () => fun.geT(".content>h1"),
         css: "union[id],.pag-ts,.contentpage{display:none!important}",
+        category: "nsfw1"
+    }, {
+        name: "888美女网",
+        host: ["www.888meinv.com"],
+        reg: /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/,
+        include: ".suoyou",
+        imgs: () => {
+            let max = fun.geT(".suoyou").match(/\/(\d+)/)[1];
+            let links = fun.arr(max).map((_, i) => siteUrl + "/" + (i + 1));
+            return fun.getImgA(".pannel img", links);
+        },
+        button: [4],
+        insertImg: [".pannel", 1],
+        autoDownload: [0],
+        next: ".pre_pageload>a",
+        prev: ".next_pageload>a",
+        customTitle: () => fun.geT("h1"),
+        css: ".nr .tupianqu img{margin-top:0px!important}@media only screen and (max-width:480px){.nr .tupianqu,.nr .tupianqu .pannel{padding:0px!important}}",
         category: "nsfw1"
     }, {
         name: "可爱小图",
@@ -3562,8 +3583,8 @@
         category: "nsfw2"
     }, {
         name: "HOTGIRLchina格式",
-        host: ["hotgirlchina.com", "thechinagirls.com", "theasiagirl.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com"],
-        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com)\/.+(photos?|videos?|anh)?\/?|^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/,
+        host: ["hotgirlchina.com", "hotgirlasian.com", "thechinagirls.com", "theasiagirl.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com", "nudeasiangirl.com"],
+        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com)\/.+(photos?|videos?|anh)?\/?|^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$|^https?:\/\/hotgirlasian\.com\/\d+\/$/,
         include: ".entry-inner img[alt]",
         imgs: () => {
             let max;
@@ -3583,7 +3604,7 @@
         category: "nsfw1"
     }, {
         name: "HOTGIRLchina格式",
-        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com)\//,
+        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hotgirlasian\.com)\//,
         css: ".boxzilla-container,.boxzilla-overlay{display:none!important}",
         category: "ad"
     }, {
@@ -6098,9 +6119,9 @@
         css: "union{display:none!important;}",
         category: "nsfw1"
     }, {
-        name: "3K图片网/中看图片大全/图片发达网/昆山美图网/桃子啦/漫爱美图/雾四图片网/屈求图库/闲人图片大全/天气图片大全/洒清图片网/宫戏图片网/有臣美图/MM美图网/克斯图片网/你给图库/质量美图网/茫茫图片库/黑丝MM图库/MM美图网/奇米美图777/几时图片网/夜寄图库/出卖图片库/所尚图片大全/80天堂图片网/玩偶图片网/立春美图/敢面美图/不论图片网/如之美图/抢暴美图/高空美图/我见图库/荒村图库/奉使图库/隩区美图/逢僧图片网/无条图片网/林岂图片网",
-        host: ["www.3ktu.com", "www.zkjmpx.com", "www.tufada.com", "www.ksxx365.com", "www.tzala.com", "www.mash120.com", "www.wslak.com", "www.777url.com", "www.xr70.com", "www.t7mm.com", "www.sqhyyz.com", "www.gxwpjc.com", "www.ycwlx.com", "www.ksxx360.com", "www.ngptp.com", "www.zlsmm.com", "www.mmdmlt.com", "www.hsnmm.com", "www.mmxsl.com", "www.i9ke.com", "www.jsjfgkgs.com", "www.yjpfxs.com", "www.cmylzx.com", "www.sskge.com", "www.iduobi.com", "www.woxiutu.com", "www.lcylaa.com", "www.gmcpx.com", "www.803352.com", "www.rzjyz.com", "www.cpbdj.com", "www.gkiev.com", "www.wjjlf.com", "www.hceday.com", "www.fs120yy.com", "www.aolangde.com", "www.fssrr.com", "www.wt768.com", "www.lql1.com"],
-        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
+        name: "3K图片网/桃子啦 格式",
+        host: ["www.3ktu.com", "www.tufada.com"],
+        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
         include: "#showimg img,.img-box img",
         imgs: () => {
             let max;
@@ -14152,7 +14173,7 @@ document.body.appendChild(text);
                 if (typeof siteData.button[2] === "number") {
                     for (let i = 0; i < siteData.button[2]; i++) {
                         let br = document.createElement("br");
-                        buttonDiv.appendChild(br);
+                        fragment.appendChild(br);
                     }
                 }
                 let width = "24%";
