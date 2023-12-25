@@ -1,4 +1,4 @@
-2023/12/25 03:14
+2023/12/25 21:27
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -345,8 +345,10 @@ HOTGIRLchina
 *://thechinagirls.com/*-photos*/
 *://manhsec.com/*-photos*/
 *://asiaceleb.com/*-photos*/
+*://nudeasiangirl.com/*-photos*/
 /^https://chinagirly\.com/\d+/$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
+/^https?:\/\/hotgirlasian\.com\/\d+\/$/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -377,6 +379,9 @@ Coomer
 *://www.meijuntu.com/*/*.html
 *://www.junmeitu.com/*/*.html
 *://www.jeya.*/*/*.html
+
+888美女网
+/^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 
 美女图片网
 *://www.mevtu.com/*/*.html
@@ -715,6 +720,11 @@ Fapello
 *://www.wt768.com/meitu/*.html
 *://www.3ktu.com/tupian/*.html
 *://www.lql1.com/meitu/*.html
+*://www.xhtrz.com/news/*.html
+*://www.zggsdh.com/tu/*.html
+*://www.xhycg.com/meitu/*.html
+*://www.mokhee.com/pic/*.html
+*://www.zqydc.com/tupian/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -1351,6 +1361,7 @@ https://www.nuyet.com/gallery/*
 *://www.4khd.com/*/*/*/*.html
 /buondua\.(com|us)\/(?!hot|collection)[^\?]+$/
 /^https://hotgirlchina\.com/[^\/]+/$/
+/^https?:\/\/hotgirlasian\.com\/\d+\/$/
 *://hotgirlchina.com/*-photos*/
 *://theasiagirl.com/*-photos*/
 *://anhsec.com/*-photos*/
@@ -1364,6 +1375,7 @@ https://www.nuyet.com/gallery/*
 *://thechinagirls.com/*-photos*/
 *://manhsec.com/*-photos*/
 *://asiaceleb.com/*-photos*/
+*://nudeasiangirl.com/*-photos*/
 *://idol.gravureprincess.date/*/*/*.html
 *www.micmicidol.club*
 *unc.micmicdoll.com*
@@ -1665,6 +1677,11 @@ https://www.eyval.net/*
 *://www.wt768.com/meitu/*.html
 *://www.3ktu.com/tupian/*.html
 *://www.lql1.com/meitu/*.html
+*://www.xhtrz.com/news/*.html
+*://www.zggsdh.com/tu/*.html
+*://www.xhycg.com/meitu/*.html
+*://www.mokhee.com/pic/*.html
+*://www.zqydc.com/tupian/*.html
 *erotic.pics*
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
@@ -1677,6 +1694,7 @@ https://www.eyval.net/*
 *://www.0niz.com/*.html
 *://www.7k1a.com/*.html
 *://www.mfpho.com/*.html
+/^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
