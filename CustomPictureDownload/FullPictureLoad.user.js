@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.27
+// @version            1.7.28
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1695,7 +1695,7 @@
         name: "绅士猫",
         host: "www.cos6.net",
         reg: /www\.cos6\.net\/\d+\.html/,
-        exclude: ".tinymce-hide",
+        exclude: ".tinymce-hide,.hidden-box",
         imgs: ".wp-posts-content img[data-src]",
         button: [4],
         insertImg: [".bialty-container", 2],
@@ -2341,6 +2341,46 @@
         },
         openInNewTab: ".mixs-card-content>a:not([target=_blank])",
         category: "autoPager"
+    }, {
+        name: "云边网盘",
+        host: ["qinzhi.top"],
+        reg: /^https?:\/\/qinzhi\.top\/[^\/]+\/[^\/]+\/.+$/,
+        init: async () => {
+            await fun.waitEle("div.list");
+            let div = document.createElement("div");
+            div.className = "imgBox";
+            let x = fun.ge(".body");
+            x.appendChild(div);
+        },
+        imgs: async () => {
+            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURI(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$/i.test(href) ? href : null).filter(item => item);
+            fun.showMsg(displayLanguage.str_05, 0);
+            let fetchNum = 0;
+            let resArr = paths.map((path, i, arr) => {
+                return fetch("/api/fs/get", {
+                    "headers": {
+                        "accept": "application/json, text/plain, */*",
+                        "content-type": "application/json;charset=UTF-8"
+                    },
+                    "body": `{\"path\":\"${path}\",\"password\":\"\"}`,
+                    "method": "POST"
+                }).then(res => res.json()).then(json => {
+                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                    return json.code == 200 ? decodeURI(json.data.raw_url) : null;
+                });
+            });
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
+        },
+        repeat: 1,
+        button: [4],
+        insertImg: [".imgBox", 3],
+        go: 1,
+        observerTitle: true,
+        customTitle: () => fun.title(" | 云边网盘").replace(/\s?\d+p\s?/i, ""),
+        category: "nsfw1"
     }, {
         name: "新美图录/臺灣美腿女郎",
         host: ["www.xinmeitulu.com", "www.twlegs.com"],
@@ -5124,6 +5164,22 @@
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
+        name: "Asian Porn",
+        host: ["asianporn.li"],
+        link: "https://asianporn.li/photos/",
+        reg: /^https?:\/\/asianporn\.li\/photo\/\d+\/[^\/]+\/$/i,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".photos img.thumb")].map(e => e.dataset.src ?? e.src);
+            return fun.getImgA("#image .img-reponsive", ".photos a");
+        },
+        button: [4],
+        insertImg: [
+            [".photos", 2], 2
+        ],
+        go: 1,
+        customTitle: () => fun.geT(".content-title"),
+        category: "nsfw2"
+    }, {
         name: "Xasiat",
         host: ["www.xasiat.com"],
         link: "https://www.xasiat.com/albums/",
@@ -5931,7 +5987,7 @@
         },
         imgs: async () => {
             let imgsSrcArr = [];
-            let URLs = [...fun.gae(".entry-content a[href*='vipr.im'],.entry-content a[href*='pixhost.to']:not([href*='/gallery/']),.entry-content a[href*='turboimagehost'],.entry-content a[href*='imgbox.com'],.entry-content a[href*='imagevenue'],.entry-content a[href*='imx.to'],.entry-content a[href*='imagebam']")];
+            let URLs = [...fun.gae(".entry-content a[href*='postimg.cc'],.entry-content a[href*='fastpic.org'],.entry-content a[href*='vipr.im'],.entry-content a[href*='pixhost.to']:not([href*='/gallery/']),.entry-content a[href*='turboimagehost'],.entry-content a[href*='imgbox.com'],.entry-content a[href*='imagevenue'],.entry-content a[href*='imx.to'],.entry-content a[href*='imagebam']")];
             if (URLs.length > 0) {
                 fun.showMsg(displayLanguage.str_01, 0);
                 let xhrNum = 0;
@@ -5950,10 +6006,16 @@
                             let img = fun.ge("img.main-image", doc);
                             return img ? img.src : null;
                         });
+                    } else if (/postimg/.test(url)) {
+                        return fun.xhr(url, "document").then(doc => {
+                            fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
+                            let a = fun.ge("a#download", doc);
+                            return a ? a.href : null;
+                        });
                     } else {
                         return fun.xhr(url, "document").then(doc => {
                             fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                            let img = fun.ge("#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img", doc);
+                            let img = fun.ge("#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid", doc);
                             return img ? img.src : null;
                         });
                     }
@@ -6055,9 +6117,7 @@
         name: "Bunkr",
         host: ["bunkr-albums.io"],
         reg: /^https:\/\/bunkrr\.su\/a\/\w+/i,
-        imgs: () => {
-            return fun.getImgA(".lightgallery img", "a[href^='/i/']");
-        },
+        imgs: () => fun.getImgA(".lightgallery img", "a[href^='/i/']"),
         button: [4],
         insertImg: [
             [".grid-images", 2], 2
@@ -14254,7 +14314,8 @@ document.body.appendChild(text);
                 img.alt = `no.${parseInt(i, 10) + 1}`;
                 img.dataset.index = i;
                 img.className = "FullPictureLoadImage";
-                if (siteData.referrerpolicy) img.setAttribute("referrerpolicy", siteData.referrerpolicy);
+                if (siteData.referrerpolicy) img.referrerPolicy = siteData.referrerpolicy;
+                //if (/vipr\.im/.test(srcArr[i])) img.referrerPolicy = "no-referrer";
                 if (options.zoom <= 10 && options.zoom > 0) {
                     img.style.width = `${options.zoom * 10}%`;
                     img.style.height = "auto";
