@@ -832,6 +832,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類添加了自動翻頁。</td>
             </tr>
             <tr>
+                <td><a href="https://qinzhi.top/%E5%86%99%E7%9C%9F">云边网盘</a></td>
+                <td>SPA網頁，手動插入圖片，請在圖片清單目錄做操作，建議按一下名稱重新排序</td>
+            </tr>
+            <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
                 <td></td>
             </tr>
@@ -948,7 +952,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.cos6.net/">绅士猫</a></td>
-                <td></td>
+                <td>需註冊</td>
             </tr>
             <tr>
                 <td><a href="https://paopoi.com/">泡泡</a></td>
@@ -1634,6 +1638,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://asianporn.li/photos/">Asian Porn</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://erotic.pics/">Erotic Pics</a></td>
                 <td>分類添加了自動翻頁</td>
             </tr>
@@ -1643,7 +1651,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.luscious.net/porn/cosplay-22/">Luscious</a></td>
-                <td>SPA網頁，手動插入圖片，請在第一頁做操作，有極少部分是全GIF，鏈結是取MP4檔而非GIF檔，建議按7或對左下圖示按中鍵可以匯出MediaURLs.txt，再用Motrix或Aria2來下載。</td>
+                <td>SPA網頁，手動插入圖片。</td>
             </tr>
             <tr>
                 <td><a href="https://www.imagefap.com/">ImageFap</a></td>
@@ -1663,11 +1671,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
-                <td>手動插入圖片，有日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片，如果沒有成功插入imx.to圖床的圖片，可以按Ctrl + Alt + C複製鏈結丟給JDownloader下載，或點開鏈結看有沒有提供Gallery，如果下載速度慢需要掛VPN</td>
+                <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片。</td>
             </tr>
             <tr>
                 <td><a href="https://imx.to/">imx.to</a></td>
-                <td>輔助點擊，能在gallery頁進行下載，沒有gallery只有單張圖，可以在eropics按Ctrl + Alt + C複製鏈結丟給JDownloader下載</td>
+                <td>輔助點擊，能在gallery頁進行下載。</td>
             </tr>
             <tr>
                 <td><a href="https://thotsbay.tv/">Thotsbay</a></td>
