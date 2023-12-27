@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.28
+// @version            1.7.29
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -832,6 +832,28 @@
             css: false
         },
         category: "nsfw1"
+    }, {
+        name: "8E资源站",
+        host: ["8ezy.com"],
+        reg: /^https?:\/\/8ezy\.com\/[^\/]+\/$/,
+        include: ".entry-content",
+        init: () => fun.clearAllTimer(),
+        imgs: () => [...fun.gae(".entry-content img")].map(e => e.dataset.srcset),
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".article-nav-prev a",
+        prev: ".article-nav-next a",
+        customTitle: () => fun.geT(".entry-title").replace(/\d+p/i, "").trim(),
+        category: "nsfw1"
+    }, {
+        name: "8E资源站",
+        host: ["8ezy.com"],
+        reg: /^https?:\/\/8ezy\.com\//,
+        include: ".infinite-scroll-button",
+        init: () => fun.clearAllTimer(),
+        observerClick: ".infinite-scroll-button",
+        category: "autoPager"
     }, {
         name: "牛牛美图",
         host: ["www.uyn8.cn"],
@@ -2422,9 +2444,9 @@
         css: ".content_left img{cursor:unset!important;}",
         category: "nsfw1"
     }, {
-        name: "秀窝/RMM吧/赞MM/恩图集/美Girl图集",
-        host: ["www.xiuwo.net", "rmm8.com", "www.zanmm.com", "www.entuji.com", "www.mhgirl.com"],
-        reg: /(www\.xiuwo\.net|rmm8\.com|www\.mhgirl\.com)\/tu([\w]+)?\/\d+\.html|www\.zanmm\.com\/tupian\/\d+\.html|www\.entuji\.com\/\w+\/\d+\.html/,
+        name: "秀窝/RMM吧/赞MM/恩图集/美Girl图集/狐图网",
+        host: ["www.xiuwo.net", "rmm8.com", "www.zanmm.com", "www.entuji.com", "www.mhgirl.com", "www.hutu6.com"],
+        reg: /(www\.xiuwo\.net|rmm8\.com|www\.mhgirl\.com)\/tu([\w]+)?\/\d+\.html|www\.zanmm\.com\/tupian\/\d+\.html|(www\.entuji\.com|www\.hutu6\.com)\/\w+\/\d+\.html/,
         imgs: () => {
             let max = fun.geT("//p[contains(text(),'图片数量')]").match(/\d+/)[0];
             return fun.getImg("#showimg img", max, 9);
@@ -3030,8 +3052,8 @@
         category: "nsfw2"
     }, {
         name: "好女神网",
-        host: ["www.haonvshen.com"],
-        reg: /www\.haonvshen\.com\/gallery\/\d+\.html/,
+        host: ["www.haonvshen.com", "www.nvshen5.com"],
+        reg: /(www\.haonvshen\.com|www\.nvshen\d\.com)\/gallery\/\d+\.html/,
         imgs: () => {
             let max;
             fun.ge(".page") ? max = fun.geT(".page").match(/\d+\/(\d+)/)[1] : max = fun.geT("#pages>*:last-child", 3) || 1;
@@ -3416,6 +3438,7 @@
         next: ".g1-nav-single-next>a",
         prev: ".g1-nav-single-prev>a",
         customTitle: () => fun.geT("h1.entry-title").replace(/“[0-9a-z ]+”/i, "").trim(),
+        css: "#secondary{display:none!important;}.g1-column-2of3{width:100%!important;}",
         category: "nsfw2"
     }, {
         name: "Cosplaytele",
@@ -3439,6 +3462,18 @@
         next: "a[rel=prev]",
         prev: "a[rel=next]",
         customTitle: () => fun.geT("h1.entry-title"),
+        category: "nsfw1"
+    }, {
+        name: "CG Cosplay",
+        host: ["cgcosplay.org"],
+        reg: /^https?:\/\/cgcosplay\.org\/\d+\/$/,
+        imgs: ".gallery a",
+        button: [4],
+        insertImg: [".gallery", 2],
+        autoDownload: [0],
+        next: ".nav-previous a[rel=prev]",
+        prev: ".nav-next a[rel=next]",
+        customTitle: () => fun.geT(".elementor-heading-title"),
         category: "nsfw1"
     }, {
         name: "AsiaOnTop",
@@ -3476,6 +3511,19 @@
         next: ".previous>a",
         prev: ".next>a",
         customTitle: () => fun.geT("h1.entry-title"),
+        category: "nsfw2"
+    }, {
+        name: "Cosplay World",
+        host: ["cosplayworld.net"],
+        reg: /^https?:\/\/cosplayworld\.net\/[^\/]+\/$/,
+        include: ".entry-content",
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".g1-nav-single-prev a",
+        prev: ".g1-nav-single-next a",
+        customTitle: () => fun.geT(".entry-title").replace(" (mitaku.net)", ""),
         category: "nsfw2"
     }, {
         name: "Byoru",
@@ -3710,8 +3758,8 @@
     }, {
         name: "SexyGirl",
         host: ["sexygirl.cc"],
-        reg: /sexygirl\.cc\/a\/\d+\.html/,
-        imgs: "div>img.img-fluid",
+        reg: /sexygirl\.cc\/a\/\d+\.html|^https?:\/\/sexygirl\.cc\/photo\/([\w-]+\/)?a\/\d+\.html$/,
+        imgs: "div>img.img-f1luid,div>img.img-fluid",
         button: [4],
         insertImg: ["//div[img]", 2],
         next: "//a[text()='Previous']",
@@ -3733,6 +3781,21 @@
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: () => fun.geT(".entry-title>a").split("|")[0].trim(),
+        category: "nsfw1"
+    }, {
+        name: "Căng Cực",
+        host: ["cangcuc.com"],
+        reg: /^https?:\/\/cangcuc\.com\/[^\/]+\/[^\/]+\/$/,
+        imgs: ".royal_grid a",
+        button: [4],
+        insertImg: [
+            [".royal_grid", 2, ".royal_grid"], 2
+        ],
+        go: 1,
+        autoDownload: [0],
+        next: ".widget-previous-post a",
+        prev: ".widget-next-post a",
+        customTitle: () => fun.geT("h1.title"),
         category: "nsfw1"
     }, {
         name: "Kenh69",
@@ -6181,7 +6244,7 @@
     }, {
         name: "3K图片网/桃子啦 格式",
         host: ["www.3ktu.com", "www.tufada.com"],
-        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
+        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
         include: "#showimg img,.img-box img",
         imgs: () => {
             let max;
@@ -7959,6 +8022,19 @@
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
+        name: "Hentai.bang14.com",
+        host: ["hentai.bang14.com"],
+        reg: /^https?:\/\/hentai\.bang14\.com\/[^\/]+\/$/,
+        include: ".entry-content",
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".nav-previous a[rel=prev]",
+        prev: ".nav-previous a[rel=next]",
+        customTitle: () => fun.geT("h1.entry-title"),
+        category: "hcomic"
+    }, {
         name: "AllPornComic",
         host: ["allporncomic.com"],
         reg: /^https?:\/\/allporncomic\.com\/porncomic\/[^\/]+\/[^\/]+\/$/i,
@@ -8040,6 +8116,24 @@
         customTitle: () => fun.geT(".box>h1"),
         category: "hcomic"
     }, {
+        name: "漫畫車",
+        host: ["www.mh100.top"],
+        reg: /^https?:\/\/www\.mh100\.top\/chapter\/\d+/,
+        init: () => {
+            let ele = fun.ge(".chapter-nav");
+            if (ele) ele.removeAttribute("style");
+        },
+        imgs: ".chapter-content img",
+        button: [4],
+        insertImg: [".chapter-content", 2],
+        next: () => {
+            let next = fun.ge("//a[button[span[text()='下一話']]][not(contains(@href,'javascript'))]");
+            return next ? next.href : null;
+        },
+        prev: 1,
+        referrerpolicy: "no-referrer",
+        category: "hcomic"
+    }, {
         name: "漫畫聯合國",
         host: ["www.comicun.com"],
         reg: /www\.comicun\.com\/index-look(-cid)?-name-.+/,
@@ -8095,16 +8189,17 @@
         css: ".banner_ad{display:none!important;}",
         category: "hcomic"
     }, {
-        name: "韩国污漫画",
-        host: ["www.ikanmh.xyz", "www.hmfby.com"],
-        reg: /(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)\/chapter\/\d+/,
+        name: "久久漫画网/韩国污漫画",
+        host: ["www.jjmhw.cc", "www.ikanmh.xyz", "www.hmfby.com", "web.hmfby.com", "www.freexcomic.com"],
+        reg: /(www\.jjmhw\.cc|www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top|mxsmh\d.com|mxsmh\d+.top|mxs\d+\.top)\/chapter\/\d+/,
+        init: () => fun.remove("//body/div[div[@id][@style][a]]|//body/div[div[@id][@style]][a[@id][@style]]"),
         imgs: "img[data-original]",
         button: [4],
         insertImg: [".comicpage,#cp_img", 2],
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
-        customTitle: () => fun.geT("h1.title"),
+        customTitle: () => fun.ge("h1.title") ? fun.geT("h1.title") : bookInfo.book_name + " - " + bookInfo.chapter_name,
         referer: "src",
         category: "hcomic"
     }, {
@@ -8756,35 +8851,6 @@
         prev: 1,
         customTitle: () => fun.title(" - 一耽女孩_好看的一耽漫画官网").trim(),
         css: ".page-pagination{display:none!important}",
-        category: "hcomic"
-    }, {
-        name: "久久漫画网",
-        host: ["www.99hanman.top"],
-        reg: /^https?:\/\/www\.99hanman\.top\/chapter\/\d+/,
-        include: ".rd-article-wr",
-        imgs: ".comiclist img",
-        button: [4],
-        insertImg: [".comiclist", 2],
-        autoDownload: [0],
-        next: "//a[text()='下一章' and @href]",
-        prev: "//a[text()='上一章' and @href]",
-        customTitle: () => fun.geT("h1.title"),
-        category: "hcomic"
-    }, {
-        name: "久久漫画网M",
-        host: ["www.99hanman.top"],
-        reg: /^https?:\/\/www\.99hanman\.top\/chapter\/\d+/,
-        imgs: "#cp_img img",
-        insertImg: ["#cp_img", 2],
-        autoDownload: [0],
-        next: "//a[text()='下一章' and @href]",
-        prev: "//a[text()='上一章' and @href]",
-        customTitle: () => {
-            let code = fun.geT("//script[contains(text(),'bookInfo')]");
-            let bookInfo = code.match(/bookInfo\s?=\s?([^;]+)/g)[0];
-            bookInfo = fun.run(bookInfo);
-            return bookInfo.book_name + " - " + bookInfo.chapter_name;
-        },
         category: "hcomic"
     }, {
         name: "91禁漫",
