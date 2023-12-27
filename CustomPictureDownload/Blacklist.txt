@@ -1,4 +1,4 @@
-2023/12/25 21:27
+2023/12/27 20:05
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -290,7 +290,7 @@ Dmmtu 美女图
 *://www.dmmtu.com/*/*.html
 
 好女神网
-*://www.haonvshen.com/gallery/*.html
+*://www.nvshen5.com/gallery/*.html
 
 Jablehk
 *://jablehk.com/*/*
@@ -463,6 +463,9 @@ Chinese Beauties
 
 RMM吧
 *rmm8.com/tu/*.html
+
+狐图网
+*://www.hutu6.com/*/*.html
 
 秀人图集
 *://xiuren0.com/*.html
@@ -725,6 +728,13 @@ Fapello
 *://www.xhycg.com/meitu/*.html
 *://www.mokhee.com/pic/*.html
 *://www.zqydc.com/tupian/*.html
+*://www.fxqmm.com/pic/*.html
+*://www.jxybjk.com/tupian/*.html
+*://www.qxttsl.com/pic/*.html
+*://www.lzxjw.com/pic/*.html
+*://www.btsmmm.com/meitu/*.html
+*://www.jye8.com/tupian/*.html
+*://www.ao5z.com/tu/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -893,7 +903,7 @@ H漫画
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
 
 韩国污漫画
-/(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)/chapter/\d+/
+/(www\.jjmhw\.cc|www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top|mxsmh\d.com|mxsmh\d+.top|mxs\d+\.top)\/chapter\/\d+/
 
 H漫画 123548.xyz
 *123548.xyz/e/action/ShowInfo.php*
@@ -918,7 +928,7 @@ JComic
 *://naluhd.com/index.php/*.html
 
 久久漫画网
-*://www.99hanman.top/chapter/*
+*://www.jjmhw.cc/chapter/*
 
 色色漫画
 *://www.manhuasese.com/index.php/chapter/*
@@ -1349,7 +1359,7 @@ https://www.nuyet.com/gallery/*
 *://www.beautyleg6.com/*/*/*.html
 *://www.ikanins.com/*/
 *://www.dmmtu.com/*/*.html
-*://www.haonvshen.com/gallery/*.html
+*://www.nvshen5.com/gallery/*.html
 *://jablehk.com/*/*
 *://www.taotucc.com/*.html
 *://www.95mm.*/*.html
@@ -1569,7 +1579,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://mabui-onna.com/blog-entry-*.html
 *bunkr-albums.io*
 *bunkrr.su/a/*
-*://www.99hanman.top/chapter/*
+*://www.jjmhw.cc/chapter/*
 *://www.24cos.org/*/*.html
 *://chinesenudeart.blogspot.com/*/*/*.html*
 *www.youfreex.com/file/*
@@ -1682,6 +1692,13 @@ https://www.eyval.net/*
 *://www.xhycg.com/meitu/*.html
 *://www.mokhee.com/pic/*.html
 *://www.zqydc.com/tupian/*.html
+*://www.fxqmm.com/pic/*.html
+*://www.jxybjk.com/tupian/*.html
+*://www.qxttsl.com/pic/*.html
+*://www.lzxjw.com/pic/*.html
+*://www.btsmmm.com/meitu/*.html
+*://www.jye8.com/tupian/*.html
+*://www.ao5z.com/tu/*.html
 *erotic.pics*
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
@@ -1694,6 +1711,7 @@ https://www.eyval.net/*
 *://www.0niz.com/*.html
 *://www.7k1a.com/*.html
 *://www.mfpho.com/*.html
+*://www.hutu6.com/*/*.html
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
@@ -1722,4 +1740,4 @@ https://www.eyval.net/*
 /^https?://(www\.rosi8\.net|www\.sfjpg\.(com|net)|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
 /^https?://heysexgirl\.com/archives/\d+$/
 *www.modelsvibe.com*
-/(www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top)/chapter/\d+/
+/(www\.jjmhw\.cc|www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top|mxsmh\d.com|mxsmh\d+.top|mxs\d+\.top)\/chapter\/\d+/
