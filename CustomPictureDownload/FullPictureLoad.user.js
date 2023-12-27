@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.29
+// @version            1.7.30
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -13053,7 +13053,8 @@ document.body.appendChild(text);
                 str_98: "頁獲取出錯，建議反饋",
                 str_99: "重試第",
                 str_100: "次",
-                str_101: "網址.txt已匯出"
+                str_101: "網址.txt已匯出",
+                str_102: "格式轉換中..."
             };
             break;
         case "zh-CN":
@@ -13158,7 +13159,8 @@ document.body.appendChild(text);
                 str_98: "页获取出错，建议反馈",
                 str_99: "重试第",
                 str_100: "次",
-                str_101: "网址.txt已导出"
+                str_101: "网址.txt已导出",
+                str_102: "格式转换中..."
             };
             break;
         default:
@@ -13263,7 +13265,8 @@ document.body.appendChild(text);
                 str_98: "Page Fetch Error Please Feedback",
                 str_99: "Retry No.",
                 str_100: "Bout",
-                str_101: "MediaURLs.txt Exported"
+                str_101: "MediaURLs.txt Exported",
+                str_102: "Format Converting"
             };
             break;
     }
@@ -15104,7 +15107,7 @@ document.body.appendChild(text);
                 }
             });
         },
-        blobToJpgBlob: async blob => {
+        blobToPicBlob: async (blob, type = "image/jpeg") => {
             let img = new Image();
             img.src = URL.createObjectURL(blob);
             await new Promise((resolve, reject) => (img.onload = resolve, img.onerror = reject));
@@ -15112,8 +15115,8 @@ document.body.appendChild(text);
             canvas.getContext("2d").drawImage(img, 0, 0);
             URL.revokeObjectURL(img.src);
             return canvas.convertToBlob({
-                type: "image/jpeg",
-                quality: 1
+                type: type,
+                quality: 0.9
             });
         },
         scrollEles: async (ele, ms = 100) => {
@@ -15347,18 +15350,20 @@ document.body.appendChild(text);
                     currentDownloadThread--;
                     let blob = data.response;
                     //debug("GM blob", blob);
-                    if (blob.type == "application/octet-stream" || blob.type == "binary/octet-stream") {
+                    if (/\/octet-stream/.test(blob.type) && blob.size > 1000) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
-                            picNum: picNum
+                            picNum: picNum,
+                            src: srcUrl
                         });
                         getDataMsg(displayLanguage.str_25, picNum, imgsNum);
                     } else if (/^image|^video|text\/base64\.jpg/.test(blob.type)) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
-                            picNum: picNum
+                            picNum: picNum,
+                            src: srcUrl
                         });
                         getDataMsg(displayLanguage.str_25, picNum, imgsNum);
                     } else {
@@ -15570,9 +15575,15 @@ document.body.appendChild(text);
                         let blobData = blobDataArray[i].blob;
                         let type = blobData.type;
                         try {
-                            if (/octet-stream/.test(type) /* || type == "image/webp"*/ ) {
-                                blobData = await fun.blobToJpgBlob(blobData);
-                                ex = "jpg";
+                            if (/octet-stream/.test(type)) {
+                                if (/\.webp/i.test(blobDataArray[i].src)) {
+                                    blobData = await fun.blobToPicBlob(blobData, "image/webp");
+                                    ex = "webp";
+                                } else {
+                                    blobData = await fun.blobToPicBlob(blobData);
+                                    ex = "jpg";
+                                }
+                                fun.showMsg(`${displayLanguage.str_102} ${(i+ 1)}/${blobDataArray.length}`, 0);
                             } else if (/^text\/base64\.jpg/.test(type)) {
                                 ex = "jpg";
                             } else {
@@ -15582,7 +15593,7 @@ document.body.appendChild(text);
                             if (/^image/.test(type)) {
                                 ex = "jpg";
                             } else {
-                                console.error("\nimgZipDownload() PromiseAll blob資料格式錯誤", blobDataArray);
+                                console.error("\nimgZipDownload() PromiseAll blob資料格式錯誤", blobDataArray[i]);
                                 fun.showMsg(displayLanguage.str_30, 0);
                                 return;
                             }
