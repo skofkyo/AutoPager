@@ -700,7 +700,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/27 20:05</p>
+<p>2023/12/29 01:11</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1990,6 +1990,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 </td>
             </tr>
             <tr>
+                <td><a href="https://akuma.moe/">akuma.moe</a></td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://cathentai.net/">Cathentai</a></td>
                 <td>作用在List Read頁，<a href="https://hentaibeeg.com/">hentaibeeg.com</a>，<a href="https://hentaicolor.net/">hentaicolor.net</a>，<a href="https://nyahentai.info/">nyahentai.info</a></td>
             </tr>
@@ -2164,6 +2168,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://litu100.xyz/">丽图·污漫画</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://91manwu.com/vodtype/4.html">91漫屋</a></td>
+                <td><a href="https://fumanwu.org/">腐漫屋</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.jjmhw.cc/">久久漫画网</a></td>
