@@ -1,4 +1,4 @@
-2023/12/27 20:05
+2023/12/29 01:11
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -741,6 +741,7 @@ Fapello
 *://www.959278.com/tu/*.html
 *://www.1001yy.com/tp/*.html
 *://www.biutu.com/pic/*.html
+*://www.hiuin.com/pic/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -861,6 +862,9 @@ Pururin
 
 丽图·污漫画
 *://litu100.xyz/comic/id-*/*.html
+
+91漫屋/腐漫屋
+/^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 
 ACG漫画网
 *://www.acgomh.com/*/*.html
@@ -1713,7 +1717,9 @@ https://www.eyval.net/*
 *://www.959278.com/tu/*.html
 *://www.1001yy.com/tp/*.html
 *://www.biutu.com/pic/*.html
+*://www.hiuin.com/pic/*.html
 *erotic.pics*
+/^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
 *://youwu.asia/albums/*
