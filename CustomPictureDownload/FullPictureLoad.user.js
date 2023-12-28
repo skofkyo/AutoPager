@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.31
+// @version            1.7.32
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -2504,7 +2504,7 @@
         },
         button: [4],
         insertImg: ["#content", 2],
-        customTitle: () => fun.title(" – 小姐姐").replace(/\[\d+[\s\.\+\w-]+\]/gi, ""),
+        customTitle: () => fun.title(" – 小姐姐").replace(/\[\d+[\s\.\+\w-]+\]/gi, "").replace(/\s?\d+p/i, ""),
         category: "nsfw1"
     }, {
         name: "洛秀网",
@@ -6272,7 +6272,7 @@
     }, {
         name: "3K图片网/桃子啦 格式",
         host: ["www.3ktu.com", "www.tufada.com"],
-        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
+        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu|hiuin)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
         include: "#showimg img,.img-box img",
         imgs: () => {
             let max;
@@ -7479,6 +7479,37 @@
         css: ".advt{display:none!important}",
         category: "hcomic"
     }, {
+        name: "akuma.moe",
+        host: ["akuma.moe"],
+        reg: /^https?:\/\/akuma\.moe\/g\/\w+$/i,
+        init: async () => await fun.waitEle("#pages"),
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae("#pages img")].map(e => e.src);
+            fun.showMsg(displayLanguage.str_05, 0);
+            return fetch(siteUrl, {
+                "headers": {
+                    "accept": "*/*",
+                    "x-csrf-token": "qeSBWvqo2nmuMKp6kEZbyNmuB0BKaT6GY9wUgXuM",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "body": null,
+                "method": "POST"
+            }).then(res => res.json()).then(arr => {
+                fun.hideMsg();
+                let img = fun.ge("#pages img");
+                let src = img.src;
+                let imgDir = src.match(/^https?:\/\/[^\/]+\/\d+\//)[0];
+                return arr.map(e => imgDir + e);
+            });
+        },
+        button: [4],
+        insertImg: [
+            ["#pages", 0], 2
+        ],
+        go: 1,
+        customTitle: () => fun.ge(".entry-header>span") ? fun.geT(".entry-header>span") : fun.geT(".entry-title"),
+        category: "hcomic"
+    }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/圖片清單頁showAll",
         host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net"],
         reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net)\/[^/]+\/(#collapse)?$/i,
@@ -8341,6 +8372,19 @@
         insertImg: ["#Big_Image", 2],
         customTitle: () => fun.geT(".page-header").replace("線上閱讀", ""),
         css: "#content>.col-lg-12,[id^=read_online_ads_area],#Big_Image~*{display:none!important}",
+        category: "hcomic"
+    }, {
+        name: "91漫屋/腐漫屋",
+        host: ["91manwu.com", "fumanwu.org"],
+        reg: /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/,
+        include: "//div[div[img[@class='lazy chapter-img']]]",
+        imgs: ".chapter-img",
+        button: [4],
+        insertImg: ["//div[div[img[@class='lazy chapter-img']]]", 2],
+        autoDownload: [0],
+        next: "//a[span[text()='下一话']][contains(@href,'html')]",
+        prev: "//a[span[text()='上一话']][contains(@href,'html')]",
+        customTitle: () => fun.geT(".hl-vod-name") + " - " + fun.geT(".hl-vod-name+li").replace("章节:  ", ""),
         category: "hcomic"
     }, {
         name: "Caitlin.top",
@@ -11746,6 +11790,14 @@ window.parent.postMessage({
             let json = await fetch(api).then(res => res.json());
             siteJson = json;
             debug("\n此頁JSON資料\n", json);
+            let readHistoryData = localStorage.getItem("copymangaReadHistory");
+            let pathnameSplit = location.pathname.split("/");
+            let comic = pathnameSplit[2];
+            let chapter = pathnameSplit[4];
+            let obj;
+            readHistoryData ? obj = JSON.parse(readHistoryData) : obj = {};
+            obj[comic] = chapter;
+            localStorage.setItem("copymangaReadHistory", JSON.stringify(obj));
         },
         imgs: () => siteJson.results.chapter.contents.map(e => e.url),
         button: [4],
@@ -11767,6 +11819,33 @@ window.parent.postMessage({
         topButton: true,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.header+div[style],.comicContainerAds{display:none!important}",
         category: "comic"
+    }, {
+        name: "拷貝漫畫 目錄頁",
+        enable: 1,
+        reg: /(www\.)?(copymanga\.site|copymanga\.tv|mangacopy\.com)\/comic\/\w+$/,
+        delay: 300,
+        init: async () => {
+            fun.run("$(document).unbind();document[_0x1f93('0x1b')][_0x1f93('0x27')]=null;");
+            if (typeof aboutBlank === "function") fun.run("aboutBlank=()=>{};");
+            fun.clearAllTimer();
+            await fun.waitEle(".tab-pane.show.active a");
+            let readHistoryData = localStorage.getItem("copymangaReadHistory");
+            let pathnameSplit = location.pathname.split("/");
+            let comic = pathnameSplit.pop();
+            if (readHistoryData === null) {
+                return;
+            } else {
+                let obj = JSON.parse(readHistoryData);
+                if (obj[comic] === undefined) {
+                    return;
+                } else {
+                    let selector = `.upLoop a[href$="${obj[comic]}"]`;
+                    [...document.querySelectorAll(selector)].forEach(a => a.className = "page-all-item active");
+                }
+            }
+        },
+        css: ".page-all-item.active li{color:#fff !important}",
+        category: "none"
     }, {
         name: "拷貝漫畫M",
         host: ["www.copymanga.site", "copymanga.site", "www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
@@ -15378,7 +15457,7 @@ document.body.appendChild(text);
                     currentDownloadThread--;
                     let blob = data.response;
                     //debug("GM blob", blob);
-                    if (/\/octet-stream/.test(blob.type) && blob.size > 1000) {
+                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
@@ -15391,8 +15470,7 @@ document.body.appendChild(text);
                             load: "下載成功",
                             blob: blob,
                             picNum: picNum,
-                            src: srcUrl,
-                            data: data
+                            src: srcUrl
                         });
                         getDataMsg(displayLanguage.str_25, picNum, imgsNum);
                     } else {
