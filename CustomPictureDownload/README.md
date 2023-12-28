@@ -772,7 +772,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgmn01.cc/">极品性感美女</a></td>
+                <td><a href="https://www.xgmn05.cc/">极品性感美女</a></td>
                 <td><a href="https://m.xg08.xyz/">m.xg08.xyz</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
@@ -876,10 +876,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.06se.com/">六色美图</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://xx.knit.bid/">爱妹子</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1032,6 +1028,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://tu928.com/">tu928美女写真网</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://xiaojiejie.me/">小姐姐么</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1875,7 +1875,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式52個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式58個</a></td>
             </tr>
             <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
