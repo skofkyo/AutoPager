@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.30
+// @version            1.7.31
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -264,6 +264,7 @@
         init: () => [...fun.gae(".gallery-blur-item")].forEach(e => e.className = "gallery-item gallery-fancy-item"),
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src);
+            fun.showMsg("fun.xhrHEA(check)...", 0);
             let xhrNum = 0;
             let resArr = [...fun.gae(".article-content img[src*='-285x285']")].map(e => e.src.replace("-285x285", "")).map(async (src, i, arr) => {
                 let res = await fun.xhrHEAD(src);
@@ -531,7 +532,7 @@
         category: "nsfw1"
     }, {
         name: "极品性感美女",
-        host: ["www.xgmn01.cc", "m.xg08.xyz"],
+        host: ["www.xgmn05.cc", "m.xg08.xyz"],
         reg: /^https?:\/\/[^\/]+\/\w+\/\w+\.html/i,
         include: "//div[@class='toptip']/a[text()='极品性感美女']",
         init: () => {
@@ -838,13 +839,17 @@
         reg: /^https?:\/\/8ezy\.com\/[^\/]+\/$/,
         include: ".entry-content",
         init: () => fun.clearAllTimer(),
-        imgs: () => [...fun.gae(".entry-content img")].map(e => e.dataset.srcset),
+        imgs: () => [...fun.gae(".entry-content img")].map(e => e.dataset.srcset ?? e.src),
         button: [4],
         insertImg: [".entry-content", 2],
         autoDownload: [0],
         next: ".article-nav-prev a",
         prev: ".article-nav-next a",
         customTitle: () => fun.geT(".entry-title").replace(/\d+p/i, "").trim(),
+        fancybox: {
+            v: 3,
+            insertLibrarys: 1
+        },
         category: "nsfw1"
     }, {
         name: "8E资源站",
@@ -2477,6 +2482,29 @@
         prev: "//a[p[text()='下一篇']]",
         customTitle: () => fun.title("-", 1),
         //threading: 4,
+        category: "nsfw1"
+    }, {
+        name: "小姐姐么",
+        host: ["xiaojiejie.me"],
+        reg: /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/,
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            return fetch("/wp-admin/admin-ajax.php", {
+                "headers": {
+                    "accept": "*/*",
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "body": `action=chenxing_imageall&type=all&post_id=${chenxing.PID}`,
+                "method": "POST",
+            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => {
+                fun.hideMsg();
+                return doc.images;
+            });
+        },
+        button: [4],
+        insertImg: ["#content", 2],
+        customTitle: () => fun.title(" – 小姐姐").replace(/\[\d+[\s\.\+\w-]+\]/gi, ""),
         category: "nsfw1"
     }, {
         name: "洛秀网",
@@ -6244,7 +6272,7 @@
     }, {
         name: "3K图片网/桃子啦 格式",
         host: ["www.3ktu.com", "www.tufada.com"],
-        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
+        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
         include: "#showimg img,.img-box img",
         imgs: () => {
             let max;
@@ -6337,8 +6365,8 @@
         category: "nsfw2"
     }, {
         name: "KawaiiX系列",
-        host: ["kawaiix.com", "kawaiixgirl.com", "kawaiixpic.com", "kinkygirlz.com", "kawaiimetas.com", "assxpic.com", "metaxgirl.com", "eroticxgirl.com", "sexyxpic.com", "hottyxpic.com", "thongxxx.com", "juicexgirl.com", "adultmetas.com", "eroticxpic.com", "bustyxgirl.com", "beautyxgirl.com", "bellexpic.com", "pantyxpic.com", "www.peachgirlz.com", "peachgirlz.com", "pantyxart.com", "beautyxpic.com", "cutemetas.com", "cutexpic.com", "perfectxbody.com", "sexyqgirl.com", "bestxhips.com", "assgirlz.com", "beautifulmetas.com", "pantyxgirl.com", "greatxpic.com", "xartpic.com", "perfectxpic.com", "bestxboobs.com", "artthong.com", "hotbeautypic.com", "greatxgirl.com", "asianxpic.com", "bestxleg.com", "tokyohotgirl.com", "bestxass.com"],
-        reg: /^https?:\/\/(r18\.|www\.)?(kawaiix|kawaiixgirl|kawaiixpic|kinkygirlz|kawaiimetas|assxpic|metaxgirl|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|adultmetas|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|assgirlz|beautifulmetas|pantyxgirl|greatxpic|xartpic|perfectxpic|bestxboobs|artthong|hotbeautypic|greatxgirl|asianxpic|bestxleg|tokyohotgirl|bestxass)\.com\/[^/]+\/.+/,
+        host: ["kawaiithong.com", "kawaiix.com", "kawaiixgirl.com", "kawaiixpic.com", "kinkygirlz.com", "kawaiimetas.com", "assxpic.com", "metaxgirl.com", "eroticxgirl.com", "sexyxpic.com", "hottyxpic.com", "thongxxx.com", "juicexgirl.com", "adultmetas.com", "eroticxpic.com", "bustyxgirl.com", "beautyxgirl.com", "bellexpic.com", "pantyxpic.com", "www.peachgirlz.com", "peachgirlz.com", "pantyxart.com", "beautyxpic.com", "cutemetas.com", "cutexpic.com", "perfectxbody.com", "sexyqgirl.com", "bestxhips.com", "assgirlz.com", "beautifulmetas.com", "pantyxgirl.com", "greatxpic.com", "xartpic.com", "perfectxpic.com", "bestxboobs.com", "artthong.com", "hotbeautypic.com", "greatxgirl.com", "asianxpic.com", "bestxleg.com", "tokyohotgirl.com", "bestxass.com"],
+        reg: /^https?:\/\/(r18\.|www\.)?(kawaii(\w+)?|kinkygirlz|assxpic|metaxgirl|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|adultmetas|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|assgirlz|beautifulmetas|pantyxgirl|greatxpic|xartpic|perfectxpic|bestxboobs|artthong|hotbeautypic|greatxgirl|asianxpic|bestxleg|tokyohotgirl|bestxass)\.com\/[^/]+\/.+/,
         include: "//a[@data-title and picture/source]",
         imgs: "//a[@data-title and picture/source]",
         button: [4],
@@ -6347,8 +6375,8 @@
         category: "nsfw2"
     }, {
         name: "KawaiiX系列",
-        host: ["cn.kawaiix.com", "cn.kawaiixgirl.com", "cn.kawaiixpic.com", "cn.kinkygirlz.com", "cn.kawaiimetas.com", "cn.assxpic.com", "cn.metaxgirl.com", "cn.eroticxgirl.com", "cn.sexyxpic.com", "cn.hottyxpic.com", "cn.thongxxx.com", "cn.juicexgirl.com", "cn.eroticxpic.com", "cn.bustyxgirl.com", "cn.beautyxgirl.com", "cn.bellexpic.com", "cn.pantyxpic.com", "cn.peachgirlz.com", "cn.pantyxart.com", "cn.beautyxpic.com", "cn.cutemetas.com", "cn.cutexpic.com", "cn.perfectxbody.com", "cn.sexyqgirl.com", "cn.bestxhips.com", "cn.bestxass.com", "cn.assgirlz.com", "cn.bestxbum.com", "cn.adultmetas.com cn", "eroticxpic.com", "cn.xxxthong.com", "cn.thongxgirl.com", "cn.bestxlingerie.com", "cn.sexyxart.com", "cn.hotxhips.com", "cn.hotbeautypic", "cn.greatxgirl.com", "cn.asianxpic.com", "cn.bootyxgirl.com", "cn.tokyohotgirl.com"],
-        reg: /^https?:\/\/\w{2}\.(kawaiix|kawaiixgirl|kawaiixpic|kinkygirlz|kawaiimetas|assxpic|metaxgirl|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic|greatxgirl|asianxpic|bootyxgirl|tokyohotgirl)\.com\/[^/]+\/\w+/,
+        host: ["cn.kawaiithong.com", "cn.kawaiix.com", "cn.kawaiixgirl.com", "cn.kawaiixpic.com", "cn.kinkygirlz.com", "cn.kawaiimetas.com", "cn.assxpic.com", "cn.metaxgirl.com", "cn.eroticxgirl.com", "cn.sexyxpic.com", "cn.hottyxpic.com", "cn.thongxxx.com", "cn.juicexgirl.com", "cn.eroticxpic.com", "cn.bustyxgirl.com", "cn.beautyxgirl.com", "cn.bellexpic.com", "cn.pantyxpic.com", "cn.peachgirlz.com", "cn.pantyxart.com", "cn.beautyxpic.com", "cn.cutemetas.com", "cn.cutexpic.com", "cn.perfectxbody.com", "cn.sexyqgirl.com", "cn.bestxhips.com", "cn.bestxass.com", "cn.assgirlz.com", "cn.bestxbum.com", "cn.adultmetas.com cn", "eroticxpic.com", "cn.xxxthong.com", "cn.thongxgirl.com", "cn.bestxlingerie.com", "cn.sexyxart.com", "cn.hotxhips.com", "cn.hotbeautypic", "cn.greatxgirl.com", "cn.asianxpic.com", "cn.bootyxgirl.com", "cn.tokyohotgirl.com"],
+        reg: /^https?:\/\/\w{2}\.(kawaii(\w+)?|kinkygirlz|assxpic|metaxgirl|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|adultmetas|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic|greatxgirl|asianxpic|bootyxgirl|tokyohotgirl)\.com\/[^/]+\/\w+/,
         include: "//a[@data-title and picture/source]",
         imgs: () => fun.getImg("//a[@data-title and picture/source]", (fun.geT(".nav-links>*:last-child", 2) || 1), 16),
         button: [4],
@@ -8220,7 +8248,7 @@
     }, {
         name: "ACG漫画网",
         host: ["www.acgomh.com", "www.acgxmh.com", "www.acgomh.com", "www.cool-manga.com", "www.porn-comic.com", "porn-comic.com"],
-        reg: /((www\.)?acg(x|o)mh\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/(h|hentai)\/\d+\.html/,
+        reg: /((www\.)?acg(x|o)mh\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|western)\/\d+\.html/,
         imgs: () => fun.getImg(".manga-page img", fun.geT("#pages>*:last-child", 2), 5),
         button: [4],
         insertImg: [".manga-page", 1],
@@ -15363,7 +15391,8 @@ document.body.appendChild(text);
                             load: "下載成功",
                             blob: blob,
                             picNum: picNum,
-                            src: srcUrl
+                            src: srcUrl,
+                            data: data
                         });
                         getDataMsg(displayLanguage.str_25, picNum, imgsNum);
                     } else {
@@ -15376,7 +15405,8 @@ document.body.appendChild(text);
                             blob: blob,
                             error: "下載錯誤",
                             picNum: picNum,
-                            src: srcUrl
+                            src: srcUrl,
+                            data: data
                         });
                         getDataMsg(displayLanguage.str_26, picNum, imgsNum);
                     }
@@ -17094,7 +17124,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     case 27: //Esc
                         ge("#FullPictureLoadOptions").style.display = "none";
                         break;
-                    case 111: //數字鍵/
+                    case 111: //數字鍵
                         fun.showMsg(displayLanguage.str_91);
                         localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
                         setTimeout(() => location.reload(), 1000);
