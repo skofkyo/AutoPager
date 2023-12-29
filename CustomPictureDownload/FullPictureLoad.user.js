@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.32
+// @version            1.7.33
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -2499,12 +2499,37 @@
                 "method": "POST",
             }).then(res => res.text()).then(text => fun.doc(text)).then(doc => {
                 fun.hideMsg();
-                return doc.images;
+                return [...doc.images];
             });
         },
         button: [4],
         insertImg: ["#content", 2],
         customTitle: () => fun.title(" – 小姐姐").replace(/\[\d+[\s\.\+\w-]+\]/gi, "").replace(/\s?\d+p/i, ""),
+        category: "nsfw1"
+    }, {
+        name: "Coser Lab",
+        host: ["coserlab.io"],
+        reg: /^https?:\/\/coserlab\.io\/archives\/\d+$/,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae("a.masonry-image img")].map(e => e.src);
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            let resArr = [...fun.gae("a.masonry-image")].map(a => a.href.replace("-scaled", "")).map(async (src, i, arr) => {
+                let res = await fun.xhrHEAD(src);
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                let status = res.status;
+                return status == 404 ? src.replace(/(\.[a-z]+)$/i, "-scaled$1") : src;
+            });
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
+        },
+        button: [4],
+        insertImg: [
+            [".masonry-list", 2, ".masonry-list"], 2
+        ],
+        customTitle: () => fun.geT("span.current"),
         category: "nsfw1"
     }, {
         name: "洛秀网",
@@ -7483,13 +7508,33 @@
         host: ["akuma.moe"],
         reg: /^https?:\/\/akuma\.moe\/g\/\w+$/i,
         init: async () => await fun.waitEle("#pages"),
-        imgs: () => {
-            thumbnailsSrcArray = [...fun.gae("#pages img")].map(e => e.src);
+        imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
+            if (options.fancybox == 1 && !downloading) {
+                let pages = parseInt(fun.geT(".pages .value"), 10);
+                if (pages > 40) {
+                    let max = Math.ceil(pages / 20);
+                    let resArr = fun.arr(max).map((_, i) => {
+                        return fetch(pag.act, {
+                            "headers": {
+                                "accept": "*/*",
+                                "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                                "x-csrf-token": ajx.hdr["X-CSRF-TOKEN"],
+                                "x-requested-with": "XMLHttpRequest"
+                            },
+                            "body": `index=${i}`,
+                            "method": "POST",
+                        }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images]);
+                    });
+                    thumbnailsSrcArray = await Promise.all(resArr).then(data => fun.getImgSrcArr(data.flat()));
+                } else {
+                    thumbnailsSrcArray = [...fun.gae("#pages img")].map(e => e.src);
+                }
+            }
             return fetch(siteUrl, {
                 "headers": {
                     "accept": "*/*",
-                    "x-csrf-token": "qeSBWvqo2nmuMKp6kEZbyNmuB0BKaT6GY9wUgXuM",
+                    "x-csrf-token": ajx.hdr["X-CSRF-TOKEN"],
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": null,
@@ -7501,6 +7546,33 @@
                 let imgDir = src.match(/^https?:\/\/[^\/]+\/\d+\//)[0];
                 return arr.map(e => imgDir + e);
             });
+            /*
+            if (options.fancybox == 1 && !downloading) {
+                let pages = parseInt(fun.geT(".pages .value"), 10);
+                if (pages > 40) {
+                    await new Promise(async resolve => {
+                        fun.showMsg(displayLanguage.str_08, 0);
+                        for (let i = 1; i <= 100; i++) {
+                            if (!fun.ge("#more-thumbs")) {
+                                fun.hideMsg();
+                                resolve();
+                                break;
+                            }
+                            let ele = fun.ge("#more-thumbs");
+                            if (ele) ele.click();
+                            await fun.delay(300, 0);
+                        }
+                    });
+                }
+                thumbnailsSrcArray = [...fun.gae("#pages img")].map(e => e.src);
+            }
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge("#pages a").href;
+            let iframe = await fun.iframe(url, 1000);
+            let imgs = iframe.img_lst.map(e => iframe.img_prt + "/" + e);
+            fun.ge("#FullPictureLoadIframe").remove();
+            return imgs;
+            */
         },
         button: [4],
         insertImg: [
@@ -8229,9 +8301,7 @@
             let arr = fun.geT(".b", 1, doc).split("-");
             return arr[2].trim() + " - " + arr[3].trim();
         },
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: "body{overflow:unset!important}.awesome970{display:none!important;}",
         category: "comic"
     }, {
@@ -9726,10 +9796,7 @@ document.body.appendChild(text);
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: doc => fun.title("_", 2, doc),
-        preloadNext: (nextDoc, obj) => {
-            let arr = fun.getImgSrcArr(obj.imgs, nextDoc);
-            fun.picPreload(arr, obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: (nextDoc, obj) => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextDoc), obj.customTitle(nextDoc), "next"),
         css: "body{overflow:unset!important}",
         category: "comic"
     }, {
@@ -9930,12 +9997,7 @@ document.body.appendChild(text);
             let s = doc.title.split("_");
             return (s[1] + " - " + s[0]).replace(" - 漫画星球", "");
         },
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, ".main_img img", 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, ".main_img img", 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
         name: "漫畫狗",
@@ -10254,9 +10316,7 @@ document.body.appendChild(text);
         next: "//a[label[text()='下一章']][contains(@href,'chapter')]",
         prev: "//a[label[text()='上一章']][contains(@href,'chapter')]",
         customTitle: doc => fun.attr("meta[name='description']", "content", doc),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".mdui-container .mdui-col-xs-4:nth-child(2){display:none!important;}.mdui-col-xs-4{width:50%!important}",
         category: "comic"
     }, {
@@ -10530,9 +10590,7 @@ window.parent.postMessage({
         },
         prev: 1,
         customTitle: doc => fun.title("在线", 1, doc),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".a-90mh{display:none!important}",
         category: "comic"
     }, {
@@ -10599,9 +10657,7 @@ window.parent.postMessage({
         },
         prev: 1,
         customTitle: doc => fun.title("在线", 1, doc),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(*[class^=fancybox]),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
         category: "comic"
     }, {
@@ -10620,9 +10676,7 @@ window.parent.postMessage({
         next: "//a[text()='下一章'][contains(@href,'html')] | //a[img[contains(@src,'icon_xz.png')]][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')] | //a[img[contains(@src,'icon_sz.png')]][contains(@href,'html')]",
         customTitle: doc => fun.title("在线", 1, doc),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: "body{padding:0!important}div[style*='text-align']:not(#images),.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(*[class^=fancybox]){display:none!important}",
         category: "comic"
     }, {
@@ -10641,9 +10695,7 @@ window.parent.postMessage({
         next: "//a[text()='下一章'][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: doc => fun.title("-零点漫画", 0, doc).trim(),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".action-list li{width:50% !important}div[style*='text-align']:not(#images),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}",
         category: "comic"
     }, {
@@ -10674,9 +10726,7 @@ window.parent.postMessage({
             location.hostname == "m.100mhl.com" ? comic_name = document.title.split("漫画")[0] : comic_name = fun.attr("meta[name='keywords']", "content").split(" ")[0];
             return comic_name + " - " + fun.geT(".BarTit").trim();
         },
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), nextDoc.title, "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), nextDoc.title, "next"),
         css: "#addMoney,#images~div[style*=blur],div[style*='text-align: left;']{display:none!important}",
         category: "comic"
     }, {
@@ -10703,9 +10753,7 @@ window.parent.postMessage({
         },
         prev: 1,
         customTitle: doc => /xlsmh|gougoumh|yxtun/.test(location.hostname) ? fun.geT("#panel-title span,.title3 span", 1, doc).replace(">", " - ") : fun.title("在线", 1, doc),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(obj.imgs(nextDoc), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(obj.imgs(nextDoc), obj.customTitle(nextDoc), "next"),
         css: "body{padding:0!important}.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(*[class^=fancybox]),.bottom~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(*[class^=fancybox]),div[style*='text-align: left;']{display:none!important}",
         category: "comic"
     }, {
@@ -10950,11 +10998,7 @@ window.parent.postMessage({
                 return fun.title("下拉", 1, doc).trim().replace("-", " - ");
             }
         },
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, ".comic-page img,img[data-src],img[data-original],canvas[data-src]", 30000).then(nextIframeDoc => {
-                fun.picPreload(obj.imgs(nextIframeDoc), obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, ".comic-page img,img[data-src],img[data-original],canvas[data-src]", 30000).then(nextIframeDoc => fun.picPreload(obj.imgs(nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         css: "body>ins,#mainView>.read,.chapter-end .read,#chapter1,#chapter3,.cnt-4,.comic-list a,.chapter-end>a,div[style^=height]{display:none!important}",
         category: "comic"
     }, {
@@ -11002,12 +11046,7 @@ window.parent.postMessage({
         next: "a#next_c[href]",
         prev: "a#last_c[href]",
         customTitle: doc => fun.title(" - ", 3, doc).trim(),
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeSrcDoc(nextLink, "#showimage img", 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeSrcDoc(nextLink, "#showimage img", 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
@@ -11104,10 +11143,7 @@ window.parent.postMessage({
             })
         },
         prev: 1,
-        preloadNext: async (nextDoc, obj) => {
-            let arr = await fun.getKukudmSrc(nextLink, nextDoc, 0);
-            fun.picPreload(arr, nextDoc.title, "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await fun.getKukudmSrc(nextLink, nextDoc, 0), nextDoc.title, "next"),
         css: "body{background-image:unset}body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}body{scrollbar-width:none;-ms-overflow-style:none;overflow-x:hidden;overflow-y:auto}",
         category: "comic"
     }, {
@@ -11151,10 +11187,7 @@ window.parent.postMessage({
         },
         prev: 1,
         customTitle: () => fun.title("在线", 1),
-        preloadNext: async (nextDoc, obj) => {
-            let arr = await fun.getKukudmSrc(nextLink, nextDoc, 0);
-            fun.picPreload(arr, nextDoc.title.split("在线")[0], "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await fun.getKukudmSrc(nextLink, nextDoc, 0), nextDoc.title.split("在线")[0], "next"),
         css: ".imgBox{margin-bottom:0px!important}.subNav{border-top:1px solid #dcdcde}body{scrollbar-width:none;overflow-x:hidden;overflow-y:auto}",
         category: "comic"
     }, {
@@ -11240,9 +11273,7 @@ window.parent.postMessage({
                 return fun.geT(".nav_name>h1", 1, doc) + " - " + fun.geT("h3", 1, doc);
             }
         },
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         category: "comic"
     }, {
         name: "大树漫画",
@@ -11276,12 +11307,7 @@ window.parent.postMessage({
         next: "//a[span[text()='下一话']] | //a[span[text()='NEXT']]",
         prev: "//a[span[text()='上一话']] | //a[span[text()='PREV']]",
         customTitle: doc => fun.geT("h1", 1, doc),
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
         name: "GODA漫畫 / 包子漫畫",
@@ -11327,11 +11353,7 @@ window.parent.postMessage({
         },
         prev: 1,
         customTitle: doc => fun.geT("ol.inline-flex>li:nth-child(2) a", 1, doc) + " - " + fun.geT("ol.inline-flex>li:nth-child(3) a", 1, doc),
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, ".touch-manipulation img", 30000).then(async nextIframeDoc => {
-                fun.picPreload(await obj.imgs(nextIframeDoc), obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, ".touch-manipulation img", 30000).then(async nextIframeDoc => fun.picPreload(await obj.imgs(nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
         name: "漫畫屋",
@@ -11518,12 +11540,7 @@ window.parent.postMessage({
         next: "//a[img[@alt='下一章'] and contains(@href,'html')]",
         prev: "//a[img[@alt='上一章'] and contains(@href,'html')]",
         customTitle: doc => fun.title("_", 3, doc),
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
         name: "七夕漫画M",
@@ -11540,12 +11557,7 @@ window.parent.postMessage({
             let s = doc.title.replace(" - 七夕漫画", "").split("_");
             return s[1] + " - " + s[0];
         },
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         css: ".ad_js{display:none!important}",
         category: "comic"
     }, {
@@ -11722,12 +11734,7 @@ window.parent.postMessage({
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: doc => fun.geT("h1.title", 1, doc),
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, ".comiclist img:not([src*=loading])", 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, obj.customTitle(nextIframeDoc), "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, ".comiclist img:not([src*=loading])", 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
         name: "雪人漫画M/艾米漫画M/聚合漫画屋M/酷看漫画M",
@@ -11747,12 +11754,7 @@ window.parent.postMessage({
                 return fun.title("在线阅读-艾米漫画");
             }
         },
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, "#cp_img>img[data-original]:not([src*=loading])", 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, nextIframeDoc.title, "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, "#cp_img>img[data-original]:not([src*=loading])", 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), nextIframeDoc.title, "next")),
         category: "comic"
     }, {
         name: "拷貝漫畫",
@@ -11929,9 +11931,7 @@ window.parent.postMessage({
             let comic_chapter = s[3];
             return comic_name + " - " + comic_chapter.replace(/（\d+P）/i, "");
         },
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".c>*:not(.n.zhangjie):not(.p.zhangjie){display:none!important;}#ComicPic{display:block!important;margin: 0 auto !important;}",
         category: "comic"
     }, {
@@ -11951,9 +11951,7 @@ window.parent.postMessage({
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: (doc = document) => doc.title.replace(/（\d+P）.+/i, "").replace("第", " - 第"),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         category: "comic"
     }, {
         name: "酷漫屋",
@@ -11975,12 +11973,7 @@ window.parent.postMessage({
                 return s[1] + " - " + s[0];
             }
         },
-        preloadNext: (nextDoc, obj) => {
-            fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => {
-                let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-                fun.picPreload(arr, nextIframeDoc.title, "next");
-            });
-        },
+        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), nextIframeDoc.title, "next")),
         category: "comic"
     }, {
         name: "速漫库",
@@ -11995,11 +11988,7 @@ window.parent.postMessage({
         next: "//a[span[text()='下一章']]",
         prev: "//a[span[text()='上一章']]",
         customTitle: doc => fun.attr("meta[itemprop=mhname]", "content", doc) + " - " + fun.geT(".chaptitle", 1, doc),
-        preloadNext: async (nextDoc, obj) => {
-            let nextIframeDoc = await fun.iframeDoc(nextLink, ".main_img img");
-            let arr = fun.getImgSrcArr(obj.imgs, nextIframeDoc);
-            fun.picPreload(arr, obj.customTitle(nextIframeDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.iframeDoc(nextLink, ".main_img img").then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
         name: "漫画DB",
@@ -12484,9 +12473,7 @@ document.body.appendChild(text);
         //next: "//a[@href and text()='下一章']",
         prev: "//a[@href and text()='上一章']",
         customTitle: doc => fun.geT("#bookname", 1, doc) + " - " + fun.geT(".headline", 1, doc),
-        preloadNext: async (nextDoc, obj) => {
-            fun.picPreload(await obj.imgs(nextLink, nextDoc), obj.customTitle(nextDoc), "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc), obj.customTitle(nextDoc), "next"),
         css: "#content~a,.content~a,.apjg,.pager a:nth-child(n+2):nth-child(-n+3){display:none!important}.pager a{width:44%!important}#content,.content{width:100%}",
         category: "comic"
     }, {
@@ -12511,10 +12498,7 @@ document.body.appendChild(text);
         autoDownload: [0],
         next: "//a[label[text()='下一章'] and not(starts-with(@href,'java'))]",
         prev: "//a[label[text()='上一章'] and not(starts-with(@href,'java'))]",
-        preloadNext: async (nextDoc, obj) => {
-            let arr = fun.getImgSrcArr(obj.imgs, nextDoc);
-            fun.picPreload(arr, nextDoc.title, "next");
-        },
+        preloadNext: async (nextDoc, obj) => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextDoc), nextDoc.title, "next"),
         category: "comic"
     }, {
         name: "哈哈漫画 - 分類自動翻頁",
@@ -12615,10 +12599,7 @@ document.body.appendChild(text);
                 return data.articlename + " - " + data.chaptername_read;
             }
         },
-        preloadNext: (nextDoc, obj) => {
-            let arr = fun.getImgSrcArr(obj.imgs, nextDoc);
-            fun.picPreload(arr, nextDoc.title, "next");
-        },
+        preloadNext: (nextDoc, obj) => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextDoc), nextDoc.title, "next"),
         category: "comic"
     }, {
         name: "轻之国度",
@@ -14192,6 +14173,17 @@ document.body.appendChild(text);
                 }
             });
         },
+        iframe: async (url, time = 200) => {
+            const iframe = document.createElement("iframe");
+            iframe.id = "FullPictureLoadIframe";
+            iframe.src = url;
+            iframe.style.display = "none";
+            iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
+            document.body.appendChild(iframe);
+            await new Promise((resolve) => (iframe.onload = resolve));
+            await fun.delay(time, 0);
+            return iframe.contentWindow;
+        },
         autoPagerNextObserver: new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && autoPager) {
@@ -14406,6 +14398,7 @@ document.body.appendChild(text);
                 buttonDiv.style.width = "100%";
                 buttonDiv.style.height = "42px";
                 buttonDiv.style.display = "inline-block";
+                buttonDiv.style.textAlign = "center";
                 if (typeof siteData.button[2] === "number") {
                     for (let i = 0; i < siteData.button[2]; i++) {
                         let br = document.createElement("br");
@@ -14552,15 +14545,15 @@ document.body.appendChild(text);
                         targetEle = fun.ge(ele[0]);
                         if (ele[1] == 0) {
                             targetEle.appendChild(fragment);
-                            targetEle.style.textAlign = "center";
+                            //targetEle.style.textAlign = "center";
                             targetEle.style.display = "block";
                         } else if (ele[1] == 1) {
                             targetEle.parentNode.insertBefore(fragment, targetEle);
-                            targetEle.parentNode.style.textAlign = "center";
+                            //targetEle.parentNode.style.textAlign = "center";
                             targetEle.parentNode.style.display = "block";
                         } else if (ele[1] == 2) {
                             targetEle.parentNode.insertBefore(fragment, targetEle.nextSibling);
-                            targetEle.parentNode.style.textAlign = "center";
+                            //targetEle.parentNode.style.textAlign = "center";
                             targetEle.parentNode.style.display = "block";
                         }
                         if (typeof ele[2] != "undefined") {
@@ -14572,7 +14565,7 @@ document.body.appendChild(text);
                         targetEle = fun.ge(ele);
                         targetEle.innerHTML = "";
                         targetEle.appendChild(fragment);
-                        targetEle.style.textAlign = "center";
+                        //targetEle.style.textAlign = "center";
                         targetEle.style.display = "block";
                         if (siteData.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
                         if (siteData.go == 1) goToNo1Img();
@@ -15924,6 +15917,8 @@ document.body.appendChild(text);
             imgBox.style.width = "100%";
             imgBox.style.maxWidth = "1400px";
             imgBox.style.backgroundColor = "#F6F6F6";
+            imgBox.style.textAlign = "center";
+            imgBox.style.display = "block";
             let srcArr1 = [...gae(".FullPictureLoadImage:not(.small)")].map(e => e.dataset.src ? e.dataset.src : e.src);
             let srcArr2 = srcArr1.map((item, index, arr) => parseInt(index, 10) % 2 == 0 ? (parseInt(index, 10) + 1) == arr.length ? arr[index] : arr[parseInt(index, 10) + 1] : arr[parseInt(index, 10) - 1]);
             let srcArr;
@@ -15981,7 +15976,7 @@ document.body.appendChild(text);
                     debug("沒有引入FancyboxV5", error);
                 }
             }
-            tE.parentNode.style.textAlign = "center";
+            //tE.parentNode.style.textAlign = "center";
             tE.parentNode.style.display = "block";
             [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => {
                 if (e.tagName == "IMG") {
