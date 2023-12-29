@@ -1035,6 +1035,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://coserlab.io/">Coser Lab</a></td>
+                <td>4K~8K高解析</td>
+            </tr>
+            <tr>
                 <td><a href="https://loxiu.com/">洛秀网</a></td>
                 <td></td>
             </tr>
