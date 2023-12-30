@@ -4783,6 +4783,22 @@
         css: ".sponsor,.chatra--webkit{display:none!important}",
         category: "ad"
     }, {
+        name: "爱微社区",
+        host: ["dev.avjb.com"],
+        link: "https://dev.avjb.com/albums/",
+        reg: /^https:\/\/dev\.avjb\.com\/albums\/\d+\/[^\/]+\/$/i,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".images>a>img")].map(e => e.dataset.original ?? e.src);
+            return [...fun.gae(".images>a")];
+        },
+        button: [4],
+        insertImg: [
+            [".images", 2], 2
+        ],
+        go: 1,
+        customTitle: () => fun.geT("h1.title").trim(),
+        category: "nsfw2"
+    }, {
         name: "Asian To Lick",
         host: ["asiantolick.com"],
         reg: /asiantolick\.com\/post/,
@@ -16432,6 +16448,7 @@ document.body.appendChild(text);
     border: 1px solid #a0a0a0 !important;
     background-color: transparent !important;
     outline: unset !important;
+    display: unset !important;
     -webkit-appearance: auto !important;
 }
 
