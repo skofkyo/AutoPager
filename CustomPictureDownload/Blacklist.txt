@@ -1,4 +1,4 @@
-2023/12/29 01:11
+2023/12/3017:04
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -33,8 +33,8 @@ HotAsiaGirl圖片
 PimpAndHost相簿
 /pimpandhost\.com\/album\/\d+/
 
-TWHentai圖片清單頁
-/twhentai\.com\/hentai_manga\/\d+\/$/
+TWHenta//十八禁成人H漫 圖片清單頁
+/^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
 
 Xiutaku/Kiutaku
 /^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
@@ -195,7 +195,7 @@ Depday-Info
 *://www.taotu8.cc/mm/*.html
 
 美人图
-*://meirentu.cc/pic/*.html
+*://meirentu.*/pic/*.html
 
 性感美女写真
 *://www.xg*.*/*/*.html
@@ -445,6 +445,9 @@ SexyAsianGirl
 
 尤物丧志
 *://youwu.asia/albums/*
+
+HotAsianX
+*://hotasianx.com/albums/*
 
 Chinese Beauties
 *://sxchinesegirlz01.xyz/*/*/*/*/
@@ -742,6 +745,21 @@ Fapello
 *://www.1001yy.com/tp/*.html
 *://www.biutu.com/pic/*.html
 *://www.hiuin.com/pic/*.html
+*://www.ksruisj.com/tu/*.html
+*://www.mmokok.com/meitu/*.html
+*://www.nangluan.com/meitu/*.html
+*://www.579993.com/tu/*.html
+*://www.wpslgs.com/meitu/*.html
+*://www.xscmt.com/pic/*.html
+*://www.hyqcxs.com/pic/*.html
+*://www.xthkw.com/pic/*.html
+*://www.fzxfl.com/tupian/*.html
+*://www.wsvdj.com/tu/*.html
+*://www.timitm.com/tu/*.html
+*://www.5269se.com/tp/*.html
+*://www.xgxff.com/tp/*.html
+*://www.srzx168.com/meitu/*.html
+*://www.nxzths.com/news/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -1346,7 +1364,7 @@ https://www.nuyet.com/gallery/*
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
 *://www.ikmn*.*/*/*.html
-*://meirentu.cc/pic/*.html
+*://meirentu.*/pic/*.html
 *://www.xg*.*/*/*.html
 *://*v2ph.*/album/*
 *://www.meitule.*/photo/*.html
@@ -1718,6 +1736,21 @@ https://www.eyval.net/*
 *://www.1001yy.com/tp/*.html
 *://www.biutu.com/pic/*.html
 *://www.hiuin.com/pic/*.html
+*://www.ksruisj.com/tu/*.html
+*://www.mmokok.com/meitu/*.html
+*://www.nangluan.com/meitu/*.html
+*://www.579993.com/tu/*.html
+*://www.wpslgs.com/meitu/*.html
+*://www.xscmt.com/pic/*.html
+*://www.hyqcxs.com/pic/*.html
+*://www.xthkw.com/pic/*.html
+*://www.fzxfl.com/tupian/*.html
+*://www.wsvdj.com/tu/*.html
+*://www.timitm.com/tu/*.html
+*://www.5269se.com/tp/*.html
+*://www.xgxff.com/tp/*.html
+*://www.srzx168.com/meitu/*.html
+*://www.nxzths.com/news/*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
@@ -1732,6 +1765,8 @@ https://www.eyval.net/*
 *://www.7k1a.com/*.html
 *://www.mfpho.com/*.html
 *://www.hutu6.com/*/*.html
+*://hotasianx.com/*
+/^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
