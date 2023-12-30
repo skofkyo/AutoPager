@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.33
+// @version            1.7.34
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -357,7 +357,7 @@
         name: "24FA",
         host: ["www.24fa.com"],
         link: "https://www.24fa.com/c49.aspx",
-        reg: /(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}\/m?n\w+\.aspx/,
+        reg: /(www\.)?\d{2,3}(m|w|faw|fa|aa|xx)?\.[a-z]{2,4}\/m?n\w+\.aspx/,
         init: "document.onkeydown=null",
         imgs: () => fun.getImgA("#content img", ".pager a:not([title])"),
         button: [4],
@@ -372,14 +372,27 @@
         name: "Hit-x-Hot/Hitxhot Album Archive II",
         host: ["www.hitxhot.org", "hitxhot.com"],
         reg: /www\.hitxhot\.org\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html(\?m=1)?$|^https?:\/\/hitxhot\.com\/blog\/\w+\.html(\?m=1)?$/i,
-        imgs: () => {
+        imgs: async () => {
             let max;
             try {
                 max = fun.geT(".entry-title").match(/\d+$/)[0];
             } catch (e) {
                 max = 1;
             }
-            return /\?m=1/.test(siteUrl) ? fun.getImg(".entry-content img", max, "8") : fun.getImg(".entry-content img", max);
+            let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".entry-content img", max, "8") : await fun.getImg(".entry-content img", max);
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            let resArr = imgSrcs.map(async (src, i, arr) => {
+                let res = await fun.xhrHEAD(src);
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                let status = res.status;
+                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
+            });
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
+            //return /\?m=1/.test(siteUrl) ? fun.getImg(".entry-content img", max, "8", [/i\d\.wp\.com\/([^\/]+)/, "$1"]) : fun.getImg(".entry-content img", max, 1, [/i\d\.wp\.com\/([^\/]+)/, "$1"]);
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -389,14 +402,27 @@
         name: "www.depvailon.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com depday.info",
         host: ["www.depvailon.com", "pic.yailay.com", "nungvl.net", "www.kaizty.com", "lootiu.com", "depday.info"],
         reg: /(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$|lootiu\.com\/gallery\/.+\.cfg$|(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html\?m=1$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html\?m=1$|nungvl\.net\/gallerys\/\d+\.cg\?m=1$|lootiu\.com\/gallery\/.+\.cfg\?m=1$|depday\.info\/v2\/\w+\.html/i,
-        imgs: () => {
+        imgs: async () => {
             let max;
             try {
                 max = fun.geT("h1,h2").match(/\d+$/)[0];
             } catch (e) {
                 max = 1;
             }
-            return /\?m=1/.test(siteUrl) ? fun.getImg(".contentme img,.contentme2 img", max, "8") : fun.getImg(".contentme img,.contentme2 img", max);
+            let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".contentme img,.contentme2 img", max, "8") : await fun.getImg(".contentme img,.contentme2 img", max);
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            let resArr = imgSrcs.map(async (src, i, arr) => {
+                let res = await fun.xhrHEAD(src);
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                let status = res.status;
+                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
+            });
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
+            //return /\?m=1/.test(siteUrl) ? fun.getImg(".contentme img,.contentme2 img", max, "8", [/i\d\.wp\.com\/([^\/]+)/, "$1"]) : fun.getImg(".contentme img,.contentme2 img", max, 1, [/i\d\.wp\.com\/([^\/]+)/, "$1"]);
         },
         button: [4],
         insertImg: [".contentme,.contentme2", 2],
@@ -591,7 +617,7 @@
         category: "nsfw1"
     }, {
         name: "美人图",
-        host: ["meirentu.cc"],
+        host: ["meirentu.cc", "meirentu.top"],
         reg: /meirentu\.\w+\/pic\/\d+\.html/i,
         imgs: () => fun.getImg('.content_left img[alt]', fun.geT(".page a:last-child", 2), 5),
         button: [4],
@@ -1194,16 +1220,11 @@
         name: "51sex分類自動翻頁",
         host: ["51sex.vip"],
         reg: /https?:\/\/51sex\.vip\/category\/\d+/i,
-        init: () => {
-            location.pathname.split("/").length == 3 ? currentPageNum = 1 : currentPageNum = parseInt(location.pathname.split("/").pop(), 10);
-        },
+        init: () => location.pathname.split("/").length == 3 ? currentPageNum = 1 : currentPageNum = parseInt(location.pathname.split("/").pop(), 10),
         autoPager: {
             ele: ".headling_main_a",
             observer: ".headling_main_a",
-            next: () => {
-                let url = siteUrl.match(/https?:\/\/51sex\.vip\/category\/\d+/)[0] + `/${currentPageNum += 1}`;
-                return url;
-            },
+            next: () => siteUrl.match(/https?:\/\/51sex\.vip\/category\/\d+/)[0] + "/" + (currentPageNum += 1),
             stop: doc => {
                 let currentEles = [...fun.gae(".headling_main_a")];
                 if (currentEles.length < 24) {
@@ -1648,9 +1669,7 @@
         name: "和邪社",
         host: ["www.hexieshe.cn"],
         reg: /^https?:\/\/www\.hexieshe\.cn\/\d+\/$/i,
-        init: async () => {
-            await fun.getNP("#content-innerText>p", "span.current+a", null, ".post-links");
-        },
+        init: async () => await fun.getNP("#content-innerText>p", "span.current+a", null, ".post-links"),
         imgs: "#content-innerText img",
         customTitle: () => fun.geT(".entry-title").replace("为您朗读", "").trim(),
         category: "nsfw1"
@@ -1658,9 +1677,7 @@
         name: "天极图片",
         host: ["pic.yesky.com"],
         reg: /^https?:\/\/pic\.yesky\.com\/\d+\/\d+\.shtml$/i,
-        init: () => {
-            fun.ge(".bigPic").outerHTML = '<div class="imgBox"></div>';
-        },
+        init: () => fun.ge(".bigPic").outerHTML = '<div class="imgBox"></div>',
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".previewPic img")].map(e => e.src);
             return thumbnailsSrcArray.map(e => e.replace(/d-|\/180x320/g, ""));
@@ -1741,7 +1758,7 @@
             ["//p[img]", 2, "//p[img] | //div[@class='read-more']"], 2
         ],
         customTitle: () => fun.geT(".article-title"),
-        css: "div[data-nav=posts][style]{max-height:unset !important}",
+        css: "div[data-nav=posts][style]{max-height:unset!important}",
         category: "nsfw1"
     }, {
         name: "涩涩乐园",
@@ -1754,6 +1771,20 @@
         next: ".article-nav>div:first-child>a[href$=html]",
         prev: ".article-nav>div:last-child>a[href$=html]",
         customTitle: () => fun.geT("h1.article-title"),
+        category: "nsfw1"
+    }, {
+        name: "扮之狐狸",
+        host: "www.costhisfox.com",
+        reg: /^https?:\/\/www\.costhisfox\.com\/\d+\/$/i,
+        include: "//ul[@class='breadcrumb']//a[text()='cos福利美图']|//ul[@class='breadcrumb']//a[text()='写真系列']",
+        imgs: ".wp-posts-content img[data-src]",
+        button: [4],
+        insertImg: [".wp-posts-content", 2],
+        autoDownload: [0],
+        next: "//a[p[text()='上一篇']]",
+        prev: "//a[p[text()='下一篇']]",
+        customTitle: () => fun.geT("h1.article-title"),
+        css: "div[data-nav=posts][style]{max-height:unset!important}",
         category: "nsfw1"
     }, {
         name: "男人之家",
@@ -2075,11 +2106,7 @@
                 fun.hideMsg();
                 return data.flat().map(e => e.photourl);
             });
-            if (photourl.length > [...new Set(photourl)].length) {
-                setTimeout(() => {
-                    fun.showMsg("VIP套圖需升級為VIP", 5000);
-                }, 1200)
-            }
+            if (photourl.length > [...new Set(photourl)].length) setTimeout(() => fun.showMsg("VIP套圖需升級為VIP", 5000), 1200);
             return photourl;
         },
         button: [4],
@@ -2122,11 +2149,7 @@
                 fun.hideMsg();
                 return data.flat();
             });
-            if (data.length > [...new Set(data)].length) {
-                setTimeout(() => {
-                    fun.showMsg("VIP套圖需升級為VIP", 5000);
-                }, 1200)
-            }
+            if (data.length > [...new Set(data)].length) setTimeout(() => fun.showMsg("VIP套圖需升級為VIP", 5000), 1200);
             return data;
         },
         button: [4],
@@ -2371,16 +2394,13 @@
     }, {
         name: "云边网盘",
         host: ["qinzhi.top"],
-        reg: /^https?:\/\/qinzhi\.top\/[^\/]+\/[^\/]+\/.+$/,
+        reg: /^https?:\/\/qinzhi\.top\/[^\/]+\/[^\/]+\/.+/,
         init: async () => {
             await fun.waitEle("div.list");
-            let div = document.createElement("div");
-            div.className = "imgBox";
-            let x = fun.ge(".body");
-            x.appendChild(div);
+            fun.imgBox(".body");
         },
         imgs: async () => {
-            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURI(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$/i.test(href) ? href : null).filter(item => item);
+            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURI(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$|\.gif$|\.mp4$/i.test(href) ? href : null).filter(item => item);
             fun.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
             let resArr = paths.map((path, i, arr) => {
@@ -2398,15 +2418,23 @@
             });
             return Promise.all(resArr).then(arr => {
                 fun.hideMsg();
-                return arr;
+                return arr.map(e => {
+                    if (/\.mp4\?/i.test(e)) {
+                        videosSrcArray.push(e);
+                        return null;
+                    } else {
+                        return e;
+                    }
+                }).filter(item => item);
             });
         },
         repeat: 1,
         button: [4],
-        insertImg: [".imgBox", 3],
+        insertImg: ["#fullPictureLoadImgBox", 3],
         go: 1,
         observerTitle: true,
-        customTitle: () => fun.title(" | 云边网盘").replace(/\s?\d+p\s?/i, ""),
+        downloadVideo: true,
+        customTitle: () => fun.title(" | 云边网盘").replace(/\s?\d+p\s?|\[\d+[\w\s\.\+-]+\]/i, ""),
         category: "nsfw1"
     }, {
         name: "新美图录/臺灣美腿女郎",
@@ -2736,7 +2764,10 @@
         host: ["xx.knit.bid", "mm.187187.xyz"],
         reg: /^https?:\/\/(xx\.knit\.bid|mm\.187187\.xyz)\/([\w-]+\/)?article\/\d+\//i,
         init: () => fun.clearAllTimer(2),
-        imgs: () => fun.getImg(".item-image img,#img-box img", (fun.geT("li.next-page", 2) || 1)),
+        imgs: async () => {
+            await fun.getNP(".item-image", ".next-page>a", null, ".pagination");
+            return [...fun.gae(".item-image img,#img-box img")];
+        },
         button: [4],
         insertImg: ["#img-box", 2],
         customTitle: () => fun.geT(".focusbox-title").replace(/\[\d+P\]/i, "").replace(/\d+P/i, "").trim(),
@@ -3069,7 +3100,7 @@
         reg: /sxchinesegirlz(\d+)?\.\w+\/\d+\/\d+\/\d+\/.+\/$/,
         imgs: () => fun.getImg(".wp-block-image img", fun.geT(".pagination>*:last-child", 2), 4),
         button: [4],
-        insertImg: [".thecontent", 1],
+        insertImg: [".thecontent", 2],
         customTitle: () => fun.geT("h1.entry-title"),
         category: "nsfw2"
     }, {
@@ -3139,9 +3170,7 @@
         name: "TangMoc",
         host: ["tangmoc.com"],
         reg: /^https?:\/\/tangmoc\.com\/blog\/show\/\w+\/view/,
-        init: async () => {
-            fun.remove("//div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]");
-        },
+        init: () => fun.remove("//div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]"),
         imgs: () => fun.ge(".btn-warning+.btn-secondary") ? fun.getImgA("a[href*=media]>.media-preview", "a.btn-secondary") : [...fun.gae("a[href*=media]>.media-preview")],
         button: [4],
         insertImg: ["//media[article]", 2],
@@ -3416,7 +3445,7 @@
         init: () => fun.remove("//article/div[a[img]]"),
         imgs: () => fun.getImg("img.block", fun.geT("//a[text()='Next']", 2) || 1),
         button: [4],
-        insertImg: ["//div[img[@title]]", 1],
+        insertImg: ["//div[img[@title]]", 2],
         customTitle: () => fun.geT("header>h2").replace(/\s?\(\d+\s?photos\s?\)/, "").trim(),
         category: "nsfw2"
     }, {
@@ -3425,7 +3454,30 @@
         reg: /^https?:\/\/youwu\.asia\/albums\//,
         imgs: () => fun.getImg("img.block", fun.geT("a[rel=next]", 2) || 1),
         button: [4],
-        insertImg: ["//div[img[@title]]", 1],
+        insertImg: ["//div[img[@title]]", 2],
+        customTitle: () => fun.geT("#main>h1").replace(/未分类性感写真|^.+人体|AI图区/, "").trim(),
+        category: "nsfw2"
+    }, {
+        name: "HotAsianX",
+        host: ["hotasianx.com"],
+        reg: /^https?:\/\/hotasianx\.com\/albums\//,
+        imgs: async () => {
+            let imgSrcs = await fun.getImg("img.block", fun.geT("a[rel=next]", 2) || 1);
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            let resArr = imgSrcs.map(async (src, i, arr) => {
+                let res = await fun.xhrHEAD(src);
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                let status = res.status;
+                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
+            });
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
+        },
+        button: [4],
+        insertImg: ["//div[img[@title]]", 2],
         customTitle: () => fun.geT("#main>h1").replace(/未分类性感写真|^.+人体|AI图区/, "").trim(),
         category: "nsfw2"
     }, {
@@ -5037,10 +5089,10 @@
         css: "body>.wrap{display:none!important}.player	img{max-width:100% !important}",
         category: "nsfw2"
     }, {
-        name: "麻豆村/糖心vlog",
-        host: ["madoucun.com", "tangxvlog.com"],
-        link: "https://madoucun.com/arttype/57.html，https://tangxvlog.com/arttype/57.html",
-        reg: /^https?:\/\/(madoucun\.com|tangxvlog\.com)\/artdetail-\d+\.html/,
+        name: "麻豆村/麻麻传媒/糖心vlog/果冻传媒",
+        host: ["www.madoucun.com", "www.mamamcn.com", "www.tangxvlog.com", "www.guodongmcn.com"],
+        link: "https://www.madoucun.com/arttype/57.html，https://www.mamamcn.com/arttype/57.html，https://www.tangxvlog.com/arttype/57.html，https://www.guodongmcn.com/arttype/57.html",
+        reg: /^https?:\/\/(www\.)?(madoucun|mamamcn|tangxvlog|guodongmcn)\.com\/artdetail-\d+\.html/,
         include: ".hl-article-box img",
         imgs: ".hl-article-box img",
         button: [4],
@@ -6297,7 +6349,7 @@
     }, {
         name: "3K图片网/桃子啦 格式",
         host: ["www.3ktu.com", "www.tufada.com"],
-        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu|hiuin)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
+        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu|hiuin|ksruisj|mmokok|nangluan|579993|wpslgs|xscmt|hyqcxs|xthkw|fzxfl|wsvdj|timitm|5269se|xgxff|srzx168|nxzths)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
         include: "#showimg img,.img-box img",
         imgs: () => {
             let max;
@@ -7258,8 +7310,11 @@
         host: ["18comic.vip", "18comic.org", "18comic-fun.xyz", "jmcomic.me", "jmcomic1.me", "jm-comic1.art", "jm-comic2.art", "jm-comic3.art"],
         reg: /^https?:\/\/(18comic.(vip|org)|18comic-fun\.xyz|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/,
         init: () => {
+            setTimeout(() => {
+                fun.ge("#chk_cover").click();
+                fun.ge("#chk_guide").click();
+            }, 1000);
             fun.remove("//div[contains(text(),'插件')] | //div[@class='col-xs-6'][div[@data-group]] | //div[@class='panel-body']//div[@data-group] | //div[@class='row'][div[div[@data-group]]] | //div[@class='div_sticky2 hidden-lg']");
-            fun.remove("#billboard-modal,#guide-modal");
         },
         imgs: async () => {
             fun.showMsg(displayLanguage.str_01, 0);
@@ -7368,8 +7423,11 @@
         name: "禁漫天堂",
         reg: /^https?:\/\/(18comic.(vip|org)|18comic-fun\.xyz|jmcomic\d?\.me|jm-comic\d.art)\//,
         init: () => {
+            setTimeout(() => {
+                fun.ge("#chk_cover").click();
+                fun.ge("#chk_guide").click();
+            }, 1000);
             fun.remove("//div[contains(text(),'插件')] | //div[@class='col-xs-6'][div[@data-group]] | //div[@class='panel-body']//div[@data-group] | //div[@class='row'][div[div[@data-group]]][not(div[@id='album_photo_cover'])][not(div[*[@class='panel panel-default']])] | //div[@class='div_sticky2 hidden-lg']");
-            fun.remove("#billboard-modal,#guide-modal");
         },
         css: ".hidden-lg:not(.panel)[style*='z-index']{display:none!important;}",
         category: "ad"
@@ -7378,9 +7436,7 @@
         host: ["e-hentai.org", "exhentai.org"],
         reg: /(e-hentai|exhentai).org\/g\/\d+\/\w+\/$/,
         exclude: "//h1[text()='Content Warning']",
-        init: async () => {
-            await fun.getNP(".gdtm,.gdtl", ".ptds+td>a", null, "//tr[td[@class='ptds']]");
-        },
+        init: async () => await fun.getNP(".gdtm,.gdtl", ".ptds+td>a", null, "//tr[td[@class='ptds']]"),
         imgs: async () => {
             if (options.fancybox == 1 && !downloading) {
                 //預覽縮圖網址需要裁剪難弄...
@@ -7440,8 +7496,8 @@
             ["#gdt", 0], 3
         ],
         customTitle: () => {
-            let t = fun.geT("#gj").replace(/\//, "");
-            return t.length > 0 ? t : fun.geT("#gn").replace(/\|.+/, "").trim();
+            let t = fun.geT("#gj").replace(/\/|\[\d+[\w\.\+\s-]+\]/i, "");
+            return t.length > 0 ? t : fun.geT("#gn").replace(/\|.+|\[\d+[\w\.\+\s-]+\]/i, "").trim();
         },
         go: 1,
         topButton: true,
@@ -7452,9 +7508,7 @@
         host: ["e-hentai.org"],
         link: "https://e-hentai.org/lofi/",
         reg: /^https?:\/\/e-hentai\.org\/lofi\/g\/\w+\/\w+\//,
-        init: async () => {
-            await fun.getNP(".gi", "//a[text()='Next Page >']", null, "#ia");
-        },
+        init: async () => await fun.getNP(".gi", "//a[text()='Next Page >']", null, "#ia"),
         imgs: () => fun.getImgA("#sm", ".gi>a", 100),
         button: [4],
         insertImg: [
@@ -7511,7 +7565,7 @@
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
             if (options.fancybox == 1 && !downloading) {
-                let pages = parseInt(fun.geT(".pages .value"), 10);
+                let pages = pag.cnt;
                 if (pages > 40) {
                     let max = Math.ceil(pages / 20);
                     let resArr = fun.arr(max).map((_, i) => {
@@ -7531,6 +7585,9 @@
                     thumbnailsSrcArray = [...fun.gae("#pages img")].map(e => e.src);
                 }
             }
+            let url = fun.ge("#pages a").href;
+            let iframe = await fun.iframe(url);
+            let imgDir = iframe.img_prt + "/";
             return fetch(siteUrl, {
                 "headers": {
                     "accept": "*/*",
@@ -7541,38 +7598,8 @@
                 "method": "POST"
             }).then(res => res.json()).then(arr => {
                 fun.hideMsg();
-                let img = fun.ge("#pages img");
-                let src = img.src;
-                let imgDir = src.match(/^https?:\/\/[^\/]+\/\d+\//)[0];
                 return arr.map(e => imgDir + e);
             });
-            /*
-            if (options.fancybox == 1 && !downloading) {
-                let pages = parseInt(fun.geT(".pages .value"), 10);
-                if (pages > 40) {
-                    await new Promise(async resolve => {
-                        fun.showMsg(displayLanguage.str_08, 0);
-                        for (let i = 1; i <= 100; i++) {
-                            if (!fun.ge("#more-thumbs")) {
-                                fun.hideMsg();
-                                resolve();
-                                break;
-                            }
-                            let ele = fun.ge("#more-thumbs");
-                            if (ele) ele.click();
-                            await fun.delay(300, 0);
-                        }
-                    });
-                }
-                thumbnailsSrcArray = [...fun.gae("#pages img")].map(e => e.src);
-            }
-            fun.showMsg(displayLanguage.str_05, 0);
-            let url = fun.ge("#pages a").href;
-            let iframe = await fun.iframe(url, 1000);
-            let imgs = iframe.img_lst.map(e => iframe.img_prt + "/" + e);
-            fun.ge("#FullPictureLoadIframe").remove();
-            return imgs;
-            */
         },
         button: [4],
         insertImg: [
@@ -8411,8 +8438,8 @@
         category: "autoPager"
     }, {
         name: "TWHentai/十八禁成人H漫 圖片清單頁",
-        host: ["twhentai.com", "cn.hentai.desi"],
-        reg: /^https?:\/\/(twhentai\.com|cn\.hentai\.desi)\/hentai_manga\/\d+\/$/,
+        host: ["twhentai.com", "hentai.desi"],
+        reg: /^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/,
         imgs: async () => {
             await fun.getNP("//div[div[a[@class='thumbnail'][img]]]", ".pagination li.active+li:not(.disabled)>a", null, ".pagination");
             thumbnailsSrcArray = [...fun.gae(".recommended img")].map(e => e.src);
@@ -8444,9 +8471,9 @@
         css: "#content>.col-lg-12,[id^=read_online_ads_area],#Big_Image~*{display:none!important}",
         category: "hcomic"
     }, {
-        name: "91漫屋/腐漫屋",
-        host: ["91manwu.com", "fumanwu.org"],
-        reg: /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/,
+        name: "91漫屋/欲漫涩/腐漫屋",
+        host: ["91manwu.com", "yumanse.com", "fumanwu.org"],
+        reg: /^https?:\/\/(91manwu\.com|yumanse\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/,
         include: "//div[div[img[@class='lazy chapter-img']]]",
         imgs: ".chapter-img",
         button: [4],
@@ -8901,22 +8928,20 @@
         customTitle: () => fun.title("韩漫 "),
         category: "hcomic"
     }, {
-        name: "韓漫天堂",
-        host: ["18jin.top"],
-        reg: /^https?:\/\/18jin\.top\/index\.php\/chapter\/\d+/,
+        name: "韓漫天堂/51漫画",
+        host: ["18jin.top", "51comic.org"],
+        reg: /^https?:\/\/18jin\.top\/index\.php\/chapter\/\d+|^https?:\/\/51comic\.org\/chapter\/\d+/,
         imgs: () => fun.ge(".rd-article-wr") ? [...fun.gae(".rd-article-wr img")] : [...fun.gae(".comic-list img:not([src$='empty.png'])")],
         button: [4],
         insertImg: [".rd-article-wr,.comic-list", 1],
         autoDownload: [0],
-        next: ".j-rd-next,.next-btn",
+        next: ".j-rd-next:not([style]):not(.hide),.next-btn",
         prev: ".j-rd-prev,.prev-btn",
         customTitle: () => {
             if (fun.ge(".rd-article-wr")) {
                 return fun.geT(".j-comic-title") + " - " + fun.geT(".comic-title>a")
             } else {
-                let t = fun.geT("h1.comic-name");
-                let tArr = t.split("：");
-                return tArr[1] + " - " + tArr[0];
+                return shareArr[0].match(/《([^》]+)/)[1] + " - " + fun.geT(".comic-name");
             }
         },
         css: ".image-container{display:none!important;}",
@@ -8963,19 +8988,11 @@
         host: ["yidan.in", "yidan.one", "yidan.app"],
         reg: /^https?:\/\/yidan\.(in|one|app)\/#\/pages\/read\/read\?no=\d+&id=\d+(&episodesId=\d+)?/,
         delay: 1000,
-        init: () => {
-            $("uni-view.last-bum").on("click", () => {
-                setTimeout(() => {
-                    location.reload();
-                }, 300);
-            });
+        init: async () => {
+            await fun.waitEle(".read-article img");
+            $("uni-view.last-bum").on("click", () => setTimeout(() => location.reload(), 300));
         },
-        imgs: () => {
-            let m = siteUrl.split("&");
-            let no = m[0].match(/\d+$/)[0];
-            let mhid = m[1].match(/\d+/)[0];
-            return fetch(`${location.origin}/prod-api/app-api/vv/mh-episodes/get?jiNo=${no}&mhid=${mhid}`).then(res => res.json()).then(json => json.data.pics.split(",").map(e => location.origin + e));
-        },
+        imgs: ".read-article img",
         button: [4],
         insertImg: [".read-article", 2],
         autoDownload: [0],
@@ -8985,13 +9002,17 @@
                 let m = siteUrl.split("&");
                 let no = parseInt(m[0].match(/\d+$/)[0], 10);
                 let mhid = m[1].match(/\d+/)[0];
-                let url = `https://yidan.in/#/pages/read/read?no=${no+=1}&id=${mhid}`;
+                let url = `https://${location.host}/#/pages/read/read?no=${no+=1}&id=${mhid}`;
                 return url;
             }
             return null;
         },
         prev: 1,
-        customTitle: () => fun.title(" - 一耽女孩_好看的一耽漫画官网").trim(),
+        customTitle: async () => {
+            await fun.delay(3000, 0);
+            return fun.title(" - 一耽女孩_好看的一耽漫画官网").trim();
+        },
+        observerTitle: true,
         css: ".page-pagination{display:none!important}",
         category: "hcomic"
     }, {
@@ -9474,9 +9495,7 @@
         init: () => fun.clearAllTimer(1),
         imgs: () => fun.ge(".mh_comicpic img[src^=blob]") ? fun.imgBlobArr(".mh_comicpic img[src^=blob]") : [...fun.gae(".mh_comicpic img[src]")],
         //scrollEle: [".mh_comicpic img", 600],
-        scrollEle: () => {
-            fun.aotoScrollEles(".mh_comicpic", (ele) => fun.ge("img[src]", ele));
-        },
+        scrollEle: () => fun.aotoScrollEles(".mh_comicpic", (ele) => fun.ge("img[src]", ele)),
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title(" COLAMANGA", 1),
@@ -10085,9 +10104,7 @@ document.body.appendChild(text);
             let json = JSON.parse(fun.run(code).slice(11, -12));
             return json;
         },
-        init: () => {
-            siteJson = siteData.json();
-        },
+        init: () => siteJson = siteData.json(),
         imgs: (json = siteJson) => json.images.map(e => `https://i.hamreus.com${e}?e=${json.sl.e}&m=${json.sl.m}`),
         button: [4],
         insertImg: ["#manga", 2],
@@ -12152,15 +12169,7 @@ document.body.appendChild(text);
         host: ["manga.bilibili.com"],
         enable: 1,
         reg: /manga\.bilibili\.com\/mc\d+\/\d+\?from=manga_detail/,
-        init: () => {
-            setTimeout(() => {
-                fun.ge(".load-next-btn").addEventListener("click", () => {
-                    setTimeout(() => {
-                        location.reload();
-                    }, 500)
-                })
-            }, 1000)
-        },
+        init: () => setTimeout(() => fun.ge(".load-next-btn").addEventListener("click", () => setTimeout(() => location.reload(), 500)), 1000),
         imgs: async () => {
             let ep_id = siteUrl.split("/").pop().match(/\d+/)[0];
             let headers = {
@@ -12265,9 +12274,7 @@ document.body.appendChild(text);
             await fun.waitEle(".content-img.lazy_img[src^=blob]");
         },
         imgs: () => fun.imgBlobArr(".content-img[src^=blob]"),
-        scrollEle: () => {
-            fun.aotoScrollEles(".img-content .content-img", (img) => /^blob/.test(img.src));
-        },
+        scrollEle: () => fun.aotoScrollEles(".img-content .content-img", (img) => /^blob/.test(img.src)),
         next: ".view-fix-bottom-bar-item-menu-next",
         prev: ".view-fix-bottom-bar-item-menu-prev",
         customTitle: () => fun.title("在线阅读", 1),
@@ -12347,11 +12354,7 @@ document.body.appendChild(text);
             if (url) {
                 let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
                 fun.ge("#mh").insertAdjacentHTML("afterend", text);
-                fun.ge("#mh+div").addEventListener("click", () => {
-                    setTimeout(() => {
-                        location.reload();
-                    }, 200)
-                });
+                fun.ge("#mh+div").addEventListener("click", () => setTimeout(() => location.reload(), 200));
             }
         },
         imgs: async (json = siteJson, msg = null) => {
@@ -12632,9 +12635,7 @@ document.body.appendChild(text);
         host: ["bbs.hupu.com"],
         enable: 1,
         reg: /^https?:\/\/bbs\.hupu\.com\/\d+\.html/,
-        init: () => {
-            siteJson = JSON.parse(fun.attr("#bbs-admin-main-post-container", "data-admininfo"));
-        },
+        init: () => siteJson = JSON.parse(fun.attr("#bbs-admin-main-post-container", "data-admininfo")),
         imgs: () => {
             let data = JSON.parse(siteJson.format);
             if (data.imgList) {
@@ -12700,9 +12701,7 @@ document.body.appendChild(text);
         name: "m.4khd.com 自動跳轉",
         host: ["m.4khd.com"],
         reg: /^https?:\/\/m\.4khd\.com\//,
-        init: () => {
-            location.href = fun.ge("//a[text()='GET LINK']").href;
-        },
+        init: () => location.href = fun.ge("//a[text()='GET LINK']").href,
         category: "none"
     }, {
         name: "4kup.net 自動跳轉",
@@ -12762,11 +12761,7 @@ document.body.appendChild(text);
         reg: /^http/,
         include: "img[src^='https://stfly.me/']",
         init: async () => {
-            if (await fun.waitEle(".btn-captcha:not(.disable)")) {
-                setInterval(() => {
-                    fun.ge(".btn-captcha:not(.disable)").click();
-                }, 3000);
-            }
+            if (await fun.waitEle(".btn-captcha:not(.disable)")) setInterval(() => fun.ge(".btn-captcha:not(.disable)").click(), 3000);
         },
         category: "none"
     }, {
@@ -12795,14 +12790,6 @@ document.body.appendChild(text);
         openInNewTab: ".entry-content a[href]:not([target=_blank]):not([id])",
         category: "none"
     }, {
-        name: "google search loadmore",
-        enable: 1,
-        reg: /^https?:\/\/(?:www\.)?google\..*\/search/,
-        include: "a[aria-label='更多搜尋結果']",
-        observerClick: "//a[@aria-label='更多搜尋結果' and div[not(@style='display: none;')]]",
-        openInNewTab: "#center_col a[ping][data-ctpacw]",
-        category: "none"
-    }, {
         name: "測試 test",
         host: ["www.hathitrust.org"],
         link: "https://babel.hathitrust.org/cgi/pt?id=mdp.39015096528875&seq=1",
@@ -12821,10 +12808,7 @@ document.body.appendChild(text);
         delay: 2000,
         init: async () => {
             await fun.waitEle(".mantine-u0eh0m");
-            let div = document.createElement("div");
-            div.className = "imgBox";
-            let x = fun.ge(".mantine-u0eh0m");
-            x.parentNode.insertBefore(div, x.nextSibling);
+            fun.imgBox(".mantine-u0eh0m", 2);
             fun.CivitAiAutoShowNSFW();
         },
         imgs: () => {
@@ -12834,7 +12818,7 @@ document.body.appendChild(text);
         },
         repeat: 1,
         button: [4],
-        insertImg: [".imgBox", 3],
+        insertImg: ["#fullPictureLoadImgBox", 3],
         go: 1,
         customTitle: () => fun.geT(".mantine-Title-root").replace(/\|\s/, "").replace(/\//g, "-") + " - " + fun.geT(".mantine-z8ikjj"),
         observerTitle: true,
@@ -14182,6 +14166,7 @@ document.body.appendChild(text);
             document.body.appendChild(iframe);
             await new Promise((resolve) => (iframe.onload = resolve));
             await fun.delay(time, 0);
+            setTimeout(() => iframe.remove(), 1000);
             return iframe.contentWindow;
         },
         autoPagerNextObserver: new IntersectionObserver((entries, observer) => {
@@ -14384,6 +14369,16 @@ document.body.appendChild(text);
             //创建一个链接到回调函数的观察者实例
             const Observer = new MutationObserver(Callbacks);
             ContentContainer && Observer.observe(ContentContainer, configObserver);
+        },
+        imgBox: (selector, pos = 0) => {
+            let div = document.createElement("div");
+            div.id = "fullPictureLoadImgBox";
+            div.style.display = "block";
+            div.style.textAlign = "center";
+            let targetEle = fun.ge(selector);
+            if (pos == 0) targetEle.appendChild(div);
+            if (pos == 1) targetEle.parentNode.insertBefore(div, targetEle);
+            if (pos == 2) targetEle.parentNode.insertBefore(div, targetEle.nextSibling);
         },
         insertImg: (imgsArray, ele, mode = 1) => {
             let srcArr = [];
@@ -14671,9 +14666,7 @@ document.body.appendChild(text);
             let msg = fun.ge(".FullPictureLoadMsg");
             if (fun.ge(".FullPictureLoadMsg[style]")) msg.removeAttribute("style");
             msg.innerText = text;
-            if (time > 0) {
-                setTimeout(() => fun.hideMsg(), time);
-            }
+            if (time > 0) setTimeout(() => fun.hideMsg(), time);
         },
         hideMsg: () => {
             if (!fun.ge(".FullPictureLoadMsg[style]")) {
@@ -15230,6 +15223,8 @@ document.body.appendChild(text);
             }
         },
         aotoScrollEles: async (selector, callback, time = 5000) => {
+            if (fetching) return;
+            fetching = true;
             let n = 0;
             let timeout = false;
             const autoScrollIntoView = async (arr, num) => {
@@ -15260,8 +15255,9 @@ document.body.appendChild(text);
             let newImgs = [...fun.gae(selector)];
             if (imgs.length < newImgs.length) {
                 newImgs = newImgs.slice(imgs.length);
-                autoScrollIntoView(newImgs, imgs.length + newImgs.length);
+                await autoScrollIntoView(newImgs, imgs.length + newImgs.length);
             }
+            fetching = false;
         },
         openInTab: (url, target = "_blank") => {
             let a = document.createElement("a");
@@ -15504,9 +15500,7 @@ document.body.appendChild(text);
         document.body.appendChild(a);
         a.click();
         a.remove();
-        setTimeout(() => {
-            URL.revokeObjectURL(blob);
-        }, 1000);
+        setTimeout(() => URL.revokeObjectURL(blob), 1000);
     };
 
     const checkGeting = () => {
@@ -16121,9 +16115,7 @@ document.body.appendChild(text);
         img2.style.display = "none";
         img2.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA7BJREFUWEetl29olVUYwH/n3jvvGpp/WtNlIdoK1MJazBwO0/mlZqFgRCgGfZC7TTbwixqbMnPiHIIwmdd9MYiMhD4o6gqirenGsoF/MLfaahFz3a1Shlv7e9/3yHnnxXvv3vee96574P3wcp4/v/M8z3nOOQK3o67Oj2+0EMlWPKxEkg3Wp0YIQQiTLgQXCWc0UV4+4ca00Ao1HM3G8B0CuROYp5WfFhgGcQ5v+FMCFaFEOs4An1WlM+6vRIq9QIZLx/Fiowh5kvSJaj6uGrezYQ9QX7sEYV4A3pyl43i160jPNvbsG4ifmAlwquZVfDQieV7nfJE/3RJ5MGG7uFh1wT3CFFF24E70RCyAWrnH7NA5V0pH8gooW51r2Tp19wYHO1qROmIFYXryoiPxBEDlfCz9B13YlULd+s0EVq6JcdfQdZvytu/1EHCdp8Y3RmriCUDwWDVSVOgq1s55RMc1hJBHKfmkUulNA1hbzftbomp3Wnk8sEuIUbxGjtqi0wCnjwdBFjut3q3z5CIhzlC6v0Qw3eH+cWoyyTpPAmKYcMazgtM17wCNTk0iUc51Re8iHUWC+pozCAJ2DeL/OHcVCUmDIFjTgmRDPMDB3HzUl4qxq7mR87//MtOU4KpKQTfwUvTsgjl+QrtK8Qr9WeUGsG2gn02Xz9uJ9iiAYWBu9OwbmYtp36YOv9SM/8JTZH1ez5RpxhscsQWYP8fPnzsCZPh8MQph0+THv0MULFlqS9Y60M+6rGx8Hk/M/Nlf71B87Ts7HQtgRgqUZNkruZxYt/Fxp4JJ0+Cj5m/IeXoB1XkFtgCVHa10Dt2ndu0GcuYvtGR+fvAvO5uu0DV03yEFDkWopNVqtix70QrdFz2d9D4cYt+atQkBam//ZEFvXrqMCcPg2sA95zxaReiwDZ203AC4rhxrGyZoRHaGUgoARdpWHA+RQoDHrVh50BxG0RApBAhSeqDU9XEcgUgRwAhpRg67KwaTupAoiD2rX+dk/ibbOtvb3kz93Zv6GhTiECX7jyjBpK9k+Yufo+W9D22dvHXpK9oH/9IAiDYyxwr5oGoyFkD9ubyUfln4Lu+veDnG0de93exouqxz3kdaOE+FPiI4q2u5OqRKVr3G2y8st+x82/cHwc5bGDLRvVj0Ycgtia/lEayUP0xEG2nh7dErd45AZCY1T7MRhKjlmbHjkZzH50h/4M/ucfoQOEeacdhu1dEQeoCItPPzXCVenTj9SNmJ4BLeRS0EAlP6/QiPAMXOipDq4W0VAAAAAElFTkSuQmCC";
         img2.setAttribute("title", displayLanguage.str_62);
-        img2.addEventListener("click", () => {
-            goToImg("first");
-        });
+        img2.addEventListener("click", () => goToImg("first"));
         document.body.appendChild(img2);
         let img3 = new Image();
         img3.id = "FullPictureLoadGoToLastImage";
@@ -16131,9 +16123,7 @@ document.body.appendChild(text);
         img3.style.display = "none";
         img3.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA6lJREFUWEfFl21IlWcYx3/3c46vayG1lq5i5FablrQFbon2oiOYzlgfgsY2gvrinCQEwzayklI69SVQPMdDH4KJMkZBoxf6kpkYVjK32FqgtiGbs8xczeF0O5477ucknZfnzaPUDc+n57ru/++67uu6XwROh9+fwNToRiRbECIbWAIsBQQwhGCIILcRfEcgtY3KykknUytn63GibjH/uw4CnwDz7cyf/B8D0YIrcIiyfUNWPuYA39Yk8iBlL1JWAfMcCkebjSPkcZIna9lZM2E0hzGAHrX7NMj8OIWj3a4jta1UVN2N/hEL0ODJwSXOg1xmJu4SgvLst3h/2XLd5OLvv+H75UempDTnFfxBgBJ2f/lTuFEkQCjybitx5dxaVMq2zJURYqd+7eXjtnPWCVMQQS03PBNPAdSaj6S02aU9b/ErXNnykaHQxrPf0HXvT7tVu07KxKbpmngK4Du6HykP2XlXrHqb43mFhmZ7ui7TeOsHuylAyDrKv6pWhiGAUKv1O6n2qjXvUJtbYChS3d3JsZs37AFgHNfU66pFQwBejxcod+I5RwAq9iY+31suqK9Pwj1+H3jx2QIwRiB1kcDrKQYuOBFXNnOXAV2xRNDoaUJQ9lwAJH6Bz3MFyQYzgPXpS0lyubg0OIDaZpxkIHN+Gp+uyCZB0zg/cIdrwybHgaBDLUEvsCIaICttIS1FH7B6wUv6r/5Hf1F1o4PstIWWXdD/90O+LiwmUXPpfgr6i2vtNPzcYxRjnwIYM2q/pvWb2fVGToRTIBjUoylIVydx7Oi8O8i6lzNwa1rEz/FAgFdb/Tz6L+aE/scQQKVueEcFL7gTnJaGrV3emRa+H7kXbacDGC7B5dLt5JtEaqsWZaAOqYxmLw9jM9BnWoTbX3uT5sKSmWoZ2h/u6UJ9MUMvQpM2VFtkff57lGWtmRWE//ZNKq9e0osxZuhtaLERzRbCUjxEU2K7FccL4UD8yVasOLxHfSA/M8v1TCEciIcdRkrVX5fBlH4cp84Wwpl49HGsVH1HapFin1XF2WXCobjBhUSpnqxJ5t/kduDdeCAci4PJlUypNh5LRwt2I/UXj+lQmTicW8DuVWt1m4ZbPezv7jRutfBZLC+l04bqWu7mgh2EMl+QlKx7jU4avjkiA3B0LZ92UZkQwTN2yzGDHWoGD5PpWVVNTCRVI8Ueq+6wgYjzaRY+q96i7gMg1ePU0b0RmIPHaXRooctrEZIP0chCkgH6p0bcz/PHF6yIkDG/FFMAAAAASUVORK5CYII=";
         img3.setAttribute("title", displayLanguage.str_63);
-        img3.addEventListener("click", () => {
-            goToImg("last");
-        });
+        img3.addEventListener("click", () => goToImg("last"));
         img3.addEventListener("mousedown", (event) => {
             if (event.button == 2) {
                 event.preventDefault();
@@ -16267,9 +16257,7 @@ document.body.appendChild(text);
         };
         FullPictureLoadOptionsButtonAddEvent();
 
-        let optionsObserverTimeid = setTimeout(() => {
-            optionsObserver.disconnect();
-        }, 5000);
+        let optionsObserverTimeid = setTimeout(() => optionsObserver.disconnect(), 5000);
 
         const optionsObserver = new MutationObserver((mutationsList, observer) => {
             //網站如果使用了rocket-loader.min.js，會修改含input的HTML，導致FullPictureLoadOptions結構樣式跑掉，必須再修改回來。
@@ -17067,9 +17055,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
 
     if (showOptions) {
         //debug("\n圖片全載開啟了GM選單?\n", showOptions);
-        _GM_registerMenuCommand(displayLanguage.str_67, () => {
-            ge("#FullPictureLoadOptions").removeAttribute("style");
-        });
+        _GM_registerMenuCommand(displayLanguage.str_67, () => ge("#FullPictureLoadOptions").removeAttribute("style"));
         addFullPictureLoadOptionsMain();
         setValue();
         if (comicSwitch) ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
@@ -17092,9 +17078,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     options.autoDownload = 1;
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
+                    setTimeout(() => location.reload(), 2000);
                 } else {
                     options.autoDownload = 0;
                     let jsonStr = JSON.stringify(options);
@@ -17120,9 +17104,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
 
     debug("\n最終options物件\n", options);
 
-    _GM_registerMenuCommand(displayLanguage.str_66, () => {
-        _GM_openInTab("https://greasyfork.org/scripts/463305/feedback");
-    });
+    _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
 
     setTimeout(() => {
         let preloadNext = siteData.preloadNext;
