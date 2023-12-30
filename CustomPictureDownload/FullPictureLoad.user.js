@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.7.34
+// @version            1.8.0
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -50,6 +50,7 @@
         doubleTouchNext: 1, //觸控裝置雙擊前往下一頁，1：開啟、0：關閉
         zoom: 0, //1 ~ 10 腳本插入的圖片縮放比例，10 = 100%，9 = 90%，0 = auto
         column: 4, //圖片並排顯示的數量 2 ~ 6
+        viewMode: 0, //0：置中、1：並排
         fancybox: 1 //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
     };
 
@@ -13111,8 +13112,8 @@ document.body.appendChild(text);
                 str_84: "保存設定",
                 str_85: "腳本選項(*)",
                 str_86: "切換模式(5)",
-                str_87: "比例縮放(-)",
-                str_88: "取消縮放(+)",
+                str_87: "比例縮放(-+)",
+                str_88: "取消縮放(.)",
                 str_89: "暫停自動翻頁",
                 str_90: "啟用自動翻頁",
                 str_91: "初始化設定",
@@ -13126,7 +13127,8 @@ document.body.appendChild(text);
                 str_99: "重試第",
                 str_100: "次",
                 str_101: "網址.txt已匯出",
-                str_102: "格式轉換中..."
+                str_102: "格式轉換中...",
+                str_103: "啟用並排模式"
             };
             break;
         case "zh-CN":
@@ -13217,8 +13219,8 @@ document.body.appendChild(text);
                 str_84: "保存设置",
                 str_85: "脚本选项(*)",
                 str_86: "切换模式(5)",
-                str_87: "比例缩放(-)",
-                str_88: "取消缩放(+)",
+                str_87: "比例缩放(-+)",
+                str_88: "取消缩放(.)",
                 str_89: "暂停自动翻页",
                 str_90: "启用自动翻页",
                 str_91: "初始化设置",
@@ -13232,7 +13234,8 @@ document.body.appendChild(text);
                 str_99: "重试第",
                 str_100: "次",
                 str_101: "网址.txt已导出",
-                str_102: "格式转换中..."
+                str_102: "格式转换中...",
+                str_103: "启用并排模式"
             };
             break;
         default:
@@ -13323,8 +13326,8 @@ document.body.appendChild(text);
                 str_84: "Save",
                 str_85: "Settings(*)",
                 str_86: "Toggle(5)",
-                str_87: "Zoom(-)",
-                str_88: "Cancel(+)",
+                str_87: "Zoom(-+)",
+                str_88: "Cancel(.)",
                 str_89: "Pause Automatic Page Turning",
                 str_90: "Enable Automatic Page Turning",
                 str_91: "Initialization Settings",
@@ -13338,7 +13341,8 @@ document.body.appendChild(text);
                 str_99: "Retry No.",
                 str_100: "Bout",
                 str_101: "MediaURLs.txt Exported",
-                str_102: "Format Converting"
+                str_102: "Format Converting",
+                str_103: "Enable Side-By-Side Mode"
             };
             break;
     }
@@ -14405,29 +14409,35 @@ document.body.appendChild(text);
                 const buttonObj = [{
                     id: "FullPictureLoadOptionsBtn",
                     text: displayLanguage.str_85,
-                    fn: event => {
+                    cfn: event => {
                         event.preventDefault();
                         fun.ge("#FullPictureLoadOptions").removeAttribute("style");
                     }
                 }, {
                     id: "FullPictureLoadToggleImgModeBtn",
                     text: displayLanguage.str_86,
-                    fn: event => {
+                    cfn: event => {
                         event.preventDefault();
                         toggleImgMode();
                     }
                 }, {
                     id: "FullPictureLoadToggleZoomeBtn",
                     text: displayLanguage.str_87,
-                    fn: event => {
+                    cfn: event => {
                         event.preventDefault();
                         fun.clearAllTimer(2);
-                        toggleZoom();
+                        reduceZoom();
+                    },
+                    mfn: event => {
+                        if (event.button == 2) {
+                            event.preventDefault();
+                            increaseZoom();
+                        }
                     }
                 }, {
                     id: "FullPictureLoadCancelZoomBtn",
                     text: displayLanguage.str_88,
-                    fn: event => {
+                    cfn: event => {
                         event.preventDefault();
                         fun.clearAllTimer(2);
                         cancelZoom();
@@ -14439,7 +14449,9 @@ document.body.appendChild(text);
                     button.style.width = width;
                     button.style.height = "24px";
                     button.innerText = obj.text;
-                    button.addEventListener("click", obj.fn);
+                    button.oncontextmenu = () => false;
+                    if (obj.cfn) button.addEventListener("click", obj.cfn);
+                    if (obj.mfn) button.addEventListener("mousedown", obj.mfn);
                     buttonDiv.appendChild(button);
                 };
                 [...buttonObj].forEach(obj => createButton(obj));
@@ -14555,7 +14567,6 @@ document.body.appendChild(text);
                             fun.remove(ele[2]);
                         }
                         if (siteData.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
-                        if (siteData.go == 1) goToNo1Img();
                     } else if (typeof ele == "string") {
                         targetEle = fun.ge(ele);
                         targetEle.innerHTML = "";
@@ -14563,7 +14574,6 @@ document.body.appendChild(text);
                         //targetEle.style.textAlign = "center";
                         targetEle.style.display = "block";
                         if (siteData.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
-                        if (siteData.go == 1) goToNo1Img();
                     }
                 } catch (error) {
                     fun.showMsg(displayLanguage.str_19, 3000);
@@ -14610,7 +14620,8 @@ document.body.appendChild(text);
                     }
                 }
                 if (!/tupianwu\.com/.test(location.host)) fun.MutationObserver_aff();
-                if (siteData.viewMode == 1) toggleImgMode();
+                if (options.viewMode == 1 || siteData.viewMode == 1) toggleImgMode();
+                if (siteData.go == 1) goToNo1Img();
             } else {
                 fun.showMsg(displayLanguage.str_20);
             }
@@ -15848,7 +15859,7 @@ document.body.appendChild(text);
         if (scrollEle) typeof scrollEle === "function" ? scrollEle() : fun.scrollEles(scrollEle[0], scrollEle[1]);
     };
 
-    const toggleZoom = () => {
+    const reduceZoom = () => {
         if (fetching || ge("#FullPictureLoadOptions:not([style])")) return;
         if (options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom == 0 ? options.zoom = 10 : options.zoom = options.zoom -= 1;
@@ -15857,6 +15868,21 @@ document.body.appendChild(text);
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             if (options.zoom > 0) {
+                [...gae(".FullPictureLoadImage:not(.small)")].forEach(img => img.style.width = `${options.zoom * 10}%`);
+                fun.showMsg(`${displayLanguage.str_60} ${options.zoom * 10}%`);
+            }
+        }
+    };
+
+    const increaseZoom = () => {
+        if (fetching || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (options.zoom > 1 && options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
+            options.zoom = options.zoom += 1;
+            if (options.zoom > 10) cancelZoom();
+            ge("#FullPictureLoadOptionsZoom").value = options.zoom;
+            let jsonStr = JSON.stringify(options);
+            localStorage.setItem("FullPictureLoadOptions", jsonStr);
+            if (options.zoom > 0 && options.zoom <= 10) {
                 [...gae(".FullPictureLoadImage:not(.small)")].forEach(img => img.style.width = `${options.zoom * 10}%`);
                 fun.showMsg(`${displayLanguage.str_60} ${options.zoom * 10}%`);
             }
@@ -16133,6 +16159,56 @@ document.body.appendChild(text);
         document.body.appendChild(img3);
     };
 
+    const addFullPictureLoadFixedMenu = () => {
+        let menuDiv = document.createElement("div");
+        menuDiv.id = "FullPictureLoadFixedMenu";
+        const menuObj = [{
+            text: displayLanguage.str_88,
+            cfn: event => {
+                event.preventDefault();
+                fun.clearAllTimer(2);
+                cancelZoom();
+            }
+        }, {
+            text: displayLanguage.str_87,
+            cfn: event => {
+                event.preventDefault();
+                fun.clearAllTimer(2);
+                reduceZoom();
+            },
+            mfn: event => {
+                if (event.button == 2) {
+                    event.preventDefault();
+                    increaseZoom();
+                }
+            }
+        }, {
+            text: displayLanguage.str_86,
+            cfn: event => {
+                event.preventDefault();
+                toggleImgMode();
+            }
+        }, {
+            text: displayLanguage.str_85,
+            cfn: event => {
+                event.preventDefault();
+                fun.ge("#FullPictureLoadOptions").removeAttribute("style");
+            }
+        }];
+        const createButton = obj => {
+            let button = document.createElement("button");
+            button.style.width = "100px";
+            button.style.height = "24px";
+            button.innerText = obj.text;
+            button.oncontextmenu = () => false;
+            if (obj.cfn) button.addEventListener("click", obj.cfn);
+            if (obj.mfn) button.addEventListener("mousedown", obj.mfn);
+            menuDiv.appendChild(button);
+        };
+        [...menuObj].forEach(obj => createButton(obj));
+        document.body.appendChild(menuDiv);
+    };
+
     const elementClick = ele => {
         const dispatchTouchEvent = (_ele, type) => {
             let touchEvent = document.createEvent("UIEvent");
@@ -16220,6 +16296,9 @@ document.body.appendChild(text);
 <div style="width: 348px; display: flex; margin-left: 6px;">
     ${displayLanguage.str_80}<input id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}" style="width: 60px; margin: 0 6px !important;">
 </div>
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_103}
+</div>
 <button id="FullPictureLoadOptionsCancelBtn"><font color="black">${displayLanguage.str_82}</font></button>
 <button id="FullPictureLoadOptionsResetBtn"><font color="black">${displayLanguage.str_83}</font></button>
 <button id="FullPictureLoadOptionsSaveBtn"><font color="black">${displayLanguage.str_84}</font></button>
@@ -16250,6 +16329,7 @@ document.body.appendChild(text);
                 options.fancybox = ge("#FullPictureLoadOptionsFancybox").checked == true ? 1 : 0;
                 options.zoom = ge("#FullPictureLoadOptionsZoom").value;
                 options.column = ge("#FullPictureLoadOptionsColumn").value;
+                options.viewMode = ge("#FullPictureLoadOptionsviewMode").checked == true ? 1 : 0;
                 let jsonStr = JSON.stringify(options);
                 localStorage.setItem("FullPictureLoadOptions", jsonStr);
                 location.reload();
@@ -16288,6 +16368,7 @@ document.body.appendChild(text);
         }
         ge("#FullPictureLoadOptionsZoom").value = options.zoom;
         siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn").value = 2 : ge("#FullPictureLoadOptionsColumn").value = options.column;
+        ge("#FullPictureLoadOptionsviewMode").checked = options.viewMode == 1 ? true : false;
     };
 
     const style = `
@@ -16385,6 +16466,34 @@ document.body.appendChild(text);
     opacity: 1 !important;
 }
 
+#FullPictureLoadFixedMenu {
+    text-align: center;
+    width: 100px !important;
+    height: auto !important;
+    position: fixed !important;
+    left: 64px;
+    bottom: 30px !important;
+    border: 1px solid #a0a0a0 !important;
+    border-radius: 3px !important;
+    box-shadow: -2px 2px 5px rgb(0 0 0 / 30%) !important;
+    background-color: #FAFAFB;
+    opacity: 0;
+    z-index: 2147483647 !important;
+}
+
+#FullPictureLoadFixedMenu button {
+    font-family: Arial, sans-serif !important;
+    color: #000000 !important;
+    border-radius: unset !important;
+    padding: 0px !important;
+    border: 1px solid #a0a0a0 !important;
+    background-color: transparent !important;
+}
+
+#FullPictureLoadFixedMenu:hover {
+  opacity: 1;
+}
+
 .FullPictureLoadMsg {
     font-family: Arial, sans-serif !important;
     font-size: 24px;
@@ -16475,7 +16584,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     border: none !important;
 }
 
-#FullPictureLoad~*:not(.FullPictureLoadFixedBtn):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.pagetual_tipsWords):not(*[class^=fancybox]):not(div[tabindex]):not(#spotlight):not(div[id^='swiper-imgbox']) {
+#FullPictureLoad~*:not(#FullPictureLoadFixedMenu):not(.FullPictureLoadFixedBtn):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.pagetual_tipsWords):not(*[class^=fancybox]):not(div[tabindex]):not(#spotlight):not(div[id^='swiper-imgbox']) {
     display: none !important;
 }
 
@@ -16570,12 +16679,10 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
         } else if (options.autoDownload !== 1) {
             let optionsJson = JSON.parse(getOptionsData);
-            if (optionsJson.fancybox != 1 && optionsJson.fancybox != 0) {
+            if (optionsJson.viewMode === undefined) {
                 localStorage.removeItem("FullPictureLoadOptions");
                 let jsonStr = JSON.stringify(options);
                 localStorage.setItem("FullPictureLoadOptions", jsonStr);
-                if (!fun.ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
-                if (!fun.ge(".FullPictureLoadStyle")) fun.css(style);
                 debug("圖片全載更新已初始化設定");
             } else {
                 options = optionsJson;
@@ -17111,7 +17218,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         try {
             if (nextLink && preloadNext && !downloading) {
                 window.addEventListener("message", e => {
-                    if (e.data.iframePicArr) fun.picPreload(e.data.iframePicArr, e.data.title, "next");;
+                    if (e.data.iframePicArr) fun.picPreload(e.data.iframePicArr, e.data.title, "next");
                 }, false);
                 fun.fetchDoc(nextLink).then(async nextDoc => {
                     debug("\nnextDoc", nextDoc);
@@ -17167,9 +17274,13 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         break;
                     case 109: //數字鍵-
                         fun.clearAllTimer(2);
-                        toggleZoom();
+                        reduceZoom();
                         break;
                     case 107: //數字鍵+
+                        fun.clearAllTimer(2);
+                        increaseZoom();
+                        break;
+                    case 110: //數字鍵.
                         fun.clearAllTimer(2);
                         cancelZoom();
                         break;
@@ -17192,6 +17303,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             return;
         } else if (options.icon == 1 || siteData.icon == 1) {
             addFullPictureLoadButton();
+            addFullPictureLoadFixedMenu();
         }
     }
 
