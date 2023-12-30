@@ -671,7 +671,9 @@ imgs: async () => {
 <p>數字鍵 4 捲動至最後一張大圖</p>
 <p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
 <p>數字鍵 7 匯出網址MediaURLs.txt文件</p>
-<p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例、數字鍵 + 加鍵恢復為自動</p>
+<p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例</p>
+<p>數字鍵 + 加鍵圖片以10%為單位放大，會記憶縮放比例</p>
+<p>數字鍵 . 點鍵恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
@@ -1352,6 +1354,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://avjb.com/albums/">AVJB</a></td>
                 <td><a href="https://avjb.github.io/">網址發佈頁1</a>，<a href="https://bitbucket.org/free890722/avjb/src/master/README.md">網址發佈頁2</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://dev.avjb.com/albums/">爱微社区</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.qinimg.com/">Qinimg</a></td>
