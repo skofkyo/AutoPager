@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.1
+// @version            1.8.2
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -4796,8 +4796,30 @@
             [".images", 2], 2
         ],
         go: 1,
-        customTitle: () => fun.geT("h1.title").trim(),
+        customTitle: () => fun.geT("h1.title").replace(/\[\d+[\w\.\+\s-]+\]|\(\d+[\w\.\+\s-]+\)/i, "").trim(),
         category: "nsfw2"
+    }, {
+        name: "爱微社区 成人相册",
+        reg: /^https?:\/\/dev\.avjb\.com\/albums\/$/i,
+        init: async () => {
+            let api = "/albums/?mode=async&function=get_block&block_id=list_albums_common_albums_list&sort_by=post_date&from=";
+            await fun.waitEle(".thumb.item img[src^=http]");
+            fun.openInNewTab(".thumb.item a");
+            let max = await fun.fetchDoc(api + "2").then(doc => fun.geT("a.next", 2, doc));
+            for (let i = 2; i <= max; i++) {
+                await fun.fetchDoc(api + i).then(doc => {
+                    fun.openInNewTab(".thumb.item a", doc);
+                    let targetEle = fun.ge(".albums-thumbs");
+                    [...fun.gae(".thumb.item", doc)].forEach(e => {
+                        let img = fun.ge("img", e);
+                        img.src = img.dataset.original;
+                        targetEle.appendChild(e.cloneNode(true));
+                    });
+                    fun.ge(".pagination").innerHTML = fun.ge(".pagination", doc).innerHTML;
+                });
+            }
+        },
+        category: "autoPager"
     }, {
         name: "Asian To Lick",
         host: ["asiantolick.com"],
@@ -7550,7 +7572,17 @@
                     return rValue;
                 };
                 return _gallery.images.pages.map((img, index) => `https://${randomHost(hostArray)}.nhentai.net/galleries/${gallery.media_id}/${index + 1}.${{ j: "jpg", p: "png", g: "gif" }[img.t]}`);
-            } else if (/nyahentai\.red|nhentai\.xxx|nhentai\.to|simplyhentai\.org|simplyhentai\.red/.test(siteUrl)) {
+            } else if (/nyahentai\.red|nhentai\.xxx/.test(siteUrl)) {
+                fun.showMsg(displayLanguage.str_05, 0);
+                let imgDir = fun.ge(".gallerythumb>img").src.match(/.+\//)[0];
+                let url = fun.ge("a.gallerythumb").href;
+                let iframe = await fun.iframeVar(url, 1000, "images_ext");
+                return iframe.images_ext.map((img, index) => imgDir + (index + 1) + "." + {
+                    j: "jpg",
+                    p: "png",
+                    g: "gif"
+                } [img]);
+            } else if (/nhentai\.to|simplyhentai\.org|simplyhentai\.red/.test(siteUrl)) {
                 return [...fun.gae(".thumbs img,.thumb-container img")].map(e => e.dataset.src ? e.dataset.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png") : e.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png"));
             } else if (/www\.hentai\.name/.test(siteUrl)) {
                 return [...fun.gae(".thumb-container img")].map(e => e.src.replace("_thumb.jpg", ".jpg").replace("_thumb.png", ".png"));
@@ -7603,7 +7635,7 @@
                 }
             }
             let url = fun.ge("#pages a").href;
-            let iframe = await fun.iframe(url);
+            let iframe = await fun.iframeVar(url, 1000, "img_prt");
             let imgDir = iframe.img_prt + "/";
             return fetch(siteUrl, {
                 "headers": {
@@ -7668,8 +7700,18 @@
             await fun.waitEle(".view_group[style]");
             fun.hideMsg();
             thumbnailsSrcArray = [...fun.gae(".gallery_thumb img")].map(e => e.dataset.src ?? e.src);
-            return thumbnailsSrcArray.map(e => e.replace("t.", "."));
-            //return fun.getImgA("#gimg", ".g_thumb>a", 300);
+            fun.showMsg(displayLanguage.str_05, 0);
+            let max = fun.geT(".pages").match(/\d+/)[0];
+            let img = fun.ge(".gallery_thumb img");
+            let src = img.dataset.src ?? img.src;
+            let imgDir = src.match(/.+\//)[0];
+            let url = fun.ge(".g_thumb>a").href;
+            let iframe = await fun.iframeVar(url, 1000, "g_th");
+            return fun.arr(max).map((_, i) => imgDir + (i + 1) + "." + {
+                j: "jpg",
+                p: "png",
+                g: "gif"
+            } [iframe.g_th[(i + 1)][0]]);
         },
         button: [4],
         insertImg: [
@@ -7853,7 +7895,7 @@
         name: "HentaiPaw圖片清單頁",
         host: ["hentaipaw.com"],
         reg: /hentaipaw\.com\/articles\/\d+/i,
-        delay: 2000,
+        init: async () => await fun.waitEle(".gallery-image-container a"),
         imgs: async () => {
             fun.showMsg("獲取數據中...", 0);
             let url = fun.ge(".gallery-image-container a").href;
@@ -7904,13 +7946,14 @@
         reg: /doujins\.com\/.+\/.+/i,
         include: "#thumbnails",
         autoClick: ["button.loadmore"],
+        init: async () => await fun.waitEle(".doujin"),
         imgs: () => {
-            thumbnailsSrcArray = [...fun.gae("#thumbnails img")].map(e => e.src);
-            return [...fun.gae(".swiper-wrapper>div:not(:first-of-type):not(:last-of-type) .swiper-lazy")];
+            thumbnailsSrcArray = [...fun.gae("div[data-hash]")].map(e => "https://static.doujins.com/t-" + e.dataset.hash + ".jpg");
+            return [...fun.gae(".doujin[data-file]")].map(e => e.dataset.file);
         },
         button: [4],
         insertImg: [
-            ["#thumbnails", 2], 2, 2000
+            ["#thumbnails", 2], 2
         ],
         go: 1,
         customTitle: () => fun.geT(".folder-title>a:last-child"),
@@ -7921,23 +7964,24 @@
         reg: /www\.simply-hentai\.com\/[0-9a-z-]+\/.+/i,
         include: "//main[@class='container' and div[div[a[div[@class='image-wrapper' and img]]]]]",
         exclude: "nav.pagination,#reader-image",
+        init: async () => {
+            await fun.waitEle("#__NEXT_DATA__");
+            let json = JSON.parse(fun.geT("#__NEXT_DATA__"));
+            debug("\n此頁JSON資料\n", json);
+            siteJson = json;
+        },
         imgs: () => {
-            thumbnailsSrcArray = [...fun.gae("img[data-src]")].map(e => e.dataset.src);
-            return thumbnailsSrcArray.map(e => e.replace("small_thumb_", ""));
+            thumbnailsSrcArray = siteJson.props.pageProps.manga.images.map(e => e.sizes.small_thumb);
+            return siteJson.props.pageProps.manga.images.map(e => e.sizes.full)
+            //return thumbnailsSrcArray.map(e => e.replace("small_thumb_", ""));
         },
         button: [4],
         insertImg: [
-            ["//main[@class='container']/*[last()]", 2], 2, 2000
+            ["//main[@class='container']/*[last()]", 2], 2
         ],
         go: 1,
-        autoClick: "a[href$='all-pages']",
-        customTitle: () => {
-            try {
-                return fun.geT("h1.content-headline>a").replace(/\/|\|/g, "-");
-            } catch (e) {
-                return fun.geT("h1").replace(/\/|\|/g, "-");
-            }
-        },
+        //autoClick: "a[href$='all-pages']",
+        customTitle: () => siteJson.props.pageProps.manga.title.replace(/\/|\|/g, "-"),
         css: ".text-center{display:none!important}",
         category: "hcomic"
     }, {
@@ -8410,9 +8454,23 @@
             fun.remove(".dlh,iframe:not(#FullPictureLoadIframe)");
             fun.remove("//body/div[a[img]] | //div[@class='Introduct']/a[div[img]] | //div[a[img[@alt='Game Tip']]]");
             new MutationObserver(() => fun.remove(".dlh,iframe:not(#FullPictureLoadIframe)")).observe(document.body, MutationObserverConfig);
-            await fun.getNP(".gallary_item", ".thispage+a", null, ".paginator", 0, null, 0);
+            if (fun.ge(".paginator") && fun.ge(".thispage+a")) await fun.getNP(".gallary_item", ".thispage+a", null, ".paginator");
         },
-        category: "autoPager"
+        imgs: async () => {
+            thumbnailsSrcArray = [...fun.gae(".gallary_item img")].map(e => e.src);
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge("a[href*='slide'],a[href*='slist']").href;
+            let iframe = await fun.iframeVar(url, 1000, "imglist");
+            fun.hideMsg();
+            return iframe.imglist.map(e => e.url);
+        },
+        button: [4],
+        insertImg: [
+            [".gallary_wrap,.Introduct", 0], 2
+        ],
+        go: 1,
+        customTitle: () => fun.title(/ - 紳士漫畫| - 绅士漫画|-紳士漫畫|-绅士漫画/, 1),
+        category: "hcomic"
     }, {
         name: "紳士漫畫 下拉閱讀頁",
         host: ["wnacg.com", "www.wnacg.com", "m.wnacg.com", "www.wnacglink.top", "wn01.ru", "wn02.ru", "www.htmanga3.top", "www.htmanga4.top", "www.htmanga5.top", "www.hentaicomic.ru", "www.wn3.lol"],
@@ -10521,10 +10579,7 @@ window.parent.postMessage({
             await fun.waitEle("//script[contains(text(),'chapterImages')]");
             fun.run("$('#images').unbind('click');");
         },
-        imgs: async () => {
-            await fun.waitEle("//script[contains(text(),'chapterImages')]");
-            return chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost1 + "/" + chapterPath + e);
-        },
+        imgs: () => chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost1 + "/" + chapterPath + e),
         button: [4],
         insertImg: ["#images", 2],
         next: () => {
@@ -14177,15 +14232,26 @@ document.body.appendChild(text);
                 }
             });
         },
-        iframe: async (url, time = 200) => {
+        iframeVar: async (url, time = 1000, declares) => {
             const iframe = document.createElement("iframe");
             iframe.id = "FullPictureLoadIframe";
             iframe.src = url;
             iframe.style.display = "none";
             iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
             document.body.appendChild(iframe);
-            await new Promise((resolve) => (iframe.onload = resolve));
             await fun.delay(time, 0);
+            //await new Promise((resolve) => (iframe.onload = resolve));
+            //let doc = iframe.contentDocument || iframe.contentWindow.document;
+            //await fun.waitEle(selector, doc);
+            await new Promise(resolve => {
+                let loop = setInterval(() => {
+                    //console.log("typeof iframe.contentWindow[declares]", typeof iframe.contentWindow[declares]);
+                    if (typeof iframe.contentWindow[declares] != "undefined") {
+                        clearInterval(loop);
+                        resolve();
+                    }
+                }, 100);
+            });
             setTimeout(() => iframe.remove(), 1000);
             return iframe.contentWindow;
         },
@@ -14276,6 +14342,7 @@ document.body.appendChild(text);
             history.pushState(null, title, url);
             document.title = title;
         },
+        openInNewTab: (selector, doc = document) => [...fun.gae(selector, doc)].forEach(a => a.setAttribute("target", "_blank")),
         getEle: async (links, elements, targetEle, removeEles = null, time = 100) => {
             if (fun.ge(".FullPictureLoadImage")) return;
             fetching = true;
@@ -14628,6 +14695,7 @@ document.body.appendChild(text);
                     fun.comicNextObserver.observe(lastImg);
                 }
                 [...fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage")].forEach(e => e.style.display = "block");
+                addFullPictureLoadFixedMenu();
                 if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
                     try {
                         Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
@@ -14643,7 +14711,7 @@ document.body.appendChild(text);
             }
         },
         immediateInsertImg: async () => {
-            await fun.delay(siteData.insertImg[2] || 200);
+            await fun.delay(siteData.insertImg[2] || 0);
             let selector = siteData.imgs;
             let imgsSrcArray = await getImgs(selector);
             fun.insertImg(imgsSrcArray, siteData.insertImg[0], siteData.insertImg[1]);
@@ -15382,6 +15450,12 @@ document.body.appendChild(text);
                 for (let i = 1; i <= endIid; i++) {
                     clearInterval(i);
                 }
+            }
+        },
+        clearSetTimeout: () => {
+            let endTid = setTimeout(() => {});
+            for (let i = 0; i <= endTid; i++) {
+                clearTimeout(i);
             }
         }
     };
@@ -16182,14 +16256,14 @@ document.body.appendChild(text);
             text: displayLanguage.str_88,
             cfn: event => {
                 event.preventDefault();
-                fun.clearAllTimer(2);
+                fun.clearSetTimeout();
                 cancelZoom();
             }
         }, {
             text: displayLanguage.str_87,
             cfn: event => {
                 event.preventDefault();
-                fun.clearAllTimer(2);
+                fun.clearSetTimeout();
                 reduceZoom();
             },
             mfn: event => {
@@ -17144,9 +17218,8 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             }
             let openInNewTab = customData[i].openInNewTab;
             if (openInNewTab) {
-                const _openInNewTab = () => [...fun.gae(openInNewTab)].forEach(a => a.setAttribute("target", "_blank"));
-                _openInNewTab();
-                new MutationObserver(() => _openInNewTab()).observe(document.body, MutationObserverConfig);
+                fun.openInNewTab(openInNewTab);
+                new MutationObserver(() => fun.openInNewTab(openInNewTab)).observe(document.body, MutationObserverConfig);
             }
             let autoDownload = siteData.autoDownload;
             if (autoDownload) {
@@ -17207,7 +17280,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     options.autoDownload = 0;
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
-                    fun.clearAllTimer(2);
+                    fun.clearSetTimeout();
                     fun.showMsg(displayLanguage.str_65, 0);
                     location.reload();
                 }
@@ -17290,15 +17363,15 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         exportImgSrcText();
                         break;
                     case 109: //數字鍵-
-                        fun.clearAllTimer(2);
+                        fun.clearSetTimeout();
                         reduceZoom();
                         break;
                     case 107: //數字鍵+
-                        fun.clearAllTimer(2);
+                        fun.clearSetTimeout();
                         increaseZoom();
                         break;
                     case 110: //數字鍵.
-                        fun.clearAllTimer(2);
+                        fun.clearSetTimeout();
                         cancelZoom();
                         break;
                     case 106: //數字鍵*
@@ -17320,7 +17393,6 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             return;
         } else if (options.icon == 1 || siteData.icon == 1) {
             addFullPictureLoadButton();
-            addFullPictureLoadFixedMenu();
         }
     }
 
