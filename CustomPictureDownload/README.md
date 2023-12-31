@@ -669,7 +669,7 @@ imgs: async () => {
 <p>數字鍵 2 捲動至第一張大圖</p>
 <p>數字鍵 3 一鍵下載</p>
 <p>數字鍵 4 捲動至最後一張大圖</p>
-<p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，圖片並排無法適配所有網站，樣式衝突很正常，無能為力，這不是本腳本想實現的主要功能</p>
+<p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式，</p>
 <p>數字鍵 7 匯出網址MediaURLs.txt文件</p>
 <p>數字鍵 - 減鍵圖片以10%為單位縮小，會記憶縮放比例</p>
 <p>數字鍵 + 加鍵圖片以10%為單位放大，會記憶縮放比例</p>
@@ -702,7 +702,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2023/12/3017:04</p>
+<p>2024/01/01 05:12</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -918,7 +918,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.zhaotaotu.cc/">找套图</a></td>
-                <td></td>
+                <td><a href="https://kantaotu.cc/">Xiuno BBS</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.douhua520.com/">豆花520</a></td>
@@ -1357,7 +1357,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://dev.avjb.com/albums/">爱微社区</a></td>
-                <td></td>
+                <td>成人相册添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.qinimg.com/">Qinimg</a></td>
@@ -1897,7 +1897,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式74個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式80個</a></td>
             </tr>
             <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
