@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.3
+// @version            1.8.4
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -9492,8 +9492,13 @@
             let lps = lp.split("/");
             let mangaCode = lps[2];
             let id = lps[3];
-            let api = `https://m.happymh.com/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}`;
-            return fetch(api).then(res => res.json());
+            let api = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v2.13`;
+            return fetch(api, {
+                "headers": {
+                    "accept": "application/json, text/plain, */*",
+                    "x-requested-with": "XMLHttpRequest"
+                }
+            }).then(res => res.json());
         },
         init: async () => {
             let json = await siteData.xhr();
@@ -9526,11 +9531,10 @@
                 }).observe(ge('#page-area'));
             }
         },
-        imgs: () => siteJson.data.scans.map(e => e.url.replace(/\?q=\d+/, "")),
+        imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url.replace(/\?q=\d+/, "")) : [],
         referrerpolicy: "origin",
         button: [4],
         insertImg: ["//article[div[contains(@id,'imageLoader')]]", 3],
-        go: 1,
         autoDownload: [0],
         next: "//a[span[text()='下一話' or text()='下一话']][contains(@href,'reads')]",
         prev: "//a[span[text()='上一話' or text()='上一话']]",
@@ -9539,6 +9543,7 @@
             let json = await obj.xhr(new URL(nextLink).pathname);
             json.status == 0 ? fun.picPreload(json.data.scans.map(e => e.url), json.data.manga_name + " - " + json.data.chapter_name, "next") : debug("預讀下一頁失敗");
         },
+        css: "footer>article>div{padding: 0.5rem 0 !important}",
         category: "comic"
     }, {
         name: "嗨皮漫畫更新頁，自動點擊載入更多，鏈接新分頁打開",
@@ -9556,7 +9561,7 @@
         enable: 0,
         icon: 0,
         key: 0,
-        autoClick: "#expandButton",
+        autoClick: ["#expandButton", 1000],
         category: "comic"
     }, {
         name: "嗨皮漫畫，鏈接新分頁打開",
@@ -12472,6 +12477,10 @@ document.body.appendChild(text);
         preloadNext: async (nextDoc, obj) => {
             let json = await obj.xhr(new URL(nextLink).pathname);
             fun.picPreload(await obj.imgs(json, 0), obj.customTitle(nextDoc), "next");
+        },
+        fancybox: {
+            v: 3,
+            insertLibrarys: 1
         },
         category: "comic"
     }, {
