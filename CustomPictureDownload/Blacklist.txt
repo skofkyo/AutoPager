@@ -1,4 +1,4 @@
-2023/12/3017:04
+2024/01/01 05:12
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -760,6 +760,12 @@ Fapello
 *://www.xgxff.com/tp/*.html
 *://www.srzx168.com/meitu/*.html
 *://www.nxzths.com/news/*.html
+*://www.meinv173.com/tu*.html
+*://www.ajkie.com/tupian/*.html
+*://www.meinv007.com/tu*.html
+*://www.linguifa.com/meitu/*.html
+*://www.gknrnb.com/news/*.html
+*://www.yachw.com/news/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -1751,6 +1757,12 @@ https://www.eyval.net/*
 *://www.xgxff.com/tp/*.html
 *://www.srzx168.com/meitu/*.html
 *://www.nxzths.com/news/*.html
+*://www.meinv173.com/tu*.html
+*://www.ajkie.com/tupian/*.html
+*://www.meinv007.com/tu*.html
+*://www.linguifa.com/meitu/*.html
+*://www.gknrnb.com/news/*.html
+*://www.yachw.com/news/*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
