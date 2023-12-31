@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.2
+// @version            1.8.3
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1007,9 +1007,9 @@
         css: "[id].widget_text,.gridmode-post-thumbnail-single,.gridbit-thumbnail-alignwide{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "找套图",
-        host: ["www.zhaotaotu.cc"],
-        reg: /www\.zhaotaotu\.cc\/thread-\d+\.htm/i,
+        name: "找套图/Xiuno BBS",
+        host: ["www.zhaotaotu.cc", "kantaotu.cc"],
+        reg: /^https?:\/\/(www\.zhaotaotu\.cc|kantaotu\.cc)\/thread-\d+\.htm/i,
         imgs: ".message>img:not(:first-of-type)",
         button: [4],
         insertImg: [".message", 2],
@@ -2762,8 +2762,8 @@
         category: "nsfw1"
     }, {
         name: "爱妹子",
-        host: ["xx.knit.bid", "mm.187187.xyz"],
-        reg: /^https?:\/\/(xx\.knit\.bid|mm\.187187\.xyz)\/([\w-]+\/)?article\/\d+\//i,
+        host: ["xx.knit.bid", "mm.187187.xyz", "999888.best"],
+        reg: /^https?:\/\/(xx\.knit\.bid|mm\.187187\.xyz|999888\.best)\/([\w-]+\/)?article\/\d+\//i,
         init: () => fun.clearAllTimer(2),
         imgs: async () => {
             await fun.getNP(".item-image", ".next-page>a", null, ".pagination");
@@ -3780,6 +3780,10 @@
         host: ["hotgirlchina.com", "hotgirlasian.com", "thechinagirls.com", "theasiagirl.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com", "nudeasiangirl.com"],
         reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com)\/.+(photos?|videos?|anh)?\/?|^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$|^https?:\/\/hotgirlasian\.com\/\d+\/$/,
         include: ".entry-inner img[alt]",
+        init: () => {
+            let share = fun.ge(".entry.share");
+            if (share) share.classList.remove("share");
+        },
         imgs: () => {
             let max;
             try {
@@ -3794,12 +3798,12 @@
             [".pagination", 1, ".entry-inner>p:not(#FullPictureLoadEnd)"], 2
         ],
         customTitle: () => fun.geT(".post-title").replace(/\(\d+\s?photos\s?\)|(\s?\(\d+\s?photos?\s?\+\s?\d+\s?videos?\))|\([0-9\s]+ảnh[0-9\s\+]+video\)|\([0-9\s]+ảnh\)/i, "").trim(),
-        css: ".boxzilla-container,.boxzilla-overlay{display:none!important}",
+        css: ".boxzilla-container,.boxzilla-overlay,.sharrre-container{display:none!important}",
         category: "nsfw1"
     }, {
         name: "HOTGIRLchina格式",
         reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hotgirlasian\.com)\//,
-        css: ".boxzilla-container,.boxzilla-overlay{display:none!important}",
+        css: ".boxzilla-container,.boxzilla-overlay,.sharrre-container{display:none!important}",
         category: "ad"
     }, {
         name: "FoamGirl",
@@ -4801,24 +4805,24 @@
     }, {
         name: "爱微社区 成人相册",
         reg: /^https?:\/\/dev\.avjb\.com\/albums\/$/i,
-        init: async () => {
-            let api = "/albums/?mode=async&function=get_block&block_id=list_albums_common_albums_list&sort_by=post_date&from=";
-            await fun.waitEle(".thumb.item img[src^=http]");
-            fun.openInNewTab(".thumb.item a");
-            let max = await fun.fetchDoc(api + "2").then(doc => fun.geT("a.next", 2, doc));
-            for (let i = 2; i <= max; i++) {
-                await fun.fetchDoc(api + i).then(doc => {
-                    fun.openInNewTab(".thumb.item a", doc);
-                    let targetEle = fun.ge(".albums-thumbs");
-                    [...fun.gae(".thumb.item", doc)].forEach(e => {
-                        let img = fun.ge("img", e);
-                        img.src = img.dataset.original;
-                        targetEle.appendChild(e.cloneNode(true));
-                    });
-                    fun.ge(".pagination").innerHTML = fun.ge(".pagination", doc).innerHTML;
-                });
-            }
+        init: async () => await fun.waitEle(".thumb.item img[src^=http]"),
+        autoPager: {
+            ele: ".albums-thumbs",
+            observer: ".albums-thumbs .thumb.item",
+            next: (doc) => {
+                let next = fun.ge(".pagination a.active+a:not(.next)", doc);
+                if (next) {
+                    let num = next.innerText;
+                    return "/albums/?mode=async&function=get_block&block_id=list_albums_common_albums_list&sort_by=post_date&from=" + num;
+                } else {
+                    return null;
+                }
+            },
+            re: ".pagination",
+            title: doc => "Page " + fun.geT(".pagination a.active", 1, doc),
+            lazySrc: "img[data-original]"
         },
+        openInNewTab: ".thumb.item a",
         category: "autoPager"
     }, {
         name: "Asian To Lick",
@@ -6388,7 +6392,7 @@
     }, {
         name: "3K图片网/桃子啦 格式",
         host: ["www.3ktu.com", "www.tufada.com"],
-        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu|hiuin|ksruisj|mmokok|nangluan|579993|wpslgs|xscmt|hyqcxs|xthkw|fzxfl|wsvdj|timitm|5269se|xgxff|srzx168|nxzths)\.com\/\w+\/\d+\.html|^https?:\/\/www\.tufada\.com\/tu\d+\.html/,
+        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu|hiuin|ksruisj|mmokok|nangluan|579993|wpslgs|xscmt|hyqcxs|xthkw|fzxfl|wsvdj|timitm|5269se|xgxff|srzx168|nxzths|ajkie|linguifa|gknrnb|yachw)\.com\/\w+\/\d+\.html|^https?:\/\/www\.(tufada|meinv173|meinv007)\.com\/tu\d+\.html/,
         include: "#showimg img,.img-box img",
         imgs: () => {
             let max;
@@ -11920,22 +11924,27 @@ window.parent.postMessage({
             if (typeof aboutBlank === "function") fun.run("aboutBlank=()=>{};");
             fun.clearAllTimer();
             await fun.waitEle(".tab-pane.show.active a");
-            let readHistoryData = localStorage.getItem("copymangaReadHistory");
-            let pathnameSplit = location.pathname.split("/");
-            let comic = pathnameSplit.pop();
-            if (readHistoryData === null) {
-                return;
-            } else {
-                let obj = JSON.parse(readHistoryData);
-                if (obj[comic] === undefined) {
+            const updateLastChapter = () => {
+                let readHistoryData = localStorage.getItem("copymangaReadHistory");
+                let pathnameSplit = location.pathname.split("/");
+                let comic = pathnameSplit.pop();
+                if (readHistoryData === null) {
                     return;
                 } else {
-                    let selector = `.upLoop a[href$="${obj[comic]}"]`;
-                    [...document.querySelectorAll(selector)].forEach(a => a.className = "page-all-item active");
+                    let obj = JSON.parse(readHistoryData);
+                    if (obj[comic] === undefined) {
+                        return;
+                    } else {
+                        let selector = `.upLoop a[href$="${obj[comic]}"]`;
+                        [...document.querySelectorAll(".lastchapter")].forEach(a => a.classList.remove("lastchapter"));
+                        [...document.querySelectorAll(selector)].forEach(a => a.classList.add("lastchapter"));
+                    }
                 }
-            }
+            };
+            updateLastChapter();
+            document.addEventListener("visibilitychange", updateLastChapter);
         },
-        css: ".page-all-item.active li{color:#fff !important}",
+        css: ".lastchapter{color:#fff !important;background:#1790E6}",
         category: "none"
     }, {
         name: "拷貝漫畫M",
@@ -12446,11 +12455,12 @@ document.body.appendChild(text);
             }
             return ok ? siteJson.cont.map(e => host + e) : [];
         },
+        button: [4],
         insertImg: ["#mh", 2],
         go: 1,
         next: () => {
-            let comicListUrl = siteUrl.replace(/[\w-]+\/$/i, "");
-            let chapter = siteUrl.match(/[\w-]+\/$/)[0];
+            let comicListUrl = decodeURI(siteUrl.replace(/[^\/]+\/$/i, ""));
+            let chapter = decodeURI(siteUrl.match(/[^\/]+\/$/)[0]);
             let nextXPath = `//div[@id='content']/li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
             return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
@@ -14477,8 +14487,9 @@ document.body.appendChild(text);
             let fragment = new DocumentFragment();
             if (siteData.button) {
                 let buttonDiv = document.createElement("div");
+                buttonDiv.id = "FullPictureLoadOptionsButtonParentDiv";
                 buttonDiv.style.width = "100%";
-                buttonDiv.style.height = "42px";
+                //buttonDiv.style.height = "42px";
                 buttonDiv.style.display = "inline-block";
                 buttonDiv.style.textAlign = "center";
                 if (typeof siteData.button[2] === "number") {
@@ -14530,7 +14541,7 @@ document.body.appendChild(text);
                     let button = document.createElement("button");
                     button.id = obj.id;
                     button.style.width = width;
-                    button.style.height = "24px";
+                    //button.style.height = "24px";
                     button.innerText = obj.text;
                     button.oncontextmenu = () => false;
                     if (obj.cfn) button.addEventListener("click", obj.cfn);
@@ -16059,7 +16070,7 @@ document.body.appendChild(text);
                 fun.imagesObserver.observe(img);
                 let item = document.createElement("div");
                 item.style.width = width;
-                item.style.height = "auto";
+                //item.style.height = "auto";
                 //item.style.float = "left";
                 item.style.display = "inline-block";
                 siteData.category == "comic" || (options.column == 2 && siteData.category == "hcomic") ? item.style.verticalAlign = "middle" : item.style.verticalAlign = "top";
@@ -16287,8 +16298,6 @@ document.body.appendChild(text);
         }];
         const createButton = obj => {
             let button = document.createElement("button");
-            button.style.width = "100px";
-            button.style.height = "24px";
             button.innerText = obj.text;
             button.oncontextmenu = () => false;
             if (obj.cfn) button.addEventListener("click", obj.cfn);
@@ -16575,6 +16584,8 @@ document.body.appendChild(text);
 #FullPictureLoadFixedMenu button {
     font-family: Arial, sans-serif !important;
     color: #000000 !important;
+    width: 100px !important;
+    height: 24px !important;
     border-radius: unset !important;
     padding: 0px !important;
     border: 1px solid #a0a0a0 !important;
@@ -16645,6 +16656,10 @@ document.body.appendChild(text);
     border-radius: unset !important;
     padding: 0 !important;
     margin: 0 auto !important;
+}
+
+#FullPictureLoadImgBox>div {
+    height: auto;
 }
 
 a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadImageSmall] {
@@ -16727,10 +16742,15 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     margin: 20px auto !important;
 }
 
+#FullPictureLoadOptionsButtonParentDiv {
+    height: 42px;
+}
+
 #FullPictureLoadOptionsBtn,
 #FullPictureLoadToggleImgModeBtn,
 #FullPictureLoadToggleZoomeBtn,
 #FullPictureLoadCancelZoomBtn {
+    height: 24px;
     padding: 1px !important;
     margin-top: 10px !important;
     margin-bottom: 6px !important;
