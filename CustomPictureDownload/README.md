@@ -1356,6 +1356,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://avjb.github.io/">網址發佈頁1</a>，<a href="https://bitbucket.org/free890722/avjb/src/master/README.md">網址發佈頁2</a></td>
             </tr>
             <tr>
+                <td><a href="https://theavporn.com/albums/">The AV Porn</a></td>
+                <td><a href="https://theavporn.github.io/theavporn/">網址發佈頁</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://dev.avjb.com/albums/">爱微社区</a></td>
                 <td>成人相册添加了自動翻頁</td>
             </tr>
