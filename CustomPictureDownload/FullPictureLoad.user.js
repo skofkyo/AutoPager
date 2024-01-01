@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.4
+// @version            1.8.5
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -4749,10 +4749,10 @@
         customTitle: () => fun.geT("h1"),
         category: "nsfw2"
     }, {
-        name: "AVJB",
-        host: ["avjb.com"],
-        link: "https://avjb.com/albums/",
-        reg: /^https?:\/\/(avjb\.com|avjb\.fun|av\d{2}\.fun|bav\d{2}\.xyz|bbav\d{3}\.com|onebookcms\.com)\/(\w{2}\/)?albums\/\d+\/[\w-]+\/$/i,
+        name: "AVJB/The AV Porn",
+        host: ["avjb.com", "theavporn.com"],
+        link: "https://avjb.com/albums/，https://theavporn.com/albums/",
+        reg: /^https?:\/\/(avjb\.com|avjb\.fun|av\d{2}\.fun|bav\d{2}\.xyz|bbav\d{3}\.com|onebookcms\.com|theavporn\.com|thedemovideos\.com|thepa\d+\.\w+|the\d+\.\w+)\/(\w{2}\/)?albums\/\d+\/[\w-]+\/$/i,
         init: () => {
             new MutationObserver((mutations, observer) => {
                 if (fun.ge(".chatra--webkit")) {
@@ -4775,7 +4775,7 @@
         category: "nsfw2"
     }, {
         name: "AVJB 去廣告",
-        reg: /^https?:\/\/(avjb\.com|avjb\.fun|av\d{2}\.fun|bav\d{2}\.xyz|bbav\d{3}\.com|onebookcms\.com)\//i,
+        reg: /^https?:\/\/(avjb\.com|avjb\.fun|av\d{2}\.fun|bav\d{2}\.xyz|bbav\d{3}\.com|onebookcms\.com|theavporn\.com|thedemovideos\.com|thepa\d+\.\w+|the\d+\.\w+)\//i,
         init: () => {
             new MutationObserver((mutations, observer) => {
                 if (fun.ge(".chatra--webkit")) {
@@ -13218,7 +13218,9 @@ document.body.appendChild(text);
                 str_100: "次",
                 str_101: "網址.txt已匯出",
                 str_102: "格式轉換中...",
-                str_103: "啟用並排模式"
+                str_103: "啟用並排模式",
+                str_104: "匯出圖址",
+                str_105: "複製圖址"
             };
             break;
         case "zh-CN":
@@ -13325,7 +13327,9 @@ document.body.appendChild(text);
                 str_100: "次",
                 str_101: "网址.txt已导出",
                 str_102: "格式转换中...",
-                str_103: "启用并排模式"
+                str_103: "启用并排模式",
+                str_104: "导出图址",
+                str_105: "拷贝图址"
             };
             break;
         default:
@@ -13432,7 +13436,9 @@ document.body.appendChild(text);
                 str_100: "Bout",
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
-                str_103: "Enable Side-By-Side Mode"
+                str_103: "Enable Side-By-Side Mode",
+                str_104: "Export URL",
+                str_105: "Copy URL"
             };
             break;
     }
@@ -15914,6 +15920,25 @@ document.body.appendChild(text);
         showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
     };
 
+    const copyImgSrcTextB = async () => {
+        if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
+        let selector;
+        typeof siteData.imgs == "function" ? selector = siteData.imgs : selector = options.default;
+        let srcArr = await getImgs(selector);
+        if (srcArr.length == 0) {
+            showMsg(displayLanguage.str_44);
+            return;
+        }
+        if (videosSrcArray.length > 0) {
+            srcArr = srcArr.concat(videosSrcArray);
+        }
+        let textArr = [customTitle || document.title].concat(srcArr);
+        let str = textArr.join("\n");
+        console.log(str);
+        copyToClipboard(str);
+        showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
+    };
+
     const copyToClipboard = text => {
         if (navigator.clipboard && window.isSecureContext) {
             return navigator.clipboard.writeText(text);
@@ -16273,6 +16298,18 @@ document.body.appendChild(text);
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenu";
         const menuObj = [{
+            text: displayLanguage.str_104,
+            cfn: event => {
+                event.preventDefault();
+                exportImgSrcText();
+            }
+        }, {
+            text: displayLanguage.str_105,
+            cfn: event => {
+                event.preventDefault();
+                copyImgSrcTextB();
+            }
+        }, {
             text: displayLanguage.str_88,
             cfn: event => {
                 event.preventDefault();
@@ -16305,15 +16342,15 @@ document.body.appendChild(text);
                 fun.ge("#FullPictureLoadOptions").removeAttribute("style");
             }
         }];
-        const createButton = obj => {
-            let button = document.createElement("button");
-            button.innerText = obj.text;
-            button.oncontextmenu = () => false;
-            if (obj.cfn) button.addEventListener("click", obj.cfn);
-            if (obj.mfn) button.addEventListener("mousedown", obj.mfn);
-            menuDiv.appendChild(button);
+        const createMenu = obj => {
+            let item = document.createElement("div");
+            item.innerText = obj.text;
+            item.oncontextmenu = () => false;
+            if (obj.cfn) item.addEventListener("click", obj.cfn);
+            if (obj.mfn) item.addEventListener("mousedown", obj.mfn);
+            menuDiv.appendChild(item);
         };
-        [...menuObj].forEach(obj => createButton(obj));
+        [...menuObj].forEach(obj => createMenu(obj));
         document.body.appendChild(menuDiv);
     };
 
@@ -16573,32 +16610,44 @@ document.body.appendChild(text);
     border-radius: unset !important;
     z-index: 2147483647 !important;
     opacity: 1 !important;
+    cursor: pointer !important;
 }
 
 #FullPictureLoadFixedMenu {
-    text-align: center;
-    width: 100px !important;
+    text-align: center !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 14px !important;
+    color: #000000 !important;
+    width: 112px !important;
     height: auto !important;
+    padding: 5px 5px 2px 5px !important;
     position: fixed !important;
-    left: 64px;
-    bottom: 30px !important;
-    border: 1px solid #a0a0a0 !important;
+    left: 24px !important;
+    bottom: 152px !important;
+    border: #ccc 1px solid !important;
     border-radius: 3px !important;
-    box-shadow: -2px 2px 5px rgb(0 0 0 / 30%) !important;
-    background-color: #FAFAFB;
+    background-color: #fff !important;
     opacity: 0;
     z-index: 2147483647 !important;
 }
 
-#FullPictureLoadFixedMenu button {
-    font-family: Arial, sans-serif !important;
-    color: #000000 !important;
+#FullPictureLoadFixedMenu > div {
     width: 100px !important;
     height: 24px !important;
-    border-radius: unset !important;
-    padding: 0px !important;
-    border: 1px solid #a0a0a0 !important;
-    background-color: transparent !important;
+    line-height: 24px !important;
+    overflow: hidden !important;
+    font-size: 14px !important;
+    border: #ccc 1px solid !important;
+    background-color: #f6f6f6 !important;
+    padding: 0 5px 0 5px !important;
+    margin: 0 2px 3px 0 !important;
+    cursor: pointer !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #FullPictureLoadFixedMenu:hover {
@@ -16780,6 +16829,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     box-sizing: border-box;
     background-color: buttonface;
     border: 1px solid #a0a0a0 !important;
+    cursor: pointer !important;
 }
 
 .viewer-open:not(.fancybox-active) {
