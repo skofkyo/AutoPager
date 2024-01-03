@@ -1,4 +1,4 @@
-2024/01/01 05:12
+2024/01/03 19:47
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -766,6 +766,8 @@ Fapello
 *://www.linguifa.com/meitu/*.html
 *://www.gknrnb.com/news/*.html
 *://www.yachw.com/news/*.html
+*://www.qdsyhj.com/tupian/*.html
+*://www.yqx101.com/news/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -813,6 +815,10 @@ ROSI美女写真
 
 小姐姐么
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
+
+Asian Porn
+*://asianporn.li/photo/*/*/
+
 gogo人体艺术
 *://www.64ay.com/*/*.html
 *://www.98ah.com/*/*.html
@@ -1763,6 +1769,8 @@ https://www.eyval.net/*
 *://www.linguifa.com/meitu/*.html
 *://www.gknrnb.com/news/*.html
 *://www.yachw.com/news/*.html
+*://www.qdsyhj.com/tupian/*.html
+*://www.yqx101.com/news/*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
@@ -1778,6 +1786,7 @@ https://www.eyval.net/*
 *://www.mfpho.com/*.html
 *://www.hutu6.com/*/*.html
 *://hotasianx.com/*
+*://asianporn.li/photo/*/*/
 /^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
