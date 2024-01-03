@@ -702,7 +702,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/01 05:12</p>
+<p>2024/01/03 19:47</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -775,7 +775,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xgmn05.cc/">极品性感美女</a></td>
-                <td><a href="https://m.xg08.xyz/">m.xg08.xyz</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
+                <td><a href="https://xg04.ffft.bf/">xg04.ffft.bf</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xrmn03.com/">秀人美女網</a></td>
@@ -786,7 +786,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://a.xiu.cloudns.org/">a.xiu.cloudns.org</a>，<a href="http://137.175.84.179/">137.175.84.179</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.ikmn03.cc/">爱看美女网</a></td>
+                <td><a href="https://www.ikmn05.cc/">爱看美女网</a></td>
                 <td>不支持預覽版頁面</td>
             </tr>
             <tr>
@@ -1492,6 +1492,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://meitu.neocities.org/">美图</a></td>
+                <td>很多posts都404...</td>
+            </tr>
+            <tr>
                 <td><a href="https://fuligirl.net/">福利姬美图</a></td>
                 <td></td>
             </tr>
@@ -1901,7 +1905,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式80個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式82個</a></td>
             </tr>
             <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
@@ -2137,6 +2141,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hentai.bang14.com/">Hentai.bang14.com</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://18kami.com/">18Kami.com</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2876,7 +2884,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://civitai.com/">Civitai</a></td>
-                <td>SPA網頁，只支持Models頁和Posts頁，Models需手動插入圖片，切換圖片版本後，再手動插入當前版本的圖片，支持自動顯示NSFW被模糊的圖片。</td>
+                <td>SPA網頁，支持自動顯示NSFW被模糊的圖片，請透過Tampermonkey選單開啟Lazy Load加載原圖功能，下載請使用其他圖片下載腳本。</td>
             </tr>
         </tbody>
     </table>
