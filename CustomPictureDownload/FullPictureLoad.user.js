@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.6
+// @version            1.8.7
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -64,6 +64,7 @@
     const language = window.navigator.language;
     let displayLanguage = {};
     let globalImgArray = [];
+    let captureSrcArray = [];
     let thumbnailsSrcArray = [];
     let videosSrcArray = [];
     let promiseBlobArray = [];
@@ -559,7 +560,7 @@
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: () => fun.geT(".item_title>h1").replace(/\d+P$/i, ""),
         //threading: 4,
-        css: ".item_title>div[id].item_title>a,.content br,.bottom_fixed,.update_area_lists>div[id],body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
+        css: ".item_title>div[id],.item_title>a,.content br,.bottom_fixed,.update_area_lists>div[id],body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
         category: "nsfw1"
     }, {
         name: "极品性感美女",
@@ -5404,8 +5405,7 @@
         link: "https://asianporn.li/photos/",
         reg: /^https?:\/\/asianporn\.li\/photo\/\d+\/[^\/]+\/$/i,
         imgs: async () => {
-            await fun.getNP(".cell.photo", "li.active+li>a", null, ".pagination");
-            [...fun.gae("img[src*=loading][data-src]")].forEach(e => e.src = e.dataset.src);
+            await fun.getNP(".cell.photo", "li.active+li>a", null, ".pagination", 0, "img[data-src]");
             thumbnailsSrcArray = [...fun.gae(".photos img.thumb")].map(e => e.dataset.src ?? e.src);
             return fun.getImgA("#image .img-reponsive", ".photos a");
         },
@@ -6394,6 +6394,32 @@
         autoDownload: [0],
         next: "//div[contains(text(),'上一篇')]/a | //a[text()='上一篇']",
         prev: "//div[contains(text(),'下一篇')]/a | //a[text()='下一篇']",
+        category: "nsfw1"
+    }, {
+        name: "中国人体艺术模特网",
+        host: ["www.crtys.net", "crtys.net"],
+        reg: /^https?:\/\/(www\.)?crtys\.net\/(index\.php)?\?action-imagelist-uid-/,
+        imgs: async () => {
+            await fun.getNP(".imglist>*", "strong+a:not(.next)", null, ".pages");
+            thumbnailsSrcArray = [...fun.gae(".imglist img")].map(e => e.src);
+            return fun.getImgA(".bigimg img", ".imglist a");
+        },
+        button: [4],
+        insertImg: [".imglist", 2],
+        customTitle: () => fun.geT(".title>div[style]").replace(/\(\d+p\)/i, "").trim(),
+        category: "nsfw1"
+    }, {
+        name: "性爱吧",
+        host: ["www.xingaiba.com", "xingaiba.com"],
+        reg: /^https?:\/\/(www\.)?xingaiba\.com\/\?action-viewnews-itemid-\d+$/,
+        include: "//span[contains(text(),'美图类别')]",
+        imgs: async () => {
+            await fun.getNP("#carousel_photo_container>*", "strong+a:not(.next)", null, ".pages");
+            return [...fun.gae("#carousel_photo_container img")];
+        },
+        button: [4],
+        insertImg: ["#carousel_photo_container", 2],
+        customTitle: () => fun.geT(".n_content>h1"),
         category: "nsfw1"
     }, {
         name: "Girl Girl Go",
@@ -12888,8 +12914,18 @@ document.body.appendChild(text);
         init: () => {
             fun.CivitAiAutoShowNSFW();
             if (lazyLoadFullResolution == 1) fun.CivitAiFullSrc();
+            if (hasTouchEvents()) {
+                setInterval(() => {
+                    [...document.querySelectorAll(".mantine-1m6je7k")].forEach(e => {
+                        let img = e.querySelector("img.mantine-1rc3uhm[src*='original']");
+                        if (img) e.style.height = img.height + 66 + "px";
+                    })
+                }, 1000);
+            }
         },
+        capture: "img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi),img[data-src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi)",
         openInNewTab: "a[href]:not([target=_blank])",
+        css: ".mantine-15xhaye{display:block !important;}img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi){width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
         category: "lazyLoad"
     }];
 
@@ -12998,7 +13034,7 @@ document.body.appendChild(text);
                 display: {
                     left: ["infobar"],
                     middle: ["flipX", "flipY"],
-                    right: [ /*"downloa", */ "iterateZoom", "slideshow", "thumbs", "close"]
+                    right: [ /*"download", */ "iterateZoom", "slideshow", "thumbs", "close"]
                 }
             },
             on: {
@@ -13033,7 +13069,7 @@ document.body.appendChild(text);
                 display: {
                     left: ["infobar"],
                     middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
-                    right: [ /*"downloa", */ "slideshow", "fullscreen", "thumbs", "close"]
+                    right: [ /*"download", */ "slideshow", "fullscreen", "thumbs", "close"]
                 }
             },
             on: {
@@ -13163,7 +13199,8 @@ document.body.appendChild(text);
                 str_102: "格式轉換中...",
                 str_103: "啟用並排模式",
                 str_104: "匯出圖址",
-                str_105: "複製圖址"
+                str_105: "複製圖址",
+                str_106: "分頁檢視"
             };
             break;
         case "zh-CN":
@@ -13272,7 +13309,8 @@ document.body.appendChild(text);
                 str_102: "格式转换中...",
                 str_103: "启用并排模式",
                 str_104: "导出图址",
-                str_105: "拷贝图址"
+                str_105: "拷贝图址",
+                str_106: "标籤页视图"
             };
             break;
         default:
@@ -13380,8 +13418,9 @@ document.body.appendChild(text);
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
-                str_104: "Export URL",
-                str_105: "Copy URL"
+                str_104: "Export URLs",
+                str_105: "Copy URLs",
+                str_106: "New Tab View"
             };
             break;
     }
@@ -13909,13 +13948,15 @@ document.body.appendChild(text);
                         }
                     }
                     if (!doc) doc = fun.doc(htmlText);
-                    if (dataset) {
-                        [...fun.gae(`img[${dataset}],a[${dataset}],div[${dataset}]`, doc)].forEach(e => {
-                            if (e.tagName == "IMG") {
-                                e.src = e.getAttribute(dataset);
-                            } else if (e.tagName == "A" || e.tagName == "DIV") {
-                                let url = e.getAttribute(dataset);
-                                e.style.backgroundImage = `url(${url})`;
+                    if (typeof dataset === "string") {
+                        [...fun.gae(dataset, doc)].forEach(e => {
+                            let check = fun.checkImgSrc(e);
+                            if (check.ok) {
+                                if (e.tagName == "IMG") {
+                                    e.src = check.src;
+                                } else if (e.tagName == "A" || e.tagName == "DIV") {
+                                    e.style.backgroundImage = `url(${check.src})`;
+                                }
                             }
                         });
                     }
@@ -14778,7 +14819,11 @@ document.body.appendChild(text);
                                 error.target.dataset.src = newSrc;
                             }
                             if (/civitai\.com/.test(location.host)) {
-                                error.target.dataset.src = error.target.dataset.url;
+                                if (error.target.dataset.url) {
+                                    error.target.dataset.src = error.target.dataset.url;
+                                } else {
+                                    error.target.dataset.src = error.target.dataset.src.replace("original=true/", "");
+                                }
                             }
                             error.target.src = loading_bak;
                             error.target.classList.add("error");
@@ -15342,16 +15387,18 @@ document.body.appendChild(text);
         CivitAiAutoShowNSFW: () => {
             const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(window.location.pathname)) {
-                    let ele = [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")][0];
-                    let elePath = ele.querySelector("span+svg>path");
-                    if (elePath) {
-                        let d = elePath.getAttribute("d");
-                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
-                            ele.click();
-                            //elementClick(ele);
+                    try {
+                        let ele = [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")][0];
+                        let elePath = ele.querySelector("span+svg>path");
+                        if (elePath) {
+                            let d = elePath.getAttribute("d");
+                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
+                                ele.click();
+                                //elementClick(ele);
+                            }
+                            await fun.delay(1000, 0);
                         }
-                        await fun.delay(1000, 0);
-                    }
+                    } catch (e) {}
                 }
                 [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")].forEach(ele => {
                     let elePath = ele.querySelector("span+svg>path");
@@ -15378,8 +15425,8 @@ document.body.appendChild(text);
                     if (!/\.mp4/.test(item.dataset.src ?? item.src)) {
                         let thumbnail = item.dataset.src ?? item.src;
                         item.dataset.thumb = thumbnail;
-                        item.dataset.url = thumbnail.replace(/width=\d+\//, "");
-                        let original = thumbnail.replace(/width=\d+\//, "original=true/");
+                        item.dataset.url = thumbnail.replace(/width=[\d+\.]\//, ""); //Original Image URL to replace when an error occurs
+                        let original = thumbnail.replace(/width=[\d\.]+\//, "original=true/");
                         let imgDir = original.match(/.+\//)[0];
                         if (item.alt != "" && /\.\w+$/.test(item.alt)) {
                             original = imgDir + item.alt.trim();
@@ -16210,6 +16257,110 @@ document.body.appendChild(text);
         }
     };
 
+    const newTabView = async () => {
+        if (typeof siteData.imgs === "string") {
+            const imageEles = [...fun.gae(siteData.imgs)];
+            console.log("newTabViewImageEles", imageEles);
+        }
+        let imgSrcs;
+        captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
+        if (imgSrcs.length > 0) {
+            const newWindow = window.open("about:blank", "_blank");
+            newWindow.fn = fun;
+            const fn = newWindow.fn;
+            const doc = newWindow.document;
+            doc.write('<html><head></head><body></body></html>');
+            const css = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css").then(res => res.text());
+            const code = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js").then(res => res.text());
+            const imageElements = imgSrcs.map((src, i, arr) => {
+                let a = doc.createElement("a");
+                a.href = src;
+                a.dataset.fancybox = "gallery";
+                a.target = "_blank";
+                let img = doc.createElement("img");
+                img.src = loading_bak;
+                img.dataset.src = src;
+                img.decoding = "async";
+                img.style.width = "auto";
+                img.style.maxWidth = "100vw";
+                img.style.height = "auto";
+                img.style.maxHeight = "100vh";
+                img.style.padding = "2px";
+                fn.imagesObserver.observe(img);
+                a.appendChild(img);
+                return a;
+            });
+            doc.body.append(...imageElements);
+            doc.body.style.textAlign = "center";
+            const style = doc.createElement("style");
+            style.type = "text/css";
+            style.innerHTML = css;
+            doc.head.appendChild(style);
+            const script = doc.createElement("script");
+            script.type = "text/javascript";
+            script.innerHTML = code +
+                `Fancybox.bind("[data-fancybox]", {
+    idle: false,
+    wheel: "slide",
+    Images: {
+        Panzoom: {
+            maxScale: 2
+        }
+    },
+    Thumbs: {
+        showOnStart: false
+    },
+    Toolbar: {
+        display: {
+            left: ["infobar"],
+            middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+            right: ["download", "slideshow", "fullscreen", "close"]
+        }
+    },
+    on: {
+        done: (fancybox, slide) => {
+            if (fancybox.isCurrentSlide(slide)) {
+                slideIndex = slide.index;
+                [...document.querySelectorAll("img")][slideIndex].scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                    inline: "center",
+                });
+            } else {
+                [...document.querySelectorAll("img")][fancybox.getSlide().index].scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                    inline: "center",
+                });
+            }
+        },
+        close: (fancybox, slide) => {
+            document.body.classList.remove("hide-scrollbar");
+            slideIndex = fancybox.getSlide().index;
+            [...document.querySelectorAll("img")][slideIndex].scrollIntoView({
+                block: "center",
+                behavior: "smooth",
+                inline: "center",
+            });
+        }
+    }
+});`;
+            doc.body.appendChild(script);
+        }
+    };
+
+    const addnewTabViewButton = () => {
+        let img = new Image();
+        img.id = "FullPictureLoad";
+        img.className = "FullPictureLoadFixedBtn";
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
+        img.oncontextmenu = () => false;
+        img.addEventListener("click", () => {
+            newTabView();
+        });
+        document.body.appendChild(img);
+    };
+
     const cancelZoom = () => {
         if (ge("#FullPictureLoadOptions:not([style])")) return;
         if (ge(".FullPictureLoadImage:not(.small)")) {
@@ -16273,6 +16424,12 @@ document.body.appendChild(text);
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenu";
         const menuObj = [{
+            text: displayLanguage.str_106,
+            cfn: event => {
+                event.preventDefault();
+                newTabView();
+            }
+        }, {
             text: displayLanguage.str_104,
             cfn: event => {
                 event.preventDefault();
@@ -17398,6 +17555,20 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             console.error("圖片全載preloadNext()出錯", error);
         }
     }, 1000);
+
+    const captureSrc = async () => {
+        let imgSrcs = await getImgs(siteData.capture ?? siteData.imgs);
+        imgSrcs.forEach(src => {
+            if (!captureSrcArray.includes(src)) {
+                captureSrcArray.push(src);
+            }
+        });
+    };
+
+    if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture) {
+        addnewTabViewButton();
+        new MutationObserver(captureSrc).observe(document.body, MutationObserverConfig);
+    }
 
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !siteData.category.includes("lazyLoad") && !siteData.category.includes("none") && !siteData.category.includes("ad")) {
         if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
