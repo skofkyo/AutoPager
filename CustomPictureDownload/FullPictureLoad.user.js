@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.7
+// @version            1.8.8
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -5559,7 +5559,7 @@
         host: ["bitchesgirls.com"],
         reg: /^https?:\/\/bitchesgirls\.com\/[^\/]+\/[^\/]+\/[^\/]+\/$/,
         imgs: async () => {
-            await fun.getNP(".albumgrid a", "a#loadMore");
+            await fun.getNP(".albumgrid a,.popup-element", "a#loadMore");
             const selector = "script[type='application/ld+json']";
             const getUrls = (ele, doc) => {
                 let text = fun.ge(ele, doc).innerText;
@@ -6396,18 +6396,23 @@
         prev: "//div[contains(text(),'下一篇')]/a | //a[text()='下一篇']",
         category: "nsfw1"
     }, {
-        name: "中国人体艺术模特网",
-        host: ["www.crtys.net", "crtys.net"],
-        reg: /^https?:\/\/(www\.)?crtys\.net\/(index\.php)?\?action-imagelist-uid-/,
+        name: "中国人体艺术模特网/欧洲人体艺术套图网/亚洲人体艺术/日本人体艺术/美女人体艺术/更真人体艺术/一千美女",
+        host: ["www.crtys.net", "crtys.net", "www.ozrt.live", "ozrt.live", "www.yzrt.live", "yzrt.live", "www.rbrt.live", "rbrt.live", "www.mnrt.live", "mnrt.live", "www.gengzhen.vip", "gengzhen.vip", "www.yqmn.live", "yqmn.live"],
+        reg: /^https?:\/\/((www\.)?crtys\.net|(www\.)?(ozrt|yzrt|rbrt|mnrt|yqmn)\.live|(www\.)?gengzhen\.vip)\/(index\.php)?\?action-imagelist-uid-/,
         imgs: async () => {
-            await fun.getNP(".imglist>*", "strong+a:not(.next)", null, ".pages");
-            thumbnailsSrcArray = [...fun.gae(".imglist img")].map(e => e.src);
-            return fun.getImgA(".bigimg img", ".imglist a");
+            await fun.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
+            return fun.getImgA(".bigimg img,#articlebody img,.content_pic img,#big-pic img", ".imglist a,.m_aana a,.main_column_pic a,.pic-list a");
         },
         button: [4],
-        insertImg: [".imglist", 2],
-        customTitle: () => fun.geT(".title>div[style]").replace(/\(\d+p\)/i, "").trim(),
-        category: "nsfw1"
+        insertImg: [".imglist,.m_aana,.main_column,.pic-list", 2],
+        customTitle: () => {
+            if (fun.ge(".title>div[style],.imgWrap a,.name>a")) {
+                return fun.geT(".title>div[style],.imgWrap a,.name>a").replace(/\(\d+p\)|\s?\(.+\)\s?/i, "").trim();
+            } else {
+                return fun.ge(".main_column_pic img").alt.replace(/\(\d+p\)|\s?\(.+\)\s?/i, "").trim();;
+            }
+        },
+        category: "nsfw2"
     }, {
         name: "性爱吧",
         host: ["www.xingaiba.com", "xingaiba.com"],
@@ -6419,8 +6424,82 @@
         },
         button: [4],
         insertImg: ["#carousel_photo_container", 2],
+        autoDownload: [0],
+        next: "div[style^='TEXT-ALIGN']>a:first-child",
+        prev: "div[style^='TEXT-ALIGN']>a:last-child",
         customTitle: () => fun.geT(".n_content>h1"),
+        category: "nsfw2"
+    }, {
+        name: "好312图库",
+        host: ["www.hao312.xyz", "hao312.xyz"],
+        reg: /^https?:\/\/(www\.)?hao312\.xyz\/html\/\d+\/n-\d+\.html$/,
+        imgs: async () => {
+            await fun.getNP("#picBody img", "li.thisclass+li>a", null, ".pages");
+            return [...fun.gae("#picBody img")];
+        },
+        button: [4],
+        insertImg: ["#picBody", 2],
+        autoDownload: [0],
+        next: ".next>a",
+        prev: ".pre>a",
+        customTitle: () => fun.geT(".articleTitle>h1"),
         category: "nsfw1"
+    }, {
+        name: "空图美女网",
+        host: ["www.kongtu.com", "www.kongtu.com"],
+        reg: /^https?:\/\/kongtu\.com\/post\/\d+\/$/,
+        init: () => fun.clearAllTimer(),
+        imgs: () => [...fun.gae(".LightGallery_Item")].map(e => e.getAttribute("lg-data-src")),
+        button: [4],
+        insertImg: [".viewall_plugin", 2],
+        autoDownload: [0],
+        next: ".prev>a",
+        prev: ".next>a",
+        customTitle: () => fun.geT("h1.tit").replace(/\d+p/i, ""),
+        css: ".viewall_plugin{height:auto!important}@media only screen and (max-width:480px){.container{padding:0px !important}}",
+        category: "nsfw1"
+    }, {
+        name: "阳雀人体艺术",
+        host: ["www.yangque.xyz", "yangque.xyz"],
+        reg: /^https?:\/\/www\.yangque\.xyz\/html\/\d+\/n-\d+\.html$/,
+        imgs: async () => {
+            await fun.getNP(".image-box>*", "strong+a:not(.next)", null, ".pages");
+            return [...fun.gae(".image-box img")];
+        },
+        button: [4],
+        insertImg: [".image-box", 2],
+        autoDownload: [0],
+        next: "a[title^='下一篇']",
+        prev: "a[title^='上一篇']",
+        customTitle: () => fun.geT(".article-title>h1"),
+        category: "nsfw2"
+    }, {
+        name: "上流时尚人体艺术",
+        host: ["www.6643.live", "6643.live"],
+        reg: /^https?:\/\/www\.6643\.live\/html\/\d+\/n-\d+\.html$/,
+        imgs: async () => {
+            await fun.getNP("#d_BigPic", "strong+a:not(.next)", null, ".pages");
+            return [...fun.gae("#d_BigPic img")];
+        },
+        button: [4],
+        insertImg: ["#efpBigPic", 2],
+        autoDownload: [0],
+        next: "#efpNextTxt>a",
+        prev: "#efpPreTxt>a",
+        customTitle: () => fun.geT("#d_picTit"),
+        category: "nsfw2"
+    }, {
+        name: "西西人体艺术",
+        host: ["www.xixirenti.vip", "xixirenti.vip"],
+        reg: /^https?:\/\/www\.xixirenti\.vip\/html\/\d+\/n-\d+\.html$/,
+        imgs: async () => {
+            await fun.getNP("//p[img]", "strong+a:not(.next)", null, ".pages", 0, null, 1, 0);
+            return [...fun.gae(".pp img")];
+        },
+        button: [4],
+        insertImg: [".pp", 2],
+        customTitle: () => fun.geT("#ctt>h1"),
+        category: "nsfw2"
     }, {
         name: "Girl Girl Go",
         host: ["girlgirlgo.org", "girlgirlgo.net", "girlgirlgo.top", "girlgirlgo.icu", "girlgirlgo.biz", "girlygirlpic.com"],
@@ -7535,10 +7614,10 @@
                     thumbnailsSrcArray = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => e.src);
                 }
             }
-            fun.showMsg(displayLanguage.str_07, 0);
-            let doc = await fun.fetchDoc(fun.ge(".gdtm a,.gdtl a").href);
-            let fullimg = fun.ge("a[href*=fullimg]", doc);
-            if (fullimg) {
+            if (E_HENTAI_LoadOriginalImage == 1) {
+                fun.showMsg(displayLanguage.str_07, 0);
+                let doc = await fun.fetchDoc(fun.ge(".gdtm a,.gdtl a").href);
+                let fullimg = fun.ge("a[href*=fullimg]", doc);
                 let url = fullimg.href;
                 let res = await fun.xhrHEAD(url);
                 let finalUrl = res.finalUrl;
@@ -8197,7 +8276,7 @@
     }, {
         name: "HentaiPorns",
         host: ["hentaiporns.net"],
-        reg: /hentaiporns\.net\/[\w-]+\/$/,
+        reg: /hentaiporns\.net\/[^\/]+\/$/,
         include: ".gallery",
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".gallery-item a>img")].map(e => e.dataset.src ?? e.src);
@@ -12907,25 +12986,248 @@ document.body.appendChild(text);
         },
         category: "test"
     }, {
-        name: "CivitAi Auto Show NSFW civitai.com",
+        name: "CivitAi Auto Show NSFW",
         host: ["civitai.com"],
         reg: /^https?:\/\/civitai\.com\//,
         delay: 2000,
         init: () => {
-            fun.CivitAiAutoShowNSFW();
-            if (lazyLoadFullResolution == 1) fun.CivitAiFullSrc();
-            if (hasTouchEvents()) {
+            //自動顯示NSFW
+            const unBlur = async () => {
+                if (/\/posts\/|\/models\//.test(window.location.pathname)) {
+                    try {
+                        let ele = [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")][0];
+                        let elePath = ele.querySelector("span+svg>path");
+                        if (elePath) {
+                            let d = elePath.getAttribute("d");
+                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
+                                ele.click();
+                            }
+                            await fun.delay(1000, 0);
+                        }
+                    } catch (e) {}
+                }
+                [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")].forEach(ele => {
+                    let elePath = ele.querySelector("span+svg>path");
+                    if (elePath) {
+                        let d = elePath.getAttribute("d");
+                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
+                            ele.click();
+                        }
+                    }
+                });
+            };
+            fun.addMutationObserver(unBlur);
+            //將預覽縮圖替換為原始圖片，延遲載入原始圖片URL，透過腳本管理器選單開啟。
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = () => {
+                    [...document.querySelectorAll("img[src*='width=']")].forEach(item => {
+                        //console.log(item);
+                        if (!/\.mp4/.test(item.dataset.src ?? item.src)) {
+                            let thumbnail = item.dataset.src ?? item.src;
+                            item.dataset.thumb = thumbnail;
+                            item.dataset.url = thumbnail.replace(/width=[\d+\.]\//, ""); //Original Image URL to replace when an error occurs
+                            let original = thumbnail.replace(/width=[\d\.]+\//, "original=true/");
+                            let imgDir = original.match(/.+\//)[0];
+                            if (item.alt != "" && /\.\w+$/.test(item.alt)) {
+                                original = imgDir + item.alt.trim();
+                            }
+                            item.dataset.src = original;
+                            item.src = loading_bak;
+                            fun.imagesObserver.observe(item);
+                        }
+                    });
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+            //修正Models頁Gallery觸控裝置圖片被遮擋顯示不全的問題
+            if (hasTouchEvents() && lazyLoadSingleColumn != 1) {
                 setInterval(() => {
-                    [...document.querySelectorAll(".mantine-1m6je7k")].forEach(e => {
-                        let img = e.querySelector("img.mantine-1rc3uhm[src*='original']");
-                        if (img) e.style.height = img.height + 66 + "px";
-                    })
+                    if (/\/models\//.test(window.location.pathname)) {
+                        [...document.querySelectorAll(".mantine-1m6je7k")].forEach(e => {
+                            let img = e.querySelector("img.mantine-1rc3uhm[src*='original']");
+                            if (img) e.style.height = img.height + 66 + "px";
+                        });
+                    }
+                }, 1000);
+            }
+            //Collections單列顯示，透過腳本管理器選單開啟。
+            if (/\/collections\//.test(window.location.pathname) && lazyLoadSingleColumn == 1) {
+                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{display:block;width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}.mantine-2r6b9p{max-width:100%;max-height:100%}.mantine-1f4qkyp{max-width:100%}");
+                setInterval(() => {
+                    if (/\/collections\//.test(window.location.pathname)) {
+                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
+                        if (parentWidth == "") {
+                            parentWidth = document.querySelector(".mantine-1hggcbg").offsetWidth;
+                        } else {
+                            parentWidth = parseInt(parentWidth, 10);
+                        }
+                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
+                            let img = e.querySelector("img.mantine-1f4qkyp");
+                            if (img) {
+                                if (img.naturalWidth < parentWidth) {
+                                    e.style.width = img.naturalWidth + 2 + "px";
+                                    e.style.height = img.naturalHeight + 2 + "px";
+                                } else {
+                                    e.style.width = parentWidth + "px";
+                                    let num = parentWidth / img.naturalWidth;
+                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
+                                }
+                            }
+                            let video = e.querySelector("video.mantine-1f4qkyp");
+                            if (video) {
+                                e.style.width = video.videoWidth + 2 + "px";
+                                e.style.height = video.videoHeight + 2 + "px";
+                            }
+                        });
+                    }
+                }, 1000);
+            }
+            //Models Gallery單列顯示，透過腳本管理器選單開啟。
+            if (/\/models\//.test(window.location.pathname) && lazyLoadSingleColumn == 1) {
+                fun.css(".mantine-63e7k9{display:block}.mantine-1wxbjtp{display:block;width:100%;max-width:100%}.mantine-1m6je7k{margin:0px auto}");
+                setInterval(() => {
+                    if (/\/models\//.test(window.location.pathname)) {
+                        [...document.querySelectorAll(".mantine-1m6je7k")].forEach(e => {
+                            let img = e.querySelector("img.mantine-1rc3uhm:not([src^=data])");
+                            if (img) {
+                                let imgHeight = img.height + 60 + "px";
+                                e.style.height = imgHeight;
+                                let viewport = e.querySelector(".mantine-Carousel-viewport");
+                                if (viewport) {
+                                    viewport.style.height = imgHeight;
+                                    [...e.querySelectorAll(".mantine-Carousel-slide")].forEach(slide => {
+                                        slide.style.height = imgHeight;
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }, 1000);
+            }
+            //User單列顯示，透過腳本管理器選單開啟。
+            if (/\/user\//.test(window.location.pathname) && lazyLoadSingleColumn == 1) {
+                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{display:block;width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}.mantine-2r6b9p{max-width:100%;max-height:100%}.mantine-7aj0so,.mantine-1f4qkyp{max-width:100%}");
+                setInterval(() => {
+                    if (/\/user\//.test(window.location.pathname)) {
+                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
+                        if (parentWidth == "") {
+                            parentWidth = document.querySelector(".mantine-1hggcbg").offsetWidth;
+                        } else {
+                            parentWidth = parseInt(parentWidth, 10);
+                        }
+                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
+                            let img = e.querySelector("img.mantine-7aj0so,img.mantine-1f4qkyp");
+                            if (img) {
+                                if (img.naturalWidth < parentWidth) {
+                                    e.style.width = img.naturalWidth + 2 + "px";
+                                    e.style.height = img.naturalHeight + 2 + "px";
+                                } else {
+                                    e.style.width = parentWidth + "px";
+                                    let num = parentWidth / img.naturalWidth;
+                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
+                                }
+                            }
+                            let video = e.querySelector("video.mantine-7aj0so,img.mantine-1f4qkyp");
+                            if (video) {
+                                e.style.width = video.videoWidth + 2 + "px";
+                                e.style.height = video.videoHeight + 2 + "px";
+                            }
+                        });
+                    }
+                }, 1000);
+            }
+            //Search單列顯示，透過腳本管理器選單開啟。
+            if (/\/search\//.test(window.location.pathname) && lazyLoadSingleColumn == 1) {
+                fun.css(".mantine-xhyubp{display:block}");
+            }
+            //Tags單列顯示，透過腳本管理器選單開啟。
+            if (/\?tags=/.test(window.location.search) && lazyLoadSingleColumn == 1) {
+                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{display:flex;width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}");
+                setInterval(() => {
+                    if (/\?tags=/.test(window.location.search)) {
+                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
+                        if (parentWidth == "") {
+                            parentWidth = document.querySelector(".mantine-1hggcbg").offsetWidth;
+                        } else {
+                            parentWidth = parseInt(parentWidth, 10);
+                        }
+                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
+                            let img = e.querySelector("img.mantine-1f4qkyp");
+                            if (img) {
+                                if (img.naturalWidth < parentWidth) {
+                                    e.style.width = img.naturalWidth + 2 + "px";
+                                    e.style.height = img.naturalHeight + 2 + "px";
+                                } else {
+                                    e.style.width = parentWidth + "px";
+                                    let num = parentWidth / img.naturalWidth;
+                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
+                                }
+                            }
+                            let video = e.querySelector("video.mantine-1f4qkyp");
+                            if (video) {
+                                e.style.width = video.videoWidth + 2 + "px";
+                                e.style.height = video.videoHeight + 2 + "px";
+                            }
+                        });
+                    }
+                }, 1000);
+            }
+            //Models / images / videos / posts 單列顯示，透過腳本管理器選單開啟。
+            if (/^\/(models|images|videos|posts)$/.test(window.location.pathname) && lazyLoadSingleColumn == 1) {
+                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}");
+                setInterval(() => {
+                    if (/^\/(models|images|videos|posts)/.test(window.location.pathname)) {
+                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
+                        if (parentWidth == "") {
+                            parentWidth = document.querySelector(".mantine-1hggcbg").offsetWidth;
+                        } else {
+                            parentWidth = parseInt(parentWidth, 10);
+                        }
+                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
+                            let img = e.querySelector("img.mantine-7aj0so,img.mantine-1f4qkyp");
+                            if (img) {
+                                if (img.naturalWidth < parentWidth) {
+                                    e.style.width = img.naturalWidth + 2 + "px";
+                                    e.style.height = img.naturalHeight + 2 + "px";
+                                } else {
+                                    e.style.width = parentWidth + "px";
+                                    let num = parentWidth / img.naturalWidth;
+                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
+                                }
+                            }
+                            let video = e.querySelector("video.mantine-7aj0so,video.mantine-1f4qkyp");
+                            if (video) {
+                                e.style.width = video.videoWidth + 2 + "px";
+                                e.style.height = video.videoHeight + 2 + "px";
+                            }
+                        });
+                    }
+                }, 1000);
+            }
+            //Articles 單列顯示，透過腳本管理器選單開啟。
+            if (/^\/articles$/.test(window.location.pathname) && lazyLoadSingleColumn == 1) {
+                fun.css(".mantine-1ar5zo4{display:block}.mantine-1ar5zo4 > div{width:100%;max-width:100%}");
+                setInterval(() => {
+                    if (/^\/articles$/.test(window.location.pathname)) {
+                        let parentWidth = document.querySelector(".mantine-zyu68o").offsetWidth;
+                        [...document.querySelectorAll(".mantine-1ar5zo4 > div,.mantine-wc580l > :not(style)")].forEach(div => {
+                            let img = div.querySelector("img.mantine-1thskbr");
+                            if (img) {
+                                if (img.naturalWidth < parentWidth) {
+                                    div.style.height = img.height + "px";
+                                } else {
+                                    let num = parentWidth / img.naturalWidth;
+                                    div.style.height = parseInt(img.naturalHeight * num, 10) + "px";
+                                }
+                            }
+                        });
+                    }
                 }, 1000);
             }
         },
         capture: "img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi),img[data-src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi)",
         openInNewTab: "a[href]:not([target=_blank])",
-        css: ".mantine-15xhaye{display:block !important;}img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi){width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
+        css: ".mantine-15xhaye{display:block;}img[src^=data]{margin: auto}img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi){width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
         category: "lazyLoad"
     }];
 
@@ -13200,7 +13502,8 @@ document.body.appendChild(text);
                 str_103: "啟用並排模式",
                 str_104: "匯出圖址",
                 str_105: "複製圖址",
-                str_106: "分頁檢視"
+                str_106: "分頁檢視",
+                str_107: "一鍵下載(3)"
             };
             break;
         case "zh-CN":
@@ -13310,7 +13613,8 @@ document.body.appendChild(text);
                 str_103: "启用并排模式",
                 str_104: "导出图址",
                 str_105: "拷贝图址",
-                str_106: "标籤页视图"
+                str_106: "分页视图",
+                str_107: "一键下载(3)"
             };
             break;
         default:
@@ -13420,7 +13724,8 @@ document.body.appendChild(text);
                 str_103: "Enable Side-By-Side Mode",
                 str_104: "Export URLs",
                 str_105: "Copy URLs",
-                str_106: "New Tab View"
+                str_106: "New Tab View",
+                str_107: "Fast Download(3)"
             };
             break;
     }
@@ -14504,7 +14809,41 @@ document.body.appendChild(text);
                 let width = "24%";
                 if (typeof siteData.button[1] === "string") width = siteData.button[1];
                 const buttonObj = [{
+                    id: "FullPictureLoadCopyURLBtn",
+                    className: "FullPictureLoadPageButtonTop",
+                    text: displayLanguage.str_105,
+                    cfn: event => {
+                        event.preventDefault();
+                        copyImgSrcTextB();
+                    }
+                }, {
+                    id: "FullPictureLoadExportURLBtn",
+                    className: "FullPictureLoadPageButtonTop",
+                    text: displayLanguage.str_104,
+                    cfn: event => {
+                        event.preventDefault();
+                        exportImgSrcText();
+                    }
+                }, {
+                    id: "FullPictureLoadFastDownloadBtn",
+                    className: "FullPictureLoadPageButtonTop",
+                    text: displayLanguage.str_107,
+                    cfn: event => {
+                        event.preventDefault();
+                        fastDownload = true;
+                        imgZipDownload();
+                    }
+                }, {
+                    id: "FullPictureLoadNewTabViewBtn",
+                    className: "FullPictureLoadPageButtonTop",
+                    text: displayLanguage.str_106,
+                    cfn: event => {
+                        event.preventDefault();
+                        newTabView();
+                    }
+                }, {
                     id: "FullPictureLoadOptionsBtn",
+                    className: "FullPictureLoadPageButtonBottom",
                     text: displayLanguage.str_85,
                     cfn: event => {
                         event.preventDefault();
@@ -14512,6 +14851,7 @@ document.body.appendChild(text);
                     }
                 }, {
                     id: "FullPictureLoadToggleImgModeBtn",
+                    className: "FullPictureLoadPageButtonBottom",
                     text: displayLanguage.str_86,
                     cfn: event => {
                         event.preventDefault();
@@ -14519,6 +14859,7 @@ document.body.appendChild(text);
                     }
                 }, {
                     id: "FullPictureLoadToggleZoomeBtn",
+                    className: "FullPictureLoadPageButtonBottom",
                     text: displayLanguage.str_87,
                     cfn: event => {
                         event.preventDefault();
@@ -14533,6 +14874,7 @@ document.body.appendChild(text);
                     }
                 }, {
                     id: "FullPictureLoadCancelZoomBtn",
+                    className: "FullPictureLoadPageButtonBottom",
                     text: displayLanguage.str_88,
                     cfn: event => {
                         event.preventDefault();
@@ -14543,6 +14885,7 @@ document.body.appendChild(text);
                 const createButton = obj => {
                     let button = document.createElement("button");
                     button.id = obj.id;
+                    button.className = obj.className;
                     button.style.width = width;
                     //button.style.height = "24px";
                     button.innerText = obj.text;
@@ -15384,61 +15727,6 @@ document.body.appendChild(text);
             a.click();
             a.remove();
         },
-        CivitAiAutoShowNSFW: () => {
-            const unBlur = async () => {
-                if (/\/posts\/|\/models\//.test(window.location.pathname)) {
-                    try {
-                        let ele = [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")][0];
-                        let elePath = ele.querySelector("span+svg>path");
-                        if (elePath) {
-                            let d = elePath.getAttribute("d");
-                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
-                                ele.click();
-                                //elementClick(ele);
-                            }
-                            await fun.delay(1000, 0);
-                        }
-                    } catch (e) {}
-                }
-                [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")].forEach(ele => {
-                    let elePath = ele.querySelector("span+svg>path");
-                    if (elePath) {
-                        let d = elePath.getAttribute("d");
-                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") {
-                            ele.click();
-                            //elementClick(ele);
-                        }
-                    }
-                });
-            };
-            new MutationObserver(unBlur).observe(document.body, {
-                childList: true,
-                subtree: true,
-                attributes: true
-            });
-            unBlur();
-        },
-        CivitAiFullSrc: () => {
-            const lazyLoad = () => {
-                [...document.querySelectorAll("img[src*='width=']")].forEach(item => {
-                    //console.log(item);
-                    if (!/\.mp4/.test(item.dataset.src ?? item.src)) {
-                        let thumbnail = item.dataset.src ?? item.src;
-                        item.dataset.thumb = thumbnail;
-                        item.dataset.url = thumbnail.replace(/width=[\d+\.]\//, ""); //Original Image URL to replace when an error occurs
-                        let original = thumbnail.replace(/width=[\d\.]+\//, "original=true/");
-                        let imgDir = original.match(/.+\//)[0];
-                        if (item.alt != "" && /\.\w+$/.test(item.alt)) {
-                            original = imgDir + item.alt.trim();
-                        }
-                        item.dataset.src = original;
-                        item.src = loading_bak;
-                        fun.imagesObserver.observe(item);
-                    }
-                });
-            };
-            fun.addMutationObserver(lazyLoad);
-        },
         addMutationObserver: callback => {
             callback();
             new MutationObserver(callback).observe(document.body, MutationObserverConfig);
@@ -15684,10 +15972,10 @@ document.body.appendChild(text);
             if (getImgFn == "") getImgFn += " > " + siteData.name + "專用Fn";
         } else if (/^\//.test(selector)) {
             imgs = [...gax(selector)];
-            getImgFn += " > [...gax(selector)]";
+            if (siteData.category != "lazyLoad") getImgFn += " > [...gax(selector)]";
         } else {
             imgs = [...gae(selector)];
-            getImgFn += " > [...gae(selector)]";
+            if (siteData.category != "lazyLoad") getImgFn += " > [...gae(selector)]";
         }
         imgs = await Promise.all(imgs); //取出new Promise的值
         imgs = imgs.filter(item => item); //去除空、無用
@@ -15700,8 +15988,8 @@ document.body.appendChild(text);
                 return null;
             }
         }).filter(item => item);
-        debug(`\ngetImgs()${getImgFn} 所有圖片網址：`, imgsSrcArr);
-        debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
+        if (siteData.category != "lazyLoad") debug(`\ngetImgs()${getImgFn} 所有圖片網址：`, imgsSrcArr);
+        if (siteData.category != "lazyLoad") debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
         imgsSrcArr = [...new Set(imgsSrcArr)];
         globalImgArray = imgsSrcArr;
         fetching = false;
@@ -16258,9 +16546,9 @@ document.body.appendChild(text);
     };
 
     const newTabView = async () => {
-        if (typeof siteData.imgs === "string") {
-            const imageEles = [...fun.gae(siteData.imgs)];
-            console.log("newTabViewImageEles", imageEles);
+        if (typeof siteData.capture === "string") {
+            const captureImgEles = [...fun.gae(siteData.imgs)];
+            console.log("newTabViewCaptureImgEles", captureImgEles);
         }
         let imgSrcs;
         captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
@@ -16272,7 +16560,7 @@ document.body.appendChild(text);
             doc.write('<html><head></head><body></body></html>');
             const css = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css").then(res => res.text());
             const code = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js").then(res => res.text());
-            const imageElements = imgSrcs.map((src, i, arr) => {
+            const imgElements = imgSrcs.map((src, i, arr) => {
                 let a = doc.createElement("a");
                 a.href = src;
                 a.dataset.fancybox = "gallery";
@@ -16290,7 +16578,7 @@ document.body.appendChild(text);
                 a.appendChild(img);
                 return a;
             });
-            doc.body.append(...imageElements);
+            doc.body.append(...imgElements);
             doc.body.style.textAlign = "center";
             const style = doc.createElement("style");
             style.type = "text/css";
@@ -16428,6 +16716,13 @@ document.body.appendChild(text);
             cfn: event => {
                 event.preventDefault();
                 newTabView();
+            }
+        }, {
+            text: displayLanguage.str_107,
+            cfn: event => {
+                event.preventDefault();
+                fastDownload = true;
+                imgZipDownload();
             }
         }, {
             text: displayLanguage.str_104,
@@ -16935,17 +17230,41 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
 
 #FullPictureLoadOptionsButtonParentDiv {
     max-width: 100% !important;
-    height: 42px !important;
+    height: 80px !important;
 }
 
-#FullPictureLoadOptionsBtn,
-#FullPictureLoadToggleImgModeBtn,
-#FullPictureLoadToggleZoomeBtn,
-#FullPictureLoadCancelZoomBtn {
+.FullPictureLoadPageButtonTop {
     height: 24px;
     min-height: unset !important;
     padding: 1px !important;
-    margin: 10px 0 6px 0 !important;
+    margin: 10px 0 10px 0 !important;
+    border-radius: unset !important;
+    appearance: auto;
+    text-rendering: auto;
+    color: buttontext;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    font-size: 14px !important;
+    font-weight: unset !important;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block !important;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    box-sizing: border-box;
+    background-color: buttonface;
+    border: 1px solid #a0a0a0 !important;
+    cursor: pointer !important;
+}
+
+.FullPictureLoadPageButtonBottom {
+    height: 24px;
+    min-height: unset !important;
+    padding: 1px !important;
+    margin: 0 0 6px 0 !important;
     border-radius: unset !important;
     appearance: auto;
     text-rendering: auto;
@@ -16985,12 +17304,36 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
         lazyLoadFullResolution = 0;
     }
 
+    let lazyLoadSingleColumn = _GM_getValue("lazyLoadSingleColumn");
+
+    if (lazyLoadSingleColumn == undefined) {
+        _GM_setValue("lazyLoadSingleColumn", 0);
+        lazyLoadSingleColumn = 0;
+    }
+
     const addLazyLoadFullResolutionMenu = async () => {
         _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ Lazy Load Full Resolution" : "✔️ Lazy Load Full Resolution", () => {
             lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
             location.reload();
         });
+        _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ Lazy Load Single Column Layout" : "✔️ Lazy Load Single Column Layout", () => {
+            lazyLoadSingleColumn == 0 ? _GM_setValue("lazyLoadSingleColumn", 1) : _GM_setValue("lazyLoadSingleColumn", 0);
+            location.reload();
+        });
     };
+
+    let E_HENTAI_LoadOriginalImage = _GM_getValue("E_HENTAI_LoadOriginalImage");
+
+    if (E_HENTAI_LoadOriginalImage == undefined) {
+        E_HENTAI_LoadOriginalImage = 0;
+    }
+
+    if (/^https?:\/\/(e-hentai|exhentai).org\//.test(window.location.href)) {
+        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ E_HENTAI Load Original Image" : "✔️ E_HENTAI Load Original Image", () => {
+            E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
+            location.reload();
+        });
+    }
 
     const checkOptionsData = async () => {
         const getOptionsData = localStorage.getItem("FullPictureLoadOptions");
