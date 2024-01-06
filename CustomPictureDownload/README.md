@@ -1937,7 +1937,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://gogortrt.com/">gogo人体艺术</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站44個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站57個</a></td>
             </tr>
             <tr>
                 <td><a href="https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo">XO福利圖</a></td>
@@ -2012,7 +2012,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://e-hentai.org/">E-Hentai</a></td>
-                <td>作用在圖片清單頁，手動插入大圖減少消耗配額，處於帳號登入狀態將會抓取原圖鏈結，否則為壓縮過的大圖鏈結，<a href="https://exhentai.org/">exhentai.org</a>，<a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。</td>
+                <td>作用在圖片清單頁，手動插入大圖減少消耗配額，可透過腳本管理器選單選擇是否載入原圖鏈結，<a href="https://exhentai.org/">exhentai.org</a>，<a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。</td>
             </tr>
             <tr>
                 <td><a href="https://nhentai.net/">nhentai</a></td>
