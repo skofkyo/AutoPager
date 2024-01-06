@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.9
+// @version            1.8.10
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -17327,6 +17327,13 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
         lazyLoadSingleColumn = 0;
     }
 
+    let lazyLoadPreloadImages = _GM_getValue("lazyLoadPreloadImages");
+
+    if (lazyLoadPreloadImages == undefined) {
+        _GM_setValue("lazyLoadPreloadImages", 0);
+        lazyLoadPreloadImages = 0;
+    }
+
     const addLazyLoadFullResolutionMenu = async () => {
         _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ Lazy Load Full Resolution" : "✔️ Lazy Load Full Resolution", () => {
             lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
@@ -17334,6 +17341,10 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
         });
         _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ Lazy Load Single Column Layout" : "✔️ Lazy Load Single Column Layout", () => {
             lazyLoadSingleColumn == 0 ? _GM_setValue("lazyLoadSingleColumn", 1) : _GM_setValue("lazyLoadSingleColumn", 0);
+            location.reload();
+        });
+        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ Lazy Load Preload Images" : "✔️ Lazy Load Preload Images", () => {
+            lazyLoadPreloadImages == 0 ? _GM_setValue("lazyLoadPreloadImages", 1) : _GM_setValue("lazyLoadPreloadImages", 0);
             location.reload();
         });
     };
@@ -17917,11 +17928,14 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
 
     const captureSrc = async () => {
         let imgSrcs = await getImgs(siteData.capture ?? siteData.imgs);
+        let imagePreloadArray = [];
         imgSrcs.forEach(src => {
             if (!captureSrcArray.includes(src)) {
                 captureSrcArray.push(src);
+                imagePreloadArray.push(src);
             }
         });
+        if (lazyLoadPreloadImages == 1) fun.picPreload(imagePreloadArray, "Lazy Load Mode");
     };
 
     if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture) {
