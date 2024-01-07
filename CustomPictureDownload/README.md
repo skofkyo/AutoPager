@@ -702,7 +702,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/03 19:47</p>
+<p>2024/01/08 02:28</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -2874,6 +2874,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
+<p>請透過腳本管理器選單開啟Lazy Load加載大圖功能，批量下載請使用其他圖片下載腳本。</p>
+<p>可點擊左下的眼睛圖示新分頁觀看圖片，並且會顯示抓取到的圖片數量。</p>
     <table>
         <thead>
             <tr>
@@ -2884,7 +2886,47 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://civitai.com/">Civitai</a></td>
-                <td>SPA網頁，支持自動顯示NSFW被模糊的圖片，請透過Tampermonkey選單開啟Lazy Load加載原圖功能，下載請使用其他圖片下載腳本。</td>
+                <td>SPA網頁，Lazy Load加載大圖，支持自動顯示NSFW被模糊的圖片。</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.liblib.art/">LiblibAI</a></td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
+            </tr>
+            <tr>
+                <td><a href="https://tensor.art/">Tensor.Art</a></td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
+            </tr>
+            <tr>
+                <td><a href="https://pixai.art/">PixAI</a></td>
+                <td>SPA網頁，Lazy Load加載大圖，自動顯示NSFW被模糊的圖片。</td>
+            </tr>
+            <tr>
+                <td><a href="https://yodayo.com/explore/">Yodayo</a></td>
+                <td>SPA網頁，加載大圖。</td>
+            </tr>
+            <tr>
+                <td><a href="https://creator.nightcafe.studio/explore">NightCafe Creator</a></td>
+                <td>SPA網頁，Lazy Load加載大圖，不穩定需要上下滾動重複觸發，左下的眼睛數字沒有增加，代表沒有抓到新圖。</td>
+            </tr>
+            <tr>
+                <td><a href="https://legacy.midjourney.com/showcase/recent/">Midjourney</a></td>
+                <td>沒有更高解析度的圖片，只是能聚集到新分頁觀看。</td>
+            </tr>
+            <tr>
+                <td><a href="https://neural.love/search">neural.love</a></td>
+                <td>SPA網頁，加載大圖。</td>
+            </tr>
+            <tr>
+                <td><a href="https://neural.love/search">neural.love</a></td>
+                <td>SPA網頁，加載大圖。</td>
+            </tr>
+            <tr>
+                <td><a href="https://playgroundai.com/feed">Playground</a></td>
+                <td>SPA網頁，加載大圖，無法並行請求所以抓取很慢。</td>
+            </tr>
+            <tr>
+                <td><a href="https://pornderful.ai/search">Pornderful.ai</a></td>
+                <td>SPA網頁，Lazy Load加載大圖，首頁會有閃爍的問題。</td>
             </tr>
         </tbody>
     </table>
