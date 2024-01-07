@@ -1,4 +1,4 @@
-2024/01/03 19:47
+2024/01/08 02:28
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -534,7 +534,7 @@ Kenh69
 *www.mhgirl.com/tuji/*.html
 
 福利姬美图
-*fuligirl.net/albums/*
+*fuligirl.top/albums/*
 
 青年美圖
 *jrants.com/*.html
@@ -818,6 +818,9 @@ ROSI美女写真
 
 Asian Porn
 *://asianporn.li/photo/*/*/
+
+中国人体艺术模特网
+*crtys.net/?action-imagelist-uid-*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1570,7 +1573,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *www.22mm.net/a/*.html
 *.neihantu.net/zhainannvshen/*.html
 *www.zanmm.com/tupian/*.html
-*fuligirl.net/albums/*
+*fuligirl.top/albums/*
 *://www.baobua.net/post/*
 *baobua.com/post/*
 *://www.baobua.net/post/*
@@ -1787,6 +1790,7 @@ https://www.eyval.net/*
 *://www.hutu6.com/*/*.html
 *://hotasianx.com/*
 *://asianporn.li/photo/*/*/
+crtys.net/?action-imagelist-uid-*
 /^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
