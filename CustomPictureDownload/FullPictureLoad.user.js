@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.10
+// @version            1.8.11
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -3499,8 +3499,8 @@
         category: "nsfw1"
     }, {
         name: "福利姬美图",
-        host: ["fuligirl.net"],
-        reg: /fuligirl\.net\/albums\/\d+/,
+        host: ["fuligirl.top"],
+        reg: /^https?:\/\/fuligirl\.top\/albums\/\d+/,
         imgs: () => fun.getImg("img.block", (fun.geT("a[rel=next]", 2) || 1)),
         button: [4],
         insertImg: ["//div[@class='my-1' and img[@class='block my-1']]", 1],
@@ -8532,8 +8532,8 @@
         category: "hcomic"
     }, {
         name: "ACG漫画网",
-        host: ["www.acgomh.com", "www.acgxmh.com", "www.acgomh.com", "www.cool-manga.com", "www.porn-comic.com", "porn-comic.com"],
-        reg: /((www\.)?acg(x|o)mh\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|western)\/\d+\.html/,
+        host: ["www.acgomh.com", "www.acgxmh.com", "www.acgsmh.com", "www.cool-manga.com", "www.porn-comic.com", "porn-comic.com"],
+        reg: /((www\.)?acg([a-z])mh\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|western)\/\d+\.html/,
         imgs: () => fun.getImg(".manga-page img", fun.geT("#pages>*:last-child", 2), 5),
         button: [4],
         insertImg: [".manga-page", 1],
@@ -13245,6 +13245,266 @@ document.body.appendChild(text);
         openInNewTab: "a[href]:not([target=_blank])",
         css: ".mantine-15xhaye{display:block;}img[src^=data]{margin: auto}img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi){width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
         category: "lazyLoad"
+    }, {
+        name: "LiblibAI",
+        host: ["www.liblib.art"],
+        reg: /^https?:\/\/www\.liblib\.art\//,
+        init: () => {
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = () => {
+                    [...document.querySelectorAll("img.bg-lighter")].forEach(img => {
+                        let thumbnail = img.dataset.src ?? img.src;
+                        img.dataset.thumb = thumbnail.replace(/\?image_process=.+/, "") + "?image_process=format,webp&x-oss-process=image/resize,w_600,m_lfit/format,webp";
+                        let original = thumbnail.replace(/\?image_process=.+/, "");
+                        img.dataset.src = original;
+                        img.src = thumbnail;
+                        fun.imagesObserver.observe(img);
+                    });
+                    [...document.querySelectorAll(".relative.cursor-pointer>img,div.image-card img.CarouselWrap_imgItem__h90eB")].forEach(img => {
+                        let thumbnail = img.dataset.src ?? img.src;
+                        img.dataset.thumb = thumbnail.replace(/\?x-oss-process=image.+/, "") + "?x-oss-process=image/resize,w_600,m_lfit/format,webp";
+                        let original = thumbnail.replace(/\?x-oss-process=image.+/, "");
+                        img.dataset.src = original;
+                        img.src = thumbnail;
+                        fun.imagesObserver.observe(img);
+                    });
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+        },
+        capture: "img.bg-lighter[data-src],.relative.cursor-pointer>img[data-src],div.image-card img.CarouselWrap_imgItem__h90eB[data-src]",
+        category: "lazyLoad"
+    }, {
+        name: "Tensor.Art",
+        host: ["tensor.art"],
+        reg: /^https?:\/\/tensor\.art\//,
+        init: () => {
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = () => {
+                    [...document.querySelectorAll(".thumbnail-image>img.w-full.h-full")].forEach(img => {
+                        let thumbnail = img.dataset.src ?? img.src;
+                        let splitArr = thumbnail.split("/");
+                        let bigSrc;
+                        if (splitArr.length == 9) {
+                            splitArr[5] = "w=3840";
+                            bigSrc = splitArr.join("/");
+                        } else {
+                            bigSrc = thumbnail;
+                        }
+                        img.dataset.src = bigSrc;
+                        img.src = loading_bak;
+                        fun.imagesObserver.observe(img);
+                    });
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+        },
+        capture: ".thumbnail-image>img",
+        css: ".thumbnail-image>img{width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important;margin:0px auto}",
+        category: "lazyLoad"
+    }, {
+        name: "PixAI",
+        host: ["pixai.art"],
+        reg: /^https?:\/\/pixai\.art\//,
+        init: async () => {
+            await fun.waitEle("//a[div[div[div[contains(@style,'blob:')]]]]");
+            //自動顯示NSFW
+            const unBlur = () => {
+                [...document.querySelectorAll(".blur-xl")].forEach(e => e.classList.remove("blur-xl"));
+                [...document.querySelectorAll(".absolute.bg-black")].forEach(e => e.remove());
+            };
+            document.addEventListener("scroll", () => unBlur());
+            fun.addMutationObserver(unBlur);
+            if (lazyLoadFullResolution == 1) {
+                const gae = (selector, domNode) => {
+                    if (/^\//.test(selector)) {
+                        let nodes = [];
+                        let results = (domNode || document).evaluate(selector, (domNode || document), null, XPathResult.ANY_TYPE, null);
+                        let node;
+                        while (node = results.iterateNext()) {
+                            nodes.push(node);
+                        }
+                        return nodes;
+                    } else {
+                        return (domNode || document).querySelectorAll(selector);
+                    }
+                };
+                const lazyLoad = () => {
+                    setTimeout(() => {
+                        [...gae("//a[div[div[div[contains(@style,'blob:')]]]]")].forEach(aEle => {
+                            let thumbnail = aEle.querySelector(".bg-cover").getAttribute("style").split("url(")[1].split(")")[0];
+                            //console.log("thumbnail",thumbnail);
+                            aEle.querySelector(".bg-cover").style.backgroundImage = `url('${loading_bak}')`;
+                            fetch(aEle.href).then(res => res.text()).then(text => {
+                                let doc = new DOMParser().parseFromString(text, "text/html");
+                                let meta = doc.querySelector("meta[property='og:image'][content]");
+                                let origUrl;
+                                if (meta?.content && /\/thumbnail$/.test(meta.content)) {
+                                    let id = meta.content.match(/([^/]+\/[^/]+)\/thumbnail$/)[1];
+                                    origUrl = "https://imagedelivery.net/" + id + "/public";
+                                } else if (meta?.content && /\/public$/.test(meta.content)) {
+                                    origUrl = meta.content;
+                                } else if (meta?.content) {
+                                    let id = meta.content.match(/.+\/(.+)/)[1];
+                                    origUrl = "https://images-ng.pixai.art/images/orig/" + id;
+                                } else {
+                                    origUrl = thumbnail;
+                                }
+                                let div = aEle.querySelector(".bg-cover");
+                                div.dataset.src = origUrl;
+                                div.style.backgroundImage = `url('${origUrl}')`;
+                            });
+                        });
+                    }, 500);
+                };
+                fun.addMutationObserver(lazyLoad, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true
+                });
+            }
+        },
+        capture: "//a[div[div[div[contains(@style,'https:')][not(contains(@style,'blob:'))]]]]//div[contains(@class,'bg-cover')]",
+        category: "lazyLoad"
+    }, {
+        name: "Yodayo",
+        host: ["yodayo.com"],
+        reg: /^https?:\/\/yodayo\.com\/explore\//,
+        init: async () => {
+            await fun.waitEle("img[alt='post thumbnail']");
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = () => {
+                    [...document.querySelectorAll("img[alt='post thumbnail']")].forEach(img => {
+                        let thumbnail = img.dataset.src ?? img.src;
+                        img.dataset.thumb = thumbnail;
+                        fetch(img.parentNode.parentNode.href).then(res => res.text()).then(text => {
+                            let doc = new DOMParser().parseFromString(text, "text/html");
+                            let original = doc.querySelector(".image-gallery-image").src;
+                            img.dataset.src = original;
+                            img.src = original;
+                        });
+                    });
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+        },
+        capture: "img[alt='post thumbnail'][data-src]",
+        category: "lazyLoad"
+    }, {
+        name: "NightCafe Creator",
+        host: ["creator.nightcafe.studio"],
+        reg: /^https?:\/\/creator\.nightcafe\.studio\//,
+        init: async () => {
+            await fun.waitEle("img.css-9whsf3");
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = () => {
+                    setTimeout(() => {
+                        [...document.querySelectorAll("img.css-9whsf3")].forEach(img => {
+                            let thumbnail = img.dataset.src ?? img.src;
+                            img.dataset.thumb = thumbnail;
+                            let original = thumbnail.replace(/\?.+$/, "");
+                            img.dataset.src = original;
+                            img.src = loading_bak;
+                            fun.imagesObserver.observe(img);
+                        });
+                    }, 200)
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+        },
+        capture: "img.css-9whsf3[data-src]",
+        css: "img.css-9whsf3{width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
+        category: "lazyLoad"
+    }, {
+        name: "Midjourney",
+        host: ["midjourney.com"],
+        reg: /^https?:\/\/legacy\.midjourney\.com\//,
+        capture: "img[data-job-id]",
+        category: "lazyLoad"
+    }, {
+        name: "neural.love",
+        host: ["neural.love"],
+        reg: /^https?:\/\/neural\.love\//,
+        init: async () => {
+            await fun.waitEle("a.shadow.bg-dark,img[src*='cdn/ai-photostoc']");
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = () => {
+                    [...document.querySelectorAll("a.shadow.bg-dark:not([data-src])")].forEach(a => {
+                        let id = a.href.split("/")[4];
+                        let api = `https://saas.neural.love/api/ai-photostock/orders/${id}?id=${id}`;
+                        fetch(api).then(res => res.json()).then(json => {
+                            let data = json.output[0];
+                            let original = data.full ?? data.fullWebp;
+                            a.dataset.src = original;
+                            a.style.backgroundImage = `url('${original}')`;
+                        });
+                    });
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+        },
+        capture: "a.shadow.bg-dark[data-src],img[src*='cdn/ai-photostoc']",
+        category: "lazyLoad"
+    }, {
+        name: "Playground",
+        host: ["playgroundai.com"],
+        reg: /^https?:\/\/playgroundai\.com\//,
+        init: async () => {
+            await fun.waitEle("a.image-card-grid,img[data-testid=image-post-image]");
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = async () => {
+                    let postImg = document.querySelector("img[data-testid=image-post-image]");
+                    if (postImg) {
+                        let original = document.querySelector("meta[property='og:image'][content]").content;
+                        postImg.dataset.src = original;
+                        postImg.src = loading_bak;
+                        fun.imagesObserver.observe(postImg);
+                    }
+                    let aEles = [...document.querySelectorAll("a.image-card-grid:not([data-src])")];
+                    for (let i = 0; i < aEles.length; i++) {
+                        await fetch(aEles[i].href).then(res => res.text()).then(text => {
+                            let doc = new DOMParser().parseFromString(text, "text/html");
+                            let original = doc.querySelector("meta[property='og:image'][content]").content;
+                            aEles[i].dataset.src = original;
+                            let img = aEles[i].querySelector("img");
+                            img.dataset.src = original;
+                            //img.src = loading_bak;
+                            fun.imagesObserver.observe(img);
+                        });
+                    }
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+        },
+        capture: "a.image-card-grid[data-src],img[data-testid=image-post-image][data-src]",
+        category: "lazyLoad"
+    }, {
+        name: "Pornderful.ai",
+        host: ["pornderful.ai"],
+        reg: /^https?:\/\/pornderful\.ai\//,
+        init: async () => {
+            await fun.waitEle("a.tw-relative");
+            if (lazyLoadFullResolution == 1) {
+                const lazyLoad = () => {
+                    [...document.querySelectorAll("a.tw-relative:not([data-src])")].forEach(a => {
+                        fetch(a.href).then(res => res.text()).then(text => {
+                            let doc = new DOMParser().parseFromString(text, "text/html");
+                            let data = JSON.parse(doc.querySelector("generator-v3-component").attributes[0].nodeValue);
+                            let original = data.path;
+                            a.dataset.src = original;
+                            let img = a.querySelector("img");
+                            img.dataset.src = original;
+                            img.src = loading_bak;
+                            fun.imagesObserver.observe(img);
+                        });
+                    });
+                };
+                fun.addMutationObserver(lazyLoad);
+            }
+        },
+        capture: "a.tw-relative[data-src]",
+        observerClick: "button.tw-mx-auto",
+        category: "lazyLoad"
     }];
 
     const debug = (str, obj = "", title = "debug") => {
@@ -14142,7 +14402,7 @@ document.body.appendChild(text);
                 imgSrc = check.src;
                 if (/^\/\//.test(imgSrc)) imgSrc = location.protocol + imgSrc;
                 if (/^\/\w+/.test(imgSrc)) imgSrc = location.origin + imgSrc;
-                if (!/^(http|blob)/.test(imgSrc) && /^\w+/.test(imgSrc)) imgSrc = location.origin + "/" + imgSrc;
+                if (!/^(http|blob)/.test(imgSrc) && !/^data/.test(imgSrc) && /^\w+/.test(imgSrc)) imgSrc = location.origin + "/" + imgSrc;
                 if (rText[0]) imgSrc = imgSrc.replace(rText[0], rText[1]);
                 return {
                     ok: true,
@@ -15743,9 +16003,9 @@ document.body.appendChild(text);
             a.click();
             a.remove();
         },
-        addMutationObserver: callback => {
+        addMutationObserver: (callback, config = MutationObserverConfig) => {
             callback();
-            new MutationObserver(callback).observe(document.body, MutationObserverConfig);
+            new MutationObserver(callback).observe(document.body, config);
         },
         scrollEvent: slideIndex => {
             let modeName = "Samll";
@@ -16568,7 +16828,7 @@ document.body.appendChild(text);
         }
         let imgSrcs;
         captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
-        if (imgSrcs.length > 0) {
+        if (imgSrcs?.length && imgSrcs.length > 0) {
             const newWindow = window.open("about:blank", "_blank");
             newWindow.fn = fun;
             const fn = newWindow.fn;
@@ -16663,6 +16923,23 @@ document.body.appendChild(text);
             newTabView();
         });
         document.body.appendChild(img);
+        let menuDiv = document.createElement("div");
+        menuDiv.id = "FullPictureLoadFixedMenuB";
+        const menuObj = [{
+            id: "FullPictureLoadCaptureNum",
+            text: 0
+        }];
+        const createMenu = obj => {
+            let item = document.createElement("div");
+            if (obj.id) item.id = obj.id;
+            item.innerText = obj.text;
+            item.oncontextmenu = () => false;
+            if (obj.cfn) item.addEventListener("click", obj.cfn);
+            if (obj.mfn) item.addEventListener("mousedown", obj.mfn);
+            menuDiv.appendChild(item);
+        };
+        [...menuObj].forEach(obj => createMenu(obj));
+        document.body.appendChild(menuDiv);
     };
 
     const cancelZoom = () => {
@@ -17075,7 +17352,7 @@ document.body.appendChild(text);
     z-index: 2147483647 !important;
 }
 
-#FullPictureLoadFixedMenu > div {
+#FullPictureLoadFixedMenu > div, #FullPictureLoadFixedMenuB > div {
     width: 100px !important;
     height: 24px !important;
     line-height: 24px !important;
@@ -17096,6 +17373,24 @@ document.body.appendChild(text);
 
 #FullPictureLoadFixedMenu:hover {
   opacity: 1;
+}
+
+#FullPictureLoadFixedMenuB {
+    text-align: center !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 14px !important;
+    color: #000000 !important;
+    width: 112px !important;
+    height: auto !important;
+    padding: 5px 5px 2px 5px !important;
+    position: fixed !important;
+    left: 64px !important;
+    bottom: 22px !important;
+    border: #ccc 1px solid !important;
+    border-radius: 3px !important;
+    background-color: #fff !important;
+    opacity: 1;
+    z-index: 2147483647 !important;
 }
 
 .FullPictureLoadMsg {
@@ -17190,10 +17485,6 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     line-height: 30px;
     margin: 5px auto !important;
     border: none !important;
-}
-
-#FullPictureLoad~*:not(#FullPictureLoadFixedMenu):not(.FullPictureLoadFixedBtn):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.pagetual_tipsWords):not(*[class^=fancybox]):not(div[tabindex]):not(#spotlight):not(div[id^='swiper-imgbox']) {
-    display: none !important;
 }
 
 .autoPagerTitle {
@@ -17320,13 +17611,6 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
         lazyLoadFullResolution = 0;
     }
 
-    let lazyLoadSingleColumn = _GM_getValue("lazyLoadSingleColumn");
-
-    if (lazyLoadSingleColumn == undefined) {
-        _GM_setValue("lazyLoadSingleColumn", 0);
-        lazyLoadSingleColumn = 0;
-    }
-
     let lazyLoadPreloadImages = _GM_getValue("lazyLoadPreloadImages");
 
     if (lazyLoadPreloadImages == undefined) {
@@ -17339,10 +17623,17 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
             lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
             location.reload();
         });
-        _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ Lazy Load Single Column Layout" : "✔️ Lazy Load Single Column Layout", () => {
-            lazyLoadSingleColumn == 0 ? _GM_setValue("lazyLoadSingleColumn", 1) : _GM_setValue("lazyLoadSingleColumn", 0);
-            location.reload();
-        });
+        if (/civitai\.com/.test(window.location.host)) {
+            let lazyLoadSingleColumn = _GM_getValue("lazyLoadSingleColumn");
+            if (lazyLoadSingleColumn == undefined) {
+                _GM_setValue("lazyLoadSingleColumn", 0);
+                lazyLoadSingleColumn = 0;
+            }
+            _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ Lazy Load Single Column Layout" : "✔️ Lazy Load Single Column Layout", () => {
+                lazyLoadSingleColumn == 0 ? _GM_setValue("lazyLoadSingleColumn", 1) : _GM_setValue("lazyLoadSingleColumn", 0);
+                location.reload();
+            });
+        }
         _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ Lazy Load Preload Images" : "✔️ Lazy Load Preload Images", () => {
             lazyLoadPreloadImages == 0 ? _GM_setValue("lazyLoadPreloadImages", 1) : _GM_setValue("lazyLoadPreloadImages", 0);
             location.reload();
@@ -17927,6 +18218,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     }, 1000);
 
     const captureSrc = async () => {
+        let num = captureSrcArray.length;
         let imgSrcs = await getImgs(siteData.capture ?? siteData.imgs);
         let imagePreloadArray = [];
         imgSrcs.forEach(src => {
@@ -17935,12 +18227,17 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 imagePreloadArray.push(src);
             }
         });
+        if (ge("#FullPictureLoadCaptureNum") && num < captureSrcArray.length) ge("#FullPictureLoadCaptureNum").innerText = captureSrcArray.length;
         if (lazyLoadPreloadImages == 1) fun.picPreload(imagePreloadArray, "Lazy Load Mode");
     };
 
     if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture) {
         addnewTabViewButton();
-        new MutationObserver(captureSrc).observe(document.body, MutationObserverConfig);
+        fun.addMutationObserver(captureSrc, {
+            childList: true,
+            subtree: true,
+            attributes: true
+        });
     }
 
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !siteData.category.includes("lazyLoad") && !siteData.category.includes("none") && !siteData.category.includes("ad")) {
