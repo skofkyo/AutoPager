@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.11
+// @version            1.8.12
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -3629,6 +3629,7 @@
         insertImg: [
             [".article-content", 2], 2
         ],
+        go: 1,
         autoDownload: [0],
         next: ".previous>a",
         prev: ".next>a",
@@ -12989,8 +12990,8 @@ document.body.appendChild(text);
         name: "CivitAi Auto Show NSFW",
         host: ["civitai.com"],
         reg: /^https?:\/\/civitai\.com\//,
-        delay: 2000,
-        init: () => {
+        init: async () => {
+            await fun.waitEle("img[src*='width='],video[src*='width=']");
             //自動顯示NSFW
             const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(window.location.pathname)) {
@@ -13776,9 +13777,9 @@ document.body.appendChild(text);
                 str_101: "網址.txt已匯出",
                 str_102: "格式轉換中...",
                 str_103: "啟用並排模式",
-                str_104: "匯出圖址",
-                str_105: "複製圖址",
-                str_106: "分頁檢視",
+                str_104: "匯出圖址(7)",
+                str_105: "複製圖址(2)",
+                str_106: "分頁檢視(8)",
                 str_107: "一鍵下載(3)"
             };
             break;
@@ -13887,9 +13888,9 @@ document.body.appendChild(text);
                 str_101: "网址.txt已导出",
                 str_102: "格式转换中...",
                 str_103: "启用并排模式",
-                str_104: "导出图址",
-                str_105: "拷贝图址",
-                str_106: "分页视图",
+                str_104: "导出图址(7)",
+                str_105: "拷贝图址(2)",
+                str_106: "分页视图(8)",
                 str_107: "一键下载(3)"
             };
             break;
@@ -13998,9 +13999,9 @@ document.body.appendChild(text);
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
-                str_104: "Export URLs",
-                str_105: "Copy URLs",
-                str_106: "New Tab View",
+                str_104: "Export URLs(7)",
+                str_105: "Copy URLs(2)",
+                str_106: "New Tab View(8)",
                 str_107: "Fast Download(3)"
             };
             break;
@@ -17618,17 +17619,22 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
         lazyLoadPreloadImages = 0;
     }
 
+    let lazyLoadSingleColumn = 0;
+
+    if (/civitai\.com/.test(window.location.host)) {
+        lazyLoadSingleColumn = _GM_getValue("lazyLoadSingleColumn");
+        if (lazyLoadSingleColumn == undefined) {
+            _GM_setValue("lazyLoadSingleColumn", 0);
+            lazyLoadSingleColumn = 0;
+        }
+    }
+
     const addLazyLoadFullResolutionMenu = async () => {
         _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ Lazy Load Full Resolution" : "✔️ Lazy Load Full Resolution", () => {
             lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
             location.reload();
         });
         if (/civitai\.com/.test(window.location.host)) {
-            let lazyLoadSingleColumn = _GM_getValue("lazyLoadSingleColumn");
-            if (lazyLoadSingleColumn == undefined) {
-                _GM_setValue("lazyLoadSingleColumn", 0);
-                lazyLoadSingleColumn = 0;
-            }
             _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ Lazy Load Single Column Layout" : "✔️ Lazy Load Single Column Layout", () => {
                 lazyLoadSingleColumn == 0 ? _GM_setValue("lazyLoadSingleColumn", 1) : _GM_setValue("lazyLoadSingleColumn", 0);
                 location.reload();
@@ -18274,6 +18280,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         break;
                     case 103: //數字鍵7
                         exportImgSrcText();
+                        break;
+                    case 104: //數字鍵8
+                        newTabView();
                         break;
                     case 109: //數字鍵-
                         fun.clearSetTimeout();
