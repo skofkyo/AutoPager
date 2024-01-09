@@ -702,7 +702,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/08 02:28</p>
+<p>2024/01/09 18:43</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1014,7 +1014,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xiuwo.net/">秀窝</a></td>
-                <td><a href="https://rmm8.com/">RMM吧</a>，<a href="https://www.zanmm.com/">赞MM</a>，<a href="https://www.entuji.com/">恩图集</a>，<a href="https://www.mhgirl.com/">美Girl图集</a>，<a href="https://www.hutu6.com/">狐图网</a></td>
+                <td><a href="https://rmm8.com/">RMM吧</a>，<a href="https://www.zanmm.com/">赞MM</a>，<a href="https://www.entuji.com/">恩图集</a>，<a href="https://www.mhgirl.com/">美Girl图集</a>，<a href="https://www.hutu6.com/">狐图网</a>，<a href="https://www.930tu.com/">930圖片網</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xsnvshen.co/">秀色女神</a></td>
@@ -1029,8 +1029,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.aixiuren.com/">秀人图</a></td>
-                <td><a href="https://www.xiurento.com/">www.xiurento.com</a>，只支援免費</td>
+                <td><a href="https://www.aixiurentu.com/">秀人图</a></td>
+                <td>只支援免費</td>
             </tr>
             <tr>
                 <td><a href="https://tu928.com/">tu928美女写真网</a></td>
@@ -1138,10 +1138,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.mmonly.cc/mmtp/">唯一图库</a></td>
                 <td><a href="https://m.mmonly.cc/mmtp/">m.mmonly.cc</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.930tu.com/">930图片网</a></td>
-                <td><a href="https://m.930tu.com/">m.930tu.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://pic.yesky.com/">天极图片</a></td>
@@ -2309,7 +2305,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://1zse.com/">一之涩漫画</a></td>
-                <td></td>
+                <td><a href="http://hatazi.com/">哈塔兹漫画</a>，<a href="https://522160.xyz/">物二漫画</a></td>
             </tr>
             <tr>
                 <td><a href="http://naluhd.com/">那露漫画</a></td>
