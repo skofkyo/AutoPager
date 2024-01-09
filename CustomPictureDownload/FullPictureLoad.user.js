@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.12
+// @version            1.8.13
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -850,8 +850,8 @@
         category: "nsfw1"
     }, {
         name: "秀人图",
-        host: ["www.xiurento.com", "www.aixiuren.com"],
-        reg: /^https?:\/\/www\.(xiurento|aixiuren)\.com\/\d+\.html/i,
+        host: ["www.xiurento.com", "www.aixiuren.com", "www.aixiurentu.com"],
+        reg: /^https?:\/\/www\.(xiurento|aixiuren(tu)?)\.com\/\d+\.html/i,
         exclude: "//button[contains(text(),'登录购买')]",
         imgs: () => fun.getImgA("a[data-fancybox],.entry-content img", ".fenye a"),
         button: [4],
@@ -1617,43 +1617,6 @@
         css: "#bigImg{margin:0px!important}",
         category: "nsfw1"
     }, {
-        name: "930图片网 有分頁",
-        host: ["www.930tu.com", "m.930tu.com"],
-        reg: /(www|m)\.930tu\.com\/\w+\/\w+\/\d+.html$/i,
-        include: ".page a,a[title=Page]",
-        init: () => {
-            let a = fun.ge(".pic-main a,.pic-m a");
-            a.outerHTML = a.innerHTML;
-        },
-        imgs: () => {
-            let max = fun.ge("//a[text()='尾页']").href.match(/_(\d+)/)[1];
-            return fun.getImg(".pic-main img,.pic-m img", max, 9);
-        },
-        button: [4],
-        insertImg: [".pic-main,.pic-m", 1],
-        autoDownload: [0],
-        next: "//a[@class='pic-next']|//a[text()='下一组图']",
-        prev: "//a[@class='pic-prew']|//a[text()='上一组图']",
-        customTitle: () => fun.geT(".pic h1,.tit-m h1"),
-        css: ".pic .pic-main img{max-width:100%!important}",
-        category: "nsfw1"
-    }, {
-        name: "930图片网 無分頁",
-        host: ["www.930tu.com", "m.930tu.com"],
-        reg: /(www|m)\.930tu\.com\/\w+\/\w+\/\d+.html$/i,
-        include: "//p[img]",
-        imgs: ".pic-main img,.pic-m img",
-        button: [4],
-        insertImg: [
-            ["//p[img]", 1, "//p[img]"], 1
-        ],
-        autoDownload: [0],
-        next: "//a[@class='pic-next']|//a[text()='下一组图']",
-        prev: "//a[@class='pic-prew']|//a[text()='上一组图']",
-        customTitle: () => fun.geT(".pic h1,.tit-m h1"),
-        css: ".pic .pic-main img{max-width:100%!important}",
-        category: "nsfw1"
-    }, {
         name: "唯一图库",
         host: ["www.mmonly.cc", "m.mmonly.cc"],
         reg: /^https?:\/\/(www|m)\.mmonly\.cc\/\w+\/\w+\/\d+\.html$/i,
@@ -1938,6 +1901,7 @@
         downloadVideo: true,
         customTitle: () => fun.geT(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a"),
         observerTitle: true,
+        noOpen: 1,
         css: "body.o-modal-no-scroll{overflow:unset!important}#modal-root{display:none!important;}",
         category: "hcomic"
     }, {
@@ -2407,7 +2371,7 @@
             fun.imgBox(".body");
         },
         imgs: async () => {
-            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURI(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$|\.gif$|\.mp4$/i.test(href) ? href : null).filter(item => item);
+            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURI(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$|\.gif$|\.mp4$|\.mov$/i.test(href) ? href : null).filter(item => item);
             fun.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
             let resArr = paths.map((path, i, arr) => {
@@ -2426,7 +2390,7 @@
             return Promise.all(resArr).then(arr => {
                 fun.hideMsg();
                 return arr.map(e => {
-                    if (/\.mp4\?/i.test(e)) {
+                    if (/\.mp4\?|\.mov\?/i.test(e)) {
                         videosSrcArray.push(e);
                         return null;
                     } else {
@@ -2484,9 +2448,10 @@
         css: ".content_left img{cursor:unset!important;}",
         category: "nsfw1"
     }, {
-        name: "秀窝/RMM吧/赞MM/恩图集/美Girl图集/狐图网",
-        host: ["www.xiuwo.net", "rmm8.com", "www.zanmm.com", "www.entuji.com", "www.mhgirl.com", "www.hutu6.com"],
-        reg: /(www\.xiuwo\.net|rmm8\.com|www\.mhgirl\.com)\/tu([\w]+)?\/\d+\.html|www\.zanmm\.com\/tupian\/\d+\.html|(www\.entuji\.com|www\.hutu6\.com)\/\w+\/\d+\.html/,
+        name: "秀窝/RMM吧/赞MM/恩图集/美Girl图集/狐图网/930圖片網",
+        host: ["www.xiuwo.net", "rmm8.com", "www.zanmm.com", "www.entuji.com", "www.mhgirl.com", "www.hutu6.com", "www.930tu.com"],
+        reg: /(www\.xiuwo\.net|rmm8\.com|www\.mhgirl\.com)\/tu([\w]+)?\/\d+\.html|www\.zanmm\.com\/tupian\/\d+\.html|(www\.entuji\.com|www\.hutu6\.com)\/\w+\/\d+\.html|www\.930tu\.com\/\w+\/\d+\.html/,
+        init: () => fun.clearAllTimer(),
         imgs: () => {
             let max = fun.geT("//p[contains(text(),'图片数量')]").match(/\d+/)[0];
             return fun.getImg("#showimg img", max, 9);
@@ -2806,6 +2771,7 @@
         name: "萌图社",
         host: ["www.446m.com", "446m.com"],
         reg: /^https?:\/\/(www\.)?446m\.com\/index\.php\/\w+\/\d+\.html/,
+        include: ".post-content",
         imgs: "span.post-item",
         button: [4],
         insertImg: [".post-content", 2],
@@ -3311,7 +3277,7 @@
         name: "LUVBP",
         host: ["luvbp.com"],
         reg: /^https?:\/\/luvbp\.com\/\d+\//,
-        exclude: "//a[text()='网盘下载'] | //h4[text()='此文章仅供订阅者阅读']",
+        exclude: "//a[text()='网盘下载'] | //h4[text()='此文章仅供订阅者阅读'] | //h4[text()='此内容仅供登陆后查看']",
         imgs: "figure img",
         button: [4],
         insertImg: [".c-content", 2],
@@ -3540,7 +3506,7 @@
     }, {
         name: "R18 Cosplay",
         host: ["r18cosplay.com"],
-        reg: /r18cosplay\.com\/\?p=\d+/,
+        reg: /^https?:\/\/r18cosplay\.com\/\?p=\d+|^https?:\/\/r18cosplay\.com\/\w+\/[^\/]+\/\d+\/$/,
         imgs: ".wp-block-image img",
         button: [4],
         insertImg: [
@@ -3697,7 +3663,8 @@
         reg: /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/,
         imgs: () => fun.getImg(".entry img[decoding]", fun.geT(".page-link>*:last-child"), 4),
         button: [4],
-        insertImg: ["//p[img[@decoding]]", 1],
+        insertImg: ["//p[img[@decoding]]", 2],
+        go: 1,
         customTitle: () => fun.geT("h1").replace(/\(\d+\s?photos?\s?(\+\s?\d+\s?videos?)?\)/gi, "").trim(),
         category: "nsfw1"
     }, {
@@ -3738,6 +3705,7 @@
         customTitle: () => fun.geT("h3.wp-block-post-title").replace(/\[(\d+)?mb-\d+photos\]|\[\d+photos\]|\(\d+8MB\)\(\d+photos\)/i, "").trim(),
         fetch: 1,
         //threading: 4,
+        CSP: 1,
         css: ".popup,.wp-container-13{display:none!important}.FullPictureLoadImage{max-width:100%!important}",
         category: "nsfw2"
     }, {
@@ -3976,9 +3944,9 @@
         category: "ad"
     }, {
         name: "Phym18/Bongda21h",
-        host: ["phym18.org", "bongda21h.co"],
-        link: "https://phym18.org/tag/%E1%BA%A3nh-sex，https://bongda21h.co/anh-hot/",
-        reg: /phym18\.org\/anh\/[^/]+$|^https?:\/\/bongda21h\.co\/anh-hot\/[^\/]+\/$/,
+        host: ["phym18.org", "bongda21h.me"],
+        link: "https://phym18.org/tag/%E1%BA%A3nh-sex，https://bongda21h.me/anh-hot/",
+        reg: /phym18\.org\/anh\/[^/]+$|^https?:\/\/bongda21h\.me\/anh-hot\/[^\/]+\/$/,
         init: "$(document).off();",
         imgs: () => {
             try {
@@ -4433,7 +4401,7 @@
         reg: /taotuhome\.com\/\d+\.html/i,
         imgs: () => fun.getImg(".single-content img[alt]", (fun.geT(".page-links>*:last-child", 2) || 1), 7),
         button: [4],
-        insertImg: [".single-content", 1],
+        insertImg: [".single-content", 2],
         autoDownload: [0],
         next: "a[rel=prev]:not([href^=j])",
         prev: "a[rel=next]:not([href^=j])",
@@ -5382,6 +5350,7 @@
             ["#content>*:last-child", 2], 2
         ],
         go: 1,
+        noOpen: 1,
         category: "nsfw2"
     }, {
         name: "EPORNER Photo",
@@ -5841,6 +5810,7 @@
             thumbnailsSrcArray = [...fun.gae("#thumbimages a>img,.swipebox a>img")].map(e => e.src);
             return [...fun.gae("#thumbimages a,.swipebox a")];
         },
+        button: [4],
         insertImg: [
             ["//a[text()='View full images']", 2], 2
         ],
@@ -5853,6 +5823,7 @@
         reg: /^https?:\/\/fuskator\.com\//i,
         include: "//a[text()='View gallery thumbnails']",
         imgs: "img.full",
+        button: [4],
         insertImg: ["#fullimages", 2, 1000],
         category: "nsfw2"
     }, {
@@ -6401,7 +6372,7 @@
         host: ["www.crtys.net", "crtys.net", "www.ozrt.live", "ozrt.live", "www.yzrt.live", "yzrt.live", "www.rbrt.live", "rbrt.live", "www.mnrt.live", "mnrt.live", "www.gengzhen.vip", "gengzhen.vip", "www.yqmn.live", "yqmn.live"],
         reg: /^https?:\/\/((www\.)?crtys\.net|(www\.)?(ozrt|yzrt|rbrt|mnrt|yqmn)\.live|(www\.)?gengzhen\.vip)\/(index\.php)?\?action-imagelist-uid-/,
         imgs: async () => {
-            await fun.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
+            if (fun.ge("strong+a:not(.next)")) await fun.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
             return fun.getImgA(".bigimg img,#articlebody img,.content_pic img,#big-pic img", ".imglist a,.m_aana a,.main_column_pic a,.pic-list a");
         },
         button: [4],
@@ -6410,9 +6381,18 @@
             if (fun.ge(".title>div[style],.imgWrap a,.name>a")) {
                 return fun.geT(".title>div[style],.imgWrap a,.name>a").replace(/\(\d+p\)|\s?\(.+\)\s?/i, "").trim();
             } else {
-                return fun.ge(".main_column_pic img").alt.replace(/\(\d+p\)|\s?\(.+\)\s?/i, "").trim();;
+                return fun.ge(".main_column_pic img").alt.replace(/\(\d+p\)|\s?\(.+\)\s?/i, "").trim();
             }
         },
+        category: "nsfw2"
+    }, {
+        name: "中国人体艺术模特网",
+        host: ["www.crtys.net", "crtys.net"],
+        reg: /^https?:\/\/(www\.)?crtys\.net\/html\/\d+\/n-\d+\.html/,
+        imgs: () => fun.getImgA(".imgbox img", ".pages a"),
+        button: [4],
+        insertImg: [".imgbox", 2],
+        customTitle: () => fun.geT(".tt>h1"),
         category: "nsfw2"
     }, {
         name: "性爱吧",
@@ -6420,7 +6400,7 @@
         reg: /^https?:\/\/(www\.)?xingaiba\.com\/\?action-viewnews-itemid-\d+$/,
         include: "//span[contains(text(),'美图类别')]",
         imgs: async () => {
-            await fun.getNP("#carousel_photo_container>*", "strong+a:not(.next)", null, ".pages");
+            if (fun.ge("strong+a:not(.next)")) await fun.getNP("#carousel_photo_container>*", "strong+a:not(.next)", null, ".pages");
             return [...fun.gae("#carousel_photo_container img")];
         },
         button: [4],
@@ -6435,7 +6415,7 @@
         host: ["www.hao312.xyz", "hao312.xyz"],
         reg: /^https?:\/\/(www\.)?hao312\.xyz\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            await fun.getNP("#picBody img", "li.thisclass+li>a", null, ".pages");
+            if (fun.ge("li.thisclass+li>a")) await fun.getNP("#picBody img", "li.thisclass+li>a", null, ".pages");
             return [...fun.gae("#picBody img")];
         },
         button: [4],
@@ -6464,7 +6444,7 @@
         host: ["www.yangque.xyz", "yangque.xyz"],
         reg: /^https?:\/\/www\.yangque\.xyz\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            await fun.getNP(".image-box>*", "strong+a:not(.next)", null, ".pages");
+            if (fun.ge("strong+a:not(.next)")) await fun.getNP(".image-box>*", "strong+a:not(.next)", null, ".pages");
             return [...fun.gae(".image-box img")];
         },
         button: [4],
@@ -6479,7 +6459,7 @@
         host: ["www.6643.live", "6643.live"],
         reg: /^https?:\/\/www\.6643\.live\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            await fun.getNP("#d_BigPic", "strong+a:not(.next)", null, ".pages");
+            if (fun.ge("strong+a:not(.next)")) await fun.getNP("#d_BigPic", "strong+a:not(.next)", null, ".pages");
             return [...fun.gae("#d_BigPic img")];
         },
         button: [4],
@@ -6494,7 +6474,7 @@
         host: ["www.xixirenti.vip", "xixirenti.vip"],
         reg: /^https?:\/\/www\.xixirenti\.vip\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            await fun.getNP("//p[img]", "strong+a:not(.next)", null, ".pages", 0, null, 1, 0);
+            if (fun.ge("strong+a:not(.next)")) await fun.getNP("//p[img]", "strong+a:not(.next)", null, ".pages", 0, null, 1, 0);
             return [...fun.gae(".pp img")];
         },
         button: [4],
@@ -8942,9 +8922,10 @@
         customTitle: () => fun.geT("//ol/li[2]/a") + " - " + fun.geT("//ol/li[3]"),
         category: "hcomic"
     }, {
-        name: "一之涩漫画",
-        host: ["1zse.com"],
-        reg: /^https?:\/\/1zse\.com\/index\.php\/\d+\.html/,
+        name: "一之涩漫画/哈塔兹漫画/物二漫画",
+        host: ["1zse.com", "hatazi.com", "522160.xyz", "522161.xyz", "522162.xyz", "522163.xyz", "522164.xyz", "522168.xyz", "522168.xyz", "522167.xyz", "522168.xyz", "522169.xyz"],
+        reg: /^https?:\/\/(1zse\.com|hatazi\.com|52216\d\.xyz)\/index\.php\/\d+\.html/,
+        init: () => fun.clearAllTimer(),
         imgs: () => {
             let max = fun.ge("a.last").href.split("/").pop();
             return fun.getImg(".context img", max, 7);
@@ -14975,6 +14956,15 @@ document.body.appendChild(text);
                 fun.fetchErrorMsg();
             });
         },
+        singleThreadLoadImgs: async imgArr => {
+            for (let i = 0; i < imgArr.length; i++) {
+                let loadSrc = imgArr[i].dataset.src;
+                let temp = new Image();
+                temp.src = loadSrc;
+                await new Promise((resolve, reject) => (temp.onload = resolve, temp.onerror = reject));
+                imgArr[i].src = loadSrc;
+            }
+        },
         picPreload: async (arr, title = (customTitle || document.title), page = "current") => {
             const loadImg = async (src, index) => {
                 await new Promise(resolve => {
@@ -15297,7 +15287,8 @@ document.body.appendChild(text);
                     console.error("\nfun.insertImg() ele參數錯誤，或用來定位插入的元素不存在。", error);
                     return;
                 }
-                let imgs = [...fun.gae(".FullPictureLoadImage:not(.small)")];
+                let imgs = [...fun.gae("img.FullPictureLoadImage:not(.small)")];
+                fun.singleThreadLoadImgs(imgs);
                 let imgsNum = 0;
                 document.addEventListener("keydown", event => {
                     if (fun.ge("#FullPictureLoadOptions:not([style])")) return;
@@ -16730,6 +16721,8 @@ document.body.appendChild(text);
             });
             viewMode = 1;
             fun.showMsg(displayLanguage.str_93);
+            let loadImgs = [...gae("img.FullPictureLoadImage.small")];
+            fun.singleThreadLoadImgs(loadImgs);
             let imgs = [...gae("#FullPictureLoadImgBox>div")];
             if (siteData.category == "comic") {
                 let lastImg = imgs.pop();
@@ -16823,94 +16816,368 @@ document.body.appendChild(text);
     };
 
     const newTabView = async () => {
+
+        if (siteData?.noOpen && siteData?.noOpen == 1) {
+            alert("Unable to use window.open()");
+            return;
+        }
+
         if (typeof siteData.capture === "string") {
             const captureImgEles = [...fun.gae(siteData.imgs)];
             console.log("newTabViewCaptureImgEles", captureImgEles);
         }
+
+        let newWindowData = localStorage.getItem("newWindowData");
+        if (newWindowData === null) {
+            localStorage.setItem("newWindowData", '{"ViewMode":0}');
+        }
+
         let imgSrcs;
         captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
+
         if (imgSrcs?.length && imgSrcs.length > 0) {
+
             const newWindow = window.open("about:blank", "_blank");
-            newWindow.fn = fun;
-            const fn = newWindow.fn;
             const doc = newWindow.document;
-            doc.write('<html><head></head><body></body></html>');
-            const css = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css").then(res => res.text());
-            const code = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js").then(res => res.text());
-            const imgElements = imgSrcs.map((src, i, arr) => {
-                let a = doc.createElement("a");
-                a.href = src;
-                a.dataset.fancybox = "gallery";
-                a.target = "_blank";
-                let img = doc.createElement("img");
-                img.src = loading_bak;
-                img.dataset.src = src;
-                img.decoding = "async";
-                img.style.width = "auto";
-                img.style.maxWidth = "100vw";
-                img.style.height = "auto";
-                img.style.maxHeight = "100vh";
-                img.style.padding = "2px";
-                fn.imagesObserver.observe(img);
-                a.appendChild(img);
-                return a;
-            });
-            doc.body.append(...imgElements);
-            doc.body.style.textAlign = "center";
-            const style = doc.createElement("style");
-            style.type = "text/css";
-            style.innerHTML = css;
-            doc.head.appendChild(style);
-            const script = doc.createElement("script");
-            script.type = "text/javascript";
-            script.innerHTML = code +
-                `Fancybox.bind("[data-fancybox]", {
-    idle: false,
-    wheel: "slide",
-    Images: {
-        Panzoom: {
-            maxScale: 2
-        }
-    },
-    Thumbs: {
-        showOnStart: false
-    },
-    Toolbar: {
-        display: {
-            left: ["infobar"],
-            middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
-            right: ["download", "slideshow", "fullscreen", "close"]
-        }
-    },
-    on: {
-        done: (fancybox, slide) => {
-            if (fancybox.isCurrentSlide(slide)) {
-                slideIndex = slide.index;
+            doc.write(`<html><head><title>${customTitle ?? document.title}</title></head><body style="text-align: center;"><div id="imgBox"></div></body></html>`);
+
+            if (siteData?.CSP && siteData?.CSP == 1) {
+                const imgElements = imgSrcs.map((src, i, arr) => {
+                    let a = doc.createElement("a");
+                    a.href = src;
+                    a.target = "_blank";
+                    let img = doc.createElement("img");
+                    img.src = loading_bak;
+                    img.dataset.src = src;
+                    img.style.width = "auto";
+                    img.style.maxWidth = "100vw";
+                    img.style.height = "auto";
+                    img.style.maxHeight = "100vh";
+                    img.style.padding = "2px";
+                    fun.imagesObserver.observe(img);
+                    a.appendChild(img);
+                    return a;
+                });
+                doc.querySelector("#imgBox").append(...imgElements);
+                let loadImgs = [...doc.querySelectorAll("img")];
+                fun.singleThreadLoadImgs(loadImgs);
+            } else {
+                newWindow.fn = fun;
+                newWindow.newImgs = imgSrcs;
+                const jqueryCode = await fetch("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js").then(res => res.text());
+                const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css").then(res => res.text());
+                const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js").then(res => res.text());
+
+                const fancyboxStyle = doc.createElement("style");
+                fancyboxStyle.id = "fancyboxStyle";
+                fancyboxStyle.type = "text/css";
+                fancyboxStyle.innerHTML = fancyboxCss;
+                doc.head.appendChild(fancyboxStyle);
+
+                const jQueryScript = doc.createElement("script");
+                jQueryScript.id = "jQueryScript";
+                jQueryScript.type = "text/javascript";
+                jQueryScript.innerHTML = jqueryCode + fancyboxCode + `
+function setFancybox() {
+    Fancybox.bind("[data-fancybox]", {
+        idle: false,
+        wheel: "slide",
+        Images: {
+            Panzoom: {
+                maxScale: 2
+            }
+        },
+        Thumbs: {
+            showOnStart: false
+        },
+        Toolbar: {
+            display: {
+                left: ["infobar"],
+                middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                right: ["download", "slideshow", "fullscreen", "close"]
+            }
+        },
+        on: {
+            done: (fancybox, slide) => {
+                if (fancybox.isCurrentSlide(slide)) {
+                    slideIndex = slide.index;
+                    imgViewIndex = slideIndex;
+                    [...document.querySelectorAll("img")].forEach(e => {
+                        e.style.border = "";
+                    });
+                    [...document.querySelectorAll("img")][slideIndex].style.border = "solid #32a1ce";
+                    [...document.querySelectorAll("img")][slideIndex].scrollIntoView({
+                        block: "center",
+                        behavior: "smooth",
+                        inline: "center"
+                    });
+                } else {
+                    imgViewIndex = fancybox.getSlide().index;
+                    [...document.querySelectorAll("img")].forEach(e => {
+                        e.style.border = "";
+                    });
+                    [...document.querySelectorAll("img")][slideIndex].style.border = "solid #32a1ce";
+                    [...document.querySelectorAll("img")][fancybox.getSlide().index].scrollIntoView({
+                        block: "center",
+                        behavior: "smooth",
+                        inline: "center"
+                    });
+                }
+            },
+            close: (fancybox, slide) => {
+                document.body.classList.remove("hide-scrollbar");
+                slideIndex = fancybox.getSlide().index;
+                imgViewIndex = fancybox.getSlide().index;
+                [...document.querySelectorAll("img")].forEach(e => {
+                    e.style.border = "";
+                });
+                [...document.querySelectorAll("img")][slideIndex].style.border = "solid #32a1ce";
                 [...document.querySelectorAll("img")][slideIndex].scrollIntoView({
                     block: "center",
                     behavior: "smooth",
                     inline: "center",
                 });
-            } else {
-                [...document.querySelectorAll("img")][fancybox.getSlide().index].scrollIntoView({
-                    block: "center",
-                    behavior: "smooth",
-                    inline: "center",
-                });
             }
-        },
-        close: (fancybox, slide) => {
-            document.body.classList.remove("hide-scrollbar");
-            slideIndex = fancybox.getSlide().index;
-            [...document.querySelectorAll("img")][slideIndex].scrollIntoView({
-                block: "center",
-                behavior: "smooth",
-                inline: "center",
-            });
         }
+    });
+}
+`;
+                doc.body.appendChild(jQueryScript);
+
+                const newWindowStyle = doc.createElement("style");
+                newWindowStyle.id = "newWindowStyle";
+                newWindowStyle.type = "text/css";
+                newWindowStyle.innerHTML = `
+#FixedMenu {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #000000;
+    width: 122px;
+    height: auto;
+    padding: 5px 5px 2px 5px;
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    background-color: #fff;
+    z-index: 2;
+}
+.FixedMenuitem {
+    width: 110px;
+    height: 24px;
+    line-height: 24px;
+    overflow: hidden;
+    font-size: 14px;
+    border: #ccc 1px solid;
+    background-color: #f6f6f6;
+    padding: 0 5px 0 5px;
+    margin: 0 2px 3px 0;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.FixedMenuitem.active {
+    color: #fff;
+    background: #1790E6;
+}
+img.default {
+    width: auto;
+    height: auto;
+    max-width: 100vw;
+    max-height: 100vh;
+    padding: 2px;
+}
+img.singlePage {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100vh;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 4px;
+}
+`;
+                doc.body.appendChild(newWindowStyle);
+
+                const newWindowScript = doc.createElement("script");
+                newWindowScript.id = "newWindowScript";
+                newWindowScript.type = "text/javascript";
+                newWindowScript.innerHTML = `
+var viewMode = 0;
+var imgViewIndex = -1;
+
+function addFixedMenu() {
+    let menuDiv = document.createElement("div");
+    menuDiv.id = "FixedMenu";
+    const menuObj = [{
+        id: "MenuSinglePageItem",
+        text: "Single Image (1)",
+        cfn: event => {
+            event.preventDefault();
+            singlePageImageLayout();
+            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            document.querySelector("#MenuSinglePageItem").classList.add("active");
+            localStorage.setItem("newWindowData", '{"ViewMode":1}');
+        }
+    }, {
+        id: "MenuDefaultItem",
+        text: "Default (0)",
+        cfn: event => {
+            event.preventDefault();
+            defaultImageLayout();
+            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            document.querySelector("#MenuDefaultItem").classList.add("active");
+            localStorage.setItem("newWindowData", '{"ViewMode":0}');
+        }
+    }];
+    const createMenu = obj => {
+        let item = document.createElement("div");
+        item.id = obj.id;
+        item.className = "FixedMenuitem";
+        item.innerText = obj.text;
+        item.oncontextmenu = () => false;
+        if (obj.cfn) item.addEventListener("click", obj.cfn);
+        if (obj.mfn) item.addEventListener("mousedown", obj.mfn);
+        menuDiv.appendChild(item);
+    };
+    [...menuObj].forEach(obj => createMenu(obj));
+    document.body.appendChild(menuDiv);
+}
+addFixedMenu();
+
+document.addEventListener("keydown", event => {
+    switch (event.keyCode) {
+        case 96:
+            defaultImageLayout();
+            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            document.querySelector("#MenuDefaultItem").classList.add("active");
+            localStorage.setItem("newWindowData", '{"ViewMode":0}');
+            break;
+        case 97:
+            singlePageImageLayout();
+            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            document.querySelector("#MenuSinglePageItem").classList.add("active");
+            localStorage.setItem("newWindowData", '{"ViewMode":1}');
+            break;
     }
-});`;
-            doc.body.appendChild(script);
+});
+
+document.addEventListener("keydown", event => {
+    if (document.querySelector(".fancybox__container")) return;
+    let imgs = [...document.querySelectorAll("img")];
+    if (event.key == "ArrowUp" && imgViewIndex >= 0 || event.key == "ArrowLeft" && imgViewIndex >= 0) {
+        event.preventDefault();
+        imgViewIndex--;
+        if (imgViewIndex < 0) {
+            imgViewIndex = imgs.length - 1;
+        }
+        imgs.forEach(e => {
+            e.style.border = "";
+        });
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        imgs[imgViewIndex].scrollIntoView({
+            block: "center",
+            inline: "center"
+        });
+    } else if (event.key == "ArrowDown" && imgViewIndex <= imgs.length - 1 || event.key == "ArrowRight" && imgViewIndex <= imgs.length - 1) {
+        event.preventDefault();
+        imgViewIndex++;
+        if (imgViewIndex > imgs.length - 1) {
+            imgViewIndex = 0;
+        }
+        imgs.forEach(e => {
+            e.style.border = "";
+        });
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        imgs[imgViewIndex].scrollIntoView({
+            block: "center",
+            inline: "center"
+        });
+    } else {
+        imgViewIndex = -1;
+    }
+});
+
+function loadImgs() {
+    let loadImgs = [...document.querySelectorAll("img")];
+    fn.singleThreadLoadImgs(loadImgs);
+}
+
+function defaultImageLayout() {
+    window.scrollTo({
+        top: 0
+    });
+    imgViewIndex = -1;
+    viewMode = 0;
+    document.querySelector("#imgBox").innerHTML = "";
+    const imgElements = newImgs.map((src, i, arr) => {
+        let a = document.createElement("a");
+        a.href = src;
+        a.dataset.fancybox = "gallery";
+        a.target = "_blank";
+        let img = document.createElement("img");
+        img.className = "default";
+        img.src = "${loading_bak}";
+        img.dataset.src = src;
+        fn.imagesObserver.observe(img);
+        a.appendChild(img);
+        return a;
+    });
+    document.querySelector("#imgBox").append(...imgElements);
+    document.querySelector("#MenuDefaultItem").classList.add("active");
+
+    try {
+        setFancybox();
+    } catch (e) {}
+
+    loadImgs();
+}
+
+function singlePageImageLayout() {
+    window.scrollTo({
+        top: 0
+    });
+    imgViewIndex = -1;
+    viewMode = 1;
+    document.querySelector("#imgBox").innerHTML = "";
+    const imgElements = newImgs.map((src, i, arr) => {
+        let a = document.createElement("a");
+        a.href = src;
+        a.dataset.fancybox = "gallery";
+        a.target = "_blank";
+        let img = document.createElement("img");
+        img.className = "singlePage";
+        img.src = "${loading_bak}";
+        img.dataset.src = src;
+        fn.imagesObserver.observe(img);
+        a.appendChild(img);
+        return a;
+    });
+    document.querySelector("#imgBox").append(...imgElements);
+    document.querySelector("#MenuSinglePageItem").classList.add("active");
+    try {
+        setFancybox();
+    } catch (e) {}
+    loadImgs();
+}
+
+let newWindowDataViewMode = JSON.parse(localStorage.newWindowData).ViewMode;
+
+if (newWindowDataViewMode == 1) {
+    singlePageImageLayout();
+} else {
+    defaultImageLayout();
+}
+
+`;
+                doc.body.appendChild(newWindowScript);
+            }
         }
     };
 
