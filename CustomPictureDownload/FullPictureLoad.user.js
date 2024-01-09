@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.13
+// @version            1.8.14
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -5257,7 +5257,7 @@
             [".album", 0], 2
         ],
         go: 1,
-        customTitle: () => fun.geT(".gallery_name"),
+        customTitle: () => fun.geT(".gallery_name").replace(/\sx\d{1,4}.*|-\sx\d{1,4}.*|-\s\d{1,4}x.*|-[\d\s]+pic.+| - \d{2}.\d{2}.\d{4}.*|\(x\d+\).*|[\d\s]+pics.*|\([\w\s\.\+,]+\)|\|[\s\dx]+\|.*/i, "").trim(),
         category: "nsfw2"
     }, {
         name: "Good Sex Porn",
@@ -13759,7 +13759,7 @@ document.body.appendChild(text);
                 str_102: "格式轉換中...",
                 str_103: "啟用並排模式",
                 str_104: "匯出圖址(7)",
-                str_105: "複製圖址(2)",
+                str_105: "複製圖址(1)",
                 str_106: "分頁檢視(8)",
                 str_107: "一鍵下載(3)"
             };
@@ -13870,7 +13870,7 @@ document.body.appendChild(text);
                 str_102: "格式转换中...",
                 str_103: "启用并排模式",
                 str_104: "导出图址(7)",
-                str_105: "拷贝图址(2)",
+                str_105: "拷贝图址(1)",
                 str_106: "分页视图(8)",
                 str_107: "一键下载(3)"
             };
@@ -13981,7 +13981,7 @@ document.body.appendChild(text);
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
                 str_104: "Export URLs(7)",
-                str_105: "Copy URLs(2)",
+                str_105: "Copy URLs(1)",
                 str_106: "New Tab View(8)",
                 str_107: "Fast Download(3)"
             };
@@ -15288,7 +15288,10 @@ document.body.appendChild(text);
                     return;
                 }
                 let imgs = [...fun.gae("img.FullPictureLoadImage:not(.small)")];
-                fun.singleThreadLoadImgs(imgs);
+                let oddNumberImgs = imgs.filter((img, index) => parseInt(index, 10) % 2 == 0);
+                let evenNumberImgs = imgs.filter((img, index) => parseInt(index, 10) % 2 != 0);
+                fun.singleThreadLoadImgs(oddNumberImgs);
+                fun.singleThreadLoadImgs(evenNumberImgs);
                 let imgsNum = 0;
                 document.addEventListener("keydown", event => {
                     if (fun.ge("#FullPictureLoadOptions:not([style])")) return;
@@ -16721,8 +16724,10 @@ document.body.appendChild(text);
             });
             viewMode = 1;
             fun.showMsg(displayLanguage.str_93);
-            let loadImgs = [...gae("img.FullPictureLoadImage.small")];
-            fun.singleThreadLoadImgs(loadImgs);
+            let oddNumberImgs = [...gae("img.FullPictureLoadImage.small")].filter((img, index) => parseInt(index, 10) % 2 == 0);
+            let evenNumberImgs = [...gae("img.FullPictureLoadImage.small")].filter((img, index) => parseInt(index, 10) % 2 != 0);
+            fun.singleThreadLoadImgs(oddNumberImgs);
+            fun.singleThreadLoadImgs(evenNumberImgs);
             let imgs = [...gae("#FullPictureLoadImgBox>div")];
             if (siteData.category == "comic") {
                 let lastImg = imgs.pop();
@@ -16859,8 +16864,10 @@ document.body.appendChild(text);
                     return a;
                 });
                 doc.querySelector("#imgBox").append(...imgElements);
-                let loadImgs = [...doc.querySelectorAll("img")];
-                fun.singleThreadLoadImgs(loadImgs);
+                let oddNumberImgs = [...doc.querySelectorAll("img")].filter((img, index) => parseInt(index, 10) % 2 == 0);
+                let evenNumberImgs = [...doc.querySelectorAll("img")].filter((img, index) => parseInt(index, 10) % 2 != 0);
+                fun.singleThreadLoadImgs(oddNumberImgs);
+                fun.singleThreadLoadImgs(evenNumberImgs);
             } else {
                 newWindow.fn = fun;
                 newWindow.newImgs = imgSrcs;
@@ -17105,8 +17112,10 @@ document.addEventListener("keydown", event => {
 });
 
 function loadImgs() {
-    let loadImgs = [...document.querySelectorAll("img")];
-    fn.singleThreadLoadImgs(loadImgs);
+    let oddNumberImgs = [...document.querySelectorAll("img")].filter((img, index) => parseInt(index, 10) % 2 == 0);
+    let evenNumberImgs = [...document.querySelectorAll("img")].filter((img, index) => parseInt(index, 10) % 2 != 0);
+    fn.singleThreadLoadImgs(oddNumberImgs);
+    fn.singleThreadLoadImgs(evenNumberImgs);
 }
 
 function defaultImageLayout() {
@@ -18566,10 +18575,10 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     case 106: //數字鍵*
                         ge("#FullPictureLoadOptions").removeAttribute("style");
                         break;
-                    case 27: //Esc
+                    case 27: //Esc鍵
                         ge("#FullPictureLoadOptions").style.display = "none";
                         break;
-                    case 111: //數字鍵
+                    case 111: //數字鍵/
                         fun.showMsg(displayLanguage.str_91);
                         localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
                         setTimeout(() => location.reload(), 1000);
