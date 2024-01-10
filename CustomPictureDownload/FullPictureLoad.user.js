@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.14
+// @version            1.8.15
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -124,7 +124,7 @@
             thumbnailsSrcArray = [...fun.gae("img.cr_only")].map(e => e.src);
             return thumbnailsSrcArray.map(e => e.replace("_600x0", ""));
         },
-        button: [4],
+        button: [4, "24%", 1],
         insertImg: [
             ["//div[div[@class='photos']]/*[last()]", 2], 2
         ],
@@ -3762,8 +3762,8 @@
         category: "nsfw2"
     }, {
         name: "HOTGIRLchina格式",
-        host: ["hotgirlchina.com", "hotgirlasian.com", "thechinagirls.com", "theasiagirl.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com", "nudeasiangirl.com"],
-        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com)\/.+(photos?|videos?|anh)?\/?|^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$|^https?:\/\/hotgirlasian\.com\/\d+\/$/,
+        host: ["hotgirlchina.com", "hotgirlasian.com", "thechinagirls.com", "theasiagirl.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com", "nudeasiangirl.com", "hinhsexvietnam.com"],
+        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hinhsexvietnam\.com)\/.+(photos?|videos?|anh)?\/?|^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$|^https?:\/\/hotgirlasian\.com\/\d+\/$/,
         include: ".entry-inner img[alt]",
         init: () => {
             let share = fun.ge(".entry.share");
@@ -3786,8 +3786,8 @@
         css: ".boxzilla-container,.boxzilla-overlay,.sharrre-container{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "HOTGIRLchina格式",
-        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hotgirlasian\.com)\//,
+        name: "HOTGIRLchina 格式 AD",
+        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hotgirlasian\.com|hinhsexvietnam\.com)\//,
         css: ".boxzilla-container,.boxzilla-overlay,.sharrre-container{display:none!important}",
         category: "ad"
     }, {
@@ -6372,7 +6372,7 @@
         host: ["www.crtys.net", "crtys.net", "www.ozrt.live", "ozrt.live", "www.yzrt.live", "yzrt.live", "www.rbrt.live", "rbrt.live", "www.mnrt.live", "mnrt.live", "www.gengzhen.vip", "gengzhen.vip", "www.yqmn.live", "yqmn.live"],
         reg: /^https?:\/\/((www\.)?crtys\.net|(www\.)?(ozrt|yzrt|rbrt|mnrt|yqmn)\.live|(www\.)?gengzhen\.vip)\/(index\.php)?\?action-imagelist-uid-/,
         imgs: async () => {
-            if (fun.ge("strong+a:not(.next)")) await fun.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
+            await fun.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
             return fun.getImgA(".bigimg img,#articlebody img,.content_pic img,#big-pic img", ".imglist a,.m_aana a,.main_column_pic a,.pic-list a");
         },
         button: [4],
@@ -6400,7 +6400,7 @@
         reg: /^https?:\/\/(www\.)?xingaiba\.com\/\?action-viewnews-itemid-\d+$/,
         include: "//span[contains(text(),'美图类别')]",
         imgs: async () => {
-            if (fun.ge("strong+a:not(.next)")) await fun.getNP("#carousel_photo_container>*", "strong+a:not(.next)", null, ".pages");
+            await fun.getNP("#carousel_photo_container>*", "strong+a:not(.next)", null, ".pages");
             return [...fun.gae("#carousel_photo_container img")];
         },
         button: [4],
@@ -6415,7 +6415,7 @@
         host: ["www.hao312.xyz", "hao312.xyz"],
         reg: /^https?:\/\/(www\.)?hao312\.xyz\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            if (fun.ge("li.thisclass+li>a")) await fun.getNP("#picBody img", "li.thisclass+li>a", null, ".pages");
+            await fun.getNP("#picBody img", "li.thisclass+li>a", null, ".pages");
             return [...fun.gae("#picBody img")];
         },
         button: [4],
@@ -6444,7 +6444,7 @@
         host: ["www.yangque.xyz", "yangque.xyz"],
         reg: /^https?:\/\/www\.yangque\.xyz\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            if (fun.ge("strong+a:not(.next)")) await fun.getNP(".image-box>*", "strong+a:not(.next)", null, ".pages");
+            await fun.getNP(".image-box>*", "strong+a:not(.next)", null, ".pages");
             return [...fun.gae(".image-box img")];
         },
         button: [4],
@@ -6459,7 +6459,7 @@
         host: ["www.6643.live", "6643.live"],
         reg: /^https?:\/\/www\.6643\.live\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            if (fun.ge("strong+a:not(.next)")) await fun.getNP("#d_BigPic", "strong+a:not(.next)", null, ".pages");
+            await fun.getNP("#d_BigPic", "strong+a:not(.next)", null, ".pages");
             return [...fun.gae("#d_BigPic img")];
         },
         button: [4],
@@ -6474,7 +6474,7 @@
         host: ["www.xixirenti.vip", "xixirenti.vip"],
         reg: /^https?:\/\/www\.xixirenti\.vip\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
-            if (fun.ge("strong+a:not(.next)")) await fun.getNP("//p[img]", "strong+a:not(.next)", null, ".pages", 0, null, 1, 0);
+            await fun.getNP("//p[img]", "strong+a:not(.next)", null, ".pages", 0, null, 1, 0);
             return [...fun.gae(".pp img")];
         },
         button: [4],
@@ -7972,15 +7972,20 @@
         name: "HentaiPaw圖片清單頁",
         host: ["hentaipaw.com"],
         reg: /hentaipaw\.com\/articles\/\d+/i,
-        init: async () => await fun.waitEle(".gallery-image-container a"),
+        init: async () => await fun.waitEle("next-route-announcer"),
         imgs: async () => {
             fun.showMsg("獲取數據中...", 0);
+            thumbnailsSrcArray = [...fun.gae(".gallery-image-container a>img")].map(e => e.src);
             let url = fun.ge(".gallery-image-container a").href;
             let doc = await fun.fetchDoc(url);
-            let data = [...doc.scripts].find(s => s.innerHTML.search(/startingPage/) > -1).innerHTML.replace(/\\/g, "").match(/\[{.+"}]/)[0];
-            fun.hideMsg();
-            thumbnailsSrcArray = [...fun.gae(".gallery-image-container a>img")].map(e => e.src);
-            return JSON.parse(data).map(e => e.src);
+            try {
+                let data = [...doc.scripts].find(s => s.innerHTML.search(/startingPage/) > -1).innerHTML.replace(/\\/g, "").match(/\[{.+"}]/)[0];
+                fun.hideMsg();
+                return JSON.parse(data).map(e => e.src);
+            } catch (e) {
+                doc = await fun.iframeDoc(url, ".yarl__slide_image");
+                return [...fun.gae(".yarl__slide_image", doc)].map(e => e.src).sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
+            }
         },
         button: [4],
         insertImg: [
@@ -8531,7 +8536,7 @@
             fun.remove(".dlh,iframe:not(#FullPictureLoadIframe)");
             fun.remove("//body/div[a[img]] | //div[@class='Introduct']/a[div[img]] | //div[a[img[@alt='Game Tip']]]");
             fun.addMutationObserver(() => fun.remove(".dlh,iframe:not(#FullPictureLoadIframe)"));
-            if (fun.ge(".paginator") && fun.ge(".thispage+a")) await fun.getNP(".gallary_item", ".thispage+a", null, ".paginator");
+            await fun.getNP(".gallary_item", ".thispage+a", null, ".paginator");
         },
         imgs: async () => {
             thumbnailsSrcArray = [...fun.gae(".gallary_item img")].map(e => e.src);
@@ -9528,6 +9533,7 @@
         host: ["400manhua.com"],
         reg: /^https?:\/\/400manhua\.com\/chapter_\d+\.html$/i,
         include: ".rd-article-wr",
+        init: () => fun.clearAllTimer(),
         imgs: ".rd-article-wr img",
         button: [4],
         insertImg: [".rd-article-wr", 2],
@@ -9543,6 +9549,10 @@
         name: "400漫画网M",
         host: ["400manhua.com"],
         reg: /^https?:\/\/400manhua\.com\/chapter_\d+\.html$/i,
+        init: async () => {
+            await fun.waitEle(".chapter-end[style]");
+            fun.clearAllTimer();
+        },
         imgs: ".comic-list img",
         button: [4],
         insertImg: [".comic-list", 2],
@@ -14448,6 +14458,9 @@ document.body.appendChild(text);
             //翻頁模式聚集所有圖片或是預覽縮圖然後fun.getImgA()
             //用在規則init，fun.getNP(picsEle, nextLinkEle, lastEle, replaceElement, time);
             if (fun.ge(".FullPictureLoadImage")) return;
+            if (typeof nextLinkEle === "string") {
+                if (!fun.ge(nextLinkEle)) return;
+            }
             fetching = true;
             getImgFn += " > fun.getNP()";
             let nextlink = null;
@@ -14958,6 +14971,7 @@ document.body.appendChild(text);
         },
         singleThreadLoadImgs: async imgArr => {
             for (let i = 0; i < imgArr.length; i++) {
+                if (!imgArr[i]?.dataset?.src) continue;
                 let loadSrc = imgArr[i].dataset.src;
                 let temp = new Image();
                 temp.src = loadSrc;
@@ -17929,7 +17943,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     }
 
     if (/^https?:\/\/(e-hentai|exhentai).org\//.test(window.location.href)) {
-        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ E_HENTAI Load Original Image" : "✔️ E_HENTAI Load Original Image", () => {
+        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ E-HENTAI Load Original Image" : "✔️ E_HENTAI Load Original Image", () => {
             E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
             location.reload();
         });
