@@ -1571,7 +1571,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://nudeasiangirl.com/">nudeasiangirl.com</a>，<a href="https://thechinagirls.com/">thechinagirls.com</a>，<a href="https://theasiagirl.com/">theasiagirl.com</a>，<a href="https://cutexinh.com/">cutexinh.com</a>，<a href="https://girlxinhxinh.com/">girlxinhxinh.com</a>，<a href="https://asiaceleb.com/">asiaceleb.com</a>，<a href="https://chinagirly.com/">chinagirly.com</a>，<a href="https://babeasia.com/">babeasia.com</a>，<a href="https://nudeasiangirl.com/">nudeasiangirl.com</a></td>
+                <td><a href="https://nudeasiangirl.com/">Nude Asian Girl</a>，<a href="https://thechinagirls.com/">The China Girls</a>，<a href="https://cutexinh.com/">CuteXinh</a>，<a href="https://girlxinhxinh.com/">Girl Xinh Xinh</a>，<a href="https://asiaceleb.com/">Asia Celebrity</a>，<a href="https://chinagirly.com/">China Girly</a>，<a href="https://babeasia.com/">Babe Asia</a>，<a href="https://nudeasiangirl.com/">Hot Nude Asian Girls</a>，<a href="https://hinhsexvietnam.com/">Hình Sex Việt Nam</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -2913,10 +2913,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://legacy.midjourney.com/showcase/recent/">Midjourney</a></td>
                 <td>沒有更高解析度的圖片，只是能聚集到新分頁觀看。</td>
-            </tr>
-            <tr>
-                <td><a href="https://neural.love/search">neural.love</a></td>
-                <td>SPA網頁，加載大圖。</td>
             </tr>
             <tr>
                 <td><a href="https://neural.love/search">neural.love</a></td>
