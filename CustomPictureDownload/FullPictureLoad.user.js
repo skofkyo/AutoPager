@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.15
+// @version            1.8.16
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -405,9 +405,8 @@
         customTitle: () => document.title.split("|")[0].slice(10).trim(),
         category: "nsfw2"
     }, {
-        name: "www.depvailon.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com depday.info",
-        host: ["www.depvailon.com", "pic.yailay.com", "nungvl.net", "www.kaizty.com", "lootiu.com", "depday.info"],
-        reg: /(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$|lootiu\.com\/gallery\/.+\.cfg$|(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html\?m=1$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html\?m=1$|nungvl\.net\/gallerys\/\d+\.cg\?m=1$|lootiu\.com\/gallery\/.+\.cfg\?m=1$|depday\.info\/v2\/\w+\.html/i,
+        name: "www.depvailon.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com depday.info thismore.fun",
+        reg: /(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$|lootiu\.com\/gallery\/.+\.cfg$|(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html\?m=1$|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html\?m=1$|nungvl\.net\/gallerys\/\d+\.cg\?m=1$|lootiu\.com\/gallery\/.+\.cfg\?m=1$|depday\.info\/v2\/\w+\.html|^https?:\/\/thismore\.fun\/view\/[^\.]+\.php/i,
         imgs: async () => {
             let max;
             try {
@@ -2695,7 +2694,7 @@
         next: "//a[p[text()='上一篇']]",
         prev: "//a[p[text()='下一篇']]",
         customTitle: () => fun.geT(".article-title").replace(/\[\d([／\+\.\w]+)?\]\s?|【\d+P】/i, ""),
-        css: "#modal-system-notice,.container.fluid-widget{display:none!important;}",
+        css: ".modal-open{overflow:unset!important;}#modal-system-notice,.container.fluid-widget,#zibpay_modal,#mini-imgbox,.modal-backdrop{display:none!important;}",
         category: "nsfw1"
     }, {
         name: "丝袜客",
@@ -4565,8 +4564,22 @@
         imgs: async () => {
             let a = fun.ge("#the-photo-link");
             if (a) a.outerHTML = a.innerHTML;
-            await fun.getNP("#fdp-photo img,#fdp-photo-old img,.file-detail img", ".page-curr+a", null, "#pager", 0, null, 0);
-            return [...fun.gae("#fdp-photo img,#fdp-photo-old img,.file-detail img")];
+            //await fun.getNP("#fdp-photo img,#fdp-photo-old img,.file-detail img", ".page-curr+a", null, "#pager", 0, null, 0);
+            //return [...fun.gae("#fdp-photo img,#fdp-photo-old img,.file-detail img")];
+            let max = fun.attr("#auto-play", "total");
+            let id = fun.attr("#auto-play", "data").match(/\d+/)[0];
+            fun.showMsg(displayLanguage.str_05, 0);
+            let fetchNum = 0;
+            let resArr = fun.arr(max).map((_, i) => {
+                return fetch(`${location.origin}/api/?ac=get_album_images&id=${id}&num=${i+1}`).then(res => res.json()).then(json => {
+                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    return json.src;
+                });
+            });
+            return Promise.all(resArr).then(data => {
+                fun.hideMsg();
+                return data;
+            });
         },
         button: [4],
         insertImg: ["#task,#fdp-photo,#fdp-photo-old", 2],
@@ -14120,7 +14133,7 @@ document.body.appendChild(text);
             }).then(buffer => {
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
-                if (msg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${maxPage}`, 0);
+                if (msg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${parseInt(maxPage, 10)}`, 0);
                 return htmlText;
             }).catch(error => {
                 console.error(`\nfun.getImg() > fetch()出錯:\n${decodeURI(_url)}`, error);
@@ -14187,7 +14200,7 @@ document.body.appendChild(text);
                             }
                         }
                     }
-                    if (msg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${maxPage}`, 0);
+                    if (msg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${parseInt(maxPage, 10)}`, 0);
                     return htmlText;
                 }).catch(error => {
                     console.error(`\nfun.getImgO() > fetch()出錯:\n${decodeURI(_url)}`, error);
@@ -14257,7 +14270,7 @@ document.body.appendChild(text);
                         }
                     }
                     load.remove();
-                    if (showMsg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${maxPage}`, 0);
+                    if (showMsg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${parseInt(maxPage, 10)}`, 0);
                 } else {
                     fetchNum += 1;
                     load.remove();
@@ -14975,7 +14988,10 @@ document.body.appendChild(text);
                 let loadSrc = imgArr[i].dataset.src;
                 let temp = new Image();
                 temp.src = loadSrc;
-                await new Promise((resolve, reject) => (temp.onload = resolve, temp.onerror = reject));
+                await new Promise(resolve => {
+                    temp.onload = () => resolve();
+                    temp.onerror = () => resolve();
+                });
                 imgArr[i].src = loadSrc;
             }
         },
@@ -16147,7 +16163,7 @@ document.body.appendChild(text);
                     errorLog: error
                 });
                 getDataMsg(displayLanguage.str_26, picNum, imgsNum);
-                console.error(`Fetch_API_GetData() Error: ${error}`);
+                console.error("Fetch_API_GetData() Error: ", error);
             });
         })
     };
@@ -16209,7 +16225,7 @@ document.body.appendChild(text);
                         errorLog: error
                     });
                     getDataMsg(displayLanguage.str_26, picNum, imgsNum);
-                    console.error(`GM_XHR_GetData() Error: ${error}`);
+                    console.error("GM_XHR_GetData() Error: ", error);
                 }
             });
         });
@@ -17407,8 +17423,9 @@ if (newWindowDataViewMode == 1) {
     const nsfw2Data = customData.filter(item => item.category == "nsfw2"); //列出老司機站
     const comicData = customData.filter(item => item.category == "comic"); //列出普漫站
     const hcomicData = customData.filter(item => item.category == "hcomic"); //列出H漫站
-    const AIData = customData.filter(item => item.category == "AI"); //列出AI繪圖站
+    const lazyLoadData = customData.filter(item => item.category == "lazyLoad"); //列出LazyLoad模式規則
     const autoPagerData = customData.filter(item => item.category == "autoPager"); //列出自動翻頁
+    const AD_Data = customData.filter(item => item.category == "ad"); //列出去廣告規則
     const noneData = customData.filter(item => item.category == "none"); //列出未分類
 
     const addFullPictureLoadOptionsMain = () => {
@@ -18431,8 +18448,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         debug("\n列出NSFW+規則", nsfw2Data);
         debug("\n列出COMIC規則", comicData);
         debug("\n列出HCOMIC規則", hcomicData);
-        debug("\n列出AI繪圖規則", AIData);
+        debug("\n列出LazyLoad模式規則", lazyLoadData);
         debug("\n列出自動翻頁規則", autoPagerData);
+        debug("\n列出去廣告規則", AD_Data);
         debug("\n列出未分類規則", noneData);
     }
 
