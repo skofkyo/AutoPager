@@ -708,7 +708,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/09 18:43</p>
+<p>2024/01/11 19:00</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -777,7 +777,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hitxhot.org/">Hit-x-Hot</a></td>
-                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a></td>
+                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xgmn05.cc/">极品性感美女</a></td>
