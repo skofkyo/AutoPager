@@ -1,4 +1,4 @@
-2024/01/09 18:43
+2024/01/11 19:00
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -124,6 +124,9 @@ Lootiu.Com
 
 Depday-Info
 *://depday.info/v2/*.html*
+
+ThisMore.Fun
+*://thismore.fun/view/*.php
 
 萝丝派
 *://www.yylsp.com/*.html
@@ -346,9 +349,11 @@ HOTGIRLchina
 *://manhsec.com/*-photos*/
 *://asiaceleb.com/*-photos*/
 *://nudeasiangirl.com/*-photos*/
+*://hinhsexvietnam.com/*-photos*/
 /^https://chinagirly\.com/\d+/$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/hotgirlasian\.com\/\d+\/$/
+
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -1419,6 +1424,7 @@ https://www.nuyet.com/gallery/*
 /^https://hotgirlchina\.com/[^\/]+/$/
 /^https?:\/\/hotgirlasian\.com\/\d+\/$/
 *://hotgirlchina.com/*-photos*/
+*://hinhsexvietnam.com/*-photos*/
 *://theasiagirl.com/*-photos*/
 *://anhsec.com/*-photos*/
 *://sex4viet.com/*-photos*/
@@ -1793,6 +1799,7 @@ https://www.eyval.net/*
 *://asianporn.li/photo/*/*/
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
+*://thismore.fun/view/*.php
 /^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
