@@ -1055,6 +1055,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://bisipic.xyz/">比思在線圖庫</a></td>
+                <td><a href="https://bisipic.online/">bisipic.online</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://m888.top/">女神网</a></td>
                 <td></td>
             </tr>
