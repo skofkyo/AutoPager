@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.16
+// @version            1.8.17
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -2531,6 +2531,15 @@
         customTitle: () => fun.geT("span.current"),
         category: "nsfw1"
     }, {
+        name: "比思在線圖庫",
+        host: ["bisipic.xyz", "bisipic.online"],
+        reg: /^https?:\/\/bisipic\.(xyz|online)\/thread[\d-]+\.html$/,
+        imgs: () => [...fun.gae("img[zoomfile]")].map(e => location.origin + "/" + e.getAttribute("zoomfile")),
+        button: [4],
+        insertImg: ["[id^=postmessage]", 2],
+        customTitle: () => fun.geT(".focusbox-title"),
+        category: "nsfw1"
+    }, {
         name: "洛秀网",
         host: ["loxiu.com"],
         reg: /loxiu\.com\/post\/\d+\.html/,
@@ -4800,14 +4809,26 @@
         reg: /^https:\/\/dev\.avjb\.com\/albums\/\d+\/[^\/]+\/$/i,
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".images>a>img")].map(e => e.dataset.original ?? e.src);
-            return [...fun.gae(".images>a")];
+            /*
+            let xhrNum = 0;
+            fun.showMsg("fun.xhrHEAD...", 0);
+            let resArr = [...fun.gae(".images>a")].map((a, i, arr) => fun.xhrHEAD(a.href).then(res => {
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                return res.finalUrl;
+            }));
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
+            */
+            return thumbnailsSrcArray.map(e => e.replace("main/200x150", "sources"))
         },
         button: [4],
         insertImg: [
             [".images", 2], 2
         ],
         go: 1,
-        customTitle: () => fun.geT("h1.title").replace(/\[\d+[\w\.\+\s-]+\]|\(\d+[\w\.\+\s-]+\)/i, "").trim(),
+        customTitle: () => fun.geT("h1.title").replace(/\[\d+[\w\.\+\s-]+\]|\(\d+[\w\.\+\s-]+\)|\d+P\+\d+V/i, "").trim(),
         category: "nsfw2"
     }, {
         name: "爱微社区 成人相册",
@@ -4875,11 +4896,11 @@
                 let max = fun.geT(".page-nav>*:last-child", 2);
                 return fun.getImg(".td-post-content img", max, 4);
             } else if (fun.ge(".td-post-content img[srcset]")) {
-                let srcs = [...fun.gae(".td-post-content img[src]")].map(e => e.src);
+                let srcs = [...fun.gae(".td-post-content img[src]")].map(e => decodeURI(e.src));
                 let srcsets = [...fun.gae(".td-post-content img[srcset]")].map(img => {
                     let splitArr = img.getAttribute("srcset").split(",");
                     splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1]);
-                    return splitArr.pop().trim().split(" ")[0];
+                    return decodeURI(splitArr.pop().trim().split(" ")[0]);
                 });
                 return [...new Set(srcs.concat(srcsets))];
             } else {
