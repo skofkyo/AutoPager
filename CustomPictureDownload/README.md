@@ -924,7 +924,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.zhaotaotu.cc/">找套图</a></td>
-                <td><a href="https://kantaotu.cc/">Xiuno BBS</a></td>
+                <td><a href="https://www.zhaotaotu.one/">zhaotaotu.one</a>，<a href="https://kantaotu.cc/">Xiuno BBS</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.douhua520.com/">豆花520</a></td>
@@ -1470,6 +1470,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://fapachi.com/">Fapachi</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://fanleaks.club/">Fan Leaks</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://tangmoc.com/">TangMoc</a></td>
                 <td></td>
             </tr>
@@ -1603,11 +1611,15 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.micmicidol.club/">MIC MIC IDOL</a></td>
-                <td>分類添加了自動翻頁和</td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a></td>
                 <td><a href="https://magazinejapanese5.blog.jp/">グラビア週刊誌 5</a>，<a href="https://magazinejapanese6.blog.jp/">グラビア週刊誌 6</a>，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://gravureidols.top/">Gravure Idols</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="http://gravia.site/box/gate.php">Gravia</a></td>
@@ -1718,6 +1730,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>圖床imgadult無法外連，但可以下載。</td>
             </tr>
             <tr>
+                <td><a href="https://urlgalleries.net/">URLGalleries</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://nsfwalbum.com/">NSFWalbum</a></td>
                 <td></td>
             </tr>
@@ -1731,7 +1747,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://thotsbay.tv/">Thotsbay</a></td>
-                <td>手動插入圖片，圖片數量超過5千，建議按7或對左下圖示按中鍵可以匯出MediaURLs.txt，再用Motrix或Aria2來下載。</td>
+                <td><a href="https://hotleak.vip/">Hotleak</a>，手動插入圖片</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.wikifeet.com/">wikiFeet</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="http://goodsexporn.org/">Good Sex Porn</a></td>
@@ -1911,7 +1931,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式82個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式100個</a></td>
             </tr>
             <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
@@ -2058,6 +2078,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同上</td>
             </tr>
             <tr>
+                <td><a href="https://hentaihand.com/en/latest">HentaiHand</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.tsumino.com/">TSUMINO</a></td>
                 <td>同上</td>
             </tr>
@@ -2107,6 +2131,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://lhentai.com/">lHentai</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td><a href="https://tmohentai.com/">TMOHentai</a></td>
                 <td>同上</td>
             </tr>
             <tr>
@@ -2163,7 +2191,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.wnacg.com/">紳士漫畫</a></td>
-                <td>作用在圖片清單、下拉閱讀頁，<a href="http://m.wnacg.com/">m.wnacg.com</a>，<a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>，<a href="http://wn01.ru/">wn01.ru</a>，<a href="http://wn02.ru/">wn02.ru</a></td>
+                <td>作用在圖片清單、下拉閱讀頁，<a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>，<a href="https://wnacg01.org/">紳士漫畫地址發布頁</a></td>
             </tr>
             <tr>
                 <td><a href="https://ahri8.top/">松鼠症倉庫</a></td>
