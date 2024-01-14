@@ -1,4 +1,4 @@
-2024/01/11 19:00
+2024/01/14 16:58
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -241,7 +241,7 @@ MEITU131
 *.qq7k.com/*/*/*.html
 
 930图片网
-*.930tu.com/*/*/*.html
+*.930t*.com/*/*/*.html
 
 唯一图库
 *mmonly.cc/*/*/*.html
@@ -496,7 +496,8 @@ MM1311
 *18av.mm-cg.com/*.html
 
 洛秀网
-*://loxiu.com/post/*.html
+*://*loxiu.com/post/*.html
+*://*counv.com/post/*.html
 
 女神网
 *://m888.top/*/*.html
@@ -608,7 +609,7 @@ CUTE GIRLS ADDICT
 *://djjpg.com/*.html
 
 TangMoc
-*://tangmoc.com/blog/show/*/view
+*://tangmoc.com/blog/show/*/*
 
 LUVBP
 *://luvbp.com/*/
@@ -684,6 +685,12 @@ Byoru
 
 Fapello
 *://fapello.com/*/
+
+Fapachi
+/^https?:\/\/fapachi\.com\/[^\/]+$/
+
+Fan Leaks
+/^https?:\/\/fanleaks\.club\/[^\/]+$/
 
 天极图片
 *://pic.yesky.com/*/*.shtml
@@ -773,6 +780,30 @@ Fapello
 *://www.yachw.com/news/*.html
 *://www.qdsyhj.com/tupian/*.html
 *://www.yqx101.com/news/*.html
+*://www.xcd100.com/tu/*.html
+*://www.kyy41.com/tu/*.html
+*://www.yymul.com/news/*.html
+*://www.yvxji.com/tp/*.html
+*://www.cunedu.com/tupian/*.html
+*://www.sxji56.com/news/*.html
+*://www.szckpt.com/meitu/*.html
+*://www.tjsyyl.com/news/*.html
+*://www.ppmlx.com/tp/*.html
+*://www.xizhuai.com/tp/*.html
+*://www.yunkay.com/pic/*.html
+*://www.xwdwz.com/tupian/*.html
+*://www.nrrqq.com/tupian/*.html
+*://www.714g.com/pic/*.html
+*://www.php-art.com/tp/*.html
+*://www.021zxy.com/tp/*.html
+*://www.0b23.com/tupian/*.html
+*://www.aizibang.com/meitu/*.html
+*://www.qmjxg.com/tupian/*.html
+*://www.smgcjk.com/meitu/*.html
+*://www.hmrzry.com/news/*.html
+*://www.832771.com/tu/*.html
+*://www.qmjxg.com/tupian/*.html
+*://www.wykpc.com/tu/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -1558,7 +1589,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *88comic.vip/chapter/*.html
 *www.comicun.com/index-look*
 *://foamgirl.net/*.html
-*://loxiu.com/post/*.html
+*://*loxiu.com/post/*.html
+*://*counv.com/post/*.html
 *://xher.net/index.php?/category/*
 *gravurezasshi9.doorblog.jp*
 *magazinejapanese5.blog.jp*
@@ -1569,7 +1601,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.umeitu.com/img/*.html
 *://*.jxmm.net/pic/*.html
 *.qq7k.com/*/*/*.html
-*.930tu.com/*/*/*.html
+*.930t*.com/*/*/*.html
 *://www.superbeautygirlx.com/*/*/*.html
 *://www.meimeimei.org/*/*/
 *www.meimeimei.org/*/*/*.html
@@ -1615,7 +1647,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.502x.com/*/*.html
 *://djjpg.com/*.html
 *jcomic.net/page/*
-*://tangmoc.com/blog/show/*/view
+*://tangmoc.com/blog/show/*/*
 *://luvbp.com/*/
 *://www.kaizty.com/photos/*.html*
 *://aitu.men/*/*.html
@@ -1781,6 +1813,30 @@ https://www.eyval.net/*
 *://www.yachw.com/news/*.html
 *://www.qdsyhj.com/tupian/*.html
 *://www.yqx101.com/news/*.html
+*://www.xcd100.com/tu/*.html
+*://www.kyy41.com/tu/*.html
+*://www.yymul.com/news/*.html
+*://www.yvxji.com/tp/*.html
+*://www.cunedu.com/tupian/*.html
+*://www.sxji56.com/news/*.html
+*://www.szckpt.com/meitu/*.html
+*://www.tjsyyl.com/news/*.html
+*://www.ppmlx.com/tp/*.html
+*://www.xizhuai.com/tp/*.html
+*://www.yunkay.com/pic/*.html
+*://www.xwdwz.com/tupian/*.html
+*://www.nrrqq.com/tupian/*.html
+*://www.714g.com/pic/*.html
+*://www.php-art.com/tp/*.html
+*://www.021zxy.com/tp/*.html
+*://www.0b23.com/tupian/*.html
+*://www.aizibang.com/meitu/*.html
+*://www.qmjxg.com/tupian/*.html
+*://www.smgcjk.com/meitu/*.html
+*://www.hmrzry.com/news/*.html
+*://www.832771.com/tu/*.html
+*://www.qmjxg.com/tupian/*.html
+*://www.wykpc.com/tu/*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
@@ -1800,6 +1856,8 @@ https://www.eyval.net/*
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
 *://thismore.fun/view/*.php
+/^https?:\/\/fanleaks\.club\/[^\/]+$/
+/^https?:\/\/fapachi\.com\/[^\/]+$/
 /^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
