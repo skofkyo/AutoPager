@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.18
+// @version            1.8.19
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -622,7 +622,7 @@
         category: "nsfw1"
     }, {
         name: "美人图",
-        host: ["meirentu.cc", "meirentu.top"],
+        host: ["meirentu.cc", "meirentu.top", "meirentu.icu"],
         reg: /meirentu\.\w+\/pic\/\d+\.html/i,
         imgs: () => fun.getImg('.content_left img[alt]', fun.geT(".page a:last-child", 2), 5),
         button: [4],
@@ -2540,16 +2540,16 @@
         customTitle: () => fun.ge("meta[name=keywords]").content.replace(/【\d+P】.*/i, ""),
         category: "nsfw1"
     }, {
-        name: "洛秀网",
-        host: ["loxiu.com"],
-        reg: /loxiu\.com\/post\/\d+\.html/,
+        name: "洛秀网/维秘秀",
+        host: ["www.loxiu.com", "www.counv.com"],
+        reg: /^https?:\/\/((www\.)?loxiu\.com|(www\.)?counv\.com)\/post\/\d+\.html/,
         imgs: () => fun.getImg(".info-imtg-box>img[alt]", fun.geT(".pagebar>*:last-child", 3)),
         button: [4],
         insertImg: [".info-imtg-box", 1],
         autoDownload: [0],
         next: "//a[p[text()='上一篇']]",
         prev: "//a[p[text()='下一篇']]",
-        customTitle: () => fun.geT(".info-title>h1"),
+        customTitle: () => fun.geT(".info-title>h1").replace(/\[\d+p\]/i, "").trim(),
         category: "nsfw1"
     }, {
         name: "女神网",
@@ -3646,13 +3646,17 @@
         host: ["cosplayworld.net"],
         reg: /^https?:\/\/cosplayworld\.net\/[^\/]+\/$/,
         include: ".entry-content",
-        imgs: ".entry-content img",
+        imgs: () => {
+            videosSrcArray = [...fun.gae("video.lazy")].map(e => e.dataset.src ?? e.src);
+            return [...fun.gae(".entry-content img")];
+        },
         button: [4],
         insertImg: [".entry-content", 2],
+        go: 1,
         autoDownload: [0],
         next: ".g1-nav-single-prev a",
         prev: ".g1-nav-single-next a",
-        customTitle: () => fun.geT(".entry-title").replace(" (mitaku.net)", ""),
+        customTitle: () => fun.geT(".entry-inner .entry-title").replace(" (mitaku.net)", "").replace("/mitaku.net/", ""),
         category: "nsfw2"
     }, {
         name: "Byoru",
@@ -6382,7 +6386,7 @@
     }, {
         name: "Bunkr",
         host: ["bunkr-albums.io"],
-        reg: /^https:\/\/bunkrr\.su\/a\/\w+/i,
+        reg: /^https:\/\/bunkrr\.(su|ru)\/a\/\w+/i,
         imgs: () => fun.getImgA(".lightgallery img", "a[href^='/i/']"),
         button: [4],
         insertImg: [
@@ -6447,7 +6451,7 @@
     }, {
         name: "3K图片网/桃子啦 格式",
         host: ["www.3ktu.com", "www.tufada.com"],
-        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu|hiuin|ksruisj|mmokok|nangluan|579993|wpslgs|xscmt|hyqcxs|xthkw|fzxfl|wsvdj|timitm|5269se|xgxff|srzx168|nxzths|ajkie|linguifa|gknrnb|yachw|qdsyhj|yqx101|xcd100|kyy41|yymul|yvxji|cunedu|sxji56|szckpt|tjsyyl|ppmlx|xizhuai|yunkay|xwdwz|nrrqq|714g|php-art|021zxy|0b23|714g)\.com\/\w+\/\d+\.html|^https?:\/\/www\.(tufada|meinv173|meinv007)\.com\/tu\d+\.html/,
+        reg: /^https?:\/\/www\.(3ktu|zkjmpx|tufada|ksxx365|tzala|mash120|wslak|777url|xr70|t7mm|sqhyyz|gxwpjc|ycwlx|ksxx360|ngptp|zlsmm|mmdmlt|hsnmm|mmxsl|i9ke|jsjfgkgs|yjpfxs|cmylzx|sskge|iduobi|woxiutu|lcylaa|gmcpx|803352|rzjyz|cpbdj|gkiev|wjjlf|hceday|fs120yy|aolangde|fssrr|wt768|lql1|xhtrz|zggsdh|xhycg|mokhee|zqydc|fxqmm|jxybjk|qxttsl|lzxjw|btsmmm|jye8|ao5z|4k1k|csltx|hmcby|959278|1001yy|biutu|hiuin|ksruisj|mmokok|nangluan|579993|wpslgs|xscmt|hyqcxs|xthkw|fzxfl|wsvdj|timitm|5269se|xgxff|srzx168|nxzths|ajkie|linguifa|gknrnb|yachw|qdsyhj|yqx101|xcd100|kyy41|yymul|yvxji|cunedu|sxji56|szckpt|tjsyyl|ppmlx|xizhuai|yunkay|xwdwz|nrrqq|714g|php-art|021zxy|0b23|714g|aizibang|qmjxg|smgcjk|hmrzry|832771|qmjxg|wykpc)\.com\/\w+\/\d+\.html|^https?:\/\/www\.(tufada|meinv173|meinv007)\.com\/tu\d+\.html/,
         include: "#showimg img,.img-box img",
         imgs: () => {
             let max;
@@ -14589,7 +14593,7 @@ document.body.appendChild(text);
         },
         checkDataset: ele => {
             if (ele.tagName == "IMG" || ele.tagName == "DIV" || ele.tagName == "A" || ele.tagName == "SPAN") {
-                const setArr = ["data-src", "data-original", "data-url", "data-thumb", "data-echo", "data-ecp", "data-lazyload-src", "data-lazy-src", "data-lazy", "lazysrc", "data-lazyload", "file", "zoomfile", "data-lbwps-srcsmall", "original", "mydatasrc", "ess-data", "data-cfsrc", "data-pin-media", "data-mfp-src"];
+                const setArr = ["data-orig-file", "data-src", "data-original", "data-url", "data-thumb", "data-echo", "data-ecp", "data-lazyload-src", "data-lazy-src", "data-lazy", "lazysrc", "data-lazyload", "file", "zoomfile", "data-lbwps-srcsmall", "original", "mydatasrc", "ess-data", "data-cfsrc", "data-pin-media", "data-mfp-src"];
                 for (let i = 0; i < setArr.length; i++) {
                     let imgSrc = ele.getAttribute(setArr[i]);
                     if (imgSrc) {
