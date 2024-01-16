@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.19
+// @version            1.8.20
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -529,7 +529,7 @@
         category: "nsfw1"
     }, {
         name: "秀人集",
-        host: ["www.2xiuren.cc", "www.xr01.vip", "a.xiu.cloudns.org", "x1.x1.cloudns.biz"],
+        host: ["www.xr08.vip", "www.xr01.vip", "xr.cccn.bf"],
         reg: /^https?:\/\/[^\/]+\/\w+\/\d+\.html/i,
         include: "//div[@class='item_info']//a[text()='秀人集']",
         imgs: () => fun.getImg('.content>p img[alt]', fun.geT(".page a:last-child", 2), 3, [null, null], 200),
@@ -548,7 +548,7 @@
         category: "nsfw1"
     }, {
         name: "秀人美女網",
-        host: ["www.xrmn03.com", "m.xrmn.xyz", "m1.xrmn.xyz"],
+        host: ["www.xrmn05.com", "xrmn.cxxx.bf"],
         reg: /^https?:\/\/[^\/]+\/\w+\/\d+\/\d+\.html/i,
         include: "//div[@class='single-cat']/a[text()='秀人美女网']",
         imgs: () => fun.getImg('.content p img[alt]', fun.geT(".page a:last-child", 2), 3, [null, null], 200),
@@ -563,7 +563,7 @@
         category: "nsfw1"
     }, {
         name: "极品性感美女",
-        host: ["www.xgmn05.cc", "m.xg08.xyz"],
+        host: ["www.xgmn03.cc", "x05.uuuv.bf"],
         reg: /^https?:\/\/[^\/]+\/\w+\/\w+\.html/i,
         include: "//div[@class='toptip']/a[text()='极品性感美女']",
         init: () => {
@@ -7297,6 +7297,35 @@
         next: ".updown_r>a",
         prev: ".updown_l>a",
         customTitle: () => fun.geT("h1").split(",")[0],
+        category: "nsfw2"
+    }, {
+        name: "尼克成人網 人體寫真",
+        host: ["nick20.com"],
+        link: "https://nick20.com/pic/index.html",
+        reg: /^https?:\/\/nick20\.com\/pic\/pic\d+\.html$/i,
+        imgs: () => {
+            thumbnailsSrcArray = Large_cgurl.filter(item => item);
+            return thumbnailsSrcArray.map(e => e.replace("https://thumbs", "https://images").replace("_t.", "_o."));
+        },
+        button: [4],
+        insertImg: ["//center[img]", 2],
+        customTitle: () => fun.geT(".bbs_entry_wrapper>h2"),
+        category: "nsfw2"
+    }, {
+        name: "尼克成人網 成人漫畫",
+        reg: /^https?:\/\/nick20\.com\/bbs2\/index\.cgi\?read=\d+/i,
+        imgs: "a[id][onclick]",
+        button: [4],
+        insertImg: ["p.img", 2],
+        customTitle: () => fun.geT(".bbs_entry_wrapper>h2"),
+        category: "nsfw2"
+    }, {
+        name: "尼克成人網 成人貼圖 本土自拍 走光偷拍",
+        reg: /^https?:\/\/nick20\.com\/bbs(3|5)?\/\d+\.html/i,
+        imgs: "p#img>img",
+        button: [4],
+        insertImg: ["p#img", 2],
+        customTitle: () => fun.geT(".bbs_entry_wrapper>h2"),
         category: "nsfw2"
     }, {
         name: "XO福利圖",
