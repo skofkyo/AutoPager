@@ -780,11 +780,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgmn05.cc/">极品性感美女</a></td>
+                <td><a href="https://www.xgmn03.cc/">极品性感美女</a></td>
                 <td><a href="https://xg04.ffft.bf/">xg04.ffft.bf</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn03.com/">秀人美女網</a></td>
+                <td><a href="https://www.xrmn05.com/">秀人美女網</a></td>
                 <td><a href="https://m.xrmn.xyz/">m.xrmn.xyz</a></td>
             </tr>
             <tr>
@@ -887,6 +887,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://girlsteam.club/">女神部落</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.mfpho.com/">柔丝映画</a></td>
                 <td></td>
             </tr>
@@ -956,7 +960,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.cos6.net/">绅士猫</a></td>
-                <td>需註冊</td>
+                <td>需註冊登錄</td>
             </tr>
             <tr>
                 <td><a href="https://paopoi.com/">泡泡</a></td>
@@ -1919,7 +1923,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.6evu.com/">遛无写真</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式16個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式17個</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ywsq.cc/">出物社区写真网</a></td>
@@ -1964,6 +1968,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://gogortrt.com/">gogo人体艺术</a></td>
                 <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站57個</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://nick20.com/pic/index.html">尼克成人網</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo">XO福利圖</a></td>
