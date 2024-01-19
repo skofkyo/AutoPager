@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.20
+// @version            1.8.21
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1343,7 +1343,7 @@
     }, {
         name: "青年美圖",
         host: ["jrants.com"],
-        reg: /^https?:\/\/jrants\.com\/\d+\.html$/,
+        reg: /^https?:\/\/(\w+\.)?jrants\.com\/\d+\.html$|^https:\/\/\w+\.jrants\.com\/[^\/]+\/$/,
         imgs: () => fun.ge(".page-links") ? fun.getImg(".entry-content img", fun.geT(".page-links>a:last-child"), 7) : [...fun.gae(".entry-content img")],
         button: [4],
         insertImg: [".entry-content", 1],
@@ -1707,7 +1707,7 @@
         name: "绅士猫",
         host: "www.cos6.net",
         reg: /www\.cos6\.net\/\d+\.html/,
-        exclude: ".tinymce-hide,.hidden-box",
+        exclude: ".hidden-text.signin-loader",
         imgs: ".wp-posts-content img[data-src]",
         button: [4],
         insertImg: [".bialty-container", 2],
@@ -1715,6 +1715,9 @@
         next: ".article-nav>div:first-child>a[href$=html]",
         prev: ".article-nav>div:last-child>a[href$=html]",
         customTitle: () => fun.geT("h1.article-title"),
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw1"
     }, {
         name: "泡泡",
@@ -1752,6 +1755,9 @@
         next: "//a[p[text()='上一篇']]",
         prev: "//a[p[text()='下一篇']]",
         customTitle: () => fun.geT("h1.article-title"),
+        fancybox: {
+            blacklist: 1
+        },
         css: "div[data-nav=posts][style]{max-height:unset!important}",
         category: "nsfw1"
     }, {
@@ -2572,9 +2578,9 @@
         customTitle: () => fun.geT(".entry-title").replace(/\d+p/i, ""),
         category: "nsfw1"
     }, {
-        name: "遛无写真/KP写真/美女云图网/tck天天番号/4tck番号库/5tck天天番号/6K美女/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/54k5宅男必备/0niz宅男频道/7k1a番号库",
-        host: ["www.6evu.com", "www.6kpo.com", "www.c0h.net", "www.3tck.com", "www.4tck.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com"],
-        reg: /^https?:\/\/www\.(6evu|6kpo|c0h|\dtck|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a)\.(com|net)\/\d+\.html/,
+        name: "遛无写真/KP写真/美女云图网/tck天天番号/4tck番号库/5tck天天番号/6K美女/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线",
+        host: ["www.6evu.com", "www.6kpo.com", "www.c0h.net", "www.3tck.com", "www.4tck.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com", "www.1nlm.com"],
+        reg: /^https?:\/\/www\.(6evu|6kpo|c0h|\dtck|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a|1nlm)\.(com|net)\/\d+\.html/,
         exclude: "//a[@rel='category tag'][contains(text(),'人物简历') or contains(text(),'宅男科技') or contains(text(),'时尚玩酷') or contains(text(),'身边事') or contains(text(),'追星一族') or contains(text(),'网红头条') or contains(text(),'大众娱乐') or contains(text(),'生活热点') or contains(text(),'影评剧透') or contains(text(),'娱乐时尚') or contains(text(),'吃喝玩乐') or contains(text(),'体育') or contains(text(),'亲子宠物') or contains(text(),'番号大全') or contains(text(),'番号推荐') or contains(text(),'最新番号') or contains(text(),'素人番号')]",
         imgs: () => fun.getImgA("#post_content img,.article-content img,.entry-content img", ".pagelist a,.pagination a,.article-paging a"),
         button: [4],
@@ -2582,7 +2588,7 @@
         autoDownload: [0],
         next: "a[rel=prev],.article-nav-prev a",
         prev: "a[rel=next],.article-nav-next a",
-        customTitle: () => fun.geT("h1").replace(/\(\d+P\)/i, "").replace(/无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
+        customTitle: () => fun.geT("h1").replace(/\(\d+P\)/i, "").replace(/无删减写真作品良心推荐|无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
         css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}@media only screen and (max-width:640px){.container{max-width:100% !important}}",
         category: "nsfw1"
     }, {
@@ -2704,6 +2710,18 @@
         prev: "//a[p[text()='下一篇']]",
         customTitle: () => fun.geT(".article-title").replace(/\[\d([／\+\.\w]+)?\]\s?|【\d+P】/i, ""),
         css: ".modal-open{overflow:unset!important;}#modal-system-notice,.container.fluid-widget,#zibpay_modal,#mini-imgbox,.modal-backdrop{display:none!important;}",
+        category: "nsfw1"
+    }, {
+        name: "女神部落",
+        host: ["girlsteam.club"],
+        reg: () => {
+            if (/^https?:\/\/girlsteam\.club\//.test(siteUrl) && fun.ge("#content img") && fun.ge(".item_title>h1")) return true;
+            return false;
+        },
+        imgs: "#content img",
+        button: [4],
+        insertImg: ["#content", 2],
+        customTitle: () => fun.geT(".item_title>h1"),
         category: "nsfw1"
     }, {
         name: "丝袜客",
@@ -3881,14 +3899,9 @@
         name: "Everia club",
         host: ["www.everiaclub.com"],
         reg: () => {
-            if (/^https?:\/\/www\.everiaclub\.com\/(?!tags).+/.test(siteUrl)) {
-                if (!siteUrl.includes(".html")) {
-                    return true;
-                }
-            }
+            if (/^https?:\/\/www\.everiaclub\.com\/(?!tags).+/.test(siteUrl) && !siteUrl.includes(".html")) return true;
             return false;
         },
-        //exclude: ".pagination",
         imgs: ".mainleft img",
         button: [4],
         insertImg: [".mainleft", 2],
@@ -6328,14 +6341,17 @@
         name: "ShowGirlx",
         host: ["showgirlx.net"],
         reg: /^https?:\/\/showgirlx\.net\/[^/]+\/(\d+\/)?$/,
-        init: "Function.prototype.constructor=()=>{}",
-        imgs: () => {
+        init: () => fun.clearAllTimer(),
+        imgs: async () => {
+            await fun.waitEle(".wp-block-gallery img", 10);
             return [...fun.gae(".wp-block-gallery img")].map(img => {
                 let srcset = img.getAttribute("srcset");
                 if (srcset) {
                     let splitArr = srcset.split(",");
                     splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1]);
                     return splitArr.pop().trim().split(" ")[0];
+                } else if (img.dataset?.lazySrc) {
+                    return img.dataset.lazySrc;
                 } else {
                     return img.src;
                 }
@@ -7326,6 +7342,19 @@
         button: [4],
         insertImg: ["p#img", 2],
         customTitle: () => fun.geT(".bbs_entry_wrapper>h2"),
+        category: "nsfw2"
+    }, {
+        name: "尼克成人網M",
+        host: ["m.nick20.com"],
+        link: "https://nick20.com/pic/index.html",
+        reg: /^https?:\/\/m\.nick20\.com\/pic\/index\.(html|cgi)\?read=\d+$|^https?:\/\/m\.nick20\.com\/bbs(2|3|5)?\/\d+\.html$/i,
+        imgs: () => {
+            let imgs = [...fun.gae("img", [...fun.gae(".bbs_pictures")][0])];
+            return fun.getImgSrcArr(imgs).filter(src => !/\/images\/share|\/add\/|aav999/.test(src));
+        },
+        button: [4],
+        insertImg: [".bbs_pictures", 2],
+        customTitle: () => fun.geT(".entryBlock>strong"),
         category: "nsfw2"
     }, {
         name: "XO福利圖",
