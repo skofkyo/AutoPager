@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.21
+// @version            1.8.22
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -4108,8 +4108,8 @@
         category: "nsfw2"
     }, {
         name: "NongMo.Zone",
-        host: ["www.ilovexs.com"],
-        reg: /www\.ilovexs\.com\/post_id\/\d+\//,
+        host: ["www.ilovexs.com", "ilovexs.com"],
+        reg: /^https?:\/\/(www\.)?ilovexs\.com\/post_id\/\d+\//,
         imgs: ".separator img",
         button: [4],
         insertImg: [".entry-content", 2],
@@ -16256,6 +16256,24 @@ document.body.appendChild(text);
             let elementById = document.getElementById(`imgLocation${modeName}_` + slideIndex);
             if (elementById) {
                 elementById.scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                    inline: "center",
+                });
+            } else if (fun.ge(".swiper-slide.swiper-slide-active") && fun.ge(".FullPictureLoadImage")) {
+                [...fun.gae(".FullPictureLoadImage")][slideIndex].scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                    inline: "center",
+                });
+            } else if (fun.ge("#FullPictureLoadImgBox:not([style*=none]) .FullPictureLoadImage.small")) {
+                [...fun.gae("#FullPictureLoadImgBox:not([style*=none]) .FullPictureLoadImage.small")][slideIndex].scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                    inline: "center",
+                });
+            } else if (fun.ge(".FullPictureLoadImage:not(.small)")) {
+                [...fun.gae(".FullPictureLoadImage:not(.small)")][slideIndex].scrollIntoView({
                     block: "center",
                     behavior: "smooth",
                     inline: "center",
