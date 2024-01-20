@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.22
+// @version            1.8.23
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -39,6 +39,8 @@
     "use strict";
 
     if (document.querySelector("body.no-js")) return; //Cloudflare檢測連線安全性時，不運行腳本
+
+    let msgPos = 0; //訊息顯示的位置，0置中、1左上、2右上、3左下、4右下
 
     let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
         enable: 0, //!!!維持0不要改!!!
@@ -17769,6 +17771,34 @@ if (newWindowDataViewMode == 1) {
         ge("#FullPictureLoadOptionsviewMode").checked = options.viewMode == 1 ? true : false;
     };
 
+    let msgPosCss;
+    if (msgPos == 1) {
+        msgPosCss = `
+    top: 10px;
+    left: 10px;
+    `;
+    } else if (msgPos == 2) {
+        msgPosCss = `
+    top: 10px;
+    right: 10px;
+    `;
+    } else if (msgPos == 3) {
+        msgPosCss = `
+    bottom: 10px;
+    left: 72px;
+    `;
+    } else if (msgPos == 4) {
+        msgPosCss = `
+    bottom: 10px;
+    right: 10px;
+    `;
+    } else {
+        msgPosCss = `
+    top: 30%;
+    left: 50%;
+    margin-left: -180px;
+    `;
+    }
     const style = `
 .fancybox-container,.fancybox__container {
     z-index: 2147483647 !important;
@@ -17935,9 +17965,7 @@ if (newWindowDataViewMode == 1) {
     color: #ffffff;
     width: 360px;
     height: auto;
-    top: 30%;
-    left: 50%;
-    margin-left: -180px;
+${msgPosCss}
     padding: 0px !important;
     background-color: #000;
     border: 1px solid #303030;
