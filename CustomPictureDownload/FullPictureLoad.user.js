@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.25
+// @version            1.8.26
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -4772,7 +4772,7 @@
         host: ["www.lianjiajr.net"],
         reg: /^https?:\/\/www\.lianjiajr\.net\/\d+\.html$/i,
         exclude: "div.pic",
-        imgs: ".text img",
+        imgs: ".text img:not([onerror])",
         button: [4],
         insertImg: [".text", 2],
         autoDownload: [0],
@@ -4786,7 +4786,7 @@
         host: ["www.lianjiajr.net"],
         reg: /^https?:\/\/www\.lianjiajr\.net\/\d+\.html$/i,
         init: () => fun.remove("//div[a[img[contains(@src,'gif')]]]"),
-        imgs: "div.pic img",
+        imgs: "div.pic img:not([onerror])",
         button: [4],
         insertImg: ["div.pic", 2],
         customTitle: () => fun.geT(".grjs1>h1"),
