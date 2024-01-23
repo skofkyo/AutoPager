@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.23
+// @version            1.8.24
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -104,7 +104,7 @@
             //let max = Math.ceil(numP / pageSize);
             let max;
             try {
-                max = parseInt([...new Set([...fun.gae(".pager a[href]")].map(e => e.href))].pop().match(/\/(\d+)\.html$/)[1], 10);
+                max = parseInt([...new Set([...fun.gae(".pager a[href]")].map(e => e.href))].at(-1).match(/\/(\d+)\.html$/)[1], 10);
             } catch (e) {
                 max = 1;
             }
@@ -1002,6 +1002,19 @@
         customTitle: () => fun.geT(".article-header>h1").replace("(mitaku.net)", "").trim(),
         category: "nsfw1"
     }, {
+        name: "XGirl",
+        host: ["xgirl.one"],
+        reg: /^https?:\/\/xgirl\.one\/view\//,
+        init: async () => {
+            await fun.waitEle("//span[text()='Sponsored ads']");
+            fun.remove("//div[iframe]|//*[span[text()='Sponsored ads']]", 1000);
+        },
+        imgs: () => fun.getImgA(".items-center.min-h-screen img", "a[class*=bg-pink-500][href*='page=']"),
+        button: [4],
+        insertImg: [".items-center.min-h-screen", 2],
+        customTitle: () => fun.geT("section.min-h-screen h1"),
+        category: "nsfw2"
+    }, {
         name: "私图网",
         host: ["baoruba.com", "tukuku.cc"],
         reg: /(baoruba\.com|tukuku\.cc)\/(bb|t)\d+\.html/i,
@@ -1118,7 +1131,7 @@
                     if (vipEle) vip = true;
                     let imgs = [...fun.gae(".album-photo img[alt]", doc)];
                     imgs.length == 0 ? debug(`\n${links[page]}\n沒有任何圖片`) : debug(`\n${links[page]}\n此頁圖片`, imgs);
-                    let tE = [...fun.gae("div.album-photo")].pop();
+                    let tE = [...fun.gae("div.album-photo")].at(-1);
                     imgs.forEach(img => {
                         img.dataset.src ? srcArr.push(img.dataset.src) : srcArr.push(img.src);
                         if (page != 0) tE.parentNode.insertBefore(img.parentNode.cloneNode(true), tE.nextSibling);
@@ -1227,7 +1240,7 @@
         name: "51sex分類自動翻頁",
         host: ["51sex.vip"],
         reg: /https?:\/\/51sex\.vip\/category\/\d+/i,
-        init: () => location.pathname.split("/").length == 3 ? currentPageNum = 1 : currentPageNum = parseInt(location.pathname.split("/").pop(), 10),
+        init: () => location.pathname.split("/").length == 3 ? currentPageNum = 1 : currentPageNum = parseInt(location.pathname.split("/").at(-1), 10),
         autoPager: {
             ele: ".headling_main_a",
             observer: ".headling_main_a",
@@ -1805,7 +1818,7 @@
                     splitArr = splitArr.sort((a, b) => {
                         return a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1];
                     });
-                    return splitArr.pop().trim().split(" ")[0];
+                    return splitArr.at(-1).trim().split(" ")[0];
                 } else {
                     return img.src.replace(/-\d+x\d+\./, ".");
                 }
@@ -1892,7 +1905,7 @@
                         video: e.url_to_video
                     } : {
                         original: e.url_to_original,
-                        thumbnail: e.thumbnails.pop().url
+                        thumbnail: e.thumbnails.at(-1).url
                     }
                 }));
             });
@@ -2642,7 +2655,7 @@
                     }
                 });
                 let imgs = [...fun.gae("#picg img[alt]", doc)];
-                let te = [...fun.gae("#picg img[alt]")].pop();
+                let te = [...fun.gae("#picg img[alt]")].at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
                     if (i != 0) te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
@@ -2758,6 +2771,10 @@
         imgs: () => fun.getImgA(".single-content img", ".page-links a"),
         button: [4],
         insertImg: [".single-content", 2],
+        fancybox: {
+            v: 3,
+            css: false
+        },
         category: "nsfw1"
     }, {
         name: "爱妹子",
@@ -3659,7 +3676,7 @@
         autoDownload: [0],
         next: ".previous>a",
         prev: ".next>a",
-        customTitle: () => fun.geT("h1.entry-title"),
+        customTitle: () => fun.geT("h1.entry-title").replace(/.mitaku\.net./, "").trim(),
         category: "nsfw2"
     }, {
         name: "Cosplay World",
@@ -3676,7 +3693,7 @@
         autoDownload: [0],
         next: ".g1-nav-single-prev a",
         prev: ".g1-nav-single-next a",
-        customTitle: () => fun.geT(".entry-inner .entry-title").replace(" (mitaku.net)", "").replace("/mitaku.net/", ""),
+        customTitle: () => fun.geT(".entry-inner .entry-title").replace(/.mitaku\.net./, "").trim(),
         category: "nsfw2"
     }, {
         name: "Byoru",
@@ -4256,7 +4273,7 @@
                 if (img.dataset.srcset !== "") {
                     let splitArr = img.dataset.srcset.split(",");
                     splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1]);
-                    return splitArr.pop().trim().split(" ")[0];
+                    return splitArr.at(-1).trim().split(" ")[0];
                 }
                 return img.dataset.src ?? null;
             });
@@ -4509,7 +4526,7 @@
                     }
                 });
                 let imgs = [...fun.gae(".pictures img[alt]", doc)];
-                let te = [...fun.gae(".pictures img[alt]")].pop();
+                let te = [...fun.gae(".pictures img[alt]")].at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
                     if (i != 0) te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
@@ -4966,7 +4983,7 @@
                 let srcsets = [...fun.gae(".td-post-content img[srcset]")].map(img => {
                     let splitArr = img.getAttribute("srcset").split(",");
                     splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1]);
-                    return decodeURI(splitArr.pop().trim().split(" ")[0]);
+                    return decodeURI(splitArr.at(-1).trim().split(" ")[0]);
                 });
                 return [...new Set(srcs.concat(srcsets))];
             } else {
@@ -5337,7 +5354,7 @@
                     return src.replace("/t/", "/i/");
                 } else {
                     return fetch(a.href).then(res => res.text()).then(text => {
-                        let id = a.href.split("/").pop();
+                        let id = a.href.split("/").at(-1);
                         let spirit = fun.run(text.match(/var\sspirit\s?=\s?([^;]+);/)[1]);
                         let api = `https://nsfwalbum.com/backend.php?&spirit=${spirit}&photo=${id}`;
                         return fetch(api).then(res => res.json()).then(json => {
@@ -6063,7 +6080,7 @@
         reg: /(hentai-img|hentai-cosplays|porn-images-xxx|porn-gravure-idol)\.com\/image\/[^/]+\//,
         include: "//a[text()='DETAIL PAGE' or text()='DETAIL HALAMAN' or text()='詳細へ' or text()='详细信息页面' or text()='Страница сведений' or text()='상세 페이지' or text()='página de detalles' or text()='หน้ารายละเอียด' or text()='TRANG CHI TIẾT']",
         imgs: async () => {
-            let max = document.title.split("/").pop().match(/\d+/)[0];
+            let max = document.title.split("/").at(-1).match(/\d+/)[0];
             let url = siteUrl.replace(/\/\d+\/$/, "");
             let links = fun.arr(max).map((_, i) => url + `/${(i + 1)}/`);
             let imgSrcArray = await fun.getImgA("#display_image_detail a,#detail_list a", links, 100);
@@ -6351,7 +6368,7 @@
                 if (srcset) {
                     let splitArr = srcset.split(",");
                     splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1]);
-                    return splitArr.pop().trim().split(" ")[0];
+                    return splitArr.at(-1).trim().split(" ")[0];
                 } else if (img.dataset?.lazySrc) {
                     return img.dataset.lazySrc;
                 } else {
@@ -7620,7 +7637,7 @@
                         resolve(url);
                     } else {
                         const blob = await fetch(url).then(res => res.blob());
-                        const fileName = new URL(url).pathname.split("/").pop();
+                        const fileName = new URL(url).pathname.split("/").at(-1);
                         const [id, ex] = fileName.split(".");
                         const img = new Image();
                         img.src = URL.createObjectURL(blob);
@@ -7659,7 +7676,7 @@
                     return url;
                 } else {
                     const blob = await fetch(url).then(res => res.blob());
-                    const fileName = new URL(url).pathname.split("/").pop();
+                    const fileName = new URL(url).pathname.split("/").at(-1);
                     const [id, ex] = fileName.split(".");
                     const img = new Image();
                     img.src = URL.createObjectURL(blob);
@@ -8373,11 +8390,11 @@
         customTitle: () => {
             let title = fun.geT(".book-data");
             if (/ \/ /.test(title)) {
-                return title.split(" / ").pop();
+                return title.split(" / ").at(-1);
             } else if (/ \| /.test(title)) {
                 let s = title.split(" | ");
                 if (s.length == 2) {
-                    return s.pop();
+                    return s.at(-1);
                 } else {
                     return title;
                 }
@@ -8390,7 +8407,7 @@
         host: ["hentaihand.com"],
         reg: /^https?:\/\/hentaihand\.com\/en\/comic\/[^\/]+$/,
         init: async () => {
-            let comic = location.href.split("/").pop();
+            let comic = location.href.split("/").at(-1);
             let json = await fetch(`https://hentaihand.com/api/comics/${comic}/images`, {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
@@ -8900,7 +8917,7 @@
         imgs: () => {
             let max;
             try {
-                max = fun.ge(".last").href.split("/").pop();
+                max = fun.ge(".last").href.split("/").at(-1);
             } catch (e) {
                 max = 1;
             }
@@ -9154,7 +9171,7 @@
         reg: /^https?:\/\/(1zse\.com|hatazi\.com|52216\d\.xyz)\/index\.php\/\d+\.html/,
         init: () => fun.clearAllTimer(),
         imgs: () => {
-            let max = fun.ge("a.last").href.split("/").pop();
+            let max = fun.ge("a.last").href.split("/").at(-1);
             return fun.getImg(".context img", max, 7);
         },
         button: [4],
@@ -9588,7 +9605,7 @@
                 let lastFn = fun.geT("//script[contains(text(),'decodeBinaryString')]", 1, lastDoc).match(/decodeBinaryString\('[^;]+/g)[0];
                 let html = fun.run(lastFn);
                 let tempDoc = fun.doc(html);
-                let lastA = [...fun.gae("a", tempDoc)].pop();
+                let lastA = [...fun.gae("a", tempDoc)].at(-1);
                 let max = lastA.href.match(/(\d+)\.\w+$/)[1];
                 let m = fun.ge("#imgs>a").href.match(/^(.+\/)(\d+)(\.\w+)$/);
                 let imgDir = m[1];
@@ -12238,7 +12255,7 @@ window.parent.postMessage({
             const updateLastChapter = () => {
                 let readHistoryData = localStorage.getItem("copymangaReadHistory");
                 let pathnameSplit = location.pathname.split("/");
-                let comic = pathnameSplit.pop();
+                let comic = pathnameSplit.at(-1);
                 if (readHistoryData === null) {
                     return;
                 } else {
@@ -12563,7 +12580,7 @@ document.body.appendChild(text);
         reg: /manga\.bilibili\.com\/mc\d+\/\d+\?from=manga_detail/,
         init: () => setTimeout(() => fun.ge(".load-next-btn").addEventListener("click", () => setTimeout(() => location.reload(), 500)), 1000),
         imgs: async () => {
-            let ep_id = siteUrl.split("/").pop().match(/\d+/)[0];
+            let ep_id = siteUrl.split("/").at(-1).match(/\d+/)[0];
             let headers = {
                 "content-type": "application/json;charset=UTF-8"
             };
@@ -14395,7 +14412,7 @@ document.body.appendChild(text);
                         let check = fun.checkImgSrc(ele);
                         if (ele.tagName == "IMG" && check.ok) ele.src = check.src;
                         if (id == 1) {
-                            let targetEle = [...fun.gae(img)].pop();
+                            let targetEle = [...fun.gae(img)].at(-1);
                             targetEle.parentNode.insertBefore(ele.cloneNode(true), targetEle.nextSibling);
                         }
                     });
@@ -14448,7 +14465,7 @@ document.body.appendChild(text);
             await fun.waitEle(img);
             [...fun.gae(img)].forEach(ele => imgsArray.push(ele));
             const html = async (url, index = 0) => {
-                let targetEle = [...fun.gae(img)].pop();
+                let targetEle = [...fun.gae(img)].at(-1);
                 let load = document.createElement("p");
                 load.className = "FullPictureLoadLoading";
                 load.innerText = "Loading...";
@@ -14773,7 +14790,7 @@ document.body.appendChild(text);
                     }
                     let fragment = new DocumentFragment();
                     eles.forEach(ele => fragment.appendChild(ele.cloneNode(true)));
-                    let targetEle = [...fun.gae(pageEle)].pop();
+                    let targetEle = [...fun.gae(pageEle)].at(-1);
                     targetEle.parentNode.insertBefore(fragment, targetEle.nextSibling);
                     if (replaceElement) {
                         let currentPageEles = [...fun.gae(replaceElement)];
@@ -14903,7 +14920,7 @@ document.body.appendChild(text);
                         fun.showMsg(displayLanguage.str_59, 3000);
                         return;
                     }
-                    tE = [...fun.gae(siteData.autoPager.ele)].pop();
+                    tE = [...fun.gae(siteData.autoPager.ele)].at(-1);
                     newEle = [...fun.gae(siteData.autoPager.ele, doc)];
                 }
                 let fragment = new DocumentFragment();
@@ -14949,7 +14966,7 @@ document.body.appendChild(text);
             if (siteData.autoPager.history == 1) fun.addHistory(doc.title, url);
             if (siteData.autoPager.observer) {
                 await fun.delay(siteData.autoPager.sleep || 1000, 0);
-                let ele = [...fun.gae(siteData.autoPager.observer)].pop();
+                let ele = [...fun.gae(siteData.autoPager.observer)].at(-1);
                 fun.autoPagerNextObserver.observe(ele);
             }
         },
@@ -15130,7 +15147,7 @@ document.body.appendChild(text);
                             tE.parentNode.insertBefore(img, tE.nextSibling);
                         }
                     } else {
-                        tE = [...fun.gae(siteData.autoPager.ele)].pop();
+                        tE = [...fun.gae(siteData.autoPager.ele)].at(-1);
                         tE.parentNode.insertBefore(img, tE.nextSibling);
                     }
                 } catch (e) {
@@ -15558,7 +15575,7 @@ document.body.appendChild(text);
                     }
                 });
                 if (siteData.category == "comic") {
-                    let lastImg = imgs.pop();
+                    let lastImg = imgs.at(-1);
                     fun.comicNextObserver.observe(lastImg);
                 }
                 [...fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage")].forEach(e => e.style.display = "block");
@@ -16819,9 +16836,9 @@ document.body.appendChild(text);
             ele = ge(".FullPictureLoadImage:not(.small)");
         }
         if (ge("#FullPictureLoadImgBox:not([style*=none])") && img == "last") {
-            ele = [...gae(".FullPictureLoadImage.small")].pop();
+            ele = [...gae(".FullPictureLoadImage.small")].at(-1);
         } else if (img == "last") {
-            ele = [...gae(".FullPictureLoadImage:not(.small)")].pop();
+            ele = [...gae(".FullPictureLoadImage:not(.small)")].at(-1);
         }
         if (ele) ele.scrollIntoView();
     };
@@ -16987,7 +17004,7 @@ document.body.appendChild(text);
             fun.singleThreadLoadImgs(evenNumberImgs);
             let imgs = [...gae("#FullPictureLoadImgBox>div")];
             if (siteData.category == "comic") {
-                let lastImg = imgs.pop();
+                let lastImg = imgs.at(-1);
                 fun.comicNextObserver.observe(lastImg);
             }
             let imgsNum = 0;
@@ -18656,7 +18673,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             }
             if (siteData.autoPager) {
                 if (siteData.autoPager.observer) {
-                    let ele = [...fun.gae(siteData.autoPager.observer)].pop();
+                    let ele = [...fun.gae(siteData.autoPager.observer)].at(-1);
                     if (ele) fun.autoPagerNextObserver.observe(ele);
                 } else {
                     const callback = async () => {
