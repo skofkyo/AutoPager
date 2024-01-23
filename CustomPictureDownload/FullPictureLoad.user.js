@@ -4768,6 +4768,31 @@
         customTitle: () => fun.geT(".contitle").replace(/【\d+P】|\(\d+P\)/i, "").trim(),
         category: "nsfw2"
     }, {
+        name: "好视角",
+        host: ["www.lianjiajr.net"],
+        reg: /^https?:\/\/www\.lianjiajr\.net\/\d+\.html$/i,
+        exclude: "div.pic",
+        imgs: ".text img",
+        button: [4],
+        insertImg: [".text", 2],
+        autoDownload: [0],
+        next: "//p[contains(text(),'上一篇')]/a",
+        prev: "//p[contains(text(),'下一篇')]/a",
+        customTitle: () => fun.geT(".tit>h1"),
+        css: "audio{display:none!important}",
+        category: "nsfw2"
+    }, {
+        name: "好视角M",
+        host: ["www.lianjiajr.net"],
+        reg: /^https?:\/\/www\.lianjiajr\.net\/\d+\.html$/i,
+        init: () => fun.remove("//div[a[img[contains(@src,'gif')]]]"),
+        imgs: "div.pic img",
+        button: [4],
+        insertImg: ["div.pic", 2],
+        customTitle: () => fun.geT(".grjs1>h1"),
+        css: "audio{display:none!important}",
+        category: "nsfw2"
+    }, {
         name: "YY美女图片/美眉大宝贝",
         host: ["www.yyzhenshun.com", "www.mmdabaobei.com"],
         reg: /(www\.yyzhenshun\.com|www.mmdabaobei\.com)\/\d+\.html/i,
