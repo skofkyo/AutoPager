@@ -1,4 +1,4 @@
-2024/01/14 16:58
+2024/01/23 13:46
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -507,6 +507,9 @@ Xasiat
 
 找套图
 *://www.zhaotaotu.cc/thread-*.htm
+
+XGirl
+*://xgirl.one/view/*
 
 尤美图库
 *://www.umeitu.com/img/*.html
@@ -1856,6 +1859,7 @@ https://www.eyval.net/*
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
 *://thismore.fun/view/*.php
+*://xgirl.one/view/*
 /^https?:\/\/fanleaks\.club\/[^\/]+$/
 /^https?:\/\/fapachi\.com\/[^\/]+$/
 /^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
