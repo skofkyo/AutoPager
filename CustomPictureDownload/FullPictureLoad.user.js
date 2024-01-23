@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.26
+// @version            1.8.27
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1002,9 +1002,9 @@
         customTitle: () => fun.geT(".article-header>h1").replace("(mitaku.net)", "").trim(),
         category: "nsfw1"
     }, {
-        name: "XGirl",
-        host: ["xgirl.one"],
-        reg: /^https?:\/\/xgirl\.one\/view\//,
+        name: "XGirl/Xerocos",
+        host: ["xgirl.one", "xerocos.com"],
+        reg: /^https?:\/\/(xgirl\.one|xerocos\.com)\/view\//,
         init: async () => {
             await fun.waitEle("//span[text()='Sponsored ads']");
             fun.remove("//div[iframe]|//*[span[text()='Sponsored ads']]", 1000);
@@ -1012,8 +1012,43 @@
         imgs: () => fun.getImgA(".items-center.min-h-screen img", "a[class*=bg-pink-500][href*='page=']"),
         button: [4],
         insertImg: [".items-center.min-h-screen", 2],
-        customTitle: () => fun.geT("//div[strong[contains(text(),'Album Name')]]").replace("Album Name: ", ""),
+        customTitle: () => fun.geT("//div[strong[contains(text(),'Album Name')]]").replace("Album Name: ", "").replace(/\(\d+[\w\s]+\)/i, "").trim(),
         category: "nsfw2"
+    }, {
+        name: "XGirl 分類自動翻頁",
+        enable: 1,
+        reg: /^https?:\/\/xgirl\.one\/(\?page=\d+)?$/,
+        autoPager: {
+            mode: 1,
+            waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']//img",
+            ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']",
+            observer: "//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']",
+            pos: ["//div[@class='flex py-4 justify-center md:justify-between mt-4']", 1],
+            next: "//a[text()='Next']",
+            re: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
+            title: doc => "Page " + nextLink.match(/\d+$/)[0],
+            history: 1
+        },
+        openInNewTab: ".grid a:not([target=_blank])",
+        category: "autoPager"
+    }, {
+        name: "Xerocos 分類自動翻頁",
+        enable: 1,
+        reg: /^https?:\/\/xerocos\.com\/(\?page=\d+)?$/,
+        autoPager: {
+            mode: 1,
+            waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']//img",
+            ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']",
+            observer: "//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']",
+            pos: ["//div[@class='flex py-4 justify-center md:justify-between mt-4']", 1],
+            next: "//a[text()='Next']",
+            re: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
+            title: doc => "Page " + nextLink.match(/\d+$/)[0],
+            aF: () => [...fun.gae(".blur-2xl")].forEach(e => e.classList.remove("blur-2xl")),
+            history: 1
+        },
+        openInNewTab: ".grid a:not([target=_blank])",
+        category: "autoPager"
     }, {
         name: "私图网",
         host: ["baoruba.com", "tukuku.cc"],
@@ -14877,7 +14912,7 @@ document.body.appendChild(text);
             }
             fun.addLoading();
             if (siteData.autoPager.mode == 1) {
-                doc = await fun.iframeSrcDoc(url, (siteData.autoPager.waitEle || siteData.autoPager.ele), 30000);
+                doc = await fun.iframeDoc(url, (siteData.autoPager.waitEle || siteData.autoPager.ele), 30000);
             } else {
                 try {
                     doc = await fun.fetchDoc(url, 0);
@@ -14966,16 +15001,14 @@ document.body.appendChild(text);
                             console.error("\nsiteData.autoPager.title() 函式錯誤\n", error);
                         }
                     }
-                    if (add) fragment.appendChild(await fun.titleUrlEle(url, (titleText || doc.title)));
+                    if (add) fragment.appendChild(await fun.titleUrlEle(url, (titleText || doc.title || document.title)));
                 }
                 newEle.forEach(e => fragment.appendChild(e.cloneNode(true)));
-                newEle = null;
                 if (siteData.autoPager.pos) {
+                    tE = fun.ge(siteData.autoPager.pos[0]);
                     if (siteData.autoPager.pos[1] === 0) { //元素裡面
-                        tE = fun.ga(siteData.autoPager.pos[0], doc);
                         tE.appendChild(fragment);
                     } else if (siteData.autoPager.pos[1] === 1) { //元素之前
-                        tE = fun.ga(siteData.autoPager.pos[0], doc);
                         tE.parentNode.insertBefore(fragment, tE);
                     } else if (siteData.autoPager.pos[1] === 2) { //元素之後
                         tE.parentNode.insertBefore(fragment, tE.nextSibling);
@@ -14988,7 +15021,7 @@ document.body.appendChild(text);
             }
             if (typeof siteData.autoPager.aF === "function") await siteData.autoPager.aF(doc);
             fun.removeLoading();
-            if (siteData.autoPager.history == 1) fun.addHistory(doc.title, url);
+            if (siteData.autoPager.history == 1) fun.addHistory(doc.title || document.title, url);
             if (siteData.autoPager.observer) {
                 await fun.delay(siteData.autoPager.sleep || 1000, 0);
                 let ele = [...fun.gae(siteData.autoPager.observer)].at(-1);
@@ -15162,11 +15195,10 @@ document.body.appendChild(text);
                     img.src = autoPagerLoading;
                     let tE;
                     if (siteData.autoPager.pos) {
+                        tE = fun.ge(siteData.autoPager.pos[0]);
                         if (siteData.autoPager.pos[1] === 0) { //元素裡面
-                            tE = fun.ga(siteData.autoPager.pos[0], doc);
                             tE.appendChild(img);
                         } else if (siteData.autoPager.pos[1] === 1) { //元素之前
-                            tE = fun.ga(siteData.autoPager.pos[0], doc);
                             tE.parentNode.insertBefore(img, tE);
                         } else if (siteData.autoPager.pos[1] === 2) { //元素之後
                             tE.parentNode.insertBefore(img, tE.nextSibling);
