@@ -708,7 +708,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/23 13:46</p>
+<p>2024/01/23 20:36</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -865,7 +865,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xgirl.one/">XGirl</a></td>
-                <td>SPA網頁</td>
+                <td>SPA網頁，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://xerocos.com/">Xerocos</a></td>
+                <td>SPA網頁，分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.v2ph.com/">微圖坊</a></td>
