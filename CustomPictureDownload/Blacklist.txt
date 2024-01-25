@@ -1,4 +1,4 @@
-2024/01/23 20:36
+2024/01/25 14:48
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -218,6 +218,12 @@ ThisMore.Fun
 COSPLAY ZIP
 *://*coszip.com/*.html*
 
+淑女爱
+*://www.shunv*i.com/*/*.html
+
+三千图片网
+*://*.win3000.com/*/*.html
+
 美桌
 *://www.win4000.com/meinv*.html
 
@@ -265,13 +271,15 @@ MEITU131
 *://www.c0h.net/*.html
 *://www.*tck.com/*.html
 *://www.1tu5.com/*.html
-*://www.1plq.com/*.html
+*://www.wsqap.com/*.html
 *://www.gr2e.com/*.html
 *://www.joerei.com/*.html
-*://www.game1313.net/*.html
 *://www.54k5.com/*.html
 *://www.0niz.com/*.html
 *://www.7k1a.com/*.html
+*://www.game1313.net/*.html
+*://www.1nlm.com/*.html
+*://www.1plq.com/*.html
 
 出物社区写真网
 *://www.ywsq.cc/*/*.html
@@ -299,7 +307,7 @@ Jablehk
 *://jablehk.com/*/*
 
 Taotuxp.com
-*://www.taotucc.com/*.html
+*://www.taotuc*.com/*.html
 
 MM范
 *://www.95mm.tv/*.html
@@ -1437,11 +1445,20 @@ https://www.nuyet.com/gallery/*
 *://meitulu.me/item/*.html
 *://mm.tvv.tw/archives/*.html
 *nvsheng.cc/m*/*.html
-*://www.6kpo.com/*.html
 *://www.c0h.net/*.html
 *://www.6evu.com/*.html
+*://www.6kpo.com/*.html
+*://www.c0h.net/*.html
 *://www.*tck.com/*.html
 *://www.1tu5.com/*.html
+*://www.wsqap.com/*.html
+*://www.gr2e.com/*.html
+*://www.joerei.com/*.html
+*://www.54k5.com/*.html
+*://www.0niz.com/*.html
+*://www.7k1a.com/*.html
+*://www.game1313.net/*.html
+*://www.1nlm.com/*.html
 *://www.1plq.com/*.html
 *://*.xsnvshen.co/album/*
 *://www.beautyleg6.com/*/*/*.html
@@ -1449,7 +1466,7 @@ https://www.nuyet.com/gallery/*
 *://www.dmmtu.com/*/*.html
 *://www.nvshen5.com/gallery/*.html
 *://jablehk.com/*/*
-*://www.taotucc.com/*.html
+*://www.taotuc*.com/*.html
 *://www.95mm.*/*.html
 *://www.taotu8.xyz/*/*/*.html
 *://*.tuiimg.com/meinv/*/
@@ -1864,6 +1881,8 @@ https://www.eyval.net/*
 *://thismore.fun/view/*.php
 *://xgirl.one/*
 *://xerocos.com/*
+*://*.win3000.com/*/*.html
+*://www.shunv*i.com/*/*.html
 /^https?:\/\/fanleaks\.club\/[^\/]+$/
 /^https?:\/\/fapachi\.com\/[^\/]+$/
 /^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
