@@ -964,7 +964,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://heysexgirl.com/">嘿～色女孩</a></td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.cos6.net/">绅士猫</a></td>
@@ -1044,7 +1044,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://8ezy.com/">8E资源站</a></td>
-                <td></td>
+                <td>有反擋廣告套件機制會清空網頁內容，需加入擋廣告白名單。</td>
             </tr>
             <tr>
                 <td><a href="https://www.aixiurentu.com/">秀人图</a></td>
@@ -1106,7 +1106,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.hanjuzu.com/hantype/23.html">韩剧组</a></td>
+                <td><a href="https://www.370kb.com/tuku/5.html">370看吧</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1142,8 +1142,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.tuiimg.com/meinv/">推图网</a></td>
-                <td></td>
+                <td><a href="https://www.tuiimg.com/">推图网</a></td>
+                <td>網站更新沒有美女圖了</td>
             </tr>
             <tr>
                 <td><a href="https://tupianwu.com/">图片屋</a></td>
@@ -1258,7 +1258,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://dimtown.com/">次元小镇</a></td>
+                <td><a href="https://dimtown.com/cosplay">次元小镇</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1302,7 +1302,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://phym18.org/tag/%E1%BA%A3nh-sex">Phym18</a></td>
+                <td><a href="https://phym18.net/tag/%E1%BA%A3nh-sex">Phym18</a></td>
                 <td>圖片分類添加了自動翻頁</td>
             </tr>
             <tr>
@@ -1546,6 +1546,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://nudecosplay.biz/">Nude Cosplay</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://nudecosplaygirls.com/category/nude-cosplay-albums/">NUDECOSPLAY</a></td>
                 <td></td>
             </tr>
@@ -1607,7 +1611,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://nudeasiangirl.com/">Nude Asian Girl</a>，<a href="https://thechinagirls.com/">The China Girls</a>，<a href="https://cutexinh.com/">CuteXinh</a>，<a href="https://girlxinhxinh.com/">Girl Xinh Xinh</a>，<a href="https://asiaceleb.com/">Asia Celebrity</a>，<a href="https://chinagirly.com/">China Girly</a>，<a href="https://babeasia.com/">Babe Asia</a>，<a href="https://nudeasiangirl.com/">Hot Nude Asian Girls</a>，<a href="https://hinhsexvietnam.com/">Hình Sex Việt Nam</a></td>
+                <td><a href="https://nudeasiangirl.com/">Nude Asian Girl</a>，<a href="https://cutexinh.com/">CuteXinh</a>，<a href="https://girlxinhxinh.com/">Girl Xinh Xinh</a>，<a href="https://asiaceleb.com/">Asia Celebrity</a>，<a href="https://chinagirly.com/">China Girly</a>，<a href="https://babeasia.com/">Babe Asia</a>，<a href="https://nudeasiangirl.com/">Hot Nude Asian Girls</a>，<a href="https://hinhsexvietnam.com/">Hình Sex Việt Nam</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -1910,14 +1914,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.uamoe.com/">萌物语</a></td>
-                <td>需要VIP</td>
-            </tr>
-            <tr>
-                <td><a href="https://meituzyw.com/">ACG 资源网</a></td>
-                <td>幾乎都需要VIP</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.lianjiajr.net/">好视角</a></td>
                 <td>很久沒新圖了</td>
             </tr>
@@ -2019,10 +2015,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.112ze.com/">美女写真图集</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.871651.com/">51控美图网</a></td>
                 <td></td>
             </tr>
             <tr>
