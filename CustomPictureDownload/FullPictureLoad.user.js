@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.8.28
+// @version            1.9.0
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -35,12 +35,11 @@
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js
 // ==/UserScript==
+
 (async () => {
     "use strict";
 
     if (document.querySelector("body.no-js")) return; //Cloudflare檢測連線安全性時，不運行腳本
-
-    let msgPos = 0; //訊息顯示的位置，0置中、1左上、2右上、3左下、4右下
 
     let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
         enable: 0, //!!!維持0不要改!!!
@@ -73,6 +72,7 @@
     let customTitle = null;
     let downloading = false;
     let fetching = false;
+    let aotoScrolling = false;
     let fetchErrorArray = [];
     let fastDownload = false;
     let currentDownloadThread = 0;
@@ -503,33 +503,6 @@
         css: ".img_ad_list{display:none!important}",
         category: "nsfw2"
     }, {
-        name: "萌物语",
-        host: ["www.uamoe.com"],
-        reg: /^https?:\/\/www\.uamoe\.com\/\d+\/$/i,
-        include: ".article-content img",
-        exclude: ".hidden-box",
-        imgs: ".article-content img",
-        button: [4],
-        insertImg: [".wp-posts-content", 2],
-        autoDownload: [0],
-        next: "//a[p[text()='上一篇']]",
-        prev: "//a[p[text()='下一篇']]",
-        customTitle: () => fun.geT(".article-title>a"),
-        category: "nsfw1"
-    }, {
-        name: "ACG 资源网",
-        host: ["meituzyw.com"],
-        reg: /meituzyw\.com\/\d+\.html/i,
-        exclude: ".ri-hide-warp",
-        imgs: "img[data-lazy-src],.content-wrapper img",
-        button: [4],
-        insertImg: ["//p[img]", 2],
-        autoDownload: [0],
-        next: "a.entry-page-prev",
-        prev: "a.entry-page-next",
-        customTitle: () => fun.geT(".post-title,.entry-title").replace(/\[\d+p\]/i, "").trim(),
-        category: "nsfw1"
-    }, {
         name: "秀人集",
         host: ["www.xr08.vip", "www.xr01.vip", "xr.cccn.bf"],
         reg: /^https?:\/\/[^\/]+\/\w+\/\d+\.html/i,
@@ -684,7 +657,7 @@
     }, {
         name: "ROSI美女写真",
         host: ["www.rosixiezhen.cc", "rosixiezhen.cc", "www.rosi985.com", "www.rosi365.cc", "www.rosi360.cc", "www.2meinv.cc", "www.silk-necktie.com"],
-        reg: /^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/i,
+        reg: /^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/i,
         exclude: "//span/a[text()='ROSI视频']",
         init: () => {
             let pag = [...fun.gae(".pagination2")];
@@ -710,7 +683,7 @@
     }, {
         name: "ROSI小莉最新写真",
         host: ["www.rosi211.cc"],
-        reg: /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/i,
+        reg: /^https?:\/\/(www\.)?rosi\d{3}\.cc\/\d+$/i,
         init: () => {
             let pag = [...fun.gae(".wp-pagenavi")];
             if (pag.length > 0) pag[0].remove();
@@ -871,7 +844,7 @@
         host: ["8ezy.com"],
         reg: /^https?:\/\/8ezy\.com\/[^\/]+\/$/,
         include: ".entry-content",
-        init: () => fun.clearAllTimer(),
+        //init: () => fun.clearAllTimer(),
         imgs: () => [...fun.gae(".entry-content img")].map(e => e.dataset.srcset ?? e.src),
         button: [4],
         insertImg: [".entry-content", 2],
@@ -889,7 +862,7 @@
         host: ["8ezy.com"],
         reg: /^https?:\/\/8ezy\.com\//,
         include: ".infinite-scroll-button",
-        init: () => fun.clearAllTimer(),
+        //init: () => fun.clearAllTimer(),
         observerClick: ".infinite-scroll-button",
         category: "autoPager"
     }, {
@@ -901,6 +874,10 @@
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: () => fun.geT(".entry-title"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
         category: "nsfw1"
     }, {
         name: "图片屋",
@@ -1064,7 +1041,7 @@
     }, {
         name: "找套图/Xiuno BBS",
         host: ["www.zhaotaotu.cc", "zhaotaotu.one", "kantaotu.cc"],
-        reg: /^https?:\/\/((www\.)?zhaotaotu\.cc|(www\.)?zhaotaotu\.one|kantaotu\.cc)\/thread-\d+\.htm/i,
+        reg: /^https?:\/\/((www\.)?zhaotaotu\.cc|(www\.)?zhaotaotu\.one|kantaotu\.cc)\/\??thread-\d+\.htm/i,
         imgs: ".message>img:not(:first-of-type)",
         button: [4],
         insertImg: [".message", 2],
@@ -1423,7 +1400,7 @@
         reg: /www\.mm5mm5\.com\/mm\/\d+/,
         imgs: () => picinfo[0].split(","),
         button: [4],
-        insertImg: ["#content", 1],
+        insertImg: ["#content", 2],
         customTitle: () => fun.geT(".article>h2"),
         css: ".article .content img{max-width:100%!important}",
         category: "nsfw1"
@@ -1681,13 +1658,7 @@
         reg: /(www|m)\.meitu131\.(com|net)\/(\w+\/)?meinv\/\d+\//,
         imgs: () => {
             let max = fun.geT("a[title],.uk-page>span").match(/\/(\d+)/)[1];
-            let links = [];
-            let url = siteUrl.replace(/index(\w+)?\.html$/, "");
-            for (let i = 1; i <= max; i++) {
-                i == 1 ? links.push(url + "index.html") : links.push(url + "index_" + i + ".html");
-            }
-            return fun.getImgA(".work-content img,.uk-article-bd img", links, 333);
-            //return fun.getImg(".work-content img,.uk-article-bd img", max, 15);
+            return fun.getImgO(".work-content img,.uk-article-bd img", max, 15);
         },
         button: [4],
         insertImg: [".work-content>p,.uk-article-bd", 1],
@@ -2035,7 +2006,6 @@
         downloadVideo: true,
         customTitle: () => fun.geT(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a"),
         observerTitle: true,
-        noOpen: 1,
         css: "body.o-modal-no-scroll{overflow:unset!important}#modal-root{display:none!important;}",
         category: "hcomic"
     }, {
@@ -2128,7 +2098,7 @@
         imgs: ".video-description img",
         button: [4],
         insertImg: [".video-description", 2],
-        customTitle: () => fun.geT(".entry-title"),
+        customTitle: () => fun.geT(".entry-title").replace(/\[\d+[\w\.\+\s-]+\]/i, "").trim(),
         category: "nsfw1"
     }, {
         name: "COSPLAY ZIP",
@@ -2588,7 +2558,7 @@
         init: () => fun.clearAllTimer(),
         imgs: () => {
             let max = fun.geT("//p[contains(text(),'图片数量')]").match(/\d+/)[0];
-            return fun.getImg("#showimg img", max, 9);
+            return fun.getImgO("#showimg img", max, 9);
         },
         button: [4],
         insertImg: ["#showimg", 2],
@@ -2802,8 +2772,8 @@
         category: "nsfw2"
     }, {
         name: "魅狸图片网/美女私房照/看妹图",
-        host: ["www.rosi8.com", "www.sfjpg.com", "www.kanmeitu.net", "www.kanmeitu1.cc", "kanmeitu.net", "kanmeitu1.cc"],
-        reg: /(www\.rosi8\.\w+|www\.sfjpg\.com|www\.sfjpg\.net|kanmeitu\.net|kanmeitu1\.cc)\/\w+\/\d+\.html$/,
+        host: ["www.rosi8.net", "www.sfjpg.com", "www.kanmeitu.net", "www.kanmeitu1.cc", "kanmeitu.net", "kanmeitu1.cc"],
+        reg: /(www\.rosi\d\.net|www\.sfjpg\.com|www\.sfjpg\.net|kanmeitu\.net|kanmeitu1\.cc)\/\w+\/\d+\.html$/,
         init: () => {
             [...fun.gae(".b a")].forEach(a => a.removeAttribute("target"));
             [...fun.gae("#picg a")].forEach(a => a.outerHTML = a.innerHTML);
@@ -3201,6 +3171,7 @@
         host: ["nicegirl4u.cyou"],
         reg: /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/,
         include: ".wp-block-image>img",
+        init: () => fun.remove(".ads_custom"),
         imgs: async () => {
             let pag = fun.ge(".page-links");
             if (pag) {
@@ -3212,8 +3183,10 @@
         },
         button: [4],
         insertImg: [
-            [".responsive-tabs-wrapper", 2], 2
+            [".responsive-tabs-wrapper,.entry-meta", 2], 2
         ],
+        insertImgAF: () => [...document.querySelectorAll("figure.wp-block-image")].forEach(e => e.outerHTML = ""),
+        go: 1,
         customTitle: () => fun.geT(".entry-title"),
         category: "nsfw1"
     }, {
@@ -3403,7 +3376,7 @@
     }, {
         name: "Thotsbay/Hotleak",
         host: ["thotsbay.tv", "hotleak.vip"],
-        reg: /^https?:\/\/(thotsbay\.tv|hotleak\.vip)\/\w+(\/photo)?$/i,
+        reg: /^https?:\/\/(thotsbay\.tv|hotleak\.vip)\/[\w\.]+(\/photo)?$/i,
         init: () => {
             if (location.href.split("/").length == 4) {
                 location.href = location.href + "/photo";
@@ -3555,7 +3528,7 @@
             return fun.getImg(".post img[alt]", max, 2);
         },
         button: [4],
-        insertImg: [".post", 1],
+        insertImg: [".post", 2],
         autoDownload: [0],
         next: "//div[div[text()='上一组']]/preceding-sibling::div/a",
         prev: "//div[div[text()='下一组']]/preceding-sibling::a",
@@ -3564,20 +3537,14 @@
     }, {
         name: "推图网",
         host: ["www.tuiimg.com"],
-        link: "https://www.tuiimg.com/meinv/",
-        reg: /(www|m)\.tuiimg\.com\/meinv\/\d+\//,
-        init: "goshowall();",
+        reg: /^https?:\/\/www\.tuiimg\.com\/\w+\/\d+\/$/,
         imgs: () => {
-            let max = fun.geT("#allbtn").match(/\/(\d+)/)[1];
-            let imgDir = fun.ge("#content>img").src.match(/.+\//)[0];
-            return fun.arr(max).map((_, i) => imgDir + (i + 1) + ".jpg");
+            let src = fun.ge(".content img").src;
+            return [src.replace("/pic/", "/da/")];
         },
         button: [4],
-        insertImg: ["#content", 2],
-        autoDownload: [0],
-        next: "#nextbtn>a",
-        prev: "#prebtn>a",
-        customTitle: () => fun.geT("#main>h1,.main>h1"),
+        insertImg: ["//div[a[img]][not(@class)]", 1],
+        customTitle: () => fun.geT(".content>h1"),
         category: "nsfw1"
     }, {
         name: "18AV",
@@ -3686,10 +3653,18 @@
         css: ".affs{display:none!important}.image_div a img{cursor:unset}",
         category: "nsfw1"
     }, {
-        name: "Nude Bird",
-        host: ["nudebird.biz"],
-        reg: /nudebird\.biz\/.+\//,
-        imgs: ".thecontent a",
+        name: "Nude Bird/Nude Cosplay",
+        host: ["nudebird.biz", "nudecosplay.biz"],
+        reg: /^https?:\/\/nudecosplay\.biz\/[^\/]+\/$|^https?:\/\/nudebird\.biz\/[^\/]\/$/,
+        include: "//p[a[img]]",
+        init: () => {
+            let video = fun.ge(".online-video");
+            if (video) {
+                let x = fun.ge("//p[a[img]]");
+                [...fun.gae(".online-video")].forEach(e => x.parentNode.insertBefore(e, x));
+            }
+        },
+        imgs: ".thecontent a,.content-inner>p>a",
         button: [4],
         insertImg: ["//p[a[img]]", 2],
         customTitle: () => fun.geT("h1"),
@@ -3746,6 +3721,13 @@
         name: "CG Cosplay",
         host: ["cgcosplay.org"],
         reg: /^https?:\/\/cgcosplay\.org\/\d+\/$/,
+        init: () => {
+            let video = fun.ge(".fluid_video_wrapper");
+            if (video) {
+                let x = fun.ge(".gallery");
+                [...fun.gae(".fluid_video_wrapper")].forEach(e => x.parentNode.insertBefore(e, x))
+            }
+        },
         imgs: ".gallery a",
         button: [4],
         insertImg: [".gallery", 2],
@@ -3866,8 +3848,8 @@
         name: "Xiuren",
         host: ["xiuren.biz"],
         reg: /^https?:\/\/xiuren\.biz\/[^\/]+\//,
-        include: ".content-inner a[data-lbwps-srcsmall]",
-        imgs: ".content-inner a[data-lbwps-srcsmall]",
+        include: ".content-inner a[data-lbwps-srcsmall],.content-inner a[rel=noopener]",
+        imgs: ".content-inner a[data-lbwps-srcsmall],.content-inner a[rel=noopener]",
         button: [4],
         insertImg: [".content-inner", 2],
         autoDownload: [0],
@@ -3919,14 +3901,26 @@
         name: "BaoBua.Com",
         host: ["baobua.com"],
         reg: /^https?:\/\/baobua\.com\/post\/\w+\.html/i,
-        imgs: () => {
+        imgs: async () => {
             let max;
             try {
                 max = fun.geT(".article-header>h1").match(/Page\s?\d+\/(\d+)/i)[1];
             } catch (e) {
                 max = 1;
             }
-            return /\?m=1/.test(siteUrl) ? fun.getImg(".contentme img", max, "8") : fun.getImg(".contentme img", max);
+            let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".contentme img", max, "8") : await fun.getImg(".contentme img", max);
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            let resArr = imgSrcs.map(async (src, i, arr) => {
+                let res = await fun.xhrHEAD(src);
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                let status = res.status;
+                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
+            });
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
         },
         button: [4],
         insertImg: [".contentme", 2],
@@ -3957,8 +3951,8 @@
         category: "nsfw2"
     }, {
         name: "HOTGIRLchina格式",
-        host: ["hotgirlchina.com", "hotgirlasian.com", "thechinagirls.com", "theasiagirl.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com", "nudeasiangirl.com", "hinhsexvietnam.com"],
-        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hinhsexvietnam\.com)\/.+(photos?|videos?|anh)?\/?|^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$|^https?:\/\/hotgirlasian\.com\/\d+\/$/,
+        host: ["hotgirlchina.com", "hotgirlasian.com", "theasiagirl.com", "cutexinh.com", "girlxinhxinh.com", "asiaceleb.com", "chinagirly.com", "nudeasiangirl.com", "hinhsexvietnam.com"],
+        reg: /(hotgirlchina\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hinhsexvietnam\.com)\/.+(photos?|videos?|anh)?\/?|^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$|^https?:\/\/hotgirlasian\.com\/\d+\/$/,
         include: ".entry-inner img[alt]",
         init: () => {
             let share = fun.ge(".entry.share");
@@ -3982,7 +3976,7 @@
         category: "nsfw1"
     }, {
         name: "HOTGIRLchina 格式 AD",
-        reg: /(hotgirlchina\.com|thechinagirls\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hotgirlasian\.com|hinhsexvietnam\.com)\//,
+        reg: /(hotgirlchina\.com|theasiagirl\.com|anhsec\.com|cutexinh\.com|girlxinhxinh\.com|asiaceleb\.com|chinagirly\.com|nudeasiangirl\.com|hotgirlasian\.com|hinhsexvietnam\.com)\//,
         css: ".boxzilla-container,.boxzilla-overlay,.sharrre-container{display:none!important}",
         category: "ad"
     }, {
@@ -4134,9 +4128,9 @@
         category: "ad"
     }, {
         name: "Phym18/Bongda21h",
-        host: ["phym18.org", "bongda21h.me"],
-        link: "https://phym18.org/tag/%E1%BA%A3nh-sex，https://bongda21h.me/anh-hot/",
-        reg: /phym18\.org\/anh\/[^/]+$|^https?:\/\/bongda21h\.me\/anh-hot\/[^\/]+\/$/,
+        host: ["phym18.net", "bongda21h.me"],
+        link: "https://phym18.net/tag/%E1%BA%A3nh-sex，https://bongda21h.me/anh-hot/",
+        reg: /phym18\.net\/anh\/[^/]+$|^https?:\/\/bongda21h\.me\/anh-hot\/[^\/]+\/$/,
         init: "$(document).off();",
         imgs: () => {
             try {
@@ -4154,15 +4148,15 @@
         button: [4],
         insertImg: [".ndtruyen", 2],
         go: 1,
-        customTitle: () => fun.geT("h1.header-title,h1.title").replace(/\s?\(\d+\s?photos?\)|\s?\(\d+\s?photos?(\s?\+\s?\d+\s?videos?)\)/g, ""),
+        customTitle: () => fun.geT("h1.header-title,h1.title").replace(/\s?\(\d+\s?photos?\)|\s?\(\d+\s?photos?(\s?\+\s?\d+\s?videos?)\)/g, "").replace("– MissKon.com", "").trim(),
         css: "#wap_bottombannerr,#wap_bottombanner,#backgroundPopupp,#popupContact,center[style*='z-index']{display:none!important}",
         category: "nsfw2"
     }, {
         name: "Phym18 圖片分類自動翻頁",
-        host: ["phym18.org"],
-        link: "https://phym18.org/tag/%E1%BA%A3nh-sex",
+        host: ["phym18.net"],
+        link: "https://phym18.net/tag/%E1%BA%A3nh-sex",
         enable: 1,
-        reg: /^https?:\/\/phym18\.org\/tag\/[^n]+nh-sex/,
+        reg: /^https?:\/\/phym18\.net\/tag\/[^n]+nh-sex/,
         init: () => {
             fun.run("$(document).off();");
             fun.remove("//div[div[a[div[text()='Free']]]]");
@@ -4182,8 +4176,8 @@
         category: "autoPager"
     }, {
         name: "Phym18/bongda21h去廣告",
-        host: ["phym18.org", "bongda21h.co"],
-        reg: /phym18\.org|bongda21h\.co/,
+        host: ["phym18.net", "bongda21h.co"],
+        reg: /phym18\.net|bongda21h\.co/,
         init: "$(document).off();",
         css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index']{display:none!important}",
         category: "ad"
@@ -4290,13 +4284,13 @@
         customTitle: () => fun.geT("h1.entry-title,h2.post-title").replace(/【寫真】|\s?\(\d+P,片\)/gi, ""),
         category: "nsfw1"
     }, {
-        name: "韩剧组",
-        host: ["www.hanjuzu.com"],
-        link: "https://www.hanjuzu.com/hantype/23.html",
-        reg: /www\.hanjuzu\.com\/handetail-\d+\.html/,
+        name: "370看吧",
+        host: ["www.370kb.com"],
+        link: "https://www.370kb.com/tuku/5.html",
+        reg: /^https?:\/\/www\.370kb\.com\/tuku-\d+\.html$/,
         imgs: () => {
             let max = fun.geT(".num").match(/\d+\/(\d+)/)[1];
-            return fun.getImg(".hl-article-box>img", max, );
+            return fun.getImgO(".hl-article-box img", max, 5);
         },
         button: [4],
         insertImg: [".hl-article-box", 2],
@@ -4671,10 +4665,25 @@
         host: ["x6o.com"],
         link: "https://x6o.com/topics/14#articles",
         reg: /(www\.)?x6o\.com\/articles\/\d+/,
-        delay: 500,
-        imgs: ".content img",
+        init: async () => await fun.waitEle(".content img:not([src*='loading.gif'])"),
+        imgs: () => {
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            return [...fun.gae(".content img")].map(async (img, i, arr) => {
+                let src = img.dataset.original ?? img.src;
+                if (!/^http|^\/\//.test(src)) {
+                    let testSrc = "https://telegra.ph/file/" + src;
+                    let res = await fun.xhrHEAD(testSrc);
+                    fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                    let status = res.status;
+                    return status == 404 ? src : testSrc;
+                } else {
+                    return img;
+                }
+            });
+        },
         button: [4],
-        insertImg: [".content", 2, 2000],
+        insertImg: [".content", 2],
         customTitle: () => fun.geT("h1.title").replace(/\[\d+P-\d+MB\]|\[\d+P\]|\s?\d+P$/gi, "").trim(),
         category: "nsfw2"
     }, {
@@ -4822,7 +4831,7 @@
     }, {
         name: "嘿～色女孩",
         host: ["heysexgirl.com"],
-        reg: /heysexgirl\.com\/archives\/\d+$/,
+        reg: /^https?:\/\/heysexgirl\.com\/archives\/\d+$/,
         imgs: () => {
             let max = fun.geT(".page-links>*:last-child");
             return fun.getImg(".entry-content p>a,.entry-content p>img", max, "4");
@@ -4834,6 +4843,23 @@
         prev: ".nav-next>a",
         customTitle: () => fun.geT("h1.page-title"),
         category: "nsfw2"
+    }, {
+        name: "嘿～色女孩 分類自動翻頁",
+        enable: 1,
+        reg: /^https?:\/\/heysexgirl\.com\/(page\/\d+)?$|^https?:\/\/heysexgirl\.com\/archives\/category\/\w+(\/page\/\d+)?$/,
+        autoPager: {
+            mode: 1,
+            waitEle: ".blog-posts-wrapper[style]",
+            ele: ".blog-posts-wrapper",
+            observer: ".blog-posts-wrapper",
+            next: "span.current+a",
+            re: ".nav-links",
+            title: () => "Page " + nextLink.match(/\d+$/)[0],
+            history: 1
+        },
+        openInNewTab: ".blog-posts-wrapper a:not([target=_blank])",
+        css: ".blog-posts-wrapper article.has-post-thumbnail .entry-container{margin:0 auto 0 !important}",
+        category: "autoPager"
     }, {
         name: "2LSP",
         host: ["2lsp.xyz"],
@@ -4848,6 +4874,10 @@
         next: ".article-nav-prev>a",
         prev: ".article-nav-next>a",
         customTitle: () => fun.geT("h1.entry-title"),
+        fancybox: {
+            v: 3,
+            insertLibrarys: 1
+        },
         category: "nsfw1"
     }, {
         name: "2LSP",
@@ -5637,7 +5667,6 @@
             ["#content>*:last-child", 2], 2
         ],
         go: 1,
-        noOpen: 1,
         category: "nsfw2"
     }, {
         name: "EPORNER Photo",
@@ -5691,7 +5720,7 @@
             [".album-holder", 2], 2
         ],
         go: 1,
-        customTitle: () => fun.geT(".headline>h1"),
+        customTitle: () => fun.geT(".headline>h1").replace(/\[\d+[\w\s\.\+-]+\]|\(\d+[\w\s\.\+-]+\)/i, "").trim(),
         css: ".block-album{display:block!important}.block-album>.table,.top,.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
         category: "nsfw2"
     }, {
@@ -5954,15 +5983,23 @@
         host: ["www.pichunter.com"],
         reg: /www\.pichunter\.com\/gallery\/\d+\/.+/,
         imgs: () => {
-            thumbnailsSrcArray = [...fun.gae(".flex-images figure>a>img")].map(e => e.getAttribute("xs"));
-            return [...fun.gae(".flex-images figure>a")];
+            if (fun.ge(".flex-images figure>a>img")) {
+                thumbnailsSrcArray = [...fun.gae(".flex-images figure>a>img")].map(e => e.getAttribute("xs"));
+            } else {
+                thumbnailsSrcArray = [...fun.gae("#main-grid a img")].map(e => e.src);
+            }
+            return [...fun.gae(".flex-images figure>a,#main-grid a")];
         },
         button: [4],
         insertImg: [
-            [".flex-images", 2], 1
+            [".flex-images,#main-grid", 2], 1
         ],
         go: 1,
         customTitle: () => fun.geT("h1"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
         category: "nsfw2"
     }, {
         name: "Pictoa",
@@ -6338,8 +6375,8 @@
         host: ["www.pornpic.com"],
         reg: /www\.pornpic\.com\/gallery\/[\w-]+/i,
         imgs: () => {
-            thumbnailsSrcArray = [...fun.gae(".gallery-grid a.item-link img")].map(e => e.src);
-            return [...fun.gae(".gallery-grid a.item-link")];
+            thumbnailsSrcArray = [...fun.gae(".gallery-grid a.item-link[data-fancybox] img")].map(e => e.src);
+            return [...fun.gae(".gallery-grid a.item-link[data-fancybox]")];
         },
         button: [4],
         insertImg: [
@@ -6560,7 +6597,7 @@
     }, {
         name: "Bunkr",
         host: ["bunkr-albums.io"],
-        reg: /^https:\/\/bunkrr\.(su|ru)\/a\/\w+/i,
+        reg: /^https:\/\/bunkrr?\.(su|ru|sk)\/a\/\w+/i,
         imgs: () => fun.getImgA(".lightgallery img", "a[href^='/i/']"),
         button: [4],
         insertImg: [
@@ -7629,20 +7666,6 @@
         },
         category: "nsfw1"
     }, {
-        name: "51控美图网",
-        host: ["www.871651.com"],
-        reg: /^https?:\/\/www\.871651\.com\/\d+\.html$/i,
-        init: () => fun.remove("audio"),
-        imgs: ".text img[src^=http]",
-        button: [4],
-        insertImg: [".text", 2],
-        autoDownload: [0],
-        next: "//p[contains(text(),'上一篇')]/a",
-        prev: "//p[contains(text(),'下一篇')]/a",
-        customTitle: () => fun.geT(".tit>h1"),
-        css: ".news_article .left .text img{width:100%!important}",
-        category: "nsfw1"
-    }, {
         name: "18少女团",
         host: ["18cute.monster"],
         reg: /^https?:\/\/18cute\.monster\/chapter\/\d+$/i,
@@ -7928,13 +7951,24 @@
                 }
             }
             if (E_HENTAI_LoadOriginalImage == 1) {
-                fun.showMsg(displayLanguage.str_07, 0);
-                let doc = await fun.fetchDoc(fun.ge(".gdtm a,.gdtl a").href);
-                let fullimg = fun.ge("a[href*=fullimg]", doc);
-                let url = fullimg.href;
-                let res = await fun.xhrHEAD(url);
-                let finalUrl = res.finalUrl;
-                return /login\.php/.test(finalUrl) ? fun.getImgA("#img", ".gdtm a,.gdtl a", 100) : fun.getImgA("a[href*=fullimg]", ".gdtm a,.gdtl a", 100);
+                fun.showMsg(displayLanguage.str_01, 0);
+                let fetchNum = 0;
+                return [...fun.gae(".gdtm a,.gdtl a")].map(async (a, i, arr) => {
+                    await fun.delay(100 * i, 0);
+                    return fun.fetchDoc(a.href).then(async doc => {
+                        fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${parseInt(arr.length, 10)}`, 0);
+                        let fullimg = fun.ge("a[href*=fullimg]", doc);
+                        let img = fun.ge("#img", doc);
+                        if (fullimg) {
+                            let url = fullimg.href;
+                            let res = await fun.xhrHEAD(url);
+                            let finalUrl = res.finalUrl;
+                            return /login\.php/.test(finalUrl) ? img.src : url;
+                        } else {
+                            return img.src;
+                        }
+                    });
+                });
             } else {
                 return fun.getImgA("#img", ".gdtm a,.gdtl a", 100);
             }
@@ -7943,11 +7977,11 @@
         insertImg: [
             ["#gdt", 0], 3
         ],
+        go: 1,
         customTitle: () => {
             let t = fun.geT("#gj").replace(/\/|\[\d+[\w\.\+\s-]+\]/i, "");
             return t.length > 0 ? t : fun.geT("#gn").replace(/\|.+|\[\d+[\w\.\+\s-]+\]/i, "").trim();
         },
-        go: 1,
         topButton: true,
         threading: 4,
         category: "hcomic"
@@ -9880,12 +9914,12 @@
         category: "hcomic"
     }, {
         name: "污污漫畫",
-        host: ["www.55comic.com"],
-        reg: /^https?:\/\/www\.55comic\.com\/chapter\/\d+$/i,
+        host: ["www.55comic.com", "www.comicbox.xyz"],
+        reg: /^https?:\/\/(www\.55comic\.com|www\.comicbox\.xyz)\/chapter\/\d+$/i,
         init: () => fun.remove("//div[div[@class='CarouselView center']]"),
         imgs: async () => {
             let arr = [];
-            await fun.aotoScrollEles(".comiclist div[data-src]", async (ele) => {
+            await fun.aotoScrollEles(".comiclist div[data-src]", (ele) => {
                 let canvas = fun.ge("canvas", ele);
                 if (canvas) {
                     arr.push(canvas.toDataURL("image/jpeg"));
@@ -14149,7 +14183,10 @@ document.body.appendChild(text);
                 str_104: "匯出圖址(7)",
                 str_105: "複製圖址(1)",
                 str_106: "分頁檢視(8)",
-                str_107: "一鍵下載(3)"
+                str_107: "一鍵下載(3)",
+                str_108: "訊息顯示的位置 ( 0 ~ 4 )：",
+                str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
+                str_110: "Webp轉換為Jpg"
             };
             break;
         case "zh-CN":
@@ -14260,7 +14297,10 @@ document.body.appendChild(text);
                 str_104: "导出图址(7)",
                 str_105: "拷贝图址(1)",
                 str_106: "分页视图(8)",
-                str_107: "一键下载(3)"
+                str_107: "一键下载(3)",
+                str_108: "讯息显示的位置 ( 0 ~ 4 )：",
+                str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
+                str_110: "Webp转换为Jpg"
             };
             break;
         default:
@@ -14371,7 +14411,10 @@ document.body.appendChild(text);
                 str_104: "Export URLs(7)",
                 str_105: "Copy URLs(1)",
                 str_106: "New Tab View(8)",
-                str_107: "Fast Download(3)"
+                str_107: "Fast Download(3)",
+                str_108: "Where the message appears ( 0 ~ 4 )：",
+                str_109: "0: Center, 1: Upper left, 2: Upper right, 3: Lower left, 4: Lower right",
+                str_110: "Convert Webp to Jpg"
             };
             break;
     }
@@ -15100,7 +15143,7 @@ document.body.appendChild(text);
             }
             if (typeof siteData.autoPager.aF === "function") await siteData.autoPager.aF(doc);
             fun.removeLoading();
-            if (siteData.autoPager.history == 1) fun.addHistory(doc.title || document.title, url);
+            if (siteData.autoPager.history == 1) fun.addHistory(doc?.title || document.title, url);
             if (siteData.autoPager.observer) {
                 await fun.delay(siteData.autoPager.sleep || 1000, 0);
                 let ele = [...fun.gae(siteData.autoPager.observer)].at(-1);
@@ -15254,7 +15297,7 @@ document.body.appendChild(text);
         },
         titleUrlEle: (url, title) => {
             let div = document.createElement("div");
-            div.className = "autoPagerTitle";
+            autoPager == true ? div.className = "autoPagerTitle" : div.className = "autoPagerTitle off";
             let a = document.createElement("a");
             a.href = url;
             a.innerText = title;
@@ -15662,8 +15705,11 @@ document.body.appendChild(text);
                             //targetEle.parentNode.style.textAlign = "center";
                             targetEle.parentNode.style.display = "block";
                         }
-                        if (typeof ele[2] != "undefined") {
+                        if (typeof ele[2] == "string") {
                             fun.remove(ele[2]);
+                        }
+                        if (typeof siteData.insertImgAF == "function") {
+                            siteData.insertImgAF();
                         }
                         if (siteData.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
                     } else if (typeof ele == "string") {
@@ -16322,7 +16368,7 @@ document.body.appendChild(text);
                 }
             });
         },
-        blobToPicBlob: async (blob, type = "image/jpeg") => {
+        convertImage: async (blob, type = "image/jpeg") => {
             let img = new Image();
             img.src = URL.createObjectURL(blob);
             await new Promise((resolve, reject) => (img.onload = resolve, img.onerror = reject));
@@ -16345,8 +16391,8 @@ document.body.appendChild(text);
             }
         },
         aotoScrollEles: async (selector, callback, time = 5000) => {
-            if (fetching) return;
-            fetching = true;
+            if (aotoScrolling) return;
+            aotoScrolling = true;
             let n = 0;
             let timeout = false;
             const autoScrollIntoView = async (arr, num) => {
@@ -16379,7 +16425,7 @@ document.body.appendChild(text);
                 newImgs = newImgs.slice(imgs.length);
                 await autoScrollIntoView(newImgs, imgs.length + newImgs.length);
             }
-            fetching = false;
+            aotoScrolling = false;
         },
         openInTab: (url, target = "_blank") => {
             let a = document.createElement("a");
@@ -16789,13 +16835,17 @@ document.body.appendChild(text);
                         let type = blobData.type;
                         try {
                             if (/octet-stream/.test(type)) {
-                                if (/\.webp/i.test(blobDataArray[i].src)) {
-                                    blobData = await fun.blobToPicBlob(blobData, "image/webp");
+                                if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
+                                    blobData = await fun.convertImage(blobData, "image/webp");
                                     ex = "webp";
                                 } else {
-                                    blobData = await fun.blobToPicBlob(blobData);
+                                    blobData = await fun.convertImage(blobData);
                                     ex = "jpg";
                                 }
+                                fun.showMsg(`${displayLanguage.str_102} to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                            } else if ((/webp/i.test(type) || /\.webp/i.test(blobDataArray[i].src)) && convertWebpToJpg == 1) {
+                                blobData = await fun.convertImage(blobData);
+                                ex = "jpg";
                                 fun.showMsg(`${displayLanguage.str_102} to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
                             } else if (/^text\/base64\.jpg/.test(type)) {
                                 ex = "jpg";
@@ -17232,11 +17282,6 @@ document.body.appendChild(text);
 
     const newTabView = async () => {
 
-        if (siteData?.noOpen && siteData?.noOpen == 1) {
-            alert("Unable to use window.open()");
-            return;
-        }
-
         if (typeof siteData.capture === "string") {
             const captureImgEles = [...fun.gae(siteData.imgs)];
             console.log("newTabViewCaptureImgEles", captureImgEles);
@@ -17252,8 +17297,15 @@ document.body.appendChild(text);
 
         if (imgSrcs?.length && imgSrcs.length > 0) {
 
-            const newWindow = window.open("about:blank", "_blank");
-            const doc = newWindow.document;
+            let newWindow;
+            let doc;
+            try {
+                newWindow = window.open("about:blank", "_blank");
+                doc = newWindow.document;
+            } catch (e) {
+                alert("An error occurred\nUnable to use window.open()\nIt is recommended to use ComicRead Scripts\nhttps://greasyfork.org/scripts/374903");
+                return;
+            }
             doc.write(`<html><head><title>${customTitle ?? document.title}</title></head><body style="text-align: center;"><div id="imgBox"></div></body></html>`);
 
             if (siteData?.CSP && siteData?.CSP == 1) {
@@ -17597,6 +17649,9 @@ if (newWindowDataViewMode == 1) {
 `;
                 doc.body.appendChild(newWindowScript);
             }
+        } else {
+            alert("No Image.");
+            return;
         }
     };
 
@@ -17820,7 +17875,13 @@ if (newWindowDataViewMode == 1) {
     <input id="FullPictureLoadOptionsIcon" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_69}
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
+    ${displayLanguage.str_108}<input id="FullPictureLoadOptionsMsgPos" title="${displayLanguage.str_109}" style="width: 60px; margin: 0 6px !important;">
+</div>
+<div style="width: 348px; display: flex; margin-left: 6px;">
     ${displayLanguage.str_70}<input id="FullPictureLoadOptionsThreading" style="width: 60px; margin: 0 6px !important;">
+</div>
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsConvert" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_110}
 </div>
 <div style="width: 348px; display: flex;">
     <input id="FullPictureLoadOptionsZip" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_71}
@@ -17867,14 +17928,18 @@ if (newWindowDataViewMode == 1) {
             ge("#FullPictureLoadOptionsResetBtn").addEventListener("click", event => {
                 event.preventDefault();
                 localStorage.removeItem("FullPictureLoadOptions");
+                _GM_setValue("FullPictureLoadMsgPos", 0);
+                _GM_setValue("convertWebpToJpg", 0);
                 location.reload();
             });
             ge("#FullPictureLoadOptionsSaveBtn").addEventListener("click", event => {
                 event.preventDefault();
                 options.icon = ge("#FullPictureLoadOptionsIcon").checked == true ? 1 : 0;
+                _GM_setValue("FullPictureLoadMsgPos", ge("#FullPictureLoadOptionsMsgPos").value);
                 options.threading = ge("#FullPictureLoadOptionsThreading").value;
                 options.zip = ge("#FullPictureLoadOptionsZip").checked == true ? 1 : 0;
                 options.file_extension = ge("#FullPictureLoadOptionsExtension").value;
+                _GM_setValue("convertWebpToJpg", ge("#FullPictureLoadOptionsConvert").checked == true ? 1 : 0);
                 options.comic = ge("#FullPictureLoadOptionsComic").checked == true ? 1 : 0;
                 options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload").checked == true ? 1 : 0;
                 options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown").value;
@@ -17907,9 +17972,11 @@ if (newWindowDataViewMode == 1) {
 
     const setValue = () => {
         ge("#FullPictureLoadOptionsIcon").checked = options.icon == 1 ? true : false;
+        ge("#FullPictureLoadOptionsMsgPos").value = _GM_getValue("FullPictureLoadMsgPos");
         ge("#FullPictureLoadOptionsThreading").value = options.threading;
         ge("#FullPictureLoadOptionsZip").checked = options.zip == 1 ? true : false;
         ge("#FullPictureLoadOptionsExtension").value = options.file_extension;
+        ge("#FullPictureLoadOptionsConvert").checked = _GM_getValue("convertWebpToJpg") == 1 ? true : false;
         ge("#FullPictureLoadOptionsAutoDownload").checked = options.autoDownload == 1 ? true : false;
         ge("#FullPictureLoadOptionsCountdown").value = options.autoDownloadCountdown;
         ge("#FullPictureLoadOptionsComic").checked = options.comic == 1 ? true : false;
@@ -17924,23 +17991,31 @@ if (newWindowDataViewMode == 1) {
         ge("#FullPictureLoadOptionsviewMode").checked = options.viewMode == 1 ? true : false;
     };
 
+
+    let FullPictureLoadMsgPos = _GM_getValue("FullPictureLoadMsgPos");
+
+    if (FullPictureLoadMsgPos == undefined) {
+        _GM_setValue("FullPictureLoadMsgPos", 0);
+        FullPictureLoadMsgPos = 0;
+    }
+
     let msgPosCss;
-    if (msgPos == 1) {
+    if (FullPictureLoadMsgPos == 1) {
         msgPosCss = `
     top: 10px;
     left: 10px;
     `;
-    } else if (msgPos == 2) {
+    } else if (FullPictureLoadMsgPos == 2) {
         msgPosCss = `
     top: 10px;
     right: 10px;
     `;
-    } else if (msgPos == 3) {
+    } else if (FullPictureLoadMsgPos == 3) {
         msgPosCss = `
     bottom: 10px;
     left: 72px;
     `;
-    } else if (msgPos == 4) {
+    } else if (FullPictureLoadMsgPos == 4) {
         msgPosCss = `
     bottom: 10px;
     right: 10px;
@@ -17952,9 +18027,14 @@ if (newWindowDataViewMode == 1) {
     margin-left: -180px;
     `;
     }
+
     const style = `
 .fancybox-container,.fancybox__container {
     z-index: 2147483647 !important;
+}
+
+.fancybox-image {
+    opacity: 1 !important;
 }
 
 .FullPictureLoadImageReturnTop {
@@ -18219,6 +18299,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
     border-radius: 5px;
 }
+
 .autoPagerTitle.off {
     color: white;
     border: 1px solid #0e0e0e;
@@ -18317,6 +18398,13 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     color: white;
 }
                 `;
+
+    let convertWebpToJpg = _GM_getValue("convertWebpToJpg");
+
+    if (convertWebpToJpg == undefined) {
+        _GM_setValue("convertWebpToJpg", 0);
+        convertWebpToJpg = 0;
+    }
 
     let lazyLoadFullResolution = _GM_getValue("lazyLoadFullResolution");
 
