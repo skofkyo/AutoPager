@@ -708,7 +708,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/23 20:36</p>
+<p>2024/01/25 14:48</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -780,16 +780,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgmn03.cc/">极品性感美女</a></td>
-                <td><a href="https://xg04.ffft.bf/">xg04.ffft.bf</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
+                <td><a href="https://www.xgmn06.cc/">极品性感美女</a></td>
+                <td><a href="https://06.ooov.bf/">06.ooov.bf</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xrmn05.com/">秀人美女網</a></td>
-                <td><a href="https://m.xrmn.xyz/">m.xrmn.xyz</a></td>
+                <td><a href="https://xrmn1.zzzy.bf/">xrmn1.zzzy.bf</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr01.vip/">秀人集</a></td>
-                <td><a href="https://a.xiu.cloudns.org/">a.xiu.cloudns.org</a>，<a href="http://137.175.84.179/">137.175.84.179</a></td>
+                <td><a href="https://www.xr07.vip/">秀人集</a></td>
+                <td><a href="https://xr.uunn.bf/">xr.uunn.bf</a>，<a href="http://137.175.84.179/">137.175.84.179</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn05.cc/">爱看美女网</a></td>
@@ -816,11 +816,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://www.502x.com/">秀人图吧</a></td>
+                <td><a href="http://www.502x.com/xiurenwang.html">秀人图吧</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://www.rosixiezhen.cc/">ROSI美女写真</a></td>
+                <td><a href="http://www.rosi985.com/">ROSI美女写真</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1178,6 +1178,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.shunvi.com/">淑女爱</a></td>
+                <td>www.shunvai.com</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.meijuntu.com/">俊美图</a></td>
                 <td>www.jeya.de</td>
             </tr>
@@ -1394,8 +1398,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://wap.umei.cc/">wap.umei.cc</a>，China IP限定</td>
             </tr>
             <tr>
+                <td><a href="https://www.win3000.com/tags/xingganmeinv/">三千图片网</a></td>
+                <td><a href="https://m.win3000.com/tags/xingganmeinv/">m.win3000.com</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.3gbizhi.com/meinv">3G壁纸</a></td>
                 <td><a href="https://m.3gbizhi.com/">m.3gbizhi.com</a>，China IP限定</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.mn52.com/xingganmeinv/">mn52图库</a></td>
+                <td><a href="https://wap.mn52.com/meihuoxiezhen/">wap.mn52.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.enterdesk.com/">回车桌面</a></td>
@@ -1935,7 +1947,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.6evu.com/">遛无写真</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式17個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式18個</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ywsq.cc/">出物社区写真网</a></td>
