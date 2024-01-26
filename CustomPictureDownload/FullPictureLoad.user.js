@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.0
+// @version            1.9.1
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -15771,7 +15771,7 @@ document.body.appendChild(text);
                 }
                 if (!/tupianwu\.com/.test(location.host)) fun.MutationObserver_aff();
                 if (options.viewMode == 1 || siteData.viewMode == 1) toggleImgMode();
-                if (siteData.go == 1) goToNo1Img();
+                if (siteData.go == 1 && noGoToFirstImage != 1) goToNo1Img();
             } else {
                 fun.showMsg(displayLanguage.str_20);
             }
@@ -18399,6 +18399,13 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
 }
                 `;
 
+    let noGoToFirstImage = GM_getValue("noGoToFirstImage");
+
+    if (noGoToFirstImage == undefined) {
+        _GM_setValue("noGoToFirstImage", 0);
+        noGoToFirstImage = 0;
+    }
+
     let convertWebpToJpg = _GM_getValue("convertWebpToJpg");
 
     if (convertWebpToJpg == undefined) {
@@ -18951,6 +18958,10 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     if (showOptions) {
         //debug("\n圖片全載開啟了GM選單?\n", showOptions);
         _GM_registerMenuCommand(displayLanguage.str_67, () => ge("#FullPictureLoadOptions").removeAttribute("style"));
+        _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ Turn Off Auto Scroll" : "✔️ Turn Off Auto Scroll", () => {
+            noGoToFirstImage == 0 ? _GM_setValue("noGoToFirstImage", 1) : _GM_setValue("noGoToFirstImage", 0);
+            location.reload();
+        });
         addFullPictureLoadOptionsMain();
         setValue();
         if (comicSwitch) ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
