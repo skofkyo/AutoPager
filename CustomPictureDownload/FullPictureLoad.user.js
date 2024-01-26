@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.1
+// @version            1.9.2
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -4391,8 +4391,8 @@
     }, {
         name: "エロ画像まとめ",
         host: ["geinou-nude.com"],
-        reg: /geinou-nude\.com\/[^/]+\/$/,
-        imgs: ".post_content>p>a[href*=uploads]",
+        reg: /^https?:\/\/geinou-nude\.com\/[^\/]+\/(#.*)?$/,
+        imgs: ".post_content a[href*='/uploads/']",
         autoDownload: [0],
         next: "a.nav_link_l",
         prev: "a.f_row_r",
@@ -15761,7 +15761,6 @@ document.body.appendChild(text);
                     fun.comicNextObserver.observe(lastImg);
                 }
                 [...fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage")].forEach(e => e.style.display = "block");
-                if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
                 if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
                     try {
                         Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
@@ -18965,6 +18964,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         addFullPictureLoadOptionsMain();
         setValue();
         if (comicSwitch) ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
+        if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
     }
 
     if (!ge(".FullPictureLoadStyle")) fun.css(style);
