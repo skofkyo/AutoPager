@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.2
+// @version            1.9.3
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -989,13 +989,14 @@
         imgs: () => fun.getImgA(".items-center.min-h-screen img", "a[class*=bg-pink-500][href*='page=']"),
         button: [4],
         insertImg: [".items-center.min-h-screen", 2],
-        //customTitle: () => fun.geT("//div[strong[contains(text(),'Album Name')]]").replace("Album Name: ", "").replace(/\(\d+[\w\s]+\)/i, "").trim(),
-        customTitle: () => fun.title(/\s?-\sXGirl|\s?-\sXerocos/).replace(/\(\d+[\w\s]+\)/i, "").trim(),
+        customTitle: () => fun.geT("//div[strong[contains(text(),'Album Name')]]").replace("Album Name: ", "").replace(/\(\d+[\w\s]+\)/i, "").trim(),
+        //customTitle: () => fun.title(/\s?-\sXGirl|\s?-\sXerocos/).replace(/\(\d+[\w\s]+\)/i, "").trim(),
         category: "nsfw2"
     }, {
         name: "XGirl 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/xgirl\.one\/(\?page=\d+)?$/,
+        reg: /^https?:\/\/xgirl\.one\/(\?page=\d+|search\?q=.+|tag\/.+)?$/,
+        include: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
         autoPager: {
             mode: 1,
             waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']//img",
@@ -1012,12 +1013,13 @@
     }, {
         name: "Xerocos 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/xerocos\.com\/(\?page=\d+)?$/,
+        reg: /^https?:\/\/xerocos\.com\/(\?page=\d+|search\?q=.+|tag\/.+)?$/,
+        include: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
         autoPager: {
             mode: 1,
-            waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']//img",
-            ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']",
-            observer: "//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']",
+            waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']//img|//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6']//img",
+            ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']|//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6']",
+            observer: "//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']|//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6']",
             pos: ["//div[@class='flex py-4 justify-center md:justify-between mt-4']", 1],
             next: "//a[text()='Next']",
             re: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
@@ -6453,7 +6455,7 @@
         reg: /eropics\.\w+\/\d+\/\d+\/\d+\//i,
         init: () => {
             document.addEventListener("keydown", event => {
-                if (event.ctrlKey && event.altKey && event.key == "c") {
+                if (event.ctrlKey && event.altKey && (event.code == "KeyC" || event.key == "c")) {
                     event.preventDefault();
                     let arr = [...fun.gae(".entry-content a")].map(a => a.href);
                     let str = arr.join("\n");
@@ -10217,9 +10219,8 @@ document.body.appendChild(text);
             };
             document.addEventListener("wheel", toggleToolbar);
             document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = e => {
-                let key = window.event ? e.keyCode : e.which;
-                if (key == "34" || key == "32" || key == "40") {
+            const keyToggleToolbar = event => {
+                if (["PageDown", "Space", "ArrowDown"].includes(event.code) || ["PageDown", " ", "ArrowDown"].includes(event.key)) {
                     $(".top-bar").attr("style", "top: -74px;");
                 } else {
                     $(".top-bar").removeAttr("style");
@@ -10298,9 +10299,8 @@ document.body.appendChild(text);
             };
             document.addEventListener("wheel", toggleToolbar);
             document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = e => {
-                let key = window.event ? e.keyCode : e.which;
-                if (key == "34" || key == "32" || key == "40") {
+            const keyToggleToolbar = event => {
+                if (["PageDown", "Space", "ArrowDown"].includes(event.code) || ["PageDown", " ", "ArrowDown"].includes(event.key)) {
                     $(".header").addClass("toolbar");
                     $(".header").attr("style", "top: -64px;");
                     $(".reader-bottom").addClass("toolbar");
@@ -10440,9 +10440,8 @@ document.body.appendChild(text);
             };
             document.addEventListener("wheel", toggleToolbar);
             document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = (e) => {
-                let key = window.event ? e.keyCode : e.which;
-                if (key == "34" || key == "32" || key == "40") {
+            const keyToggleToolbar = event => {
+                if (["PageDown", "Space", "ArrowDown"].includes(event.code) || ["PageDown", " ", "ArrowDown"].includes(event.key)) {
                     $(".header").addClass("toolbar");
                     $(".header").attr("style", "top: -64px;");
                     $(".reader-bottom").addClass("toolbar");
@@ -12370,9 +12369,8 @@ window.parent.postMessage({
             };
             document.addEventListener("wheel", toggleToolbar);
             document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = (e) => {
-                let key = window.event ? e.keyCode : e.which;
-                if (key == "34" || key == "32" || key == "40") {
+            const keyToggleToolbar = event => {
+                if (["PageDown", "Space", "ArrowDown"].includes(event.code) || ["PageDown", " ", "ArrowDown"].includes(event.key)) {
                     $("h4.header").attr("style", "top: -30px;");
                     $("div.footer").attr("style", "bottom: -41px;");
                 } else {
@@ -12658,9 +12656,8 @@ window.parent.postMessage({
             };
             document.addEventListener("wheel", toggleToolbar);
             document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = (e) => {
-                let key = window.event ? e.keyCode : e.which;
-                if (key == "34" || key == "32" || key == "40") {
+            const keyToggleToolbar = event => {
+                if (["PageDown", "Space", "ArrowDown"].includes(event.code) || ["PageDown", " ", "ArrowDown"].includes(event.key)) {
                     fun.ge(".view-title").style.top = "-60px";
                 } else {
                     fun.ge(".view-title").style.top = "0px";
@@ -12821,9 +12818,8 @@ document.body.appendChild(text);
             };
             document.addEventListener("wheel", toggleToolbar);
             document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = e => {
-                let key = window.event ? e.keyCode : e.which;
-                if (key == "34" || key == "32" || key == "40") {
+            const keyToggleToolbar = event => {
+                if (["PageDown", "Space", "ArrowDown"].includes(event.code) || ["PageDown", " ", "ArrowDown"].includes(event.key)) {
                     $(".view-fix-top-bar").attr("style", "top: -60px;");
                     $(".view-fix-bottom-bar").attr("style", "bottom: -60px;");
                     $(".detail-comment-fix-bottom").hide("fast");
@@ -15733,13 +15729,13 @@ document.body.appendChild(text);
                 let imgsNum = 0;
                 document.addEventListener("keydown", event => {
                     if (fun.ge("#FullPictureLoadOptions:not([style])")) return;
-                    if (event.key == "ArrowUp") {
+                    if (event.code == "ArrowUp" || event.key == "ArrowUp") {
                         if (fun.ge(".fancybox-container,.fancybox__container")) return;
                         if (imgsNum > 0 && viewMode == 0) {
                             imgsNum -= 1;
                             imgs[imgsNum].scrollIntoView();
                         }
-                    } else if (event.key == "ArrowDown") {
+                    } else if (event.code == "ArrowDown" || event.key == "ArrowDown") {
                         if (fun.ge(".fancybox-container,.fancybox__container")) return;
                         event.preventDefault();
                         if (imgsNum < imgs.length && viewMode == 0) {
@@ -15906,7 +15902,7 @@ document.body.appendChild(text);
                         const comicSpaceClickNext = () => {
                             let click = 0;
                             const callback = event => {
-                                if (event.keyCode == 32) {
+                                if (event.code == "Space" || event.key == " ") {
                                     click += 1;
                                     if (click >= 5) {
                                         document.removeEventListener("keydown", callback);
@@ -17206,14 +17202,14 @@ document.body.appendChild(text);
             }
             document.addEventListener("keydown", async event => {
                 if (ge("#FullPictureLoadOptions:not([style])")) return;
-                if (event.key == "ArrowUp") {
+                if (event.code == "ArrowUp" || event.key == "ArrowUp") {
                     if (ge(".fancybox-container,.fancybox__container")) return;
                     event.preventDefault();
                     if (imgsNum > 0 && viewMode == 1) {
                         imgsNum -= column;
                         imgs[imgsNum].scrollIntoView();
                     }
-                } else if (event.key == "ArrowDown") {
+                } else if (event.code == "ArrowDown" || event.key == "ArrowDown") {
                     if (ge(".fancybox-container,.fancybox__container")) return;
                     event.preventDefault();
                     if (imgsNum < imgs.length && imgsNum != imgs.length && viewMode == 1) {
@@ -17520,26 +17516,24 @@ function addFixedMenu() {
 addFixedMenu();
 
 document.addEventListener("keydown", event => {
-    switch (event.keyCode) {
-        case 96:
-            defaultImageLayout();
-            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
-            document.querySelector("#MenuDefaultItem").classList.add("active");
-            localStorage.setItem("newWindowData", '{"ViewMode":0}');
-            break;
-        case 97:
-            singlePageImageLayout();
-            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
-            document.querySelector("#MenuSinglePageItem").classList.add("active");
-            localStorage.setItem("newWindowData", '{"ViewMode":1}');
-            break;
+    if (event.code == "Numpad0" || event.key == "0") {
+        defaultImageLayout();
+        [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+        document.querySelector("#MenuDefaultItem").classList.add("active");
+        localStorage.setItem("newWindowData", '{"ViewMode":0}');
+    }
+    if (event.code == "Numpad1" || event.key == "1") {
+        singlePageImageLayout();
+        [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+        document.querySelector("#MenuSinglePageItem").classList.add("active");
+        localStorage.setItem("newWindowData", '{"ViewMode":1}');
     }
 });
 
 document.addEventListener("keydown", event => {
     if (document.querySelector(".fancybox__container")) return;
     let imgs = [...document.querySelectorAll("img")];
-    if (event.key == "ArrowUp" && imgViewIndex >= 0 || event.key == "ArrowLeft" && imgViewIndex >= 0) {
+    if ((event.code == "ArrowUp" || event.key == "ArrowUp") && imgViewIndex >= 0 || (event.code == "ArrowLeft" || event.key == "ArrowLeft") && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) {
@@ -17553,7 +17547,7 @@ document.addEventListener("keydown", event => {
             block: "center",
             inline: "center"
         });
-    } else if (event.key == "ArrowDown" && imgViewIndex <= imgs.length - 1 || event.key == "ArrowRight" && imgViewIndex <= imgs.length - 1) {
+    } else if ((event.code == "ArrowDown" || event.key == "ArrowDown") && imgViewIndex <= imgs.length - 1 || (event.code == "ArrowRight" || event.key == "ArrowRight") && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
         if (imgViewIndex > imgs.length - 1) {
@@ -18815,16 +18809,14 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 if (hasTouchEvents() && siteData.next && options.doubleTouchNext == 1) document.addEventListener("dblclick", () => callback());
                 document.addEventListener("keydown", event => {
                     if (ge(".fancybox-container,.fancybox__container")) return;
-                    let key = window.event ? event.keyCode : event.which;
-                    if (key == 39) callback();
+                    if (event.code == "ArrowRight" || event.key == "ArrowRight") callback();
                 });
             }
             let prev = customData[i].prev;
             if (typeof prev == "string" && prev != 1) {
                 document.addEventListener("keydown", event => {
                     if (ge(".fancybox-container,.fancybox__container")) return;
-                    let key = window.event ? event.keyCode : event.which;
-                    if (key == 37) {
+                    if (event.code == "ArrowLeft" || event.key == "ArrowLeft") {
                         event.preventDefault();
                         let ele = fun.ge(prev);
                         if (ele) {
@@ -18837,10 +18829,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     }
                 });
             } else if (prev == 1) {
-                document.addEventListener("keydown", (event) => {
+                document.addEventListener("keydown", event => {
                     if (ge(".fancybox-container,.fancybox__container")) return;
-                    let key = window.event ? event.keyCode : event.which;
-                    if (key == 37) {
+                    if (event.code == "ArrowLeft" || event.key == "ArrowLeft") {
                         event.preventDefault();
                         fun.showMsg(displayLanguage.str_38);
                         history.back();
@@ -18964,7 +18955,6 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         addFullPictureLoadOptionsMain();
         setValue();
         if (comicSwitch) ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
-        if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
     }
 
     if (!ge(".FullPictureLoadStyle")) fun.css(style);
@@ -18978,7 +18968,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     if (autoDownload) {
         document.addEventListener("keydown", event => {
             if (ge("#FullPictureLoadOptions:not([style])")) return;
-            if (event.ctrlKey && event.key == ".") {
+            if (event.ctrlKey && (event.code == "NumpadDecimal" || event.key == ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
                     options.autoDownload = 1;
@@ -19063,63 +19053,48 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         if (!ge(".FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
         if (!ge(".FullPictureLoadStyle")) fun.css(style);
         if (siteData.key != 0) {
+            if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
             document.addEventListener("keydown", event => {
-                if (event.keyCode != 27) {
-                    if (ge("#FullPictureLoadOptions:not([style])")) return;
+                if (event.code != "Escape" || event.key != "Escape") {
+                    if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey || ge("#FullPictureLoadOptions:not([style])")) return;
                 }
-                switch (event.keyCode) {
-                    case 96: //數字鍵0
-                        fastDownload = false;
-                        imgZipDownload();
-                        break;
-                    case 97: //數字鍵1
-                        copyImgSrcText();
-                        break;
-                    case 98: //數字鍵2
-                        goToImg("first");
-                        break;
-                    case 99: //數字鍵3
-                        fastDownload = true;
-                        imgZipDownload();
-                        break;
-                    case 100: //數字鍵4
-                        goToImg("last");
-                        break;
-                    case 101: //數字鍵5
-                        toggleImgMode();
-                        break;
-                    case 102: //數字鍵6
-                        autoScrollEles();
-                        break;
-                    case 103: //數字鍵7
-                        exportImgSrcText();
-                        break;
-                    case 104: //數字鍵8
-                        newTabView();
-                        break;
-                    case 109: //數字鍵-
-                        fun.clearSetTimeout();
-                        reduceZoom();
-                        break;
-                    case 107: //數字鍵+
-                        fun.clearSetTimeout();
-                        increaseZoom();
-                        break;
-                    case 110: //數字鍵.
-                        fun.clearSetTimeout();
-                        cancelZoom();
-                        break;
-                    case 106: //數字鍵*
-                        ge("#FullPictureLoadOptions").removeAttribute("style");
-                        break;
-                    case 27: //Esc鍵
-                        ge("#FullPictureLoadOptions").style.display = "none";
-                        break;
-                    case 111: //數字鍵/
-                        fun.showMsg(displayLanguage.str_91);
-                        localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
-                        setTimeout(() => location.reload(), 1000);
-                        break;
+                if (event.code == "Numpad0" || event.key == "0") { //數字鍵0
+                    fastDownload = false;
+                    return imgZipDownload();
+                }
+                if (event.code == "Numpad1" || event.key == "1") return copyImgSrcText(); //數字鍵1
+                if (event.code == "Numpad2" || event.key == "2") return goToImg("first"); //數字鍵2
+                if (event.code == "Numpad3" || event.key == "3") { //數字鍵3
+                    fastDownload = true;
+                    return imgZipDownload();
+                }
+                if (event.code == "Numpad4" || event.key == "4") return goToImg("last"); //數字鍵4
+                if (event.code == "Numpad5" || event.key == "5") return toggleImgMode(); //數字鍵5
+                if (event.code == "Numpad6" || event.key == "6") return autoScrollEles(); //數字鍵6
+                if (event.code == "Numpad7" || event.key == "7") return exportImgSrcText(); //數字鍵7
+                if (event.code == "Numpad8" || event.key == "8") return newTabView(); //數字鍵8
+                if (event.code == "NumpadSubtract" || event.key == "-") { //數字鍵-
+                    fun.clearSetTimeout();
+                    return reduceZoom();
+                }
+                if (event.code == "NumpadAdd" || event.key == "+") { //數字鍵+
+                    fun.clearSetTimeout();
+                    return increaseZoom();
+                }
+                if (event.code == "NumpadDecimal" || event.key == ".") { //數字鍵.
+                    fun.clearSetTimeout();
+                    return cancelZoom();
+                }
+                if (event.code == "NumpadMultiply" || event.key == "*") return ge("#FullPictureLoadOptions").removeAttribute("style"); //數字鍵*
+                if (event.code == "Escape" || event.key == "Escape") { //Esc鍵
+                    ge("#FullPictureLoadOptions").style.display = "none";
+                    return;
+                }
+                if (event.code == "NumpadDivide" || event.key == "/") { //數字鍵/
+                    fun.showMsg(displayLanguage.str_91);
+                    localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
+                    setTimeout(() => location.reload(), 1000);
+                    return;
                 }
             });
         }
