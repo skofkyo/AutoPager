@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.4
+// @version            1.9.5
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -388,19 +388,7 @@
                 max = 1;
             }
             let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".entry-content img", max, "8") : await fun.getImg(".entry-content img", max);
-            fun.showMsg("fun.xhrHEA(check)...", 0);
-            let xhrNum = 0;
-            let resArr = imgSrcs.map(async (src, i, arr) => {
-                let res = await fun.xhrHEAD(src);
-                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
-                let status = res.status;
-                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
-            });
-            return Promise.all(resArr).then(arr => {
-                fun.hideMsg();
-                return arr;
-            });
-            //return /\?m=1/.test(siteUrl) ? fun.getImg(".entry-content img", max, "8", [/i\d\.wp\.com\/([^\/]+)/, "$1"]) : fun.getImg(".entry-content img", max, 1, [/i\d\.wp\.com\/([^\/]+)/, "$1"]);
+            return fun.checkWordPressCDN(imgSrcs);
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -417,19 +405,7 @@
                 max = 1;
             }
             let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".contentme img,.contentme2 img", max, "8") : await fun.getImg(".contentme img,.contentme2 img", max);
-            fun.showMsg("fun.xhrHEA(check)...", 0);
-            let xhrNum = 0;
-            let resArr = imgSrcs.map(async (src, i, arr) => {
-                let res = await fun.xhrHEAD(src);
-                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
-                let status = res.status;
-                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
-            });
-            return Promise.all(resArr).then(arr => {
-                fun.hideMsg();
-                return arr;
-            });
-            //return /\?m=1/.test(siteUrl) ? fun.getImg(".contentme img,.contentme2 img", max, "8", [/i\d\.wp\.com\/([^\/]+)/, "$1"]) : fun.getImg(".contentme img,.contentme2 img", max, 1, [/i\d\.wp\.com\/([^\/]+)/, "$1"]);
+            return fun.checkWordPressCDN(imgSrcs);
         },
         button: [4],
         insertImg: [".contentme,.contentme2", 2],
@@ -973,7 +949,10 @@
         host: ["xiutaku.com", "kiutaku.com"],
         reg: /(xiutaku\.com|kiutaku\.com)\/\d+$/,
         init: () => fun.remove(".search-form~*,.blog~*:not([class]),.pagination~*:not([class]):not(hr),.article.content~*:not([class]):not(hr),.bottom-articles~*"),
-        imgs: () => fun.getImg(".article-fulltext img", fun.geT(".pagination-list>span:last-child")),
+        imgs: async () => {
+            let imgSrcs = await fun.getImg(".article-fulltext img", fun.geT(".pagination-list>span:last-child"));
+            return fun.checkWordPressCDN(imgSrcs);
+        },
         button: [4],
         insertImg: [".article-fulltext", 2],
         customTitle: () => fun.geT(".article-header>h1").replace("(mitaku.net)", "").trim(),
@@ -2885,6 +2864,7 @@
         name: "美女写真",
         host: ["portrait.knit.bid"],
         reg: /portrait\.knit\.bid\/\w+\/\d+$/,
+        include: ".container>.container>img",
         imgs: async () => {
             let max = fun.geT("//li[a[text()='下页']]", 2);
             let links = fun.arr(max).map((_, i) => siteUrl + "?page=" + (i + 1));
@@ -2895,6 +2875,27 @@
             [".container>.container>nav", 2, "nav[aria-label=pagination],.img-fluid"], 2
         ],
         customTitle: () => fun.geT(".container h1"),
+        category: "nsfw1"
+    }, {
+        name: "美图网",
+        host: ["meitu.knit.bid"],
+        reg: /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/,
+        include: ".details_item>img",
+        imgs: async () => {
+            let max = [...document.querySelectorAll("a[href*=gotoPage]")].at(-2).href.match(/\d+/)[0];
+            let links = fun.arr(max).map((_, i) => siteUrl + "?page=" + (i + 1));
+            return fun.getImgA(".details_item>img", links, 300);
+        },
+        button: [4],
+        insertImg: [".details_item", 2],
+        customTitle: () => fun.geT(".text-center>h1").replace("|", "-"),
+        category: "nsfw1"
+    }, {
+        name: "美图网",
+        host: ["meitu.knit.bid"],
+        reg: /^https?:\/\/meitu\.knit\.bid\/(news|street)\/\d+$/,
+        imgs: ".news-body img",
+        customTitle: () => fun.geT(".text-center>h1").replace("|", "-"),
         category: "nsfw1"
     }, {
         name: "萌图社",
@@ -3591,18 +3592,7 @@
         reg: /^https?:\/\/hotasianx\.com\/albums\//,
         imgs: async () => {
             let imgSrcs = await fun.getImg("img.block", fun.geT("a[rel=next]", 2) || 1);
-            fun.showMsg("fun.xhrHEA(check)...", 0);
-            let xhrNum = 0;
-            let resArr = imgSrcs.map(async (src, i, arr) => {
-                let res = await fun.xhrHEAD(src);
-                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
-                let status = res.status;
-                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
-            });
-            return Promise.all(resArr).then(arr => {
-                fun.hideMsg();
-                return arr;
-            });
+            return fun.checkWordPressCDN(imgSrcs);
         },
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
@@ -3862,19 +3852,24 @@
         host: ["www.4khd.com", "www.4kep.com", "xjav.cc", "hhhy.quest", "vxkk.cc"],
         reg: /(www\.4k(hd|ep)\.com|xjav\.cc|hhhy\.quest|vxkk\.cc)\/\d+\/\d+\/\d+\/.+\.html/,
         imgs: async () => {
-            await fun.getNP("#basicExample>a,figure.wp-block-image", ".current+li>a", null, ".page-link-box", 0, null, 1, 0);
-            let mobile = fun.ge("figure.wp-block-image>a");
-            if (mobile) {
-                thumbnailsSrcArray = [...fun.gae("#basicExample>a>img,figure.wp-block-image>a>img")].map(e => e.src.replace("?w=1000", "?w=100"));
+            await fun.getNP("#basicExample>a,figure.wp-block-image,.entry-content>p>a", ".current+li>a", null, ".page-link-box", 0, null, 1, 0);
+            if (fun.ge("figure.wp-block-image>a")) {
+                thumbnailsSrcArray = [...fun.gae("figure.wp-block-image>a>img")].map(e => e.src.replace(/\?w=\d+$/, "?w=100"));
                 return [...fun.gae("figure.wp-block-image>a")];
-            } else {
-                thumbnailsSrcArray = [...fun.gae("#basicExample>a>img,#gallery a img")].map(e => e.src.replace("?w=1000", "?w=100"));
+            } else if (fun.ge("#basicExample>a")) {
+                thumbnailsSrcArray = [...fun.gae("#basicExample>a>img")].map(e => e.src.replace(/\?w=\d+$/, "?w=100"));
                 return fun.getImgA("#gallery a", "#basicExample>a");
+            } else if (fun.ge(".entry-content>p>a")) {
+                thumbnailsSrcArray = [...fun.gae(".entry-content>p>a>img")].map(e => e.src.replace(/\?w=\d+$/, "?w=100"));
+                return [...fun.gae(".entry-content>p>a")];
+            } else {
+                alert("Full Picture Load\nThe website may have been updated, please provide feedback.");
+                return [];
             }
         },
         button: [4],
         insertImg: [
-            [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image"], 2
+            [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image,.entry-content>p"], 2
         ],
         //autoDownload: [0],
         //next: ".post-navigation-link-previous>a",
@@ -3909,18 +3904,7 @@
                 max = 1;
             }
             let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".contentme img", max, "8") : await fun.getImg(".contentme img", max);
-            fun.showMsg("fun.xhrHEA(check)...", 0);
-            let xhrNum = 0;
-            let resArr = imgSrcs.map(async (src, i, arr) => {
-                let res = await fun.xhrHEAD(src);
-                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
-                let status = res.status;
-                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
-            });
-            return Promise.all(resArr).then(arr => {
-                fun.hideMsg();
-                return arr;
-            });
+            return fun.checkWordPressCDN(imgSrcs);
         },
         button: [4],
         insertImg: [".contentme", 2],
@@ -5852,7 +5836,10 @@
                 let thumbnailUrls = text.match(/"thumbnailUrl":\s?"[^"]+/g).map(e => e.replace(/"thumbnailUrl":\s?"/, "")).filter(e => !/\/logos\//.test(e));
                 thumbnailsSrcArray = thumbnailsSrcArray.concat(thumbnailUrls);
                 let urls = text.match(/"url":\s?"[^"]+/g).map(e => e.replace(/"url":\s?"/, ""));
-                return urls.filter(e => !/\/logos\//.test(e));
+                urls.filter(e => /\.mp4$/.test(e)).forEach(e => {
+                    videosSrcArray.push(e);
+                });
+                return urls.filter(e => !/\/logos\/|\.mp4$/.test(e));
             }
             const max = adConstants.pagesAmount;
             if (max > 1) {
@@ -5862,12 +5849,14 @@
                     links.push(siteUrl + `${i}/`);
                 }
                 let fetchNum = 0;
-                let resArr = links.map((url, i, arr) => {
-                    return fun.fetchDoc(url).then(doc => {
+                let resArr = [];
+                for (let i = 0; i < max; i++) {
+                    let res = await fun.fetchDoc(links[i]).then(doc => {
                         fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
                         return getUrls(selector, doc);
                     });
-                });
+                    resArr.push(res);
+                }
                 return Promise.all(resArr).then(data => {
                     fun.hideMsg();
                     return data.flat();
@@ -5876,13 +5865,13 @@
                 return getUrls(selector, document);
             }
         },
-        repeat: 1,
         button: [4],
         insertImg: [
             [".button-container", 2], 2
         ],
         go: 1,
         css: "a#loadMore{display:none!important}",
+        downloadVideo: true,
         category: "nsfw2"
     }, {
         name: "EroMe",
@@ -14860,6 +14849,20 @@ document.body.appendChild(text);
             return {
                 ok: false
             };
+        },
+        checkWordPressCDN: srcArr => {
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            let resArr = srcArr.map(async (src, i, arr) => {
+                let res = await fun.xhrHEAD(src);
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                let status = res.status;
+                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
+            });
+            return Promise.all(resArr).then(arr => {
+                fun.hideMsg();
+                return arr;
+            });
         },
         getImgSrcArr: (img, doc = document) => {
             let imgs;
