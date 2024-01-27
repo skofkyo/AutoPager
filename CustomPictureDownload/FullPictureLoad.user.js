@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.3
+// @version            1.9.4
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1261,22 +1261,20 @@
             observer: ".headling_main_a",
             next: () => siteUrl.match(/https?:\/\/51sex\.vip\/category\/\d+/)[0] + "/" + (currentPageNum += 1),
             stop: doc => {
-                let currentEles = [...fun.gae(".headling_main_a")];
-                if (currentEles.length < 24) {
+                let currentEleURLs = [...fun.gae(".headling_main_a")].map(a => a.href);
+                if (currentEleURLs.length < 24) {
                     return true;
                 } else {
-                    if (currentEles.length > 24) currentEles = currentEles.slice(-24);
-                    let nextEles = [...fun.gae(".headling_main_a", doc)];
-                    for (let i in currentEles) {
-                        for (let n in nextEles) {
-                            if (currentEles[i].href == nextEles[n].href) return true;
-                        }
+                    if (currentEleURLs.length > 24) currentEleURLs = currentEleURLs.slice(-24);
+                    let nextEleURLs = [...fun.gae(".headling_main_a", doc)].map(a => a.href);
+                    for (let i in currentEleURLs) {
+                        if (nextEleURLs.includes(currentEleURLs[i])) return true;
                     }
                 }
                 return false;
             },
             history: 1,
-            title: doc => doc.title + ` - Page ${currentPageNum}`
+            title: () => "Page " + currentPageNum
         },
         openInNewTab: "a.headling_main_a:not([target=_blank])",
         category: "autoPager"
@@ -19055,9 +19053,10 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         if (siteData.key != 0) {
             if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
             document.addEventListener("keydown", event => {
-                if (event.code != "Escape" || event.key != "Escape") {
-                    if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey || ge("#FullPictureLoadOptions:not([style])")) return;
-                }
+                if (event.ctrlKey && event.altKey && (event.code == "KeyC" || event.key == "c")) return;
+                if (event.ctrlKey && (event.code == "NumpadDecimal" || event.key == ".")) return;
+                if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptions:not([style])")) return;
+                if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
                 if (event.code == "Numpad0" || event.key == "0") { //數字鍵0
                     fastDownload = false;
                     return imgZipDownload();
