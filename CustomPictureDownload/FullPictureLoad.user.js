@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.5
+// @version            1.9.6
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -974,8 +974,8 @@
     }, {
         name: "XGirl 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/xgirl\.one\/(\?page=\d+|search\?q=.+|tag\/.+)?$/,
-        include: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
+        reg: /^https?:\/\/xgirl\.one\//,
+        reg: () => /^https?:\/\/xgirl\.one\//.test(siteUrl) && fun.ge("//div[@class='flex py-4 justify-center md:justify-between mt-4']") && fun.ge("//a[text()='Next']") ? true : false,
         autoPager: {
             mode: 1,
             waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']//img",
@@ -992,8 +992,7 @@
     }, {
         name: "Xerocos 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/xerocos\.com\/(\?page=\d+|search\?q=.+|tag\/.+)?$/,
-        include: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
+        reg: () => /^https?:\/\/xgirl\.one\//.test(siteUrl) && fun.ge("//div[@class='flex py-4 justify-center md:justify-between mt-4']") && fun.ge("//a[text()='Next']") ? true : false,
         autoPager: {
             mode: 1,
             waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']//img|//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6']//img",
@@ -1092,14 +1091,7 @@
     }, {
         name: "微圖坊",
         host: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru", "www.v2ph.ovh"],
-        reg: () => {
-            if (/^https?:\/\/www\.v2ph\.(com|net|ru|ovh)\/album\//.test(siteUrl)) {
-                if (!siteUrl.includes("?page=")) {
-                    return true;
-                }
-            }
-            return false;
-        },
+        reg: () => /^https?:\/\/www\.v2ph\.(com|net|ru|ovh)\/album\//.test(siteUrl) && !siteUrl.includes("?page=") ? true : false,
         include: ".photos-list",
         imgs: async () => {
             let picTotalNum = fun.geT("dd:last-child").match(/\d+/)[0];
@@ -2792,10 +2784,7 @@
     }, {
         name: "女神部落",
         host: ["girlsteam.club"],
-        reg: () => {
-            if (/^https?:\/\/girlsteam\.club\//.test(siteUrl) && fun.ge("#content img") && fun.ge(".item_title>h1")) return true;
-            return false;
-        },
+        reg: () => /^https?:\/\/girlsteam\.club\//.test(siteUrl) && fun.ge("#content img") && fun.ge(".item_title>h1") ? true : false,
         imgs: "#content img",
         button: [4],
         insertImg: ["#content", 2],
@@ -4009,10 +3998,7 @@
     }, {
         name: "Everia club",
         host: ["www.everiaclub.com"],
-        reg: () => {
-            if (/^https?:\/\/www\.everiaclub\.com\/(?!tags).+/.test(siteUrl) && !siteUrl.includes(".html")) return true;
-            return false;
-        },
+        reg: () => /^https?:\/\/www\.everiaclub\.com\/(?!tags).+/.test(siteUrl) && !siteUrl.includes(".html") ? true : false,
         imgs: ".mainleft img",
         button: [4],
         insertImg: [".mainleft", 2],
@@ -4594,7 +4580,7 @@
         name: "俊美图",
         host: ["www.meijuntu.com", "www.junmeitu.com", "www.jeya.de", "www.jeya.jp"],
         reg: /(www\.meijuntu\.com|(www\.)?junmeitu\.com|(www\.)?jeya\.\w+)\/\w+\/\w+\.html/i,
-        include: ".pictures img[alt]",
+        include: ".pictures img",
         imgs: async () => {
             let imgsArr = [];
             let max = fun.geT("#pages>*:last-child", 2) || 1;
@@ -4617,8 +4603,8 @@
                         }
                     }
                 });
-                let imgs = [...fun.gae(".pictures img[alt]", doc)];
-                let te = [...fun.gae(".pictures img[alt]")].at(-1);
+                let imgs = [...fun.gae(".pictures img", doc)];
+                let te = [...fun.gae(".pictures img")].at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
                     if (i != 0) te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
@@ -4770,7 +4756,7 @@
             fun.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
             let resArr = fun.arr(max).map((_, i) => {
-                return fetch(`${location.origin}/api/?ac=get_album_images&id=${id}&num=${i+1}`).then(res => res.json()).then(json => {
+                return fetch(`/api/?ac=get_album_images&id=${id}&num=${i+1}`).then(res => res.json()).then(json => {
                     fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
                     return json.src;
                 });
@@ -5937,7 +5923,7 @@
         imgs: () => {
             if (fun.ge("#album_view_album_view_pagination")) {
                 fun.showMsg(displayLanguage.str_05, 0);
-                let max = parseInt(fun.geT("//li[@class='next action-item']/preceding-sibling::li[1]//span[@class='text']"), 10);
+                let max = parseInt(fun.geT("//li[@class='next action-item']/preceding-sibling::li[@class='page action-item'][1]//span[@class='text']"), 10);
                 let fetchNum = 0;
                 let resArr = fun.arr(max).map((_, i) => {
                     let url = siteUrl + "?mode=async&function=get_block&block_id=album_view_album_view&sort_by=&from=" + (i + 1);
