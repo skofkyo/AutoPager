@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.6
+// @version            1.9.7
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -881,7 +881,6 @@
             mode: 1,
             waitEle: "#article[style]",
             ele: "#article",
-            observer: "#article",
             next: "span.current+a",
             re: ".pagebar",
             title: doc => "Page " + fun.geT("span.current", 1, doc),
@@ -980,11 +979,11 @@
             mode: 1,
             waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']//img",
             ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']",
-            observer: "//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']",
             pos: ["//div[@class='flex py-4 justify-center md:justify-between mt-4']", 1],
             next: "//a[text()='Next']",
             re: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
             title: doc => "Page " + nextLink.match(/\d+$/)[0],
+            bottom: screen.height * 2,
             history: 1
         },
         openInNewTab: ".grid a:not([target=_blank])",
@@ -992,17 +991,17 @@
     }, {
         name: "Xerocos 分類自動翻頁",
         enable: 1,
-        reg: () => /^https?:\/\/xgirl\.one\//.test(siteUrl) && fun.ge("//div[@class='flex py-4 justify-center md:justify-between mt-4']") && fun.ge("//a[text()='Next']") ? true : false,
+        reg: () => /^https?:\/\/xerocos\.com\//.test(siteUrl) && fun.ge("//div[@class='flex py-4 justify-center md:justify-between mt-4']") && fun.ge("//a[text()='Next']") ? true : false,
         autoPager: {
             mode: 1,
             waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']//img|//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6']//img",
             ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']|//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6']",
-            observer: "//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4']|//div[@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6']",
             pos: ["//div[@class='flex py-4 justify-center md:justify-between mt-4']", 1],
             next: "//a[text()='Next']",
             re: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
             title: doc => "Page " + nextLink.match(/\d+$/)[0],
             aF: () => [...fun.gae(".blur-2xl")].forEach(e => e.classList.remove("blur-2xl")),
+            bottom: screen.height * 2,
             history: 1
         },
         openInNewTab: ".grid a:not([target=_blank])",
@@ -1908,10 +1907,10 @@
             mode: 1,
             waitEle: "#posts[style]",
             ele: "#posts",
-            observer: "#posts",
             next: "a.archive-nav-older.fleft",
             re: ".archive-nav",
             title: () => "Page " + nextLink.match(/\d+$/)[0],
+            bottom: screen.height * 3,
             history: 1
         },
         openInNewTab: ".post-container a:not([target=_blank])",
@@ -3044,8 +3043,8 @@
         category: "nsfw2"
     }, {
         name: "HotGirl World",
-        host: ["www.hotgirl.world"],
-        reg: /^https?:\/\/www\.hotgirl\.world\/g\/\w+\.html\//,
+        host: ["www.hotgirl.world", "www.hotgirl2024.com"],
+        reg: /^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/g\/\w+\.html\//,
         imgs: () => {
             let max = fun.geT(".pagination__total");
             return fun.getImg(".article__image-list img", max);
@@ -3062,12 +3061,11 @@
     }, {
         name: "HotGirl World 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/,
+        reg: /^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/search\.html\/\?(page=\d+&)?q=/,
         include: ".pagination",
         init: () => [...fun.gae(".blur-image")].forEach(e => e.classList.remove("blur-image")),
         autoPager: {
             ele: ".articles-grid",
-            observer: ".articles-grid .articles-grid__item",
             next: ".pagination__item--active+a",
             re: ".pagination",
             lazySrc: "img[data-src]",
@@ -4484,7 +4482,6 @@
         include: ".date-outer",
         init: () => fun.run("$('.snips-image').unbind();$('.snips-image img').unbind();"),
         autoPager: {
-            //mode: 1,
             ele: ".blog-posts",
             next: "a.blog-pager-older-link",
             http: "https",
@@ -4511,16 +4508,7 @@
             },
             title: doc => {
                 let num;
-                if (/start=/.test(nextLink)) {
-                    if (siteUrl.includes("unc.micmicdoll.com")) {
-                        num = parseInt(nextLink.match(/start=(\d+)/)[1], 10);
-                        num % 2 == 0 ? num = num / 50 + 1 : num = num / 39 + 1;
-                    } else {
-                        num = parseInt(nextLink.match(/start=(\d+)/)[1], 10) / 50 + 1;
-                    }
-                } else {
-                    num = 1;
-                }
+                /start=/.test(nextLink) ? num = parseInt(nextLink.match(/start=(\d+)/)[1], 10) / 50 + 1 : num = 1;
                 return doc.title + ` - Page ${num}`;
             }
         },
@@ -4817,6 +4805,7 @@
         name: "嘿～色女孩 分類自動翻頁",
         enable: 1,
         reg: /^https?:\/\/heysexgirl\.com\/(page\/\d+)?$|^https?:\/\/heysexgirl\.com\/archives\/category\/\w+(\/page\/\d+)?$/,
+        init: async () => await fun.waitEle(".blog-posts-wrapper[style]"),
         autoPager: {
             mode: 1,
             waitEle: ".blog-posts-wrapper[style]",
@@ -13065,6 +13054,7 @@ document.body.appendChild(text);
             observer: ".mdui-col-lg-2",
             next: doc => fun.ge("span.current+a", doc) ? siteUrl.replace(/\?page=\d+/, "") + "?page=" + fun.ge("span.current+a", doc).getAttribute("href").match(/\d+/)[0] : null,
             re: ".pages",
+            title: doc => "Page " + nextLink.match(/\d+$/)[0],
             history: 1
         },
         openInNewTab: ".mdui-col-lg-2>a",
@@ -18885,7 +18875,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     if (ele) fun.autoPagerNextObserver.observe(ele);
                 } else {
                     const callback = async () => {
-                        if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - (siteData.autoPager.bottom || 1000)) {
+                        if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - (siteData.autoPager.bottom || screen.height)) {
                             if (!autoPager) return;
                             document.removeEventListener("scroll", callback);
                             await fun.autoPager();
