@@ -252,7 +252,7 @@ fun.ge(selector, doc)
                 text: titleText
             }
         },
-        bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設1000可省略。
+        bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設為當前視窗可視範圍的高度screen.height可省略。
         sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略。
         history: 1, //1翻頁後添加瀏覽器歷史紀錄，不需要則省略。
         loading: "msg", //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息
@@ -836,7 +836,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.lovecos.net/">www.lovecos.net</a>，不支持VIP資源。</td>
             </tr>
             <tr>
-                <td><a href="https://ja.huamaobizhi.com/mixs/?page_size=24&search_tag=&tag_id=0&page=1&order_by=0&purity=1&remember_filter=1&lang=zh-CN">花猫壁纸</a></td>
+                <td><a href="https://ja.huamaobizhi.com/mixs/?lang=zh-CN">花猫壁纸</a></td>
                 <td><a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類添加了自動翻頁。</td>
             </tr>
             <tr>
@@ -1426,7 +1426,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.hotgirl.world/">HotGirl World</a></td>
+                <td><a href="https://www.hotgirl2024.com/">HotGirl World</a></td>
                 <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
