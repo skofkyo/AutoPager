@@ -708,7 +708,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/25 14:48</p>
+<p>2024/01/28 23:10</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -900,10 +900,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.mfpho.com/">柔丝映画</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://portrait.knit.bid/">美女写真</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1915,6 +1911,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.lianjiajr.net/">好视角</a></td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td><a href="https://meitu.knit.bid/">美图网</a></td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td><a href="https://portrait.knit.bid/">美女写真</a></td>
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
