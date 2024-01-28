@@ -677,8 +677,8 @@ Hentai Cosplay
 *://www.hentaicos.com/*/*.html
 
 HotGirl World
-/^https?:\/\/www\.hotgirl\.world\/g\/\w+\.html\//
-/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
+/^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/g\/\w+\.html\//
+/^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/search\.html\/\?(page=\d+&)?q=/
 
 1Y Beauties
 *://www.1y.is/*/*.html
@@ -1703,8 +1703,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.hanmanfree.com/index.php/chapter/*
 *://okhanman.com/index.php/chapter/*
 *://www.hentaicos.com/*/*.html
-/^https?:\/\/www\.hotgirl\.world\/g\/\w+\.html\//
-/^https?:\/\/www\.hotgirl\.world\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/www\.hotgirl\.world\/search\.html\/\?(page=\d+&)?q=/
+/^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/g\/\w+\.html\//
+/^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/search\.html\/\?(page=\d+&)?q=/
 *://cosblay.com/*.html
 *://trendszine.com/*.html
 *://www.tiplogo.com/*.html
