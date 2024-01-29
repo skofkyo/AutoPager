@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.7
+// @version            1.9.8
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -7701,6 +7701,52 @@
         css: "@media only screen and (max-width:480px){article{width:100%!important}}",
         category: "nsfw1"
     }, {
+        name: "名腿网",
+        host: ["www.mingtuiw.com"],
+        reg: /^https?:\/\/www\.mingtuiw\.com\/archives\/\d+$/,
+        exclude: ".swpm-more-tag-not-logged-in,.swpm-more-tag-restricted-msg",
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".entry-content img")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
+        },
+        button: [4],
+        insertImg: [".entry-content>p", 2],
+        customTitle: () => fun.geT(".entry-title").replace(/（\d+图）/, "").trim(),
+        category: "nsfw1"
+    }, {
+        name: "名腿网",
+        host: ["www.mingtuiw.com"],
+        reg: () => {
+            if (/^https?:\/\/www\.mingtuiw\.com\/archives\/\d+$/.test(siteUrl)) {
+                let num = fun.geT(".entry-title").match(/（(\d+)图）/)[1];
+                let tImgsNum = [...fun.gae(".entry-content img")].length;
+                if (num == tImgsNum) return true;
+            }
+            return false;
+        },
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".entry-content img")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
+        },
+        button: [4],
+        insertImg: [".entry-content>p", 2],
+        customTitle: () => fun.geT(".entry-title").replace(/（\d+图）/, "").trim(),
+        category: "nsfw1"
+    }, {
+        name: "名腿网",
+        host: ["www.mingtuiw.com"],
+        reg: /^https?:\/\/www\.mingtuiw\.com\/archives\/\d+\/.+$/,
+        exclude: "#div_img_vip",
+        imgs: async () => {
+            let links = [...fun.gae("#thumb_imglist>a")].map(a => a.href);
+            let imgSrcs = await fun.getImgA(".entry-content img.attachment-large", links);
+            return imgSrcs.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
+        },
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: () => document.title.replace(/（\d+\/\d+）.+/, "").trim(),
+        category: "nsfw1"
+    }, {
         name: "Ai19 Art/Ai art nude/Hentaimama",
         host: ["ai19.art", "ainudesporn.art", "hentaimama.xyz"],
         reg: /^https?:\/\/(ai19\.art|ainudesporn\.art|hentaimama\.xyz)\/news\//,
@@ -13987,7 +14033,7 @@ document.body.appendChild(text);
                         fun.scrollEvent(fancybox.getSlide().index);
                     }
                 },
-                close: (fancybox, slide) => {
+                close: fancybox => {
                     document.body.classList.remove("imgbox-show");
                     slideIndex = fancybox.getSlide().index;
                     fun.scrollEvent(slideIndex);
@@ -14022,7 +14068,7 @@ document.body.appendChild(text);
                         fun.scrollEvent(fancybox.getSlide().index);
                     }
                 },
-                close: (fancybox, slide) => {
+                close: fancybox => {
                     document.body.classList.remove("imgbox-show");
                     slideIndex = fancybox.getSlide().index;
                     fun.scrollEvent(slideIndex);
@@ -14035,6 +14081,9 @@ document.body.appendChild(text);
 
     switch (language) {
         case "zh-TW":
+        case "zh-HK":
+        case "zh-Hant-TW":
+        case "zh-Hant-HK":
             displayLanguage = {
                 str_01: "獲取圖片元素中...",
                 str_02: "獲取圖片中 ",
@@ -14103,7 +14152,7 @@ document.body.appendChild(text);
                 str_65: "已停止自動下載!!!",
                 str_66: "💬 反饋",
                 str_67: "設定",
-                str_68: "當前網站 Full Picture Load 選項",
+                str_68: "當前(※全局)網站 Full Picture Load 選項",
                 str_69: "顯示左下圖示按鈕",
                 str_70: "最大下載線程數 ( 1 ~ 32 )：",
                 str_71: "下載後壓縮打包",
@@ -14117,13 +14166,13 @@ document.body.appendChild(text);
                 str_79: "圖片縮放比例 ( 0 ~ 10 )：",
                 str_80: "圖片並排數量 ( 2 ~ 6 )：",
                 str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
-                str_82: "取消 (Esc)",
+                str_82: hasTouchEvents() ? "取消" : "取消 (Esc)",
                 str_83: "重置設定",
                 str_84: "保存設定",
-                str_85: "腳本選項(*)",
-                str_86: "切換模式(5)",
-                str_87: "比例縮放(-+)",
-                str_88: "取消縮放(.)",
+                str_85: hasTouchEvents() ? "腳本選項" : "腳本選項(*)",
+                str_86: hasTouchEvents() ? "切換模式" : "切換模式(5)",
+                str_87: hasTouchEvents() ? "比例縮放" : "比例縮放(-+)",
+                str_88: hasTouchEvents() ? "取消縮放" : "取消縮放(.)",
                 str_89: "暫停自動翻頁",
                 str_90: "啟用自動翻頁",
                 str_91: "初始化設定",
@@ -14139,16 +14188,17 @@ document.body.appendChild(text);
                 str_101: "網址.txt已匯出",
                 str_102: "格式轉換中...",
                 str_103: "啟用並排模式",
-                str_104: "匯出圖址(7)",
-                str_105: "複製圖址(1)",
-                str_106: "分頁檢視(8)",
-                str_107: "一鍵下載(3)",
-                str_108: "訊息顯示的位置 ( 0 ~ 4 )：",
+                str_104: hasTouchEvents() ? "匯出圖址" : "匯出圖址(7)",
+                str_105: hasTouchEvents() ? "複製圖址" : "複製圖址(1)",
+                str_106: hasTouchEvents() ? "分頁檢視" : "分頁檢視(8)",
+                str_107: hasTouchEvents() ? "一鍵下載" : "一鍵下載(3)",
+                str_108: "※訊息顯示的位置 ( 0 ~ 4 )：",
                 str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
-                str_110: "Webp轉換為Jpg"
+                str_110: "※Webp轉換為Jpg"
             };
             break;
         case "zh-CN":
+        case "zh-Hans-CN":
             displayLanguage = {
                 str_01: "获取图片元素中...",
                 str_02: "获取图片中 ",
@@ -14217,7 +14267,7 @@ document.body.appendChild(text);
                 str_65: "已停止自动下载!!!",
                 str_66: "💬 反馈",
                 str_67: "设置",
-                str_68: "当前网站 Full Picture Load 选项",
+                str_68: "当前(※全局)网站 Full Picture Load 设置",
                 str_69: "显示左下图标按钮",
                 str_70: "下载后最大下载线程数 ( 1 ~ 32 )：",
                 str_71: "压缩打包",
@@ -14231,13 +14281,13 @@ document.body.appendChild(text);
                 str_79: "图片缩放比例 ( 0 ~ 10 )：",
                 str_80: "图片并排数量 ( 2 ~ 6 )：",
                 str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
-                str_82: "取消 (Esc)",
+                str_82: hasTouchEvents() ? "取消" : "取消 (Esc)",
                 str_83: "重置设置",
                 str_84: "保存设置",
-                str_85: "脚本选项(*)",
-                str_86: "切换模式(5)",
-                str_87: "比例缩放(-+)",
-                str_88: "取消缩放(.)",
+                str_85: hasTouchEvents() ? "脚本设置" : "脚本设置(*)",
+                str_86: hasTouchEvents() ? "切换模式" : "切换模式(5)",
+                str_87: hasTouchEvents() ? "比例缩放" : "比例缩放(-+)",
+                str_88: hasTouchEvents() ? "取消缩放" : "取消缩放(.)",
                 str_89: "暂停自动翻页",
                 str_90: "启用自动翻页",
                 str_91: "初始化设置",
@@ -14253,13 +14303,13 @@ document.body.appendChild(text);
                 str_101: "网址.txt已导出",
                 str_102: "格式转换中...",
                 str_103: "启用并排模式",
-                str_104: "导出图址(7)",
-                str_105: "拷贝图址(1)",
-                str_106: "分页视图(8)",
-                str_107: "一键下载(3)",
-                str_108: "讯息显示的位置 ( 0 ~ 4 )：",
+                str_104: hasTouchEvents() ? "导出图址" : "导出图址(7)",
+                str_105: hasTouchEvents() ? "拷贝图址" : "拷贝图址(1)",
+                str_106: hasTouchEvents() ? "分页视图" : "分页视图(8)",
+                str_107: hasTouchEvents() ? "一键下载" : "一键下载(3)",
+                str_108: "※讯息显示的位置 ( 0 ~ 4 )：",
                 str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
-                str_110: "Webp转换为Jpg"
+                str_110: "※Webp转换为Jpg"
             };
             break;
         default:
@@ -14331,7 +14381,7 @@ document.body.appendChild(text);
                 str_65: "Stop AutoDownload!!!",
                 str_66: "💬 Feedback",
                 str_67: "Settings",
-                str_68: "Current Website Full Picture Load Options",
+                str_68: "Current(※Global) Website Full Picture Load Options",
                 str_69: "Show Lower Left Icon Button",
                 str_70: "Max Download Thread ( 1 ~ 32 )：",
                 str_71: "Compressed Packaging",
@@ -14343,15 +14393,15 @@ document.body.appendChild(text);
                 str_77: "Double Click Go To Next Page",
                 str_78: "Fancybox Plugin",
                 str_79: "Image Zoom Ratio ( 0 ~ 10 )：",
-                str_80: "Number Of Pictures Side By Side ( 2 ~ 6 )：",
+                str_80: "Number Of Images Side By Side ( 2 ~ 6 )：",
                 str_81: "Comic Category Fixed To 2",
-                str_82: "Cancel (Esc)",
+                str_82: hasTouchEvents() ? "Cancel" : "Cancel (Esc)",
                 str_83: "Reset",
                 str_84: "Save",
-                str_85: "Settings(*)",
-                str_86: "Toggle(5)",
-                str_87: "Zoom(-+)",
-                str_88: "Cancel(.)",
+                str_85: hasTouchEvents() ? "Settings" : "Settings(*)",
+                str_86: hasTouchEvents() ? "Toggle" : "Toggle(5)",
+                str_87: hasTouchEvents() ? "Zoom" : "Zoom(-+)",
+                str_88: hasTouchEvents() ? "Cancel" : "Cancel(.)",
                 str_89: "Pause Automatic Page Turning",
                 str_90: "Enable Automatic Page Turning",
                 str_91: "Initialization Settings",
@@ -14367,13 +14417,13 @@ document.body.appendChild(text);
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
-                str_104: "Export URLs(7)",
-                str_105: "Copy URLs(1)",
-                str_106: "New Tab View(8)",
-                str_107: "Fast Download(3)",
-                str_108: "Where the message appears ( 0 ~ 4 )：",
+                str_104: hasTouchEvents() ? "Export" : "Export URLs(7)",
+                str_105: hasTouchEvents() ? "Copy" : "Copy URLs(1)",
+                str_106: hasTouchEvents() ? "TabView" : "New Tab View(8)",
+                str_107: hasTouchEvents() ? "Download" : "Fast Download(3)",
+                str_108: "※Where the message appears ( 0 ~ 4 )：",
                 str_109: "0: Center, 1: Upper left, 2: Upper right, 3: Lower left, 4: Lower right",
-                str_110: "Convert Webp to Jpg"
+                str_110: "※Convert Webp to Jpg"
             };
             break;
     }
@@ -17320,6 +17370,11 @@ document.body.appendChild(text);
                 jQueryScript.type = "text/javascript";
                 jQueryScript.innerHTML = jqueryCode + fancyboxCode + `
 function setFancybox() {
+    const scrollIntoViewOptions = {
+        block: "center",
+        behavior: "smooth",
+        inline: "center"
+    };
     Fancybox.bind("[data-fancybox]", {
         idle: false,
         wheel: "slide",
@@ -17340,44 +17395,27 @@ function setFancybox() {
         },
         on: {
             done: (fancybox, slide) => {
+                let slideIndex = slide.index;
+                let imgs = [...document.querySelectorAll("img")];
+                imgs.forEach(e => e.style.border = "");
                 if (fancybox.isCurrentSlide(slide)) {
-                    slideIndex = slide.index;
                     imgViewIndex = slideIndex;
-                    [...document.querySelectorAll("img")].forEach(e => {
-                        e.style.border = "";
-                    });
-                    [...document.querySelectorAll("img")][slideIndex].style.border = "solid #32a1ce";
-                    [...document.querySelectorAll("img")][slideIndex].scrollIntoView({
-                        block: "center",
-                        behavior: "smooth",
-                        inline: "center"
-                    });
+                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
                 } else {
                     imgViewIndex = fancybox.getSlide().index;
-                    [...document.querySelectorAll("img")].forEach(e => {
-                        e.style.border = "";
-                    });
-                    [...document.querySelectorAll("img")][slideIndex].style.border = "solid #32a1ce";
-                    [...document.querySelectorAll("img")][fancybox.getSlide().index].scrollIntoView({
-                        block: "center",
-                        behavior: "smooth",
-                        inline: "center"
-                    });
+                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
                 }
             },
-            close: (fancybox, slide) => {
+            close: fancybox => {
                 document.body.classList.remove("hide-scrollbar");
-                slideIndex = fancybox.getSlide().index;
-                imgViewIndex = fancybox.getSlide().index;
-                [...document.querySelectorAll("img")].forEach(e => {
-                    e.style.border = "";
-                });
-                [...document.querySelectorAll("img")][slideIndex].style.border = "solid #32a1ce";
-                [...document.querySelectorAll("img")][slideIndex].scrollIntoView({
-                    block: "center",
-                    behavior: "smooth",
-                    inline: "center",
-                });
+                let slideIndex = fancybox.getSlide().index;
+                imgViewIndex = slideIndex;
+                let imgs = [...document.querySelectorAll("img")];
+                imgs.forEach(e => e.style.border = "");
+                imgs[slideIndex].style.border = "solid #32a1ce";
+                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
             }
         }
     });
@@ -17430,18 +17468,30 @@ function setFancybox() {
 img.default {
     width: auto;
     height: auto;
-    max-width: 100vw;
-    max-height: 100vh;
+    max-width: 99vw;
+    max-height: 99vh;
     padding: 2px;
+    border: solid #fff;
 }
-img.singlePage {
+img.single {
     width: auto;
     height: auto;
-    max-width: 100%;
-    max-height: 100vh;
+    max-width: 99%;
+    max-height: 99vh;
     display: block;
     margin: 0 auto;
     padding-bottom: 4px;
+    border: solid #fff;
+}
+img.sbs {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    height: auto;
+    max-width: 23.2%;
+    max-height: 99vh;
+    margin: 2px;
+    border: solid #fff;
 }
 `;
                 doc.body.appendChild(newWindowStyle);
@@ -17450,32 +17500,24 @@ img.singlePage {
                 newWindowScript.id = "newWindowScript";
                 newWindowScript.type = "text/javascript";
                 newWindowScript.innerHTML = `
-var viewMode = 0;
+var hasTouchEvents = () => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;
 var imgViewIndex = -1;
 
 function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
+        id: "MenuSBSItem",
+        text: hasTouchEvents() ? "Side By Side" : "Side By Side (2)",
+        cfn: () => SBSImageLayout()
+    }, {
         id: "MenuSinglePageItem",
-        text: "Single Image (1)",
-        cfn: event => {
-            event.preventDefault();
-            singlePageImageLayout();
-            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
-            document.querySelector("#MenuSinglePageItem").classList.add("active");
-            localStorage.setItem("newWindowData", '{"ViewMode":1}');
-        }
+        text: hasTouchEvents() ? "Single Image" : "Single Image (1)",
+        cfn: () => singleImageLayout()
     }, {
         id: "MenuDefaultItem",
-        text: "Default (0)",
-        cfn: event => {
-            event.preventDefault();
-            defaultImageLayout();
-            [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
-            document.querySelector("#MenuDefaultItem").classList.add("active");
-            localStorage.setItem("newWindowData", '{"ViewMode":0}');
-        }
+        text: hasTouchEvents() ? "Default" : "Default (0)",
+        cfn: () => defaultImageLayout()
     }];
     const createMenu = obj => {
         let item = document.createElement("div");
@@ -17484,78 +17526,60 @@ function addFixedMenu() {
         item.innerText = obj.text;
         item.oncontextmenu = () => false;
         if (obj.cfn) item.addEventListener("click", obj.cfn);
-        if (obj.mfn) item.addEventListener("mousedown", obj.mfn);
         menuDiv.appendChild(item);
     };
-    [...menuObj].forEach(obj => createMenu(obj));
+    menuObj.forEach(obj => createMenu(obj));
     document.body.appendChild(menuDiv);
 }
 addFixedMenu();
 
 document.addEventListener("keydown", event => {
-    if (event.code == "Numpad0" || event.key == "0") {
-        defaultImageLayout();
-        [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
-        document.querySelector("#MenuDefaultItem").classList.add("active");
-        localStorage.setItem("newWindowData", '{"ViewMode":0}');
-    }
-    if (event.code == "Numpad1" || event.key == "1") {
-        singlePageImageLayout();
-        [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
-        document.querySelector("#MenuSinglePageItem").classList.add("active");
-        localStorage.setItem("newWindowData", '{"ViewMode":1}');
-    }
+    if (document.querySelector(".fancybox__container")) return;
+    if (event.code == "Numpad0" || event.key == "0") return defaultImageLayout();
+    if (event.code == "Numpad1" || event.key == "1") return singleImageLayout();
+    if (event.code == "Numpad2" || event.key == "2") return SBSImageLayout();
 });
 
 document.addEventListener("keydown", event => {
     if (document.querySelector(".fancybox__container")) return;
-    let imgs = [...document.querySelectorAll("img")];
+    const scrollIntoViewOptions = {
+        block: "center",
+        inline: "center"
+    };
+    const imgs = [...document.querySelectorAll("img")];
     if ((event.code == "ArrowUp" || event.key == "ArrowUp") && imgViewIndex >= 0 || (event.code == "ArrowLeft" || event.key == "ArrowLeft") && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
-        if (imgViewIndex < 0) {
-            imgViewIndex = imgs.length - 1;
-        }
-        imgs.forEach(e => {
-            e.style.border = "";
-        });
+        if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
+        imgs.forEach(e => e.style.border = "");
         imgs[imgViewIndex].style.border = "solid #32a1ce";
-        imgs[imgViewIndex].scrollIntoView({
-            block: "center",
-            inline: "center"
-        });
+        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else if ((event.code == "ArrowDown" || event.key == "ArrowDown") && imgViewIndex <= imgs.length - 1 || (event.code == "ArrowRight" || event.key == "ArrowRight") && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
-        if (imgViewIndex > imgs.length - 1) {
-            imgViewIndex = 0;
-        }
-        imgs.forEach(e => {
-            e.style.border = "";
-        });
+        if (imgViewIndex > imgs.length - 1) imgViewIndex = 0;
+        imgs.forEach(e => e.style.border = "");
         imgs[imgViewIndex].style.border = "solid #32a1ce";
-        imgs[imgViewIndex].scrollIntoView({
-            block: "center",
-            inline: "center"
-        });
+        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else {
         imgViewIndex = -1;
     }
 });
 
 function loadImgs() {
-    let oddNumberImgs = [...document.querySelectorAll("img")].filter((img, index) => parseInt(index, 10) % 2 == 0);
-    let evenNumberImgs = [...document.querySelectorAll("img")].filter((img, index) => parseInt(index, 10) % 2 != 0);
+    const imgs = [...document.querySelectorAll("img")];
+    const oddNumberImgs = imgs.filter((img, index) => parseInt(index, 10) % 2 == 0);
+    const evenNumberImgs = imgs.filter((img, index) => parseInt(index, 10) % 2 != 0);
     fn.singleThreadLoadImgs(oddNumberImgs);
     fn.singleThreadLoadImgs(evenNumberImgs);
 }
 
-function defaultImageLayout() {
+function createImgElement(mode) {
     window.scrollTo({
         top: 0
     });
     imgViewIndex = -1;
-    viewMode = 0;
+    [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
     document.querySelector("#imgBox").innerHTML = "";
     const imgElements = newImgs.map((src, i, arr) => {
         let a = document.createElement("a");
@@ -17563,7 +17587,7 @@ function defaultImageLayout() {
         a.dataset.fancybox = "gallery";
         a.target = "_blank";
         let img = document.createElement("img");
-        img.className = "default";
+        img.className = mode;
         img.src = "${loading_bak}";
         img.dataset.src = src;
         fn.imagesObserver.observe(img);
@@ -17571,47 +17595,34 @@ function defaultImageLayout() {
         return a;
     });
     document.querySelector("#imgBox").append(...imgElements);
-    document.querySelector("#MenuDefaultItem").classList.add("active");
-
-    try {
-        setFancybox();
-    } catch (e) {}
-
+    setFancybox();
     loadImgs();
 }
 
-function singlePageImageLayout() {
-    window.scrollTo({
-        top: 0
-    });
-    imgViewIndex = -1;
-    viewMode = 1;
-    document.querySelector("#imgBox").innerHTML = "";
-    const imgElements = newImgs.map((src, i, arr) => {
-        let a = document.createElement("a");
-        a.href = src;
-        a.dataset.fancybox = "gallery";
-        a.target = "_blank";
-        let img = document.createElement("img");
-        img.className = "singlePage";
-        img.src = "${loading_bak}";
-        img.dataset.src = src;
-        fn.imagesObserver.observe(img);
-        a.appendChild(img);
-        return a;
-    });
-    document.querySelector("#imgBox").append(...imgElements);
+function defaultImageLayout() {
+    createImgElement("default");
+    localStorage.setItem("newWindowData", '{"ViewMode":0}');
+    document.querySelector("#MenuDefaultItem").classList.add("active");
+}
+
+function singleImageLayout() {
+    createImgElement("single");
+    localStorage.setItem("newWindowData", '{"ViewMode":1}');
     document.querySelector("#MenuSinglePageItem").classList.add("active");
-    try {
-        setFancybox();
-    } catch (e) {}
-    loadImgs();
+}
+
+function SBSImageLayout() {
+    createImgElement("sbs");
+    localStorage.setItem("newWindowData", '{"ViewMode":2}');
+    document.querySelector("#MenuSBSItem").classList.add("active");
 }
 
 let newWindowDataViewMode = JSON.parse(localStorage.newWindowData).ViewMode;
 
 if (newWindowDataViewMode == 1) {
-    singlePageImageLayout();
+    singleImageLayout();
+} else if (newWindowDataViewMode == 2) {
+    SBSImageLayout();
 } else {
     defaultImageLayout();
 }
@@ -18431,7 +18442,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     }
 
     if (/^https?:\/\/(e-hentai|exhentai).org\//.test(window.location.href)) {
-        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ E-HENTAI Load Original Image" : "✔️ E_HENTAI Load Original Image", () => {
+        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ E/EX-HENTAI Load Original Image" : "✔️ E/EX-HENTAI Load Original Image", () => {
             E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
             location.reload();
         });
