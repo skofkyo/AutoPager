@@ -912,7 +912,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.446m.com/">萌图社</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.inini.win/">爱若传媒映画</a></td>
