@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.8
+// @version            1.9.9
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -427,9 +427,9 @@
         category: "nsfw2"
     }, {
         name: "新闻吧/新娱乐在线/新娱乐网/福建热线/山东热线/广西热线/武汉热线/天津热线/云南热线/甘肃热线",
-        host: ["www.xinwenba.net", "m.xwbar.com", "www.dv67.com", "m.dv67.com", "www.xinent.net", "m.xinent.net", "www.fjrx.org", "m.fjrx.org", "www.sdrx.org", "m.sdrx.org", "www.gxrx.org", "m.gxrx.org", "www.whrx.org", "m.whrx.org", "www.tjrx.org", "m.tjrx.org", "www.ynrx.org", "m.ynrx.org", "www.gsrx.org", "m.gsrx.org"],
+        host: ["www.xinwenba.net", "www.xwbar.com", "m.xwbar.com", "www.dv67.com", "m.dv67.com", "www.xinent.net", "m.xinent.net", "www.fjrx.org", "m.fjrx.org", "www.sdrx.org", "m.sdrx.org", "www.gxrx.org", "m.gxrx.org", "www.whrx.org", "m.whrx.org", "www.tjrx.org", "m.tjrx.org", "www.ynrx.org", "m.ynrx.org", "www.gsrx.org", "m.gsrx.org"],
         link: "https://www.xinwenba.net/web/meinv/",
-        reg: /(www\.xinwenba\.net|m\.xwbar\.com|(www|m)\.dv67\.com|(www|m)\.xinent\.net|(www|m)\.fjrx\.org|(www|m)\.sdrx\.org|(www|m)\.gxrx\.org|(www|m)\.whrx\.org|(www|m)\.tjrx\.org|(www|m)\.ynrx\.org|(www|m)\.gsrx\.org)\/plus\/view-\d+-\d+\.html/,
+        reg: /(www\.xinwenba\.net|(www|m)\.xwbar\.com|(www|m)\.dv67\.com|(www|m)\.xinent\.net|(www|m)\.fjrx\.org|(www|m)\.sdrx\.org|(www|m)\.gxrx\.org|(www|m)\.whrx\.org|(www|m)\.tjrx\.org|(www|m)\.ynrx\.org|(www|m)\.gsrx\.org)\/plus\/view-\d+-\d+\.html/,
         include: ".main img",
         imgs: () => {
             let max;
@@ -875,7 +875,7 @@
     }, {
         name: "图片屋 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/(www\.)?tupianwu\.com\/(page\/\d+\/)?$|^https?:\/\/(www\.)?tupianwu\.com\/category\/\d+\/(\d+\/)?$/,
+        reg: /^https?:\/\/(www\.)?tupianwu\.com\/(page\/\d+\/)?$|^https?:\/\/(www\.)?tupianwu\.com\/category\/\d+\/(\d+\/)?$|^https?:\/\/(www\.)?tupianwu\.com\/tags\//,
         include: ".pagebar",
         autoPager: {
             mode: 1,
@@ -883,7 +883,8 @@
             ele: "#article",
             next: "span.current+a",
             re: ".pagebar",
-            title: doc => "Page " + fun.geT("span.current", 1, doc),
+            title: doc => "Page " + fun.geT(".pagebar span.current", 1, doc),
+            bottom: screen.height * 3,
             history: 1
         },
         openInNewTab: "#article a:not([target=_blank])",
@@ -1737,7 +1738,7 @@
         button: [4],
         insertImg: [".imgBox", 2],
         customTitle: () => fun.geT(".atlas_introduce h1"),
-        css: "[class^=ad]{display:none!important;}",
+        css: ".swiper-sum,[class^=ad]{display:none!important;}",
         category: "nsfw1"
     }, {
         name: "爱美女",
@@ -2370,6 +2371,7 @@
             let load = fun.ge(".load-more-photos");
             if (load) load.remove();
             await fun.getNP(".images-card", "li.active+li>a", null, ".pagination");
+            [...document.querySelectorAll(".thumb-nsfw")].forEach(e => e.classList.remove("thumb-nsfw"));
         },
         imgs: async () => {
             thumbnailsSrcArray = [...fun.gae(".images-card img")].map(e => e.dataset.src ?? e.src);
@@ -2645,6 +2647,10 @@
         next: ".article-nav-prev a",
         prev: ".article-nav-next a",
         customTitle: () => fun.geT(".entry-title").replace(/\d+p/i, ""),
+        fancybox: {
+            v: 3,
+            insertLibrarys: 1
+        },
         category: "nsfw1"
     }, {
         name: "遛无写真/有脾气美图/KP写真/美女云图网/tck天天番号/4tck番号库/5tck天天番号/6K美女/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线",
@@ -3566,8 +3572,9 @@
         category: "nsfw2"
     }, {
         name: "尤物丧志",
-        host: ["youwu.asia"],
-        reg: /^https?:\/\/youwu\.asia\/albums\//,
+        host: ["youwu.asia", "youwu.pics"],
+        reg: /^https?:\/\/youwu\.\w+\/albums\//,
+        include: "//title[contains(text(),'尤物丧志')]",
         imgs: () => fun.getImg("img.block", fun.geT("a[rel=next]", 2) || 1),
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
@@ -6703,8 +6710,8 @@
         category: "nsfw2"
     }, {
         name: "好312图库",
-        host: ["www.hao312.xyz", "hao312.xyz"],
-        reg: /^https?:\/\/(www\.)?hao312\.xyz\/html\/\d+\/n-\d+\.html$/,
+        host: ["www.hao312.xyz", "hao312.xyz", "www.hao312.live", "hao312.live"],
+        reg: /^https?:\/\/(www\.)?hao312\.(xyz|live)\/html\/\d+\/n-\d+\.html$/,
         imgs: async () => {
             await fun.getNP("#picBody img", "li.thisclass+li>a", null, ".pages");
             return [...fun.gae("#picBody img")];
@@ -7711,6 +7718,9 @@
         },
         button: [4],
         insertImg: [".entry-content>p", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a[rel=prev]",
+        prev: ".nav-next>a[rel=next]",
         customTitle: () => fun.geT(".entry-title").replace(/（\d+图）/, "").trim(),
         category: "nsfw1"
     }, {
@@ -7730,6 +7740,9 @@
         },
         button: [4],
         insertImg: [".entry-content>p", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a[rel=prev]",
+        prev: ".nav-next>a[rel=next]",
         customTitle: () => fun.geT(".entry-title").replace(/（\d+图）/, "").trim(),
         category: "nsfw1"
     }, {
@@ -17304,6 +17317,8 @@ document.body.appendChild(text);
 
     const newTabView = async () => {
 
+        if (fetching) return;
+
         if (typeof siteData.capture === "string") {
             const captureImgEles = [...fun.gae(siteData.imgs)];
             console.log("newTabViewCaptureImgEles", captureImgEles);
@@ -17427,6 +17442,9 @@ function setFancybox() {
                 newWindowStyle.id = "newWindowStyle";
                 newWindowStyle.type = "text/css";
                 newWindowStyle.innerHTML = `
+body {
+    background-color: #333;
+}
 #FixedMenu {
     text-align: center;
     font-family: Arial, sans-serif;
@@ -17466,11 +17484,11 @@ function setFancybox() {
     background: #1790E6;
 }
 img.default {
+    vertical-align: middle;
     width: auto;
     height: auto;
     max-width: 99vw;
     max-height: 99vh;
-    padding: 2px;
     border: solid #fff;
 }
 img.single {
@@ -17480,7 +17498,6 @@ img.single {
     max-height: 99vh;
     display: block;
     margin: 0 auto;
-    padding-bottom: 4px;
     border: solid #fff;
 }
 img.sbs {
@@ -17488,9 +17505,8 @@ img.sbs {
     vertical-align: middle;
     width: auto;
     height: auto;
-    max-width: 23.2%;
-    max-height: 99vh;
-    margin: 2px;
+    max-width: 32.4%;
+    max-height: 36vh;
     border: solid #fff;
 }
 `;
