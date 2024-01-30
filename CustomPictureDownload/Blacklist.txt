@@ -1,4 +1,4 @@
-2024/01/28 23:10
+2024/01/31 05:06
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -73,7 +73,14 @@ Xiutaku/Kiutaku
         "enable": 0,
         "url": "^https://www\\.wai76\\.com/[^/]+/",
         "include": ".entry-content"
+    },
+    {
+        "name": "圖片全載秀人格式排除 ",
+        "enable": 0,
+        "url": "^https?://[^/]+/\\w+/\\d+\\.html|^https?://[^/]+/\\w+/\\d+/\\d+\\.html|^https?://[^/]+/\\w+/\\w+\\.html/",
+        "include": "//div[@class='item_info']//a[text()='秀人集']|//div[@class='single-cat']/a[text()='秀人美女网']|//div[@class='toptip']/a[text()='极品性感美女']"
     }
+
 
 =========================東方永頁機黑名單=========================
 
@@ -131,7 +138,7 @@ ThisMore.Fun
 
 新闻吧
 *://www.xinwenba.net/plus/view-*.html
-*://m.xwbar.com/plus/view-*.html
+*://*.xwbar.com/plus/view-*.html
 
 新娱乐在线
 *://www.dv67.com/plus/view-*.html
@@ -457,7 +464,7 @@ SexyAsianGirl
 *://www.sexyasiangirl.xyz/album/*.html
 
 尤物丧志
-*://youwu.asia/albums/*
+*://youwu.*/albums/*
 
 HotAsianX
 *://hotasianx.com/albums/*
@@ -619,6 +626,9 @@ CUTE GIRLS ADDICT
 
 套图之家
 *://taotuhome.com/*.html
+
+淑女爱
+*://*.shunv*i.com/*/*.html
 
 秀人图吧
 *://www.502x.com/*/*.html
@@ -1429,7 +1439,7 @@ https://www.nuyet.com/gallery/*
 *://lootiu.com/gallery/*.cfg*
 *://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
-*://m.xwbar.com/plus/view-*.html
+*://*.xwbar.com/plus/view-*.html
 *://www.xiuren*.*/*/*.html
 *://www.xr*.xyz/*/*.html
 *://www.xrmn*.*/*/*/*.html
@@ -1871,7 +1881,7 @@ https://www.eyval.net/*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
 *://niuniuhome.club/?p=*
-*://youwu.asia/albums/*
+*://youwu.*/albums/*
 *://www.ywsq.cc/*/*.html
 *://www.gr2e.com/*.html
 *://www.joerei.com/*.html
@@ -1891,6 +1901,7 @@ https://www.eyval.net/*
 *://*.win3000.com/*/*.html
 *://www.shunv*i.com/*/*.html
 *://mrdeepfakes.com/photo/*/*
+*://*.shunv*i.com/*/*.html
 /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/
 /^https?:\/\/meitu\.knit\.bid\/(news|street)\/\d+$/
 /^https?:\/\/fanleaks\.club\/[^\/]+$/
