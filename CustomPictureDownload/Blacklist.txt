@@ -1,4 +1,4 @@
-2024/01/31 05:06
+2024/01/31 23:36
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -364,6 +364,7 @@ HOTGIRLchina
 *://thechinagirls.com/*-photos*/
 *://manhsec.com/*-photos*/
 *://asiaceleb.com/*-photos*/
+/^https?:\/\/asiaceleb\.com\/\d+\/$/
 *://nudeasiangirl.com/*-photos*/
 *://hinhsexvietnam.com/*-photos*/
 /^https://chinagirly\.com/\d+/$/
@@ -1508,6 +1509,7 @@ https://www.nuyet.com/gallery/*
 *://thechinagirls.com/*-photos*/
 *://manhsec.com/*-photos*/
 *://asiaceleb.com/*-photos*/
+/^https?:\/\/asiaceleb\.com\/\d+\/$/
 *://nudeasiangirl.com/*-photos*/
 *://idol.gravureprincess.date/*/*/*.html
 *www.micmicidol.club*
