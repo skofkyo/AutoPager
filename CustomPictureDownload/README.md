@@ -1,4 +1,25 @@
 <h1>提醒：</h1>
+<p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
+<p>請自行修改腳本將所有cdn.jsdelivr.net替換成cdn.bootcdn.net</p>
+<pre>
+cdn.jsdelivr.net
+https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
+https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css
+https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+</pre>
+<pre>
+cdn.bootcdn.net
+https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js
+https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
+https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
+https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
+https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js
+https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css
+</pre>
+<br>
 <p>2023/11/06</p>
 <p>腳本1.6.0+版本使用Fancybox5.0.24後，暴力猴Violentmonkey會報錯。</p>
 <p>在以下測試環境是正常的</p>
@@ -703,12 +724,14 @@ imgs: async () => {
 <br>
 <p>4.分頁檢視模式</p>
 <p>上左方向鍵跳轉到目前的上一張圖、下右方向鍵跳轉到目前的下一張圖</p>
-<p>數字鍵 0 切換為預設模式自動排列、數字鍵 1 切換為單圖置中模式</p>
+<p>數字鍵 0 切換為預設模式自動排列</p>
+<p>數字鍵 1 切換為單圖置中模式</p>
+<p>數字鍵 2 切換為多圖並排模式</p>
 <p>PS：網站如果有Content Security Policy (CSP)限制，將沒有切換模式、圖片跳轉、Fancybox功能，或者莫名其妙不能使用window.open()，將無法使用分頁檢視功能。</p>
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/01/28 23:10</p>
+<p>2024/01/31 23:36</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -979,7 +1002,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.xinwenba.net/web/meinv/">新闻吧</a></td>
+                <td><a href="https://www.xwbar.com/web/meinv/">新闻吧</a></td>
                 <td><a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>，<a href="https://www.fjrx.org/web/meinv/">福建热线</a>，<a href="https://www.sdrx.org/web/meinv/">山东热线</a>，<a href="https://www.gxrx.org/web/meinv/">广西热线</a>，<a href="https://www.whrx.org/web/meinv/">武汉热线</a>，<a href="http://www.tjrx.org/web/meinv/">天津热线</a>，<a href="https://www.ynrx.org/web/meinv/">云南热线</a>，<a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片</td>
             </tr>
             <tr>
@@ -1298,11 +1321,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://phym18.net/tag/%E1%BA%A3nh-sex">Phym18</a></td>
+                <td><a href="https://phym18.one/tag/%E1%BA%A3nh-sex">Phym18</a></td>
                 <td>圖片分類添加了自動翻頁</td>
             </tr>
             <tr>
-                <td><a href="https://bongda21h.co/anh-hot/">Bongda21h</a></td>
+                <td><a href="https://bongda21h.me/anh-hot/">Bongda21h</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1487,11 +1510,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://fapello.com/">Fapello</a></td>
-                <td></td>
+                <td>手動插入圖片</td>
             </tr>
             <tr>
                 <td><a href="https://fapachi.com/">Fapachi</a></td>
-                <td></td>
+                <td>手動插入圖片</td>
             </tr>
             <tr>
                 <td><a href="https://fanleaks.club/">Fan Leaks</a></td>
@@ -1510,15 +1533,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://luvbp.com/">LUVBP</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.sexyasiangirl.xyz/">SexyAsianGirl</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://youwu.asia/">尤物丧志</a></td>
+                <td><a href="https://youwu.pics/">尤物丧志</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1530,11 +1549,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>很多posts都404...</td>
             </tr>
             <tr>
-                <td><a href="https://fuligirl.net/">福利姬美图</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://r18cosplay.com/">R18 Cosplay</a></td>
+                <td><a href="https://fuligirl.top/">福利姬美图</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1806,10 +1821,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://topleaks.net/">Onlyfans Leaks</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.tokyomotion.net/albums">TOKYO Motion</a></td>
                 <td></td>
             </tr>
@@ -1856,10 +1867,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://pimpandhost.com/site/trending">PimpAndHost</a></td>
                 <td>相簿</td>
-            </tr>
-            <tr>
-                <td><a href="http://babesource.com/">BabeSource</a></td>
-                <td>圖片清單頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.pornpaw.com/">Pornpaw</a></td>
@@ -1928,10 +1935,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.ikmt.net/">爱看美图网</a></td>
                 <td><a href="http://m.ikmt.net/">m.ikmt.net</a>，很久沒新圖了</td>
-            </tr>
-            <tr>
-                <td><a href="https://xjjtk.link/">小姐姐图库</a></td>
-                <td>很久沒新圖了</td>
             </tr>
             <tr>
                 <td><a href="https://www.taotucc.com/">Taotuxp.com</a></td>
@@ -2076,6 +2079,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://akuma.moe/">akuma.moe</a></td>
                 <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://anchira.to//">Anchira</a></td>
+                <td>SPA網頁，作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td><a href="https://cathentai.net/">Cathentai</a></td>
