@@ -1,4 +1,4 @@
-2024/01/31 23:36
+2024/02/03 19:49
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -33,8 +33,8 @@ HotAsiaGirl圖片
 PimpAndHost相簿
 /pimpandhost\.com\/album\/\d+/
 
-TWHenta//十八禁成人H漫 圖片清單頁
-/^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
+TWHentai/台灣成人H漫/十八禁成人H漫 圖片清單頁
+/^https?:\/\/(twhentai\.com|mttang\.club|(\w+\.)?hentai\.desi)\/\??(hentai_manga|hentai_doujin|hentai_western)\/\d+\/$/
 
 Xiutaku/Kiutaku
 /^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
@@ -114,6 +114,7 @@ Hitxhot Album Archive II
 
 DEPVAILON
 *://www.depvailon.com/*.html*
+*://crimejunkiespodcast.com/*.html*
 
 Pic Yailay
 *://pic.yailay.com/articles/*.html*
@@ -131,7 +132,10 @@ Depday-Info
 *://depday.info/v2/*.html*
 
 ThisMore.Fun
-*://thismore.fun/view/*.php
+*://thismore.fun/view/*php*
+
+CosXuxi Club
+*://cosxuxi.club/*.html*
 
 萝丝派
 *://www.yylsp.com/*.html
@@ -836,6 +840,29 @@ MrDeepFakes
 *://www.832771.com/tu/*.html
 *://www.qmjxg.com/tupian/*.html
 *://www.wykpc.com/tu/*.html
+*://www.18qqt.com/news/*.html
+*://www.muhour.com/tu/*.html
+*://www.wzcswy.com/news/*.html
+*://www.fyzwe.com/tupian/*.html
+*://www.yzbywh.com/tupian/*.html
+*://www.diu5.com/meitu/*.html
+*://www.edu-zytc.com/tu/*.html
+*://www.nanitu.com/tupian/*.html
+*://www.sitpf.com/tu/*.html
+*://www.deenli.com/meitu/*.html
+*://www.uwzyf.com/tu/*.html
+*://www.cgareg.com/news/*.html
+*://www.7tul.com/tu*.html
+*://www.bysga.com/tu/*.html
+*://www.ghsfc.com/meitu/*.html
+*://www.jxaxsy.com/tu/*.html
+*://www.dymux.com/news/*.html
+*://www.czxbjc.com/news/*.html
+*://www.csjgzy.com/news/*.html
+*://www.cdnecs.com/news/*.html
+
+万德美图屋
+*://www.wind5.com/tu*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -950,6 +977,9 @@ gogo人体艺术
 
 H漫類
 
+Anchira
+*://anchira.to/*
+
 IMHentai
 *://imhentai.xxx/view/*/*/
 
@@ -1031,6 +1061,7 @@ JComic
 
 琴瑟書庫
 *://sixacg.com/chapter/*
+*://6acg.top/chapter/*
 
 特漫网
 *://www.44te.com/chapter/*
@@ -1435,6 +1466,7 @@ https://www.nuyet.com/gallery/*
 *://www.hitxhot.org/gallerys/*.html*
 *://hitxhot.com/blog/*.html*
 *://www.depvailon.com/*.html*
+*://crimejunkiespodcast.com/*.html*
 *://pic.yailay.com/articles/*.html*
 *://nungvl.net/gallerys/*.cg*
 *://lootiu.com/gallery/*.cfg*
@@ -1587,6 +1619,7 @@ https://www.nuyet.com/gallery/*
 *://*22gs.com/*/*/
 *://*44aq.com/*/*/
 *://*28xv.com/*/*/
+*://anchira.to/*
 *://imhentai.xxx/view/*/*/
 *pururin.to/read/*
 *7mmtv.sx/*hcomic_content/*/content.html
@@ -1686,6 +1719,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://sixcomic.com/chapter/*
 *://www.sixacg.org/chapter/*
 *://sixacg.com/chapter/*
+*://6acg.top/chapter/*
 *://www.502x.com/*/*.html
 *://djjpg.com/*.html
 *jcomic.net/page/*
@@ -1879,6 +1913,27 @@ https://www.eyval.net/*
 *://www.832771.com/tu/*.html
 *://www.qmjxg.com/tupian/*.html
 *://www.wykpc.com/tu/*.html
+*://www.18qqt.com/news/*.html
+*://www.muhour.com/tu/*.html
+*://www.wzcswy.com/news/*.html
+*://www.fyzwe.com/tupian/*.html
+*://www.yzbywh.com/tupian/*.html
+*://www.diu5.com/meitu/*.html
+*://www.edu-zytc.com/tu/*.html
+*://www.nanitu.com/tupian/*.html
+*://www.sitpf.com/tu/*.html
+*://www.deenli.com/meitu/*.html
+*://www.uwzyf.com/tu/*.html
+*://www.cgareg.com/news/*.html
+*://www.7tul.com/tu*.html
+*://www.bysga.com/tu/*.html
+*://www.ghsfc.com/meitu/*.html
+*://www.jxaxsy.com/tu/*.html
+*://www.dymux.com/news/*.html
+*://www.czxbjc.com/news/*.html
+*://www.csjgzy.com/news/*.html
+*://www.cdnecs.com/news/*.html
+*://www.wind5.com/tu*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
@@ -1897,18 +1952,19 @@ https://www.eyval.net/*
 *://asianporn.li/photo/*/*/
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
-*://thismore.fun/view/*.php
+*://thismore.fun/view/*php*
 *://xgirl.one/*
 *://xerocos.com/*
 *://*.win3000.com/*/*.html
 *://www.shunv*i.com/*/*.html
 *://mrdeepfakes.com/photo/*/*
 *://*.shunv*i.com/*/*.html
+*://cosxuxi.club/*.html*
 /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/
 /^https?:\/\/meitu\.knit\.bid\/(news|street)\/\d+$/
 /^https?:\/\/fanleaks\.club\/[^\/]+$/
 /^https?:\/\/fapachi\.com\/[^\/]+$/
-/^https?:\/\/(twhentai\.com|(\w+\.)?hentai\.desi)\/hentai_manga\/\d+\/$/
+/^https?:\/\/(twhentai\.com|mttang\.club|(\w+\.)?hentai\.desi)\/\??(hentai_manga|hentai_doujin|hentai_western)\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
@@ -1932,7 +1988,6 @@ https://www.eyval.net/*
 /(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}/m?n\w+\.aspx/
 /^https?://hotgirl\.asia/[^/]+/$/
 /pimpandhost\.com/album/\d+/
-/twhentai\.com/hentai_manga/\d+/$/
 /^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
 /^https?://www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com/\w+/\w+/\d+/\d+\.html$/
 /^https?://(www\.rosi8\.net|www\.sfjpg\.(com|net)|(www\.)?kanmeitu\.net|(www\.)?kanmeitu1\.cc)/\w+/\d+\.html$/
