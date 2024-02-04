@@ -1074,7 +1074,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://8ezy.com/">8E资源站</a></td>
+                <td><a href="https://8ezy.com/?s=">8E资源站</a></td>
                 <td>有反擋廣告套件機制會清空網頁內容，需加入擋廣告白名單。</td>
             </tr>
             <tr>
@@ -1474,7 +1474,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.4khd.com/">4KHD</a></td>
-                <td></td>
+                <td><a href="https://fxcc.cc/">二級域名導航</a></td>
             </tr>
             <tr>
                 <td><a href="https://asianpink.net/">AsianPink</a></td>
@@ -2584,8 +2584,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
             </tr>
             <tr>
-                <td><a href="https://www.aiguoman.com/">爱国漫</a></td>
-                <td><a href="https://m.aiguoman.com/">m.aiguoman.com</a></td>
+                <td><a href="https://www.kanguoman.com/">爱国漫</a></td>
+                <td><a href="https://m.kanguoman.com/">m.kanguoman.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.mh160.cc/">漫画160</a></td>
@@ -2594,10 +2594,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.iimanhuapi.com/">漫画皮</a></td>
                 <td><a href="https://m.iimanhuapi.com/">m.iimanhuapi.com</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.dgmanhua.com/">大古漫画</a></td>
-                <td><a href="https://m.dgmanhua.com/">m.dgmanhua.com</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="https://www.qyy158.com/">风车漫画</a></td>
@@ -2798,7 +2794,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.qt1588.com/">爱看漫画</a></td>
+                <td><a href="https://www.yyjj66.com/">爱看漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
@@ -2806,16 +2802,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://m.wuqimh.net/">m.guoman8.cc</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.golden-koi.net/">1359漫画网</a></td>
-                <td><a href="https://m.golden-koi.net/">m.golden-koi.net</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.tuhao456.com/">土豪漫畫網</a></td>
-                <td><a href="https://m.tuhao456.com/">m.tuhao456.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.wuqimh.net/">57漫画网</a></td>
-                <td><a href="http://m.wuqimh.net/">m.wuqimh.net</a>，預設關閉</td>
+                <td><a href="http://www.92mh.com/">92漫画</a></td>
+                <td><a href="http://m.92mh.com/">m.92mh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.manhua456.com/">漫画456</a></td>
@@ -2886,10 +2874,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.manhuabaiku.com/">漫百库</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://mh.9xxsm.com/">Go追漫</a></td>
                 <td>預設關閉</td>
             </tr>
@@ -2942,18 +2926,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.kukanmanhua.com/">酷看漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://yemancomic.com/">野蛮漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://2cycomic.com/">次元漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://m.mhkami.com/">漫神</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
