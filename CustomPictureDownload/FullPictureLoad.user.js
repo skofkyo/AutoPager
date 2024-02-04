@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.11
+// @version            1.9.12
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -955,7 +955,7 @@
         },
         button: [4],
         insertImg: [".article-fulltext", 2],
-        customTitle: () => fun.geT(".article-header>h1").replace("(mitaku.net)", "").trim(),
+        customTitle: () => fun.geT(".article-header>h1").replace(/.mitaku.net./, "").trim(),
         category: "nsfw1"
     }, {
         name: "XGirl/Xerocos",
@@ -3812,8 +3812,9 @@
         category: "nsfw1"
     }, {
         name: "4KHD",
-        host: ["www.4khd.com", "www.4kep.com", "xjav.cc", "hhhy.quest", "vxkk.cc"],
-        reg: /(www\.4k(hd|ep)\.com|xjav\.cc|hhhy\.quest|vxkk\.cc)\/\d+\/\d+\/\d+\/.+\.html/,
+        host: ["www.4khd.com", "www.4kep.com", "xjav.cc", "hhhy.quest", "vxkk.cc", "lbmfrd.xxtt.info", "mbfxy.xxtt.info"],
+        reg: /\/\d+\/\d+\/\d+\/.+\.html$/,
+        include: "//a[@rel='home'][text()='4KHD']",
         imgs: async () => {
             await fun.getNP("#basicExample>a,figure.wp-block-image,.entry-content>p>a", ".current+li>a", null, ".page-link-box", 0, null, 1, 0);
             if (fun.ge("figure.wp-block-image>a")) {
@@ -3859,7 +3860,7 @@
     }, {
         name: "Buon Dua",
         host: ["buondua.com", "buondua.us"],
-        reg: /buondua\.(com|us)\/(?!hot|collection)[^\?]+$/,
+        reg: /buondua\.(com|us)\/(?!hot|tag|collection)[^\?]+$/,
         imgs: () => {
             let max = fun.geT(".pagination-list>span:last-child>a").match(/\d+/)[0];
             return fun.getImg(".article-fulltext img[alt]", max);
@@ -6637,7 +6638,8 @@
     }, {
         name: "亚洲色吧",
         host: ["yazhouseba.com"],
-        reg: /^https?:\/\/yazhouseba\.com\/meinv\/[\w-]+\.html/,
+        reg: /^https?:\/\/yazhouseba\.com\/meinv\/img-\d+\.html/,
+        include: "#next-url",
         imgs: async () => {
             let pid = fun.ge("#next-url").rel;
             let json = await new Promise(resolve => {
@@ -6678,7 +6680,7 @@
         name: "3K图片网格式",
         reg: () => {
             let hosts1 = ["www.3ktu.com", "www.tzala.com", "www.mash120.com", "www.wslak.com", "www.777url.com", "www.zkjmpx.com", "www.hsnmm.com", "www.mmdmlt.com", "www.zlsmm.com", "www.xr70.com", "www.ksxx365.com", "www.ksxx360.com", "www.ngptp.com", "www.t7mm.com", "www.sqhyyz.com", "www.gxwpjc.com", "www.ycwlx.com", "www.mmxsl.com", "www.i9ke.com", "www.jsjfgkgs.com", "www.yjpfxs.com", "www.cmylzx.com", "www.sskge.com", "www.iduobi.com", "www.woxiutu.com", "www.lcylaa.com", "www.gmcpx.com", "www.803352.com", "www.rzjyz.com", "www.cpbdj.com", "www.gkiev.com", "www.wjjlf.com", "www.hceday.com", "www.fs120yy.com", "www.aolangde.com", "www.fssrr.com", "www.wt768.com", "www.lql1.com", "www.xhtrz.com", "www.zggsdh.com", "www.xhycg.com", "www.mokhee.com", "www.zqydc.com", "www.fxqmm.com", "www.jxybjk.com", "www.qxttsl.com", "www.lzxjw.comc", "www.btsmmm.com", "www.jye8.com", "www.ao5z.com", "www.4k1k.com", "www.csltx.com", "www.hmcby.com", "www.959278.com", "www.1001yy.com", "www.biutu.com", "www.hiuin.com", "www.ksruisj.com", "www.mmokok.com", "www.nangluan.com", "www.579993.com", "www.wpslgs.com", "www.xscmt.com", "www.hyqcxs.com", "www.xthkw.com", "www.fzxfl.com", "www.wsvdj.com", "www.timitm.com", "www.5269se.com", "www.xgxff.com", "www.srzx168.com", "www.nxzths.com", "www.ajkie.com", "www.linguifa.com", "www.gknrnb.com", "www.yachw.com", "www.qdsyhj.com", "www.yqx101.com", "www.xcd100.com", "www.kyy41.com", "www.yymul.com", "www.yvxji.com", "www.cunedu.com", "www.sxji56.com", "www.szckpt.com", "www.tjsyyl.com", "www.ppmlx.com", "www.xizhuai.com", "www.yunkay.com", "www.xwdwz.com", "www.nrrqq.com", "www.714g.com", "www.php-art.com", "www.021zxy.com", "www.0b23.com", "www.aizibang.com", "www.qmjxg.com", "www.smgcjk.com", "www.hmrzry.com", "www.832771.com", "www.wykpc.com", "www.18qqt.com", "www.muhour.com", "www.wzcswy.com", "www.fyzwe.com", "www.yzbywh.com", "www.diu5.com", "www.edu-zytc.com", "www.nanitu.com", "www.sitpf.com", "www.deenli.com", "www.uwzyf.com", "www.cgareg.com", "www.bysga.com", "www.ghsfc.com", "www.jxaxsy.com", "www.dymux.com", "www.czxbjc.com", "www.csjgzy.com", "www.cdnecs.com"];
-            let hosts2 = ["www.tufada.com", "www.7tul.com", "www.meinv173.com", "www.meinv007.com", ];
+            let hosts2 = ["www.tufada.com", "www.7tul.com", "www.meinv173.com", "www.meinv007.com"];
             return hosts1.includes(window.location.host) && /\/\w+\/\d+\.html$/.test(window.location.pathname) || hosts2.includes(window.location.host) && /\/tu\d+\.html$/.test(window.location.pathname) ? true : false;
         },
         include: "#showimg img,.img-box img",
@@ -6689,7 +6691,7 @@
             } catch (e) {
                 max = 1;
             }
-            return fun.getImg("#showimg img,.img-box img", max, 5, [null, null], 300);
+            return fun.getImgO("#showimg img,.img-box img", max, 5);
         },
         button: [4],
         insertImg: ["#showimg,.img-box", 2],
@@ -6709,7 +6711,7 @@
             } catch (e) {
                 max = 1;
             }
-            return fun.getImg("#portfolio img", max, 5, [null, null], 300);
+            return fun.getImgO("#portfolio img", max, 5);
         },
         button: [4],
         insertImg: ["#portfolio", 2],
@@ -7788,8 +7790,8 @@
         category: "nsfw1"
     }, {
         name: "名腿网",
-        host: ["www.mingtuiw.com"],
-        reg: /^https?:\/\/www\.mingtuiw\.com\/archives\/\d+$/,
+        host: ["www.mingtuiw.com", "mingtui.net"],
+        reg: /^https?:\/\/(www\.mingtuiw\.com|mingtui\.net)\/archives\/\d+$/,
         exclude: ".swpm-more-tag-not-logged-in,.swpm-more-tag-restricted-msg",
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".entry-content img")].map(e => e.src);
@@ -11022,8 +11024,6 @@ document.body.appendChild(text);
         enable: 0,
         reg: /www\.(webtoons|dongmanmanhua)\.(com|cn)\/[^&]+&episode/,
         imgs: "._images[data-url]",
-        insertImg: ["#_imageList", 2],
-        go: 1,
         autoDownload: [0],
         next: "//div[@class='episode_cont']//li[a[starts-with(@class,'on')]]/following-sibling::li[1]/a",
         prev: "//div[@class='episode_cont']//li[a[starts-with(@class,'on')]]/preceding-sibling::li[1]/a",
@@ -11132,10 +11132,10 @@ document.body.appendChild(text);
         css: ".bd_960_90{display:none!important}",
         category: "comic"
     }, {
-        name: "57漫画网 / 国漫吧",
-        host: ["www.wuqimh.net", "m.wuqimh.net", "www.guoman8.cc", "m.guoman8.cc"],
+        name: "国漫吧",
+        host: ["www.guoman8.cc", "m.guoman8.cc"],
         enable: 0,
-        reg: /((www|m)\.wuqimh\.net)|(www|m)\.guoman8\.cc\/\d+\/\d+\.html$/,
+        reg: /(www|m)\.guoman8\.cc\/\d+\/\d+\.html$/,
         imgs: () => cInfo.fs.map(e => /^http/.test(e) ? e : location.protocol + "//" + pageConfig.host.auto[0] + e),
         button: [4],
         insertImg: ["//td[img[@id='manga']]", 2],
@@ -11226,7 +11226,7 @@ document.body.appendChild(text);
         init: "setTimeout(()=>{$(document).unbind('keyup');$(document).unbind('keydown')},4000)",
         imgs: async () => {
             await fun.waitEle("//script[contains(text(),'chapterImages')]");
-            return chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost1 + "/" + chapterPath + e);
+            return chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost[0].domain + "/" + chapterPath + e);
         },
         button: [4],
         insertImg: ["#images", 2],
@@ -11263,7 +11263,7 @@ window.parent.postMessage({
             await fun.waitEle("//script[contains(text(),'chapterImages')]");
             fun.run("$('#images').unbind('click');");
         },
-        imgs: () => chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost1 + "/" + chapterPath + e),
+        imgs: () => chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost[0].domain + "/" + chapterPath + e),
         button: [4],
         insertImg: ["#images", 2],
         next: () => {
@@ -11325,6 +11325,50 @@ window.parent.postMessage({
             fun.picPreload(await obj.imgs(), nextDoc.title, "next");
         },
         css: ".globalPadding{display:none!important;}",
+        category: "comic"
+    }, {
+        name: "92漫画",
+        host: ["www.92mh.com"],
+        enable: 0,
+        reg: /^https?:\/\/www\.92mh\.com\/manhua\/\d+\/\d+\.html/i,
+        init: "$(document).unbind('keydown');$(document).unbind('keyup');$('#images').unbind('click');",
+        imgs: () => chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost[0].domain + "/" + e),
+        button: [4],
+        insertImg: ["#images", 2],
+        autoDownload: [0],
+        next: () => nextChapterData.id > 0 ? nextChapterData.url : null,
+        prev: 1,
+        customTitle: () => {
+            let data = JSON.parse(localStorage.history)[0];
+            return data.comic_name + " - " + data.read_chapter;
+        },
+        preloadNext: (nextDoc, obj) => {
+            let code = fun.geT("//script[contains(text(),'chapterImages')]", 1, nextDoc);
+            fun.script(code, 0, 1);
+            fun.picPreload(obj.imgs(), nextDoc.title, "next");
+        },
+        category: "comic"
+    }, {
+        name: "92漫画M",
+        host: ["m.92mh.com"],
+        enable: 0,
+        reg: /^https?:\/\/m\.92mh\.com\/manhua\/\d+\/\d+\.html/i,
+        imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
+            let max = fun.geT(".image-content p", 1, doc).match(/\/(\d+)/)[1];
+            return fun.getImg("#manga-image", max, 5, [null, null], 20, url, msg, request);
+        },
+        button: [4],
+        insertImg: ["#images", 2],
+        go: 1,
+        autoDownload: [0],
+        next: () => {
+            let next = fun.ge("//a[text()='下一章'][contains(@href,'html')]");
+            return next ? next.href : null;
+        },
+        prev: 1,
+        customTitle: doc => fun.title("在线", 1, doc),
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
+        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
         category: "comic"
     }, {
         name: "90漫画",
@@ -11687,18 +11731,12 @@ window.parent.postMessage({
         category: "comic"
     }, {
         name: "漫画屋格式",
-        host: ["www.mhua5.com", "www.mhw1.com", "www.cmh5.com", "www.360mh.cc", "www.manshiduo.net", "comics.veryim.com", "797mh.com", "www.biqug.org", "www.manhuabaiku.com", "mh.9xxsm.com", "www.cuiman.com"],
+        host: ["www.mhua5.com", "www.mhw1.com", "www.cmh5.com", "www.360mh.cc", "www.manshiduo.net", "comics.veryim.com", "797mh.com", "www.biqug.org", "mh.9xxsm.com", "www.cuiman.com"],
         enable: 0,
-        reg: /(www\.mhua5\.com|www\.mhw\d?\.com|www\.cmh5\.com|www\.360mh\.cc|mh\.9xxsm\.com)\/index\.php\/chapter\/\d+|(www\.manshiduo\.net|797mh\.com)\/chapter_\d+\.html|comics\.veryim\.com\/\w+\/\d+\/\d+\.html|www\.biqug\.org\/index\.php\/chapter-\d+.html|www\.manhuabaiku\.com\/chapter\/\w+\.html|www\.cuiman\.com\/\d+-\d+\.html/i,
+        reg: /(www\.mhua5\.com|www\.mhw\d?\.com|www\.cmh5\.com|www\.360mh\.cc|mh\.9xxsm\.com)\/index\.php\/chapter\/\d+|(www\.manshiduo\.net|797mh\.com)\/chapter_\d+\.html|comics\.veryim\.com\/\w+\/\d+\/\d+\.html|www\.biqug\.org\/index\.php\/chapter-\d+.html|www\.cuiman\.com\/\d+-\d+\.html/i,
         include: ".rd-article-wr",
         init: "document.onkeydown=null;",
-        imgs: doc => {
-            if (/www\.manhuabaiku\.com/.test(location.host)) {
-                return [...fun.gae("img[data-src]", doc)].map(e => atob(e.dataset.src));
-            } else {
-                return fun.getImgSrcArr("img[data-original]:not([data-original*='/template/pc/default/']),.lazy-read:not([data-original*='/template/pc/default/']),img[data-src]", doc);
-            }
-        },
+        imgs: doc => fun.getImgSrcArr("img[data-original]:not([data-original*='/template/pc/default/']),.lazy-read:not([data-original*='/template/pc/default/']),img[data-src]", doc),
         button: [4],
         insertImg: [".rd-article-wr", 2],
         autoDownload: [0],
@@ -11724,7 +11762,7 @@ window.parent.postMessage({
                 return fun.title(" - 漫画屋", 0, doc).replace("-", " - ");
             } else if (/www\.cmh5\.com/.test(location.host)) {
                 return fun.attr("meta[name=description]", "content", doc).split(" - 漫画屋")[0].replace("当前阅读的是", "").replace("的", " - ");
-            } else if (/www\.360mh\.cc|797mh\.com|www\.biqug\.org|www\.manhuabaiku\.com|mh\.9xxsm\.com|www\.cuiman\.com/.test(location.host)) {
+            } else if (/www\.360mh\.cc|797mh\.com|www\.biqug\.org|mh\.9xxsm\.com|www\.cuiman\.com/.test(location.host)) {
                 return fun.geT(".j-comic-title", 1, doc) + " - " + fun.geT(".last-crumb", 1, doc);
             } else {
                 return fun.title(/下拉|在线/, 1, doc).replace("-", " - ").replace(/漫画|\[\d+P\]/i, "");
@@ -11824,9 +11862,9 @@ window.parent.postMessage({
         category: "comic"
     }, {
         name: "爱国漫",
-        host: ["www.aiguoman.com"],
+        host: ["www.kanguoman.com"],
         enable: 1,
-        reg: /www\.aiguoman\.com\/chapter\/.+\.html/i,
+        reg: /www\.kanguoman\.com\/chapter\/.+\.html/i,
         imgs: ".main-item>img",
         button: [4, "24%", 1],
         insertImg: [".main-scroll_mode", 2],
@@ -11838,9 +11876,9 @@ window.parent.postMessage({
         category: "comic"
     }, {
         name: "爱国漫M",
-        host: ["m.aiguoman.com"],
+        host: ["m.kanguoman.com"],
         enable: 1,
-        reg: /m\.aiguoman\.com\/chapter\/.+\.html/i,
+        reg: /m\.kanguoman\.com\/chapter\/.+\.html/i,
         imgs: ".lazy-image[data-original]",
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
@@ -12068,10 +12106,10 @@ window.parent.postMessage({
         preloadNext: true,
         category: "comic"
     }, {
-        name: "GODA漫画",
-        host: ["cocomanga.org", "godamanga.art"],
+        name: "Godamanga.ART",
+        host: ["godamanga.art"],
         enable: 0,
-        reg: /^https?:\/\/(cocomanga\.org|godamanga\.art)\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+(\/|\.html)$/i,
+        reg: /^https?:\/\/godamanga\.art\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+(\/|\.html)$/i,
         delay: 300,
         imgs: "//img[@decoding and @layout] | //img[@decoding and contains(@class,'img_content_jpg')]",
         button: [4],
@@ -12084,44 +12122,18 @@ window.parent.postMessage({
         category: "comic"
     }, {
         name: "GODA漫畫 / 包子漫畫",
-        host: ["godamanga.com", "cn.godamanga.site", "gd.godamanga.art", "cn.godamanga.art", "cn.godamanga.com", "baozimh.org", "bz.godamanga.art", "cn.baozimh.org"],
         enable: 0,
-        reg: /^https?:\/\/((www|gd|bz|cn)\.)(baozimh|godamanga)\.(art|com|org)\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+/i,
-        init: async () => {
-            /*
-            try {
-                let script = "//script[contains(text(),'currentManga')]";
-                await fun.waitEle(script);
-                let code = fun.geT(script);
-                let id = code.match(/\\"id\\":(\d+)/)[1];
-                let api = `https://papi.mgsearcher.com/api/chapters/${id}?fields[0]=chapter_img&encodeValuesOnly=true`;
-                siteJson = await fetch(api, {
-                    "headers": {
-                        "Authorization": "Bearer b69efef9280150ba3c29ebd02f1dd08b78d9d76a646fea85442c8f806f0037512d3bfab40a27528769b52373f9857edae1b8d74a3198c60f583f223bcccd8fde586cbc8420570a34570b62d2bef66c6aa82da8a3fd0c3dd2dedb18b8ea276f55d56151fe72317f2f38c9f888475f7433e24edebd7775c4aafa98ec9694789da9"
-                    }
-                }).then(res => res.json());
-                debug("\n此頁JSON資料\n", siteJson);
-            } catch (e) {}
-            */
-            await fun.waitEle("//script[contains(text(),'currentManga')]");
-            fun.remove("//div[ins[@class='adsbygoogle']]");
+        reg: () => {
+            let hosts = ["m.cocolamanhua.com", "cn.baozimh.one", "cocomanga.org", "baozimh.one", "bz.godamanga.art", "gd.godamanga.art", "cn.godamanga.art"];
+            return hosts.includes(window.location.host) && /\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+/.test(window.location.pathname) && fun.ge(".touch-manipulation img") ? true : false;
         },
-        imgs: async doc => {
-            await fun.waitEle(".touch-manipulation");
-            /*
-            try {
-                return siteJson.data == null ? [] : siteJson.data.attributes.chapter_img.map(e => e.url);
-            } catch (e) {
-                return [...fun.gae(".touch-manipulation img")];
-            }
-            */
-            return fun.getImgSrcArr(".touch-manipulation img", doc);
-        },
+        init: () => fun.remove("//div[ins[@class='adsbygoogle']]"),
+        imgs: doc => fun.getImgSrcArr(".touch-manipulation img", doc),
         button: [4],
         insertImg: [".touch-manipulation", 2],
         autoDownload: [0],
         next: () => {
-            let next = fun.ge("//a[button[text()='下一話' or text()='下一话']]");
+            let next = fun.ge("//a[button[text()='下一話' or text()='下一话']] | //a[div[span[text()='下一話']]]");
             return next ? next.href : null;
         },
         prev: 1,
@@ -12164,83 +12176,6 @@ window.parent.postMessage({
         prev: "//a[text()='上一話']",
         customTitle: () => document.title.split(" - ")[0].replace(/正在觀看|（\d+P）/ig, "").replace(">", " - "),
         css: ".ptview>img{width:100%!important;height:auto!important;max-width:1000px!important;border:none!important;box-shadow:none!important;padding:0!important;margin:0 auto!important}",
-        category: "comic"
-    }, {
-        name: "1359漫画网",
-        host: ["www.golden-koi.net"],
-        enable: 0,
-        reg: /^https?:\/\/www\.golden-koi\.net\/chapter\/\d+\.html/i,
-        init: () => {
-            let next = fun.ge(siteData.next);
-            if (next) fun.addUrlHtml(next.href, "#content", 1);
-        },
-        imgs: () => __cr.data.chapter_list_all,
-        button: [4],
-        insertImg: [".comicpage", 2],
-        autoDownload: [0],
-        next: "a.mh_nextbook[href*=chapter]",
-        prev: "a.mh_prevbook[href*=chapter]",
-        customTitle: () => __cr.data.comic_name + " - " + __cr.data.chapter_name,
-        preloadNext: (nextDoc, obj) => {
-            let code = fun.geT("//script[contains(text(),'chapter_list_all')]", 1, nextDoc);
-            let arr = fun.run(code.match(/chapter_list_all:([^\n]+)/)[1]);
-            fun.picPreload(arr, nextDoc.title, "next");
-        },
-        css: ".footpage{display:none!important;}",
-        category: "comic"
-    }, {
-        name: "土豪漫畫網",
-        host: ["www.tuhao456.com", "tuhao456.com"],
-        enable: 0,
-        reg: /^https?:\/\/(www\.)?tuhao456\.com\/chapter\/\d+\.html/i,
-        imgs: () => picArry,
-        button: [4],
-        insertImg: [".comic_wraCon", 2],
-        autoDownload: [0],
-        next: "a.btm_chapter_btn.fr[href*=chapter]",
-        prev: "a.btm_chapter_btn.fl[href*=chapter]",
-        customTitle: () => comic_name + " - " + info.chapter_name.replace(comic_name, "").trim(),
-        preloadNext: async (nextDoc, obj) => {
-            const callback = (doc, fun) => {
-                const code = `
-window.parent.postMessage({
-    iframePicArr: picArry,
-    title: document.title
-}, "*");
-               `;
-                fun.script(code, 0, 1, doc);
-            };
-            fun.iframeDoc(nextLink, ".comic_wraCon img[src*=apiimgs]", 30000, callback);
-        },
-        category: "comic"
-    }, {
-        name: "1359漫画网M/土豪漫畫網M",
-        host: ["m.golden-koi.net", "m.tuhao456.com"],
-        enable: 0,
-        reg: /^https?:\/\/(m\.golden-koi\.net|m\.tuhao456\.com)\/chapter\/\d+\.html/i,
-        init: () => {
-            fun.remove("#readModeMenu,#pagePrev,#pageNext");
-            [...fun.gae("#prevBook,#nextBook")].forEach(e => {
-                e.removeAttribute("style");
-                e.classList.remove("hide");
-            });
-            let tools = fun.ge("#tools").cloneNode(true);
-            let x = fun.ge("#content");
-            x.parentNode.insertBefore(tools, x.nextSibling);
-        },
-        imgs: () => __cr.data.chapter_list_all,
-        button: [4],
-        insertImg: [".comicpage", 2],
-        autoDownload: [0],
-        next: "a[title='下章'][href*=chapter]",
-        prev: "a[title='上一话'][href*=chapter]",
-        customTitle: () => __cr.data.comic_name + " - " + __cr.data.chapter_name,
-        preloadNext: (nextDoc, obj) => {
-            let code = fun.geT("//script[contains(text(),'chapter_list_all')]", 1, nextDoc);
-            let arr = fun.run(code.match(/chapter_list_all:([^\n]+)/)[1]);
-            fun.picPreload(arr, nextDoc.title, "next");
-        },
-        css: ".comiclist{padding-bottom:0px!important}",
         category: "comic"
     }, {
         name: "ACG456",
@@ -13168,87 +13103,6 @@ document.body.appendChild(text);
         css: "#prePage,#nextPage,select,.jump-list,.apjg,a[href*=taobao]{display:none!important;}",
         category: "comic"
     }, {
-        name: "大古漫画",
-        host: ["www.dgmanhua.com"],
-        enable: 1,
-        reg: /www\.(dgmanhua|dagumanhua)\.\w+\/manhua\/\d+\/\d+\.html$/i,
-        init: async () => {
-            document.onkeydown = null;
-            document.onkeyup = null;
-            let url = await siteData.next();
-            if (url) fun.addUrlHtml(url, ".mh_list", 1);
-        },
-        //imgs: () => fun.getImg(".mh_list img", fun.geT("//script[contains(text(),'totalpage')]").match(/totalpage\s?=\s?(\d+)/)[1], 9),
-        imgs: doc => {
-            let firstSrc = fun.ge(".mh_list img", doc).src;
-            let max = fun.geT("//script[contains(text(),'totalpage')]", 1, doc).match(/totalpage\s?=\s?(\d+)/)[1];
-            return fun.arr(max).map((_, i) => decodeURI(firstSrc.replace(/(.+\/)(\d+)(.+)/, `$1${(i + 1)}$3`).replace("-mht.middle.webp", "")));
-        },
-        button: [4],
-        insertImg: [".mh_list", 2],
-        go: 1,
-        autoDownload: [0],
-        next: () => {
-            let comicListUrl = siteUrl.replace(/\d+\.html$/, "");
-            let chapter = location.pathname;
-            let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
-            return fun.fetchDoc(comicListUrl).then(doc => {
-                let next = fun.ge(nextXPath, doc);
-                return next ? location.origin + next.getAttribute("href") : null;
-            })
-        },
-        prev: 1,
-        customTitle: doc => fun.geT(".mh_cont>h1", 1, doc),
-        preloadNext: true,
-        category: "comic"
-    }, {
-        name: "大古漫画M",
-        host: ["m.dgmanhua.com"],
-        enable: 1,
-        reg: /m\.(dgmanhua|dagumanhua)\.\w+\/manhua\/\d+\/\d+\.html$/i,
-        init: async () => {
-            let content = fun.ge("#content,.content");
-            if (content) content.innerHTML = fun.ge("img", content).outerHTML;
-            let url = await siteData.next();
-            if (url) fun.addUrlHtml(url, "#content,.content", 1);
-        },
-        imgs: async (url = siteUrl, doc) => {
-            url = url.replace("m.dgmanhua.com", "www.dgmanhua.com");
-            let max = await fun.xhrDoc(url).then(doc => {
-                return fun.ge("//script[contains(text(),'totalpage')]", doc).innerText.match(/totalpage\s?=\s?(\d+)/)[1];
-            });
-            let firstSrc = fun.ge("#content img", doc).src;
-            return fun.arr(max).map((_, i) => decodeURI(firstSrc.replace(/(.+\/)(\d+)(.+)/, `$1${(i + 1)}$3`).replace("-mht.middle.webp", "")));
-        },
-        button: [4],
-        insertImg: ["#content,.content", 2],
-        autoDownload: [0],
-        next: () => {
-            let comicListUrl = siteUrl.replace(/\d+\.html$/, "");
-            let chapter = location.pathname;
-            let nextXPath = `//li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
-            return fun.fetchDoc(comicListUrl).then(doc => {
-                let next = fun.ge(nextXPath, doc);
-                return next ? location.origin + next.getAttribute("href") : null;
-            })
-        },
-        //next: "//a[@href and text()='下一章']",
-        prev: "//a[@href and text()='上一章']",
-        customTitle: doc => fun.geT("#bookname", 1, doc) + " - " + fun.geT(".headline", 1, doc),
-        preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc), obj.customTitle(nextDoc), "next"),
-        css: "#content~a,.content~a,.apjg,.pager a:nth-child(n+2):nth-child(-n+3){display:none!important}.pager a{width:44%!important}#content,.content{width:100%}",
-        category: "comic"
-    }, {
-        name: "大古漫画M loadMore",
-        host: ["m.dgmanhua.com"],
-        enable: 1,
-        icon: 0,
-        key: 0,
-        reg: /m\.(dgmanhua|dagumanhua)\.\w+\/manhua\//i,
-        include: "//div[text()='点击加载更多']",
-        observerClick: "//div[text()='点击加载更多']",
-        category: "comic"
-    }, {
         name: "哈哈漫画",
         host: ["www.hahacomic.com"],
         enable: 1,
@@ -13279,9 +13133,9 @@ document.body.appendChild(text);
         category: "autoPager"
     }, {
         name: "爱看漫画",
-        host: ["www.qt1588.com", "m.qt1588.com"],
+        host: ["www.yyjj66.com", "m.yyjj66.com"],
         enable: 0,
-        reg: /^https?:\/\/(www|m)\.qt1588\.com\/comic\/[0-9_]+\.html/,
+        reg: /^https?:\/\/(www|m)\.yyjj66\.com\/comic\/[0-9_]+\.html/,
         imgs: ".chapter-content img,.hide-scrollbars img",
         button: [4],
         insertImg: [".chapter-content,.hide-scrollbars", 2],
@@ -13291,56 +13145,6 @@ document.body.appendChild(text);
         prev: "//span[starts-with(@class,'prev-chapter')]/a[contains(@href,'html')] | //a[p[text()='上一话'] and contains(@href,'html')]",
         customTitle: doc => fun.title("-在线", 1, doc),
         preloadNext: true,
-        category: "comic"
-    }, {
-        name: "野蛮漫画/次元漫画/漫神",
-        host: ["yemancomic.com", "2cycomic.com", "m.mhkami.com"],
-        enable: 0,
-        reg: /^https?:\/\/(yemancomic\.com|2cycomic.com)\/chapter\/\d+\/\d+\.html|m\.mhkami\.com\/chapter\/\d+\/\d+\.html/,
-        include: "#img-box",
-        imgs: async () => {
-            if (fun.ge("//a[div[text()='下一页']]")) {
-                await fun.getNP("#img-box>div", "//a[div[text()='下一页']]", null, ".chapter-page-nav");
-                return [...fun.gae("#img-box img")];
-            } else {
-                return [...fun.gae("#img-box img")];
-            }
-        },
-        button: [4],
-        insertImg: ["#img-box", 2],
-        autoDownload: [0],
-        next: "//a[div[contains(text(),'下一章')]]",
-        prev: "//a[div[contains(text(),'上一章')]]",
-        customTitle: () => read.articlename + " - " + read.chaptername,
-        fancybox: {
-            blacklist: 1
-        },
-        category: "comic"
-    }, {
-        name: "野蛮漫画M/次元漫画M/波洞M/漫神M",
-        host: ["yemancomic.com", "2cycomic.com", "ymcdnyfqdapp.ikmmh.com", "m.mhkami.com"],
-        enable: 0,
-        reg: /^https?:\/\/(yemancomic\.com|2cycomic.com|ymcdnyfqdapp\.ikmmh\.com)\/chapter\/\d+\/\d+\.html|m\.mhkami\.com\/chapter\/\d+\/\d+\.html/,
-        include: ".center-title",
-        init: () => fun.remove("//body/div[a[img]]"),
-        imgs: async () => {
-            if (fun.ge("//a[text()='下一页']")) {
-                await fun.getNP("#imgsec>figure", "//a[text()='下一页']", null, ".action,.tooltip-bar__row");
-                return [...fun.gae("#reader-scroll img")];
-            } else {
-                return [...fun.gae("#reader-scroll img")];
-            }
-        },
-        button: [4],
-        insertImg: ["#reader-scroll", 2],
-        autoDownload: [0],
-        next: "a#next",
-        prev: "a#prev",
-        customTitle: () => read.articlename + " - " + fun.geT(".center-title"),
-        fancybox: {
-            blacklist: 1
-        },
-        css: "body>div[style^=width],.pull-right,.down-app,div.z-index-99>.down-app+div{display:none!important;}.episode-detail{padding-top:0px!important;}",
         category: "comic"
     }, {
         name: "风车漫画",
@@ -19178,6 +18982,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     }
 
     if (showOptions) {
+        unsafeWindow.FullPictureLoadCustomData = customData;
         //debug("\n圖片全載開啟了GM選單?\n", showOptions);
         _GM_registerMenuCommand(displayLanguage.str_67, () => ge("#FullPictureLoadOptions").removeAttribute("style"));
         _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ Turn Off Auto Scroll" : "✔️ Turn Off Auto Scroll", () => {
