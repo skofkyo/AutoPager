@@ -1,4 +1,4 @@
-2024/02/03 19:49
+2024/02/05 19:45
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -473,6 +473,9 @@ SexyAsianGirl
 
 HotAsianX
 *://hotasianx.com/albums/*
+
+色图
+*://setu.pics/albums/*
 
 Chinese Beauties
 *://sxchinesegirlz01.xyz/*/*/*/*/
@@ -1948,7 +1951,8 @@ https://www.eyval.net/*
 *://www.7k1a.com/*.html
 *://www.mfpho.com/*.html
 *://www.hutu6.com/*/*.html
-*://hotasianx.com/*
+*://hotasianx.com/albums/*
+*://setu.pics/albums/*
 *://asianporn.li/photo/*/*/
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
