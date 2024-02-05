@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.13
+// @version            1.9.14
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -388,7 +388,7 @@
                 max = 1;
             }
             let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".entry-content img", max, "8") : await fun.getImg(".entry-content img", max);
-            return fun.checkWordPressCDN(imgSrcs);
+            return fun.checkImageCDN(imgSrcs);
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -405,7 +405,7 @@
                 max = 1;
             }
             let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".contentme img,.contentme2 img", max, "8") : await fun.getImg(".contentme img,.contentme2 img", max);
-            return fun.checkWordPressCDN(imgSrcs);
+            return fun.checkImageCDN(imgSrcs);
         },
         button: [4],
         insertImg: [".contentme,.contentme2", 2],
@@ -951,7 +951,7 @@
         init: () => fun.remove(".search-form~*,.blog~*:not([class]),.pagination~*:not([class]):not(hr),.article.content~*:not([class]):not(hr),.bottom-articles~*"),
         imgs: async () => {
             let imgSrcs = await fun.getImg(".article-fulltext img", fun.geT(".pagination-list>span:last-child"));
-            return fun.checkWordPressCDN(imgSrcs);
+            return fun.checkImageCDN(imgSrcs);
         },
         button: [4],
         insertImg: [".article-fulltext", 2],
@@ -3566,7 +3566,7 @@
         reg: /^https?:\/\/hotasianx\.com\/albums\//,
         imgs: async () => {
             let imgSrcs = await fun.getImg("img.block", fun.geT("a[rel=next]", 2) || 1);
-            return fun.checkWordPressCDN(imgSrcs);
+            return fun.checkImageCDN(imgSrcs);
         },
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
@@ -3576,7 +3576,10 @@
         name: "色图",
         host: ["setu.pics"],
         reg: /^https?:\/\/setu\.pics\/albums\//,
-        imgs: () => fun.getImg("img.block", fun.geT("a[rel=next]", 2) || 1),
+        imgs: async () => {
+            let imgSrcs = await fun.getImg("img.block", fun.geT("a[rel=next]", 2) || 1);
+            return fun.checkImageCDN(imgSrcs);
+        },
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
         customTitle: () => fun.geT("#main>h1"),
@@ -3890,7 +3893,7 @@
                 max = 1;
             }
             let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".contentme img", max, "8") : await fun.getImg(".contentme img", max);
-            return fun.checkWordPressCDN(imgSrcs);
+            return fun.checkImageCDN(imgSrcs);
         },
         button: [4],
         insertImg: [".contentme", 2],
@@ -14861,14 +14864,18 @@ document.body.appendChild(text);
                 ok: false
             };
         },
-        checkWordPressCDN: srcArr => {
+        checkImageCDN: srcArr => {
             fun.showMsg("fun.xhrHEA(check)...", 0);
             let xhrNum = 0;
             let resArr = srcArr.map(async (src, i, arr) => {
                 let res = await fun.xhrHEAD(src);
                 fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
                 let status = res.status;
-                return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src;
+                if (src.includes("wsrv.nl")) {
+                    return status > 399 ? src.replace("https://wsrv.nl/?url=", "") : src; //wsrv.nl_CDN
+                } else {
+                    return status > 399 ? src.replace(/i\d\.wp\.com\/([^\/]+)/, "$1") : src; //WordPressCDN
+                }
             });
             return Promise.all(resArr).then(arr => {
                 fun.hideMsg();
