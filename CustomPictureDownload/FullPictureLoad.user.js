@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.15
+// @version            1.9.16
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -188,7 +188,7 @@
         css: ".banner-top{display:none!important;}",
         category: "nsfw2"
     }, {
-        name: "Nlegs/HoneyLeg www.nlegs.com www.honeyleg.com", //無法完全應對此站的人機驗證，請使用專用腳本 https://greasyfork.org/scripts/463123
+        name: "Nlegs/HoneyLeg www.nlegs.com www.honeyleg.com", //棄用規則，無法完全應對此站的人機驗證，請使用專用腳本 https://greasyfork.org/scripts/463123
         enable: 0,
         reg: /(www\.nlegs\.com|www.honeyleg.com)\/(girls|article)\//,
         init: () => {
@@ -202,6 +202,18 @@
         threading: 1,
         fetch: 1,
         //css: ".col-md-2.col-sm-4.col-xs-12{width:1000px!important;height:auto!important;display:block!important;margin:0 auto !important;float: none!important;}",
+        category: "nsfw2"
+    }, {
+        name: "NLegs/HoneyLeg/Lady Lap/Nuyet/LegBabe", //需搭配專用腳本 https://greasyfork.org/scripts/463123
+        reg: /^https?:\/\/www\.nlegs\.com\/girls\/\d+\/\d+\/\d+\/\d+\.html$|^https?:\/\/www\.honeyleg\.com\/article\/\d+\/\d+\/\d+\/\d+\.html$|^https?:\/\/www\.ladylap\.com\/show\/|^https?:\/\/www\.nuyet\.com\/gallery\/|^https?:\/\/www\.legbabe\.com\/hot\/[^\.]+\.html$/,
+        init: () => fun.imgBox("//div[div[a/div[contains(@style,'thumb') and span]]]", 2),
+        imgs: ".col-md-12.col-xs-12 img[src^=blob],.col-md-12.col-lg-12 img[src^=blob]",
+        repeat: 1,
+        button: [4],
+        insertImg: ["#fullPictureLoadImgBox", 0],
+        go: 1,
+        customTitle: () => fun.geT("strong").replace(/\[\d+[-\.\+\w]+\]/, "").trim(),
+        fetch: 1,
         category: "nsfw2"
     }, {
         name: "雅拉伊", //免VIP僅支援PC版和圖片命名是簡單數字遞增的。
@@ -4569,7 +4581,7 @@
         host: ["kemono.su", "coomer.su"],
         link: "https://kemono.su/fantia/user/17148/post/1633768",
         reg: /(kemono\.party|kemono\.su|coomer\.party|coomer\.su)\/.+\/post/,
-        delay: 300,
+        delay: 1000,
         include: "a.fileThumb.image-link",
         imgs: () => {
             videosSrcArray = [...fun.gae("video>source")].map(e => e.src);
