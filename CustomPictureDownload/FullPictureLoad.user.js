@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.16
+// @version            1.9.17
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -206,7 +206,7 @@
     }, {
         name: "NLegs/HoneyLeg/Lady Lap/Nuyet/LegBabe", //需搭配專用腳本 https://greasyfork.org/scripts/463123
         reg: /^https?:\/\/www\.nlegs\.com\/girls\/\d+\/\d+\/\d+\/\d+\.html$|^https?:\/\/www\.honeyleg\.com\/article\/\d+\/\d+\/\d+\/\d+\.html$|^https?:\/\/www\.ladylap\.com\/show\/|^https?:\/\/www\.nuyet\.com\/gallery\/|^https?:\/\/www\.legbabe\.com\/hot\/[^\.]+\.html$/,
-        init: () => fun.imgBox("//div[div[a/div[contains(@style,'thumb') and span]]]", 2),
+        init: () => fun.createImgBox("//div[div[a/div[contains(@style,'thumb') and span]]]", 2),
         imgs: ".col-md-12.col-xs-12 img[src^=blob],.col-md-12.col-lg-12 img[src^=blob]",
         repeat: 1,
         button: [4],
@@ -1020,13 +1020,13 @@
         openInNewTab: ".grid a:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "私图网",
-        host: ["baoruba.com", "tukuku.cc"],
-        reg: /(baoruba\.com|tukuku\.cc)\/(bb|t)\d+\.html/i,
+        name: "私图网/图库库/coscoser",
+        host: ["baoruba.com", "tukuku.cc", "coscoser.com"],
+        reg: /(baoruba\.com|tukuku\.cc|coscoser\.com)\/(bb|t)?\d+\.html/i,
         imgs: "img[decoding]",
         button: [4],
         insertImg: [".entry-content", 2],
-        customTitle: () => fun.title(" - 私图网"),
+        customTitle: () => fun.title(/ - 私图网| - coscoser/),
         go: 1,
         css: "[id].widget_text,.gridmode-post-thumbnail-single,.gridbit-thumbnail-alignwide{display:none!important}",
         category: "nsfw1"
@@ -1997,6 +1997,7 @@
         host: ["www.evacg.org"],
         reg: /www\.evacg\.org\/archives\/\d+/,
         include: ".wp-caption img",
+        exclude: ".poi-alert__msg",
         imgs: ".wp-caption img",
         button: [4],
         insertImg: [
@@ -2471,7 +2472,7 @@
         reg: /^https?:\/\/qinzhi\.top\/[^\/]+\/[^\/]+\/.+/,
         init: async () => {
             await fun.waitEle("div.list");
-            fun.imgBox(".body");
+            fun.createImgBox(".body");
         },
         imgs: () => fun.getAList(),
         repeat: 1,
@@ -4325,7 +4326,7 @@
         reg: /^https?:\/\/alist\.qiuyeshudian\.com\/[^\/]+\/[^\/]+\/.+/,
         init: async () => {
             await fun.waitEle("div.list");
-            fun.imgBox(".body");
+            fun.createImgBox(".body");
         },
         imgs: () => fun.getAList(),
         repeat: 1,
@@ -6704,7 +6705,7 @@
     }, {
         name: "3K图片网格式",
         reg: () => {
-            let hosts1 = ["www.3ktu.com", "www.tzala.com", "www.mash120.com", "www.wslak.com", "www.777url.com", "www.zkjmpx.com", "www.hsnmm.com", "www.mmdmlt.com", "www.zlsmm.com", "www.xr70.com", "www.ksxx365.com", "www.ksxx360.com", "www.ngptp.com", "www.t7mm.com", "www.sqhyyz.com", "www.gxwpjc.com", "www.ycwlx.com", "www.mmxsl.com", "www.i9ke.com", "www.jsjfgkgs.com", "www.yjpfxs.com", "www.cmylzx.com", "www.sskge.com", "www.iduobi.com", "www.woxiutu.com", "www.lcylaa.com", "www.gmcpx.com", "www.803352.com", "www.rzjyz.com", "www.cpbdj.com", "www.gkiev.com", "www.wjjlf.com", "www.hceday.com", "www.fs120yy.com", "www.aolangde.com", "www.fssrr.com", "www.wt768.com", "www.lql1.com", "www.xhtrz.com", "www.zggsdh.com", "www.xhycg.com", "www.mokhee.com", "www.zqydc.com", "www.fxqmm.com", "www.jxybjk.com", "www.qxttsl.com", "www.lzxjw.comc", "www.btsmmm.com", "www.jye8.com", "www.ao5z.com", "www.4k1k.com", "www.csltx.com", "www.hmcby.com", "www.959278.com", "www.1001yy.com", "www.biutu.com", "www.hiuin.com", "www.ksruisj.com", "www.mmokok.com", "www.nangluan.com", "www.579993.com", "www.wpslgs.com", "www.xscmt.com", "www.hyqcxs.com", "www.xthkw.com", "www.fzxfl.com", "www.wsvdj.com", "www.timitm.com", "www.5269se.com", "www.xgxff.com", "www.srzx168.com", "www.nxzths.com", "www.ajkie.com", "www.linguifa.com", "www.gknrnb.com", "www.yachw.com", "www.qdsyhj.com", "www.yqx101.com", "www.xcd100.com", "www.kyy41.com", "www.yymul.com", "www.yvxji.com", "www.cunedu.com", "www.sxji56.com", "www.szckpt.com", "www.tjsyyl.com", "www.ppmlx.com", "www.xizhuai.com", "www.yunkay.com", "www.xwdwz.com", "www.nrrqq.com", "www.714g.com", "www.php-art.com", "www.021zxy.com", "www.0b23.com", "www.aizibang.com", "www.qmjxg.com", "www.smgcjk.com", "www.hmrzry.com", "www.832771.com", "www.wykpc.com", "www.18qqt.com", "www.muhour.com", "www.wzcswy.com", "www.fyzwe.com", "www.yzbywh.com", "www.diu5.com", "www.edu-zytc.com", "www.nanitu.com", "www.sitpf.com", "www.deenli.com", "www.uwzyf.com", "www.cgareg.com", "www.bysga.com", "www.ghsfc.com", "www.jxaxsy.com", "www.dymux.com", "www.czxbjc.com", "www.csjgzy.com", "www.cdnecs.com"];
+            let hosts1 = ["www.3ktu.com", "www.tzala.com", "www.bjimx.com", "www.qyjafk.com", "www.mash120.com", "www.wslak.com", "www.777url.com", "www.zkjmpx.com", "www.hsnmm.com", "www.mmdmlt.com", "www.zlsmm.com", "www.xr70.com", "www.ksxx365.com", "www.ksxx360.com", "www.ngptp.com", "www.t7mm.com", "www.sqhyyz.com", "www.gxwpjc.com", "www.ycwlx.com", "www.mmxsl.com", "www.i9ke.com", "www.jsjfgkgs.com", "www.yjpfxs.com", "www.cmylzx.com", "www.sskge.com", "www.iduobi.com", "www.woxiutu.com", "www.lcylaa.com", "www.gmcpx.com", "www.803352.com", "www.rzjyz.com", "www.cpbdj.com", "www.gkiev.com", "www.wjjlf.com", "www.hceday.com", "www.fs120yy.com", "www.aolangde.com", "www.fssrr.com", "www.wt768.com", "www.lql1.com", "www.xhtrz.com", "www.zggsdh.com", "www.xhycg.com", "www.mokhee.com", "www.zqydc.com", "www.fxqmm.com", "www.jxybjk.com", "www.qxttsl.com", "www.lzxjw.comc", "www.btsmmm.com", "www.jye8.com", "www.ao5z.com", "www.4k1k.com", "www.csltx.com", "www.hmcby.com", "www.959278.com", "www.1001yy.com", "www.biutu.com", "www.hiuin.com", "www.ksruisj.com", "www.mmokok.com", "www.nangluan.com", "www.579993.com", "www.wpslgs.com", "www.xscmt.com", "www.hyqcxs.com", "www.xthkw.com", "www.fzxfl.com", "www.wsvdj.com", "www.timitm.com", "www.5269se.com", "www.xgxff.com", "www.srzx168.com", "www.nxzths.com", "www.ajkie.com", "www.linguifa.com", "www.gknrnb.com", "www.yachw.com", "www.qdsyhj.com", "www.yqx101.com", "www.xcd100.com", "www.kyy41.com", "www.yymul.com", "www.yvxji.com", "www.cunedu.com", "www.sxji56.com", "www.szckpt.com", "www.tjsyyl.com", "www.ppmlx.com", "www.xizhuai.com", "www.yunkay.com", "www.xwdwz.com", "www.nrrqq.com", "www.714g.com", "www.php-art.com", "www.021zxy.com", "www.0b23.com", "www.aizibang.com", "www.qmjxg.com", "www.smgcjk.com", "www.hmrzry.com", "www.832771.com", "www.wykpc.com", "www.18qqt.com", "www.muhour.com", "www.wzcswy.com", "www.fyzwe.com", "www.yzbywh.com", "www.diu5.com", "www.edu-zytc.com", "www.nanitu.com", "www.sitpf.com", "www.deenli.com", "www.uwzyf.com", "www.cgareg.com", "www.bysga.com", "www.ghsfc.com", "www.jxaxsy.com", "www.dymux.com", "www.czxbjc.com", "www.csjgzy.com", "www.cdnecs.com"];
             let hosts2 = ["www.tufada.com", "www.7tul.com", "www.meinv173.com", "www.meinv007.com"];
             return hosts1.includes(window.location.host) && /\/\w+\/\d+\.html$/.test(window.location.pathname) || hosts2.includes(window.location.host) && /\/tu\d+\.html$/.test(window.location.pathname) ? true : false;
         },
@@ -6716,7 +6717,7 @@
             } catch (e) {
                 max = 1;
             }
-            return fun.getImgO("#showimg img,.img-box img", max, 5);
+            return fun.getImgO("#showimg img,.img-box img", max, 5, [null, null], 0, "#pageNum");
         },
         button: [4],
         insertImg: ["#showimg,.img-box", 2],
@@ -15537,7 +15538,7 @@ document.body.appendChild(text);
             const Observer = new MutationObserver(Callbacks);
             ContentContainer && Observer.observe(ContentContainer, configObserver);
         },
-        imgBox: (selector, pos = 0) => {
+        createImgBox: (selector, pos = 0) => {
             let div = document.createElement("div");
             div.id = "fullPictureLoadImgBox";
             div.style.display = "block";
@@ -18095,7 +18096,7 @@ if (newWindowDataViewMode == 1) {
     width: 360px !important;
     height: auto !important;
     position: fixed !important;
-    top: 10%;
+    top: ${hasTouchEvents() ? "2px" : "20%"};
     left: 50%;
     margin-left: -180px;
     border: 1px solid #a0a0a0 !important;
@@ -18993,7 +18994,8 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             console.error("圖片全載規則出錯", error);
             debug("圖片全載規則出錯", customData[i]);
             debug("出錯之前的規則", customData[i - 1]);
-            return alert(`圖片全載規則出錯 索引${i}`);
+            //alert(`圖片全載規則出錯 索引${i}`);
+            return;
         }
     }
 
