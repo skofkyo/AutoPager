@@ -776,7 +776,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.nlegs.com/">NLegs</a></td>
-                <td><a href="https://www.honeyleg.com/">HoneyLeg</a>，<a href="https://www.ladylap.com/">Lady Lap</a>，<a href="https://www.nuyet.com/">Nuyet</a>，<a href="https://www.legbabe.com/">LegBabe</a>，請使用專用腳本，<a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a></td>
+                <td><a href="https://www.honeyleg.com/">HoneyLeg</a>，<a href="https://www.ladylap.com/">Lady Lap</a>，<a href="https://www.nuyet.com/">Nuyet</a>，<a href="https://www.legbabe.com/">LegBabe</a>，請使用專用腳本載入大圖，<a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a>，規則有手動插入模式，請在載入所有大圖後對左下圖示按右鍵或數字鍵1或8來使用</td>
             </tr>
             <tr>
                 <td><a href="https://www.yalayi.com/">雅拉伊</a></td>
@@ -959,7 +959,15 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://baoruba.com/">私图网</a></td>
-                <td><a href="https://tukuku.cc/">tukuku.cc</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://tukuku.cc/">图库库</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://coscoser.com/">coscoser</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.umeitu.com/">尤美图库</a></td>
