@@ -2965,15 +2965,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.kuaikanmanhua.com/">快看漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.kanman.com/">看漫画</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://ac.qq.com/">腾讯漫画</a></td>
                 <td>預設關閉</td>
             </tr>
         </tbody>
