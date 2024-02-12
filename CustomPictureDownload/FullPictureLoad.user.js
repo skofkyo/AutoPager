@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.19
+// @version            1.9.20
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -2580,7 +2580,7 @@
     }, {
         name: "孔雀海/洛丽网",
         host: ["www.kongquehai.net", "www.lolili.net"],
-        reg: /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/,
+        reg: /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html(\?btwaf=\d+)?$/i,
         imgs: async () => {
             await fun.getNP(".m-list-content img", "//a[text()='下一页'][@class='next']", null, ".link_pages");
             return [...fun.gae(".m-list-content img")];
@@ -3588,10 +3588,7 @@
         name: "乳此动人",
         host: ["rucidongren.neocities.org"],
         reg: /^https?:\/\/rucidongren\.neocities\.org\/posts\/\w+\//,
-        imgs: () => {
-            let imgSrcs = fun.getImgSrcArr("#gallery img");;
-            return fun.checkImageCDN(imgSrcs);
-        },
+        imgs: "#gallery img",
         button: [4],
         insertImg: ["#gallery", 2],
         autoDownload: [0],
