@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.18
+// @version            1.9.19
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -2576,6 +2576,33 @@
             [".masonry-list", 2, ".masonry-list"], 2
         ],
         customTitle: () => fun.geT("span.current"),
+        category: "nsfw1"
+    }, {
+        name: "孔雀海/洛丽网",
+        host: ["www.kongquehai.net", "www.lolili.net"],
+        reg: /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/,
+        imgs: async () => {
+            await fun.getNP(".m-list-content img", "//a[text()='下一页'][@class='next']", null, ".link_pages");
+            return [...fun.gae(".m-list-content img")];
+        },
+        button: [4],
+        insertImg: [".m-list-content", 2],
+        autoDownload: [0],
+        next: ".sxpage_r>a",
+        prev: ".sxpage_l>a",
+        customTitle: () => fun.geT(".m-list-tools>h2").replace(/\(\d\)/, "").replace(/\[\d+[\s\.\+\w-\/]+\].*/, "").replace(/全网首发|免费下载|无损图包下载|未删减版/g, ""),
+        category: "nsfw1"
+    }, {
+        name: "iLegs时光印象网",
+        host: ["legskr.com"],
+        reg: /^https?:\/\/legskr\.com\/album\/detail\/\d+\.html$/,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae("#lightgallery .img-fluid[data-src]")].map(e => e.dataset.src ?? e.src);
+            return [...fun.gae("#lightgallery div.col-6[data-src]")];
+        },
+        button: [4],
+        insertImg: ["#lightgallery", 2],
+        customTitle: () => fun.geT(".title").replace("Album name：", "").replace(/\[\d+[\s\.\+\w-\/]+\]/, "").trim(),
         category: "nsfw1"
     }, {
         name: "比思在線圖庫",
@@ -10142,12 +10169,7 @@
             let mangaCode = lps[2];
             let id = lps[3];
             let api = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v2.13`;
-            return fetch(api, {
-                "headers": {
-                    "accept": "application/json, text/plain, */*",
-                    "x-requested-with": "XMLHttpRequest"
-                }
-            }).then(res => res.json());
+            return fetch(api).then(res => res.json());
         },
         init: async () => {
             let json = await siteData.xhr();
@@ -12477,7 +12499,7 @@ window.parent.postMessage({
             obj[comic] = chapter;
             localStorage.setItem("copymangaReadHistory", JSON.stringify(obj));
         },
-        imgs: () => siteJson.results.chapter.contents.map(e => e.url),
+        imgs: () => siteJson.results.chapter.contents.map(e => e.url.replace("c800x.", "c1500x.")),
         button: [4],
         insertImg: [".comicContent-list", 2],
         go: 1,
@@ -12569,7 +12591,7 @@ window.parent.postMessage({
             let nUrl = siteData.next();
             if (nUrl) addHtml(nUrl, "點選進入下一話");
         },
-        imgs: () => siteJson.results.chapter.contents.map(e => e.url),
+        imgs: () => siteJson.results.chapter.contents.map(e => e.url.replace("c800x.", "c1500x.")),
         button: [4],
         insertImg: [".comicContentPopupImageList", 2],
         go: 1,
@@ -17401,12 +17423,15 @@ body {
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: 10px;
-    bottom: 10px;
+    left: ${hasTouchEvents() ? "0px" : "-128px"};
+    bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
     background-color: #fff;
     z-index: 2;
+}
+#FixedMenu:hover {
+  left: 0px;
 }
 .FixedMenuitem {
     width: 110px;
