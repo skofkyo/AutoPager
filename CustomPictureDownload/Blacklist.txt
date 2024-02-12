@@ -1,4 +1,4 @@
-2024/02/05 19:45
+2024/02/12 15:10
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -295,6 +295,9 @@ MEITU131
 
 秀色女神
 *://*.xsnvshen.co/album/*
+
+孔雀海/洛丽网
+/^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 
 嘿～色女孩
 *://heysexgirl.com/*
@@ -863,6 +866,8 @@ MrDeepFakes
 *://www.czxbjc.com/news/*.html
 *://www.csjgzy.com/news/*.html
 *://www.cdnecs.com/news/*.html
+*://www.bjimx.com/meitu/*.html
+*://www.qyjafk.com/tupian/*.html
 
 万德美图屋
 *://www.wind5.com/tu*.html
@@ -1936,6 +1941,8 @@ https://www.eyval.net/*
 *://www.czxbjc.com/news/*.html
 *://www.csjgzy.com/news/*.html
 *://www.cdnecs.com/news/*.html
+*://www.bjimx.com/meitu/*.html
+*://www.qyjafk.com/tupian/*.html
 *://www.wind5.com/tu*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
@@ -1964,6 +1971,7 @@ https://www.eyval.net/*
 *://mrdeepfakes.com/photo/*/*
 *://*.shunv*i.com/*/*.html
 *://cosxuxi.club/*.html*
+/^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/
 /^https?:\/\/meitu\.knit\.bid\/(news|street)\/\d+$/
 /^https?:\/\/fanleaks\.club\/[^\/]+$/
