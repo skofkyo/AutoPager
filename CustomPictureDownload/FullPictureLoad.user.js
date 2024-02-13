@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.20
+// @version            1.9.21
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -1013,7 +1013,7 @@
         name: "私图网/图库库/coscoser",
         host: ["baoruba.com", "tukuku.cc", "coscoser.com"],
         reg: /(baoruba\.com|tukuku\.cc|coscoser\.com)\/(bb|t)?\d+\.html/i,
-        imgs: "img[decoding]",
+        imgs: ".entry-content img[decoding]",
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: () => fun.title(/ - 私图网| - coscoser/),
@@ -2590,7 +2590,7 @@
         autoDownload: [0],
         next: ".sxpage_r>a",
         prev: ".sxpage_l>a",
-        customTitle: () => fun.geT(".m-list-tools>h2").replace(/\(\d\)/, "").replace(/\[\d+[\s\.\+\w-\/]+\].*/, "").replace(/全网首发|免费下载|无损图包下载|未删减版/g, ""),
+        customTitle: () => fun.geT(".m-list-tools>h2").replace(/\(\d\)/, "").replace(/\[\d+[\s\.\+\w-\/]+\].*/, "").replace(/全网首发|免费下载|无损图包下载|未删减版|无删减图包/g, ""),
         category: "nsfw1"
     }, {
         name: "iLegs时光印象网",
@@ -6854,7 +6854,7 @@
     }, {
         name: "Girl Girl Go",
         host: ["girlgirlgo.org", "girlgirlgo.net", "girlgirlgo.top", "girlgirlgo.icu", "girlgirlgo.biz", "girlygirlpic.com"],
-        reg: /^https?:\/\/\w{2}\.(girlgirlgo|girlygirlpic)\.(org|net|icu|com|biz|top)\/a\/\w+/,
+        reg: /^https?:\/\/(\w{2}\.)?(girlgirlgo|girlygirlpic)\.(org|net|icu|com|biz|top)\/a\/\w+/,
         imgs: ".figure-link",
         button: [4],
         insertImg: [".post-media-body", 2],
@@ -6905,8 +6905,9 @@
         reg: /^https?:\/\/\w{2}\.(bunnyxgirl|letsgirlz|bestxleg|xbeautyzone)\.com\/[^/]+\/\w+/,
         include: ".separator>a",
         imgs: () => fun.getImg(".separator>a", (fun.geT(".nav-links>*:last-child", 2) || 1), 16),
+        button: [4],
         insertImg: [
-            [".album-post-body .clear,.album-post-share-wrap", 1, "div[itemprop='description articleBody'],.album-post-body>*:not(.album-post-inner):not(.album-post-share-wrap):not(.FullPictureLoadImage):not(#FullPictureLoadEnd)"], 2
+            [".album-post-body .clear,.album-post-share-wrap", 1, "div[itemprop='description articleBody'],.album-post-body>*:not(.album-post-inner):not(.album-post-share-wrap):not(#FullPictureLoadOptionsButtonParentDiv,.FullPictureLoadImage,a[data-fancybox]):not(#FullPictureLoadEnd)"], 2
         ],
         customTitle: () => fun.geT(".breadcrumbs>span:last-child"),
         category: "nsfw2"
