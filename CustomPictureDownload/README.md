@@ -2988,7 +2988,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
 <p>請透過腳本管理器選單開啟Lazy Load加載大圖功能，批量下載請使用其他圖片下載腳本。</p>
-<p>可點擊左下的眼睛圖示新分頁觀看圖片，並且會顯示抓取到的圖片數量。</p>
+<p>可點擊右下的眼睛圖示新分頁觀看圖片，並且會顯示抓取到的圖片數量。</p>
     <table>
         <thead>
             <tr>
@@ -3019,7 +3019,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://creator.nightcafe.studio/explore">NightCafe Creator</a></td>
-                <td>SPA網頁，Lazy Load加載大圖，不穩定需要上下滾動重複觸發，左下的眼睛數字沒有增加，代表沒有抓到新圖。</td>
+                <td>SPA網頁，Lazy Load加載大圖，不穩定需要上下滾動重複觸發，右下的眼睛數字沒有增加，代表沒有抓到新圖。</td>
             </tr>
             <tr>
                 <td><a href="https://legacy.midjourney.com/showcase/recent/">Midjourney</a></td>
