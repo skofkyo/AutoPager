@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.21
+// @version            1.9.22
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -432,7 +432,6 @@
         name: "Telegram Web",
         host: ["telegra.ph"],
         reg: /^https?:\/\/telegra\.ph\/.+/,
-        exclude: "strong+a,a+strong",
         imgs: ".figure_wrapper img",
         customTitle: () => fun.geT("h1").replace(/\|/g, "").replace(/(\s?-\s?)?\d+P/i, ""),
         category: "nsfw2"
@@ -2550,7 +2549,7 @@
         },
         button: [4],
         insertImg: ["#content", 2],
-        customTitle: () => fun.title(" – 小姐姐").replace(/\[\d+[\s\.\+\w-]+\]/gi, "").replace(/\s?\d+p/i, ""),
+        customTitle: () => fun.title(" – 小姐姐").replace(/\[\d+[\s\.\+\w-]+\]/gi, "").replace(/\s?\d+p(\d+V)?/i, "").replace(/[\d\.\s]+(GB|MB)/i, "").replace(/（\d+月\d+打赏群(自购)?资源）/, "").trim(),
         category: "nsfw1"
     }, {
         name: "Coser Lab",
@@ -3819,7 +3818,7 @@
     }, {
         name: "Xiuren",
         host: ["xiuren.biz"],
-        reg: () => /^https?:\/\/xiuren\.biz\/[^\/]+\//.test(siteUrl) && fun.ge(siteData.imgs) ? true : false,
+        reg: () => /^https?:\/\/xiuren\.biz\/[^\/]+\//.test(siteUrl) && fun.ge(".content-inner a[data-lbwps-srcsmall],.content-inner a[rel=noopener]") ? true : false,
         imgs: ".content-inner a[data-lbwps-srcsmall],.content-inner a[rel=noopener]",
         button: [4],
         insertImg: [".content-inner", 2],
@@ -3850,7 +3849,7 @@
         },
         button: [4],
         insertImg: [
-            [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image,.entry-content>p"], 2
+            [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image,.entry-content>p:not(#FullPictureLoadEnd)"], 2
         ],
         //autoDownload: [0],
         //next: ".post-navigation-link-previous>a",
@@ -5443,7 +5442,7 @@
         name: "麻豆村/麻麻传媒/糖心vlog/果冻传媒",
         host: ["www.madoucun.com", "www.mamamcn.com", "www.tangxvlog.com", "www.guodongmcn.com"],
         link: "https://www.madoucun.com/arttype/57.html，https://www.mamamcn.com/arttype/57.html，https://www.tangxvlog.com/arttype/57.html，https://www.guodongmcn.com/arttype/57.html",
-        reg: () => /^https?:\/\/(www\.)?(madoucun|mamamcn|tangxvlog|guodongmcn)\.com\/artdetail-\d+\.html/.test(siteUrl) && fun.ge(siteData.imgs) ? true : false,
+        reg: () => /^https?:\/\/(www\.)?(madoucun|mamamcn|tangxvlog|guodongmcn)\.com\/artdetail-\d+\.html/.test(siteUrl) && fun.ge(".hl-article-box img") ? true : false,
         imgs: ".hl-article-box img",
         button: [4],
         insertImg: [".hl-article-box", 2],
@@ -5791,7 +5790,7 @@
     }, {
         name: "Erotic Pics",
         host: ["erotic.pics"],
-        reg: () => /^https:\/\/erotic\.pics\/[^\/]+\/$/.test(siteUrl) && fun.ge(siteData.imgs) ? true : false,
+        reg: () => /^https:\/\/erotic\.pics\/[^\/]+\/$/.test(siteUrl) && fun.ge(".entry-content img") ? true : false,
         imgs: ".entry-content img",
         button: [4],
         insertImg: [".entry-content", 2],
@@ -13639,7 +13638,7 @@ document.body.appendChild(text);
         host: ["pixai.art"],
         reg: /^https?:\/\/pixai\.art\//,
         init: async () => {
-            await fun.waitEle("//a[div[div[div[contains(@style,'blob:')]]]]");
+            await fun.waitEle("//a[div[div[img[contains(@src,'blob:')]]]]");
             //自動顯示NSFW
             const unBlur = () => {
                 [...document.querySelectorAll(".blur-xl")].forEach(e => e.classList.remove("blur-xl"));
@@ -13663,10 +13662,10 @@ document.body.appendChild(text);
                 };
                 const lazyLoad = () => {
                     setTimeout(() => {
-                        [...gae("//a[div[div[div[contains(@style,'blob:')]]]]")].forEach(aEle => {
-                            let thumbnail = aEle.querySelector(".bg-cover").getAttribute("style").split("url(")[1].split(")")[0];
+                        [...gae("//a[div[div[img[contains(@src,'blob:')]]]][not(contains(@href,'video'))]")].forEach(aEle => {
+                            let thumbnail = aEle.querySelector("img").src;
                             //console.log("thumbnail",thumbnail);
-                            aEle.querySelector(".bg-cover").style.backgroundImage = `url('${loading_bak}')`;
+                            aEle.querySelector("img").src = loading_bak;
                             fetch(aEle.href).then(res => res.text()).then(text => {
                                 let doc = new DOMParser().parseFromString(text, "text/html");
                                 let meta = doc.querySelector("meta[property='og:image'][content]");
@@ -13682,9 +13681,9 @@ document.body.appendChild(text);
                                 } else {
                                     origUrl = thumbnail;
                                 }
-                                let div = aEle.querySelector(".bg-cover");
-                                div.dataset.src = origUrl;
-                                div.style.backgroundImage = `url('${origUrl}')`;
+                                let img = aEle.querySelector("img");
+                                img.dataset.src = origUrl;
+                                fun.imagesObserver.observe(img);
                             });
                         });
                     }, 500);
@@ -13696,7 +13695,7 @@ document.body.appendChild(text);
                 });
             }
         },
-        capture: "//a[div[div[div[contains(@style,'https:')][not(contains(@style,'blob:'))]]]]//div[contains(@class,'bg-cover')]",
+        capture: "a.group img.object-cover[data-src]",
         category: "lazyLoad"
     }, {
         name: "Yodayo",
@@ -17624,8 +17623,7 @@ if (newWindowDataViewMode == 1) {
 
     const addnewTabViewButton = () => {
         let img = new Image();
-        img.id = "FullPictureLoad";
-        img.className = "FullPictureLoadFixedBtn";
+        img.id = "FullPictureLoadEye";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => {
@@ -18098,6 +18096,19 @@ if (newWindowDataViewMode == 1) {
     cursor: pointer !important;
 }
 
+#FullPictureLoadEye {
+    bottom: 24px !important;
+    display: block !important;
+    position: fixed !important;
+    right: 24px !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: unset !important;
+    z-index: 2147483647 !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+}
+
 #FullPictureLoadFixedMenu {
     text-align: center !important;
     font-family: Arial, sans-serif !important;
@@ -18148,7 +18159,7 @@ if (newWindowDataViewMode == 1) {
     height: auto !important;
     padding: 5px 5px 2px 5px !important;
     position: fixed !important;
-    left: 64px !important;
+    right: 64px !important;
     bottom: 22px !important;
     border: #ccc 1px solid !important;
     border-radius: 3px !important;
