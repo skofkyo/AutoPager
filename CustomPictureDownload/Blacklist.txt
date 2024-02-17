@@ -1,4 +1,4 @@
-2024/02/12 15:10
+2024/02/18 01:42
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -694,6 +694,9 @@ Chinese Nude Art Photos
 YouFreeX
 *www.youfreex.com/file/*
 
+Share Cosplay
+*sharecosplay.com*
+
 Hentai Cosplay
 *://www.hentaicos.com/*/*.html
 
@@ -745,6 +748,9 @@ MrDeepFakes
 
 亿秀美女
 *://*.*tu11.com/*/*/*.html
+
+움짤저장소 KPOP GIRLGROUPS ACTOR
+*://kkoreaactor.blogspot.com/*/*/*.html*
 
 桃子啦
 *://www.tzala.com/book/*.html
@@ -868,6 +874,8 @@ MrDeepFakes
 *://www.cdnecs.com/news/*.html
 *://www.bjimx.com/meitu/*.html
 *://www.qyjafk.com/tupian/*.html
+*://www.jnnmm.com/meitu/*.html
+*://www.hdz39.com/tu/*.html
 
 万德美图屋
 *://www.wind5.com/tu*.html
@@ -1007,7 +1015,10 @@ Pururin
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 
 ACG漫画网
-*://www.acgomh.com/*/*.html
+*://www.acg*mh.com/*/*.html
+*://www.cool-manga.com/*/*.html
+*porn-comic.com/*/*.html
+*://www.acgnbus.com/*/*.html
 
 禁漫天堂
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
@@ -1634,7 +1645,10 @@ https://www.nuyet.com/gallery/*
 *://18h.mm-cg.com/*_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
 *://mhdnf.xyz/play?linkId=*
-*://www.acgomh.com/*/*.html
+*://www.acg*mh.com/*/*.html
+*://www.cool-manga.com/*/*.html
+*porn-comic.com/*/*.html
+*://www.acgnbus.com/*/*.html
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
 *://www.wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
@@ -1943,6 +1957,8 @@ https://www.eyval.net/*
 *://www.cdnecs.com/news/*.html
 *://www.bjimx.com/meitu/*.html
 *://www.qyjafk.com/tupian/*.html
+*://www.jnnmm.com/meitu/*.html
+*://www.hdz39.com/tu/*.html
 *://www.wind5.com/tu*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
@@ -1971,6 +1987,8 @@ https://www.eyval.net/*
 *://mrdeepfakes.com/photo/*/*
 *://*.shunv*i.com/*/*.html
 *://cosxuxi.club/*.html*
+*://kkoreaactor.blogspot.com/*/*/*.html*
+*sharecosplay.com*
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/
 /^https?:\/\/meitu\.knit\.bid\/(news|street)\/\d+$/
