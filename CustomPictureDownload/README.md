@@ -731,7 +731,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/02/12 15:10</p>
+<p>2024/02/18 01:42</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1374,7 +1374,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.madoucun.com/arttype/57.html">麻豆村</a></td>
-                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a></td>
+                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>，<a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>，<a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>，<a href="https://www.proncn.com/arttype/57.html">中国P站</a>，<a href="https://www.proncn.com/arttype/57.html">麻豆101</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.91tulu.com/">91图录</a></td>
@@ -1599,6 +1599,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://fuligirl.top/">福利姬美图</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://sharecosplay.com/">Share Cosplay</a></td>
+                <td>高解析原圖需要下載，聚集的只是預覽圖，分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://nudebird.biz/">Nude Bird</a></td>
@@ -1973,6 +1977,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="http://ycyweb.cloudapp.net/">三界异次元</a></td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.lianjiajr.net/">好视角</a></td>
                 <td>很久沒新圖了</td>
             </tr>
@@ -2018,7 +2026,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式124個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式126個</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.wind5.com/">万德美图屋</a></td>
@@ -2289,6 +2297,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>手動插入圖片，由於需要重新繪製還原被分割的圖片，過程中CPU會全速運轉。<a href="https://jmcmomic.github.io/">禁漫天堂發布頁</a></td>
             </tr>
             <tr>
+                <td><a href="https://www.nicohentai.com/">逆次元逆ACG</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://www.wnacg.com/">紳士漫畫</a></td>
                 <td>作用在圖片清單、下拉閱讀頁，<a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>，<a href="https://wnacg01.org/">紳士漫畫地址發布頁</a></td>
             </tr>
@@ -2355,6 +2367,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.acgomh.com/">ACG漫画网</a></td>
                 <td><a href="https://www.porn-comic.com/">www.porn-comic.com</a>，<a href="https://www.cool-manga.com/">www.cool-manga.com</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.acgnbus.com/">ACG漫画网</a></td>
+                <td>Mobile限定</td>
             </tr>
             <tr>
                 <td><a href="https://twhentai.com/">TWHentai</a></td>
