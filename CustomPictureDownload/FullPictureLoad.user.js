@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.23
+// @version            1.9.24
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -3895,7 +3895,7 @@
         },
         button: [4],
         insertImg: [
-            [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image,.entry-content>p:not(#FullPictureLoadEnd)"], 2
+            [".page-link-box,.wp-block-post-content>*:last-child,#khd", 1, "#basicExample,.wp-block-image,.entry-content>p:not(#FullPictureLoadEnd),.page-link-box"], 2
         ],
         //autoDownload: [0],
         //next: ".post-navigation-link-previous>a",
@@ -4125,7 +4125,7 @@
         button: [4],
         insertImg: [".wp-content-ex", 2],
         customTitle: () => fun.geT(".title>h1").replace(/\(\d+[-\.\+\s\w]+\)/, "").trim(),
-        css: "#rtb,.float-ck-center-lt,#popupContact,#backgroundPopupp,.col-9>.col-12,.col-3{display:none!important}.col-9{flex:unset!important;max-width:100%!important}",
+        css: "#rtb,.float-ck-center-lt,#popupContact,#backgroundPopupp,.col-9>.col-12,.col-3,#popup_se{display:none!important}.col-9{flex:unset!important;max-width:100%!important}",
         category: "nsfw2"
     }, {
         name: "Kenh69 自動翻頁",
@@ -4145,14 +4145,14 @@
             history: 1
         },
         openInNewTab: ".space-ad a:not([target=_blank])",
-        css: ".autoPagerTitle{width:100%!important}#backgroundPopupp,#popupContact,.float-ck-center-lt,center[style*='z-index']{display:none!important}",
+        css: ".autoPagerTitle{width:100%!important}#backgroundPopupp,#popupContact,.float-ck-center-lt,center[style*='z-index'],#popup_se{display:none!important}",
         category: "autoPager"
     }, {
         name: "Kenh69去廣告",
         host: ["kenh69.co"],
         reg: /^https?:\/\/kenh69\.co\//,
         init: "$(document).off();",
-        css: "#backgroundPopupp,#popupContact,.float-ck-center-lt,center[style*='z-index']{display:none!important}",
+        css: "#backgroundPopupp,#popupContact,.float-ck-center-lt,center[style*='z-index'],#popup_se{display:none!important}",
         category: "ad"
     }, {
         name: "Phym18/Bongda21h",
@@ -4177,7 +4177,7 @@
         insertImg: [".ndtruyen", 2],
         go: 1,
         customTitle: () => fun.geT("h1.header-title,h1.title").replace(/\s?\(\d+\s?photos?\)|\s?\(\d+\s?photos?(\s?\+\s?\d+\s?videos?)\)/g, "").replace("– MissKon.com", "").trim(),
-        css: "#wap_bottombannerr,#wap_bottombanner,#backgroundPopupp,#popupContact,center[style*='z-index']{display:none!important}",
+        css: "#wap_bottombannerr,#wap_bottombanner,#backgroundPopupp,#popupContact,center[style*='z-index'],#popup_se{display:none!important}",
         category: "nsfw2"
     }, {
         name: "Phym18 圖片分類自動翻頁",
@@ -4200,14 +4200,14 @@
             history: 1
         },
         openInNewTab: "div.item a:not([target=_blank])",
-        css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index']{display:none!important}",
+        css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index'],#popup_se{display:none!important}.autoPagerTitle{margin-bottom: 30px!important}",
         category: "autoPager"
     }, {
         name: "Phym18/bongda21h去廣告",
         host: ["phym18.one", "bongda21h.co"],
         reg: /phym18\.one|bongda21h\.co/,
         init: "$(document).off();",
-        css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index']{display:none!important}",
+        css: "#bn_top,#backgroundPopupp,#popupContact,#wap_bottombannerr,#wap_bottombanner,center[style*='z-index'],#popup_se{display:none!important}",
         category: "ad"
     }, {
         name: "Porn Pics",
@@ -7683,6 +7683,7 @@
             history: 1,
             title: doc => "Page" + fun.geT(".paging-item--current", 1, doc)
         },
+        openInNewTab: ".picture-list a:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "MOMO图库",
@@ -15614,7 +15615,7 @@ document.body.appendChild(text);
                     cfn: event => {
                         event.preventDefault();
                         fastDownload = true;
-                        imgZipDownload();
+                        DownloadFn();
                     }
                 }, {
                     id: "FullPictureLoadNewTabViewBtn",
@@ -16783,8 +16784,9 @@ document.body.appendChild(text);
     const getImgs = async selector => {
         fetching = true;
         let imgs;
-        if (ge(".FullPictureLoadImage") && siteData.repeat != 1) {
-            imgs = [...gae(".FullPictureLoadImage:not(.small)")];
+        if (globalImgArray.length > 0 && siteData.repeat != 1) {
+            fetching = false;
+            return globalImgArray;
         } else if (typeof selector == "function") {
             imgs = await selector();
             if (getImgFn == "") getImgFn += " > " + siteData.name + "專用Fn";
@@ -16816,8 +16818,8 @@ document.body.appendChild(text);
                 return null;
             }
         }).filter(item => item);
-        if (siteData.category != "lazyLoad") debug(`\ngetImgs()${getImgFn} 所有圖片網址：`, imgsSrcArr);
-        if (siteData.category != "lazyLoad") debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
+        if (siteData.category != "lazyLoad" && globalImgArray.length == 0) debug(`\ngetImgs()${getImgFn} 所有圖片網址：`, imgsSrcArr);
+        if (siteData.category != "lazyLoad" && globalImgArray.length == 0) debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
         imgsSrcArr = [...new Set(imgsSrcArr)];
         globalImgArray = imgsSrcArr;
         fetching = false;
@@ -16854,7 +16856,7 @@ document.body.appendChild(text);
         }
     };
 
-    const imgZipDownload = async () => {
+    const DownloadFn = async () => {
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
         let selector, titleText;
         if (fastDownload) {
@@ -16957,7 +16959,7 @@ document.body.appendChild(text);
                             if (/^image/.test(type)) {
                                 ex = "jpg";
                             } else {
-                                console.error("\nimgZipDownload() PromiseAll blob資料格式錯誤", blobDataArray[i]);
+                                console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", blobDataArray[i]);
                                 fun.showMsg(displayLanguage.str_30, 0);
                                 return;
                             }
@@ -17181,9 +17183,7 @@ document.body.appendChild(text);
                 [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => {
                     if (e.tagName == "IMG") {
                         e.setAttribute("style", "display:none!important;");
-                        if (options.zoom > 0) {
-                            e.style.width = `${options.zoom * 10}%`;
-                        }
+                        if (options.zoom > 0) e.style.width = `${options.zoom * 10}%`;
                     } else {
                         e.setAttribute("style", "display:none!important;");
                     }
@@ -17216,7 +17216,7 @@ document.body.appendChild(text);
             imgBox.style.backgroundColor = "#F6F6F6";
             imgBox.style.textAlign = "center";
             imgBox.style.display = "block";
-            let srcArr1 = [...gae(".FullPictureLoadImage:not(.small)")].map(e => e.dataset.src ? e.dataset.src : e.src);
+            let srcArr1 = [...gae(".FullPictureLoadImage:not(.small)")].map(e => e.dataset.src ?? e.src);
             let srcArr2 = srcArr1.map((item, index, arr) => parseInt(index, 10) % 2 == 0 ? (parseInt(index, 10) + 1) == arr.length ? arr[index] : arr[parseInt(index, 10) + 1] : arr[parseInt(index, 10) - 1]);
             let srcArr;
             siteData.category == "comic" || (options.column == 2 && siteData.category == "hcomic") ? srcArr = srcArr2 : srcArr = srcArr1;
@@ -17263,9 +17263,7 @@ document.body.appendChild(text);
             });
             let tE = fun.ge("#FullPictureLoadEnd");
             tE.parentNode.insertBefore(imgBox, tE);
-            if (fun.ge(".FullPictureLoadVideo")) {
-                [...fun.gae(".FullPictureLoadVideo")].forEach(e => tE.parentNode.insertBefore(e, tE));
-            }
+            if (fun.ge(".FullPictureLoadVideo"))[...fun.gae(".FullPictureLoadVideo")].forEach(e => tE.parentNode.insertBefore(e, tE));
             if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
                 try {
                     Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
@@ -17391,9 +17389,7 @@ document.body.appendChild(text);
         }
 
         let newWindowData = localStorage.getItem("newWindowData");
-        if (newWindowData === null) {
-            localStorage.setItem("newWindowData", '{"ViewMode":0}');
-        }
+        if (newWindowData === null) localStorage.setItem("newWindowData", '{"ViewMode":0}');
 
         let imgSrcs;
         captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
@@ -17632,14 +17628,14 @@ document.addEventListener("keydown", event => {
         inline: "center"
     };
     const imgs = [...document.querySelectorAll("img")];
-    if ((event.code == "ArrowUp" || event.key == "ArrowUp") && imgViewIndex >= 0 || (event.code == "ArrowLeft" || event.key == "ArrowLeft") && imgViewIndex >= 0) {
+    if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].includes(event.code) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].includes(event.key)) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
         imgs.forEach(e => e.style.border = "");
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
-    } else if ((event.code == "ArrowDown" || event.key == "ArrowDown") && imgViewIndex <= imgs.length - 1 || (event.code == "ArrowRight" || event.key == "ArrowRight") && imgViewIndex <= imgs.length - 1) {
+    } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].includes(event.code) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].includes(event.key)) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
         if (imgViewIndex > imgs.length - 1) imgViewIndex = 0;
@@ -17770,7 +17766,7 @@ if (newWindowDataViewMode == 1) {
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => {
             fastDownload = false;
-            imgZipDownload();
+            DownloadFn();
         });
         img.addEventListener("mousedown", (event) => {
             if (event.button == 1) {
@@ -17822,7 +17818,7 @@ if (newWindowDataViewMode == 1) {
             cfn: event => {
                 event.preventDefault();
                 fastDownload = true;
-                imgZipDownload();
+                DownloadFn();
             }
         }, {
             text: displayLanguage.str_104,
@@ -19015,7 +19011,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 }
                 let autoDownload = siteData.autoDownload;
                 if (autoDownload) {
-                    if (autoDownload[0] == 1 || options.autoDownload == 1) imgZipDownload();
+                    if (autoDownload[0] == 1 || options.autoDownload == 1) DownloadFn();
                 }
                 let insertImg = data.insertImg;
                 if (insertImg) {
@@ -19167,13 +19163,13 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
                 if (event.code == "Numpad0" || event.key == "0") { //數字鍵0
                     fastDownload = false;
-                    return imgZipDownload();
+                    return DownloadFn();
                 }
                 if (event.code == "Numpad1" || event.key == "1") return copyImgSrcText(); //數字鍵1
                 if (event.code == "Numpad2" || event.key == "2") return goToImg("first"); //數字鍵2
                 if (event.code == "Numpad3" || event.key == "3") { //數字鍵3
                     fastDownload = true;
-                    return imgZipDownload();
+                    return DownloadFn();
                 }
                 if (event.code == "Numpad4" || event.key == "4") return goToImg("last"); //數字鍵4
                 if (event.code == "Numpad5" || event.key == "5") return toggleImgMode(); //數字鍵5
