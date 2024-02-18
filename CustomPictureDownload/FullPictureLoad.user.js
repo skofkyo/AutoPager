@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.24
+// @version            1.9.25
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -323,7 +323,7 @@
             if (/\(\d+\)(-tic)?\./.test(url)) {
                 let m = url.match(/^(.+\()(\d+)(\).+)$/i);
                 for (let i = 1; i <= max; i++) {
-                    arr.push(decodeURI(m[1] + i + m[3]));
+                    arr.push(decodeURIComponent(m[1] + i + m[3]));
                 }
             } else {
                 try {
@@ -335,12 +335,12 @@
                     if (blur && fileName.length <= 4) {
                         let n = url.match(/(\d+)\.[a-z]{3,4}$/)[1];
                         for (let i = parseInt(n, 10); i < (parseInt(n, 10) + parseInt(max, 10)); i++) {
-                            arr.push(decodeURI(path + String(i).padStart(fileName.length, "0") + ex));
+                            arr.push(decodeURIComponent(path + String(i).padStart(fileName.length, "0") + ex));
                         }
                     } else if (blur && fun.ge(".size-thumbnail[src*='-285x180']")) {
                         arr = [...fun.gae(".size-thumbnail[src*='-285x180']")].map(e => e.src.replace("-285x180", ""));
                     } else if (blur && fun.ge("img[src*='?width=285']")) {
-                        arr = [...fun.gae("img[src*='?width=285']")].map(e => decodeURI(e.src.replace(/\?width=285.+/, "")));
+                        arr = [...fun.gae("img[src*='?width=285']")].map(e => decodeURIComponent(e.src.replace(/\?width=285.+/, "")));
                     } else {
                         arr = [...fun.gae(".gallery-item a")].map(e => e.href);
                     }
@@ -2340,7 +2340,7 @@
             /*
             if (options.fancybox == 1) {
                 fun.showMsg("預覽縮圖轉DataURL中...", 0);
-                thumbnailsSrcArray = [...fun.gae(".mtp img")].map(e => fun.xhr(decodeURI(e.src), "blob").then(blob => fun.blobToDataURL(blob)));
+                thumbnailsSrcArray = [...fun.gae(".mtp img")].map(e => fun.xhr(decodeURIComponent(e.src), "blob").then(blob => fun.blobToDataURL(blob)));
                 thumbnailsSrcArray = await Promise.all(thumbnailsSrcArray).then(arr => {
                     fun.hideMsg();
                     return arr;
@@ -2348,8 +2348,8 @@
                 debug("\n爱死cos美女图片站 thumbnailsSrcArray", thumbnailsSrcArray)
             }
             */
-            thumbnailsSrcArray = [...fun.gae(".mtp img")].map(e => decodeURI(e.src));
-            return [...fun.gae(".mtp img")].map(e => decodeURI(e.src.replace("/m", "/")));
+            thumbnailsSrcArray = [...fun.gae(".mtp img")].map(e => decodeURIComponent(e.src));
+            return [...fun.gae(".mtp img")].map(e => decodeURIComponent(e.src.replace("/m", "/")));
         },
         button: [4],
         insertImg: [
@@ -5215,11 +5215,11 @@
                 let max = fun.geT(".page-nav>*:last-child", 2);
                 return fun.getImg(".td-post-content img", max, 4);
             } else if (fun.ge(".td-post-content img[srcset]")) {
-                let srcs = [...fun.gae(".td-post-content img[src]")].map(e => decodeURI(e.src));
+                let srcs = [...fun.gae(".td-post-content img[src]")].map(e => decodeURIComponent(e.src));
                 let srcsets = [...fun.gae(".td-post-content img[srcset]")].map(img => {
                     let splitArr = img.getAttribute("srcset").split(",");
                     splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1]);
-                    return decodeURI(splitArr.at(-1).trim().split(" ")[0]);
+                    return decodeURIComponent(splitArr.at(-1).trim().split(" ")[0]);
                 });
                 return [...new Set(srcs.concat(srcsets))];
             } else {
@@ -9101,9 +9101,9 @@
                         str += arr[i] + "-";
                     }
                 }
-                return decodeURI(str);
+                return decodeURIComponent(str);
             } else {
-                return decodeURI(url);
+                return decodeURIComponent(url);
             }
         },
         init: () => {
@@ -13116,8 +13116,8 @@ document.body.appendChild(text);
         insertImg: ["#mh", 2],
         go: 1,
         next: () => {
-            let comicListUrl = decodeURI(siteUrl.replace(/[^\/]+\/$/i, ""));
-            let chapter = decodeURI(siteUrl.match(/[^\/]+\/$/)[0]);
+            let comicListUrl = decodeURIComponent(siteUrl.replace(/[^\/]+\/$/i, ""));
+            let chapter = decodeURIComponent(siteUrl.match(/[^\/]+\/$/)[0]);
             let nextXPath = `//div[@id='content']/li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
             return fun.fetchDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
@@ -14575,7 +14575,7 @@ document.body.appendChild(text);
                 if (msg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${parseInt(maxPage, 10)}`, 0);
                 return htmlText;
             }).catch(error => {
-                console.error(`\nfun.getImg() > fetch()出錯:\n${decodeURI(_url)}`, error);
+                console.error(`\nfun.getImg() > fetch()出錯:\n${decodeURIComponent(_url)}`, error);
             });
             const resArr = [];
             resArr.push(html(url));
@@ -14594,7 +14594,7 @@ document.body.appendChild(text);
                     debug(`\nfun.getImg() DOM${i}`, doc);
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
-                        check.ok ? imgsArray.push(decodeURI(check.src)) : debug(`\nfun.getImg() imgs[${p}]錯誤`, imgs[p]);
+                        check.ok ? imgsArray.push(decodeURIComponent(check.src)) : debug(`\nfun.getImg() imgs[${p}]錯誤`, imgs[p]);
                     }
                 }
             });
@@ -14642,7 +14642,7 @@ document.body.appendChild(text);
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${parseInt(maxPage, 10)}`, 0);
                     return htmlText;
                 }).catch(error => {
-                    console.error(`\nfun.getImgO() > fetch()出錯:\n${decodeURI(_url)}`, error);
+                    console.error(`\nfun.getImgO() > fetch()出錯:\n${decodeURIComponent(_url)}`, error);
                 });
             };
             const resArr = [];
@@ -14661,7 +14661,7 @@ document.body.appendChild(text);
                     debug(`\nfun.getImgO() DOM${i}`, doc);
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
-                        check.ok ? imgsArray.push(decodeURI(check.src)) : debug(`\nfun.getImgO() imgs[${p}]錯誤`, imgs[p]);
+                        check.ok ? imgsArray.push(decodeURIComponent(check.src)) : debug(`\nfun.getImgO() imgs[${p}]錯誤`, imgs[p]);
                     }
                 }
             });
@@ -14769,7 +14769,7 @@ document.body.appendChild(text);
                 const htmlText = decoder.decode(buffer);
                 return htmlText;
             }).catch(error => {
-                console.error(`\nfun.getImgA fetch()出錯:\n${decodeURI(url)}`, error);
+                console.error(`\nfun.getImgA fetch()出錯:\n${decodeURIComponent(url)}`, error);
             });
             const resArr = [];
             if (typeof link != "object") resArr.push(html(siteUrl));
@@ -14918,7 +14918,7 @@ document.body.appendChild(text);
             });
         },
         getAList: () => {
-            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURI(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$|\.gif$|\.mp4$|\.mov$|\.ts$/i.test(href) ? href : null).filter(item => item);
+            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURIComponent(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$|\.gif$|\.mp4$|\.mov$|\.ts$/i.test(href) ? href : null).filter(item => item);
             fun.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
             let resArr = paths.map((path, i, arr) => {
@@ -14933,7 +14933,7 @@ document.body.appendChild(text);
                     fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     return json.code == 200 ? {
                         name: json.data.name,
-                        url: decodeURI(json.data.raw_url)
+                        url: decodeURIComponent(json.data.raw_url)
                     } : null;
                 });
             });
@@ -15039,7 +15039,7 @@ document.body.appendChild(text);
                             }
                         });
                     }
-                    debug(`\nfun.getNP() > getNextPageEles() DOM\n${decodeURI(url)}`, doc);
+                    debug(`\nfun.getNP() > getNextPageEles() DOM\n${decodeURIComponent(url)}`, doc);
                     let eles = [...fun.gae(pageEle, doc)];
                     let lastPage = null;
                     if (typeof lastEle === "string") {
@@ -15443,7 +15443,7 @@ document.body.appendChild(text);
                 let res = fun.xhrDoc(links[i]).then(doc => {
                     debug(`\nfun.getEle() URL`, links[i]);
                     fun.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
-                    debug(`fun.getEle()\n${decodeURI(links[i])}\n`, doc);
+                    debug(`fun.getEle()\n${decodeURIComponent(links[i])}\n`, doc);
                     return [...fun.gae(elements, doc)];
                 });
                 resArr.push(res);
