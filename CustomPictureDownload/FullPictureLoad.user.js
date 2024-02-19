@@ -3,11 +3,11 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.26
-// @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @version            1.9.27
+// @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
-// @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
-// @description:zh-TW  專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，让你免去需要翻页的动作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
+// @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
+// @description:zh-TW  支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @author             tony0809
 // @match              *://*/*
 // @connect            *
@@ -206,11 +206,10 @@
     }, {
         name: "NLegs/HoneyLeg/Lady Lap/Nuyet/LegBabe", //需搭配專用腳本 https://greasyfork.org/scripts/463123
         reg: /^https?:\/\/www\.nlegs\.com\/girls\/\d+\/\d+\/\d+\/\d+\.html$|^https?:\/\/www\.honeyleg\.com\/article\/\d+\/\d+\/\d+\/\d+\.html$|^https?:\/\/www\.ladylap\.com\/show\/|^https?:\/\/www\.nuyet\.com\/gallery\/|^https?:\/\/www\.legbabe\.com\/hot\/[^\.]+\.html$/,
-        init: () => fun.createImgBox("//div[div[a/div[contains(@style,'thumb') and span]]]", 2),
         imgs: ".col-md-12.col-xs-12 img[src^=blob],.col-md-12.col-lg-12 img[src^=blob]",
         repeat: 1,
         button: [4],
-        insertImg: ["#fullPictureLoadImgBox", 0],
+        insertImg: ["//div[img[starts-with(@src,'blob')]]", 0],
         go: 1,
         customTitle: () => fun.geT("strong").replace(/\[\d+[-\.\+\w]+\]/, "").trim(),
         fetch: 1,
@@ -3901,7 +3900,7 @@
         //autoDownload: [0],
         //next: ".post-navigation-link-previous>a",
         //prev: ".post-navigation-link-next>a",
-        customTitle: () => fun.geT("h3.wp-block-post-title").replace(/\[(\d+)?mb-\d+photos\]|\[\d+photos\]|\(\d+8MB\)\(\d+photos\)/i, "").trim(),
+        customTitle: () => fun.geT("h3.wp-block-post-title").replace(/\[\d+[\w\s\.\+-]+\]|\(\d+[\w\s\.\+-]+\)/gi, "").trim(),
         fetch: 1,
         //threading: 4,
         CSP: 1,
@@ -5984,6 +5983,70 @@
         downloadVideo: true,
         category: "nsfw2"
     }, {
+        name: "Fasting Sex Porn Pics/Cosplay Photos",
+        host: ["www.fastingsex.com"],
+        reg: /^https?:\/\/www\.fastingsex\.com\/post\//i,
+        include: "//span[text()='Watch Gallery'] | //span[text()='Photo Gallery']",
+        exclude: "//span[text()='Watch Movie']",
+        init: async () => {
+            fun.addMutationObserver(() => fun.remove("//div[div[div[div[iframe]]]]"));
+            await fun.waitEle("img.gallery-item");
+        },
+        imgs: async () => {
+            fun.ge("img.gallery-item").scrollIntoView();
+            await fun.delay("2000");
+            videosSrcArray = [...fun.gae("[data-breakout='normal'] video")].map(e => e.src);
+            thumbnailsSrcArray = [...fun.gae("img.gallery-item")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
+        },
+        button: [4],
+        insertImg: ["//div[div[div[div[@data-hook='galleryViewer']]]][@data-breakout='fullWidth']", 2],
+        customTitle: () => fun.geT(".post-title__text").replace(/\d+P\s?|\[\d+[\w+\s\.\+-]+\]\s?/, ""),
+        downloadVideo: true,
+        css: "#POPUPS_ROOT{display:none!important;}",
+        category: "nsfw2"
+    }, {
+        name: "Fasting Sex Hentai Pictures",
+        host: ["www.fastingsex.com"],
+        reg: /^https?:\/\/www\.fastingsex\.com\/post\//i,
+        include: "//span[text()='Gallery']",
+        exclude: "//span[text()='Watch Movie']",
+        init: async () => {
+            fun.addMutationObserver(() => fun.remove("//div[div[div[div[iframe]]]]"));
+            await fun.waitEle("[data-breakout='normal'] [data-hook='imageViewer'] [data-image-info]");
+        },
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae("[data-breakout='normal'] [data-hook='imageViewer'] [data-image-info]>img")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
+        },
+        button: [4],
+        insertImg: ["//div[@data-hook='post-description']", 2],
+        customTitle: () => fun.geT(".post-title__text").replace(/^\d+P\s?/, ""),
+        css: "#POPUPS_ROOT{display:none!important;}",
+        category: "nsfw2"
+    }, {
+        name: "Fasting Sex Porn Comic",
+        host: ["www.fastingsex.com"],
+        reg: /^https?:\/\/www\.fastingsex\.com\/post\//i,
+        include: "//a[text()='Porn Comic']",
+        exclude: "//span[text()='Watch Movie']",
+        init: async () => {
+            fun.addMutationObserver(() => fun.remove("//div[div[div[div[iframe]]]]"));
+            await fun.waitEle("img.gallery-item");
+        },
+        imgs: async () => {
+            fun.ge("img.gallery-item").scrollIntoView();
+            await fun.delay("2000");
+            thumbnailsSrcArray = [...fun.gae("img.gallery-item")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
+        },
+        button: [4],
+        insertImg: ["//div[@data-hook='post-description']", 2],
+        customTitle: () => fun.geT(".post-title__text").replace(/\d+P\s?|\[\d+[\w+\s\.\+-]+\]\s?/, ""),
+        downloadVideo: true,
+        css: "#POPUPS_ROOT{display:none!important;}",
+        category: "nsfw2"
+    }, {
         name: "EroMe",
         host: ["www.erome.com"],
         reg: /^https?:\/\/www\.erome\.com\/a\/\w+$/i,
@@ -7607,6 +7670,14 @@
         next: ".updown_r>a",
         prev: ".updown_l>a",
         customTitle: () => fun.geT("h1").split(",")[0],
+        category: "nsfw2"
+    }, {
+        name: "D哥新聞",
+        host: ["dbro.news"],
+        link: "https://dbro.news/category/p0-%e5%a5%97%e5%9c%96%e7%b3%bb%e5%88%97",
+        reg: () => /^https?:\/\/dbro\.news\/\d+\/[^\.]+\.html$/i.test(siteUrl) && fun.ge("p.pic_center") ? true : false,
+        imgs: ".pic_center>img",
+        customTitle: () => fun.geT(".post-title").replace(/\[\d+[\w\s\.\+-]+\]|\(\d+[\w\s\.\+-]+\)/, "").trim(),
         category: "nsfw2"
     }, {
         name: "流量密碼",
