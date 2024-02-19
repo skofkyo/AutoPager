@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.25
+// @version            1.9.26
 // @description        專注於寫真、H漫、漫畫的網站，目前規則數600+，進行圖片全量加載，讓你免去需要翻頁的動作，也能進行下載壓縮打包，如有下一頁元素能做到自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  专注于写真、H漫、漫画的网站，目前规则数600+，进行图片全量加载，也能进行下载压缩打包，如有下一页元素能做到自动化下载。
@@ -3875,23 +3875,24 @@
         category: "nsfw1"
     }, {
         name: "4KHD",
-        host: ["www.4khd.com", "www.4kep.com", "xjav.cc", "hhhy.quest", "vxkk.cc", "lbmfrd.xxtt.info", "mbfxy.xxtt.info"],
+        host: ["www.4khd.com", "www.4kep.com", "xjav.cc", "hhhy.quest", "vxkk.cc", "rtlvmk.xxtt.info", "lfdxxb.xxtt.info"],
         reg: () => /\/\d+\/\d+\/\d+\/.+\.html$/.test(siteUrl) && fun.ge("//a[@rel='home'][text()='4KHD']") ? true : false,
         imgs: async () => {
             await fun.getNP("#basicExample>a,figure.wp-block-image,.entry-content>p>a", ".current+li>a", null, ".page-link-box", 0, null, 1, 0);
             if (fun.ge("figure.wp-block-image>a")) {
                 thumbnailsSrcArray = [...fun.gae("figure.wp-block-image>a>img")].map(e => e.src.replace(/\?w=\d+$/, "?w=100"));
-                return [...fun.gae("figure.wp-block-image>a")];
+                //return [...fun.gae("figure.wp-block-image>a")];
             } else if (fun.ge("#basicExample>a")) {
                 thumbnailsSrcArray = [...fun.gae("#basicExample>a>img")].map(e => e.src.replace(/\?w=\d+$/, "?w=100"));
-                return fun.getImgA("#gallery a", "#basicExample>a");
+                //return fun.getImgA("#gallery a", "#basicExample>a");
             } else if (fun.ge(".entry-content>p>a")) {
                 thumbnailsSrcArray = [...fun.gae(".entry-content>p>a>img")].map(e => e.src.replace(/\?w=\d+$/, "?w=100"));
-                return [...fun.gae(".entry-content>p>a")];
+                //return [...fun.gae(".entry-content>p>a")];
             } else {
                 alert("Full Picture Load\nThe website may have been updated, please provide feedback.");
                 return [];
             }
+            return thumbnailsSrcArray.map(e => e.replace("?w=100", ""));
         },
         button: [4],
         insertImg: [
