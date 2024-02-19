@@ -723,7 +723,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <br>
 <p>4.分頁檢視模式</p>
-<p>上左方向鍵跳轉到目前的上一張圖、下右方向鍵跳轉到目前的下一張圖</p>
+<p>W鍵、A鍵、上左方向鍵跳轉到目前的上一張圖、S鍵、D鍵、下右方向鍵跳轉到目前的下一張圖</p>
 <p>數字鍵 0 切換為預設模式自動排列</p>
 <p>數字鍵 1 切換為單圖置中模式</p>
 <p>數字鍵 2 切換為多圖並排模式</p>
@@ -1146,7 +1146,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://niuniuhome.club/">妞妞之家</a></td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.beautyleg6.com/index.html">BeautyLeg</a></td>
@@ -1599,6 +1599,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://fuligirl.top/">福利姬美图</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.fastingsex.com/">Fasting Sex</a></td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://sharecosplay.com/">Share Cosplay</a></td>
@@ -2063,6 +2067,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://gogortrt.com/">gogo人体艺术</a></td>
                 <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站57個</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://dbro.news/category/p0-%e5%a5%97%e5%9c%96%e7%b3%bb%e5%88%97">D哥新聞</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://jo106.com/beauty-photo/">流量密碼</a></td>
