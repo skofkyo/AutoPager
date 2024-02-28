@@ -109,6 +109,9 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
     ],
+    insertImgAF: () => {//插入圖片後要執行的代碼
+        code
+    },
     go: 1, //insertImg配套選項，圖片插入在頁面偏下位置時，捲動至第一張大圖的位置。
     customTitle: "return code", //自定義JS代碼生成壓縮檔和資料夾名稱，預設是使用當前網頁標題。
     customTitle: () => {
@@ -165,6 +168,9 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     insertImg: [
         ["", 1, ""], 2, time
     ],
+    insertImgAF: () => {
+        code
+    },
     go: 1,
     customTitle: "code",
     customTitle: () => {
@@ -867,18 +873,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類添加了自動翻頁。</td>
             </tr>
             <tr>
-                <td><a href="https://www.qiuyeshudian.com/category/%e5%86%99%e7%9c%9f%e9%9b%86%e9%80%89%e7%99%bb/">J M G T</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://alist.qiuyeshudian.com/">J M G T的AList</a></td>
-                <td>SPA網頁，手動插入圖片，請在圖片清單目錄做操作，建議按一下名稱重新排序</td>
-            </tr>
-            <tr>
-                <td><a href="https://qinzhi.top/%E5%86%99%E7%9C%9F">云边网盘</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
                 <td><a href="https://fulitu.me/">福利图</a></td>
                 <td></td>
             </tr>
@@ -1145,6 +1139,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://nrzj.link/">nrzj.link</a></td>
             </tr>
             <tr>
+                <td><a href="https://www.2wh.net/meinvxiezhenjigou">网红跟我俩</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://niuniuhome.club/">妞妞之家</a></td>
                 <td>分類添加了自動翻頁</td>
             </tr>
@@ -1154,10 +1152,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://kenshin.hk/category/jnews/photoalbum/">劍心回憶</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.370kb.com/tuku/5.html">370看吧</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2171,6 +2165,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://hanime1.me/comics">Hanime1</a></td>
                 <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://ch.hentai-one.com/">Hentai-One</a></td>
+                <td>同上</td>
             </tr>
             <tr>
                 <td><a href="https://hentaifox.com/">HentaiFox</a></td>
