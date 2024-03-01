@@ -17823,6 +17823,7 @@ if (newWindowDataViewMode == 1) {
     min-width: 102px;
     max-width: 110px;
     min-height: unset !important;
+    max-height: 24px !important;
     margin-left: 2px;
     margin-right: 2px;
     margin-bottom: 4px !important;
@@ -17830,12 +17831,14 @@ if (newWindowDataViewMode == 1) {
     color: #000000 !important;
     border: 1px solid #a0a0a0 !important;
     background-color: transparent !important;
+    border-radius: unset !important;
 }
 
 #FullPictureLoadOptions input {
     color: #000000 !important;
     height: 18px !important;
     border: 1px solid #a0a0a0 !important;
+    border-radius: unset !important;
     background-color: transparent !important;
     outline: unset !important;
     display: unset !important;
