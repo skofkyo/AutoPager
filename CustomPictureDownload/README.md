@@ -737,7 +737,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/02/18 01:42</p>
+<p>2024/03/01 18:50</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -837,16 +837,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.2mn.cc/">秀爱美女网</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.taotu8.cc/">秀套图吧</a></td>
                 <td></td>
             </tr>
             <tr>
                 <td><a href="http://www.502x.com/xiurenwang.html">秀人图吧</a></td>
-                <td></td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td><a href="http://www.rosi985.com/">ROSI美女写真</a></td>
@@ -942,10 +938,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.446m.com/">萌图社</a></td>
                 <td>China IP限定</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.inini.win/">爱若传媒映画</a></td>
-                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.jk.rs/">日式JK</a></td>
@@ -1065,7 +1057,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xiuwo.net/">秀窝</a></td>
-                <td><a href="https://rmm8.com/">RMM吧</a>，<a href="https://www.zanmm.com/">赞MM</a>，<a href="https://www.entuji.com/">恩图集</a>，<a href="https://www.mhgirl.com/">美Girl图集</a>，<a href="https://www.hutu6.com/">狐图网</a>，<a href="https://www.930tu.com/">930圖片網</a></td>
+                <td><a href="https://rmm8.com/">RMM吧</a>，<a href="https://www.zanmm.com/">赞MM</a>，<a href="https://www.entuji.com/">恩图集</a>，<a href="https://www.mhgirl.com/">美Girl图集</a>，<a href="https://www.hutu6.com/">狐图网</a>，<a href="https://wap.kunv.cc/">爱秀美女</a>，<a href="https://www.930tu.com/">930圖片網</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xsnvshen.co/">秀色女神</a></td>
@@ -1292,7 +1284,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://ijjiao.com/people">街角图片社</a></td>
-                <td>需透過微信公眾號取得密碼登錄</td>
+                <td>需透過微信公眾號取得密碼登錄，China IP限定</td>
             </tr>
             <tr>
                 <td><a href="https://www.evacg.org/">E次元</a></td>
@@ -1351,11 +1343,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://phym18.one/tag/%E1%BA%A3nh-sex">Phym18</a></td>
+                <td><a href="https://phym18.pro/tag/%E1%BA%A3nh-sex">Phym18</a></td>
                 <td>圖片分類添加了自動翻頁</td>
             </tr>
             <tr>
-                <td><a href="https://bongda21h.me/anh-hot/">Bongda21h</a></td>
+                <td><a href="https://bongda21h.vip/anh-hot/">Bongda21h</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1391,12 +1383,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://534798.xyz/">性趣套图</a></td>
+                <td><a href="https://a.534798.xyz/">性趣套图</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.28tyu.com/">苍井优图片</a></td>
-                <td><a href="https://www.28wer.com/">www.28wer.com</a>，<a href="https://sldlxz.com/">sldlxz.com</a></td>
+                <td><a href="https://a.28tyu.com/">苍井优图片</a></td>
+                <td><a href="https://a.28wer.com/">a.28wer.com</a>，<a href="https://a.sldlxz.com/">a.sldlxz.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.photos18.com/">色情圖片網</a></td>
@@ -2031,6 +2023,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.mayihz.com/">蚂蚁图库</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://mm.tvv.tw/">妹妹图</a></td>
                 <td>很久沒新圖了</td>
             </tr>
@@ -2192,7 +2188,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hentaihand.com/en/latest">HentaiHand</a></td>
-                <td>同上</td>
+                <td>同上，SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.tsumino.com/">TSUMINO</a></td>
@@ -2371,7 +2367,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.acgomh.com/">ACG漫画网</a></td>
+                <td><a href="https://www.acgmhs.com/">ACG漫画网</a></td>
                 <td><a href="https://www.porn-comic.com/">www.porn-comic.com</a>，<a href="https://www.cool-manga.com/">www.cool-manga.com</a></td>
             </tr>
             <tr>
@@ -2380,10 +2376,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://twhentai.com/">TWHentai</a></td>
-                <td>作用在圖片清單頁</td>
-            </tr>
-            <tr>
-                <td><a href="https://mttang.club/">台灣成人H漫</a></td>
                 <td>作用在圖片清單頁</td>
             </tr>
             <tr>
@@ -2431,7 +2423,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://nnhanman.net/">鸟鸟韩漫</a></td>
+                <td><a href="https://nnhanman.org/">鸟鸟韩漫</a></td>
                 <td>寫真請點開第一章，直接翻到底。</td>
             </tr>
             <tr>
@@ -2451,7 +2443,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.hanmantuijian.com/">韩漫推荐</a></td>
+                <td><a href="https://www.hanmantop.com/">韩漫推荐</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2515,11 +2507,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://mhdnf.xyz/">H漫画</a></td>
-                <td><a href="https://qscxx4.com/">發佈頁</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://123548.xyz/">H漫画 123548.xyz</a></td>
+                <td><a href="https://a.123548.xyz/">H漫画</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2630,8 +2618,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
             </tr>
             <tr>
-                <td><a href="https://www.kanguoman.com/">爱国漫</a></td>
-                <td><a href="https://m.kanguoman.com/">m.kanguoman.com</a></td>
+                <td><a href="https://www.guoman.net/">爱国漫</a></td>
+                <td><a href="https://m.guoman.net/">m.guoman.net</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.mh160.cc/">漫画160</a></td>
