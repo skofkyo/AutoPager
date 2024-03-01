@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.29
+// @version            1.9.30
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -2280,27 +2280,19 @@
         host: ["www.24tupian.org"],
         reg: () => /^https?:\/\/www\.24tupian\.org\/\w+\/\d+\/\d+\/\d+\.html$/.test(siteUrl) && fun.ge("img[data-original*='imgs.diercun.com']") ? true : false,
         imgs: async () => {
-            await new Promise(async resolve => {
-                fun.showMsg(displayLanguage.str_08, 0);
-                for (let i = 1; i <= 100; i++) {
-                    if (fun.ge("//div[@class='moremsg'][contains(text(),'没有更多图片了')]")) {
-                        fun.hideMsg();
-                        resolve();
-                        break;
-                    }
-                    let ele = fun.ge(".mores>a");
-                    if (ele) ele.click();
-                    await fun.delay(200);
-                }
-            });
-            thumbnailsSrcArray = [...fun.gae("#piclist img[data-original]")].map(e => e.dataset.original);
-            return thumbnailsSrcArray.map(e => {
-                let arr = e.split("/");
-                arr[2] = arr[2].replace("imgs.diercun.com", "big.diercun.com");
-                arr[arr.length - 1] = arr[arr.length - 1].replace(/^m/, "");
-                let bigSrc = arr.join("/");
-                return bigSrc;
-            });
+            let pid = fun.geT("#pid");
+            let num = fun.geT(".mores>a").match(/\d+/)[0];
+            let max = Math.ceil(num / 21);
+            let html = "";
+            let fetchNum = 0;
+            for (let i = 0; i < num; i += 21) {
+                fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                await fetch(`/ajaxs.aspx?fun=getmore&id=${pid}&p=${i}`).then(res => res.text()).then(text => html += text);
+            }
+            let dom = fun.doc(html);
+            let datas = [...fun.gae("img[data]", dom)].map(e => e.getAttribute("data"));
+            thumbnailsSrcArray = datas.map(data => "https://imgs.diercun.com" + data);
+            return datas.map(data => "https://big.diercun.com" + getbig(data));
         },
         button: [4],
         insertImg: [
@@ -2321,7 +2313,12 @@
             let liImgs = [...fun.gae(".mtp>li")];
             if (pages.length > 0 && liImgs.length < 21) await fun.getEle(pages, ".mtp>li", [".mtp", 0]);
             thumbnailsSrcArray = [...fun.gae(".mtp img")].map(e => decodeURIComponent(e.src));
-            return thumbnailsSrcArray.map(e => e.replace("/m", "/"));
+            return thumbnailsSrcArray.map(url => {
+                let i = url.lastIndexOf("/");
+                let murl = url.substring(i + 1);
+                url = url.replace(murl, murl.substring(1));
+                return url;
+            });
         },
         button: [4],
         insertImg: [
@@ -2331,6 +2328,7 @@
         topButton: true,
         threading: 5,
         customTitle: () => fun.geT(".tmsg>h1"),
+        css: ".tpmh img{filter:unset!important;}",
         category: "nsfw1"
     }, {
         name: "Huamao wallpaper 花猫壁纸",
@@ -2705,8 +2703,9 @@
         category: "nsfw2"
     }, {
         name: "魅狸图片网/美女私房照/看妹图",
-        host: ["www.rosi8.net", "www.sfjpg.com", "www.kanmeitu.net", "www.kanmeitu1.cc", "kanmeitu.net", "kanmeitu1.cc"],
-        reg: /(www\.rosi\d\.net|www\.sfjpg\.com|www\.sfjpg\.net|kanmeitu\.net|kanmeitu1\.cc)\/\w+\/\d+\.html$/,
+        host: ["www.rosi8.net", "www.sfjpg.com", "www.kanmeitu.net", "www.kanmeitu1.cc", "www.kanmeitu1.com", "kanmeitu.net", "kanmeitu1.cc", "kanmeitu1.com"],
+        reg: /(www\.rosi\d\.net|www\.sfjpg\.\w+|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/,
+        include: "#picg img",
         init: () => {
             [...fun.gae(".b a")].forEach(a => a.removeAttribute("target"));
             [...fun.gae("#picg a")].forEach(a => a.outerHTML = a.innerHTML);
@@ -8872,7 +8871,7 @@
         reg: /www\.yinmh\.(com|top|xyz)\/\d+\.html/,
         imgs: () => fun.fetchDoc(siteUrl).then(doc => [...fun.gae(".left>.image img.lazy", doc)].map(e => e.getAttribute("img") ?? e.src)),
         button: [4],
-        insertImg: [".left", 2],
+        insertImg: [".left>.image", 2],
         customTitle: () => fun.geT(".box>h1"),
         category: "hcomic"
     }, {
