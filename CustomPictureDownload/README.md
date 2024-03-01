@@ -912,7 +912,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://www.mfsft.com/">免费私房图</a></td>
                 <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a>
                     ，發布頁，<a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>，
-                    相似仿站，<a href="https://www.rosi8.net/">www.rosi8.net</a>，<a href="https://www.sfjpg.com/">www.sfjpg.com</a>，<a href="https://www.sfjpg.net/">www.sfjpg.net</a>，<a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>，<a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
+                    相似仿站，<a href="https://www.rosi8.net/">www.rosi8.net</a>，<a href="https://www.sfjpg.com/">www.sfjpg.com</a>，<a href="https://www.sfjpg.net/">www.sfjpg.net</a>，<a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>，<a href="https://www.kanmeitu1.com/">www.kanmeitu1.com</a>，<a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
                 </td>
             </tr>
             <tr>
