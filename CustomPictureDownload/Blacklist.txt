@@ -1,4 +1,4 @@
-2024/02/18 01:42
+2024/03/01 18:50
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -427,6 +427,9 @@ Coomer
 牛C网导航
 *://niuc*.com/*.html
 
+NICEGIRL4U
+/^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
+
 Erotic Pics
 *erotic.pics*
 
@@ -500,6 +503,9 @@ RMM吧
 
 狐图网
 *://www.hutu6.com/*/*.html
+
+爱秀美女
+*://wap.kunv.cc/*/*.html
 
 秀人图集
 *://xiuren0.com/*.html
@@ -785,6 +791,7 @@ MrDeepFakes
 *://www.fssrr.com/tp/54223.html
 *://www.wt768.com/meitu/*.html
 *://www.3ktu.com/tupian/*.html
+*://www.sy-sme.com/tu/*.html
 *://www.lql1.com/meitu/*.html
 *://www.xhtrz.com/news/*.html
 *://www.zggsdh.com/tu/*.html
@@ -879,6 +886,9 @@ MrDeepFakes
 
 万德美图屋
 *://www.wind5.com/tu*.html
+
+蚂蚁图库
+*://www.mayihz.com/tu*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -1868,6 +1878,7 @@ https://www.eyval.net/*
 *://www.fssrr.com/tp/54223.html
 *://www.wt768.com/meitu/*.html
 *://www.3ktu.com/tupian/*.html
+*://www.sy-sme.com/tu/*.html
 *://www.lql1.com/meitu/*.html
 *://www.xhtrz.com/news/*.html
 *://www.zggsdh.com/tu/*.html
@@ -1989,6 +2000,9 @@ https://www.eyval.net/*
 *://cosxuxi.club/*.html*
 *://kkoreaactor.blogspot.com/*/*/*.html*
 *sharecosplay.com*
+*://wap.kunv.cc/*/*.html
+*://www.mayihz.com/tu*.html
+/^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/
 /^https?:\/\/meitu\.knit\.bid\/(news|street)\/\d+$/
