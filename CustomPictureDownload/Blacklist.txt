@@ -1,4 +1,4 @@
-2024/03/01 18:50
+2024/03/02 23:14
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -404,8 +404,8 @@ Coomer
 *://coomer.*/*/user/*/post/*
 
 俊美图
-*://www.meijuntu.com/*/*.html
-*://www.junmeitu.com/*/*.html
+*://*meijuntu.com/*/*.html
+*://*junmeitu.com/*/*.html
 *://www.jeya.*/*/*.html
 
 888美女网
@@ -1034,7 +1034,7 @@ ACG漫画网
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
 
 紳士漫畫
-*://www.wnacg.*/photos-index-aid-*.html
+*://wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
 
 松鼠症倉庫
@@ -1577,8 +1577,8 @@ https://www.nuyet.com/gallery/*
 *unc.micmicdoll.com*
 *://kemono.*/*/user/*/post/*
 *://coomer.*/*/user/*/post/*
-*://www.meijuntu.com/*/*.html
-*://www.junmeitu.com/*/*.html
+*://*meijuntu.com/*/*.html
+*://*junmeitu.com/*/*.html
 *://www.jeya.*/*/*.html
 *://www.mevtu.com/*/*.html
 *://myjkwd.com/e/action/ShowInfo.php?*
@@ -1660,7 +1660,7 @@ https://www.nuyet.com/gallery/*
 *porn-comic.com/*/*.html
 *://www.acgnbus.com/*/*.html
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
-*://www.wnacg.*/photos-index-aid-*.html
+*://*wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
 *://ahri8.top/readOnline2.php?ID=*
 *caitlin.top/index.php?route=comic/readOnline*
