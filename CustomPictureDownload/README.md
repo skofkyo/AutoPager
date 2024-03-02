@@ -199,6 +199,27 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     …
 }]
 </pre>
+<pre>
+// 網站自帶燈箱功能，不注入FancyboxCSS樣式
+fancybox: {
+    v: 3,
+    css: false
+},
+// 不使用燈箱功能
+fancybox: {
+    blacklist: 1
+},
+// 頁面注入代碼，使用Fancybox3.5.7
+fancybox: {
+    v: 3,
+    insertLibrarys: 1
+},
+// 頁面注入代碼，使用Fancybox5
+fancybox: {
+    v: 5,
+    insertLibrarys: 1
+},
+</pre>
 </details>
 <h1>自動翻頁規則示例：</h1>
 <details>
@@ -737,7 +758,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/01 18:50</p>
+<p>2024/03/02 23:14</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -2071,6 +2092,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://shinv.link/">湿女吧</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo">XO福利圖</a></td>
                 <td>分類添加了自動翻頁</td>
             </tr>
@@ -2108,6 +2133,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.fulitu.cc/">福利兔</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://sifang.app/">美图收藏夹</a></td>
                 <td></td>
             </tr>
             <tr>
