@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.30
+// @version            1.9.31
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -2608,9 +2608,9 @@
         },
         category: "nsfw1"
     }, {
-        name: "遛无写真/有脾气美图/KP写真/美女云图网/tck天天番号/4tck番号库/5pwc番号库/5tck天天番号/6K美女/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线/7c0a宅男福利网站",
-        host: ["www.6evu.com", "www.6kpo.com", "www.1plq.com", "www.c0h.net", "www.3tck.com", "www.4tck.com", "www.5pwc.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.7c0a.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com", "www.1nlm.com"],
-        reg: /^https?:\/\/www\.(6evu|6kpo|c0h|\dtck|5pwc|7c0a|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a|1nlm|1plq)\.(com|net)\/\d+\.html/,
+        name: "遛无写真/有脾气美图/KP写真/美女云图网/tck天天番号/4tck番号库/5pwc番号库/5tck天天番号/6K美女/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/PXA番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线/7c0a宅男福利网站",
+        host: ["www.6evu.com", "www.6kpo.com", "www.1plq.com", "www.c0h.net", "www.3tck.com", "www.3pxa.com", "www.4tck.com", "www.5pwc.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.7c0a.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com", "www.1nlm.com"],
+        reg: /^https?:\/\/www\.(6evu|6kpo|c0h|\dtck|3pxa|5pwc|7c0a|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a|1nlm|1plq)\.(com|net)\/\d+\.html/,
         exclude: "//a[@rel='category tag'][contains(text(),'人物简历') or contains(text(),'宅男科技') or contains(text(),'时尚玩酷') or contains(text(),'身边事') or contains(text(),'追星一族') or contains(text(),'网红头条') or contains(text(),'大众娱乐') or contains(text(),'生活热点') or contains(text(),'影评剧透') or contains(text(),'娱乐时尚') or contains(text(),'吃喝玩乐') or contains(text(),'体育') or contains(text(),'亲子宠物') or contains(text(),'番号大全') or contains(text(),'番号推荐') or contains(text(),'最新番号') or contains(text(),'素人番号')]",
         imgs: () => fun.getImgA("#post_content img,.article-content img,.entry-content img", ".pagelist a,.pagination a,.article-paging a"),
         button: [4],
@@ -2618,7 +2618,7 @@
         autoDownload: [0],
         next: "a[rel=prev],.article-nav-prev a",
         prev: "a[rel=next],.article-nav-next a",
-        customTitle: () => fun.geT("h1").replace(/\(\d+P\)/i, "").replace(/无圣光私房写真个人分享|无水印私房写真流出|无删减写真作品良心推荐|无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
+        customTitle: () => fun.geT("h1").replace(/\(\d+P\)/i, "").replace(/超高清绝版网图流出|无圣光私房写真个人分享|无水印私房写真流出|无删减写真作品良心推荐|无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
         css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}@media only screen and (max-width:640px){.container{max-width:100% !important}}",
         category: "nsfw1"
     }, {
@@ -3381,7 +3381,7 @@
         category: "nsfw2"
     }, {
         name: "美拍 - 我自拍",
-        host: ["7aipai.com", "35zipai.com", "9zipai.net"],
+        host: ["5zipai.com", "7aipai.com", "35zipai.com", "9zipai.net"],
         reg: /^https?:\/\/(\d+aipai\.com|\d+zipai.com|\d+zipai\.net)\/\w+\/\d+\/\d+\.html/i,
         init: () => fun.clearAllTimer(),
         imgs: async () => {
@@ -4575,7 +4575,7 @@
     }, {
         name: "俊美图",
         host: ["www.meijuntu.com", "www.junmeitu.com", "www.jeya.de", "www.jeya.jp"],
-        reg: () => /(www\.meijuntu\.com|(www\.)?junmeitu\.com|(www\.)?jeya\.\w+)\/\w+\/\w+\.html/i.test(siteUrl) && fun.ge(".pictures img") ? true : false,
+        reg: () => /((www\.)?meijuntu\.com|(www\.)?junmeitu\.com|(www\.)?jeya\.\w+)\/\w+\/\w+\.html/i.test(siteUrl) && fun.ge(".pictures img") ? true : false,
         imgs: async () => {
             let imgsArr = [];
             let max = fun.geT("#pages>*:last-child", 2) || 1;
@@ -5569,7 +5569,7 @@
         host: ["zzup.com"],
         link: "https://zzup.com/user-album/3338/petmer/index.html",
         reg: /^https?:\/\/zzup\.com\/content\/.+index\.html/i,
-        init: () => fun.remove("iframe[src*='ad'],font[color=red]"),
+        init: () => fun.remove("//iframe|//div[div[center[script[contains(text(),'juicy')]]]][@class='container']"),
         imgs: async () => {
             let max;
             try {
@@ -7481,6 +7481,15 @@
         customTitle: () => fun.geT(".entryBlock>strong"),
         category: "nsfw2"
     }, {
+        name: "湿女吧",
+        host: ["shinv.link"],
+        reg: /^https?:\/\/shinv\.link\/posts\/\w+\/$/i,
+        imgs: "//div[@class='p-1 col-span-12 md:col-span-9']//img[@class='block my-2 mx-auto']",
+        button: [4],
+        insertImg: ["//div[@class='p-1 col-span-12 md:col-span-9']", 2],
+        customTitle: () => fun.geT("h1.text-xl"),
+        category: "nsfw2"
+    }, {
         name: "XO福利圖",
         host: ["diedk1123-ake33i.xofulitu2za222.sbs"],
         link: "https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo",
@@ -7656,6 +7665,22 @@
             ["//p[a[img]]", 2, "//p[a[img]]"], 2
         ],
         customTitle: () => fun.geT("article>h1"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        css: "@media only screen and (max-width:480px){article{width:100%!important}}",
+        category: "nsfw1"
+    }, {
+        name: "美图收藏夹",
+        host: ["sifang.app"],
+        reg: /^https?:\/\/sifang\.app\/node\/\d+$/i,
+        imgs: "a[data-fancybox]",
+        button: [4],
+        insertImg: [
+            ["//p[a[img]]", 2, "//p[a[img]]"], 2
+        ],
+        customTitle: () => fun.geT(".page-title"),
         fancybox: {
             v: 3,
             css: false
@@ -8000,7 +8025,17 @@
                     p: "png",
                     g: "gif"
                 } [iframe.g_th.fl[(i + 1)][0]]);
-            } else if (/nhentai\.to|simplyhentai\.org|simplyhentai\.red/.test(siteUrl)) {
+            } else if (/nhentai\.to/.test(siteUrl)) {
+                fun.showMsg(displayLanguage.str_05, 0);
+                let url = fun.ge("a.gallerythumb").href;
+                let iframe = await fun.iframeVar(url, 1000, "reader");
+                let imgDir = iframe.reader.media_url + "/galleries/" + iframe.reader.gallery.media_id + "/";
+                return iframe.reader.gallery.images.pages.map((e, i) => imgDir + (i + 1) + "." + {
+                    j: "jpg",
+                    p: "png",
+                    g: "gif"
+                } [e.t]);
+            } else if (/simplyhentai\.org|simplyhentai\.red/.test(siteUrl)) {
                 return [...fun.gae(".thumbs img,.thumb-container img")].map(e => e.dataset.src ? e.dataset.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png") : e.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png"));
             } else if (/www\.hentai\.name/.test(siteUrl)) {
                 return [...fun.gae(".thumb-container img")].map(e => e.src.replace("_thumb.jpg", ".jpg").replace("_thumb.png", ".png").replace("_thumb.webp", ".webp"));
@@ -8143,19 +8178,42 @@
         name: "3hentai圖片清單頁",
         host: ["3hentai.net"],
         reg: /(www\.3hentai1\.buzz|3hentai\.net)\/\??d\/\d+$/,
-        imgs: () => {
+        imgs: async () => {
             thumbnailsSrcArray = [...fun.gae(".single-thumb>a>img")].map(e => e.dataset.src ?? e.src);
-            return fun.getImgA(".js-main-img", ".single-thumb>a", 100);
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge(".single-thumb>a").href;
+            let json = await fun.fetchDoc(url).then(doc => {
+                let code = [...doc.scripts].find(s => s.innerHTML.search(/readerPages/) > -1).innerHTML;
+                let jsonCode = code.match(/JSON[^;]+/)[0];
+                return fun.run(jsonCode);
+            });
+            let max = json.lastPage;
+            let imgDir = json.baseUriImg.replace("%s", "");
+            return fun.arr(max).map((_, i) => imgDir + json.pages[(i + 1)].f);
         },
         button: [4],
         insertImg: [
             ["#thumbnail-gallery", 0], 2
         ],
-        customTitle: () => fun.geT("#main-info>h2"),
+        customTitle: () => fun.geT("#main-info>h2").replace("|", "-"),
         go: 1,
         topButton: true,
         threading: 4,
         //css: "#header-ban-agsy,#middle-ban-agsy,#footer-ban-agsy{display:none!important}.single-thumb-col{padding:0px!important;width:100%!important}",
+        category: "hcomic"
+    }, {
+        name: "3hentai閱讀頁",
+        host: ["3hentai.net"],
+        reg: /^https?:\/\/3hentai\.net\/\??d\/\d+\/\d+$/,
+        imgs: () => {
+            let max = readerPages.lastPage;
+            let imgDir = readerPages.baseUriImg.replace("%s", "");
+            return fun.arr(max).map((_, i) => imgDir + readerPages.pages[(i + 1)].f);
+        },
+        button: [4],
+        insertImg: [".reader-image", 2],
+        customTitle: () => fun.geT(".reader-title").replace("|", "-"),
+        threading: 4,
         category: "hcomic"
     }, {
         name: "HentaiFox圖片清單頁",
@@ -8184,26 +8242,30 @@
             ["#append_thumbs", 0], 2
         ],
         autoClick: ["#load_all"],
-        customTitle: () => fun.geT(".info>h1"),
+        customTitle: () => fun.geT(".info>h1").replace("|", "-"),
         go: 1,
         topButton: true,
         threading: 4,
         category: "hcomic"
     }, {
-        name: "HentaiFox圖片清單頁",
+        name: "HentaiFox閱讀頁",
         host: ["hentaifox.com"],
-        reg: /hentaifox\.com\/gallery\/\d+\/$/,
-        imgs: () => {
-            return [...fun.gae(".gallery_thumb img")].map(e => e.dataset.src.replace("t.", "."));
-            //return fun.getImgA("#gimg", ".g_thumb>a", 300);
+        reg: /^https?:\/\/hentaifox\.com\/g\/\d+\/\d+\/$/,
+        imgs: async () => {
+            let max = fun.ge("#pages").value;
+            console.log("max", max);
+            let img = fun.ge("#gimg");
+            let src = img.dataset.src ?? img.src;
+            let imgDir = src.match(/.+\//)[0];
+            return fun.arr(max).map((_, i) => imgDir + (i + 1) + "." + {
+                j: "jpg",
+                p: "png",
+                g: "gif"
+            } [g_th[(i + 1)][0]]);
         },
         button: [4],
-        insertImg: [
-            ["#append_thumbs", 0], 2
-        ],
-        customTitle: () => fun.geT(".info>h1"),
-        go: 1,
-        topButton: true,
+        insertImg: [".full_image", 2],
+        customTitle: () => fun.title(/ - Page \d+ - HentaiFox/).replace("|", "-"),
         threading: 4,
         category: "hcomic"
     }, {
@@ -8251,6 +8313,22 @@
         },
         button: [4],
         insertImg: [".reader_overlay", 2],
+        category: "hcomic"
+    }, {
+        name: "nhentai.to閱讀頁",
+        host: ["nhentai.to"],
+        reg: /^https?:\/\/nhentai\.to\/g\/\d+\/\d+$/,
+        imgs: () => {
+            let imgDir = reader.media_url + "/galleries/" + reader.gallery.media_id + "/";
+            return reader.gallery.images.pages.map((e, i) => imgDir + (i + 1) + "." + {
+                j: "jpg",
+                p: "png",
+                g: "gif"
+            } [e.t]);
+        },
+        button: [4],
+        insertImg: ["#image-container", 2],
+        customTitle: () => reader.gallery.title.japanese ?? reader.gallery.title.english,
         category: "hcomic"
     }, {
         name: "TMOHentai閱讀頁",
@@ -8489,15 +8567,46 @@
         host: ["hanime1.me"],
         link: "https://hanime1.me/comics",
         reg: /hanime1\.me\/comic\/\d+$/,
-        imgs: () => {
+        imgs: async () => {
             thumbnailsSrcArray = [...fun.gae(".comics-thumbnail-wrapper img[data-srcset]")].map(e => e.dataset.srcset);
-            return thumbnailsSrcArray.map(e => e.replace("t.n", "i.n").replace("t.jpg", ".jpg").replace("t.png", ".png"));
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge(".comics-thumbnail-wrapper>a").href;
+            return fun.fetchDoc(url).then(doc => {
+                let imgDir = fun.ge("#current-page-image", doc).dataset.prefix;
+                let code = [...doc.scripts].find(s => s.innerHTML.search(/extensions/) > -1).innerHTML;
+                let extensions = fun.run(code.match(/\[.+\]/)[0].replaceAll("&quot;", '"'));
+                return extensions.map((e, i) => imgDir + (i + 1) + "." + {
+                    j: "jpg",
+                    p: "png",
+                    g: "gif"
+                } [e]);
+            });
         },
         button: [4],
         insertImg: [".comics-thumbnail-wrapper", 2, 1000],
         go: 1,
         autoClick: "#show-all-comics-btn",
         customTitle: () => fun.geT("h4.title"),
+        threading: 4,
+        referer: "src",
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "hcomic"
+    }, {
+        name: "Hanime1閱讀頁",
+        host: ["hanime1.me"],
+        link: "https://hanime1.me/comics",
+        reg: /hanime1\.me\/comic\/\d+\/\d+$/,
+        imgs: async () => {
+            let imgDir = fun.ge("#current-page-image").dataset.prefix;
+            return extensions.map((e, i) => imgDir + (i + 1) + "." + {
+                j: "jpg",
+                p: "png",
+                g: "gif"
+            } [e]);
+        },
+        button: [4],
+        insertImg: ["#comic-content-wrapper", 2],
+        customTitle: () => fun.ge("//meta[@property='og:title']").content.replace(/第\d+頁 - /, ""),
         threading: 4,
         referer: "src",
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
@@ -8518,14 +8627,24 @@
         },
         button: [4],
         insertImg: [
-            [".detail-gallery", 2], 2, 1000
+            [".detail-gallery", 2], 2
         ],
-        insertImgAF: () => fun.css(".detail-gallery{display:none!important;}"),
+        insertImgAF: () => {
+            fun.css(".detail-gallery{display:none!important;}");
+            let loop = setInterval(() => {
+                if (!fun.ge(".FullPictureLoadImage")) {
+                    if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
+                    if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
+                    fun.immediateInsertImg();
+                }
+            }, 500);
+            setTimeout(() => clearInterval(loop), 10000);
+        },
         customTitle: () => {
             let text = fun.geT("h1.detail-ttl");
             return text.indexOf("|") != -1 ? text.split("|")[1].trim() : text;
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.middle-ad{display:none!important;}",
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.header-ad,.middle-ad{display:none!important;}",
         category: "hcomic"
     }, {
         name: "My Hentai Gallery圖片清單頁",
@@ -13401,7 +13520,7 @@ document.body.appendChild(text);
         init: () => {
             if (lazyLoadFullResolution == 1) {
                 const lazyLoad = () => {
-                    [...document.querySelectorAll("img.bg-lighter:not([data-src])")].forEach(img => {
+                    [...document.querySelectorAll("img.bg-lighter")].forEach(img => {
                         let thumbnail = img.dataset.src ?? img.src;
                         img.dataset.thumb = thumbnail.replace(/\?image_process=.+/, "") + "?image_process=format,webp&x-oss-process=image/resize,w_600,m_lfit/format,webp";
                         let original = thumbnail.replace(/\?image_process=.+/, "");
@@ -15400,15 +15519,6 @@ document.body.appendChild(text);
                 if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(location.host) || !/^data/.test(thumbnailsSrcArray[0])) {
                     thumbnailsSrcArray = [...new Set(thumbnailsSrcArray)];
                 }
-                //if (!/^data/.test(thumbnailsSrcArray[0])) {
-                //    let thumbnailsFragment = new DocumentFragment();
-                //    for (let i in thumbnailsSrcArray) {
-                //        let img = new Image();
-                //        img.src = thumbnailsSrcArray[i];
-                //        thumbnailsFragment.appendChild(img);
-                //    }
-                //    debug("\n背景預讀所有預覽縮圖\n", thumbnailsFragment);
-                //}
             }
             debug("\nfun.insertImg()插入圖片最後確認 thumbnailsSrcArray", thumbnailsSrcArray);
             debug("\nfun.insertImg()插入圖片最後確認 srcArr", srcArr);
@@ -15420,8 +15530,6 @@ document.body.appendChild(text);
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
-                    //a.dataset.downloadSrc = srcArr[i];
-                    //a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i, 10) + 1).padStart(padStart, "0")}P`;
                 }
                 let img = new Image();
                 img.alt = `no.${parseInt(i, 10) + 1}`;
@@ -16906,8 +17014,6 @@ document.body.appendChild(text);
                     a.dataset.fancybox = "FullPictureLoadImageSmall";
                     thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = e;
                     a.href = e;
-                    //a.dataset.downloadSrc = e;
-                    //a.dataset.downloadFilename = (customTitle || document.title) + `-${String(parseInt(i, 10) + 1).padStart(padStart, "0")}P`;
                 }
                 let img = new Image();
                 img.alt = `no.${parseInt(i, 10) + 1}`;
@@ -17448,7 +17554,6 @@ if (newWindowDataViewMode == 1) {
         img.addEventListener("mousedown", (event) => {
             if (event.button == 1) {
                 event.preventDefault();
-                //goToNo1Img(0);
                 exportImgSrcText();
             }
             if (event.button == 2) {
@@ -17573,16 +17678,6 @@ if (newWindowDataViewMode == 1) {
             dispatchTouchEvent(ele, "touchend");
         }
         ele.click();
-        //if (hasTouchEvents()) {
-        //    ele.dispatchEvent(new Event("touchstart"));
-        //    ele.dispatchEvent(new Event("touchend"));
-        //    //ele.click();
-        //    debug("\nelementClick touch事件式點擊\n", ele);
-        //} else {
-        //    //ele.dispatchEvent(new Event("click"));
-        //    ele.click();
-        //    debug("\nelementClick click事件式點擊\n", ele);
-        //}
     };
 
     const addReturnTopButton = () => {
@@ -17870,6 +17965,7 @@ if (newWindowDataViewMode == 1) {
     left: 24px !important;
     width: 32px !important;
     height: 32px !important;
+    border: unset !important;
     border-radius: unset !important;
     z-index: 2147483647 !important;
     opacity: 1 !important;
@@ -18104,7 +18200,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     border-radius: unset !important;
     appearance: auto;
     text-rendering: auto;
-    color: buttontext;
+    color: black !important;
     letter-spacing: normal;
     word-spacing: normal;
     line-height: normal;
@@ -18131,7 +18227,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     border-radius: unset !important;
     appearance: auto;
     text-rendering: auto;
-    color: buttontext;
+    color: black !important;
     letter-spacing: normal;
     word-spacing: normal;
     line-height: normal;
@@ -18150,6 +18246,10 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     cursor: pointer !important;
 }
 
+#FullPictureLoadOptions button:hover,.FullPictureLoadPageButtonTop:hover,.FullPictureLoadPageButtonBottom:hover {
+  color: black !important;
+}
+
 .viewer-open:not(.fancybox-active) {
     overflow: unset !important;
     padding-right: 0px !important;
@@ -18157,6 +18257,9 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
 
 .fancybox-infobar *,.fancybox__infobar,a[data-fancybox-download],a[data-fancybox-download]:hover,a[data-fancybox-download]:link,a[data-fancybox-download]:visited,a[data-fancybox-download]:active {
     color: white;
+}
+a[data-fancybox]:hover {
+    opacity: 1 !important;
 }
                 `;
 
@@ -18511,19 +18614,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     }
                     await Fancyboxl10nV5();
                 } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 5 && siteData.fancybox.insertLibrarys == 1) {
-                    //加規則
-                    //fancybox: {
-                    //    v: 5,
-                    //    insertLibrarys : 1
-                    //},
                     await addLibrarysV5();
                     await Fancyboxl10nV5();
                 } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 3 && siteData.fancybox.insertLibrarys == 1) {
-                    //加規則
-                    //fancybox: {
-                    //    v: 3,
-                    //    insertLibrarys : 1
-                    //},
                     await addLibrarysV3();
                     Fancyboxi18nV3();
                     FancyboxOptionsV3();
