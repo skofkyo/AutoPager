@@ -12780,7 +12780,7 @@ document.body.appendChild(text);
                 }),
                 "method": "POST"
             }).then(res => res.json()).then(json => json.data.images.map(e => e.path));
-            return fetch("/twirp/comic.v1.Comic/Imagtoken?device=pc&platform=web", {
+            return fetch("/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
                 "headers": headers,
                 "body": JSON.stringify({
                     urls: JSON.stringify(imgsRes)
