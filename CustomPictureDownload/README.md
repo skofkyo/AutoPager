@@ -87,7 +87,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     delay: 300, //延遲載入規則
     include: "元素", //網頁必須包含的元素
     exclude: "元素", //網頁要排除的元素
-    init: "code", //載入頁面後要執行的代碼
+    init: "code", //載入頁面後要優先執行的代碼
     init: () => {
         code
     },
@@ -339,7 +339,7 @@ fun.gae("selector", node);
 //1返回指定元素的字串(預設)
 //2返回指定元素的上一個元素的字串
 //3返回指定元素的上上一個元素的字串
-fun.geT("selector", mode = 1, doc = document);
+fun.gt("selector", mode = 1, doc = document);
 </pre>
 <pre>
 //取得元素屬性的值
@@ -2631,8 +2631,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>SPA網頁，只有下載功能</td>
             </tr>
             <tr>
-                <td><a href="http://www.manmanju.com/">漫漫聚</a></td>
-                <td><a href="http://m.manmanju.com/">m.manmanju.com</a>，閱讀頁添加了下一話鏈接</td>
+                <td><a href="http://www.manmanju.cc/">漫漫聚</a></td>
+                <td><a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="http://manhua.kukudm.com/">KuKu动漫</a></td>
