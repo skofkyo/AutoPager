@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.32
+// @version            1.9.33
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -7979,8 +7979,8 @@
         category: "hcomic"
     }, {
         name: "nhentai圖片清單頁",
-        host: ["nhentai.net", "nyahentai.red", "www.hentai.name", "nhentai.xxx", "nhentai.to", "simplyhentai.org", "simplyhentai.red"],
-        reg: /(nhentai\.net|nyahentai\.red|www\.hentai\.name|nhentai\.xxx|nhentai\.to|simplyhentai\.org|simplyhentai\.red)\/g\/\d+\/?$/,
+        host: ["nhentai.net", "nyahentai.red", "www.hentai.name", "nhentai.xxx", "nhentai.to", "simplyhentai.org"],
+        reg: /(nhentai\.net|nyahentai\.red|www\.hentai\.name|nhentai\.xxx|nhentai\.to|simplyhentai\.org)\/g\/\d+\/?$/,
         imgs: async () => {
             thumbnailsSrcArray = [...fun.gae("a.gallerythumb>img")].map(e => e.dataset.src ?? e.src);
             if (/nhentai\.net/.test(siteUrl)) {
@@ -7990,17 +7990,13 @@
                     let rValue = arr[choose];
                     return rValue;
                 };
-                return _gallery.images.pages.map((img, index) => `https://${randomHost(hostArray)}.nhentai.net/galleries/${gallery.media_id}/${index + 1}.${{ j: "jpg", p: "png", g: "gif" }[img.t]}`);
+                return _gallery.images.pages.map((img, index) => `https://${randomHost(hostArray)}.nhentai.net/galleries/${gallery.media_id}/${index + 1}.${{j: "jpg", p: "png", g: "gif", w: "webp", b: "bmp"}[img.t]}`);
             } else if (/nyahentai\.red/.test(siteUrl)) {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let imgDir = fun.ge(".gallerythumb>img").src.match(/.+\//)[0];
                 let url = fun.ge("a.gallerythumb").href;
                 let iframe = await fun.iframeVar(url, 1000, "images_ext");
-                return iframe.images_ext.map((img, index) => imgDir + (index + 1) + "." + {
-                    j: "jpg",
-                    p: "png",
-                    g: "gif"
-                } [img]);
+                return iframe.images_ext.map((img, index) => `${imgDir}${(index + 1)}.${{j: "jpg", p: "png", g: "gif", w: "webp", b: "bmp"}[img]}`);
             } else if (/nhentai\.xxx/.test(siteUrl)) {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let max = fun.gt(".pages").match(/\d+/)[0];
@@ -8009,25 +8005,17 @@
                 let imgDir = src.match(/.+\//)[0];
                 let url = fun.ge(".gallery_thumbs a").href;
                 let iframe = await fun.iframeVar(url, 1000, "g_th");
-                return fun.arr(max).map((_, i) => imgDir + (i + 1) + "." + {
-                    j: "jpg",
-                    p: "png",
-                    g: "gif"
-                } [iframe.g_th.fl[(i + 1)][0]]);
+                return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g: "gif", w: "webp", b: "bmp"}[iframe.g_th.fl[(i + 1)][0]]}`);
             } else if (/nhentai\.to/.test(siteUrl)) {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let url = fun.ge("a.gallerythumb").href;
                 let iframe = await fun.iframeVar(url, 1000, "reader");
                 let imgDir = iframe.reader.media_url + "/galleries/" + iframe.reader.gallery.media_id + "/";
-                return iframe.reader.gallery.images.pages.map((e, i) => imgDir + (i + 1) + "." + {
-                    j: "jpg",
-                    p: "png",
-                    g: "gif"
-                } [e.t]);
-            } else if (/simplyhentai\.org|simplyhentai\.red/.test(siteUrl)) {
-                return [...fun.gae(".thumbs img,.thumb-container img")].map(e => e.dataset.src ? e.dataset.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png") : e.src.replace(/t\.jpg/, ".jpg").replace(/t\.png/, ".png"));
+                return iframe.reader.gallery.images.pages.map((e, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g: "gif", w: "webp", b: "bmp"}[e.t]}`);
+            } else if (/simplyhentai\.org/.test(siteUrl)) {
+                return [...fun.gae(".thumbs img,.thumb-container img")].map(e => e.dataset.src ? e.dataset.src.replace(/t(\.\w+)$/, "$1") : e.src.replace(/t(\.\w+)$/, "$1"));
             } else if (/www\.hentai\.name/.test(siteUrl)) {
-                return [...fun.gae(".thumb-container img")].map(e => e.src.replace("_thumb.jpg", ".jpg").replace("_thumb.png", ".png").replace("_thumb.webp", ".webp"));
+                return [...fun.gae(".thumb-container img")].map(e => e.src.replace(/_thumb(\.\w+)$/, "$1"));
             }
         },
         button: [4],
@@ -8047,6 +8035,65 @@
         go: 1,
         topButton: true,
         css: ".advt{display:none!important}",
+        category: "hcomic"
+    }, {
+        name: "nhentai閱讀頁",
+        host: ["nhentai.net"],
+        reg: /^https?:\/\/nhentai\.net\/g\/\d+\/\d+\/$/,
+        imgs: () => {
+            const hostArray = ["i", "i3", "i5", "i7"];
+            const randomHost = arr => {
+                let choose = Math.floor(Math.random() * Math.floor(arr.length));
+                let rValue = arr[choose];
+                return rValue;
+            };
+            return _gallery.images.pages.map((img, index) => `https://${randomHost(hostArray)}.nhentai.net/galleries/${_gallery.media_id}/${index + 1}.${{ j: "jpg", p: "png", g: "gif", w: "webp", b: "bmp"}[img.t]}`);
+        },
+        button: [4],
+        insertImg: ["#image-container", 2],
+        customTitle: () => _gallery.title.japanese ?? _gallery.title.english,
+        threading: 4,
+        category: "hcomic"
+    }, {
+        name: "nyahentai.red閱讀頁",
+        host: ["nyahentai.red"],
+        reg: /^https?:\/\/nyahentai\.red\/g\/\d+\/\d+\/$/,
+        imgs: () => {
+            let imgDir = fun.ge("#image-container img").src.match(/.+\//)[0];
+            return images_ext.map((img, index) => `${imgDir}${(index + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[img]}`);
+        },
+        button: [4],
+        insertImg: ["#image-container", 2],
+        customTitle: () => fun.title(" » ", 1),
+        threading: 4,
+        category: "hcomic"
+    }, {
+        name: "www.hentai.name閱讀頁",
+        host: ["www.hentai.name"],
+        reg: /^https?:\/\/www\.hentai\.name\/g\/\d+\/\d+\/$/,
+        imgs: () => {
+            let max = fun.gt(".num-pages");
+            let [, imgDir, ex] = fun.ge("#image-container img").src.match(/(.+\/)\d+(\.\w+)$/);
+            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}${ex}`);
+        },
+        button: [4],
+        insertImg: ["#image-container", 2],
+        customTitle: () => fun.title(" - Hentai.name"),
+        threading: 4,
+        category: "hcomic"
+    }, {
+        name: "simplyhentai.org閱讀頁",
+        host: ["simplyhentai.org"],
+        reg: /^https?:\/\/simplyhentai\.org\/g\/\d+\/\d+\/$/,
+        imgs: () => {
+            let max = fun.gt(".num-pages");
+            let [, imgDir, ex] = fun.ge("#image-container img").src.match(/(.+\/)\d+(\.\w+)$/);
+            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}${ex}`);
+        },
+        button: [4],
+        insertImg: ["#image-container", 2],
+        customTitle: () => fun.title(" » ", 1),
+        threading: 4,
         category: "hcomic"
     }, {
         name: "akuma.moe",
@@ -8149,11 +8196,23 @@
         openInNewTab: ".galleries a:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "Cathentai/Hentaibeeg/Hentaicolor/圖片清單頁showAll",
+        name: "Cathentai/Hentaibeeg/Hentaicolor/圖片清單頁",
         host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net"],
         reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net)\/[^/]+\/(#collapse)?$/i,
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge("//a[span[text()='List Read']]").href;
+            return fun.fetchDoc(url).then(doc => {
+                return fun.run(fun.gt("#listImgH", 1, doc));
+            });
+        },
+        insertImg: [
+            ["#thumbnail-container", 2], 2
+        ],
+        go: 1,
+        customTitle: () => fun.gt("#info>h4") || fun.gt("#info>h1"),
         autoClick: ["#showAll"],
-        category: "none"
+        category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/List Read頁",
         host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net", "nyahentai.info"],
@@ -8220,11 +8279,7 @@
             let imgDir = src.match(/.+\//)[0];
             let url = fun.ge(".g_thumb>a").href;
             let iframe = await fun.iframeVar(url, 1000, "g_th");
-            return fun.arr(max).map((_, i) => imgDir + (i + 1) + "." + {
-                j: "jpg",
-                p: "png",
-                g: "gif"
-            } [iframe.g_th[(i + 1)][0]]);
+            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[g_th[(i + 1)][0]]}`);
         },
         button: [4],
         insertImg: [
@@ -8242,15 +8297,10 @@
         reg: /^https?:\/\/hentaifox\.com\/g\/\d+\/\d+\/$/,
         imgs: async () => {
             let max = fun.ge("#pages").value;
-            console.log("max", max);
             let img = fun.ge("#gimg");
             let src = img.dataset.src ?? img.src;
             let imgDir = src.match(/.+\//)[0];
-            return fun.arr(max).map((_, i) => imgDir + (i + 1) + "." + {
-                j: "jpg",
-                p: "png",
-                g: "gif"
-            } [g_th[(i + 1)][0]]);
+            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[g_th[(i + 1)][0]]}`);
         },
         button: [4],
         insertImg: [".full_image", 2],
@@ -8258,16 +8308,23 @@
         threading: 4,
         category: "hcomic"
     }, {
-        name: "nhentai/HentaiHand閱讀頁",
-        host: ["nhentai.com", "hentaihand.com"],
-        reg: /(nhentai\.com|hentaihand\.com)\/\w+\/comic\/[^/]+\/reader\//i,
-        imgs: ".vertical-image img[data-src]",
-        button: [4],
-        insertImg: [".reader", 2],
-        customTitle: async () => {
-            await fun.delay(1000, 0);
-            return fun.gt(".router-link-active")
+        name: "lhentai.com/simplyhentai.red圖片清單頁",
+        host: ["lhentai.com", "simplyhentai.red"],
+        reg: /^https?:\/\/(lhentai\.com|simplyhentai\.red)\/g\/\d+$/,
+        imgs: async () => {
+            thumbnailsSrcArray = [...fun.gae(".gallerythumb img")].map(e => e.dataset.src ?? e.src);
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge("a.gallerythumb").href;
+            let iframe = await fun.iframeVar(url, 1000, "images_ext");
+            let imgDir = fun.ge(".fit-horizontal", iframe.document).src.match(/.+\//)[0];
+            return iframe.images_ext.map((e, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[e]}`);
         },
+        button: [4],
+        insertImg: [
+            [".thumbs", 2], 2
+        ],
+        go: 1,
+        customTitle: () => fun.gt("#info>h2") || fun.gt("#info>h1"),
         category: "hcomic"
     }, {
         name: "lhentai.com/simplyhentai.red閱讀頁",
@@ -8275,12 +8332,7 @@
         reg: /^https?:\/\/(lhentai\.com|simplyhentai\.red)\/g\/\d+\/\d+\/$/,
         imgs: () => {
             let imgDir = fun.ge(".fit-horizontal").src.match(/.+\//)[0];
-            return images_ext.map((e, i) => imgDir + (i + 1) + {
-                j: ".jpg",
-                p: ".png",
-                b: ".bmp",
-                g: ".gif"
-            } [e]);
+            return images_ext.map((e, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[e]}`);
         },
         button: [4],
         insertImg: ["#page-container", 2],
@@ -8294,11 +8346,7 @@
             let src = img.dataset.src ?? img.src;
             let imgDir = src.match(/.+\//)[0];
             let max = fun.ge("#pages").value;
-            return fun.arr(max).map((_, i) => imgDir + (i + 1) + "." + {
-                j: "jpg",
-                p: "png",
-                g: "gif"
-            } [g_th.fl[(i + 1)][0]]);
+            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[g_th.fl[(i + 1)][0]]}`);
         },
         button: [4],
         insertImg: [".reader_overlay", 2],
@@ -8309,15 +8357,30 @@
         reg: /^https?:\/\/nhentai\.to\/g\/\d+\/\d+$/,
         imgs: () => {
             let imgDir = reader.media_url + "/galleries/" + reader.gallery.media_id + "/";
-            return reader.gallery.images.pages.map((e, i) => imgDir + (i + 1) + "." + {
-                j: "jpg",
-                p: "png",
-                g: "gif"
-            } [e.t]);
+            return reader.gallery.images.pages.map((e, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[e.t]}`);
         },
         button: [4],
         insertImg: ["#image-container", 2],
         customTitle: () => reader.gallery.title.japanese ?? reader.gallery.title.english,
+        category: "hcomic"
+    }, {
+        name: "TMOHentai圖片清單頁",
+        host: ["tmohentai.com"],
+        reg: /^https?:\/\/tmohentai\.com\/contents\/\w+$/i,
+        imgs: async () => {
+            await fun.waitEle("div[style*='background']");
+            let div = fun.ge("div[style*='background']");
+            let src = div.style.background.split('"')[1];
+            let imgDir = src.match(/.+\//)[0];
+            let max = [...fun.gae("div[style*='background']")].length;
+            return fun.arr(max).map((_, i) => imgDir + String(i).padStart(3, "0") + ".webp");
+        },
+        button: [4],
+        insertImg: [
+            ["//div[div[@class='well']]", 2], 2
+        ],
+        go: 1,
+        customTitle: () => fun.gt(".panel-title h3"),
         category: "hcomic"
     }, {
         name: "TMOHentai閱讀頁",
@@ -8339,6 +8402,29 @@
         name: "Pururin圖片清單頁",
         host: ["pururin.to"],
         reg: /pururin\.to\/gallery\/\d+\/.+/,
+        imgs: () => {
+            let url = fun.ge(".gallery-preview>a").href;
+            return fun.fetchDoc(url).then(doc => {
+                let ele = fun.ge(".img-viewer", doc);
+                let svr = ele.dataset.svr;
+                let data = JSON.parse(ele.dataset.img);
+                let arr = data.images.sort((a, b) => a.page - b.page);
+                arr = arr.map(e => svr + "/" + data.directory + "/" + e.filename);
+                thumbnailsSrcArray = arr.map(e => e.replace(/(\.\w+)$/, "t$1"));
+                return arr;
+            });
+        },
+        button: [4],
+        insertImg: [
+            [".gallery-preview", 2], 2
+        ],
+        go: 1,
+        insertImgAF: () => {
+            if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
+            if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
+        },
+        customTitle: () => fun.ge("[placeholder=Japanese]").value || fun.ge("[placeholder='Alternative names']").value,
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         autoClick: ["//button[contains(text(),'View all')]"],
         category: "none"
     }, {
@@ -8357,8 +8443,38 @@
         },
         button: [4],
         insertImg: [".img-viewer", 2],
-        customTitle: () => fun.ge("[placeholder=Japanese]").value,
+        customTitle: () => fun.ge("[placeholder=Japanese]").value || fun.ge("[placeholder='Alternative names']").value,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.box.img-reader .img-viewer{position:unset!important;white-space:unset!important}",
+        category: "hcomic"
+    }, {
+        name: "9hentai圖片清單頁",
+        host: ["9hentai.to"],
+        reg: /9hentai\.to\/g\/\d+\/$/,
+        init: async () => {
+            let json = await fetch("/api/getBookByID", {
+                method: "POST",
+                body: JSON.stringify({
+                    id: parseInt(/\d+/.exec(window.location.pathname).at(0) ?? 0, 10)
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(res => res.json());
+            debug("\n此頁JSON資料\n", json);
+            siteJson = json;
+        },
+        imgs: () => {
+            let arr = fun.arr(siteJson.results.total_page).map((_, i) => `${siteJson.results.image_server + siteJson.results.id}/${i + 1}.jpg`);
+            thumbnailsSrcArray = arr.map(e => e.replace(/(\d+)(\.\w+)$/, "preview/$1t$2"));
+            return arr;
+        },
+        button: [4],
+        insertImg: [
+            [".pt-0 .card-body", 2], 2
+        ],
+        go: 1,
+        customTitle: () => siteJson.results.alt_title ?? siteJson.results.title,
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "9hentai閱讀頁",
@@ -8388,6 +8504,28 @@
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
+        name: "AsmHentai圖片清單頁",
+        host: ["asmhentai.com"],
+        reg: /asmhentai\.com\/g\/\d+\/$/,
+        imgs: () => {
+            let url = fun.ge(".preview_thumb>a").href;
+            return fun.fetchDoc(url).then(doc => {
+                let imgDir = fun.ge("#fimg", doc).dataset.src.match(/.+\//)[0];
+                let max = fun.ge("#pages", doc).value;
+                let arr = fun.arr(max).map((_, i) => imgDir + (i + 1) + ".jpg");
+                thumbnailsSrcArray = arr.map(e => e.replace(/(\.\w+)$/, "t$1"));
+                return arr;
+            });
+        },
+        button: [4],
+        insertImg: [
+            ["#append_thumbs", 2], 2
+        ],
+        customTitle: () => fun.gt(".info>h2") || fun.gt(".info>h1"),
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        autoClick: ["#load_all"],
+        category: "hcomic"
+    }, {
         name: "AsmHentai閱讀頁",
         host: ["asmhentai.com"],
         reg: /asmhentai\.com\/gallery\/\d+\/\d+\/$/,
@@ -8398,16 +8536,11 @@
             thumbnailsSrcArray = arr.map(e => e.replace(/(\.\w+)$/, "t$1"));
             return arr;
         },
+        button: [4],
         insertImg: [".rd_fimg", 2],
         customTitle: () => fun.title(" Page", 1),
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.preloader{text-indent:unset !important}",
         category: "hcomic"
-    }, {
-        name: "AsmHentai View All",
-        host: ["asmhentai.com"],
-        reg: /asmhentai\.com\/g\/\d+\/$/,
-        autoClick: ["#load_all"],
-        category: "none"
     }, {
         name: "MultPorn閱讀頁",
         host: ["multporn.net"],
@@ -8551,6 +8684,24 @@
         css: ".text-center{display:none!important}",
         category: "hcomic"
     }, {
+        name: "Simply Hentai閱讀頁",
+        host: ["www.simply-hentai.com"],
+        reg: /^https?:\/\/www.simply-hentai.com\/[^\/]+\/[^\/]+\/page\/\d+/i,
+        init: async () => {
+            await fun.waitEle("#__NEXT_DATA__");
+            let json = JSON.parse(fun.gt("#__NEXT_DATA__"));
+            debug("\n此頁JSON資料\n", json);
+            siteJson = json;
+        },
+        imgs: () => {
+            thumbnailsSrcArray = siteJson.props.pageProps.data.pages.map(e => e.sizes.small_thumb);
+            return siteJson.props.pageProps.data.pages.map(e => e.sizes.full)
+        },
+        button: [4],
+        insertImg: ["#reader-image", 2],
+        customTitle: () => siteJson.props.pageProps.data.title.replace(/\/|\|/g, "-"),
+        category: "hcomic"
+    }, {
         name: "Hanime1圖片清單頁",
         host: ["hanime1.me"],
         link: "https://hanime1.me/comics",
@@ -8563,11 +8714,7 @@
                 let imgDir = fun.ge("#current-page-image", doc).dataset.prefix;
                 let code = [...doc.scripts].find(s => s.innerHTML.search(/extensions/) > -1).innerHTML;
                 let extensions = fun.run(code.match(/\[.+\]/)[0].replaceAll("&quot;", '"'));
-                return extensions.map((e, i) => imgDir + (i + 1) + "." + {
-                    j: "jpg",
-                    p: "png",
-                    g: "gif"
-                } [e]);
+                return extensions.map((e, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[e]}`);
             });
         },
         button: [4],
@@ -8586,11 +8733,7 @@
         reg: /hanime1\.me\/comic\/\d+\/\d+$/,
         imgs: async () => {
             let imgDir = fun.ge("#current-page-image").dataset.prefix;
-            return extensions.map((e, i) => imgDir + (i + 1) + "." + {
-                j: "jpg",
-                p: "png",
-                g: "gif"
-            } [e]);
+            return extensions.map((e, i) => `${imgDir}${(i + 1)}.${{j: "jpg", p: "png", g:"gif", w: "webp", b: "bmp"}[e]}`);
         },
         button: [4],
         insertImg: ["#comic-content-wrapper", 2],
@@ -8654,6 +8797,7 @@
         name: "XYZ PORN COMICS圖片清單頁",
         host: ["xyzcomics.com"],
         reg: /^https?:\/\/xyzcomics\.com\/[^\/]+\/$/,
+        include: ".jig-link>img",
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".jig-link>img")].map(e => e.src);
             return [...fun.gae(".jig-link")];
@@ -8690,7 +8834,7 @@
         threading: 4,
         category: "hcomic"
     }, {
-        name: "IMHentai",
+        name: "IMHentai閱讀頁",
         host: ["imhentai.xxx"],
         reg: /imhentai\.xxx\/view\/\d+\/\d+\//,
         init: "setTimeout(()=>{fun.ge('.pre_img').removeAttribute('style');$('a.next_img').unbind('click');},1000)",
@@ -8736,11 +8880,27 @@
         },
         category: "hcomic"
     }, {
-        name: "HentaiHand圖片清單頁",
-        host: ["hentaihand.com"],
-        reg: /^https?:\/\/hentaihand\.com\/en\/comic\/[^\/]+$/,
+        name: "TSUMINO閱讀頁",
+        host: ["www.tsumino.com"],
+        reg: /^https?:\/\/www\.tsumino\.com\/Read\/Index\/\d+\?page=\d+$/,
+        imgs: async () => {
+            await fun.waitEle(".reader-img");
+            let max = fun.gt("//h1[span[@id='pageNumberText']]").match(/\d+$/)[0];
+            let url = fun.ge("div[data-cdn]").dataset.cdn;
+            let newUrl = new URL(url);
+            let imgDir = newUrl.origin + newUrl.pathname.replace("[PAGE]", "");
+            let key = newUrl.search;
+            return fun.arr(max).map((_, i) => imgDir + (i + 1) + key);
+        },
+        button: [4],
+        insertImg: [".reader-page", 2],
+        category: "hcomic"
+    }, {
+        name: "nhentai/HentaiHand圖片清單頁",
+        host: ["nhentai.com", "hentaihand.com"],
+        reg: /^https?:\/\/(nhentai\.com|hentaihand\.com)\/en\/comic\/[^\/]+$/,
         init: async () => {
-            let comic = location.href.split("/").at(-1);
+            let comic = location.pathname.split("/").at(3);
             let json = await fetch(`/api/comics/${comic}/images`, {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
@@ -8762,6 +8922,32 @@
             ["//div[div[contains(@class,'comic-gallery')]]", 0], 2, 1000
         ],
         go: 1,
+        customTitle: () => siteJson.comic.alternative_title ?? siteJson.comic.title,
+        category: "hcomic"
+    }, {
+        name: "nhentai/HentaiHand閱讀頁",
+        host: ["nhentai.com", "hentaihand.com"],
+        reg: /(nhentai\.com|hentaihand\.com)\/\w+\/comic\/[^/]+\/reader\//i,
+        init: async () => {
+            let comic = location.pathname.split("/").at(3);
+            let json = await fetch(`/api/comics/${comic}/images`, {
+                "headers": {
+                    "accept": "application/json, text/plain, */*",
+                    "x-csrf-token": document.querySelector("meta[name='csrf-token']").content,
+                    "x-requested-with": "XMLHttpRequest",
+                    "x-xsrf-token": document.cookie.match(/XSRF-TOKEN=(\w+)/)[1]
+                }
+            }).then(res => res.json());
+            debug("\n此頁JSON資料\n", json);
+            siteJson = json;
+        },
+        imgs: async () => {
+            await fun.waitEle(".vertical-image img[data-src]");
+            thumbnailsSrcArray = siteJson.images.map(e => e.thumbnail_url);
+            return siteJson.images.map(e => e.source_url);
+        },
+        button: [4],
+        insertImg: [".reader", 2],
         customTitle: () => siteJson.comic.alternative_title ?? siteJson.comic.title,
         category: "hcomic"
     }, {
@@ -14034,6 +14220,7 @@ document.body.appendChild(text);
                 str_110: "※Webp轉換為Jpg"
             };
             break;
+        case "zh":
         case "zh-CN":
         case "zh-Hans-CN":
             displayLanguage = {
@@ -17521,6 +17708,7 @@ if (newWindowDataViewMode == 1) {
     };
 
     const addFullPictureLoadButton = () => {
+        if (ge(".FullPictureLoadFixedBtn")) return;
         let img = new Image();
         img.id = "FullPictureLoad";
         img.className = "FullPictureLoadFixedBtn";
@@ -17567,6 +17755,7 @@ if (newWindowDataViewMode == 1) {
     };
 
     const addFullPictureLoadFixedMenu = () => {
+        if (ge("#FullPictureLoadFixedMenu")) return;
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenu";
         const menuObj = [{
@@ -18089,6 +18278,7 @@ ${msgPosCss}
 }
 
 a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadImageSmall] {
+    position: unset !important;
     padding: 0 !important;
     margin: 0 !important;
     display: unset !important;
