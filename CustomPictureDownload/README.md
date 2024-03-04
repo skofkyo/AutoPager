@@ -830,16 +830,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xgmn06.cc/">极品性感美女</a></td>
-                <td><a href="https://06.ooov.bf/">06.ooov.bf</a>，<a href="http://104.233.163.65/">104.233.163.65</a>，<a href="https://plmn5.com/">网址发布页</a></td>
+                <td><a href="https://www.12356781.xyz/">极品性感美女</a></td>
+                <td><a href="https://x002.pppy.bf/">x002.pppy.bf</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn05.com/">秀人美女網</a></td>
-                <td><a href="https://xrmn1.zzzy.bf/">xrmn1.zzzy.bf</a></td>
+                <td><a href="https://www.xrmn02.top/">秀人美女網</a></td>
+                <td><a href="https://xrmn5.zzzy.bf/">xrmn5.zzzy.bf</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr07.vip/">秀人集</a></td>
-                <td><a href="https://xr.uunn.bf/">xr.uunn.bf</a>，<a href="http://137.175.84.179/">137.175.84.179</a></td>
+                <td><a href="https://www.xr05.vip/">秀人集</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn05.cc/">爱看美女网</a></td>
@@ -2172,7 +2172,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://nhentai.net/">nhentai</a></td>
-                <td>作用在圖片清單頁，<a href="https://nyahentai.red/">nyahentai.red</a>，<a href="https://www.hentai.name/">www.hentai.name</a>，<a href="https://nhentai.xxx/">nhentai.xxx</a>，<a href="https://nhentai.to/">nhentai.to</a>，<a href="https://simplyhentai.org/">simplyhentai.org</a>，<a href="https://simplyhentai.red/">simplyhentai.red</a>
+                <td>作用在圖片清單/閱讀頁，<a href="https://nyahentai.red/">nyahentai.red</a>，<a href="https://www.hentai.name/">www.hentai.name</a>，<a href="https://nhentai.xxx/">nhentai.xxx</a>，<a href="https://nhentai.to/">nhentai.to</a>，<a href="https://simplyhentai.org/">simplyhentai.org</a>，<a href="https://simplyhentai.red/">simplyhentai.red</a>
                 </td>
             </tr>
             <tr>
@@ -2185,99 +2185,95 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://cathentai.net/">Cathentai</a></td>
-                <td>作用在List Read頁，<a href="https://hentaibeeg.com/">hentaibeeg.com</a>，<a href="https://hentaicolor.net/">hentaicolor.net</a>，<a href="https://nyahentai.info/">nyahentai.info</a></td>
+                <td>作用在圖片清單/List Read頁，<a href="https://hentaibeeg.com/">hentaibeeg.com</a>，<a href="https://hentaicolor.net/">hentaicolor.net</a>，<a href="https://nyahentai.info/">nyahentai.info</a></td>
             </tr>
             <tr>
                 <td><a href="https://hanime1.me/comics">Hanime1</a></td>
-                <td>作用在圖片清單頁</td>
+                <td>作用在圖片清單/閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://ch.hentai-one.com/">Hentai-One</a></td>
-                <td>同上</td>
+                <td>作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td><a href="https://hentaifox.com/">HentaiFox</a></td>
-                <td>同上</td>
+                <td>作用在圖片清單/閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://3hentai.net/">3hentai</a></td>
-                <td>同上</td>
+                <td>作用在圖片清單/閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.simply-hentai.com/">Simply Hentai</a></td>
-                <td>同上，SPA網頁</td>
+                <td>作用在圖片清單/閱讀頁，SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://doujins.com/">Doujins</a></td>
-                <td>同上</td>
+                <td>作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td><a href="https://hentaipaw.com/">HentaiPaw</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://hentaihand.com/en/latest">HentaiHand</a></td>
-                <td>同上，SPA網頁</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.tsumino.com/">TSUMINO</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="http://imhentai.xxx/">IMHentai</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://myhentaigallery.com/">My Hentai Gallery</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://xyzcomics.com/">XYZ PORN COMICS</a></td>
-                <td>同上</td>
+                <td>作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td><a href="https://nhentai.com/xxx">nhentai.com</a></td>
-                <td><a href="https://hentaihand.com/xxx">hentaihand.com</a>，作用在閱讀頁，SPA網頁</td>
+                <td><a href="https://hentaihand.com/xxx">HentaiHand</a>，作用在圖片清單/閱讀頁，SPA網頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.tsumino.com/">TSUMINO</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="http://imhentai.xxx/">IMHentai</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://myhentaigallery.com/">My Hentai Gallery</a></td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://xyzcomics.com/">XYZ PORN COMICS</a></td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+           <tr>
+                <td><a href="https://pururin.to/">Pururin</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://9hentai.to/">9hentai</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://asmhentai.com/">AsmHentai</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://multporn.net/">MultPorn</a></td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://lhentai.com/">lHentai</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://tmohentai.com/">TMOHentai</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://hentai2read.com/">Hentai2Read</a></td>
                 <td>作用在閱讀頁</td>
             </tr>
             <tr>
-                <td><a href="https://pururin.to/">Pururin</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://9hentai.to/">9hentai</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://asmhentai.com/">AsmHentai</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://multporn.net/">MultPorn</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
                 <td><a href="https://hentaihere.com/">HentaiHere</a></td>
-                <td>同上</td>
+                <td>作用在閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://kingcomix.com/">KingComiX</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://lhentai.com/">lHentai</a></td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://tmohentai.com/">TMOHentai</a></td>
-                <td>同上</td>
+                <td>作用在閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://hitomi.la/">Hitomi.la</a></td>
-                <td>同上</td>
+                <td>作用在閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://hdporncomics.com/">HDpornComics</a></td>
