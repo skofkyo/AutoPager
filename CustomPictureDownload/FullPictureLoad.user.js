@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.9.33
+// @version            1.10.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -33,7 +33,7 @@
 // @noframes
 // @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js
 // ==/UserScript==
 
 (async () => {
@@ -45,8 +45,6 @@
         enable: 0, //!!!維持0不要改!!!
         icon: 1, //是否顯示左下圖示，1：開啟、0：關閉
         threading: 32, //最大下載線程數
-        default: "img[src]", //預設CSS/Xpath選擇器/javascript代碼
-        //default: "js;return [...document.images];",
         zip: 1, //1：圖片下載後壓縮打包，0：批量下載圖片，無法全自動下載
         file_extension: "zip", //zip or cbz
         autoDownload: 0, //!!!維持0不要改!!!建議透過UI選項設定來開啟，需要customData也有autoDownload
@@ -70,9 +68,9 @@
     let videosSrcArray = [];
     let promiseBlobArray = [];
     let customTitle = null;
-    let downloading = false;
-    let fetching = false;
-    let aotoScrolling = false;
+    let isDownloading = false;
+    let isFetching = false;
+    let isAutoScrolling = false;
     let fetchErrorArray = [];
     let fastDownload = false;
     let currentDownloadThread = 0;
@@ -397,8 +395,8 @@
         customTitle: () => document.title.split("|")[0].slice(10).trim(),
         category: "nsfw2"
     }, {
-        name: "www.depvailon.com crimejunkiespodcast.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com depday.info thismore.fun cosxuxi.club",
-        reg: /(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|(www\.depvailon\.com|crimejunkiespodcast\.com)\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$|lootiu\.com\/gallery\/.+\.cfg$|(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html|nungvl\.net\/gallerys\/\d+\.cg|lootiu\.com\/gallery\/.+\.cfg|depday\.info\/v2\/\w+\.html|^https?:\/\/thismore\.fun\/view\/[^\.]+\.php|^https?:\/\/cosxuxi\.club\/[^\.]+\.html/i,
+        name: "www.depvailon.com crimejunkiespodcast.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com depday.info thismore.fun cosxuxi.club baobua.com",
+        reg: /(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html$|(www\.depvailon\.com|crimejunkiespodcast\.com)\/(?!\?page=|\?m=).+\.html$|nungvl\.net\/gallerys\/\d+\.cg$|lootiu\.com\/gallery\/.+\.cfg$|(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html|www\.depvailon\.com\/(?!\?page=|\?m=).+\.html|nungvl\.net\/gallerys\/\d+\.cg|lootiu\.com\/gallery\/.+\.cfg|depday\.info\/v2\/\w+\.html|^https?:\/\/thismore\.fun\/view\/[^\.]+\.php|^https?:\/\/cosxuxi\.club\/[^\.]+\.html|^https?:\/\/baobua\.com\/post\/[^\.]+\.html/i,
         imgs: async () => {
             let max;
             try {
@@ -487,7 +485,7 @@
             let pag = [...fun.gae(".page")];
             if (pag.length > 0) pag[0].remove();
         },
-        imgs: () => fun.getImg('.content>p img[alt]', fun.gt(".page a:last-child", 2), 3, [null, null], 200),
+        imgs: () => fun.getImg(".content>p img[alt]", fun.gt(".page a:last-child", 2), 3, null, 200),
         button: [4],
         insertImg: ["//div[p[img[@alt and @title]]]", 2],
         autoDownload: [0],
@@ -501,7 +499,7 @@
         name: "秀人美女網",
         host: ["www.xrmn05.com", "xrmn.cxxx.bf"],
         reg: () => /\/\w+\/\d+\/\d+\.html$/.test(siteUrl) && fun.ge("//div[@class='single-cat']/a[text()='秀人美女网']") ? true : false,
-        imgs: () => fun.getImg('.content p img[alt]', fun.gt(".page a:last-child", 2), 3, [null, null], 200),
+        imgs: () => fun.getImg(".content p img[alt]", fun.gt(".page a:last-child", 2), 3, null, 200),
         button: [4],
         insertImg: ["//div[p[img[@alt]]]", 2],
         autoDownload: [0],
@@ -524,7 +522,7 @@
                 p.forEach(e => te.parentNode.insertBefore(e, te));
             }
         },
-        imgs: () => fun.getImg(".article-content img[alt]", fun.gt("a.current~*:last-child", 2), 3, [null, null], 200),
+        imgs: () => fun.getImg(".article-content img[alt]", fun.gt("a.current~*:last-child", 2), 3, null, 200),
         button: [4],
         insertImg: [
             ["//div[@class='pagination'][last()]", 1, "//p[img[@alt]]"], 2
@@ -541,7 +539,7 @@
         name: "爱美女网",
         host: ["www.imn5.xyz"],
         reg: /^https?:\/\/www\.imn5\.\w+\/\w+\/\w+\/\d+\.html/i,
-        imgs: () => fun.getImg('.imgwebp p img[alt]', fun.gt(".page a:last-child", 2), 3, [null, null], 200),
+        imgs: () => fun.getImg(".imgwebp p img[alt]", fun.gt(".page a:last-child", 2), 3, null, 200),
         button: [4],
         insertImg: ["//div[p[img[@alt]]]", 2],
         autoDownload: [0],
@@ -559,7 +557,7 @@
             let pag = [...fun.gae(".pagebar")];
             if (pag.length > 0) pag[0].remove();
         },
-        imgs: () => fun.getImg('.info-imtg-box img[alt]', fun.gt(".pagebar>*:last-child", 2), 3, [null, null], 200),
+        imgs: () => fun.getImg(".info-imtg-box img[alt]", fun.gt(".pagebar>*:last-child", 2), 3, null, 200),
         button: [4],
         insertImg: ["//p[img[@alt]]", 2],
         autoDownload: [0],
@@ -572,7 +570,7 @@
         name: "美人图",
         host: ["meirentu.cc", "meirentu.top", "meirentu.icu"],
         reg: /meirentu\.\w+\/pic\/\d+\.html/i,
-        imgs: () => fun.getImg('.content_left img[alt]', fun.gt(".page a:last-child", 2), 5),
+        imgs: () => fun.getImg(".content_left img[alt]", fun.gt(".page a:last-child", 2), 5),
         button: [4],
         insertImg: [".content_left", 2],
         autoDownload: [0],
@@ -906,7 +904,7 @@
         name: "优美图录",
         host: ["umei.net"],
         reg: /umei\.net\/\w+\/\d+\.html/i,
-        imgs: () => fun.getImg(".image_div img", fun.gt(".item_info span"), 9, [null, null], 200),
+        imgs: () => fun.getImg(".image_div img", fun.gt(".item_info span"), 9, null, 200),
         button: [4],
         insertImg: [".image_div", 2],
         customTitle: () => fun.gt(".item_title>h1"),
@@ -1200,7 +1198,7 @@
             let num = siteUrl.match(/\d+$/)[0];
             return siteUrl.replace(/\d+$/, "") + (parseInt(num, 10) - 1);
         },
-        customTitle: () => fun.gt('.headling_word_main_box_title').replace(/\[\d+P\]/i, "").replace(/\d+P$/i, "").replace(/\(\d+P\)/i, "").trim(),
+        customTitle: () => fun.gt(".headling_word_main_box_title").replace(/\[\d+P\]/i, "").replace(/\d+P$/i, "").replace(/\(\d+P\)/i, "").trim(),
         css: ".headling_main{height:auto}",
         category: "nsfw1"
     }, {
@@ -1232,8 +1230,8 @@
         category: "autoPager"
     }, {
         name: "美图乐",
-        host: ["www.meitule.net"],
-        reg: /www\.meitule\.\w+\/photo\/\d+\.html/i,
+        host: ["www.meitule.net", "www.meitule.com", "www.meitulu.cc"],
+        reg: /www\.(meitule|meitulu)\.\w+\/photo\/\d+\.html/i,
         imgs: () => {
             let max;
             try {
@@ -1241,7 +1239,7 @@
             } catch (e) {
                 max = 1;
             }
-            return fun.getImg(".content img", max, 9);
+            return fun.getImgO(".content img", max, 9);
         },
         button: [4],
         insertImg: [".content", 2],
@@ -1285,7 +1283,7 @@
         reg: /(www\.eemm\.cc|www\.jxmm\.net)\/pic\/\d+\.html/,
         imgs: async () => {
             await fun.getNP("#content img", "a.on+a:not(.next)", null, ".page", 0, null, 0, 0);
-            return [...fun.gae('#content img')];
+            return [...fun.gae("#content img")];
         },
         button: [4],
         insertImg: ["#content", 1],
@@ -2603,9 +2601,9 @@
         },
         category: "nsfw1"
     }, {
-        name: "遛无写真/有脾气美图/KP写真/美女云图网/tck天天番号/4tck番号库/5pwc番号库/5tck天天番号/6K美女/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/PXA番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线/7c0a宅男福利网站",
-        host: ["www.6evu.com", "www.6kpo.com", "www.1plq.com", "www.c0h.net", "www.3tck.com", "www.3pxa.com", "www.4tck.com", "www.5pwc.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.7c0a.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com", "www.1nlm.com"],
-        reg: /^https?:\/\/www\.(6evu|6kpo|c0h|\dtck|3pxa|5pwc|7c0a|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a|1nlm|1plq)\.(com|net)\/\d+\.html/,
+        name: "遛无写真/有脾气美图/KP写真/美女云图网/tck天天番号/4tck番号库/5pwc番号库/5tck天天番号/6K美女/6vtr宅男社区/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/PXA番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线/7c0a宅男福利网站",
+        host: ["www.6evu.com", "www.6kpo.com", "www.6vtr.com", "www.1plq.com", "www.c0h.net", "www.3tck.com", "www.3pxa.com", "www.4tck.com", "www.5pwc.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.7c0a.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com", "www.1nlm.com"],
+        reg: /^https?:\/\/www\.(6evu|6kpo|6vtr|c0h|\dtck|3pxa|5pwc|7c0a|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a|1nlm|1plq)\.(com|net)\/\d+\.html/,
         exclude: "//a[@rel='category tag'][contains(text(),'人物简历') or contains(text(),'宅男科技') or contains(text(),'时尚玩酷') or contains(text(),'身边事') or contains(text(),'追星一族') or contains(text(),'网红头条') or contains(text(),'大众娱乐') or contains(text(),'生活热点') or contains(text(),'影评剧透') or contains(text(),'娱乐时尚') or contains(text(),'吃喝玩乐') or contains(text(),'体育') or contains(text(),'亲子宠物') or contains(text(),'番号大全') or contains(text(),'番号推荐') or contains(text(),'最新番号') or contains(text(),'素人番号')]",
         imgs: () => fun.getImgA("#post_content img,.article-content img,.entry-content img", ".pagelist a,.pagination a,.article-paging a"),
         button: [4],
@@ -2613,7 +2611,7 @@
         autoDownload: [0],
         next: "a[rel=prev],.article-nav-prev a",
         prev: "a[rel=next],.article-nav-next a",
-        customTitle: () => fun.gt("h1").replace(/\(\d+P\)/i, "").replace(/超高清绝版网图流出|无圣光私房写真个人分享|无水印私房写真流出|无删减写真作品良心推荐|无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
+        customTitle: () => fun.gt("h1").replace(/\(\d+P\)/i, "").replace(/高品质写真作品收藏合集|超高清绝版网图流出|无圣光私房写真个人分享|无水印私房写真流出|无删减写真作品良心推荐|无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
         css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}@media only screen and (max-width:640px){.container{max-width:100% !important}}",
         category: "nsfw1"
     }, {
@@ -2706,7 +2704,7 @@
         },
         imgs: () => {
             let max = fun.gt(".pagelist span,.pagelist a[title=Page]").match(/\/(\d+)/)[1];
-            return fun.getImgO("#picg img", max, 9, [null, null], 200, ".page .pagelist", siteUrl, 0);
+            return fun.getImgO("#picg img", max, 9, null, 200, ".page .pagelist", siteUrl, 0);
         },
         button: [4],
         insertImg: ["#picg", 2],
@@ -3506,6 +3504,15 @@
         customTitle: () => fun.gt("#main>h1"),
         category: "nsfw2"
     }, {
+        name: "亚色图库",
+        host: ["yase.pics"],
+        reg: /^https?:\/\/yase\.pics\/albums\//,
+        imgs: async () => fun.checkImageCDN(await fun.getImg("img.block", fun.gt("a[rel=next]", 2) || 1)),
+        button: [4],
+        insertImg: ["//div[img[@title]]", 2],
+        customTitle: () => fun.gt("#main>h1").replace(/\d+P/, ""),
+        category: "nsfw2"
+    }, {
         name: "乳此动人",
         host: ["rucidongren.neocities.org"],
         reg: /^https?:\/\/rucidongren\.neocities\.org\/posts\/\w+\//,
@@ -3547,7 +3554,7 @@
         autoDownload: [0],
         next: "//a[div[h5[text()=' 上一篇']]]",
         prev: "//a[div[h5[text()=' 下一篇']]]",
-        customTitle: () => fun.gt('.multi-single-header>h1').replace(/\（\d+\/\d+\）|(\s–\s)?\(\d+P\)/i, "").trim(),
+        customTitle: () => fun.gt(".multi-single-header>h1").replace(/\（\d+\/\d+\）|(\s–\s)?\(\d+P\)/i, "").trim(),
         category: "nsfw1"
     }, {
         name: "秀人图吧",
@@ -3593,14 +3600,14 @@
         autoPager: {
             mode: 1,
             waitEle: "img[variant='avatarThumbnail'],img[variant='avatar'],.MuiAvatar-img",
-            ele: ".css-1tz8m30",
-            observer: ".css-1tz8m30",
+            ele: ".css-1tz8m30,.css-1u5bbeh",
+            observer: ".css-1tz8m30,.css-1u5bbeh",
             next: "a[aria-label='Go to next page']:not(.Mui-disabled)",
             re: "nav[aria-label='pagination navigation']",
             title: doc => "Page " + fun.gt("a.Mui-selected", 1, doc),
             history: 1,
             bF: doc => {
-                doc.querySelectorAll("img[variant='avatarThumbnail'],img[variant='avatar']").forEach(img => img.style.cssText = "color: transparent;");
+                doc.querySelectorAll("img[variant='avatarThumbnail'],img[variant='avatar']").forEach(img => img.style.cssText = "position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;");
                 doc.querySelectorAll("img[variant='cover']").forEach(img => img.style.cssText = "position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent; object-fit: cover;");
             }
         },
@@ -3792,7 +3799,7 @@
         autoDownload: [0],
         next: "a.post.prev-post",
         prev: "a.post.next-post",
-        customTitle: () => fun.gt('h1.jeg_post_title').replace(/\d+P/i, ""),
+        customTitle: () => fun.gt("h1.jeg_post_title").replace(/\d+P/i, ""),
         category: "nsfw1"
     }, {
         name: "4KHD",
@@ -3844,6 +3851,10 @@
     }, {
         name: "Buon Dua",
         host: ["buondua.com", "buondua.us"],
+        init: () => {
+            fun.remove("//div[text()='Sponsored ads']");
+            fun.remove(".search-form~*");
+        },
         reg: /buondua\.(com|us)\/(?!hot|tag|collection)[^\?]+$/,
         imgs: () => fun.getImg(".article-fulltext img[alt]", fun.gt(".pagination-list>span:last-child>a").match(/\d+/)[0]),
         button: [4],
@@ -4158,7 +4169,7 @@
         exclude: "p[class='404info']",
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae("#connbox .im-main-rec>a>img")].map(e => e.src);
-            return [...document.querySelectorAll("#connbox .im-main-rec>a")].map(a => "http://" + a.href.split('/').at(-1).replaceAll("*", "/").replace(".asp", "").replace(/-\d+x\d+\./, "."));
+            return [...document.querySelectorAll("#connbox .im-main-rec>a")].map(a => "http://" + a.href.split("/").at(-1).replaceAll("*", "/").replace(".asp", "").replace(/-\d+x\d+\./, "."));
         },
         button: [4],
         insertImg: ["#connbox", 2],
@@ -4447,7 +4458,7 @@
         imgs: ".imageblock img",
         button: [4],
         insertImg: [".entry-content,.blogview_content", 2],
-        customTitle: () => fun.gt('.tit_blogview,.hgroup h1').replace(/\[\d+p\]/i, "").trim(),
+        customTitle: () => fun.gt(".tit_blogview,.hgroup h1").replace(/\[\d+p\]/i, "").trim(),
         category: "nsfw1"
     }, {
         name: "MIC MIC IDOL",
@@ -4560,7 +4571,7 @@
         autoDownload: [0],
         next: "a[rel=prev]:not([href^=j])",
         prev: "a[rel=next]:not([href^=j])",
-        customTitle: () => fun.gt('.entry-title').replace("-套图之家", ""),
+        customTitle: () => fun.gt(".entry-title").replace("-套图之家", ""),
         category: "nsfw1"
     }, {
         name: "俊美图",
@@ -4622,20 +4633,26 @@
         reg: /(www\.)?x6o\.com\/articles\/\d+/,
         init: async () => await fun.waitEle(".content img:not([src*='loading.gif']),#vjs_video_3_html5_api"),
         imgs: () => {
-            fun.showMsg("fun.xhrHEA(check)...", 0);
-            let xhrNum = 0;
-            return [...fun.gae(".content img")].map(async (img, i, arr) => {
-                let src = img.dataset.original ?? img.src;
-                if (!/^http|^\/\//.test(src)) {
-                    let testSrc = "https://telegra.ph/file/" + src;
-                    let res = await fun.xhrHEAD(testSrc);
-                    fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
-                    let status = res.status;
-                    return status == 404 ? src : testSrc;
-                } else {
-                    return img;
-                }
-            });
+            if (fun.ge("a[data-fancybox]")) {
+                return [...fun.gae("a[data-fancybox]")];
+            } else {
+                fun.showMsg("fun.xhrHEA(check)...", 0);
+                let xhrNum = 0;
+                return [...fun.gae(".content img")].map(async (img, i, arr) => {
+                    let src = img.dataset.original ?? img.src;
+                    if (/^\/upload\/image\//.test(src)) {
+                        return location.origin + src;
+                    } else if (!/^http|^\/\//.test(src)) {
+                        let testSrc = "https://telegra.ph/file/" + src;
+                        let res = await fun.xhrHEAD(testSrc);
+                        fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                        let status = res.status;
+                        return status == 404 ? src : testSrc;
+                    } else {
+                        return img;
+                    }
+                });
+            }
         },
         button: [4],
         insertImg: [".content", 2],
@@ -5559,7 +5576,7 @@
         host: ["zzup.com"],
         link: "https://zzup.com/user-album/3338/petmer/index.html",
         reg: /^https?:\/\/zzup\.com\/content\/.+index\.html/i,
-        init: () => fun.remove("//iframe|//div[div[center[script[contains(text(),'juicy')]]]][@class='container']"),
+        init: () => fun.remove("//iframe|//div[div[center[script[contains(text(),'juicy')]]]][@class='container']|//font[b[contains(text(),'ads')]]"),
         imgs: async () => {
             let max;
             try {
@@ -5760,7 +5777,7 @@
         reg: /xhamster\.com\/photos\/gallery\/[^/]+$/,
         imgs: async () => {
             await fun.getNP(".items[data-role='gallery-photos']>.item-container", "//ol[@class='page-list']/li[@class='page-button' and a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a", null, "//ol[@class='page-list']");
-            return fun.getImgA("#photoCurr", "a.item.slided", 1, [null, null], 0);
+            return fun.getImgA("#photoCurr", "a.item.slided", 1, null, 0);
         },
         button: [4],
         insertImg: [".items[data-role=gallery-photos]", 1],
@@ -6022,7 +6039,7 @@
         link: "https://pimpandhost.com/site/trending",
         reg: /pimpandhost\.com\/(image|album)\/\d+/,
         init: () => {
-            if (/image/.test(location.href)) location.href = fun.ge('a[title=Album]').href;
+            if (/image/.test(location.href)) location.href = fun.ge("a[title=Album]").href;
             fun.remove(".flex-block-1,.flex-block-2,#comments,.ano_po");
         },
         imgs: async () => {
@@ -6652,7 +6669,7 @@
             } catch (e) {
                 max = 1;
             }
-            return fun.getImgO("#showimg img,.img-box img", max, 5, [null, null], 0, "#pageNum");
+            return fun.getImgO("#showimg img,.img-box img", max, 5, null, 0, "#pageNum");
         },
         button: [4],
         insertImg: ["#showimg,.img-box", 2],
@@ -7092,7 +7109,7 @@
         host: ["www.48gd.com"],
         reg: /www\.48gd\.com\/\w+\/\d+\.html/i,
         init: "document.onkeydown=null;",
-        imgs: () => fun.getImg('#content img[alt]', fun.gt('.pagelist>strong', 2).match(/\d+/)[0], 9),
+        imgs: () => fun.getImg("#content img[alt]", fun.gt(".pagelist>strong", 2).match(/\d+/)[0], 9),
         button: [4],
         insertImg: ["#content", 2],
         autoDownload: [0],
@@ -7886,7 +7903,7 @@
         exclude: "//h1[text()='Content Warning']",
         init: async () => await fun.getNP(".gdtm,.gdtl", ".ptds+td>a", null, "//tr[td[@class='ptds']]"),
         imgs: async () => {
-            if (options.fancybox == 1 && !downloading) {
+            if (options.fancybox == 1 && !isDownloading) {
                 //預覽縮圖網址需要裁剪難弄...
                 if (fun.ge(".gdtm img[style],.gdtl img[style]")) {
                     let thumbnailsHeightData = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => parseInt(e.style.height.match(/\d+/)[0], 10));
@@ -8102,7 +8119,7 @@
         init: async () => await fun.waitEle("#pages"),
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
-            if (options.fancybox == 1 && !downloading) {
+            if (options.fancybox == 1 && !isDownloading) {
                 let pages = pag.cnt;
                 if (pages > 40) {
                     let max = Math.ceil(pages / 20);
@@ -8196,9 +8213,9 @@
         openInNewTab: ".galleries a:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "Cathentai/Hentaibeeg/Hentaicolor/圖片清單頁",
-        host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net"],
-        reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net)\/[^/]+\/(#collapse)?$/i,
+        name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/圖片清單頁",
+        host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net", "nyahentai.info"],
+        reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net|nyahentai\.info)\/[^/]+\/(#collapse)?$/i,
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.ge("//a[span[text()='List Read']]").href;
@@ -8206,6 +8223,7 @@
                 return fun.run(fun.gt("#listImgH", 1, doc));
             });
         },
+        button: [4],
         insertImg: [
             ["#thumbnail-container", 2], 2
         ],
@@ -8214,7 +8232,7 @@
         autoClick: ["#showAll"],
         category: "hcomic"
     }, {
-        name: "Cathentai/Hentaibeeg/Hentaicolor/List Read頁",
+        name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/List Read頁",
         host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net", "nyahentai.info"],
         reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net|nyahentai\.info)\/read\/\d+\.html$/i,
         imgs: () => fun.run(fun.gt("#listImgH")),
@@ -8827,7 +8845,7 @@
         customTitle: async () => {
             await fun.waitVar("g_th");
             let t = fun.gt(".subtitle");
-            return t.length > 0 ? t : fun.gt('h1').replace(/\||\+/g, "");
+            return t.length > 0 ? t : fun.gt("h1").replace(/\||\+/g, "");
         },
         go: 1,
         topButton: true,
@@ -8843,6 +8861,46 @@
         insertImg: [".pre_img", 2],
         customTitle: () => fun.title("-", 1),
         threading: 4,
+        category: "hcomic"
+    }, {
+        name: "HentaiEra圖片清單頁",
+        host: ["hentaiera.com"],
+        reg: /^https?:\/\/hentaiera\.com\/gallery\/\d+\/$/,
+        include: "#append_thumbs",
+        delay: 300,
+        autoClick: "#load_all",
+        imgs: async () => {
+            let max = fun.ge("#load_pages").value;
+            let url = fun.ge(".gthumb>a").href.replace(/\d+\/$/, "");
+            let links = fun.arr(max).map((_, i) => url + (i + 1) + "/");
+            let arr = await fun.getImgA("#gimg", links);
+            thumbnailsSrcArray = [...fun.gae("#append_thumbs img")].map(e => e.dataset.src ?? e.src);
+            return arr;
+        },
+        button: [4],
+        insertImg: [
+            ["#append_thumbs", 2], 2, 1000
+        ],
+        go: 1,
+        customTitle: () => fun.gt(".subtitle") ?? fun.gt("h1"),
+        category: "hcomic"
+    }, {
+        name: "HentaiEra閱讀頁",
+        host: ["hentaiera.com"],
+        reg: /^https?:\/\/hentaiera\.com\/view\/\d+\/\d+\/$/,
+        init: () => {
+            let html = fun.ge(".pre_img img").outerHTML;
+            fun.ge(".pre_img").outerHTML = `<div class="imgBox">${html}</div>`;
+        },
+        imgs: () => {
+            let max = fun.ge("#pages").value;
+            let url = siteUrl.replace(/\d+\/$/, "");
+            let links = fun.arr(max).map((_, i) => url + (i + 1) + "/");
+            return fun.getImgA("#gimg", links);
+        },
+        button: [4],
+        insertImg: [".imgBox", 2],
+        customTitle: () => fun.title(/ - Page \d+ - HentaiEra/),
         category: "hcomic"
     }, {
         name: "TSUMINO圖片清單頁",
@@ -9221,7 +9279,7 @@
             if (/index-look-cid-name-/.test(siteUrl)) location.href = siteData.FixURL(siteUrl);
             [...fun.gae("//a[text()='下一章'] | //a[text()='上一章']")].forEach(a => a.href = siteData.FixURL(a.href));
         },
-        imgs: (url = siteUrl, doc, msg = 1, request = 0) => fun.getImg("#ComicPic", fun.ge("#total", doc).value, 20, [null, null], 20, url, msg, request),
+        imgs: (url = siteUrl, doc, msg = 1, request = 0) => fun.getImg("#ComicPic", fun.ge("#total", doc).value, 20, null, 20, url, msg, request),
         button: [4, "24%", 1],
         insertImg: [".e", 2],
         autoDownload: [0],
@@ -9451,7 +9509,7 @@
             } catch (e) {
                 max = 1;
             }
-            return fun.getImgO("#comic", max, "4", [null, null], 0, ".entry-title,.wp-pagenavi", siteUrl, 0);
+            return fun.getImgO("#comic", max, "4", null, 0, ".entry-title,.wp-pagenavi", siteUrl, 0);
         },
         button: [4],
         insertImg: ["#page-current", 1],
@@ -10428,16 +10486,24 @@
         host: ["www.colamanga.com"],
         enable: 1,
         reg: /www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/,
-        init: () => fun.clearAllTimer(1),
+        init: () => {
+            fun.clearAllTimer(1);
+            if (autoScrollAllElement === 1) siteData.scrollEle();
+        },
         imgs: () => fun.ge(".mh_comicpic img[src^=blob]") ? fun.imgBlobArr(".mh_comicpic img[src^=blob]") : [...fun.gae(".mh_comicpic img[src]")],
         //scrollEle: [".mh_comicpic img", 600],
-        scrollEle: () => fun.aotoScrollEles(".mh_comicpic", (ele) => fun.ge("img[src]", ele)),
+        scrollEle: () => fun.aotoScrollEles(".mh_comicpic", (ele) => isEle(fun.ge("img[src]", ele))),
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title(" COLAMANGA", 1),
         threading: 10,
         css: ".mh_wrap{width:100%!important;min-width:100%!important}",
         category: "comic"
+    }, {
+        name: "COLAMANHUA 目錄鏈結新分頁開啟",
+        reg: /^https?:\/\/www\.colamanga\.com\/manga-\w+\/$/,
+        openInNewTab: ".all_data_list a:not([target=_blank])",
+        category: "none"
     }, {
         name: "8Comic無限動漫",
         host: ["www.comicabc.com"],
@@ -10502,7 +10568,7 @@ window.parent.postMessage({
             let textNode = document.querySelector(".book_inc_title")?.nextSibling;
             if (textNode?.nodeName == "#text" && textNode?.textContent?.indexOf("alert") > -1) textNode.remove();
             fun.ge("#pageindex").parentNode.appendChild(fun.ge("#prevvol").cloneNode(true));
-            fun.ge('#pageindex').parentNode.appendChild(fun.ge("#nextvol").cloneNode(true));
+            fun.ge("#pageindex").parentNode.appendChild(fun.ge("#nextvol").cloneNode(true));
             let ul = fun.ge("#TheTable>ul");
             let v1 = fun.ge(".view_tmenu").cloneNode(true);
             let v2 = fun.gae(".view_menut")[1];
@@ -10690,7 +10756,7 @@ document.body.appendChild(text);
         autoDownload: [0],
         next: "//a[img[contains(@src,'reader-bottom-right-2')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'reader-bottom-right-1')]][starts-with(@href,'/m')]",
-        customTitle: doc => fun.title('_', 2, doc).replace("漫畫", ""),
+        customTitle: doc => fun.title("_", 2, doc).replace("漫畫", ""),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gt("//script[contains(text(),'XMANHUA_IMAGE_COUNT')]", 1, nextDoc);
             fun.script(code, 0, 1);
@@ -11246,7 +11312,7 @@ document.body.appendChild(text);
         reg: /^https?:\/\/www\.dongman\.la\/manhua\/chapter\/\d+\/\d+\//,
         imgs: (link = siteUrl, msg = 1, request = 0) => {
             let links = [link.replace("all.html", "") + "all.html"];
-            return fun.getImgA(".imgListBox img", links, 0, [null, null], msg, request);
+            return fun.getImgA(".imgListBox img", links, 0, null, msg, request);
         },
         button: [4],
         insertImg: [".imgListBox", 2],
@@ -11512,7 +11578,7 @@ window.parent.postMessage({
         reg: /^https?:\/\/m\.92mh\.com\/manhua\/\d+\/\d+\.html/i,
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let max = fun.gt(".image-content p", 1, doc).match(/\/(\d+)/)[1];
-            return fun.getImg("#manga-image", max, 5, [null, null], 20, url, msg, request);
+            return fun.getImg("#manga-image", max, 5, null, 20, url, msg, request);
         },
         button: [4],
         insertImg: ["#images", 2],
@@ -11551,7 +11617,7 @@ window.parent.postMessage({
         enable: 0,
         reg: /(wap|m)\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
         init: () => siteData.next() ? fun.addUrlHtml(siteData.next(), "#chapter-image", 1) : null,
-        imgs: (url = siteUrl, doc, msg = 1, request = 0) => fun.getImg("#chapter-image img", fun.gt("#k_total", 1, doc), 5, [null, null], 20, url, msg, request),
+        imgs: (url = siteUrl, doc, msg = 1, request = 0) => fun.getImg("#chapter-image img", fun.gt("#k_total", 1, doc), 5, null, 20, url, msg, request),
         button: [4],
         insertImg: ["#chapter-image", 2],
         autoDownload: [0],
@@ -11615,7 +11681,7 @@ window.parent.postMessage({
         reg: /(m|coco)\.mhxin\.com\/manhua\/\w+\/\d+\.html/i,
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let max = fun.gt(".image-content p", 1, doc).match(/\/(\d+)/)[1];
-            return fun.getImg("#manga-image", max, 5, [null, null], 20, url, msg, request);
+            return fun.getImg("#manga-image", max, 5, null, 20, url, msg, request);
         },
         button: [4],
         insertImg: ["#images", 2],
@@ -11638,7 +11704,7 @@ window.parent.postMessage({
         reg: /(m\.zuimh\.com|m.pinmh.com)\/manhua\/\w+\/\d+\.html/i,
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let max = fun.gt(".image-content p", 1, doc).match(/\/(\d+)/)[1];
-            return fun.getImg("#image", max, 5, [null, null], 20, url, msg, request);
+            return fun.getImg("#image", max, 5, null, 20, url, msg, request);
         },
         button: [4],
         insertImg: ["#images", 2],
@@ -11657,7 +11723,7 @@ window.parent.postMessage({
         reg: /(m\.0dmh\.com)\/manhua\/\w+\/\d+\.html/i,
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let max = Math.ceil(fun.gt("#images p", 1, doc).match(/\/(\d+)/)[1] / 3);
-            return fun.getImg("#images img", max, 5, [null, null], 20, url, msg, request);
+            return fun.getImg("#images img", max, 5, null, 20, url, msg, request);
         },
         button: [4],
         insertImg: ["#images", 2],
@@ -11677,7 +11743,7 @@ window.parent.postMessage({
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let num = fun.gt("#images p", 1, doc).match(/\/(\d+)/)[1];
             let max = Math.ceil(num / 5);
-            return location.hostname == "m.100mhl.com" ? fun.getImg("#images img", max, 5, [null, null], 20, url, msg, request) : fun.getImg("#images img", num, 5, [null, null], 20, url, msg, request);
+            return location.hostname == "m.100mhl.com" ? fun.getImg("#images img", max, 5, null, 20, url, msg, request) : fun.getImg("#images img", num, 5, null, 20, url, msg, request);
         },
         button: [4],
         insertImg: ["#images", 2],
@@ -12103,29 +12169,24 @@ window.parent.postMessage({
         enable: 1,
         reg: /(m\.manmanju\.(com|cc)|m\.ikuku\.cc|\w+\.ihhmh\.com|s\d\.m\.ikkdm\.com|s\d.wap.ikukudm.com|mh123\.dypro\.xyz|sbxrb1\.3840p\.xyz)\/comiclist\/\d+\/\d+\/1\.htm/i,
         include: ".classBox img,.imgBox",
-        init: async () => {
-            fun.remove("//center[iframe]");
-            let url = await siteData.next();
-            if (url) fun.addUrlHtml(url, ".bottom .subNav", 1);
-            let nav = fun.ge("ul.subNav").cloneNode(true);
-            let tE = fun.ge("div.bottom");
-            tE.parentNode.insertBefore(nav, tE);
-            fun.remove("meta[name=viewport]");
-            $("head").append('<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=2.0,user-scalable=no"/>');
-            setTimeout(() => {
-                let nextDivEle = fun.ge(".bottom div");
-                let bottomEle = fun.ge(".bottom");
-                nextDivEle ? bottomEle.innerHTML = fun.ge("div", bottomEle).outerHTML + fun.ge("p", bottomEle).outerHTML : bottomEle.innerHTML = fun.ge("p", bottomEle).outerHTML;
-            }, 500);
-        },
+        init: () => fun.remove("//center[iframe]"),
         imgs: () => {
             fun.remove("//a[img] | //ul[center[li]]");
-            fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
             return fun.getKukudmSrc();
         },
         button: [4],
         insertImg: [".imgBox", 2],
         go: 1,
+        insertImgAF: async () => {
+            fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
+            let nav = fun.ge("ul.subNav").cloneNode(true);
+            let tE = fun.ge("div.bottom");
+            tE.parentNode.insertBefore(nav, tE);
+            fun.remove("meta[name=viewport]");
+            $("head").append('<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=2.0,user-scalable=no"/>');
+            let url = await siteData.next();
+            if (url) fun.addUrlHtml(url, ".bottom", 0);
+        },
         autoDownload: [0],
         next: () => {
             let comicListUrl = fun.ge(".subNav a").href;
@@ -12202,7 +12263,7 @@ window.parent.postMessage({
         reg: /^https?:\/\/(www|m)\.manhuag\.cc\/\d+\/\d+\/\d+\.html/i,
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let max = fun.gt("//a[text()='下一页']", 2, doc) || 1;
-            return /www\.manhuag\.cc/.test(location.host) ? fun.getImg(".img img", max, 9, [null, null], 20, url, msg, request) : fun.getImg(".img img", max, 5, [null, null], 20, url, msg, request);
+            return /www\.manhuag\.cc/.test(location.host) ? fun.getImg(".img img", max, 9, null, 20, url, msg, request) : fun.getImg(".img img", max, 5, null, 20, url, msg, request);
         },
         button: [4],
         insertImg: ["//div[div[@id='nr'][p[@class='img']]] | //div[@id][p[@class='img']][not(@style)]", 2],
@@ -12284,7 +12345,7 @@ window.parent.postMessage({
         imgs: () => {
             let max;
             /seriesvip/.test(siteUrl) ? max = fun.gt("a.cur~a:last-child") - 2 : max = fun.gt("a.cur~a:last-child") - 1;
-            return fun.getImgIframe(".ptview>img[alt]:not([style])", max, 13, [null, null], ".setnmh-pagedos", 1000, 0);
+            return fun.getImgIframe(".ptview>img[alt]:not([style])", max, 13, ".setnmh-pagedos", 1000, 0);
         },
         insertImg: [".ptview", 1, 0],
         autoDownload: [0],
@@ -12304,7 +12365,7 @@ window.parent.postMessage({
         imgs: () => {
             let max;
             /seriesvip/.test(siteUrl) ? max = fun.gt("a.cur~a:last-child") - 2 : max = fun.gt("a.cur~a:last-child") - 1;
-            return fun.getImgIframe(".ptview>img[alt]:not([style])", max, 13, [null, null], ".setnmh-pagedos,.pagedosw", 1000, 0);
+            return fun.getImgIframe(".ptview>img[alt]:not([style])", max, 13, ".setnmh-pagedos,.pagedosw", 1000, 0);
         },
         insertImg: [".ptview", 1, 0],
         autoDownload: [0],
@@ -12625,6 +12686,7 @@ window.parent.postMessage({
                 }
             };
             document.addEventListener("keydown", keyToggleToolbar);
+            fun.showMsg(displayLanguage.str_05, 0);
             let host = location.host.replace("www.", "");
             let api = siteUrl.replace(/.*?(?=\/comic\/)/, `https://api.${host}/api/v3`);
             let json = await fetch(api).then(res => res.json());
@@ -12651,7 +12713,7 @@ window.parent.postMessage({
             let host = location.host.replace("www.", "");
             let api = nextLink.replace(/.*?(?=\/comic\/)/, `https://api.${host}/api/v3`);
             fetch(api).then(res => res.json()).then(json => {
-                let arr = json.results.chapter.contents.map(e => e.url);
+                let arr = json.results.chapter.contents.map(e => e.url.replace("c800x.", "c1500x."));
                 let title = json.results.comic.name + " - " + json.results.chapter.name;
                 fun.picPreload(arr, title, "next");
             });
@@ -12666,7 +12728,7 @@ window.parent.postMessage({
         delay: 300,
         init: async () => {
             fun.run("$(document).unbind();document[_0x1f93('0x1b')][_0x1f93('0x27')]=null;");
-            if (typeof aboutBlank === "function") fun.run("aboutBlank=()=>{};");
+            if (isFn(aboutBlank)) fun.run("aboutBlank=()=>{};");
             fun.clearAllTimer();
             await fun.waitEle(".tab-pane.show.active a");
             const updateLastChapter = () => {
@@ -12716,7 +12778,7 @@ window.parent.postMessage({
             });
         },
         init: async () => {
-            if (typeof aboutBlank === "function") fun.run("aboutBlank=()=>{};");
+            if (isFn(aboutBlank)) fun.run("aboutBlank=()=>{};");
             fun.clearAllTimer();
             siteJson = await siteData.xhr();
             debug("\n此頁JSON資料\n", siteJson);
@@ -12761,7 +12823,7 @@ window.parent.postMessage({
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let max = fun.ge("#total", doc).value;
             let links = fun.arr(max).map((_, i) => fun.getModeUrl(url, 20, (i + 1)));
-            return fun.getImgA("#ComicPic", links, 100, [null, null], msg, request);
+            return fun.getImgA("#ComicPic", links, 100, null, msg, request);
         },
         button: [4],
         insertImg: ["//div[img[@id='ComicPic']]", 2],
@@ -12784,7 +12846,7 @@ window.parent.postMessage({
         imgs: (url = siteUrl, doc, msg = 1, request = 0) => {
             let max = fun.ge("#total", doc).value;
             let links = fun.arr(max).map((_, i) => url.replace(/\d+\.html$/, "") + (i + 1) + ".html");
-            return fun.getImgA("#cpimg", links, 100, [null, null], msg, request);
+            return fun.getImgA("#cpimg", links, 100, null, msg, request);
         },
         button: [4],
         insertImg: ["#showimage", 2],
@@ -12997,7 +13059,7 @@ document.body.appendChild(text);
         },
         customTitle: async () => {
             await fun.delay(1500, 0);
-            return fun.gt('#crumbComicLink') + " - " + fun.gt('.chapter-title').trim();
+            return fun.gt("#crumbComicLink") + " - " + fun.gt(".chapter-title").trim();
         },
         category: "comic"
     }, {
@@ -13055,6 +13117,7 @@ document.body.appendChild(text);
                 });
             }
             await fun.waitEle(".content-img.lazy_img[src^=blob]");
+            if (autoScrollAllElement === 1) siteData.scrollEle();
         },
         imgs: () => fun.imgBlobArr(".content-img[src^=blob]"),
         scrollEle: () => fun.aotoScrollEles(".img-content .content-img", (img) => /^blob/.test(img.src)),
@@ -13942,8 +14005,16 @@ document.body.appendChild(text);
     }];
 
     const debug = (str, obj = "", title = "debug") => console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
-
     const hasTouchEvents = () => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;
+    const isString = str => Object.prototype.toString.call(str) === "[object String]";
+    const isNumber = num => Object.prototype.toString.call(num) === "[object Number]";
+    const isBoolean = b => Object.prototype.toString.call(b) === "[object Boolean]";
+    const isRegExp = reg => Object.prototype.toString.call(reg) === "[object RegExp]";
+    const isObject = obj => Object.prototype.toString.call(obj) === "[object Object]";
+    const isArray = arr => Object.prototype.toString.call(arr) === "[object Array]";
+    const isFn = fn => ["[object Function]", "[object AsyncFunction]"].includes(Object.prototype.toString.call(fn));
+    const isPromise = p => Object.prototype.toString.call(p) === "[object Promise]";
+    const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e));
 
     const addLibrarysV3 = async () => {
         try {
@@ -13992,8 +14063,8 @@ document.body.appendChild(text);
             const jsdelivrLibrarys = [
                 "https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js",
                 "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css"
+                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js",
+                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css"
             ];
             const bootcdnLibrarys = [
                 "https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js",
@@ -14100,7 +14171,7 @@ document.body.appendChild(text);
         };
     }
 
-    const fancyboxBlackList = () => siteData.fancybox && siteData.fancybox.blacklist === 1 ? true : false;
+    const fancyboxBlackList = () => siteData?.fancybox?.blacklist === 1 ? true : false;
 
     switch (language) {
         case "zh-TW":
@@ -14217,7 +14288,13 @@ document.body.appendChild(text);
                 str_107: hasTouchEvents() ? "一鍵下載" : "一鍵下載(3)",
                 str_108: "※訊息顯示的位置 ( 0 ~ 4 )：",
                 str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
-                str_110: "※Webp轉換為Jpg"
+                str_110: "※Webp轉換為Jpg",
+                str_111: "惰性載入大圖",
+                str_112: "惰性載入單欄布局",
+                str_113: "惰性載入預讀大圖",
+                str_114: "E/EX-HENTAI 載入原始圖片鏈結",
+                str_115: "關閉自動捲動至首張圖片",
+                str_116: "自動捲動所有惰性載入的圖片元素"
             };
             break;
         case "zh":
@@ -14269,7 +14346,7 @@ document.body.appendChild(text);
                 str_43: "下载失败数据为空...",
                 str_44: "没有任何图片元素...",
                 str_45: "网址已拷贝",
-                str_46: "即将进行卷动...",
+                str_46: "即将进行滚动...",
                 str_47: "左键：进行下载打包压缩\n中键：导出网址URLs.txt文档\n右键：拷贝图片网址和标题或聚集所有图片",
                 str_48: "下载&压缩中请稍后再操作！",
                 str_49: "获取图片中请稍后再操作！",
@@ -14333,7 +14410,13 @@ document.body.appendChild(text);
                 str_107: hasTouchEvents() ? "一键下载" : "一键下载(3)",
                 str_108: "※讯息显示的位置 ( 0 ~ 4 )：",
                 str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
-                str_110: "※Webp转换为Jpg"
+                str_110: "※Webp转换为Jpg",
+                str_111: "懒加载大图",
+                str_112: "懒加载单栏布局",
+                str_113: "懒加载预读大图",
+                str_114: "E/EX-HENTAI 加载原始图片链结",
+                str_115: "关闭自动滚动至首张图片",
+                str_116: "自动滚动所有懒加载的图片元素"
             };
             break;
         default:
@@ -14447,16 +14530,22 @@ document.body.appendChild(text);
                 str_107: hasTouchEvents() ? "Download" : "Fast Download(3)",
                 str_108: "※Where the message appears ( 0 ~ 4 )：",
                 str_109: "0: Center, 1: Upper left, 2: Upper right, 3: Lower left, 4: Lower right",
-                str_110: "※Convert Webp to Jpg"
+                str_110: "※Convert Webp to Jpg",
+                str_111: "Lazy Load Full Resolution",
+                str_112: "Lazy Load Single Column Layout",
+                str_113: "Lazy Load Preload Images",
+                str_114: "E/EX-HENTAI Load Original Image",
+                str_115: "Turn Off Auto Scroll To First Image",
+                str_116: "Auto Scroll All Image Elements"
             };
             break;
     }
 
-    const _GM_xmlhttpRequest = (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : GM.xmlHttpRequest)();
-    const _GM_openInTab = (() => typeof GM_openInTab != "undefined" ? GM_openInTab : GM.openInTab)();
-    const _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : GM.getValue)();
-    const _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : GM.setValue)();
-    const _GM_registerMenuCommand = (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : GM.registerMenuCommand)();
+    const _GM_xmlhttpRequest = (() => isFn(GM_xmlhttpRequest) ? GM_xmlhttpRequest : GM.xmlHttpRequest)();
+    const _GM_openInTab = (() => isFn(GM_openInTab) ? GM_openInTab : GM.openInTab)();
+    const _GM_getValue = (() => isFn(GM_getValue) ? GM_getValue : GM.getValue)();
+    const _GM_setValue = (() => isFn(GM_setValue) ? GM_setValue : GM.setValue)();
+    const _GM_registerMenuCommand = (() => isFn(GM_registerMenuCommand) ? GM_registerMenuCommand : GM.registerMenuCommand)();
 
     _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
 
@@ -14557,9 +14646,9 @@ document.body.appendChild(text);
                 setTimeout(() => fun.showMsg(`${displayLanguage.str_97}${fetchErrorArray.length}${displayLanguage.str_98}`, 10000), 1500);
             }
         },
-        getImg: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 50, url = siteUrl, msg = 1, request = 0) => {
+        getImg: async (img, maxPage = 1, mode = 1, rText = null, time = 50, url = siteUrl, msg = 1, request = 0) => {
             if (fun.ge(".FullPictureLoadImage") && request == 0) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
-            fetching = true;
+            isFetching = true;
             if (!getImgFn.includes("getImg()")) getImgFn += " > fun.getImg()";
             if (msg == 1) fun.showMsg(displayLanguage.str_01, 0);
             let imgsArray = [];
@@ -14588,7 +14677,7 @@ document.body.appendChild(text);
                 }
             }
             await Promise.all(resArr).then(htmls => {
-                fetching = false;
+                isFetching = false;
                 if (msg == 1) fun.hideMsg();
                 for (let i = 0; i < htmls.length; i++) {
                     let doc = fun.doc(htmls[i]);
@@ -14603,9 +14692,9 @@ document.body.appendChild(text);
             fun.fetchErrorMsg();
             return imgsArray;
         },
-        getImgO: async (img, maxPage = 1, mode = 1, rText = [null, null], time = 200, replaceElement = null, url = siteUrl, msg = 1, request = 0) => {
+        getImgO: async (img, maxPage = 1, mode = 1, rText = null, time = 200, replaceElement = null, url = siteUrl, msg = 1, request = 0) => {
             if (fun.ge(".FullPictureLoadImage") && request == 0) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
-            fetching = true;
+            isFetching = true;
             if (!getImgFn.includes("getImgO()")) getImgFn += " > fun.getImgO()";
             if (msg == 1) fun.showMsg(displayLanguage.str_01, 0);
             let imgsArray = [];
@@ -14631,7 +14720,7 @@ document.body.appendChild(text);
                             targetEle.parentNode.insertBefore(ele.cloneNode(true), targetEle.nextSibling);
                         }
                     });
-                    if (typeof replaceElement == "string") {
+                    if (isString(replaceElement)) {
                         [...fun.gae(".invisible", doc)].forEach(ele => ele.classList.remove("invisible"));
                         let currentPageEles = [...fun.gae(replaceElement)];
                         let nextPageEles = [...fun.gae(replaceElement, doc)];
@@ -14655,7 +14744,7 @@ document.body.appendChild(text);
                 }
             }
             await Promise.all(resArr).then(htmls => {
-                fetching = false;
+                isFetching = false;
                 fun.hideMsg();
                 for (let i = 0; i < htmls.length; i++) {
                     let doc = fun.doc(htmls[i]);
@@ -14670,9 +14759,9 @@ document.body.appendChild(text);
             fun.fetchErrorMsg();
             return imgsArray;
         },
-        getImgIframe: async (img, maxPage = 1, mode = 1, rText = [null, null], rEle = null, time = 500, showMsg = 1) => {
+        getImgIframe: async (img, maxPage = 1, mode = 1, rEle = null, time = 500, showMsg = 1) => {
             if (fun.ge(".FullPictureLoadImage")) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
-            fetching = true;
+            isFetching = true;
             if (!getImgFn.includes("getImgIframe()")) getImgFn += " > fun.getImgIframe()";
             if (showMsg == 1) fun.showMsg(displayLanguage.str_01, 0);
             let imgsArray = [];
@@ -14686,7 +14775,7 @@ document.body.appendChild(text);
                 load.innerText = "Loading...";
                 targetEle.parentNode.insertBefore(load, targetEle.nextSibling);
                 await fun.delay(time, 0);
-                let doc;
+                let doc = null;
                 for (let i = 1; i < 20; i++) {
                     doc = await fun.iframeSrcDoc(url, img);
                     if (doc !== null) {
@@ -14730,26 +14819,26 @@ document.body.appendChild(text);
                 }
             }
             debug("\nfun.getImgiframe() 聚集的所有IMG", imgsArray);
-            fetching = false;
+            isFetching = false;
             fun.hideMsg();
             fun.fetchErrorMsg();
             return imgsArray;
         },
-        getImgA: async (img, link, mode = 0, rText = [null, null], showMsg = 1, request = 0) => { //從指定的所有鏈接抓圖片
+        getImgA: async (img, link, mode = 0, rText = null, showMsg = 1, request = 0) => { //從指定的所有鏈接抓圖片
             if (fun.ge(".FullPictureLoadImage") && request == 0) return [...fun.gae(".FullPictureLoadImage:not(.small)")];
-            fetching = true;
+            isFetching = true;
             if (!getImgFn.includes("getImgA()")) getImgFn += " > fun.getImgA()";
             if (showMsg == 1) fun.showMsg(displayLanguage.str_01, 0);
             let links, linkEles, linksNum;
-            if (typeof link == "function") {
+            if (isFn(link)) {
                 links = await link();
                 linksNum = links.length;
-            } else if (typeof link == "object") {
+            } else if (isArray(link)) {
                 links = link;
                 linksNum = links.length;
-            } else if (typeof link == "string") {
+            } else if (isString(link)) {
                 linkEles = [...fun.gae(link)];
-                links = [...new Set([...fun.gae(link)].map(a => a.href))];
+                links = [...new Set(linkEles.map(a => a.href))];
                 linksNum = parseInt(links.length, 10) + 1;
             } else {
                 console.error("\nfun.getImgA() link參數錯誤");
@@ -14774,7 +14863,7 @@ document.body.appendChild(text);
                 console.error(`\nfun.getImgA fetch()出錯:\n${decodeURIComponent(url)}`, error);
             });
             const resArr = [];
-            if (typeof link != "object") resArr.push(html(siteUrl));
+            if (isString(link)) resArr.push(html(siteUrl));
             for (let i = 0; i < links.length; i++) {
                 if (mode == 0) {
                     resArr.push(html(links[i]));
@@ -14807,7 +14896,7 @@ document.body.appendChild(text);
                 }
             }
             await Promise.all(resArr).then(htmls => {
-                fetching = false;
+                isFetching = false;
                 fun.hideMsg();
                 for (let i = 0; i < htmls.length; i++) {
                     let doc = fun.doc(htmls[i]);
@@ -14823,11 +14912,11 @@ document.body.appendChild(text);
             return imgsArray;
         },
         getImgCorsA: (imgSelector, aSelector, time = 100) => {
-            fetching = true;
+            isFetching = true;
             fun.showMsg(displayLanguage.str_01, 0);
             let xhrNum = 0;
             let links;
-            typeof aSelector === "string" ? links = [...fun.gae(aSelector)].map(a => a.href) : links = aSelector;
+            isString(aSelector) ? links = [...fun.gae(aSelector)].map(a => a.href) : links = aSelector;
             let resArr = links.map(async (url, i, arr) => {
                 await fun.delay(time * i, 0);
                 return fun.xhrDoc(url).then(doc => {
@@ -14836,44 +14925,44 @@ document.body.appendChild(text);
                 });
             });
             return Promise.all(resArr).then(arr => {
-                fetching = false;
+                isFetching = false;
                 fun.hideMsg();
                 return fun.getImgSrcArr(arr.flat());
             });
         },
-        checkImgSrc: (ele, rText = [null, null]) => {
+        checkImgSrc: (ele, rText = null) => {
             let imgSrc;
             let check = fun.checkDataset(ele);
-            if (ele.tagName == "IMG" && check.ok || ele.tagName == "DIV" && check.ok || ele.tagName == "A" && check.ok || ele.tagName == "SPAN" && check.ok) {
+            if (isEle(ele) && ["IMG", "DIV", "A", "SPAN"].includes(ele.tagName) && check.ok) {
                 imgSrc = check.src;
                 if (/^\/\//.test(imgSrc)) imgSrc = location.protocol + imgSrc;
                 if (/^\/\w+/.test(imgSrc)) imgSrc = location.origin + imgSrc;
                 if (!/^(http|blob)/.test(imgSrc) && !/^data/.test(imgSrc) && /^\w+/.test(imgSrc)) imgSrc = location.origin + "/" + imgSrc;
-                if (rText[0]) imgSrc = imgSrc.replace(rText[0], rText[1]);
+                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
                 return {
                     ok: true,
                     src: imgSrc
                 };
-            } else if (ele.tagName == "IMG" || ele.tagName == "AMP-IMG") {
+            } else if (isEle(ele) && ["IMG", "AMP-IMG"].includes(ele.tagName)) {
                 if (ele.tagName == "IMG") imgSrc = ele.src;
-                if (ele.tagName == "AMP-IMG") imgSrc = ele.getAttribute('src');
+                if (ele.tagName == "AMP-IMG") imgSrc = ele.getAttribute("src");
                 if (/^\/\//.test(imgSrc)) imgSrc = location.protocol + imgSrc;
-                if (rText[0]) imgSrc = imgSrc.replace(rText[0], rText[1]);
+                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
                 return {
                     ok: true,
                     src: imgSrc
                 };
             } else if (ele.tagName == "A") {
                 imgSrc = ele.href;
-                if (rText[0]) imgSrc = imgSrc.replace(rText[0], rText[1]);
+                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
                 return {
                     ok: true,
                     src: imgSrc
                 };
-            } else if (/^(http|blob|\/\/)/.test(ele)) {
+            } else if (isString(ele) && /^(http|blob|\/\/)/.test(ele)) {
                 imgSrc = ele;
                 if (/^\/\//.test(ele)) imgSrc = location.protocol + imgSrc;
-                if (rText[0]) imgSrc = imgSrc.replace(rText[0], rText[1]);
+                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
                 return {
                     ok: true,
                     src: imgSrc
@@ -14884,7 +14973,7 @@ document.body.appendChild(text);
             };
         },
         checkDataset: ele => {
-            if (ele.tagName == "IMG" || ele.tagName == "DIV" || ele.tagName == "A" || ele.tagName == "SPAN") {
+            if (["IMG", "DIV", "A", "SPAN"].includes(ele.tagName)) {
                 const setArr = ["data-orig-file", "data-src", "data-original", "data-url", "data-thumb", "data-echo", "data-ecp", "data-lazyload-src", "data-lazy-src", "data-lazy", "lazysrc", "data-lazyload", "file", "zoomfile", "data-lbwps-srcsmall", "original", "mydatasrc", "ess-data", "data-cfsrc", "data-pin-media", "data-mfp-src"];
                 for (let i = 0; i < setArr.length; i++) {
                     let imgSrc = ele.getAttribute(setArr[i]);
@@ -14946,7 +15035,7 @@ document.body.appendChild(text);
         },
         getImgSrcArr: (img, doc = document) => {
             let imgs;
-            typeof img === "string" ? imgs = [...fun.gae(img, doc)] : imgs = img;
+            isString(img) ? imgs = [...fun.gae(img, doc)] : imgs = img;
             return imgs.map(ele => {
                 let check = fun.checkImgSrc(ele);
                 return check.ok ? check.src : null;
@@ -14956,21 +15045,19 @@ document.body.appendChild(text);
             //翻頁模式聚集所有圖片或是預覽縮圖然後fun.getImgA()
             //用在規則init，fun.getNP(picsEle, nextLinkEle, lastEle, replaceElement, time);
             if (fun.ge(".FullPictureLoadImage")) return;
-            if (typeof nextLinkEle === "string") {
-                if (!fun.ge(nextLinkEle)) return;
-            }
-            fetching = true;
+            if (isString(nextLinkEle) && !fun.ge(nextLinkEle)) return;
+            isFetching = true;
             if (!getImgFn.includes("getNP()")) getImgFn += " > fun.getNP()";
             let nextlink = null;
             let page = 1;
             if (mag == 1) fun.showMsg(displayLanguage.str_14, 0);
             const getNextLink = async (url = "", doc = document) => {
-                if (typeof nextLinkEle === "function") {
-                    nextlink = await nextLinkEle();
-                } else if (typeof nextLinkEle === "string") {
+                if (isFn(nextLinkEle)) {
+                    nextlink = await nextLinkEle(doc);
+                } else if (isString(nextLinkEle)) {
                     let ele = fun.ge(nextLinkEle, doc);
                     if (ele) {
-                        if (ele.dataset.url) {
+                        if (ele?.dataset?.url) {
                             if (!/^http/.test(ele.dataset.url)) return null;
                             nextlink = ele.dataset.url;
                         } else if (ele.tagName === "A") {
@@ -14991,7 +15078,7 @@ document.body.appendChild(text);
                 } else {
                     nextlink = null;
                 }
-                if (typeof url === "string" && typeof nextlink === "string" && (url === nextlink)) {
+                if (isString(url) && isString(nextlink) && (url === nextlink)) {
                     if (mag == 1) fun.showMsg(displayLanguage.str_15);
                     nextlink = null;
                 }
@@ -15022,13 +15109,13 @@ document.body.appendChild(text);
                         }
                     }
                     if (!doc) doc = fun.doc(htmlText);
-                    if (typeof dataset === "string") {
+                    if (isString(dataset)) {
                         [...fun.gae(dataset, doc)].forEach(e => {
                             let check = fun.checkImgSrc(e);
                             if (check.ok) {
                                 if (e.tagName == "IMG") {
                                     e.src = check.src;
-                                } else if (e.tagName == "A" || e.tagName == "DIV") {
+                                } else if (["A", "DIV"].includes(e.tagName)) {
                                     e.style.backgroundImage = `url(${check.src})`;
                                 }
                             }
@@ -15037,15 +15124,20 @@ document.body.appendChild(text);
                     debug(`\nfun.getNP() > getNextPageEles() DOM\n${decodeURIComponent(url)}`, doc);
                     let eles = [...fun.gae(pageEle, doc)];
                     let lastPage = null;
-                    if (typeof lastEle === "string") {
+                    if (isString(lastEle)) {
                         lastPage = fun.ge(lastEle, doc);
-                    } else if (typeof lastEle === "function") {
+                    } else if (isFn(lastEle)) {
                         try {
                             lastPage = await lastEle(doc);
                         } catch (error) {
                             debug("fun.getNP() lastEle() 函式錯誤", error);
                             lastPage = null;
                         }
+                    }
+                    if (lastPage) {
+                        isFetching = false;
+                        if (mag == 1) fun.showMsg(displayLanguage.str_15);
+                        return;
                     }
                     let fragment = new DocumentFragment();
                     eles.forEach(ele => fragment.appendChild(ele.cloneNode(true)));
@@ -15065,17 +15157,12 @@ document.body.appendChild(text);
                             }
                         }
                     }
-                    if (lastPage) {
-                        fetching = false;
-                        if (mag == 1) fun.showMsg(displayLanguage.str_15);
-                        return;
-                    }
                     nextlink = await getNextLink(url, doc);
                     if (nextlink) {
                         await fun.delay(time, 0);
                         await getNextPageEles(nextlink);
                     } else {
-                        fetching = false;
+                        isFetching = false;
                         if (mag == 1) fun.showMsg(displayLanguage.str_15);
                         return;
                     }
@@ -15086,7 +15173,7 @@ document.body.appendChild(text);
                 await fun.delay(time, 0);
                 await getNextPageEles(nextlink);
             } else {
-                fetching = false;
+                isFetching = false;
                 if (mag == 1) fun.showMsg(displayLanguage.str_15);
                 return;
             }
@@ -15110,8 +15197,9 @@ document.body.appendChild(text);
                 return;
             }
             fun.addLoading();
-            if (siteData.autoPager.mode == 1) {
-                doc = await fun.iframeDoc(url, (siteData.autoPager.waitEle || siteData.autoPager.ele), 30000);
+            let mode = siteData?.autoPager?.mode;
+            if (isNumber(mode) && mode == 1) {
+                doc = await fun.iframeDoc(url, (siteData.autoPager?.waitEle || siteData.autoPager?.ele), 30000);
             } else {
                 try {
                     doc = await fun.fetchDoc(url, 0);
@@ -15120,10 +15208,11 @@ document.body.appendChild(text);
                 }
             }
             debug(`\nfun.autoPager()\n${url}\n`, doc);
-            if (siteData.autoPager.stop) {
+            let stop = siteData?.autoPager?.stop;
+            if (isFn(stop)) {
                 let check;
                 try {
-                    check = await siteData.autoPager.stop(doc);
+                    check = await stop(doc);
                 } catch (error) {
                     console.error("\nsiteData.autoPager.stop() 函式錯誤\n", error);
                     check = false;
@@ -15135,8 +15224,9 @@ document.body.appendChild(text);
                     return;
                 }
             }
-            if (siteData.autoPager.script) {
-                let scripts = [...fun.gae(siteData.autoPager.script, doc)];
+            let script = siteData?.autoPager?.script;
+            if (isString(script)) {
+                let scripts = [...fun.gae(script, doc)];
                 for (let i = 0; i < scripts.length; i++) {
                     if (scripts[i].src) {
                         await fun.script(scripts[i].src, 1, 1);
@@ -15146,8 +15236,9 @@ document.body.appendChild(text);
                     }
                 }
             }
-            if (siteData.autoPager.lazySrc) {
-                let eles = [...fun.gae(siteData.autoPager.lazySrc, doc)];
+            let lazySrc = siteData?.autoPager?.lazySrc;
+            if (isString(lazySrc)) {
+                let eles = [...fun.gae(lazySrc, doc)];
                 for (let i = 0; i < eles.length; i++) {
                     let check = fun.checkDataset(eles[i]);
                     if (check.ok) {
@@ -15159,10 +15250,12 @@ document.body.appendChild(text);
                     }
                 }
             }
-            if (typeof siteData.autoPager.bF === "function") await siteData.autoPager.bF(doc);
-            if (siteData.autoPager.re) {
-                let currentPageEles = [...fun.gae(siteData.autoPager.re)];
-                let nextPageEles = [...fun.gae(siteData.autoPager.re, doc)];
+            let bF = siteData?.autoPager?.bF;
+            if (isFn(bF)) await bF(doc);
+            let re = siteData?.autoPager?.re;
+            if (isString(re)) {
+                let currentPageEles = [...fun.gae(re)];
+                let nextPageEles = [...fun.gae(re, doc)];
                 if (currentPageEles.length === nextPageEles.length) {
                     for (let i in currentPageEles) {
                         currentPageEles[i].outerHTML = nextPageEles[i].outerHTML;
@@ -15170,31 +15263,31 @@ document.body.appendChild(text);
                 }
             }
             let newEle, tE;
-            if (typeof siteData.autoPager.ele === "function" && siteData.autoPager.pos || typeof siteData.autoPager.ele === "string") {
-                if (typeof siteData.autoPager.ele === "function") newEle = await siteData.autoPager.ele(doc);
-                if (typeof siteData.autoPager.ele === "string") {
-                    let nextEle = fun.ge(siteData.autoPager.ele, doc);
+            let eleSelector = siteData?.autoPager?.ele;
+            let pos = siteData?.autoPager?.pos;
+            if (isFn(eleSelector) && pos || isString(eleSelector)) {
+                if (isFn(eleSelector)) {
+                    newEle = await eleSelector(doc);
+                } else if (isString(eleSelector)) {
+                    let nextEle = fun.ge(eleSelector, doc);
                     if (!nextEle) {
                         fun.removeLoading();
                         fun.showMsg(displayLanguage.str_59, 3000);
                         return;
                     }
-                    tE = [...fun.gae(siteData.autoPager.ele)].at(-1);
-                    newEle = [...fun.gae(siteData.autoPager.ele, doc)];
+                    tE = [...fun.gae(eleSelector)].at(-1);
+                    newEle = [...fun.gae(eleSelector, doc)];
                 }
                 let fragment = new DocumentFragment();
-                if (siteData.autoPager.showTitle !== 0) {
+                if (siteData?.autoPager?.showTitle !== 0) {
                     let add = true;
                     let titleText = null;
-                    if (typeof siteData.autoPager.title === "function") {
+                    let title = siteData?.autoPager?.title;
+                    if (isFn(title)) {
                         try {
-                            titleText = await siteData.autoPager.title(doc);
-                            if (typeof titleText === "object") {
-                                if (titleText.ok) {
-                                    titleText = titleText.text;
-                                } else {
-                                    add = false;
-                                }
+                            titleText = await title(doc);
+                            if (isObject(titleText)) {
+                                titleText.ok ? titleText = titleText.text : add = false;
                             }
                         } catch (error) {
                             console.error("\nsiteData.autoPager.title() 函式錯誤\n", error);
@@ -15203,27 +15296,29 @@ document.body.appendChild(text);
                     if (add) fragment.appendChild(await fun.titleUrlEle(url, (titleText || doc.title || document.title)));
                 }
                 newEle.forEach(e => fragment.appendChild(e.cloneNode(true)));
-                if (siteData.autoPager.pos) {
-                    tE = fun.ge(siteData.autoPager.pos[0]);
-                    if (siteData.autoPager.pos[1] === 0) { //元素裡面
+                if (isArray(pos) && pos.length == 2 && isString(pos[0]) && isNumber(pos[1])) {
+                    tE = fun.ge(pos[0]);
+                    if (pos[1] === 0) { //元素裡面
                         tE.appendChild(fragment);
-                    } else if (siteData.autoPager.pos[1] === 1) { //元素之前
+                    } else if (pos[1] === 1) { //元素之前
                         tE.parentNode.insertBefore(fragment, tE);
-                    } else if (siteData.autoPager.pos[1] === 2) { //元素之後
+                    } else if (pos[1] === 2) { //元素之後
                         tE.parentNode.insertBefore(fragment, tE.nextSibling);
                     }
                 } else {
                     tE.parentNode.insertBefore(fragment, tE.nextSibling);
                 }
-            } else if (typeof siteData.autoPager.ele === "function") {
+            } else if (isFn(siteData.autoPager.ele)) {
                 await siteData.autoPager.ele(doc);
             }
-            if (typeof siteData.autoPager.aF === "function") await siteData.autoPager.aF(doc);
+            let aF = siteData?.autoPager?.aF;
+            if (isFn(aF)) await aF(doc);
             fun.removeLoading();
-            if (siteData.autoPager.history == 1) fun.addHistory(doc?.title || document.title, url);
-            if (siteData.autoPager.observer) {
-                await fun.delay(siteData.autoPager.sleep || 1000, 0);
-                let ele = [...fun.gae(siteData.autoPager.observer)].at(-1);
+            if (siteData?.autoPager?.history == 1) fun.addHistory(doc?.title || document.title, url);
+            let observer = siteData?.autoPager?.observer;
+            if (isString(observer)) {
+                await fun.delay(siteData?.autoPager?.sleep || 1000, 0);
+                let ele = [...fun.gae(observer)].at(-1);
                 fun.autoPagerNextObserver.observe(ele);
             }
         },
@@ -15236,7 +15331,7 @@ document.body.appendChild(text);
                 iframe.src = url;
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 //iframe.style.display = "none";
-                iframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;';
+                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 document.body.appendChild(iframe);
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
@@ -15250,8 +15345,8 @@ document.body.appendChild(text);
                     } catch (e) {
                         await fun.delay(200, 0);
                     }
-                    if (typeof ele === "string") await fun.waitEle(ele, 600, doc);
-                    if (typeof callback === "function") {
+                    if (isString(ele)) await fun.waitEle(ele, 600, doc);
+                    if (isFn(callback)) {
                         await fun.delay(200, 0);
                         await callback(doc, fun);
                         await fun.delay(200, 0);
@@ -15287,7 +15382,7 @@ document.body.appendChild(text);
                 iframe.srcdoc = resText;
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 //iframe.style.display = "none";
-                iframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;';
+                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 document.body.appendChild(iframe);
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
@@ -15301,8 +15396,8 @@ document.body.appendChild(text);
                     } catch (e) {
                         await fun.delay(200, 0);
                     }
-                    if (typeof ele === "string") await fun.waitEle(ele, 600, doc);
-                    if (typeof callback === "function") {
+                    if (isString(ele)) await fun.waitEle(ele, 600, doc);
+                    if (isFn(callback)) {
                         await fun.delay(200, 0);
                         await callback(doc, fun);
                         await fun.delay(200, 0);
@@ -15325,13 +15420,9 @@ document.body.appendChild(text);
             iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
             document.body.appendChild(iframe);
             await fun.delay(time, 0);
-            //await new Promise((resolve) => (iframe.onload = resolve));
-            //let doc = iframe.contentDocument || iframe.contentWindow.document;
-            //await fun.waitEle(selector, doc);
             await new Promise(resolve => {
                 let loop = setInterval(() => {
-                    //console.log("typeof iframe.contentWindow[declares]", typeof iframe.contentWindow[declares]);
-                    if (typeof iframe.contentWindow[declares] != "undefined") {
+                    if (declares in iframe.contentWindow) {
                         clearInterval(loop);
                         resolve();
                     }
@@ -15349,12 +15440,13 @@ document.body.appendChild(text);
             });
         }),
         getNextLink: async doc => {
-            if (typeof siteData.autoPager.next === "function") {
-                let nextCode = await siteData.autoPager.next(doc);
+            let nextSelector = siteData?.autoPager?.next;
+            if (isFn(nextSelector)) {
+                let nextCode = await nextSelector(doc);
                 if (nextLink === nextCode) return null;
                 nextLink = nextCode;
-            } else if (typeof siteData.autoPager.next === "string") {
-                let nextEle = fun.ge(siteData.autoPager.next, doc);
+            } else if (isString(nextSelector)) {
+                let nextEle = fun.ge(nextSelector, doc);
                 try {
                     if (!nextEle || (nextEle && (nextLink === nextEle.href))) return null;
                 } catch (error) {
@@ -15385,7 +15477,7 @@ document.body.appendChild(text);
             return div;
         },
         addLoading: () => {
-            if (siteData.autoPager.loading === "msg") {
+            if (siteData?.autoPager?.loading === "msg") {
                 fun.showMsg(displayLanguage.str_57, 0);
             } else {
                 try {
@@ -15393,17 +15485,18 @@ document.body.appendChild(text);
                     img.className = "autoPagerLoading";
                     img.src = autoPagerLoading;
                     let tE;
-                    if (siteData.autoPager.pos) {
-                        tE = fun.ge(siteData.autoPager.pos[0]);
-                        if (siteData.autoPager.pos[1] === 0) { //元素裡面
+                    let pos = siteData?.autoPager?.pos;
+                    if (isArray(pos) && pos.length == 2 && isString(pos[0]) && isNumber(pos[1])) {
+                        tE = fun.ge(pos[0]);
+                        if (pos[1] === 0) { //元素裡面
                             tE.appendChild(img);
-                        } else if (siteData.autoPager.pos[1] === 1) { //元素之前
+                        } else if (pos[1] === 1) { //元素之前
                             tE.parentNode.insertBefore(img, tE);
-                        } else if (siteData.autoPager.pos[1] === 2) { //元素之後
+                        } else if (pos[1] === 2) { //元素之後
                             tE.parentNode.insertBefore(img, tE.nextSibling);
                         }
                     } else {
-                        tE = [...fun.gae(siteData.autoPager.ele)].at(-1);
+                        tE = [...fun.gae(siteData?.autoPager?.ele)].at(-1);
                         tE.parentNode.insertBefore(img, tE.nextSibling);
                     }
                 } catch (e) {
@@ -15412,7 +15505,7 @@ document.body.appendChild(text);
             }
         },
         removeLoading: () => {
-            if (siteData.autoPager.loading === "msg") {
+            if (siteData?.autoPager?.loading === "msg") {
                 fun.hideMsg();
             } else {
                 try {
@@ -15429,7 +15522,7 @@ document.body.appendChild(text);
         openInNewTab: (selector, doc = document) => [...fun.gae(selector, doc)].forEach(a => a.setAttribute("target", "_blank")),
         getEle: async (links, elements, targetEle, removeEles = null, time = 100) => {
             if (fun.ge(".FullPictureLoadImage")) return;
-            fetching = true;
+            isFetching = true;
             if (!getImgFn.includes("getEle()")) getImgFn += " > fun.getEle() > [...fun.gae()]";
             let resArr = [];
             let xhrNum = 0;
@@ -15445,17 +15538,17 @@ document.body.appendChild(text);
                 await fun.delay(time, 0);
             }
             await Promise.all(resArr).then(arr => arr.flat()).then(eles => {
-                fetching = false;
+                isFetching = false;
                 fun.hideMsg();
                 let ele;
                 let fragment = new DocumentFragment();
                 eles.forEach(e => fragment.appendChild(e.cloneNode(true)));
-                if (typeof targetEle == "object") {
+                if (isArray(targetEle) && targetEle.length == 2 && isString(targetEle[0]) && isNumber(targetEle[1])) {
                     ele = fun.ge(targetEle[0]);
                     if (targetEle[1] == 0) ele.appendChild(fragment);
                     else if (targetEle[1] == 1) ele.parentNode.insertBefore(fragment, ele);
                     else if (targetEle[1] == 2) ele.parentNode.insertBefore(fragment, ele.nextSibling);
-                } else if (typeof targetEle == "string") {
+                } else if (isString(targetEle)) {
                     ele = fun.ge(targetEle);
                     ele.innerHTML = "";
                     ele.appendChild(fragment);
@@ -15518,7 +15611,7 @@ document.body.appendChild(text);
                 } else if (fun.ge("badge.b-black.counter") !== null) {
                     slideIndex = parseInt(fun.gt("badge.b-black.counter").match(/\d+/)[0], 10) - 1;
                 }
-                if (typeof slideIndex === "number") {
+                if (isNumber(slideIndex)) {
                     console.log("open - # " + slideIndex + " slide is open!");
                 }
             };
@@ -15564,7 +15657,7 @@ document.body.appendChild(text);
             if (pos == 1) targetEle.parentNode.insertBefore(div, targetEle);
             if (pos == 2) targetEle.parentNode.insertBefore(div, targetEle.nextSibling);
         },
-        insertImg: (imgsArray, ele, mode = 1) => {
+        insertImg: (imgsArray, ele, mode = 2) => {
             let srcArr = [];
             for (let i = 0; i < imgsArray.length; i++) {
                 let check = fun.checkImgSrc(imgsArray[i]);
@@ -15572,21 +15665,22 @@ document.body.appendChild(text);
             }
             srcArr = [...new Set(srcArr)];
             let fragment = new DocumentFragment();
-            if (siteData.button) {
+            let sb = siteData?.button;
+            if (isArray(sb)) {
                 let buttonDiv = document.createElement("div");
                 buttonDiv.id = "FullPictureLoadOptionsButtonParentDiv";
                 buttonDiv.style.width = "100%";
                 //buttonDiv.style.height = "42px";
                 buttonDiv.style.display = "inline-block";
                 buttonDiv.style.textAlign = "center";
-                if (typeof siteData.button[2] === "number") {
-                    for (let i = 0; i < siteData.button[2]; i++) {
+                if (isNumber(sb[2])) {
+                    for (let i = 0; i < sb[2]; i++) {
                         let br = document.createElement("br");
                         fragment.appendChild(br);
                     }
                 }
                 let width = "24%";
-                if (typeof siteData.button[1] === "string") width = siteData.button[1];
+                if (isString(sb[1])) width = sb[1];
                 const buttonObj = [{
                     id: "FullPictureLoadCopyURLBtn",
                     className: "FullPictureLoadPageButtonTop",
@@ -15760,7 +15854,7 @@ document.body.appendChild(text);
                 if (siteData.insertImg[1] == 2 || siteData.insertImg[1] == 3) fun.picPreload(srcArr);
                 let targetEle;
                 try {
-                    if (typeof ele == "object") {
+                    if (isArray(ele) && isString(ele[0]) && isNumber(ele[1])) {
                         targetEle = fun.ge(ele[0]);
                         if (ele[1] == 0) {
                             targetEle.appendChild(fragment);
@@ -15775,17 +15869,17 @@ document.body.appendChild(text);
                             //targetEle.parentNode.style.textAlign = "center";
                             targetEle.parentNode.style.display = "block";
                         }
-                        if (typeof ele[2] == "string") fun.remove(ele[2]);
-                        if (siteData.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
-                    } else if (typeof ele == "string") {
+                        if (isString(ele[2])) fun.remove(ele[2]);
+                        if (siteData?.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
+                    } else if (isString(ele)) {
                         targetEle = fun.ge(ele);
                         targetEle.innerHTML = "";
                         targetEle.appendChild(fragment);
                         //targetEle.style.textAlign = "center";
                         targetEle.style.display = "block";
-                        if (siteData.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
+                        if (siteData?.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
                     }
-                    if (typeof siteData.insertImgAF == "function") siteData.insertImgAF();
+                    if (isFn(siteData?.insertImgAF)) siteData.insertImgAF();
                 } catch (error) {
                     fun.showMsg(displayLanguage.str_19, 3000);
                     console.error("\nfun.insertImg() ele參數錯誤，或用來定位插入的元素不存在。", error);
@@ -15827,7 +15921,7 @@ document.body.appendChild(text);
                     fun.comicNextObserver.observe(lastImg);
                 }
                 [...fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage")].forEach(e => e.style.display = "block");
-                if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
+                if (options.fancybox == 1 && !blackList && !isObject(siteData?.fancybox)) {
                     try {
                         Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                     } catch (error) {
@@ -16036,7 +16130,7 @@ document.body.appendChild(text);
             return new Promise(resolve => {
                 let loop = setInterval(() => {
                     loopNum += 1;
-                    if (!!fun.ge(ele, doc) === true) {
+                    if (isEle(fun.ge(ele, doc))) {
                         clearInterval(loop);
                         resolve(true);
                     }
@@ -16053,8 +16147,7 @@ document.body.appendChild(text);
             return new Promise(resolve => {
                 let loop = setInterval(() => {
                     loopNum += 1;
-                    //console.log("typeof unsafeWindow[declares]", typeof unsafeWindow[declares]);
-                    if (typeof unsafeWindow[declares] != "undefined") {
+                    if (declares in unsafeWindow) {
                         clearInterval(loop);
                         resolve(true);
                     }
@@ -16245,9 +16338,9 @@ document.body.appendChild(text);
                 return "m8.imhentai.xxx";
             };
             const galleryId = fun.ge(".gview>#gallery_id,#load_id").value;
-            const imageDir = fun.ge('#image_dir,#load_dir').value;
-            const num = fun.ge('#pages,#load_pages').value ?? "";
-            const cId = parseInt(fun.ge('#u_id,#load_dir+#gallery_id').value ?? "", 10);
+            const imageDir = fun.ge("#image_dir,#load_dir").value;
+            const num = fun.ge("#pages,#load_pages").value ?? "";
+            const cId = parseInt(fun.ge("#u_id,#load_dir+#gallery_id").value ?? "", 10);
             const randomServer = unsafeWindow.random_server ?? findServer(cId);
             return fun.arr(num).map((_, i) => `//${randomServer}/${imageDir}/${galleryId}/${(i + 1)}${findExt(i + 1)}`);
         },
@@ -16265,8 +16358,9 @@ document.body.appendChild(text);
                 return fun.fetchDoc(url).then(doc => {
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                     let script = [...doc.scripts].find(s => s.innerText.search(/document\.write/) > -1).innerText;
-                    let html = eval(script.replace("document.write(", "").replace(");", ""));
-                    let dom = fun.doc(html);
+                    let htmlCode = script.replace("document.write(", "").replace(");", "");
+                    let htmlText = fun.run(`(${htmlCode}).toString()`);
+                    let dom = fun.doc(htmlText);
                     let imgs = [...dom.images];
                     if (imgs.length > 1) {
                         return {
@@ -16286,7 +16380,7 @@ document.body.appendChild(text);
                 return arr;
             });
             try {
-                if (typeof allSrc[0] === "string") {
+                if (isString(allSrc[0])) {
                     return allSrc;
                 } else {
                     let obj = await fun.checkImgStatus(allSrc[0].src1, msg == 1 ? null : 0);
@@ -16422,8 +16516,8 @@ document.body.appendChild(text);
             }
         },
         aotoScrollEles: async (selector, callback, time = 5000) => {
-            if (aotoScrolling) return;
-            aotoScrolling = true;
+            if (isAutoScrolling) return;
+            isAutoScrolling = true;
             let n = 0;
             let timeout = false;
             const autoScrollIntoView = async (arr, num) => {
@@ -16455,8 +16549,15 @@ document.body.appendChild(text);
             if (imgs.length < newImgs.length) {
                 newImgs = newImgs.slice(imgs.length);
                 await autoScrollIntoView(newImgs, imgs.length + newImgs.length);
+                window.scrollTo({
+                    top: 0
+                });
+            } else {
+                window.scrollTo({
+                    top: 0
+                });
             }
-            aotoScrolling = false;
+            isAutoScrolling = false;
         },
         openInTab: (url, target = "_blank") => {
             let a = document.createElement("a");
@@ -16591,7 +16692,7 @@ document.body.appendChild(text);
         let referer;
         if (/vipr\.im/.test(srcUrl) || siteData.referer == "src") {
             referer = srcUrl;
-        } else if (typeof siteData.referer == "string" || siteData.referer == "") {
+        } else if (isString(siteData?.referer) || siteData.referer == "") {
             referer = siteData.referer;
         } else {
             referer = siteUrl;
@@ -16721,11 +16822,11 @@ document.body.appendChild(text);
     };
 
     const checkGeting = () => {
-        if (downloading) {
+        if (isDownloading) {
             alert(displayLanguage.str_48);
             return true;
         }
-        if (fetching) {
+        if (isFetching) {
             alert(displayLanguage.str_49);
             return true;
         }
@@ -16733,12 +16834,12 @@ document.body.appendChild(text);
     };
 
     const getImgs = async selector => {
-        fetching = true;
-        let imgs;
+        isFetching = true;
+        let imgs = null;
         if (globalImgArray.length > 0 && siteData.repeat != 1) {
-            fetching = false;
+            isFetching = false;
             return globalImgArray;
-        } else if (typeof selector == "function") {
+        } else if (isFn(selector)) {
             imgs = await selector();
             if (getImgFn == "" && !getImgFn.includes("專用Fn")) getImgFn += " > " + siteData.name + "專用Fn";
         } else if (!selector || selector === "") {
@@ -16758,7 +16859,14 @@ document.body.appendChild(text);
             imgs = [...gae(selector)];
             if (siteData.category != "lazyLoad" && !getImgFn.includes("...gae")) getImgFn += " > [...gae(selector)]";
         }
-        imgs = await Promise.all(imgs); //取出new Promise的值
+        if (!isArray(imgs)) {
+            isFetching = false;
+            alert("getImgs() Error! ImageList Not Array");
+            return [];
+        }
+        if (isPromise(imgs[0])) {
+            imgs = await Promise.all(imgs); //取出new Promise的值
+        }
         fun.hideMsg();
         imgs = imgs.filter(item => item); //去除空、無用
         let imgsSrcArr = imgs.map(img => {
@@ -16774,25 +16882,25 @@ document.body.appendChild(text);
         if (siteData.category != "lazyLoad" && globalImgArray.length == 0) debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
         imgsSrcArr = [...new Set(imgsSrcArr)];
         globalImgArray = imgsSrcArr;
-        fetching = false;
+        isFetching = false;
         return imgsSrcArr;
     };
 
     const startAutoDownload = async () => {
-        let autoDownload = siteData.autoDownload;
-        let next = siteData.next;
+        let autoDownload = siteData?.autoDownload;
+        let next = siteData?.next;
         if (!autoDownload) return;
         let ele;
-        typeof next === "function" ? ele = await next() : ele = fun.ge(next);
-        if (ele && siteData.autoDownload[0] == 1 || ele && options.autoDownload == 1) {
-            let max = siteData.autoDownload[1] || options.autoDownloadCountdown;
+        isFn(next) ? ele = await next() : ele = fun.ge(next);
+        if (ele && autoDownload[0] == 1 || ele && options.autoDownload == 1) {
+            let max = autoDownload[1] || options.autoDownloadCountdown;
             let countdownNum = max;
             fun.showMsg(`${displayLanguage.str_32}${max}${displayLanguage.str_33}`, 0);
             for (let i = 1; i < max; i++) {
                 setTimeout(() => fun.showMsg(`${displayLanguage.str_32}${countdownNum-=1}${displayLanguage.str_33}`, 0), i * 1000);
             }
             setTimeout(() => {
-                if (typeof next === "function") {
+                if (isFn(next)) {
                     fun.showMsg(displayLanguage.str_34);
                     location.href = ele;
                 } else {
@@ -16800,7 +16908,7 @@ document.body.appendChild(text);
                     ele.click();
                 }
             }, max * 1000);
-        } else if (!ele && siteData.autoDownload[0] == 1 || !ele && options.autoDownload == 1) {
+        } else if (!ele && autoDownload[0] == 1 || !ele && options.autoDownload == 1) {
             fun.showMsg(displayLanguage.str_36, 0);
             options.autoDownload = 0;
             let jsonStr = JSON.stringify(options);
@@ -16811,25 +16919,25 @@ document.body.appendChild(text);
     const DownloadFn = async () => {
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
         let selector, titleText;
+        let autoDownload = siteData?.autoDownload;
         if (fastDownload) {
-            typeof siteData.imgs == "function" ? selector = siteData.imgs : selector = options.default;
-            titleText = (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim());
+            selector = siteData.imgs;
+            titleText = (customTitle || document.title.replace(/\(\d+[\w\s\.\+-]+\)|\[\d+[\w\s\.\+-]+\]|【\d+[\w\s\.\+-]+】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim());
         } else {
-            if (!siteData.autoDownload || siteData.autoDownload && siteData.autoDownload[0] != 1 && options.autoDownload != 1) {
-                //typeof siteData.imgs == "function" ? selector = siteData.imgs : await prompt(displayLanguage.str_50, options.default);
-                typeof siteData.imgs == "function" ? selector = siteData.imgs : selector = options.default;
-                titleText = await prompt(displayLanguage.str_51, (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim()));
-            } else if (siteData.autoDownload) {
-                if (siteData.autoDownload[0] == 1 || options.autoDownload == 1) {
+            if (!autoDownload || autoDownload && autoDownload[0] != 1 && options.autoDownload != 1) {
+                selector = siteData.imgs;
+                titleText = await prompt(displayLanguage.str_51, (customTitle || document.title.replace(/\(\d+[\w\s\.\+-]+\)|\[\d+[\w\s\.\+-]+\]|【\d+[\w\s\.\+-]+】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim()));
+            } else if (autoDownload) {
+                if (autoDownload[0] == 1 || options.autoDownload == 1) {
                     selector = siteData.imgs;
-                    titleText = (customTitle || document.title.replace(/\[\d+p(\d+v)?\]|【\d+P】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim());
+                    titleText = (customTitle || document.title.replace(/\(\d+[\w\s\.\+-]+\)|\[\d+[\w\s\.\+-]+\]|【\d+[\w\s\.\+-]+】/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim());
                 } else {
                     debug("未開啟自動下載");
                     return;
                 }
             }
         }
-        downloading = true;
+        isDownloading = true;
         let imgsSrcArr = await getImgs(selector);
         if (imgsSrcArr.length > 0 && titleText != null && titleText != "") {
             fun.showMsg(displayLanguage.str_55, 0);
@@ -16874,7 +16982,7 @@ document.body.appendChild(text);
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
                     downloadNum = 0;
-                    downloading = false;
+                    isDownloading = false;
                     let yes = await confirm(`${displayLanguage.str_27}${errorDataArray.length}${displayLanguage.str_28}${displayLanguage.str_29}`);
                     if (!yes) {
                         promiseBlobArray = [];
@@ -16929,7 +17037,7 @@ document.body.appendChild(text);
                             if (i === blobDataArray.length - 1) {
                                 promiseBlobArray = [];
                                 downloadNum = 0;
-                                downloading = false;
+                                isDownloading = false;
                                 fun.hideMsg();
                                 startAutoDownload();
                             }
@@ -16951,7 +17059,7 @@ document.body.appendChild(text);
                             saveData(data, fileName);
                             promiseBlobArray = [];
                             downloadNum = 0;
-                            downloading = false;
+                            isDownloading = false;
                             fun.hideMsg();
                             startAutoDownload();
                         });
@@ -16959,13 +17067,13 @@ document.body.appendChild(text);
                 } else {
                     promiseBlobArray = [];
                     downloadNum = 0;
-                    downloading = false;
+                    isDownloading = false;
                     showMsg(displayLanguage.str_43);
                     return;
                 }
             });
         } else {
-            downloading = false;
+            isDownloading = false;
             showMsg(displayLanguage.str_41);
             return;
         }
@@ -16973,13 +17081,9 @@ document.body.appendChild(text);
 
     const exportImgSrcText = async () => {
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
-        let selector;
-        typeof siteData.imgs == "function" ? selector = siteData.imgs : selector = options.default;
+        let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
-        if (srcArr.length == 0) {
-            showMsg(displayLanguage.str_44);
-            return;
-        }
+        if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
         let titleText = (customTitle || document.title);
         let fileName = `${titleText}_MediaURLs.txt`;
         if (videosSrcArray.length > 0) srcArr = srcArr.concat(videosSrcArray);
@@ -16994,21 +17098,14 @@ document.body.appendChild(text);
 
     const copyImgSrcText = async () => {
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
-        let selector;
-        typeof siteData.imgs == "function" ? selector = siteData.imgs : selector = options.default;
+        let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         siteData.insertImg ? debug("手動插入圖片") : debug("複製網址");
-        if (srcArr.length == 0) {
-            showMsg(displayLanguage.str_44);
-            return;
-        }
+        if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
         if ((!fun.ge(".FullPictureLoadImage") && siteData.insertImg) || siteData.repeat == 1) {
-            fun.insertImg(srcArr, siteData.insertImg[0], siteData.insertImg[1]);
-            return;
+            return fun.insertImg(srcArr, siteData.insertImg[0], siteData.insertImg[1]);
         }
-        if (videosSrcArray.length > 0) {
-            srcArr = srcArr.concat(videosSrcArray);
-        }
+        if (videosSrcArray.length > 0) srcArr = srcArr.concat(videosSrcArray);
         let textArr = [customTitle || document.title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
@@ -17018,16 +17115,10 @@ document.body.appendChild(text);
 
     const copyImgSrcTextB = async () => {
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
-        let selector;
-        typeof siteData.imgs == "function" ? selector = siteData.imgs : selector = options.default;
+        let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
-        if (srcArr.length == 0) {
-            showMsg(displayLanguage.str_44);
-            return;
-        }
-        if (videosSrcArray.length > 0) {
-            srcArr = srcArr.concat(videosSrcArray);
-        }
+        if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
+        if (videosSrcArray.length > 0) srcArr = srcArr.concat(videosSrcArray);
         let textArr = [customTitle || document.title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
@@ -17087,11 +17178,11 @@ document.body.appendChild(text);
     const autoScrollEles = () => {
         if (ge("#FullPictureLoadOptions:not([style])")) return;
         let scrollEle = siteData.scrollEle;
-        if (scrollEle) typeof scrollEle === "function" ? scrollEle() : fun.scrollEles(scrollEle[0], scrollEle[1]);
+        if (scrollEle) isFn(scrollEle) ? scrollEle() : fun.scrollEles(scrollEle[0], scrollEle[1]);
     };
 
     const reduceZoom = () => {
-        if (fetching || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (isFetching || ge("#FullPictureLoadOptions:not([style])")) return;
         if (options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom == 0 ? options.zoom = 10 : options.zoom = options.zoom -= 1;
             if (options.zoom == 0) cancelZoom();
@@ -17106,7 +17197,7 @@ document.body.appendChild(text);
     };
 
     const increaseZoom = () => {
-        if (fetching || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (isFetching || ge("#FullPictureLoadOptions:not([style])")) return;
         if (options.zoom > 1 && options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = options.zoom += 1;
             if (options.zoom > 10) cancelZoom();
@@ -17123,7 +17214,7 @@ document.body.appendChild(text);
     let viewMode = 0;
 
     const toggleImgMode = async () => {
-        if (fetching || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (isFetching || ge("#FullPictureLoadOptions:not([style])")) return;
         let column;
         if ([...gae(".FullPictureLoadImage")].length < 1) {
             fun.showMsg("請先手動插入圖片");
@@ -17214,7 +17305,7 @@ document.body.appendChild(text);
             let tE = fun.ge("#FullPictureLoadEnd");
             tE.parentNode.insertBefore(imgBox, tE);
             if (fun.ge(".FullPictureLoadVideo"))[...fun.gae(".FullPictureLoadVideo")].forEach(e => tE.parentNode.insertBefore(e, tE));
-            if (options.fancybox == 1 && !blackList && !siteData.fancybox) {
+            if (options.fancybox == 1 && !blackList && !isObject(siteData?.fancybox)) {
                 try {
                     Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
                 } catch (error) {
@@ -17289,7 +17380,7 @@ document.body.appendChild(text);
                             imgs[imgsNum].scrollIntoView();
                         } catch (e) {
                             if (siteData.category == "comic" && siteData.next && siteData.insertImg) {
-                                if (typeof siteData.next === "string") {
+                                if (isString(siteData?.next)) {
                                     let next = fun.ge(siteData.next);
                                     if (next) {
                                         fun.showMsg(displayLanguage.str_95, 3000);
@@ -17299,7 +17390,7 @@ document.body.appendChild(text);
                                         imgsNum = 0 - column;
                                         fun.showMsg(displayLanguage.str_96, 3000);
                                     }
-                                } else if (typeof siteData.next === "function") {
+                                } else if (isFn(siteData.next)) {
                                     let next = await siteData.next();
                                     if (next) {
                                         fun.showMsg(displayLanguage.str_95, 3000);
@@ -17331,9 +17422,9 @@ document.body.appendChild(text);
 
     const newTabView = async () => {
 
-        if (fetching) return;
+        if (isFetching) return;
 
-        if (typeof siteData.capture === "string") {
+        if (isString(siteData?.capture)) {
             const captureImgEles = [...fun.gae(siteData.imgs)];
             console.log("newTabViewCaptureImgEles", captureImgEles);
         }
@@ -17383,8 +17474,8 @@ document.body.appendChild(text);
                 newWindow.fn = fun;
                 newWindow.newImgs = imgSrcs;
                 const jqueryCode = await fetch("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js").then(res => res.text());
-                const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css").then(res => res.text());
-                const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js").then(res => res.text());
+                const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css").then(res => res.text());
+                const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js").then(res => res.text());
 
                 const fancyboxStyle = doc.createElement("style");
                 fancyboxStyle.id = "fancyboxStyle";
@@ -17525,7 +17616,7 @@ img.sbs {
     border: solid #fff;
 }
 `;
-                doc.body.appendChild(newWindowStyle);
+                doc.head.appendChild(newWindowStyle);
 
                 const newWindowScript = doc.createElement("script");
                 newWindowScript.id = "newWindowScript";
@@ -18440,6 +18531,12 @@ a[data-fancybox]:hover {
         noGoToFirstImage = 0;
     }
 
+    let autoScrollAllElement = GM_getValue("autoScrollAllElement");
+    if (autoScrollAllElement == undefined) {
+        _GM_setValue("autoScrollAllElement", 0);
+        autoScrollAllElement = 0;
+    }
+
     let convertWebpToJpg = _GM_getValue("convertWebpToJpg");
 
     if (convertWebpToJpg == undefined) {
@@ -18472,17 +18569,17 @@ a[data-fancybox]:hover {
     }
 
     const addLazyLoadFullResolutionMenu = async () => {
-        _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ Lazy Load Full Resolution" : "✔️ Lazy Load Full Resolution", () => {
+        _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ " + displayLanguage.str_111 : "✔️ " + displayLanguage.str_111, () => {
             lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
             location.reload();
         });
         if (/civitai\.com/.test(window.location.host)) {
-            _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ Lazy Load Single Column Layout" : "✔️ Lazy Load Single Column Layout", () => {
+            _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ " + displayLanguage.str_112 : "✔️ " + displayLanguage.str_112, () => {
                 lazyLoadSingleColumn == 0 ? _GM_setValue("lazyLoadSingleColumn", 1) : _GM_setValue("lazyLoadSingleColumn", 0);
                 location.reload();
             });
         }
-        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ Lazy Load Preload Images" : "✔️ Lazy Load Preload Images", () => {
+        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ " + displayLanguage.str_112 : "✔️ " + displayLanguage.str_113, () => {
             lazyLoadPreloadImages == 0 ? _GM_setValue("lazyLoadPreloadImages", 1) : _GM_setValue("lazyLoadPreloadImages", 0);
             location.reload();
         });
@@ -18495,7 +18592,7 @@ a[data-fancybox]:hover {
     }
 
     if (/^https?:\/\/(e-hentai|exhentai).org\//.test(window.location.href)) {
-        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ E/EX-HENTAI Load Original Image" : "✔️ E/EX-HENTAI Load Original Image", () => {
+        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ " + displayLanguage.str_114 : "✔️ " + displayLanguage.str_114, () => {
             E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
             location.reload();
         });
@@ -18526,7 +18623,7 @@ a[data-fancybox]:hover {
             let loop = setInterval(() => {
                 num++;
                 try {
-                    if (typeof Fancybox === "function") {
+                    if (isFn(Fancybox)) {
                         clearInterval(loop);
                         resolve();
                     }
@@ -18580,6 +18677,7 @@ a[data-fancybox]:hover {
                         DOWNLOAD: "下載"
                     };
                     break;
+                case "zh":
                 case "zh-CN":
                 case "zh-Hans-CN":
                     Fancybox.defaults.l10n = {
@@ -18621,7 +18719,7 @@ a[data-fancybox]:hover {
             Fancybox.defaults.animated = false;
             debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
         } catch (error) {
-            if (!siteData.fancybox) {
+            if (!isObject(siteData?.fancybox)) {
                 try {
                     const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css";
                     const fancyBoxCss = await fetch(jcss).then(res => res.text());
@@ -18643,7 +18741,7 @@ a[data-fancybox]:hover {
     };
 
     const Fancyboxi18nV3 = async () => {
-        if (siteData.fancybox.js === false) return;
+        if (siteData?.fancybox?.js === false) return;
         let str = `
 switch (language) {
     case "zh-TW":
@@ -18665,6 +18763,7 @@ switch (language) {
         };
         $.fancybox.defaults.lang = "tw";
         break;
+    case "zh":
     case "zh-CN":
     case "zh-Hans-CN":
         $.fancybox.defaults.i18n.cn = {
@@ -18688,7 +18787,7 @@ switch (language) {
     };
 
     const FancyboxOptionsV3 = () => {
-        if (siteData.fancybox.js === false) return; //"download",
+        if (siteData?.fancybox?.js === false) return; //"download",
         let str = `
 $.fancybox.defaults.buttons = ["zoom", "slideShow", "fullScreen", "thumbs", "close"];
 $.fancybox.defaults.loop = true;
@@ -18705,21 +18804,21 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         const data = customData[i];
         let check = false;
         try {
-            if (typeof data.reg === "object") {
+            if (isRegExp(data?.reg)) {
                 check = data.reg.test(siteUrl);
-            } else if (typeof data.reg === "function") {
+            } else if (isFn(data?.reg)) {
                 check = await data.reg();
             }
             if (check) {
                 let category = data.category;
-                if (category === "comic" && data.enable === 0) {
+                if (category === "comic" && data?.enable === 0) {
                     showOptions = true;
                     comicSwitch = true;
                 }
-                let delay = data.delay;
+                let delay = data?.delay;
                 if (delay) await fun.delay(delay, 0);
                 options.enable = 1;
-                if (data.enable == 0) {
+                if (data?.enable == 0) {
                     await checkOptionsData();
                     if (options.comic == 1 && category === "comic") {
                         showOptions = true;
@@ -18732,42 +18831,60 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         continue;
                     }
                 }
-                if (data.enable != 0) await checkOptionsData();
-                let include = data.include;
-                if (include) {
+                if (data?.enable != 0) await checkOptionsData();
+                let include = data?.include;
+                if (isString(include)) {
                     if (!fun.ge(include)) {
                         options.enable = 0;
-                        debug("\n頁面沒有包含必須元素", data);
+                        debug("\n頁面沒有包含必須的元素", data);
+                        continue;
+                    }
+                } else if (isArray(include)) {
+                    let checkEles = include.map(e => fun.ge(e));
+                    let checkItems = checkEles.filter(i => i);
+                    if (checkItems.length === 0) {
+                        options.enable = 0;
+                        debug("\n頁面沒有任何數組選擇器中必須包含的元素", data);
+                        continue;
+                    } else if (checkEles.length != checkItems.length) {
+                        options.enable = 0;
+                        debug("\n頁面缺少數組選擇器中必須包含的元素", data);
                         continue;
                     }
                 }
-                let exclude = data.exclude;
-                if (exclude) {
+                let exclude = data?.exclude;
+                if (isString(exclude)) {
                     if (fun.ge(exclude)) {
                         options.enable = 0;
-                        debug("\n頁面包含排除元素", data);
+                        debug("\n頁面包含必須排除的元素", data);
+                        continue;
+                    }
+                } else if (isArray(exclude)) {
+                    let checkEles = include.map(e => fun.ge(e));
+                    let checkItems = checkEles.filter(i => i);
+                    if (checkItems.length > 0) {
+                        options.enable = 0;
+                        debug("\n頁面包含數組選擇器中必須排除的元素", data);
                         continue;
                     }
                 }
                 siteData = customData[i];
                 if (siteData.category != "none") showOptions = true;
                 if (!ge(".FullPictureLoadStyle")) fun.css(style);
-                let css = data.css;
+                let css = data?.css;
                 if (css) fun.css(css);
-                let initCode = data.init;
+                let initCode = data?.init;
                 if (initCode) {
-                    if (typeof initCode == "string") {
+                    if (isString(initCode)) {
                         await new Function("siteData", "fun", '"use strict";' + initCode)(siteData, fun);
-                    } else if (typeof initCode == "function") {
+                    } else if (isFn(initCode)) {
                         await initCode();
                     }
                 }
-                if (options.fancybox == 1 && !siteData.fancybox && category !== "none" && !siteData.autoPager) {
-                    //const fancyBoxCssHtml = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css">`;
-                    //document.head.insertAdjacentHTML("beforeend", fancyBoxCssHtml);
-                    if (typeof Fancybox === "function") {
+                if (options.fancybox == 1 && !isObject(siteData?.fancybox) && category !== "none" && !isObject(siteData?.autoPager)) {
+                    if (isFn(Fancybox)) {
                         try {
-                            const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css";
+                            const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css";
                             const fancyBoxCss = await fetch(jcss).then(res => res.text());
                             fun.css(fancyBoxCss);
                         } catch (error) {
@@ -18783,28 +18900,25 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         }
                     }
                     await Fancyboxl10nV5();
-                } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 5 && siteData.fancybox.insertLibrarys == 1) {
+                } else if (options.fancybox == 1 && category !== "none" && !isObject(siteData?.autoPager) && siteData?.fancybox?.v == 5 && siteData?.fancybox?.insertLibrarys == 1) {
                     await addLibrarysV5();
                     await Fancyboxl10nV5();
-                } else if (options.fancybox == 1 && category !== "none" && !siteData.autoPager && siteData.fancybox.v == 3 && siteData.fancybox.insertLibrarys == 1) {
+                } else if (options.fancybox == 1 && category !== "none" && !isObject(siteData?.autoPager) && siteData?.fancybox?.v == 3 && siteData?.fancybox?.insertLibrarys == 1) {
                     await addLibrarysV3();
                     Fancyboxi18nV3();
                     FancyboxOptionsV3();
                 }
-                if (data.imgs) {
-                    options.default = data.imgs;
-                    debug(`\nCSS/Xpath/JS選擇器：${options.default}`);
-                }
-                if (data.threading) {
+                if (data?.imgs) debug("\nCSS/Xpath/JS選擇器：" + data.imgs);
+                if (data?.threading) {
                     options.threading = data.threading;
                     debug("\n下載線程數：" + options.threading);
                 }
-                let titleCode = data.customTitle;
+                let titleCode = data?.customTitle;
                 if (titleCode) {
                     const getTitle = async () => {
-                        if (typeof titleCode == "string") {
+                        if (isString(titleCode)) {
                             customTitle = await new Function("siteData", "fun", '"use strict";' + titleCode)(siteData, fun);
-                        } else if (typeof titleCode == "function") {
+                        } else if (isFn(titleCode)) {
                             customTitle = await titleCode();
                         }
                     };
@@ -18817,15 +18931,15 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         }).observe(document.body, MutationObserverConfig);
                     }
                 }
-                let next = data.next;
+                let next = data?.next;
                 if (next) {
                     let link = null;
-                    typeof next === "function" ? link = await next() : link = fun.ge(next);
+                    isFn(next) ? link = await next() : link = fun.ge(next);
                     debug("\n圖片全載NEXT：", link);
                     try {
                         if (link !== null) {
-                            typeof link === "string" ? nextLink = link : null;
-                            if (link.tagName == "A") {
+                            isString(link) ? nextLink = link : null;
+                            if (isEle(link) && link?.tagName == "A") {
                                 try {
                                     /^http/.test(link.href) ? nextLink = link.href : nextLink = null;
                                 } catch (e) {}
@@ -18833,10 +18947,10 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         }
                     } catch (e) {}
                     const callback = () => {
-                        if (typeof next === "function") {
+                        if (isFn(next)) {
                             fun.showMsg(displayLanguage.str_34, 0);
                             /^http/.test(link) ? location.href = link : fun.showMsg(displayLanguage.str_37);
-                        } else if (typeof next === "string") {
+                        } else if (isString(next)) {
                             if (link) {
                                 //link.click();
                                 elementClick(link);
@@ -18846,14 +18960,14 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                             }
                         }
                     };
-                    if (hasTouchEvents() && siteData.next && options.doubleTouchNext == 1) document.addEventListener("dblclick", () => callback());
+                    if (hasTouchEvents() && siteData?.next && options.doubleTouchNext == 1) document.addEventListener("dblclick", () => callback());
                     document.addEventListener("keydown", event => {
                         if (ge(".fancybox-container,.fancybox__container")) return;
                         if (event.code == "ArrowRight" || event.key == "ArrowRight") callback();
                     });
                 }
-                let prev = data.prev;
-                if (typeof prev == "string" && prev != 1) {
+                let prev = data?.prev;
+                if (isString(prev) && prev != 1) {
                     document.addEventListener("keydown", event => {
                         if (ge(".fancybox-container,.fancybox__container")) return;
                         if (event.code == "ArrowLeft" || event.key == "ArrowLeft") {
@@ -18878,9 +18992,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         }
                     });
                 }
-                let autoClick = data.autoClick;
+                let autoClick = data?.autoClick;
                 if (autoClick) {
-                    if (typeof autoClick == "object") {
+                    if (isArray(autoClick)) {
                         setTimeout(() => {
                             let ele = fun.ge(autoClick[0]);
                             if (ele) {
@@ -18888,7 +19002,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                                 debug(`\n圖片全載autoClick("${autoClick}")`, ele);
                             }
                         }, autoClick[1] || 1000);
-                    } else if (typeof autoClick == "string") {
+                    } else if (isString(autoClick)) {
                         let ele = fun.ge(autoClick);
                         if (ele) {
                             elementClick(ele);
@@ -18896,7 +19010,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         }
                     }
                 }
-                let observerClick = data.observerClick;
+                let observerClick = data?.observerClick;
                 if (observerClick) {
                     let ele = fun.ge(observerClick);
                     if (ele) {
@@ -18915,7 +19029,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         setTimeout(() => observer.observe(ele), 1000)
                     }
                 }
-                let loadMore = data.loadMore;
+                let loadMore = data?.loadMore;
                 if (loadMore) {
                     const callback = () => {
                         if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 200) {
@@ -18932,17 +19046,17 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     };
                     document.addEventListener("scroll", callback);
                 }
-                if (siteData.autoPager) {
-                    if (siteData.autoPager.observer) {
+                if (isObject(siteData?.autoPager)) {
+                    if (siteData?.autoPager?.observer) {
                         let ele = [...fun.gae(siteData.autoPager.observer)].at(-1);
                         if (ele) fun.autoPagerNextObserver.observe(ele);
                     } else {
                         const callback = async () => {
-                            if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - (siteData.autoPager.bottom || screen.height)) {
+                            if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - (siteData?.autoPager?.bottom || screen.height)) {
                                 if (!autoPager) return;
                                 document.removeEventListener("scroll", callback);
                                 await fun.autoPager();
-                                await fun.delay(siteData.autoPager.sleep || 1000, 0);
+                                await fun.delay(siteData?.autoPager?.sleep || 1000, 0);
                                 document.addEventListener("scroll", callback);
                             }
                         };
@@ -18950,23 +19064,23 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     }
                     document.addEventListener("dblclick", () => fun.toggleAutoPager());
                 }
-                let openInNewTab = data.openInNewTab;
+                let openInNewTab = data?.openInNewTab;
                 if (openInNewTab) {
                     fun.openInNewTab(openInNewTab);
                     new MutationObserver(() => fun.openInNewTab(openInNewTab)).observe(document.body, MutationObserverConfig);
                 }
-                let autoDownload = siteData.autoDownload;
+                let autoDownload = siteData?.autoDownload;
                 if (autoDownload) {
                     if (autoDownload[0] == 1 || options.autoDownload == 1) DownloadFn();
                 }
-                let insertImg = data.insertImg;
+                let insertImg = data?.insertImg;
                 if (insertImg) {
                     if (autoDownload) {
                         if (autoDownload[0] == 1 || options.autoDownload == 1) break;
                     }
                     if (insertImg[1] == 1 || insertImg[1] == 2) fun.immediateInsertImg();
                 }
-                let button = data.topButton;
+                let button = data?.topButton;
                 if (button) addReturnTopButton();
                 break;
             }
@@ -18979,7 +19093,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     }
 
-    if (siteData.reg) {
+    if (siteData?.reg) {
         debug("\n列出此站資料", siteData);
         debug(`\n列出規則總數(${customData.length})`);
         debug("\n列出NSFW規則", nsfw1Data);
@@ -19002,20 +19116,30 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             }
             ge("#FullPictureLoadOptions").removeAttribute("style");
         });
-        _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ Turn Off Auto Scroll" : "✔️ Turn Off Auto Scroll", () => {
-            noGoToFirstImage == 0 ? _GM_setValue("noGoToFirstImage", 1) : _GM_setValue("noGoToFirstImage", 0);
-            location.reload();
-        });
         addFullPictureLoadOptionsMain();
         setValue();
         if (comicSwitch) ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
     }
 
+    if (showOptions && isNumber(siteData?.go)) {
+        _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ " + displayLanguage.str_115 : "✔️ " + displayLanguage.str_115, () => {
+            noGoToFirstImage == 0 ? _GM_setValue("noGoToFirstImage", 1) : _GM_setValue("noGoToFirstImage", 0);
+            location.reload();
+        });
+    }
+
+    if (isArray(siteData?.scrollEle) || isFn(siteData?.scrollEle)) {
+        _GM_registerMenuCommand(autoScrollAllElement == 0 ? "❌ " + displayLanguage.str_116 : "✔️ " + displayLanguage.str_116, () => {
+            autoScrollAllElement == 0 ? _GM_setValue("autoScrollAllElement", 1) : _GM_setValue("autoScrollAllElement", 0);
+            location.reload();
+        });
+    }
+
     if (!ge(".FullPictureLoadStyle")) fun.css(style);
 
-    let autoDownload = siteData.autoDownload;
+    let autoDownload = siteData?.autoDownload;
 
-    if (hasTouchEvents() && showOptions || !autoDownload && showOptions)[...gae("#FullPictureLoadOptionsAutoDownloadDIV,#FullPictureLoadOptionsCountdownDIV")].forEach(e => e.style.display = "none")
+    if (hasTouchEvents() && showOptions || !autoDownload && showOptions)[...gae("#FullPictureLoadOptionsAutoDownloadDIV,#FullPictureLoadOptionsCountdownDIV")].forEach(e => e.style.display = "none");
 
     if (!hasTouchEvents() && showOptions || (hasTouchEvents() && showOptions && !siteData.next)) ge("#FullPictureLoadOptionsDoubleDIV").style.display = "none";
 
@@ -19057,20 +19181,20 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     if (siteData.category == "lazyLoad") addLazyLoadFullResolutionMenu();
 
     setTimeout(() => {
-        let preloadNext = siteData.preloadNext;
+        let preloadNext = siteData?.preloadNext;
         try {
-            if (nextLink && preloadNext && !downloading) {
+            if (nextLink && preloadNext && !isDownloading) {
                 window.addEventListener("message", e => {
                     if (e.data.iframePicArr) fun.picPreload(e.data.iframePicArr, e.data.title, "next");
                 }, false);
                 fun.fetchDoc(nextLink).then(async nextDoc => {
                     debug("\nnextDoc", nextDoc);
-                    if (typeof preloadNext === "boolean" && preloadNext === true && typeof siteData.imgs === "function" && typeof siteData.customTitle === "function") {
+                    if (isBoolean(preloadNext) && preloadNext === true && isFn(siteData?.imgs) && isFn(siteData?.customTitle)) {
                         fun.picPreload(await siteData.imgs(nextDoc), await siteData.customTitle(nextDoc), "next");
-                    } else if (typeof preloadNext === "boolean" && preloadNext === true && typeof siteData.imgs === "string" && typeof siteData.customTitle === "function") {
+                    } else if (isBoolean(preloadNext) && preloadNext === true && isString(siteData?.imgs) && isFn(siteData?.customTitle)) {
                         let arr = fun.getImgSrcArr(siteData.imgs, nextDoc);
                         fun.picPreload(arr, await siteData.customTitle(nextDoc), "next");
-                    } else if (typeof preloadNext == "function") {
+                    } else if (isFn(preloadNext)) {
                         preloadNext(nextDoc, siteData);
                     }
                 });
