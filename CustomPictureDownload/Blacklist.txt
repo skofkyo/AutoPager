@@ -1,4 +1,4 @@
-2024/03/02 23:14
+2024/03/08 23:15
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -136,6 +136,9 @@ ThisMore.Fun
 
 CosXuxi Club
 *://cosxuxi.club/*.html*
+
+BaoBua
+*://baobua.com/post/*.html*
 
 萝丝派
 *://www.yylsp.com/*.html
@@ -289,6 +292,7 @@ MEITU131
 *://www.game1313.net/*.html
 *://www.1nlm.com/*.html
 *://www.1plq.com/*.html
+*://www.6vtr.com/*.html
 
 出物社区写真网
 *://www.ywsq.cc/*/*.html
@@ -482,6 +486,9 @@ HotAsianX
 
 色图
 *://setu.pics/albums/*
+
+亚色图库
+*://yase.pics/albums/*
 
 Chinese Beauties
 *://sxchinesegirlz01.xyz/*/*/*/*/
@@ -1003,6 +1010,51 @@ gogo人体艺术
 
 H漫類
 
+nhentai
+*://nhentai.net/g/*/*/
+*://nyahentai.red/g/*/*/
+*://nhentai.xxx/g/*/*/
+*://nhentai.to/g/*/*
+*://www.hentai.name/g/*/*/
+*://simplyhentai.org/g/*/*/
+*://simplyhentai.red/g/*/*/
+
+Hanime1
+*://hanime1.me/comic/*/*
+
+HentaiFox
+*://hentaifox.com/g/*/*/
+
+3hentai
+*://3hentai.net/d/*/*
+
+Simply Hentai
+*://www.simply-hentai.com/*/*/page/*
+
+nhentai.com
+*://nhentai.com/en/comic/*/reader/*
+
+HentaiHand
+*://hentaihand.com/en/comic/*reader/*
+
+HentaiEra
+*://hentaiera.com/view/*/*/
+
+TSUMINO
+*://www.tsumino.com/Read/Index/*
+
+9hentai
+*://9hentai.to/g/*/*/
+
+AsmHentai
+*://asmhentai.com/gallery/*/*/
+
+lHentai
+*://lhentai.com/g/*/*/
+
+TMOHentai
+*://tmohentai.com/reader/*/*/*
+
 Anchira
 *://anchira.to/*
 
@@ -1173,6 +1225,9 @@ HentaiPal.com
 *://www.twmanga.com/*
 *://tw.twmanga.com/*
 *://cn.twmanga.com/*
+*://www.tbmanga.com/*
+*://tw.tbmanga.com/*
+*://cn.tbmanga.com/*
 
 嗨皮漫畫
 *m.happymh.com*
@@ -1188,14 +1243,15 @@ COCOMANGA閱讀
 *://cocomanga.xyz/comic/*/*.html
 
 漫漫聚閱讀
-*manmanju.com/comiclist/*/*/*.htm
-*m.ikkdm.com/comiclist/*/*/*.htm
+*manmanju.*/comiclist/*/*/*.htm
+*m.ikkdm.*/comiclist/*/*/*.htm
 
 KuKu动漫閱讀
-*kukudm.com/comiclist/*/*/*.htm
-*.ihhmh.com/comiclist/*/*/*.htm
-*.wap.ikukudm.com/comiclist/*/*/*.htm
+*kukudm.*/comiclist/*/*/*.htm
+*.ihhmh.*/comiclist/*/*/*.htm
+*.wap.ikukudm.*/comiclist/*/*/*.htm
 *mh123.dypro.xyz/comiclist/*/*/*.htm
+*sbxrb1.3840p.xyz/comiclist/*/*/*.htm
 *m.ikuku.cc/comiclist/*/*/*.htm
 
 8Comic無限動漫手機版閱讀
@@ -1443,12 +1499,13 @@ manhuab.com/manhua/*/*.html
 *://ani.gamer.com.tw/animeVideo.php*
 *://*copymanga.site/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
-*manmanju.com/comiclist/*/*/*.htm
-*m.ikkdm.com/comiclist/*/*/*.htm
-*kukudm.com/comiclist/*/*/*.htm
-*.ihhmh.com/comiclist/*/*/*.htm
-*.wap.ikukudm.com/comiclist/*/*/*.htm
+*manmanju.*/comiclist/*/*/*.htm
+*m.ikkdm.*/comiclist/*/*/*.htm
+*kukudm.*/comiclist/*/*/*.htm
+*.ihhmh.*/comiclist/*/*/*.htm
+*.wap.ikukudm.*/comiclist/*/*/*.htm
 *mh123.dypro.xyz/comiclist/*/*/*.htm
+*sbxrb1.3840p.xyz/comiclist/*/*/*.htm
 *m.ikuku.cc/comiclist/*/*/*.htm
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
@@ -1472,6 +1529,9 @@ manhuab.com/manhua/*/*.html
 *://www.twmanga.com/*
 *://tw.twmanga.com/*
 *://cn.twmanga.com/*
+*://www.tbmanga.com/*
+*://tw.tbmanga.com/*
+*://cn.tbmanga.com/*
 *://8.twobili.com/comic/insurance_*
 *://www.comicabc.com/online/new-*
 *://www.comicabc.com/ReadComic/*
@@ -1495,6 +1555,7 @@ https://www.nuyet.com/gallery/*
 *://www.hitxhot.org/gallerys/*.html*
 *://hitxhot.com/blog/*.html*
 *://www.depvailon.com/*.html*
+*://baobua.com/post/*.html*
 *://crimejunkiespodcast.com/*.html*
 *://pic.yailay.com/articles/*.html*
 *://nungvl.net/gallerys/*.cg*
@@ -1539,6 +1600,7 @@ https://www.nuyet.com/gallery/*
 *://www.game1313.net/*.html
 *://www.1nlm.com/*.html
 *://www.1plq.com/*.html
+*://www.6vtr.com/*.html
 *://*.xsnvshen.co/album/*
 *://www.beautyleg6.com/*/*/*.html
 *://www.ikanins.com/*/
@@ -1648,6 +1710,25 @@ https://www.nuyet.com/gallery/*
 *://*22gs.com/*/*/
 *://*44aq.com/*/*/
 *://*28xv.com/*/*/
+*://nhentai.net/g/*/*/
+*://nyahentai.red/g/*/*/
+*://nhentai.xxx/g/*/*/
+*://nhentai.to/g/*/*
+*://lhentai.com/g/*/*/
+*://www.hentai.name/g/*/*/
+*://simplyhentai.org/g/*/*/
+*://simplyhentai.red/g/*/*/
+*://hanime1.me/comic/*/*
+*://hentaifox.com/g/*/*/
+*://3hentai.net/d/*/*
+*://www.simply-hentai.com/*/*/page/*
+*://nhentai.com/en/comic/*/reader/*
+*://hentaihand.com/en/comic/*reader/*
+*://hentaiera.com/view/*/*/
+*://www.tsumino.com/Read/Index/*
+*://9hentai.to/g/*/*/
+*://asmhentai.com/gallery/*/*/
+*://tmohentai.com/reader/*/*/*
 *://anchira.to/*
 *://imhentai.xxx/view/*/*/
 *pururin.to/read/*
@@ -1987,6 +2068,7 @@ https://www.eyval.net/*
 *://www.hutu6.com/*/*.html
 *://hotasianx.com/albums/*
 *://setu.pics/albums/*
+*://yase.pics/albums/*
 *://asianporn.li/photo/*/*/
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
