@@ -5,8 +5,8 @@
 cdn.jsdelivr.net
 https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.css
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 </pre>
@@ -49,8 +49,9 @@ localStorage.removeItem("FullPictureLoadOptions");
 </pre>
 <p>紳士漫畫wnacg，由於新增的Fancybox功能的緣故，新的元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
 <pre>
-https://www.wnacg.com/photos-slide-aid-*.html
-https://www.wnacg.com/photos-slist-aid-*.html
+https://*wnacg.com/photos-index-aid-*.html
+https://*wnacg.com/photos-slide-aid-*.html
+https://*wnacg.com/photos-slist-aid-*.html
 </pre>
 <p>Fancybox功能在少部份網站上無效或與網站自身的LIGHTBOX插件衝突或顯示有問題，有列了是不使用Fancybox的網站，如下。</p>
 <pre>
@@ -85,12 +86,16 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         return false;
     },
     delay: 300, //延遲載入規則
-    include: "元素", //網頁必須包含的元素
+    include: "元素選擇器", //網頁必須包含的元素
+    include: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁必須包含數組裡的所有元素
     exclude: "元素", //網頁要排除的元素
+    exclude: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁要排除數組裡其中的元素
     init: "code", //載入頁面後要優先執行的代碼
     init: () => {
         code
     },
+    init: async () => await fun.waitEle("元素選擇器"), //等待直至元素出現
+    init: async () => await fun.waitVar("屬性名"), //等待直至window物件的屬性出現
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
     //IMG、DIV、A，SPAN，4種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
@@ -150,7 +155,9 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     },
     delay: 300,
     include: "",
+    include: [""],
     exclude: "",
+    exclude: [""],
     init: "code",
     init: () => {
         code
@@ -646,8 +653,8 @@ fun.getImgO(img, maxPage = 1, mode = 1, rText = [null, null], time = 200, pagina
 </pre>
 <pre>
 //fun.getImgIframe基本同fun.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
-fun.getImgIframe("圖片元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
-fun.getImgIframe(img, max, mode, [null, null], paginationEle, time, showMsg)
+fun.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
+fun.getImgIframe(img, max, mode, paginationEle, time, showMsg)
 </pre>
 <pre>
 //mode
@@ -758,7 +765,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/02 23:14</p>
+<p>2024/03/08 23:15</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -827,7 +834,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hitxhot.org/">Hit-x-Hot</a></td>
-                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a></td>
+                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.12356781.xyz/">极品性感美女</a></td>
@@ -1360,10 +1367,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://kenh69.co/">Kenh69</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://phym18.pro/tag/%E1%BA%A3nh-sex">Phym18</a></td>
                 <td>圖片分類添加了自動翻頁</td>
             </tr>
@@ -1597,6 +1600,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://setu.pics/">色图</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://yase.pics/">亚色图库</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2220,6 +2227,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://hentaihand.com/xxx">HentaiHand</a>，作用在圖片清單/閱讀頁，SPA網頁</td>
             </tr>
             <tr>
+                <td><a href="https://hentaiera.com/">HentaiEra</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.tsumino.com/">TSUMINO</a></td>
                 <td>作用在圖片清單/閱讀頁</td>
             </tr>
@@ -2676,12 +2687,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.colamanga.com/">COLAMANGA</a></td>
-                <td>方向鍵上下章，按6自動捲動等待全部圖片載入，下載需先手動觸發全部載入圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
+                <td>方向鍵上下章，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，下載需先觸發載入全部圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
             </tr>
             <tr>
                 <td><a href="https://manwa.me/">漫蛙</a></td>
                 <td>uBlock加信任名單<pre>https://manwa.me/chapter/*</pre>
-按6自動捲動等待全部圖片載入，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先手動觸發全部載入圖片，函式使用到canvas需要繪製過程會有點卡。</td>
+，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。</td>
             </tr>
             <tr>
                 <td><a href="https://www.yinghuamh.net/">樱花漫画</a></td>
