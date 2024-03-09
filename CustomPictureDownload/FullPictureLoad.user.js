@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.10.0
+// @version            1.10.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -14294,7 +14294,8 @@ document.body.appendChild(text);
                 str_113: "惰性載入預讀大圖",
                 str_114: "E/EX-HENTAI 載入原始圖片鏈結",
                 str_115: "關閉自動捲動至首張圖片",
-                str_116: "自動捲動所有惰性載入的圖片元素"
+                str_116: "自動捲動所有惰性載入的圖片元素",
+                str_117: "顯示浮動選單"
             };
             break;
         case "zh":
@@ -14416,7 +14417,8 @@ document.body.appendChild(text);
                 str_113: "懒加载预读大图",
                 str_114: "E/EX-HENTAI 加载原始图片链结",
                 str_115: "关闭自动滚动至首张图片",
-                str_116: "自动滚动所有懒加载的图片元素"
+                str_116: "自动滚动所有懒加载的图片元素",
+                str_117: "显示浮动菜单"
             };
             break;
         default:
@@ -14536,7 +14538,8 @@ document.body.appendChild(text);
                 str_113: "Lazy Load Preload Images",
                 str_114: "E/EX-HENTAI Load Original Image",
                 str_115: "Turn Off Auto Scroll To First Image",
-                str_116: "Auto Scroll All Image Elements"
+                str_116: "Auto Scroll All Image Elements",
+                str_117: "Show Fixed Menu"
             };
             break;
     }
@@ -14548,6 +14551,7 @@ document.body.appendChild(text);
     const _GM_registerMenuCommand = (() => isFn(GM_registerMenuCommand) ? GM_registerMenuCommand : GM.registerMenuCommand)();
 
     _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
+    _GM_registerMenuCommand("Github", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/tree/main/CustomPictureDownload"));
 
     const fun = {
         getModeUrl: (url, mode, i) => {
@@ -18531,6 +18535,13 @@ a[data-fancybox]:hover {
         noGoToFirstImage = 0;
     }
 
+    let ShowFullPictureLoadFixedMenu = GM_getValue("ShowFullPictureLoadFixedMenu");
+
+    if (ShowFullPictureLoadFixedMenu == undefined) {
+        _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
+        ShowFullPictureLoadFixedMenu = 1;
+    }
+
     let autoScrollAllElement = GM_getValue("autoScrollAllElement");
     if (autoScrollAllElement == undefined) {
         _GM_setValue("autoScrollAllElement", 0);
@@ -19230,7 +19241,13 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !siteData.category.includes("lazyLoad") && !siteData.category.includes("none") && !siteData.category.includes("ad")) {
         if (!ge(".FullPictureLoadStyle")) fun.css(style);
         if (siteData.key != 0) {
-            if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
+            if (!hasTouchEvents()) {
+                _GM_registerMenuCommand(ShowFullPictureLoadFixedMenu == 0 ? "❌ " + displayLanguage.str_117 : "✔️ " + displayLanguage.str_117, () => {
+                    ShowFullPictureLoadFixedMenu == 0 ? _GM_setValue("ShowFullPictureLoadFixedMenu", 1) : _GM_setValue("ShowFullPictureLoadFixedMenu", 0);
+                    location.reload();
+                });
+                if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
+            }
             document.addEventListener("keydown", event => {
                 if (event.ctrlKey && event.altKey && (event.code == "KeyC" || event.key == "c" || event.key == "C")) return;
                 if (event.ctrlKey && (event.code == "NumpadDecimal" || event.key == ".")) return;
