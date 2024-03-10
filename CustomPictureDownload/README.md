@@ -76,6 +76,10 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     icon: 0, //填0不顯示左下圖示
     key: 0, //填0不綁定快捷鍵
     reg: /www\.xxxxx\.com/, //正則表達式匹配網址
+    reg: [ //匹配正則表達式數組
+        /reg_A/,
+        /reg_B/
+    ],
     reg: () => {
          //函式寫法返回布林值boolean
         if (/^https?:\/\/www\.everiaclub\.com\/.+/.test(siteUrl)) {
@@ -147,6 +151,10 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     icon: 0,
     key: 0,
     reg: /www\.xxxxx\.com/,
+    reg: [
+        //,
+        //
+    ],
     reg: () => {
         if (code) {
             return true;
@@ -765,7 +773,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/08 23:15</p>
+<p>2024/03/10 19:27</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -834,7 +842,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hitxhot.org/">Hit-x-Hot</a></td>
-                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，同格式，<a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a></td>
+                <td>同格式，<a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，<a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>，<a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.12356781.xyz/">极品性感美女</a></td>
@@ -1355,10 +1363,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>SPA網頁</td>
             </tr>
             <tr>
-                <td><a href="https://www.dongojyousan.com/">dongojyousan.com</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://sexygirl.cc/">SexyGirl</a></td>
                 <td></td>
             </tr>
@@ -1696,7 +1700,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://nudeasiangirl.com/">Nude Asian Girl</a>，<a href="https://cutexinh.com/">CuteXinh</a>，<a href="https://girlxinhxinh.com/">Girl Xinh Xinh</a>，<a href="https://asiaceleb.com/">Asia Celebrity</a>，<a href="https://chinagirly.com/">China Girly</a>，<a href="https://babeasia.com/">Babe Asia</a>，<a href="https://nudeasiangirl.com/">Hot Nude Asian Girls</a>，<a href="https://hinhsexvietnam.com/">Hình Sex Việt Nam</a></td>
+                <td><a href="https://cutexinh.com/">CuteXinh</a>，<a href="https://babeasia.com/">Babe Asia</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -2100,6 +2104,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://shinv.link/">湿女吧</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://ios.zzgo810.top/">哔咔庇护所v2</a></td>
                 <td></td>
             </tr>
             <tr>
