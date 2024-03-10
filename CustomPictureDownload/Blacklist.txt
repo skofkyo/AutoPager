@@ -1,4 +1,4 @@
-2024/03/08 23:15
+2024/03/10 19:27
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -140,6 +140,9 @@ CosXuxi Club
 BaoBua
 *://baobua.com/post/*.html*
 
+Chinese in beauty
+*://cn.looives.com/view/*.cfg*
+
 萝丝派
 *://www.yylsp.com/*.html
 
@@ -225,7 +228,8 @@ BaoBua
 *://*v2ph.*/album/*
 
 美图乐
-*://www.meitule.*/photo/*.html
+*://*meitule.*/photo/*.html
+*://*meitulu.*/photo/*.html
 
 COSPLAY ZIP
 *://*coszip.com/*.html*
@@ -890,6 +894,8 @@ MrDeepFakes
 *://www.qyjafk.com/tupian/*.html
 *://www.jnnmm.com/meitu/*.html
 *://www.hdz39.com/tu/*.html
+*://www.2cra.com/tp/*.html
+*://www.hsudhf.com/pic/*.html
 
 万德美图屋
 *://www.wind5.com/tu*.html
@@ -1556,6 +1562,7 @@ https://www.nuyet.com/gallery/*
 *://hitxhot.com/blog/*.html*
 *://www.depvailon.com/*.html*
 *://baobua.com/post/*.html*
+*://cn.looives.com/view/*.cfg*
 *://crimejunkiespodcast.com/*.html*
 *://pic.yailay.com/articles/*.html*
 *://nungvl.net/gallerys/*.cg*
@@ -1573,7 +1580,8 @@ https://www.nuyet.com/gallery/*
 *://meirentu.*/pic/*.html
 *://www.xg*.*/*/*.html
 *://*v2ph.*/album/*
-*://www.meitule.*/photo/*.html
+*://*meitule.*/photo/*.html
+*://*meitulu.*/photo/*.html
 *://www.win4000.com/meinv*.html
 *://www.3gbizhi.com/meinv/*/pic*.html
 *://*.yeitu.com/*/*/*.html
@@ -1801,8 +1809,6 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *.neihantu.net/zhainannvshen/*.html
 *www.zanmm.com/tupian/*.html
 *fuligirl.top/albums/*
-*://www.baobua.net/post/*
-*baobua.com/post/*
 *://www.baobua.net/post/*
 *baobua.com/post/*
 *jrants.com/*.html
@@ -2051,6 +2057,8 @@ https://www.eyval.net/*
 *://www.qyjafk.com/tupian/*.html
 *://www.jnnmm.com/meitu/*.html
 *://www.hdz39.com/tu/*.html
+*://www.2cra.com/tp/*.html
+*://www.hsudhf.com/pic/*.html
 *://www.wind5.com/tu*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
