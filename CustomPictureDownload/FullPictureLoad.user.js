@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.10.2
+// @version            1.10.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -33,7 +33,7 @@
 // @noframes
 // @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.umd.js
 // ==/UserScript==
 
 (async () => {
@@ -8457,7 +8457,7 @@
         go: 1,
         insertImgAF: () => {
             if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
-            if (!hasTouchEvents() && ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
+            if (!hasTouchEvents && ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
         },
         customTitle: () => fun.ge("[placeholder=Japanese]").value || fun.ge("[placeholder='Alternative names']").value,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
@@ -8801,7 +8801,7 @@
             let loop = setInterval(() => {
                 if (!fun.ge(".FullPictureLoadImage")) {
                     if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
-                    if (!hasTouchEvents()) addFullPictureLoadFixedMenu();
+                    if (!hasTouchEvents) addFullPictureLoadFixedMenu();
                     fun.immediateInsertImg();
                 }
             }, 500);
@@ -13535,7 +13535,7 @@ document.body.appendChild(text);
             const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(window.location.pathname)) {
                     try {
-                        let ele = [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")][0];
+                        let ele = [...document.querySelectorAll(".mantine-1tt1w1o,.mantine-6mpnke,.mantine-mo1fxo")][0];
                         let elePath = ele.querySelector("span+svg>path");
                         if (elePath) {
                             let d = elePath.getAttribute("d");
@@ -13544,7 +13544,7 @@ document.body.appendChild(text);
                         }
                     } catch (e) {}
                 }
-                [...document.querySelectorAll(".mantine-ggrxfn,.mantine-1hn4pmf,.mantine-1rjynyk,.mantine-1pj0akd,.mantine-1a9x8zw,.mantine-qwgpbp,.mantine-1m05dul,.mantine-1gtzxoj,.mantine-7cmpjr,.mantine-hdmzgx,.mantine-10dlb,.mantine-17xqhym,.mantine-1ll12xr,.mantine-1ge3iyn,.mantine-1jb75iu,.mantine-5ix9q9,.mantine-1p64zh1,.mantine-k1f4y4,.mantine-kg33jb")].forEach(ele => {
+                [...document.querySelectorAll("[class^='mantine-Badge-root mantine']")].forEach(ele => {
                     let elePath = ele.querySelector("span+svg>path");
                     if (elePath) {
                         let d = elePath.getAttribute("d");
@@ -13574,7 +13574,7 @@ document.body.appendChild(text);
                 fun.addMutationObserver(lazyLoad);
             }
             //修正Models頁Gallery觸控裝置圖片被遮擋顯示不全的問題
-            if (hasTouchEvents() && lazyLoadSingleColumn != 1) {
+            if (hasTouchEvents && lazyLoadSingleColumn != 1) {
                 setInterval(() => {
                     if (/\/models\//.test(window.location.pathname)) {
                         [...document.querySelectorAll(".mantine-1m6je7k")].forEach(e => {
@@ -13757,7 +13757,7 @@ document.body.appendChild(text);
                 }, 1000);
             }
         },
-        capture: "img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi),img[data-src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi)",
+        capture: "img[src*=original]:not(.mantine-Avatar-image,.mantine-34i7e7,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi),img[data-src*=original]:not(.mantine-Avatar-image,.mantine-34i7e7,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi)",
         openInNewTab: "a[href]:not([target=_blank])",
         css: ".mantine-15xhaye{display:block;}img[src^=data]{margin: auto}img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi){width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
         category: "lazyLoad"
@@ -14024,7 +14024,7 @@ document.body.appendChild(text);
     }];
 
     const debug = (str, obj = "", title = "debug") => console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
-    const hasTouchEvents = () => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;
+    const hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false)();
     const isString = str => Object.prototype.toString.call(str) === "[object String]";
     const isNumber = num => Object.prototype.toString.call(num) === "[object Number]";
     const isBoolean = b => Object.prototype.toString.call(b) === "[object Boolean]";
@@ -14082,8 +14082,8 @@ document.body.appendChild(text);
             const jsdelivrLibrarys = [
                 "https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js",
                 "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css"
+                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.umd.js",
+                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.css"
             ];
             const bootcdnLibrarys = [
                 "https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js",
@@ -14119,7 +14119,7 @@ document.body.appendChild(text);
     let FancyboxOptions;
     let slideIndex = null;
 
-    if (hasTouchEvents()) {
+    if (hasTouchEvents) {
         FancyboxOptions = {
             idle: false,
             Images: {
@@ -14279,13 +14279,13 @@ document.body.appendChild(text);
                 str_79: "圖片縮放比例 ( 0 ~ 10 )：",
                 str_80: "圖片並排數量 ( 2 ~ 6 )：",
                 str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
-                str_82: hasTouchEvents() ? "取消" : "取消 (Esc)",
+                str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
                 str_83: "重置設定",
                 str_84: "保存設定",
-                str_85: hasTouchEvents() ? "腳本選項" : "腳本選項(*)",
-                str_86: hasTouchEvents() ? "切換模式" : "切換模式(5)",
-                str_87: hasTouchEvents() ? "比例縮放" : "比例縮放(-+)",
-                str_88: hasTouchEvents() ? "取消縮放" : "取消縮放(.)",
+                str_85: hasTouchEvents ? "腳本選項" : "腳本選項(*)",
+                str_86: hasTouchEvents ? "切換模式" : "切換模式(5)",
+                str_87: hasTouchEvents ? "比例縮放" : "比例縮放(-+)",
+                str_88: hasTouchEvents ? "取消縮放" : "取消縮放(.)",
                 str_89: "暫停自動翻頁",
                 str_90: "啟用自動翻頁",
                 str_91: "初始化設定",
@@ -14301,10 +14301,10 @@ document.body.appendChild(text);
                 str_101: "網址.txt已匯出",
                 str_102: "格式轉換中...",
                 str_103: "啟用並排模式",
-                str_104: hasTouchEvents() ? "匯出圖址" : "匯出圖址(7)",
-                str_105: hasTouchEvents() ? "複製圖址" : "複製圖址(1)",
-                str_106: hasTouchEvents() ? "分頁檢視" : "分頁檢視(8)",
-                str_107: hasTouchEvents() ? "一鍵下載" : "一鍵下載(3)",
+                str_104: hasTouchEvents ? "匯出圖址" : "匯出圖址(7)",
+                str_105: hasTouchEvents ? "複製圖址" : "複製圖址(1)",
+                str_106: hasTouchEvents ? "分頁檢視" : "分頁檢視(8)",
+                str_107: hasTouchEvents ? "一鍵下載" : "一鍵下載(3)",
                 str_108: "※訊息顯示的位置 ( 0 ~ 4 )：",
                 str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
                 str_110: "※Webp轉換為Jpg",
@@ -14402,13 +14402,13 @@ document.body.appendChild(text);
                 str_79: "图片缩放比例 ( 0 ~ 10 )：",
                 str_80: "图片并排数量 ( 2 ~ 6 )：",
                 str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
-                str_82: hasTouchEvents() ? "取消" : "取消 (Esc)",
+                str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
                 str_83: "重置设置",
                 str_84: "保存设置",
-                str_85: hasTouchEvents() ? "脚本设置" : "脚本设置(*)",
-                str_86: hasTouchEvents() ? "切换模式" : "切换模式(5)",
-                str_87: hasTouchEvents() ? "比例缩放" : "比例缩放(-+)",
-                str_88: hasTouchEvents() ? "取消缩放" : "取消缩放(.)",
+                str_85: hasTouchEvents ? "脚本设置" : "脚本设置(*)",
+                str_86: hasTouchEvents ? "切换模式" : "切换模式(5)",
+                str_87: hasTouchEvents ? "比例缩放" : "比例缩放(-+)",
+                str_88: hasTouchEvents ? "取消缩放" : "取消缩放(.)",
                 str_89: "暂停自动翻页",
                 str_90: "启用自动翻页",
                 str_91: "初始化设置",
@@ -14424,10 +14424,10 @@ document.body.appendChild(text);
                 str_101: "网址.txt已导出",
                 str_102: "格式转换中...",
                 str_103: "启用并排模式",
-                str_104: hasTouchEvents() ? "导出图址" : "导出图址(7)",
-                str_105: hasTouchEvents() ? "拷贝图址" : "拷贝图址(1)",
-                str_106: hasTouchEvents() ? "分页视图" : "分页视图(8)",
-                str_107: hasTouchEvents() ? "一键下载" : "一键下载(3)",
+                str_104: hasTouchEvents ? "导出图址" : "导出图址(7)",
+                str_105: hasTouchEvents ? "拷贝图址" : "拷贝图址(1)",
+                str_106: hasTouchEvents ? "分页视图" : "分页视图(8)",
+                str_107: hasTouchEvents ? "一键下载" : "一键下载(3)",
                 str_108: "※讯息显示的位置 ( 0 ~ 4 )：",
                 str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
                 str_110: "※Webp转换为Jpg",
@@ -14523,13 +14523,13 @@ document.body.appendChild(text);
                 str_79: "Image Zoom Ratio ( 0 ~ 10 )：",
                 str_80: "Number Of Images Side By Side ( 2 ~ 6 )：",
                 str_81: "Comic Category Fixed To 2",
-                str_82: hasTouchEvents() ? "Cancel" : "Cancel (Esc)",
+                str_82: hasTouchEvents ? "Cancel" : "Cancel (Esc)",
                 str_83: "Reset",
                 str_84: "Save",
-                str_85: hasTouchEvents() ? "Settings" : "Settings(*)",
-                str_86: hasTouchEvents() ? "Toggle" : "Toggle(5)",
-                str_87: hasTouchEvents() ? "Zoom" : "Zoom(-+)",
-                str_88: hasTouchEvents() ? "Cancel" : "Cancel(.)",
+                str_85: hasTouchEvents ? "Settings" : "Settings(*)",
+                str_86: hasTouchEvents ? "Toggle" : "Toggle(5)",
+                str_87: hasTouchEvents ? "Zoom" : "Zoom(-+)",
+                str_88: hasTouchEvents ? "Cancel" : "Cancel(.)",
                 str_89: "Pause Automatic Page Turning",
                 str_90: "Enable Automatic Page Turning",
                 str_91: "Initialization Settings",
@@ -14545,10 +14545,10 @@ document.body.appendChild(text);
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
-                str_104: hasTouchEvents() ? "Export" : "Export URLs(7)",
-                str_105: hasTouchEvents() ? "Copy" : "Copy URLs(1)",
-                str_106: hasTouchEvents() ? "TabView" : "New Tab View(8)",
-                str_107: hasTouchEvents() ? "Download" : "Fast Download(3)",
+                str_104: hasTouchEvents ? "Export" : "Export URLs(7)",
+                str_105: hasTouchEvents ? "Copy" : "Copy URLs(1)",
+                str_106: hasTouchEvents ? "TabView" : "New Tab View(8)",
+                str_107: hasTouchEvents ? "Download" : "Fast Download(3)",
                 str_108: "※Where the message appears ( 0 ~ 4 )：",
                 str_109: "0: Center, 1: Upper left, 2: Upper right, 3: Lower left, 4: Lower right",
                 str_110: "※Convert Webp to Jpg",
@@ -16859,9 +16859,8 @@ document.body.appendChild(text);
     const getImgs = async selector => {
         isFetching = true;
         let imgs = null;
-        if (globalImgArray.length > 0 && siteData.repeat != 1) {
-            isFetching = false;
-            return globalImgArray;
+        if (ge(".FullPictureLoadImage") && siteData.repeat != 1) {
+            imgs = [...gae(".FullPictureLoadImage:not(.small)")];
         } else if (isFn(selector)) {
             imgs = await selector();
             if (getImgFn == "" && !getImgFn.includes("專用Fn")) getImgFn += " > " + siteData.name + "專用Fn";
@@ -17273,7 +17272,7 @@ document.body.appendChild(text);
                 column = 6;
             } else {
                 column = 4;
-                hasTouchEvents() ? width = "24%" : width = "24.4%";
+                hasTouchEvents ? width = "24%" : width = "24.4%";
             }
             let imgBox = document.createElement("div");
             imgBox.id = "FullPictureLoadImgBox";
@@ -17497,8 +17496,8 @@ document.body.appendChild(text);
                 newWindow.fn = fun;
                 newWindow.newImgs = imgSrcs;
                 const jqueryCode = await fetch("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js").then(res => res.text());
-                const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css").then(res => res.text());
-                const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js").then(res => res.text());
+                const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.css").then(res => res.text());
+                const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.umd.js").then(res => res.text());
 
                 const fancyboxStyle = doc.createElement("style");
                 fancyboxStyle.id = "fancyboxStyle";
@@ -17580,7 +17579,7 @@ body {
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: ${hasTouchEvents() ? "0px" : "-128px"};
+    left: ${hasTouchEvents ? "0px" : "-128px"};
     bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -17645,7 +17644,7 @@ img.sbs {
                 newWindowScript.id = "newWindowScript";
                 newWindowScript.type = "text/javascript";
                 newWindowScript.innerHTML = `
-var hasTouchEvents = () => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false;
+var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false)();
 var imgViewIndex = -1;
 
 function addFixedMenu() {
@@ -17653,15 +17652,15 @@ function addFixedMenu() {
     menuDiv.id = "FixedMenu";
     const menuObj = [{
         id: "MenuSBSItem",
-        text: hasTouchEvents() ? "Side By Side" : "Side By Side (2)",
+        text: hasTouchEvents ? "Side By Side" : "Side By Side (2)",
         cfn: () => SBSImageLayout()
     }, {
         id: "MenuSinglePageItem",
-        text: hasTouchEvents() ? "Single Image" : "Single Image (1)",
+        text: hasTouchEvents ? "Single Image" : "Single Image (1)",
         cfn: () => singleImageLayout()
     }, {
         id: "MenuDefaultItem",
-        text: hasTouchEvents() ? "Default" : "Default (0)",
+        text: hasTouchEvents ? "Default" : "Default (0)",
         cfn: () => defaultImageLayout()
     }];
     const createMenu = obj => {
@@ -17956,7 +17955,7 @@ if (newWindowDataViewMode == 1) {
             }];
             _ele.dispatchEvent(touchEvent);
         };
-        if (hasTouchEvents()) {
+        if (hasTouchEvents) {
             dispatchTouchEvent(ele, "touchstart");
             dispatchTouchEvent(ele, "touchend");
         }
@@ -18173,7 +18172,7 @@ if (newWindowDataViewMode == 1) {
     width: 360px !important;
     height: auto !important;
     position: fixed !important;
-    top: ${hasTouchEvents() ? "2px" : "20%"};
+    top: ${hasTouchEvents ? "2px" : "20%"};
     left: 50%;
     margin-left: -180px;
     border: 1px solid #a0a0a0 !important;
@@ -18609,7 +18608,7 @@ a[data-fancybox]:hover {
                 location.reload();
             });
         }
-        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ " + displayLanguage.str_112 : "✔️ " + displayLanguage.str_113, () => {
+        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ " + displayLanguage.str_113 : "✔️ " + displayLanguage.str_113, () => {
             lazyLoadPreloadImages == 0 ? _GM_setValue("lazyLoadPreloadImages", 1) : _GM_setValue("lazyLoadPreloadImages", 0);
             location.reload();
         });
@@ -18922,7 +18921,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 if (options.fancybox == 1 && !isObject(siteData?.fancybox) && category !== "none" && !isObject(siteData?.autoPager)) {
                     if (isFn(Fancybox)) {
                         try {
-                            const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css";
+                            const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.css";
                             const fancyBoxCss = await fetch(jcss).then(res => res.text());
                             fun.css(fancyBoxCss);
                         } catch (error) {
@@ -18998,7 +18997,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                             }
                         }
                     };
-                    if (hasTouchEvents() && siteData?.next && options.doubleTouchNext == 1) document.addEventListener("dblclick", () => callback());
+                    if (hasTouchEvents && siteData?.next && options.doubleTouchNext == 1) document.addEventListener("dblclick", () => callback());
                     document.addEventListener("keydown", event => {
                         if (ge(".fancybox-container,.fancybox__container")) return;
                         if (event.code == "ArrowRight" || event.key == "ArrowRight") callback();
@@ -19177,9 +19176,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
 
     let autoDownload = siteData?.autoDownload;
 
-    if (hasTouchEvents() && showOptions || !autoDownload && showOptions)[...gae("#FullPictureLoadOptionsAutoDownloadDIV,#FullPictureLoadOptionsCountdownDIV")].forEach(e => e.style.display = "none");
+    if (hasTouchEvents && showOptions || !autoDownload && showOptions)[...gae("#FullPictureLoadOptionsAutoDownloadDIV,#FullPictureLoadOptionsCountdownDIV")].forEach(e => e.style.display = "none");
 
-    if (!hasTouchEvents() && showOptions || (hasTouchEvents() && showOptions && !siteData.next)) ge("#FullPictureLoadOptionsDoubleDIV").style.display = "none";
+    if (!hasTouchEvents && showOptions || (hasTouchEvents && showOptions && !siteData.next)) ge("#FullPictureLoadOptionsDoubleDIV").style.display = "none";
 
     if (autoDownload) {
         document.addEventListener("keydown", event => {
@@ -19203,7 +19202,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-    if (hasTouchEvents() && siteData.insertImg && (siteData.insertImg[1] == 0 || siteData.insertImg[1] == 3)) {
+    if (hasTouchEvents && siteData.insertImg && (siteData.insertImg[1] == 0 || siteData.insertImg[1] == 3)) {
         let timeId;
         document.addEventListener("touchstart", event => {
             if ((event.target.tagName == "IMG" && event.target.id != "FullPictureLoad") || event.target.tagName == "CANVAS") {
@@ -19268,7 +19267,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !siteData.category.includes("lazyLoad") && !siteData.category.includes("none") && !siteData.category.includes("ad")) {
         if (!ge(".FullPictureLoadStyle")) fun.css(style);
         if (siteData.key != 0) {
-            if (!hasTouchEvents()) {
+            if (!hasTouchEvents) {
                 _GM_registerMenuCommand(ShowFullPictureLoadFixedMenu == 0 ? "❌ " + displayLanguage.str_117 : "✔️ " + displayLanguage.str_117, () => {
                     ShowFullPictureLoadFixedMenu == 0 ? _GM_setValue("ShowFullPictureLoadFixedMenu", 1) : _GM_setValue("ShowFullPictureLoadFixedMenu", 0);
                     location.reload();
