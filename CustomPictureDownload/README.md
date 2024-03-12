@@ -5,8 +5,8 @@
 cdn.jsdelivr.net
 https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.umd.js
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.css
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 </pre>
@@ -773,7 +773,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/10 19:27</p>
+<p>2024/03/13 00:50</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -894,7 +894,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.24tupian.org/">爱死美女图片站</a></td>
-                <td></td>
+                <td>需註冊登入能看大圖</td>
             </tr>
             <tr>
                 <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
@@ -1368,14 +1368,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://cangcuc.com/">Căng Cực</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://phym18.pro/tag/%E1%BA%A3nh-sex">Phym18</a></td>
-                <td>圖片分類添加了自動翻頁</td>
-            </tr>
-            <tr>
-                <td><a href="https://bongda21h.vip/anh-hot/">Bongda21h</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2048,7 +2040,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式126個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式134個</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.wind5.com/">万德美图屋</a></td>
@@ -2099,7 +2091,19 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://r18.jo106.com/">R18成人站-流量密碼</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://nick20.com/pic/index.html">尼克成人網</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.sexdiary1769.com/category/photogallery">我們的性愛日誌</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://happy.5ge.net/category/%E5%9B%BE%E5%86%8C/">五歌的开心网</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2650,8 +2654,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
-                <td><a href="http://manhua.kukudm.com/">KuKu动漫</a></td>
-                <td><a href="http://m.ikuku.cc/">m.ikuku.cc</a>，閱讀頁添加了下一話鏈接</td>
+                <td><a href="https://www.ikukudm.cc/">KuKu动漫</a></td>
+                <td><a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接</td>
             </tr>
             <tr>
                 <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
@@ -3084,12 +3088,16 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>SPA網頁，加載大圖。</td>
             </tr>
             <tr>
-                <td><a href="https://playgroundai.com/feed">Playground</a></td>
+                <td><a href="https://playground.com/feed">Playground</a></td>
                 <td>SPA網頁，加載大圖，無法並行請求所以抓取很慢。</td>
             </tr>
             <tr>
                 <td><a href="https://pornderful.ai/search">Pornderful.ai</a></td>
                 <td>SPA網頁，Lazy Load加載大圖，首頁會有閃爍的問題。</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.seaart.ai/">SeaArt Al</a></td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
             </tr>
         </tbody>
     </table>
