@@ -1,4 +1,4 @@
-2024/03/10 19:27
+2024/03/13 00:50
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -304,6 +304,9 @@ MEITU131
 秀色女神
 *://*.xsnvshen.co/album/*
 
+8E资源站
+/^https?:\/\/8ezy\.com\/[\w-]+\/$/
+
 孔雀海/洛丽网
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 
@@ -428,6 +431,7 @@ Coomer
 性趣套图
 *://myjkwd.com/e/action/ShowInfo.php?*
 *://enpeta.com/e/action/ShowInfo.php?*
+*://xjzi.to/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
 *://123548.xyz/e/action/ShowInfo.php?*
@@ -766,6 +770,9 @@ MrDeepFakes
 亿秀美女
 *://*.*tu11.com/*/*/*.html
 
+五歌的开心网
+/^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
+
 움짤저장소 KPOP GIRLGROUPS ACTOR
 *://kkoreaactor.blogspot.com/*/*/*.html*
 
@@ -895,7 +902,10 @@ MrDeepFakes
 *://www.jnnmm.com/meitu/*.html
 *://www.hdz39.com/tu/*.html
 *://www.2cra.com/tp/*.html
+*://www.1taz.com/tu/*.html
 *://www.hsudhf.com/pic/*.html
+*://www.rodwy.com/tupian/*.html
+*://www.y521.com/tupian/.html
 
 万德美图屋
 *://www.wind5.com/tu*.html
@@ -1653,6 +1663,7 @@ https://www.nuyet.com/gallery/*
 *://www.mevtu.com/*/*.html
 *://myjkwd.com/e/action/ShowInfo.php?*
 *://enpeta.com/e/action/ShowInfo.php?*
+*://xjzi.to/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
 *://123548.xyz/e/action/ShowInfo.php?*
@@ -2058,7 +2069,10 @@ https://www.eyval.net/*
 *://www.jnnmm.com/meitu/*.html
 *://www.hdz39.com/tu/*.html
 *://www.2cra.com/tp/*.html
+*://www.1taz.com/tu/*.html
 *://www.hsudhf.com/pic/*.html
+*://www.rodwy.com/tupian/*.html
+*://www.y521.com/tupian/.html
 *://www.wind5.com/tu*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
@@ -2092,6 +2106,8 @@ https://www.eyval.net/*
 *sharecosplay.com*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
+/^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
+/^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/
