@@ -12134,7 +12134,7 @@ window.parent.postMessage({
                 host = 3;
             }
             let nextXPath = `//dd[a[contains(@href,'${chapterId}')]]/following-sibling::dd[1]/a[${host}]`;
-            return fun.fetchDoc(siteData.comicListUrl()).then(doc => {
+            return fun.xhrDoc(siteData.comicListUrl()).then(doc => {
                 let next = fun.ge(nextXPath, doc);
                 return next ? next.href : null;
             })
@@ -12174,7 +12174,7 @@ window.parent.postMessage({
             let comicListUrl = fun.ge(".subNav a").href;
             let chapterId = siteUrl.split("/")[5];
             let nextXPath = `//li[a[contains(@href,'${chapterId}')]]/preceding-sibling::li[1]/a`;
-            return fun.fetchDoc(comicListUrl).then(doc => {
+            return fun.xhrDoc(comicListUrl).then(doc => {
                 let next = fun.ge(nextXPath, doc);
                 return next ? next.href : null;
             })
@@ -16286,7 +16286,9 @@ document.body.appendChild(text);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
                 return fun.doc(htmlText);
-            });
+            }).catch(error => {
+                console.error(`\nfun.fetchDoc()出錯:\n${decodeURIComponent(url)}`, error);
+            });;
         },
         getImhentaiSrc: async () => {
             await fun.waitVar("g_th");
@@ -16315,18 +16317,19 @@ document.body.appendChild(text);
             return fun.arr(num).map((_, i) => `//${randomServer}/${imageDir}/${galleryId}/${(i + 1)}${findExt(i + 1)}`);
         },
         getKukudmSrc: async (url = siteUrl, doc = document, msg = 1) => {
+            if (url === null) return;
             if (fun.ge("//title[contains(text(),'404')]", doc)) return [];
             if (!getImgFn.includes("getKukudmSrc")) getImgFn += " > fun.getKukudmSrc()";
-            let timeId = setTimeout(() => location.reload(), 20000);
+            let timeId = setTimeout(() => msg === 1 ? location.reload() : null, 20000);
             if (msg == 1) fun.showMsg(displayLanguage.str_05, 0);
             let max;
             fun.ge("//td[input]", doc) ? max = fun.gt("//td[input]", 1, doc).match(/共(\d+)/)[1] : max = fun.gt(".bottom .subNav", 1, doc).match(/\/(\d+)/)[1];
             url = url.replace(/1\.htm$/, "");
             let links = fun.arr(max).map((_, i) => url + (i + 1) + ".htm");
-            let fetchNum = 0;
+            let xhrNum = 0;
             let resArr = links.map(url => {
-                return fun.fetchDoc(url).then(doc => {
-                    if (msg == 1) fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                return fun.xhrDoc(url).then(doc => {
+                    if (msg == 1) fun.showMsg(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
                     let script = [...doc.scripts].find(s => s.innerText.search(/document\.write/) > -1).innerText;
                     let htmlCode = script.replace("document.write(", "").replace(");", "");
                     let htmlText = fun.run(`(${htmlCode}).toString()`);
@@ -19166,7 +19169,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 window.addEventListener("message", e => {
                     if (e.data.iframePicArr) fun.picPreload(e.data.iframePicArr, e.data.title, "next");
                 }, false);
-                fun.fetchDoc(nextLink).then(async nextDoc => {
+                fun.xhrDoc(nextLink).then(async nextDoc => {
                     debug("\nnextDoc", nextDoc);
                     if (isBoolean(preloadNext) && preloadNext === true && isFn(siteData?.imgs) && isFn(siteData?.customTitle)) {
                         fun.picPreload(await siteData.imgs(nextDoc), await siteData.customTitle(nextDoc), "next");
