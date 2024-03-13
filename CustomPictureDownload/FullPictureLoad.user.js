@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.10.4
+// @version            1.10.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -283,7 +283,7 @@
         name: "优丝库HD", //免VIP
         reg: () => {
             let hosts = ["yskhd.com", "yskhd.me"];
-            return hosts.includes(fun.lh) && /\/archives\/\d+/i.test(fun.lp);
+            return fun.indexOf(hosts, fun.lh) && /\/archives\/\d+/i.test(fun.lp);
         },
         exclude: "#erphpdown",
         init: () => [...fun.gae(".gallery-blur-item")].forEach(e => e.className = "gallery-item gallery-fancy-item"),
@@ -846,7 +846,7 @@
             if (fun.ge("//div[contains(text(),'分页阅读')]")) {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let links = [...fun.gae("//div[contains(text(),'分页阅读')]/a")].map(a => a.href);
-                links = [fun.url].concat(links);
+                links = [fun.url].concat([...new Set(links)]);
                 let resArr = links.map(url => fun.fetchDoc(url).then(doc => [...fun.gae(".entry-content img", doc)].map(e => e.dataset.srcset ?? e.src)));
                 return Promise.all(resArr).then(data => data.flat());
             } else {
@@ -1117,7 +1117,7 @@
     }, {
         name: "微圖坊",
         host: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru", "www.v2ph.ovh"],
-        reg: () => /^https?:\/\/www\.v2ph\.(com|net|ru|ovh)\/album\//.test(siteUrl) && !siteUrl.includes("?page=") && fun.ge(".photos-list"),
+        reg: () => /^https?:\/\/www\.v2ph\.(com|net|ru|ovh)\/album\//.test(siteUrl) && !fun.indexOf(siteUrl, "?page=") && fun.ge(".photos-list"),
         imgs: async () => {
             let picTotalNum = fun.gt("dd:last-child").match(/\d+/)[0];
             let pagePicNum = [...fun.gae(".album-photo img[alt]")].length;
@@ -3044,6 +3044,7 @@
             lazySrc: "img[data-src]",
             title: doc => "Page " + fun.gt(".pagination__item--active", 1, doc),
             aF: () => siteData.init(),
+            bottom: screen.height * 2,
             history: 1
         },
         openInNewTab: ".articles-grid a:not([target=_blank])",
@@ -4031,7 +4032,7 @@
     }, {
         name: "Everia club",
         host: ["www.everiaclub.com"],
-        reg: () => /^https?:\/\/www\.everiaclub\.com\/(?!tags).+/.test(siteUrl) && !siteUrl.includes(".html"),
+        reg: () => /^https?:\/\/www\.everiaclub\.com\/(?!tags).+/.test(siteUrl) && !fun.indexOf(siteUrl, ".html"),
         imgs: ".mainleft img",
         button: [4],
         insertImg: [".mainleft", 2],
@@ -6183,10 +6184,8 @@
         category: "nsfw2"
     }, {
         name: "Hentai Image 單張",
-        reg: () => {
-            let hosts = ["hentai-img.com", "hentai-cosplays.com", "porn-images-xxx.com", "porn-gravure-idol.com"];
-            return hosts.includes(fun.lh) && /^\/image\/[^/]+\//.test(fun.lp);
-        },
+        host: ["hentai-img.com", "hentai-cosplays.com", "porn-images-xxx.com", "porn-gravure-idol.com"],
+        reg: /(hentai-img|hentai-cosplays|porn-images-xxx|porn-gravure-idol)\.com\/image\/[^/]+\//,
         include: "//a[text()='DETAIL PAGE' or text()='DETAIL HALAMAN' or text()='詳細へ' or text()='详细信息页面' or text()='Страница сведений' or text()='상세 페이지' or text()='página de detalles' or text()='หน้ารายละเอียด' or text()='TRANG CHI TIẾT']",
         imgs: async () => {
             let max = document.title.split("/").at(-1).match(/\d+/)[0];
@@ -6207,10 +6206,8 @@
         category: "nsfw2"
     }, {
         name: "Hentai Image",
-        reg: () => {
-            let hosts = ["hentai-img.com", "hentai-cosplays.com", "porn-images-xxx.com", "porn-gravure-idol.com"];
-            return hosts.includes(fun.lh) && /^\/image\/[^/]+\/(page\/\d+\/)?$/.test(fun.lp);
-        },
+        host: ["hentai-img.com", "hentai-cosplays.com", "porn-images-xxx.com", "porn-gravure-idol.com"],
+        reg: /(hentai-img|hentai-cosplays|porn-images-xxx|porn-gravure-idol)\.com\/image\/[^/]+\/(page\/\d+\/)?$/,
         init: () => {
             let ele = fun.ge("//div[span[a]]");
             if (ele) {
@@ -14520,6 +14517,7 @@ document.body.appendChild(text);
         lp: (() => window.location.pathname)(),
         lh: (() => window.location.hostname)(),
         ls: (() => window.location.search)(),
+        indexOf: (obj, str) => obj.indexOf(str) > -1,
         getModeUrl: (url, mode, i) => {
             //【.html ==> .html?page=2】第一頁 ==> 第二頁
             //【 ==> ?page=2】第一頁 ==> 第二頁
