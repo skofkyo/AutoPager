@@ -773,7 +773,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/13 00:50</p>
+<p>2024/03/14 19:03</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -894,7 +894,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.24tupian.org/">爱死美女图片站</a></td>
-                <td>需註冊登入能看大圖</td>
+                <td>需註冊登入才能看大圖和下載</td>
             </tr>
             <tr>
                 <td><a href="https://www.24cos.org/">爱死cos美女图片站</a></td>
@@ -1635,6 +1635,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.cosplay69.net/">Cosplay69</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.simply-porn.com/galleries">Simply Porn</a></td>
                 <td>SPA網頁</td>
             </tr>
@@ -2100,7 +2104,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.sexdiary1769.com/category/photogallery">我們的性愛日誌</a></td>
-                <td></td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://happy.5ge.net/category/%E5%9B%BE%E5%86%8C/">五歌的开心网</a></td>
@@ -2360,6 +2364,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://caitlin.top/">Caitlin.top</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://tianhei-acg.com/">天黑漫画</a></td>
                 <td></td>
             </tr>
             <tr>
