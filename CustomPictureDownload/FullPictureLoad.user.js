@@ -596,7 +596,7 @@
     }, {
         name: "美人图",
         reg: () => {
-            let hosts = ["meirentu.cc", "meirentu.top", "meirentu.icu"];
+            let hosts = ["meirentu.me", "meirentu.cc", "meirentu.top", "meirentu.icu"];
             return hosts.includes(fun.lh) && /\/pic\/\d+\.html$/.test(fun.lp);
         },
         imgs: () => fun.getImg(".content_left img[alt]", fun.gt(".page a:last-child", 2), 5),
@@ -3699,6 +3699,26 @@
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
+        name: "Cosplay69",
+        host: ["www.cosplay69.net"],
+        reg: /^https?:\/\/www\.cosplay69\.net\/[^\/]+\/$/,
+        include: "a[data-fancybox]",
+        init: () => {
+            let iframe = fun.ge(".iframe-container");
+            if (iframe) {
+                let x = fun.ge(".entry-content");
+                [...fun.gae(".iframe-container")].forEach(e => x.parentNode.insertBefore(e, x));
+            }
+        },
+        imgs: "a[data-fancybox]",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: () => fun.gt("h1.entry-title"),
+        category: "nsfw2"
+    }, {
         name: "X Cosplay",
         host: ["xcosplay.top"],
         reg: /xcosplay\.top\/\d+\/\d+\/\d+\//,
@@ -5298,13 +5318,25 @@
         category: "nsfw2"
     }, {
         name: "麻豆村/麻麻传媒/糖心vlog/果冻传媒/兔子先生/中国X站/中国P站/麻豆101",
-        host: ["www.madoucun.com", "www.mamamcn.com", "www.tangxvlog.com", "www.guodongmcn.com", "www.mrrabbit.org", "www.xvideo.bar", "www.proncn.com", "www.md101.tv"],
+        host: ["www.madoucun.com", "www.madoucun.net", "www.mamamcn.com", "www.tangxvlog.com", "www.guodongmcn.com", "www.mrrabbit.org", "www.xvideo.bar", "www.proncn.com", "www.md101.tv"],
         link: "/arttype/57.html",
-        reg: () => /^https?:\/\/((www\.)?(madoucun|mamamcn|tangxvlog|guodongmcn|proncn)\.com|(www\.)?mrrabbit\.org|(www\.)?xvideo\.bar|(www\.)?md101\.tv)\/artdetail-\d+/.test(siteUrl) && fun.ge(".hl-article-box img,.news-content img"),
+        reg: [
+            /^https?:\/\/(www\.)?madoucun\.(com|net)\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?mamamcn\.com\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?tangxvlog\.com\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?guodongmcn\.com\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?mrrabbit\.org\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?xvideo\.bar\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?proncn\.com\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?md101\.tv\/artdetail-\d+/
+        ],
+        include: ".hl-article-box img,.news-content img",
+        init: () => fun.addMutationObserver(() => fun.remove("//div[div[@id and a[@id and img]]]")),
         imgs: ".hl-article-box img,.news-content img",
         button: [4],
         insertImg: [".hl-article-box,.news-content", 2],
         customTitle: () => fun.gt(".hl-article-title,.news-title"),
+        css: ".hl-pops-bg,.hl-poptips-wrap{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "淫淫小说写真馆",
@@ -9333,6 +9365,21 @@
         customTitle: () => fun.gt(".entry-header>h1"),
         css: ".adbox{display:none!important;}",
         category: "hcomic"
+    }, {
+        name: "天黑漫画",
+        host: "tianhei-acg.com",
+        reg: /^https?:\/\/tianhei-acg\.com\/[^\/]+\/$/,
+        imgs: ".wp-posts-content img[data-src]",
+        button: [4],
+        insertImg: [".wp-posts-content", 2],
+        autoDownload: [0],
+        next: "//a[p[text()='上一篇']]",
+        prev: "//a[p[text()='下一篇']]",
+        customTitle: () => fun.gt("h1.article-title").replace(/\|\s?/, ""),
+        fancybox: {
+            blacklist: 1
+        },
+        category: "nsfw1"
     }, {
         name: "紳士漫畫 圖片清單頁",
         host: ["wnacg.com", "www.wnacg.com", "www.htmanga3.top", "www.htmanga4.top", "www.htmanga5.top", "www.hentaicomic.ru", "www.hm1.lol", "www.wn05.lol"],
