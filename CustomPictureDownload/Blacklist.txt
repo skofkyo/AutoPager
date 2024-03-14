@@ -1,4 +1,4 @@
-2024/03/13 00:50
+2024/03/14 19:03
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1260,15 +1260,12 @@ COCOMANGA閱讀
 
 漫漫聚閱讀
 *manmanju.*/comiclist/*/*/*.htm
-*m.ikkdm.*/comiclist/*/*/*.htm
 
 KuKu动漫閱讀
-*kukudm.*/comiclist/*/*/*.htm
-*.ihhmh.*/comiclist/*/*/*.htm
-*.wap.ikukudm.*/comiclist/*/*/*.htm
-*mh123.dypro.xyz/comiclist/*/*/*.htm
-*sbxrb1.3840p.xyz/comiclist/*/*/*.htm
-*m.ikuku.cc/comiclist/*/*/*.htm
+*ikukudm.*/comiclist/*/*/*.htm
+*m.3840p.xyz/comiclist/*/*/*.htm
+
+
 
 8Comic無限動漫手機版閱讀
 *://8.twobili.com/comic/insurance_*
@@ -1516,13 +1513,8 @@ manhuab.com/manhua/*/*.html
 *://*copymanga.site/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
 *manmanju.*/comiclist/*/*/*.htm
-*m.ikkdm.*/comiclist/*/*/*.htm
-*kukudm.*/comiclist/*/*/*.htm
-*.ihhmh.*/comiclist/*/*/*.htm
-*.wap.ikukudm.*/comiclist/*/*/*.htm
-*mh123.dypro.xyz/comiclist/*/*/*.htm
-*sbxrb1.3840p.xyz/comiclist/*/*/*.htm
-*m.ikuku.cc/comiclist/*/*/*.htm
+*ikukudm.*/comiclist/*/*/*.htm
+*m.3840p.xyz/comiclist/*/*/*.htm
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
 *://tw.baozimh.com/*
