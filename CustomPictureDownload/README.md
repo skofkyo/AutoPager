@@ -584,13 +584,15 @@ let callback = (doc, fun) => { //參數doc為iframe的document,fun為可調用�
 await fun.iframeSrcDoc(url, ele);
 </pre>
 <pre>
-//xhr抓取元素，不局限於圖片(靜態，可跨域)
+//xhr抓取元素，不局限於圖片
 //links網址陣列
 //eles要抓的元素
 //"targetEle"清空此元素放入allEle
 //["targetEle", pos] 此元素位置pos，0裡面1之前2之後
 //time請求發送的間隔毫秒
 await fun.getEle(links, eles, targetEle, removeEle = null, time = 100)
+//跨域
+await fun.getCorsEle(links, eles, targetEle, removeEle = null, time = 100)
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
@@ -980,6 +982,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.cup2d.com/">Cup2D</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://baoruba.com/">私图网</a></td>
                 <td></td>
             </tr>
@@ -1093,7 +1099,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.xiuwo.net/">秀窝</a></td>
-                <td><a href="https://rmm8.com/">RMM吧</a>，<a href="https://www.zanmm.com/">赞MM</a>，<a href="https://www.entuji.com/">恩图集</a>，<a href="https://www.mhgirl.com/">美Girl图集</a>，<a href="https://www.hutu6.com/">狐图网</a>，<a href="https://wap.kunv.cc/">爱秀美女</a>，<a href="https://www.930tu.com/">930圖片網</a></td>
+                <td><a href="https://rmm8.com/">RMM吧</a>，<a href="https://www.zanmm.com/">赞MM</a>，<a href="https://www.entuji.com/">恩图集</a>，<a href="https://www.mhgirl.com/">美Girl图集</a>，<a href="https://www.hutu6.com/">狐图网</a>，<a href="https://wap.kunv.cc/">爱秀美女</a>，<a href="https://www.930tu.com/">930圖片網</a>，<a href="https://www.smkwan.com/">四魔写真</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xsnvshen.co/">秀色女神</a></td>
@@ -1380,7 +1386,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.madoucun.com/arttype/57.html">麻豆村</a></td>
-                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>，<a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>，<a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>，<a href="https://www.proncn.com/arttype/57.html">中国P站</a>，<a href="https://www.proncn.com/arttype/57.html">麻豆101</a></td>
+                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>，<a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>，<a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>，<a href="https://www.proncn.com/arttype/57.html">中国P站</a>，<a href="https://www.proncn.com/arttype/57.html">麻豆101</a>，<a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.91tulu.com/">91图录</a></td>
@@ -1635,6 +1641,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://gaidam18.com/">gaidam18</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.cosplay69.net/">Cosplay69</a></td>
                 <td></td>
             </tr>
@@ -1651,8 +1661,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://asiaon.top/">AsiaOnTop</a></td>
-                <td></td>
+                <td><a href="https://asiaontop.com/">AsiaOnTop</a></td>
+                <td><a href="https://asiaon.top/">asiaon.top</a></td>
             </tr>
             <tr>
                 <td><a href="https://mitaku.net/">Mitaku</a></td>
@@ -1808,7 +1818,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.eporner.com/pics/">EPORNER</a></td>
-                <td><a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>，<a href="https://www.eporner.com/profile/trevor221/uploaded-pics//">trevor221</a></td>
+                <td><a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>，<a href="https://www.eporner.com/profile/Khosmo/uploaded-pics/">Khosmo</a>，<a href="https://www.eporner.com/profile/trevor221/uploaded-pics//">trevor221</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xasiat.com/albums/">Xasiat</a></td>
@@ -1851,6 +1861,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://ovovo.me/">OVOVO</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
                 <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片。</td>
             </tr>
@@ -1887,8 +1901,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>列表添加了自動翻頁</td>
             </tr>
             <tr>
-                <td><a href="https://www.erome.com/">EroMe</a></td>
-                <td></td>
+                <td><a href="https://www.erome.com/explore">EroMe</a></td>
+                <td><a href="https://erome.pics/explore/">EroMe erome.pics</a></td>
             </tr>
             <tr>
                 <td><a href="https://mrdeepfakes.com/photos">MrDeepFakes</a></td>
@@ -2807,8 +2821,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.77mh.xyz/">m.77mh.xyz</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://m.gaonaojin.com/">仙漫网</a></td>
-                <td>預設關閉</td>
+                <td><a href="https://www.gaonaojin.com/">仙漫网</a></td>
+                <td>預設關閉，<a href="https://m.gaonaojin.com/">m.gaonaojin.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
@@ -3077,7 +3091,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://pixai.art/">PixAI</a></td>
-                <td>SPA網頁，Lazy Load加載大圖，自動顯示NSFW被模糊的圖片。</td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
             </tr>
             <tr>
                 <td><a href="https://yodayo.com/explore/">Yodayo</a></td>
