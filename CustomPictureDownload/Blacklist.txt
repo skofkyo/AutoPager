@@ -1,4 +1,4 @@
-2024/03/14 19:03
+2024/03/16 23:55
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -431,7 +431,7 @@ Coomer
 性趣套图
 *://myjkwd.com/e/action/ShowInfo.php?*
 *://enpeta.com/e/action/ShowInfo.php?*
-*://xjzi.to/e/action/ShowInfo.php?*
+*://xjzi.top/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
 *://123548.xyz/e/action/ShowInfo.php?*
@@ -597,6 +597,7 @@ Kenh69
 
 青年美圖
 *jrants.com/*.html
+*://*.jrants.com/*/
 
 套圖TAOTU.ORG
 *taotu.org/*/*/*
@@ -630,6 +631,15 @@ PixiBB
 
 Simply Cosplay
 *www.simply-cosplay.com*
+
+OSOSEDKI
+*://ososedki.com/photos/*
+
+COSPLAYASIAN
+*://cosplayasian.com/post/*
+
+COSPLAYTHOTS
+*://cosplaythots.com/p/*
 
 福利图
 *fulitu.me/*/*.html
@@ -1655,7 +1665,7 @@ https://www.nuyet.com/gallery/*
 *://www.mevtu.com/*/*.html
 *://myjkwd.com/e/action/ShowInfo.php?*
 *://enpeta.com/e/action/ShowInfo.php?*
-*://xjzi.to/e/action/ShowInfo.php?*
+*://xjzi.top/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
 *://123548.xyz/e/action/ShowInfo.php?*
@@ -1815,6 +1825,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.baobua.net/post/*
 *baobua.com/post/*
 *jrants.com/*.html
+*://*.jrants.com/*/
 *taotu.org/*/*/*
 *www.kkc3.com/file/*
 *://www.370kb.com/tuku-*.html
@@ -2098,6 +2109,9 @@ https://www.eyval.net/*
 *sharecosplay.com*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
+*://ososedki.com/photos/*
+*://cosplayasian.com/post/*
+*://cosplaythots.com/p/*
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
