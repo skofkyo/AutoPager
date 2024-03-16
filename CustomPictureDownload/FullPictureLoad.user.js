@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.10.8
+// @version            1.10.9
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -658,7 +658,7 @@
     }, {
         name: "ROSI写真",
         host: ["www.rosipic.com", "rosipic.com"],
-        reg: /^https?:\/\/rosipic\.com\/rosi\/\d+\.html$/i,
+        reg: /^https?:\/\/(www\.)?rosipic\.com\/rosi\/\d+\.html$/i,
         imgs: () => [...fun.gae("a.spotlight")].map(a => a.href.replace("https://wsrv.nl/?url=", "").replace(/&blur=\d+/, "")),
         button: [4],
         insertImg: [
@@ -2318,19 +2318,66 @@
         reg: /^https?:\/\/aiavr\.uk\/detail\?aid=\d+/,
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
-            let id = fun.url.match(/\d+$/)[0];
+            let id = fun.url.match(/\?aid=(\d+)/)[1];
             let total = await fetch(`/api/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fun.arr(pages).map((_, i) => `/api/image/list?aid=${id}&pageNum=${i+1}`);
             let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
-            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.sourceWeb + e.sourceUrl));
+            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.sourceUrl == null ? e.sourceWeb + e.url : e.sourceWeb + e.sourceUrl));
         },
         button: [4],
         insertImg: [".q-infinite-scroll", 2],
-        autoDownload: [0],
-        next: "//div[div[@class='q-infinite-scroll']]/following-sibling::div[1]/a[1]",
-        prev: "//div[div[@class='q-infinite-scroll']]/following-sibling::div[1]/a[2]",
-        customTitle: () => fun.title("图集网-"),
+        customTitle: () => {
+            let id = fun.url.match(/\?aid=(\d+)/)[1];
+            return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
+        },
+        category: "nsfw1"
+    }, {
+        name: "图集网",
+        host: ["user.aiavr.uk"],
+        reg: /^https?:\/\/user\.aiavr\.uk\/detail\?aid=\d+/,
+        imgs: async () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let id = fun.url.match(/\?aid=(\d+)/)[1];
+            let total = await fetch(`https://admin.aiavr.uk/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
+            let pages = Math.ceil(total / 6);
+            let links = fun.arr(pages).map((_, i) => `https://admin.aiavr.uk/image/list?aid=${id}&pageNum=${i+1}`);
+            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
+            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.sourceUrl == null ? e.sourceWeb + e.url : e.sourceWeb + e.sourceUrl));
+        },
+        button: [4],
+        insertImg: [".q-infinite-scroll", 2],
+        customTitle: () => {
+            let id = fun.url.match(/\?aid=(\d+)/)[1];
+            return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
+        },
+        category: "nsfw1"
+    }, {
+        name: "图集网",
+        host: ["user.aiavr.uk"],
+        reg: /^https?:\/\/user\.aiavr\.uk\/userAlbumDetail\?aid=\d+/,
+        imgs: async () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let id = fun.url.match(/\?aid=(\d+)/)[1];
+            let vip = await fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.isSee);
+            if (vip == false) {
+                setTimeout(() => {
+                    fun.showMsg("VIP限定專輯圖片!", 5000);
+                }, 1200);
+                return [];
+            }
+            let total = await fetch(`https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
+            let pages = Math.ceil(total / 6);
+            let links = fun.arr(pages).map((_, i) => `https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=${i+1}`);
+            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
+            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.imgUrl == null ? null : "https://image.51x.uk/xinshijie" + e.imgUrl).filter(item => item));
+        },
+        button: [4],
+        insertImg: [".q-infinite-scroll", 2],
+        customTitle: () => {
+            let id = fun.url.match(/\?aid=(\d+)/)[1];
+            return fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.title);
+        },
         category: "nsfw1"
     }, {
         name: "爱死美女图片站",
@@ -12287,17 +12334,21 @@ window.parent.postMessage({
         category: "comic"
     }, {
         name: "新新漫画",
-        host: ["www.77mh.xyz", "m.77mh.xyz"],
+        host: ["www.77mh.nl", "m.77mh.nl", "www.77mh.xyz", "m.77mh.xyz", "www.77mh.me", "m.77mh.me"],
         enable: 0,
         reg: /(www|m)\.77mh\.[a-z]{2,3}\/\d+\/\d+\.html/i,
         imgs: async () => {
-            let src = fun.attr("#comicImg img,.mg-co img", "src");
-            let status = await fun.xhrHEAD(src).then(res => res.status);
+            let status;
+            if (fun.ge(".FullPictureLoadImage")) {
+                status = 200;
+            } else {
+                let src = fun.attr("#comicImg img,.mg-co img", "src");
+                status = await fun.xhrHEAD(src).then(res => res.status);
+            }
             return status === 200 ? msg.split("|").map(e => fun.indexOf(fun.lh, "m.77mh") ? ImgSvrList + e : img_qianz + e) : [];
         },
         button: [4],
         insertImg: ["#comicImg,.mg-co", 2],
-        go: 1,
         insertImgAF: () => {
             if (fun.indexOf(fun.lh, "m.77mh")) {
                 let p = fun.ge(".page_num");
@@ -12319,10 +12370,10 @@ window.parent.postMessage({
         next: () => nextLink_b == "" ? null : location.origin + nextLink_b,
         prev: "//a[contains(text(),'上一章')]",
         customTitle: doc => fun.title(" - ", 3, doc),
-        preloadNext: (nextDoc, obj) => {
+        preloadNext: async (nextDoc, obj) => {
             let code = fun.gt("//script[contains(text(),'eval')]", 1, nextDoc);
             fun.script(code, 0, 1);
-            fun.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
+            fun.picPreload(await obj.imgs(), obj.customTitle(nextDoc), "next");
         },
         category: "comic"
     }, {
