@@ -1,3 +1,13 @@
+<h1>測試通過環境：</h1>
+<pre>
+Chrome 122.0.6261.129 + Tampermonkey 5.0.1
+Edge 122.0.2365.92 + Tampermonkey 5.0.1
+Cent Browser 5.1.1130.26 + Tampermonkey 5.0.1
+FireFox 123.0.1 + Tampermonkey 5.0.1
+Kiwi Browser 124.0.6327.1 + Tampermonkey 5.0.1
+Firefox for Android 123.1.0 + Tampermonkey 5.0.1
+Waterfox for Android 1.0.5 + Tampermonkey 5.0.1
+</pre>
 <h1>提醒：</h1>
 <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
 <p>請自行修改腳本將所有cdn.jsdelivr.net替換成cdn.bootcdn.net</p>
@@ -5,8 +15,8 @@
 cdn.jsdelivr.net
 https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.umd.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.22/dist/fancybox/fancybox.css
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 </pre>
@@ -22,17 +32,9 @@ https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css
 <br>
 <p>2023/11/06</p>
 <p>腳本1.6.0+版本使用Fancybox5.0.24後，暴力猴Violentmonkey會報錯。</p>
-<p>在以下測試環境是正常的</p>
-<pre>
-FireFox 119.0 + Tampermonkey 4.19.0
-Cent Browser 5.0.1002.354 + Tampermonkey 4.19.0
-Chrome 119.0.6045.106 + Tampermonkey 4.19.0
-Edge 119.0.2151.44 + Tampermonkey 4.19.0
-Kiwi Browser 116.0.5845.240 + Tampermonkey 4.19.0
-</pre>
 <p>如果用戶堅持使用暴力猴Violentmonkey，腳本1.6.3+的版本只需用戶自己修改</p>
 <pre>
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.24/dist/fancybox/fancybox.umd.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js
 </pre>
 改成
 <pre>
@@ -441,7 +443,10 @@ fun.arr(num).map((_, i) => {
 </pre>
 <pre>
 //移除元素
-fun.remove("ele", time = 0)
+fun.remove("selector", time = 0)
+//如果需要多個選擇器並且CSS/Xpath混寫可寫成數組
+let selectors = ["cssSelector" , "XpathSelector"]
+fun.remove(selectors, time = 0)
 </pre>
 <pre>
 //清除所有setTimeout&setInterval定時器
@@ -775,7 +780,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/14 19:03</p>
+<p>2024/03/16 23:55</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -883,6 +888,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>China IP限定</td>
             </tr>
             <tr>
+                <td><a href="https://rosipic.com/rosi.html">ROSI写真</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://www.rosi985.com/">ROSI美女写真</a></td>
                 <td></td>
             </tr>
@@ -924,6 +933,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://kiutaku.com/">Kiutaku</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://aiavr.uk/">图集网</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1514,7 +1527,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://4kup.net/">4KUP</a></td>
-                <td>高解析原圖需要下載，聚集的只是預覽圖</td>
+                <td>圖片服務器屏蔽部分地區需要VPN才能顯示，高解析原圖需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
                 <td><a href="https://imgasd.com/">Imgasd</a></td>
@@ -1703,6 +1716,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://xcosplay.top/">X Cosplay</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://ososedki.com/">OSOSEDKI</a></td>
+                <td><a href="https://cosplayasian.com/">COSPLAYASIAN</a><a href="https://cosplaythots.com/">COSPLAYTHOTS</a></td>
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
@@ -2362,7 +2379,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://18comic.vip/">禁漫天堂</a></td>
-                <td>手動插入圖片，由於需要重新繪製還原被分割的圖片，過程中CPU會全速運轉。<a href="https://jmcmomic.github.io/">禁漫天堂發布頁</a></td>
+                <td>手動插入圖片，由於需要重新繪製還原被分割的圖片，過程中CPU會全速運轉。<a href="https://jmcmomic.github.io/">禁漫天堂發布頁</a>，<a href="https://jmcomic-fb.vip/">禁漫天堂發布頁2</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.nicohentai.com/">逆次元逆ACG</a></td>
