@@ -79,8 +79,8 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     key: 0, //填0不綁定快捷鍵
     reg: /www\.xxxxx\.com/, //正則表達式匹配網址
     reg: [ //匹配正則表達式數組
-        /reg_A/,
-        /reg_B/
+        /RegExp/,
+        /RegExp/
     ],
     reg: () => {
          //函式寫法返回布林值boolean
@@ -98,7 +98,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     exclude: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁要排除數組裡其中的元素
     init: "code", //載入頁面後要優先執行的代碼
     init: () => {
-        code
+        code;
     },
     init: async () => await fun.waitEle("元素選擇器"), //等待直至元素出現
     init: async () => await fun.waitVar("屬性名"), //等待直至window物件的屬性出現
@@ -107,9 +107,8 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     //IMG、DIV、A，SPAN，4種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
     imgs: "js;code", //也可透過JS代碼自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變量或透過api取得的json。
     imgs: () => {
-        let arr = [];
-        …code;
-        return arr;
+        code;
+        return Array;
     },
     scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵6
     scrollEle: async () => {
@@ -120,21 +119,24 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
     ],
-    insertImgAF: () => {//插入圖片後要執行的代碼
-        code
+    insertImgAF: () => {
+        //插入圖片後要執行的代碼
+        code;
     },
     go: 1, //insertImg配套選項，圖片插入在頁面偏下位置時，捲動至第一張大圖的位置。
-    customTitle: "return code", //自定義JS代碼生成壓縮檔和資料夾名稱，預設是使用當前網頁標題。
+    customTitle: "return text;", //自定義JS代碼生成壓縮檔和資料夾名稱，預設是使用當前網頁標題。
     customTitle: () => {
-        return code
+        code;
+        return text;
     },
     observerTitle: true, //觀察元素變化重新取得標題字串
     autoDownload: [1, time], //1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
     next: "//a[text()="下一章"]", //設定下一頁元素綁定右方向鍵點擊下一頁。
     next: () => {
-        …code;
-        return link
+        code;
+        return link;
     },
+    observerURL: true, //觀察URL變化重新取得nextLink
     prev: "//a[text()="上一章"]", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //插入自訂樣式，基本上就是用來隱藏廣告用的。
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
@@ -199,6 +201,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     next: () => {
         code
     },
+    observerURL: true,
     prev: "",
     css: "",
     autoClick: "",
@@ -292,15 +295,15 @@ fun.ge(selector, doc)
         pos: ["selector", 0], //[插入下一頁主體元素的基準元素, 0裡面1之前2之後]，預設為主體元素最後一個之後，可省略。
         next: "selector", //下一頁A元素選擇器
         next: (doc) => { 
-            code
-            return url
+            code;
+            return url;
         },
         http: "https", //下一頁鏈結的傳輸協定 http/https
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
         stop: (doc) => {
             //根據判斷結果返回布林值boolean停止翻頁。
-            code
+            code;
             if (code) {
                 return true
             }
@@ -309,12 +312,12 @@ fun.ge(selector, doc)
         showTitle: 0, //0不顯示下一頁的標題分隔條，顯示則省略。
         title: (doc) => {
             //自定義標題分隔條要顯示的文字，不使用則省略。
-            code
+            code;
             return titleText
             //先經過代碼判斷返回obj。
             return {
                 ok: (true添加標題,false不添加),
-                text: titleText
+                text: titleText;
             }
         },
         bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設為當前視窗可視範圍的高度screen.height可省略。
@@ -326,7 +329,7 @@ fun.ge(selector, doc)
         bF: (doc) => {
             //插入下一頁元素之前要執行的代碼，不需要則省略
         },
-        aF: () => { 
+        aF: (doc) => { 
              //插入下一頁元素之後要執行的代碼，不需要則省略
         }
     },
@@ -365,7 +368,6 @@ fun.attr("selector","屬性", doc = document)
 <pre>
 //返回元素的圖片網址陣列
 fun.getImgSrcArr("selector", doc = document);
-fun.getImgSrcArr("圖片元素選擇器");
 fun.getImgSrcArr([圖片元素陣列]);
 </pre>
 <pre>
@@ -417,19 +419,6 @@ if (await fun.waitEle(ele)) {
 await fun.waitVar("declares", max = 200)
 </pre>
 <pre>
-//函式搭配，多元素點擊，如簽到任務
-init: async () => {
-    if (fun.ge(ele)) {
-        let eleArr = ["ele1","ele2","ele3"];
-        for (let i in eleArr) {
-            await fun.waitEle(eleArr[i]);
-            fun.ge(eleArr[i]).click();
-            await fun.delay(200);
-        }
-    }
-}
-</pre>
-<pre>
 //功能基本等同eval()
 fun.run("代碼")
 </pre>
@@ -438,8 +427,8 @@ fun.run("代碼")
 //num陣列的長度
 fun.arr(num)
 fun.arr(num).map((_, i) => {
-    return
-})
+    return (i+1);
+});
 </pre>
 <pre>
 //移除元素
@@ -556,7 +545,7 @@ fun.xhr(url, "json").then(json => {
 })
 </pre>
 <pre>
-//使用Promise包裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼。
+//使用Promise包裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
 fun.xhrDoc(url, referer, ua)
 fun.xhrDoc(url).then(doc => {
     console.log("測試doc", doc);
@@ -587,6 +576,11 @@ let callback = (doc, fun) => { //參數doc為iframe的document,fun為可調用�
 自由發揮
 }
 await fun.iframeSrcDoc(url, ele);
+</pre>
+<pre>
+//使用iframe框架，等待至指定的declares出現，返回iframe框架的contentWindow。
+let iframe = await fun.iframeVar(url, time = 1000, "declares");
+let _var = iframe.declares;
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片
@@ -893,7 +887,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://www.rosi985.com/">ROSI美女写真</a></td>
-                <td></td>
+                <td>部分地區需要VPN才能連上，<a href="https://www.2meinv.cc/">www.2meinv.cc</a>，<a href="https://www.silk-necktie.com/">www.silk-necktie.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.rosi211.cc/">ROSI小莉写真</a></td>
@@ -937,7 +931,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://aiavr.uk/">图集网</a></td>
-                <td></td>
+                <td><a href="https://user.aiavr.uk/">user.aiavr.uk</a></td>
             </tr>
             <tr>
                 <td><a href="https://xgirl.one/">XGirl</a></td>
@@ -1136,7 +1130,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://8ezy.com/?s=">8E资源站</a></td>
-                <td>有反擋廣告套件機制會清空網頁內容，需加入擋廣告白名單。</td>
+                <td>如出現清空網頁內容的情況，是因為有反擋廣告套件機制，需加入擋廣告白名單。</td>
             </tr>
             <tr>
                 <td><a href="https://www.aixiurentu.com/">秀人图</a></td>
@@ -1719,7 +1713,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://ososedki.com/">OSOSEDKI</a></td>
-                <td><a href="https://cosplayasian.com/">COSPLAYASIAN</a><a href="https://cosplaythots.com/">COSPLAYTHOTS</a></td>
+                <td><a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a></td>
             </tr>
             <tr>
                 <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
@@ -1811,6 +1805,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://m.phimvuspot.com/">PhimVu</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://yeugai.org/">YeuGai.Net</a></td>
                 <td></td>
             </tr>
             <tr>
