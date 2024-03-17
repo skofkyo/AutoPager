@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.10.9
+// @version            1.10.10
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -59,7 +59,7 @@
 
     const _unsafeWindow = typeof unsafeWindow === "undefined" ? window : unsafeWindow;
     const language = _unsafeWindow.navigator.language;
-    const siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$/i, "");
+    let siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$/i, "");
     let siteData = {};
     let siteJson = null;
     let displayLanguage = {};
@@ -665,6 +665,32 @@
             ["#waterfall-container", 2], 2
         ],
         go: 1,
+        category: "nsfw1"
+    }, {
+        name: "ROSI美女写真",
+        host: ["www.rosixiezhen.cc", "rosixiezhen.cc", "www.rosi985.com", "www.rosi365.cc", "www.rosi360.cc", "www.2meinv.cc", "www.silk-necktie.com"],
+        reg: /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/i,
+        exclude: "//span/a[text()='ROSI视频']",
+        init: () => {
+            let pag = [...fun.gae(".pagination2")];
+            if (pag.length > 0) pag[0].remove();
+            fun.remove(".content>b,.content>br,.asst");
+        },
+        imgs: () => {
+            let max;
+            try {
+                max = fun.gt("//a[contains(text(),'共')]").match(/\d+/)[0];
+            } catch (e) {
+                max = 1;
+            }
+            return fun.getImg(".article-content img", max, 9);
+        },
+        button: [4],
+        insertImg: [".article-content", 2],
+        autoDownload: [0],
+        next: ".article-nav-prev>a",
+        prev: ".article-nav-next>.a",
+        customTitle: () => fun.gt(".article-title"),
         category: "nsfw1"
     }, {
         name: "ROSI小莉最新写真",
@@ -3704,11 +3730,12 @@
         },
         category: "nsfw2"
     }, {
-        name: "COSPLAYASIAN/COSPLAYTHOTS",
-        host: ["cosplayasian.com", "cosplaythots.com"],
+        name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34",
+        host: ["cosplayasian.com", "cosplaythots.com", "cosplayrule34.com"],
         reg: [
             /^https?:\/\/cosplayasian\.com\/post\/\d+/,
-            /^https?:\/\/cosplaythots\.com\/p\/\d+/
+            /^https?:\/\/cosplaythots\.com\/p\/\d+/,
+            /^https?:\/\/cosplayrule34\.com\/post\/\d+/
         ],
         button: [4],
         imgs: () => {
@@ -5286,12 +5313,52 @@
     }, {
         name: "PhimVu",
         host: ["m.phimvuspot.com"],
-        reg: /m\.phimvuspot\.com\/\d+\/\d+\/[\w-]+\.html/,
-        imgs: ".separator>a",
+        reg: /^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i,
+        imgs: async () => {
+            let max;
+            try {
+                max = fun.gt("h1.post-title").match(/\d+$/)[0];
+            } catch (e) {
+                max = 1;
+            }
+            let imgSrcs = /\?m=1/.test(siteUrl) ? await fun.getImg(".post-content img", max, "8") : await fun.getImg(".post-content img", max);
+            return fun.checkImageCDN(imgSrcs);
+        },
         button: [4],
         insertImg: [".post-content", 2],
-        customTitle: () => fun.gt("h1.post-title").replace(/\s?\(\d+[\s\w]+\)|\s?\(\d+\s?photos(\s?\+\s?\d+\s?videos?)?\)/i, ""),
-        category: "nsfw1"
+        customTitle: () => fun.title(/^[a-z-\s\.I]+:/i).split("|")[0].trim().replace(/\(\d+[\w\s\.\+-]+\)|\[\d+[\w\s\.\+-]+\]|【\d+[\w\s\.\+-]+】|\d+p(\d+v)?/i, ""),
+        category: "nsfw2"
+    }, {
+        name: "YeuGai.Net",
+        host: ["yeugai.org"],
+        reg: /^https?:\/\/yeugai\.org\/[^\/]+\/$/i,
+        init: async () => {
+            await fun.waitEle(".mirror-image img");
+            fun.run("jQuery(document).off();");
+        },
+        imgs: () => {
+            videosSrcArray = [...fun.gae("video>source[type='video/mp4']+a[href*='.mp4']")].map(a => a.href);
+            if (fun.ge(".mirror-image img[src*=blog]")) {
+                let imgsSrcArr = [...fun.gae(".mirror-image img[src*=blog]")].map(e => {
+                    let arr = e.src.split("/");
+                    if (arr.length === 9) {
+                        arr[7] = "s16000";
+                        return arr.join("/");
+                    } else {
+                        return e.src;
+                    }
+                });
+                thumbnailsSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
+                return imgsSrcArr;
+            } else {
+                return [...fun.gae(".mirror-image img")]
+            }
+        },
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: () => fun.gt(".entry-title").replace(/^Ảnh.+Xinh\s|^Clip.+Em\s/, ""),
+        downloadVideo: true,
+        category: "nsfw2"
     }, {
         name: "움짤저장소 KPOP GIRLGROUPS ACTOR",
         host: ["kkoreaactor.blogspot.com"],
@@ -7558,8 +7625,8 @@
         name: "D哥新聞",
         host: ["dbro.news"],
         link: "https://dbro.news/category/p0-%e5%a5%97%e5%9c%96%e7%b3%bb%e5%88%97",
-        reg: () => /^https?:\/\/dbro\.news\/\d+\/[^\.]+\.html$/i.test(siteUrl) && fun.ge("p.pic_center,.content_left img"),
-        imgs: ".pic_center>img,.content_left img",
+        reg: () => /^https?:\/\/dbro\.news\/\d+\/[^\.]+\.html$/i.test(siteUrl) && fun.ge("p.pic_center,.content_left img,.container img.mt-1"),
+        imgs: ".pic_center>img,.content_left img,.container img.mt-1",
         customTitle: () => fun.gt(".post-title").replace(/\[\d+[\w\s\.\+-]+\]|\(\d+[\w\s\.\+-]+\)/, "").trim(),
         category: "nsfw2"
     }, {
@@ -7947,7 +8014,7 @@
     }, {
         name: "18Kami.com",
         host: ["18kami.com"],
-        reg: /^https?:\/\/18kami\.com\/photo\/\d+$/,
+        reg: /^https?:\/\/18kami\.com\/photo\/\d+/,
         init: () => {
             setTimeout(() => {
                 fun.ge("#chk_cover").click();
@@ -9777,7 +9844,7 @@
     }, {
         name: "色漫网",
         host: ["www.cartoon18.com"],
-        reg: () => /^https?:\/\/www\.cartoon18\.com\/v\/\w+$/i && fun.ge("//a[contains(text(),'開始閱讀')]"),
+        reg: () => /^https?:\/\/www\.cartoon18\.com\/v\/\w+$/i.test(siteUrl) && fun.ge("//a[contains(text(),'開始閱讀')]"),
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.ge("//a[contains(text(),'開始閱讀')]").href;
@@ -11416,7 +11483,9 @@ document.body.appendChild(text);
         host: ["komiic.com"],
         enable: 1,
         reg: /komiic\.com\/comic\/\d+\/chapter\//,
+        init: async () => await fun.waitEle(".v-breadcrumbs"),
         imgs: async (url = siteUrl) => {
+            fun.showMsg(displayLanguage.str_05, 0);
             let chapterId = url.match(/chapter\/(\d+)\/images/)[1];
             let body = {
                 operationName: "imagesByChapterId",
@@ -11435,6 +11504,7 @@ document.body.appendChild(text);
             debug("\nimages JSON\n", json);
             return json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid);
         },
+        repeat: 1,
         autoDownload: [0],
         next: async () => {
             let mhId = siteUrl.match(/comic\/(\d+)/)[1];
@@ -11469,11 +11539,13 @@ document.body.appendChild(text);
             }
             return nextUrl;
         },
+        observerURL: true,
         prev: 1,
-        customTitle: async () => {
-            await fun.delay(2000, 0);
-            return fun.title(" | Komiic漫畫");
+        customTitle: () => {
+            let textArr = fun.gt(".v-breadcrumbs").split("\n");
+            return textArr[1] + " - " + textArr[2];
         },
+        observerTitle: true,
         threading: 2,
         category: "comic"
     }, {
@@ -12482,6 +12554,7 @@ window.parent.postMessage({
         },
         button: [4],
         insertImg: [".comicpage", 2],
+        insertImgAF: () => nextLink ? fun.addUrlHtml(nextLink, ".comicpage", 1) : null,
         autoDownload: [0],
         next: "//li[a[@class='active']]/preceding-sibling::li[1]/a",
         prev: "//li[a[@class='active']]/following-sibling::li[1]/a",
@@ -12495,6 +12568,7 @@ window.parent.postMessage({
             });
             fun.picPreload(arr, nextDoc.title, "next");
         },
+        css: ".dropload-down{display:none!important;}",
         category: "comic"
     }, {
         name: "仙漫网M m.gaonaojin.com",
@@ -17420,7 +17494,7 @@ document.body.appendChild(text);
         let srcArr = await getImgs(selector);
         siteData.insertImg ? debug("手動插入圖片") : debug("複製網址");
         if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
-        if ((!fun.ge(".FullPictureLoadImage") && siteData.insertImg) || siteData.repeat == 1) {
+        if ((!fun.ge(".FullPictureLoadImage") && siteData.insertImg) || siteData.repeat == 1 && siteData.insertImg) {
             return fun.insertImg(srcArr, siteData.insertImg[0], siteData.insertImg[1]);
         }
         if (videosSrcArray.length > 0) srcArr = srcArr.concat(videosSrcArray);
@@ -19252,32 +19326,45 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     };
                     await getTitle();
                     debug(`\n自定義標題：${customTitle}`);
-                    if (data.observerTitle) {
-                        new MutationObserver(async () => {
+                    if (data?.observerTitle) {
+                        fun.addMutationObserver(async () => {
                             await getTitle();
                             debug(`\n自定義標題：${customTitle}`);
-                        }).observe(document.body, MutationObserverConfig);
+                        });
                     }
                 }
                 let next = data?.next;
                 if (next) {
                     let link = null;
-                    isFn(next) ? link = await next() : link = fun.ge(next);
-                    debug("\n圖片全載NEXT：", link);
-                    try {
-                        if (link !== null) {
-                            isString(link) ? nextLink = link : null;
-                            if (isEle(link) && link?.tagName == "A") {
-                                try {
-                                    /^http/.test(link.href) ? nextLink = link.href : nextLink = null;
-                                } catch (e) {}
+                    const getNextLink = async () => {
+                        isFn(next) ? link = await next() : link = fun.ge(next);
+                        debug("\n圖片全載NEXT：", link);
+                        try {
+                            if (link !== null) {
+                                isString(link) ? nextLink = link : null;
+                                if (isEle(link) && link?.tagName == "A") {
+                                    try {
+                                        /^http/.test(link.href) ? nextLink = link.href : nextLink = null;
+                                    } catch (e) {}
+                                }
                             }
-                        }
-                    } catch (e) {}
+                        } catch (e) {}
+                    }
+                    await getNextLink();
+                    if (data?.observerURL) {
+                        fun.addMutationObserver(async () => {
+                            if (/\?page=\d+$/.test(_unsafeWindow.document.URL)) return;
+                            if (siteUrl != _unsafeWindow.document.URL) {
+                                siteUrl = _unsafeWindow.document.URL;
+                                await getNextLink();
+                                debug(`\nURL變換 nextLink：${nextLink}`);
+                            }
+                        });
+                    }
                     const callback = () => {
                         if (isFn(next)) {
                             fun.showMsg(displayLanguage.str_34, 0);
-                            /^http/.test(link) ? location.href = link : fun.showMsg(displayLanguage.str_37);
+                            nextLink ? location.href = nextLink : fun.showMsg(displayLanguage.str_37);
                         } else if (isString(next)) {
                             if (link) {
                                 //link.click();
@@ -19395,7 +19482,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 let openInNewTab = data?.openInNewTab;
                 if (openInNewTab) {
                     fun.openInNewTab(openInNewTab);
-                    new MutationObserver(() => fun.openInNewTab(openInNewTab)).observe(document.body, MutationObserverConfig);
+                    fun.addMutationObserver(() => fun.openInNewTab(openInNewTab));
                 }
                 let autoDownload = siteData?.autoDownload;
                 if (autoDownload) {
