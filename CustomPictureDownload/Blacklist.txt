@@ -1,4 +1,4 @@
-2024/03/16 23:55
+2024/03/20 00:16
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -432,6 +432,7 @@ Coomer
 *://myjkwd.com/e/action/ShowInfo.php?*
 *://enpeta.com/e/action/ShowInfo.php?*
 *://xjzi.top/e/action/ShowInfo.php?*
+*://xqtt.xqtt.de/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
 *://123548.xyz/e/action/ShowInfo.php?*
@@ -633,13 +634,19 @@ Simply Cosplay
 *www.simply-cosplay.com*
 
 OSOSEDKI
-*://ososedki.com/photos/*
+*://ososedki.com/*photos/*
 
 COSPLAYASIAN
-*://cosplayasian.com/post/*
+*://cosplayasian.com/*post/*
 
 COSPLAYTHOTS
-*://cosplaythots.com/p/*
+*://cosplaythots.com/*p/*
+
+COSPLAYRULE34
+*://cosplayrule34.com/*post/*
+
+WAIFUBITCHES
+*://waifubitches.com/*gallery/*
 
 福利图
 *fulitu.me/*/*.html
@@ -958,7 +965,7 @@ tu928美女写真网
 /^https?:\/\/tu928\.com\/\d+\.html/
 
 ROSI美女写真
-/^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
+/^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
 
 图片屋
@@ -1050,6 +1057,9 @@ Hanime1
 
 HentaiFox
 *://hentaifox.com/g/*/*/
+
+HentaiRox
+*://hentairox.com/view/*/*/
 
 3hentai
 *://3hentai.net/d/*/*
@@ -1666,6 +1676,7 @@ https://www.nuyet.com/gallery/*
 *://myjkwd.com/e/action/ShowInfo.php?*
 *://enpeta.com/e/action/ShowInfo.php?*
 *://xjzi.top/e/action/ShowInfo.php?*
+*://xqtt.xqtt.de/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
 *://123548.xyz/e/action/ShowInfo.php?*
@@ -1741,6 +1752,7 @@ https://www.nuyet.com/gallery/*
 *://simplyhentai.red/g/*/*/
 *://hanime1.me/comic/*/*
 *://hentaifox.com/g/*/*/
+*://hentairox.com/view/*/*/
 *://3hentai.net/d/*/*
 *://www.simply-hentai.com/*/*/page/*
 *://nhentai.com/en/comic/*/reader/*
@@ -2109,9 +2121,11 @@ https://www.eyval.net/*
 *sharecosplay.com*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
-*://ososedki.com/photos/*
-*://cosplayasian.com/post/*
-*://cosplaythots.com/p/*
+*://ososedki.com/*photos/*
+*://cosplayasian.com/*post/*
+*://cosplaythots.com/*p/*
+*://cosplayrule34.com/*post/*
+*://waifubitches.com/*gallery/*
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
@@ -2125,7 +2139,7 @@ https://www.eyval.net/*
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
-/^https?:\/\/((www\.)?rosixiezhen\.cc|(www\.)?rosi\d+\.cc|(www\.)?\dmeinv\.cc)\/\w+\/\w+\.html/
+/^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
 *://*tupianwu.com/*
 /^https?:\/\/tu928\.com\/\d+\.html/
