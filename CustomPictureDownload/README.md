@@ -1,9 +1,12 @@
 <h1>測試通過環境：</h1>
 <pre>
+PC
 Chrome 122.0.6261.129 + Tampermonkey 5.0.1
 Edge 122.0.2365.92 + Tampermonkey 5.0.1
 Cent Browser 5.1.1130.26 + Tampermonkey 5.0.1
 FireFox 123.0.1 + Tampermonkey 5.0.1
+
+Android
 Kiwi Browser 124.0.6327.1 + Tampermonkey 5.0.1
 Firefox for Android 123.1.0 + Tampermonkey 5.0.1
 Waterfox for Android 1.0.5 + Tampermonkey 5.0.1
@@ -110,6 +113,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code;
         return Array;
     },
+    repeat: 1, //重複取得圖片元素，用於SPA網頁
     scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵6
     scrollEle: async () => {
         …code;
@@ -129,14 +133,14 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code;
         return text;
     },
-    observerTitle: true, //觀察元素變化重新取得標題字串
+    observerTitle: true, //觀察元素變化重新取得標題字串，用於SPA網頁
     autoDownload: [1, time], //1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
     next: "//a[text()="下一章"]", //設定下一頁元素綁定右方向鍵點擊下一頁。
     next: () => {
         code;
         return link;
     },
-    observerURL: true, //觀察URL變化重新取得nextLink
+    observerURL: true, //觀察URL變化重新取得nextLink，用於SPA網頁
     prev: "//a[text()="上一章"]", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //插入自訂樣式，基本上就是用來隱藏廣告用的。
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
@@ -178,6 +182,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     imgs: () => {
         code
     },
+    repeat: 1,
     scrollEle: ["", 500],
     scrollEle: async () => {
         …code;
@@ -364,6 +369,13 @@ fun.gt("selector", mode = 1, doc = document);
 <pre>
 //取得元素屬性的值
 fun.attr("selector","屬性", doc = document)
+</pre>
+<pre>
+//創建一個DIV用來放圖片，#FullPictureLoadMainImgBox
+//pos 0，添加進指定的元素裡面
+//pos 1，插入在指定的元素之前
+//pos 2，插入在指定的元素之後
+fun.createImgBox(selector, pos = 0);
 </pre>
 <pre>
 //返回元素的圖片網址陣列
@@ -743,7 +755,7 @@ imgs: async () => {
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
-<p>組合鍵 Ctrl + Alt + T 頁面選取文字後，按此快捷鍵可以設定為下載用的圖集標題。</p>
+<p>組合鍵 Ctrl + Alt + T 頁面選取文字後，按此快捷鍵可以快速設定為腳本用的圖集標題，沒有選取文字也會彈出輸入框能手動輸入自訂標題。</p>
 <br>
 <p>按0、Enter，2步驟開始下載。</p>
 <p>按1，複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
@@ -777,7 +789,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/20 00:16</p>
+<p>2024/03/22 22:58</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -846,18 +858,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hitxhot.org/">Hit-x-Hot</a></td>
-                <td>同格式，<a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，<a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>，<a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a></td>
+                <td>同格式，<a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，<a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>，<a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a>，<a href="https://redseats.org/">RedSeats.Org</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.12356781.xyz/">极品性感美女</a></td>
-                <td><a href="https://x002.pppy.bf/">x002.pppy.bf</a></td>
+                <td><a href="https://www.12356782.xyz/">极品性感美女</a></td>
+                <td><a href="https://x004.cxxx.bf/">x004.cxxx.bf</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn02.top/">秀人美女網</a></td>
-                <td><a href="https://xrmn5.zzzy.bf/">xrmn5.zzzy.bf</a></td>
+                <td><a href="https://www.xrmn03.top/">秀人美女網</a></td>
+                <td><a href="https://xrmn6.yyye.bf/">xrmn6.yyye.bf</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xr05.vip/">秀人集</a></td>
+                <td><a href="https://www.xr04.vip/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -960,7 +972,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://www.mfsft.com/">免费私房图</a></td>
                 <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a>
                     ，發布頁，<a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>，
-                    相似仿站，<a href="https://www.rosi8.net/">www.rosi8.net</a>，<a href="https://www.sfjpg.com/">www.sfjpg.com</a>，<a href="https://www.sfjpg.net/">www.sfjpg.net</a>，<a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>，<a href="https://www.kanmeitu1.com/">www.kanmeitu1.com</a>，<a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
+                    相似仿站，<a href="https://www.rosi8.com/">www.rosi8.com</a>，<a href="https://www.sfjpg.com/">www.sfjpg.com</a>，<a href="https://www.sfjpg.net/">www.sfjpg.net</a>，<a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>，<a href="https://www.kanmeitu1.com/">www.kanmeitu1.com</a>，<a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
                 </td>
             </tr>
             <tr>
@@ -1144,6 +1156,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.tp8.org/">图片吧</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://xiaojiejie.me/">小姐姐么</a></td>
                 <td></td>
             </tr>
@@ -1199,7 +1215,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.pixnet.net/pcard/ChibaKuma">千葉熊的出沒地</a></td>
+                <td><a href="https://chibakuma.pixnet.net/blog">千葉熊的出沒地</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://cyberkuma.pixnet.net/blog">CyberKuma的部落格</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1404,11 +1424,15 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.madoucun.com/arttype/57.html">麻豆村</a></td>
-                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>，<a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>，<a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>，<a href="https://www.proncn.com/arttype/57.html">中国P站</a>，<a href="https://www.proncn.com/arttype/57.html">麻豆101</a>，<a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>，<a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>，<a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>，<a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a></td>
+                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>，<a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>，<a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>，<a href="https://www.proncn.com/arttype/57.html">中国P站</a>，<a href="https://www.proncn.com/arttype/57.html">麻豆101</a>，<a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>，<a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>，<a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>，<a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a>，<a href="https://www.9ccg.org/arttype/57.html">9草吃瓜网</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.91tulu.com/">91图录</a></td>
                 <td><a href="https://cn.w55.tv/">cn.w55.tv</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://setushe.com/">涩图社</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://books.xxgirls.vip/">淫淫小说写真馆</a></td>
@@ -1527,6 +1551,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://fxcc.cc/">二級域名導航</a></td>
             </tr>
             <tr>
+                <td><a href="https://spacemiss.com/">Spacemiss.com</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.cosersets.com/1/main">Cosersets</a></td>
+                <td>SPA網頁，請在圖片頁做操作，可用0、1、3、7、8，Ctrl + Alt + T可修改圖集標題。</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.fantasyfactory.xyz/">小丁 (Fantasy Factory) Patreon Cosplay Leaks</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
                 <td><a href="https://asianpink.net/">AsianPink</a></td>
                 <td>高解析原圖需要下載，聚集的只是預覽圖</td>
             </tr>
@@ -1589,6 +1625,42 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://fapachi.com/">Fapachi</a></td>
                 <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td><a href="https://faponic.com/">Faponic</a></td>
+                <td>手動插入圖片，<a href="https://fapellas.com/">Fapellas</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://thefappening.plus/">The Fappening Plus</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://thefappeningblog.com/">TheFappening</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://fapomania.com/">Fapomania</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://nudostar.tv/">NudoStar.TV</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://nudogram.com/">Nudogram</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://hentaidude.tv/category/cosplay/">HentaiDude TV</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.sankakucomplex.com/">Sankaku Complex</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://influencersgonewild.com/">Influencers GoneWild</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://fanleaks.club/">Fan Leaks</a></td>
@@ -1739,12 +1811,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://ososedki.com/">OSOSEDKI</a></td>
-                <td><a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a></td>
+                <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
+                <td><a href="https://cutexinh.com/">CuteXinh</a>，<a href="https://babeasia.com/">Babe Asia</a>，<a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>，<a href="https://nongbong.com/">Nóng Bỏng</a>，<a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>，<a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a></td>
             </tr>
             <tr>
-                <td><a href="https://hotgirlchina.com/">HOTGIRLchina</a></td>
-                <td><a href="https://cutexinh.com/">CuteXinh</a>，<a href="https://babeasia.com/">Babe Asia</a></td>
+                <td><a href="https://ososedki.com/">OSOSEDKI</a></td>
+                <td><a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a></td>
             </tr>
             <tr>
                 <td><a href="https://foamgirl.net/">FoamGirl</a></td>
@@ -1824,7 +1896,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://goddess247.com/">goddess247</a></td>
-                <td><a href="https://bestprettygirl.com/">bestprettygirl</a></td>
+                <td><a href="https://bestprettygirl.com/">bestprettygirl</a>，<a href="https://girlsweetie.com/">Girl Sweetie</a>，<a href="https://girldreamy.com/">Girl Dreamy</a></td>
             </tr>
             <tr>
                 <td><a href="https://bestgirlsexy.com/">BestGirlSexy</a></td>
@@ -1849,6 +1921,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.poringa.net/">Poringa!</a></td>
                 <td><a href="https://m.poringa.net/">m.poringa.net</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://tabakus.blogspot.com/">Tabakus Gallery</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://chinesenudeart.blogspot.com/">Chinese Nude Art Photos</a></td>
@@ -1924,10 +2000,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://vipergirls.to/">ViperGirls</a></td>
-                <td>只支援PC版，論壇樓層皆可能是一個圖集，操作方式，1.選取文字後按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能</td>
+                <td>只支援PC版，論壇樓層皆可能是一個圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能</td>
             </tr>
             <tr>
                 <td><a href="https://porncoven.com/">PornCoven</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td><a href="https://eroticity.net/">ErotiCity</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td><a href="https://kitty-kats.net/">Kitty Kats</a></td>
                 <td>同上</td>
             </tr>
             <tr>
@@ -2048,6 +2132,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://showgirlx.net/">ShowGirlx</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.superbeautygirlx.top/">Forum Girl</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2399,6 +2487,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://eromanga-kong.com/web/">エロ漫画コング｜無料エロマンガ</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://hdporncomics.com/">HDpornComics</a></td>
                 <td></td>
             </tr>
@@ -2460,6 +2552,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://caitlin.top/">Caitlin.top</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://bunmh.com/">包子漫畫</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2911,6 +3007,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉，部分漫畫雖然被下架但代碼資料還在，依然能插入圖片</td>
             </tr>
             <tr>
+                <td><a href="https://www.shilunart.com/">世伦漫画</a></td>
+                <td>預設關閉，同上</td>
+            </tr>
+            <tr>
                 <td><a href="https://godamanga.com/">GODA漫畫</a></td>
                 <td><a href="https://cn.godamanga.site/">cn.godamanga.site</a>，<a href="https://cocomanga.org/">cocomanga.org</a>，<a href="https://nav.telltome.net/">发布页
 </a>，預設關閉</td>
@@ -3034,6 +3134,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.gougoumh.com/">狗狗漫画</a></td>
                 <td><a href="https://m.gougoumh.com/">m.gougoumh.com</a>，預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.77dmh.com/">77动漫</a></td>
+                <td><a href="https://m.77dmh.com/">m.77dmh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.mhkan.com/">漫画看</a></td>
