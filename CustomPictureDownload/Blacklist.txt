@@ -1,4 +1,4 @@
-2024/03/20 00:16
+2024/03/22 22:58
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -43,7 +43,7 @@ Xiutaku/Kiutaku
 /^https?:\/\/www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com\/\w+\/\w+\/\d+\/\d+\.html$/
 
 免費私房圖仿站
-/(www\.rosi\d\.net|www\.sfjpg\.\w+|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
+/(www\.rosi\d\.(com|net)|www\.sfjpg\.\w+|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
 
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
@@ -136,6 +136,9 @@ ThisMore.Fun
 
 CosXuxi Club
 *://cosxuxi.club/*.html*
+
+RedSeats.Org
+*://redseats.org/gallery/*.cfg*
 
 BaoBua
 *://baobua.com/post/*.html*
@@ -388,6 +391,10 @@ HOTGIRLchina
 /^https://chinagirly\.com/\d+/$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/hotgirlasian\.com\/\d+\/$/
+/^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/
+/^https?:\/\/nongbong\.com\/[^\/]+\/$/
+/^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/
+/^https?:\/\/anhdoitruy\.com\/[^\/]+\/$/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -647,6 +654,9 @@ COSPLAYRULE34
 
 WAIFUBITCHES
 *://waifubitches.com/*gallery/*
+
+COSPLAY BOOBS
+*://cosplayboobs.com/*album/*
 
 福利图
 *fulitu.me/*/*.html
@@ -976,6 +986,9 @@ ROSI美女写真
 
 小姐姐么
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
+
+图片吧
+/^https:\/\/www\.tp8\.org\/\d+\.html$/
 
 Asian Porn
 *://asianporn.li/photo/*/*/
@@ -2117,6 +2130,7 @@ https://www.eyval.net/*
 *://mrdeepfakes.com/photo/*/*
 *://*.shunv*i.com/*/*.html
 *://cosxuxi.club/*.html*
+*://redseats.org/gallery/*.cfg*
 *://kkoreaactor.blogspot.com/*/*/*.html*
 *sharecosplay.com*
 *://wap.kunv.cc/*/*.html
@@ -2126,6 +2140,7 @@ https://www.eyval.net/*
 *://cosplaythots.com/*p/*
 *://cosplayrule34.com/*post/*
 *://waifubitches.com/*gallery/*
+*://cosplayboobs.com/*album/*
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
@@ -2136,8 +2151,12 @@ https://www.eyval.net/*
 /^https?:\/\/fapachi\.com\/[^\/]+$/
 /^https?:\/\/(twhentai\.com|mttang\.club|(\w+\.)?hentai\.desi)\/\??(hentai_manga|hentai_doujin|hentai_western)\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
+/^https:\/\/www\.tp8\.org\/\d+\.html$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
+/^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/
+/^https?:\/\/nongbong\.com\/[^\/]+\/$/
+/^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
@@ -2160,7 +2179,7 @@ https://www.eyval.net/*
 /pimpandhost\.com/album/\d+/
 /^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
 /^https?://www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com/\w+/\w+/\d+/\d+\.html$/
-/(www\.rosi\d\.net|www\.sfjpg\.\w+|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
+/(www\.rosi\d\.(com|net)|www\.sfjpg\.\w+|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
 *://heysexgirl.com/*
 *www.modelsvibe.com*
 /(www\.jjmhw\.cc|www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top|mxsmh\d.com|mxsmh\d+.top|mxs\d+\.top)\/chapter\/\d+/
