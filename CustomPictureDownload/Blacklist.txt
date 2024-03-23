@@ -1,4 +1,4 @@
-2024/03/22 22:58
+2024/03/22 06:53
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1138,6 +1138,9 @@ ACG漫画网
 *://wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
 
+包子漫畫
+*://bunmh.com/read/*/*.html
+
 松鼠症倉庫
 *://ahri8.top/readOnline2.php?ID=*
 
@@ -1788,6 +1791,7 @@ https://www.nuyet.com/gallery/*
 *://www.acgnbus.com/*/*.html
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
 *://*wnacg.*/photos-index-aid-*.html
+*://bunmh.com/read/*/*.html
 https://www.htmanga*.top/photos-index-aid-*.html
 *://ahri8.top/readOnline2.php?ID=*
 *caitlin.top/index.php?route=comic/readOnline*
