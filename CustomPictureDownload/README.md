@@ -5,7 +5,6 @@ Chrome 122.0.6261.129 + Tampermonkey 5.0.1
 Edge 122.0.2365.92 + Tampermonkey 5.0.1
 Cent Browser 5.1.1130.26 + Tampermonkey 5.0.1
 FireFox 123.0.1 + Tampermonkey 5.0.1
-
 Android
 Kiwi Browser 124.0.6327.1 + Tampermonkey 5.0.1
 Firefox for Android 123.1.0 + Tampermonkey 5.0.1
@@ -141,6 +140,8 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         return link;
     },
     observerURL: true, //觀察URL變化重新取得nextLink，用於SPA網頁
+    observerNext: true, //觀察元素變化重新取得nextLink
+    observerNext: ".read_nav", //指定觀察元素的子元素變化重新取得nextLink
     prev: "//a[text()="上一章"]", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //插入自訂樣式，基本上就是用來隱藏廣告用的。
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
@@ -207,6 +208,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code
     },
     observerURL: true,
+    observerNext: true,
     prev: "",
     css: "",
     autoClick: "",
@@ -390,6 +392,10 @@ fun.getImgSrcArr([圖片元素陣列]);
 //2返回【字串切割[0] + "字串" + 字串切割[1]】
 //3返回【字串切割[1] + "字串" + 字串切割[0]】
 fun.title("字串", mode, doc = document)
+</pre>
+<pre>
+//觀察元素變化執行callback
+fun.addMutationObserver(callback, config = MutationObserverConfig, node = document.body);
 </pre>
 <pre>
 //將字串解析成document物件
@@ -789,7 +795,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/22 22:58</p>
+<p>2024/03/22 06:53</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1927,6 +1933,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="http://20sanctuary-grahpis.blogspot.com/">Graphis</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://chinesenudeart.blogspot.com/">Chinese Nude Art Photos</a></td>
                 <td></td>
             </tr>
@@ -1948,7 +1958,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.eporner.com/pics/">EPORNER</a></td>
-                <td><a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>，<a href="https://www.eporner.com/profile/Khosmo/uploaded-pics/">Khosmo</a>，<a href="https://www.eporner.com/profile/trevor221/uploaded-pics//">trevor221</a></td>
+                <td><a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>，<a href="https://www.eporner.com/profile/Khosmo/uploaded-pics/">Khosmo</a>，<a href="https://www.eporner.com/profile/trevor221/uploaded-pics/">trevor221</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.xasiat.com/albums/">Xasiat</a></td>
@@ -2000,7 +2010,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://vipergirls.to/">ViperGirls</a></td>
-                <td>只支援PC版，論壇樓層皆可能是一個圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能</td>
+                <td>只支援PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能</td>
             </tr>
             <tr>
                 <td><a href="https://porncoven.com/">PornCoven</a></td>
@@ -2556,7 +2566,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://bunmh.com/">包子漫畫</a></td>
-                <td></td>
+                <td>有的需要重新繪製還原被分割的圖片</td>
             </tr>
             <tr>
                 <td><a href="https://tianhei-acg.com/">天黑漫画</a></td>
