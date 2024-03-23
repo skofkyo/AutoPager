@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.11.1
+// @version            1.11.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all pictures for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -3850,7 +3850,7 @@
         },
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
-        customTitle: () => fun.gt("#main>h1").replace(/\d+P/, ""),
+        customTitle: () => fun.gt("#main>h1").replace(/\(\d+[\w\s\.\+-]\)|\d+P/i, ""),
         category: "nsfw2"
     }, {
         name: "乳此动人",
@@ -4201,7 +4201,7 @@
         autoDownload: [0],
         next: ".previous>a",
         prev: ".next>a",
-        customTitle: () => fun.gt("h1.entry-title").replace(/.mitaku\.net./, "").trim(),
+        customTitle: () => fun.gt("h1.entry-title").replace(/.mi\s?taku\.net./, "").trim(),
         downloadVideo: true,
         category: "nsfw2"
     }, {
@@ -5617,8 +5617,10 @@
         category: "autoPager"
     }, {
         name: "Goddess247/BestPrettyGirl/Girl Sweetie/Girl Dreamy",
-        host: ["goddess247.com", "bestprettygirl.com", "girlsweetie.com", "girldreamy.com"],
-        reg: /(goddess247|bestprettygirl|girlsweetie)\.com|girldreamy\.com\/(?!tag).+\//,
+        reg: () => {
+            let hosts = ["goddess247.com", "bestprettygirl.com", "girlsweetie.com", "girldreamy.com"];
+            return hosts.includes(fun.lh) && !/^\/tag\/|^\/category\//.test(fun.lp) && fun.ge(".elementor-widget-container p img[alt]");
+        },
         imgs: ".elementor-widget-container p img[alt]",
         button: [4],
         insertImg: ["//p[img]", 2],
@@ -5635,8 +5637,10 @@
         category: "nsfw1"
     }, {
         name: "BestGirlSexy",
-        host: ["bestgirlsexy.com"],
-        reg: /bestgirlsexy\.com\/(?!tag).+\//,
+        reg: () => {
+            let hosts = ["bestgirlsexy.com"];
+            return hosts.includes(fun.lh) && !/^\/tag\/|^\/category\//.test(fun.lp) && fun.ge(".elementor-widget-theme-post-content img");
+        },
         imgs: ".elementor-widget-theme-post-content img",
         button: [4],
         insertImg: ["//p[img]", 2],
@@ -5745,6 +5749,20 @@
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: () => fun.gt(".entry-title").replace(/^Ảnh.+Xinh\s|^Clip.+Em\s/, ""),
+        downloadVideo: true,
+        category: "nsfw2"
+    }, {
+        name: "Graphis",
+        host: ["20sanctuary-grahpis.blogspot.com"],
+        reg: /^https?:\/\/20sanctuary-grahpis\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
+        imgs: ".separator>a",
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".separator>a img")].map(e => e.src.replace("/s320/", "/w100/"));
+            return [...fun.gae(".separator>a")].map(a => a.href.replace("/s1600/", "/s16000/"));
+        },
+        button: [4],
+        insertImg: [".post-body", 2],
+        customTitle: () => fun.gt(".post_item>h1"),
         downloadVideo: true,
         category: "nsfw2"
     }, {
@@ -6829,7 +6847,7 @@
         imgs: ".imgHolder a[data-fancybox]",
         button: [4],
         insertImg: ["#content", 2],
-        customTitle: () => fun.gt("h1.title").replace(/\d+P|\s?\(\d+[\s\w]+\)/i, ""),
+        customTitle: () => fun.gt("h1.title").replace(/\s?\[\d+[\s\w]+\]|\s?\(\d+[\s\w]+\)|\d+P/i, ""),
         fancybox: {
             v: 3,
             css: false
@@ -7109,11 +7127,11 @@
         init: () => {
             document.addEventListener("click", event => {
                 if (event.target.className === "postdetails") {
-                    let links;
+                    let links = [];
                     if (event.target.querySelector("a[href$='.jpg']")) {
                         links = [...event.target.querySelectorAll("a[href$='.jpg']")].map(a => a.href);
                     } else {
-                        links = [...event.target.querySelectorAll("a[href*='imx.to']:not([href*='/i/']),a[href*='pixhost.to'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                        links = [...event.target.querySelectorAll("a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
                     }
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
@@ -7131,11 +7149,11 @@
         init: () => {
             document.addEventListener("click", event => {
                 if (event.target.className === "message-cell message-cell--user") {
-                    let links;
+                    let links = [];
                     if (event.target.parentNode.querySelector("a[href$='.jpg']")) {
                         links = [...event.target.parentNode.querySelectorAll("a[href$='.jpg']")].map(a => a.href);
                     } else {
-                        links = [...event.target.parentNode.querySelectorAll("a[href*='imx.to']:not([href*='/i/']),a[href*='pixhost.to'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                        links = [...event.target.parentNode.querySelectorAll("a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
                     }
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
@@ -8571,7 +8589,7 @@
                             type: blob.type,
                             quality: 0.9
                         }).then(blob => {
-                            fun.showMsg(`drawImage ${fetchNum+=1}/${imgs.length}`, 0);
+                            fun.showMsg(`DrawImage ${fetchNum+=1}/${imgs.length}`, 0);
                             resolve(URL.createObjectURL(blob));
                         });
                     }
@@ -10236,6 +10254,154 @@
         insertImg: ["#img_list", 2],
         customTitle: () => fun.title(" - 列表", 1).replace(/\d+P/i, "").trim(),
         css: "div[align=center],#control_block{display:none!important;}",
+        category: "hcomic"
+    }, {
+        name: "包子漫畫",
+        host: ["bunmh.com"],
+        reg: /^https?:\/\/bunmh\.com\/read\/\d+\/\d+\.html$/,
+        init: () => fun.createImgBox("#article"),
+        imgs: async () => {
+            let drawing = 0;
+            const _restoreShuffledImage = async (shuffledImageUrl, base64Str, total) => {
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.setAttribute("crossOrigin", "anonymous");
+                    img.src = shuffledImageUrl;
+                    img.onload = () => {
+                        const imageWidth = img.width;
+                        const imageHeight = img.height;
+                        const restoreOrder = JSON.parse(atob(base64Str));
+                        const keys = Object.keys(restoreOrder);
+                        const num = keys.length;
+                        let blockWidth, blockHeight, extraPixels;
+                        if (num % 2 === 0) {
+                            blockWidth = Math.floor(imageWidth / num);
+                            extraPixels = imageWidth % num;
+                        } else {
+                            blockHeight = Math.floor(imageHeight / num);
+                            extraPixels = imageHeight % num;
+                        }
+                        const blocks = [];
+                        let startX = 0;
+                        let startY = 0;
+                        keys.forEach((key, index) => {
+                            const originalPosition = restoreOrder[key];
+                            if (originalPosition >= 0 && originalPosition < num) {
+                                if (num % 2 === 0) {
+                                    const currentBlockWidth = blockWidth + (originalPosition < extraPixels ? 1 : 0);
+                                    const canvas = document.createElement('canvas');
+                                    canvas.width = currentBlockWidth;
+                                    canvas.height = imageHeight;
+                                    const ctx = canvas.getContext('2d');
+                                    ctx.drawImage(img, startX, 0, currentBlockWidth, imageHeight, 0, 0, currentBlockWidth, imageHeight);
+                                    blocks[originalPosition] = canvas;
+                                    startX += currentBlockWidth;
+                                } else {
+                                    const currentBlockHeight = blockHeight + (originalPosition < extraPixels ? 1 : 0);
+                                    const canvas = document.createElement('canvas');
+                                    canvas.width = imageWidth;
+                                    canvas.height = currentBlockHeight;
+                                    const ctx = canvas.getContext('2d');
+                                    ctx.drawImage(img, 0, startY, imageWidth, currentBlockHeight, 0, 0, imageWidth, currentBlockHeight);
+                                    blocks[originalPosition] = canvas;
+                                    startY += currentBlockHeight;
+                                }
+                            } else {
+                                console.error(`Invalid originalPosition: ${originalPosition}`);
+                            }
+                        });
+                        const restoredCanvas = document.createElement('canvas');
+                        restoredCanvas.width = imageWidth;
+                        restoredCanvas.height = imageHeight;
+                        const ctx = restoredCanvas.getContext('2d');
+                        startX = 0;
+                        startY = 0;
+                        Object.keys(blocks).sort((a, b) => a - b).forEach(key => {
+                            const block = blocks[key];
+                            if (num % 2 === 0) {
+                                const currentBlockWidth = block.width;
+                                ctx.drawImage(block, 0, 0, currentBlockWidth, imageHeight, startX, 0, currentBlockWidth, imageHeight);
+                                startX += currentBlockWidth;
+                            } else {
+                                const currentBlockHeight = block.height;
+                                ctx.drawImage(block, 0, 0, imageWidth, currentBlockHeight, 0, startY, imageWidth, currentBlockHeight);
+                                startY += currentBlockHeight;
+                            }
+                        });
+                        let dataURL = restoredCanvas.toDataURL("image/jpeg", 0.9);
+                        let dataURL_Split = dataURL.split(",");
+                        let bstr = atob(dataURL_Split[1]);
+                        let n = bstr.length;
+                        let u8arr = new Uint8Array(n);
+                        while (n--) {
+                            u8arr[n] = bstr.charCodeAt(n);
+                        }
+                        let blobUrl = URL.createObjectURL(new Blob([u8arr], {
+                            type: "image/jpeg"
+                        }));
+                        fun.showMsg(`DrawImage ${drawing += 1}/${total}`, 0);
+                        resolve(blobUrl);
+                    };
+                    img.onerror = () => {
+                        resolve(null);
+                    };
+                });
+            };
+            fun.showMsg(displayLanguage.str_05, 0);
+            let [articleid, chapterid] = window.location.pathname.match(/\d+/g);
+            let max = document.querySelector(".text_title>p").innerText.match(/\d+/g).at(-1);
+            let fetchNum = 0;
+            let resArr = fun.arr(max).map((_, i) => {
+                return fetch("/api/reader_js.php", {
+                    "headers": {
+                        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "x-requested-with": "XMLHttpRequest"
+                    },
+                    "body": `action=show&articleid=${articleid}&chapterid=${chapterid}&pid=${i+1}`,
+                    "method": "POST"
+                }).then(res => res.text()).then(text => {
+                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        return {
+                            error: "ERROR"
+                        }
+                    }
+                }).then(json => json?.error ? [] : json.data.image_list.sort((a, b) => a.order - b.order));
+            });
+            let allData = await Promise.all(resArr).then(data => data.flat());
+            if (allData.length > 0) {
+                fun.showMsg(displayLanguage.str_53, 0);
+                return allData.map(async (obj, i, _arr) => {
+                    if (obj.arr === "") {
+                        return obj.pic;
+                    } else {
+                        await fun.delay(200 * i, 0);
+                        return _restoreShuffledImage(obj.pic, obj.arr, _arr.length);
+                    }
+                });
+            } else {
+                return [];
+            }
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => {
+            let max = document.querySelector(".text_title>p").innerText.match(/\d+/g).at(-1);
+            let lastUrl = fun.url.replace(".html", "") + "_" + max + ".html";
+            fun.fetchDoc(lastUrl).then(doc => {
+                fun.ge(".text_title>p").innerText = fun.ge(".text_title>p", doc).innerText;
+                fun.ge("#next_url").outerHTML = fun.ge("#next_url", doc).outerHTML;
+                nextLink = fun.ge("#next_url", doc).href;
+            });
+        },
+        autoDownload: [0],
+        next: "#next_url",
+        observerNext: ".read_nav",
+        prev: "#prev_url",
+        customTitle: () => fun.ge("meta[property='og:comic:book_name']").content + " - " + fun.ge("meta[property='og:comic:chapter_name']").content,
+        css: "#article>canvas,.chapterpic{display:none!important;}",
         category: "hcomic"
     }, {
         name: "VN漫画网 下拉阅读",
@@ -15090,7 +15256,7 @@ document.body.appendChild(text);
     } else {
         FancyboxOptions = {
             idle: false,
-            wheel: "slide",
+            wheel: "zoom",
             Images: {
                 Panzoom: {
                     maxScale: 2
@@ -15848,7 +16014,7 @@ document.body.appendChild(text);
                         let check = fun.checkImgSrc(imgs[p], rText);
                         if (check.ok) {
                             imgSrc = check.src;
-                            //let blob = await GM_XHR_GetData(imgSrc);
+                            //let blob = await GM_XHR_Download(imgSrc);
                             //let objectURL = await URL.createObjectURL(blob.blob);
                             //imgSrc = objectURL;
                             debug("\nfun.getImgA() 單線程模式imgSrc", imgSrc);
@@ -17552,7 +17718,7 @@ document.body.appendChild(text);
             let num = 0;
             let imgs = await [...fun.gae(selector)].map(async (img, index, arr) => {
                 let blobUrl = await fun.imgToBlobURL(img, type, quality);
-                fun.showMsg(`drawImage ${num += 1}/${arr.length}`, 0);
+                fun.showMsg(`DrawImage ${num += 1}/${arr.length}`, 0);
                 return blobUrl;
             });
             fun.hideMsg();
@@ -17642,9 +17808,9 @@ document.body.appendChild(text);
             a.click();
             a.remove();
         },
-        addMutationObserver: (callback, config = MutationObserverConfig) => {
+        addMutationObserver: (callback, config = MutationObserverConfig, node = document.body) => {
             callback();
-            new MutationObserver(callback).observe(document.body, config);
+            new MutationObserver(callback).observe(node, config);
         },
         scrollEvent: slideIndex => {
             if (!isNumber(slideIndex)) return;
@@ -17775,7 +17941,7 @@ document.body.appendChild(text);
         return referer;
     };
 
-    const Fetch_API_GetData = (srcUrl, picNum = "none", imgsNum = "none") => {
+    const Fetch_API_Download = (srcUrl, picNum = "none", imgsNum = "none") => {
         currentDownloadThread++;
         return new Promise(resolve => {
             fetch(srcUrl, {
@@ -17810,12 +17976,12 @@ document.body.appendChild(text);
                     get: "Fetch API"
                 });
                 getDataMsg(displayLanguage.str_26, picNum, imgsNum);
-                console.error("Fetch_API_GetData() Error: ", error);
+                console.error("Fetch_API_Download() Error: ", error);
             });
         })
     };
 
-    const GM_XHR_GetData = (srcUrl, picNum = "none", imgsNum = "none") => {
+    const GM_XHR_Download = (srcUrl, picNum = "none", imgsNum = "none") => {
         currentDownloadThread++;
         return new Promise(resolve => {
             _GM_xmlhttpRequest({
@@ -17851,6 +18017,17 @@ document.body.appendChild(text);
                             get: "GM_xmlhttpRequest"
                         });
                         getDataMsg(displayLanguage.str_25, picNum, imgsNum);
+                    } else if (blob.type === "text/html; charset=utf-8" && fun.lh === "bunmh.com") {
+                        let newBlob = await fun.convertImage(blob);
+                        resolve({
+                            load: "下載成功",
+                            blob: newBlob,
+                            picNum: picNum,
+                            src: srcUrl,
+                            finalUrl: data.finalUrl,
+                            get: "GM_xmlhttpRequest"
+                        });
+                        getDataMsg(displayLanguage.str_25, picNum, imgsNum);
                     } else {
                         let htmlText = "none";
                         if (/text\/html/.test(blob.type)) {
@@ -17879,7 +18056,7 @@ document.body.appendChild(text);
                         get: "GM_xmlhttpRequest"
                     });
                     getDataMsg(displayLanguage.str_26, picNum, imgsNum);
-                    console.error("GM_XHR_GetData() Error: ", error);
+                    console.error("GM_XHR_Download() Error: ", error);
                 }
             });
         });
@@ -18031,7 +18208,7 @@ document.body.appendChild(text);
                 let picNum = getNum(i, padStart);
                 let promiseBlob;
                 await fun.checkDownloadThread();
-                siteData.fetch == 1 ? promiseBlob = Fetch_API_GetData(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_GetData(imgsSrcArr[i], picNum, imgsNum);
+                siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_Download(imgsSrcArr[i], picNum, imgsNum);
                 promiseBlobArray.push(promiseBlob);
             }
             if (videosSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true) {
@@ -18040,7 +18217,7 @@ document.body.appendChild(text);
                     let videoNum = getNum(i, padStart);
                     let promiseBlob;
                     await fun.checkDownloadThread();
-                    siteData.fetch == 1 ? promiseBlob = Fetch_API_GetData(videosSrcArray[i], videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_GetData(videosSrcArray[i], videoNum, imgsNum + videosNum);
+                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(videosSrcArray[i], videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_Download(videosSrcArray[i], videoNum, imgsNum + videosNum);
                     promiseBlobArray.push(promiseBlob);
                 }
             }
@@ -18058,6 +18235,7 @@ document.body.appendChild(text);
                     downloadNum = 0;
                     isDownloading = false;
                     let yes = await confirm(`${displayLanguage.str_27}${errorDataArray.length}${displayLanguage.str_28}${displayLanguage.str_29}`);
+                    fun.hideMsg();
                     if (!yes) {
                         promiseBlobArray = [];
                         blobDataArray = null;
@@ -19982,7 +20160,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         } catch (e) {}
                     }
                     await getNextLink();
-                    if (data?.observerURL) {
+                    if (data?.observerURL || data?.observerNext) {
+                        let node;
+                        isString(data?.observerNext) ? node = fun.ge(data.observerNext) : node = null;
                         fun.addMutationObserver(async () => {
                             if (/\?page=\d+$/.test(_unsafeWindow.document.URL)) return;
                             if (siteUrl != _unsafeWindow.document.URL) {
@@ -19990,7 +20170,8 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                                 await getNextLink();
                                 debug(`\nURL變換 nextLink：${nextLink}`);
                             }
-                        });
+                            if (data?.observerNext) await getNextLink();
+                        }, MutationObserverConfig, node || document.body);
                     }
                     const callback = () => {
                         if (isFn(next)) {
