@@ -1,4 +1,4 @@
-2024/03/22 06:53
+2024/03/24 00:26
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -300,6 +300,8 @@ MEITU131
 *://www.1nlm.com/*.html
 *://www.1plq.com/*.html
 *://www.6vtr.com/*.html
+*://www.tmm123.vip/*.html
+*://www.wushengguang.biz/*.html
 
 出物社区写真网
 *://www.ywsq.cc/*/*.html
@@ -326,8 +328,9 @@ BeautyLeg
 劍心回憶
 *://kenshin.hk/*/*/*/*/*
 
-Dmmtu 美女图
+第一美女图
 *://www.dmmtu.com/*/*.html
+*://www.kkmnt.com/*/*.html
 
 好女神网
 *://www.nvshen5.com/gallery/*.html
@@ -1647,10 +1650,13 @@ https://www.nuyet.com/gallery/*
 *://www.1nlm.com/*.html
 *://www.1plq.com/*.html
 *://www.6vtr.com/*.html
+*://www.tmm123.vip/*.html
+*://www.wushengguang.biz/*.html
 *://*.xsnvshen.co/album/*
 *://www.beautyleg6.com/*/*/*.html
 *://www.ikanins.com/*/
 *://www.dmmtu.com/*/*.html
+*://www.kkmnt.com/*/*.html
 *://www.nvshen5.com/gallery/*.html
 *://jablehk.com/*/*
 *://www.taotuc*.com/*.html
