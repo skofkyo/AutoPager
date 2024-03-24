@@ -3,9 +3,9 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.11.4
+// @version            1.11.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
-// @description:en     Load all pictures for picture websites, and can also compress and package them for download.
+// @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
 // @description:zh-TW  支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @author             tony0809
@@ -2792,9 +2792,10 @@
         },
         category: "nsfw1"
     }, {
-        name: "遛无写真/有脾气美图/KP写真/美女云图网/tck天天番号/4tck番号库/5pwc番号库/5tck天天番号/6K美女/6vtr宅男社区/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/PXA番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线/7c0a宅男福利网站",
-        host: ["www.6evu.com", "www.6kpo.com", "www.6vtr.com", "www.1plq.com", "www.c0h.net", "www.3tck.com", "www.3pxa.com", "www.4tck.com", "www.5pwc.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.7c0a.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com", "www.1nlm.com"],
-        reg: /^https?:\/\/www\.(6evu|6kpo|6vtr|c0h|\dtck|3pxa|5pwc|7c0a|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a|1nlm|1plq)\.(com|net)\/\d+\.html/,
+        name: "遛无写真/推妹妹美图/无圣光/有脾气美图/KP写真/美女云图网/tck天天番号/4tck番号库/5pwc番号库/5tck天天番号/6K美女/6vtr宅男社区/7tck番号网/1凸5宅男福利/有脾气美图/极品番号社/过热E宅男天堂/杰瑞宅男频道/宅男番号库/PXA番号库/54k5宅男必备/0niz宅男频道/7k1a番号库/男人沉默宅男在线/7c0a宅男福利网站",
+        host: ["www.6evu.com", "www.6kpo.com", "www.6vtr.com", "www.tmm123.vip", "www.wushengguang.biz", "www.1plq.com", "www.c0h.net", "www.3tck.com", "www.3pxa.com", "www.4tck.com", "www.5pwc.com", "www.5tck.com", "www.6tck.com", "www.7tck.com", "www.7c0a.com", "www.1tu5.com", "www.wsqap.com", "www.gr2e.com", "www.joerei.com", "www.game1313.net", "www.54k5.com", "www.0niz.com", "www.7k1a.com", "www.1nlm.com"],
+        reg: /^https?:\/\/www\.(6evu|6kpo|6vtr|c0h|\dtck|3pxa|5pwc|7c0a|1tu5|wsqap|gr2e|joerei|game1313|54k5|0niz|7k1a|1nlm|1plq|tmm123|wushengguang)\.(com|net|vip|biz)\/\d+\.html/,
+        include: "#post_content img,.article-content img,.entry-content img",
         exclude: "//a[@rel='category tag'][contains(text(),'人物简历') or contains(text(),'宅男科技') or contains(text(),'时尚玩酷') or contains(text(),'身边事') or contains(text(),'追星一族') or contains(text(),'网红头条') or contains(text(),'大众娱乐') or contains(text(),'生活热点') or contains(text(),'影评剧透') or contains(text(),'娱乐时尚') or contains(text(),'吃喝玩乐') or contains(text(),'体育') or contains(text(),'亲子宠物') or contains(text(),'番号大全') or contains(text(),'番号推荐') or contains(text(),'最新番号') or contains(text(),'素人番号')]",
         imgs: () => fun.getImgA("#post_content img,.article-content img,.entry-content img", ".pagelist a,.pagination a,.article-paging a"),
         button: [4],
@@ -2802,7 +2803,7 @@
         autoDownload: [0],
         next: "a[rel=prev],.article-nav-prev a",
         prev: "a[rel=next],.article-nav-next a",
-        customTitle: () => fun.gt("h1").replace(/\(\d+P\)/i, "").replace(/高品质写真作品收藏合集|超高清绝版网图流出|无圣光私房写真个人分享|无水印私房写真流出|无删减写真作品良心推荐|无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
+        customTitle: () => fun.gt("h1").replace(/\(\d+P\)/i, "").replace(/无圣光写真福利套图|高品质写真作品收藏合集|超高清绝版网图流出|无圣光私房写真个人分享|无水印私房写真流出|无删减写真作品良心推荐|无删减写真大图流出|无圣光壁纸图片良心推荐|无圣光绝版网图传疯了|无水印私房照片收藏合集|高品质壁纸图片传疯了|高品质壁纸图片珍藏版|无圣光壁纸图片免费在线|无圣光私房写真良心推荐|超高清私家拍摄作品珍藏版|超高清私房照片在线浏览|无圣光写真作品流出|无水印壁纸图片良心推荐|无水印绝版网图在线浏览|无水印私房照片珍藏版|无水印私房照片个人分享/g, "").trim(),
         css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}@media only screen and (max-width:640px){.container{max-width:100% !important}}",
         category: "nsfw1"
     }, {
@@ -3337,9 +3338,9 @@
         customTitle: () => fun.gt(".entry-title").replace(/\s?\d+P\s?$/i, "").trim(),
         category: "nsfw1"
     }, {
-        name: "Dmmtu 美女图",
-        host: ["www.dmmtu.com"],
-        reg: /www\.dmmtu\.com\/\w+\/\d+\.html/,
+        name: "第一美女图",
+        host: ["www.dmmtu.com", "www.kkmnt.com"],
+        reg: /^https?:\/\/(www\.dmmtu\.com|www\.kkmnt\.com)\/\w+\/\d+\.html/,
         imgs: () => {
             let max = fun.gt("a[title=Page]>b").match(/共(\d+)/)[1];
             return fun.getImg(".main-body img", max, 9);
@@ -5754,10 +5755,18 @@
         downloadVideo: true,
         category: "nsfw2"
     }, {
+        name: "min: archive",
+        host: ["min-bin.blogspot.com"],
+        reg: /^https?:\/\/min-bin\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
+        imgs: () => [...fun.gae(".separator>a")].map(a => a.href.replace("/s1600/", "/s16000/")),
+        button: [4],
+        insertImg: [".post-body", 2],
+        customTitle: () => fun.gt(".entry-title"),
+        category: "nsfw2"
+    }, {
         name: "Graphis",
         host: ["20sanctuary-grahpis.blogspot.com"],
         reg: /^https?:\/\/20sanctuary-grahpis\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
-        imgs: ".separator>a",
         imgs: () => {
             thumbnailsSrcArray = [...fun.gae(".separator>a img")].map(e => e.src.replace("/s320/", "/w100/"));
             return [...fun.gae(".separator>a")].map(a => a.href.replace("/s1600/", "/s16000/"));
@@ -5765,7 +5774,19 @@
         button: [4],
         insertImg: [".post-body", 2],
         customTitle: () => fun.gt(".post_item>h1"),
-        downloadVideo: true,
+        category: "nsfw2"
+    }, {
+        name: "Asia Idols",
+        host: ["asiaidols.wordpress.com"],
+        reg: /^https?:\/\/asiaidols\.wordpress\.com\/\d+\/\d+\/\d+\/[^\/]+\/$/,
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae("img[alt='image host']")].map(e => e.src);
+            let imageHostLinks = [...fun.gae("//a[img[@alt='image host']]")].map(a => a.href);
+            return fun.getImageHost(imageHostLinks);
+        },
+        button: [4],
+        insertImg: [".entry-content", 3],
+        customTitle: () => fun.gt(".entry-title"),
         category: "nsfw2"
     }, {
         name: "Tabakus Gallery",
@@ -7109,7 +7130,7 @@
             });
         },
         imgs: async () => {
-            let aEles = [...fun.gae(".entry-content a[href*='postimg.cc'],.entry-content a[href*='fastpic.org'],.entry-content a[href*='vipr.im'],.entry-content a[href*='pixhost.to']:not([href*='/gallery/']),.entry-content a[href*='turboimagehost'],.entry-content a[href*='imgbox.com'],.entry-content a[href*='imagevenue'],.entry-content a[href*='imx.to'],.entry-content a[href*='imagebam']")];
+            let aEles = [...fun.gae(".entry-content a[href^='https://imgspice.com/'],.entry-content a[href^='http://imagetwist.com/'],.entry-content a[href*='postimg.cc'],.entry-content a[href*='fastpic.org'],.entry-content a[href*='vipr.im'],.entry-content a[href*='pixhost.to']:not([href*='/gallery/']),.entry-content a[href*='turboimagehost'],.entry-content a[href*='imgbox.com'],.entry-content a[href*='imagevenue'],.entry-content a[href*='imx.to'],.entry-content a[href*='imagebam']")];
             thumbnailsSrcArray = aEles.map(a => fun.ge("img", a).src);
             let URLs = aEles.map(a => a.href);
             return fun.getImageHost(URLs);
@@ -7130,10 +7151,10 @@
             document.addEventListener("click", event => {
                 if (event.target.className === "postdetails") {
                     let links = [];
-                    if (event.target.querySelector("a[href$='.jpg']")) {
+                    if (event.target.querySelector("a[href$='.jpg']:not([href^='http://imagetwist.com/'])")) {
                         links = [...event.target.querySelectorAll("a[href$='.jpg']")].map(a => a.href);
                     } else {
-                        links = [...event.target.querySelectorAll("a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                        links = [...event.target.querySelectorAll("a[href^='https://imgspice.com/'],a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href^='http://imagetwist.com/'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
                     }
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
@@ -7152,10 +7173,10 @@
             document.addEventListener("click", event => {
                 if (event.target.className === "message-cell message-cell--user") {
                     let links = [];
-                    if (event.target.parentNode.querySelector("a[href$='.jpg']")) {
+                    if (event.target.parentNode.querySelector("a[href$='.jpg']:not([href^='http://imagetwist.com/'])")) {
                         links = [...event.target.parentNode.querySelectorAll("a[href$='.jpg']")].map(a => a.href);
                     } else {
-                        links = [...event.target.parentNode.querySelectorAll("a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                        links = [...event.target.parentNode.querySelectorAll("a[href^='https://imgspice.com/'],a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href^='http://imagetwist.com/'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
                     }
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
@@ -15136,6 +15157,11 @@ document.body.appendChild(text);
     const isFn = fn => ["[object Function]", "[object AsyncFunction]"].includes(Object.prototype.toString.call(fn));
     const isPromise = p => Object.prototype.toString.call(p) === "[object Promise]";
     const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e));
+    const _GM_xmlhttpRequest = (() => isFn(GM_xmlhttpRequest) ? GM_xmlhttpRequest : GM.xmlHttpRequest)();
+    const _GM_openInTab = (() => isFn(GM_openInTab) ? GM_openInTab : GM.openInTab)();
+    const _GM_getValue = (() => isFn(GM_getValue) ? GM_getValue : GM.getValue)();
+    const _GM_setValue = (() => isFn(GM_setValue) ? GM_setValue : GM.setValue)();
+    const _GM_registerMenuCommand = (() => isFn(GM_registerMenuCommand) ? GM_registerMenuCommand : GM.registerMenuCommand)();
 
     const addLibrarysV3 = async () => {
         try {
@@ -15218,6 +15244,8 @@ document.body.appendChild(text);
         }
     };
 
+    let FancyboxWheelOptions = _GM_getValue("FancyboxWheelOptions", 0);
+
     let FancyboxOptions;
     let slideIndex = null;
 
@@ -15258,7 +15286,7 @@ document.body.appendChild(text);
     } else {
         FancyboxOptions = {
             idle: false,
-            wheel: "slide",
+            wheel: FancyboxWheelOptions === 0 ? "slide" : "zoom",
             Images: {
                 Panzoom: {
                     maxScale: 2
@@ -15417,7 +15445,8 @@ document.body.appendChild(text);
                 str_115: "關閉自動捲動至首張圖片",
                 str_116: "自動捲動所有惰性載入的圖片元素",
                 str_117: "顯示浮動選單",
-                str_118: "圖集標題已更新"
+                str_118: "圖集標題已更新",
+                str_119: "FancyboxV5滾輪圖片縮放"
             };
             break;
         case "zh":
@@ -15541,7 +15570,8 @@ document.body.appendChild(text);
                 str_115: "关闭自动滚动至首张图片",
                 str_116: "自动滚动所有懒加载的图片元素",
                 str_117: "显示浮动菜单",
-                str_118: "图集标题已更新"
+                str_118: "图集标题已更新",
+                str_119: "FancyboxV5滚轮图片缩放"
             };
             break;
         default:
@@ -15663,16 +15693,11 @@ document.body.appendChild(text);
                 str_115: "Turn Off Auto Scroll To First Image",
                 str_116: "Auto Scroll All Image Elements",
                 str_117: "Show Fixed Menu",
-                str_118: "Album title has been updated"
+                str_118: "Album title has been updated",
+                str_119: "FancyboxV5 Wheel Toggle Zoom"
             };
             break;
     }
-
-    const _GM_xmlhttpRequest = (() => isFn(GM_xmlhttpRequest) ? GM_xmlhttpRequest : GM.xmlHttpRequest)();
-    const _GM_openInTab = (() => isFn(GM_openInTab) ? GM_openInTab : GM.openInTab)();
-    const _GM_getValue = (() => isFn(GM_getValue) ? GM_getValue : GM.getValue)();
-    const _GM_setValue = (() => isFn(GM_setValue) ? GM_setValue : GM.setValue)();
-    const _GM_registerMenuCommand = (() => isFn(GM_registerMenuCommand) ? GM_registerMenuCommand : GM.registerMenuCommand)();
 
     _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
     _GM_registerMenuCommand("Github", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/tree/main/CustomPictureDownload"));
@@ -16315,7 +16340,7 @@ document.body.appendChild(text);
         getImageHost: async (links = captureLinksArray) => {
             let imgsSrcArr = [];
             if (links.length > 0) {
-                if (/\.\w+$/.test(links[0]) && !/pixhost\.to\/show\//.test(links[0])) return links;
+                if (/\.\w+$/.test(links[0]) && !/\.html$/.test(links[0]) && !/pixhost\.to\/show\//.test(links[0]) && !/^https?:\/\/imagetwist\.com\//.test(links[0])) return links;
                 fun.showMsg(displayLanguage.str_01, 0);
                 let xhrNum = 0;
                 let resArr = links.map(async (url, i, arr) => {
@@ -16341,7 +16366,7 @@ document.body.appendChild(text);
                     } else {
                         return fun.xhr(url, "document").then(doc => {
                             fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                            let img = fun.ge("#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid", doc);
+                            let img = fun.ge("#imgpreview,#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid", doc);
                             return img ? img.src : null;
                         });
                     }
@@ -17933,7 +17958,7 @@ document.body.appendChild(text);
 
     const getReferer = srcUrl => {
         let referer;
-        if (/vipr\.im/.test(srcUrl) || siteData.referer == "src") {
+        if (/vipr\.im|imagetwist\.com|imgspice\.com/.test(srcUrl) || siteData.referer == "src") {
             referer = srcUrl;
         } else if (isString(siteData?.referer) || siteData.referer == "") {
             referer = siteData.referer;
@@ -17948,7 +17973,8 @@ document.body.appendChild(text);
         return new Promise(resolve => {
             fetch(srcUrl, {
                 headers: {
-                    "accept": "*/*"
+                    "accept": "*/*",
+                    "upgrade-insecure-requests": "1"
                 },
                 referrer: getReferer(srcUrl),
                 referrerPolicy: "strict-origin-when-cross-origin"
@@ -17993,7 +18019,8 @@ document.body.appendChild(text);
                 headers: {
                     origin: location.origin,
                     referer: getReferer(srcUrl),
-                    accept: "*/*"
+                    accept: "*/*",
+                    "upgrade-insecure-requests": "1"
                 },
                 onload: async data => {
                     currentDownloadThread--;
@@ -18744,7 +18771,7 @@ function setFancybox() {
     };
     Fancybox.bind("[data-fancybox]", {
         idle: false,
-        wheel: "slide",
+        wheel: ${FancyboxWheelOptions === 0 ? '"slide"' : '"zoom"'},
         Images: {
             Panzoom: {
                 maxScale: 2
@@ -19368,7 +19395,7 @@ if (newWindowDataViewMode == 1) {
     `;
     }
 
-    const style = `
+    const FullPictureLoadStyle = `
 .fancybox-container,.fancybox__container {
     z-index: 2147483647 !important;
 }
@@ -20083,7 +20110,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 }
                 siteData = customData[i];
                 if (siteData.category != "none") showOptions = true;
-                if (!ge(".FullPictureLoadStyle")) fun.css(style);
+                if (!ge(".FullPictureLoadStyle")) fun.css(FullPictureLoadStyle);
                 let css = data?.css;
                 if (css) fun.css(css);
                 let initCode = data?.init;
@@ -20129,18 +20156,23 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 let titleCode = data?.customTitle;
                 if (titleCode) {
                     const getTitle = async () => {
+                        let text;
                         if (isString(titleCode)) {
-                            customTitle = await new Function("siteData", "fun", '"use strict";' + titleCode)(siteData, fun);
+                            text = await new Function("siteData", "fun", '"use strict";' + titleCode)(siteData, fun);
                         } else if (isFn(titleCode)) {
-                            customTitle = await titleCode();
+                            text = await titleCode();
                         }
+                        return text;
                     };
-                    await getTitle();
+                    customTitle = await getTitle();
                     debug(`\n自定義標題：${customTitle}`);
                     if (data?.observerTitle) {
                         fun.addMutationObserver(async () => {
-                            await getTitle();
-                            debug(`\n自定義標題：${customTitle}`);
+                            let newCustomTitle = await getTitle();
+                            if (customTitle !== newCustomTitle) {
+                                customTitle = newCustomTitle;
+                                debug(`\n自定義標題：${newCustomTitle}`);
+                            }
                         });
                     }
                 }
@@ -20167,7 +20199,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         isString(data?.observerNext) ? node = fun.ge(data.observerNext) : node = null;
                         fun.addMutationObserver(async () => {
                             if (/\?page=\d+$/.test(_unsafeWindow.document.URL)) return;
-                            if (siteUrl != _unsafeWindow.document.URL) {
+                            if (siteUrl !== _unsafeWindow.document.URL) {
                                 siteUrl = _unsafeWindow.document.URL;
                                 await getNextLink();
                                 debug(`\nURL變換 nextLink：${nextLink}`);
@@ -20364,7 +20396,14 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-    if (!ge(".FullPictureLoadStyle")) fun.css(style);
+    if (siteData?.category && ["nsfw", "nsfw2", "hcomic", "comic", "lazyLoad"].includes(siteData?.category)) {
+        _GM_registerMenuCommand(FancyboxWheelOptions == 0 ? "❌ " + displayLanguage.str_119 : "✔️ " + displayLanguage.str_119, () => {
+            FancyboxWheelOptions == 0 ? _GM_setValue("FancyboxWheelOptions", 1) : _GM_setValue("FancyboxWheelOptions", 0);
+            location.reload();
+        });
+    }
+
+    //if (!ge(".FullPictureLoadStyle")) fun.css(FullPictureLoadStyle);
 
     let autoDownload = siteData?.autoDownload;
 
