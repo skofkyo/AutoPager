@@ -795,7 +795,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/22 06:53</p>
+<p>2024/03/24 00:26</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1233,8 +1233,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.dmmtu.com/">Dmmtu 美女图</a></td>
-                <td></td>
+                <td><a href="https://www.dmmtu.com/">第一美女图</a></td>
+                <td><a href="https://www.kkmnt.com/">www.kkmnt.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://zipaipic.com/">自拍图库</a></td>
@@ -1937,6 +1937,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://min-bin.blogspot.com/">min: archive</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://asiaidols.wordpress.com/">Asia Idols</a></td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
                 <td><a href="https://chinesenudeart.blogspot.com/">Chinese Nude Art Photos</a></td>
                 <td></td>
             </tr>
@@ -2010,7 +2018,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://vipergirls.to/">ViperGirls</a></td>
-                <td>只支援PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能</td>
+                <td>只支援PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
             </tr>
             <tr>
                 <td><a href="https://porncoven.com/">PornCoven</a></td>
@@ -2210,7 +2218,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.6evu.com/">遛无写真</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式18個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式24個</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.ywsq.cc/">出物社区写真网</a></td>
