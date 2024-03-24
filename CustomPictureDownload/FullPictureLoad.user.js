@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.11.5
+// @version            1.11.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -15143,6 +15143,7 @@ document.body.appendChild(text);
             }
         },
         capture: "img[data-src*='_high.']",
+        css: "*{backdrop-filter:unset!important}",
         category: "lazyLoad"
     }];
 
@@ -16901,6 +16902,7 @@ document.body.appendChild(text);
                 check.ok ? srcArr.push(check.src) : console.error("\nfun.insertImg(imgsArray) 格式錯誤！", imgsArray[i]);
             }
             srcArr = [...new Set(srcArr)];
+            let noVideoNum = [...srcArr].filter(src => !/youtube|\.mp4$|\.webm$/.test(src)).length;
             let fragment = new DocumentFragment();
             let sb = siteData?.button;
             if (isArray(sb)) {
@@ -16937,7 +16939,7 @@ document.body.appendChild(text);
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: displayLanguage.str_107,
+                    text: hasTouchEvents ? displayLanguage.str_107 : displayLanguage.str_107 + ` [${noVideoNum}P]`,
                     cfn: event => {
                         event.preventDefault();
                         fastDownload = true;
@@ -17011,7 +17013,6 @@ document.body.appendChild(text);
                 [...buttonObj].forEach(obj => createButton(obj));
                 fragment.appendChild(buttonDiv);
             }
-            let noVideoNum = [...srcArr].filter(src => !/youtube|\.mp4$|\.webm$/.test(src)).length;
             let blackList = fancyboxBlackList();
             if (options.fancybox == 1 && thumbnailsSrcArray.length > 0) {
                 if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(fun.lh) || !/^data/.test(thumbnailsSrcArray[0])) {
@@ -19742,6 +19743,9 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     text-shadow: none;
     display: inline-block !important;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     align-items: flex-start;
     cursor: default;
     box-sizing: border-box;
