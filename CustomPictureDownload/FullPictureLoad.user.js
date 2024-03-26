@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.11.6
+// @version            1.12.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -2680,17 +2680,25 @@
         name: "图片吧",
         host: ["www.tp8.org"],
         reg: /^https:\/\/www\.tp8\.org\/\d+\.html$/,
-        imgs: () => {
+        imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
-            return fetch("/wp-admin/admin-ajax.php", {
+            let id = fun.lp.match(/\d+/)[0];
+            let res = await fetch("/wp-admin/admin-ajax.php", {
                 "headers": {
                     "accept": "*/*",
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
-                "body": `action=chenxing_imageall&type=all&post_id=${chenxing.PID}`,
+                "body": `action=chenxing_imageall&type=all&post_id=${id}`,
                 "method": "POST",
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images]);
+            }).then(res => res.text());
+            if (res === "需要登录才能使用单页浏览哦！") {
+                let max = fun.gt("a[title='最后页']");
+                return fun.getImg("#image_div img", max, 9, [/\?x-oss-process.+$/, ""]);
+            } else {
+                let doc = fun.doc(res);
+                return [...doc.images];
+            }
         },
         button: [4],
         insertImg: ["#content", 2],
@@ -4461,6 +4469,50 @@
         customTitle: () => fun.gt(".page-title").replace(/\[\d+P-?\d+MB?\]/i, "").trim(),
         category: "nsfw2"
     }, {
+        name: "3600000 Beauty",
+        host: ["3600000.xyz"],
+        reg: /^https?:\/\/3600000\.xyz\/[^\/]+\/$/,
+        include: "//a[img[@file]]",
+        imgs: "//a[img[@file]]",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: () => fun.gt(".entry-title"),
+        category: "nsfw1"
+    }, {
+        name: "Big Boobs Asia",
+        host: ["www.tokyobombers.com"],
+        reg: /^https?:\/\/www\.tokyobombers\.com\/\d+\/\d+\/\d+\/[^\/]+\/$/,
+        imgs: "a[itemprop='contentURL']",
+        button: [4],
+        insertImg: [".gallery", 2],
+        customTitle: () => fun.gt(".entry-title"),
+        category: "nsfw1"
+    }, {
+        name: "Erogirl",
+        host: ["erogirl.net"],
+        reg: /^https?:\/\/erogirl\.net\/p\//,
+        init: async () => {
+            let json = await fun.fetchDoc(fun.url).then(doc => {
+                let data = fun.gt("#__NEXT_DATA__", 1, doc);
+                let json = JSON.parse(data);
+                return json;
+            });
+            debug("\n此頁JSON資料\n", json);
+            siteJson = json;
+        },
+        imgs: () => {
+            thumbnailsSrcArray = siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.thumbnail.url);
+            return siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.serving_2560.url);
+        },
+        button: [4],
+        insertImg: [".content-img", 2],
+        customTitle: () => siteJson.props.pageProps.post.title,
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw2"
+    }, {
         name: "Everia.club",
         host: ["everia.club"],
         reg: /(everia\.club|everiaeveria\.b-cdn\.net)\/\d+\/\d+\/\d+\/[^/]+\//,
@@ -4580,7 +4632,10 @@
     }, {
         name: "NongMo.Zone",
         host: ["www.ilovexs.com", "ilovexs.com"],
-        reg: /^https?:\/\/(www\.)?ilovexs\.com\/post_id\/\d+\//,
+        reg: [
+            /^https?:\/\/(www\.)?ilovexs\.com\/post_id\/\d+\//,
+            /^https?:\/\/(www\.)?ilovexs\.com\/post\/[^\/]+\//,
+        ],
         imgs: ".separator img",
         button: [4],
         insertImg: [".entry-content", 2],
@@ -4874,6 +4929,20 @@
         insertImg: [".wp_rss_scrapeing_post-content", 2],
         customTitle: () => fun.gt(".entry-title").replace(/\d+枚/, "").replace(/\s\s/g, " ").trim(),
         css: "#oxzilla-overlay,boxzilla-overlay{display:none!important}",
+        category: "nsfw1"
+    }, {
+        name: "Permanent Bachelor",
+        host: ["www.saladpuncher.com"],
+        reg: /^https?:\/\/www\.saladpuncher\.com\/\d+\/\d+\/[^\/]+\//,
+        init: () => fun.createImgBox(".entry-container", 2),
+        imgs: () => {
+            thumbnailsSrcArray = [...fun.gae(".rsTmb>img")].map(e => e.src);
+            return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: () => fun.gt(".posttitle"),
         category: "nsfw1"
     }, {
         name: "IVPhoto_Gravure",
@@ -5224,8 +5293,16 @@
         button: [4],
         insertImg: ["#task,#fdp-photo,#fdp-photo-old", 2],
         customTitle: () => fun.gt(".fc-text-content>h1").replace(/(\[\d+P\]|\n|\(\d+P\))/gi, "").trim(),
-        css: ".content-container .content{margin-right:0px!important}.fdp-click-area,.ad-side-right,.footer{display:none!important}",
+        css: ".content-container .content{margin-right:0px!important}.ad-container,.fdp-click-area,.ad-side-right,.footer{display:none!important}",
         category: "nsfw2"
+    }, {
+        name: "图宅网/咔咔西三/YouFreeX",
+        reg: () => {
+            let hosts = ["www.tuzac.com", "www.kkc3.com", "www.youfreex.com"];
+            return hosts.includes(fun.lh);
+        },
+        css: ".ad-container{display:none!important}",
+        category: "ad"
     }, {
         name: "七仙子图片",
         host: ["www.qixianzi.com"],
@@ -5338,8 +5415,8 @@
         category: "nsfw2"
     }, {
         name: "苍井优图",
-        host: ["www.28tyu.com", "www.28rty.com", "www.28ery.com", "www.28wer.com", "sldlxz.com", "www.yuxiangcao.com", "282471.xyz", "284019.xyz"],
-        reg: /((www\.|a\.)(\d+tyu|\d+rty|\d+ery|\d+wer)\.com|sldlxz\.com|(www|a).yuxiangcao\.com|282471|284019\.xyz)\/e\/action\/ShowInfo\.php/i,
+        host: ["www.28tyu.com", "www.28rty.com", "www.28ery.com", "www.28wer.com", "www.028kkp.com", "sldlxz.com", "www.yuxiangcao.com", "282471.xyz", "284019.xyz"],
+        reg: /((www\.|a\.)(\d+tyu|\d+rty|\d+ery|\d+wer)\.com|sldlxz\.com|(www|a).yuxiangcao\.com|(www|a).028kkp\.com|282471|284019\.xyz)\/e\/action\/ShowInfo\.php/i,
         imgs: "img[id^='aimg'],.entry img",
         button: [4],
         insertImg: [".entry", 2],
@@ -5789,6 +5866,18 @@
         customTitle: () => fun.gt(".entry-title"),
         category: "nsfw2"
     }, {
+        name: "Asia Porn Photo",
+        host: ["www.asiapornphoto.com"],
+        reg: /^https?:\/\/www\.asiapornphoto\.com\/[^\.]+\.shtml$/,
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: () => fun.gt(".entry-title"),
+        category: "nsfw2"
+    }, {
         name: "Tabakus Gallery",
         host: ["tabakus.blogspot.com"],
         reg: /^https?:\/\/tabakus\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
@@ -5975,8 +6064,8 @@
         css: "body>.wrap{display:none!important}.player	img{max-width:100% !important}",
         category: "nsfw2"
     }, {
-        name: "麻豆村/麻麻传媒/乌鸦传媒/糖心vlog/果冻传媒/兔子先生/中国X站/中国P站/麻豆101/麻豆吃瓜社区/mini传媒/星空无限传媒/天美传媒/9草吃瓜网",
-        host: ["www.madoucun.com", "www.madoucun.org", "www.madoumcn.com", "www.madoucun.net", "modeltvmcn.com", "www.mamamcn.com", "www.wuyamcn.com", "www.tangxvlog.com", "www.guodongmcn.com", "www.mrrabbit.org", "www.xvideo.bar", "www.proncn.com", "www.md101.tv", "www.mdcg.club", "www.minimcn.com", "www.xkmcn.net", "www.tianmeimcn.com", "www.9ccg.org", "www.hkdoll.org"],
+        name: "麻豆村/麻麻传媒/乌鸦传媒/糖心vlog/果冻传媒/兔子先生/中国X站/中国P站/麻豆101/麻豆吃瓜社区/mini传媒/星空无限传媒/天美传媒/9草吃瓜网/皇家华人",
+        host: ["www.madoucun.com", "www.madoucun.org", "www.madoumcn.com", "www.madoucun.net", "modeltvmcn.com", "www.mamamcn.com", "www.wuyamcn.com", "www.tangxvlog.com", "www.guodongmcn.com", "www.mrrabbit.org", "www.xvideo.bar", "www.proncn.com", "www.md101.tv", "www.mdcg.club", "www.minimcn.com", "www.xkmcn.net", "www.tianmeimcn.com", "www.9ccg.org", "www.hkdoll.org", "www.royalmcn.com"],
         link: "/arttype/57.html",
         reg: [
             /^https?:\/\/(www\.)?madoucun\d?\.(com|org|net)\/artdetail-\d+/,
@@ -5993,10 +6082,11 @@
             /^https?:\/\/(www\.)?xkmcn\.net\/artdetail-\d+/,
             /^https?:\/\/(www\.)?tianmeimcn\.com\/artdetail-\d+/,
             /^https?:\/\/(www\.)?9ccg\.org\/artdetail-\d+/,
-            /^https?:\/\/(www\.)?hkdoll\.org\/artdetail-\d+/
+            /^https?:\/\/(www\.)?hkdoll\.org\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?royalmcn\.com\/artdetail-\d+/
         ],
         include: ".hl-article-box img,.news-content img",
-        init: () => fun.addMutationObserver(() => fun.remove("//div[div[@id and a[@id and img]]]")),
+        init: () => fun.addMutationObserver(() => fun.remove("//div[div[@id and a[@id and img]]] | //div[div[@id='homeBannerWrap']]")),
         imgs: ".hl-article-box img,.news-content img",
         button: [4],
         insertImg: [".hl-article-box,.news-content", 2],
@@ -13298,7 +13388,7 @@ window.parent.postMessage({
         name: "漫漫聚M/KuKu动漫M",
         enable: 1,
         reg: () => {
-            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
+            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
             return hosts.includes(fun.lh) && /\/comiclist\/\d+\/\d+\/1\.htm$/.test(fun.lp);
         },
         include: ".classBox img,.imgBox",
@@ -13334,6 +13424,46 @@ window.parent.postMessage({
         customTitle: () => fun.title("在线", 1),
         preloadNext: async (nextDoc, obj) => fun.picPreload(await fun.getKukudmSrc(nextLink, nextDoc, 0), nextDoc.title.split("在线")[0], "next"),
         css: ".imgBox{margin-bottom:0px!important}.subNav{border-top:1px solid #dcdcde}body{scrollbar-width:none;overflow-x:hidden;overflow-y:auto}",
+        category: "comic"
+    }, {
+        name: "漫漫聚/KuKu动漫M 404",
+        enable: 1,
+        reg: () => {
+            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
+            return hosts.includes(fun.lh) && /\/comiclist\/\d+\/\d+\/1\.htm$/.test(fun.lp);
+        },
+        include: [
+            "td img",
+            "iframe[src='/top.htm']"
+        ],
+        comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
+        imgs: () => fun.getKukudmSrc(),
+        button: [4],
+        insertImg: ["//td[input]", 2],
+        go: 1,
+        insertImgAF: async () => {
+            let cUrl = siteData.comicListUrl();
+            let nextUrl = await siteData.next();
+            if (nextUrl) {
+                fun.addUrlHtml(nextUrl, "body", 2);
+                fun.addUrlHtml(cUrl, "body", 2, "目錄");
+            } else {
+                fun.addUrlHtml(cUrl, "body", 2, "目錄");
+                fun.addUrlHtml(location.origin, "body", 2, "首頁");
+            }
+        },
+        autoDownload: [0],
+        next: () => {
+            let chapterId = siteUrl.split("/")[5];
+            let nextXPath = `//li[a[contains(@href,'${chapterId}')]]/preceding-sibling::li[1]/a`;
+            return fun.xhrDoc(siteData.comicListUrl()).then(doc => {
+                let next = fun.ge(nextXPath, doc);
+                return next ? next.href : null;
+            })
+        },
+        prev: 1,
+        preloadNext: async (nextDoc, obj) => fun.picPreload(await fun.getKukudmSrc(nextLink, nextDoc, 0), nextDoc.title.split("在线")[0], "next"),
+        css: "body{background-image:unset}body>table:nth-child(1),body>table:nth-child(3){display:none!important}body>table:nth-child(2),body>table:nth-child(2)>tbody>tr>td{width:100%!important;}body{scrollbar-width:none;-ms-overflow-style:none;overflow-x:hidden;overflow-y:auto}",
         category: "comic"
     }, {
         name: "仙漫网",
@@ -15447,7 +15577,8 @@ document.body.appendChild(text);
                 str_116: "自動捲動所有惰性載入的圖片元素",
                 str_117: "顯示浮動選單",
                 str_118: "圖集標題已更新",
-                str_119: "FancyboxV5滾輪圖片縮放"
+                str_119: "FancyboxV5滾輪圖片縮放",
+                str_120: "分頁檢視使用ViewerJs插件"
             };
             break;
         case "zh":
@@ -15572,7 +15703,8 @@ document.body.appendChild(text);
                 str_116: "自动滚动所有懒加载的图片元素",
                 str_117: "显示浮动菜单",
                 str_118: "图集标题已更新",
-                str_119: "FancyboxV5滚轮图片缩放"
+                str_119: "FancyboxV5滚轮图片缩放",
+                str_120: "分页视图使用ViewerJs插件"
             };
             break;
         default:
@@ -15695,7 +15827,8 @@ document.body.appendChild(text);
                 str_116: "Auto Scroll All Image Elements",
                 str_117: "Show Fixed Menu",
                 str_118: "Album title has been updated",
-                str_119: "FancyboxV5 Wheel Toggle Zoom"
+                str_119: "FancyboxV5 Wheel Toggle Zoom",
+                str_120: "New Tab View uses ViewerJs Plug-in"
             };
             break;
     }
@@ -16939,7 +17072,7 @@ document.body.appendChild(text);
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: hasTouchEvents ? displayLanguage.str_107 : displayLanguage.str_107 + ` [${noVideoNum}P]`,
+                    text: hasTouchEvents ? displayLanguage.str_107 : displayLanguage.str_107 + ` [ ${noVideoNum}P ]`,
                     cfn: event => {
                         event.preventDefault();
                         fastDownload = true;
@@ -18702,6 +18835,8 @@ document.body.appendChild(text);
         }
     };
 
+    const newTabViewLightGallery = _GM_getValue("newTabViewLightGallery", 0);
+
     const newTabView = async () => {
 
         if (isFetching) return;
@@ -18723,7 +18858,7 @@ document.body.appendChild(text);
                 alert("An error occurred\nUnable to use window.open()");
                 return;
             }
-            doc.write(`<html><head><title>${customTitle ?? document.title}</title><link rel="icon" href="/favicon.ico"></head><body style="text-align: center;"><div id="imgBox"></div></body></html>`);
+            doc.write(`<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no"><title>${customTitle ?? document.title}</title><link rel="icon" href="/favicon.ico"></head><body style="text-align: center;"><div id="imgBox"></div></body></html>`);
 
             if (siteData?.CSP && siteData?.CSP == 1) {
                 const imgElements = imgSrcs.map((src, i, arr) => {
@@ -18750,73 +18885,6 @@ document.body.appendChild(text);
             } else {
                 newWindow.fn = fun;
                 newWindow.newImgs = imgSrcs;
-                const jqueryCode = await fetch("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js").then(res => res.text());
-                const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css").then(res => res.text());
-                const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js").then(res => res.text());
-
-                const fancyboxStyle = doc.createElement("style");
-                fancyboxStyle.id = "fancyboxStyle";
-                fancyboxStyle.type = "text/css";
-                fancyboxStyle.innerHTML = fancyboxCss;
-                doc.head.appendChild(fancyboxStyle);
-
-                const jQueryScript = doc.createElement("script");
-                jQueryScript.id = "jQueryScript";
-                jQueryScript.type = "text/javascript";
-                jQueryScript.innerHTML = jqueryCode + fancyboxCode + `
-function setFancybox() {
-    const scrollIntoViewOptions = {
-        block: "center",
-        behavior: "smooth",
-        inline: "center"
-    };
-    Fancybox.bind("[data-fancybox]", {
-        idle: false,
-        wheel: ${FancyboxWheelOptions === 0 ? '"slide"' : '"zoom"'},
-        Images: {
-            Panzoom: {
-                maxScale: 2
-            }
-        },
-        Thumbs: {
-            showOnStart: false
-        },
-        Toolbar: {
-            display: {
-                left: ["infobar"],
-                middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
-                right: ["download", "slideshow", "fullscreen", "thumbs", "close"]
-            }
-        },
-        on: {
-            done: (fancybox, slide) => {
-                let slideIndex = slide.index;
-                let imgs = [...document.querySelectorAll("img")];
-                imgs.forEach(e => e.style.border = "");
-                if (fancybox.isCurrentSlide(slide)) {
-                    imgViewIndex = slideIndex;
-                    imgs[slideIndex].style.border = "solid #32a1ce";
-                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
-                } else {
-                    imgViewIndex = fancybox.getSlide().index;
-                    imgs[slideIndex].style.border = "solid #32a1ce";
-                    imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
-                }
-            },
-            close: fancybox => {
-                document.body.classList.remove("hide-scrollbar");
-                let slideIndex = fancybox.getSlide().index;
-                imgViewIndex = slideIndex;
-                let imgs = [...document.querySelectorAll("img")];
-                imgs.forEach(e => e.style.border = "");
-                imgs[slideIndex].style.border = "solid #32a1ce";
-                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
-            }
-        }
-    });
-}
-`;
-                doc.body.appendChild(jQueryScript);
 
                 const newWindowStyle = doc.createElement("style");
                 newWindowStyle.id = "newWindowStyle";
@@ -18895,11 +18963,132 @@ img.sbs {
 `;
                 doc.head.appendChild(newWindowStyle);
 
-                const newWindowScript = doc.createElement("script");
-                newWindowScript.id = "newWindowScript";
-                newWindowScript.type = "text/javascript";
-                newWindowScript.innerHTML = `
+                if (newTabViewLightGallery == 0) {
+                    const jqueryCode = await fetch("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js").then(res => res.text());
+                    const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css").then(res => res.text());
+                    const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js").then(res => res.text());
+
+                    const fancyboxStyle = doc.createElement("style");
+                    fancyboxStyle.id = "fancyboxStyle";
+                    fancyboxStyle.type = "text/css";
+                    fancyboxStyle.innerHTML = fancyboxCss;
+                    doc.head.appendChild(fancyboxStyle);
+
+                    const jQueryScript = doc.createElement("script");
+                    jQueryScript.id = "jQueryScript";
+                    jQueryScript.type = "text/javascript";
+                    jQueryScript.innerHTML = jqueryCode + fancyboxCode + `
 var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false)();
+
+var scrollIntoViewOptions = {
+    block: "center",
+    behavior: "smooth",
+    inline: "center"
+};
+
+var FancyboxOptions = {};
+
+if (hasTouchEvents) {
+    FancyboxOptions = {
+        idle: false,
+        Images: {
+            Panzoom: {
+                maxScale: 2
+            }
+        },
+        Thumbs: {
+            showOnStart: false
+        },
+        Toolbar: {
+            display: {
+                left: ["infobar"],
+                middle: ["flipX", "flipY"],
+                right: ["iterateZoom", "slideshow", "thumbs", "close"]
+            }
+        },
+        on: {
+            done: (fancybox, slide) => {
+                let slideIndex = slide.index;
+                let imgs = [...document.querySelectorAll("img")];
+                imgs.forEach(e => e.style.border = "");
+                if (fancybox.isCurrentSlide(slide)) {
+                    imgViewIndex = slideIndex;
+                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                } else {
+                    imgViewIndex = fancybox.getSlide().index;
+                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                }
+            },
+            close: fancybox => {
+                document.body.classList.remove("hide-scrollbar");
+                let slideIndex = fancybox.getSlide().index;
+                imgViewIndex = slideIndex;
+                let imgs = [...document.querySelectorAll("img")];
+                imgs.forEach(e => e.style.border = "");
+                imgs[slideIndex].style.border = "solid #32a1ce";
+                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+            }
+        }
+    }
+} else {
+    FancyboxOptions = {
+        idle: false,
+        wheel: ${FancyboxWheelOptions === 0 ? '"slide"' : '"zoom"'},
+        Images: {
+            Panzoom: {
+                maxScale: 2
+            }
+        },
+        Thumbs: {
+            showOnStart: false
+        },
+        Toolbar: {
+            display: {
+                left: ["infobar"],
+                middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                right: ["download", "slideshow", "fullscreen", "thumbs", "close"]
+            }
+        },
+        on: {
+            done: (fancybox, slide) => {
+                let slideIndex = slide.index;
+                let imgs = [...document.querySelectorAll("img")];
+                imgs.forEach(e => e.style.border = "");
+                if (fancybox.isCurrentSlide(slide)) {
+                    imgViewIndex = slideIndex;
+                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                } else {
+                    imgViewIndex = fancybox.getSlide().index;
+                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                }
+            },
+            close: fancybox => {
+                document.body.classList.remove("hide-scrollbar");
+                let slideIndex = fancybox.getSlide().index;
+                imgViewIndex = slideIndex;
+                let imgs = [...document.querySelectorAll("img")];
+                imgs.forEach(e => e.style.border = "");
+                imgs[slideIndex].style.border = "solid #32a1ce";
+                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+            }
+        }
+    }
+}
+
+function setFancybox() {
+    Fancybox.bind("[data-fancybox]", FancyboxOptions);
+}
+`;
+                    doc.body.appendChild(jQueryScript);
+
+                    const newWindowScript = doc.createElement("script");
+                    newWindowScript.id = "newWindowScript";
+                    newWindowScript.type = "text/javascript";
+                    newWindowScript.innerHTML = `
 var imgViewIndex = -1;
 
 function addFixedMenu() {
@@ -19027,7 +19216,170 @@ if (newWindowDataViewMode == 1) {
 }
 
 `;
-                doc.body.appendChild(newWindowScript);
+                    doc.body.appendChild(newWindowScript);
+                } else {
+                    const ViewerJsCss = await fetch("https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css").then(res => res.text());
+                    const ViewerJsCode = await fetch("https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js").then(res => res.text());
+
+                    const ViewerStyle = doc.createElement("style");
+                    ViewerStyle.id = "ViewerStyle";
+                    ViewerStyle.type = "text/css";
+                    ViewerStyle.innerHTML = ViewerJsCss;
+                    doc.head.appendChild(ViewerStyle);
+
+                    const ViewerScript = doc.createElement("script");
+                    ViewerScript.id = "ViewerScript";
+                    ViewerScript.type = "text/javascript";
+                    ViewerScript.innerHTML = ViewerJsCode + `
+var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
+    url: "data-src"
+});
+
+document.addEventListener("viewed", event => {
+    let slideIndex = event.detail.index;
+    let imgs = [...document.querySelectorAll("img")];
+    imgs.forEach(e => e.style.border = "");
+    imgViewIndex = slideIndex;
+    imgs[slideIndex].style.border = "solid #32a1ce";
+    imgs[slideIndex].scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+        inline: "center"
+    });
+});
+`;
+                    doc.body.appendChild(ViewerScript);
+
+                    const newWindowScript = doc.createElement("script");
+                    newWindowScript.id = "newWindowScript";
+                    newWindowScript.type = "text/javascript";
+                    newWindowScript.innerHTML = `
+var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false)();
+var imgViewIndex = -1;
+
+function addFixedMenu() {
+    let menuDiv = document.createElement("div");
+    menuDiv.id = "FixedMenu";
+    const menuObj = [{
+        id: "MenuSBSItem",
+        text: hasTouchEvents ? "Side By Side" : "Side By Side (2)",
+        cfn: () => SBSImageLayout()
+    }, {
+        id: "MenuSinglePageItem",
+        text: hasTouchEvents ? "Single Image" : "Single Image (1)",
+        cfn: () => singleImageLayout()
+    }, {
+        id: "MenuDefaultItem",
+        text: hasTouchEvents ? "Default" : "Default (0)",
+        cfn: () => defaultImageLayout()
+    }];
+    const createMenu = obj => {
+        let item = document.createElement("div");
+        item.id = obj.id;
+        item.className = "FixedMenuitem";
+        item.innerText = obj.text;
+        item.oncontextmenu = () => false;
+        if (obj.cfn) item.addEventListener("click", obj.cfn);
+        menuDiv.appendChild(item);
+    };
+    menuObj.forEach(obj => createMenu(obj));
+    document.body.appendChild(menuDiv);
+}
+addFixedMenu();
+
+document.addEventListener("keydown", event => {
+    if (document.querySelector(".viewer-container .viewer-canvas>img")) return;
+    if (event.code == "Numpad0" || event.key == "0") return defaultImageLayout();
+    if (event.code == "Numpad1" || event.key == "1") return singleImageLayout();
+    if (event.code == "Numpad2" || event.key == "2") return SBSImageLayout();
+});
+
+document.addEventListener("keydown", event => {
+    if (document.querySelector(".viewer-container .viewer-canvas>img")) return;
+    const scrollIntoViewOptions = {
+        block: "center",
+        inline: "center"
+    };
+    const imgs = [...document.querySelectorAll("img")];
+    if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].includes(event.code) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].includes(event.key)) && imgViewIndex >= 0) {
+        event.preventDefault();
+        imgViewIndex--;
+        if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
+        imgs.forEach(e => e.style.border = "");
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+    } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].includes(event.code) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].includes(event.key)) && imgViewIndex <= imgs.length - 1) {
+        event.preventDefault();
+        imgViewIndex++;
+        if (imgViewIndex > imgs.length - 1) imgViewIndex = 0;
+        imgs.forEach(e => e.style.border = "");
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+    } else {
+        imgViewIndex = -1;
+    }
+});
+
+function loadImgs() {
+    const imgs = [...document.querySelectorAll("img")];
+    const oddNumberImgs = imgs.filter((img, index) => parseInt(index, 10) % 2 == 0);
+    const evenNumberImgs = imgs.filter((img, index) => parseInt(index, 10) % 2 != 0);
+    fn.singleThreadLoadImgs(oddNumberImgs);
+    fn.singleThreadLoadImgs(evenNumberImgs);
+}
+
+function createImgElement(mode) {
+    window.scrollTo({
+        top: 0
+    });
+    imgViewIndex = -1;
+    [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+    document.querySelector("#imgBox").innerHTML = "";
+    const imgElements = newImgs.map((src, i, arr) => {
+        let img = document.createElement("img");
+        img.className = mode;
+        img.src = "${loading_bak}";
+        img.dataset.src = src;
+        fn.imagesObserver.observe(img);
+        return img;
+    });
+    document.querySelector("#imgBox").append(...imgElements);
+    ViewerJsInstance.update();
+    loadImgs();
+}
+
+function defaultImageLayout() {
+    createImgElement("default");
+    localStorage.setItem("newWindowData", '{"ViewMode":0}');
+    document.querySelector("#MenuDefaultItem").classList.add("active");
+}
+
+function singleImageLayout() {
+    createImgElement("single");
+    localStorage.setItem("newWindowData", '{"ViewMode":1}');
+    document.querySelector("#MenuSinglePageItem").classList.add("active");
+}
+
+function SBSImageLayout() {
+    createImgElement("sbs");
+    localStorage.setItem("newWindowData", '{"ViewMode":2}');
+    document.querySelector("#MenuSBSItem").classList.add("active");
+}
+
+let newWindowDataViewMode = JSON.parse(localStorage.newWindowData).ViewMode;
+
+if (newWindowDataViewMode == 1) {
+    singleImageLayout();
+} else if (newWindowDataViewMode == 2) {
+    SBSImageLayout();
+} else {
+    defaultImageLayout();
+}
+
+`;
+                    doc.body.appendChild(newWindowScript);
+
+                }
             }
         } else {
             alert("No Image.");
@@ -20403,6 +20755,10 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     if (siteData?.category && ["nsfw", "nsfw2", "hcomic", "comic", "lazyLoad"].includes(siteData?.category)) {
         _GM_registerMenuCommand(FancyboxWheelOptions == 0 ? "❌ " + displayLanguage.str_119 : "✔️ " + displayLanguage.str_119, () => {
             FancyboxWheelOptions == 0 ? _GM_setValue("FancyboxWheelOptions", 1) : _GM_setValue("FancyboxWheelOptions", 0);
+            location.reload();
+        });
+        _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + displayLanguage.str_120 : "✔️ " + displayLanguage.str_120, () => {
+            newTabViewLightGallery == 0 ? _GM_setValue("newTabViewLightGallery", 1) : _GM_setValue("newTabViewLightGallery", 0);
             location.reload();
         });
     }
