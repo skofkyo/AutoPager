@@ -21,6 +21,8 @@ https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js
 https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
+https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
 <pre>
 cdn.bootcdn.net
@@ -30,6 +32,8 @@ https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
 https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
 https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js
 https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css
+https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.js
+https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.css
 </pre>
 <br>
 <p>2023/11/06</p>
@@ -795,7 +799,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/24 00:26</p>
+<p>2024/03/26 23:58</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1430,7 +1434,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.madoucun.com/arttype/57.html">麻豆村</a></td>
-                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>，<a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>，<a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>，<a href="https://www.proncn.com/arttype/57.html">中国P站</a>，<a href="https://www.proncn.com/arttype/57.html">麻豆101</a>，<a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>，<a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>，<a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>，<a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a>，<a href="https://www.9ccg.org/arttype/57.html">9草吃瓜网</a></td>
+                <td><a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>，<a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>，<a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>，<a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>，<a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>，<a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>，<a href="https://www.proncn.com/arttype/57.html">中国P站</a>，<a href="https://www.proncn.com/arttype/57.html">麻豆101</a>，<a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>，<a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>，<a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>，<a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a>，<a href="https://www.9ccg.org/arttype/57.html">9草吃瓜网</a>，<a href="https://www.royalmcn.com/arttype/57.html">皇家华人</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.91tulu.com/">91图录</a></td>
@@ -1833,6 +1837,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://3600000.xyz/">3600000 Beauty</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://erogirl.net/">Erogirl</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://everia.club/">Everia.club</a></td>
                 <td></td>
             </tr>
@@ -1897,6 +1909,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>手動插入圖片</td>
             </tr>
             <tr>
+                <td><a href="http://www.saladpuncher.com/">Permanent Bachelor</a></td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
                 <td><a href="https://ivphoto.tistory.com/">IVPhoto_Gravure</a></td>
                 <td>手動插入圖片</td>
             </tr>
@@ -1943,6 +1959,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://asiaidols.wordpress.com/">Asia Idols</a></td>
                 <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.asiapornphoto.com/">Asia Porn Photo</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://chinesenudeart.blogspot.com/">Chinese Nude Art Photos</a></td>
