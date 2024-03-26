@@ -1,4 +1,4 @@
-2024/03/24 00:26
+2024/03/26 23:58
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -145,6 +145,15 @@ BaoBua
 
 Chinese in beauty
 *://cn.looives.com/view/*.cfg*
+
+Chinese Beauties
+/sxchinesegirlz(\d+)?\.\w+\/\d+\/\d+\/\d+\/.+\/$/
+
+photo.camcam.cc
+/photo\.camcam\.cc\/[^/]+\/$/
+
+PhimVu
+/^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i
 
 萝丝派
 *://www.yylsp.com/*.html
@@ -487,9 +496,6 @@ BuzzAV
 
 SexyGirl
 *://sexygirl.cc/a/*.html
-
-photo.camcam.cc
-/^http://photo\.camcam\.cc/[^/]+/$/
 
 dongojyousan.com
 *://www.dongojyousan.com/articles/*.html*
@@ -1303,8 +1309,8 @@ COCOMANGA閱讀
 KuKu动漫閱讀
 *ikukudm.*/comiclist/*/*/*.htm
 *m.3840p.xyz/comiclist/*/*/*.htm
-
-
+*sbxrb11.3840p.xyz/comiclist/*/*/*.htm
+*s*.wap.ikukudm.cc/comiclist/*/*/*.htm
 
 8Comic無限動漫手機版閱讀
 *://8.twobili.com/comic/insurance_*
@@ -1554,6 +1560,8 @@ manhuab.com/manhua/*/*.html
 *manmanju.*/comiclist/*/*/*.htm
 *ikukudm.*/comiclist/*/*/*.htm
 *m.3840p.xyz/comiclist/*/*/*.htm
+*sbxrb11.3840p.xyz/comiclist/*/*/*.htm
+*s*.wap.ikukudm.cc/comiclist/*/*/*.htm
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
 *://tw.baozimh.com/*
@@ -2171,12 +2179,14 @@ https://www.eyval.net/*
 /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
 *://*tupianwu.com/*
+/^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i
+/photo\.camcam\.cc\/[^/]+\/$/
+/sxchinesegirlz(\d+)?\.\w+\/\d+\/\d+\/\d+\/.+\/$/
 /^https?:\/\/tu928\.com\/\d+\.html/
 /^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/imgs\.php\?id=/
 /^https://www\.hexieshe\.cn/\d+/$/
 /^https://chinagirly\.com/\d+/$/
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
-/^http://photo\.camcam\.cc/[^/]+/$/
 /^https?://(e-hentai|exhentai)\.org/(lofi/)?g/\w+/\w+/$/
 /^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?xmanhua\.com/m\d+(-p\d+)?//
