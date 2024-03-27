@@ -17,8 +17,8 @@ Waterfox for Android 1.0.5 + Tampermonkey 5.0.1
 cdn.jsdelivr.net
 https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
@@ -40,7 +40,7 @@ https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.css
 <p>腳本1.6.0+版本使用Fancybox5.0.24後，暴力猴Violentmonkey會報錯。</p>
 <p>如果用戶堅持使用暴力猴Violentmonkey，腳本1.6.3+的版本只需用戶自己修改</p>
 <pre>
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 </pre>
 改成
 <pre>
@@ -791,6 +791,7 @@ imgs: async () => {
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
 <br>
 <p>4.分頁檢視模式</p>
+<p>左下有浮動選單區塊，鼠標懸停彈出顯示。</p>
 <p>W鍵、A鍵、上左方向鍵跳轉到目前的上一張圖、S鍵、D鍵、下右方向鍵跳轉到目前的下一張圖</p>
 <p>數字鍵 0 切換為預設模式自動排列</p>
 <p>數字鍵 1 切換為單圖置中模式</p>
@@ -860,7 +861,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.hentaiclub.net/">紳士会所</a></td>
-                <td></td>
+                <td><a href="https://www.sshs.pw/">导航页</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.24fa.com/c49.aspx">24FA</a></td>
@@ -1842,7 +1843,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://erogirl.net/">Erogirl</a></td>
-                <td></td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://everia.club/">Everia.club</a></td>
