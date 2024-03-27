@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.0
+// @version            1.12.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -29,11 +29,20 @@
 // @grant              GM.getValue
 // @grant              GM_setValue
 // @grant              GM.setValue
+// @grant              GM_getResourceText
+// @grant              GM.getResourceText
 // @grant              unsafeWindow
 // @noframes
 // @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource JqueryJS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+// @resource FancyboxV3Css https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+// @resource ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
+// @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 // ==/UserScript==
 
 (async () => {
@@ -100,37 +109,34 @@
         include: ".photos>a",
         imgs: async () => {
             let numP = fun.gt("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
-            //let pageSize = parseInt(fun.ge(".photos>a").href.match(/pageSize=(\d+)/i)[1], 10) || 17;
-            //let max = Math.ceil(numP / pageSize);
             let max;
             try {
                 max = parseInt([...new Set([...fun.gae(".pager a[href]")].map(e => e.href))].at(-1).match(/\/(\d+)\.html$/)[1], 10);
             } catch (e) {
                 max = 1;
             }
-            //if (max > 1 && [...fun.gae(".photos>a")].length < (pageSize + 1)) {
             if (max > 1) {
-                let links = [];
+                let links = [siteUrl];
                 let url = siteUrl.replace(".html", "");
                 for (let i = 2; i <= max; i++) {
                     links.push(url + "/" + i + ".html");
                 }
-                await fun.getEle(links, ".photos>a", [".photos", 0], ".pager,.photos>.item,.photos>.photoMask", 200);
+                thumbnailsSrcArray = await fun.getImgA("img.cr_only", links, 200);
+            } else {
+                thumbnailsSrcArray = [...fun.gae("img.cr_only")].map(e => e.src);
             }
-            if (parseInt(numP, 10) != [...fun.gae("img.cr_only")].length) {
+            if (parseInt(numP, 10) != thumbnailsSrcArray.length) {
                 setTimeout(() => {
                     fun.hideMsg();
                     fun.showMsg("圖片數量不符合，請反饋", 5000);
                 }, 1500)
             }
-            thumbnailsSrcArray = [...fun.gae("img.cr_only")].map(e => e.src);
             return thumbnailsSrcArray.map(e => e.replace("_600x0", "").replace(".webp", ".jpg"));
         },
         button: [4, "24%", 1],
         insertImg: [
-            ["//div[div[@class='photos']]/*[last()]", 2], 2
+            ["//div[div[@class='photos']]/*[last()]", 2, ".pager,.photos"], 2
         ],
-        go: 1,
         customTitle: () => {
             let s = document.title.split("-");
             let title = "";
@@ -2295,8 +2301,9 @@
     }, {
         name: "街角图片社",
         host: ["ijjiao.com"],
-        reg: () => /^https?:\/\/ijjiao\.com\/\d+\/\d+\/\d+\/album/.test(siteUrl) && fun.ge(".v-pagination") && !fun.ge("//span[text()='加载更多']"),
-        delay: 800,
+        reg: /^https?:\/\/ijjiao\.com\/\d+\/\d+\/\d+\/album/,
+        exclude: "//span[text()='加载更多']",
+        init: async () => await fun.waitEle(".v-pagination"),
         imgs: async () => {
             let max = fun.gt("//li[button[@aria-label='Next page']]", 2);
             let url = siteUrl.replace(/\/\d+$/, "");
@@ -3994,7 +4001,8 @@
     }, {
         name: "NudoStar",
         host: ["nudostar.com"],
-        reg: /^https?:\/\/nudostar\.com\/[^\/]+\/#more-\d+/,
+        reg: /^https?:\/\/nudostar\.com\/[^\/]+\//,
+        include: "h1.entry-title",
         init: () => fun.createImgBox(".crp_related", 1),
         imgs: "//p/a[img]",
         button: [4],
@@ -4015,7 +4023,7 @@
             return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)/, "$1"));
         },
         button: [4],
-        insertImg: ["#miniThumbContainer ", 2],
+        insertImg: ["#miniThumbContainer ", 2, 2000],
         customTitle: () => fun.gt("h1"),
         css: "#miniThumbContainer{max-width:unset!important}",
         category: "nsfw2"
@@ -4130,7 +4138,7 @@
         name: "Cosplay69",
         host: ["www.cosplay69.net", "cosplay69.net"],
         reg: /^https?:\/\/(www\.)?cosplay69\.net\/[^\/]+\/$/,
-        include: "a[data-fancybox]",
+        include: "a[data-fancybox],.gallery-item a",
         init: () => {
             let iframe = fun.ge(".iframe-container,iframe[scrolling]");
             if (iframe) {
@@ -4138,7 +4146,7 @@
                 [...fun.gae(".iframe-container,iframe[scrolling]")].forEach(e => x.parentNode.insertBefore(e, x));
             }
         },
-        imgs: "a[data-fancybox]",
+        imgs: "a[data-fancybox],.gallery-item a",
         button: [4],
         insertImg: [".entry-content", 2],
         autoDownload: [0],
@@ -4212,7 +4220,7 @@
         autoDownload: [0],
         next: ".previous>a",
         prev: ".next>a",
-        customTitle: () => fun.gt("h1.entry-title").replace(/.mi\s?taku\.net./, "").trim(),
+        customTitle: () => fun.gt("h1.entry-title").replace(/.[\smitaku]{6,7}\.net./, "").trim(),
         downloadVideo: true,
         category: "nsfw2"
     }, {
@@ -4324,7 +4332,7 @@
         //next: ".post-navigation-link-previous>a",
         //prev: ".post-navigation-link-next>a",
         customTitle: () => fun.gt("h3.wp-block-post-title").replace(/\[\d+[\w\s\.\+-]+\]|\(\d+[\w\s\.\+-]+\)/gi, "").trim(),
-        fetch: 1,
+        //fetch: 1,
         //threading: 4,
         CSP: 1,
         css: ".popup,.wp-container-13{display:none!important}.FullPictureLoadImage{max-width:100%!important}",
@@ -6604,7 +6612,7 @@
             return thumbnailsSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
         },
         button: [4],
-        insertImg: ["//div[div[div[div[@data-hook='galleryViewer']]]][@data-breakout='fullWidth']", 2],
+        insertImg: ["//div[div[div[div[@data-hook='galleryViewer']]]]", 2],
         customTitle: () => fun.gt(".post-title__text").replace(/\d+P\s?|\[\d+[\w+\s\.\+-]+\]\s?/, ""),
         downloadVideo: true,
         css: "#POPUPS_ROOT{display:none!important;}",
@@ -15293,83 +15301,38 @@ document.body.appendChild(text);
     const _GM_getValue = (() => isFn(GM_getValue) ? GM_getValue : GM.getValue)();
     const _GM_setValue = (() => isFn(GM_setValue) ? GM_setValue : GM.setValue)();
     const _GM_registerMenuCommand = (() => isFn(GM_registerMenuCommand) ? GM_registerMenuCommand : GM.registerMenuCommand)();
+    const _GM_getResourceText = (() => isFn(GM_getResourceText) ? GM_getResourceText : GM.getResourceText)();
+
+    const JqueryJS = GM_getResourceText("JqueryJS");
+    const FancyboxV5JS = GM_getResourceText("FancyboxV5JS");
+    const FancyboxV5Css = GM_getResourceText("FancyboxV5Css");
+    const FancyboxV3JS = GM_getResourceText("FancyboxV3JS");
+    const FancyboxV3Css = GM_getResourceText("FancyboxV3Css");
+    const ViewerJs = GM_getResourceText("ViewerJs");
+    const ViewerJsCss = GM_getResourceText("ViewerJsCss");
 
     const addLibrarysV3 = async () => {
         try {
-            const jsdelivrLibrarys = [
-                "https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js",
-                "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
-            ];
-            const bootcdnLibrarys = [
-                "https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js",
-                "https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js",
-                "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js",
-                "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css"
-            ];
-            let librarysArr;
-            try {
-                const check = await fetch(jsdelivrLibrarys[0]).then(res => res.status);
-                check == 200 ? librarysArr = jsdelivrLibrarys : librarysArr = bootcdnLibrarys;
-            } catch (error) {
-                console.error("\ncdn.jsdelivr.netV3 函式庫取得失敗", error);
-                librarysArr = bootcdnLibrarys;
+            const jsArr = [JqueryJS, FancyboxV3JS];
+            for (let i in jsArr) {
+                if (siteData.fancybox && siteData.fancybox.js === false) continue;
+                fun.script(jsArr[i], 0, 1);
             }
-            for (let i in librarysArr) {
-                if (/\.js$/.test(librarysArr[i])) {
-                    if (siteData.fancybox && siteData.fancybox.js === false) continue;
-                    const script = document.createElement("script");
-                    const code = await fetch(librarysArr[i]).then(res => res.text());
-                    script.type = "text/javascript";
-                    script.innerHTML = code;
-                    document.body.appendChild(script);
-                } else if (/\.css$/.test(librarysArr[i])) {
-                    if (siteData.fancybox && siteData.fancybox.css !== false) {
-                        const css = await fetch(librarysArr[i]).then(res => res.text());
-                        fun.css(css);
-                    }
-                }
+            if (siteData.fancybox && siteData.fancybox.css !== false) {
+                fun.css(FancyboxV3Css);
             }
         } catch (error) {
             console.error("\naddLibrarysV3() 注入函式庫失敗", error);
         }
     };
 
-    const addLibrarysV5 = async () => {
+    const addLibrarysV5 = () => {
         try {
-            const jsdelivrLibrarys = [
-                "https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js",
-                "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js",
-                "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css"
-            ];
-            const bootcdnLibrarys = [
-                "https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js",
-                "https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js",
-                "https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js",
-                "https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css"
-            ];
-            let librarysArr;
-            try {
-                const check = await fetch(jsdelivrLibrarys[0]).then(res => res.status);
-                check == 200 ? librarysArr = jsdelivrLibrarys : librarysArr = bootcdnLibrarys;
-            } catch (error) {
-                console.error("\ncdn.jsdelivr.netV5 函式庫取得失敗", error);
-                librarysArr = bootcdnLibrarys;
+            const jsArr = [JqueryJS, FancyboxV5JS];
+            for (let i in jsArr) {
+                fun.script(jsArr[i], 0, 1);
             }
-            for (let i in librarysArr) {
-                if (/\.js$/.test(librarysArr[i])) {
-                    const script = document.createElement("script");
-                    const code = await fetch(librarysArr[i]).then(res => res.text());
-                    script.type = "text/javascript";
-                    script.innerHTML = code;
-                    document.body.appendChild(script);
-                } else if (/\.css$/.test(librarysArr[i])) {
-                    const css = await fetch(librarysArr[i]).then(res => res.text());
-                    fun.css(css);
-                }
-            }
+            fun.css(FancyboxV5Css);
         } catch (error) {
             console.error("\naddLibrarysV5() 注入函式庫失敗", error);
         }
@@ -15578,7 +15541,8 @@ document.body.appendChild(text);
                 str_117: "顯示浮動選單",
                 str_118: "圖集標題已更新",
                 str_119: "FancyboxV5滾輪圖片縮放",
-                str_120: "分頁檢視使用ViewerJs插件"
+                str_120: "此網站分頁檢視使用ViewerJs插件",
+                str_121: "關閉圖片導覽快速鍵"
             };
             break;
         case "zh":
@@ -15704,7 +15668,8 @@ document.body.appendChild(text);
                 str_117: "显示浮动菜单",
                 str_118: "图集标题已更新",
                 str_119: "FancyboxV5滚轮图片缩放",
-                str_120: "分页视图使用ViewerJs插件"
+                str_120: "此网站分页视图使用ViewerJs插件",
+                str_121: "关闭图片导览快捷键"
             };
             break;
         default:
@@ -15828,7 +15793,8 @@ document.body.appendChild(text);
                 str_117: "Show Fixed Menu",
                 str_118: "Album title has been updated",
                 str_119: "FancyboxV5 Wheel Toggle Zoom",
-                str_120: "New Tab View uses ViewerJs Plug-in"
+                str_120: "This Website New Tab View uses ViewerJs Plug-in",
+                str_121: "Turn Off Image Navigation Shortcut Keys"
             };
             break;
     }
@@ -17072,7 +17038,7 @@ document.body.appendChild(text);
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: hasTouchEvents ? displayLanguage.str_107 : displayLanguage.str_107 + ` [ ${noVideoNum}P ]`,
+                    text: hasTouchEvents ? displayLanguage.str_107 : displayLanguage.str_107 + ` | [ ${noVideoNum}P ]`,
                     cfn: event => {
                         event.preventDefault();
                         fastDownload = true;
@@ -17261,32 +17227,34 @@ document.body.appendChild(text);
                 let evenNumberImgs = imgs.filter((img, index) => parseInt(index, 10) % 2 != 0);
                 fun.singleThreadLoadImgs(oddNumberImgs);
                 fun.singleThreadLoadImgs(evenNumberImgs);
-                let imgsNum = 0;
-                document.addEventListener("keydown", event => {
-                    if (fun.ge("#FullPictureLoadOptions:not([style])")) return;
-                    if (event.code == "ArrowUp" || event.key == "ArrowUp") {
-                        if (fun.ge(".fancybox-container,.fancybox__container")) return;
-                        if (imgsNum > 0 && viewMode == 0) {
-                            imgsNum -= 1;
-                            imgs[imgsNum].scrollIntoView();
-                        }
-                    } else if (event.code == "ArrowDown" || event.key == "ArrowDown") {
-                        if (fun.ge(".fancybox-container,.fancybox__container")) return;
-                        event.preventDefault();
-                        if (imgsNum < imgs.length && viewMode == 0) {
-                            imgsNum += 1;
-                            try {
+                if (TurnOffImageNavigationShortcutKeys != 1) {
+                    let imgsNum = 0;
+                    document.addEventListener("keydown", event => {
+                        if (fun.ge("#FullPictureLoadOptions:not([style])")) return;
+                        if (event.code == "ArrowUp" || event.key == "ArrowUp") {
+                            if (fun.ge(".fancybox-container,.fancybox__container")) return;
+                            if (imgsNum > 0 && viewMode == 0) {
+                                imgsNum -= 1;
                                 imgs[imgsNum].scrollIntoView();
-                            } catch (e) {
-                                imgsNum = 0;
-                                imgs[0].scrollIntoView();
-                                fun.showMsg(displayLanguage.str_94);
                             }
+                        } else if (event.code == "ArrowDown" || event.key == "ArrowDown") {
+                            if (fun.ge(".fancybox-container,.fancybox__container")) return;
+                            event.preventDefault();
+                            if (imgsNum < imgs.length && viewMode == 0) {
+                                imgsNum += 1;
+                                try {
+                                    imgs[imgsNum].scrollIntoView();
+                                } catch (e) {
+                                    imgsNum = 0;
+                                    imgs[0].scrollIntoView();
+                                    fun.showMsg(displayLanguage.str_94);
+                                }
+                            }
+                        } else {
+                            imgsNum = 0 - 1;
                         }
-                    } else {
-                        imgsNum = 0 - 1;
-                    }
-                });
+                    });
+                }
                 if (siteData.category == "comic") {
                     let lastImg = imgs.at(-1);
                     fun.comicNextObserver.observe(lastImg);
@@ -18760,72 +18728,74 @@ document.body.appendChild(text);
                 }
                 imgs[0].scrollIntoView();
             }
-            document.addEventListener("keydown", async event => {
-                if (ge("#FullPictureLoadOptions:not([style])")) return;
-                if (event.code == "ArrowUp" || event.key == "ArrowUp") {
-                    if (ge(".fancybox-container,.fancybox__container")) return;
-                    event.preventDefault();
-                    if (imgsNum > 0 && viewMode == 1) {
-                        imgsNum -= column;
-                        imgs[imgsNum].scrollIntoView();
-                    }
-                } else if (event.code == "ArrowDown" || event.key == "ArrowDown") {
-                    if (ge(".fancybox-container,.fancybox__container")) return;
-                    event.preventDefault();
-                    if (imgsNum < imgs.length && imgsNum != imgs.length && viewMode == 1) {
-                        imgsNum += column;
-                        try {
-                            if (imgs[imgsNum].nextSibling && siteData.category == "comic") {
-                                debug(`\n第${parseInt(imgsNum, 10) + 1}張(左)高：${imgs[imgsNum].offsetHeight}\n第${parseInt(imgsNum, 10) + 2}張(右)高：${imgs[imgsNum].nextSibling.offsetHeight}`);
-                                await fun.checkImgStatus(imgs[imgsNum].nextSibling.querySelector("img").dataset.src, "Wait Loading...");
-                                if (imgs[imgsNum].offsetHeight < imgs[imgsNum].nextSibling.offsetHeight) {
-                                    imgs[imgsNum].style.height = (imgs[imgsNum].nextSibling.offsetHeight) + "px";
-                                    let img = imgs[imgsNum].querySelector("img");
-                                    await fun.checkImgStatus(img.dataset.src, "Wait Loading...");
-                                    let num = (imgs[imgsNum].offsetHeight - img.height) / 2;
-                                    debug(`\n修改了之後\n第${parseInt(imgsNum, 10) + 1}張(左)高：${imgs[imgsNum].offsetHeight}\n第${parseInt(imgsNum, 10) + 2}張(右)高：${imgs[imgsNum].nextSibling.offsetHeight}`);
-                                    img.style.marginTop = `${num}px`;
-                                }
-                            } else if (siteData.category == "comic") {
-                                imgs[imgsNum].src = imgs[imgsNum].dataset.src;
-                                await fun.checkImgStatus(imgs[imgsNum].dataset.src, "Wait Loading...");
-                            }
+            if (TurnOffImageNavigationShortcutKeys != 1) {
+                document.addEventListener("keydown", async event => {
+                    if (ge("#FullPictureLoadOptions:not([style])")) return;
+                    if (event.code == "ArrowUp" || event.key == "ArrowUp") {
+                        if (ge(".fancybox-container,.fancybox__container")) return;
+                        event.preventDefault();
+                        if (imgsNum > 0 && viewMode == 1) {
+                            imgsNum -= column;
                             imgs[imgsNum].scrollIntoView();
-                            await fun.delay(200);
-                            imgs[imgsNum].scrollIntoView();
-                        } catch (e) {
-                            if (siteData.category == "comic" && siteData.next && siteData.insertImg) {
-                                if (isString(siteData?.next)) {
-                                    let next = fun.ge(siteData.next);
-                                    if (next) {
-                                        fun.showMsg(displayLanguage.str_95, 3000);
-                                        //next.click();
-                                        elementClick(next);
-                                    } else {
-                                        imgsNum = 0 - column;
-                                        fun.showMsg(displayLanguage.str_96, 3000);
+                        }
+                    } else if (event.code == "ArrowDown" || event.key == "ArrowDown") {
+                        if (ge(".fancybox-container,.fancybox__container")) return;
+                        event.preventDefault();
+                        if (imgsNum < imgs.length && imgsNum != imgs.length && viewMode == 1) {
+                            imgsNum += column;
+                            try {
+                                if (imgs[imgsNum].nextSibling && siteData.category == "comic") {
+                                    debug(`\n第${parseInt(imgsNum, 10) + 1}張(左)高：${imgs[imgsNum].offsetHeight}\n第${parseInt(imgsNum, 10) + 2}張(右)高：${imgs[imgsNum].nextSibling.offsetHeight}`);
+                                    await fun.checkImgStatus(imgs[imgsNum].nextSibling.querySelector("img").dataset.src, "Wait Loading...");
+                                    if (imgs[imgsNum].offsetHeight < imgs[imgsNum].nextSibling.offsetHeight) {
+                                        imgs[imgsNum].style.height = (imgs[imgsNum].nextSibling.offsetHeight) + "px";
+                                        let img = imgs[imgsNum].querySelector("img");
+                                        await fun.checkImgStatus(img.dataset.src, "Wait Loading...");
+                                        let num = (imgs[imgsNum].offsetHeight - img.height) / 2;
+                                        debug(`\n修改了之後\n第${parseInt(imgsNum, 10) + 1}張(左)高：${imgs[imgsNum].offsetHeight}\n第${parseInt(imgsNum, 10) + 2}張(右)高：${imgs[imgsNum].nextSibling.offsetHeight}`);
+                                        img.style.marginTop = `${num}px`;
                                     }
-                                } else if (isFn(siteData.next)) {
-                                    let next = await siteData.next();
-                                    if (next) {
-                                        fun.showMsg(displayLanguage.str_95, 3000);
-                                        location.href = next;
-                                    } else {
-                                        imgsNum = 0;
-                                        fun.showMsg(displayLanguage.str_96, 3000);
-                                    }
+                                } else if (siteData.category == "comic") {
+                                    imgs[imgsNum].src = imgs[imgsNum].dataset.src;
+                                    await fun.checkImgStatus(imgs[imgsNum].dataset.src, "Wait Loading...");
                                 }
-                            } else {
-                                imgsNum = 0;
-                                imgs[0].scrollIntoView();
-                                fun.showMsg(displayLanguage.str_94);
+                                imgs[imgsNum].scrollIntoView();
+                                await fun.delay(200);
+                                imgs[imgsNum].scrollIntoView();
+                            } catch (e) {
+                                if (siteData.category == "comic" && siteData.next && siteData.insertImg) {
+                                    if (isString(siteData?.next)) {
+                                        let next = fun.ge(siteData.next);
+                                        if (next) {
+                                            fun.showMsg(displayLanguage.str_95, 3000);
+                                            //next.click();
+                                            elementClick(next);
+                                        } else {
+                                            imgsNum = 0 - column;
+                                            fun.showMsg(displayLanguage.str_96, 3000);
+                                        }
+                                    } else if (isFn(siteData.next)) {
+                                        let next = await siteData.next();
+                                        if (next) {
+                                            fun.showMsg(displayLanguage.str_95, 3000);
+                                            location.href = next;
+                                        } else {
+                                            imgsNum = 0;
+                                            fun.showMsg(displayLanguage.str_96, 3000);
+                                        }
+                                    }
+                                } else {
+                                    imgsNum = 0;
+                                    imgs[0].scrollIntoView();
+                                    fun.showMsg(displayLanguage.str_94);
+                                }
                             }
                         }
+                    } else {
+                        imgsNum = 0 - column;
                     }
-                } else {
-                    imgsNum = 0 - column;
-                }
-            });
+                });
+            }
         } else if (ge(".FullPictureLoadImage.small")) {
             ge("#FullPictureLoadImgBox").style.display = "none";
             [...gae(".FullPictureLoadImage:not(.small),#FullPictureLoadEnd")].forEach(e => e.removeAttribute("style"));
@@ -18835,7 +18805,7 @@ document.body.appendChild(text);
         }
     };
 
-    const newTabViewLightGallery = _GM_getValue("newTabViewLightGallery", 0);
+    const newTabViewLightGallery = localStorage.getItem("newTabViewLightGallery") ?? 0;
 
     const newTabView = async () => {
 
@@ -18938,7 +18908,7 @@ img.default {
     vertical-align: middle;
     width: auto;
     height: auto;
-    max-width: 99vw;
+    max-width: 94vw;
     max-height: 99vh;
     border: solid #fff;
 }
@@ -18960,24 +18930,24 @@ img.sbs {
     max-height: 36vh;
     border: solid #fff;
 }
+.viewer-backdrop {
+    background-color: rgba(0,0,0,.96)!important;
+}
 `;
                 doc.head.appendChild(newWindowStyle);
 
                 if (newTabViewLightGallery == 0) {
-                    const jqueryCode = await fetch("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js").then(res => res.text());
-                    const fancyboxCss = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css").then(res => res.text());
-                    const fancyboxCode = await fetch("https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.js").then(res => res.text());
 
                     const fancyboxStyle = doc.createElement("style");
-                    fancyboxStyle.id = "fancyboxStyle";
+                    fancyboxStyle.id = "FancyboxStyle";
                     fancyboxStyle.type = "text/css";
-                    fancyboxStyle.innerHTML = fancyboxCss;
+                    fancyboxStyle.innerHTML = FancyboxV5Css;
                     doc.head.appendChild(fancyboxStyle);
 
                     const jQueryScript = doc.createElement("script");
                     jQueryScript.id = "jQueryScript";
                     jQueryScript.type = "text/javascript";
-                    jQueryScript.innerHTML = jqueryCode + fancyboxCode + `
+                    jQueryScript.innerHTML = JqueryJS + FancyboxV5JS + `
 var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false)();
 
 var scrollIntoViewOptions = {
@@ -19218,8 +19188,6 @@ if (newWindowDataViewMode == 1) {
 `;
                     doc.body.appendChild(newWindowScript);
                 } else {
-                    const ViewerJsCss = await fetch("https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css").then(res => res.text());
-                    const ViewerJsCode = await fetch("https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js").then(res => res.text());
 
                     const ViewerStyle = doc.createElement("style");
                     ViewerStyle.id = "ViewerStyle";
@@ -19230,7 +19198,7 @@ if (newWindowDataViewMode == 1) {
                     const ViewerScript = doc.createElement("script");
                     ViewerScript.id = "ViewerScript";
                     ViewerScript.type = "text/javascript";
-                    ViewerScript.innerHTML = ViewerJsCode + `
+                    ViewerScript.innerHTML = ViewerJs + `
 var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
     url: "data-src"
 });
@@ -20151,6 +20119,7 @@ a[data-fancybox]:hover {
                 `;
 
     let noGoToFirstImage = _GM_getValue("noGoToFirstImage", 0);
+    let TurnOffImageNavigationShortcutKeys = _GM_getValue("TurnOffImageNavigationShortcutKeys", 0);
     let ShowFullPictureLoadFixedMenu = _GM_getValue("ShowFullPictureLoadFixedMenu", 1);
     let autoScrollAllElement = _GM_getValue("autoScrollAllElement", 0);
     let convertWebpToJpg = _GM_getValue("convertWebpToJpg", 0);
@@ -20309,19 +20278,9 @@ a[data-fancybox]:hover {
         } catch (error) {
             if (!isObject(siteData?.fancybox)) {
                 try {
-                    const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css";
-                    const fancyBoxCss = await fetch(jcss).then(res => res.text());
-                    fun.css(fancyBoxCss);
+                    fun.css(FancyboxV3Css);
                 } catch (error) {
-                    console.error("\ncdn.jsdelivr.net fancybox@3.5.7 jquery.fancybox.min.css 注入失敗", error);
-                    try {
-                        const bcss = "https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css";
-                        const fancyBoxCss = await fetch(bcss).then(res => res.text());
-                        fun.css(fancyBoxCss);
-                    } catch (error) {
-                        console.error("\n無法注入CSS，不使用Fancybox", error);
-                        options.fancybox = 0;
-                    }
+                    console.error("\nFancybox@3.5.7 CSS 注入失敗", error);
                 }
             }
             debug("沒有引入FancyboxV5", error);
@@ -20480,27 +20439,17 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 if (options.fancybox == 1 && !isObject(siteData?.fancybox) && category !== "none" && !isObject(siteData?.autoPager)) {
                     if (isFn(Fancybox)) {
                         try {
-                            const jcss = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.css";
-                            const fancyBoxCss = await fetch(jcss).then(res => res.text());
-                            fun.css(fancyBoxCss);
+                            fun.css(FancyboxV5Css);
                         } catch (error) {
-                            console.error("\ncdn.jsdelivr.net CSS注入失敗", error);
-                            try {
-                                const bcss = "https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css";
-                                const fancyBoxCss = await fetch(bcss).then(res => res.text());
-                                fun.css(fancyBoxCss);
-                            } catch (error) {
-                                console.error("\n無法注入CSS，不使用Fancybox", error);
-                                options.fancybox = 0;
-                            }
+                            console.error("\nFancyboxV5 CSS注入失敗", error);
                         }
                     }
                     await Fancyboxl10nV5();
                 } else if (options.fancybox == 1 && category !== "none" && !isObject(siteData?.autoPager) && siteData?.fancybox?.v == 5 && siteData?.fancybox?.insertLibrarys == 1) {
-                    await addLibrarysV5();
+                    addLibrarysV5();
                     await Fancyboxl10nV5();
                 } else if (options.fancybox == 1 && category !== "none" && !isObject(siteData?.autoPager) && siteData?.fancybox?.v == 3 && siteData?.fancybox?.insertLibrarys == 1) {
-                    await addLibrarysV3();
+                    addLibrarysV3();
                     Fancyboxi18nV3();
                     FancyboxOptionsV3();
                 }
@@ -20738,6 +20687,13 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         if (comicSwitch) ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
     }
 
+    if (showOptions && isArray(siteData?.insertImg)) {
+        _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + displayLanguage.str_121 : "✔️ " + displayLanguage.str_121, () => {
+            TurnOffImageNavigationShortcutKeys == 0 ? _GM_setValue("TurnOffImageNavigationShortcutKeys", 1) : _GM_setValue("TurnOffImageNavigationShortcutKeys", 0);
+            location.reload();
+        });
+    }
+
     if (showOptions && isNumber(siteData?.go)) {
         _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ " + displayLanguage.str_115 : "✔️ " + displayLanguage.str_115, () => {
             noGoToFirstImage == 0 ? _GM_setValue("noGoToFirstImage", 1) : _GM_setValue("noGoToFirstImage", 0);
@@ -20752,13 +20708,13 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-    if (siteData?.category && ["nsfw", "nsfw2", "hcomic", "comic", "lazyLoad"].includes(siteData?.category)) {
+    if (siteData?.category && ["nsfw1", "nsfw2", "hcomic", "comic", "lazyLoad"].includes(siteData?.category)) {
         _GM_registerMenuCommand(FancyboxWheelOptions == 0 ? "❌ " + displayLanguage.str_119 : "✔️ " + displayLanguage.str_119, () => {
             FancyboxWheelOptions == 0 ? _GM_setValue("FancyboxWheelOptions", 1) : _GM_setValue("FancyboxWheelOptions", 0);
             location.reload();
         });
         _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + displayLanguage.str_120 : "✔️ " + displayLanguage.str_120, () => {
-            newTabViewLightGallery == 0 ? _GM_setValue("newTabViewLightGallery", 1) : _GM_setValue("newTabViewLightGallery", 0);
+            newTabViewLightGallery == 0 ? localStorage.setItem("newTabViewLightGallery", 1) : localStorage.setItem("newTabViewLightGallery", 0);
             location.reload();
         });
     }
