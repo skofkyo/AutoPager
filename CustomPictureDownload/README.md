@@ -15,25 +15,29 @@ Waterfox for Android 1.0.5 + Tampermonkey 5.0.1
 <p>請自行修改腳本將所有cdn.jsdelivr.net替換成cdn.bootcdn.net</p>
 <pre>
 cdn.jsdelivr.net
-https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
-https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
-https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
-https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
-https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
-https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
+// @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
+// @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource JqueryJS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+// @resource FancyboxV3Css https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+// @resource ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
+// @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
 <pre>
 cdn.bootcdn.net
-https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js
-https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
-https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
-https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js
-https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css
-https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.js
-https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.css
+// @require            https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js
+// @require            https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
+// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource JqueryJS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
+// @resource FancyboxV5JS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
+// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV3JS https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js
+// @resource FancyboxV3Css https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css
+// @resource ViewerJs https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.js
+// @resource ViewerJsCss https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.css
 </pre>
 <br>
 <p>2023/11/06</p>
@@ -155,9 +159,9 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     openInNewTab: ".manga-cover>a:not([target=_blank])", //指定的A元素在新分頁開啟
     topButton: true, //添加返回頂部按鈕
     threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
-    fetch: 1, //使用Fetch API下載圖片，需要網站有支援CORS，如小黃書，4KHD
+    fetch: 1, //使用Fetch API下載圖片，需要網站有支援CORS，如小黃書
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.4khd.com/"或空""
-    category: "comic" //類別(非必須)
+    category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
     enable: 0,
@@ -800,7 +804,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/26 23:58</p>
+<p>2024/03/29 03:22</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1366,6 +1370,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://928r.com/">美图社</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="http://inewgirl.com/">女神社</a></td>
                 <td><a href="https://nshens.com/">nshens.com</a>，<a href="https://lovens.cc/">lovens.cc</a>，VIP限定的沒有VIP帳號只會重複抓到第一頁的圖片</td>
             </tr>
@@ -1614,6 +1622,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://taotu200.com/">套图200网</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://asiantolick.com/page/news">Asian To Lick</a></td>
                 <td></td>
             </tr>
@@ -1675,6 +1687,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://fanleaks.club/">Fan Leaks</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.gai.vn/">Gai.vn</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.mzpic.com/">Nude Babes</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2110,6 +2130,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://pmatehunter.com/">pmatehunter.com</a>，<a href="https://www.jperotica.com/">www.jperotica.com</a>，<a href="https://www.metarthunter.com/">www.metarthunter.com</a>，<a href="https://www.femjoyhunter.com/">www.femjoyhunter.com</a></td>
             </tr>
             <tr>
+                <td><a href="https://nakedwomenpics.com/">Naked Women Pics</a></td>
+                <td><a href="https://viewgals.com/">VIEW GALS</a>，<a href="https://hotpussypics.com/">Hot Pussy Pics</a>，<a href="https://bustypassion.com/">Busty Women Pics</a>，<a href="https://teenpussypics.com/">TeenPussyPics.com</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.freexcafe.com/">FreeXcafe</a></td>
                 <td></td>
             </tr>
@@ -2191,6 +2215,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="http://2lsp.xyz/">2LSP</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://itushe.com/">爱图社</a></td>
                 <td></td>
             </tr>
             <tr>
