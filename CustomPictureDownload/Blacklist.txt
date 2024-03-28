@@ -1,4 +1,4 @@
-2024/03/26 23:58
+2024/03/29 03:22
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -366,6 +366,9 @@ Xgirls
 *://xgirlscollection.com/collection/*
 *img3xgirls.com/album/*
 
+Nude Babes
+*://www.mzpic.com/*.html
+
 Mitaku
 *://mitaku.net/*/*/
 
@@ -681,6 +684,9 @@ COSPLAY BOOBS
 
 CUTE GIRLS ADDICT
 *cutegirlsaddict.blogspot.com/*/*/*.html*
+
+美图社
+*://928r.com/post/*.html
 
 美女写真
 *portrait.knit.bid/*/*
@@ -2159,6 +2165,8 @@ https://www.eyval.net/*
 *://cosplayrule34.com/*post/*
 *://waifubitches.com/*gallery/*
 *://cosplayboobs.com/*album/*
+*://www.mzpic.com/*.html
+*://928r.com/post/*.html
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
