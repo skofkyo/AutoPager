@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.1
+// @version            1.12.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -68,7 +68,7 @@
 
     const _unsafeWindow = typeof unsafeWindow === "undefined" ? window : unsafeWindow;
     const language = _unsafeWindow.navigator.language;
-    let siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$/i, "");
+    let siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "");
     let siteData = {};
     let siteJson = null;
     let displayLanguage = {};
@@ -729,6 +729,19 @@
         css: "@media only screen and (max-width:480px){#primary{padding:6px !important}.col-md-12{padding:0px !important}}",
         category: "nsfw1"
     }, {
+        name: "爱图社",
+        host: ["itushe.com"],
+        reg: /^https?:\/\/itushe\.com\/p\/\w+\.html$/i,
+        imgs: "a[data-fancybox]",
+        button: [4],
+        insertImg: ["#fload", 2],
+        customTitle: () => fun.gt("h1"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "nsfw1"
+    }, {
         name: "闺秀网",
         host: ["www.guixiu.org", "guixiu.org"],
         reg: /^https:\/\/(www\.)?guixiu\.org\/post\/\d+\.html/i,
@@ -1089,6 +1102,22 @@
         next: ".nav-previous>a",
         prev: ".nav-next>a",
         customTitle: () => fun.title(" – Cup2D"),
+        category: "nsfw1"
+    }, {
+        name: "美图社",
+        host: ["928r.com"],
+        reg: /^https?:\/\/928r\.com\/post\/\d+\.html$/i,
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge("//a[text()='显示全文']").href;
+            return fun.fetchDoc(url).then(doc => [...fun.gae("#lightgallery img", doc)]);
+        },
+        button: [4],
+        insertImg: ["#lightgallery", 2],
+        autoDownload: [0],
+        next: ".prev>a",
+        prev: ".next>a",
+        customTitle: () => fun.gt(".focusbox-title"),
         category: "nsfw1"
     }, {
         name: "找套图/Xiuno BBS",
@@ -4282,6 +4311,40 @@
         css: "footer+script+div[id]{display:none!important}",
         category: "nsfw2"
     }, {
+        name: "Gai.vn",
+        host: ["www.gai.vn"],
+        reg: /^https?:\/\/www\.gai\.vn\/[\w-]+$/,
+        include: [
+            "#content .gai-thumb>.vn-box",
+            "a[data-fancybox='slide']"
+        ],
+        imgs: async () => {
+            await fun.getNP(".gai-thumb", "li.page-item.active+li:not(.disabled)>a");
+            fun.remove("//div[nav[@aria-label='Page navigation']]");
+            thumbnailsSrcArray = [...fun.gae("a[data-fancybox='slide'] img")].map(e => e.dataset.src ?? e.src);
+            return [...fun.gae("a[data-fancybox='slide']")];
+        },
+        button: [4],
+        insertImg: ["#content", 2],
+        customTitle: () => fun.gt(".nav-breadcrumb>.nav-breadcrumb-item:last-child"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "nsfw1"
+    }, {
+        name: "Nude Babes",
+        host: ["www.mzpic.com"],
+        reg: /^https?:\/\/www\.mzpic\.com\/\d+\.html$/,
+        imgs: async () => {
+            await fun.getNP("//div[@class='hide-img']|//div[@class='single-content']/p[img]", "//span[@class='post-page-numbers current']/following-sibling::a[1][span[@class='next-page']]", null, ".page-links");
+            return [...fun.gae(".single-content img")];
+        },
+        button: [4],
+        insertImg: [".single-content", 2],
+        customTitle: () => fun.gt(".entry-title"),
+        category: "nsfw1"
+    }, {
         name: "MrCong.com/MissKON.com",
         host: ["mrcong.com", "misskon.com"],
         reg: /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/,
@@ -4335,7 +4398,7 @@
         //fetch: 1,
         //threading: 4,
         CSP: 1,
-        css: ".popup,.wp-container-13{display:none!important}.FullPictureLoadImage{max-width:100%!important}",
+        css: ".centbtd,.popup,.wp-container-13{display:none!important}.FullPictureLoadImage{max-width:100%!important}",
         category: "nsfw2"
     }, {
         name: "AsianPink",
@@ -5626,6 +5689,18 @@
         css: "#touch_to_see{display:none!important}",
         category: "nsfw2"
     }, {
+        name: "套图200网",
+        host: ["taotu200.com"],
+        reg: /^https?:\/\/taotu200\.com\/t\d\/\d+\.html$/,
+        imgs: "#post_content img",
+        button: [4],
+        insertImg: [
+            ["#post_content", 0, "article>*:last-child"], 2
+        ],
+        customTitle: () => fun.gt("article>h1").replaceAll("/", "").replace(/\(\d+[\w\s\.\+-]+\)/, ""),
+        css: "#touch_to_see{display:none!important}",
+        category: "nsfw1"
+    }, {
         name: "Models Vibe",
         host: ["www.modelsvibe.com"],
         reg: () => /^https?:\/\/www\.modelsvibe\.com\/[^/]+\/$/.test(siteUrl) && fun.ge(".td-post-content img"),
@@ -6076,7 +6151,7 @@
         host: ["www.madoucun.com", "www.madoucun.org", "www.madoumcn.com", "www.madoucun.net", "modeltvmcn.com", "www.mamamcn.com", "www.wuyamcn.com", "www.tangxvlog.com", "www.guodongmcn.com", "www.mrrabbit.org", "www.xvideo.bar", "www.proncn.com", "www.md101.tv", "www.mdcg.club", "www.minimcn.com", "www.xkmcn.net", "www.tianmeimcn.com", "www.9ccg.org", "www.hkdoll.org", "www.royalmcn.com"],
         link: "/arttype/57.html",
         reg: [
-            /^https?:\/\/(www\.)?madoucun\d?\.(com|org|net)\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?madoucun\d+?\.(com|org|net)\/artdetail-\d+/,
             /^https?:\/\/(www\.)?(mamamcn|madoumcn|modeltvmcn)\.com\/artdetail-\d+/,
             /^https?:\/\/(www\.)?wuyamcn\.com\/artdetail-\d+/,
             /^https?:\/\/(www\.)?tangxvlog\.com\/artdetail-\d+/,
@@ -6099,7 +6174,7 @@
         button: [4],
         insertImg: [".hl-article-box,.news-content", 2],
         customTitle: () => fun.gt(".hl-article-title,.news-title"),
-        css: ".hl-pops-bg,.hl-poptips-wrap{display:none!important;}",
+        css: "#Conchnavlinkp>*,.hl-pops-bg,.hl-poptips-wrap{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "淫淫小说写真馆",
@@ -6196,6 +6271,30 @@
             v: 3,
             css: false
         },
+        category: "nsfw2"
+    }, {
+        name: "Naked Women Pics/VIEW GALS/Hot Pussy Pics/Busty Women Pics",
+        host: ["nakedwomenpics.com", "viewgals.com", "hotpussypics.com", "bustypassion.com"],
+        reg: [
+            /^https?:\/\/nakedwomenpics\.com\/pics\/[^\/]+\/$/,
+            /^https?:\/\/viewgals\.com\/pics\/[^\/]+\/$/,
+            /^https?:\/\/hotpussypics\.com\/pics\/[^\/]+\/$/,
+            /^https?:\/\/bustypassion\.com\/pics\/[^\/]+\/$/,
+        ],
+        imgs: "a.ss-image",
+        button: [4],
+        insertImg: [".m-content-con", 2],
+        customTitle: () => fun.gt("h1"),
+        category: "nsfw2"
+    }, {
+        name: "TeenPussyPics.com",
+        host: ["teenpussypics.com"],
+        reg: /^https?:\/\/teenpussypics\.com\/images\/\d+\/$/,
+        imgs: "//div[@id='lucrezia']//a[img[@data-src]]",
+        button: [4],
+        insertImg: ["#lucrezia", 2],
+        customTitle: () => fun.gt("h1"),
+        css: "#lucrezia{height:auto!important}",
         category: "nsfw2"
     }, {
         name: "NSFWalbum",
@@ -14799,7 +14898,10 @@ document.body.appendChild(text);
         name: "網址清單新分頁開啟",
         host: ["github.com"],
         delay: 1000,
-        reg: /github\.com\/skofkyo\/AutoPager\/tree\/main\/CustomPictureDownload/,
+        reg: [
+            /github\.com\/skofkyo\/AutoPager\/tree\/main\/CustomPictureDownload/,
+            /github\.com\/skofkyo\/AutoPager\/blob\/main\/CustomPictureDownload\/README\.md$/
+        ],
         openInNewTab: ".entry-content a[href]:not([target=_blank]):not([id])",
         category: "none"
     }, {
@@ -14817,8 +14919,8 @@ document.body.appendChild(text);
             const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(fun.lp)) {
                     try {
-                        let ele = [...document.querySelectorAll(".mantine-1tt1w1o,.mantine-6mpnke,.mantine-mo1fxo")][0];
-                        let elePath = ele.querySelector("span+svg>path");
+                        let ele = [...document.querySelectorAll(".mantine-1t4bhd4")][0];
+                        let elePath = ele.querySelector("span>svg>path");
                         if (elePath) {
                             let d = elePath.getAttribute("d");
                             if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") ele.click();
@@ -14826,8 +14928,8 @@ document.body.appendChild(text);
                         }
                     } catch (e) {}
                 }
-                [...document.querySelectorAll("[class^='mantine-Badge-root mantine']")].forEach(ele => {
-                    let elePath = ele.querySelector("span+svg>path");
+                [...document.querySelectorAll("button.cursor-pointer")].forEach(ele => {
+                    let elePath = ele.querySelector("span>svg>path");
                     if (elePath) {
                         let d = elePath.getAttribute("d");
                         if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") ele.click();
@@ -14854,189 +14956,6 @@ document.body.appendChild(text);
                     });
                 };
                 fun.addMutationObserver(lazyLoad);
-            }
-            //修正Models頁Gallery觸控裝置圖片被遮擋顯示不全的問題
-            if (hasTouchEvents && lazyLoadSingleColumn != 1) {
-                setInterval(() => {
-                    if (/\/models\//.test(fun.lp)) {
-                        [...document.querySelectorAll(".mantine-1m6je7k")].forEach(e => {
-                            let img = e.querySelector("img.mantine-1rc3uhm[src*='original']");
-                            if (img) e.style.height = img.height + 66 + "px";
-                        });
-                    }
-                }, 1000);
-            }
-            //Collections單列顯示，透過腳本管理器選單開啟。
-            if (/\/collections\//.test(fun.lp) && lazyLoadSingleColumn == 1) {
-                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{display:block;width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}.mantine-2r6b9p{max-width:100%;max-height:100%}.mantine-1f4qkyp{max-width:100%}");
-                setInterval(() => {
-                    if (/\/collections\//.test(fun.lp)) {
-                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
-                        parentWidth == "" ? parentWidth = document.querySelector(".mantine-1hggcbg").offsetWidth : parentWidth = parseInt(parentWidth, 10);
-                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
-                            let img = e.querySelector("img.mantine-1f4qkyp");
-                            if (img) {
-                                if (img.naturalWidth < parentWidth) {
-                                    e.style.width = img.naturalWidth + 2 + "px";
-                                    e.style.height = img.naturalHeight + 2 + "px";
-                                } else {
-                                    e.style.width = parentWidth + "px";
-                                    let num = parentWidth / img.naturalWidth;
-                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
-                                }
-                            }
-                            let video = e.querySelector("video.mantine-1f4qkyp");
-                            if (video) {
-                                e.style.width = video.videoWidth + 2 + "px";
-                                e.style.height = video.videoHeight + 2 + "px";
-                            }
-                        });
-                    }
-                }, 1000);
-            }
-            //Models Gallery單列顯示，透過腳本管理器選單開啟。
-            if (/\/models\//.test(fun.lp) && lazyLoadSingleColumn == 1) {
-                fun.css(".mantine-63e7k9{display:block}.mantine-1wxbjtp{display:block;width:100%;max-width:100%}.mantine-1m6je7k{margin:0px auto}");
-                setInterval(() => {
-                    if (/\/models\//.test(fun.lp)) {
-                        [...document.querySelectorAll(".mantine-1m6je7k")].forEach(e => {
-                            let img = e.querySelector("img.mantine-1rc3uhm:not([src^=data])");
-                            if (img) {
-                                let imgHeight = img.height + 60 + "px";
-                                e.style.height = imgHeight;
-                                let viewport = e.querySelector(".mantine-Carousel-viewport");
-                                if (viewport) {
-                                    viewport.style.height = imgHeight;
-                                    [...e.querySelectorAll(".mantine-Carousel-slide")].forEach(slide => slide.style.height = imgHeight);
-                                }
-                            }
-                        });
-                    }
-                }, 1000);
-            }
-            //User單列顯示，透過腳本管理器選單開啟。
-            if (/\/user\//.test(fun.lp) && lazyLoadSingleColumn == 1) {
-                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{display:block;width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}.mantine-2r6b9p{max-width:100%;max-height:100%}.mantine-7aj0so,.mantine-1f4qkyp{max-width:100%}");
-                setInterval(() => {
-                    if (/\/user\//.test(fun.lp)) {
-                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
-                        parentWidth == "" ? document.querySelector(".mantine-1hggcbg").offsetWidth : parentWidth = parseInt(parentWidth, 10);
-                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
-                            let img = e.querySelector("img.mantine-7aj0so,img.mantine-1f4qkyp");
-                            if (img) {
-                                if (img.naturalWidth < parentWidth) {
-                                    e.style.width = img.naturalWidth + 2 + "px";
-                                    e.style.height = img.naturalHeight + 2 + "px";
-                                } else {
-                                    e.style.width = parentWidth + "px";
-                                    let num = parentWidth / img.naturalWidth;
-                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
-                                }
-                            }
-                            let video = e.querySelector("video.mantine-7aj0so,img.mantine-1f4qkyp");
-                            if (video) {
-                                e.style.width = video.videoWidth + 2 + "px";
-                                e.style.height = video.videoHeight + 2 + "px";
-                            }
-                        });
-                    }
-                }, 1000);
-            }
-            //Search單列顯示，透過腳本管理器選單開啟。
-            if (/\/search\//.test(fun.lp) && lazyLoadSingleColumn == 1) {
-                fun.css(".mantine-xhyubp{display:block}");
-                setInterval(() => {
-                    if (/\/search\//.test(fun.lp)) {
-                        let parentWidth = document.querySelector(".mantine-fui8ih").offsetWidth;
-                        [...document.querySelectorAll(".mantine-wc580l")].forEach(div => {
-                            let img = div.querySelector("img.__mantine-ref-image");
-                            if (img) {
-                                if (img.naturalWidth < parentWidth) {
-                                    div.style.height = img.height + "px";
-                                } else {
-                                    let num = parentWidth / img.naturalWidth;
-                                    div.style.height = parseInt(img.naturalHeight * num, 10) + "px";
-                                }
-                            }
-                        });
-                    }
-                }, 1000);
-            }
-            //Tags單列顯示，透過腳本管理器選單開啟。
-            if (/\?tags=/.test(fun.ls) && lazyLoadSingleColumn == 1) {
-                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{display:flex;width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}");
-                setInterval(() => {
-                    if (/\?tags=/.test(fun.ls)) {
-                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
-                        parentWidth == "" ? parentWidth = document.querySelector(".mantine-1hggcbg").offsetWidth : parentWidth = parseInt(parentWidth, 10);
-                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
-                            let img = e.querySelector("img.mantine-1f4qkyp");
-                            if (img) {
-                                if (img.naturalWidth < parentWidth) {
-                                    e.style.width = img.naturalWidth + 2 + "px";
-                                    e.style.height = img.naturalHeight + 2 + "px";
-                                } else {
-                                    e.style.width = parentWidth + "px";
-                                    let num = parentWidth / img.naturalWidth;
-                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
-                                }
-                            }
-                            let video = e.querySelector("video.mantine-1f4qkyp");
-                            if (video) {
-                                e.style.width = video.videoWidth + 2 + "px";
-                                e.style.height = video.videoHeight + 2 + "px";
-                            }
-                        });
-                    }
-                }, 1000);
-            }
-            //Models / images / videos / posts 單列顯示，透過腳本管理器選單開啟。
-            if (/^\/(models|images|videos|posts)$/.test(fun.lp) && lazyLoadSingleColumn == 1) {
-                fun.css(".mantine-63e7k9{display:block}.mantine-16xlp3a{width:100%;max-width:100%}.mantine-2r6b9p{margin:0px auto}");
-                setInterval(() => {
-                    if (/^\/(models|images|videos|posts)/.test(fun.lp)) {
-                        let parentWidth = document.querySelector(".mantine-1hggcbg").style.width;
-                        parentWidth == "" ? parentWidth = document.querySelector(".mantine-1hggcbg").offsetWidth : parentWidth = parseInt(parentWidth, 10);
-                        [...document.querySelectorAll(".mantine-2r6b9p")].forEach(e => {
-                            let img = e.querySelector("img.mantine-7aj0so,img.mantine-1f4qkyp");
-                            if (img) {
-                                if (img.naturalWidth < parentWidth) {
-                                    e.style.width = img.naturalWidth + 2 + "px";
-                                    e.style.height = img.naturalHeight + 2 + "px";
-                                } else {
-                                    e.style.width = parentWidth + "px";
-                                    let num = parentWidth / img.naturalWidth;
-                                    e.style.height = parseInt(img.naturalHeight * num, 10) + 2 + "px";
-                                }
-                            }
-                            let video = e.querySelector("video.mantine-7aj0so,video.mantine-1f4qkyp");
-                            if (video) {
-                                e.style.width = video.videoWidth + 2 + "px";
-                                e.style.height = video.videoHeight + 2 + "px";
-                            }
-                        });
-                    }
-                }, 1000);
-            }
-            //Articles 單列顯示，透過腳本管理器選單開啟。
-            if (/^\/articles$/.test(fun.lp) && lazyLoadSingleColumn == 1) {
-                fun.css(".mantine-1ar5zo4{display:block}.mantine-1ar5zo4 > div{width:100%;max-width:100%}");
-                setInterval(() => {
-                    if (/^\/articles$/.test(fun.lp)) {
-                        let parentWidth = document.querySelector(".mantine-zyu68o").offsetWidth;
-                        [...document.querySelectorAll(".mantine-1ar5zo4 > div,.mantine-wc580l > :not(style)")].forEach(div => {
-                            let img = div.querySelector("img.mantine-1thskbr");
-                            if (img) {
-                                if (img.naturalWidth < parentWidth) {
-                                    div.style.height = img.height + "px";
-                                } else {
-                                    let num = parentWidth / img.naturalWidth;
-                                    div.style.height = parseInt(img.naturalHeight * num, 10) + "px";
-                                }
-                            }
-                        });
-                    }
-                }, 1000);
             }
         },
         capture: "img[src*=original]:not(.mantine-Avatar-image,.mantine-34i7e7,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi),img[data-src*=original]:not(.mantine-Avatar-image,.mantine-34i7e7,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi)",
@@ -15800,7 +15719,7 @@ document.body.appendChild(text);
     }
 
     _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
-    _GM_registerMenuCommand("Github", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/tree/main/CustomPictureDownload"));
+    _GM_registerMenuCommand("Github README.md", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/README.md"));
 
     const fun = {
         url: (() => siteUrl)(),
@@ -18931,7 +18850,7 @@ img.sbs {
     border: solid #fff;
 }
 .viewer-backdrop {
-    background-color: rgba(0,0,0,.96)!important;
+    background-color: rgba(0,0,0,.94)!important;
 }
 `;
                 doc.head.appendChild(newWindowStyle);
@@ -20126,20 +20045,12 @@ a[data-fancybox]:hover {
 
     let lazyLoadFullResolution = _GM_getValue("lazyLoadFullResolution", 0);
     let lazyLoadPreloadImages = _GM_getValue("lazyLoadPreloadImages", 0);
-    let lazyLoadSingleColumn = 0;
-    if (/civitai\.com/.test(fun.lh)) lazyLoadSingleColumn = _GM_getValue("lazyLoadSingleColumn", 0);
 
     const addLazyLoadFullResolutionMenu = async () => {
         _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ " + displayLanguage.str_111 : "✔️ " + displayLanguage.str_111, () => {
             lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
             location.reload();
         });
-        if (/civitai\.com/.test(fun.lh)) {
-            _GM_registerMenuCommand(lazyLoadSingleColumn == 0 ? "❌ " + displayLanguage.str_112 : "✔️ " + displayLanguage.str_112, () => {
-                lazyLoadSingleColumn == 0 ? _GM_setValue("lazyLoadSingleColumn", 1) : _GM_setValue("lazyLoadSingleColumn", 0);
-                location.reload();
-            });
-        }
         _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ " + displayLanguage.str_113 : "✔️ " + displayLanguage.str_113, () => {
             lazyLoadPreloadImages == 0 ? _GM_setValue("lazyLoadPreloadImages", 1) : _GM_setValue("lazyLoadPreloadImages", 0);
             location.reload();
@@ -20802,8 +20713,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         if (lazyLoadPreloadImages == 1) fun.picPreload(imagePreloadArray, "Lazy Load Mode");
     };
 
-    if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture) {
+    if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture || siteData?.imgs && !siteData?.insertImg) {
         addnewTabViewButton();
+        captureSrc();
         fun.addMutationObserver(captureSrc, {
             childList: true,
             subtree: true,
