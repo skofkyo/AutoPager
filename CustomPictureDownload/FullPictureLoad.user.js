@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.2
+// @version            1.12.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -33,7 +33,7 @@
 // @grant              GM.getResourceText
 // @grant              unsafeWindow
 // @noframes
-// @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
+// @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
@@ -157,25 +157,27 @@
         link: "https://w3.javsx.com/photos.html",
         reg: /w3\.javsx\.com\/photos\/[\w-]+\.html$/,
         imgs: async () => {
+            let max;
             try {
-                let max = fun.ge("//a[text()='Last']").href.match(/\d+$/)[0];
-                let links = [];
+                max = fun.ge("//a[text()='Last']").href.match(/\d+$/)[0];
+            } catch (e) {
+                max = 1;
+            }
+            if (max > 1) {
+                let links = [siteUrl];
                 for (let i = 2; i <= max; i++) {
                     links.push(siteUrl + "?page=" + i);
                 }
-                await fun.getEle(links, ".col-photos>a", [".col-photos", 0], ".pagination");
-                [...fun.gae("img[data-src]")].forEach(e => e.src = e.dataset.src);
-            } catch (e) {}
-            thumbnailsSrcArray = [...fun.gae("img[data-src]")].map(e => e.dataset.src);
+                thumbnailsSrcArray = await fun.getImgA("img[data-src]", links, 100);
+            } else {
+                thumbnailsSrcArray = [...fun.gae("img[data-src]")].map(e => e.dataset.src);
+            }
             let imgSrcs = thumbnailsSrcArray.map(e => e.replace(/resize=[^&]+&/, ""));
             return imgSrcs;
             //return fun.checkImageCDN(imgSrcs);
         },
         button: [4],
-        insertImg: [
-            [".col-photos", 2], 2
-        ],
-        go: 1,
+        insertImg: [".col-photos", 2],
         customTitle: () => fun.gt("h1.title").replace("| Body Photography", "").replace("- JVID", "").replace("- 未分类人体摄影", "").trim(),
         css: ".col-photos{margin-bottom:60px}.pagination{margin-top:0px!important}",
         category: "nsfw2"
@@ -4000,16 +4002,17 @@
         reg: /^https?:\/\/packdechicas\.net\/[^\/]+\/$/,
         include: ".tiled-gallery__gallery",
         init: () => {
-            fun.createImgBox(".post-tags");
+            fun.createImgBox(".entry.themeform");
             let selectors = ["#twitch-embed", "iframe", "marquee", "audio", "img[alt='LOS NECESITOOOOOOOOO']"];
             fun.remove(selectors);
         },
         imgs: () => {
+            videosSrcArray = [...fun.gae("video[src]")].map(e => e.src);
             if (fun.ge(".tiled-gallery__gallery img[data-orig-file]") && fun.ge(".tiled-gallery__gallery img[data-medium-file]")) {
                 thumbnailsSrcArray = [...fun.gae(".tiled-gallery__gallery img[data-medium-file]")].map(e => e.dataset.mediumFile);
                 return [...fun.gae(".tiled-gallery__gallery img[data-orig-file]")].map(e => e.dataset.origFile);
             } else if (fun.ge(".tiled-gallery__gallery img[data-link]") && fun.ge(".tiled-gallery__gallery img[data-url]")) {
-                return [...fun.gae(".tiled-gallery__gallery img[data-url]")].map(e => e.dataset.url);
+                return [...fun.gae(".tiled-gallery__gallery img[data-url]")].map(e => e.dataset.url.replace(/-\d+x\d+(\.jpg)$/, "$1"));
             } else {
                 return [];
             }
@@ -4018,6 +4021,7 @@
         insertImg: ["#FullPictureLoadMainImgBox ", 2],
         go: 1,
         customTitle: () => fun.gt("h1.entry-title"),
+        downloadVideo: true,
         category: "nsfw2"
     }, {
         name: "Pack de chicas AD",
@@ -4336,13 +4340,19 @@
         name: "Nude Babes",
         host: ["www.mzpic.com"],
         reg: /^https?:\/\/www\.mzpic\.com\/\d+\.html$/,
+        init: () => fun.remove(".hide-img"),
         imgs: async () => {
-            await fun.getNP("//div[@class='hide-img']|//div[@class='single-content']/p[img]", "//span[@class='post-page-numbers current']/following-sibling::a[1][span[@class='next-page']]", null, ".page-links");
+            await fun.getNP("//div[@class='single-content']/p[img]", "//span[@class='post-page-numbers current']/following-sibling::a[1][span[@class='next-page']]", null, ".page-links");
             return [...fun.gae(".single-content img")];
         },
         button: [4],
         insertImg: [".single-content", 2],
         customTitle: () => fun.gt(".entry-title"),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        autoClick: ".s-hide",
         category: "nsfw1"
     }, {
         name: "MrCong.com/MissKON.com",
@@ -10467,8 +10477,8 @@
         category: "hcomic"
     }, {
         name: "紳士漫畫 下拉閱讀頁",
-        host: ["wnacg.com", "www.wnacg.com", "www.htmanga3.top", "www.htmanga4.top", "www.htmanga5.top", "www.hentaicomic.ru", "www.hm1.lol"],
-        reg: /^https?:\/\/((www\.)?wnacg\.com|www\.htmanga\d\.top|www\.hentaicomic\.ru|www\.wn3\.lol|www\.hm\d+\.lol)\/photos-(slide|slidelow|list|slist)-aid-\d+\.html/,
+        host: ["wnacg.com", "www.wnacg.com", "www.htmanga3.top", "www.htmanga4.top", "www.htmanga5.top", "www.hentaicomic.ru", "www.hm1.lol", "www.wn05.lol"],
+        reg: /^https?:\/\/((www\.)?wnacg\.com|www\.htmanga\d\.top|www\.hentaicomic\.ru|(www\.)?wn\d{1,2}\.lol|(www\.)?hm\d{1,2}\.lol)\/photos-(slide|slidelow|list|slist)-aid-\d+\.html/,
         imgs: () => imglist.map(e => e.url),
         button: [4],
         insertImg: ["#img_list", 2],
@@ -14958,8 +14968,8 @@ document.body.appendChild(text);
                 fun.addMutationObserver(lazyLoad);
             }
         },
-        capture: "img[src*=original]:not(.mantine-Avatar-image,.mantine-34i7e7,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi),img[data-src*=original]:not(.mantine-Avatar-image,.mantine-34i7e7,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi)",
-        css: ".mantine-15xhaye{display:block;}img[src^=data]{margin: auto}img[src*=original]:not(.mantine-Avatar-image,.mantine-cdh9bk,.mantine-d881q8,.mantine-qh395j,.mantine-2wuhuu,.mantine-lrbwmi){width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
+        capture: "img[src*=original]:not(.mantine-Avatar-image),img[data-src*=original]:not(.mantine-Avatar-image)",
+        css: "img[src^=data]{margin:auto;}img[src*=original]:not(.mantine-Avatar-image,.mantine-d881q8){width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
         category: "lazyLoad"
     }, {
         name: "LiblibAI",
@@ -15390,7 +15400,7 @@ document.body.appendChild(text);
                 str_47: "左鍵：進行下載打包壓縮\n中鍵：匯出網址URLs.txt文件\n右鍵：複製圖片網址和標題或聚集所有圖片",
                 str_48: "下載&壓縮中請稍後再操作！",
                 str_49: "獲取圖片中請稍後再操作！",
-                str_50: "請輸入自訂CSS/Xpath選擇器：\n範例：img#TheImg OR //img[@id='TheImg']\n也能使用JS代碼自己生成的IMG元素陣列\n範例：js;return [...document.images];",
+                str_50: "",
                 str_51: "請輸入自訂壓縮檔資料夾名稱",
                 str_52: "聚圖數量",
                 str_53: "圖片繪製中...",
@@ -15517,7 +15527,7 @@ document.body.appendChild(text);
                 str_47: "左键：进行下载打包压缩\n中键：导出网址URLs.txt文档\n右键：拷贝图片网址和标题或聚集所有图片",
                 str_48: "下载&压缩中请稍后再操作！",
                 str_49: "获取图片中请稍后再操作！",
-                str_50: "请输入自定义CSS/Xpath选择器：\n范例：img#TheImg OR //img[@id='TheImg']\n也能使用JS代码自己生成的IMG元素数组\n范例：js;return [...document.images];",
+                str_50: "",
                 str_51: "请输入自定义压缩档文件夹名称",
                 str_52: "聚图数量",
                 str_53: "图片绘制中...",
@@ -15642,7 +15652,7 @@ document.body.appendChild(text);
                 str_47: "Left Click：Download And Compress\nMiddle Click：Export URLs.txt\nLeft Click：Copy Image URL And Title Or Aggregate Images",
                 str_48: "Downloading & Compressing, Please Try Again Later!",
                 str_49: "Get Pictureing Please Try Again Later!",
-                str_50: "Please Enter Selector：\nExample：img#TheImg or //img[@id='TheImg']",
+                str_50: "",
                 str_51: "Please Enter A Custom zip File Folder Name",
                 str_52: "Number Of Pictures",
                 str_53: "Picture Drawing...",
@@ -17093,7 +17103,7 @@ document.body.appendChild(text);
                     video.controls = true;
                     video.loop = false;
                     video.autoplay = false;
-                    video.preload = "auto";
+                    video.preload = "none";
                     video.style = "height: 500px;width: 100%;max-width:100%";
                     let source = document.createElement("source");
                     source.src = videosSrcArray[i];
@@ -18149,10 +18159,6 @@ document.body.appendChild(text);
         } else if (selector.length < 3) {
             showMsg(displayLanguage.str_42);
             return;
-        } else if (/^js;/.test(selector)) {
-            imgs = await new Function("siteData", "fun", '"use strict";' + selector.slice(3))(siteData, fun);
-            debug("\ngetImgs(selector) JSimgs：", imgs);
-            if (getImgFn == "" && !getImgFn.includes("專用Fn")) getImgFn += " > " + siteData.name + "專用Fn";
         } else if (/^\//.test(selector)) {
             imgs = [...gax(selector)];
             if (siteData.category != "lazyLoad" && !getImgFn.includes("...gax")) getImgFn += " > [...gax(selector)]";
@@ -18242,6 +18248,7 @@ document.body.appendChild(text);
         let imgsSrcArr = await getImgs(selector);
         if (imgsSrcArr.length > 0 && titleText != null && titleText != "") {
             fun.showMsg(displayLanguage.str_55, 0);
+            let loopMsg;
             const imgsNum = parseInt(imgsSrcArr.length, 10);
             let title = titleText;
             const zip = new JSZip();
@@ -18261,8 +18268,11 @@ document.body.appendChild(text);
                 siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_Download(imgsSrcArr[i], picNum, imgsNum);
                 promiseBlobArray.push(promiseBlob);
             }
-            if (videosSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true) {
+            if (videosSrcArray.length > 0 && siteData?.downloadVideo == true) {
                 const padStart = String(videosNum).length;
+                loopMsg = setInterval(() => {
+                    fun.showMsg("Video Downloading...", 0);
+                }, 2000);
                 for (let i = 0; i < videosSrcArray.length; i++) {
                     let videoNum = getNum(i, padStart);
                     let promiseBlob;
@@ -18273,6 +18283,9 @@ document.body.appendChild(text);
             }
             debug("\nPromiseBlobArray：", promiseBlobArray);
             Promise.all(promiseBlobArray).then(async data => {
+                try {
+                    clearInterval(loopMsg);
+                } catch (e) {}
                 debug("\nPromiseAllData：", data);
                 let blobDataArray = data.filter(item => item.load); //成功下載
                 let errorDataArray = data.filter(item => item.error); //下載錯誤
@@ -20713,18 +20726,21 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         if (lazyLoadPreloadImages == 1) fun.picPreload(imagePreloadArray, "Lazy Load Mode");
     };
 
-    if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture || siteData?.imgs && !siteData?.insertImg) {
-        addnewTabViewButton();
-        captureSrc();
-        fun.addMutationObserver(captureSrc, {
-            childList: true,
-            subtree: true,
-            attributes: true
-        });
+    if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture || isString(siteData?.imgs) && !isArray(siteData?.insertImg)) {
+        if (isString(siteData?.capture) || isString(siteData?.imgs)) {
+            addnewTabViewButton();
+            captureSrc();
+        }
+        if (siteData?.category === "lazyLoad") {
+            fun.addMutationObserver(captureSrc, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+        }
     }
 
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !siteData.category.includes("lazyLoad") && !siteData.category.includes("none") && !siteData.category.includes("ad")) {
-        if (!ge(".FullPictureLoadStyle")) fun.css(style);
         if (siteData.key != 0) {
             if (!hasTouchEvents) {
                 _GM_registerMenuCommand(ShowFullPictureLoadFixedMenu == 0 ? "❌ " + displayLanguage.str_117 : "✔️ " + displayLanguage.str_117, () => {
