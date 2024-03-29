@@ -15,7 +15,7 @@ Waterfox for Android 1.0.5 + Tampermonkey 5.0.1
 <p>請自行修改腳本將所有cdn.jsdelivr.net替換成cdn.bootcdn.net</p>
 <pre>
 cdn.jsdelivr.net
-// @require            https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
+// @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
@@ -28,7 +28,7 @@ cdn.jsdelivr.net
 </pre>
 <pre>
 cdn.bootcdn.net
-// @require            https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js
+// @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource JqueryJS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
