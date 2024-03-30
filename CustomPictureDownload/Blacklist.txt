@@ -1,4 +1,4 @@
-2024/03/29 03:22
+2024/03/31 00:14
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1010,6 +1010,9 @@ Asian Porn
 
 Gai.vn
 *www.gai.vn*
+
+壹纳网
+*://yinaw.com/*.html
 
 中国人体艺术模特网
 *crtys.net/?action-imagelist-uid-*
@@ -2171,6 +2174,7 @@ https://www.eyval.net/*
 *://www.mzpic.com/*.html
 *://928r.com/post/*.html
 *www.gai.vn*
+*://yinaw.com/*.html
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
