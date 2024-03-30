@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.3
+// @version            1.12.4
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -90,6 +90,7 @@
     let getImgFn = "";
     let doc = document;
     let autoPager = true;
+    let httpFetchError = false;
     let currentPageNum = 0;
     let nextLink = null;
     const PCUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0";
@@ -312,9 +313,8 @@
         },
         button: [4],
         insertImg: [
-            [".article-act", 1], 2
+            [".article-content", 0, ".gallery-login,.gallery"], 2
         ],
-        go: 1,
         autoDownload: [0],
         next: ".article-nav-prev>a",
         prev: ".article-nav-next>a",
@@ -815,10 +815,7 @@
         reg: /^https?:\/\/hotgirl\.biz\/[^\/]+\/$/i,
         imgs: ".entry-content img",
         button: [4],
-        insertImg: [
-            [".entry-content", 0], 2
-        ],
-        go: 1,
+        insertImg: [".entry-content", 2],
         customTitle: () => fun.gt(".entry-title"),
         category: "nsfw1"
     }, {
@@ -838,9 +835,8 @@
         imgs: ".rl-gallery-item a",
         button: [4],
         insertImg: [
-            [".rl-gallery", 2], 2
+            [".entry-content", 0, ".rl-gallery-container"], 2
         ],
-        go: 1,
         customTitle: () => fun.gt(".entry-title").replace(/\([\d\s]+pics\)\s?/, ""),
         fancybox: {
             blacklist: 1
@@ -4226,7 +4222,7 @@
         imgs: "a[data-image-id]",
         button: [4],
         insertImg: [
-            [".modula-items", 2], 2
+            [".modula-items", 2, ".modula-items"], 2
         ],
         autoDownload: [0],
         next: "a#prepost",
@@ -4381,6 +4377,7 @@
         host: ["www.4khd.com", "www.4kep.com", "xjav.cc", "hhhy.quest", "vxkk.cc", "rtlvmk.xxtt.info", "lfdxxb.xxtt.info"],
         reg: () => /\/\d+\/\d+\/\d+\/.+\.html$/.test(siteUrl) && fun.ge("//a[@rel='home'][text()='4KHD']"),
         imgs: async () => {
+            /*
             await fun.getNP("#basicExample>a,figure.wp-block-image,.entry-content>p>a", ".current+li>a", null, ".page-link-box", 0, null, 1, 0);
             if (fun.ge("figure.wp-block-image>a")) {
                 thumbnailsSrcArray = [...fun.gae("figure.wp-block-image>a>img")].map(e => e.src.replace(/\?w=\d+$/, "?w=100"));
@@ -4395,6 +4392,8 @@
                 alert("Full Picture Load\nThe website may have been updated, please provide feedback.");
                 return [];
             }
+            */
+            thumbnailsSrcArray = await fun.getImgA("figure.wp-block-image>a>img,#basicExample>a>img,.entry-content>p>a>img", ".page-link-box a").then(arr => arr.map(e => e.replace(/\?w=\d+$/, "?w=100")));
             return thumbnailsSrcArray.map(e => e.replace("?w=100", ""));
         },
         button: [4],
@@ -4576,13 +4575,13 @@
         host: ["erogirl.net"],
         reg: /^https?:\/\/erogirl\.net\/p\//,
         init: async () => {
-            let json = await fun.fetchDoc(fun.url).then(doc => {
+            let fetchJson = await fun.fetchDoc(fun.url).then(doc => {
                 let data = fun.gt("#__NEXT_DATA__", 1, doc);
                 let json = JSON.parse(data);
                 return json;
             });
-            debug("\n此頁JSON資料\n", json);
-            siteJson = json;
+            debug("\n此頁JSON資料\n", fetchJson);
+            siteJson = fetchJson;
         },
         imgs: () => {
             thumbnailsSrcArray = siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.thumbnail.url);
@@ -6659,11 +6658,14 @@
         host: ["bitchesgirls.com"],
         reg: /^https?:\/\/bitchesgirls\.com\/[^\/]+\/[^\/]+\/[^\/]+\/$/,
         imgs: async () => {
+            /*
             if (fun.ge(".albumgrid a")) {
                 await fun.getNP(".albumgrid a", "a#loadMore");
             } else {
                 await fun.getNP(".popup-element", "a#loadMore");
             }
+            */
+            fun.showMsg(displayLanguage.str_05, 0);
             const selector = "script[type='application/ld+json']";
             const getUrls = (ele, doc) => {
                 let text = fun.ge(ele, doc).innerText;
@@ -6697,7 +6699,7 @@
         },
         button: [4],
         insertImg: [
-            [".button-container", 2], 2
+            [".button-container", 2, ".albumgrid,.popup-container"], 2
         ],
         go: 1,
         css: "a#loadMore,.my-girls-popup-element{display:none!important}",
@@ -8337,6 +8339,23 @@
         prev: ".updown_l>a",
         customTitle: () => fun.gt("h1").split(",")[0],
         category: "nsfw2"
+    }, {
+        name: "壹纳网",
+        host: ["yinaw.com"],
+        reg: () => /^https?:\/\/yinaw\.com\/\d+\.html$/.test(siteUrl) && fun.ge(".article-content img:not([src*='yinaw.png'])"),
+        init: async () => {
+            let links = [...fun.gae(".fenye>a")].map(a => a.href);
+            if (links.length > 0) {
+                links = [...new Set(links)];
+                await fun.getEle(links, ".article-content>*:not(.open-message,.fenye.article-social)", [".open-message", 1], ".fenye");
+            }
+        },
+        imgs: ".article-content img:not([src*='yinaw.png'])",
+        autoDownload: [0],
+        next: ".article-nav-prev>a",
+        prev: ".article-nav-next>a",
+        customTitle: () => fun.gt(".article-title"),
+        category: "nsfw1"
     }, {
         name: "D哥新聞",
         host: ["dbro.news"],
@@ -11688,7 +11707,13 @@
         xhr: (lp = new URL(siteUrl).pathname) => {
             let [, , mangaCode, id] = lp.split("/");
             let api = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v2.13`;
-            return fetch(api).then(res => res.json());
+            return fetch(api, {
+                "headers": {
+                    "accept": "application/json, text/plain, */*",
+                    "x-requested-id": new Date().getTime(),
+                    "x-requested-with": "XMLHttpRequest"
+                }
+            }).then(res => res.json());
         },
         init: async () => {
             let json = await siteData.xhr();
@@ -11700,14 +11725,8 @@
                     if (entries[0].isIntersecting) {
                         observer.unobserve(entries[0].target);
                         let f = ge("footer>article");
-                        let c1 = f.firstChild.cloneNode(true);
-                        c1.firstChild.href = "/latest";
-                        c1.firstChild.firstChild.innerText = "更新";
-                        f.appendChild(c1);
-                        let c2 = f.firstChild.cloneNode(true);
-                        c2.firstChild.href = "/bookcase";
-                        c2.firstChild.firstChild.innerText = "收藏";
-                        f.appendChild(c2);
+                        let item = ge("footer>article>div:nth-child(2)");
+                        item.querySelectorAll("a").forEach(a => a.classList.add("MuiButton-containedPrimary"));
                         let p = gx("//a[span[text()='上一话' or text()='上一話'] and contains(@href,'reads')]");
                         if (p) p.classList.add("MuiButton-containedPrimary");
                         let n = gx("//a[span[text()='下一话' or text()='下一話'] and contains(@href,'readMore')]");
@@ -16429,9 +16448,10 @@ document.body.appendChild(text);
             if (isNumber(mode) && mode == 1) {
                 doc = await fun.iframeDoc(url, (siteData.autoPager?.waitEle || siteData.autoPager?.ele), 30000);
             } else {
-                try {
+                if (httpFetchError === false) {
                     doc = await fun.fetchDoc(url, 0);
-                } catch (e) {
+                }
+                if (httpFetchError === true || !doc) {
                     doc = await fun.xhrDoc(url);
                 }
             }
@@ -17097,6 +17117,10 @@ document.body.appendChild(text);
             }
             if (videosSrcArray.length > 0) {
                 debug("\nfun.insertImg()插入圖片最後確認 videosSrcArray", videosSrcArray);
+                if (!hasTouchEvents && siteData?.downloadVideo === true) {
+                    let dbtn = fragment.querySelector("#FullPictureLoadFastDownloadBtn");
+                    dbtn.innerText = dbtn.innerText.replace("P", `P + ${videosSrcArray.length}V`);
+                }
                 for (let i = 0; i < videosSrcArray.length; i++) {
                     let video = document.createElement("video");
                     video.className = "FullPictureLoadVideo";
@@ -17559,7 +17583,7 @@ document.body.appendChild(text);
             });
         },
         xhrDoc: (url, referer = siteUrl, ua = navigator.userAgent) => {
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 _GM_xmlhttpRequest({
                     method: "GET",
                     url: url,
@@ -17584,25 +17608,30 @@ document.body.appendChild(text);
                         resolve(doc);
                     },
                     onerror: error => {
-                        reject(error);
+                        console.error(`\nfun.xhrDoc()出錯:\n${decodeURIComponent(url)}`, error);
+                        resolve(null);
                     }
                 });
             });
         },
         fetchDoc: (url, retry = 10) => {
-            return fetch(url).then(async res => {
-                if (res.status >= 400 && retry > 0) {
-                    let resData = await fun.retryUrl(url, res, "fun.fetchDoc()", retry);
-                    if (resData !== null) return resData;
-                }
-                return res.arrayBuffer();
-            }).then(buffer => {
-                const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
-                const htmlText = decoder.decode(buffer);
-                return fun.doc(htmlText);
-            }).catch(error => {
-                console.error(`\nfun.fetchDoc()出錯:\n${decodeURIComponent(url)}`, error);
-            });;
+            return new Promise(async resolve => {
+                fetch(url).then(async res => {
+                    if (res.status >= 400 && retry > 0) {
+                        let resData = await fun.retryUrl(url, res, "fun.fetchDoc()", retry);
+                        if (resData !== null) return resData;
+                    }
+                    return res.arrayBuffer();
+                }).then(buffer => {
+                    const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
+                    const htmlText = decoder.decode(buffer);
+                    resolve(fun.doc(htmlText));
+                }).catch(error => {
+                    console.error(`\nfun.fetchDoc()出錯:\n${decodeURIComponent(url)}`, error);
+                    httpFetchError = true;
+                    resolve(null);
+                });
+            });
         },
         getImhentaiSrc: async () => {
             await fun.waitVar("g_th");
