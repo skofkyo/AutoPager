@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.4
+// @version            1.12.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -8349,6 +8349,19 @@
                 links = [...new Set(links)];
                 await fun.getEle(links, ".article-content>*:not(.open-message,.fenye.article-social)", [".open-message", 1], ".fenye");
             }
+            [...fun.gae(".article-content img:not([src*='yinaw.png'])")].forEach(img => {
+                if (/^https?:\/\/\w+\.sinaimg\.cn\//.test(img.src)) {
+                    img.dataset.src = img.src.replace(/^(https?:\/\/\w+\.sinaimg\.cn\/)/, "https://image.baidu.com/search/down?url=$1").replace("/mw690/", "/large/");
+                } else if (/^https?:\/\/i\d\.wp\.com\//.test(img.src)) {
+                    img.dataset.src = img.src.replace("/mw690/", "/large/").replace(/\?w=.+$/, "").replace(/^https?:\/\/i\d\.wp\.com\//, "https://image.baidu.com/search/down?url=https://");
+                } else {
+                    img.dataset.src = img.src.replace("/mw690/", "/large/");
+                }
+            });
+            [...fun.gae(".article-content img:not([src*='yinaw.png'])")].forEach(img => {
+                img.src = loading_bak;
+                fun.imagesObserver.observe(img);
+            });
         },
         imgs: ".article-content img:not([src*='yinaw.png'])",
         autoDownload: [0],
