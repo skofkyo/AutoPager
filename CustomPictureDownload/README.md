@@ -2278,7 +2278,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td>仿紳士漫畫UI寫真圖庫</td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/hentaigallery.txt">同格式90個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/hentaigallery.txt">同格式90個</a>，分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
