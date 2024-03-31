@@ -3,9 +3,9 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.6
+// @version            1.12.7
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
-// @description:en     Load all images for picture websites, and can also compress and package them for download.
+// @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
 // @description:zh-TW  支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @author             tony0809
@@ -4589,6 +4589,14 @@
         },
         button: [4],
         insertImg: [".content-img", 2],
+        insertImgAF: () => {
+            fun.css(".detail-gallery{display:none!important;}");
+            let loop = setInterval(() => {
+                if (!fun.ge(".FullPictureLoadImage")) fun.immediateInsertImg();
+            }, 500);
+            setTimeout(() => clearInterval(loop), 10000);
+        },
+        go: 1,
         customTitle: () => siteJson.props.pageProps.post.title,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
@@ -7594,6 +7602,24 @@
         customTitle: () => fun.gt("#bodywrap>h2"),
         css: "#FullPictureLoadMainImgBox{max-width:1170px;margin-left:auto;margin-right:auto}",
         category: "nsfw1"
+    }, {
+        name: "仿紳士漫畫UI寫真圖庫 分類自動翻頁",
+        reg: /^http/,
+        include: [
+            "//ul[@id='album_tabs']/li/a[@title='寫真圖庫'][text()='寫真圖庫']",
+            "#o_t_d>.gallary_wrap",
+            ".bot_toolbar.cc"
+        ],
+        autoPager: {
+            ele: "#o_t_d>.gallary_wrap",
+            next: "#o_t_d a.curpage.listpage+a:not(.nextpage)",
+            re: ".bot_toolbar.cc",
+            title: doc => "Page " + fun.gt("a.curpage.listpage", 1, doc),
+            bottom: screen.height * 2,
+            history: 1
+        },
+        openInNewTab: "#o_t_d>.gallary_wrap a:not([target=_blank])",
+        category: "autoPager"
     }, {
         name: "万德美图屋/蚂蚁图库",
         host: ["www.wind5.com", "www.mayihz.com"],
@@ -20069,7 +20095,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     align-items: flex-start;
     cursor: default;
     box-sizing: border-box;
-    background-color: buttonface;
+    background-color: #F6F6F6 !important;
     border: 1px solid #a0a0a0 !important;
     cursor: pointer !important;
 }
@@ -20096,7 +20122,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     align-items: flex-start;
     cursor: default;
     box-sizing: border-box;
-    background-color: buttonface;
+    background-color: #F6F6F6 !important;
     border: 1px solid #a0a0a0 !important;
     cursor: pointer !important;
 }
