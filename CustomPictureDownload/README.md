@@ -2277,6 +2277,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.itu11.com/">m.itu11.com</a></td>
             </tr>
             <tr>
+                <td>仿紳士漫畫UI寫真圖庫</td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/hentaigallery.txt">同格式90個</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
                 <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式134個</a></td>
             </tr>
@@ -2322,7 +2326,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://yinaw.com/">壹纳网</a></td>
-                <td></td>
+                <td>腳本管理器選項可以勾選壹纳网使用原始新浪图床链结，需使用Header Editor擴展修改標頭，<a href="https://sspai.com/post/77650">奔跑中的奶酪的修改說明</a></td>
             </tr>
             <tr>
                 <td><a href="https://dbro.news/category/p0-%e5%a5%97%e5%9c%96%e7%b3%bb%e5%88%97">D哥新聞</a></td>
