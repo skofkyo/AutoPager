@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.5
+// @version            1.12.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     Load all images for picture websites, and can also compress and package them for download.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -7572,6 +7572,29 @@
         prev: "a[title='下一篇']",
         category: "nsfw1"
     }, {
+        name: "仿紳士漫畫UI寫真圖庫",
+        reg: /^http/,
+        include: [
+            "//ul[@id='album_tabs']/li/a[@title='寫真圖庫'][text()='寫真圖庫']",
+            ".png.bread a[title='寫真圖庫']",
+            "//a[@class='btn'][text()='開始閱讀']",
+            "#bodywrap",
+        ],
+        init: () => {
+            fun.clearAllTimer();
+            fun.createImgBox("#bodywrap", 2);
+        },
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let url = fun.ge("//a[@class='btn'][text()='開始閱讀']").href;
+            return fun.fetchDoc(url).then(doc => [...fun.gae("#photo_body img", doc)]);
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        customTitle: () => fun.gt("#bodywrap>h2"),
+        css: "#FullPictureLoadMainImgBox{max-width:1170px;margin-left:auto;margin-right:auto}",
+        category: "nsfw1"
+    }, {
         name: "万德美图屋/蚂蚁图库",
         host: ["www.wind5.com", "www.mayihz.com"],
         reg: () => /^https?:\/\/(www\.wind5\.com|www\.mayihz\.com)\/tu\d+\.html$/.test(siteUrl) && fun.ge("#portfolio img"),
@@ -8347,9 +8370,10 @@
             let links = [...fun.gae(".fenye>a")].map(a => a.href);
             if (links.length > 0) {
                 links = [...new Set(links)];
-                await fun.getEle(links, ".article-content>*:not(.open-message,.fenye.article-social)", [".open-message", 1], ".fenye");
+                await fun.getEle(links, ".article-content>*:not(.open-message,.fenye,.article-social)", [".open-message", 1], ".fenye");
             }
-            [...fun.gae(".article-content img:not([src*='yinaw.png'])")].forEach(img => {
+            let imgs = [...fun.gae(".article-content img:not([src*='yinaw.png'])")];
+            imgs.forEach(img => {
                 if (/^https?:\/\/\w+\.sinaimg\.cn\//.test(img.src)) {
                     img.dataset.src = img.src.replace(/^(https?:\/\/\w+\.sinaimg\.cn\/)/, "https://image.baidu.com/search/down?url=$1").replace("/mw690/", "/large/");
                 } else if (/^https?:\/\/i\d\.wp\.com\//.test(img.src)) {
@@ -8358,7 +8382,8 @@
                     img.dataset.src = img.src.replace("/mw690/", "/large/");
                 }
             });
-            [...fun.gae(".article-content img:not([src*='yinaw.png'])")].forEach(img => {
+            if (setYinawSinaOriginalURL == 1) imgs.forEach(img => img.dataset.src = img.dataset.src.replace("https://image.baidu.com/search/down?url=", ""));
+            imgs.forEach(img => {
                 img.src = loading_bak;
                 fun.imagesObserver.observe(img);
             });
@@ -8368,6 +8393,7 @@
         next: ".article-nav-prev>a",
         prev: ".article-nav-next>a",
         customTitle: () => fun.gt(".article-title"),
+        referer: "https://weibo.com/",
         category: "nsfw1"
     }, {
         name: "D哥新聞",
@@ -20117,6 +20143,15 @@ a[data-fancybox]:hover {
     if (/^https?:\/\/(e-hentai|exhentai).org\//.test(fun.url)) {
         _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ " + displayLanguage.str_114 : "✔️ " + displayLanguage.str_114, () => {
             E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
+            location.reload();
+        });
+    }
+
+    let setYinawSinaOriginalURL = _GM_getValue("setYinawSinaOriginalURL", 0);
+
+    if (/^https?:\/\/yinaw\.com\/\d+\.html$/.test(fun.url)) {
+        _GM_registerMenuCommand(setYinawSinaOriginalURL == 0 ? "❌ 壹纳网使用原始新浪图床链结" : "✔️ 壹纳网使用原始新浪图床链结", () => {
+            setYinawSinaOriginalURL == 0 ? _GM_setValue("setYinawSinaOriginalURL", 1) : _GM_setValue("setYinawSinaOriginalURL", 0);
             location.reload();
         });
     }
