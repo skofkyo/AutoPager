@@ -30,10 +30,10 @@ cdn.jsdelivr.net
 cdn.bootcdn.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @require            https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
 // @resource JqueryJS https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-// @resource FancyboxV5JS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
-// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV5JS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
+// @resource FancyboxV5Css https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
 // @resource FancyboxV3JS https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js
 // @resource FancyboxV3Css https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css
 // @resource ViewerJs https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.js
