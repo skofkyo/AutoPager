@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            1.12.7
+// @version            1.12.8
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，下载压缩打包，如有下一页元素可自动化下载。
@@ -36,7 +36,7 @@
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-// @resource JqueryJS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
 // @resource FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
@@ -273,7 +273,8 @@
     }, {
         name: "JKF",
         host: ["www.jkforum.net"],
-        reg: /www\.jkforum\.net\/thread/,
+        reg: /www\.jkforum\.net\/(p\/)?thread/,
+        init: async () => await fun.waitEle("img[id^=aimg]"),
         imgs: "img[id^=aimg]",
         customTitle: () => fun.title("-", 1),
         category: "nsfw2"
@@ -4590,10 +4591,7 @@
         button: [4],
         insertImg: [".content-img", 2],
         insertImgAF: () => {
-            fun.css(".detail-gallery{display:none!important;}");
-            let loop = setInterval(() => {
-                if (!fun.ge(".FullPictureLoadImage")) fun.immediateInsertImg();
-            }, 500);
+            let loop = setInterval(() => !fun.ge(".FullPictureLoadImage") ? fun.immediateInsertImg() : null, 500);
             setTimeout(() => clearInterval(loop), 10000);
         },
         go: 1,
@@ -6349,8 +6347,13 @@
         category: "nsfw2"
     }, {
         name: "OVOVO",
-        host: ["ovovo.me"],
-        reg: /^https?:\/\/ovovo\.me\/show\/\w+\.html$/i,
+        host: ["ovovo.me", "ame.funi6e.xyz"],
+        reg: /\/show\/\w+\.html$/i,
+        include: [
+            "//title[contains(text(),'OVOVO')]",
+            "a[data-fancybox]",
+            ".masonry-list"
+        ],
         imgs: "a[data-fancybox]",
         button: [4],
         insertImg: [".masonry-list", 2],
