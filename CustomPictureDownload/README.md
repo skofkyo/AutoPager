@@ -18,7 +18,7 @@ cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-// @resource JqueryJS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
 // @resource FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
@@ -31,7 +31,7 @@ cdn.bootcdn.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
 // @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-// @resource JqueryJS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
+// @resource JqueryJS https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
 // @resource FancyboxV5JS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
 // @resource FancyboxV3JS https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js
@@ -312,7 +312,6 @@ fun.ge(selector, doc)
             code;
             return url;
         },
-        http: "https", //下一頁鏈結的傳輸協定 http/https
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
         stop: (doc) => {
@@ -2050,7 +2049,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://ovovo.me/">OVOVO</a></td>
-                <td></td>
+                <td><a href="https://ame.funi6e.xyz/">ame.funi6e.xyz</a></td>
             </tr>
             <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
