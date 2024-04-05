@@ -1,4 +1,4 @@
-2024/03/31 00:14
+2024/04/05 20:59
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -204,6 +204,14 @@ PhimVu
 娱乐吧
 *://www.yuleba.org/a/*.html
 *://m.entba.net/a/*.html
+
+娱乐屋
+*://www.entwu.com/a/*.html
+*://m.entwu.com/a/*.html
+
+美女图片库
+*://www.xwbzx.com/a/*.html
+*://m.xwbzx.com/a/*.html
 
 秀人集
 *://www.xiuren*.*/*/*.html
@@ -1256,6 +1264,21 @@ JComic
 韩漫库
 *://se8.us/index.php/chapter/*
 
+爱看韩漫
+*://aikanhanman*.com/index.php/chapter/*
+
+哇漫画
+*://wamanhua.com/index.php/chapter/*
+
+3N漫画网
+*://3456nnn3.com/index.php/chapter/*
+
+福利漫画
+*://flmh.xyz/chapter_*.html
+
+很多漫
+*://henduoman.com/chapter-*.html
+
 頂點漫畫
 *://www.apexmh.com/comic/*.html
 
@@ -1955,6 +1978,11 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://mobile.jymhapp.com/chapter/*
 *://rimanzhijia.com/index.php/chapter/*
 *://se8.us/index.php/chapter/*
+*://aikanhanman*.com/index.php/chapter/*
+*://wamanhua.com/index.php/chapter/*
+*://3456nnn3.com/index.php/chapter/*
+*://flmh.xyz/chapter_*.html
+*://henduoman.com/chapter-*.html
 *://www.44te.com/chapter/*
 *mmonly.cc/*/*/*.html
 *://pic.yesky.com/*/*.shtml
@@ -1987,6 +2015,10 @@ https://www.eyval.net/*
 *://m.xinent.net/plus/view-*.html
 *://www.yuleba.org/a/*.html
 *://m.entba.net/a/*.html
+*://www.entwu.com/a/*.html
+*://m.entwu.com/a/*.html
+*://www.xwbzx.com/a/*.html
+*://m.xwbzx.com/a/*.html
 *://www.fjrx.org/plus/view-*.html
 *://m.fjrx.org/plus/view-*.html
 *://www.sdrx.org/plus/view-*.html
