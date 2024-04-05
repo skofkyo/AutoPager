@@ -802,7 +802,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/03/31 00:14</p>
+<p>2024/04/05 20:59</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1082,7 +1082,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.shzx.org/b/12-0.html">四海资讯</a></td>
-                <td><a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>，封鎖部分地區，需要VPN</td>
+                <td><a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>，<a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>，<a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN</td>
             </tr>
             <tr>
                 <td><a href="https://www.nvhai8.com/">女人吧</a></td>
@@ -2609,7 +2609,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.ikanmh.xyz/">韩国污漫画</a></td>
+                <td><a href="https://www.ikanmh.xyz/">漫小肆</a></td>
                 <td>網址發布頁：<a href="http://www.hmfby.com/">www.hmfby.com</a>，<a href="http://web.hmfby.com/">web.hmfby.com</a></td>
             </tr>
             <tr>
@@ -2673,6 +2673,26 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://aikanhanman1.com/">爱看韩漫</a></td>
+                <td><a href="https://fabuye01.xyz/">回家的路</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://wamanhua.com/">哇漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://henduoman.com/">很多漫</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://3456nnn3.com/">3N漫画网</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://flmh.xyz/category/">福利漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://nnhanman.org/">鸟鸟韩漫</a></td>
                 <td>寫真請點開第一章，直接翻到底。</td>
             </tr>
@@ -2681,7 +2701,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.roumanhua.net/">m.roumanhua.com</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xinhanman.com/">最新韩漫网</a></td>
+                <td><a href="https://www.xindehanman.com/">最新韩漫网</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2706,19 +2726,19 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.diyihm.com/">日韩漫画</a></td>
-                <td><a href="https://www.lltoon.com/">www.lltoon.com</a>，<a href="https://www.rrtoon.com/">www.rrtoon.com</a></td>
+                <td>限定Mobile，<a href="https://www.lltoon.com/">www.lltoon.com</a>，<a href="https://www.rrtoon.com/">www.rrtoon.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://wwtoon.com/">歪歪漫画</a></td>
-                <td><a href="https://www.zztoon.com/">www.zztoon.com</a>，<a href="https://www.vvtoon.com/">www.vvtoon.com</a></td>
+                <td>限定Mobile，<a href="https://www.zztoon.com/">www.zztoon.com</a>，<a href="https://www.vvtoon.com/">www.vvtoon.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://51comic.org/">51漫画</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="http://1zse.com/">一之涩漫画</a></td>
-                <td><a href="http://hatazi.com/">哈塔兹漫画</a>，<a href="https://522160.xyz/">物二漫画</a></td>
+                <td><a href="https://1zse.com/">一之涩漫画</a></td>
+                <td><a href="https://hatazi.com/">哈塔兹漫画</a>，<a href="https://522160.xyz/">物二漫画</a></td>
             </tr>
             <tr>
                 <td><a href="http://naluhd.com/">那露漫画</a></td>
@@ -2762,7 +2782,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://h-webtoon.com/">韓漫射</a></td>
-                <td>同格式，<a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>，<a href="https://18hmanga.click/">18hmanga.click</a>，<a href="https://cosporn.online/">cosporn.online</a></td>
+                <td>同格式，<a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>，<a href="https://18hmanga.click/">18hmanga.click</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.okcomic.net/">ok漫画網</a></td>
@@ -2777,7 +2797,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://semanji.xyz/">色漫集</a></td>
+                <td><a href="https://semanji.com/">色漫集</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2785,7 +2805,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://manhua.sexbook.top/">18H汉化漫画</a></td>
+                <td><a href="https://18manga.top/">18H汉化漫画</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2985,7 +3005,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://kanbook.net/">快岸漫画</a></td>
+                <td><a href="https://www.ikanbook.net/">快岸漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
