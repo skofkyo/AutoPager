@@ -1,4 +1,4 @@
-2024/04/05 20:59
+2024/04/012 20:31
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -329,8 +329,11 @@ MEITU131
 8E资源站
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 
-孔雀海/洛丽网
+孔雀海/洛丽网/ladymao图库/懒人看图/尤物秀
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
+/^https?:\/\/(www\.)?ladymao\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
+/^https?:\/\/(www\.)?lazymanpic\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
+/^https?:\/\/(www\.)?youwushow\.net\/pic\/\w+\.html(\?btwaf=\d+)?$/
 
 嘿～色女孩
 *://heysexgirl.com/*
@@ -418,6 +421,7 @@ HOTGIRLchina
 /^https?:\/\/nongbong\.com\/[^\/]+\/$/
 /^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/
 /^https?:\/\/anhdoitruy\.com\/[^\/]+\/$/
+/^https?:\/\/anhnguoilon\.com\/[^\/]+\/$/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -541,6 +545,9 @@ Chinese Beauties
 秀窝
 *://www.xiuwo.net/tu/*.html
 
+JN美眉网
+*://www.jnmmw.com/meimei/*.html
+
 RMM吧
 *rmm8.com/tu/*.html
 
@@ -565,6 +572,12 @@ MM5MM5美女图片
 
 MM1311
 *://*.mm1311.net/*/*.html
+
+656G精品套图
+*://*.656g.com/tid/*.html
+
+雅拉图
+*://www.yalatu.com/big-image.html?type=*&imageId=*
 
 18AV
 *18av.mm-cg.com/*cg_content/*/content.html
@@ -1100,6 +1113,12 @@ Hanime1
 HentaiFox
 *://hentaifox.com/g/*/*/
 
+HentaiZap
+*://hentaizap.com/g/*/*/
+
+HentaiRead
+*://hentairead.com/hentai/*/english/p/*/
+
 HentaiRox
 *://hentairox.com/view/*/*/
 
@@ -1122,7 +1141,7 @@ TSUMINO
 *://www.tsumino.com/Read/Index/*
 
 9hentai
-*://9hentai.to/g/*/*/
+*://9hentai.com/g/*/*/
 
 AsmHentai
 *://asmhentai.com/gallery/*/*/
@@ -1296,6 +1315,9 @@ HentaiPal.com
 
 18H汉化漫画
 /^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/imgs\.php\?id=/
+
+Roku Hentai
+/^https?:\/\/rokuhentai\.com\/\w+$/
 
 漫畫類
 
@@ -1817,6 +1839,8 @@ https://www.nuyet.com/gallery/*
 *://simplyhentai.red/g/*/*/
 *://hanime1.me/comic/*/*
 *://hentaifox.com/g/*/*/
+*://hentaizap.com/g/*/*/
+*://hentairead.com/hentai/*/english/p/*/
 *://hentairox.com/view/*/*/
 *://3hentai.net/d/*/*
 *://www.simply-hentai.com/*/*/page/*
@@ -1824,7 +1848,7 @@ https://www.nuyet.com/gallery/*
 *://hentaihand.com/en/comic/*reader/*
 *://hentaiera.com/view/*/*/
 *://www.tsumino.com/Read/Index/*
-*://9hentai.to/g/*/*/
+*://9hentai.com/g/*/*/
 *://asmhentai.com/gallery/*/*/
 *://tmohentai.com/reader/*/*/*
 *://anchira.to/*
@@ -1863,10 +1887,13 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://sxchinesegirlz01.xyz/*/*/*/*/
 *://*.tuzac.com/file/*
 *://www.xiuwo.net/tu/*.html
+*://www.jnmmw.com/meimei/*.html
 *rmm8.com/tu/*.html
 *://xiuren0.com/*.html
 *://www.emonl.com/*.html
 *://www.cybesx.com/*.html
+*://www.yalatu.com/big-image.html?type=*&imageId=*
+*://*.656g.com/tid/*.html
 *://*.mm1311.net/*/*.html
 *://*.eemm.cc/pic/*.html
 *://*.mm5mm5.com/mm/*
@@ -2207,10 +2234,14 @@ https://www.eyval.net/*
 *://928r.com/post/*.html
 *www.gai.vn*
 *://yinaw.com/*.html
+/^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
+/^https?:\/\/(www\.)?ladymao\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
+/^https?:\/\/(www\.)?lazymanpic\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
+/^https?:\/\/(www\.)?youwushow\.net\/pic\/\w+\.html(\?btwaf=\d+)?$/
 /^https?:\/\/meitu\.knit\.bid\/(beauty|handsome)\/[^\/]+$/
 /^https?:\/\/meitu\.knit\.bid\/(news|street)\/\d+$/
 /^https?:\/\/fanleaks\.club\/[^\/]+$/
@@ -2223,6 +2254,8 @@ https://www.eyval.net/*
 /^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/nongbong\.com\/[^\/]+\/$/
 /^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/
+/^https?:\/\/anhdoitruy\.com\/[^\/]+\/$/
+/^https?:\/\/anhnguoilon\.com\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
