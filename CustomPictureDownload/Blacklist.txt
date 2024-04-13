@@ -1,4 +1,4 @@
-2024/04/012 20:31
+2024/04/013 22:14
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1024,7 +1024,7 @@ ROSI美女写真
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 
 图片吧
-/^https:\/\/www\.tp8\.org\/\d+\.html$/
+/^https:\/\/www\.14mm\.net\/\d+\.html$/
 
 Asian Porn
 *://asianporn.li/photo/*/*/
@@ -1309,6 +1309,12 @@ HentaiPal.com
 
 狮城漫画
 *://hdcomic.com/chapter/*
+
+韩漫连连看
+*://www.hmllk.com/chapter/*
+
+ACG糖
+/^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 
 顶通漫画
 *://toptoon*/*/*.html
@@ -2029,6 +2035,7 @@ https://www.eyval.net/*
 *://www.1y.is/*/*.html
 *://www.mmav.me/photo/*.html
 *://hdcomic.com/chapter/*
+*://www.hmllk.com/chapter/*
 *://*guixiu.org/post/*.html
 *://www.momotk.com/*.html
 *://momotk*.uno/*.html
@@ -2234,6 +2241,7 @@ https://www.eyval.net/*
 *://928r.com/post/*.html
 *www.gai.vn*
 *://yinaw.com/*.html
+/^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
@@ -2248,7 +2256,7 @@ https://www.eyval.net/*
 /^https?:\/\/fapachi\.com\/[^\/]+$/
 /^https?:\/\/(twhentai\.com|mttang\.club|(\w+\.)?hentai\.desi)\/\??(hentai_manga|hentai_doujin|hentai_western)\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
-/^https:\/\/www\.tp8\.org\/\d+\.html$/
+/^https:\/\/www\.14mm\.net\/\d+\.html$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/
