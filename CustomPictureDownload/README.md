@@ -146,7 +146,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code;
         return link;
     },
-    observerURL: true, //觀察URL變化重新取得nextLink，用於SPA網頁
+    observerURL: true, //觀察URL變化重新取得標題字串和nextLink，用於SPA網頁
     observerNext: true, //觀察元素變化重新取得nextLink
     observerNext: ".read_nav", //指定觀察元素的子元素變化重新取得nextLink
     prev: "//a[text()="上一章"]", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
@@ -802,7 +802,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/04/012 20:31</p>
+<p>2024/04/013 22:14</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1173,7 +1173,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.tp8.org/">图片吧</a></td>
+                <td><a href="https://www.14mm.net/">14MM图片网</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2005,6 +2005,18 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://ame.funi6e.xyz/">ame.funi6e.xyz</a></td>
             </tr>
             <tr>
+                <td><a href="https://adultphotosets.best/">Adult photo sets</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://pics-x.com/">Pics-X</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://sxypix.com/">SXYPIX</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://eropics.to/">Eropics</a></td>
                 <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片。</td>
             </tr>
@@ -2597,11 +2609,23 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>作用在圖片清單、下拉閱讀頁，<a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>，<a href="https://wnacg.date/">紳士漫畫地址發布頁</a></td>
             </tr>
             <tr>
+                <td><a href="https://web.nicecat.cc/">NiceCat</a></td>
+                <td>SPA網頁，請在info頁做操作。</td>
+            </tr>
+            <tr>
                 <td><a href="https://ahri8.top/">松鼠症倉庫</a></td>
                 <td></td>
             </tr>
             <tr>
                 <td><a href="https://caitlin.top/">Caitlin.top</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://acgtoon.com/">ACG糖</a></td>
+                <td><a href="https://www.kmh123.xyz/">永久发布页</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://c3manga.com/">C3manga</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2794,6 +2818,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://hdcomic.com/booklist/?tag=%E7%9C%9F%E4%BA%BA">狮城漫画</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.hmllk.com/">韩漫连连看</a></td>
                 <td></td>
             </tr>
             <tr>
