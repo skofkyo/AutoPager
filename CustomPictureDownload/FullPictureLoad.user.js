@@ -3679,7 +3679,7 @@
                 if (fun.lh == "leakedzone.com") {
                     images = json.map(e => e.thumbnail.replace("_300.", "."));
                 } else {
-                    images = json.map(e => `${location.origin}/storage/` + e.image)
+                    images = json.map(e => e.player);
                 }
                 let thumbnails = json.map(e => e.thumbnail);
                 imgsSrcArr = imgsSrcArr.concat(images);
@@ -4024,7 +4024,7 @@
         include: "h1.entry-title",
         imgs: () => {
             videosSrcArray = [...fun.gae(".entry-content video>source")].map(e => e.src).reverse();
-            return [...fun.gae(".entry-content img")].map(e => {
+            return [...fun.gae(".entry-content img[data-srcset]")].map(e => {
                 let splitArr = e.dataset.srcset.split(",");
                 splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)w/)[1] - b.match(/\s(\d+)w/)[1]);
                 return splitArr.at(-1).trim().split(" ")[0];
@@ -4050,10 +4050,10 @@
         ],
         include: "video>source,.mace-gallery-teaser",
         imgs: () => {
-            videosSrcArray = [...document.querySelectorAll("video>source")].map(e => e.src);
-            let picArr1 = [...document.querySelectorAll(".entry-featured-media-main[itemprop='image'] meta[itemprop='url']")].map(e => e.content);
+            videosSrcArray = [...fun.gae("video>source")].map(e => e.src);
+            let picArr1 = [...fun.gae(".entry-featured-media-main[itemprop='image'] meta[itemprop='url']")].map(e => e.content);
             if (fun.ge(".mace-gallery-teaser")) {
-                let picArr2 = JSON.parse(document.querySelector(".mace-gallery-teaser").dataset.g1Gallery).map(e => {
+                let picArr2 = JSON.parse(fun.ge(".mace-gallery-teaser").dataset.g1Gallery).map(e => {
                     if (e.type === "image" && !/18xmob\.png$/.test(e.full)) {
                         return e.full;
                     } else {
