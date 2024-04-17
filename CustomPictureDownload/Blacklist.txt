@@ -1,4 +1,4 @@
-2024/04/013 22:14
+2024/04/18 00:11
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -969,6 +969,7 @@ MrDeepFakes
 *://www.hsudhf.com/pic/*.html
 *://www.rodwy.com/tupian/*.html
 *://www.y521.com/tupian/.html
+*://www.opks.cc/meiwen/*.html
 
 万德美图屋
 *://www.wind5.com/tu*.html
@@ -1023,7 +1024,7 @@ ROSI美女写真
 小姐姐么
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 
-图片吧
+14MM图片网
 /^https:\/\/www\.14mm\.net\/\d+\.html$/
 
 Asian Porn
@@ -2197,6 +2198,7 @@ https://www.eyval.net/*
 *://www.hsudhf.com/pic/*.html
 *://www.rodwy.com/tupian/*.html
 *://www.y521.com/tupian/.html
+*://www.opks.cc/meiwen/*.html
 *://www.wind5.com/tu*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
