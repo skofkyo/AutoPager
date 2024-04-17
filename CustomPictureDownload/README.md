@@ -802,7 +802,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/04/013 22:14</p>
+<p>2024/04/18 00:11</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -842,7 +842,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://w3.javsx.com/photos.html">JavSX.com</a></td>
+                <td><a href="https://www5.javsx.com/photos.html">JavSX.com</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1721,6 +1721,74 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://faps.club/main10/">OnlyFaps</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://thotbook.tv/">ThotBook.tv</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.famousinternetgirls.com/">Famous Internet Girls</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.tnapics.com/">TNApics</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://realpornclip.com/?s=photo">RealPornClip Photos</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://erothots.co/">EroThots</a></td>
+                <td>無法匯出、下載，需要透過快捷鍵複製URL給Motrix下載，來源爬取BITCHES GIRLS。</td>
+            </tr>
+            <tr>
+                <td><a href="https://fapdungeon.com/">Fapdungeon</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://ibradome.com/onlyfans-photos">Ibradome</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://fapopedia.net/updates/">Fapopedia</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://fapfappy.com/">fapfappy</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://gotanynudes.com/">gotanynudes.com</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://thotslife.com/">Thotslife.com</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://nudecosplaygirls.com/category/nude-cosplay-albums/">Nude Cosplay Albums</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://voyeurflash.com/">VoyeurFlash.com</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://leakedmodels.com/">Leaked Models</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://thothd.com/zh/albums/">ThotHD Albums</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://thothub.to/albums/">Thothub Albums</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://nudebird.biz/">Nude Bird</a></td>
                 <td></td>
             </tr>
@@ -1865,6 +1933,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.urapic.com/">裏ピク</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://reprint-kh.com/">復刻書林</a></td>
                 <td></td>
             </tr>
@@ -2001,6 +2073,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://bitchesgirls.com/">BITCHES GIRLS</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://x-video.tube/albums/">X-video albums</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://ovovo.me/">OVOVO</a></td>
                 <td><a href="https://ame.funi6e.xyz/">ame.funi6e.xyz</a></td>
             </tr>
@@ -2042,7 +2122,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://thotsbay.tv/">Thotsbay</a></td>
-                <td><a href="https://hotleak.vip/">Hotleak</a>，手動插入圖片</td>
+                <td><a href="https://hotleak.vip/">Hotleak</a>，<a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片</td>
             </tr>
             <tr>
                 <td><a href="https://www.wikifeet.com/">wikiFeet</a></td>
@@ -2058,10 +2138,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://r18hub.com/photos">R18hub</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://bitchesgirls.com/">BITCHES GIRLS</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2246,7 +2322,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.tzala.com/">桃子啦</a></td>
-                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式134個</a></td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式135個</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.wind5.com/">万德美图屋</a></td>
@@ -2331,6 +2407,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.fulizx101.cc/index.php/art/type/id/67.html">福利中心</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>坏哥哥</td>
+                <td><a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/yjdm.txt">239個域名</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.momotk.com/">MOMO图库</a></td>
@@ -2972,6 +3052,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://m.mh160.cc/">m.mh160.cc</a></td>
             </tr>
             <tr>
+                <td><a href="https://www.veryim.com/">非常爱漫</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://www.iimanhuapi.com/">漫画皮</a></td>
                 <td><a href="https://m.iimanhuapi.com/">m.iimanhuapi.com</a></td>
             </tr>
@@ -3206,10 +3290,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="http://h5.ykmh.com/">h5.ykmh.com</a>，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.mhxin.com/">漫画芯</a></td>
-                <td><a href="https://m.mhxin.com/">m.mhxin.com</a>，預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.zuimh.com/">最漫画</a></td>
                 <td><a href="https://m.zuimh.com/">m.zuimh.com</a>，預設關閉</td>
             </tr>
@@ -3240,10 +3320,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.mhkan.com/">漫画看</a></td>
                 <td><a href="https://m.mhkan.com/">m.mhkan.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://comics.veryim.com/">非常爱漫网</a></td>
-                <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://m.icekr.com/">冰氪漫画</a></td>
