@@ -375,6 +375,11 @@ fun.gae("selector", node);
 fun.gt("selector", mode = 1, doc = document);
 </pre>
 <pre>
+//取得非src腳本的字串
+//searchValue，關鍵字串或正則表達式
+fun.gst(searchValue, doc = document);
+</pre>
+<pre>
 //取得元素屬性的值
 fun.attr("selector","屬性", doc = document)
 </pre>
@@ -680,7 +685,8 @@ mode20
 fun.getModeUrl(url, mode, num)
 </pre>
 <pre>
-//fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間。
+//xhr抓取圖片元素，返回圖片網址
+//fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
 fun.getImgO("圖片元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
 fun.getImgO(img, maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 </pre>
@@ -690,9 +696,11 @@ fun.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", ti
 fun.getImgIframe(img, max, mode, paginationEle, time, showMsg)
 </pre>
 <pre>
+//xhr抓取圖片元素，返回圖片網址
 //mode
 //0多線程(預設)
 //1單線程
+//2單線程，類翻頁模式
 //數字大於等於100，請求間隔模式單位毫秒。
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
@@ -702,7 +710,7 @@ fun.getImgA("圖片元素選擇器", "A元素選擇器")
 fun.getImgA("圖片元素選擇器", [網址陣列])
 </pre>
 <pre>
-//可跨域抓圖片
+//xhr抓取圖片元素，可跨域抓圖片，返回圖片網址
 fun.getImgCorsA("圖片元素選擇器", "A元素選擇器", time = 100)
 fun.getImgCorsA("圖片元素選擇器", [網址陣列], time = 100)
 </pre>
@@ -802,7 +810,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/04/18 00:11</p>
+<p>2024/04/25 22:52</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1109,7 +1117,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
-                <td><a href="https://www.2meinv.com/">爱美女</a></td>
+                <td><a href="https://www.92meinv.com/">爱美女</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1161,7 +1169,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://8ezy.com/?s=">8E资源站</a></td>
+                <td><a href="https://8ezy.com/">8E资源站</a></td>
                 <td>如出現清空網頁內容的情況，是因為有反擋廣告套件機制，需加入擋廣告白名單。</td>
             </tr>
             <tr>
@@ -1342,7 +1350,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://trendszine.com/">風流雜誌</a></td>
-                <td><a href="https://www.tiplogo.com/">泰撲美圖</a>，<a href="https://cosblay.com/">CosBlay</a></td>
+                <td><a href="https://cosblay.com/">CosBlay</a></td>
             </tr>
             <tr>
                 <td><a href="https://xx.knit.bid/">爱妹子</a></td>
@@ -1533,7 +1541,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.cosersets.com/1/main">Cosersets</a></td>
+                <td><a href="https://www.1y.is/">1Y Beauties</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.cosersets.com/1">Cosersets</a></td>
                 <td>SPA網頁，請在圖片頁做操作，可用0、1、3、7、8，Ctrl + Alt + T可修改圖集標題。</td>
             </tr>
             <tr>
@@ -1653,6 +1665,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>SPA網頁</td>
             </tr>
             <tr>
+                <td><a href="https://imgcup.com/">imgcup.com</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.mzpic.com/">Nude Babes</a></td>
                 <td></td>
             </tr>
@@ -1737,11 +1753,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://realpornclip.com/?s=photo">RealPornClip Photos</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://erothots.co/">EroThots</a></td>
+                <td><a href="https://erothots.co/albums">EroThots</a></td>
                 <td>無法匯出、下載，需要透過快捷鍵複製URL給Motrix下載，來源爬取BITCHES GIRLS。</td>
             </tr>
             <tr>
@@ -1798,6 +1810,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://cosplaytele.com/">Cosplaytele</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.jimmysonline.com/">JimmysOnline.com</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1986,7 +2002,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.poringa.net/">Poringa!</a></td>
-                <td><a href="https://m.poringa.net/">m.poringa.net</a></td>
+                <td><a href="https://m.poringa.net/">m.poringa.net</a>，手動插入圖片</td>
             </tr>
             <tr>
                 <td><a href="https://tabakus.blogspot.com/">Tabakus Gallery</a></td>
@@ -2145,10 +2161,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>很容易被短暫封IP...</td>
             </tr>
             <tr>
-                <td><a href="https://bunkr-albums.io/">Bunkr</a></td>
-                <td>列表添加了自動翻頁</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.erome.com/explore">EroMe</a></td>
                 <td><a href="https://erome.pics/explore/">EroMe erome.pics</a></td>
             </tr>
@@ -2174,6 +2186,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.freexcafe.com/">FreeXcafe</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.tupic.top/">TUPIC.TOP</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2285,10 +2301,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>很久沒新圖了</td>
             </tr>
             <tr>
-                <td><a href="https://www.yyzhenshun.com/">YY美女图片</a></td>
-                <td><a href="https://www.mmdabaobei.com/">美眉大宝贝</a>，很久沒新圖了</td>
-            </tr>
-            <tr>
                 <td><a href="http://www.ikmt.net/">爱看美图网</a></td>
                 <td><a href="http://m.ikmt.net/">m.ikmt.net</a>，很久沒新圖了</td>
             </tr>
@@ -2303,6 +2315,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.nvshen5.com/">好女神网</a></td>
                 <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.yyzhenshun.com/">YY美女图片</a></td>
+                <td><a href="http://bb.meinvnews.com/">美眉大宝贝</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.6evu.com/">遛无写真</a></td>
@@ -2397,6 +2413,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.top888.com/">粉色家园</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://ios.zzgo810.top/">哔咔庇护所v2</a></td>
                 <td></td>
             </tr>
@@ -2421,19 +2441,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://wc2.es/myhl">跳轉頁</a></td>
             </tr>
             <tr>
-                <td><a href="https://151.lat/">色色葫芦</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.sstuku13.xyz/aa61/?shouye">色色图库</a></td>
                 <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.112ze.com/">美女写真图集</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://18cute.monster/">18少女团</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2546,7 +2558,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.simply-hentai.com/">Simply Hentai</a></td>
-                <td>作用在圖片清單/閱讀頁，SPA網頁</td>
+                <td>作用在閱讀頁，SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://eahentai.com/">EAHentai</a></td>
@@ -2683,6 +2695,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.nicohentai.com/">逆次元逆ACG</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.55comics.com/">污污漫书</a></td>
+                <td><a href="https://www.55manshu.com/">55漫書</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.wnacg.com/">紳士漫畫</a></td>
