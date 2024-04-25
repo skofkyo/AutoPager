@@ -1,4 +1,4 @@
-2024/04/18 00:11
+2024/04/25 22:52
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -292,8 +292,8 @@ MEITU131
 /^https://www\.hexieshe\.cn/\d+/$/
 
 爱美女
-*://www.2meinv.com/article-*.html
-*://mm.2meinv.com/article-*.html
+*://www.92meinv.com/article-*.html
+*://m.92meinv.com/article-*.html
 
 美图录
 *://meitulu.me/item/*.html
@@ -1183,6 +1183,10 @@ ACG漫画网
 禁漫天堂
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
 
+污污漫畫
+*://www.55comics.com/chapter/*.html
+*://www.55manshu.com/chapter/*.html
+
 紳士漫畫
 *://wnacg.*/photos-index-aid-*.html
 https://www.htmanga*.top/photos-index-aid-*.html
@@ -1701,8 +1705,8 @@ https://www.nuyet.com/gallery/*
 *://*.umei.cc/meinvtupian/*/*.htm*
 *://www.meitu131.*/meinv/*/
 *://m.meitu131.*/meinv/*/
-*://www.2meinv.com/article-*.html
-*://mm.2meinv.com/article-*.html
+*://www.92meinv.com/article-*.html
+*://m.92meinv.com/article-*.html
 *://meitulu.me/item/*.html
 *://mm.tvv.tw/archives/*.html
 *nvsheng.cc/m*/*.html
@@ -2243,6 +2247,8 @@ https://www.eyval.net/*
 *://928r.com/post/*.html
 *www.gai.vn*
 *://yinaw.com/*.html
+*://www.55comics.com/chapter/*.html
+*://www.55manshu.com/chapter/*.html
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
