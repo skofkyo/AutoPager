@@ -330,7 +330,7 @@ fun.ge(selector, doc)
             //先經過代碼判斷返回obj。
             return {
                 ok: (true添加標題,false不添加),
-                text: titleText;
+                text: titleText
             }
         },
         bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設為當前視窗可視範圍的高度screen.height可省略。
@@ -3020,6 +3020,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
 <p>透過UI開啟當前漫畫站規則的步驟 ＞ 前往漫畫網站的閱讀頁面 ＞ 瀏覽器右上角腳本管理器 ＞ 圖片全載 ＞ 設定 ＞ UI ＞ 勾選啟用當前漫畫站點規則 ＞ 保存設定</p>
 <p>2023/11/25 絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
+<p>2024/04/27 為一些常用連線品質較好的網站，添加無限捲動(自動翻頁)閱讀功能，透過腳本管理器選單開啟。</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
@@ -3033,27 +3034,63 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://www.comicabc.com/">8Comic無限動漫</a></td>
-                <td><a href="https://m.comicbus.com/">m.comicbus.com</a></td>
+                <td><a href="https://m.comicbus.com/">m.comicbus.com</a>，有無限捲動模式</td>
             </tr>
             <tr>
                 <td><a href="https://www.copymanga.site/">拷貝漫畫</a></td>
-                <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.copymanga.tv/">www.copymanga.tv</a>，<a href="https://copymanga.tv/">copymanga.tv</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效</td>
+                <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.copymanga.tv/">www.copymanga.tv</a>，<a href="https://copymanga.tv/">copymanga.tv</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，PC版有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.baozimh.com/">包子漫画</a></td>
+                <td>有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
+                <td><a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>，<a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://cocomanga.xyz/">COCOMANGA</a></td>
+                <td>有無限捲動模式，山寨Manhuagui，圖片載入很慢。</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.dm5.com/">DM5</a></td>
+                <td><a href="https://m.dm5.com/">m.dm5.com</a>，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://hk.1kkk.com/">極速</a></td>
+                <td><a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.mangabz.com/">Mangabz</a></td>
+                <td>PC版向下滾動隱藏工具列，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://xmanhua.com/">Xmanhua</a></td>
+                <td>PC版向下滾動隱藏工具列，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.yymanhua.com/">yymanhua</a></td>
+                <td>PC版向下滾動隱藏工具列，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.cartoonmad.com/">動漫狂</a></td>
+                <td><a href="https://www.cartoonmad.com/m/">動漫狂M</a>，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.manmanju.cc/">漫漫聚</a></td>
+                <td><a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.ikukudm.cc/">KuKu动漫</a></td>
+                <td><a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式</td>
             </tr>
             <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
                 <td>SPA網頁，只有下載功能</td>
             </tr>
             <tr>
-                <td><a href="http://www.manmanju.cc/">漫漫聚</a></td>
-                <td><a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.ikukudm.cc/">KuKu动漫</a></td>
-                <td><a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
-                <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a></td>
+                <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限捲動模式</td>
             </tr>
             <tr>
                 <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
@@ -3125,48 +3162,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>圖片手動插入、閱讀、展開目錄、自動點擊載入、漫畫鏈接新分頁打開，預設關閉</td>
             </tr>
             <tr>
-                <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
-                <td><a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>，<a href="https://m.manhuagui.com/">m.manhuagui.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://cocomanga.xyz/">COCOMANGA</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.baozimh.com/">包子漫画</a></td>
-                <td>閱讀、展開目錄、漫畫鏈接新分頁打開，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.mangabz.com/">Mangabz</a></td>
-                <td>PC版向下滾動隱藏工具列，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://xmanhua.com/">Xmanhua</a></td>
-                <td>PC版向下滾動隱藏工具列，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.dm5.com/">DM5</a></td>
-                <td><a href="https://m.dm5.com/">m.dm5.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://hk.1kkk.com/">極速</a></td>
-                <td><a href="https://m.1kkk.com/">m.1kkk.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.yymanhua.com/">yymanhua</a></td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
                 <td><a href="https://mh234.top/">mh234</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://m.dmzj.com/">动漫之家M</a></td>
                 <td><a href="https://m.idmzj.com/">m.idmzj.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.cartoonmad.com/">動漫狂</a></td>
-                <td><a href="https://www.cartoonmad.com/m/">動漫狂M</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://qumanku.com/">速漫库</a></td>
