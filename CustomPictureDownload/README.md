@@ -609,7 +609,7 @@ await fun.iframeSrcDoc(url, ele);
 <pre>
 //使用iframe框架，等待至指定的declares出現，返回iframe框架的contentWindow。
 let iframe = await fun.iframeVar(url, time = 1000, "declares");
-let _var = iframe.declares;
+let _declares = iframe.declares;
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片
@@ -810,7 +810,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/04/25 22:52</p>
+<p>2024/04/29 02:31</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -3077,6 +3077,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://www.cartoonmad.com/m/">動漫狂M</a>，有無限捲動模式</td>
             </tr>
             <tr>
+                <td><a href="http://www.manhuadb.com/">漫画DB</a></td>
+                <td>有無限捲動模式</td>
+            </tr>
+            <tr>
                 <td><a href="http://www.manmanju.cc/">漫漫聚</a></td>
                 <td><a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式</td>
             </tr>
@@ -3085,20 +3089,20 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式</td>
             </tr>
             <tr>
-                <td><a href="https://komiic.com/">Komiic</a></td>
-                <td>SPA網頁，只有下載功能</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
                 <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限捲動模式</td>
             </tr>
             <tr>
-                <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
-                <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
+                <td><a href="http://www.guoman8.cc/">国漫吧</a></td>
+                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限捲動模式</td>
             </tr>
             <tr>
                 <td><a href="https://www.guoman.net/">爱国漫</a></td>
-                <td><a href="https://m.guoman.net/">m.guoman.net</a></td>
+                <td><a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://komiic.com/">Komiic</a></td>
+                <td>SPA網頁，只有下載功能</td>
             </tr>
             <tr>
                 <td><a href="https://www.mh160.cc/">漫画160</a></td>
@@ -3119,6 +3123,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://dogemanga.com/">漫畫狗</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.fffdm.com/manhua/">风之动漫</a></td>
+                <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
             </tr>
             <tr>
                 <td><a href="https://www.hahacomic.com/">哈哈漫画</a></td>
@@ -3172,10 +3180,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://qumanku.com/">速漫库</a></td>
                 <td><a href="http://www.sumanku.com/">www.sumanku.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.manhuadb.com/">漫画DB</a></td>
-                <td>預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.ikanbook.net/">快岸漫画</a></td>
@@ -3265,10 +3269,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.yyjj66.com/">爱看漫画</a></td>
                 <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="http://www.guoman8.cc/">国漫吧</a></td>
-                <td><a href="http://m.wuqimh.net/">m.guoman8.cc</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="http://www.92mh.com/">92漫画</a></td>
