@@ -1,4 +1,4 @@
-2024/04/25 22:52
+2024/04/29 02:31
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1024,8 +1024,8 @@ ROSI美女写真
 小姐姐么
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 
-14MM图片网
-/^https:\/\/www\.14mm\.net\/\d+\.html$/
+图片吧/14MM图片网
+/^https:\/\/(www\.tp8\.org|www\.14mm\.net)\/\d+\.html$/
 
 Asian Porn
 *://asianporn.li/photo/*/*/
@@ -1357,6 +1357,9 @@ Roku Hentai
 *://www.tbmanga.com/*
 *://tw.tbmanga.com/*
 *://cn.tbmanga.com/*
+*://www.hcmanga.com/*
+*://tw.hcmanga.com/*
+*://cn.hcmanga.com/*
 
 嗨皮漫畫
 *m.happymh.com*
@@ -1365,8 +1368,7 @@ COLAMANHUA
 /www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/
 
 Manhuagui看漫画閱讀
-*m.manhuagui.com/comic/*/*.html
-*www.manhuagui.com/comic/*/*.html
+*manhuagui.com/comic/*/*.html
 
 COCOMANGA閱讀
 *://cocomanga.xyz/comic/*/*.html
@@ -1393,6 +1395,9 @@ KuKu动漫閱讀
 https://www.fffdm.com/manhua/*
 https://manhua.fffdm.com/*/*/
 
+国漫吧
+*:/*.guoman8.cc/44224/088.html
+
 大古漫画
 https://*.dgmanhua.com/manhua/*/*.html
 
@@ -1412,8 +1417,7 @@ LINE WEBTOON
 *://www.webtoons.com/zh-hant/*
 
 動漫狂閱讀
-*://www.cartoonmad.com/comic/*.html
-*://www.cartoonmad.com/m/comic/*.html
+*://cc.fun8.us/post/*.html
 
 動漫戲說閱讀
 *://comic.acgn.cc/view-*.htm
@@ -1422,7 +1426,7 @@ LINE WEBTOON
 *acgud.com/manhua/*/*.html
 
 古风漫画网閱讀
-*.gufengmh.com/manhua/*/*.html
+*.gufengmh*.com/manhua/*/*.html
 
 漫画456閱讀
 *://*.manhua456.com/manhua/*/*.html
@@ -1474,7 +1478,7 @@ http://*.wuqimh.net/*/*.html
 *://www.manhw.com/index.php/chapter/*
 
 爱国漫閱讀
-*://*.aiguoman.com/chapter/*.html
+*://*.guoman.net/chapter/*.html
 
 新新漫画閱讀
 *77mh.xyz/*/*.html
@@ -1571,6 +1575,8 @@ http://www.17fuman.com/*/*/*.html
 
 拷貝漫畫閱讀
 *://*copymanga.site/comic/*/chapter/*
+*://*copymanga.tv/comic/*/chapter/*
+*://*mangacopy.com/comic/*/chapter/*
 
 二次元動漫閱讀
 *://www.2animx.com/index-look-name-*
@@ -1624,12 +1630,15 @@ manhuab.com/manhua/*/*.html
 /www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/
 *://ani.gamer.com.tw/animeVideo.php*
 *://*copymanga.site/comic/*/chapter/*
+*://*copymanga.tv/comic/*/chapter/*
+*://*mangacopy.com/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
 *manmanju.*/comiclist/*/*/*.htm
 *ikukudm.*/comiclist/*/*/*.htm
 *m.3840p.xyz/comiclist/*/*/*.htm
 *sbxrb11.3840p.xyz/comiclist/*/*/*.htm
 *s*.wap.ikukudm.cc/comiclist/*/*/*.htm
+*://www.manhuadb.com/manhua/*/*.html
 *://cn.baozimh.com/*
 *://cn.webmota.com/*
 *://tw.baozimh.com/*
@@ -1648,6 +1657,7 @@ manhuab.com/manhua/*/*.html
 *://cn.dociy.net/*
 *://tw.dociy.net/*
 *://www.dociy.net/*
+*manhuagui.com/comic/*/*.html
 *m.manhuagui.com*
 *://www.twmanga.com/*
 *://tw.twmanga.com/*
@@ -1655,16 +1665,23 @@ manhuab.com/manhua/*/*.html
 *://www.tbmanga.com/*
 *://tw.tbmanga.com/*
 *://cn.tbmanga.com/*
+*://www.hcmanga.com/*
+*://tw.hcmanga.com/*
+*://cn.hcmanga.com/*
 *://8.twobili.com/comic/insurance_*
 *://www.comicabc.com/online/new-*
 *://www.comicabc.com/ReadComic/*
 *://a.twobili.com/online/new-*
 *://a.twobili.com/ReadComic/*
+*://cc.fun8.us/post/*.html
 *://www.hahacomic.com/manhua/list.html*
+*://*.guoman.net/chapter/*.html
+*:/*.guoman8.cc/*/*.html
 https://www.fffdm.com/manhua/*
 https://manhua.fffdm.com/*/*/
 https://*.dgmanhua.com/manhua/*/*.html
 *://*.laimanhua8.com/kanmanhua/*/*.html
+*.gufengmh*.com/manhua/*/*.html
 *://www.nlegs.com/girls/*.html
 https://www.honeyleg.com/article/*.html
 https://www.ladylap.com/show/*
