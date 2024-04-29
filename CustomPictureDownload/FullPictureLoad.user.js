@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.0.3
+// @version            2.0.4
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -15303,7 +15303,7 @@ window.parent.postMessage({
         autoDownload: [0],
         next: "//a[text()='下一话' and not(contains(@href,'--1'))]",
         prev: "//a[text()='上一话' and not(contains(@href,'--1'))]",
-        customTitle: doc => fun.gt(".setnmh-bookname h1", 1, dom) + " - " + fun.gt(".setnmh-bookname h2", 1, dom),
+        customTitle: doc => fun.gt(".setnmh-bookname h1", 1, doc) + " - " + fun.gt(".setnmh-bookname h2", 1, doc),
         preloadNext: true,
         category: "comic"
     }, {
@@ -15392,6 +15392,25 @@ window.parent.postMessage({
         },
         prev: 1,
         customTitle: doc => fun.gt("ol.inline-flex>li:nth-child(2) a", 1, doc) + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a", 1, doc),
+        preloadNext: (nextDoc, obj) => {
+            if (fun.lh == "news.cocolamanhua.com") {
+                let next = fun.ge("a#nextChapter[href*='manga']");
+                if (next) {
+                    let [, , mid, cid] = new URL(next.href).pathname.split("/");
+                    let api = `https://cocolamanhua.com/chapter/getinfo?m=${mid}&c=${cid}`;
+                    fun.fetchDoc(api).then(apiDom => {
+                        let srcs = fun.getImgSrcArr(".touch-manipulation img", apiDom);
+                        let ntm = fun.gt(".text-default-700 .text-xs.line-clamp-1", 1, apiDom).trim();
+                        let ntc = fun.gt(".text-default-500 .text-xs.line-clamp-1", 1, apiDom).trim();
+                        let text = ntm + " - " + ntc;
+                        fun.picPreload(srcs, text, "next");
+                    });
+                }
+            } else {
+                let srcs = fun.getImgSrcArr(".touch-manipulation img", nextDoc);
+                fun.picPreload(srcs, obj.customTitle(nextDoc), "next");
+            }
+        },
         category: "comic"
     }, {
         name: "GODA漫畫 自動翻頁",
@@ -15614,7 +15633,7 @@ window.parent.postMessage({
         name: "漫画160/非常爱漫 自動翻頁",
         enable: 1,
         reg: () => /\.mh160\.cc\/kanmanhua\/\w+\/\d+\.html$|^https?:\/\/www\.veryim\.com\/manhua\/\d+\/\d+\.html$/i.test(fun.url) && comicInfiniteScrollMode == 1,
-        getImgs: (dom = document) => {
+        getImgs: () => {
             let srcs = base64_decode(qTcms_S_m_murl_e).split("$qingtiandy$").map(e => f_qTcms_Pic_curUrl_realpic(e));
             return fun.createImgArray(srcs);
         },
@@ -15632,7 +15651,7 @@ window.parent.postMessage({
             pos: ["#FullPictureLoadMainImgBox", 0],
             observer: "#FullPictureLoadMainImgBox>img",
             next: "#k_Pic_nextArr[href$='html']",
-            re: ".title,.main-btn,.BarTit,#action",
+            re: ".title,.main-btn,.breadcrumb,.BarTit,#action,.pager:not([id])",
             title: () => {
                 if (hasTouchEvents) {
                     return qTcms_S_m_playm;
