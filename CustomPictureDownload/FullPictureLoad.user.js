@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.0.4
+// @version            2.0.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -14072,6 +14072,7 @@ if (next) {
             await fun.lazyload();
         },
         autoPager: {
+            script: "//script[contains(text(),'chapterImages')]",
             ele: (dom) => siteData.getImgs(dom),
             pos: ["#FullPictureLoadMainImgBox", 0],
             observer: "#FullPictureLoadMainImgBox>img",
@@ -14080,9 +14081,9 @@ if (next) {
                 let nextText = code.match(/nextChapterData[\s=]+([^;]+)/)[1];
                 let cUrlText = code.match(/comicUrl[\s="]+([^"]+)/)[1];
                 let nextrData = JSON.parse(nextText);
-                _unsafeWindow.nextChapterData.id = nextrData?.id;
                 return nextrData?.id && nextrData?.id > 0 ? cUrlText + nextrData.id + ".html" : null;
             },
+            re: ".title,.BarTit",
             history: 1,
             aF: () => fun.lazyload(),
             title: (dom) => {
@@ -14095,7 +14096,7 @@ if (next) {
                 }
             }
         },
-        css: ".img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
+        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
         category: "comic autoPager"
     }, {
         name: "漫画456",
@@ -16096,8 +16097,23 @@ window.parent.postMessage({
                     }
                 });
             }).then(json => {
-                siteJson = json;
-                debug("\n拷貝漫畫M_JSON\n", siteJson);
+                globalImgArray = json.results.chapter.contents.map(e => e.url);
+                customTitle = json.results.chapter.name;
+                let next = json.results.chapter?.next;
+                console.log("\n拷貝漫畫M_JSON\n", json, globalImgArray, customTitle, next);
+                if (next) {
+                    tempNextLink = document.URL.replace(/[^\/]+$/, "") + next;
+                } else {
+                    const addHtml = (url, text) => {
+                        let str = `<div style="padding: 5px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 40px;height: 40px;text-align: center;">${text}</a></div>`;
+                        fun.ge(".comicContentPopupImageList").insertAdjacentHTML("afterend", str);
+                    };
+                    let s = siteUrl.split("/").slice(-2);
+                    let url = `https://${fun.lh}/h5/details/comic/${s[0]}`;
+                    addHtml(`https://${fun.lh}/h5/index`, "首頁");
+                    addHtml(url, "目錄");
+                    tempNextLink = null;
+                }
             });
         },
         getImgs: () => {
@@ -16107,7 +16123,7 @@ window.parent.postMessage({
         init: async () => {
             fun.showMsg("自動翻頁初始化中...", 0);
             await siteData.getData();
-            let imgs = siteData.getImgs();
+            let imgs = fun.createImgArray(globalImgArray);
             let tE = fun.ge(".comicContentPopupImageList");
             tE.innerHTML = "";
             tE.append(...imgs);
@@ -16119,18 +16135,15 @@ window.parent.postMessage({
             fun.hideMsg();
         },
         autoPager: {
-            ele: () => siteData.getImgs(),
+            ele: () => fun.createImgArray(globalImgArray),
             pos: [".comicContentPopupImageList", 0],
             observer: ".comicContentPopupImageList>img",
-            next: () => {
-                let next = siteJson.results.chapter.next;
-                return next ? document.URL.replace(/[^\/]+$/, "") + next : null;
-            },
-            title: () => siteJson.results.chapter.name,
+            next: () => tempNextLink,
+            getData: async () => await siteData.getData(),
+            title: () => customTitle,
             history: 1,
             aF: async () => {
                 await fun.lazyload();
-                await siteData.getData();
             }
         },
         css: ".comicFixed{display:none!important}",
@@ -18435,6 +18448,10 @@ document.body.appendChild(text);
                 }
             }
             if (siteData?.autoPager?.history == 1) await fun.addHistory(doc?.title ?? document.title, url);
+            let xhrGetData = siteData?.autoPager?.getData;
+            if (isFn(xhrGetData)) {
+                await xhrGetData();
+            }
             let script = siteData?.autoPager?.script;
             if (isString(script)) {
                 let scripts = [...fun.gae(script, doc)];
