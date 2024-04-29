@@ -3087,6 +3087,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.ikukudm.cc/">KuKu动漫</a></td>
                 <td><a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式</td>
+            <tr>
+                <td><a href="https://www.gufengmh9.com/">古风漫画网</a></td>
+                <td><a href="https://m.gufengmh9.com/">m.gufengmh9.com</a>，<a href="https://www.gf618.com/">www.gf618.com</a>，有無限捲動模式</td>
+            </tr>
             </tr>
             <tr>
                 <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
@@ -3205,10 +3209,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="http://www.acgwd.com/">亲亲漫画</a></td>
                 <td><a href="http://m.acgwd.com/">m.acgwd.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.gufengmh9.com/">古风漫画网</a></td>
-                <td><a href="https://m.gufengmh9.com/">m.gufengmh9.com</a>，<a href="https://www.gf618.com/">www.gf618.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.77mh.xyz/">新新漫画</a></td>
