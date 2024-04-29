@@ -3107,11 +3107,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://baozimh.org/">包子漫畫</a></td>
-                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，news.cocolamanhua.com有無限捲動模式</td>
+                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，cn.baozimh.one有無限捲動模式</td>
             </tr>
             <tr>
                 <td><a href="http://www.guoman8.cc/">国漫吧</a></td>
-                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，cn.baozimh.one有無限捲動模式</td>
+                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限捲動模式</td>
             </tr>
             <tr>
                 <td><a href="https://www.guoman.net/">爱国漫</a></td>
