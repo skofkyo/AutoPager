@@ -1,4 +1,4 @@
-2024/04/29 02:31
+2024/04/29 22:29
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1489,11 +1489,14 @@ http://*.wuqimh.net/*/*.html
 大树漫画閱讀
 *://www.dashumanhua.com/comic/*/read-*.html
 
+世伦漫画
+*://www.shilunart.com/comic/*/read-*.html
+
 GODA漫画閱讀
-*://godamanga.com/manga/*/*/
+/^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
 
 包子漫畫閱讀
-*://baozimh.org/manga/*/*/
+*://cn.baozimh.one/manga/*/*
 
 漫畫屋閱讀
 *://mh5.tw/series-*
@@ -1548,6 +1551,9 @@ http://www.17fuman.com/*/*/*.html
 
 漫画160閱讀
 *://*.mh160.cc/kanmanhua/*/*.html
+
+非常爱漫
+*://www.veryim.com/manhua/*/*.html
 
 木马漫画閱讀
 *://www.omyschool.com/article_detail/*/*/*/
@@ -1682,6 +1688,12 @@ https://manhua.fffdm.com/*/*/
 https://*.dgmanhua.com/manhua/*/*.html
 *://*.laimanhua8.com/kanmanhua/*/*.html
 *.gufengmh*.com/manhua/*/*.html
+*://www.dashumanhua.com/comic/*/read-*.html
+*://www.shilunart.com/comic/*/read-*.html
+*://*.mh160.cc/kanmanhua/*/*.html
+*://www.veryim.com/manhua/*/*.html
+/^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
+*://cn.baozimh.one/manga/*/*
 *://www.nlegs.com/girls/*.html
 https://www.honeyleg.com/article/*.html
 https://www.ladylap.com/show/*
