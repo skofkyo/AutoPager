@@ -810,7 +810,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/04/29 02:31</p>
+<p>2024/04/29 22:29</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1181,12 +1181,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.14mm.net/">14MM图片网</a></td>
+                <td><a href="https://xiaojiejie.me/">小姐姐么</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://xiaojiejie.me/">小姐姐么</a></td>
-                <td></td>
+                <td><a href="https://www.14mm.cn/">14MM图片网</a></td>
+                <td><a href="https://www.tp8.org/">图片吧</a></td>
             </tr>
             <tr>
                 <td><a href="https://coserlab.io/">Coser Lab</a></td>
@@ -3018,7 +3018,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
 <p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
-<p>透過UI開啟當前漫畫站規則的步驟 ＞ 前往漫畫網站的閱讀頁面 ＞ 瀏覽器右上角腳本管理器 ＞ 圖片全載 ＞ 設定 ＞ UI ＞ 勾選啟用當前漫畫站點規則 ＞ 保存設定</p>
+<p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 勾選啟用當前漫畫站點規則 > 保存設定</p>
 <p>2023/11/25 絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
 <p>2024/04/27 為一些常用連線品質較好的網站，添加無限捲動(自動翻頁)閱讀功能，透過腳本管理器選單開啟。</p>
 <details>
@@ -3038,7 +3038,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.copymanga.site/">拷貝漫畫</a></td>
-                <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.copymanga.tv/">www.copymanga.tv</a>，<a href="https://copymanga.tv/">copymanga.tv</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，PC版有無限捲動模式</td>
+                <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.copymanga.tv/">www.copymanga.tv</a>，<a href="https://copymanga.tv/">copymanga.tv</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，有無限捲動模式(手機版一開始會重複翻一集之後才會正常，原因未知)</td>
             </tr>
             <tr>
                 <td><a href="https://www.baozimh.com/">包子漫画</a></td>
@@ -3093,24 +3093,41 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限捲動模式</td>
             </tr>
             <tr>
+                <td><a href="https://www.veryim.com/">非常爱漫</a></td>
+                <td>有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.mh160.cc/">漫画160</a></td>
+                <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://godamh.com/">GODA漫畫</a></td>
+                <td><a href="https://nav.telltome.net/">发布页
+</a>，news.cocolamanhua.com有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://baozimh.org/">包子漫畫</a></td>
+                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，news.cocolamanhua.com有無限捲動模式</td>
+            </tr>
+            <tr>
                 <td><a href="http://www.guoman8.cc/">国漫吧</a></td>
-                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限捲動模式</td>
+                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，cn.baozimh.one有無限捲動模式</td>
             </tr>
             <tr>
                 <td><a href="https://www.guoman.net/">爱国漫</a></td>
                 <td><a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限捲動模式</td>
             </tr>
             <tr>
+                <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
+                <td>部分漫畫雖然被下架但代碼資料還在，依然能插入圖片，章節混亂重複都不整理，有無限捲動模式</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.shilunart.com/">世伦漫画</a></td>
+                <td>同上</td>
+            </tr>
+            <tr>
                 <td><a href="https://komiic.com/">Komiic</a></td>
                 <td>SPA網頁，只有下載功能</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.mh160.cc/">漫画160</a></td>
-                <td><a href="http://m.mh160.cc/">m.mh160.cc</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.veryim.com/">非常爱漫</a></td>
-                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.iimanhuapi.com/">漫画皮</a></td>
@@ -3200,23 +3217,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.gaonaojin.com/">仙漫网</a></td>
                 <td>預設關閉，<a href="https://m.gaonaojin.com/">m.gaonaojin.com</a></td>
-            </tr>
-            <tr>
-                <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
-                <td>預設關閉，部分漫畫雖然被下架但代碼資料還在，依然能插入圖片</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.shilunart.com/">世伦漫画</a></td>
-                <td>預設關閉，同上</td>
-            </tr>
-            <tr>
-                <td><a href="https://godamh.com/">GODA漫畫</a></td>
-                <td><a href="https://cn.godamanga.site/">cn.godamanga.site</a>，<a href="https://cocomanga.org/">cocomanga.org</a>，<a href="https://nav.telltome.net/">发布页
-</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://baozimh.org/">包子漫畫</a></td>
-                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.2animx.com/">二次元動漫</a></td>
