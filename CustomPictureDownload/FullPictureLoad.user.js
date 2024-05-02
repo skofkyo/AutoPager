@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.1.2
+// @version            2.1.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -256,22 +256,6 @@ https://www.diffchecker.com/text-compare/
             css: false
         },
         css: ".banner-top{display:none!important;}",
-        category: "nsfw2"
-    }, {
-        name: "Nlegs/HoneyLeg www.nlegs.com www.honeyleg.com", //棄用規則，無法完全應對此站的人機驗證，請使用專用腳本 https://greasyfork.org/scripts/463123
-        enable: 0,
-        reg: /(www\.nlegs\.com|www.honeyleg.com)\/(girls|article)\//,
-        init: () => {
-            let loopFind = setInterval(() => {
-                fun.ge(".pagination>li:last-child>a") && (clearInterval(loopFind), fun.getNP("//div[a/div[contains(@style,'thumb') and span]]", "li.active+li>a", null, ".pagination"))
-            }, 100);
-        },
-        imgs: "js;return fun.getImgA('.img-res','a[href*=image]',1);",
-        insertImg: ["//div[div[@class='col-md-2 col-sm-4 col-xs-12']]", 0],
-        customTitle: () => fun.gt("strong"),
-        threading: 1,
-        fetch: 1,
-        //css: ".col-md-2.col-sm-4.col-xs-12{width:1000px!important;height:auto!important;display:block!important;margin:0 auto !important;float: none!important;}",
         category: "nsfw2"
     }, {
         name: "NLegs/HoneyLeg/Lady Lap/Nuyet/LegBabe", //需搭配專用腳本 https://greasyfork.org/scripts/463123
@@ -18236,7 +18220,8 @@ window.parent.postMessage({
                 str_119: "FancyboxV5滾輪圖片縮放",
                 str_120: "此網站分頁檢視使用ViewerJs插件",
                 str_121: "關閉圖片導覽快速鍵",
-                str_122: "此漫畫站使用無限滾動閱讀模式"
+                str_122: "此漫畫站使用無限滾動閱讀模式",
+                str_123: "此網站顯示眼睛圖示和圖片數量"
             };
             break;
         case "zh":
@@ -18364,7 +18349,8 @@ window.parent.postMessage({
                 str_119: "FancyboxV5滚轮图片缩放",
                 str_120: "此网站分页视图使用ViewerJs插件",
                 str_121: "关闭图片导览快捷键",
-                str_122: "此漫画站使用无限滚动阅读模式"
+                str_122: "此漫画站使用无限滚动阅读模式",
+                str_123: "此网站显示眼睛图标和图片数量"
             };
             break;
         default:
@@ -18490,7 +18476,8 @@ window.parent.postMessage({
                 str_119: "FancyboxV5 Wheel Toggle Zoom",
                 str_120: "This Website New Tab View uses ViewerJs Plug-in",
                 str_121: "Turn Off Image Navigation Shortcut Keys",
-                str_122: "This website uses Infinite Scroll Read Mode"
+                str_122: "This website uses Infinite Scroll Read Mode",
+                str_123: "This website Show eye icon and picture number"
             };
             break;
     }
@@ -22366,6 +22353,7 @@ if (newWindowDataViewMode == 1) {
     };
 
     const addnewTabViewButton = () => {
+        if (ge("#FullPictureLoadEye")) return;
         let img = new Image();
         img.id = "FullPictureLoadEye";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
@@ -23844,6 +23832,15 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     }, 1000);
 
+    let FullPictureLoadShowEye = localStorage.getItem("FullPictureLoadShowEye") ?? 1;
+
+    if (siteData?.category != "lazyLoad" && siteData?.capture) {
+        _GM_registerMenuCommand(FullPictureLoadShowEye == 0 ? "❌ " + displayLanguage.str_123 : "✔️  " + displayLanguage.str_123, () => {
+            FullPictureLoadShowEye == 0 ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
+            location.reload();
+        });
+    }
+
     const captureSrc = async () => {
         let num = captureSrcArray.length;
         let imgSrcs = await getImgs(siteData?.capture ?? siteData?.imgs);
@@ -23854,16 +23851,25 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 imagePreloadArray.push(src);
             }
         });
-        if (ge("#FullPictureLoadCaptureNum") && num < captureSrcArray.length) ge("#FullPictureLoadCaptureNum").innerText = captureSrcArray.length;
-        if (lazyLoadPreloadImages == 1) fun.picPreload(imagePreloadArray, "Lazy Load Mode");
+        if (ge("#FullPictureLoadCaptureNum") && num < captureSrcArray.length) {
+            ge("#FullPictureLoadCaptureNum").innerText = captureSrcArray.length;
+        }
+        if (lazyLoadPreloadImages == 1) {
+            fun.picPreload(imagePreloadArray, "Lazy Load Mode");
+        }
     };
 
     if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && siteData?.capture || isString(siteData?.imgs) && !isArray(siteData?.insertImg) || isFn(siteData?.capture) && siteData?.category != "lazyLoad") {
-        if (isFn(siteData?.capture) || isString(siteData?.capture) || isString(siteData?.imgs)) {
-            setTimeout(() => {
+        if (isFn(siteData?.capture) && siteData?.category != "lazyLoad" || isString(siteData?.capture) && siteData?.category != "lazyLoad" || isString(siteData?.imgs) && siteData?.category != "lazyLoad") {
+            if (FullPictureLoadShowEye == 1) {
+                fun.delay(1000, 0);
                 addnewTabViewButton();
                 captureSrc();
-            }, 1000);
+            }
+        }
+        if (siteData?.category === "lazyLoad") {
+            addnewTabViewButton();
+            captureSrc();
         }
         if (siteData?.category === "lazyLoad") {
             fun.addMutationObserver(captureSrc, {
