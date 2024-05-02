@@ -1,10 +1,13 @@
-2024/04/29 22:29
+2024/05/02 21:05
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
 ====================東方永頁機設定excludes====================
 E-Hentai清單頁
 /^https?:\/\/(e-hentai|exhentai)\.org\/(lofi\/)?g\/\w+\/\w+\/$/
+
+DM5/極速閱讀
+/^https?:\/\/(www|tel|en|cnc|hk|m)?\.?(dm5|1kkk)\.(com|cn)\/(m|ch|vol|other)[-_0-9]+\//
 
 Mangabz閱讀
 /^https?:\/\/(www\.)?mangabz\.com\/m\d+(-p\d+)?\//
@@ -15,11 +18,11 @@ Xmanhua閱讀
 yymanhua
 /^https?:\/\/(www\.)?yymanhua\.com\/m\d+(-p\d+)?\//
 
+漫画人
+/^https?:\/\/(www\.)?manhuaren\.com\/m\d+(-p\d+)?\//
+
 漫本閱讀
 /^https?:\/\/(www\.)?manben\.com\/m\d+(-p\d+)?\//
-
-DM5/極速閱讀
-/^https?:\/\/(www|tel|en|cnc|hk|m)?\.?(dm5|1kkk)\.(com|cn)\/(m|ch|vol|other)[-_0-9]+\//
 
 凹凸吧圖片
 /(www\.)?(tuao8?|tumm|\d+mm|luge8?)\.[a-z]{2,3}\/(post|web)\//
@@ -278,9 +281,6 @@ MEITU131
 
 牛图114图库
 *://www.niutu114.com/meinv/*/*/*.html
-
-晴空头像图库
-*.qq7k.com/*/*/*.html
 
 930图片网
 *.930t*.com/*/*/*.html
@@ -778,9 +778,6 @@ Chinese Nude Art Photos
 YouFreeX
 *www.youfreex.com/file/*
 
-Share Cosplay
-*sharecosplay.com*
-
 Hentai Cosplay
 *://www.hentaicos.com/*/*.html
 
@@ -1039,6 +1036,9 @@ Gai.vn
 中国人体艺术模特网
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
+
+Hình ảnh gái
+*://hinhanhgai.com/images/*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
@@ -1633,6 +1633,7 @@ manhuab.com/manhua/*/*.html
 *://*.qyy158.com/info/*/*.html
 
 ====================自用完整黑名單====================
+*m.happymh.com*
 /www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/
 *://ani.gamer.com.tw/animeVideo.php*
 *://*copymanga.site/comic/*/chapter/*
@@ -1954,7 +1955,6 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.zhaotaotu.cc/thread-*.htm
 *://www.umeitu.com/img/*.html
 *://*.jxmm.net/pic/*.html
-*.qq7k.com/*/*/*.html
 *.930t*.com/*/*/*.html
 *://www.superbeautygirlx.com/*/*/*.html
 *://www.meimeimei.org/*/*/
@@ -2263,7 +2263,6 @@ https://www.eyval.net/*
 *://cosxuxi.club/*.html*
 *://redseats.org/gallery/*.cfg*
 *://kkoreaactor.blogspot.com/*/*/*.html*
-*sharecosplay.com*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
 *://ososedki.com/*photos/*
@@ -2278,6 +2277,7 @@ https://www.eyval.net/*
 *://yinaw.com/*.html
 *://www.55comics.com/chapter/*.html
 *://www.55manshu.com/chapter/*.html
+*://hinhanhgai.com/images/*
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
@@ -2318,6 +2318,7 @@ https://www.eyval.net/*
 /^https?://(www\.)?xmanhua\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?yymanhua\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?manben\.com/m\d+(-p\d+)?//
+/^https?:\/\/(www\.)?manhuaren\.com\/m\d+(-p\d+)?\//
 /^https?://(www|tel|en|cnc|hk|m)?\.?(dm5|1kkk)\.(com|cn)/(m|ch|vol|other)[-_0-9]+//
 /(www\.)?(tuao8?|tumm|\d+mm|luge8?)\.[a-z]{2,3}/(post|web)//
 /(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}/m?n\w+\.aspx/
