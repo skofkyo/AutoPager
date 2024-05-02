@@ -141,7 +141,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     },
     observerTitle: true, //觀察元素變化重新取得標題字串，用於SPA網頁
     autoDownload: [1, time], //1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
-    next: "//a[text()="下一章"]", //設定下一頁元素綁定右方向鍵點擊下一頁。
+    next: "//a[text()='下一章']", //設定下一頁元素綁定右方向鍵點擊下一頁。
     next: () => {
         code;
         return link;
@@ -149,7 +149,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     observerURL: true, //觀察URL變化重新取得標題字串和nextLink，用於SPA網頁
     observerNext: true, //觀察元素變化重新取得nextLink
     observerNext: ".read_nav", //指定觀察元素的子元素變化重新取得nextLink
-    prev: "//a[text()="上一章"]", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
+    prev: "//a[text()='上一章']", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //插入自訂樣式，基本上就是用來隱藏廣告用的。
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
     autoClick: ["元素", 1000], //元素,延遲毫秒時間(預設1000)
@@ -160,6 +160,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
     fetch: 1, //使用Fetch API下載圖片，需要網站有支援CORS，如小黃書
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.4khd.com/"或空""
+    infiniteScroll: true, //漫畫類標記有無限滾動模式
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
@@ -299,22 +300,35 @@ fun.ge(selector, doc)
         mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁。
         waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
         loadTime: 200, //mode為1時給iframe框架讀取的時間，預設200可省略。
+        frameCode: `
+            //mode為1時要注入到iframe裡運行的代碼，由於是字串特殊字元需要轉譯，例如\要表達為\\
+            //會改變腳本的frameWindow變量從當前window變為iframe的window
+            //可參照8Comic無限動漫自動翻頁規則的用法
+        `,
         ele: "selector", //下一頁主體元素選擇器
-        ele: (doc) => { 
+        ele: (dom) => { 
             //2種寫法
             //1.創建元素和插入元素皆由此函式完成
             //2.創建元素陣列返回元素陣列，搭配pos決定元素插入位置
-            code
+            code;
+            return [...elements];
         },
         pos: ["selector", 0], //[插入下一頁主體元素的基準元素, 0裡面1之前2之後]，預設為主體元素最後一個之後，可省略。
         next: "selector", //下一頁A元素選擇器
-        next: (doc) => { 
+        next: (dom) => { 
             code;
             return url;
         },
+        getData: () => { 
+            //請求完下一頁後要優先執行的代碼
+            //用於改變globalImgArray、tempNextLink、customTitle，方便後續調用
+            //可參照拷貝漫畫M自動翻頁規則的用法
+            code;
+            return xhr;
+        },
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
-        stop: (doc) => {
+        stop: (dom) => {
             //根據判斷結果返回布林值boolean停止翻頁。
             code;
             if (code) {
@@ -323,7 +337,7 @@ fun.ge(selector, doc)
             return false
         },
         showTitle: 0, //0不顯示下一頁的標題分隔條，顯示則省略。
-        title: (doc) => {
+        title: (dom) => {
             //自定義標題分隔條要顯示的文字，不使用則省略。
             code;
             return titleText
@@ -338,11 +352,11 @@ fun.ge(selector, doc)
         history: 1, //1翻頁後添加瀏覽器歷史紀錄，不需要則省略。
         loading: "msg", //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息
         lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
-        script: "selector", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
-        bF: (doc) => {
+        script: "//script[contains(text(),'eval')]", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
+        bF: (dom) => {
             //插入下一頁元素之前要執行的代碼，不需要則省略
         },
-        aF: (doc) => { 
+        aF: (dom) => { 
              //插入下一頁元素之後要執行的代碼，不需要則省略
         }
     },
@@ -810,7 +824,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/04/29 22:29</p>
+<p>2024/05/02 21:05</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -847,10 +861,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://8se.me/">8色人體攝影</a></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://www5.javsx.com/photos.html">JavSX.com</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -1273,10 +1283,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
-                <td><a href="https://www.qq7k.com/mntp/">晴空头像图库</a></td>
-                <td><a href="https://m.qq7k.com/mntp/">m.qq7k.com</a></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.hexieshe.cn/">和邪社</a></td>
                 <td></td>
             </tr>
@@ -1661,6 +1667,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://hinhanhgai.com/">Hình ảnh gái</a></td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.gai.vn/">Gai.vn</a></td>
                 <td>SPA網頁</td>
             </tr>
@@ -1718,7 +1728,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://sharecosplay.com/">Share Cosplay</a></td>
-                <td>高解析原圖需要下載，聚集的只是預覽圖，分類添加了自動翻頁</td>
+                <td>高解析原圖需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
                 <td><a href="https://cosplayersgonewild.net/">Cosplayers GoneWild</a></td>
@@ -3061,6 +3071,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限捲動模式</td>
             </tr>
             <tr>
+                <td><a href="https://www.manhuaren.com/">漫画人</a></td>
+                <td>Mobile限定，有無限捲動模式</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.mangabz.com/">Mangabz</a></td>
                 <td>PC版向下滾動隱藏工具列，有無限捲動模式</td>
             </tr>
@@ -3110,7 +3124,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 </a>，news.cocolamanhua.com有無限捲動模式</td>
             </tr>
             <tr>
-                <td><a href="https://baozimh.org/">包子漫畫</a></td>
+                <td><a href="https://m.baozimh.one/">包子漫畫新站</a></td>
+                <td>閱讀頁域名是baozimh.one</td>
+            </tr>
+            <tr>
+                <td><a href="https://baozimh.org/">包子漫畫舊站</a></td>
                 <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，cn.baozimh.one有無限捲動模式</td>
             </tr>
             <tr>
@@ -3152,10 +3170,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.hahacomic.com/">哈哈漫画</a></td>
                 <td>漫畫列表添加自動翻頁功能</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.ponpomu.com/">白绒Yuri</a></td>
-                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td><a href="https://terra-historicus.hypergryph.com/">明日方舟泰拉记事社</a></td>
