@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.1.1
+// @version            2.1.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -126,9 +126,9 @@ https://www.diffchecker.com/text-compare/
     };
     //自定義站點規則
     const customData = [{
-        name: "小黃書/8色人體攝影",
-        host: ["xchina.co", "xchina.biz", "xchina.fun", "xchina.life", "8se.me"],
-        reg: /(xchina|8se)\.(co|me|biz|life|fun)\/photo\/id-\w+\.html/,
+        name: "小黃書",
+        host: ["xchina.co", "xchina.biz", "xchina.fun", "xchina.life"],
+        reg: /xchina\.(co|biz|life|fun)\/photo\/id-\w+\.html/,
         include: ".photos>a",
         imgs: async () => {
             if (fun.ge("video[src$='mp4']")) {
@@ -153,6 +153,67 @@ https://www.diffchecker.com/text-compare/
                 await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager", 1100);
             }
             thumbnailsSrcArray = [...fun.gae("img.cr_only")].map(e => e.src);
+            if (parseInt(numP, 10) != thumbnailsSrcArray.length) {
+                setTimeout(() => {
+                    fun.hideMsg();
+                    fun.showMsg("圖片數量不符合，請反饋", 5000);
+                }, 1500)
+            }
+            return thumbnailsSrcArray.map(e => e.replace("_600x0", "").replace(".webp", ".jpg"));
+        },
+        button: [4, "24%", 1],
+        insertImg: [
+            ["//div[div[@class='photos']]/*[last()]", 2, ".pager,.photos"], 2
+        ],
+        customTitle: () => {
+            let s = document.title.split("-");
+            let title = "";
+            if (/未分/.test(s[1])) {
+                title += s[0].trim()
+            } else {
+                title += s[1].trim() + " - ";
+                title += s[0].trim()
+            }
+            return title;
+        },
+        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(a):not(*[class^=fancybox]),.photoMask,.banner_ad{display: none!important;}",
+        topButton: true,
+        //downloadVideo: true,
+        category: "nsfw2"
+    }, {
+        name: "8色人體攝影",
+        host: ["8se.me"],
+        reg: /8se\.me\/photo\/id-\w+\.html/,
+        include: ".photos>a",
+        imgs: async () => {
+            if (fun.ge("video[src$='mp4']")) {
+                const {
+                    videos,
+                    domain
+                } = _unsafeWindow;
+                videosSrcArray = videos.map(e => domain + e.url);
+            }
+            let numP = fun.gt("//i[@class='fa fa-picture-o']/parent::div").match(/\d+/)[0];
+            let max;
+            try {
+                let pageUrls = [...fun.gae(".pager a[href]")].map(e => e.href);
+                pageUrls = [...new Set(pageUrls)];
+                let lastUrl = pageUrls.at(-1);
+                let lastNum = lastUrl.match(/\/(\d+)\.html$/)[1];
+                max = parseInt(lastNum, 10);
+            } catch (e) {
+                max = 1;
+            }
+            if (max > 1) {
+                let links = [siteUrl];
+                let url = siteUrl.replace(".html", "");
+                for (let i = 2; i <= max; i++) {
+                    links.push(url + "/" + i + ".html");
+                }
+                thumbnailsSrcArray = await fun.getImgA("img.cr_only", links);
+            } else {
+                thumbnailsSrcArray = [...fun.gae("img.cr_only")].map(e => e.src);
+            }
             if (parseInt(numP, 10) != thumbnailsSrcArray.length) {
                 setTimeout(() => {
                     fun.hideMsg();
@@ -4589,7 +4650,7 @@ https://www.diffchecker.com/text-compare/
         },
         prev: 1,
         customTitle: () => fun.gt("h1.title"),
-        css: ".aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
+        css: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
         category: "nsfw1"
     }, {
         name: "Hình ảnh gái",
@@ -4599,12 +4660,12 @@ https://www.diffchecker.com/text-compare/
         imgs: ".content img",
         capture: ".content img",
         customTitle: () => fun.gt("h1.title"),
-        css: ".aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
+        css: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
         category: "nsfw1"
     }, {
         name: "Hình ảnh gái 廣告",
         reg: /^https?:\/\/hinhanhgai\.com\//,
-        css: ".aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
+        css: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
         category: "ad"
     }, {
         name: "Gai.vn",
