@@ -888,19 +888,19 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>同格式，<a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，<a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>，<a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a>，<a href="https://redseats.org/">RedSeats.Org</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.12356787.xyz/">极品性感美女</a></td>
-                <td><a href="https://x006.nnnq.bf/">x006.nnnq.bf</a>，<a href="https://www.plmn5.com/">网址发布页</a></td>
+                <td><a href="https://www.321780.xyz/">极品性感美女</a></td>
+                <td><a href="https://x007.qqqv.bf/">x007.qqqv.bf</a>，<a href="https://www.plmn5.com/">网址发布页</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn09.top/">秀人美女網</a></td>
-                <td><a href="https://xrmn9.ooov.bf/">xrmn9.ooov.bf</a></td>
+                <td><a href="https://www.xrmn08.top/">秀人美女網</a></td>
+                <td><a href="https://xiu01.nnnq.bf/">xiu01.nnnq.bf</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.123781.xyz/">秀人集</a></td>
+                <td><a href="https://www.123783.xyz/">秀人集</a></td>
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.ikmn05.top/">爱看美女网</a></td>
+                <td><a href="https://www.ikmn05.xyz/">爱看美女网</a></td>
                 <td>不支持預覽版頁面</td>
             </tr>
             <tr>
@@ -1767,6 +1767,14 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>無法匯出、下載，需要透過快捷鍵複製URL給Motrix下載，來源爬取BITCHES GIRLS。</td>
             </tr>
             <tr>
+                <td><a href="https://bunkr-albums.io/">Bunkr</a></td>
+                <td>影片可匯出網址後用Motrix下載，Referer：https://bunkr.si/，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://vk.com/">VK</a></td>
+                <td>作用在相簿頁，例如：https://vk.com/album-74498063_255021373</td>
+            </tr>
+            <tr>
                 <td><a href="https://fapdungeon.com/">Fapdungeon</a></td>
                 <td></td>
             </tr>
@@ -2100,7 +2108,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://bitchesgirls.com/">BITCHES GIRLS</a></td>
-                <td></td>
+                <td>影片可匯出網址候用Motrix下載</td>
             </tr>
             <tr>
                 <td><a href="https://x-video.tube/albums/">X-video albums</a></td>
@@ -3489,7 +3497,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td>m.4khd.com</td>
-                <td>自動跳轉</td>
+                <td>自動跳轉，擋廣告需加入白名單。</td>
             </tr>
             <tr>
                 <td>4kup.net</td>
