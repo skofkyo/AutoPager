@@ -1768,7 +1768,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://bunkr-albums.io/">Bunkr</a></td>
-                <td>影片可匯出網址後用Motrix下載，Referer：https://bunkr.si/，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁</td>
+                <td>影片可匯出網址後用Motrix下載，<pre>Referer：https://bunkr.si/</pre>，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td><a href="https://vk.com/">VK</a></td>
