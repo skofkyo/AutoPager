@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.1.4
+// @version            2.1.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4673,8 +4673,7 @@ return imgSrcArr.map(e => e.replaceAll("\\u002F", "/"));
         insertImg: ["#content", 2],
         customTitle: () => fun.gt(".nav-breadcrumb>.nav-breadcrumb-item:last-child"),
         fancybox: {
-            v: 3,
-            css: false
+            blacklist: 1
         },
         category: "nsfw1"
     }, {
@@ -6461,6 +6460,41 @@ return imgSrcArr.map(e => e.replaceAll("\\u002F", "/"));
         customTitle: () => fun.gt(".content>h1"),
         category: "nsfw1"
     }, {
+        name: "呦糖社",
+        host: ["www.nicesss.com"],
+        reg: /^https?:\/\/www\.nicesss\.com\/archives\/\w+\/\w+\/\d+\.html$/i,
+        init: () => fun.createImgBox(".entry-content>img[data-srcset],.entry-content>p>img[data-srcset]", 1),
+        imgs: () => [...fun.gae(".entry-content>img[data-srcset],.entry-content>p>img[data-srcset]")].map(e => e.dataset.srcset),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".entry-content>img[data-srcset],.entry-content>p:has(>img[data-srcset])"], 2
+        ],
+        customTitle: () => fun.gt(".entry-title>a").replace(/\[\d+[\w\s\.\/+／]+\]/i, "").trim(),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "nsfw1"
+    }, {
+        name: "呦糖社C+",
+        host: ["www.nicezzz.com", "www.nicekkk.com"],
+        reg: [
+            /^https?:\/\/www\.nicezzz\.com\/archives\/\w+\/\w+\/\d+\.html$/i,
+            /^https?:\/\/www\.nicekkk\.com\/archives\/\w+\/\w+\.html$/i
+        ],
+        init: () => fun.createImgBox(".wp-posts-content>img,.wp-posts-content>p>img", 1),
+        imgs: ".wp-posts-content>img,.wp-posts-content>p>img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".wp-posts-content>img,.wp-posts-content>p:has(>img)"], 2
+        ],
+        customTitle: () => fun.gt(".article-title>a").replace(/\[\d+[\w\s\.\/+／]+\]/i, "").trim(),
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "nsfw1"
+    }, {
         name: "Fliporn",
         host: ["fliporn.biz"],
         reg: /fliporn\.biz\/videos\//,
@@ -6783,6 +6817,86 @@ return imgSrcArr.map(e => e.replaceAll("\\u002F", "/"));
         customTitle: () => fun.gt("#content h1"),
         category: "nsfw1"
     }, {
+        name: "VK",
+        host: ["vk.com"],
+        link: "https://vk.com/album-74498063_255021373",
+        reg: /^https?:\/\/vk\.com\/album-[\d_]+$/,
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let list = window.location.pathname.split("/")[1];
+            let picsNum = document.querySelector(".ui_crumb_count").innerText;
+            let max = Math.ceil(picsNum / 10);
+            let fetchNum = 0;
+            let resArr = [];
+            for (let i = 0; i < picsNum; i += 10) {
+                let res = fetch("https://vk.com/al_photos.php?act=show", {
+                    "headers": {
+                        "content-type": "application/x-www-form-urlencoded",
+                        "x-requested-with": "XMLHttpRequest"
+                    },
+                    "body": `act=show&al=1&direction=1&list=${list}&offset=${i}`,
+                    "method": "POST"
+                }).then(res => res.json()).then(json => {
+                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    return json.payload[1][3].map(e => e.z_src);
+                });
+                resArr.push(res);
+            };
+            return Promise.all(resArr).then(data => data.flat());
+        },
+        capture: () => siteData.imgs(),
+        customTitle: () => fun.gt(".photos_album_intro>h1"),
+        category: "nsfw2"
+    }, {
+        name: "Bunkr",
+        host: ["bunkr.si"],
+        reg: () => fun.lh.includes("bunkr") && /^\/a\/[\w#]+$/i.test(fun.lp),
+        init: () => fun.createImgBox(".grid-images", 2),
+        imgs: async () => {
+            fun.showMsg(displayLanguage.str_01, 0);
+            let xhrNum = 0;
+            let links = [...document.querySelectorAll(".grid-images_box a[href*='/i/']")].map(a => a.href);
+            let resArr = [];
+            for (let i = 0; i < links.length; i++) {
+                let res = fun.xhrDoc(links[i]).then(dom => {
+                    fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
+                    let img = dom.querySelector(".lightgallery>img");
+                    return img ? img.src : null;
+                });
+                resArr.push(res);
+            }
+            let videoLinks = [...document.querySelectorAll(".grid-images_box a[href*='/v/']")].map(a => a.href);
+            let videoResArr = [];
+            for (let i = 0; i < videoLinks.length; i++) {
+                let res = fun.xhrDoc(videoLinks[i]).then(dom => {
+                    let video = dom.querySelector("#player>source");
+                    return video ? video.src : null;
+                });
+                videoResArr.push(res);
+            }
+            videosSrcArray = await Promise.all(videoResArr).then(data => data.filter(item => item));
+            return Promise.all(resArr);
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: () => fun.gt("h1.text-dark"),
+        referer: "https://bunkr.si/",
+        category: "nsfw2"
+    }, {
+        name: "Bunkr 列表自動翻頁",
+        host: ["bunkr-albums.io"],
+        reg: /^https?:\/\/bunkr-albums\.io\//,
+        autoPager: {
+            ele: ".table-auto>tbody",
+            next: "a.bg-gray-300+a",
+            re: ".justify-center",
+            observer: ".table-auto>tbody",
+            history: 1,
+            title: doc => "Page " + fun.ge("a.bg-gray-300", doc).innerText
+        },
+        category: "autoPager"
+    }, {
         name: "Good Sex Porn",
         host: ["goodsexporn.org"],
         reg: /^https?:\/\/goodsexporn\.org\/galleries\/\d+\.html/,
@@ -7100,7 +7214,7 @@ return imgSrcArr.map(e => e.replaceAll("\\u002F", "/"));
         ],
         go: 1,
         css: "a#loadMore,.my-girls-popup-element{display:none!important}",
-        downloadVideo: true,
+        threading: 12,
         category: "nsfw2"
     }, {
         name: "X-video",
@@ -13079,7 +13193,16 @@ if (next) {
             } = _unsafeWindow;
             let fetchNum = 0;
             let resArr = fun.arr(MANGABZ_IMAGE_COUNT).map((_, i) => {
-                let apiUrl = MANGABZ_CURL + `chapterimage.ashx?cid=${MANGABZ_CID}&page=${(i + 1)}&key=&_cid=${MANGABZ_CID}&_mid=${MANGABZ_MID}&_dt=${MANGABZ_VIEWSIGN_DT}&_sign=${MANGABZ_VIEWSIGN}`;
+                let searchParams = new URLSearchParams({
+                    cid: MANGABZ_CID,
+                    page: i + 1,
+                    key: "",
+                    _cid: MANGABZ_CID,
+                    _mid: MANGABZ_MID,
+                    _dt: MANGABZ_VIEWSIGN_DT,
+                    _sign: MANGABZ_VIEWSIGN
+                });
+                let apiUrl = `${MANGABZ_CURL}chapterimage.ashx?${searchParams}`;
                 return fetch(apiUrl).then(res => res.text()).then(res => {
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${MANGABZ_IMAGE_COUNT})`, 0);
                     return fun.run(res)[0];
@@ -13119,7 +13242,16 @@ if (next) {
             let sing = code.match(/MANGABZ_VIEWSIGN[\s\="]+([^"]+)/)[1];
             let resArr = [];
             for (let i = 1; i <= imagesNum; i++) {
-                let api = `${chapterURL}chapterimage.ashx?cid=${cid}&page=${i}&key=&_cid=${cid}&_mid=${mid}&_dt=${dt}&_sign=${sing}`;
+                let searchParams = new URLSearchParams({
+                    cid: cid,
+                    page: i,
+                    key: "",
+                    _cid: cid,
+                    _mid: mid,
+                    _dt: dt,
+                    _sign: sing
+                });
+                let api = `${chapterURL}chapterimage.ashx?${searchParams}`;
                 let res = fetch(api).then(res => res.text()).then(text => {
                     let urlArr = fun.run(text);
                     return urlArr[0];
@@ -13173,7 +13305,16 @@ if (next) {
             } = _unsafeWindow;
             let fetchnUm = 0;
             let resArr = fun.arr(XMANHUA_IMAGE_COUNT).map((_, i) => {
-                let apiUrl = XMANHUA_CURL + `chapterimage.ashx?cid=${XMANHUA_CID}&page=${(i + 1)}&key=&_cid=${XMANHUA_CID}&_mid=${XMANHUA_MID}&_dt=${XMANHUA_VIEWSIGN_DT}&_sign=${XMANHUA_VIEWSIGN}`;
+                let searchParams = new URLSearchParams({
+                    cid: XMANHUA_CID,
+                    page: i + 1,
+                    key: "",
+                    _cid: XMANHUA_CID,
+                    _mid: XMANHUA_MID,
+                    _dt: XMANHUA_VIEWSIGN_DT,
+                    _sign: XMANHUA_VIEWSIGN
+                });
+                let apiUrl = `${XMANHUA_CURL}chapterimage.ashx?${searchParams}`;
                 return fetch(apiUrl).then(res => res.text()).then(res => {
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}(${fetchnUm+=1}/${XMANHUA_IMAGE_COUNT})`, 0);
                     return fun.run(res)[0];
@@ -13213,7 +13354,16 @@ if (next) {
             let sing = code.match(/XMANHUA_VIEWSIGN[\s\="]+([^"]+)/)[1];
             let resArr = [];
             for (let i = 1; i <= imagesNum; i++) {
-                let api = `${chapterURL}chapterimage.ashx?cid=${cid}&page=${i}&key=&_cid=${cid}&_mid=${mid}&_dt=${dt}&_sign=${sing}`;
+                let searchParams = new URLSearchParams({
+                    cid: cid,
+                    page: i,
+                    key: "",
+                    _cid: cid,
+                    _mid: mid,
+                    _dt: dt,
+                    _sign: sing
+                });
+                let api = `${chapterURL}chapterimage.ashx?${searchParams}`;
                 let res = fetch(api).then(res => res.text()).then(text => {
                     let urlArr = fun.run(text);
                     return urlArr[0];
@@ -13265,9 +13415,22 @@ if (next) {
                 DM5_VIEWSIGN
             } = _unsafeWindow;
             let fetchNum = 0;
+            let keyE = fun.ge("#dm5_key");
+            let key = keyE.value;
             let resArr = fun.arr(DM5_IMAGE_COUNT).map((_, i) => {
-                let apiUrl = DM5_CURL + `chapterfun.ashx?cid=${DM5_CID}&page=${(i + 1)}&key=&language=1>k=6&_cid=${DM5_CID}&_mid=${DM5_MID}&_dt=${DM5_VIEWSIGN_DT}&_sign=${DM5_VIEWSIGN}`;
-                return fetch(apiUrl).then(res => res.text()).then(res => {
+                let searchParams = new URLSearchParams({
+                    cid: DM5_CID,
+                    page: i + 1,
+                    key: key,
+                    language: 1,
+                    gtk: 6,
+                    _cid: DM5_CID,
+                    _mid: DM5_MID,
+                    _dt: DM5_VIEWSIGN_DT,
+                    _sign: DM5_VIEWSIGN
+                });
+                let api = `${DM5_CURL}chapterfun.ashx?${searchParams}`;
+                return fetch(api).then(res => res.text()).then(res => {
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${DM5_IMAGE_COUNT})`, 0);
                     return fun.run(res)[0];
                 });
@@ -13303,11 +13466,24 @@ if (next) {
             let chapterURL = code.match(/DM5_CURL[\s\="]+([^"]+)/)[1];
             let cid = code.match(/DM5_CID[\s\=]+(\d+)/)[1];
             let mid = code.match(/DM5_MID[\s\=]+(\d+)/)[1];
-            let dt = encodeURIComponent(code.match(/DM5_VIEWSIGN_DT[\s\="]+([^"]+)/)[1]);
+            let dt = code.match(/DM5_VIEWSIGN_DT[\s\="]+([^"]+)/)[1];
             let sing = code.match(/DM5_VIEWSIGN[\s\="]+([^"]+)/)[1];
+            let keyE = fun.ge("#dm5_key");
+            let key = keyE.value;
             let resArr = [];
             for (let i = 1; i <= imagesNum; i++) {
-                let api = `${chapterURL}chapterfun.ashx?cid=${cid}&page=${i}&key=&language=1&gtk=6&_cid=${cid}&_mid=${mid}&_dt=${dt}&_sign=${sing}`;
+                let searchParams = new URLSearchParams({
+                    cid: cid,
+                    page: i,
+                    key: key,
+                    language: 1,
+                    gtk: 6,
+                    _cid: cid,
+                    _mid: mid,
+                    _dt: dt,
+                    _sign: sing
+                });
+                let api = `${chapterURL}chapterfun.ashx?${searchParams}`;
                 let res = fetch(api).then(res => res.text()).then(text => {
                     let urlArr = fun.run(text);
                     return urlArr[0];
@@ -13400,7 +13576,16 @@ if (next) {
             } = _unsafeWindow;
             let fetchnUm = 0;
             let resArr = fun.arr(YYMANHUA_IMAGE_COUNT).map((_, i) => {
-                let apiUrl = YYMANHUA_CURL + `chapterimage.ashx?cid=${YYMANHUA_CID}&page=${(i + 1)}&key=&_cid=${YYMANHUA_CID}&_mid=${YYMANHUA_MID}&_dt=${YYMANHUA_VIEWSIGN_DT}&_sign=${YYMANHUA_VIEWSIGN}`;
+                let searchParams = new URLSearchParams({
+                    cid: YYMANHUA_CID,
+                    page: i + 1,
+                    key: "",
+                    _cid: YYMANHUA_CID,
+                    _mid: YYMANHUA_MID,
+                    _dt: YYMANHUA_VIEWSIGN_DT,
+                    _sign: YYMANHUA_VIEWSIGN
+                });
+                let apiUrl = `${YYMANHUA_CURL}chapterimage.ashx?${searchParams}`;
                 return fetch(apiUrl).then(res => res.text()).then(res => {
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}(${fetchnUm+=1}/${YYMANHUA_IMAGE_COUNT})`, 0);
                     return fun.run(res)[0];
@@ -13440,7 +13625,16 @@ if (next) {
             let sing = code.match(/YYMANHUA_VIEWSIGN[\s\="]+([^"]+)/)[1];
             let resArr = [];
             for (let i = 1; i <= imagesNum; i++) {
-                let api = `${chapterURL}chapterimage.ashx?cid=${cid}&page=${i}&key=&_cid=${cid}&_mid=${mid}&_dt=${dt}&_sign=${sing}`;
+                let searchParams = new URLSearchParams({
+                    cid: cid,
+                    page: i,
+                    key: "",
+                    _cid: cid,
+                    _mid: mid,
+                    _dt: dt,
+                    _sign: sing
+                });
+                let api = `${chapterURL}chapterimage.ashx?${searchParams}`;
                 let res = fetch(api).then(res => res.text()).then(text => {
                     let urlArr = fun.run(text);
                     return urlArr[0];
@@ -13609,7 +13803,16 @@ if (next) {
                 MH234_VIEWSIGN
             } = _unsafeWindow;
             let resArr = fun.arr(MH234_IMAGE_COUNT).map((_, i) => {
-                let apiUrl = MH234_CURL + `chapterimage.ashx?cid=${MH234_CID}&page=${(i + 1)}&key=&_cid=${MH234_CID}&_mid=${MH234_MID}&_dt=${MH234_VIEWSIGN_DT}&_sign=${MH234_VIEWSIGN}`;
+                let searchParams = new URLSearchParams({
+                    cid: MH234_CID,
+                    page: i + 1,
+                    key: "",
+                    _cid: MH234_CID,
+                    _mid: MH234_MID,
+                    _dt: MH234_VIEWSIGN_DT,
+                    _sign: MH234_VIEWSIGN
+                });
+                let apiUrl = `${MH234_CURL}chapterimage.ashx?${searchParams}`;
                 return fetch(apiUrl).then(res => res.text()).then(res => {
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${MH234_IMAGE_COUNT})`, 0);
                     return fun.run(res)[0];
@@ -13638,6 +13841,7 @@ if (next) {
         name: "动漫之家M",
         host: ["m.idmzj.com"],
         enable: 0,
+        //reg: () => /m\.i?dmzj\.com\/view\/\d+\/\d+\.html/.test(fun.url) && comicInfiniteScrollMode != 1,
         reg: /m\.i?dmzj\.com\/view\/\d+\/\d+\.html/,
         init: "$('body').unbind('keydown');",
         imgs: () => {
@@ -13652,7 +13856,58 @@ if (next) {
         prev: ".beforeChapter",
         customTitle: () => fun.title("-", 1),
         css: "#khdDown,.appTil,#m_r_bottom,#m_r_panelbox,.control_panel.alpha{display:none!important}",
+        //infiniteScroll: true,
         category: "comic"
+    }, {
+        name: "动漫之家M 自動翻頁",
+        enable: 0,
+        reg: () => /m\.i?dmzj\.com\/view\/\d+\/\d+\.html/.test(fun.url) && comicInfiniteScrollMode == 1,
+        getImgs: (dom = document) => {
+            let code = fun.gst("initData", dom);
+            let srcs = fun.run(code.match(/page_url.+(\[.+\])/)[1]);
+            return fun.createImgArray(srcs);
+        },
+        init: async () => {
+            fun.run("$('body').unbind('keydown');");
+            let imgs = siteData.getImgs();
+            let tE = fun.ge("#commicBox");
+            tE.innerHTML = "";
+            tE.append(...imgs);
+            await fun.lazyload();
+        },
+        autoPager: {
+            ele: (dom) => siteData.getImgs(dom),
+            observer: "#commicBox>img",
+            pos: ["#commicBox", 0],
+            next: (dom) => {
+                let code = fun.gst("comic_id", dom).replaceAll('\"', '');
+                let next_chap = code.search(/next_chap/);
+                if (next_chap > -1) {
+                    let cm = code.match(/comic_id:(\d+)/)[1];
+                    let nm = code.match(/next_chap_id:(\d+)/)[1];
+                    return fun.lo + "/view/" + cm + "/" + nm + ".html";
+                } else {
+                    return null;
+                }
+            },
+            stop: (dom) => {
+                if (!fun.ge("//script[contains(text(),'page_url')]", dom)) {
+                    alert(`Full Picture Load\n可能遇到 "请登录后观看！"\n下一頁鏈結：\n${nextLink}`);
+                    return true;
+                }
+                return false;
+            },
+            re: "a.BarTit,.botNav .tc",
+            history: 1,
+            title: (dom) => fun.gt(".BarTit", 1, dom),
+            aF: (dom) => {
+                let code = [...dom.scripts].find(s => s.innerHTML.includes("initData")).innerHTML;
+                code = code.match(/mReader[^;]+;/)[0];
+                fun.script(code, 0, 1);
+            }
+        },
+        css: "#khdDown,.appTil,#m_r_bottom,#m_r_panelbox,.control_panel.alpha{display:none!important}",
+        category: "comic autoPager"
     }, {
         name: "漫畫狗",
         host: ["dogemanga.com"],
@@ -17542,7 +17797,11 @@ window.parent.postMessage({
         host: ["m.4khd.com"],
         reg: /^https?:\/\/m\.4khd\.com\//,
         init: () => {
-            location.href = fun.ge("//a[text()='GET LINK']").href;
+            if (isFn(_unsafeWindow.redirect)) {
+                _unsafeWindow.redirect = null;
+            }
+            fun.css("#divExoLayerWrapper,.exo-ipp,.exo_wrapper,div:has(>.centered-contai),.center-container{display:none!important;}");
+            location.href = fun.ge("//a[text()='GET LINK']|//a[span[text()='GET LINK']]").href;
         },
         category: "none"
     }, {
@@ -20210,6 +20469,9 @@ window.parent.postMessage({
                     doc.body.appendChild(script);
                 }
             }
+            if (siteData.category === "comic autoPager") {
+                script.remove();
+            }
         },
         delay: (time, msg = 1) => {
             if (time > 200 && msg == 1) fun.showMsg(`${displayLanguage.str_21}${time}${displayLanguage.str_22}...`, time);
@@ -21196,7 +21458,7 @@ window.parent.postMessage({
     const getImgs = async selector => {
         isFetching = true;
         let imgs = null;
-        if (ge(".FullPictureLoadImage") && siteData.repeat != 1) {
+        if (ge(".FullPictureLoadImage,.FullPictureLoadVideo") && siteData.repeat != 1) {
             imgs = [...gae(".FullPictureLoadImage:not(.small)")];
         } else if (isFn(selector)) {
             imgs = await selector();
@@ -21296,7 +21558,7 @@ window.parent.postMessage({
         }
         isDownloading = true;
         let imgsSrcArr = await getImgs(selector);
-        if (imgsSrcArr.length > 0 && titleText != null && titleText != "") {
+        if (imgsSrcArr.length > 0 && titleText != null && titleText != "" || videosSrcArray.length > 0) {
             fun.showMsg(displayLanguage.str_55, 0);
             let loopMsg;
             const imgsNum = parseInt(imgsSrcArr.length, 10);
@@ -21310,13 +21572,15 @@ window.parent.postMessage({
             } else {
                 zipFolder = zip.folder(`${title} [${imgsNum}P]`);
             }
-            const padStart = String(imgsSrcArr.length).length;
-            for (let i = 0; i < imgsSrcArr.length; i++) {
-                let picNum = getNum(i, padStart);
-                let promiseBlob;
-                await fun.checkDownloadThread();
-                siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_Download(imgsSrcArr[i], picNum, imgsNum);
-                promiseBlobArray.push(promiseBlob);
+            if (imgsSrcArr.length > 0) {
+                const padStart = String(imgsSrcArr.length).length;
+                for (let i = 0; i < imgsSrcArr.length; i++) {
+                    let picNum = getNum(i, padStart);
+                    let promiseBlob;
+                    await fun.checkDownloadThread();
+                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_Download(imgsSrcArr[i], picNum, imgsNum);
+                    promiseBlobArray.push(promiseBlob);
+                }
             }
             if (videosSrcArray.length > 0 && siteData?.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
                 const padStart = String(videosNum).length;
@@ -21448,7 +21712,7 @@ window.parent.postMessage({
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
-        if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0 && videosSrcArray.length == 0) return showMsg(displayLanguage.str_44);
         let picNum = srcArr.length;
         let titleText = (customTitle || document.title);
         let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
