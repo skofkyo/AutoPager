@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.1.5
+// @version            2.1.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -6462,7 +6462,7 @@ return imgSrcArr.map(e => e.replaceAll("\\u002F", "/"));
     }, {
         name: "呦糖社",
         host: ["www.nicesss.com"],
-        reg: /^https?:\/\/www\.nicesss\.com\/archives\/\w+\/\w+\/\d+\.html$/i,
+        reg: /^https?:\/\/www\.nicesss\.com\/archives\/[\w-]+\/([\w-]+\/)?\d+\.html$/i,
         init: () => fun.createImgBox(".entry-content>img[data-srcset],.entry-content>p>img[data-srcset]", 1),
         imgs: () => [...fun.gae(".entry-content>img[data-srcset],.entry-content>p>img[data-srcset]")].map(e => e.dataset.srcset),
         button: [4],
@@ -6479,8 +6479,8 @@ return imgSrcArr.map(e => e.replaceAll("\\u002F", "/"));
         name: "呦糖社C+",
         host: ["www.nicezzz.com", "www.nicekkk.com"],
         reg: [
-            /^https?:\/\/www\.nicezzz\.com\/archives\/\w+\/\w+\/\d+\.html$/i,
-            /^https?:\/\/www\.nicekkk\.com\/archives\/\w+\/\w+\.html$/i
+            /^https?:\/\/www\.nicezzz\.com\/archives\/[\w-]+\/([\w-]+\/)?\d+\.html$/i,
+            /^https?:\/\/www\.nicekkk\.com\/archives\/[\w-]+\/[\w-]+\.html$/i
         ],
         init: () => fun.createImgBox(".wp-posts-content>img,.wp-posts-content>p>img", 1),
         imgs: ".wp-posts-content>img,.wp-posts-content>p>img",
@@ -6491,7 +6491,7 @@ return imgSrcArr.map(e => e.replaceAll("\\u002F", "/"));
         customTitle: () => fun.gt(".article-title>a").replace(/\[\d+[\w\s\.\/+／]+\]/i, "").trim(),
         fancybox: {
             v: 3,
-            css: false
+            insertLibrarys: 1
         },
         category: "nsfw1"
     }, {
