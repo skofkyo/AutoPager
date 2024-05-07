@@ -19470,13 +19470,13 @@ window.parent.postMessage({
             }
             let script = siteData.autoPager?.script;
             if (isString(script)) {
-                let scripts = [...fun.gae(script, doc, doc)];
-                for (let script of scripts) {
-                    if (script.src !== "") {
-                        let src = script.src;
+                let scripts = [...fun.gae(script, doc)];
+                for (let i = 0; i < scripts.length; i++) {
+                    if (scripts[i].src !== "") {
+                        let src = scripts[i].src;
                         await fun.script(src, 1, 1);
                     } else {
-                        let code = script.innerHTML;
+                        let code = scripts[i].innerHTML;
                         await fun.script(code, 0, 1);
                     }
                 }
@@ -20514,7 +20514,7 @@ window.parent.postMessage({
                     }
                     if (loopNum >= max) {
                         clearInterval(loop);
-                        debug(`fun.waitVar()達循環上限，沒有出現"${key}"物件。`);
+                        debug(`fun.waitVar()達循環上限，沒有出現"${key}"屬性。`);
                         resolve(false);
                     }
                 }, 100);
@@ -21745,7 +21745,7 @@ window.parent.postMessage({
     };
 
     const copyToClipboard = text => {
-        if (!!_unsafeWindow.navigator.clipboard && _unsafeWindow?.isSecureContext) {
+        if (!!_unsafeWindow.navigator.clipboard && _unsafeWindow.isSecureContext) {
             return _unsafeWindow.navigator.clipboard.writeText(text);
         } else {
             let textArea = document.createElement("textarea");
