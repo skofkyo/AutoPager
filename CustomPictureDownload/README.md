@@ -324,7 +324,7 @@ fun.ge(selector, doc)
             //用於改變globalImgArray、tempNextLink、customTitle，方便後續調用
             //可參照拷貝漫畫M自動翻頁規則的用法
             code;
-            return xhr;
+            return new Promise(code);
         },
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
@@ -449,16 +449,10 @@ await fun.delay(time);
 <pre>
 //等待元素async/await
 await fun.waitEle(ele, max = 200, doc = document)
-//間隔100毫秒判斷一次，有元素返回true超過循環次數返回false。
-//所以可以這樣用
-if (await fun.waitEle(ele)) {
-    code
-} else {
-    code
-}
+//間隔100毫秒判斷一次，有元素返回元素超過循環次數返回null。
 </pre>
 <pre>
-//等待變量async/await
+//等待window物件屬性
 await fun.waitVar("declares", max = 200)
 </pre>
 <pre>
@@ -579,24 +573,35 @@ fun.imageBamXHR(url).then(doc => {
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
-fun.xhr(url, type = "text", referer = location.href, ua)
-fun.xhr(url, "document").then(doc => {
-    console.log("測試doc", doc);
-})
-fun.xhr(url, "json").then(json => {
+fun.xhr(url, details = {})
+fun.xhr(url, {
+    responseType: "json"
+}).then(json => {
     console.log("測試json", json);
+})
+fun.xhr(url, {
+    responseType: "blob"
+}).then(blob => {
+    console.log("測試blob", blob);
 })
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
-fun.xhrDoc(url, referer, ua)
+fun.xhrDoc(url, details = {})
+fun.xhrDoc(url, {
+    headers: {
+        "Referer": location.href,
+         "User-Agent": navigator.userAgent
+    }
+})
 fun.xhrDoc(url).then(doc => {
     console.log("測試doc", doc);
 })
 </pre>
 <pre>
 //使用Fetch API，返回經過文字編碼的document，避免字元亂碼。
-fun.fetchDoc(url)
+//無法修改User-Agent
+fun.fetchDoc(url, options = {})
 fun.fetchDoc(url).then(doc => {
     console.log("測試doc", doc);
 })
@@ -857,11 +862,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xchina.biz/">小黃書</a></td>
-                <td><a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.fun/">xchina.fun</a>，<a href="https://xchina.life/">xchina.life</a></td>
+                <td><a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.fun/">xchina.fun</a>，<a href="https://xchina.life/">xchina.life</a>，有Cloudflare防火牆，還限制了訪問頻率的時間，24/5/24改用翻頁模式間隔1500毫秒請求一頁，間隔太短會429錯誤。</td>
             </tr>
             <tr>
                 <td><a href="https://8se.me/">8色人體攝影</a></td>
-                <td></td>
+                <td>應該是爬取小黃書的寫真，聚圖維持併行請求模式，間隔50毫秒發送一個請求。</td>
             </tr>
             <tr>
                 <td><a href="https://www.nlegs.com/">NLegs</a></td>
@@ -889,19 +894,23 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.321780.xyz/">极品性感美女</a></td>
-                <td><a href="https://x007.qqqv.bf/">x007.qqqv.bf</a>，<a href="https://www.plmn5.com/">网址发布页</a></td>
+                <td><a href="https://x007.qqqv.bf/">x007.qqqv.bf</a>，<a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com</td>
             </tr>
             <tr>
                 <td><a href="https://www.xrmn08.top/">秀人美女網</a></td>
-                <td><a href="https://xiu01.nnnq.bf/">xiu01.nnnq.bf</a></td>
+                <td><a href="https://xiu01.nnnq.bf/">xiu01.nnnq.bf</a>，永久域名：Xrmnw.Com  秀人美女.Top</td>
             </tr>
             <tr>
-                <td><a href="https://www.123783.xyz/">秀人集</a></td>
+                <td><a href="https://www.123783.xyz/">秀人集</a>，永久域名Xiurenba.Com及(秀人集.com)</td>
                 <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn05.xyz/">爱看美女网</a></td>
-                <td>不支持預覽版頁面</td>
+                <td>不支持預覽版頁面，永久域名：ikmn.cc</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.plmn5.cc/">漂亮美女网</a></td>
+                <td>不支持預覽版頁面，永久域名：plmn.cc</td>
             </tr>
             <tr>
                 <td><a href="https://www.imn5.vip/">爱美女网</a></td>
@@ -1567,10 +1576,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>圖片服務器屏蔽部分地區需要VPN才能顯示，高解析原圖需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
-                <td><a href="https://imgasd.com/">Imgasd</a></td>
-                <td>預覽圖只給10張，完整需要下載。</td>
-            </tr>
-            <tr>
                 <td><a href="https://blog.baobua.net/mlem">BAOBUA.COM</a></td>
                 <td><a href="https://www.baobua.net/">www.baobua.net</a></td>
             </tr>
@@ -1689,6 +1694,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://tuyetnhan.com/">☆ Ảnh đẹp ☆</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://gaitrung.lovestoblog.com/">Girls Collection 18+!</a></td>
+                <td><a href="https://aigirl.lovestoblog.com/">aigirl.lovestoblog.com</a>，<a href="https://gainhat.lovestoblog.com/">gainhat.lovestoblog.com</a>，<a href="https://hotpic.lovestoblog.com/">hotpic.lovestoblog.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://www.hotgirlpix.com/">Hot Girl Pix</a></td>
@@ -2113,10 +2122,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://x-video.tube/albums/">X-video albums</a></td>
                 <td></td>
-            </tr>
-            <tr>
-                <td><a href="https://ovovo.me/">OVOVO</a></td>
-                <td><a href="https://ame.funi6e.xyz/">ame.funi6e.xyz</a></td>
             </tr>
             <tr>
                 <td><a href="https://adultphotosets.best/">Adult photo sets</a></td>
@@ -3335,10 +3340,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.gougoumh.com/">狗狗漫画</a></td>
                 <td><a href="https://m.gougoumh.com/">m.gougoumh.com</a>，預設關閉</td>
-            </tr>
-            <tr>
-                <td><a href="https://www.77dmh.com/">77动漫</a></td>
-                <td><a href="https://m.77dmh.com/">m.77dmh.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.mhkan.com/">漫画看</a></td>
