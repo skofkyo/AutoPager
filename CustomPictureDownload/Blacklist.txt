@@ -1,4 +1,4 @@
-2024/05/02 21:05
+2024/05/12 23:14
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -286,7 +286,7 @@ MEITU131
 *.930t*.com/*/*/*.html
 
 唯一图库
-*mmonly.cc/*/*/*.html
+*mmonly.com/*/*/*.html
 
 和邪社
 /^https://www\.hexieshe\.cn/\d+/$/
@@ -334,6 +334,9 @@ MEITU131
 /^https?:\/\/(www\.)?ladymao\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
 /^https?:\/\/(www\.)?lazymanpic\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
 /^https?:\/\/(www\.)?youwushow\.net\/pic\/\w+\.html(\?btwaf=\d+)?$/
+
+亚洲色吧
+*://yazhouseba.com/meinv/img-*.html
 
 嘿～色女孩
 *://heysexgirl.com/*
@@ -2051,7 +2054,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://flmh.xyz/chapter_*.html
 *://henduoman.com/chapter-*.html
 *://www.44te.com/chapter/*
-*mmonly.cc/*/*/*.html
+*mmonly.com/*/*/*.html
 *://pic.yesky.com/*/*.shtml
 *://m888.top/*/*.html
 *://www.1000yishu.com/*/*/*/*.html
@@ -2278,6 +2281,7 @@ https://www.eyval.net/*
 *://www.55comics.com/chapter/*.html
 *://www.55manshu.com/chapter/*.html
 *://hinhanhgai.com/images/*
+*://yazhouseba.com/meinv/img-*.html
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
@@ -2317,8 +2321,8 @@ https://www.eyval.net/*
 /^https?://(www\.)?mangabz\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?xmanhua\.com/m\d+(-p\d+)?//
 /^https?://(www\.)?yymanhua\.com/m\d+(-p\d+)?//
-/^https?://(www\.)?manben\.com/m\d+(-p\d+)?//
 /^https?:\/\/(www\.)?manhuaren\.com\/m\d+(-p\d+)?\//
+/^https?://(www\.)?manben\.com/m\d+(-p\d+)?//
 /^https?://(www|tel|en|cnc|hk|m)?\.?(dm5|1kkk)\.(com|cn)/(m|ch|vol|other)[-_0-9]+//
 /(www\.)?(tuao8?|tumm|\d+mm|luge8?)\.[a-z]{2,3}/(post|web)//
 /(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}/m?n\w+\.aspx/
