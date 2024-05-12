@@ -114,12 +114,13 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     init: async () => await fun.waitVar("屬性名"), //等待直至window物件的屬性出現
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
-    //IMG、DIV、A，SPAN，4種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+    //IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
     imgs: () => { //也可自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變量或透過api取得的json。
         code;
         return Array;
     },
     repeat: 1, //重複取得圖片元素，用於SPA網頁
+    thums: ".thums", //Fancybox要用的縮略圖網址選擇器
     scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵6
     scrollEle: async () => {
         …code;
@@ -134,7 +135,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code;
     },
     go: 1, //insertImg配套選項，圖片插入在頁面偏下位置時，捲動至第一張大圖的位置。
-    customTitle: "return text;", //自定義JS代碼生成壓縮檔和資料夾名稱，預設是使用當前網頁標題。
+    customTitle: ".title", //元素選擇器取得元素的字串。
     customTitle: () => {
         code;
         return text;
@@ -192,6 +193,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code
     },
     repeat: 1,
+    thums: ".thums",
     scrollEle: ["", 500],
     scrollEle: async () => {
         …code;
@@ -205,7 +207,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         code
     },
     go: 1,
-    customTitle: "code",
+    customTitle: "",
     customTitle: () => {
         code
     },
@@ -319,12 +321,12 @@ fun.ge(selector, doc)
             code;
             return url;
         },
-        getData: () => { 
+        getData: async () => { 
             //請求完下一頁後要優先執行的代碼
             //用於改變globalImgArray、tempNextLink、customTitle，方便後續調用
             //可參照拷貝漫畫M自動翻頁規則的用法
             code;
-            return new Promise(code);
+            return Promise;
         },
         re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
         observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
@@ -349,7 +351,7 @@ fun.ge(selector, doc)
         },
         bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設為當前視窗可視範圍的高度screen.height可省略。
         sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略。
-        history: 1, //1翻頁後添加瀏覽器歷史紀錄，不需要則省略。
+        history: 1, //1翻頁後添加瀏覽器歷史紀錄，0不添加，預設1可省略。
         loading: "msg", //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息
         lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
         script: "//script[contains(text(),'eval')]", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
@@ -375,10 +377,20 @@ fun.ge("selector", doc);
 fun.ge("selector", node);
 </pre>
 <pre>
-//返回所有指定元素，支持CSS/Xpath選擇器
+//返回指定的所有元素陣列，支持CSS/Xpath選擇器
 fun.gae("selector");
 fun.gae("selector", doc);
 fun.gae("selector", node);
+</pre>
+<pre>
+//取得指定的A元素的href
+fun.gu("selector");
+fun.gu("selector", doc);
+</pre>
+<pre>
+//取得指定的所有A元素的href陣列
+fun.gau("selector");
+fun.gau("selector", doc);
 </pre>
 <pre>
 //取得元素的字串
@@ -498,6 +510,15 @@ fun.addUrlHtml(url, ele, pos, text)
 //2在元素裡面，最後一個子元素之後
 //3在元素裡面，第一個子元素之前。
 //text 字串
+</pre>
+<pre>
+//創建fun.script(string, number, number, doc = document)
+//返回script
+fun.script("code",0,0)
+//插入到document.body
+fun.script("code",0,1)
+//src插入到document.body
+fun.script("srcUrl",1,1)
 </pre>
 <pre>
 //依序滾動元素
@@ -629,6 +650,34 @@ await fun.iframeSrcDoc(url, ele);
 //使用iframe框架，等待至指定的declares出現，返回iframe框架的contentWindow。
 let iframe = await fun.iframeVar(url, time = 1000, "declares");
 let _declares = iframe.declares;
+</pre>
+<pre>
+const details = {
+    loadTime: 1000,
+    waitEle: "img",
+    waitVar: "newImgs",
+    cb: async (dom, frame) => {
+        console.log(dom); //iframe的document
+        console.log(frame); //iframe的contentWindow
+        //同源可以先行對iframe注入代碼，修改contentWindow屬性，修改document元素
+    }
+}
+const iframe = await fun.iframe(url, details);
+const {
+    dom, //iframe的document
+    frame //iframe的contentWindow
+} = iframe;
+const srcs = frame.newImgs;
+console.log(srcs);
+
+fun.iframe(url, details).then(object => {
+    const {
+        dom,
+        frame
+    } = object;
+    console.log(dom);
+    console.log(frame);
+});
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片
@@ -829,7 +878,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/02 21:05</p>
+<p>2024/05/12 23:14</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -862,11 +911,11 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://xchina.biz/">小黃書</a></td>
-                <td><a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.fun/">xchina.fun</a>，<a href="https://xchina.life/">xchina.life</a>，有Cloudflare防火牆，還限制了訪問頻率的時間，24/5/24改用翻頁模式間隔1500毫秒請求一頁，間隔太短會429錯誤。</td>
+                <td><a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.fun/">xchina.fun</a>，<a href="https://xchina.life/">xchina.life</a></td>
             </tr>
             <tr>
                 <td><a href="https://8se.me/">8色人體攝影</a></td>
-                <td>應該是爬取小黃書的寫真，聚圖維持併行請求模式，間隔50毫秒發送一個請求。</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.nlegs.com/">NLegs</a></td>
@@ -901,8 +950,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://xiu01.nnnq.bf/">xiu01.nnnq.bf</a>，永久域名：Xrmnw.Com  秀人美女.Top</td>
             </tr>
             <tr>
-                <td><a href="https://www.123783.xyz/">秀人集</a>，永久域名Xiurenba.Com及(秀人集.com)</td>
-                <td></td>
+                <td><a href="https://www.123783.xyz/">秀人集</a></td>
+                <td>永久域名Xiurenba.Com及(秀人集.com)</td>
             </tr>
             <tr>
                 <td><a href="https://www.ikmn05.xyz/">爱看美女网</a></td>
@@ -1276,6 +1325,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td><a href="https://5zipai.com/">5zipai.com</a></td>
             </tr>
             <tr>
+                <td><a href="https://cgdd.net/">吃瓜大队</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://taotu.org/">套圖TAOTU.ORG</a></td>
                 <td><a href="https://taotu.org/m/">taotu.org/m/</a></td>
             </tr>
@@ -1296,8 +1349,8 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://www.mmonly.cc/mmtp/">唯一图库</a></td>
-                <td><a href="https://m.mmonly.cc/mmtp/">m.mmonly.cc</a></td>
+                <td><a href="https://www.mmonly.com/mmtp/">唯一图库</a></td>
+                <td><a href="https://m.mmonly.com/mmtp/">m.mmonly.com</a></td>
             </tr>
             <tr>
                 <td><a href="https://pic.yesky.com/">天极图片</a></td>
@@ -2548,10 +2601,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>作用在圖片清單/閱讀頁</td>
             </tr>
             <tr>
-                <td><a href="https://hentairead.com/">HentaiRead</a></td>
-                <td>作用在圖片清單/閱讀頁</td>
-            </tr>
-            <tr>
                 <td><a href="https://hentairox.com/">HentaiRox</a></td>
                 <td>作用在圖片清單/閱讀頁</td>
             </tr>
@@ -2573,6 +2622,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://3hentai.net/">3hentai</a></td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://hentaivsmanga.com/">HENTAIVSMANGA</a></td>
                 <td>作用在圖片清單/閱讀頁</td>
             </tr>
             <tr>
@@ -2636,12 +2689,20 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td>作用在圖片清單頁</td>
             </tr>
             <tr>
+                <td><a href="https://www.hentaicredo.com/">HENTAICREDO.COM</a></td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
                 <td><a href="https://lhentai.com/">lHentai</a></td>
                 <td>作用在圖片清單/閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://tmohentai.com/">TMOHentai</a></td>
                 <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://hentairead.com/">HentaiRead</a></td>
+                <td>作用在閱讀頁</td>
             </tr>
             <tr>
                 <td><a href="https://hentai2read.com/">Hentai2Read</a></td>
@@ -2658,6 +2719,26 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://hitomi.la/">Hitomi.la</a></td>
                 <td>作用在閱讀頁</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.hentaiset.com/">HENTAISET.COM</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://hentaivid.net/">HENTAIVID.NET</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.hentaiceleb.com/">HENTAICELEB.COM</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://neko-hentai.net/">Neko Hentai</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://superhentai.blog/">Super Hentai</a></td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://ero-comic-hunter.net/luck">同人エロ漫画・エロ同人誌ならエロコミックハンター</a></td>
@@ -3042,8 +3123,9 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
 <p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
 <p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 勾選啟用當前漫畫站點規則 > 保存設定</p>
-<p>2023/11/25 絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
-<p>2024/04/27 為一些常用連線品質較好的網站，添加無限捲動(自動翻頁)閱讀功能，透過腳本管理器選單開啟。</p>
+<p>2023/11/25 常規模式，絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
+<p>2024/04/27 為一些常用連線品質較好的網站，添加無限捲動模式(自動翻頁)閱讀功能，透過腳本管理器選單開啟。</p>
+<p>2024/05/10 無限捲動模式增加了預讀下一話和圖片的功能，讓翻頁更流暢。</p>
 <details>
     <summary><kbd><strong>「 點擊展開查看 」</strong></kbd></summary>
 <br>
@@ -3057,7 +3139,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
         <tbody>
             <tr>
                 <td><a href="https://www.comicabc.com/">8Comic無限動漫</a></td>
-                <td><a href="https://m.comicbus.com/">m.comicbus.com</a>，有無限捲動模式</td>
+                <td><a href="https://m.comicbus.com/">m.comicbus.com</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.copymanga.site/">拷貝漫畫</a></td>
@@ -3065,76 +3147,76 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.baozimh.com/">包子漫画</a></td>
-                <td>有無限捲動模式</td>
+                <td>有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
-                <td><a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>，<a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限捲動模式</td>
+                <td><a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>，<a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://cocomanga.xyz/">COCOMANGA</a></td>
-                <td>有無限捲動模式，山寨Manhuagui，圖片載入很慢。</td>
+                <td>有無限捲動模式加預讀，山寨Manhuagui，圖片載入很慢。</td>
             </tr>
             <tr>
                 <td><a href="https://www.dm5.com/">DM5</a></td>
-                <td><a href="https://m.dm5.com/">m.dm5.com</a>，有無限捲動模式</td>
+                <td><a href="https://m.dm5.com/">m.dm5.com</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://hk.1kkk.com/">極速</a></td>
-                <td><a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限捲動模式</td>
+                <td><a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.manhuaren.com/">漫画人</a></td>
-                <td>Mobile限定，有無限捲動模式</td>
+                <td>Mobile限定，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.mangabz.com/">Mangabz</a></td>
-                <td>PC版向下滾動隱藏工具列，有無限捲動模式</td>
+                <td>PC版向下滾動隱藏工具列，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://xmanhua.com/">Xmanhua</a></td>
-                <td>PC版向下滾動隱藏工具列，有無限捲動模式</td>
+                <td>PC版向下滾動隱藏工具列，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.yymanhua.com/">yymanhua</a></td>
-                <td>PC版向下滾動隱藏工具列，有無限捲動模式</td>
+                <td>PC版向下滾動隱藏工具列，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.cartoonmad.com/">動漫狂</a></td>
-                <td><a href="https://www.cartoonmad.com/m/">動漫狂M</a>，有無限捲動模式</td>
+                <td><a href="https://www.cartoonmad.com/m/">動漫狂M</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="http://www.manhuadb.com/">漫画DB</a></td>
-                <td>有無限捲動模式</td>
+                <td>有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="http://www.manmanju.cc/">漫漫聚</a></td>
-                <td><a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式</td>
+                <td><a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.ikukudm.cc/">KuKu动漫</a></td>
-                <td><a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式</td>
+                <td><a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限捲動模式加預讀</td>
             <tr>
                 <td><a href="https://www.gufengmh9.com/">古风漫画网</a></td>
-                <td><a href="https://m.gufengmh9.com/">m.gufengmh9.com</a>，<a href="https://www.gf618.com/">www.gf618.com</a>，有無限捲動模式</td>
+                <td><a href="https://m.gufengmh9.com/">m.gufengmh9.com</a>，<a href="https://www.gf618.com/">www.gf618.com</a>，有無限捲動模式加預讀</td>
             </tr>
             </tr>
             <tr>
                 <td><a href="https://www.laimanhua8.com/">来漫画</a></td>
-                <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限捲動模式</td>
+                <td><a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.veryim.com/">非常爱漫</a></td>
-                <td>有無限捲動模式</td>
+                <td>有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.mh160.cc/">漫画160</a></td>
-                <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限捲動模式</td>
+                <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://godamh.com/">GODA漫畫</a></td>
                 <td><a href="https://nav.telltome.net/">发布页
-</a>，news.cocolamanhua.com有無限捲動模式</td>
+</a>，news.cocolamanhua.com有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://m.baozimh.one/">包子漫畫新站</a></td>
@@ -3142,19 +3224,19 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://baozimh.org/">包子漫畫舊站</a></td>
-                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，cn.baozimh.one有無限捲動模式</td>
+                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，cn.baozimh.one有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="http://www.guoman8.cc/">国漫吧</a></td>
-                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限捲動模式</td>
+                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.guoman.net/">爱国漫</a></td>
-                <td><a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限捲動模式</td>
+                <td><a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.dashumanhua.com/">大树漫画</a></td>
-                <td>部分漫畫雖然被下架但代碼資料還在，依然能插入圖片，章節混亂重複都不整理，有無限捲動模式</td>
+                <td>部分漫畫雖然被下架但代碼資料還在，依然能插入圖片，章節混亂重複都不整理，有無限捲動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.shilunart.com/">世伦漫画</a></td>
