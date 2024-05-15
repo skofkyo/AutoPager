@@ -1,15 +1,17 @@
 <h1>測試通過環境：</h1>
 <pre>
+2024/05/15
 PC
-Chrome 123.0.6312.106 + Tampermonkey 5.1.0
-Edge 123.0.2420.65 + Tampermonkey 5.0.1
-Cent Browser 5.1.1130.26 + Tampermonkey 5.1.0
-FireFox 124.0.2 + Tampermonkey 5.1.0
+Chrome 124.0.6367.208 + Tampermonkey 5.1.1
+Edge 124.0.2478.105 + Tampermonkey 5.1.1
+Cent Browser  5.1.1130.82 + Tampermonkey 5.1.1
+FireFox 126.0 + Tampermonkey 5.1.1
 Android
-Kiwi Browser 124.0.6327.1 + Tampermonkey 5.1.0
-Firefox for Android 124.2.0 + Tampermonkey 5.1.0
-Waterfox for Android 1.0.6 + Tampermonkey 5.1.0
+Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1
+Firefox for Android 126.0 + Tampermonkey 5.1.1
+Waterfox for Android 1.0.7 + Tampermonkey 5.1.1
 </pre>
+<p>暴力猴Violentmonkey不兼容Fancybox5會報錯，連Android上的Via瀏覽器、X瀏覽器都能正常引入使用Fancybox5了。</p>
 <h1>提醒：</h1>
 <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
 <p>請自行修改腳本將所有cdn.jsdelivr.net替換成cdn.bootcdn.net</p>
@@ -40,17 +42,6 @@ cdn.bootcdn.net
 // @resource ViewerJsCss https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.css
 </pre>
 <br>
-<p>2023/11/06</p>
-<p>腳本1.6.0+版本使用Fancybox5.0.24後，暴力猴Violentmonkey會報錯。</p>
-<p>如果用戶堅持使用暴力猴Violentmonkey，腳本1.6.3+的版本只需用戶自己修改</p>
-<pre>
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-</pre>
-改成
-<pre>
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
-</pre>
-<p>應該就能正常使用了，相當於用戶自己降低Fancybox的版本，Fancybox的css會自動注入3.5.7版。</p>
 <p>2023/11/03</p>
 <p>1.6.0開始Fancybox從3.5.7升級至5.0.24，部分網站依然調用3.5.7，網站如果有自帶LIGHTBOX之類的插件，則不調用腳本的Fancybox避免各種衝突，如有遇到FancyboxV5版圖片沒有置中錯位偏右請反饋。</p>
 <p>2023/10/24</p>
@@ -373,24 +364,28 @@ fun.ge(selector, doc)
 <pre>
 //返回一個指定元素，支持CSS/Xpath選擇器
 fun.ge("selector");
-fun.ge("selector", doc);
+fun.ge("selector", doc = document);
 fun.ge("selector", node);
+fun.ge(String, HTMLDocument || HTMLElement);
 </pre>
 <pre>
 //返回指定的所有元素陣列，支持CSS/Xpath選擇器
 fun.gae("selector");
-fun.gae("selector", doc);
+fun.gae("selector", doc = document);
 fun.gae("selector", node);
+fun.gae(String, HTMLDocument || HTMLElement);
 </pre>
 <pre>
 //取得指定的A元素的href
 fun.gu("selector");
-fun.gu("selector", doc);
+fun.gu("selector", doc = document);
+fun.gu(String, HTMLDocument || HTMLElement);
 </pre>
 <pre>
 //取得指定的所有A元素的href陣列
 fun.gau("selector");
-fun.gau("selector", doc);
+fun.gau("selector", doc = document);
+fun.gau(String, HTMLDocument || HTMLElement);
 </pre>
 <pre>
 //取得元素的字串
@@ -399,15 +394,18 @@ fun.gau("selector", doc);
 //2返回指定元素的上一個元素的字串
 //3返回指定元素的上上一個元素的字串
 fun.gt("selector", mode = 1, doc = document);
+fun.gt(String, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得非src腳本的字串
 //searchValue，關鍵字串或正則表達式
 fun.gst(searchValue, doc = document);
+fun.gst(String or RegExp, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得元素屬性的值
-fun.attr("selector","屬性", doc = document)
+fun.attr("selector","屬性", doc = document);
+fun.attr(String, String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //創建一個DIV用來放圖片，#FullPictureLoadMainImgBox
@@ -415,11 +413,13 @@ fun.attr("selector","屬性", doc = document)
 //pos 1，插入在指定的元素之前
 //pos 2，插入在指定的元素之後
 fun.createImgBox(selector, pos = 0);
+fun.createImgBox(String, Number);
 </pre>
 <pre>
 //返回元素的圖片網址陣列
 fun.getImgSrcArr("selector", doc = document);
-fun.getImgSrcArr([圖片元素陣列]);
+fun.getImgSrcArr(String, HTMLDocument or HTMLElement);
+fun.getImgSrcArr(Array [HTMLImageElement]);
 </pre>
 <pre>
 //對document.title的字串修改
@@ -428,63 +428,76 @@ fun.getImgSrcArr([圖片元素陣列]);
 //1返回【字串切割取[0]去前後空白】
 //2返回【字串切割[0] + "字串" + 字串切割[1]】
 //3返回【字串切割[1] + "字串" + 字串切割[0]】
-fun.title("字串", mode, doc = document)
+fun.title("字串", mode, doc = document);
+fun.title(String or RegExp, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //觀察元素變化執行callback
 fun.addMutationObserver(callback, config = MutationObserverConfig, node = document.body);
+fun.addMutationObserver(Function or AsyncFunction, Object, HTMLElement);
 </pre>
 <pre>
 //將字串解析成document物件
 //搭配fetch(url).then(res => res.text())返回的原始碼使用
-fun.doc("字串")
+fun.doc("字串");
+fun.doc(String);
 fetch(url).then(res => res.text()).then(text => {
     let doc = fun.doc(text);
-    let ele = fun.ge(ele, doc);
-    return ele
+    let ele = fun.ge("selector", doc);
+    return ele;
 })
 </pre>
 <pre>
 //將字串解析成xml物件
-fun.xml("字串")
+fun.xml("字串");
+fun.xml(String);
 </pre>
 <pre>
 //顯示簡短訊息
 fun.showMsg("字串",1000(顯示的時間,0持續顯示));
+fun.showMsg(String, Number);
+</pre>
+<pre>
 //隱藏簡短訊息
 fun.hideMsg();
 </pre>
 <pre>
 //延遲運行async/await
-await fun.delay(time);
+await fun.delay(time, msg = 1);
+fun.delay(Number, Number);
 </pre>
 <pre>
 //等待元素async/await
-await fun.waitEle(ele, max = 200, doc = document)
 //間隔100毫秒判斷一次，有元素返回元素超過循環次數返回null。
+await fun.waitEle("selector", max = 200, doc = document);
+fun.waitEle(String, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //等待window物件屬性
-await fun.waitVar("declares", max = 200)
+await fun.waitVar("declares", max = 200);
+fun.waitVar(String, Number);
 </pre>
 <pre>
 //功能基本等同eval()
-fun.run("代碼")
+fun.run("code");
+fun.run(String);
 </pre>
 <pre>
 //創建空陣列，取代[] for push()的寫法
 //num陣列的長度
-fun.arr(num)
+fun.arr(num);
 fun.arr(num).map((_, i) => {
     return (i+1);
 });
+fun.arr(Number);
 </pre>
 <pre>
 //移除元素
 fun.remove("selector", time = 0)
 //如果需要多個選擇器並且CSS/Xpath混寫可寫成數組
 let selectors = ["cssSelector" , "XpathSelector"]
-fun.remove(selectors, time = 0)
+fun.remove(selectors, time = 0);
+fun.remove(String or Array, Number);
 </pre>
 <pre>
 //清除所有setTimeout&setInterval定時器
@@ -493,23 +506,26 @@ fun.remove(selectors, time = 0)
 //mode1，Function.prototype.constructor = () => {};
 //mode2，只清setTimeout;
 //mode3，只清setInterval;
-fun.clearAllTimer(mode);
+fun.clearAllTimer(mode = 0);
+fun.clearAllTimer(Number);
 </pre>
 <pre>
 //插入樣式，需要先用JS判斷的情況用這個
-fun.css("css")
+fun.css("css");
+fun.css(String);
 </pre>
 <pre>
-//插入A元素
-fun.addUrlHtml(url, ele, pos, text)
+//插入A元素;
 //url 網址
-//ele 元素選擇器
+//selector 元素選擇器
 //pos
 //0在元素之前
 //1在元素之後
 //2在元素裡面，最後一個子元素之後
 //3在元素裡面，第一個子元素之前。
 //text 字串
+fun.addUrlHtml("url", "selector", pos = 0, "text");
+fun.addUrlHtml(String, String, Number, String);
 </pre>
 <pre>
 //創建script元素
@@ -525,7 +541,8 @@ fun.script("srcUrl",1,1)
 //依序滾動元素
 //selector 元素選擇器
 //ms 滾動的間隔時間
-fun.scrollEles(selector, ms = 100)
+fun.scrollEles("selector", ms = 100);
+fun.scrollEles(String, Number);
 
 //依序滾動元素EX
 //selector 元素選擇器
@@ -533,7 +550,8 @@ fun.scrollEles(selector, ms = 100)
 //time判斷逾時的時間
 let callback = (ele) => fun.ge("img[src]", ele); //ele參數為捲動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
 let callback = (img) => /^blob/.test(img.src);//此例為判斷元素的src屬性是否已經轉為BlobURL
-fun.aotoScrollEles(selector, callback, time = 5000)
+fun.aotoScrollEles("selector", callback, time = 5000);
+fun.aotoScrollEles(String, Function or AsyncFunction, Number);
 </pre>
 <pre>
 //確認圖片狀態屬性 返回一個obj
@@ -544,103 +562,114 @@ ok:true/false,成功讀取true失敗false
 width:width,//成功返回圖片寬屬性
 height:height//成功返回圖片高屬性
 }
+fun.checkImgStatus(String);
 </pre>
 <pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得，無法繪製跨域的圖片，會出現跨域汙染的錯誤。
-//ele，canvas、img元素選擇器
+//selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
 //quality 壓縮比率 0 ~ 1
 //返回BlobURL
-fun.imgToBlobURL(ele, type = "image/jpeg", quality = 1);
 //範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
+fun.imgToBlobURL("selector", type = "image/jpeg", quality = 1);
+fun.imgToBlobURL(String, String, Number);
 </pre>
 <pre>
 //包裝fun.imgToBlobURL函式。
-//ele，canvas、img元素選擇器
+//selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
 //quality 壓縮比率 0 ~ 1
 //返回BlobURL陣列
-fun.imgBlobArr(ele, type = "image/jpeg", quality = 1);
 //範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]");
 //範例2：fun.imgBlobArr(".image>img");
+fun.imgBlobArr("selector", type = "image/jpeg", quality = 1);
+fun.imgBlobArr(String, String, Number);
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
 //只取得回應標頭，不接收完整資料，快速確認鏈結的存活狀態。
-fun.xhrHEAD(url);
-let res = await fun.xhrHEAD(url);
+fun.xhrHEAD("url");
+let status = await fun.xhrHEAD("url").then(res => res.status);
+let res = await fun.xhrHEAD("url");
 let status = res.status;
 if (status == 200) {
     code
 } else if (status == 404) {
     code
 }
+fun.xhrHEAD(String);
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
 //傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址
 //imx.to、imagebam、postimg...等等
-fun.getImageHost([links])
+fun.getImageHost([links]);
+fun.getImageHost(Array);
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
-fun.xhr(url, details = {})
-fun.xhr(url, {
+fun.xhr("url", details = {});
+fun.xhr("url", {
     responseType: "json"
 }).then(json => {
     console.log("測試json", json);
 })
-fun.xhr(url, {
+fun.xhr("url", {
     responseType: "blob"
 }).then(blob => {
     console.log("測試blob", blob);
 })
+fun.xhr(String, Object);
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
-fun.xhrDoc(url, details = {})
-fun.xhrDoc(url, {
+fun.xhrDoc("url", details = {})
+fun.xhrDoc("url", {
     headers: {
         "Referer": location.href,
          "User-Agent": navigator.userAgent
     }
 })
-fun.xhrDoc(url).then(doc => {
+fun.xhrDoc("url").then(doc => {
     console.log("測試doc", doc);
 })
+fun.xhrDoc(String, Object);
 </pre>
 <pre>
 //使用Fetch API，返回經過文字編碼的document，避免字元亂碼。
 //無法修改User-Agent
-fun.fetchDoc(url, options = {})
-fun.fetchDoc(url).then(doc => {
+fun.fetchDoc("url", details = {});
+fun.fetchDoc("url").then(doc => {
     console.log("測試doc", doc);
 })
+fun.fetchDoc(String, Object);
 </pre>
 <pre>
 //使用iframe框架，返回iframe框架的document。
-//ele元素選擇器指定等待到元素出現(必須)
+//selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
-let callback = (doc, fun) => { //參數doc為iframe的document,fun為可調用的函式庫物件
+let callback = (doc) => { //參數doc為iframe的document
 自由發揮
 }
-await fun.iframeDoc(url, ele, time = 5000, callback);
+await fun.iframeDoc("url", "selector", time = 5000, callback);
+fun.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
 //使用Fetch API搭配iframe框架，返回iframe框架的document。
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
 //ele元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
-let callback = (doc, fun) => { //參數doc為iframe的document,fun為可調用的函式庫物件
+let callback = (doc) => { //參數doc為iframe的document
 自由發揮
 }
-await fun.iframeSrcDoc(url, ele, time = 5000, callback);
+await fun.iframeSrcDoc("url", "selector", time = 5000, callback);
+fun.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
 //使用iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
-let iframe = await fun.iframeVar(url, time = 1000, "declares");
-let _declares = iframe.declares;
+let iframe = await fun.iframeVar("url", time = 1000, "declares");
+fun.iframeVar(String, Number, String);
 </pre>
 <pre>
 //讓用iframe框架能像fetch的寫法
@@ -654,7 +683,7 @@ const details = {
         //同源可以先行對iframe注入代碼，修改contentWindow屬性，修改document元素
     }
 }
-const iframe = await fun.iframe(url, details);
+const iframe = await fun.iframe("url", details);
 const {
     dom, //iframe的document
     frame //iframe的contentWindow
@@ -662,7 +691,7 @@ const {
 const srcs = frame.newImgs;
 console.log(srcs);
 
-fun.iframe(url, details).then(object => {
+fun.iframe("url", details).then(object => {
     const {
         dom,
         frame
@@ -670,23 +699,28 @@ fun.iframe(url, details).then(object => {
     console.log(dom);
     console.log(frame);
 });
+
+fun.iframe(String, Object);
 </pre>
 <pre>
 //xhr抓取元素，不局限於圖片
 //links網址陣列
-//eles要抓的元素
+//selector要抓的元素
 //"targetEle"清空此元素放入allEle
 //["targetEle", pos] 此元素位置pos，0裡面1之前2之後
 //time請求發送的間隔毫秒
-await fun.getEle(links, eles, targetEle, removeEle = null, time = 100)
+await fun.getEle(links, "selector", targetEle, removeEle = null, time = 100);
+fun.getEle(Array, String, String or Array [String, Number], String or null, Number);
 //跨域
-await fun.getCorsEle(links, eles, targetEle, removeEle = null, time = 100)
+await fun.getCorsEle(links, "selector", targetEle, removeEle = null, time = 100);
+fun.getCorsEle(Array, String, String or Array [String, Number], String or null, Number);
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
 //max填入用fun.gt()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 fun.getImg("圖片元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
-fun.getImg(ele, max, mode = 1, rText = [null, null], time = 100)
+fun.getImg("img selector", max, mode = 1, rText = [null, null], time = 100);
+fun.getImg(String, Number, Number, Array [String or RegExp, String] or null, Number);
 //網址頁碼數字遞增模式
 //第一頁 ==> 第二頁
 mode1(預設)
@@ -742,18 +776,20 @@ mode20
  ==> -p-2
 
 //獨立出來的可調用函式，返回修改後的鏈結
-fun.getModeUrl(url, mode, num)
+fun.getModeUrl("url", mode, num);
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址
 //fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
 fun.getImgO("圖片元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
-fun.getImgO(img, maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
+fun.getImgO("img selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
+fun.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
 </pre>
 <pre>
 //fun.getImgIframe基本同fun.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
 fun.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
-fun.getImgIframe(img, max, mode, paginationEle, time, showMsg)
+fun.getImgIframe("img selector", max, mode, paginationEle = null, time = 1000, showMsg = 1)
+fun.getImgIframe(String, Number, Number, String or  null, Number, Number)
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址
@@ -765,14 +801,16 @@ fun.getImgIframe(img, max, mode, paginationEle, time, showMsg)
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
 fun.getImgA("圖片元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
-fun.getImgA(img, A, mode = 0, rText = [null, null], showMsg = 1)
-fun.getImgA("圖片元素選擇器", "A元素選擇器")
-fun.getImgA("圖片元素選擇器", [網址陣列])
+fun.getImgA("img selector", "a selector", mode = 0, rText = [null, null], showMsg = 1);
+fun.getImgA("圖片元素選擇器", "A元素選擇器");
+fun.getImgA("圖片元素選擇器", [網址陣列]);
+fun.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
 </pre>
 <pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址
-fun.getImgCorsA("圖片元素選擇器", "A元素選擇器", time = 100)
-fun.getImgCorsA("圖片元素選擇器", [網址陣列], time = 100)
+fun.getImgCorsA("圖片元素選擇器", "A元素選擇器", time = 100);
+fun.getImgCorsA("圖片元素選擇器", [網址陣列], time = 100);
+fun.getImgCorsA(String, String or Array, Number);
 </pre>
 <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
@@ -789,8 +827,9 @@ const last = doc => {
     return currentPage >= totalPage ? true : false; //當前頁數大於等於最大頁數是最後一頁
 }
 //用在規則init
-fun.getNP(ele, nextLinkEle, lastEle, paginationEle, time, dataset, msg);
-fun.getNP(ele, nextLinkEle);
+fun.getNP("selector", "nextLinkEle", lastEle, "paginationEle", time, dataset, msg);
+fun.getNP("selector", "nextLinkEle");
+fun.getNP(String, String, String or Function or AsyncFunction, String or null, Number, String, Number);
 //用在規則imgs，需要用async/await
 //應用在包子漫畫的用法
 imgs: async () => {
