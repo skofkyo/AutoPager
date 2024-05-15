@@ -125,7 +125,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     scrollEle: async () => {
         …code;
     },
-    button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]插入圖片也添加功能按鈕
+    button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]，有此屬性才會添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
@@ -159,7 +159,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     openInNewTab: ".manga-cover>a:not([target=_blank])", //指定的A元素在新分頁開啟
     topButton: true, //添加返回頂部按鈕
     threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
-    fetch: 1, //使用Fetch API下載圖片，需要網站有支援CORS，如小黃書
+    fetch: 1, //使用Fetch API下載圖片，需要網站有支援CORS
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.4khd.com/"或空""
     infiniteScroll: true, //漫畫類標記有無限滾動模式
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
@@ -198,7 +198,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     scrollEle: async () => {
         …code;
     },
-    button: [4, "24%", 1],
+    button: [4],
     insertImg: ["", 0, time],
     insertImg: [
         ["", 1, ""], 2, time
@@ -512,9 +512,10 @@ fun.addUrlHtml(url, ele, pos, text)
 //text 字串
 </pre>
 <pre>
-//創建fun.script(string, number, number, doc = document)
+//創建script元素
+fun.script(string, number= 0, number = 0, doc = document)
 //返回script
-fun.script("code",0,0)
+fun.script("code")
 //插入到document.body
 fun.script("code",0,1)
 //src插入到document.body
@@ -577,19 +578,9 @@ if (status == 200) {
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
-//針對imx.to圖床，返回有顯示圖片的document。
-fun.imxXHR(url);
-fun.imxXHR(url).then(doc => {
-    console.log("測試doc", doc);
-})
-</pre>
-<pre>
-//使用Promise包裝GM_xmlhttpRequest
-//針對www.imagebam.com圖床，返回有顯示圖片的document。
-fun.imageBamXHR(url);
-fun.imageBamXHR(url).then(doc => {
-    console.log("測試doc", doc);
-})
+//傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址
+//imx.to、imagebam、postimg...等等
+fun.getImageHost([links])
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
@@ -644,14 +635,15 @@ await fun.iframeDoc(url, ele, time = 5000, callback);
 let callback = (doc, fun) => { //參數doc為iframe的document,fun為可調用的函式庫物件
 自由發揮
 }
-await fun.iframeSrcDoc(url, ele);
+await fun.iframeSrcDoc(url, ele, time = 5000, callback);
 </pre>
 <pre>
-//使用iframe框架，等待至指定的declares出現，返回iframe框架的contentWindow。
+//使用iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
 let iframe = await fun.iframeVar(url, time = 1000, "declares");
 let _declares = iframe.declares;
 </pre>
 <pre>
+//讓用iframe框架能像fetch的寫法
 const details = {
     loadTime: 1000,
     waitEle: "img",
@@ -692,7 +684,7 @@ await fun.getCorsEle(links, eles, targetEle, removeEle = null, time = 100)
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
-//max填入用fun.geT()取得最大頁數的數字，或想辦法算出最大頁數的數字。
+//max填入用fun.gt()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 fun.getImg("圖片元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
 fun.getImg(ele, max, mode = 1, rText = [null, null], time = 100)
 //網址頁碼數字遞增模式
@@ -850,7 +842,7 @@ imgs: async () => {
 <p>按2，捲動至腳本插入的第一張大圖</p>
 <p>按3，一鍵下載，跳過自定義標題的步驟。</p>
 <br>
-<p>PS：需重複獲取原始圖片元素的規則，按1無法複製圖片網址，需點擊頁面功能按鈕或選單按鈕的複製圖址。</p>
+<p>PS：需重複獲取原始圖片元素的規則，按1無法複製圖片網址，需點擊頁面功能按鈕或浮動選單按鈕的複製圖址。</p>
 <h1>圖片檢視模式</h1>
 <p>1.圖片置中模式</p>
 <p>上方向鍵跳轉到目前的上一張圖、下方向鍵跳轉到目前的下一張圖</p>
@@ -878,7 +870,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/12 23:14</p>
+<p>2024/05/15 21:05</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1089,6 +1081,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.girldir.com/">美女目录网</a></td>
+                <td>作用在列表模式頁面</td>
+            </tr>
+            <tr>
                 <td><a href="https://www.cup2d.com/">Cup2D</a></td>
                 <td></td>
             </tr>
@@ -1175,10 +1171,6 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             <tr>
                 <td><a href="https://www.cool18.com/">留园酷</a></td>
                 <td>貼圖區</td>
-            </tr>
-            <tr>
-                <td><a href="https://xbbs.me/forum/id-61fe70f2b9631.html">X成人论坛</a></td>
-                <td>需註冊，貼圖區</td>
             </tr>
             <tr>
                 <td><a href="http://51sex.vip/">51sex</a></td>
@@ -2021,6 +2013,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://www.mizugigurabia.com/">水着グラビア</a></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td><a href="https://eroyakuba.com/">エロ役場</a></td>
                 <td></td>
             </tr>
@@ -2349,12 +2345,12 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://itushe.com/">爱图社</a></td>
-                <td></td>
-            </tr>
-            <tr>
                 <td><a href="https://www.guixiu.org/">闺秀网</a></td>
                 <td><a href="https://guixiu.org/">guixiu.org</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://m.xtushe.com/">新老友图社</a></td>
+                <td>有瀏覽限制，超過需要註冊會員和充值。</td>
             </tr>
             <tr>
                 <td><a href="https://nicegirl4u.cyou/">NICEGIRL4U</a></td>
@@ -2965,6 +2961,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
                 <td></td>
             </tr>
             <tr>
+                <td><a href="https://tptoon.com/">头牌漫画网</a></td>
+                <td><a href="https://xs8.me/">地址发布页</a></td>
+            </tr>
+            <tr>
                 <td><a href="https://nnhanman.org/">鸟鸟韩漫</a></td>
                 <td>寫真請點開第一章，直接翻到底。</td>
             </tr>
@@ -3457,6 +3457,10 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://www.manshiduo.net/">漫士多</a></td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.wujinmanhua.com/">无尽漫画</a></td>
                 <td>預設關閉</td>
             </tr>
             <tr>
