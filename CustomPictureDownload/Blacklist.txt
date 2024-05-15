@@ -1,4 +1,4 @@
-2024/05/12 23:14
+2024/05/15 21:05
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -655,6 +655,9 @@ Kenh69
 好圖屋
 *haotuwu.com/*/*.html
 
+美女目录网 列表模式
+*://www.girldir.com/photos/*_list/
+
 可爱小图
 *keaitupian.com/pic/*.html
 
@@ -985,6 +988,9 @@ https://www.eyval.net/*
 
 萌妹社区
 *://www.mmav.me/photo/*.html
+
+新老友图社
+*://m.xtushe.com/photo/*.html
 
 闺秀网
 *://*guixiu.org/post/*.html
@@ -2282,6 +2288,8 @@ https://www.eyval.net/*
 *://www.55manshu.com/chapter/*.html
 *://hinhanhgai.com/images/*
 *://yazhouseba.com/meinv/img-*.html
+*://m.xtushe.com/photo/*.html
+*://www.girldir.com/photos/*_list/
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
