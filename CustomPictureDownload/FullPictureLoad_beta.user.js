@@ -21776,7 +21776,8 @@ window.parent.postMessage({
                     currentDownloadThread--;
                     let blob = data.response;
                     //debug("GM blob", blob);
-                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024 || blob.type == "" && blob.size > 1024) {
+                    //XBrowser Blob的type是""
+                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024 || hasTouchEvents && blob.type == "" && blob.size > 1024) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
@@ -22049,7 +22050,7 @@ window.parent.postMessage({
                         let blobData = blobDataArray[i].blob;
                         let type = blobData.type;
                         try {
-                            if (/octet-stream/.test(type) || type == "") {
+                            if (/octet-stream/.test(type) || hasTouchEvents && type == "") {
                                 if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
                                     blobData = await fun.convertImage(blobData, "image/webp");
                                     ex = "webp";
@@ -22057,7 +22058,11 @@ window.parent.postMessage({
                                     blobData = await fun.convertImage(blobData);
                                     ex = "jpg";
                                 }
-                                fun.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                if (hasTouchEvents && type == "") {
+                                    fun.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                } else {
+                                    fun.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                }
                             } else if ((/webp/i.test(type) || /\.webp/i.test(blobDataArray[i].finalUrl)) && !type.includes("image/jpeg") && convertWebpToJpg == 1) {
                                 blobData = await fun.convertImage(blobData);
                                 ex = "jpg";
