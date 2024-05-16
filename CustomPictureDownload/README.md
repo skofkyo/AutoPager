@@ -395,17 +395,20 @@ fun.gau(String, HTMLDocument || HTMLElement);
 //1返回指定元素的字串(預設)
 //2返回指定元素的上一個元素的字串
 //3返回指定元素的上上一個元素的字串
+fun.gt("selector");
 fun.gt("selector", mode = 1, doc = document);
 fun.gt(String, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得非src腳本的字串
 //searchValue，關鍵字串或正則表達式
+fun.gst(searchValue);
 fun.gst(searchValue, doc = document);
 fun.gst(String or RegExp, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得元素屬性的值
+fun.attr("selector","屬性");
 fun.attr("selector","屬性", doc = document);
 fun.attr(String, String, HTMLDocument or HTMLElement);
 </pre>
@@ -414,11 +417,13 @@ fun.attr(String, String, HTMLDocument or HTMLElement);
 //pos 0，添加進指定的元素裡面
 //pos 1，插入在指定的元素之前
 //pos 2，插入在指定的元素之後
+fun.createImgBox(selector);
 fun.createImgBox(selector, pos = 0);
 fun.createImgBox(String, Number);
 </pre>
 <pre>
-//返回元素的圖片網址陣列
+//指定元素選擇器或元素陣列，返回過濾出圖片網址陣列。
+fun.getImgSrcArr("selector");
 fun.getImgSrcArr("selector", doc = document);
 fun.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fun.getImgSrcArr(Array [HTMLImageElement]);
@@ -430,6 +435,7 @@ fun.getImgSrcArr(Array [HTMLImageElement]);
 //1返回【字串切割取[0]去前後空白】
 //2返回【字串切割[0] + "字串" + 字串切割[1]】
 //3返回【字串切割[1] + "字串" + 字串切割[0]】
+fun.title("字串");
 fun.title("字串", mode, doc = document);
 fun.title(String or RegExp, Number, HTMLDocument or HTMLElement);
 </pre>
@@ -456,7 +462,8 @@ fun.xml(String);
 </pre>
 <pre>
 //顯示簡短訊息
-fun.showMsg("字串",1000(顯示的時間,0持續顯示));
+//time ms，0持續顯示
+fun.showMsg("字串", time = 1000));
 fun.showMsg(String, Number);
 </pre>
 <pre>
@@ -465,17 +472,23 @@ fun.hideMsg();
 </pre>
 <pre>
 //延遲運行async/await
+//time ms
+//msg，0不顯示訊息
 await fun.delay(time, msg = 1);
 fun.delay(Number, Number);
 </pre>
 <pre>
 //等待元素async/await
 //間隔100毫秒判斷一次，有元素返回元素超過循環次數返回null。
+//max，循環的次數
+await fun.waitEle("selector");
 await fun.waitEle("selector", max = 200, doc = document);
 fun.waitEle(String, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //等待window物件屬性
+//max，循環的次數
+await fun.waitVar("declares");
 await fun.waitVar("declares", max = 200);
 fun.waitVar(String, Number);
 </pre>
@@ -495,7 +508,11 @@ fun.arr(Number);
 </pre>
 <pre>
 //移除元素
-fun.remove("selector", time = 0)
+//time ms，延遲的時間
+//Promise可以用await
+fun.remove("selector");
+fun.remove("selector", time = 0);
+
 //如果需要多個選擇器並且CSS/Xpath混寫可寫成數組
 let selectors = ["cssSelector" , "XpathSelector"]
 fun.remove(selectors, time = 0);
@@ -550,10 +567,31 @@ fun.scrollEles(String, Number);
 //selector 元素選擇器
 //callback判斷
 //time判斷逾時的時間
-let callback = (ele) => fun.ge("img[src]", ele); //ele參數為捲動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
-let callback = (img) => /^blob/.test(img.src);//此例為判斷元素的src屬性是否已經轉為BlobURL
 fun.aotoScrollEles("selector", callback, time = 5000);
 fun.aotoScrollEles(String, Function or AsyncFunction, Number);
+//callback例子
+//ele參數為捲動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
+let callback = (ele) => fun.ge("img[src]", ele);
+//此例為判斷元素的src屬性是否已經轉為BlobURL
+let callback = (img) => /^blob/.test(img.src);
+</pre>
+<pre>
+//確認元素和圖片網址，嘗試取得網址和補全網址 返回一個obj。
+{
+    ok: Boolean, //成功true失敗false
+    src: src //成功返回圖片網址
+}
+fun.checkImgSrc(HTMLElement);
+//可以使用封裝好的fun.getImgSrcArr();
+</pre>
+<pre>
+//確認元素有沒有把圖片原始網址放在src以外的屬性
+{
+    ok: Boolean, //成功true失敗false
+    src: src //成功返回圖片網址
+}
+fun.checkDataset(HTMLElement);
+//可以使用封裝好的fun.getImgSrcArr();
 </pre>
 <pre>
 //確認圖片狀態屬性 返回一個obj
@@ -566,14 +604,21 @@ await fun.checkImgStatus(src);
 fun.checkImgStatus(String);
 </pre>
 <pre>
+//確認加了CDN的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址
+//https://wsrv.nl/，https://i0.wp.com/
+await fun.checkImageCDN([圖片網址陣列]);
+fun.checkImageCDN(Array);
+</pre>
+<pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得，無法繪製跨域的圖片，會出現跨域汙染的錯誤。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
 //quality 壓縮比率 0 ~ 1
 //返回BlobURL
-//範例 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
 fun.imgToBlobURL("selector", type = "image/jpeg", quality = 1);
 fun.imgToBlobURL(String, String, Number);
+//例子
+[...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
 </pre>
 <pre>
 //包裝fun.imgToBlobURL函式。
@@ -581,10 +626,12 @@ fun.imgToBlobURL(String, String, Number);
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
 //quality 壓縮比率 0 ~ 1
 //返回BlobURL陣列
-//範例1：fun.imgBlobArr(".mh_comicpic img[src^=blob]");
-//範例2：fun.imgBlobArr(".image>img");
 fun.imgBlobArr("selector", type = "image/jpeg", quality = 1);
 fun.imgBlobArr(String, String, Number);
+//例子1
+fun.imgBlobArr(".mh_comicpic img[src^=blob]");
+//例子2
+fun.imgBlobArr(".image>img");
 </pre>
 <pre>
 //使用Promise包裝GM_xmlhttpRequest
@@ -651,7 +698,7 @@ fun.fetchDoc(String, Object);
 //selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
 let callback = (doc) => { //參數doc為iframe的document
-自由發揮
+    自由發揮
 }
 await fun.iframeDoc("url", "selector", time = 5000, callback);
 fun.iframeDoc(String, String, Number, Function or AsyncFunction);
@@ -662,7 +709,7 @@ fun.iframeDoc(String, String, Number, Function or AsyncFunction);
 //ele元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
 let callback = (doc) => { //參數doc為iframe的document
-自由發揮
+    自由發揮
 }
 await fun.iframeSrcDoc("url", "selector", time = 5000, callback);
 fun.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
@@ -681,7 +728,7 @@ const details = {
     cb: async (dom, frame) => {
         console.log(dom); //iframe的document
         console.log(frame); //iframe的contentWindow
-        //同源可以先行對iframe注入代碼，修改contentWindow屬性，修改document元素
+        //同源可以先行對iframe注入代碼，修改contentWindow屬性，修改document文檔
     }
 }
 const iframe = await fun.iframe("url", details);
