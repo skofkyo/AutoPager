@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.2
+// @version            2.2.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -51,7 +51,7 @@
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 // ==/UserScript==
 
-(async () => {
+(async (JSZip, Fancybox, jQuery) => {
     "use strict";
 
     if (document.querySelector("body.no-js")) return; //Cloudflare檢測連線安全性時，不運行腳本
@@ -71,7 +71,7 @@
         viewMode: 0, //0：置中、1：並排
         fancybox: 1 //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
     };
-
+    const $ = jQuery;
     const _unsafeWindow = unsafeWindow ?? window;
     const language = _unsafeWindow.navigator.language;
     let siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "");
@@ -946,7 +946,7 @@
         reg: /^https?:\/\/(www\.)?tupianwu\.com\/post\/\d+\//i,
         init: "fun.clearAllTimer();",
         autoClick: ".readmore>a",
-        imgs: () => fun.gae(".LightGallery_Item").map(e => e.getAttribute("lg-data-src")),
+        imgs: ".LightGallery_Item",
         button: [4],
         insertImg: [
             [".umBody", 0, ".LightGallery_Item"], 2
@@ -957,22 +957,6 @@
         customTitle: ".postTitle>h1",
         css: "@media only screen and (max-width:480px){.container{padding:0px !important}}",
         category: "nsfw1"
-    }, {
-        name: "图片屋 分類自動翻頁",
-        enable: 1,
-        reg: /^https?:\/\/(www\.)?tupianwu\.com\/(page\/\d+\/)?$|^https?:\/\/(www\.)?tupianwu\.com\/category\/\d+\/(\d+\/)?$|^https?:\/\/(www\.)?tupianwu\.com\/tags\//,
-        include: ".pagebar",
-        autoPager: {
-            mode: 1,
-            waitEle: "#article[style]",
-            ele: "#article",
-            next: "span.current+a",
-            re: ".pagebar",
-            title: doc => "Page " + fun.gt(".pagebar span.current", 1, doc),
-            bottom: screen.height * 3
-        },
-        openInNewTab: "#article a:not([target=_blank])",
-        category: "autoPager"
     }, {
         name: "微密猫",
         host: ["wememiao.com", "wememao.com", "weme.su", "weme2.com", "weme4.com", "weme5.com", "weme6.com", "weme7.com", "weme9.com"],
@@ -3419,7 +3403,7 @@
             let ajaxNum = 0;
             let resArr = fun.arr(max).map((_, i, arr) => {
                 return new Promise(resolve => {
-                    _unsafeWindow.$.ajax({
+                    $.ajax({
                         url: `/ajax/model_new/${model_bid}/page-${i+1}/photos`,
                         dataType: "html",
                         success: (data) => {
@@ -3448,7 +3432,7 @@
             fun.showMsg(displayLanguage.str_05, 0);
             let resArr2 = fun.arr(videoPages).map((_, i, arr) => {
                 return new Promise(resolve => {
-                    _unsafeWindow.$.ajax({
+                    $.ajax({
                         url: `/ajax/model_new/${model_bid}/page-${i+1}/videos`,
                         dataType: "html",
                         success: (data) => {
@@ -7937,7 +7921,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             fun.showMsg(displayLanguage.str_05, 0);
             let pid = fun.ge("#next-url").rel;
             let json = await new Promise(resolve => {
-                _unsafeWindow.$.post("ajax.php", {
+                $.post("ajax.php", {
                     "action": "src",
                     "pid": pid
                 }, data => resolve(data), "json");
@@ -13788,7 +13772,6 @@ if (next) {
             }
             let b = fun.ge("body.viewbody");
             if (fun.lh.includes("mangabz") && b) {
-                const $ = _unsafeWindow.$;
                 b.innerHTML = b.innerHTML.replace("<!--", "").replace("-->", "");
                 $(".top-bar-tool").removeAttr("style");
                 $(".bottom-bar").removeAttr("style");
@@ -15662,7 +15645,6 @@ window.parent.postMessage({
         enable: 0,
         reg: /www\.manhuabaiku\.com\/chapter\/\w+\.html/i,
         init: () => {
-            const $ = _unsafeWindow.$;
             $("body").on("click", ".FullPictureLoadImage", () => {
                 if ($(".top-tool-bar").css("top") == "0px") {
                     $(".top-tool-bar").animate({
@@ -17310,7 +17292,7 @@ window.parent.postMessage({
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            if (isFn(_unsafeWindow.aboutBlank)) _unsafeWindow.aboutBlank = null;
+            if ("aboutBlank" in _unsafeWindow) _unsafeWindow.aboutBlank = null;
             fun.clearAllTimer();
             fun.hideMsg();
             const addHtml = (url, text) => {
@@ -17339,7 +17321,7 @@ window.parent.postMessage({
         reg: /(www\.)?(copymanga\.site|copymanga\.tv|mangacopy\.com)\/h5/,
         init: async () => {
             fun.clearAllTimer();
-            if (isFn(_unsafeWindow.aboutBlank)) _unsafeWindow.aboutBlank = null;
+            if ("aboutBlank" in _unsafeWindow) _unsafeWindow.aboutBlank = null;
         },
         category: "none"
     }, {
@@ -17546,7 +17528,6 @@ window.parent.postMessage({
         init: async () => {
             await fun.waitVar("x_tokens");
             fun.run("$(document).off();");
-            const $ = _unsafeWindow.$;
             const toggleToolbar = e => {
                 if (e.wheelDelta < 0 || e.detail > 0) {
                     fun.ge(".view-title").style.top = "-60px";
@@ -17713,7 +17694,6 @@ window.parent.postMessage({
             //await fun.scrollEles(".img-content img", 200);
             fun.css(".ad-area{opacity:0!important;}#cp_img>.two-ad-area:nth-child(1)>.ad-area,#cp_img>.two-ad-area:nth-child(2){display:none!important}");
             fun.remove(".ad-area,body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(a):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox])", 5000);
-            const $ = _unsafeWindow.$;
             const toggleToolbar = e => {
                 if (e.wheelDelta < 0 || e.detail > 0) {
                     $(".view-fix-top-bar").attr("style", "top: -60px;");
@@ -17970,15 +17950,6 @@ window.parent.postMessage({
         button: [4],
         insertImg: [".article-content", 3],
         customTitle: ".article-title",
-        category: "comic"
-    }, {
-        name: "idoitmyself.xyz",
-        host: ["idoitmyself.xyz"],
-        enable: 1,
-        reg: /^https?:\/\/idoitmyself\.xyz\/embed\//,
-        imgs: () => _unsafeWindow.HTMLImageElementSrcs,
-        button: [4],
-        insertImg: ["#viewer", 3],
         category: "comic"
     }, {
         name: "微信公众号",
@@ -19540,7 +19511,7 @@ window.parent.postMessage({
                 }
             }).filter(item => item));
         },
-        //指定元素選擇器或元素陣列，過濾出圖片網址。
+        //指定元素選擇器或元素陣列，返回過濾出圖片網址陣列。
         getImgSrcArr: (img, doc = document) => {
             let imgs;
             isString(img) ? imgs = fun.gae(img, doc, doc) : imgs = img;
@@ -20659,11 +20630,7 @@ window.parent.postMessage({
                 }
                 fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = "block"));
                 if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
-                    try {
-                        Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
-                    } catch (error) {
-                        console.error("沒有引入FancyboxV5", error);
-                    }
+                    Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                 }
                 if (!/tupianwu\.com/.test(fun.lh) && !fun.ge(".umRelevant.umBox")) {
                     fun.MutationObserver_aff();
@@ -21232,7 +21199,7 @@ window.parent.postMessage({
             }
         },
         //創建A元素
-        addUrlHtml: (url, selector, pos, text = "點選進入下一話") => {
+        addUrlHtml: (url, selector, pos = 0, text = "點選進入下一話") => {
             let _pos;
             switch (pos) {
                 case 0:
@@ -21526,7 +21493,6 @@ window.parent.postMessage({
             }
         },
         copymangaUI: () => {
-            const $ = _unsafeWindow.$;
             const toggleToolbar = e => {
                 if (e.wheelDelta < 0 || e.detail > 0) {
                     $("h4.header").attr("style", "top: -30px;");
@@ -21584,7 +21550,6 @@ window.parent.postMessage({
             });
         },
         MangabzUI: () => {
-            const $ = _unsafeWindow.$;
             const toggleToolbar = e => {
                 if (e.wheelDelta < 0 || e.detail > 0) {
                     $(".top-bar").attr("style", "top: -74px;");
@@ -21604,7 +21569,6 @@ window.parent.postMessage({
             document.addEventListener("keydown", keyToggleToolbar);
         },
         XmanhuaUI: () => {
-            const $ = _unsafeWindow.$;
             const clickToggleToolbar = () => {
                 let t = fun.ge(".header.toolbar");
                 if (t) {
@@ -21796,7 +21760,8 @@ window.parent.postMessage({
                     currentDownloadThread--;
                     let blob = data.response;
                     //debug("GM blob", blob);
-                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024) {
+                    //XBrowser Blob的type是""
+                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024 || hasTouchEvents && blob.type == "" && blob.size > 1024) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
@@ -22069,7 +22034,7 @@ window.parent.postMessage({
                         let blobData = blobDataArray[i].blob;
                         let type = blobData.type;
                         try {
-                            if (/octet-stream/.test(type)) {
+                            if (/octet-stream/.test(type) || hasTouchEvents && type == "") {
                                 if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
                                     blobData = await fun.convertImage(blobData, "image/webp");
                                     ex = "webp";
@@ -22077,7 +22042,11 @@ window.parent.postMessage({
                                     blobData = await fun.convertImage(blobData);
                                     ex = "jpg";
                                 }
-                                fun.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                if (hasTouchEvents && type == "") {
+                                    fun.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                } else {
+                                    fun.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                }
                             } else if ((/webp/i.test(type) || /\.webp/i.test(blobDataArray[i].finalUrl)) && !type.includes("image/jpeg") && convertWebpToJpg == 1) {
                                 blobData = await fun.convertImage(blobData);
                                 ex = "jpg";
@@ -22409,11 +22378,7 @@ window.parent.postMessage({
                 gae(".FullPictureLoadVideo").forEach(e => tE.parentNode.insertBefore(e, tE));
             }
             if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
-                try {
-                    Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
-                } catch (error) {
-                    debug("沒有引入FancyboxV5", error);
-                }
+                Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
             }
             //tE.parentNode.style.textAlign = "center";
             tE.parentNode.style.display = "block";
@@ -23953,117 +23918,88 @@ a[data-fancybox]:hover {
     };
 
     //Fancybox5的語系
-    const Fancyboxl10nV5 = async () => {
-        await new Promise(resolve => {
-            let num = 0;
-            let loop = setInterval(() => {
-                num++;
-                try {
-                    if (isFn(Fancybox)) {
-                        clearInterval(loop);
-                        resolve();
-                    }
-                } catch (e) {}
-                if (num >= 5) {
-                    clearInterval(loop);
-                    resolve();
-                    console.error("FancyboxV5 注入逾時");
-                    return;
-                }
-            }, 100);
-        });
-        try {
-            switch (language) {
-                case "zh-TW":
-                case "zh-HK":
-                case "zh-Hant-TW":
-                case "zh-Hant-HK":
-                    Fancybox.defaults.l10n = {
-                        PANUP: "上移",
-                        PANDOWN: "下移",
-                        PANLEFT: "左移",
-                        PANRIGHT: "右移",
-                        ZOOMIN: "放大",
-                        ZOOMOUT: "縮小",
-                        TOGGLEZOOM: "切換縮放等級",
-                        TOGGLE1TO1: "切換縮放等級",
-                        ITERATEZOOM: "切換縮放等級",
-                        ROTATECCW: "逆時針旋轉",
-                        ROTATECW: "順時針旋轉",
-                        FLIPX: "水平翻轉",
-                        FLIPY: "垂直翻轉",
-                        FITX: "水平適應",
-                        FITY: "垂直適應",
-                        RESET: "重設",
-                        TOGGLEFS: "切換全螢幕",
-                        CLOSE: "關閉",
-                        NEXT: "上一個",
-                        PREV: "下一個",
-                        MODAL: "使用 ESC 鍵關閉",
-                        ERROR: "發生了錯誤，請稍後再試",
-                        IMAGE_ERROR: "找不到圖像",
-                        ELEMENT_NOT_FOUND: "找不到 HTML 元素",
-                        AJAX_NOT_FOUND: "載入 AJAX 時出錯: 未找到",
-                        AJAX_FORBIDDEN: "載入 AJAX 時出錯: 被阻止",
-                        IFRAME_ERROR: "載入頁面出錯",
-                        TOGGLE_ZOOM: "切換縮放等級",
-                        TOGGLE_THUMBS: "切換縮圖",
-                        TOGGLE_SLIDESHOW: "切換幻燈片",
-                        TOGGLE_FULLSCREEN: "切換全螢幕",
-                        DOWNLOAD: "下載"
-                    };
-                    break;
-                case "zh":
-                case "zh-CN":
-                case "zh-Hans-CN":
-                    Fancybox.defaults.l10n = {
-                        PANUP: "上移",
-                        PANDOWN: "下移",
-                        PANLEFT: "左移",
-                        PANRIGHT: "右移",
-                        ZOOMIN: "放大",
-                        ZOOMOUT: "缩小",
-                        TOGGLEZOOM: "切换缩放级别",
-                        TOGGLE1TO1: "切换缩放级别",
-                        ITERATEZOOM: "切换缩放级别",
-                        ROTATECCW: "逆时针旋转",
-                        ROTATECW: "顺时针旋转",
-                        FLIPX: "水平翻转",
-                        FLIPY: "垂直翻转",
-                        FITX: "水平适应",
-                        FITY: "垂直适应",
-                        RESET: "重置",
-                        TOGGLEFS: "切换全屏",
-                        CLOSE: "关闭",
-                        NEXT: "上一个",
-                        PREV: "下一个",
-                        MODAL: "使用 ESC 键关闭",
-                        ERROR: "发生了错误，请稍后再试",
-                        IMAGE_ERROR: "找不到图像",
-                        ELEMENT_NOT_FOUND: "找不到 HTML 元素",
-                        AJAX_NOT_FOUND: "载入 AJAX 时出错: 未找到",
-                        AJAX_FORBIDDEN: "载入 AJAX 时出错: 被阻止",
-                        IFRAME_ERROR: "加载页面出错",
-                        TOGGLE_ZOOM: "切换缩放级别",
-                        TOGGLE_THUMBS: "切换缩略图",
-                        TOGGLE_SLIDESHOW: "切换幻灯片",
-                        TOGGLE_FULLSCREEN: "切换全屏",
-                        DOWNLOAD: "下载"
-                    };
-                    break;
-            };
-            Fancybox.defaults.animated = false;
-            //debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
-        } catch (error) {
-            if (!isObject(siteData.fancybox)) {
-                try {
-                    fun.css(FancyboxV3Css);
-                } catch (error) {
-                    console.error("\nFancybox@3.5.7 CSS 注入失敗", error);
-                }
-            }
-            debug("沒有引入FancyboxV5", error);
-        }
+    const Fancyboxl10nV5 = () => {
+        switch (language) {
+            case "zh-TW":
+            case "zh-HK":
+            case "zh-Hant-TW":
+            case "zh-Hant-HK":
+                Fancybox.defaults.l10n = {
+                    PANUP: "上移",
+                    PANDOWN: "下移",
+                    PANLEFT: "左移",
+                    PANRIGHT: "右移",
+                    ZOOMIN: "放大",
+                    ZOOMOUT: "縮小",
+                    TOGGLEZOOM: "切換縮放等級",
+                    TOGGLE1TO1: "切換縮放等級",
+                    ITERATEZOOM: "切換縮放等級",
+                    ROTATECCW: "逆時針旋轉",
+                    ROTATECW: "順時針旋轉",
+                    FLIPX: "水平翻轉",
+                    FLIPY: "垂直翻轉",
+                    FITX: "水平適應",
+                    FITY: "垂直適應",
+                    RESET: "重設",
+                    TOGGLEFS: "切換全螢幕",
+                    CLOSE: "關閉",
+                    NEXT: "上一個",
+                    PREV: "下一個",
+                    MODAL: "使用 ESC 鍵關閉",
+                    ERROR: "發生了錯誤，請稍後再試",
+                    IMAGE_ERROR: "找不到圖像",
+                    ELEMENT_NOT_FOUND: "找不到 HTML 元素",
+                    AJAX_NOT_FOUND: "載入 AJAX 時出錯: 未找到",
+                    AJAX_FORBIDDEN: "載入 AJAX 時出錯: 被阻止",
+                    IFRAME_ERROR: "載入頁面出錯",
+                    TOGGLE_ZOOM: "切換縮放等級",
+                    TOGGLE_THUMBS: "切換縮圖",
+                    TOGGLE_SLIDESHOW: "切換幻燈片",
+                    TOGGLE_FULLSCREEN: "切換全螢幕",
+                    DOWNLOAD: "下載"
+                };
+                break;
+            case "zh":
+            case "zh-CN":
+            case "zh-Hans-CN":
+                Fancybox.defaults.l10n = {
+                    PANUP: "上移",
+                    PANDOWN: "下移",
+                    PANLEFT: "左移",
+                    PANRIGHT: "右移",
+                    ZOOMIN: "放大",
+                    ZOOMOUT: "缩小",
+                    TOGGLEZOOM: "切换缩放级别",
+                    TOGGLE1TO1: "切换缩放级别",
+                    ITERATEZOOM: "切换缩放级别",
+                    ROTATECCW: "逆时针旋转",
+                    ROTATECW: "顺时针旋转",
+                    FLIPX: "水平翻转",
+                    FLIPY: "垂直翻转",
+                    FITX: "水平适应",
+                    FITY: "垂直适应",
+                    RESET: "重置",
+                    TOGGLEFS: "切换全屏",
+                    CLOSE: "关闭",
+                    NEXT: "上一个",
+                    PREV: "下一个",
+                    MODAL: "使用 ESC 键关闭",
+                    ERROR: "发生了错误，请稍后再试",
+                    IMAGE_ERROR: "找不到图像",
+                    ELEMENT_NOT_FOUND: "找不到 HTML 元素",
+                    AJAX_NOT_FOUND: "载入 AJAX 时出错: 未找到",
+                    AJAX_FORBIDDEN: "载入 AJAX 时出错: 被阻止",
+                    IFRAME_ERROR: "加载页面出错",
+                    TOGGLE_ZOOM: "切换缩放级别",
+                    TOGGLE_THUMBS: "切换缩略图",
+                    TOGGLE_SLIDESHOW: "切换幻灯片",
+                    TOGGLE_FULLSCREEN: "切换全屏",
+                    DOWNLOAD: "下载"
+                };
+                break;
+        };
+        Fancybox.defaults.animated = false;
+        //debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
     };
 
     //Fancybox3的語系
@@ -24220,17 +24156,11 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     }
                 }
                 if (options.fancybox == 1 && !isObject(siteData.fancybox) && category !== "none" && !isObject(siteData.autoPager)) {
-                    if (isFn(Fancybox)) {
-                        try {
-                            fun.css(FancyboxV5Css);
-                        } catch (error) {
-                            console.error("\nFancyboxV5 CSS注入失敗", error);
-                        }
-                    }
-                    await Fancyboxl10nV5();
+                    fun.css(FancyboxV5Css);
+                    Fancyboxl10nV5();
                 } else if (options.fancybox == 1 && category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 5 && siteData.fancybox?.insertLibrarys == 1) {
                     addLibrarysV5();
-                    await Fancyboxl10nV5();
+                    Fancyboxl10nV5();
                 } else if (options.fancybox == 1 && category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
                     addLibrarysV3();
                     Fancyboxi18nV3();
@@ -24412,7 +24342,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         if (ele) fun.autoPagerNextObserver.observe(ele);
                     } else {
                         const callback = async () => {
-                            if (_unsafeWindow.innerHeight + _unsafeWindow.pageYOffset >= document.body.offsetHeight - (siteData.autoPager?.bottom || screen.height)) {
+                            if (_unsafeWindow.innerHeight + _unsafeWindow.pageYOffset >= document.body.offsetHeight - (siteData.autoPager?.bottom ?? screen.height)) {
                                 if (!autoPager) return;
                                 document.removeEventListener("scroll", callback);
                                 await fun.autoPager();
@@ -24758,4 +24688,4 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-})();
+})(JSZip, Fancybox, jQuery);
