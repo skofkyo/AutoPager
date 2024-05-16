@@ -1,4 +1,4 @@
-2024/05/15 21:05
+2024/05/16 16:41
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -74,7 +74,7 @@ Xiutaku/Kiutaku
     {
         "name": "圖片全載心动美图格式排除 ",
         "enable": 0,
-        "url": "^https://www\\.wai76\\.com/[^/]+/",
+        "url": "^https://www\\.wai7\\d\\.com/[^/]+/",
         "include": ".entry-content"
     },
     {
@@ -243,6 +243,9 @@ PhimVu
 
 爱看美女网
 *://www.ikmn*.*/*/*.html
+
+漂亮美女网
+*://www.plmn*.*/*/*.html
 
 卡卡美女网
 *kaka234.cc/HTM/*/*/*/*.html
