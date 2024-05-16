@@ -89,6 +89,7 @@ https://www.nuyet.com/gallery/*
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
 *://www.ikmn*.*/*/*.html
+*://www.plmn*.*/*/*.html
 *://meirentu.*/pic/*.html
 *://www.xg*.*/*/*.html
 *://*v2ph.*/album/*
