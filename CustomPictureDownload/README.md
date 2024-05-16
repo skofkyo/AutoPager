@@ -1,6 +1,6 @@
 <h1>測試通過環境：</h1>
 <pre>
-2024/05/15
+2024/05/16
 PC
 Chrome 124.0.6367.208 + Tampermonkey 5.1.1
 Edge 124.0.2478.105 + Tampermonkey 5.1.1
@@ -10,8 +10,10 @@ Android
 Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1
 Firefox for Android 126.0 + Tampermonkey 5.1.1
 Waterfox for Android 1.0.7 + Tampermonkey 5.1.1
+XBrowser 4.6.0
 </pre>
-<p>暴力猴Violentmonkey不兼容Fancybox5會報錯，連Android上的Via瀏覽器、X瀏覽器都能正常引入使用Fancybox5了。</p>
+<p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
+<p>PS：暴力猴Violentmonkey不兼容Fancybox5會報錯，連Android上的Via瀏覽器、X瀏覽器都能正常引入使用Fancybox5了。</p>
 <h1>提醒：</h1>
 <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
 <p>請自行修改腳本將所有cdn.jsdelivr.net替換成cdn.bootcdn.net</p>
@@ -262,7 +264,7 @@ fancybox: {
 doc.querySelector(selector)
 [...doc.querySelectorAll(selector)]
 fun.ge(selector, doc)
-[...fun.gae(selector, doc)]
+fun.gae(selector, doc)
 </pre>
 <pre>
 {
@@ -555,13 +557,12 @@ fun.aotoScrollEles(String, Function or AsyncFunction, Number);
 </pre>
 <pre>
 //確認圖片狀態屬性 返回一個obj
-await fun.checkImgStatus(src);
-返回
 {
-ok:true/false,成功讀取true失敗false
-width:width,//成功返回圖片寬屬性
-height:height//成功返回圖片高屬性
+    ok: Boolean, //成功讀取true失敗false
+    width: width, //成功返回圖片寬屬性
+    height: height //成功返回圖片高屬性
 }
+await fun.checkImgStatus(src);
 fun.checkImgStatus(String);
 </pre>
 <pre>
@@ -707,12 +708,12 @@ fun.iframe(String, Object);
 //links網址陣列
 //selector要抓的元素
 //"targetEle"清空此元素放入allEle
-//["targetEle", pos] 此元素位置pos，0裡面1之前2之後
+//["targetEle", pos] targetEle目標選擇器，pos放在此元素的位置，0裡面1之前2之後
 //time請求發送的間隔毫秒
-await fun.getEle(links, "selector", targetEle, removeEle = null, time = 100);
+await fun.getEle([links], "selector", targetEle, removeEle = null, time = 100);
 fun.getEle(Array, String, String or Array [String, Number], String or null, Number);
 //跨域
-await fun.getCorsEle(links, "selector", targetEle, removeEle = null, time = 100);
+await fun.getCorsEle([links], "selector", targetEle, removeEle = null, time = 100);
 fun.getCorsEle(Array, String, String or Array [String, Number], String or null, Number);
 </pre>
 <pre>
@@ -909,8 +910,10 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/15 21:05</p>
-https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.txt
+<p>2024/05/16 16:41</p>
+https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt
+完整黑名單複製貼上即完事
+https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
@@ -1373,7 +1376,7 @@ https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Blacklist.t
             </tr>
             <tr>
                 <td><a href="https://tupianwu.com/">图片屋</a></td>
-                <td>分類添加了自動翻頁</td>
+                <td></td>
             </tr>
             <tr>
                 <td><a href="https://www.hexieshe.cn/">和邪社</a></td>
