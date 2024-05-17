@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.4
+// @version            2.2.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -20249,34 +20249,32 @@ window.parent.postMessage({
         },
         //單線程背景讀取圖片IMG元素陣列的圖片網址
         singleThreadLoadImgs: async imgArr => {
-            for (let img of imgArr) {
-                if (!img.dataset?.src) continue;
-                let loadSrc = img.dataset.src;
-                let parent = img.parentNode;
+            for (let i = 0; i < imgArr.length; i++) {
+                if (!imgArr[i].dataset?.src) continue;
+                let loadSrc = imgArr[i].dataset.src;
+                let parent = imgArr[i].parentNode;
                 let temp = new Image();
                 temp.src = loadSrc;
                 await new Promise(resolve => {
                     temp.onload = () => {
-                        img.src = loadSrc;
+                        imgArr[i].src = loadSrc;
                         resolve();
                     }
                     temp.onerror = () => {
                         if (loadSrc.includes("https://wsrv.nl/") && !fun.ge("//a[@rel='home'][text()='4KHD']")) {
                             loadSrc = loadSrc.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
-                            img.dataset.src = loadSrc;
+                            imgArr[i].dataset.src = loadSrc;
                             if (!!parent && parent?.nodeName === "A" && !!parent?.getAttribute("data-fancybox")) {
                                 parent.href = loadSrc;
                                 parent.dataset.thumb = loadSrc;
                             }
-                            fun.loadImgSetSrc(img);
                         } else if (loadSrc.includes(".wp.com/") && !fun.ge("//a[@rel='home'][text()='4KHD']")) {
                             loadSrc = loadSrc.replace(/i\d\.wp\.com\/([^\/]+)/, "$1"); //WordPressCDN
-                            img.dataset.src = loadSrc;
+                            imgArr[i].dataset.src = loadSrc;
                             if (!!parent && parent?.nodeName === "A" && !!parent?.getAttribute("data-fancybox")) {
                                 parent.href = loadSrc;
                                 parent.dataset.thumb = loadSrc;
                             }
-                            fun.loadImgSetSrc(img);
                         }
                         resolve();
                     };
@@ -20291,14 +20289,6 @@ window.parent.postMessage({
                 await new Promise(resolve => {
                     (temp.onload = resolve, temp.onerror = resolve);
                 });
-            }
-        },
-        loadImgSetSrc: img => {
-            let loadSrc = img.dataset?.src;
-            if (!loadSrc) return;
-            let temp = new Image();
-            temp.onload = () => {
-                img.src = loadSrc;
             }
         },
         //圖片預讀函式
