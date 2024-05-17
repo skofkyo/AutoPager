@@ -1,4 +1,4 @@
-2024/05/16 16:41
+2024/05/16 19:36
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -390,7 +390,7 @@ Mitaku
 *://mitaku.net/*/*/
 
 4KHD
-*://www.4khd.com/*/*/*/*.html
+*://www.4khd.com/content/*/*.html
 
 MissKON.com
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
@@ -998,6 +998,9 @@ https://www.eyval.net/*
 闺秀网
 *://*guixiu.org/post/*.html
 
+高清图片吧
+*://*.pic88.cc/e/*/*.html
+
 MOMO图库
 *://www.momotk.com/*.html
 *://momotk*.uno/*.html
@@ -1034,7 +1037,7 @@ ROSI美女写真
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 
 图片吧/14MM图片网
-/^https:\/\/(www\.tp8\.org|www\.14mm\.net)\/\d+\.html$/
+/^https:\/\/(www\.tp8\.org|www\.14mm\.(net|cn))\/\d+\.html$/
 
 Asian Porn
 *://asianporn.li/photo/*/*/
@@ -1051,6 +1054,9 @@ Gai.vn
 
 Hình ảnh gái
 *://hinhanhgai.com/images/*
+
+Hình ảnh gái
+*://hinhanhgai.com/image/*
 
 gogo人体艺术
 *://www.64ay.com/*/*.html
