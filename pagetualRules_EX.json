@@ -28,13 +28,14 @@
     {
         "name": "圖片全載心动美图格式排除 ",
         "enable": 0,
-        "url": "^https://www\\.wai76\\.com/[^/]+/",
+        "url": "^https://www\\.wai7\\d\\.com/[^/]+/",
+        "pinUrl": true,
         "include": ".entry-content"
     },
     {
         "name": "圖片全載秀人格式排除 ",
         "enable": 0,
-        "url": "^https?://[^/]+/\\w+/\\d+\\.html|^https?://[^/]+/\\w+/\\d+/\\d+\\.html|^https?://[^/]+/\\w+/\\w+\\.html/",
+        "url": "^https?://[^/]+/\\w+/\\d+\\.html|^https?://[^/]+/\\w+/\\d+/\\d+\\.html|^https?://[^/]+/\\w+/\\w+\\.html",
         "include": "//div[@class='item_info']//a[text()='秀人集']|//div[@class='single-cat']/a[text()='秀人美女网']|//div[@class='toptip']/a[text()='极品性感美女']"
     },
     {
@@ -564,7 +565,7 @@
         "name": "無限動漫 - 漫畫閱讀",
         "author": "skofkyo",
         "example": "https://www.comicabc.com/online/new-18722.html?ch=26",
-        "url": "^https?://www\\.comicabc\\.com/online/new-\\d+\\.html(\\?ch=\\d+(-\\d+)?)?$|^https?://www\\.comicabc\\.com/ReadComic/\\d+/\\d+/\\w+\\.html",
+        "url": "^https?://(a|www)\\.(comicabc|twobili)\\.com/(ReadComic|online)",
         "pinUrl": true,
         "action": 1,
         "wait": "if(!![...doc.scripts].find(s=>s.textContent.includes('ge(e)'))){let frameCode=`let code=[...document.scripts].find(s=>s.innerHTML.includes('ge(e)')).innerHTML;let[,keyCode]=code.match(/ge\\\\([^.]+\\\\.src\\\\s?=\\\\s?([^;]+)/);let imgs=[];for(let i=1;i<=ps;i++){let code=keyCode.replace(/\\\\(pp?\\\\)/g,'('+i+')');let src=eval(code);let img=new Image();img.id='TheImg';img.src=src;imgs.push(img)}window.newImgs=imgs;`;let s=doc.createElement('script');s.textContent=frameCode;doc.body.appendChild(s);return true}else{return false}",
@@ -2023,6 +2024,16 @@
         "replaceElement": "#pagination"
     },
     {
+        "name": "图片屋/中国人体艺术模特网/好312图库/空图美女网 - 分類",
+        "author": "skofkyo",
+        "example": "https://tupianwu.com/，https://www.crtys.net/",
+        "action": 1,
+        "waitElement": "#article[style]",
+        "url": "^https?://((www\\.)?tupianwu\\.com|(www\\.)?crtys\\.net|(www\\.)?hao312\\.live|(www\\.)?kongtu\\.com)/",
+        "pageElement": "#article",
+        "replaceElement": ".pagebar"
+    },
+    {
         "name": "448人体艺术",
         "author": "skofkyo",
         "example": "https://488xm.com/666rentiyishu/",
@@ -2380,6 +2391,17 @@
         "nextLink": "li.next>a[title='下一页']",
         "pageElement": "#content-list",
         "replaceElement": ".pagebreak"
+    },
+    {
+        "name": "Hình ảnh gái - 分類",
+        "author": "skofkyo",
+        "example": "https://hinhanhgai.com/images/all",
+        "url": "^https?://hinhanhgai\\.com/",
+        "refreshByClick": ".menu a",
+        "nextLinkByJs": "let n=doc.querySelector('li.active+li>button:not([disabled])');if(n){return location.href.replace(/\\?page=\\d+/,'')+'?page='+n.innerText}else{return null}",
+        "pageElement": "//div[@class='frontpage_pagination']/preceding-sibling::section[1]",
+        "replaceElement": ".frontpage_pagination",
+        "pageAction": "[...document.querySelectorAll('div.pic:not(.loaded)')].forEach(e =>e.classList.add('loaded'))"
     },
     {
         "name": "美女目录网 - 圖片列表模式載入原圖",
@@ -3218,7 +3240,7 @@
         "url": "^https?://(jable\\.tv|fs1\\.app)/",
         "action": 0,
         "refreshByClick": "[data-action='ajax']",
-        "nextLinkByJs": "let checked=doc.querySelector('.container li.active>a,.container li:has(>.active)+li>a');let blockId=checked.dataset.blockId;let parameters=checked.dataset.parameters;let[sortBy,from]=parameters.split(';');sortBy=sortBy.replace('sort_by:','');from=from.replace('from:','');let searchParams=new URLSearchParams({mode:'async',function:'get_block',block_id:blockId,sort_by:sortBy,from:from});return'?'+searchParams;",
+        "nextLinkByJs": "let next=doc.querySelector('.container li.active>a,.container li:has(>.active)+li>a');if(!!next){let blockId=next.dataset.blockId;let parameters=next.dataset.parameters;let[sortBy,from]=parameters.split(';');sortBy=sortBy.replace('sort_by:','');from=from.replace('from:','');let searchParams=new URLSearchParams({mode:'async',function:'get_block',block_id:blockId,sort_by:sortBy,from:from});return'?'+searchParams}else{return null}",
         "pageElement": "section>.row",
         "replaceElement": ".pagination",
         "pageAction": "let ps=[...document.querySelectorAll('section>.row')];let last=ps.at(-1);last.querySelectorAll('.img-box>a').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');let img=a.querySelector('img');let src=img.dataset.preview;$(v).attr({loop:'',autoplay:'',src:src});$(v).css({position:'absolute',left:'0',top:'0',width:img.offsetWidth+'px',height:img.offsetHeight+'px',background:'#000000',visibility:'visible'});a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})",
