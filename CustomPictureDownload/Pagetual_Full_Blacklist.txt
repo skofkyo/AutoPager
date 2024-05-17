@@ -138,7 +138,7 @@ https://www.nuyet.com/gallery/*
 *://www.xxiav.com/html/*/*/*.html
 *://xgirlscollection.com/collection/*
 *img3xgirls.com/album/*
-*://www.4khd.com/*/*/*/*.html
+*://www.4khd.com/content/*/*.html
 /buondua\.(com|us)\/(?!hot|collection)[^\?]+$/
 /^https://hotgirlchina\.com/[^\/]+/$/
 /^https?:\/\/hotgirlasian\.com\/\d+\/$/
@@ -437,6 +437,7 @@ https://www.eyval.net/*
 *://hdcomic.com/chapter/*
 *://www.hmllk.com/chapter/*
 *://*guixiu.org/post/*.html
+*://*.pic88.cc/e/*/*.html
 *://www.momotk.com/*.html
 *://momotk*.uno/*.html
 *://18cute.monster/chapter/*
@@ -643,7 +644,7 @@ https://www.eyval.net/*
 *://yinaw.com/*.html
 *://www.55comics.com/chapter/*.html
 *://www.55manshu.com/chapter/*.html
-*://hinhanhgai.com/images/*
+*://hinhanhgai.com/image/*
 *://yazhouseba.com/meinv/img-*.html
 *://m.xtushe.com/photo/*.html
 *://www.girldir.com/photos/*_list/
@@ -662,7 +663,7 @@ https://www.eyval.net/*
 /^https?:\/\/fapachi\.com\/[^\/]+$/
 /^https?:\/\/(twhentai\.com|mttang\.club|(\w+\.)?hentai\.desi)\/\??(hentai_manga|hentai_doujin|hentai_western)\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
-/^https:\/\/www\.14mm\.net\/\d+\.html$/
+/^https:\/\/(www\.tp8\.org|www\.14mm\.(net|cn))\/\d+\.html$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/
