@@ -957,9 +957,9 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/16 16:41</p>
+<p>2024/05/16 19:36</p>
 https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt
-完整黑名單複製貼上即完事
+除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
 https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1842,7 +1842,7 @@ https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/P
                 <td></td>
             </tr>
             <tr>
-                <td><a href="https://youwu.pics/">尤物丧志</a></td>
+                <td><a href="https://youwu.lol/">尤物丧志</a></td>
                 <td></td>
             </tr>
             <tr>
@@ -2432,6 +2432,10 @@ https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/P
             <tr>
                 <td><a href="http://2lsp.xyz/">2LSP</a></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td><a href="https://www.pic88.cc/">高清图片吧</a></td>
+                <td><a href="https://m.pic88.cc/">m.pic88.cc</a>，Pic8.cc</td>
             </tr>
             <tr>
                 <td><a href="https://www.guixiu.org/">闺秀网</a></td>
