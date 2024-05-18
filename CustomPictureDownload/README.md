@@ -1032,12 +1032,12 @@ imgs: async () => {
                 <td>同格式，<a href="https://hitxhot.com/">Hitxhot Album Archive II</a>，<a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>，<a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">www.kaizty.com</a>，<a href="https://www.depvailon.com/">www.depvailon.com</a>，<a href="https://pic.yailay.com/">pic.yailay.com</a>，<a href="https://nungvl.net/">nungvl.net</a>，<a href="https://lootiu.com/">Lootiu.Com</a>，<a href="https://depday.info/">Depday-Info</a>，<a href="https://thismore.fun/">ThisMore.Fun</a>，<a href="https://cosxuxi.club/">CosXuxi Club</a>，<a href="https://redseats.org/">RedSeats.Org</a></td>
             </tr>
             <tr>
-                <td><a href="https://www.321780.xyz/">极品性感美女</a></td>
-                <td><a href="https://x007.qqqv.bf/">x007.qqqv.bf</a>，<a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com</td>
+                <td><a href="https://www.321782.xyz/">极品性感美女</a></td>
+                <td><a href="https://x008.tbbb.bf/">x008.tbbb.bf</a>，<a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com</td>
             </tr>
             <tr>
-                <td><a href="https://www.xrmn08.top/">秀人美女網</a></td>
-                <td><a href="https://xiu01.nnnq.bf/">xiu01.nnnq.bf</a>，永久域名：Xrmnw.Com  秀人美女.Top</td>
+                <td><a href="https://www.xiu01.top/">秀人美女網</a></td>
+                <td><a href="https://xiu02.qqqv.bf/">xiu02.qqqv.bf</a>，永久域名：Xrmnw.Com  秀人美女.Top</td>
             </tr>
             <tr>
                 <td><a href="https://www.123783.xyz/">秀人集</a></td>
