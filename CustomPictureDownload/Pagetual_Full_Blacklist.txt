@@ -60,6 +60,7 @@ https://*.dgmanhua.com/manhua/*/*.html
 *://www.veryim.com/manhua/*/*.html
 /^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
 *://cn.baozimh.one/manga/*/*
+*://m.gaonaojin.com/*/*.html
 *://www.nlegs.com/girls/*.html
 https://www.honeyleg.com/article/*.html
 https://www.ladylap.com/show/*
@@ -373,6 +374,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://aitu.men/*/*.html
 *://jaoren.com/*/*.html
 *://1zse.com/index.php/*.html
+*://www.bulota.com/index.php/*.html
 *://naluhd.com/index.php/*.html
 *://nsphb.com/*/*.html
 *://www.xiurenugril.com/*.html
