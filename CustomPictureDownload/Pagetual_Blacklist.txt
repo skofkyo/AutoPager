@@ -1,4 +1,4 @@
-2024/05/16 19:36
+2024/05/18 19:48
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1273,6 +1273,9 @@ JComic
 一之涩漫画
 *://1zse.com/index.php/*.html
 
+布罗塔漫画
+*://www.bulota.com/index.php/*.html
+
 那露漫画
 *://naluhd.com/index.php/*.html
 
@@ -1502,7 +1505,8 @@ http://*.wuqimh.net/*/*.html
 *77mh.xyz/*/*.html
 
 仙漫网閱讀
-*://*.gaonaojin.com/*/*.html
+*://www.gaonaojin.com/*/*.html
+*://m.gaonaojin.com/*/*.html
 
 大树漫画閱讀
 *://www.dashumanhua.com/comic/*/read-*.html
