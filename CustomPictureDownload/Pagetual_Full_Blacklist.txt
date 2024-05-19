@@ -1,10 +1,11 @@
 *m.happymh.com*
-/www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/
 *://ani.gamer.com.tw/animeVideo.php*
 *://*copymanga.site/comic/*/chapter/*
 *://*copymanga.tv/comic/*/chapter/*
 *://*mangacopy.com/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
+/^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
+*://baozimh.one/chapter/*.html
 *manmanju.*/comiclist/*/*/*.htm
 *ikukudm.*/comiclist/*/*/*.htm
 *m.3840p.xyz/comiclist/*/*/*.htm
