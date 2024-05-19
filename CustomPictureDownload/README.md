@@ -69,13 +69,13 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
 <p>如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。</p>
 <h1>關於自動下載：</h1> 當修改了腳本UI選項設定或快捷鍵[ Ctrl + . ]或腳本內的站點規則啟用了自動下載時，站點規則insertImg的自動插入圖片將無效，瀏覽器的下載設定需關閉下載前詢問儲存位置和設定好預設的下載路徑，全自動需要有NEXT做搭配，每個站點第一次啟用時需等待連續下載2~3次後，觸發瀏覽器詢問是否同意允許下載多個檔案，需同意後後續才能成功下載，並且讓分頁保持在前景運行不然壓縮進度會停住，可以開一個獨立視窗一個分頁用作下載用，最好的方式是拉兩個視窗一個佔1/3畫面掛下載一個佔3/2畫面瀏覽。 <h1>圖片全載規則示例：</h1>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <pre>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <pre>
 [{
     name: "規則名稱",
     enable: 0, //填0禁用此規則
@@ -230,7 +230,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     …
 }]
 </pre>
-  <pre>
+    <pre>
 // 網站自帶燈箱功能，不注入FancyboxCSS樣式
 fancybox: {
     v: 3,
@@ -254,16 +254,16 @@ fancybox: {
 </details>
 <h1>自動翻頁規則示例：</h1>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <p>簡易實現自動翻頁功能，圖片全載的實驗性輔助功能，需要動態加載的大多都翻不了。</p>
-  <p>點擊標題分隔條和雙擊頁面空白處，暫停或啟用自動翻頁。</p>
-  <p>需要更高級的自動翻頁功能請使用東方永頁機。</p>
-  <pre>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <p>簡易實現自動翻頁功能，圖片全載的實驗性輔助功能，需要動態加載的大多都翻不了。</p>
+    <p>點擊標題分隔條和雙擊頁面空白處，暫停或啟用自動翻頁。</p>
+    <p>需要更高級的自動翻頁功能請使用東方永頁機。</p>
+    <pre>
 變量doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
 舉例選取元素
 doc.querySelector(selector)
@@ -271,7 +271,7 @@ doc.querySelector(selector)
 fun.ge(selector, doc)
 fun.gae(selector, doc)
 </pre>
-  <pre>
+    <pre>
 {
     name: "哈哈漫画 www.hahacomic.com 分類自動翻頁",
     enable: 1,
@@ -367,39 +367,39 @@ fun.gae(selector, doc)
 </details>
 <h1>內置函式：</h1>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <pre>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <pre>
 //返回一個指定元素，支持CSS/Xpath選擇器
 fun.ge("selector");
 fun.ge("selector", doc = document);
 fun.ge("selector", node);
 fun.ge(String, HTMLDocument || HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //返回指定的所有元素陣列，支持CSS/Xpath選擇器
 fun.gae("selector");
 fun.gae("selector", doc = document);
 fun.gae("selector", node);
 fun.gae(String, HTMLDocument || HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //取得指定的A元素的href
 fun.gu("selector");
 fun.gu("selector", doc = document);
 fun.gu(String, HTMLDocument || HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //取得指定的所有A元素的href陣列
 fun.gau("selector");
 fun.gau("selector", doc = document);
 fun.gau(String, HTMLDocument || HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //取得元素的字串
 //mode
 //1返回指定元素的字串(預設)
@@ -409,20 +409,20 @@ fun.gt("selector");
 fun.gt("selector", mode = 1, doc = document);
 fun.gt(String, Number, HTMLDocument or HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //取得非src腳本的字串
 //searchValue，關鍵字串或正則表達式
 fun.gst(searchValue);
 fun.gst(searchValue, doc = document);
 fun.gst(String or RegExp, HTMLDocument or HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //取得元素屬性的值
 fun.attr("selector","屬性");
 fun.attr("selector","屬性", doc = document);
 fun.attr(String, String, HTMLDocument or HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //創建一個DIV用來放圖片，#FullPictureLoadMainImgBox
 //pos 0，添加進指定的元素裡面
 //pos 1，插入在指定的元素之前
@@ -431,14 +431,14 @@ fun.createImgBox(selector);
 fun.createImgBox(selector, pos = 0);
 fun.createImgBox(String, Number);
 </pre>
-  <pre>
+    <pre>
 //指定元素選擇器或元素陣列，返回過濾出圖片網址陣列。
 fun.getImgSrcArr("selector");
 fun.getImgSrcArr("selector", doc = document);
 fun.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fun.getImgSrcArr(Array [HTMLImageElement]);
 </pre>
-  <pre>
+    <pre>
 //對document.title的字串修改
 //mode
 //0返回【刪除指定字串的標題(預設)】
@@ -449,12 +449,12 @@ fun.title("字串");
 fun.title("字串", mode, doc = document);
 fun.title(String or RegExp, Number, HTMLDocument or HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //觀察元素變化執行callback
 fun.addMutationObserver(callback, config = MutationObserverConfig, node = document.body);
 fun.addMutationObserver(Function or AsyncFunction, Object, HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //將字串解析成document物件
 //搭配fetch(url).then(res => res.text())返回的原始碼使用
 fun.doc("字串");
@@ -465,29 +465,29 @@ fetch(url).then(res => res.text()).then(text => {
     return ele;
 })
 </pre>
-  <pre>
+    <pre>
 //將字串解析成xml物件
 fun.xml("字串");
 fun.xml(String);
 </pre>
-  <pre>
+    <pre>
 //顯示簡短訊息
 //time ms，0持續顯示
 fun.showMsg("字串", time = 1000));
 fun.showMsg(String, Number);
 </pre>
-  <pre>
+    <pre>
 //隱藏簡短訊息
 fun.hideMsg();
 </pre>
-  <pre>
+    <pre>
 //延遲運行async/await
 //time ms
 //msg，0不顯示訊息
 await fun.delay(time, msg = 1);
 fun.delay(Number, Number);
 </pre>
-  <pre>
+    <pre>
 //等待元素async/await
 //間隔100毫秒判斷一次，有元素返回元素超過循環次數返回null。
 //max，循環的次數
@@ -495,14 +495,14 @@ await fun.waitEle("selector");
 await fun.waitEle("selector", max = 200, doc = document);
 fun.waitEle(String, Number, HTMLDocument or HTMLElement);
 </pre>
-  <pre>
+    <pre>
 //等待window物件屬性
 //max，循環的次數
 await fun.waitVar("declares");
 await fun.waitVar("declares", max = 200);
 fun.waitVar(String, Number);
 </pre>
-  <pre>
+    <pre>
 //等待函式寫法，最大循環300次100ms，30秒。
 //callback返回真假值或物件，undefined、null、NaN識別為false。
 let callback = (dom, win) => {
@@ -511,12 +511,12 @@ let callback = (dom, win) => {
 await fun.wait(callback, dom = document, win = window);
 fun.wait(Function or AsyncFunction, HTMLDocument, Window);
 </pre>
-  <pre>
+    <pre>
 //功能基本等同eval()
 fun.run("code");
 fun.run(String);
 </pre>
-  <pre>
+    <pre>
 //創建空陣列，取代[] for push()的寫法
 //num陣列的長度
 fun.arr(num);
@@ -525,7 +525,7 @@ fun.arr(num).map((_, i) => {
 });
 fun.arr(Number);
 </pre>
-  <pre>
+    <pre>
 //移除元素
 //time ms，延遲的時間
 //Promise可以用await
@@ -537,7 +537,7 @@ let selectors = ["cssSelector" , "XpathSelector"]
 fun.remove(selectors, time = 0);
 fun.remove(String or Array, Number);
 </pre>
-  <pre>
+    <pre>
 //清除所有setTimeout和setInterval定時器
 //用匿名函式對付匿名函式，可以解決一部份不讓人打開F12開發人員工具的問題
 //mode0，預設運行全部
@@ -547,12 +547,12 @@ fun.remove(String or Array, Number);
 fun.clearAllTimer(mode = 0);
 fun.clearAllTimer(Number);
 </pre>
-  <pre>
+    <pre>
 //插入樣式，需要先用JS判斷的情況用這個
 fun.css("css");
 fun.css(String);
 </pre>
-  <pre>
+    <pre>
 //插入A元素;
 //url 網址
 //selector 元素選擇器
@@ -565,7 +565,7 @@ fun.css(String);
 fun.addUrlHtml("url", "selector", pos = 0, "text");
 fun.addUrlHtml(String, String, Number, String);
 </pre>
-  <pre>
+    <pre>
 //創建script元素
 fun.script(string, number= 0, number = 0, doc = document)
 //返回script
@@ -575,7 +575,7 @@ fun.script("code",0,1)
 //src插入到document.body
 fun.script("srcUrl",1,1)
 </pre>
-  <pre>
+    <pre>
 //依序滾動元素
 //selector 元素選擇器
 //ms 滾動的間隔時間
@@ -594,7 +594,7 @@ let callback = (ele) => fun.ge("img[src]", ele);
 //此例為判斷元素的src屬性是否已經轉為BlobURL
 let callback = (img) => /^blob/.test(img.src);
 </pre>
-  <pre>
+    <pre>
 //確認元素和圖片網址，嘗試取得網址和補全網址 返回一個obj。
 {
     ok: Boolean, //成功true失敗false
@@ -603,7 +603,7 @@ let callback = (img) => /^blob/.test(img.src);
 fun.checkImgSrc(HTMLElement);
 //可以使用封裝好的fun.getImgSrcArr();
 </pre>
-  <pre>
+    <pre>
 //確認元素有沒有把圖片原始網址放在src以外的屬性
 {
     ok: Boolean, //成功true失敗false
@@ -612,7 +612,7 @@ fun.checkImgSrc(HTMLElement);
 fun.checkDataset(HTMLElement);
 //可以使用封裝好的fun.getImgSrcArr();
 </pre>
-  <pre>
+    <pre>
 //確認圖片狀態屬性 返回一個obj
 {
     ok: Boolean, //成功讀取true失敗false
@@ -622,13 +622,13 @@ fun.checkDataset(HTMLElement);
 await fun.checkImgStatus(src);
 fun.checkImgStatus(String);
 </pre>
-  <pre>
+    <pre>
 //確認加了CDN的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址
 //https://wsrv.nl/，https://i0.wp.com/
 await fun.checkImageCDN([圖片網址陣列]);
 fun.checkImageCDN(Array);
 </pre>
-  <pre>
+    <pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得，無法繪製跨域的圖片，會出現跨域汙染的錯誤。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
@@ -639,7 +639,7 @@ fun.imgToBlobURL(String, String, Number);
 //例子
 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
 </pre>
-  <pre>
+    <pre>
 //包裝fun.imgToBlobURL函式。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
@@ -652,7 +652,7 @@ fun.imgBlobArr(".mh_comicpic img[src^=blob]");
 //例子2
 fun.imgBlobArr(".image>img");
 </pre>
-  <pre>
+    <pre>
 //使用Promise包裝GM_xmlhttpRequest
 //只取得回應標頭，不接收完整資料，快速確認鏈結的存活狀態。
 fun.xhrHEAD("url");
@@ -666,14 +666,14 @@ if (status == 200) {
 }
 fun.xhrHEAD(String);
 </pre>
-  <pre>
+    <pre>
 //使用Promise包裝GM_xmlhttpRequest
 //傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址
 //imx.to、imagebam、postimg...等等
 fun.getImageHost([links]);
 fun.getImageHost(Array);
 </pre>
-  <pre>
+    <pre>
 //使用Promise包裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
 fun.xhr("url", details = {});
@@ -689,7 +689,7 @@ fun.xhr("url", {
 })
 fun.xhr(String, Object);
 </pre>
-  <pre>
+    <pre>
 //使用Promise包裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
 fun.xhrDoc("url", details = {})
 fun.xhrDoc("url", {
@@ -703,7 +703,7 @@ fun.xhrDoc("url").then(doc => {
 })
 fun.xhrDoc(String, Object);
 </pre>
-  <pre>
+    <pre>
 //使用Fetch API，返回經過文字編碼的document，避免字元亂碼。
 //無法修改User-Agent
 fun.fetchDoc("url", details = {});
@@ -712,7 +712,7 @@ fun.fetchDoc("url").then(doc => {
 })
 fun.fetchDoc(String, Object);
 </pre>
-  <pre>
+    <pre>
 //使用iframe框架，返回iframe框架的document。
 //selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
@@ -722,7 +722,7 @@ let callback = (doc) => { //參數doc為iframe的document
 await fun.iframeDoc("url", "selector", time = 5000, callback);
 fun.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
-  <pre>
+    <pre>
 //使用Fetch API搭配iframe框架，返回iframe框架的document。
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
 //ele元素選擇器指定等待到元素出現(必須)
@@ -733,12 +733,12 @@ let callback = (doc) => { //參數doc為iframe的document
 await fun.iframeSrcDoc("url", "selector", time = 5000, callback);
 fun.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
-  <pre>
+    <pre>
 //使用iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
 let iframe = await fun.iframeVar("url", time = 1000, "declares");
 fun.iframeVar(String, Number, String);
 </pre>
-  <pre>
+    <pre>
 //讓用iframe框架能像fetch的寫法
 const details = {
     loadTime: 1000,
@@ -769,7 +769,7 @@ fun.iframe("url", details).then(object => {
 
 fun.iframe(String, Object);
 </pre>
-  <pre>
+    <pre>
 //xhr抓取元素，不局限於圖片
 //links網址陣列
 //selector要抓的元素
@@ -782,7 +782,7 @@ fun.getEle(Array, String, String or Array [String, Number], String or null, Numb
 await fun.getCorsEle([links], "selector", targetEle, removeEle = null, time = 100);
 fun.getCorsEle(Array, String, String or Array [String, Number], String or null, Number);
 </pre>
-  <pre>
+    <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
 //max填入用fun.gt()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 fun.getImg("圖片元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
@@ -845,20 +845,20 @@ mode20
 //獨立出來的可調用函式，返回修改後的鏈結
 fun.getModeUrl("url", mode, num);
 </pre>
-  <pre>
+    <pre>
 //xhr抓取圖片元素，返回圖片網址
 //fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
 fun.getImgO("圖片元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
 fun.getImgO("img selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 fun.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
 </pre>
-  <pre>
+    <pre>
 //fun.getImgIframe基本同fun.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
 fun.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
 fun.getImgIframe("img selector", max, mode, paginationEle = null, time = 1000, showMsg = 1)
 fun.getImgIframe(String, Number, Number, String or  null, Number, Number)
 </pre>
-  <pre>
+    <pre>
 //xhr抓取圖片元素，返回圖片網址
 //mode
 //0多線程(預設)
@@ -873,13 +873,13 @@ fun.getImgA("圖片元素選擇器", "A元素選擇器");
 fun.getImgA("圖片元素選擇器", [網址陣列]);
 fun.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
 </pre>
-  <pre>
+    <pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址
 fun.getImgCorsA("圖片元素選擇器", "A元素選擇器", time = 100);
 fun.getImgCorsA("圖片元素選擇器", [網址陣列], time = 100);
 fun.getImgCorsA(String, String or Array, Number);
 </pre>
-  <pre>
+    <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
 fun.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器或函式", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
 //判斷為最後一頁的函式舉例
@@ -975,7 +975,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/19 18:58</p>
+<p>2024/05/19 19:47</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
 <p>
@@ -994,3549 +994,3549 @@ imgs: async () => {
 <p>※備註SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈結。</p>
 <h2>老司機類內置規則支持列表</h2>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <table>
-    <thead>
-      <tr>
-        <th>
-          <strong>網站</strong>
-        </th>
-        <th>
-          <strong>備註</strong>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <a href="https://web.telegram.org/k//">Telegram Web</a>
-        </td>
-        <td>從Telegram網頁版上的telegra.ph下載圖片，會被CentBrowser(5.0.1002.354)瀏覽器判斷為不安全封鎖下載，請自行決定是否保留檔案，從 <a href="https://tgstat.com/">TGStat</a>搜索cosplay、nsfw、Cosplay鉴赏 ，可以挖到不少你懂得。 </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xchina.biz/">小黃書</a>
-        </td>
-        <td>
-          <a href="https://xchina.co/">xchina.co</a>， <a href="https://xchina.fun/">xchina.fun</a>， <a href="https://xchina.life/">xchina.life</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://8se.me/">8色人體攝影</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.nlegs.com/">NLegs</a>
-        </td>
-        <td>
-          <a href="https://www.honeyleg.com/">HoneyLeg</a>， <a href="https://www.ladylap.com/">Lady Lap</a>， <a href="https://www.nuyet.com/">Nuyet</a>， <a href="https://www.legbabe.com/">LegBabe</a>，請使用專用腳本載入大圖， <a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a>，規則有手動插入模式，請在載入所有大圖後對左下圖示按右鍵或數字鍵1或8來使用
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.yalayi.com/">雅拉伊</a>
-        </td>
-        <td>免VIP僅支援PC版和圖片命名是簡單數字遞增的。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yskhd.com/">优丝库HD</a>
-        </td>
-        <td>
-          <a href="https://yskhd.me/">yskhd.me</a>， <a href="https://ysk567.com/">ysk567.com</a>，免VIP
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hentaiclub.net/">紳士会所</a>
-        </td>
-        <td>
-          <a href="https://www.sshs.pw/">导航页</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.24fa.com/c49.aspx">24FA</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
-        </td>
-        <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://depday.info/">Depday-Info</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.321782.xyz/">极品性感美女</a>
-        </td>
-        <td>
-          <a href="https://x008.tbbb.bf/">x008.tbbb.bf</a>， <a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xiu01.top/">秀人美女網</a>
-        </td>
-        <td>
-          <a href="https://xiu02.qqqv.bf/">xiu02.qqqv.bf</a>，永久域名：Xrmnw.Com 秀人美女.Top
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.123783.xyz/">秀人集</a>
-        </td>
-        <td>永久域名Xiurenba.Com及(秀人集.com)</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ikmn05.xyz/">爱看美女网</a>
-        </td>
-        <td>不支持預覽版頁面，永久域名：ikmn.cc</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.plmn5.cc/">漂亮美女网</a>
-        </td>
-        <td>不支持預覽版頁面，永久域名：plmn.cc</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.imn5.vip/">爱美女网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://meirentu.cc/">美人图</a>
-        </td>
-        <td>
-          <a href="https://meirentu.top/">meirentu.top</a>
-        </td>
-      </tr>c <tr>
-        <td>
-          <a href="https://www.22mm.net/">美女秀</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.taotu8.cc/">秀套图吧</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.502x.com/xiurenwang.html">秀人图吧</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://rosipic.com/rosi.html">ROSI写真</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.rosi985.com/">ROSI美女写真</a>
-        </td>
-        <td>部分地區需要VPN才能連上， <a href="https://www.2meinv.cc/">www.2meinv.cc</a>， <a href="https://www.silk-necktie.com/">www.silk-necktie.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.rosi211.cc/">ROSI小莉写真</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.kaka234.cc/">卡卡美女网</a>
-        </td>
-        <td>
-          <a href="https://m.kaka234.cc/">m.kaka234.cc</a>，China IP限定
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.24tupian.org/">爱死美女图片站</a>
-        </td>
-        <td>需註冊登入才能看大圖和下載</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.24cos.org/">爱死cos美女图片站</a>
-        </td>
-        <td>
-          <a href="https://www.lovecos.net/">www.lovecos.net</a>，不支持VIP資源。
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ja.huamaobizhi.com/mixs/?lang=zh-CN">花猫壁纸</a>
-        </td>
-        <td>
-          <a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類添加了自動翻頁。
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fulitu.me/">福利图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://weme2.com/">微密猫</a>
-        </td>
-        <td>
-          <a href="https://weme.su/">weme.su</a>， <a href="https://wememiao.com/">wememiao.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://umei.net/">优美图录</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xiutaku.com/">Xiutaku</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://kiutaku.com/">Kiutaku</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://aiavr.uk/">图集网</a>
-        </td>
-        <td>
-          <a href="https://user.aiavr.uk/">user.aiavr.uk</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xgirl.one/">XGirl</a>
-        </td>
-        <td>SPA網頁，分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xerocos.com/">Xerocos</a>
-        </td>
-        <td>SPA網頁，分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.v2ph.com/">微圖坊</a>
-        </td>
-        <td>
-          <a href="https://www.v2ph.net/">www.v2ph.net</a>， <a href="https://www.v2ph.ru/">www.v2ph.ru</a>， <a href="https://www.v2ph.ovh/">www.v2ph.ovh</a>，需註冊，大尺度非VIP只能抓到8~10張
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.meitule.net/">美图乐</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://siwake.cc/">丝袜客</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.mfsft.com/">免费私房图</a>
-        </td>
-        <td>
-          <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a> ，發布頁， <a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>， 相似仿站， <a href="https://www.rosi8.com/">www.rosi8.com</a>， <a href="https://www.sfjpg.com/">www.sfjpg.com</a>， <a href="https://www.sfjpg.net/">www.sfjpg.net</a>， <a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>， <a href="https://www.kanmeitu1.com/">www.kanmeitu1.com</a>， <a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.06se.com/">六色美图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://girlsteam.club/">女神部落</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mfpho.com/">柔丝映画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.haotuwu.com/">好圖屋</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://dongti.blog.2nt.com/">胴体的诱惑</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.446m.com/">萌图社</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.jk.rs/">日式JK</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.girldir.com/">美女目录网</a>
-        </td>
-        <td>作用在列表模式頁面</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.cup2d.com/">Cup2D</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://baoruba.com/">私图网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tukuku.cc/">图库库</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://coscoser.com/">coscoser</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.umeitu.com/">尤美图库</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.zhaotaotu.cc/">找套图</a>
-        </td>
-        <td>
-          <a href="https://www.zhaotaotu.one/">zhaotaotu.one</a>， <a href="https://kantaotu.cc/">Xiuno BBS</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.meituku.org/">美图库</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tuzac.com/">图宅网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.kkc3.com/">咔咔西三</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.youfreex.com/">YouFreeX</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.qixianzi.com/">七仙子图片</a>
-        </td>
-        <td>
-          <a href="https://www.qixianzi.com/e/wap/">www.qixianzi.com/e/wap/</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://heysexgirl.com/">嘿～色女孩</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.cos6.net/">绅士猫</a>
-        </td>
-        <td>需註冊登錄</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://paopoi.com/">泡泡</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sesew.top/">涩涩乐园</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.costhisfox.com/">扮之狐狸</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xwbar.com/web/meinv/">新闻吧</a>
-        </td>
-        <td>
-          <a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>， <a href="https://www.fjrx.org/web/meinv/">福建热线</a>， <a href="https://www.sdrx.org/web/meinv/">山东热线</a>， <a href="https://www.gxrx.org/web/meinv/">广西热线</a>， <a href="https://www.whrx.org/web/meinv/">武汉热线</a>， <a href="http://www.tjrx.org/web/meinv/">天津热线</a>， <a href="https://www.ynrx.org/web/meinv/">云南热线</a>， <a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.shzx.org/b/12-0.html">四海资讯</a>
-        </td>
-        <td>
-          <a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.nvhai8.com/">女人吧</a>
-        </td>
-        <td>
-          <a href="https://m.nvhai8.com/">m.nvhai8.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.jkforum.net/">JKF</a>
-        </td>
-        <td>貼圖區</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.t66y.com/">草榴</a>
-        </td>
-        <td>貼圖區</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.cool18.com/">留园酷</a>
-        </td>
-        <td>貼圖區</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://51sex.vip/">51sex</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.92meinv.com/">爱美女</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xinmeitulu.com/">新美图录</a>
-        </td>
-        <td>
-          <a href="https://www.twlegs.com/">臺灣美腿女郎</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://meitulu.me/">美图录</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tujigu.top/">爱图集谷</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xiuwo.net/">秀窝</a>
-        </td>
-        <td>
-          <a href="https://rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://wap.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xsnvshen.co/">秀色女神</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.kongquehai.net/">孔雀海</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.lolili.net/">洛丽网</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ladymao.net/">ladymao图库</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.lazymanpic.net/">懒人看图</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.youwushow.net/">尤物秀</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://legskr.com/">iLegs时光印象网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xiurenwang.me/">秀人网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://8ezy.com/">8E资源站</a>
-        </td>
-        <td>如出現清空網頁內容的情況，是因為有反擋廣告套件機制，需加入擋廣告白名單。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.aixiurentu.com/">秀人图</a>
-        </td>
-        <td>只支援免費</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tu928.com/">tu928美女写真网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xiaojiejie.me/">小姐姐么</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.14mm.cn/">14MM图片网</a>
-        </td>
-        <td>
-          <a href="https://www.tp8.org/">图片吧</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://coserlab.io/">Coser Lab</a>
-        </td>
-        <td>4K~8K高解析</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.loxiu.com/">洛秀网</a>
-        </td>
-        <td>
-          <a href="https://www.counv.com/">维秘秀</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://bisipic.xyz/">比思在線圖庫</a>
-        </td>
-        <td>
-          <a href="https://bisipic.online/">bisipic.online</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.uyn8.cn/">牛牛美图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.meimeimei.org/">美妹妹</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://aitu.men/">爱图门</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nanrenhome.cc/category/nanrenzhijia/fulimeitu">男人之家</a>
-        </td>
-        <td>
-          <a href="https://nrzj.link/">nrzj.link</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.2wh.net/meinvxiezhenjigou">网红跟我俩</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://niuniuhome.club/">妞妞之家</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.beautyleg6.com/index.html">BeautyLeg</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://kenshin.hk/category/jnews/photoalbum/">劍心回憶</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://chibakuma.pixnet.net/blog">千葉熊的出沒地</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cyberkuma.pixnet.net/blog">CyberKuma的部落格</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ikanins.com/">爱看 INS</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.dmmtu.com/">第一美女图</a>
-        </td>
-        <td>
-          <a href="https://www.kkmnt.com/">www.kkmnt.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://zipaipic.com/">自拍图库</a>
-        </td>
-        <td>自拍图库.com</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://7aipai.com/">美拍 - 我自拍</a>
-        </td>
-        <td>
-          <a href="https://5zipai.com/">5zipai.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cgdd.net/">吃瓜大队</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://taotu.org/">套圖TAOTU.ORG</a>
-        </td>
-        <td>
-          <a href="https://taotu.org/m/">taotu.org/m/</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.95mm.vip/">MM 范</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.meitu131.com/meinv/">MEITU131</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tupianwu.com/">图片屋</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hexieshe.cn/">和邪社</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mmonly.com/mmtp/">唯一图库</a>
-        </td>
-        <td>
-          <a href="https://m.mmonly.com/mmtp/">m.mmonly.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://pic.yesky.com/">天极图片</a>
-        </td>
-        <td>
-          <a href="https://wap.yesky.com/pic/">wap.yesky.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.xxiav.com/">XXIAV寫真館</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18av.mm-cg.com/zh/cg_random/all/index.html">18AV</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://taotuhome.com/">套图之家 taotuhome.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.taotuzj.com/">套图之家 www.taotuzj.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.shunvi.com/">淑女爱</a>
-        </td>
-        <td>www.shunvai.com</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.meijuntu.com/">俊美图</a>
-        </td>
-        <td>www.jeya.de</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mt316.com/">妹子图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.888meinv.com/">888美女网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.wai77.com/">心动美图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.meinvku.org.cn/">美女库</a>
-        </td>
-        <td>China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.656g.com/">656G精品套图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mm5mm5.com/">MM5MM5美女图片</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.eemm.cc/">依依图片网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xintp.com/meinv/">犀牛图片网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://jrants.com/">青年美圖</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://trendszine.com/">風流雜誌</a>
-        </td>
-        <td>
-          <a href="https://cosblay.com/">CosBlay</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xx.knit.bid/">爱妹子</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://928r.com/">美图社</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://inewgirl.com/">女神社</a>
-        </td>
-        <td>
-          <a href="https://nshens.com/">nshens.com</a>， <a href="https://lovens.cc/">lovens.cc</a>，VIP限定的沒有VIP帳號只會重複抓到第一頁的圖片
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://chottie.com/blog/">Chottie</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ijjiao.com/people">街角图片社</a>
-        </td>
-        <td>需透過微信公眾號取得密碼登錄，China IP限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.evacg.org/">E次元</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://ciyuandao.com/photo">次元岛</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://dimtown.com/cosplay">次元小镇</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mtutuu.com/">萌次元</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://pic.3loumao.org/">3楼猫图库</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.emonl.com/">柠檬皮</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.acgers.com/list/list">ACG宅吧</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://x6o.com/topics/14#articles">x6o</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sexygirl.cc/">SexyGirl</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cangcuc.com/">Căng Cực</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fliporn.biz/sexual-picture">Fliporn</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mmav.me/photo/">萌妹社区</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.madoucun.com/arttype/57.html">麻豆村</a>
-        </td>
-        <td>
-          <a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>， <a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>， <a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>， <a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>， <a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>， <a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>， <a href="https://www.proncn.com/arttype/57.html">中国P站</a>， <a href="https://www.proncn.com/arttype/57.html">麻豆101</a>， <a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>， <a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>， <a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>， <a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a>， <a href="https://www.9ccg.org/arttype/57.html">9草吃瓜网</a>， <a href="https://www.royalmcn.com/arttype/57.html">皇家华人</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.91tulu.com/">91图录</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://books.xxgirls.vip/">淫淫小说写真馆</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://torontolove.cc/">多伦多情色</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://a.534798.xyz/">性趣套图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://a.28tyu.com/">苍井优图片</a>
-        </td>
-        <td>
-          <a href="https://a.28wer.com/">a.28wer.com</a>， <a href="https://a.sldlxz.com/">a.sldlxz.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.photos18.com/">色情圖片網</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://17sex.vip/list/4858">趣事館</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yazhouseba.com/meinv/">亚洲色吧</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.1000yishu.com/">1000艺术摄影</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.169tp.com/">169图片大全</a>
-        </td>
-        <td>
-          <a href="https://www.169tp.com/xingganmeinv/">性感</a>， <a href="https://www.169tp.com/wangyouzipai/">自拍</a>， <a href="https://www.169tp.com/gaogensiwa/">丝袜</a>， <a href="https://www.169tp.com/rentiyishu/">人体</a>， <a href="https://www.169tp.com/xiyangmeinv//">西洋</a>， <a href="https://www.169tp.com/guoneimeinv/">国内</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://k55.net/arttype/2.html">K55</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cav103.com/albums/">GavPorn相冊</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://avjb.com/albums/">AVJB</a>
-        </td>
-        <td>
-          <a href="https://avjb.github.io/">網址發佈頁1</a>， <a href="https://bitbucket.org/free890722/avjb/src/master/README.md">網址發佈頁2</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://theavporn.com/albums/">The AV Porn</a>
-        </td>
-        <td>
-          <a href="https://theavporn.github.io/theavporn/">網址發佈頁</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://dev.avjb.com/albums/">爱微社区</a>
-        </td>
-        <td>成人相册添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.qinimg.com/">Qinimg</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.yeitu.com/meinv/">亿图全景图库</a>
-        </td>
-        <td>
-          <a href="https://www.yeitu.com/dongman/cosplay/">COSPLAY</a>， <a href="https://m.yeitu.com/">m.yeitu.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.umei.cc/meinvtupian/">优美图库</a>
-        </td>
-        <td>
-          <a href="https://wap.umei.cc/">wap.umei.cc</a>，China IP限定
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.win3000.com/tags/xingganmeinv/">三千图片网</a>
-        </td>
-        <td>
-          <a href="https://m.win3000.com/tags/xingganmeinv/">m.win3000.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.3gbizhi.com/meinv">3G壁纸</a>
-        </td>
-        <td>
-          <a href="https://m.3gbizhi.com/">m.3gbizhi.com</a>，China IP限定
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mn52.com/xingganmeinv/">mn52图库</a>
-        </td>
-        <td>
-          <a href="https://wap.mn52.com/meihuoxiezhen/">wap.mn52.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.enterdesk.com/">回车桌面</a>
-        </td>
-        <td>
-          <a href="https://m.enterdesk.com/">m.enterdesk.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.keaitupian.com/">可爱小图</a>
-        </td>
-        <td>
-          <a href="https://m.keaitupian.com/">m.keaitupian.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xiuren.biz/">Xiuren</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://misskon.com/">MissKON.com</a>
-        </td>
-        <td>完整無修正的圖片需要下載，聚集的只是預覽圖</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hotgirl.asia/">HotAsiaGirl</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hotgirl2024.com/">HotGirl World</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.4khd.com/">4KHD</a>
-        </td>
-        <td>
-          <a href="https://fxcc.cc/">二級域名導航</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://spacemiss.com/">Spacemiss.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.1y.is/">1Y Beauties</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.cosersets.com/1">Cosersets</a>
-        </td>
-        <td>SPA網頁，請在圖片頁做操作，可用0、1、3、7、8，Ctrl + Alt + T可修改圖集標題。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.fantasyfactory.xyz/">小丁 (Fantasy Factory) Patreon Cosplay Leaks</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://asianpink.net/">AsianPink</a>
-        </td>
-        <td>高解析原圖需要下載，聚集的只是預覽圖</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://4kup.net/">4KUP</a>
-        </td>
-        <td>圖片服務器屏蔽部分地區需要VPN才能顯示，高解析原圖需要下載，聚集的只是預覽圖</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://blog.baobua.net/mlem">BAOBUA.COM</a>
-        </td>
-        <td>
-          <a href="https://www.baobua.net/">www.baobua.net</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pixibb.com/?list=albums&sort=views_desc&page=1">PixiBB</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.coszip.com/">COSPLAY ZIP</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://redbust.com/">RedBust</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sxchinesegirlz01.xyz/">Chinese Beauties</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://taotu200.com/">套图200网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://asiantolick.com/page/news">Asian To Lick</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.modelsvibe.com/">Models Vibe</a>
-        </td>
-        <td>分類添加了自動翻頁功能</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.yalatu.com/">雅拉图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.asianude4u.net/">Asianude4u</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://jablehk.com/">Jablehk</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fapello.com/">Fapello</a>
-        </td>
-        <td>手動插入圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fapello.su/">Fapello.su</a>
-        </td>
-        <td>手動插入圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fapachi.com/">Fapachi</a>
-        </td>
-        <td>手動插入圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://faponic.com/">Faponic</a>
-        </td>
-        <td>手動插入圖片， <a href="https://fapellas.com/">Fapellas</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thefappening.plus/">The Fappening Plus</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thefappeningblog.com/">TheFappening</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fapomania.com/">Fapomania</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nudostar.tv/">NudoStar.TV</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nudogram.com/">Nudogram</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaidude.tv/category/cosplay/">HentaiDude TV</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.sankakucomplex.com/">Sankaku Complex</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://influencersgonewild.com/">Influencers GoneWild</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fanleaks.club/">Fan Leaks</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hinhanhgai.com/">Hình ảnh gái</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.gai.vn/">Gai.vn</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://imgcup.com/">imgcup.com</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mzpic.com/">Nude Babes</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tangmoc.com/">TangMoc</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tuyetnhan.com/">☆ Ảnh đẹp ☆</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://gaitrung.lovestoblog.com/">Girls Collection 18+!</a>
-        </td>
-        <td>
-          <a href="https://aigirl.lovestoblog.com/">aigirl.lovestoblog.com</a>， <a href="https://gainhat.lovestoblog.com/">gainhat.lovestoblog.com</a>， <a href="https://hotpic.lovestoblog.com/">hotpic.lovestoblog.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hotgirlpix.com/">Hot Girl Pix</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.sexyasiangirl.xyz/">SexyAsianGirl</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://youwu.lol/">尤物丧志</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hotasianx.com/">HotAsianX</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://setu.pics/">色图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yase.pics/">亚色图库</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://meitu.neocities.org/">美图</a>
-        </td>
-        <td>很多posts都404...</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fuligirl.top/">福利姬美图</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.fastingsex.com/">Fasting Sex</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sharecosplay.com/">Share Cosplay</a>
-        </td>
-        <td>高解析原圖需要下載，聚集的只是預覽圖</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cosplayersgonewild.net/">Cosplayers GoneWild</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thehentaiworld.com/hentai-cosplay-images/">The Hentai World</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://packdechicas.net/">Pack de chicas</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nudostar.com/">NudoStar</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://faps.club/main10/">OnlyFaps</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thotbook.tv/">ThotBook.tv</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.famousinternetgirls.com/">Famous Internet Girls</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tnapics.com/">TNApics</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://erothots.co/albums">EroThots</a>
-        </td>
-        <td>無法匯出、下載，需要透過快捷鍵複製URL給Motrix下載，來源爬取BITCHES GIRLS。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://bunkr-albums.io/">Bunkr</a>
-        </td>
-        <td>影片可匯出網址後用Motrix下載，
-          <pre>Referer：https://bunkr.si/</pre>，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://vk.com/">VK</a>
-        </td>
-        <td>作用在相簿頁，例如：https://vk.com/album-74498063_255021373</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fapdungeon.com/">Fapdungeon</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ibradome.com/onlyfans-photos">Ibradome</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fapopedia.net/updates/">Fapopedia</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fapfappy.com/">fapfappy</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://gotanynudes.com/">gotanynudes.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thotslife.com/">Thotslife.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nudecosplaygirls.com/category/nude-cosplay-albums/">Nude Cosplay Albums</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://voyeurflash.com/">VoyeurFlash.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://leakedmodels.com/">Leaked Models</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thothd.com/zh/albums/">ThotHD Albums</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thothub.to/albums/">Thothub Albums</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nudebird.biz/">Nude Bird</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nudecosplay.biz/">Nude Cosplay</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cosplaytele.com/">Cosplaytele</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.jimmysonline.com/">JimmysOnline.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://gaidam18.com/">gaidam18</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.cosplay69.net/">Cosplay69</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.simply-porn.com/galleries">Simply Porn</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.simply-cosplay.com/galleries/new">Simply Cosplay</a>
-        </td>
-        <td>SPA網頁，只支持galleries類別。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cosplayporn.online/category/cosplay/">Cosplay Porn</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://asiaontop.com/">AsiaOnTop</a>
-        </td>
-        <td>
-          <a href="https://asiaon.top/">asiaon.top</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mitaku.net/">Mitaku</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nudeslegion.com/">Nudeslegion</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cosplayworld.net/">Cosplay World</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://buondua.com/">Buon Dua</a>
-        </td>
-        <td>
-          <a href="https://buondua.us/">buondua.us</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hotgirl.biz/">Hotgirl.biz</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://asupanpenyegar.com/">AsupanPenyegar</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xlust.org/">XLUST.ORG</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://byoru.net/">Byoru</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cgcosplay.org/">CG Cosplay</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xcosplay.top/">X Cosplay</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
-        </td>
-        <td>
-          <a href="https://cutexinh.com/">CuteXinh</a>， <a href="https://babeasia.com/">Babe Asia</a>， <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://nongbong.com/">Nóng Bỏng</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ososedki.com/">OSOSEDKI</a>
-        </td>
-        <td>
-          <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://foamgirl.net/">FoamGirl</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://photo.camcam.cc/">photo.camcam.cc</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://3600000.xyz/">3600000 Beauty</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://erogirl.net/">Erogirl</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://everia.club/">Everia.club</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.everiaclub.com/">Everia club</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.ilovexs.com/">NongMo.Zone</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://idol.gravureprincess.date/">idol.gravureprincess.date</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.micmicidol.club/">MIC MIC IDOL</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a>
-        </td>
-        <td>
-          <a href="https://magazinejapanese5.blog.jp/">グラビア週刊誌 5</a>， <a href="https://magazinejapanese6.blog.jp/">グラビア週刊誌 6</a>，分類添加了自動翻頁
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://gravureidols.top/">Gravure Idols</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://news.idolsenka.net/">NEWSグラビアアイドル.net</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://gravia.site/box/gate.php">Gravia</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mizugigurabia.com/">水着グラビア</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://eroyakuba.com/">エロ役場</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://geinou-nude.com/">エロ画像まとめ</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.urapic.com/">裏ピク</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://reprint-kh.com/">復刻書林</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://amazon-love.com/">Love Asian Babes</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://bizyonotudoi.com/">美女の集い</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mabui-onna.com/">マブい女画像集</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://blog.livedoor.jp/pururungazou/">ぷるるんお宝画像庫</a>
-        </td>
-        <td>手動插入圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.saladpuncher.com/">Permanent Bachelor</a>
-        </td>
-        <td>手動插入圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ivphoto.tistory.com/">IVPhoto_Gravure</a>
-        </td>
-        <td>手動插入圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://goddess247.com/">goddess247</a>
-        </td>
-        <td>
-          <a href="https://bestprettygirl.com/">bestprettygirl</a>， <a href="https://girlsweetie.com/">Girl Sweetie</a>， <a href="https://girldreamy.com/">Girl Dreamy</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://bestgirlsexy.com/">BestGirlSexy</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.eyval.net/">eyval.net</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m.phimvuspot.com/">PhimVu</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yeugai.org/">YeuGai.Net</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.poringa.net/">Poringa!</a>
-        </td>
-        <td>
-          <a href="https://m.poringa.net/">m.poringa.net</a>，手動插入圖片
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tabakus.blogspot.com/">Tabakus Gallery</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://20sanctuary-grahpis.blogspot.com/">Graphis</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://min-bin.blogspot.com/">min: archive</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://asiaidols.wordpress.com/">Asia Idols</a>
-        </td>
-        <td>手動插入圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.asiapornphoto.com/">Asia Porn Photo</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://chinesenudeart.blogspot.com/">Chinese Nude Art Photos</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cutegirlsaddict.blogspot.com/">CUTE GIRLS ADDICT</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://kemono.su/fantia/user/17148">Kemono</a>
-        </td>
-        <td>
-          <a href="https://coomer.su/">Coomer</a>， <a href="https://nekohouse.su/">Nekohouse</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentai-img.com/">Hentai Image</a>
-        </td>
-        <td>
-          <a href="https://hentai-cosplays.com/">hentai-cosplays.com</a>， <a href="https://porn-images-xxx.com/">porn-images-xxx.com</a>， <a href="https://porn-gravure-idol.com/">porn-gravure-idol.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hentaicos.com/">Hentai Cosplay</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.eporner.com/pics/">EPORNER</a>
-        </td>
-        <td>
-          <a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>， <a href="https://www.eporner.com/profile/Khosmo/uploaded-pics/">Khosmo</a>， <a href="https://www.eporner.com/profile/trevor221/uploaded-pics/">trevor221</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xasiat.com/albums/">Xasiat</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://asianporn.li/photos/">Asian Porn</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://erotic.pics/">Erotic Pics</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xhamster.com/photos">xHamster</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.luscious.net/porn/cosplay-22/">Luscious</a>
-        </td>
-        <td>SPA網頁，手動插入圖片。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.imagefap.com/">ImageFap</a>
-        </td>
-        <td>只支援PC版</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://zzup.com/user-album/3338/petmer/index.html">ZzUp.Com</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://girlsreleased.com/">GirlsReleased</a>
-        </td>
-        <td>圖床imgadult無法外連，但可以下載。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://urlgalleries.net/">URLGalleries</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nsfwalbum.com/">NSFWalbum</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://bitchesgirls.com/">BITCHES GIRLS</a>
-        </td>
-        <td>影片可匯出網址候用Motrix下載</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://x-video.tube/albums/">X-video albums</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://adultphotosets.best/">Adult photo sets</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://pics-x.com/">Pics-X</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sxypix.com/">SXYPIX</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://eropics.to/">Eropics</a>
-        </td>
-        <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://vipergirls.to/">ViperGirls</a>
-        </td>
-        <td>只支援PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://porncoven.com/">PornCoven</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://eroticity.net/">ErotiCity</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://kitty-kats.net/">Kitty Kats</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://imx.to/">imx.to</a>
-        </td>
-        <td>輔助點擊，能在gallery頁進行下載。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://thotsbay.tv/">Thotsbay</a>
-        </td>
-        <td>
-          <a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.wikifeet.com/">wikiFeet</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://goodsexporn.org/">Good Sex Porn</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fitnakedgirls.com/">FitNakedGirls</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://r18hub.com/photos">R18hub</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cn.pornhub.com/albums">PornHub</a>
-        </td>
-        <td>很容易被短暫封IP...</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.erome.com/explore">EroMe</a>
-        </td>
-        <td>
-          <a href="https://erome.pics/explore/">EroMe erome.pics</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mrdeepfakes.com/photos">MrDeepFakes</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tokyomotion.net/albums">TOKYO Motion</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.javbangers.com/albums/">JavBangers</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.elitebabes.com/">Elite Babes</a>
-        </td>
-        <td>同格式， <a href="https://pmatehunter.com/">pmatehunter.com</a>， <a href="https://www.jperotica.com/">www.jperotica.com</a>， <a href="https://www.metarthunter.com/">www.metarthunter.com</a>， <a href="https://www.femjoyhunter.com/">www.femjoyhunter.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nakedwomenpics.com/">Naked Women Pics</a>
-        </td>
-        <td>
-          <a href="https://viewgals.com/">VIEW GALS</a>， <a href="https://hotpussypics.com/">Hot Pussy Pics</a>， <a href="https://bustypassion.com/">Busty Women Pics</a>， <a href="https://teenpussypics.com/">TeenPussyPics.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.freexcafe.com/">FreeXcafe</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tupic.top/">TUPIC.TOP</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://dirtychicks.net/photo-gallery/">DirtyChicks</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://amateurlikes.com/">Amateur Likes</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pornpics.com/jp/">Porn Pics</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hdpornpictures.net/">HD Porn Pictures</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hotzxgirl.com/">Hot Sex Picture</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.freebigtitpornpics.com/japanese-big-tits/">Freebigtit</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pichunter.com/">PicHunter</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pictoa.com">Pictoa</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://pimpandhost.com/site/trending">PimpAndHost</a>
-        </td>
-        <td>相簿</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pornpaw.com/">Pornpaw</a>
-        </td>
-        <td>圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://fuskator.com/">Fuskator</a>
-        </td>
-        <td>圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.fapator.com/">Fapator</a>
-        </td>
-        <td>圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sexygirlspics.com/">SexyGirlsPics</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.smutpond.com/">SMUTPOND</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://showgirlx.net/">ShowGirlx</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.superbeautygirlx.top/">Forum Girl</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://app.degoo.com/">Degoo Cloud</a>
-        </td>
-        <td>輔助ShowGirlx使用的圖床，先手動點開第一張預覽縮圖，展開第一張大圖後，按0輸入標題輸入圖片數量，等待抓取完畢。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pornpic.com/">PornPic</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.nudedxxx.com/">Nuded Photo</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://2lsp.xyz/">2LSP</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pic88.cc/">高清图片吧</a>
-        </td>
-        <td>
-          <a href="https://m.pic88.cc/">m.pic88.cc</a>，Pic8.cc
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.guixiu.org/">闺秀网</a>
-        </td>
-        <td>
-          <a href="https://guixiu.org/">guixiu.org</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m.xtushe.com/">新老友图社</a>
-        </td>
-        <td>有瀏覽限制，超過需要註冊會員和充值。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nicegirl4u.cyou/">NICEGIRL4U</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://ycyweb.cloudapp.net/">三界异次元</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.lianjiajr.net/">好视角</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://meitu.knit.bid/">美图网</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://portrait.knit.bid/">美女写真</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.ikmt.net/">爱看美图网</a>
-        </td>
-        <td>
-          <a href="http://m.ikmt.net/">m.ikmt.net</a>，很久沒新圖了
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.taotucc.com/">Taotuxp.com</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xgirlscollection.com/">Xgirls</a>
-        </td>
-        <td>
-          <a href="https://www.img3xgirls.com/">www.img3xgirls.com</a>，很久沒新圖了
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.nvshen5.com/">好女神网</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.yyzhenshun.com/">YY美女图片</a>
-        </td>
-        <td>
-          <a href="http://bb.meinvnews.com/">美眉大宝贝</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.6evu.com/">遛无写真</a>
-        </td>
-        <td>
-          <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式24個</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ywsq.cc/">出物社区写真网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tu11.com/">亿秀美女</a>
-        </td>
-        <td>
-          <a href="https://m.itu11.com/">m.itu11.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>仿紳士漫畫UI寫真圖庫</td>
-        <td>
-          <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/hentaigallery.txt">同格式90個</a>，分類添加了自動翻頁
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tzala.com/">桃子啦</a>
-        </td>
-        <td>
-          <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式135個</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.wind5.com/">万德美图屋</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mayihz.com/">蚂蚁图库</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mm.tvv.tw/">妹妹图</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.xiuren.org/">Xiuren 秀人网</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.mm1311.net/">MM1311</a>
-        </td>
-        <td>很久沒新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.win4000.com/meitu.html">美桌</a>
-        </td>
-        <td>感覺沒在更新圖了</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://old.buzzav.com/albums">Buzzav</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://multi.xnxx.com/">multi.xnxx.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://kawaiix.com/">KawaiiX</a>
-        </td>
-        <td>
-          <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Sexyxbody.txt">另同系列網站96個</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://gogortrt.com/">gogo人体艺术</a>
-        </td>
-        <td>
-          <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站57個</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yinaw.com/">壹纳网</a>
-        </td>
-        <td>腳本管理器選項可以勾選壹纳网使用原始新浪图床链结，需使用Header Editor擴展修改標頭， <a href="https://sspai.com/post/77650">奔跑中的奶酪的修改說明</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://dbro.news/category/p0-%e5%a5%97%e5%9c%96%e7%b3%bb%e5%88%97">D哥新聞</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://jo106.com/beauty-photo/">流量密碼</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://r18.jo106.com/">R18成人站-流量密碼</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nick20.com/pic/index.html">尼克成人網</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.sexdiary1769.com/category/photogallery">我們的性愛日誌</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://happy.5ge.net/category/%E5%9B%BE%E5%86%8C/">五歌的开心网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://shinv.link/">湿女吧</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.top888.com/">粉色家园</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ios.zzgo810.top/">哔咔庇护所v2</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo">XO福利圖</a>
-        </td>
-        <td>
-          <a href="https://www.xofulitu9ok999.xyz/xoxo">www.xofulitu9ok999.xyz</a>，分類添加了自動翻頁
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.fulizx101.cc/index.php/art/type/id/67.html">福利中心</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>坏哥哥</td>
-        <td>
-          <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/yjdm.txt">239個域名</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.momotk.com/">MOMO图库</a>
-        </td>
-        <td>
-          <a href="https://www.rb1.es/momotk/">跳轉頁</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.wc1.es/">魅影画廊</a>
-        </td>
-        <td>
-          <a href="https://wc2.es/myhl">跳轉頁</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.sstuku13.xyz/aa61/?shouye">色色图库</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.112ze.com/">美女写真图集</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18jjj.cyou/">聚姬集</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://adultspic.com/">adultspic色情成人圖片</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sifang.app/">美图收藏夹</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.cnjiepai.xyz/all.html">中国街拍</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ai19.art/">Ai19 Art</a>
-        </td>
-        <td>
-          <a href="https://ainudesporn.art/">Ai art nude</a>， <a href="https://hentaimama.xyz/">Hentaimama</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://kungfutv.net/">Kungfutv</a>
-        </td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <strong>網站</strong>
+                </th>
+                <th>
+                    <strong>備註</strong>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="https://web.telegram.org/k//">Telegram Web</a>
+                </td>
+                <td>從Telegram網頁版上的telegra.ph下載圖片，會被CentBrowser(5.0.1002.354)瀏覽器判斷為不安全封鎖下載，請自行決定是否保留檔案，從 <a href="https://tgstat.com/">TGStat</a>搜索cosplay、nsfw、Cosplay鉴赏 ，可以挖到不少你懂得。 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xchina.biz/">小黃書</a>
+                </td>
+                <td>
+                    <a href="https://xchina.co/">xchina.co</a>， <a href="https://xchina.fun/">xchina.fun</a>， <a href="https://xchina.life/">xchina.life</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://8se.me/">8色人體攝影</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.nlegs.com/">NLegs</a>
+                </td>
+                <td>
+                    <a href="https://www.honeyleg.com/">HoneyLeg</a>， <a href="https://www.ladylap.com/">Lady Lap</a>， <a href="https://www.nuyet.com/">Nuyet</a>， <a href="https://www.legbabe.com/">LegBabe</a>，請使用專用腳本載入大圖， <a href="https://greasyfork.org/scripts/463123">greasyfork.org/scripts/463123</a>，規則有手動插入模式，請在載入所有大圖後對左下圖示按右鍵或數字鍵1或8來使用
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yalayi.com/">雅拉伊</a>
+                </td>
+                <td>免VIP僅支援PC版和圖片命名是簡單數字遞增的。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yskhd.com/">优丝库HD</a>
+                </td>
+                <td>
+                    <a href="https://yskhd.me/">yskhd.me</a>， <a href="https://ysk567.com/">ysk567.com</a>，免VIP
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hentaiclub.net/">紳士会所</a>
+                </td>
+                <td>
+                    <a href="https://www.sshs.pw/">导航页</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.24fa.com/c49.aspx">24FA</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
+                </td>
+                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://depday.info/">Depday-Info</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.321782.xyz/">极品性感美女</a>
+                </td>
+                <td>
+                    <a href="https://x008.tbbb.bf/">x008.tbbb.bf</a>， <a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xiu01.top/">秀人美女網</a>
+                </td>
+                <td>
+                    <a href="https://xiu02.qqqv.bf/">xiu02.qqqv.bf</a>，永久域名：Xrmnw.Com 秀人美女.Top
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.123783.xyz/">秀人集</a>
+                </td>
+                <td>永久域名Xiurenba.Com及(秀人集.com)</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ikmn05.xyz/">爱看美女网</a>
+                </td>
+                <td>不支持預覽版頁面，永久域名：ikmn.cc</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.plmn5.cc/">漂亮美女网</a>
+                </td>
+                <td>不支持預覽版頁面，永久域名：plmn.cc</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.imn5.vip/">爱美女网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meirentu.cc/">美人图</a>
+                </td>
+                <td>
+                    <a href="https://meirentu.top/">meirentu.top</a>
+                </td>
+            </tr>c <tr>
+                <td>
+                    <a href="https://www.22mm.net/">美女秀</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.taotu8.cc/">秀套图吧</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.502x.com/xiurenwang.html">秀人图吧</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://rosipic.com/rosi.html">ROSI写真</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.rosi985.com/">ROSI美女写真</a>
+                </td>
+                <td>部分地區需要VPN才能連上， <a href="https://www.2meinv.cc/">www.2meinv.cc</a>， <a href="https://www.silk-necktie.com/">www.silk-necktie.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.rosi211.cc/">ROSI小莉写真</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.kaka234.cc/">卡卡美女网</a>
+                </td>
+                <td>
+                    <a href="https://m.kaka234.cc/">m.kaka234.cc</a>，China IP限定
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.24tupian.org/">爱死美女图片站</a>
+                </td>
+                <td>需註冊登入才能看大圖和下載</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.24cos.org/">爱死cos美女图片站</a>
+                </td>
+                <td>
+                    <a href="https://www.lovecos.net/">www.lovecos.net</a>，不支持VIP資源。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ja.huamaobizhi.com/mixs/?lang=zh-CN">花猫壁纸</a>
+                </td>
+                <td>
+                    <a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類添加了自動翻頁。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fulitu.me/">福利图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://weme2.com/">微密猫</a>
+                </td>
+                <td>
+                    <a href="https://weme.su/">weme.su</a>， <a href="https://wememiao.com/">wememiao.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://umei.net/">优美图录</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xiutaku.com/">Xiutaku</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kiutaku.com/">Kiutaku</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://aiavr.uk/">图集网</a>
+                </td>
+                <td>
+                    <a href="https://user.aiavr.uk/">user.aiavr.uk</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xgirl.one/">XGirl</a>
+                </td>
+                <td>SPA網頁，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xerocos.com/">Xerocos</a>
+                </td>
+                <td>SPA網頁，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.v2ph.com/">微圖坊</a>
+                </td>
+                <td>
+                    <a href="https://www.v2ph.net/">www.v2ph.net</a>， <a href="https://www.v2ph.ru/">www.v2ph.ru</a>， <a href="https://www.v2ph.ovh/">www.v2ph.ovh</a>，需註冊，大尺度非VIP只能抓到8~10張
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meitule.net/">美图乐</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://siwake.cc/">丝袜客</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.mfsft.com/">免费私房图</a>
+                </td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a> ，發布頁， <a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>， 相似仿站， <a href="https://www.rosi8.com/">www.rosi8.com</a>， <a href="https://www.sfjpg.com/">www.sfjpg.com</a>， <a href="https://www.sfjpg.net/">www.sfjpg.net</a>， <a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>， <a href="https://www.kanmeitu1.com/">www.kanmeitu1.com</a>， <a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.06se.com/">六色美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://girlsteam.club/">女神部落</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mfpho.com/">柔丝映画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.haotuwu.com/">好圖屋</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dongti.blog.2nt.com/">胴体的诱惑</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.446m.com/">萌图社</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.jk.rs/">日式JK</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.girldir.com/">美女目录网</a>
+                </td>
+                <td>作用在列表模式頁面</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cup2d.com/">Cup2D</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://baoruba.com/">私图网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tukuku.cc/">图库库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://coscoser.com/">coscoser</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.umeitu.com/">尤美图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.zhaotaotu.cc/">找套图</a>
+                </td>
+                <td>
+                    <a href="https://www.zhaotaotu.one/">zhaotaotu.one</a>， <a href="https://kantaotu.cc/">Xiuno BBS</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.meituku.org/">美图库</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tuzac.com/">图宅网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.kkc3.com/">咔咔西三</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.youfreex.com/">YouFreeX</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.qixianzi.com/">七仙子图片</a>
+                </td>
+                <td>
+                    <a href="https://www.qixianzi.com/e/wap/">www.qixianzi.com/e/wap/</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://heysexgirl.com/">嘿～色女孩</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cos6.net/">绅士猫</a>
+                </td>
+                <td>需註冊登錄</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://paopoi.com/">泡泡</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sesew.top/">涩涩乐园</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.costhisfox.com/">扮之狐狸</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xwbar.com/web/meinv/">新闻吧</a>
+                </td>
+                <td>
+                    <a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>， <a href="https://www.fjrx.org/web/meinv/">福建热线</a>， <a href="https://www.sdrx.org/web/meinv/">山东热线</a>， <a href="https://www.gxrx.org/web/meinv/">广西热线</a>， <a href="https://www.whrx.org/web/meinv/">武汉热线</a>， <a href="http://www.tjrx.org/web/meinv/">天津热线</a>， <a href="https://www.ynrx.org/web/meinv/">云南热线</a>， <a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.shzx.org/b/12-0.html">四海资讯</a>
+                </td>
+                <td>
+                    <a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.nvhai8.com/">女人吧</a>
+                </td>
+                <td>
+                    <a href="https://m.nvhai8.com/">m.nvhai8.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.jkforum.net/">JKF</a>
+                </td>
+                <td>貼圖區</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.t66y.com/">草榴</a>
+                </td>
+                <td>貼圖區</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cool18.com/">留园酷</a>
+                </td>
+                <td>貼圖區</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://51sex.vip/">51sex</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.92meinv.com/">爱美女</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xinmeitulu.com/">新美图录</a>
+                </td>
+                <td>
+                    <a href="https://www.twlegs.com/">臺灣美腿女郎</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meitulu.me/">美图录</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tujigu.top/">爱图集谷</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xiuwo.net/">秀窝</a>
+                </td>
+                <td>
+                    <a href="https://rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://wap.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xsnvshen.co/">秀色女神</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.kongquehai.net/">孔雀海</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.lolili.net/">洛丽网</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ladymao.net/">ladymao图库</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.lazymanpic.net/">懒人看图</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.youwushow.net/">尤物秀</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://legskr.com/">iLegs时光印象网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xiurenwang.me/">秀人网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://8ezy.com/">8E资源站</a>
+                </td>
+                <td>如出現清空網頁內容的情況，是因為有反擋廣告套件機制，需加入擋廣告白名單。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.aixiurentu.com/">秀人图</a>
+                </td>
+                <td>只支援免費</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tu928.com/">tu928美女写真网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xiaojiejie.me/">小姐姐么</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.14mm.cn/">14MM图片网</a>
+                </td>
+                <td>
+                    <a href="https://www.tp8.org/">图片吧</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://coserlab.io/">Coser Lab</a>
+                </td>
+                <td>4K~8K高解析</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.loxiu.com/">洛秀网</a>
+                </td>
+                <td>
+                    <a href="https://www.counv.com/">维秘秀</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bisipic.xyz/">比思在線圖庫</a>
+                </td>
+                <td>
+                    <a href="https://bisipic.online/">bisipic.online</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.uyn8.cn/">牛牛美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meimeimei.org/">美妹妹</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://aitu.men/">爱图门</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nanrenhome.cc/category/nanrenzhijia/fulimeitu">男人之家</a>
+                </td>
+                <td>
+                    <a href="https://nrzj.link/">nrzj.link</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.2wh.net/meinvxiezhenjigou">网红跟我俩</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://niuniuhome.club/">妞妞之家</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.beautyleg6.com/index.html">BeautyLeg</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kenshin.hk/category/jnews/photoalbum/">劍心回憶</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://chibakuma.pixnet.net/blog">千葉熊的出沒地</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cyberkuma.pixnet.net/blog">CyberKuma的部落格</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ikanins.com/">爱看 INS</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.dmmtu.com/">第一美女图</a>
+                </td>
+                <td>
+                    <a href="https://www.kkmnt.com/">www.kkmnt.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://zipaipic.com/">自拍图库</a>
+                </td>
+                <td>自拍图库.com</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://7aipai.com/">美拍 - 我自拍</a>
+                </td>
+                <td>
+                    <a href="https://5zipai.com/">5zipai.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cgdd.net/">吃瓜大队</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://taotu.org/">套圖TAOTU.ORG</a>
+                </td>
+                <td>
+                    <a href="https://taotu.org/m/">taotu.org/m/</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.95mm.vip/">MM 范</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meitu131.com/meinv/">MEITU131</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tupianwu.com/">图片屋</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hexieshe.cn/">和邪社</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mmonly.com/mmtp/">唯一图库</a>
+                </td>
+                <td>
+                    <a href="https://m.mmonly.com/mmtp/">m.mmonly.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pic.yesky.com/">天极图片</a>
+                </td>
+                <td>
+                    <a href="https://wap.yesky.com/pic/">wap.yesky.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.xxiav.com/">XXIAV寫真館</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18av.mm-cg.com/zh/cg_random/all/index.html">18AV</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://taotuhome.com/">套图之家 taotuhome.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.taotuzj.com/">套图之家 www.taotuzj.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.shunvi.com/">淑女爱</a>
+                </td>
+                <td>www.shunvai.com</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meijuntu.com/">俊美图</a>
+                </td>
+                <td>www.jeya.de</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mt316.com/">妹子图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.888meinv.com/">888美女网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.wai77.com/">心动美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meinvku.org.cn/">美女库</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.656g.com/">656G精品套图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mm5mm5.com/">MM5MM5美女图片</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.eemm.cc/">依依图片网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xintp.com/meinv/">犀牛图片网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jrants.com/">青年美圖</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://trendszine.com/">風流雜誌</a>
+                </td>
+                <td>
+                    <a href="https://cosblay.com/">CosBlay</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xx.knit.bid/">爱妹子</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://928r.com/">美图社</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://inewgirl.com/">女神社</a>
+                </td>
+                <td>
+                    <a href="https://nshens.com/">nshens.com</a>， <a href="https://lovens.cc/">lovens.cc</a>，VIP限定的沒有VIP帳號只會重複抓到第一頁的圖片
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://chottie.com/blog/">Chottie</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ijjiao.com/people">街角图片社</a>
+                </td>
+                <td>需透過微信公眾號取得密碼登錄，China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.evacg.org/">E次元</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://ciyuandao.com/photo">次元岛</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dimtown.com/cosplay">次元小镇</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mtutuu.com/">萌次元</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pic.3loumao.org/">3楼猫图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.emonl.com/">柠檬皮</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.acgers.com/list/list">ACG宅吧</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://x6o.com/topics/14#articles">x6o</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sexygirl.cc/">SexyGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cangcuc.com/">Căng Cực</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fliporn.biz/sexual-picture">Fliporn</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mmav.me/photo/">萌妹社区</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.madoucun.com/arttype/57.html">麻豆村</a>
+                </td>
+                <td>
+                    <a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>， <a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>， <a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>， <a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>， <a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>， <a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>， <a href="https://www.proncn.com/arttype/57.html">中国P站</a>， <a href="https://www.proncn.com/arttype/57.html">麻豆101</a>， <a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>， <a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>， <a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>， <a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a>， <a href="https://www.9ccg.org/arttype/57.html">9草吃瓜网</a>， <a href="https://www.royalmcn.com/arttype/57.html">皇家华人</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.91tulu.com/">91图录</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://books.xxgirls.vip/">淫淫小说写真馆</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://torontolove.cc/">多伦多情色</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://a.534798.xyz/">性趣套图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://a.28tyu.com/">苍井优图片</a>
+                </td>
+                <td>
+                    <a href="https://a.28wer.com/">a.28wer.com</a>， <a href="https://a.sldlxz.com/">a.sldlxz.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.photos18.com/">色情圖片網</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://17sex.vip/list/4858">趣事館</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yazhouseba.com/meinv/">亚洲色吧</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.1000yishu.com/">1000艺术摄影</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.169tp.com/">169图片大全</a>
+                </td>
+                <td>
+                    <a href="https://www.169tp.com/xingganmeinv/">性感</a>， <a href="https://www.169tp.com/wangyouzipai/">自拍</a>， <a href="https://www.169tp.com/gaogensiwa/">丝袜</a>， <a href="https://www.169tp.com/rentiyishu/">人体</a>， <a href="https://www.169tp.com/xiyangmeinv//">西洋</a>， <a href="https://www.169tp.com/guoneimeinv/">国内</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://k55.net/arttype/2.html">K55</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cav103.com/albums/">GavPorn相冊</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://avjb.com/albums/">AVJB</a>
+                </td>
+                <td>
+                    <a href="https://avjb.github.io/">網址發佈頁1</a>， <a href="https://bitbucket.org/free890722/avjb/src/master/README.md">網址發佈頁2</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://theavporn.com/albums/">The AV Porn</a>
+                </td>
+                <td>
+                    <a href="https://theavporn.github.io/theavporn/">網址發佈頁</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dev.avjb.com/albums/">爱微社区</a>
+                </td>
+                <td>成人相册添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.qinimg.com/">Qinimg</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yeitu.com/meinv/">亿图全景图库</a>
+                </td>
+                <td>
+                    <a href="https://www.yeitu.com/dongman/cosplay/">COSPLAY</a>， <a href="https://m.yeitu.com/">m.yeitu.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.umei.cc/meinvtupian/">优美图库</a>
+                </td>
+                <td>
+                    <a href="https://wap.umei.cc/">wap.umei.cc</a>，China IP限定
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.win3000.com/tags/xingganmeinv/">三千图片网</a>
+                </td>
+                <td>
+                    <a href="https://m.win3000.com/tags/xingganmeinv/">m.win3000.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.3gbizhi.com/meinv">3G壁纸</a>
+                </td>
+                <td>
+                    <a href="https://m.3gbizhi.com/">m.3gbizhi.com</a>，China IP限定
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mn52.com/xingganmeinv/">mn52图库</a>
+                </td>
+                <td>
+                    <a href="https://wap.mn52.com/meihuoxiezhen/">wap.mn52.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.enterdesk.com/">回车桌面</a>
+                </td>
+                <td>
+                    <a href="https://m.enterdesk.com/">m.enterdesk.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.keaitupian.com/">可爱小图</a>
+                </td>
+                <td>
+                    <a href="https://m.keaitupian.com/">m.keaitupian.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xiuren.biz/">Xiuren</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://misskon.com/">MissKON.com</a>
+                </td>
+                <td>完整無修正的圖片需要下載，聚集的只是預覽圖</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hotgirl.asia/">HotAsiaGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hotgirl2024.com/">HotGirl World</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.4khd.com/">4KHD</a>
+                </td>
+                <td>
+                    <a href="https://fxcc.cc/">二級域名導航</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://spacemiss.com/">Spacemiss.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.1y.is/">1Y Beauties</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cosersets.com/1">Cosersets</a>
+                </td>
+                <td>SPA網頁，請在圖片頁做操作，可用0、1、3、7、8，Ctrl + Alt + T可修改圖集標題。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fantasyfactory.xyz/">小丁 (Fantasy Factory) Patreon Cosplay Leaks</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asianpink.net/">AsianPink</a>
+                </td>
+                <td>高解析原圖需要下載，聚集的只是預覽圖</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://4kup.net/">4KUP</a>
+                </td>
+                <td>圖片服務器屏蔽部分地區需要VPN才能顯示，高解析原圖需要下載，聚集的只是預覽圖</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://blog.baobua.net/mlem">BAOBUA.COM</a>
+                </td>
+                <td>
+                    <a href="https://www.baobua.net/">www.baobua.net</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pixibb.com/?list=albums&sort=views_desc&page=1">PixiBB</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.coszip.com/">COSPLAY ZIP</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://redbust.com/">RedBust</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sxchinesegirlz01.xyz/">Chinese Beauties</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://taotu200.com/">套图200网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asiantolick.com/page/news">Asian To Lick</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.modelsvibe.com/">Models Vibe</a>
+                </td>
+                <td>分類添加了自動翻頁功能</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.yalatu.com/">雅拉图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.asianude4u.net/">Asianude4u</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jablehk.com/">Jablehk</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapello.com/">Fapello</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapello.su/">Fapello.su</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapachi.com/">Fapachi</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://faponic.com/">Faponic</a>
+                </td>
+                <td>手動插入圖片， <a href="https://fapellas.com/">Fapellas</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thefappening.plus/">The Fappening Plus</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thefappeningblog.com/">TheFappening</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapomania.com/">Fapomania</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudostar.tv/">NudoStar.TV</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudogram.com/">Nudogram</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaidude.tv/category/cosplay/">HentaiDude TV</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.sankakucomplex.com/">Sankaku Complex</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://influencersgonewild.com/">Influencers GoneWild</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fanleaks.club/">Fan Leaks</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hinhanhgai.com/">Hình ảnh gái</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.gai.vn/">Gai.vn</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://imgcup.com/">imgcup.com</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mzpic.com/">Nude Babes</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tangmoc.com/">TangMoc</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tuyetnhan.com/">☆ Ảnh đẹp ☆</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gaitrung.lovestoblog.com/">Girls Collection 18+!</a>
+                </td>
+                <td>
+                    <a href="https://aigirl.lovestoblog.com/">aigirl.lovestoblog.com</a>， <a href="https://gainhat.lovestoblog.com/">gainhat.lovestoblog.com</a>， <a href="https://hotpic.lovestoblog.com/">hotpic.lovestoblog.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hotgirlpix.com/">Hot Girl Pix</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.sexyasiangirl.xyz/">SexyAsianGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://youwu.lol/">尤物丧志</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hotasianx.com/">HotAsianX</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://setu.pics/">色图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yase.pics/">亚色图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meitu.neocities.org/">美图</a>
+                </td>
+                <td>很多posts都404...</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fuligirl.top/">福利姬美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fastingsex.com/">Fasting Sex</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sharecosplay.com/">Share Cosplay</a>
+                </td>
+                <td>高解析原圖需要下載，聚集的只是預覽圖</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplayersgonewild.net/">Cosplayers GoneWild</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thehentaiworld.com/hentai-cosplay-images/">The Hentai World</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://packdechicas.net/">Pack de chicas</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudostar.com/">NudoStar</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://faps.club/main10/">OnlyFaps</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thotbook.tv/">ThotBook.tv</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.famousinternetgirls.com/">Famous Internet Girls</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tnapics.com/">TNApics</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://erothots.co/albums">EroThots</a>
+                </td>
+                <td>無法匯出、下載，需要透過快捷鍵複製URL給Motrix下載，來源爬取BITCHES GIRLS。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bunkr-albums.io/">Bunkr</a>
+                </td>
+                <td>影片可匯出網址後用Motrix下載，
+                    <pre>Referer：https://bunkr.si/</pre>，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://vk.com/">VK</a>
+                </td>
+                <td>作用在相簿頁，例如：https://vk.com/album-74498063_255021373</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapdungeon.com/">Fapdungeon</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ibradome.com/onlyfans-photos">Ibradome</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapopedia.net/updates/">Fapopedia</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapfappy.com/">fapfappy</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gotanynudes.com/">gotanynudes.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thotslife.com/">Thotslife.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudecosplaygirls.com/category/nude-cosplay-albums/">Nude Cosplay Albums</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://voyeurflash.com/">VoyeurFlash.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://leakedmodels.com/">Leaked Models</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thothd.com/zh/albums/">ThotHD Albums</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thothub.to/albums/">Thothub Albums</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudebird.biz/">Nude Bird</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudecosplay.biz/">Nude Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplaytele.com/">Cosplaytele</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.jimmysonline.com/">JimmysOnline.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gaidam18.com/">gaidam18</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cosplay69.net/">Cosplay69</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.simply-porn.com/galleries">Simply Porn</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.simply-cosplay.com/galleries/new">Simply Cosplay</a>
+                </td>
+                <td>SPA網頁，只支持galleries類別。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplayporn.online/category/cosplay/">Cosplay Porn</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asiaontop.com/">AsiaOnTop</a>
+                </td>
+                <td>
+                    <a href="https://asiaon.top/">asiaon.top</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mitaku.net/">Mitaku</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudeslegion.com/">Nudeslegion</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplayworld.net/">Cosplay World</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://buondua.com/">Buon Dua</a>
+                </td>
+                <td>
+                    <a href="https://buondua.us/">buondua.us</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hotgirl.biz/">Hotgirl.biz</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asupanpenyegar.com/">AsupanPenyegar</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xlust.org/">XLUST.ORG</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://byoru.net/">Byoru</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cgcosplay.org/">CG Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xcosplay.top/">X Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
+                </td>
+                <td>
+                    <a href="https://cutexinh.com/">CuteXinh</a>， <a href="https://babeasia.com/">Babe Asia</a>， <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://nongbong.com/">Nóng Bỏng</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ososedki.com/">OSOSEDKI</a>
+                </td>
+                <td>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://foamgirl.net/">FoamGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://photo.camcam.cc/">photo.camcam.cc</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://3600000.xyz/">3600000 Beauty</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://erogirl.net/">Erogirl</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://everia.club/">Everia.club</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.everiaclub.com/">Everia club</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.ilovexs.com/">NongMo.Zone</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://idol.gravureprincess.date/">idol.gravureprincess.date</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.micmicidol.club/">MIC MIC IDOL</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a>
+                </td>
+                <td>
+                    <a href="https://magazinejapanese5.blog.jp/">グラビア週刊誌 5</a>， <a href="https://magazinejapanese6.blog.jp/">グラビア週刊誌 6</a>，分類添加了自動翻頁
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gravureidols.top/">Gravure Idols</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://news.idolsenka.net/">NEWSグラビアアイドル.net</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://gravia.site/box/gate.php">Gravia</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mizugigurabia.com/">水着グラビア</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eroyakuba.com/">エロ役場</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://geinou-nude.com/">エロ画像まとめ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.urapic.com/">裏ピク</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://reprint-kh.com/">復刻書林</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://amazon-love.com/">Love Asian Babes</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bizyonotudoi.com/">美女の集い</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mabui-onna.com/">マブい女画像集</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://blog.livedoor.jp/pururungazou/">ぷるるんお宝画像庫</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.saladpuncher.com/">Permanent Bachelor</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ivphoto.tistory.com/">IVPhoto_Gravure</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://goddess247.com/">goddess247</a>
+                </td>
+                <td>
+                    <a href="https://bestprettygirl.com/">bestprettygirl</a>， <a href="https://girlsweetie.com/">Girl Sweetie</a>， <a href="https://girldreamy.com/">Girl Dreamy</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bestgirlsexy.com/">BestGirlSexy</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.eyval.net/">eyval.net</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.phimvuspot.com/">PhimVu</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yeugai.org/">YeuGai.Net</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.poringa.net/">Poringa!</a>
+                </td>
+                <td>
+                    <a href="https://m.poringa.net/">m.poringa.net</a>，手動插入圖片
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tabakus.blogspot.com/">Tabakus Gallery</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://20sanctuary-grahpis.blogspot.com/">Graphis</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://min-bin.blogspot.com/">min: archive</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asiaidols.wordpress.com/">Asia Idols</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.asiapornphoto.com/">Asia Porn Photo</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://chinesenudeart.blogspot.com/">Chinese Nude Art Photos</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cutegirlsaddict.blogspot.com/">CUTE GIRLS ADDICT</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kemono.su/fantia/user/17148">Kemono</a>
+                </td>
+                <td>
+                    <a href="https://coomer.su/">Coomer</a>， <a href="https://nekohouse.su/">Nekohouse</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentai-img.com/">Hentai Image</a>
+                </td>
+                <td>
+                    <a href="https://hentai-cosplays.com/">hentai-cosplays.com</a>， <a href="https://porn-images-xxx.com/">porn-images-xxx.com</a>， <a href="https://porn-gravure-idol.com/">porn-gravure-idol.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hentaicos.com/">Hentai Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.eporner.com/pics/">EPORNER</a>
+                </td>
+                <td>
+                    <a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>， <a href="https://www.eporner.com/profile/Khosmo/uploaded-pics/">Khosmo</a>， <a href="https://www.eporner.com/profile/trevor221/uploaded-pics/">trevor221</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xasiat.com/albums/">Xasiat</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asianporn.li/photos/">Asian Porn</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://erotic.pics/">Erotic Pics</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xhamster.com/photos">xHamster</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.luscious.net/porn/cosplay-22/">Luscious</a>
+                </td>
+                <td>SPA網頁，手動插入圖片。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.imagefap.com/">ImageFap</a>
+                </td>
+                <td>只支援PC版</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://zzup.com/user-album/3338/petmer/index.html">ZzUp.Com</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://girlsreleased.com/">GirlsReleased</a>
+                </td>
+                <td>圖床imgadult無法外連，但可以下載。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://urlgalleries.net/">URLGalleries</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nsfwalbum.com/">NSFWalbum</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bitchesgirls.com/">BITCHES GIRLS</a>
+                </td>
+                <td>影片可匯出網址候用Motrix下載</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://x-video.tube/albums/">X-video albums</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://adultphotosets.best/">Adult photo sets</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pics-x.com/">Pics-X</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sxypix.com/">SXYPIX</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eropics.to/">Eropics</a>
+                </td>
+                <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://vipergirls.to/">ViperGirls</a>
+                </td>
+                <td>只支援PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://porncoven.com/">PornCoven</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eroticity.net/">ErotiCity</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kitty-kats.net/">Kitty Kats</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://imx.to/">imx.to</a>
+                </td>
+                <td>輔助點擊，能在gallery頁進行下載。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thotsbay.tv/">Thotsbay</a>
+                </td>
+                <td>
+                    <a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.wikifeet.com/">wikiFeet</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://goodsexporn.org/">Good Sex Porn</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fitnakedgirls.com/">FitNakedGirls</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://r18hub.com/photos">R18hub</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cn.pornhub.com/albums">PornHub</a>
+                </td>
+                <td>很容易被短暫封IP...</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.erome.com/explore">EroMe</a>
+                </td>
+                <td>
+                    <a href="https://erome.pics/explore/">EroMe erome.pics</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mrdeepfakes.com/photos">MrDeepFakes</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tokyomotion.net/albums">TOKYO Motion</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.javbangers.com/albums/">JavBangers</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.elitebabes.com/">Elite Babes</a>
+                </td>
+                <td>同格式， <a href="https://pmatehunter.com/">pmatehunter.com</a>， <a href="https://www.jperotica.com/">www.jperotica.com</a>， <a href="https://www.metarthunter.com/">www.metarthunter.com</a>， <a href="https://www.femjoyhunter.com/">www.femjoyhunter.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nakedwomenpics.com/">Naked Women Pics</a>
+                </td>
+                <td>
+                    <a href="https://viewgals.com/">VIEW GALS</a>， <a href="https://hotpussypics.com/">Hot Pussy Pics</a>， <a href="https://bustypassion.com/">Busty Women Pics</a>， <a href="https://teenpussypics.com/">TeenPussyPics.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.freexcafe.com/">FreeXcafe</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tupic.top/">TUPIC.TOP</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dirtychicks.net/photo-gallery/">DirtyChicks</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://amateurlikes.com/">Amateur Likes</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pornpics.com/jp/">Porn Pics</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hdpornpictures.net/">HD Porn Pictures</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hotzxgirl.com/">Hot Sex Picture</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.freebigtitpornpics.com/japanese-big-tits/">Freebigtit</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pichunter.com/">PicHunter</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pictoa.com">Pictoa</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pimpandhost.com/site/trending">PimpAndHost</a>
+                </td>
+                <td>相簿</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pornpaw.com/">Pornpaw</a>
+                </td>
+                <td>圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fuskator.com/">Fuskator</a>
+                </td>
+                <td>圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fapator.com/">Fapator</a>
+                </td>
+                <td>圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sexygirlspics.com/">SexyGirlsPics</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.smutpond.com/">SMUTPOND</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://showgirlx.net/">ShowGirlx</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.superbeautygirlx.top/">Forum Girl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://app.degoo.com/">Degoo Cloud</a>
+                </td>
+                <td>輔助ShowGirlx使用的圖床，先手動點開第一張預覽縮圖，展開第一張大圖後，按0輸入標題輸入圖片數量，等待抓取完畢。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pornpic.com/">PornPic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.nudedxxx.com/">Nuded Photo</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://2lsp.xyz/">2LSP</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pic88.cc/">高清图片吧</a>
+                </td>
+                <td>
+                    <a href="https://m.pic88.cc/">m.pic88.cc</a>，Pic8.cc
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.guixiu.org/">闺秀网</a>
+                </td>
+                <td>
+                    <a href="https://guixiu.org/">guixiu.org</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.xtushe.com/">新老友图社</a>
+                </td>
+                <td>有瀏覽限制，超過需要註冊會員和充值。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nicegirl4u.cyou/">NICEGIRL4U</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://ycyweb.cloudapp.net/">三界异次元</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.lianjiajr.net/">好视角</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meitu.knit.bid/">美图网</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://portrait.knit.bid/">美女写真</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.ikmt.net/">爱看美图网</a>
+                </td>
+                <td>
+                    <a href="http://m.ikmt.net/">m.ikmt.net</a>，很久沒新圖了
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.taotucc.com/">Taotuxp.com</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xgirlscollection.com/">Xgirls</a>
+                </td>
+                <td>
+                    <a href="https://www.img3xgirls.com/">www.img3xgirls.com</a>，很久沒新圖了
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.nvshen5.com/">好女神网</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yyzhenshun.com/">YY美女图片</a>
+                </td>
+                <td>
+                    <a href="http://bb.meinvnews.com/">美眉大宝贝</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.6evu.com/">遛无写真</a>
+                </td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式24個</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ywsq.cc/">出物社区写真网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tu11.com/">亿秀美女</a>
+                </td>
+                <td>
+                    <a href="https://m.itu11.com/">m.itu11.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>仿紳士漫畫UI寫真圖庫</td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/hentaigallery.txt">同格式90個</a>，分類添加了自動翻頁
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tzala.com/">桃子啦</a>
+                </td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式135個</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.wind5.com/">万德美图屋</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mayihz.com/">蚂蚁图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mm.tvv.tw/">妹妹图</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.xiuren.org/">Xiuren 秀人网</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.mm1311.net/">MM1311</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.win4000.com/meitu.html">美桌</a>
+                </td>
+                <td>感覺沒在更新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://old.buzzav.com/albums">Buzzav</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://multi.xnxx.com/">multi.xnxx.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kawaiix.com/">KawaiiX</a>
+                </td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Sexyxbody.txt">另同系列網站96個</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gogortrt.com/">gogo人体艺术</a>
+                </td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站57個</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yinaw.com/">壹纳网</a>
+                </td>
+                <td>腳本管理器選項可以勾選壹纳网使用原始新浪图床链结，需使用Header Editor擴展修改標頭， <a href="https://sspai.com/post/77650">奔跑中的奶酪的修改說明</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dbro.news/category/p0-%e5%a5%97%e5%9c%96%e7%b3%bb%e5%88%97">D哥新聞</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jo106.com/beauty-photo/">流量密碼</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://r18.jo106.com/">R18成人站-流量密碼</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nick20.com/pic/index.html">尼克成人網</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.sexdiary1769.com/category/photogallery">我們的性愛日誌</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://happy.5ge.net/category/%E5%9B%BE%E5%86%8C/">五歌的开心网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://shinv.link/">湿女吧</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.top888.com/">粉色家园</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ios.zzgo810.top/">哔咔庇护所v2</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo">XO福利圖</a>
+                </td>
+                <td>
+                    <a href="https://www.xofulitu9ok999.xyz/xoxo">www.xofulitu9ok999.xyz</a>，分類添加了自動翻頁
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fulizx101.cc/index.php/art/type/id/67.html">福利中心</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>坏哥哥</td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/yjdm.txt">239個域名</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.momotk.com/">MOMO图库</a>
+                </td>
+                <td>
+                    <a href="https://www.rb1.es/momotk/">跳轉頁</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.wc1.es/">魅影画廊</a>
+                </td>
+                <td>
+                    <a href="https://wc2.es/myhl">跳轉頁</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.sstuku13.xyz/aa61/?shouye">色色图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.112ze.com/">美女写真图集</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18jjj.cyou/">聚姬集</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://adultspic.com/">adultspic色情成人圖片</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sifang.app/">美图收藏夹</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cnjiepai.xyz/all.html">中国街拍</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ai19.art/">Ai19 Art</a>
+                </td>
+                <td>
+                    <a href="https://ainudesporn.art/">Ai art nude</a>， <a href="https://hentaimama.xyz/">Hentaimama</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kungfutv.net/">Kungfutv</a>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 </details>
 <h2>H漫類內置規則支持列表</h2>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <table>
-    <thead>
-      <tr>
-        <th>
-          <strong>網站</strong>
-        </th>
-        <th>
-          <strong>備註</strong>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <a href="https://e-hentai.org/">E-Hentai</a>
-        </td>
-        <td>作用在圖片清單頁，手動插入大圖減少消耗GP配額，可透過腳本管理器選單選擇是否載入原圖鏈結， <a href="https://exhentai.org/">exhentai.org</a>， <a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。 </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nhentai.net/">nhentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁， <a href="https://nyahentai.red/">nyahentai.red</a>， <a href="https://www.hentai.name/">www.hentai.name</a>， <a href="https://nhentai.xxx/">nhentai.xxx</a>， <a href="https://nhentai.to/">nhentai.to</a>， <a href="https://simplyhentai.org/">simplyhentai.org</a>， <a href="https://simplyhentai.red/">simplyhentai.red</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://akuma.moe/">akuma.moe</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://anchira.to/">Anchira</a>
-        </td>
-        <td>SPA網頁，作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://cathentai.net/">Cathentai</a>
-        </td>
-        <td>作用在圖片清單/List Read頁， <a href="https://hentaibeeg.com/">hentaibeeg.com</a>， <a href="https://hentaicolor.net/">hentaicolor.net</a>， <a href="https://nyahentai.info/">nyahentai.info</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hanime1.me/comics">Hanime1</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ch.hentai-one.com/">Hentai-One</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaifox.com/">HentaiFox</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaizap.com/">HentaiZap</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentairox.com/">HentaiRox</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaienvy.com/">HentaiEnvy</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m-hentai.net/">M-Hentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentainexus.com/">HentaiNexus</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentailoop.com/">HentaiLoop</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://3hentai.net/">3hentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaivsmanga.com/">HENTAIVSMANGA</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hentai321.top/">山寨3hentai</a>
-        </td>
-        <td>作用在圖片清單</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.simply-hentai.com/">Simply Hentai</a>
-        </td>
-        <td>作用在閱讀頁，SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://eahentai.com/">EAHentai</a>
-        </td>
-        <td>作用在圖片清單，SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://doujins.com/">Doujins</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaipaw.com/">HentaiPaw</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nhentai.com/xxx">nhentai.com</a>
-        </td>
-        <td>
-          <a href="https://hentaihand.com/xxx">HentaiHand</a>，作用在圖片清單/閱讀頁，SPA網頁
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaiera.com/">HentaiEra</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tsumino.com/">TSUMINO</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://imhentai.xxx/">IMHentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://myhentaigallery.com/">My Hentai Gallery</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xyzcomics.com/">XYZ PORN COMICS</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://pururin.to/">Pururin</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://9hentai.com/">9hentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://asmhentai.com/">AsmHentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://multporn.net/">MultPorn</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hentaicredo.com/">HENTAICREDO.COM</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://lhentai.com/">lHentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tmohentai.com/">TMOHentai</a>
-        </td>
-        <td>作用在圖片清單/閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentairead.com/">HentaiRead</a>
-        </td>
-        <td>作用在閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentai2read.com/">Hentai2Read</a>
-        </td>
-        <td>作用在閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaihere.com/">HentaiHere</a>
-        </td>
-        <td>作用在閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://kingcomix.com/">KingComiX</a>
-        </td>
-        <td>作用在閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hitomi.la/">Hitomi.la</a>
-        </td>
-        <td>作用在閱讀頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hentaiset.com/">HENTAISET.COM</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaivid.net/">HENTAIVID.NET</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hentaiceleb.com/">HENTAICELEB.COM</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://neko-hentai.net/">Neko Hentai</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://superhentai.blog/">Super Hentai</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ero-comic-hunter.net/luck">同人エロ漫画・エロ同人誌ならエロコミックハンター</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://eromanga-kong.com/web/">エロ漫画コング｜無料エロマンガ</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hdporncomics.com/">HDpornComics</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xlecx.one/">XlecX</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaipal.com/">HentaiPal.com</a>
-        </td>
-        <td>分類添加了自動翻頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentaiporns.net/">HentaiPorns</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://comics.8muses.com/">8muses</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://allporncomic.com/">AllPornComic</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://rokuhentai.com/">Roku Hentai</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hachirumi.com/">Hachirumi.com</a>
-        </td>
-        <td>SPA網頁，在閱讀頁不分章節取得所有圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hentai.bang14.com/">Hentai.bang14.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18kami.com/">18Kami.com</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://18p.fun/">開車漫畫</a>
-        </td>
-        <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18comic.vip/">禁漫天堂</a>
-        </td>
-        <td>手動插入圖片，由於需要重新繪製還原被分割的圖片，過程中CPU會全速運轉。 <a href="https://jmcmomic.github.io/">禁漫天堂發布頁</a>， <a href="https://jmcomic-fb.vip/">禁漫天堂發布頁2</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.nicohentai.com/">逆次元逆ACG</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.55comics.com/">污污漫书</a>
-        </td>
-        <td>
-          <a href="https://www.55manshu.com/">55漫書</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.wnacg.com/">紳士漫畫</a>
-        </td>
-        <td>作用在圖片清單、下拉閱讀頁， <a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>， <a href="https://wnacg.date/">紳士漫畫地址發布頁</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://web.nicecat.cc/">NiceCat</a>
-        </td>
-        <td>SPA網頁，請在info頁做操作。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://ahri8.top/">松鼠症倉庫</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://caitlin.top/">Caitlin.top</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://acgtoon.com/">ACG糖</a>
-        </td>
-        <td>
-          <a href="https://www.kmh123.xyz/">永久发布页</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://c3manga.com/">C3manga</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://bunmh.com/">包子漫畫</a>
-        </td>
-        <td>有的需要重新繪製還原被分割的圖片</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tianhei-acg.com/">天黑漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.apexmh.com/">頂點漫畫</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.vnacg.com/">VN漫画网</a>
-        </td>
-        <td>
-          <a href="https://m.vnacg.com/">m.vnacg.com</a>，作用在下拉閱讀頁
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://7mmtv.sx/zh/hcomic_random/all/index.html">7mmtv</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18h.mm-cg.com/">18H</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://h-ciyuan.com/category/%e6%bc%ab%e7%94%bb/">H次元</a>
-        </td>
-        <td>大圖在清單後面</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.yinmh.com/">淫漫画</a>
-        </td>
-        <td>
-          <a href="https://www.yinmh.top/">www.yinmh.top</a>， <a href="https://www.yinmh.xyz/">www.yinmh.xyz</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.comicun.com/">漫畫聯合國</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.manhuache.com/">漫畫車</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://litu100.xyz/">丽图·污漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://91manwu.com/vodtype/4.html">91漫屋</a>
-        </td>
-        <td>
-          <a href="https://yumanse.com/">欲漫涩</a>， <a href="https://fumanwu.org/">腐漫屋</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.jjmhw.cc/">久久漫画网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ikanmh.xyz/">漫小肆</a>
-        </td>
-        <td>網址發布頁： <a href="http://www.hmfby.com/">www.hmfby.com</a>， <a href="http://web.hmfby.com/">web.hmfby.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://avbebe.com/archives/category/%e6%88%90%e4%ba%bah%e6%bc%ab%e7%95%ab">Avbebe</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.acgmhs.com/">ACG漫画网</a>
-        </td>
-        <td>
-          <a href="https://www.porn-comic.com/">www.porn-comic.com</a>， <a href="https://www.cool-manga.com/">www.cool-manga.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.acgnbus.com/">ACG漫画网</a>
-        </td>
-        <td>Mobile限定</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://twhentai.com/">TWHentai</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://hentai.desi/">十八禁成人H漫</a>
-        </td>
-        <td>作用在圖片清單頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.177pica.com/">177漫画</a>
-        </td>
-        <td>
-          <a href="http://www.177picyy.com/">www.177picyy.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yousemanhua.com/">有色漫画网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.91jinman.com/">91禁漫</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xn--wgv69rba1382b.com/">漫香阁</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://boylove.cc/">香香腐宅</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yidan.in/">一耽女孩</a>
-        </td>
-        <td>SPA網頁，限定Mobile</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.sesemanhua.com/">色色漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mobile.jymhapp.com/">九妖漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://rimanzhijia.com/">日漫之家</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://se8.us/">韩漫库</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://aikanhanman1.com/">爱看韩漫</a>
-        </td>
-        <td>
-          <a href="https://fabuye01.xyz/">回家的路</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://wamanhua.com/">哇漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://henduoman.com/">很多漫</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://3456nnn3.com/">3N漫画网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://flmh.xyz/category/">福利漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tptoon.com/">头牌漫画网</a>
-        </td>
-        <td>
-          <a href="https://xs8.me/">地址发布页</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://nnhanman.org/">鸟鸟韩漫</a>
-        </td>
-        <td>寫真請點開第一章，直接翻到底。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.roumanhua.com/">肉漫画网</a>
-        </td>
-        <td>
-          <a href="https://m.roumanhua.net/">m.roumanhua.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xindehanman.com/">最新韩漫网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hanman100.com/">韩漫100</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hanmanmianfei.com/">免费韩漫看</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hanmantop.com/">韩漫推荐</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18jin.top/">韓漫天堂</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://aicomic.org/">爱漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.diyihm.com/">日韩漫画</a>
-        </td>
-        <td>限定Mobile， <a href="https://www.lltoon.com/">www.lltoon.com</a>， <a href="https://www.rrtoon.com/">www.rrtoon.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://wwtoon.com/">歪歪漫画</a>
-        </td>
-        <td>限定Mobile， <a href="https://www.zztoon.com/">www.zztoon.com</a>， <a href="https://www.vvtoon.com/">www.vvtoon.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://51comic.org/">51漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://1zse.com/">一之涩漫画</a>
-        </td>
-        <td>
-          <a href="https://hatazi.com/">哈塔兹漫画</a>， <a href="https://www.bulota.com/">布罗塔漫画</a>， <a href="https://522160.xyz/">物二漫画</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://naluhd.com/">那露漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hdcomic.com/booklist/?tag=%E7%9C%9F%E4%BA%BA">狮城漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hmllk.com/">韩漫连连看</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://sixcomic.com/">琴瑟漫畫</a>
-        </td>
-        <td>
-          <a href="https://6acg.top/">琴瑟書庫</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.44te.com/">特漫网</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://jcomic.net/">JComic</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18h.animezilla.com/">18H 宅宅愛動漫</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ho5ho.com/">HO5HO</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.18mh.cc/">18禁漫</a>
-        </td>
-        <td>
-          <a href="http://m.18mh.cc/">m.18mh.cc</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://bad.news/mh">成人漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://a.123548.xyz/">H漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://h-webtoon.com/">韓漫射</a>
-        </td>
-        <td>同格式， <a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>， <a href="https://18hmanga.click/">18hmanga.click</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.okcomic.net/">ok漫画網</a>
-        </td>
-        <td>
-          <a href="https://m.okcomic.net/">m.okcomic.net</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://toptoon.shop/">顶通漫画</a>
-        </td>
-        <td>
-          <a href="https://toptoon123.xyz">地址发布页</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.rhmanhua12.xyz/">H肉番动漫</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://semanji.com/">色漫集</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://155comic.com/">155漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://18manga.top/">18H汉化漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hanime1.biz/home">hanime1.biz</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://javabc.club/">JavABC</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://txcomic.com/">桃心漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.topcomic.online/">嘿嘿漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.viptoon.bond/">顶漫漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://javcomics.site/">日本禁漫屋</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.55comic.com/">污污漫畫</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://400manhua.com/">400漫画网</a>
-        </td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <strong>網站</strong>
+                </th>
+                <th>
+                    <strong>備註</strong>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="https://e-hentai.org/">E-Hentai</a>
+                </td>
+                <td>作用在圖片清單頁，手動插入大圖減少消耗GP配額，可透過腳本管理器選單選擇是否載入原圖鏈結， <a href="https://exhentai.org/">exhentai.org</a>， <a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nhentai.net/">nhentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁， <a href="https://nyahentai.red/">nyahentai.red</a>， <a href="https://www.hentai.name/">www.hentai.name</a>， <a href="https://nhentai.xxx/">nhentai.xxx</a>， <a href="https://nhentai.to/">nhentai.to</a>， <a href="https://simplyhentai.org/">simplyhentai.org</a>， <a href="https://simplyhentai.red/">simplyhentai.red</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://akuma.moe/">akuma.moe</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://anchira.to/">Anchira</a>
+                </td>
+                <td>SPA網頁，作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cathentai.net/">Cathentai</a>
+                </td>
+                <td>作用在圖片清單/List Read頁， <a href="https://hentaibeeg.com/">hentaibeeg.com</a>， <a href="https://hentaicolor.net/">hentaicolor.net</a>， <a href="https://nyahentai.info/">nyahentai.info</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hanime1.me/comics">Hanime1</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ch.hentai-one.com/">Hentai-One</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaifox.com/">HentaiFox</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaizap.com/">HentaiZap</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentairox.com/">HentaiRox</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaienvy.com/">HentaiEnvy</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m-hentai.net/">M-Hentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentainexus.com/">HentaiNexus</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentailoop.com/">HentaiLoop</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://3hentai.net/">3hentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaivsmanga.com/">HENTAIVSMANGA</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hentai321.top/">山寨3hentai</a>
+                </td>
+                <td>作用在圖片清單</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.simply-hentai.com/">Simply Hentai</a>
+                </td>
+                <td>作用在閱讀頁，SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eahentai.com/">EAHentai</a>
+                </td>
+                <td>作用在圖片清單，SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://doujins.com/">Doujins</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaipaw.com/">HentaiPaw</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nhentai.com/xxx">nhentai.com</a>
+                </td>
+                <td>
+                    <a href="https://hentaihand.com/xxx">HentaiHand</a>，作用在圖片清單/閱讀頁，SPA網頁
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaiera.com/">HentaiEra</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tsumino.com/">TSUMINO</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://imhentai.xxx/">IMHentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://myhentaigallery.com/">My Hentai Gallery</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xyzcomics.com/">XYZ PORN COMICS</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pururin.to/">Pururin</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://9hentai.com/">9hentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asmhentai.com/">AsmHentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://multporn.net/">MultPorn</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hentaicredo.com/">HENTAICREDO.COM</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://lhentai.com/">lHentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tmohentai.com/">TMOHentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentairead.com/">HentaiRead</a>
+                </td>
+                <td>作用在閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentai2read.com/">Hentai2Read</a>
+                </td>
+                <td>作用在閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaihere.com/">HentaiHere</a>
+                </td>
+                <td>作用在閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kingcomix.com/">KingComiX</a>
+                </td>
+                <td>作用在閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hitomi.la/">Hitomi.la</a>
+                </td>
+                <td>作用在閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hentaiset.com/">HENTAISET.COM</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaivid.net/">HENTAIVID.NET</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hentaiceleb.com/">HENTAICELEB.COM</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://neko-hentai.net/">Neko Hentai</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://superhentai.blog/">Super Hentai</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ero-comic-hunter.net/luck">同人エロ漫画・エロ同人誌ならエロコミックハンター</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eromanga-kong.com/web/">エロ漫画コング｜無料エロマンガ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hdporncomics.com/">HDpornComics</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xlecx.one/">XlecX</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaipal.com/">HentaiPal.com</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaiporns.net/">HentaiPorns</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://comics.8muses.com/">8muses</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://allporncomic.com/">AllPornComic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://rokuhentai.com/">Roku Hentai</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hachirumi.com/">Hachirumi.com</a>
+                </td>
+                <td>SPA網頁，在閱讀頁不分章節取得所有圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentai.bang14.com/">Hentai.bang14.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18kami.com/">18Kami.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://18p.fun/">開車漫畫</a>
+                </td>
+                <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18comic.vip/">禁漫天堂</a>
+                </td>
+                <td>手動插入圖片，由於需要重新繪製還原被分割的圖片，過程中CPU會全速運轉。 <a href="https://jmcmomic.github.io/">禁漫天堂發布頁</a>， <a href="https://jmcomic-fb.vip/">禁漫天堂發布頁2</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.nicohentai.com/">逆次元逆ACG</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.55comics.com/">污污漫书</a>
+                </td>
+                <td>
+                    <a href="https://www.55manshu.com/">55漫書</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.wnacg.com/">紳士漫畫</a>
+                </td>
+                <td>作用在圖片清單、下拉閱讀頁， <a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>， <a href="https://wnacg.date/">紳士漫畫地址發布頁</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://web.nicecat.cc/">NiceCat</a>
+                </td>
+                <td>SPA網頁，請在info頁做操作。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ahri8.top/">松鼠症倉庫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://caitlin.top/">Caitlin.top</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://acgtoon.com/">ACG糖</a>
+                </td>
+                <td>
+                    <a href="https://www.kmh123.xyz/">永久发布页</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://c3manga.com/">C3manga</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bunmh.com/">包子漫畫</a>
+                </td>
+                <td>有的需要重新繪製還原被分割的圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tianhei-acg.com/">天黑漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.apexmh.com/">頂點漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.vnacg.com/">VN漫画网</a>
+                </td>
+                <td>
+                    <a href="https://m.vnacg.com/">m.vnacg.com</a>，作用在下拉閱讀頁
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://7mmtv.sx/zh/hcomic_random/all/index.html">7mmtv</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18h.mm-cg.com/">18H</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://h-ciyuan.com/category/%e6%bc%ab%e7%94%bb/">H次元</a>
+                </td>
+                <td>大圖在清單後面</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yinmh.com/">淫漫画</a>
+                </td>
+                <td>
+                    <a href="https://www.yinmh.top/">www.yinmh.top</a>， <a href="https://www.yinmh.xyz/">www.yinmh.xyz</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.comicun.com/">漫畫聯合國</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.manhuache.com/">漫畫車</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://litu100.xyz/">丽图·污漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://91manwu.com/vodtype/4.html">91漫屋</a>
+                </td>
+                <td>
+                    <a href="https://yumanse.com/">欲漫涩</a>， <a href="https://fumanwu.org/">腐漫屋</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.jjmhw.cc/">久久漫画网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ikanmh.xyz/">漫小肆</a>
+                </td>
+                <td>網址發布頁： <a href="http://www.hmfby.com/">www.hmfby.com</a>， <a href="http://web.hmfby.com/">web.hmfby.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://avbebe.com/archives/category/%e6%88%90%e4%ba%bah%e6%bc%ab%e7%95%ab">Avbebe</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.acgmhs.com/">ACG漫画网</a>
+                </td>
+                <td>
+                    <a href="https://www.porn-comic.com/">www.porn-comic.com</a>， <a href="https://www.cool-manga.com/">www.cool-manga.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.acgnbus.com/">ACG漫画网</a>
+                </td>
+                <td>Mobile限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://twhentai.com/">TWHentai</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://hentai.desi/">十八禁成人H漫</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.177pica.com/">177漫画</a>
+                </td>
+                <td>
+                    <a href="http://www.177picyy.com/">www.177picyy.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yousemanhua.com/">有色漫画网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.91jinman.com/">91禁漫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xn--wgv69rba1382b.com/">漫香阁</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://boylove.cc/">香香腐宅</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yidan.in/">一耽女孩</a>
+                </td>
+                <td>SPA網頁，限定Mobile</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.sesemanhua.com/">色色漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mobile.jymhapp.com/">九妖漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://rimanzhijia.com/">日漫之家</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://se8.us/">韩漫库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://aikanhanman1.com/">爱看韩漫</a>
+                </td>
+                <td>
+                    <a href="https://fabuye01.xyz/">回家的路</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://wamanhua.com/">哇漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://henduoman.com/">很多漫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://3456nnn3.com/">3N漫画网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://flmh.xyz/category/">福利漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tptoon.com/">头牌漫画网</a>
+                </td>
+                <td>
+                    <a href="https://xs8.me/">地址发布页</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nnhanman.org/">鸟鸟韩漫</a>
+                </td>
+                <td>寫真請點開第一章，直接翻到底。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.roumanhua.com/">肉漫画网</a>
+                </td>
+                <td>
+                    <a href="https://m.roumanhua.net/">m.roumanhua.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xindehanman.com/">最新韩漫网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hanman100.com/">韩漫100</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hanmanmianfei.com/">免费韩漫看</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hanmantop.com/">韩漫推荐</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18jin.top/">韓漫天堂</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://aicomic.org/">爱漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.diyihm.com/">日韩漫画</a>
+                </td>
+                <td>限定Mobile， <a href="https://www.lltoon.com/">www.lltoon.com</a>， <a href="https://www.rrtoon.com/">www.rrtoon.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://wwtoon.com/">歪歪漫画</a>
+                </td>
+                <td>限定Mobile， <a href="https://www.zztoon.com/">www.zztoon.com</a>， <a href="https://www.vvtoon.com/">www.vvtoon.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://51comic.org/">51漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://1zse.com/">一之涩漫画</a>
+                </td>
+                <td>
+                    <a href="https://hatazi.com/">哈塔兹漫画</a>， <a href="https://www.bulota.com/">布罗塔漫画</a>， <a href="https://522160.xyz/">物二漫画</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://naluhd.com/">那露漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hdcomic.com/booklist/?tag=%E7%9C%9F%E4%BA%BA">狮城漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hmllk.com/">韩漫连连看</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sixcomic.com/">琴瑟漫畫</a>
+                </td>
+                <td>
+                    <a href="https://6acg.top/">琴瑟書庫</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.44te.com/">特漫网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jcomic.net/">JComic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18h.animezilla.com/">18H 宅宅愛動漫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ho5ho.com/">HO5HO</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.18mh.cc/">18禁漫</a>
+                </td>
+                <td>
+                    <a href="http://m.18mh.cc/">m.18mh.cc</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bad.news/mh">成人漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://a.123548.xyz/">H漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://h-webtoon.com/">韓漫射</a>
+                </td>
+                <td>同格式， <a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>， <a href="https://18hmanga.click/">18hmanga.click</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.okcomic.net/">ok漫画網</a>
+                </td>
+                <td>
+                    <a href="https://m.okcomic.net/">m.okcomic.net</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://toptoon.shop/">顶通漫画</a>
+                </td>
+                <td>
+                    <a href="https://toptoon123.xyz">地址发布页</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.rhmanhua12.xyz/">H肉番动漫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://semanji.com/">色漫集</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://155comic.com/">155漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18manga.top/">18H汉化漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hanime1.biz/home">hanime1.biz</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://javabc.club/">JavABC</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://txcomic.com/">桃心漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.topcomic.online/">嘿嘿漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.viptoon.bond/">顶漫漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://javcomics.site/">日本禁漫屋</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.55comic.com/">污污漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://400manhua.com/">400漫画网</a>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 </details>
 <h2>漫畫類內置規則支持列表</h2>
 <p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
@@ -4546,808 +4546,795 @@ imgs: async () => {
 <p>2024/04/27 為一些常用連線品質較好的網站，添加無限滾動模式(自動翻頁)閱讀功能，透過腳本管理器選單開啟。</p>
 <p>2024/05/10 無限滾動模式增加了預讀下一話和圖片的功能，讓翻頁更流暢。</p>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <table>
-    <thead>
-      <tr>
-        <th>
-          <strong>網站</strong>
-        </th>
-        <th>
-          <strong>備註</strong>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <a href="https://www.comicabc.com/">8Comic無限動漫</a>
-        </td>
-        <td>
-          <a href="https://m.comicbus.com/">m.comicbus.com</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.copymanga.site/">拷貝漫畫</a>
-        </td>
-        <td>
-          <a href="https://copymanga.site/">copymanga.site</a>， <a href="https://www.copymanga.tv/">www.copymanga.tv</a>， <a href="https://copymanga.tv/">copymanga.tv</a>， <a href="https://www.mangacopy.com/">www.mangacopy.com</a>， <a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.baozimh.com/">🌈️包子漫畫</a>
-        </td>
-        <td>有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://godamh.com/">GODA漫畫</a>
-        </td>
-        <td>
-          <a href="https://nav.telltome.net/">发布页 </a>，閱讀頁域名為news.cocolamanhua.com，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m.baozimh.one/">包子漫畫</a>
-        </td>
-        <td>閱讀頁域名為baozimh.one，有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.manhuagui.com/">Manhuagui看漫画</a>
-        </td>
-        <td>
-          <a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>， <a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限滾動模式加預讀
-        </td>
-      <tr>
-        <td>
-          <a href="https://cocomanga.xyz/">COCOMANGA</a>
-        </td>
-        <td>有無限滾動模式加預讀，山寨Manhuagui，圖片載入很慢。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.dm5.com/">DM5</a>
-        </td>
-        <td>
-          <a href="https://m.dm5.com/">m.dm5.com</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://hk.1kkk.com/">極速</a>
-        </td>
-        <td>
-          <a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.manhuaren.com/">漫画人</a>
-        </td>
-        <td>Mobile限定，有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mangabz.com/">Mangabz</a>
-        </td>
-        <td>PC版向下滾動隱藏工具列，有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://xmanhua.com/">Xmanhua</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.yymanhua.com/">yymanhua</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.cartoonmad.com/">動漫狂</a>
-        </td>
-        <td>
-          <a href="https://www.cartoonmad.com/m/">動漫狂M</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.manhuadb.com/">漫画DB</a>
-        </td>
-        <td>有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.manmanju.cc/">漫漫聚</a>
-        </td>
-        <td>
-          <a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ikukudm.cc/">KuKu动漫</a>
-        </td>
-        <td>
-          <a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
-        </td>
-      <tr>
-        <td>
-          <a href="https://www.gufengmh9.com/">古风漫画网</a>
-        </td>
-        <td>
-          <a href="https://m.gufengmh9.com/">m.gufengmh9.com</a>， <a href="https://www.gf618.com/">www.gf618.com</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.laimanhua8.com/">来漫画</a>
-        </td>
-        <td>
-          <a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.veryim.com/">非常爱漫</a>
-        </td>
-        <td>Mobile限定，有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mh160.cc/">漫画160</a>
-        </td>
-        <td>
-          <a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.guoman8.cc/">国漫吧</a>
-        </td>
-        <td>
-          <a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.guoman.net/">爱国漫</a>
-        </td>
-        <td>
-          <a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限滾動模式加預讀
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.dashumanhua.com/">大树漫画</a>
-        </td>
-        <td>部分漫畫雖然被下架但代碼資料還在，依然能插入圖片，章節混亂重複都不整理，有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.shilunart.com/">世伦漫画</a>
-        </td>
-        <td>同上</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m.gaonaojin.com/">仙漫网M</a>
-        </td>
-        <td>有無限滾動模式加預讀</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://komiic.com/">Komiic</a>
-        </td>
-        <td>SPA網頁，只有下載功能</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.iimanhuapi.com/">漫画皮</a>
-        </td>
-        <td>
-          <a href="https://m.iimanhuapi.com/">m.iimanhuapi.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.qyy158.com/">风车漫画</a>
-        </td>
-        <td>
-          <a href="https://m.qyy158.com/">m.qyy158.com</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://dogemanga.com/">漫畫狗</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.fffdm.com/manhua/">风之动漫</a>
-        </td>
-        <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.hahacomic.com/">哈哈漫画</a>
-        </td>
-        <td>漫畫列表添加自動翻頁功能</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://terra-historicus.hypergryph.com/">明日方舟泰拉记事社</a>
-        </td>
-        <td>SPA網頁</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.colamanga.com/">COLAMANGA</a>
-        </td>
-        <td>方向鍵上下章，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，下載需先觸發載入全部圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://manwa.me/">漫蛙</a>
-        </td>
-        <td>uBlock加信任名單
-          <pre>https://manwa.me/chapter/*</pre> ，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.yinghuamh.net/">樱花漫画</a>
-        </td>
-        <td>圖片伺服器很不穩定，下載很容易404。</td>
-      </tr>
-      <tr>
-        <td>微信公众号</td>
-        <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組的公眾號發布的漫畫鏈結。</td>
-      </tr>
-      <tr>
-        <td>虎扑社区</td>
-        <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組在虎扑社区發布的帖子鏈結。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.lightnovel.us/">轻之国度</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m.happymh.com/">嗨皮漫畫</a>
-        </td>
-        <td>圖片手動插入、閱讀、展開目錄、自動點擊載入、漫畫鏈接新分頁打開，預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mh234.top/">mh234</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m.dmzj.com/">动漫之家M</a>
-        </td>
-        <td>
-          <a href="https://m.idmzj.com/">m.idmzj.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.ikanbook.net/">快岸漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.acgwd.com/">亲亲漫画</a>
-        </td>
-        <td>
-          <a href="http://m.acgwd.com/">m.acgwd.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.77mh.xyz/">新新漫画</a>
-        </td>
-        <td>
-          <a href="https://m.77mh.xyz/">m.77mh.xyz</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.gaonaojin.com/">仙漫网</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.2animx.com/">二次元動漫</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.k886.net/">看漫畫</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.2nunu.com/">奴奴漫畫</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.omyschool.com/">木马漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.webtoons.com/zh-hant/">LINE WEBTOON</a>
-        </td>
-        <td>目錄聚集所有章節、閱讀，預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.dongmanmanhua.cn/">咚漫</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.dongman.la/">動漫啦</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.acg456.com/">ACG456</a>
-        </td>
-        <td>
-          <a href="http://m.acg456.com/">m.acg456.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.vomicmh.com/">vomic漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.manben.com/">漫本</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://comic.acgn.cc/">動漫戲說</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.98comic.com/">98漫畫網</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.yyjj66.com/">爱看漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.92mh.com/">92漫画</a>
-        </td>
-        <td>
-          <a href="http://m.92mh.com/">m.92mh.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.manhua456.com/">漫画456</a>
-        </td>
-        <td>
-          <a href="https://m.manhua456.com/">m.manhua456.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.90mh.org/">90漫画</a>
-        </td>
-        <td>
-          <a href="http://m.90mh.org/">m.90mh.org</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.gmh1234.com/">漫画1234</a>
-        </td>
-        <td>
-          <a href="https://m.gmh1234.com/">m.gmh1234.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.ykmh.com/">优酷漫画</a>
-        </td>
-        <td>
-          <a href="http://h5.ykmh.com/">h5.ykmh.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.zuimh.com/">最漫画</a>
-        </td>
-        <td>
-          <a href="https://m.zuimh.com/">m.zuimh.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.100mhl.com/">漫画连</a>
-        </td>
-        <td>
-          <a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.pinmh.com/">拼拼漫画</a>
-        </td>
-        <td>
-          <a href="https://m.pinmh.com/">m.pinmh.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.0dmh.com/">零点漫画</a>
-        </td>
-        <td>
-          <a href="https://m.0dmh.com/">m.0dmh.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.xuermh.com/">雪儿漫画</a>
-        </td>
-        <td>
-          <a href="https://m.xuermh.com/">m.xuermh.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.gougoumh.com/">狗狗漫画</a>
-        </td>
-        <td>
-          <a href="https://m.gougoumh.com/">m.gougoumh.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mhkan.com/">漫画看</a>
-        </td>
-        <td>
-          <a href="https://m.mhkan.com/">m.mhkan.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://m.icekr.com/">冰氪漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://www.mkzhan.com/">漫客栈</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.mhw1.com/">漫画屋</a>
-        </td>
-        <td>
-          <a href="http://www.cmh5.com/">www.cmh5.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.obq8.com/">笔趣阁漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mh.9xxsm.com/">Go追漫</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.umh5.com/">有漫画屋</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://797mh.com/">漫画网</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.manshiduo.net/">漫士多</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://comics.veryim.com/">非常爱漫舊站</a>
-        </td>
-        <td>
-          <a href="https://wap.veryim.com/">wap.veryim.com</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.wujinmanhua.com/">无尽漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://mh5.tw/">漫畫屋</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.setnmh.com/">山立漫畫</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.tvbsmh.com/">TVBS漫畫</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.szcdmj.com/">砂之船动漫家</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.52hah.com/">聚合漫画屋</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.kukanmanhua.com/">酷看漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="http://manhuat.cc/">漫画台</a>
-        </td>
-        <td>
-          <a href="http://www.manhuat.cc/">www.manhuat.cc</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.manhuag.cc/">漫画哥</a>
-        </td>
-        <td>
-          <a href="https://m.manhuag.cc/">m.manhuag.cc</a>，預設關閉
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://manga.bilibili.com/">哔哩哔哩漫画</a>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.kanman.com/">看漫画</a>
-        </td>
-        <td>預設關閉</td>
-      </tr>
-    </tbody>
-  </table>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <strong>網站</strong>
+                </th>
+                <th>
+                    <strong>備註</strong>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="https://www.comicabc.com/">8Comic無限動漫</a>
+                </td>
+                <td>
+                    <a href="https://m.comicbus.com/">m.comicbus.com</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.copymanga.site/">拷貝漫畫</a>
+                </td>
+                <td>
+                    <a href="https://copymanga.site/">copymanga.site</a>， <a href="https://www.copymanga.tv/">www.copymanga.tv</a>， <a href="https://copymanga.tv/">copymanga.tv</a>， <a href="https://www.mangacopy.com/">www.mangacopy.com</a>， <a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.baozimh.com/">🌈️包子漫畫</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://godamh.com/">GODA漫畫</a>
+                </td>
+                <td>
+                    <a href="https://nav.telltome.net/">发布页 </a>，閱讀頁域名為news.cocolamanhua.com，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.baozimh.one/">包子漫畫</a>
+                </td>
+                <td>閱讀頁域名為baozimh.one，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manhuagui.com/">Manhuagui看漫画</a>
+                </td>
+                <td>
+                    <a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>， <a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.dm5.com/">DM5</a>
+                </td>
+                <td>
+                    <a href="https://m.dm5.com/">m.dm5.com</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hk.1kkk.com/">極速</a>
+                </td>
+                <td>
+                    <a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manhuaren.com/">漫画人</a>
+                </td>
+                <td>Mobile限定，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangabz.com/">Mangabz</a>
+                </td>
+                <td>PC版向下滾動隱藏工具列，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xmanhua.com/">Xmanhua</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yymanhua.com/">yymanhua</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cartoonmad.com/">動漫狂</a>
+                </td>
+                <td>
+                    <a href="https://www.cartoonmad.com/m/">動漫狂M</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.manhuadb.com/">漫画DB</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.manmanju.cc/">漫漫聚</a>
+                </td>
+                <td>
+                    <a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ikukudm.cc/">KuKu动漫</a>
+                </td>
+                <td>
+                    <a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
+                </td>
+            <tr>
+                <td>
+                    <a href="https://www.gufengmh9.com/">古风漫画网</a>
+                </td>
+                <td>
+                    <a href="https://m.gufengmh9.com/">m.gufengmh9.com</a>， <a href="https://www.gf618.com/">www.gf618.com</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.laimanhua8.com/">来漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.veryim.com/">非常爱漫</a>
+                </td>
+                <td>Mobile限定，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mh160.cc/">漫画160</a>
+                </td>
+                <td>
+                    <a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.guoman8.cc/">国漫吧</a>
+                </td>
+                <td>
+                    <a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.guoman.net/">爱国漫</a>
+                </td>
+                <td>
+                    <a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.dashumanhua.com/">大树漫画</a>
+                </td>
+                <td>部分漫畫雖然被下架但代碼資料還在，依然能插入圖片，章節混亂重複都不整理，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.shilunart.com/">世伦漫画</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.gaonaojin.com/">仙漫网M</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://komiic.com/">Komiic</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dogemanga.com/">漫畫狗</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fffdm.com/manhua/">风之动漫</a>
+                </td>
+                <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.iimanhuapi.com/">漫画皮</a>
+                </td>
+                <td>
+                    <a href="https://m.iimanhuapi.com/">m.iimanhuapi.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hahacomic.com/">哈哈漫画</a>
+                </td>
+                <td>漫畫列表添加自動翻頁功能</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://terra-historicus.hypergryph.com/">明日方舟泰拉记事社</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.colamanga.com/">COLAMANGA</a>
+                </td>
+                <td>方向鍵上下章，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，下載需先觸發載入全部圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manwa.me/">漫蛙</a>
+                </td>
+                <td>uBlock加信任名單
+                    <pre>https://manwa.me/chapter/*</pre> ，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yinghuamh.net/">樱花漫画</a>
+                </td>
+                <td>圖片伺服器很不穩定，下載很容易404。</td>
+            </tr>
+            <tr>
+                <td>微信公众号</td>
+                <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組的公眾號發布的漫畫鏈結。</td>
+            </tr>
+            <tr>
+                <td>虎扑社区</td>
+                <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組在虎扑社区發布的帖子鏈結。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.lightnovel.us/">轻之国度</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.happymh.com/">嗨皮漫畫</a>
+                </td>
+                <td>圖片手動插入、閱讀、展開目錄、自動點擊載入、漫畫鏈接新分頁打開，預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mh234.top/">mh234</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.dmzj.com/">动漫之家M</a>
+                </td>
+                <td>
+                    <a href="https://m.idmzj.com/">m.idmzj.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ikanbook.net/">快岸漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.acgwd.com/">亲亲漫画</a>
+                </td>
+                <td>
+                    <a href="http://m.acgwd.com/">m.acgwd.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.77mh.xyz/">新新漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.77mh.xyz/">m.77mh.xyz</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.gaonaojin.com/">仙漫网</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.2animx.com/">二次元動漫</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.k886.net/">看漫畫</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.2nunu.com/">奴奴漫畫</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.omyschool.com/">木马漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.webtoons.com/zh-hant/">LINE WEBTOON</a>
+                </td>
+                <td>目錄聚集所有章節、閱讀，預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.dongmanmanhua.cn/">咚漫</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.dongman.la/">動漫啦</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.acg456.com/">ACG456</a>
+                </td>
+                <td>
+                    <a href="http://m.acg456.com/">m.acg456.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.vomicmh.com/">vomic漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.manben.com/">漫本</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://comic.acgn.cc/">動漫戲說</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.98comic.com/">98漫畫網</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yyjj66.com/">爱看漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.92mh.com/">92漫画</a>
+                </td>
+                <td>
+                    <a href="http://m.92mh.com/">m.92mh.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manhua456.com/">漫画456</a>
+                </td>
+                <td>
+                    <a href="https://m.manhua456.com/">m.manhua456.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.90mh.org/">90漫画</a>
+                </td>
+                <td>
+                    <a href="http://m.90mh.org/">m.90mh.org</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.gmh1234.com/">漫画1234</a>
+                </td>
+                <td>
+                    <a href="https://m.gmh1234.com/">m.gmh1234.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.ykmh.com/">优酷漫画</a>
+                </td>
+                <td>
+                    <a href="http://h5.ykmh.com/">h5.ykmh.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.zuimh.com/">最漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.zuimh.com/">m.zuimh.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.100mhl.com/">漫画连</a>
+                </td>
+                <td>
+                    <a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pinmh.com/">拼拼漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.pinmh.com/">m.pinmh.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.0dmh.com/">零点漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.0dmh.com/">m.0dmh.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xuermh.com/">雪儿漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.xuermh.com/">m.xuermh.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.gougoumh.com/">狗狗漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.gougoumh.com/">m.gougoumh.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mhkan.com/">漫画看</a>
+                </td>
+                <td>
+                    <a href="https://m.mhkan.com/">m.mhkan.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.icekr.com/">冰氪漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://www.mkzhan.com/">漫客栈</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mhw1.com/">漫画屋</a>
+                </td>
+                <td>
+                    <a href="http://www.cmh5.com/">www.cmh5.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.obq8.com/">笔趣阁漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mh.9xxsm.com/">Go追漫</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.umh5.com/">有漫画屋</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://797mh.com/">漫画网</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manshiduo.net/">漫士多</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://comics.veryim.com/">非常爱漫舊站</a>
+                </td>
+                <td>
+                    <a href="https://wap.veryim.com/">wap.veryim.com</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.wujinmanhua.com/">无尽漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mh5.tw/">漫畫屋</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.setnmh.com/">山立漫畫</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tvbsmh.com/">TVBS漫畫</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.szcdmj.com/">砂之船动漫家</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.52hah.com/">聚合漫画屋</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.kukanmanhua.com/">酷看漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://manhuat.cc/">漫画台</a>
+                </td>
+                <td>
+                    <a href="http://www.manhuat.cc/">www.manhuat.cc</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manhuag.cc/">漫画哥</a>
+                </td>
+                <td>
+                    <a href="https://m.manhuag.cc/">m.manhuag.cc</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manga.bilibili.com/">哔哩哔哩漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.kanman.com/">看漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+        </tbody>
+    </table>
 </details>
 <h2>AI繪圖類內置規則支持列表</h2>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <p>請透過腳本管理器選單開啟Lazy Load加載大圖功能，批量下載請使用其他圖片下載腳本。</p>
-  <p>可點擊右下的眼睛圖示新分頁觀看圖片，並且會顯示抓取到的圖片數量。</p>
-  <table>
-    <thead>
-      <tr>
-        <th>
-          <strong>網站</strong>
-        </th>
-        <th>
-          <strong>備註</strong>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <a href="https://civitai.com/">Civitai</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖，支持自動顯示NSFW被模糊的圖片。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.liblib.art/">LiblibAI</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://tensor.art/">Tensor.Art</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://pixai.art/">PixAI</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://yodayo.com/explore/">Yodayo</a>
-        </td>
-        <td>SPA網頁，加載大圖。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://creator.nightcafe.studio/explore">NightCafe Creator</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖，不穩定需要上下滾動重複觸發，右下的眼睛數字沒有增加，代表沒有抓到新圖。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://legacy.midjourney.com/showcase/recent/">Midjourney</a>
-        </td>
-        <td>沒有更高解析度的圖片，只是能聚集到新分頁觀看。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://neural.love/search">neural.love</a>
-        </td>
-        <td>SPA網頁，加載大圖。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://playground.com/feed">Playground</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://pornderful.ai/search">Pornderful.ai</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖，首頁會有閃爍的問題。</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://www.seaart.ai/">SeaArt Al</a>
-        </td>
-        <td>SPA網頁，Lazy Load加載大圖。</td>
-      </tr>
-    </tbody>
-  </table>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <p>請透過腳本管理器選單開啟Lazy Load加載大圖功能，批量下載請使用其他圖片下載腳本。</p>
+    <p>可點擊右下的眼睛圖示新分頁觀看圖片，並且會顯示抓取到的圖片數量。</p>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <strong>網站</strong>
+                </th>
+                <th>
+                    <strong>備註</strong>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="https://civitai.com/">Civitai</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖，支持自動顯示NSFW被模糊的圖片。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.liblib.art/">LiblibAI</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tensor.art/">Tensor.Art</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pixai.art/">PixAI</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yodayo.com/explore/">Yodayo</a>
+                </td>
+                <td>SPA網頁，加載大圖。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://creator.nightcafe.studio/explore">NightCafe Creator</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖，不穩定需要上下滾動重複觸發，右下的眼睛數字沒有增加，代表沒有抓到新圖。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://legacy.midjourney.com/showcase/recent/">Midjourney</a>
+                </td>
+                <td>沒有更高解析度的圖片，只是能聚集到新分頁觀看。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://neural.love/search">neural.love</a>
+                </td>
+                <td>SPA網頁，加載大圖。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://playground.com/feed">Playground</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pornderful.ai/search">Pornderful.ai</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖，首頁會有閃爍的問題。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.seaart.ai/">SeaArt Al</a>
+                </td>
+                <td>SPA網頁，Lazy Load加載大圖。</td>
+            </tr>
+        </tbody>
+    </table>
 </details>
 <h2>輔助類內置規則支持列表</h2>
 <details>
-  <summary>
-    <kbd>
-      <strong>「 點擊展開查看 」</strong>
-    </kbd>
-  </summary>
-  <br>
-  <table>
-    <thead>
-      <tr>
-        <th>
-          <strong>網站</strong>
-        </th>
-        <th>
-          <strong>備註</strong>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>漫畫類</td>
-        <td>自動展開目錄</td>
-      </tr>
-      <tr>
-        <td>m.4khd.com</td>
-        <td>自動跳轉，擋廣告需加入白名單。</td>
-      </tr>
-      <tr>
-        <td>4kup.net</td>
-        <td>自動跳轉</td>
-      </tr>
-      <tr>
-        <td>Imgasd</td>
-        <td>下載鏈結自動跳轉</td>
-      </tr>
-      <tr>
-        <td>ouo.io</td>
-        <td>自動跳轉</td>
-      </tr>
-      <tr>
-        <td>cuty.io</td>
-        <td>自動跳轉</td>
-      </tr>
-      <tr>
-        <td>link1s.com</td>
-        <td>自動跳轉</td>
-      </tr>
-      <tr>
-        <td>Binto.click</td>
-        <td>自動跳轉</td>
-      </tr>
-      <tr>
-        <td>stfly.me</td>
-        <td>半自動跳轉</td>
-      </tr>
-      <tr>
-        <td>www.mediafire.com</td>
-        <td>自動下載</td>
-      </tr>
-      <tr>
-        <td>anonfiles.com</td>
-        <td>自動下載</td>
-      </tr>
-      <tr>
-        <td>letsupload.cc</td>
-        <td>自動下載</td>
-      </tr>
-      <tr>
-        <td>94i.in</td>
-        <td>自動簽到</td>
-      </tr>
-      <tr>
-        <td>supjav.com</td>
-        <td>立即顯示影片縮圖</td>
-      </tr>
-    </tbody>
-  </table>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <strong>網站</strong>
+                </th>
+                <th>
+                    <strong>備註</strong>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>漫畫類</td>
+                <td>自動展開目錄</td>
+            </tr>
+            <tr>
+                <td>m.4khd.com</td>
+                <td>自動跳轉，擋廣告需加入白名單。</td>
+            </tr>
+            <tr>
+                <td>4kup.net</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>Imgasd</td>
+                <td>下載鏈結自動跳轉</td>
+            </tr>
+            <tr>
+                <td>ouo.io</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>cuty.io</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>link1s.com</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>Binto.click</td>
+                <td>自動跳轉</td>
+            </tr>
+            <tr>
+                <td>stfly.me</td>
+                <td>半自動跳轉</td>
+            </tr>
+            <tr>
+                <td>www.mediafire.com</td>
+                <td>自動下載</td>
+            </tr>
+            <tr>
+                <td>anonfiles.com</td>
+                <td>自動下載</td>
+            </tr>
+            <tr>
+                <td>letsupload.cc</td>
+                <td>自動下載</td>
+            </tr>
+            <tr>
+                <td>94i.in</td>
+                <td>自動簽到</td>
+            </tr>
+            <tr>
+                <td>supjav.com</td>
+                <td>立即顯示影片縮圖</td>
+            </tr>
+        </tbody>
+    </table>
 </details>
