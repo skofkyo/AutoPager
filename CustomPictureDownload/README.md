@@ -342,6 +342,7 @@ fun.gae(selector, doc)
                 text: titleText
             }
         },
+        hide: "selector", //暫時隱藏元素，當暫停翻頁或最後一頁時取消隱藏。
         bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設為當前視窗可視範圍的高度screen.height可省略。
         sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略。
         history: 1, //1翻頁後添加瀏覽器歷史紀錄，0不添加，預設1可省略。
@@ -966,7 +967,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/18 19:48</p>
+<p>2024/05/19 18:58</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事<p>
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
@@ -3248,12 +3249,21 @@ imgs: async () => {
                 <td><a href="https://copymanga.site/">copymanga.site</a>，<a href="https://www.copymanga.tv/">www.copymanga.tv</a>，<a href="https://copymanga.tv/">copymanga.tv</a>，<a href="https://www.mangacopy.com/">www.mangacopy.com</a>，<a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式</td>
             </tr>
             <tr>
-                <td><a href="https://www.baozimh.com/">包子漫画</a></td>
+                <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
+                <td><a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>，<a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.baozimh.com/">🌈️包子漫畫</a></td>
                 <td>有無限滾動模式加預讀</td>
             </tr>
             <tr>
-                <td><a href="https://www.manhuagui.com/">Manhuagui看漫画</a></td>
-                <td><a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>，<a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限滾動模式加預讀</td>
+                <td><a href="https://godamh.com/">GODA漫畫</a></td>
+                <td><a href="https://nav.telltome.net/">发布页
+</a>，閱讀頁域名為news.cocolamanhua.com，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td><a href="https://m.baozimh.one/">包子漫畫</a></td>
+                <td>閱讀頁域名為baozimh.one，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://cocomanga.xyz/">COCOMANGA</a></td>
@@ -3277,11 +3287,11 @@ imgs: async () => {
             </tr>
             <tr>
                 <td><a href="https://xmanhua.com/">Xmanhua</a></td>
-                <td>PC版向下滾動隱藏工具列，有無限滾動模式加預讀</td>
+                <td>同上</td>
             </tr>
             <tr>
                 <td><a href="https://www.yymanhua.com/">yymanhua</a></td>
-                <td>PC版向下滾動隱藏工具列，有無限滾動模式加預讀</td>
+                <td>同上</td>
             </tr>
             <tr>
                 <td><a href="https://www.cartoonmad.com/">動漫狂</a></td>
@@ -3309,24 +3319,11 @@ imgs: async () => {
             </tr>
             <tr>
                 <td><a href="https://www.veryim.com/">非常爱漫</a></td>
-                <td>有無限滾動模式加預讀</td>
+                <td>Mobile限定，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="https://www.mh160.cc/">漫画160</a></td>
                 <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限滾動模式加預讀</td>
-            </tr>
-            <tr>
-                <td><a href="https://godamh.com/">GODA漫畫</a></td>
-                <td><a href="https://nav.telltome.net/">发布页
-</a>，news.cocolamanhua.com有無限滾動模式加預讀</td>
-            </tr>
-            <tr>
-                <td><a href="https://m.baozimh.one/">包子漫畫新站</a></td>
-                <td>閱讀頁域名是baozimh.one有無限滾動模式加預讀</td>
-            </tr>
-            <tr>
-                <td><a href="https://baozimh.org/">包子漫畫舊站</a></td>
-                <td><a href="https://cn.baozimh.org/">cn.baozimh.org</a>，cn.baozimh.one有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td><a href="http://www.guoman8.cc/">国漫吧</a></td>
@@ -3560,6 +3557,10 @@ imgs: async () => {
             <tr>
                 <td><a href="https://www.manshiduo.net/">漫士多</a></td>
                 <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td><a href="https://comics.veryim.com/">非常爱漫舊站</a></td>
+                <td><a href="https://wap.veryim.com/">wap.veryim.com</a>，預設關閉</td>
             </tr>
             <tr>
                 <td><a href="https://www.wujinmanhua.com/">无尽漫画</a></td>
