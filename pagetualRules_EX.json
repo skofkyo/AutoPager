@@ -268,11 +268,12 @@
         "name": "COLAMANGA - 閱讀",
         "author": "skofkyo",
         "example": "https://www.colamanga.com/manga-rk63083/1/3.html",
-        "url": "^https?://www\\.colamanga\\.com/",
-        "include": ".mh_comicpic",
+        "url": "^https?://www\\.colamanga\\.com/manga-\\w+/\\d+/\\d+\\.html",
         "action": 2,
-        "pinUrl": true,
-        "css": ".mh_wrap{width:100%!important;min-width:100%!important}"
+        "replaceElement": ".mh_wrap.tc",
+        "pageBarText": "return doc.querySelector('.mh_readtitle>h1>strong').innerText;",
+        "pageAction": "setTimeout(()=>{let titles=document.querySelectorAll('.pagetual_pageBar');if(titles.length>3){document.querySelector('#mangalist')?.remove();titles[0].remove();document.querySelector(\"iframe[name='pagetual-iframe']\").remove()}},1000)",
+        "css": ".mh_wrap{width:100%!important;min-width:100%!important}inIframe:.mh_wrap.tc:has(>.mh_readtitle){display:none!important}.mh_wrap{width:100%!important;min-width:100%!important}"
     },
     {
         "name": "COLAMANGA - 分類/搜索",
