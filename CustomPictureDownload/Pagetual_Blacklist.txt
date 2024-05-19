@@ -1,4 +1,4 @@
-2024/05/18 19:48
+2024/05/19 18:58
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1386,7 +1386,7 @@ Roku Hentai
 *m.happymh.com*
 
 COLAMANHUA
-/www\.(colamanga|colamanhua)\.com\/manga-.+\.html$/
+/www\.colamanga\.com\/manga-.+\.html$/
 
 Manhuagui看漫画閱讀
 *manhuagui.com/comic/*/*.html
@@ -1518,7 +1518,7 @@ GODA漫画閱讀
 /^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
 
 包子漫畫閱讀
-*://cn.baozimh.one/manga/*/*
+*://baozimh.one/chapter/*.html
 
 漫畫屋閱讀
 *://mh5.tw/series-*
