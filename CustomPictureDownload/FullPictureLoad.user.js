@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.7
+// @version            2.2.8
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -515,7 +515,7 @@
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".item_title>h1",
         //threading: 4,
-        css: ".item_title>div[id],.item_title>a,.content br,.bottom_fixed,.update_area_lists>div[id],body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
+        css: ".item_info>a,p[align='center']:has(>img),.item_title>div[id],.item_title>a,.content br,.bottom_fixed,.update_area_lists>div[id],body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
         category: "nsfw1"
     }, {
         name: "极品性感美女",
@@ -12951,6 +12951,7 @@ if (next && /ReadComic/.test(location.pathname)) {
             if (!!_unsafeWindow.nextLink) {
                 fun.iframe(_unsafeWindow.nextLink, {
                     waitVar: "ge",
+                    waitEle: "#TheImg",
                     cb: async (dom, frame) => {
                         fun.script(_this.frameCode, 0, 1, dom);
                         fun.picPreload(frame.newImgs, "第" + frame.ch + "集", "next");
@@ -13004,10 +13005,12 @@ if (next && /ReadComic/.test(location.pathname)) {
             aF: () => {
                 _unsafeWindow.ch = frameWindow.ch;
             },
+            hide: "div:has(>.item_eps_top_bar),.comment_block",
             preloadNextPage: () => {
                 if (!!frameWindow.nextLink) {
                     fun.iframe(frameWindow.nextLink, {
                         waitVar: "ge",
+                        waitEle: "#TheImg",
                         cb: async (dom, frame) => {
                             fun.script(_this.frameCode, 0, 1, dom);
                             fun.picPreload(frame.newImgs, fun.gt(".text-view-title") + ` - 第${frame.ch}集`, "next");
@@ -13057,6 +13060,7 @@ if (next) {
             if (!!_unsafeWindow.nextLink) {
                 fun.iframe(_unsafeWindow.nextLink, {
                     waitVar: "ge",
+                    waitEle: "#TheImg",
                     cb: async (dom, frame) => {
                         fun.script(_this.frameCode, 0, 1, dom);
                         fun.picPreload(frame.newImgs, "第" + frame.ch + "集", "next");
@@ -13108,10 +13112,12 @@ if (next) {
                 fun.gae("#prevname").forEach(e => (e.innerText = fun.ge("#prevname", dom).innerText));
                 _unsafeWindow.ch = frameWindow.ch;
             },
+            hide: ".book_inc_title",
             preloadNextPage: () => {
                 if (!!frameWindow.nextLink) {
                     fun.iframe(frameWindow.nextLink, {
                         waitVar: "ge",
+                        waitEle: "#TheImg",
                         cb: async (dom, frame) => {
                             fun.script(_this.frameCode, 0, 1, dom);
                             fun.picPreload(frame.newImgs, "第" + frame.ch + "集", "next");
@@ -13487,6 +13493,7 @@ if (next) {
             next: "//a[text()='下一章']",
             re: ".active.right-arrow,.view-paging",
             title: (dom) => fun.gt(".title", 1, dom).replace("首页 ", ""),
+            hide: ".view-comment",
             preloadNextPage: (dom) => {
                 let next = fun.ge(_this.autoPager.next, dom, dom);
                 if (!!next) {
@@ -13541,6 +13548,7 @@ if (next) {
             next: "//a[text()='下一章']",
             re: ".view-paging",
             title: (dom) => fun.gt(".title", 1, dom).replace("首页 ", ""),
+            hide: ".view-comment",
             preloadNextPage: (dom) => {
                 let next = fun.ge(_this.autoPager.next, dom, dom);
                 if (!!next) {
@@ -14237,6 +14245,7 @@ if (next) {
                     text: titleText
                 }
             },
+            hide: ".comic-chapter>.l-content",
             preloadNextPage: (dom) => {
                 let next = _this.autoPager.next(dom);
                 if (!!next) {
@@ -14247,7 +14256,7 @@ if (next) {
                 }
             }
         },
-        css: ".chapter-main.scroll-mode~*:not(.next_chapter):not(.bottom-bar){display:none!important}.comic-contain{width: 100%;margin: 0 auto;max-width:970px;",
+        css: ".chapter-main.scroll-mode~*:not(.next_chapter,.bottom-bar,.l-content),.mobadsq{display:none!important}.comic-contain{width: 100%;margin: 0 auto;max-width:970px;",
         category: "comic autoPager"
     }, {
         name: "包子漫画 展開目錄",
@@ -14567,7 +14576,6 @@ if (next) {
             let tE = fun.ge("//td[img[@id='manga']]");
             tE.innerHTML = "";
             tE.append(...imgs);
-            fun.hideMsg();
             await fun.lazyload();
             _this.autoPager.preloadNextPage();
             setTimeout(() => fun.run("$(document).off();"), 5000);
@@ -14612,8 +14620,8 @@ if (next) {
                 }
             }
         },
-        css: ".action-list li{width:50%!important}#imgLoading,#manga,.action,#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo,.FullPictureLoadMsg),footer~*:not(.FullPictureLoadMsg),#prev,#pageSelect,#next,#pager>*:not([onclick]),#pager>*[onclick*='next()']{display:none!important}",
-        category: "comic"
+        css: ".action-list li{width:50%!important}#imgLoading,#manga,.action,#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo,.FullPictureLoadMsg),footer~*:not(.FullPictureLoadMsg),#prev,#pageSelect,#next,#pager>*:not([onclick]),#pager>*[onclick*='next()'],.backToTop~div[style*='overflow']{display:none!important}",
+        category: "comic autoPager"
     }, {
         name: "亲亲漫画",
         host: ["www.acgwd.com", "m.acgwd.com"],
@@ -14710,7 +14718,7 @@ if (next) {
             fun.script(code, 0, 1);
             fun.picPreload(obj.imgs(), title, "next");
         },
-        css: ".img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}#action li{width:50%!important}",
+        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.footer):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -14772,6 +14780,7 @@ if (next) {
                     return arr[1];
                 }
             },
+            hide: ".comic-comment,.chapter-content+.imgBox",
             preloadNextPage: (dom) => {
                 let next = _this.autoPager.next(dom, 0);
                 if (!!next) {
@@ -14783,7 +14792,7 @@ if (next) {
                 }
             }
         },
-        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
+        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.footer):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
         category: "comic autoPager"
     }, {
         name: "漫画456",
@@ -15300,7 +15309,7 @@ window.parent.postMessage({
             fun.script(code, 0, 1);
             fun.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}#loading,#pre-loading,.img_info{display:none!important}",
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}#loading,#pre-loading,.img_info,.blank20,#udbsdk_login{display:none!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -15359,7 +15368,7 @@ window.parent.postMessage({
                 }
             }
         },
-        css: "#loading,#pre-loading,.img_info,.blank20{display:none!important}",
+        css: "#loading,#pre-loading,.img_info,.blank20,#udbsdk_login{display:none!important}",
         category: "comic autoPager"
     }, {
         name: "来漫画M",
@@ -15440,6 +15449,7 @@ window.parent.postMessage({
                 }
             },
             title: (dom) => _this.json(dom).chapterTitle,
+            hide: "#slider",
             preloadNextPage: (dom) => {
                 let next = _this.autoPager.next(dom, 0);
                 if (!!next) {
@@ -15529,13 +15539,14 @@ window.parent.postMessage({
         category: "comic"
     }, {
         name: "漫画屋格式",
-        host: ["www.mhua5.com", "www.mhw1.com", "www.cmh5.com", "www.umh5.com", "www.manshiduo.net", "www.obq8.com", "mh.9xxsm.com", "www.wujinmanhua.com"],
+        host: ["www.mhua5.com", "www.mhw1.com", "www.cmh5.com", "www.umh5.com", "www.manshiduo.net", "www.obq8.com", "mh.9xxsm.com", "www.wujinmanhua.com", "comics.veryim.com"],
         enable: 0,
         reg: [
             /(www\.mhua5\.com|www\.mhw\d?\.com|www\.cmh5\.com|www\.umh5\.com|mh\.9xxsm\.com)\/index\.php\/chapter\/\d+/i,
             /www\.manshiduo\.net\/chapter_\d+\.html/i,
             /www\.obq8\.com\/index\.php\/chapter-\d+.html/i,
-            /www\.wujinmanhua\.com\/\d+-\d+\.html/i
+            /www\.wujinmanhua\.com\/\d+-\d+\.html/i,
+            /comics\.veryim\.com\/\w+\/\d+\/\d+\.html/
         ],
         include: ".rd-article-wr",
         init: "document.onkeydown=null;",
@@ -15576,14 +15587,15 @@ window.parent.postMessage({
         category: "comic"
     }, {
         name: "漫画屋M格式",
-        host: ["m.mkzhan.com", "www.mhua5.com", "www.mhw1.com", "www.cmh5.com", "www.umh5.com", "www.manshiduo.net", "www.biqug.org", "mh.9xxsm.com", "m.wujinmanhua.com"],
+        host: ["m.mkzhan.com", "www.mhua5.com", "www.mhw1.com", "www.cmh5.com", "www.umh5.com", "www.manshiduo.net", "www.biqug.org", "mh.9xxsm.com", "m.wujinmanhua.com", "wap.veryim.com"],
         enable: 0,
         reg: [
             /m\.mkzhan\.com\/\d+\/\d+\.html/i,
             /(www\.mhua5\.com|www\.mhw\d?\.com|www\.cmh5\.com|www\.umh5\.com|mh\.9xxsm\.com)\/index\.php\/chapter\/\d+/i,
             /www\.manshiduo\.net\/chapter_\d+\.html/i,
             /www\.biqug\.org\/index\.php\/chapter-\d+.html/i,
-            /m\.wujinmanhua\.com\/\d+-\d+\.html/i
+            /m\.wujinmanhua\.com\/\d+-\d+\.html/i,
+            /wap\.veryim\.com\/\w+\/\d+\/\d+\.html/i
         ],
         imgs: (doc = document) => fun.getImgSrcArr(".comic-page img,img[data-src],img[data-original]", doc),
         autoDownload: [0],
@@ -15685,6 +15697,7 @@ window.parent.postMessage({
             });
         },
         infiniteScroll: true,
+        css: "a:has(>img[alt*='APP']){display:none!important;}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "爱国漫 自動翻頁",
@@ -15953,7 +15966,7 @@ window.parent.postMessage({
         name: "漫漫聚M/KuKu动漫M",
         enable: 1,
         reg: () => {
-            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
+            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "wap.ikukudm.cc", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
             return hosts.includes(fun.lh) && /\/comiclist\/\d+\/\d+\/1\.htm$/.test(fun.lp) && comicInfiniteScrollMode != 1;
         },
         include: ".classBox img,.imgBox",
@@ -15997,7 +16010,7 @@ window.parent.postMessage({
         name: "漫漫聚/KuKu动漫M 404",
         enable: 1,
         reg: () => {
-            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
+            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "wap.ikukudm.cc", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
             return hosts.includes(fun.lh) && /\/comiclist\/\d+\/\d+\/1\.htm$/.test(fun.lp) && comicInfiniteScrollMode != 1;
         },
         include: [
@@ -16036,7 +16049,7 @@ window.parent.postMessage({
     }, {
         name: "漫漫聚M/KuKu动漫M 自動翻頁",
         reg: () => {
-            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
+            let hosts = ["m.manmanju.cc", "s1.m.manmanju.cc", "s2.m.manmanju.cc", "s3.m.manmanju.cc", "m.ikukudm.cc", "m.3840p.xyz", "sbxrb11.3840p.xyz", "wap.ikukudm.cc", "s1.wap.ikukudm.cc", "s2.wap.ikukudm.cc", "s3.wap.ikukudm.cc"];
             return hosts.includes(fun.lh) && /\/comiclist\/\d+\/\d+\/1\.htm$/.test(fun.lp) && comicInfiniteScrollMode == 1;
         },
         include: ".classBox img,.imgBox",
@@ -16145,13 +16158,16 @@ window.parent.postMessage({
         host: ["m.gaonaojin.com"],
         enable: 1,
         reg: () => /m\.gaonaojin\.com\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode != 1,
+        init: () => fun.createImgBox("#cp_img", 2),
         imgs: (doc = document) => {
             let code = fun.gst("eval", doc).match(/eval.+\)\)/)[0].slice(4);
             let imgData = fun.run(fun.run(code).match(/picdata[^;]+/)[0]);
             return imgData.map(e => "https://res.xiaoqinre.com/" + e);
         },
         button: [4],
-        insertImg: ["#cp_img", 2],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#cp_img"], 2
+        ],
         autoDownload: [0],
         next: "a.btn.next",
         prev: "a.btn.prev",
@@ -16173,8 +16189,10 @@ window.parent.postMessage({
             return fun.createImgArray(srcs);
         },
         init: async () => {
+            fun.createImgBox("#cp_img", 2);
+            await fun.remove("#cp_img");
             let imgs = _this.getImgs();
-            let tE = fun.ge("#cp_img");
+            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
@@ -16182,11 +16200,12 @@ window.parent.postMessage({
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
-            pos: ["#cp_img", 0],
-            observer: "#cp_img>img",
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            observer: "#FullPictureLoadMainImgBox>img",
             next: "a.btn.next",
-            re: ".pagenation",
+            re: "#title+#title,.pagenation",
             title: (dom) => fun.gt("#title+#title", 1, dom),
+            hide: ".recommendList:has(h2)",
             bF: (dom) => fun.gae(".pagenation", dom).forEach(e => e.setAttribute("class", "pagenation")),
             preloadNextPage: (dom) => {
                 let next = fun.ge(_this.autoPager.next, dom);
@@ -16315,6 +16334,7 @@ window.parent.postMessage({
                     return fun.gt(".setnmh-bookname h1", 1, dom) + " - " + fun.gt(".setnmh-bookname h2", 1, dom);
                 }
             },
+            hide: ".setnmh-detailspage,#setnmh-footer>nav",
             preloadNextPage: (dom) => {
                 let next = fun.ge(_this.autoPager.next, dom, dom);
                 if (!!next) {
@@ -16348,6 +16368,9 @@ window.parent.postMessage({
         reg: () => {
             let hosts = ["news.cocolamanhua.com"];
             return hosts.includes(fun.lh) && /^\/[\w-]+\/$/i.test(fun.lp) && fun.ge("h2#title") && comicInfiniteScrollMode != 1;
+        },
+        xhrOptions: {
+            cache: "no-cache"
         },
         init: async () => {
             await fun.waitEle(".touch-manipulation img");
@@ -16385,6 +16408,9 @@ window.parent.postMessage({
         reg: () => {
             let hosts = ["news.cocolamanhua.com"];
             return hosts.includes(fun.lh) && /^\/[\w-]+\/$/i.test(fun.lp) && fun.ge("h2#title") && comicInfiniteScrollMode == 1;
+        },
+        xhrOptions: {
+            cache: "no-cache"
         },
         getImgs: (dom = document) => {
             let newDE = fun.ge("#imagelist", dom);
@@ -16453,6 +16479,7 @@ window.parent.postMessage({
             pos: ["#FullPictureLoadMainImgBox", 0],
             next: () => tempNextLink,
             title: () => customTitle,
+            hide: "div:has(>div>.cardlist),.justify-center:has(>.border-t)",
             preloadNextPage: () => {
                 if (!!tempNextLink) {
                     let host = "https://cocolamanhua.com";
@@ -16468,7 +16495,7 @@ window.parent.postMessage({
         },
         category: "comic autoPager"
     }, {
-        name: "新包子漫畫",
+        name: "包子漫畫",
         enable: 1,
         reg: () => {
             let hosts = ["baozimh.one"];
@@ -16510,7 +16537,7 @@ window.parent.postMessage({
         infiniteScroll: true,
         category: "comic"
     }, {
-        name: "新包子漫畫 自動翻頁",
+        name: "包子漫畫 自動翻頁",
         enable: 1,
         reg: () => {
             let hosts = ["baozimh.one"];
@@ -16588,74 +16615,13 @@ window.parent.postMessage({
             next: () => tempNextLink,
             title: () => customTitle,
             history: 0,
+            hide: "div:has(>#c-recommed),.justify-center:has(>.border-t)",
             preloadNextPage: () => {
                 if (!!tempNextLink) {
                     fun.fetchDoc(tempNextLink).then(dom => {
                         let dataE = fun.ge("#c-imagelist", dom);
                         let srcs = fun.getImgSrcArr(".touch-manipulation img", dom);
                         let text = dataE.dataset.title + " - " + dataE.dataset.ctitle;
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
-        },
-        category: "comic autoPager"
-    }, {
-        name: "包子漫畫",
-        enable: 1,
-        reg: () => {
-            let hosts = ["cn.baozimh.one"];
-            return hosts.includes(fun.lh) && /^\/manga\/[\w-_]+\/[\w-_]+$/i.test(fun.lp) && fun.ge("h2.truncate") && comicInfiniteScrollMode != 1;
-        },
-        init: async () => {
-            await fun.waitEle(".touch-manipulation img");
-            fun.remove("//div[ins[@class='adsbygoogle']]");
-        },
-        imgs: (doc = document) => fun.getImgSrcArr(".touch-manipulation img", doc),
-        button: [4],
-        insertImg: [".touch-manipulation", 2],
-        autoDownload: [0],
-        next: "//a[div[span[text()='下一話']]]",
-        prev: "//a[div[span[text()='上一話']]]",
-        customTitle: (doc = document) => fun.gt("ol.inline-flex>li:nth-child(2) a", 1, doc) + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a", 1, doc),
-        preloadNext: true,
-        infiniteScroll: true,
-        category: "comic"
-    }, {
-        name: "包子漫畫 自動翻頁",
-        enable: 1,
-        reg: () => {
-            let hosts = ["cn.baozimh.one"];
-            return hosts.includes(fun.lh) && /^\/manga\/[a-z0-9-_-]+\/[a-z0-9-_-]+$/.test(fun.lp) && fun.ge("h2.truncate") && comicInfiniteScrollMode == 1;
-        },
-        getImgs: (dom = document) => {
-            let srcs = fun.getImgSrcArr(".touch-manipulation img", dom);
-            return fun.createImgArray(srcs);
-        },
-        init: async () => {
-            await fun.waitEle(".touch-manipulation img");
-            fun.remove("//div[ins[@class='adsbygoogle']]");
-            fun.createImgBox(".touch-manipulation", 2);
-            fun.remove(".touch-manipulation");
-            let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
-            tE.append(...imgs);
-            await fun.lazyload();
-            _this.autoPager.preloadNextPage();
-        },
-        autoPager: {
-            ele: (dom) => _this.getImgs(dom),
-            observer: "#FullPictureLoadMainImgBox>img",
-            pos: ["#FullPictureLoadMainImgBox", 0],
-            next: "//a[button[text()='下一話' or text()='下一话']] | //a[div[span[text()='下一話']]]",
-            re: ".top-0,.bottom-0,.mx-auto.p-4,.flex.flex-row.space-x-2.px-2.py-4",
-            title: (dom) => fun.gt("ol.inline-flex>li:nth-child(2) a", 1, dom) + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a", 1, dom),
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(async nextDoc => {
-                        let srcs = fun.getImgSrcArr(".touch-manipulation img", nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
                         fun.picPreload(srcs, text, "next");
                     });
                 }
@@ -16762,7 +16728,7 @@ window.parent.postMessage({
         },
         category: "comic"
     }, {
-        name: "漫画160/非常爱漫",
+        name: "漫画160/非常爱漫新站",
         host: ["www.mh160.cc", "m.mh160.cc", "www.veryim.com"],
         enable: 1,
         reg: () => /\.mh160\.cc\/kanmanhua\/\w+\/\d+\.html$|^https?:\/\/www\.veryim\.com\/manhua\/\d+\/\d+\.html$/i.test(fun.url) && comicInfiniteScrollMode != 1,
@@ -16793,9 +16759,10 @@ window.parent.postMessage({
             fun.picPreload(obj.imgs(), obj.customTitle(), "next");
         },
         infiniteScroll: true,
+        css: ".action-list li{width:50% !important}#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none !important}",
         category: "comic"
     }, {
-        name: "漫画160/非常爱漫 自動翻頁",
+        name: "漫画160/非常爱漫新站 自動翻頁",
         enable: 1,
         reg: () => /\.mh160\.cc\/kanmanhua\/\w+\/\d+\.html$|^https?:\/\/www\.veryim\.com\/manhua\/\d+\/\d+\.html$/i.test(fun.url) && comicInfiniteScrollMode == 1,
         getImgs: () => {
@@ -16855,6 +16822,7 @@ window.parent.postMessage({
                     return qTcms_S_m_name + " - " + qTcms_S_m_playm;
                 }
             },
+            hide: "#m_r_bottom~.imgBox,.globalPadding",
             preloadNextPage: (dom) => {
                 let next = _this.autoPager.next(dom);
                 if (!!next) {
@@ -17601,6 +17569,7 @@ window.parent.postMessage({
                 let c = fun.gt("h2.h4", 1, dom).replace(/\[|\]/g, "");
                 return hasTouchEvents ? c : m + " - " + c;
             },
+            hide: ".comic-viewer-toc",
             preloadNextPage: async (dom) => {
                 let next = await _this.autoPager.next(dom);
                 if (!!next) {
@@ -17612,6 +17581,7 @@ window.parent.postMessage({
                 }
             }
         },
+        css: ".form-inline>.pre,.form-inline>.next,div:has(>#page-selector){display:none!important;}",
         category: "comic autoPager"
     }, {
         name: "快岸漫画",
@@ -19830,19 +19800,29 @@ window.parent.postMessage({
             return imgsSrcArr;
         },
         toggleAutoPager: () => {
+            let hide = siteData.autoPager?.hide;
             if (autoPager === true) {
                 autoPager = false;
                 fun.showMsg(displayLanguage.str_89);
                 fun.gae(".autoPagerTitle").forEach(e => e.classList.add("off"));
+                if (isString(hide)) {
+                    let eles = fun.gae(hide);
+                    eles.forEach(e => (e.style.display = ""));
+                }
             } else {
                 autoPager = true;
                 fun.showMsg(displayLanguage.str_90);
                 fun.gae(".autoPagerTitle").forEach(e => e.classList.remove("off"));
+                if (isString(hide)) {
+                    let eles = fun.gae(hide);
+                    eles.forEach(e => (e.style.display = "none"));
+                }
             }
         },
         //無限滾動自動翻頁函式
         autoPager: async () => {
             fun.addLoading();
+            let hide = siteData.autoPager?.hide;
             let url;
             try {
                 url = await fun.getNextLink(doc);
@@ -19850,11 +19830,19 @@ window.parent.postMessage({
                     autoPager = false;
                     fun.showMsg(displayLanguage.str_58, 3000);
                     fun.removeLoading();
+                    if (isString(hide)) {
+                        let eles = fun.gae(hide);
+                        eles.forEach(e => (e.style.display = ""));
+                    }
                     return;
                 }
             } catch (error) {
                 console.error("\n取得下一頁鏈結出錯\n", error);
                 fun.removeLoading();
+                if (isString(hide)) {
+                    let eles = fun.gae(hide);
+                    eles.forEach(e => (e.style.display = ""));
+                }
                 return;
             }
             let mode = siteData.autoPager?.mode;
@@ -19888,6 +19876,10 @@ window.parent.postMessage({
                     autoPager = false;
                     fun.removeLoading();
                     fun.showMsg(displayLanguage.str_58, 3000);
+                    if (isString(hide)) {
+                        let eles = fun.gae(hide);
+                        eles.forEach(e => (e.style.display = ""));
+                    }
                     return;
                 }
             }
@@ -19995,7 +19987,7 @@ window.parent.postMessage({
             if (siteData.category === "comic autoPager") {
                 await fun.lazyload();
                 let pagerTitles = fun.gae(".autoPagerTitle");
-                if (pagerTitles.length > 4) {
+                if (pagerTitles.length > 3) {
                     let parentE = pagerTitles[0].parentNode;
                     pagerTitles[0].remove();
                     let eles = [...parentE.childNodes];
@@ -24588,6 +24580,11 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         document.addEventListener("scroll", callback);
                     }
                     document.addEventListener("dblclick", () => fun.toggleAutoPager());
+                    let hide = siteData.autoPager?.hide;
+                    if (isString(hide)) {
+                        let eles = fun.gae(hide);
+                        eles.forEach(e => (e.style.display = "none"));
+                    }
                 }
                 let openInNewTab = data.openInNewTab;
                 if (isString(openInNewTab)) {
