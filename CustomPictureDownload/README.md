@@ -1,9 +1,9 @@
 <h1>測試通過環境：</h1>
 <pre>
-2024/05/17
+2024/05/24
 PC
-Chrome 125.0.6422.61 + Tampermonkey 5.1.1
-Edge 124.0.2478.109 + Tampermonkey 5.1.1
+Chrome 125.0.6422.77 + Tampermonkey 5.1.1
+Edge 125.0.2535.51 + Tampermonkey 5.1.1
 Cent Browser  5.1.1130.82 + Tampermonkey 5.1.1
 FireFox 126.0 + Tampermonkey 5.1.1
 Android
@@ -977,7 +977,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/19 19:47</p>
+<p>2024/05/24 01:30</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
 <p>
@@ -1637,12 +1637,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://niuniuhome.club/">妞妞之家</a>
-                </td>
-                <td>分類添加了自動翻頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.beautyleg6.com/index.html">BeautyLeg</a>
                 </td>
                 <td></td>
@@ -2196,6 +2190,12 @@ imgs: async () => {
             <tr>
                 <td>
                     <a href="https://www.pixibb.com/?list=albums&sort=views_desc&page=1">PixiBB</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://vtecy.top/">二次元图库</a>
                 </td>
                 <td></td>
             </tr>
@@ -4045,6 +4045,12 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
+                    <a href="https://18mh.org/">18漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://caitlin.top/">Caitlin.top</a>
                 </td>
                 <td></td>
@@ -4578,6 +4584,14 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.manhuagui.com/">Manhuagui看漫画</a>
+                </td>
+                <td>
+                    <a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>， <a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限滾動模式加預讀
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.baozimh.com/">🌈️包子漫畫</a>
                 </td>
                 <td>有無限滾動模式加預讀</td>
@@ -4598,11 +4612,9 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.manhuagui.com/">Manhuagui看漫画</a>
+                    <a href="https://manhuascans.org/">GodaComic 英文漫画</a>
                 </td>
-                <td>
-                    <a href="https://tw.manhuagui.com/">tw.manhuagui.com</a>， <a href="https://m.manhuagui.com/">m.manhuagui.com</a>，有無限滾動模式加預讀
-                </td>
+                <td>閱讀頁域名為godamh.org，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
