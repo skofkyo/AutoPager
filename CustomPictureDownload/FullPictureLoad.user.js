@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.8
+// @version            2.2.9
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1817,6 +1817,15 @@
         customTitle: () => fun.title("_", 1),
         category: "nsfw1"
     }, {
+        name: "美女图册",
+        host: "www.mntuce.com",
+        reg: /^https?:\/\/www\.mntuce\.com\/\d+\/\.html$/,
+        imgs: () => fun.getImgA(".article-content img", ".post-nav-links a"),
+        button: [4],
+        insertImg: [".article-content", 2],
+        customTitle: ".article-title",
+        category: "nsfw1"
+    }, {
         name: "绅士猫",
         host: "www.cos6.net",
         reg: /www\.cos6\.net\/\d+\.html/,
@@ -1935,35 +1944,6 @@
         prev: ".next>a",
         customTitle: "h1.post-title",
         category: "nsfw2"
-    }, {
-        name: "妞妞之家",
-        host: ["niuniuhome.club"],
-        reg: /^https?:\/\/niuniuhome\.club\/[^\/]+\/$|^https?:\/\/niuniuhome\.club\/\?p=\d+$/,
-        imgs: ".entry-content img",
-        button: [4],
-        insertImg: [".post-content", 2],
-        autoDownload: [0],
-        next: "a.post-nav-prev",
-        prev: "a.post-nav-next",
-        customTitle: ".post-title",
-        css: ".post-inner{width:98%!important;max-width:98%!important;padding:0!important}",
-        category: "nsfw1"
-    }, {
-        name: "妞妞之家 分類自動翻頁",
-        enable: 1,
-        reg: /^^https?:\/\/niuniuhome\.club\/(\?paged=\d+|\?cat=\d+)?$/,
-        autoPager: {
-            mode: 1,
-            waitEle: "#posts[style]",
-            ele: "#posts",
-            next: "a.archive-nav-older.fleft",
-            re: ".archive-nav",
-            title: () => "Page " + nextLink.match(/\d+$/)[0],
-            bottom: screen.height * 3
-        },
-        openInNewTab: ".post-container a:not([target=_blank])",
-        css: ".post-container{opacity:1 !important}",
-        category: "autoPager"
     }, {
         name: "PixiBB",
         host: ["www.pixibb.com"],
@@ -2171,6 +2151,18 @@
         customTitle: () => fun.gt("#crumbbar").replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)"),
         observerTitle: true,
         category: "nsfw1"
+    }, {
+        name: "二次元图库",
+        host: ["vtecy.top"],
+        reg: /^https?:\/\/vtecy\.top\/index\.php\/\d+\/\d+\/\d+\/[^\/]+\/$/,
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".post-next h2>a",
+        prev: ".post-pre h2>a",
+        customTitle: ".entry-header>h1",
+        category: "nsfw2"
     }, {
         name: "COSPLAY ZIP",
         host: ["www.coszip.com", "coszip.com"],
@@ -6065,7 +6057,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             bF: doc => {
                 fun.gae("span[data-img-url]", doc).forEach(span => {
                     span.classList.add("td-animation-stack-type0-2");
-                    span.style.backgroundImage = `url('${span.dataset.imgUrl}')`;
+                    span.style.backgroundImage = `url("${span.dataset.imgUrl}")`;
                 });
             },
             title: doc => "Page " + currentPageNum
@@ -9660,36 +9652,40 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "Anchira",
         host: ["anchira.to"],
+        enable: 0,
         reg: /^https?:\/\/anchira\.to\/g\/\d+\/\w+$/i,
         init: async () => await fun.waitEle("#previews img"),
         imgs: async () => {
-            if (!fun.ge("#previews img")) return [];
-            let max = fun.gt("//strong[text()='Length']/following-sibling::div").match(/\d+/)[0];
-            let sSrc = fun.attr("#previews img", "src");
-            let sImgDir = sSrc.replace(/\d+$/, "");
-            thumbnailsSrcArray = fun.arr(max).map((_, i) => sImgDir + (i + 1));
-            let urlArr = siteUrl.split("/");
-            let galleryId = urlArr.at(-2);
-            let galleryKey = urlArr.at(-1);
-            let res = await fetch(`/api/v1/library/${galleryId}/${galleryKey}/data`, {
-                "headers": {
-                    "x-requested-with": "XMLHttpRequest"
-                }
-            });
-            if (res.status != 200) {
+            let ids = location.pathname.replace("/g", "");
+            let api = "https://api.anchira.to/library/" + ids;
+            let json = await fetch(api).then(res => res.json());
+            if (json.status === 1) {
+                thumbnailsSrcArray = json.data.map(e => `https://kisakisexo.xyz/${json.id}/${json.key}/s/${e.n}`);
+                let data_api = api + "/data";
+                return fetch(data_api).then(res => res.json()).then(data => {
+                    let {
+                        hash,
+                        id,
+                        key
+                    } = data;
+                    let imgs = json.data.map((e, i) => {
+                        let host;
+                        if (i % 2 === 0) {
+                            host = "https://kisakisexo.xyz/";
+                        } else {
+                            host = "https://aronasexo.xyz/";
+                        }
+                        return `${host}${id}/${key}/${hash}/b/${e.n}`
+                    });
+                    return imgs;
+                });
+            } else {
                 alert("Trigger human-machine verification.\nPlease click Read button.\nAfter successful human-machine verification.\nReturn to gallery information page.\nReload.");
                 return [];
-            } else {
-                let bSrc = fun.attr("#gallery img", "src");
-                let imgOrigin = new URL(bSrc).origin;
-                let json = await res.json();
-                let gallerHash = json.hash;
-                let gallerReadKey = json.key;
-                return json.names.map(name => imgOrigin + "/" + galleryId + "/" + gallerReadKey + "/" + gallerHash + "/b/" + name);
             }
         },
         button: [4],
-        insertImg: ["#previews", 2],
+        insertImg: ["#previews", 3],
         customTitle: "#metadata span.s",
         threading: 6,
         category: "hcomic"
@@ -9701,7 +9697,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             mode: 1,
             waitEle: ".galleries article img",
             ele: ".galleries>main",
-            next: ".pagination a[aria-current='true']+a:not([title='Go to the next page'])",
+            next: ".pagination a[aria-current='true'][tabindex]+a:not([title='Go to the next page'])",
             re: ".pagination",
             title: doc => "Page " + nextLink.match(/\d+$/)[0],
             bottom: screen.height * 3
@@ -11734,10 +11730,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["rokuhentai.com"],
         reg: /^https?:\/\/rokuhentai\.com\/\w+$/,
         imgs: () => {
-            thumbnailsSrcArray = fun.gae(".site-page-card__media").map(e => e.style.backgroundImage.split('"')[1]);
+            thumbnailsSrcArray = fun.getImgSrcArr(".site-page-card__media");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.url + "/0";
-            return fun.fetchDoc(url).then(doc => fun.gae(".site-reader__image", doc).map(e => e.dataset.src ?? e.src));
+            return fun.fetchDoc(url).then(doc => fun.getImgSrcArr(".site-reader__image", doc));
         },
         button: [4],
         insertImg: [
@@ -11919,6 +11915,22 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: "div[class][id][style*=fixed]{display:none!important;}",
         category: "hcomic"
     }, {
+        name: "18漫畫",
+        host: ["18mh.org"],
+        reg: /^https?:\/\/badynews\.com\/[^\/]+$/i,
+        init: async () => {
+            await fun.waitEle(".touch-manipulation img");
+            fun.remove(".flex.flex-row.space-x-2.px-2.py-4");
+        },
+        imgs: ".touch-manipulation img",
+        button: [4],
+        insertImg: [".touch-manipulation", 2],
+        autoDownload: [0],
+        next: "#nextChapterLink",
+        prev: "#preChapterLink",
+        customTitle: () => fun.gt("ol.inline-flex>li:nth-child(2) a").trim() + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a").trim(),
+        category: "hcomic"
+    }, {
         name: "Hitomi.la",
         host: ["hitomi.la"],
         reg: /hitomi\.la\/reader\/\d+\.html/,
@@ -11945,19 +11957,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: () => fun.title("|", 1),
         css: "body{overflow:unset!important}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         threading: 5,
-        category: "hcomic"
-    }, {
-        name: "Orzqwq List模式",
-        host: ["orzqwq.com"],
-        reg: /orzqwq\.com\/manga\/.+style=list/,
-        include: "//option[@selected and text()='List style']",
-        imgs: async () => {
-            fun.showMsg(displayLanguage.str_04, 0);
-            await fun.waitEle(".img-responsive", 600);
-            return fun.gae("img[data-src]");
-        },
-        insertImg: [".reading-content", 2],
-        customTitle: ".breadcrumb>li:nth-child(2)",
         category: "hcomic"
     }, {
         name: "HO5HO",
@@ -13226,7 +13225,6 @@ if (next) {
                 tE.append(...imgs);
                 fun.hideMsg();
                 await fun.lazyload();
-                _this.autoPager.preloadNextPage();
             });
         },
         autoPager: {
@@ -13240,16 +13238,7 @@ if (next) {
                 let title = code.match(/MANGABZ_CTITLE[\s\="]+([^"]+)/)[1];
                 return title;
             },
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: "a[href^='j']{display:none !important}body{overflow:unset!important}",
         category: "comic autoPager"
@@ -13351,7 +13340,6 @@ if (next) {
                 tE.append(...imgs);
                 fun.hideMsg();
                 await fun.lazyload();
-                _this.autoPager.preloadNextPage();
             });
         },
         autoPager: {
@@ -13365,16 +13353,7 @@ if (next) {
                 let title = code.match(/XMANHUA_CTITLE[\s\="]+([^"]+)/)[1];
                 return title;
             },
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
         category: "comic autoPager"
@@ -13483,7 +13462,6 @@ if (next) {
                 tE.append(...imgs);
                 fun.hideMsg();
                 await fun.lazyload();
-                _this.autoPager.preloadNextPage();
             });
         },
         autoPager: {
@@ -13492,18 +13470,9 @@ if (next) {
             observer: "#cp_img>img",
             next: "//a[text()='下一章']",
             re: ".active.right-arrow,.view-paging",
-            title: (dom) => fun.gt(".title", 1, dom).replace("首页 ", ""),
+            title: (dom) => fun.gt(".title", 1, dom).replace("首页 ", "").replace(/\s+/g, " ").trim(),
             hide: ".view-comment",
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc).replace(/\s+/g, " ").trim();
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: "body{overflow:unset!important}a[href^='javascript:Show'],.chapterpager{display:none!important;}",
         category: "comic autoPager"
@@ -13539,7 +13508,6 @@ if (next) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -13547,18 +13515,9 @@ if (next) {
             observer: "#barChapter>img",
             next: "//a[text()='下一章']",
             re: ".view-paging",
-            title: (dom) => fun.gt(".title", 1, dom).replace("首页 ", ""),
+            title: (dom) => fun.gt(".title", 1, dom).replace("首页 ", "").replace(/\s+/, " ").trim(),
             hide: ".view-comment",
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc).replace(/\s+/g, " ").trim();
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: "body{overflow:unset!important}",
         category: "comic autoPager"
@@ -13660,7 +13619,6 @@ if (next) {
                 tE.append(...imgs);
                 fun.hideMsg();
                 await fun.lazyload();
-                _this.autoPager.preloadNextPage();
             });
         },
         autoPager: {
@@ -13674,16 +13632,7 @@ if (next) {
                 let title = code.match(/YYMANHUA_CTITLE[\s\="]+([^"]+)/)[1];
                 return title;
             },
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
         category: "comic autoPager"
@@ -13753,7 +13702,6 @@ if (next) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
             if (fun.gae(".view-bottom-bar>li").length == 4) {
                 fun.css(".view-bottom-bar>li:nth-child(n+2):nth-child(-n+3){display:none!important}.view-bottom-bar li{width:50%!important}");
             }
@@ -13805,16 +13753,7 @@ if (next) {
                     b.innerHTML = b.innerHTML.replace("<!--", "").replace("-->", "");
                 }
             },
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom);
-                if (!!next) {
-                    fun.fetchDoc(next).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         category: "comic autoPager"
     }, {
@@ -14044,7 +13983,6 @@ if (next) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -14064,7 +14002,7 @@ if (next) {
                 }
             },
             re: "#mangaTitle",
-            title: (dom) => fun.ge("#mangaTitle>a", dom)?.nextSibling?.data?.trim(),
+            title: (dom) => fun.ge("#mangaTitle>a", dom)?.nextSibling?.data?.replace(/\s+/g, " ")?.trim(),
             aF: (dom) => {
                 let json = _this.json(dom);
                 let cUrl = fun.gu("#mangaTitle a");
@@ -14073,16 +14011,7 @@ if (next) {
                 let pe = fun.ge("a[data-action='chapter.prev']");
                 pe.href = cUrl + json.prevId + ".html";
             },
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom, 0);
-                if (!!next) {
-                    fun.fetchDoc(next).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc).replace(/\s+/g, " ").trim();
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".action-list li{width:50% !important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,.clickforceads{display:none !important}",
         category: "comic autoPager"
@@ -14151,7 +14080,6 @@ if (next) {
             tE.append(...imgs);
             await fun.lazyload();
             fun.run("$(document).unbind('keydown');");
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -14171,16 +14099,7 @@ if (next) {
             },
             re: ".title h2",
             title: (dom) => _this.json(dom).cname,
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom, 0);
-                if (!!next) {
-                    fun.fetchDoc(next).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".tbCenter{max-width:1400px!important;width:auto!important;height:auto!important}#prev,#pageSelect,#next,.pager>*:not([onclick]){display:none!important;}",
         category: "comic autoPager"
@@ -14227,7 +14146,6 @@ if (next) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -14246,15 +14164,7 @@ if (next) {
                 }
             },
             hide: ".comic-chapter>.l-content",
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom);
-                if (!!next) {
-                    fun.fetchDoc(next).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        fun.picPreload(srcs, nextDoc.title, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".chapter-main.scroll-mode~*:not(.next_chapter,.bottom-bar,.l-content),.mobadsq{display:none!important}.comic-contain{width: 100%;margin: 0 auto;max-width:970px;",
         category: "comic autoPager"
@@ -14427,7 +14337,6 @@ if (next) {
             tE.append(...imgs);
             await fun.lazyload();
             fun.remove("//tr[td[a[@class='onpage']]]");
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -14438,15 +14347,7 @@ if (next) {
                 fun.gae("//tr[td[@bgcolor='#EAEAEA']] | //tr[td[@bgcolor='#EBEBEB']]").forEach(e => (e.innerHTML = fun.ge("//tr[td[@bgcolor='#EAEAEA']] | //tr[td[@bgcolor='#EBEBEB']]", dom, dom).innerHTML));
                 fun.remove("//td[div[@id='sidebar-follow']] | //td[ins[@class='adsbygoogle']] | //tr[td[script]] | //select");
             },
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(async nextDoc => {
-                        let srcs = await _this.getSrcs(nextDoc);
-                        fun.picPreload(srcs, nextDoc.title, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         category: "comic autoPager"
     }, {
@@ -14577,7 +14478,6 @@ if (next) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
             setTimeout(() => fun.run("$(document).off();"), 5000);
         },
         autoPager: {
@@ -14609,16 +14509,7 @@ if (next) {
             },
             re: ".title h2,.main-btn,#mangaTitle,#action",
             title: (dom) => _this.json(dom).ctitle,
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom, 0);
-                if (!!next) {
-                    fun.fetchDoc(next).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".action-list li{width:50%!important}#imgLoading,#manga,.action,#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo,.FullPictureLoadMsg),footer~*:not(.FullPictureLoadMsg),#prev,#pageSelect,#next,#pager>*:not([onclick]),#pager>*[onclick*='next()'],.backToTop~div[style*='overflow']{display:none!important}",
         category: "comic autoPager"
@@ -14747,7 +14638,6 @@ if (next) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             script: "//script[contains(text(),'chapterImages')]",
@@ -14781,16 +14671,7 @@ if (next) {
                 }
             },
             hide: ".comic-comment,.chapter-content+.imgBox",
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom, 0);
-                if (!!next) {
-                    fun.fetchDoc(next).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.footer):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
         category: "comic autoPager"
@@ -15337,7 +15218,6 @@ window.parent.postMessage({
             let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             script: "//script[contains(text(),'picTree')]",
@@ -15357,18 +15237,9 @@ window.parent.postMessage({
             },
             re: "#bottom_chapter",
             title: (dom) => fun.gt("#position", 1, dom).replaceAll("\n", "").replaceAll(">", "").replace("漫画", ""),
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom);
-                if (!!next) {
-                    fun.fetchDoc(next).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
-        css: "#loading,#pre-loading,.img_info,.blank20,#udbsdk_login{display:none!important}",
+        css: "#loading,#pre-loading,.img_info,.blank20,#udbsdk_login{display:none!important}.subNav{margin: 4px auto!important;float:unset!important}",
         category: "comic autoPager"
     }, {
         name: "来漫画M",
@@ -15427,7 +15298,6 @@ window.parent.postMessage({
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             script: "//script[contains(text(),'mhInfo')]",
@@ -15450,16 +15320,7 @@ window.parent.postMessage({
             },
             title: (dom) => _this.json(dom).chapterTitle,
             hide: "#slider",
-            preloadNextPage: (dom) => {
-                let next = _this.autoPager.next(dom, 0);
-                if (!!next) {
-                    fun.fetchDoc(next).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: "#jusha1{display:none!important}.action-list li{width:50% !important}#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none !important}",
         category: "comic autoPager"
@@ -15712,7 +15573,6 @@ window.parent.postMessage({
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             mode: 1,
@@ -15780,7 +15640,6 @@ window.parent.postMessage({
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             mode: 1,
@@ -15925,7 +15784,6 @@ window.parent.postMessage({
                 tE.append(...imgs);
                 fun.hideMsg();
                 await fun.lazyload();
-                _this.autoPager.preloadNextPage();
             });
             let cUrl = _this.comicListUrl();
             fun.addUrlHtml(cUrl, "body", 2, "目錄");
@@ -16062,7 +15920,6 @@ window.parent.postMessage({
                 tE.append(...imgs);
                 fun.hideMsg();
                 await fun.lazyload();
-                _this.autoPager.preloadNextPage();
             });
             fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
             let nav = fun.ge("ul.subNav").cloneNode(true);
@@ -16196,7 +16053,6 @@ window.parent.postMessage({
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -16207,16 +16063,7 @@ window.parent.postMessage({
             title: (dom) => fun.gt("#title+#title", 1, dom),
             hide: ".recommendList:has(h2)",
             bF: (dom) => fun.gae(".pagenation", dom).forEach(e => e.setAttribute("class", "pagenation")),
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: "#cp_img>div[style]{display:none!important;}",
         category: "comic autoPager"
@@ -16309,7 +16156,6 @@ window.parent.postMessage({
             let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -16335,33 +16181,105 @@ window.parent.postMessage({
                 }
             },
             hide: ".setnmh-detailspage,#setnmh-footer>nav",
-            preloadNextPage: (dom) => {
-                let next = fun.ge(_this.autoPager.next, dom, dom);
-                if (!!next) {
-                    fun.fetchDoc(next.href).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         category: "comic autoPager"
     }, {
         name: "Godamanga.ART 英文漫画",
         host: ["godamanga.art"],
-        enable: 0,
-        reg: /^https?:\/\/godamanga\.art\/manga\/[a-z0-9-_]+\/[a-z0-9-_]+(\/|\.html)$/i,
-        delay: 300,
-        imgs: "//img[@decoding and @layout] | //img[@decoding and contains(@class,'img_content_jpg')]",
+        enable: 1,
+        reg: () => {
+            let hosts = ["godamanga.art"];
+            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$/i.test(fun.lp) && fun.ge("h1#htitle") && comicInfiniteScrollMode != 1;
+        },
+        xhrOptions: {
+            cache: "no-cache"
+        },
+        init: async () => await fun.waitEle(".touch-manipulation img"),
+        imgs: ".touch-manipulation img",
         button: [4],
-        insertImg: ["//div[div[div[div[div[img[@decoding and @layout]]]]]] | //div[div[div[div[div[img[@decoding and contains(@class,'img_content_jpg')]]]]]]", 2],
+        insertImg: [".touch-manipulation", 2],
         autoDownload: [0],
-        next: "//a[span[text()='下一话']] | //a[span[text()='NEXT']]",
-        prev: "//a[span[text()='上一话']] | //a[span[text()='PREV']]",
-        customTitle: (doc = document) => fun.gt("h1", 1, doc),
-        preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, obj.imgs, 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
+        next: "#nextchaptera",
+        prev: "#prevchaptera",
+        customTitle: (doc = document) => fun.gt("ol.inline-flex>li:nth-child(2) a", 1, doc) + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a", 1, doc),
+        preloadNext: () => {
+            let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
+            let {
+                host,
+                ms,
+                cs
+            } = setdata;
+            let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+            fun.fetchDoc(api).then(dom => {
+                let next = fun.ge("#c-imagelist", dom)?.dataset?.next;
+                if (!!next) {
+                    let nextApi = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
+                    fun.fetchDoc(nextApi).then(nextDom => {
+                        let dataE = fun.ge("#c-imagelist", nextDom);
+                        let srcs = fun.getImgSrcArr(".touch-manipulation img", nextDom);
+                        let text = dataE.dataset.title + " - " + dataE.dataset.ctitle;
+                        fun.picPreload(srcs, text, "next");
+                    });
+                }
+            });
+        },
+        infiniteScroll: true,
         category: "comic"
+    }, {
+        name: "Godamanga.ART 英文漫画 自動翻頁",
+        enable: 1,
+        reg: () => {
+            let hosts = ["godamanga.art"];
+            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$/i.test(fun.lp) && fun.ge("h1#htitle") && comicInfiniteScrollMode == 1;
+        },
+        xhrOptions: {
+            cache: "no-cache"
+        },
+        getSrcs: (dom) => fun.getImgSrcArr(".touch-manipulation img", dom),
+        getImgs: (dom = document) => {
+            let srcs = _this.getSrcs(dom);
+            return fun.createImgArray(srcs);
+        },
+        init: async () => {
+            await fun.waitEle(".touch-manipulation img");
+            let imgs = await _this.getImgs();
+            fun.createImgBox(".touch-manipulation", 2);
+            fun.remove("//div[ins[@class='adsbygoogle']]");
+            await fun.remove(".touch-manipulation");
+            let tE = fun.ge("#FullPictureLoadMainImgBox");
+            tE.append(...imgs);
+            await fun.lazyload();
+        },
+        autoPager: {
+            ele: (dom) => _this.getImgs(dom),
+            observer: "#FullPictureLoadMainImgBox>img",
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            next: async (dom) => {
+                let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
+                let {
+                    host,
+                    ms,
+                    cs
+                } = setdata;
+                let dataE = fun.ge("#c-imagelist", dom);
+                if (!dataE) {
+                    let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+                    dataE = await fun.fetchDoc(api).then(apiDom => fun.ge("#c-imagelist", apiDom));
+                }
+                let next = dataE.dataset?.next;
+                if (!!next) {
+                    return `${host}/chapter/getinfo?m=${ms}&c=${next}`;
+                } else {
+                    return null;
+                }
+            },
+            title: (dom) => fun.ge("#c-imagelist", dom).dataset.ctitle,
+            history: 0,
+            hide: "div:has(>#c-recommed),.justify-center:has(>.border-t)",
+            preloadNextPage: 1
+        },
+        category: "comic autoPager"
     }, {
         name: "GODA漫畫",
         enable: 1,
@@ -16383,22 +16301,26 @@ window.parent.postMessage({
         next: "#nextChapterLink",
         prev: "#preChapterLink",
         customTitle: (doc = document) => fun.gt("ol.inline-flex>li:nth-child(2) a", 1, doc) + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a", 1, doc),
-        preloadNext: (nextDoc, obj) => {
-            const picPreloadFn = (m, c) => {
-                let api = `https://cocolamanhua.com/chapter/getinfo?m=${m}&c=${c}`;
-                fun.fetchDoc(api).then(apiDom => {
-                    let srcs = fun.getImgSrcArr(".touch-manipulation img", apiDom);
-                    let ntm = fun.gt(".text-default-700 .text-xs.line-clamp-1", 1, apiDom).trim();
-                    let ntc = fun.gt(".text-default-500 .text-xs.line-clamp-1", 1, apiDom).trim();
-                    let text = ntm + " - " + ntc;
-                    fun.picPreload(srcs, text, "next");
-                });
-            };
-            let next = fun.ge("a#nextChapter[href*='manga']");
-            if (next) {
-                let [, , mid, cid] = new URL(next.href).pathname.split("/");
-                picPreloadFn(mid, cid);
-            }
+        preloadNext: () => {
+            let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
+            let {
+                host,
+                ms,
+                cs
+            } = setdata;
+            let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+            fun.fetchDoc(api).then(dom => {
+                let next = fun.ge("#imagelist", dom)?.dataset?.next;
+                if (!!next) {
+                    let nextApi = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
+                    fun.fetchDoc(nextApi).then(nextDom => {
+                        let dataE = fun.ge("#imagelist", nextDom);
+                        let srcs = fun.getImgSrcArr(".touch-manipulation img", nextDom);
+                        let text = dataE.dataset.title + " - " + dataE.dataset.ctitle;
+                        fun.picPreload(srcs, text, "next");
+                    });
+                }
+            });
         },
         infiniteScroll: true,
         category: "comic"
@@ -16412,86 +16334,49 @@ window.parent.postMessage({
         xhrOptions: {
             cache: "no-cache"
         },
+        getSrcs: (dom) => fun.getImgSrcArr(".touch-manipulation img", dom),
         getImgs: (dom = document) => {
-            let newDE = fun.ge("#imagelist", dom);
-            let host = "https://cocolamanhua.com";
-            let mid;
-            let cid;
-            if (newDE) {
-                mid = newDE.dataset.mid;
-                cid = newDE.dataset.cid;
-            } else {
-                [, , mid, cid] = new URL(nextLink).pathname.split("/");
-            }
-            let setdata = localStorage.getItem("setdata") ?? null;
-            if (!!setdata) {
-                let json = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-                host = json.host;
-            }
-            let api = `${host}/chapter/getinfo?m=${mid}&c=${cid}`;
-            return fun.fetchDoc(api).then(apiDom => {
-                let next = fun.ge("a#nextChapter[href*='manga']", apiDom);
-                if (next) {
-                    tempNextLink = next.href;
-                } else {
-                    tempNextLink = null;
-                }
-                let np = fun.ge(".flex.flex-row.space-x-2.px-2.py-4", apiDom);
-                let cp = fun.ge(".flex.flex-row.space-x-2.px-2.py-4");
-                if (np && cp) {
-                    cp.outerHTML = np.outerHTML;
-                }
-                let nt = fun.gt(".text-default-500 .text-xs.line-clamp-1", 1, apiDom);
-                let ct = fun.ge("#title");
-                if (nt && ct) {
-                    ct.innerText = nt;
-                }
-                let n_nav = fun.ge(".mx-auto.p-4", apiDom);
-                let c_nav = fun.ge(".mx-auto.p-4");
-                if (n_nav && c_nav) {
-                    c_nav.outerHTML = n_nav.outerHTML;
-                }
-                customTitle = nt;
-                let srcs = fun.getImgSrcArr(".touch-manipulation img", apiDom);
-                return fun.createImgArray(srcs);
-            });
+            let srcs = _this.getSrcs(dom);
+            return fun.createImgArray(srcs);
         },
         init: async () => {
             await fun.waitEle(".touch-manipulation img");
-            fun.remove("//div[ins[@class='adsbygoogle']]");
+            let imgs = _this.getImgs();
             fun.createImgBox(".touch-manipulation", 2);
-            fun.remove(".touch-manipulation,.bottom-0");
-            let imgs = await _this.getImgs();
+            fun.remove("//div[ins[@class='adsbygoogle']]");
+            await fun.remove(".touch-manipulation");
             let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
-            let next = fun.ge("a#nextChapter[href*='manga']");
-            if (next) {
-                tempNextLink = next.href;
-            } else {
-                tempNextLink = null;
-            }
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
             observer: "#FullPictureLoadMainImgBox>img",
             pos: ["#FullPictureLoadMainImgBox", 0],
-            next: () => tempNextLink,
-            title: () => customTitle,
-            hide: "div:has(>div>.cardlist),.justify-center:has(>.border-t)",
-            preloadNextPage: () => {
-                if (!!tempNextLink) {
-                    let host = "https://cocolamanhua.com";
-                    let [, , mid, cid] = new URL(tempNextLink).pathname.split("/");
-                    let api = `${host}/chapter/getinfo?m=${mid}&c=${cid}`;
-                    fun.fetchDoc(api).then(dom => {
-                        let srcs = fun.getImgSrcArr(".touch-manipulation img", dom);
-                        let text = fun.gt(".text-default-500 .text-xs.line-clamp-1", 1, dom);
-                        fun.picPreload(srcs, text, "next");
-                    });
+            next: (dom) => {
+                let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
+                let dataE = fun.ge("#imagelist", dom);
+                let next = dataE.dataset?.next;
+                if (!!next) {
+                    let host = setdata.host;
+                    let mid = dataE.dataset.mid;
+                    return `${host}/chapter/getinfo?m=${mid}&c=${next}`;
+                } else {
+                    return null;
                 }
-            }
+            },
+            re: "h1.text-center,.mx-auto.p-4,.flex.flex-row.space-x-2.px-2.py-4",
+            title: (dom) => fun.ge("#imagelist", dom).dataset.ctitle,
+            history: 0,
+            hide: "div:has(>div>.cardlist),.justify-center:has(>.border-t)",
+            aF: (dom) => {
+                let nt = fun.gt(".text-default-500 .text-xs.line-clamp-1", 1, dom);
+                let ct = fun.ge("#title");
+                if (nt && ct) {
+                    ct.innerText = nt;
+                }
+            },
+            preloadNextPage: 1
         },
         category: "comic autoPager"
     }, {
@@ -16516,14 +16401,16 @@ window.parent.postMessage({
         prev: "#preChapterLink",
         preloadNext: () => {
             let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-            let host = setdata.host;
-            let mid = setdata.ms;
-            let cid = setdata.cs;
-            let api = host + "/chapter/getinfo?m=" + mid + "&c=" + cid;
+            let {
+                host,
+                ms,
+                cs
+            } = setdata;
+            let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
             fun.fetchDoc(api).then(dom => {
                 let next = fun.ge("#c-imagelist", dom)?.dataset?.next;
                 if (!!next) {
-                    let nextApi = host + "/chapter/getinfo?m=" + mid + "&c=" + next;
+                    let nextApi = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
                     fun.fetchDoc(nextApi).then(nextDom => {
                         let dataE = fun.ge("#c-imagelist", nextDom);
                         let srcs = fun.getImgSrcArr(".touch-manipulation img", nextDom);
@@ -16546,86 +16433,52 @@ window.parent.postMessage({
         xhrOptions: {
             cache: "no-cache"
         },
-        getImgs: (dom = null) => {
-            let dataE = fun.ge("#c-imagelist", dom);
-            let host, mid, cid;
-            if (!!dataE) {
-                host = dataE.dataset.home;
-                mid = dataE.dataset.mid;
-                cid = dataE.dataset.cid;
-            } else {
-                let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-                host = setdata.host;
-                mid = setdata.ms;
-                cid = setdata.cs;
-            }
-            if (!!dataE) {
-                let next = dataE.dataset?.next;
-                if (!!next) {
-                    tempNextLink = `${host}/chapter/getinfo?m=${mid}&c=${next}`;
-                } else {
-                    tempNextLink = null;
-                }
-                let text;
-                if (hasTouchEvents) {
-                    text = dataE.dataset.ctitle;
-                } else {
-                    text = dataE.dataset.title + " - " + dataE.dataset.ctitle;
-                }
-                customTitle = text;
-                let srcs = fun.getImgSrcArr(".touch-manipulation img", dom);
-                return fun.createImgArray(srcs);
-            } else {
-                let api = `${host}/chapter/getinfo?m=${mid}&c=${cid}`;
-                return fun.fetchDoc(api).then(apiDom => {
-                    let dataE = fun.ge("#c-imagelist", apiDom);
-                    let next = dataE.dataset?.next;
-                    if (next) {
-                        tempNextLink = `${host}/chapter/getinfo?m=${mid}&c=${next}`;
-                    } else {
-                        tempNextLink = null;
-                    }
-                    let text;
-                    if (hasTouchEvents) {
-                        text = dataE.dataset.ctitle;
-                    } else {
-                        text = dataE.dataset.title + " - " + dataE.dataset.ctitle;
-                    }
-                    customTitle = text;
-                    let srcs = fun.getImgSrcArr(".touch-manipulation img", apiDom);
-                    return fun.createImgArray(srcs);
-                });
-            }
+        getSrcs: (dom) => fun.getImgSrcArr(".touch-manipulation img", dom),
+        getImgs: (dom = document) => {
+            let srcs = _this.getSrcs(dom);
+            return fun.createImgArray(srcs);
         },
         init: async () => {
             await fun.waitEle(".touch-manipulation img");
-            fun.remove("//div[ins[@class='adsbygoogle']]");
-            fun.createImgBox(".touch-manipulation", 2);
-            fun.remove(".touch-manipulation,.bottom-0");
             let imgs = await _this.getImgs();
+            fun.createImgBox(".touch-manipulation", 2);
+            fun.remove("//div[ins[@class='adsbygoogle']]");
+            await fun.remove(".touch-manipulation");
             let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
             observer: "#FullPictureLoadMainImgBox>img",
             pos: ["#FullPictureLoadMainImgBox", 0],
-            next: () => tempNextLink,
-            title: () => customTitle,
+            next: async (dom) => {
+                let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
+                let {
+                    host,
+                    ms,
+                    cs
+                } = setdata;
+                let dataE = fun.ge("#c-imagelist", dom);
+                if (!dataE) {
+                    let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+                    dataE = await fun.fetchDoc(api).then(apiDom => fun.ge("#c-imagelist", apiDom));
+                }
+                let next = dataE.dataset?.next;
+                if (!!next) {
+                    return `${host}/chapter/getinfo?m=${ms}&c=${next}`;
+                } else {
+                    return null;
+                }
+            },
+            title: (dom) => fun.ge("#c-imagelist", dom).dataset.ctitle,
             history: 0,
             hide: "div:has(>#c-recommed),.justify-center:has(>.border-t)",
-            preloadNextPage: () => {
-                if (!!tempNextLink) {
-                    fun.fetchDoc(tempNextLink).then(dom => {
-                        let dataE = fun.ge("#c-imagelist", dom);
-                        let srcs = fun.getImgSrcArr(".touch-manipulation img", dom);
-                        let text = dataE.dataset.title + " - " + dataE.dataset.ctitle;
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            aF: (dom) => {
+                let t = _this.autoPager.title(dom);
+                fun.gae("#title,#htitle,#bcrctitle").forEach(e => (e.innerText = t));
+            },
+            preloadNextPage: 1
         },
         category: "comic autoPager"
     }, {
@@ -16781,7 +16634,6 @@ window.parent.postMessage({
             let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             script: "//script[contains(text(),'qTcms_S_m_murl_e')]",
@@ -16823,6 +16675,7 @@ window.parent.postMessage({
                 }
             },
             hide: "#m_r_bottom~.imgBox,.globalPadding",
+            lazyload: 0,
             preloadNextPage: (dom) => {
                 let next = _this.autoPager.next(dom);
                 if (!!next) {
@@ -17544,7 +17397,6 @@ window.parent.postMessage({
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -17570,16 +17422,7 @@ window.parent.postMessage({
                 return hasTouchEvents ? c : m + " - " + c;
             },
             hide: ".comic-viewer-toc",
-            preloadNextPage: async (dom) => {
-                let next = await _this.autoPager.next(dom);
-                if (!!next) {
-                    fun.fetchDoc(next).then(nextDoc => {
-                        let srcs = _this.getSrcs(nextDoc);
-                        let text = _this.autoPager.title(nextDoc);
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
-            }
+            preloadNextPage: 1
         },
         css: ".form-inline>.pre,.form-inline>.next,div:has(>#page-selector){display:none!important;}",
         category: "comic autoPager"
@@ -17957,10 +17800,13 @@ window.parent.postMessage({
         },
         category: "comic"
     }, {
-        name: "漫画皮",
-        host: ["www.iimanhuapi.com", "m.iimanhuapi.com"],
+        name: "大哥漫画/漫画皮",
+        host: ["www.dagemanhua.com", "m.dagemanhua.com", "www.iimanhuapi.com", "m.iimanhuapi.com"],
         enable: 1,
-        reg: /^https?:\/\/(www|m)\.iimanhuapi\.com\/chapter\/\d+\.html$/i,
+        reg: [
+            /^https?:\/\/(www|m)\.iimanhuapi\.com\/chapter\/\d+\.html$/i,
+            /^https?:\/\/(www|m)\.dagemanhua\.com\/manhua\/\d+\/\d+\.html$/i
+        ],
         init: "document.onkeydown=null;$('body').unbind();",
         imgs: (doc = document) => fun.gae("option[jhc-data]", doc).map(e => e.getAttribute("jhc-data").replace("-mht.middle.webp", "")).map(e => e.replace(new URL(e).protocol, location.protocol)),
         button: [4],
@@ -18421,7 +18267,7 @@ window.parent.postMessage({
                             let data = json.output[0];
                             let original = data.full ?? data.fullWebp;
                             a.dataset.src = original;
-                            a.style.backgroundImage = `url('${original}')`;
+                            a.style.backgroundImage = `url("${original}")`;
                         });
                     });
                 };
@@ -19080,6 +18926,11 @@ window.parent.postMessage({
             };
             return object[e];
         },
+        for: async (array, callback) => {
+            for (let index = 0; index < array.length; index++) {
+                await callback(array[index], index, array);
+            }
+        },
         getModeUrl: (url, mode, i) => {
             //【.html ==> .html?page=2】第一頁 ==> 第二頁
             //【 ==> ?page=2】第一頁 ==> 第二頁
@@ -19532,6 +19383,7 @@ window.parent.postMessage({
                     "data-lbwps-srcsmall",
                     "data-cfsrc",
                     "data-pin-media",
+                    "data-img-url",
                     "data-mfp-src",
                     "data-wpfc-original-src",
                     "data-high-res-src",
@@ -19546,12 +19398,21 @@ window.parent.postMessage({
                     "ess-data"
                 ];
                 for (let p of datasetArr) {
-                    let imgSrc = ele.getAttribute(p);
+                    let imgSrc = ele.getAttribute(p)?.trim();
                     if (!!imgSrc) {
                         return {
                             ok: true,
-                            src: imgSrc.trim()
-                        };
+                            src: imgSrc
+                        }
+                    }
+                }
+                let backgroundImage = ele.style.backgroundImage;
+                if (backgroundImage !== "") {
+                    let [, imgSrc] = backgroundImage.split('"');
+                    imgSrc = imgSrc?.trim();
+                    return {
+                        ok: true,
+                        src: imgSrc
                     }
                 }
             }
@@ -19716,7 +19577,7 @@ window.parent.postMessage({
                             if (check.ok) {
                                 if (e.tagName == "IMG") {
                                     e.src = check.src;
-                                } else if (["A", "DIV"].includes(e.tagName)) {
+                                } else if (["A", "DIV", "SPAN", "LI", "FIGURE"].includes(e.tagName)) {
                                     e.style.backgroundImage = `url(${check.src})`;
                                 }
                             }
@@ -19916,7 +19777,7 @@ window.parent.postMessage({
                     if (check.ok) {
                         if (eles[i].tagName === "IMG") {
                             eles[i].src = check.src;
-                        } else if (eles[i].tagName === "DIV" || eles[i].tagName === "A") {
+                        } else if (["DIV", "A", "SPAN", "LI", "FIGURE"].includes(eles[i].tagName)) {
                             eles[i].style.backgroundImage = `url('${check.src}')`;
                         }
                     }
@@ -20006,8 +19867,48 @@ window.parent.postMessage({
                 fun.autoPagerNextObserver.observe(ele);
             }
             let preloadNextPage = siteData.autoPager?.preloadNextPage;
-            if (isFn(preloadNextPage)) {
-                preloadNextPage(doc);
+            if (!!preloadNextPage) {
+                fun.preloadNextPage(doc);
+            }
+        },
+        preloadNextPage: async (dom = document) => {
+            let preloadNextPage = siteData.autoPager?.preloadNextPage;
+            if (isNumber(preloadNextPage) && preloadNextPage === 1 && siteData.category === "comic autoPager") {
+                let nextSelector = siteData.autoPager.next;
+                let nextUrl = null;
+                if (isString(nextSelector)) {
+                    let nextE = fun.ge(nextSelector, dom, dom);
+                    if (!!nextE) {
+                        nextUrl = nextE.href;
+                    }
+                } else if (isFn(nextSelector)) {
+                    nextUrl = await nextSelector(dom, 0);
+                }
+                if (!!nextUrl) {
+                    let _fetch;
+                    let xhr = siteData.autoPager?.preloadNextPageXHR;
+                    if (!!xhr && xhr === "cors") {
+                        _fetch = fun.xhrDoc(nextUrl);
+                    } else {
+                        _fetch = fun.fetchDoc(nextUrl);
+                    }
+                    _fetch.then(async nextDoc => {
+                        let srcs = await siteData.getSrcs(nextDoc);
+                        let text;
+                        let title = siteData.autoPager?.title;
+                        if (isFn(title)) {
+                            text = await title(nextDoc);
+                            if (isObject(text)) {
+                                text = nextDoc.title;
+                            }
+                        } else {
+                            text = nextDoc.title;
+                        }
+                        fun.picPreload(srcs, text, "next");
+                    });
+                }
+            } else if (isFn(preloadNextPage)) {
+                preloadNextPage(dom);
             }
         },
         //Iframe框架加載網頁返回框架的document
@@ -20842,13 +20743,13 @@ window.parent.postMessage({
         //選取所有指定的A素返回元素的href陣列
         gau: (selector, contextNode = null, dom = document) => fun.gae(selector, contextNode, dom)?.map(a => a.href),
         //返回網頁喧染後的元素字串
-        gt: (ele, mode = 1, dom = document) => {
+        gt: (selector, mode = 1, dom = document) => {
             try {
-                if (mode == 1) return fun.ge(ele, dom, dom).innerText;
-                if (mode == 2) return fun.ge(ele, dom, dom).previousElementSibling.innerText;
-                if (mode == 3) return fun.ge(ele, dom, dom).previousElementSibling.previousElementSibling.innerText;
+                if (mode == 1) return fun.ge(selector, dom, dom).innerText;
+                if (mode == 2) return fun.ge(selector, dom, dom).previousElementSibling.innerText;
+                if (mode == 3) return fun.ge(selector, dom, dom).previousElementSibling.previousElementSibling.innerText;
             } catch (error) {
-                console.error("\nfun.gt() ERROR\n", error);
+                console.error(`\nfun.gt() ERROR\nselector：${selector}\n`, error);
                 return null;
             }
         },
@@ -21703,13 +21604,25 @@ window.parent.postMessage({
         lazyload: async () => {
             let check = !!fun.ge("img.FullPictureLoadImage.lazyload");
             if (check) {
+                let lazyload = siteData?.autoPager?.lazyload;
                 let imgs = fun.gae("img.FullPictureLoadImage.lazyload");
-                let oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
-                let evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
-                fun.singleThreadLoadImgs(oddNumberImgs);
-                fun.singleThreadLoadImgs(evenNumberImgs);
-                await fun.delay(1000, 0);
-                imgs.forEach(img => fun.imagesObserver.observe(img));
+                if (lazyload != 0) {
+                    let oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
+                    let evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
+                    fun.singleThreadLoadImgs(oddNumberImgs);
+                    fun.singleThreadLoadImgs(evenNumberImgs);
+                    await fun.delay(1000, 0);
+                    imgs.forEach(img => fun.imagesObserver.observe(img));
+                } else {
+                    await fun.delay(1000, 0);
+                    imgs.forEach((img, i) => {
+                        setTimeout(() => {
+                            img.src = img.dataset.src;
+                            img.classList.remove("lazyload");
+                            fun.imagesObserver.observe(img);
+                        }, i * 200);
+                    });
+                }
             }
         },
         copymangaUI: () => {
@@ -24584,6 +24497,10 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     if (isString(hide)) {
                         let eles = fun.gae(hide);
                         eles.forEach(e => (e.style.display = "none"));
+                    }
+                    let preloadNextPage = siteData.autoPager?.preloadNextPage;
+                    if (!!preloadNextPage) {
+                        fun.preloadNextPage();
                     }
                 }
                 let openInNewTab = data.openInNewTab;
