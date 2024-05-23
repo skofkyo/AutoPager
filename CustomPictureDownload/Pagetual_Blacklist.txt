@@ -1,4 +1,4 @@
-2024/05/19 18:58
+2024/05/24 01:30
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -293,6 +293,9 @@ MEITU131
 
 和邪社
 /^https://www\.hexieshe\.cn/\d+/$/
+
+美女图册
+*://www.mntuce.com/*/.html
 
 爱美女
 *://www.92meinv.com/article-*.html
@@ -1030,9 +1033,6 @@ ROSI美女写真
 图片屋
 *://*tupianwu.com/*
 
-妞妞之家
-*://niuniuhome.club/?p=*
-
 小姐姐么
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 
@@ -1170,6 +1170,9 @@ lHentai
 
 TMOHentai
 *://tmohentai.com/reader/*/*/*
+
+akuma.moe
+*://akuma.moe/g/*
 
 Anchira
 *://anchira.to/*
@@ -1520,6 +1523,9 @@ GODA漫画閱讀
 包子漫畫閱讀
 *://baozimh.one/chapter/*.html
 
+GodaComic 英文漫画
+*://godamh.org/chapter/*.html
+
 漫畫屋閱讀
 *://mh5.tw/series-*
 *://mh5.tw/seriesvip-*
@@ -1638,6 +1644,9 @@ manhuab.com/manhua/*/*.html
 
 哈哈漫画
 *://www.hahacomic.com/manhua/list.html*
+
+大哥漫画
+*://*.dagemanhua.com/manhua/*/*.html
 
 漫画皮
 *://*.iimanhuapi.com/chapter/*.html
