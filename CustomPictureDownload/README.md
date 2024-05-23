@@ -1397,6 +1397,12 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.mntuce.com/">美女图册</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.cos6.net/">绅士猫</a>
                 </td>
                 <td>需註冊登錄</td>
