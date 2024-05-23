@@ -6,6 +6,9 @@
 *://manga.bilibili.com/mc*/*?from=manga_detail
 /^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
 *://baozimh.one/chapter/*.html
+*://godamh.org/chapter/*.html
+*manhuagui.com/comic/*/*.html
+*m.manhuagui.com*
 *manmanju.*/comiclist/*/*/*.htm
 *ikukudm.*/comiclist/*/*/*.htm
 *m.3840p.xyz/comiclist/*/*/*.htm
@@ -30,8 +33,6 @@
 *://cn.dociy.net/*
 *://tw.dociy.net/*
 *://www.dociy.net/*
-*manhuagui.com/comic/*/*.html
-*m.manhuagui.com*
 *://www.twmanga.com/*
 *://tw.twmanga.com/*
 *://cn.twmanga.com/*
@@ -41,6 +42,9 @@
 *://www.hcmanga.com/*
 *://tw.hcmanga.com/*
 *://cn.hcmanga.com/*
+*://www.ddmanga.com/*
+*://tw.ddmanga.com/*
+*://cn.ddmanga.com/*
 *://8.twobili.com/comic/insurance_*
 *://www.comicabc.com/online/new-*
 *://www.comicabc.com/ReadComic/*
@@ -59,8 +63,6 @@ https://*.dgmanhua.com/manhua/*/*.html
 *://www.shilunart.com/comic/*/read-*.html
 *://*.mh160.cc/kanmanhua/*/*.html
 *://www.veryim.com/manhua/*/*.html
-/^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
-*://cn.baozimh.one/manga/*/*
 *://m.gaonaojin.com/*/*.html
 *://www.nlegs.com/girls/*.html
 https://www.honeyleg.com/article/*.html
@@ -260,6 +262,7 @@ https://www.nuyet.com/gallery/*
 *://9hentai.com/g/*/*/
 *://asmhentai.com/gallery/*/*/
 *://tmohentai.com/reader/*/*/*
+*://akuma.moe/g/*
 *://anchira.to/*
 *://imhentai.xxx/view/*/*/
 *pururin.to/read/*
@@ -407,6 +410,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://fapello.com/*/
 *://www.shzx.org/a/*.html
 *://m.shzx.org/a/*.html
+*://*.dagemanhua.com/manhua/*/*.html
 *://*.iimanhuapi.com/chapter/*.html
 *://*.golden-koi.net/chapter/*.html*
 *://*.tuhao456.com/chapter/*.html*
@@ -606,7 +610,6 @@ https://www.eyval.net/*
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 *://depday.info/v2/*.html*
-*://niuniuhome.club/?p=*
 *://youwu.*/albums/*
 *://www.ywsq.cc/*/*.html
 *://www.gr2e.com/*.html
@@ -651,6 +654,7 @@ https://www.eyval.net/*
 *://yazhouseba.com/meinv/img-*.html
 *://m.xtushe.com/photo/*.html
 *://www.girldir.com/photos/*_list/
+*://www.mntuce.com/*/.html
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
