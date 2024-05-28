@@ -5203,27 +5203,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "ぷるるんお宝画像庫",
         link: "http://blog.livedoor.jp/pururungazou/",
-        reg: () => !hasTouchEvents && /^https?:\/\/blog\.livedoor\.jp\/pururungazou\/archives\/\d+\.html$/.test(fun.url),
+        reg: /^https?:\/\/blog\.livedoor\.jp\/pururungazou\/archives\/\d+\.html$/,
         imgs: () => {
             videosSrcArray = fun.gae("video[src]").map(e => e.src);
-            return fun.gae(".entry-content img[src*='/pururungazou/imgs/']").map(e => e.src.replace(/-s(\.\w+)$/, "$1"));
+            return fun.gae(".entry-content img[src*='/pururungazou/imgs/'],.article-body img[src*='/pururungazou/imgs/']").map(e => e.src.replace(/-s(\.\w+)$/, "$1"));
         },
-        button: [4],
-        insertImg: [".article-body-more", 3],
-        customTitle: ".entry-title",
-        downloadVideo: true,
-        category: "nsfw2"
-    }, {
-        name: "ぷるるんお宝画像庫M",
-        link: "http://blog.livedoor.jp/pururungazou/",
-        reg: () => hasTouchEvents && /^https?:\/\/blog\.livedoor\.jp\/pururungazou\/archives\/\d+\.html$/.test(fun.url),
-        imgs: () => {
-            videosSrcArray = fun.gae("video[src]").map(e => e.src);
-            return fun.gae(".article-body img[src*='/pururungazou/imgs/']").map(e => e.src.replace(/-s(\.\w+)$/, "$1"));
-        },
-        button: [4],
-        insertImg: [".article-body", 3],
-        customTitle: ".article-title",
+        capture: () => _this.imgs(),
+        customTitle: ".entry-title,.article-title",
         downloadVideo: true,
         category: "nsfw2"
     }, {
@@ -19300,7 +19286,7 @@ if (next) {
                 }
             }
             let history = siteData.autoPager?.history;
-            if (history != 0 && mode == "json") {
+            if (history != 0 && mode != "json") {
                 try {
                     await fun.addHistory(doc?.title ?? document.title, url);
                 } catch (error) {
@@ -22312,7 +22298,7 @@ img.sbs {
                 doc.head.appendChild(fancyboxStyle);
 
                 const JF_code = JqueryJS + FancyboxV5JS + `
-var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false)();
+var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))();
 
 var scrollIntoViewOptions = {
     block: "center",
@@ -22613,7 +22599,7 @@ document.addEventListener("viewed", event => {
                 });
 
                 const newWindowScriptCode = `
-var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0) ? true : false)();
+var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))();
 var imgViewIndex = -1;
 
 function addFixedMenu() {
