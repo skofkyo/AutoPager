@@ -4616,7 +4616,7 @@ imgs: async () => {
                     <a href="https://godamh.com/">GODA漫畫</a>
                 </td>
                 <td>
-                    <a href="https://nav.telltome.net/">发布页 ，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料。</a>
+                    <a href="https://nav.telltome.net/">发布页</a> ，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料。
                 </td>
             </tr>
             <tr>
