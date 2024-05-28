@@ -297,7 +297,7 @@ fun.gae(selector, doc)
     enable: 1,
     reg: /^https:\/\/.+/,
     autoPager: {
-        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁。
+        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁，"json"請求的資料格式是JSON會存為變量siteJson。
         waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
         loadTime: 200, //mode為1時給iframe框架讀取的時間，預設200可省略。
         frameCode: `
@@ -432,12 +432,21 @@ fun.createImgBox(selector, pos = 0);
 fun.createImgBox(String, Number);
 </pre>
 <pre>
-//指定元素選擇器或元素陣列，返回過濾出圖片的網址陣列。
-//IMG、DIV、A、SPAN、LI、FIGURE
+//指定元素選擇器或元素陣列，返回過濾出圖片網址的陣列。
+//IMG、DIV、A、SPAN、LI、FIGURE，支持dataset和backgroundImage
+//不判斷srcset是因為不是所有網站都遵循srcset屬性的格式
 fun.getImgSrcArr("selector");
 fun.getImgSrcArr("selector", doc = document);
 fun.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fun.getImgSrcArr(Array [HTMLElement]);
+</pre>
+<pre>
+//指定圖片選擇器或圖片元素陣列，返回過濾出圖片網址的陣列。
+//主要用於提取IMG的srcset屬性，也支持dataset和backgroundImage
+fun.getImgSrcset("img selector");
+fun.getImgSrcset("img selector", doc = document);
+fun.getImgSrcset(String, HTMLDocument);
+fun.getImgSrcset(Array [HTMLImageElement]);
 </pre>
 <pre>
 //對document.title的字串修改
@@ -1079,10 +1088,10 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.321782.xyz/">极品性感美女</a>
+                    <a href="https://www.321781.xyz/">极品性感美女</a>
                 </td>
                 <td>
-                    <a href="https://x008.tbbb.bf/">x008.tbbb.bf</a>， <a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com
+                    <a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com
                 </td>
             </tr>
             <tr>
@@ -1090,7 +1099,7 @@ imgs: async () => {
                     <a href="https://www.xiu01.top/">秀人美女網</a>
                 </td>
                 <td>
-                    <a href="https://xiu02.qqqv.bf/">xiu02.qqqv.bf</a>，永久域名：Xrmnw.Com 秀人美女.Top
+                   永久域名：Xrmnw.Com 秀人美女.Top
                 </td>
             </tr>
             <tr>
@@ -4607,14 +4616,14 @@ imgs: async () => {
                     <a href="https://godamh.com/">GODA漫畫</a>
                 </td>
                 <td>
-                    <a href="https://nav.telltome.net/">发布页 </a>，閱讀頁域名為news.cocolamanhua.com，有無限滾動模式加預讀
+                    <a href="https://nav.telltome.net/">发布页 ，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料。</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://m.baozimh.one/">包子漫畫</a>
                 </td>
-                <td>閱讀頁域名為baozimh.one，有無限滾動模式加預讀</td>
+                <td>閱讀頁域名為baozimh.one，有無限滾動模式加預讀。</td>
             </tr>
             <tr>
                 <td>
@@ -4879,6 +4888,12 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
+                    <a href="http://www.zerobyw24.com/">zero搬运网</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.gaonaojin.com/">仙漫网</a>
                 </td>
                 <td>預設關閉</td>
@@ -4903,12 +4918,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.omyschool.com/">木马漫画</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.webtoons.com/zh-hant/">LINE WEBTOON</a>
                 </td>
                 <td>目錄聚集所有章節、閱讀，預設關閉</td>
@@ -4927,20 +4936,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="http://www.acg456.com/">ACG456</a>
-                </td>
-                <td>
-                    <a href="http://m.acg456.com/">m.acg456.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://www.vomicmh.com/">vomic漫画</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="http://www.manben.com/">漫本</a>
                 </td>
                 <td>預設關閉</td>
@@ -4954,12 +4949,6 @@ imgs: async () => {
             <tr>
                 <td>
                     <a href="http://www.98comic.com/">98漫畫網</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.yyjj66.com/">爱看漫画</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
@@ -5005,65 +4994,11 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.zuimh.com/">最漫画</a>
-                </td>
-                <td>
-                    <a href="https://m.zuimh.com/">m.zuimh.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.100mhl.com/">漫画连</a>
-                </td>
-                <td>
-                    <a href="https://m.100mhl.com/">m.100mhl.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.pinmh.com/">拼拼漫画</a>
-                </td>
-                <td>
-                    <a href="https://m.pinmh.com/">m.pinmh.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.0dmh.com/">零点漫画</a>
-                </td>
-                <td>
-                    <a href="https://m.0dmh.com/">m.0dmh.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.xuermh.com/">雪儿漫画</a>
-                </td>
-                <td>
-                    <a href="https://m.xuermh.com/">m.xuermh.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.gougoumh.com/">狗狗漫画</a>
-                </td>
-                <td>
-                    <a href="https://m.gougoumh.com/">m.gougoumh.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.mhkan.com/">漫画看</a>
                 </td>
                 <td>
                     <a href="https://m.mhkan.com/">m.mhkan.com</a>，預設關閉
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://m.icekr.com/">冰氪漫画</a>
-                </td>
-                <td>預設關閉</td>
             </tr>
             <tr>
                 <td>
@@ -5087,12 +5022,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://mh.9xxsm.com/">Go追漫</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.umh5.com/">有漫画屋</a>
                 </td>
                 <td>預設關閉</td>
@@ -5105,21 +5034,15 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.manshiduo.net/">漫士多</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://comics.veryim.com/">非常爱漫舊站</a>
+                    <a href="http://comics.veryim.com/">非常爱漫舊站</a>
                 </td>
                 <td>
-                    <a href="https://wap.veryim.com/">wap.veryim.com</a>，預設關閉
+                    <a href="http://wap.veryim.com/">wap.veryim.com</a>，預設關閉
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.wujinmanhua.com/">无尽漫画</a>
+                    <a href="https://www.wujinmh.com/">无尽漫画</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
@@ -5158,22 +5081,6 @@ imgs: async () => {
                     <a href="https://www.kukanmanhua.com/">酷看漫画</a>
                 </td>
                 <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://manhuat.cc/">漫画台</a>
-                </td>
-                <td>
-                    <a href="http://www.manhuat.cc/">www.manhuat.cc</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.manhuag.cc/">漫画哥</a>
-                </td>
-                <td>
-                    <a href="https://m.manhuag.cc/">m.manhuag.cc</a>，預設關閉
-                </td>
             </tr>
             <tr>
                 <td>
