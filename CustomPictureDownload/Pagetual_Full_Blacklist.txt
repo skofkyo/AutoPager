@@ -249,6 +249,7 @@ https://www.nuyet.com/gallery/*
 *://simplyhentai.org/g/*/*/
 *://simplyhentai.red/g/*/*/
 *://hanime1.me/comic/*/*
+*://hanime1.biz/book/*
 *://hentaifox.com/g/*/*/
 *://hentaizap.com/g/*/*/
 *://hentairead.com/hentai/*/english/p/*/
@@ -314,6 +315,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *jmwu.vip/chapter/*.html
 *88comic.vip/chapter/*.html
 *www.comicun.com/index-look*
+*manhuache.com/chapter/*
 *://foamgirl.net/*.html
 *://*loxiu.com/post/*.html
 *://*counv.com/post/*.html
