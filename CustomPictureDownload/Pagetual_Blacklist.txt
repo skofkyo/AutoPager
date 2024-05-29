@@ -1,4 +1,4 @@
-2024/05/24 01:30
+2024/05/29 21:15
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1128,6 +1128,7 @@ nhentai
 
 Hanime1
 *://hanime1.me/comic/*/*
+*://hanime1.biz/book/*
 
 HentaiFox
 *://hentaifox.com/g/*/*/
@@ -1249,6 +1250,9 @@ H漫画
 
 漫畫聯合國
 *www.comicun.com/index-look*
+
+漫畫車
+*manhuache.com/chapter/*
 
 H漫画
 /^https?://(www\.)?(mhdnf|mhqwe)\.xyz/play\?linkId/
