@@ -378,26 +378,26 @@ fun.gae(selector, doc)
 fun.ge("selector");
 fun.ge("selector", doc = document);
 fun.ge("selector", node);
-fun.ge(String, HTMLDocument || HTMLElement);
+fun.ge(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //返回指定的所有元素陣列，支持CSS/Xpath選擇器
 fun.gae("selector");
 fun.gae("selector", doc = document);
 fun.gae("selector", node);
-fun.gae(String, HTMLDocument || HTMLElement);
+fun.gae(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得指定的A元素的href
 fun.gu("selector");
 fun.gu("selector", doc = document);
-fun.gu(String, HTMLDocument || HTMLElement);
+fun.gu(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得指定的所有A元素的href陣列
 fun.gau("selector");
 fun.gau("selector", doc = document);
-fun.gau(String, HTMLDocument || HTMLElement);
+fun.gau(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得元素的字串
@@ -506,7 +506,7 @@ await fun.waitEle("selector", max = 200, doc = document);
 fun.waitEle(String, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//等待window物件屬性
+//等待window物件屬性環境變量
 //max，循環的次數
 await fun.waitVar("declares");
 await fun.waitVar("declares", max = 200);
@@ -723,41 +723,41 @@ fun.fetchDoc("url").then(doc => {
 fun.fetchDoc(String, Object);
 </pre>
 <pre>
-//使用iframe框架，返回iframe框架的document。
+//使用Promise包裝iframe框架，返回iframe框架的document。
 //selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
-let callback = (doc) => { //參數doc為iframe的document
+let callback = (dom, frame) => { //參數dom為iframe的document，參數frame為iframe的contentWindow
     自由發揮
 }
 await fun.iframeDoc("url", "selector", time = 5000, callback);
 fun.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
-//使用Fetch API搭配iframe框架，返回iframe框架的document。
+//使用Promise包裝Fetch API搭配iframe框架，返回iframe框架的document。
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
-//ele元素選擇器指定等待到元素出現(必須)
+//selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
-let callback = (doc) => { //參數doc為iframe的document
+let callback = (dom, frame) => { //參數dom為iframe的document，參數frame為iframe的contentWindow
     自由發揮
 }
 await fun.iframeSrcDoc("url", "selector", time = 5000, callback);
 fun.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
-//使用iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
-let iframe = await fun.iframeVar("url", time = 1000, "declares");
-fun.iframeVar(String, Number, String);
+//使用Promise包裝iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
+let iframe = await fun.iframeVar("url", "declares", time = 1000);
+fun.iframeVar(String, String, Number);
 </pre>
 <pre>
-//讓用iframe框架能像fetch的寫法
+//使用Promise包裝iframe框架，讓調用iframe框架能像fetch的寫法
 const details = {
-    loadTime: 1000,
-    waitEle: "img",
-    waitVar: "newImgs",
+    loadTime: 1000, //框架的讀取時間
+    waitEle: "img", //指定等待框架直至出現該元素的選擇器
+    waitVar: "newImgs", //指定等待框架直至出現該環境變量
     cb: async (dom, frame) => {
         console.log(dom); //iframe的document
         console.log(frame); //iframe的contentWindow
-        //同源可以先行對iframe注入代碼，修改contentWindow屬性，修改document文檔
+        //同源可以先行對iframe創建script注入代碼，修改contentWindow屬性環境變量，修改document文檔
     }
 }
 const iframe = await fun.iframe("url", details);
@@ -986,7 +986,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/24 01:30</p>
+<p>2024/05/29 21:15</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
 <p>
@@ -2242,7 +2242,7 @@ imgs: async () => {
                 <td>
                     <a href="https://asiantolick.com/page/news">Asian To Lick</a>
                 </td>
-                <td></td>
+                <td>自動修正404</td>
             </tr>
             <tr>
                 <td>
@@ -3505,7 +3505,7 @@ imgs: async () => {
                     <a href="https://gogortrt.com/">gogo人体艺术</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站57個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">另同系列網站53個</a>
                 </td>
             </tr>
             <tr>
@@ -4060,13 +4060,13 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://18mh.org/">18漫畫</a>
+                    <a href="https://caitlin.top/">Caitlin.top</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://caitlin.top/">Caitlin.top</a>
+                    <a href="https://18mh.org/">18漫畫</a>
                 </td>
                 <td></td>
             </tr>
@@ -4279,12 +4279,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://wamanhua.com/">哇漫画</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://henduoman.com/">很多漫</a>
                 </td>
                 <td></td>
@@ -4325,7 +4319,7 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.xindehanman.com/">最新韩漫网</a>
+                    <a href="https://www.zuixindehanman.com/">最新韩漫网</a>
                 </td>
                 <td></td>
             </tr>
@@ -4344,12 +4338,6 @@ imgs: async () => {
             <tr>
                 <td>
                     <a href="https://www.hanmantop.com/">韩漫推荐</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://18jin.top/">韓漫天堂</a>
                 </td>
                 <td></td>
             </tr>
@@ -4407,7 +4395,7 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://sixcomic.com/">琴瑟漫畫</a>
+                    <a href="https://sixacg.org/">琴瑟漫畫</a>
                 </td>
                 <td>
                     <a href="https://6acg.top/">琴瑟書庫</a>
@@ -4616,7 +4604,7 @@ imgs: async () => {
                     <a href="https://godamh.com/">GODA漫畫</a>
                 </td>
                 <td>
-                    <a href="https://nav.telltome.net/">发布页</a> ，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料。
+                    <a href="https://nav.telltome.net/">发布页</a> ，閱讀頁域名為news.cocolamanhua.com，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料，如有此情況需uBlock加信任名單。<pre>https://news.cocolamanhua.com/*/</pre>腳本自帶去廣告，還你乾淨的閱讀感受。
                 </td>
             </tr>
             <tr>
