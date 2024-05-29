@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.10
+// @version            2.2.11
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -8261,30 +8261,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: ".content_title",
         category: "nsfw2"
     }, {
-        name: "666人体艺术 只翻預覽圖",
-        host: ["6666rt.com"],
-        reg: /6666rt\.com\/\w+\/\d+\/(index\.html)?/i,
-        enable: 0,
-        include: "//div[@class='boxx']//li[a[@target]/img]",
-        init: () => fun.getNP("//div[@class='boxx']//li[a[@target]/img]", "a.curent+a[href]", null, ".pagelist"),
-        category: "nsfw2"
-    }, {
-        name: "666人体艺术 大圖頁聚圖",
-        host: ["6666rt.com"],
-        reg: /6666rt\.com\/\w+\/\d+\//i,
-        enable: 0,
-        init: "document.onkeydown=null;",
-        imgs: () => fun.getImg(".imgbox>a>img[alt]", fun.gt(".page>span#hover", 3).match(/\d+$/)[0], 11),
-        button: [4],
-        insertImg: ["//div[@class='imgbox' and a/img[@alt]]", 2],
-        customTitle: ".contitle h1>a",
-        css: "#FullPictureLoadEnd{color:rgb(0, 0, 0)}",
-        category: "nsfw2"
-    }, {
         name: "666人体艺术 翻完預覽圖立即插入大圖 getNP搭配getImgA",
         host: ["6666rt.com"],
         reg: /6666rt\.com\/\w+\/\d+\/(index\.html)?/i,
-        enable: 1,
         include: "//div[@class='boxx']//li[a[@target]/img]",
         imgs: async () => {
             await fun.getNP("//div[@class='boxx']//li[a[@target]/img]", "a.curent+a[href]", null, ".pagelist");
@@ -8292,7 +8271,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             return fun.getImgA(".imgbox>a>img[alt]", "//div[@class='boxx']//li/a[@target and img]");
         },
         button: [4],
-        //insertImg: [".boxx ul", 1],
         insertImg: [
             [".footdh", 1], 2
         ],
@@ -8328,18 +8306,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: "font>a:nth-child(3)",
         category: "nsfw2"
     }, {
-        name: "64人体艺术",
-        host: ["www.64ay.com"],
-        reg: /www\.64ay\.com\/\w+\/\d+/i,
-        imgs: () => fun.getImg(".tu>a>img[alt]", fun.gt(".page-show>span.current", 2).match(/\d+/)[0], 9),
-        button: [4],
-        insertImg: ["//div[@class='tu' and a/img[@alt]]", 2],
-        autoDownload: [0],
-        next: "//div[contains(text(),'下一')]/a[1]",
-        prev: "//div[contains(text(),'上一')]/a[2]",
-        customTitle: () => fun.title(",", 1),
-        category: "nsfw2"
-    }, {
         name: "45人体艺术/873人体艺术",
         host: ["45xm.com", "873750.com"],
         reg: /(45xm\.com|873750\.com)\/\w+\/\d+/i,
@@ -8358,30 +8324,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         category: "nsfw2"
     }, {
-        name: "98人体艺术",
-        host: ["www.98ah.com"],
-        reg: /www\.98ah\.com\/\w+\/\d+\.html/i,
-        imgs: () => fun.getImg(".content-pic img[alt]", fun.gt(".current", 2).match(/\d+/)[0], 9),
-        button: [4],
-        insertImg: [".content-pic", 2],
-        autoDownload: [0],
-        next: "//div[contains(text(),'下一')]/a[1]",
-        prev: "//div[contains(text(),'下一')]/a[2]",
-        customTitle: () => fun.gt("h5").split(",")[0],
-        category: "nsfw2"
-    }, {
-        name: "54人体艺术",
-        host: ["www.54aj.com"],
-        reg: /www\.54aj\.com\/\w+\/\d+\.html/i,
-        imgs: () => fun.getImg(".content img[alt]", fun.gt("#hover", 2).match(/\d+/)[0], 9),
-        button: [4],
-        insertImg: [".content", 2],
-        autoDownload: [0],
-        next: "//span[contains(text(),'下一')]/a",
-        prev: "//span[contains(text(),'上一')]/a",
-        customTitle: () => fun.gt(".content>h1").split(",")[0],
-        category: "nsfw2"
-    }, {
         name: "03人体艺术网",
         host: ["03hb.com"],
         reg: /03hb\.com\/\w+\/\d+\//i,
@@ -8394,19 +8336,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: () => fun.gt(".currentpath span:nth-child(2)>a:nth-child(2)").split(",")[0],
         category: "nsfw2"
     }, {
-        name: "48人体艺术",
-        host: ["www.48gd.com"],
-        reg: /www\.48gd\.com\/\w+\/\d+\.html/i,
-        init: "document.onkeydown=null;",
-        imgs: () => fun.getImg("#content img[alt]", fun.gt(".pagelist>strong", 2).match(/\d+/)[0], 9),
-        button: [4],
-        insertImg: ["#content", 2],
-        autoDownload: [0],
-        next: "//span[contains(text(),'下一')]/a",
-        prev: "//span[contains(text(),'上一')]/a",
-        customTitle: () => fun.gt(".photo-tit>h3").split(",")[0],
-        category: "nsfw2"
-    }, {
         name: "693人体艺术",
         host: ["693350.com"],
         reg: /693350\.com\/\w+\/\d+\//i,
@@ -8417,28 +8346,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         next: "//span[contains(text(),'下一')]/a",
         prev: "//span[contains(text(),'上一')]/a",
         customTitle: () => fun.gt(".photo-tit>h3").split(",")[0],
-        category: "nsfw2"
-    }, {
-        name: "42人体艺术",
-        host: ["www.42jd.com"],
-        reg: /www\.42jd\.com\/\w+\/\d+\.html/i,
-        imgs: () => fun.getImg(".imgbox img[alt]", fun.gt(".pagelist>.curent", 2).match(/\d+/)[0], 9),
-        button: [4],
-        insertImg: [".imgbox", 2],
-        autoDownload: [0],
-        next: "//li[contains(text(),'下一')]/a",
-        prev: "//li[contains(text(),'上一')]/a",
-        customTitle: () => fun.gt(".imgbox h1").split(",")[0],
-        category: "nsfw2"
-    }, {
-        name: "36人体艺术",
-        host: ["www.36ut.com"],
-        reg: /www\.36ut\.com\/\w+\/\d+\.html/i,
-        init: "document.onkeydown=null;",
-        imgs: () => fun.getImg(".pp.hh img[alt]", fun.gt(".page-show>.current", 2).match(/\d+/)[0], 9),
-        button: [4],
-        insertImg: [".pp.hh", 2],
-        customTitle: () => fun.gt(".des>h1").split(",")[0],
         category: "nsfw2"
     }, {
         name: "西西人体艺术",
@@ -8497,18 +8404,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         next: ".updown>a",
         prev: 1,
         customTitle: ".content>h5",
-        category: "nsfw2"
-    }, {
-        name: "23人体艺术",
-        host: ["www.23fe.com"],
-        reg: /www\.23fe\.com\/\w+\/\d+\.html/i,
-        imgs: () => fun.getImg("#content-p img[alt]", fun.gt(".thispg", 2).match(/\d+/)[0], 9),
-        button: [4],
-        insertImg: ["#content-p", 2],
-        autoDownload: [0],
-        next: "//span[contains(text(),'下一')]/a",
-        prev: "//span[contains(text(),'上一')]/a",
-        customTitle: () => fun.gt("#ctt>h1").split(",")[0],
         category: "nsfw2"
     }, {
         name: "AJ人体艺术",
@@ -9399,7 +9294,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 fun.showMsg(displayLanguage.str_05, 0);
                 let [imgDir] = fun.ge(".gallerythumb>img").src.match(/.+\//);
                 let url = fun.gu("a.gallerythumb");
-                return fun.iframeVar(url, 1000, "images_ext").then(w => w.images_ext.map((e, i) => `${imgDir}${(i + 1)}.${fun.ex(e)}`));
+                return fun.iframeVar(url, "images_ext").then(w => w.images_ext.map((e, i) => `${imgDir}${(i + 1)}.${fun.ex(e)}`));
             } else if (/nhentai\.xxx/.test(siteUrl)) {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let [max] = fun.gt(".pages").match(/\d+/);
@@ -9407,12 +9302,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 let src = img.dataset.src ?? img.src;
                 let [imgDir] = src.match(/.+\//);
                 let url = fun.gu(".gallery_thumbs a");
-                let iframe = await fun.iframeVar(url, 1000, "g_th");
+                let iframe = await fun.iframeVar(url, "g_th");
                 return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(iframe.g_th.fl[(i + 1)][0])}`);
             } else if (/nhentai\.to/.test(siteUrl)) {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let url = fun.gu("a.gallerythumb");
-                let iframe = await fun.iframeVar(url, 1000, "reader");
+                let iframe = await fun.iframeVar(url, "reader");
                 let imgDir = iframe.reader.media_url + "/galleries/" + iframe.reader.gallery.media_id + "/";
                 return iframe.reader.gallery.images.pages.map((e, i) => `${imgDir}${(i + 1)}.${fun.ex(e.t)}`);
             } else if (/simplyhentai\.org/.test(siteUrl)) {
@@ -9542,7 +9437,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 }
             }
             let url = fun.gu("#pages a");
-            let imgDir = await fun.iframeVar(url, 1000, "img_prt").then(w => w.img_prt + "/");
+            let imgDir = await fun.iframeVar(url, "img_prt").then(w => w.img_prt + "/");
             return fetch(siteUrl, {
                 "headers": {
                     "accept": "*/*",
@@ -9936,7 +9831,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             thumbnailsSrcArray = fun.getImgSrcArr(".gallerythumb img");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("a.gallerythumb");
-            let iframe = await fun.iframeVar(url, 1000, "images_ext");
+            let iframe = await fun.iframeVar(url, "images_ext");
             let [imgDir] = fun.ge(".fit-horizontal", iframe.document).src.match(/.+\//);
             return iframe.images_ext.map((e, i) => `${imgDir}${(i + 1)}.${fun.ex(e)}`);
         },
@@ -9987,7 +9882,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             thumbnailsSrcArray = fun.getImgSrcArr(".bookthumbnail .lazyloadimage");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu(".bookthumbnail>a");
-            return fun.iframeVar(url, 1000, "displayimagelist").then(w => w.displayimagelist.map(e => e.image_url));
+            return fun.iframeVar(url, "displayimagelist").then(w => w.displayimagelist.map(e => e.image_url));
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -10016,7 +9911,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             thumbnailsSrcArray = fun.getImgSrcArr(".card-image img");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("//a[div[@class='card']]");
-            let iframe = await fun.iframeVar(url, 1000, "pageData");
+            let iframe = await fun.iframeVar(url, "pageData");
             let CDN_Srcs = iframe.pageData.map(e => e.image);
             let siteSrcs = CDN_Srcs.map(e => e.replace(/i\d\.wp\.com\/|\?filter=null/g, ""));
             fun.showMsg(displayLanguage.str_56, 0);
@@ -10059,7 +9954,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 "method": "POST"
             }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.src));
             let url = fun.gu(".previews>a");
-            return fun.iframeVar(url, 1000, "ajax").then(w => {
+            return fun.iframeVar(url, "ajax").then(w => {
                 let html = w.ajax.pages.join("");
                 let dom = fun.doc(html);
                 return [...dom.images].map(e => e.dataset.src ?? e.src);
@@ -11103,30 +10998,20 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "漫畫車",
-        host: ["www.manhuache.com", "m.manhuache.com", "www.mh100.top"],
-        reg: /^https?:\/\/(www\.mh100\.top|(www|m)\.manhuache\.com)\/chapter\/\d+/,
-        init: () => {
-            let ele = fun.ge(".chapter-nav");
-            if (ele) ele.removeAttribute("style");
-        },
-        imgs: async () => {
-            let chapterName = fun.gt(".chapter-name");
-            if (chapterName.includes("第1章") && fun.ge("//a[button[span[text()='下一話']]][not(contains(@href,'javascript'))]")) {
-                await fun.getNP(".chapter-content img", "//a[button[span[text()='下一話']]][not(contains(@href,'javascript'))]");
-                return fun.gae(".chapter-content img");
-            } else {
-                return fun.gae(".chapter-content img");
+        host: ["www.manhuache.com", "m.manhuache.com"],
+        reg: /^https?:\/\/(www|m)\.manhuache\.com\/chapter\/\d+/,
+        init: async () => {
+            let chapterName = fun.gt(".text-center.mt-3.mb-4");
+            if (!/^第\d+話$/.test(chapterName)) {
+                await fun.getNP("picture img", "//a[span[text()='下一章']][contains(@href,'chapter')]");
             }
         },
+        imgs: "picture img",
         button: [4],
-        insertImg: [".chapter-content", 2],
-        next: () => {
-            let next = fun.ge("//a[button[span[text()='下一話']]][not(contains(@href,'javascript'))]");
-            return next ? next.href : null;
-        },
-        prev: 1,
-        referrerpolicy: "no-referrer",
-        customTitle: () => document.title.replace(/\(\d+P\)|第.章/g, "").trim(),
+        insertImg: ["picture", 2],
+        next: "//a[span[text()='下一章']][contains(@href,'chapter')]",
+        prev: "//a[span[text()='上一章']]",
+        customTitle: () => fun.title(/\s-\d+/).replace(/\(\d+P\)|第.章/gi, "").replace(/[\s-]+$/, "").trim(),
         category: "hcomic"
     }, {
         name: "漫畫聯合國",
@@ -11318,7 +11203,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("a[href*='slide'],a[href*='slist']");
-            return fun.iframeVar(url, 1000, "imglist").then(w => w.imglist.map(e => e.url));
+            return fun.iframeVar(url, "imglist").then(w => w.imglist.map(e => e.url));
         },
         thums: ".gallary_item img",
         button: [4],
@@ -11964,8 +11849,11 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "色色漫画/最新韩漫网",
-        host: ["www.sesemanhua.com", "www.xindehanman.com", "aicomic.org"],
-        reg: /^https:\/\/www\.sesemanhua\.com\/index\.php\/chapter\/\d+|^https?:\/\/www\.xindehanman\.com\/chapter_\d+\.html/,
+        host: ["www.sesemanhua.com", "www.zuixindehanman.com"],
+        reg: [
+            /^https:\/\/www\.sesemanhua\.com\/index\.php\/chapter\/\d+/,
+            /^https?:\/\/www\.zuixindehanman\.com\/chapter_\d+\.html/
+        ],
         include: ".rd-article-wr,.comic-list",
         imgs: ".rd-article-wr img,.comic-list img",
         button: [4],
@@ -11990,10 +11878,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: "[class^=ad],.m-hm-ad1,p.result{display:none!important;}",
         category: "hcomic"
     }, {
-        name: "韩漫库/3N漫画网/哇漫画/很多漫/爱看韩漫",
-        host: ["se8.us", "3456nnn3.com", "wamanhua.com", "henduoman.com", "aikanhanman1.com"],
+        name: "韩漫库/3N漫画网/很多漫/爱看韩漫",
+        host: ["se8.us", "3456nnn3.com", "henduoman.com", "aikanhanman1.com"],
         reg: [
-            /^https?:\/\/(se8\.us|3456nnn3\.com|wamanhua\.com|aikanhanman\d?\.com)\/index\.php\/chapter\/\d+/,
+            /^https?:\/\/(se8\.us|3456nnn3\.com|aikanhanman\d?\.com)\/index\.php\/chapter\/\d+/,
             /^https?:\/\/henduoman\.com\/chapter-\d+\.html/
         ],
         imgs: ".rd-article-wr img,.comic-list img,.episode-detail img",
@@ -12116,9 +12004,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: () => fun.title("韩漫 "),
         category: "hcomic"
     }, {
-        name: "韓漫天堂/51漫画/爱漫画",
-        host: ["18jin.top", "51comic.org", "aicomic.org"],
-        reg: /^https?:\/\/(18jin\.top|aicomic\.org)\/index\.php\/chapter\/\d+|^https?:\/\/51comic\.org\/chapter\/\d+/,
+        name: "51漫画/爱漫画",
+        host: ["51comic.org", "aicomic.org"],
+        reg: [
+            /^https?:\/\/aicomic\.org\/index\.php\/chapter\/\d+/,
+            /^https?:\/\/51comic\.org\/chapter\/\d+/
+        ],
         imgs: () => fun.ge(".rd-article-wr") ? fun.gae(".rd-article-wr img") : fun.gae(".comic-list img:not([src$='empty.png'])"),
         button: [4],
         insertImg: [".rd-article-wr,.comic-list", 1],
@@ -12903,7 +12794,6 @@ if (next && /ReadComic/.test(location.pathname)) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             mode: 1,
@@ -13007,7 +12897,6 @@ if (next) {
             tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
-            _this.autoPager.preloadNextPage();
         },
         autoPager: {
             mode: 1,
@@ -13880,7 +13769,7 @@ if (next) {
             let json = JSON.parse(fun.run(code).slice(11, -12));
             return json;
         },
-        getSrcs: (dom = document) => {
+        getSrcs: (dom) => {
             let json = _this.json(dom);
             let srcs = json.images.map(e => `https://i.hamreus.com${e}?e=${json.sl.e}&m=${json.sl.m}`);
             return srcs;
@@ -13974,7 +13863,7 @@ if (next) {
             let json = fun.run(fun.run(code).slice(11, -11));
             return json;
         },
-        getSrcs: (dom = document) => {
+        getSrcs: (dom) => {
             let json = _this.json(dom);
             let domain;
             /manhuagui|mhgui/.test(fun.lh) ? domain = "https://i.hamreus.com" : domain = "https://i1.cocomanga.xyz";
@@ -14364,7 +14253,7 @@ if (next) {
     }, {
         name: "国漫吧 自動翻頁",
         reg: () => /(www|m)\.guoman8\.cc\/\d+\/\d+\.html$/.test(fun.url) && comicInfiniteScrollMode == 1,
-        json: (dom = document) => {
+        json: (dom) => {
             let code = fun.gst("eval", dom);
             let codeText = code.match(/eval(\(.+\)\))/)[0].slice(4);
             let objText = fun.run(codeText);
@@ -14372,7 +14261,7 @@ if (next) {
             let json = fun.run(objText);
             return json;
         },
-        getSrcs: (dom = document) => {
+        getSrcs: (dom) => {
             let json = _this.json(dom);
             const {
                 pageConfig
@@ -15064,13 +14953,13 @@ if (next) {
     }, {
         name: "来漫画M 自動翻頁",
         reg: () => /m\.laimanhua8\.com\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode == 1,
-        json: (dom = document) => {
+        json: (dom) => {
             let code = fun.gst("mhInfo", dom);
             let objText = code.match(/mhInfo[\s=]+([^;]+)/)[1];
             let json = JSON.parse(objText);
             return json;
         },
-        getSrcs: (dom = document) => {
+        getSrcs: (dom) => {
             let json = _this.json(dom);
             let srcs = json.images.map(e => _unsafeWindow.realurl + json.path + e);
             return srcs;
@@ -15321,7 +15210,7 @@ if (next) {
         prev: "a.J_prev_eposide_btn[href*=chapter]",
         customTitle: (doc = document) => fun.gt(".cartoon-title>a:first-child", 1, doc) + " - " + fun.gt(".cartoon-title>a:last-child", 1, doc),
         preloadNext: (nextDoc, obj) => {
-            fun.iframeVar(nextLink, 1000, "newImgs").then(w => {
+            fun.iframeVar(nextLink, "newImgs").then(w => {
                 let srcs = w.newImgs.map(e => e.url);
                 fun.picPreload(srcs, obj.customTitle(nextDoc), "next");
             });
@@ -15388,7 +15277,7 @@ if (next) {
         prev: "//a[text()='上一章'][contains(@href,'html')]",
         customTitle: (doc = document) => doc.title.split("免费")[0].replace("漫画", ""),
         preloadNext: (nextDoc, obj) => {
-            fun.iframeVar(nextLink, 1000, "newImgs").then(w => {
+            fun.iframeVar(nextLink, "newImgs").then(w => {
                 let srcs = w.newImgs.map(e => e.url);
                 fun.picPreload(srcs, obj.customTitle(nextDoc), "next");
             });
@@ -15860,7 +15749,7 @@ if (next) {
         host: ["www.dashumanhua.com", "www.shilunart.com"],
         enable: 1,
         reg: () => /(www\.dashumanhua\.com|www\.shilunart\.com)\/comic\/\w+\/.+\.html/i.test(fun.url) && comicInfiniteScrollMode == 1,
-        getSrcs: (dom = document) => {
+        getSrcs: (dom) => {
             let code = fun.gst("picTree", dom);
             let m = code.match(/eval.+\)\)/)[0].slice(4);
             let srcs = fun.run(fun.run(m).slice(12, -1));
@@ -16008,6 +15897,7 @@ if (next) {
             return hosts.includes(fun.lh) && /^\/[\w-]+\/$|^\/[\w-]+\/$|^\/chapter\/\d+\.html$/i.test(fun.lp) && fun.ge("h2#title") && comicInfiniteScrollMode != 1;
         },
         init: async () => {
+            fun.addMutationObserver(() => fun.remove("iframe,.bannersUite"));
             await fun.waitEle(".touch-manipulation img");
             fun.remove("//div[ins[@class='adsbygoogle']]");
             let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
@@ -16017,7 +15907,9 @@ if (next) {
                 cs
             } = setdata;
             let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
-            let fetchJson = await fetch(api).then(res => res.json());
+            let fetchJson = await fetch(api, {
+                cache: "no-cache"
+            }).then(res => res.json());
             siteJson = fetchJson;
         },
         imgs: (json = siteJson) => json.data.info.images.map(e => e.url),
@@ -16029,20 +15921,23 @@ if (next) {
         customTitle: (json = siteJson) => json.data.info.mangatitle + " - " + json.data.info.title,
         preloadNext: () => {
             let next = siteJson.data.info?.next;
-            if (next) {
+            if (!!next) {
                 let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
                 let {
                     host,
                     ms,
                 } = setdata;
                 let api = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
-                fetch(api).then(res => res.json()).then(json => {
+                fetch(api, {
+                    cache: "no-cache"
+                }).then(res => res.json()).then(json => {
                     let srcs = _this.imgs(json);
                     let text = _this.customTitle(json);
                     fun.picPreload(srcs, text, "next");
                 });
             }
         },
+        css: "iframe,.bannersUite{display:none!important;}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -16058,6 +15953,7 @@ if (next) {
             return fun.createImgArray(srcs);
         },
         init: async () => {
+            fun.addMutationObserver(() => fun.remove("iframe,.bannersUite"));
             await fun.waitEle(".touch-manipulation img");
             let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
             let {
@@ -16066,7 +15962,9 @@ if (next) {
                 cs
             } = setdata;
             let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
-            let fetchJson = await fetch(api).then(res => res.json());
+            let fetchJson = await fetch(api, {
+                cache: "no-cache"
+            }).then(res => res.json());
             siteJson = fetchJson;
             let imgs = _this.getImgs();
             fun.createImgBox(".touch-manipulation", 2);
@@ -16107,7 +16005,9 @@ if (next) {
                         ms,
                     } = setdata;
                     let api = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
-                    fetch(api).then(res => res.json()).then(json => {
+                    fetch(api, {
+                        cache: "no-cache"
+                    }).then(res => res.json()).then(json => {
                         let srcs = _this.getSrcs(json);
                         let text = _this.autoPager.title(json);
                         fun.picPreload(srcs, text, "next");
@@ -16115,6 +16015,7 @@ if (next) {
                 }
             }
         },
+        css: "iframe,.bannersUite{display:none!important;}",
         category: "comic autoPager"
     }, {
         name: "漫畫屋",
@@ -17031,17 +16932,18 @@ if (next) {
             } = _unsafeWindow;
             return comic_name + " - " + part_name;
         },
-        preloadNext: async () => {
-            let iframe = await fun.iframeVar(nextLink, 1000, "x_tokens");
-            const {
-                x_tokens,
-                Gm,
-                comic_name,
-                part_name
-            } = iframe;
-            let srcs = x_tokens.map(e => Gm.getImgUrl(Gm.fitImgUrl(e)));
-            let text = comic_name + part_name;
-            fun.picPreload(srcs, text, "next");
+        preloadNext: () => {
+            fun.iframeVar(nextLink, "x_tokens").then(frame => {
+                const {
+                    x_tokens,
+                    Gm,
+                    comic_name,
+                    part_name
+                } = frame;
+                let srcs = x_tokens.map(e => Gm.getImgUrl(Gm.fitImgUrl(e)));
+                let text = comic_name + part_name;
+                fun.picPreload(srcs, text, "next");
+            });
         },
         threading: 4,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
@@ -19469,7 +19371,6 @@ if (next) {
                 //iframe.style.display = "none";
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 document.body.appendChild(iframe);
-                iframe.contentWindow.fn = fun;
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -19484,14 +19385,11 @@ if (next) {
                     }
                     if (isString(selector)) await fun.waitEle(selector, 600, doc);
                     if (isFn(callback)) {
-                        await fun.delay(200, 0);
-                        await callback(doc, fun);
-                        await fun.delay(200, 0);
+                        await callback(doc, iframe.contentWindow);
                     }
                     let frameCode = siteData.frameCode;
                     if (!!frameCode) {
                         fun.script(frameCode, 0, 1, doc);
-                        await fun.delay(200, 0);
                     }
                     frameWindow = iframe.contentWindow;
                     resolve(doc);
@@ -19528,7 +19426,6 @@ if (next) {
                 //iframe.style.display = "none";
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 document.body.appendChild(iframe);
-                iframe.contentWindow.fn = fun;
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -19543,14 +19440,11 @@ if (next) {
                     }
                     if (isString(selector)) await fun.waitEle(selector, 600, doc);
                     if (isFn(callback)) {
-                        await fun.delay(200, 0);
-                        await callback(doc, fun);
-                        await fun.delay(200, 0);
+                        await callback(doc, iframe.contentWindow);
                     }
                     let frameCode = siteData.frameCode;
                     if (!!frameCode) {
                         fun.script(frameCode, 0, 1, doc);
-                        await fun.delay(200, 0);
                     }
                     frameWindow = iframe.contentWindow;
                     resolve(doc);
@@ -19564,7 +19458,7 @@ if (next) {
             });
         },
         //使用Iframe框架加載網頁，直到框架的window出現指定的屬性，返回框架window
-        iframeVar: async (url, time = 1000, declares) => {
+        iframeVar: async (url, declares, time = 1000) => {
             const iframe = document.createElement("iframe");
             iframe.id = "FullPictureLoadIframe";
             iframe.src = url;
@@ -19572,7 +19466,6 @@ if (next) {
             iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
             document.body.appendChild(iframe);
             await fun.delay(time, 0);
-            iframe.contentWindow.fn = fun;
             await new Promise(resolve => {
                 let loop = setInterval(() => {
                     if (declares in iframe.contentWindow) {
@@ -19593,7 +19486,6 @@ if (next) {
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 document.body.appendChild(iframe);
-                iframe.contentWindow.fn = fun;
                 const call = async () => {
                     const {
                         loadTime,
@@ -23799,7 +23691,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         //showOptions = true;
                         options.enable = 0;
                         debug("\n此規則禁用", data);
-                        break;
+                        continue;
                     }
                 }
                 if (data.enable != 0) await checkOptionsData();
