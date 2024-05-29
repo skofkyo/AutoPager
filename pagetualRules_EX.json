@@ -273,7 +273,7 @@
         "replaceElement": ".mh_wrap.tc",
         "pageBarText": "return doc.querySelector('.mh_readtitle>h1>strong').innerText;",
         "pageAction": "setTimeout(()=>{let titles=document.querySelectorAll('.pagetual_pageBar');if(titles.length>3){document.querySelector('#mangalist')?.remove();titles[0].remove();document.querySelector(\"iframe[name='pagetual-iframe']\").remove()}},1000)",
-        "css": ".mh_wrap{width:100%!important;min-width:100%!important}inIframe:.mh_wrap.tc:has(>.mh_readtitle){display:none!important}.mh_wrap{width:100%!important;min-width:100%!important}"
+        "css": ".mh_wrap{width:100%!important;min-width:100%!important}body>iframe{display:none!important}inIframe:iframe,.mh_wrap.tc:has(>.mh_readtitle){display:none!important}.mh_wrap{width:100%!important;min-width:100%!important}"
     },
     {
         "name": "COLAMANGA - 分類/搜索",
@@ -1183,7 +1183,7 @@
         "history": 2,
         "action": 1,
         "init": "document.querySelectorAll('img[data-original]').forEach(e=>{e.src=e.dataset.original})",
-        "nextLinkByJs": "let next1=doc.querySelector('a.j-rd-next[_href]:not([style])');let next2=doc.querySelector('a.j-rd-next[href]:not([href^=java])');if(/mh\\.9xxsm\\.com/.test(location.host)){let next=doc.querySelector('a.j-rd-prev[_href]:not([style])');return next?location.origin+next.getAttribute('_href'):null}else if(next1){let href=doc.querySelector('a.j-rd-next[_href]')?.getAttribute('_href');return href==''?null:location.origin+href}else if(next2){return next2.href}return null;",
+        "nextLinkByJs": "let next1=doc.querySelector('a.j-rd-next[_href]:not([style])');let next2=doc.querySelector('a.j-rd-next[href]:not([href^=java])');if(next1){let href=doc.querySelector('a.j-rd-next[_href]')?.getAttribute('_href');return href==''?null:location.origin+href}else if(next2){return next2.href}return null;",
         "pageElement": ".rd-article-wr",
         "replaceElement": ".last-crumb,.rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next,head>title",
         "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('.rd-article-wr');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
@@ -3458,6 +3458,8 @@
         "author": "skofkyo",
         "example": "http://e-hentai.org/，https://exhentai.org/",
         "url": "^https?://(e-hentai|exhentai)\\.org/",
+        "action": 0,
+        "pinUrl": true,
         "nextLink": "//table[@class='ptt']//a[string()='>'] | id('next') | id('unext')",
         "pageElement": ".itg>div,.itg>tbody>tr:not(:first-of-type),.gl1t, #gdt>div:not(.c), #img",
         "replaceElement": ".ptt,.ptb,.sn,.searchnav",
