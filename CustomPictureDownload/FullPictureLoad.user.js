@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.11
+// @version            2.2.12
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -286,13 +286,7 @@
         host: ["www.jkforum.net"],
         reg: /www\.jkforum\.net\/(p\/)?thread/,
         init: async () => await fun.waitEle("img[id^=aimg]"),
-        imgs: () => {
-            if (hasTouchEvents) {
-                return fun.gae("img[id^=aimg]:not([style])");
-            } else {
-                return fun.gae("img[id^=aimg][zoomfile]");
-            }
-        },
+        imgs: () => hasTouchEvents ? fun.gae("img[id^=aimg]:not([style])") : fun.gae("img[id^=aimg][zoomfile]"),
         capture: () => _this.imgs(),
         customTitle: () => fun.gt(".title-hd h1,.post-title").replace(/\(\d+[\w\s\\.+-]\)/, "").trim(),
         category: "nsfw2"
@@ -770,11 +764,7 @@
                 x.parentNode.insertBefore(ele, x);
             }
         },
-        imgs: () => {
-            let links = fun.gau(".wp-pagenavi a");
-            links = [...new Set(links)];
-            return fun.getImgA("article img", links);
-        },
+        imgs: () => fun.getImgA("article img", ".wp-pagenavi a"),
         button: [4],
         insertImg: ["article.post", 2],
         autoDownload: [0],
@@ -784,12 +774,24 @@
         css: "@media only screen and (max-width:480px){#primary{padding:6px !important}.col-md-12{padding:0px !important}}",
         category: "nsfw1"
     }, {
+        name: "ROSI小莉写真网",
+        host: ["www.xiaolis.cc"],
+        reg: /^https?:\/\/www\.xiaolis\.cc\/html\/\d+$/,
+        imgs: () => fun.getImgA(".entry-content img", ".page-links a"),
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: "a[rel=prev]",
+        prev: "a[rel=next]",
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
         name: "新老友图社",
         host: ["m.xtushe.com"],
         reg: /^https?:\/\/m\.xtushe\.com\/photo\/\d+\.html$/i,
         imgs: async () => {
-            const error = async doc => {
-                let ele = fun.ge("#content-photo>img", doc);
+            const error = async (dom) => {
+                let ele = fun.ge("#content-photo>img", dom);
                 if (!ele) {
                     await alert("遇到驗證");
                     location.reload();
@@ -932,7 +934,7 @@
                 fun.showMsg(displayLanguage.str_05, 0);
                 let links = fun.gau("//div[contains(text(),'分页阅读')]/a");
                 links = [fun.url].concat([...new Set(links)]);
-                let resArr = links.map(url => fun.fetchDoc(url).then(doc => fun.gae(".entry-content img", doc).map(e => e.dataset.srcset ?? e.src)));
+                let resArr = links.map(url => fun.fetchDoc(url).then(dom => fun.gae(".entry-content img", dom).map(e => e.dataset.srcset ?? e.src)));
                 return Promise.all(resArr).then(data => data.flat()).then(srcs => srcs.filter(i => !/jzfi4j-0\.gif|k0j1um-0\.gif/.test(i)));
             } else {
                 return fun.gae(".entry-content img").map(e => e.dataset.srcset ?? e.src).filter(i => !/jzfi4j-0\.gif|k0j1um-0\.gif/.test(i));
@@ -1135,7 +1137,7 @@
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("//a[text()='显示全文']");
-            return fun.fetchDoc(url).then(doc => fun.gae("#lightgallery img", doc));
+            return fun.fetchDoc(url).then(dom => fun.gae("#lightgallery img", dom));
         },
         button: [4],
         insertImg: ["#lightgallery", 2],
@@ -1162,18 +1164,6 @@
         insertImg: [".vipimglist", 2],
         customTitle: () => fun.title(" - 尤美图库", 1).replace(/\[\d+P\]/i, ""),
         css: ".sb.list2>li:nth-child(n+2):nth-child(-n+3){display:none!important}.vipimglist img{min-height:unset!important;}",
-        category: "nsfw1"
-    }, {
-        name: "美图库",
-        host: ["www.meituku.org"],
-        reg: /www\.meituku\.org\/\d+\/\d+\.html/,
-        imgs: () => [...fun.doc(_unsafeWindow.imgs.join("")).images],
-        button: [4],
-        insertImg: ["#content", 2],
-        autoDownload: [0],
-        next: "//div[contains(text(),'下一篇')]/a",
-        prev: "//div[contains(text(),'上一篇')]/a",
-        customTitle: ".info-title>a:nth-child(3)",
         category: "nsfw1"
     }, {
         name: "秀爱美女网/秀套图吧",
@@ -1227,18 +1217,18 @@
                 }).then(buffer => {
                     const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                     const htmlText = decoder.decode(buffer);
-                    const doc = fun.doc(htmlText);
-                    debug(`\n${links[page]}\n`, doc);
-                    let vipEle = fun.ge(".lead", doc);
+                    const dom = fun.doc(htmlText);
+                    debug(`\n${links[page]}\n`, dom);
+                    let vipEle = fun.ge(".lead", dom);
                     if (vipEle) vip = true;
-                    let imgs = fun.gae(".album-photo img[alt]", doc);
+                    let imgs = fun.gae(".album-photo img[alt]", dom);
                     imgs.length == 0 ? debug(`\n${links[page]}\n沒有任何圖片`) : debug(`\n${links[page]}\n此頁圖片`, imgs);
                     let tE = fun.gae("div.album-photo").at(-1);
                     imgs.forEach(img => {
                         img.dataset.src ? srcArr.push(img.dataset.src) : srcArr.push(img.src);
                         if (page != 0) tE.parentNode.insertBefore(img.parentNode.cloneNode(true), tE.nextSibling);
                     });
-                    if (page != 0 && !vipEle && fun.ge(".pagination", doc)) fun.ge(".pagination").outerHTML = fun.ge(".pagination", doc).outerHTML;
+                    if (page != 0 && !vipEle && fun.ge(".pagination", dom)) fun.ge(".pagination").outerHTML = fun.ge(".pagination", dom).outerHTML;
                 });
                 if (status == 403) {
                     setTimeout(() => {
@@ -1271,21 +1261,14 @@
     }, {
         name: "柠檬皮",
         host: ["www.emonl.com"],
-        reg: () => /www\.emonl\.com\/\d+\.html$/i.test(siteUrl) && fun.ge(".page-links") && !fun.ge(".read-point-box"),
-        imgs: () => fun.getImg(".single-content img", (fun.gt(".page-links>a:last-child", 2) || 1), 7),
-        button: [4],
-        insertImg: [".single-content", 1],
-        customTitle: "h1.entry-title",
-        fancybox: {
-            v: 3,
-            css: false
+        reg: () => /www\.emonl\.com\/\d+\.html$/i.test(siteUrl) && !fun.ge(".read-point-box"),
+        imgs: () => {
+            if (fun.ge(".page-links")) {
+                return fun.getImg(".single-content img", (fun.gt(".page-links>a:last-child", 2) || 1), 7);
+            } else {
+                return fun.gae(".single-content img");
+            }
         },
-        category: "nsfw1"
-    }, {
-        name: "柠檬皮",
-        host: ["www.emonl.com"],
-        reg: () => /www\.emonl\.com\/\d+\.html$/i.test(siteUrl) && fun.ge(".single-content img") && !fun.ge(".read-point-box"),
-        imgs: ".single-content img",
         button: [4],
         insertImg: [".single-content", 1],
         customTitle: "h1.entry-title",
@@ -1329,13 +1312,13 @@
             ele: ".headling_main_a",
             observer: ".headling_main_a",
             next: () => siteUrl.match(/https?:\/\/51sex\.vip\/category\/\d+/)[0] + "/" + (currentPageNum += 1),
-            stop: doc => {
+            stop: (dom) => {
                 let currentEleURLs = fun.gau(".headling_main_a");
                 if (currentEleURLs.length < 24) {
                     return true;
                 } else {
                     if (currentEleURLs.length > 24) currentEleURLs = currentEleURLs.slice(-24);
-                    let nextEleURLs = fun.gau(".headling_main_a", doc);
+                    let nextEleURLs = fun.gau(".headling_main_a", dom);
                     for (let url of currentEleURLs) {
                         if (nextEleURLs.includes(url)) return true;
                     }
@@ -1547,10 +1530,9 @@
             document.body.removeAttribute("style");
         },
         imgs: () => {
-            try {
-                let [max] = fun.gt(".imgfooter>a").match(/\d+/);
+            if (fun.ge(".imgfooter>a[href]")) {
                 return fun.getImgA(".remark img,.ui-article-detail img", ".imgfooter>a[href]");
-            } catch {
+            } else {
                 return fun.gae(".remark img,.ui-article-detail img");
             }
         },
@@ -2199,9 +2181,9 @@
             let links = fun.arr(max).map((_, i) => siteUrl + "/" + (i + 1));
             let fetchNum = 0;
             let resArr = links.map((url, i, arr) => {
-                return fun.fetchDoc(url).then(doc => {
+                return fun.fetchDoc(url).then(dom => {
                     fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
-                    let code = fun.gst("photoList", doc);
+                    let code = fun.gst("photoList", dom);
                     return fun.run(code.match(/photoList:([^\]]+\])/)[1]);
                 });
             });
@@ -2232,14 +2214,14 @@
             let links = fun.arr(max).map((_, i) => siteUrl + "/" + (i + 1));
             let fetchNum = 0;
             let resArr = links.map((url, i, arr) => {
-                return fun.fetchDoc(url).then(doc => {
+                return fun.fetchDoc(url).then(dom => {
                     fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     let code, imgs;
                     try {
-                        code = fun.gst("imgList", doc);
+                        code = fun.gst("imgList", dom);
                         imgs = fun.run(code.match(/imgList:([^\]]+\])/)[1]);
                     } catch {
-                        code = fun.gst("snapshotList", doc);
+                        code = fun.gst("snapshotList", dom);
                         imgs = fun.run(code.match(/snapshotList:([^\]]+\])/)[1]);
                     }
                     return imgs;
@@ -2265,8 +2247,8 @@
             let url = siteUrl.replace(/\/\d+$/, "");
             let links = fun.arr(max).map((_, i) => url + "/" + (i + 1));
             fun.showMsg(displayLanguage.str_07, 0);
-            let check = await fun.fetchDoc(links[1]).then(doc => {
-                let code = fun.gst("photoList", doc);
+            let check = await fun.fetchDoc(links[1]).then(dom => {
+                let code = fun.gst("photoList", dom);
                 let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
                 return photoList.length < 1 ? false : true;
             });
@@ -2274,9 +2256,9 @@
                 fun.showMsg(displayLanguage.str_05, 0);
                 let fetchNum = 0;
                 let resArr = links.map((url, i, arr) => {
-                    return fun.fetchDoc(url).then(doc => {
+                    return fun.fetchDoc(url).then(dom => {
                         fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
-                        let code = fun.gst("photoList", doc);
+                        let code = fun.gst("photoList", dom);
                         let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
                         return photoList;
                     });
@@ -2509,17 +2491,17 @@
             ele: "//div[@class='row'][div[div[@class='mixs-card']]] | //div[@class='table-responsive table-sm-no-border'] | //div[div[div[@class='thumbnail']]] | //div[@class='tags-wrap']",
             next: ".pagination li.active+li>a",
             re: ".pagination",
-            title: doc => "Page " + fun.ge(".pagination li.active", doc).innerText,
-            bF: doc => {
-                fun.gae(".mixs-card-img:not(.lock)", doc).forEach(e => {
+            title: (dom) => "Page " + fun.gt(".pagination li.active", 1, dom),
+            bF: (dom) => {
+                fun.gae(".mixs-card-img:not(.lock)", dom).forEach(e => {
                     let url = e.attributes[1].value.replaceAll("'", "");
                     e.outerHTML = `<div class="mixs-card-img" data-src="${url}" lazy="loaded" style="background-image: url(&quot;${url}&quot;);"></div>`;
                 });
-                fun.gae(".thumbnail .img-circle[v-lazy]", doc).forEach(e => {
+                fun.gae(".thumbnail .img-circle[v-lazy]", dom).forEach(e => {
                     let url = e.getAttribute("v-lazy").replaceAll("'", "");
                     e.outerHTML = `<img src="${url}" alt="${e.alt}" class="img-circle" data-src="${url}" lazy="loaded">`;
                 });
-                fun.gae(".tags-item img[v-lazy]", doc).forEach(e => {
+                fun.gae(".tags-item img[v-lazy]", dom).forEach(e => {
                     let url = e.getAttribute("v-lazy").replaceAll("'", "");
                     e.outerHTML = `<img src="${url}" alt="${e.alt}" data-src="${url}" lazy="loaded">`;
                 });
@@ -2625,7 +2607,7 @@
                 },
                 "body": `action=chenxing_imageall&type=all&post_id=${_unsafeWindow.chenxing.PID}`,
                 "method": "POST",
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images]);
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images]);
         },
         button: [4],
         insertImg: ["#content", 2],
@@ -2784,15 +2766,15 @@
                 links.push(siteUrl.replace(/(_\d+)?\.html$/, "") + `_${i}.html`);
             }
             for (let i = 0; i < links.length; i++) {
-                let doc = await new Promise(async resolve => {
+                let dom = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
                         let res = await fetch(links[i]);
                         if (res.status == 304 || res.status == 200) {
                             let buffer = await res.arrayBuffer();
                             let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                             let htmlText = decoder.decode(buffer);
-                            let doc = fun.doc(htmlText);
-                            resolve(doc);
+                            let dom = fun.doc(htmlText);
+                            resolve(dom);
                             break;
                         } else {
                             fun.showMsg(`第${i + 1}頁${res.status}重試第${check}次`, 2900);
@@ -2800,7 +2782,7 @@
                         }
                     }
                 });
-                let imgs = fun.gae("#picg img[alt]", doc);
+                let imgs = fun.gae("#picg img[alt]", dom);
                 let te = fun.gae("#picg img[alt]").at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
@@ -2808,7 +2790,7 @@
                 });
                 if (i != 0) {
                     let ce = fun.gae("h1,.page .pagelist");
-                    let re = fun.gae("h1,.page .pagelist", doc);
+                    let re = fun.gae("h1,.page .pagelist", dom);
                     if (ce.length == re.length) {
                         ce.forEach((e, i) => (e.outerHTML = re[i].outerHTML));
                     }
@@ -2828,7 +2810,7 @@
             v: 3,
             insertLibrarys: 1
         },
-        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,#xtjpp,.interestline+.nav~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none !important}",
+        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#qpai,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,#xtjpp,.interestline+.nav~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none !important}",
         category: "nsfw2"
     }, {
         name: "魅狸图片网/美女私房照/看妹图",
@@ -2905,18 +2887,6 @@
         },
         openInNewTab: "#main.gallery a:not([target=_blank])",
         category: "autoPager"
-    }, {
-        name: "柔丝映画",
-        host: ["www.mfpho.com"],
-        reg: /^https?:\/\/www\.mfpho\.com\/\d+\.html$/i,
-        imgs: () => fun.getImgA(".single-content img", ".page-links a"),
-        button: [4],
-        insertImg: [".single-content", 2],
-        fancybox: {
-            v: 3,
-            css: false
-        },
-        category: "nsfw1"
     }, {
         name: "爱妹子",
         host: ["xx.knit.bid", "mm.187187.xyz", "999888.best"],
@@ -3275,20 +3245,6 @@
         customTitle: ".entry-title",
         category: "nsfw1"
     }, {
-        name: "好女神网",
-        host: ["www.haonvshen.com", "www.nvshen5.com"],
-        reg: /(www\.haonvshen\.com|www\.nvshen\d\.com)\/gallery\/\d+\.html/,
-        imgs: () => {
-            let max;
-            fun.ge(".page") ? [, max] = fun.gt(".page").match(/\d+\/(\d+)/) : max = fun.gt("#pages>*:last-child", 3) || 1;
-            return fun.getImg("#hgallery>img,#imgwrap img", max, 9);
-        },
-        button: [4],
-        insertImg: ["#hgallery,#imgwrap", 1],
-        customTitle: () => fun.title(" - 第1页-美女图片-好女神网"),
-        css: ".f_b_c_d{display:none!important}",
-        category: "nsfw1"
-    }, {
         name: "Jablehk",
         host: ["jablehk.com"],
         reg: /jablehk\.com\/\w+/,
@@ -3459,9 +3415,9 @@
                 console.log("iframeVideoUrls", videoUrls);
                 fun.showMsg(displayLanguage.str_05, 0);
                 let getVideoUrlsArr = videoUrls.map((url, i, arr) => {
-                    return fun.xhrDoc(url).then(doc => {
+                    return fun.xhrDoc(url).then(dom => {
                         fun.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${arr.length}`, 0);
-                        return fun.ge("source[type]", doc)?.src ?? null;
+                        return fun.ge("source[type]", dom)?.src ?? null;
                     });
                 });
                 await Promise.all(getVideoUrlsArr).then(async mp4Arr => {
@@ -3569,10 +3525,7 @@
         reg: /^https?:\/\/fapomania\.com\/[^\/]+\/$/,
         init: () => fun.createImgBox(".previzakosblo", 2),
         imgs: async () => {
-            const last = doc => {
-                let ele = fun.ge(".leftocontar .previzako", doc);
-                return ele ? false : true;
-            }
+            const last = (dom) => !fun.ge(".leftocontar .previzako", dom);
             await fun.getNP(".leftocontar .previzako", "//a[contains(text(),'Next')]", last, ".morebutaro");
             thumbnailsSrcArray = fun.gae(".leftocontar .previzakoimag>img:not([src$='videoleaks.png'])").map(e => e.src).reverse();
             return thumbnailsSrcArray.map(e => e.replace(/_\d+px(\.\w+)$/, "$1"));
@@ -3643,18 +3596,6 @@
         capture: () => _this.imgs(),
         customTitle: ".entry-title",
         downloadVideo: true,
-        category: "nsfw2"
-    }, {
-        name: "Fan Leaks",
-        host: ["fanleaks.club"],
-        reg: /^https?:\/\/fanleaks\.club\/[^\/]+$/,
-        imgs: async () => {
-            thumbnailsSrcArray = await fun.getImg("#content img", fun.gt("nav[aria-label=Pagination]>*:last-child", 2) || 1);
-            return thumbnailsSrcArray.map(e => e.replace("thumbs/", ""));
-        },
-        button: [4],
-        insertImg: ["#content", 2],
-        customTitle: "h1",
         category: "nsfw2"
     }, {
         name: "Thotsbay/Hotleak/Leakedzone",
@@ -4682,12 +4623,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "HOTGIRLchina格式",
-        host: ["hotgirlchina.com", "cutexinh.com", "babeasia.com", "anhnguoimau.com", "nongbong.com", "anhnguoidep.com", "anhdoitruy.com", "anhnguoilon.com"],
+        host: ["hotgirlchina.com", "anhnguoimau.com", "anhnguoidep.com", "anhdoitruy.com", "anhnguoilon.com"],
         reg: [
-            /(hotgirlchina\.com|cutexinh\.com)\/.+(photos?|videos?|anh)?\/?/,
-            /^https?:\/\/babeasia\.com\/\d+\//,
+            /hotgirlchina\.com\/.+(photos?|videos?|anh)?\/?/,
             /^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/,
-            /^https?:\/\/nongbong\.com\/[^\/]+\/$/,
             /^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/,
             /^https?:\/\/anhdoitruy\.com\/[^\/]+\/$/,
             /^https?:\/\/anhnguoilon\.com\/[^\/]+\/$/,
@@ -4715,7 +4654,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "HOTGIRLchina 格式 AD",
-        reg: /(hotgirlchina\.com|cutexinh\.com|babeasia\.com|anhnguoimau\.com|nongbong\.com|anhnguoidep|anhnguoilon\.com)\//,
+        reg: /(hotgirlchina\.com|anhnguoimau\.com|anhnguoidep|anhnguoilon\.com)\//,
         css: ".boxzilla-container,.boxzilla-overlay,.sharrre-container{display:none!important}",
         category: "ad"
     }, {
@@ -4787,8 +4726,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["erogirl.net"],
         reg: /^https?:\/\/erogirl\.net\/p\//,
         init: async () => {
-            let fetchJson = await fun.fetchDoc(fun.url).then(doc => {
-                let data = fun.gt("#__NEXT_DATA__", 1, doc);
+            let fetchJson = await fun.fetchDoc(fun.url).then(dom => {
+                let data = fun.gt("#__NEXT_DATA__", 1, dom);
                 let json = JSON.parse(data);
                 return json;
             });
@@ -5084,7 +5023,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: "article.article,.article-list-outer>li",
             next: "//li[@class='current']/following-sibling::li[1]/a | //a[span[text()='次へ']]",
             re: ".pager,.pager_fixed,.fractional-page",
-            title: doc => "Page " + nextLink.match(/\?p=(\d+)/)[1]
+            title: () => "Page " + nextLink.match(/\?p=(\d+)/)[1]
         },
         openInNewTab: ".autopagerize_page_element a[href]:not([target=_blank]),.article-list-outer a[href]:not([target=_blank])",
         category: "autoPager"
@@ -5297,7 +5236,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             http: "https",
             observer: ".post.hentry",
             re: "#blog-pager",
-            stop: doc => fun.ge(".date-outer", doc) ? false : true,
+            stop: (dom) => !fun.ge(".date-outer", dom),
             aF: () => {
                 fun.gae("//div[@class='snips-image']/a[not(img)]").forEach(a => {
                     let script = fun.ge("script", a);
@@ -5432,15 +5371,15 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let url = siteUrl.replace(/(-\d+)?\.html$/, "");
             let links = fun.arr(max).map((_, i) => url + "-" + (i + 1) + ".html")
             for (let i = 0; i < links.length; i++) {
-                let doc = await new Promise(async resolve => {
+                let dom = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
                         let res = await fetch(links[i]);
                         if (res.status == 304 || res.status == 200) {
                             let buffer = await res.arrayBuffer();
                             let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                             let htmlText = decoder.decode(buffer);
-                            let doc = fun.doc(htmlText);
-                            resolve(doc);
+                            let dom = fun.doc(htmlText);
+                            resolve(dom);
                             break;
                         } else {
                             fun.showMsg(`第${i + 1}頁${res.status}重試第${check}次`, 2900);
@@ -5448,7 +5387,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                         }
                     }
                 });
-                let imgs = fun.gae(".pictures img", doc);
+                let imgs = fun.gae(".pictures img", dom);
                 let te = fun.gae(".pictures img").at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
@@ -5456,7 +5395,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 });
                 if (i != 0) {
                     let ce = fun.gae("#pages");
-                    let re = fun.gae("#pages", doc);
+                    let re = fun.gae("#pages", dom);
                     if (ce.length == re.length) {
                         ce.forEach((e, i) => (e.outerHTML = re[i].outerHTML));
                     }
@@ -5688,7 +5627,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: async () => {
             if (fun.ge("embed[src*='sendvid']")) {
                 let links = fun.gae("embed").map(e => e.src);
-                let resArr = links.map(url => fun.xhrDoc(url).then(doc => fun.ge("video>source", doc).src));
+                let resArr = links.map(url => fun.xhrDoc(url).then(dom => fun.ge("video>source", dom).src));
                 videosSrcArray = await Promise.all(resArr);
             }
             return fun.getImg(".entry img", fun.gt("a[title=总数]"), 8)
@@ -5726,40 +5665,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         next: "//p[contains(text(),'上一')]/a",
         prev: "//p[contains(text(),'下一')]/a",
         customTitle: ".contitle",
-        category: "nsfw2"
-    }, {
-        name: "三界异次元",
-        host: ["ycyweb.cloudapp.net"],
-        reg: /^https?:\/\/ycyweb\.cloudapp\.net\/p\/\d+$/i,
-        imgs: ".postBody img",
-        button: [4],
-        insertImg: [".postBody", 2],
-        customTitle: "#postTitle",
-        category: "nsfw1"
-    }, {
-        name: "好视角",
-        host: ["www.lianjiajr.net"],
-        reg: /^https?:\/\/www\.lianjiajr\.net\/\w+\.html$/i,
-        exclude: "div.pic",
-        imgs: ".text img:not([onerror])",
-        button: [4],
-        insertImg: [".text", 2],
-        autoDownload: [0],
-        next: "//p[contains(text(),'上一篇')]/a",
-        prev: "//p[contains(text(),'下一篇')]/a",
-        customTitle: ".tit>h1",
-        css: "audio{display:none!important}",
-        category: "nsfw2"
-    }, {
-        name: "好视角M",
-        host: ["www.lianjiajr.net"],
-        reg: /^https?:\/\/www\.lianjiajr\.net\/\w+\.html$/i,
-        init: () => fun.remove("//div[a[img[contains(@src,'gif')]]]"),
-        imgs: "div.pic img:not([onerror])",
-        button: [4],
-        insertImg: ["div.pic", 2],
-        customTitle: ".grjs1>h1",
-        css: "audio{display:none!important}",
         category: "nsfw2"
     }, {
         name: "YY美女图片/美眉大宝贝",
@@ -5974,7 +5879,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 return url;
             },
             re: ".page-nav",
-            stop: (dom) => fun.ge(".td-404-title", dom) ? true : false,
+            stop: (dom) => !!fun.ge(".td-404-title", dom),
             bF: (dom) => {
                 fun.gae("span[data-img-url]", dom).forEach(span => {
                     span.classList.add("td-animation-stack-type0-2");
@@ -6061,7 +5966,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             next: "a.blog-pager-older-link",
             observer: ".blog-posts>.date-outer",
             re: "#blog-pager",
-            stop: (dom) => !!fun.ge(".date-outer", dom),
+            stop: (dom) => !fun.ge(".date-outer", dom),
             title: () => "Page" + (currentPageNum += 1)
         },
         openInNewTab: ".date-outer a[href]:not([target=_blank])",
@@ -6901,7 +6806,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: "#masonry>article",
             next: "span.current+a",
             re: ".wp-pagenavi",
-            title: (doc) => "Page " + fun.gt("span.current", 1, doc)
+            title: (dom) => "Page " + fun.gt("span.current", 1, dom)
         },
         openInNewTab: "a.entry-thumbnail:not([target=_blank])",
         category: "autoPager"
@@ -6978,9 +6883,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 let fetchNum = 0;
                 let resArr = [];
                 for (let i = 0; i < max; i++) {
-                    let res = await fun.fetchDoc(links[i]).then(doc => {
+                    let res = await fun.fetchDoc(links[i]).then(dom => {
                         fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
-                        return getUrls(doc);
+                        return getUrls(dom);
                     });
                     resArr.push(res);
                 }
@@ -7176,9 +7081,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 let fetchNum = 0;
                 let resArr = fun.arr(max).map((_, i) => {
                     let url = siteUrl + "?mode=async&function=get_block&block_id=album_view_album_view&sort_by=&from=" + (i + 1);
-                    return fun.fetchDoc(url).then(doc => {
+                    return fun.fetchDoc(url).then(dom => {
                         fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
-                        return fun.gae("a[data-fancybox-type=image]", doc).map(a => {
+                        return fun.gae("a[data-fancybox-type=image]", dom).map(a => {
                             let img = fun.ge("img", a);
                             return {
                                 original: a.href,
@@ -7302,13 +7207,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             fun.showMsg(displayLanguage.str_05, 0);
             for (let i = 0; i < max; i += 24) {
                 let url = `/photo/${pid}/?gid=${gid}&idx=${i}&partial=true`;
-                let res = await fun.fetchDoc(url).then(doc => {
+                let res = await fun.fetchDoc(url).then(dom => {
                     fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${pages}`, 0);
-                    if (!fun.ge(".thumbs a", doc)) {
+                    if (!fun.ge(".thumbs a", dom)) {
                         alert("Encountered human-machine verification");
                         window.location.href = siteUrl;
                     }
-                    return fun.gae(".thumbs a", doc).map(a => {
+                    return fun.gae(".thumbs a", dom).map(a => {
                         let original = a.href;
                         let thumb = fun.attr("img", "src", a);
                         return {
@@ -7409,6 +7314,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             v: 3,
             css: false
         },
+        css: ".no-gutters{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "趣事館",
@@ -7743,56 +7649,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         go: 1,
         category: "nsfw2"
     }, {
-        name: "ShowGirlx",
-        host: ["showgirlx.net"],
-        reg: /^https?:\/\/showgirlx\.net\/[^/]+\/(\d+\/)?$/,
-        init: () => fun.clearAllTimer(),
-        imgs: async () => {
-            let selector = ".wp-block-gallery img";
-            await fun.waitEle(selector, 10);
-            return fun.getImgSrcset(selector);
-        },
-        button: [4],
-        insertImg: [
-            [".penci-single-link-pages", 2], 2
-        ],
-        go: 1,
-        category: "nsfw2"
-    }, {
-        name: "ShowGirlx album",
-        host: ["showgirlx.net"],
-        reg: /ngamgaixinh\.\w+\/album\/.+/,
-        imgs: () => fun.gae(".list-item-image img").map(img => img.src.replace(/\.(th|md)\./, ".")),
-        button: [4],
-        insertImg: [
-            [".pad-content-listing", 2], 2
-        ],
-        go: 1,
-        category: "nsfw2"
-    }, {
-        name: "Degoo Cloud",
-        host: ["app.degoo.com"],
-        reg: /^https?:\/\/app\.degoo\.com\/share\//,
-        imgs: async () => {
-            let max = prompt(displayLanguage.str_13, "100");
-            let img = ".preview-media .hidden";
-            await fun.waitEle(img);
-            let arr = [];
-            arr.push(fun.ge(img).cloneNode(true));
-            fun.showMsg(`${displayLanguage.str_02}1/${max}`, 0);
-            let n = 1;
-            for (let i = 1; i < max; i++) {
-                fun.ge("#nextFileButton").click();
-                await fun.delay(200, 0);
-                if (await fun.waitEle(img)) {
-                    arr.push(fun.ge(img).cloneNode(true));
-                    fun.showMsg(`${displayLanguage.str_02}${n+=1}/${max}`, 0);
-                }
-            }
-            return [...new Set(arr.map(e => e.src))];
-        },
-        category: "nsfw2"
-    }, {
         name: "亚洲色吧",
         host: ["yazhouseba.com"],
         reg: () => /^https?:\/\/yazhouseba\.com\/meinv\/img-\d+\.html/.test(siteUrl) && fun.ge("#next-url"),
@@ -7870,7 +7726,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.ge("//a[@class='btn'][text()='開始閱讀']").href;
-            return fun.fetchDoc(url).then(doc => fun.gae("#photo_body img", doc));
+            return fun.fetchDoc(url).then(dom => fun.gae("#photo_body img", dom));
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -8781,14 +8637,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: "#comic-view-main .text-center",
         category: "nsfw2"
     }, {
-        name: "福利中心",
-        host: ["www.fulizx1.xyz", "www.fulizx101.cc"],
-        reg: () => /^\/index\.php\/art\/detail\/id\/\d+\.html$/i.test(fun.lp) && fun.ge("//title[contains(text(),'福利中心')]") && fun.ge("#image_show"),
-        imgs: "#image_show img",
-        customTitle: () => fun.gt("#Video-Title,.area-title").replace(" - 查看图片", "").replace(/\s\(\d+[\w\s\.\+-]+\)/, "").replace(/《|》/g, ""),
-        css: ".swing{display:none!important;}",
-        category: "nsfw2"
-    }, {
         name: "XO福利圖",
         host: ["diedk1123-ake33i.xofulitu2za222.sbs", "www.xofulitu9ok999.xyz"],
         link: "https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo",
@@ -9228,10 +9076,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 let fetchNum = 0;
                 return fun.gae(".gdtm a,.gdtl a").map(async (a, i, arr) => {
                     await fun.delay(100 * i, 0);
-                    return fun.fetchDoc(a.href).then(async doc => {
+                    return fun.fetchDoc(a.href).then(async (dom) => {
                         fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${arr.length}`, 0);
-                        let fullimg = fun.ge("a[href*=fullimg]", doc);
-                        let img = fun.ge("#img", doc);
+                        let fullimg = fun.ge("a[href*=fullimg]", dom);
+                        let img = fun.ge("#img", dom);
                         if (fullimg) {
                             let url = fullimg.href;
                             let res = await fun.xhrHEAD(url);
@@ -9429,7 +9277,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                             },
                             "body": `index=${i}`,
                             "method": "POST",
-                        }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images]);
+                        }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images]);
                     });
                     thumbnailsSrcArray = await Promise.all(resArr).then(data => fun.getImgSrcArr(data.flat()));
                 } else {
@@ -9517,8 +9365,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("//a[span[text()='List Read']]");
-            return fun.fetchDoc(url).then(doc => {
-                return fun.run(fun.gt("#listImgH", 1, doc));
+            return fun.fetchDoc(url).then(dom => {
+                return fun.run(fun.gt("#listImgH", 1, dom));
             });
         },
         button: [4],
@@ -9546,8 +9394,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             thumbnailsSrcArray = fun.getImgSrcArr(".single-thumb>a>img");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu(".single-thumb>a");
-            let json = await fun.fetchDoc(url).then(doc => {
-                let code = fun.gst("readerPages", doc);
+            let json = await fun.fetchDoc(url).then(dom => {
+                let code = fun.gst("readerPages", dom);
                 let jsonCode = code.match(/JSON[^;]+/)[0];
                 return fun.run(jsonCode);
             });
@@ -9620,7 +9468,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let [max] = fun.gt(".pages").match(/\d+/);
             let img = fun.ge(".gallery_thumb img");
             let src = img.dataset.src ?? img.src;
@@ -9673,7 +9521,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `_token=${_token}&server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             if (!fun.ge("#FullPictureLoadMainImgBox")) fun.createImgBox("#comments_div");
             let max = fun.gt(".info_pg").match(/\d+/)[0];
             let img = fun.ge(".gp_th img");
@@ -9738,7 +9586,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let [max] = fun.gt(".pages").match(/\d+/);
             let img = fun.ge(".gthumb img");
             let src = img.dataset.src ?? img.src;
@@ -9792,7 +9640,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `_token=${_token}&server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let [max] = fun.gt("//ul[span[text()='Pages:']]").match(/\d+/);
             let img = fun.ge(".th_gp img");
             let src = img.dataset.src ?? img.src;
@@ -9952,7 +9800,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `action=loadpreviews&postID=${_unsafeWindow.ajaxData.postID}`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.src));
             let url = fun.gu(".previews>a");
             return fun.iframeVar(url, "ajax").then(w => {
                 let html = w.ajax.pages.join("");
@@ -10057,8 +9905,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /pururin\.to\/gallery\/\d+\/.+/,
         imgs: () => {
             let url = fun.gu(".gallery-preview>a");
-            return fun.fetchDoc(url).then(doc => {
-                let ele = fun.ge(".img-viewer", doc);
+            return fun.fetchDoc(url).then(dom => {
+                let ele = fun.ge(".img-viewer", dom);
                 let svr = ele.dataset.svr;
                 let data = JSON.parse(ele.dataset.img);
                 let arr = data.images.sort((a, b) => a.page - b.page);
@@ -10174,7 +10022,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `_token=${_token}&id=${id}&dir=${dir}&visible_pages=0&t_pages=${t_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             return thumbnailsSrcArray.map(e => e.replace("t.", "."));
         },
         button: [4],
@@ -10200,7 +10048,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `_token=${_token}&id=${id}&dir=${dir}&visible_pages=0&t_pages=${t_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             return thumbnailsSrcArray.map(e => e.replace("t.", "."));
         },
         button: [4],
@@ -10357,14 +10205,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: async () => {
             fun.showMsg("獲取數據中...", 0);
             let url = fun.gu(".gallery-image-container a");
-            let doc;
             try {
-                doc = await fun.fetchDoc(url);
-                let [data] = fun.gst("startingPage", doc).replace(/\\/g, "").match(/\[{.+"}]/);
+                let dom = await fun.fetchDoc(url);
+                let [data] = fun.gst("startingPage", dom).replace(/\\/g, "").match(/\[{.+"}]/);
                 return JSON.parse(data).map(e => e.src);
             } catch {
-                doc = await fun.iframeDoc(url, ".yarl__slide_image");
-                return fun.gae(".yarl__slide_image", doc).map(e => e.src).sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
+                let dom = await fun.iframeDoc(url, ".yarl__slide_image");
+                return fun.gae(".yarl__slide_image", dom).map(e => e.src).sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
             }
         },
         thums: ".gallery-image-container a>img",
@@ -10448,9 +10295,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             thumbnailsSrcArray = fun.gae(".comics-thumbnail-wrapper img[data-srcset]").map(e => e.dataset.srcset);
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu(".comics-thumbnail-wrapper>a");
-            return fun.fetchDoc(url).then(doc => {
-                let imgDir = fun.ge("#current-page-image", doc).dataset.prefix;
-                let code = fun.gst("extensions", doc);
+            return fun.fetchDoc(url).then(dom => {
+                let imgDir = fun.ge("#current-page-image", dom).dataset.prefix;
+                let code = fun.gst("extensions", dom);
                 let extensions = fun.run(code.match(/\[.+\]/)[0].replaceAll("&quot;", '"'));
                 return extensions.map((e, i) => {
                     if (imgDir.includes("nhentai")) {
@@ -10499,8 +10346,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: async () => {
             let url = fun.gu(".detail-gallery-item a");
             fun.showMsg(displayLanguage.str_05, 0);
-            return fun.fetchDoc(url).then(doc => {
-                let code = fun.gst("slides", doc);
+            return fun.fetchDoc(url).then(dom => {
+                let code = fun.gst("slides", dom);
                 let arr = JSON.parse(code.match(/\\"slides\\":([^\]]+\])/)[1].replaceAll("\\", ""));
                 return arr.map(e => e.src);
             });
@@ -10580,7 +10427,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             return fun.getImhentaiSrc();
         },
         button: [4],
@@ -10627,7 +10474,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 },
                 "body": `server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fun.doc(text)).then(doc => [...doc.images].map(e => e.dataset.src ?? e.src));
+            }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let max = fun.ge("#load_pages").value;
             let img = fun.ge(".gthumb img");
             let src = img.dataset.src ?? img.src;
@@ -10670,8 +10517,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let prges = fun.ge("div[data-pages]").dataset.pages;
             fun.showMsg(displayLanguage.str_05, 0);
             let imgDir;
-            let key = await fun.fetchDoc(fun.gu("#thumbnails-container a")).then(doc => {
-                let url = fun.ge("div[data-cdn]", doc).dataset.cdn;
+            let key = await fun.fetchDoc(fun.gu("#thumbnails-container a")).then(dom => {
+                let url = fun.ge("div[data-cdn]", dom).dataset.cdn;
                 let newUrl = new URL(url);
                 imgDir = newUrl.origin + newUrl.pathname.replace("[PAGE]", "");
                 return newUrl.search;
@@ -10991,7 +10838,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         name: "淫漫画",
         host: ["www.yinmh.com", "www.yinmh.top", "www.yinmh.xyz"],
         reg: /www\.yinmh\.(com|top|xyz)\/\d+\.html/,
-        imgs: () => fun.fetchDoc(siteUrl).then(doc => fun.gae(".left>.image img.lazy", doc).map(e => e.getAttribute("img") ?? e.src)),
+        imgs: () => fun.fetchDoc(siteUrl).then(dom => fun.gae(".left>.image img.lazy", dom).map(e => e.getAttribute("img") ?? e.src)),
         button: [4],
         insertImg: [".left>.image", 2],
         customTitle: ".box>h1",
@@ -11040,14 +10887,14 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             if (/index-look-cid-name-/.test(siteUrl)) location.href = _this.FixURL(siteUrl);
             fun.gae("//a[text()='下一章'] | //a[text()='上一章']").forEach(a => (a.href = _this.FixURL(a.href)));
         },
-        imgs: (url = siteUrl, doc, msg = 1, request = 0) => fun.getImg("#ComicPic", fun.ge("#total", doc).value, 20, null, 20, url, msg, request),
+        imgs: (url = siteUrl, dom, msg = 1, request = 0) => fun.getImg("#ComicPic", fun.ge("#total", dom).value, 20, null, 20, url, msg, request),
         button: [4, "24%", 1],
         insertImg: [".e", 2],
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: 1,
-        customTitle: doc => {
-            let arr = fun.gt(".b", 1, doc).split("-");
+        customTitle: (dom) => {
+            let arr = fun.gt(".b", 1, dom).split("-");
             return arr[2].trim() + " - " + arr[3].trim();
         },
         preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
@@ -11358,10 +11205,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         insertImgAF: () => {
             let max = document.querySelector(".text_title>p").innerText.match(/\d+/g).at(-1);
             let lastUrl = fun.url.replace(".html", "") + "_" + max + ".html";
-            fun.fetchDoc(lastUrl).then(doc => {
-                fun.ge(".text_title>p").innerText = fun.ge(".text_title>p", doc).innerText;
-                fun.ge("#next_url").outerHTML = fun.ge("#next_url", doc).outerHTML;
-                nextLink = fun.gu("#next_url", doc);
+            fun.fetchDoc(lastUrl).then(dom => {
+                fun.ge(".text_title>p").innerText = fun.gt(".text_title>p", 1, dom);
+                fun.ge("#next_url").outerHTML = fun.ge("#next_url", dom).outerHTML;
+                nextLink = fun.gu("#next_url", dom);
             });
         },
         autoDownload: [0],
@@ -11530,7 +11377,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             thumbnailsSrcArray = fun.getImgSrcArr(".site-page-card__media");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.url + "/0";
-            return fun.fetchDoc(url).then(doc => fun.getImgSrcArr(".site-reader__image", doc));
+            return fun.fetchDoc(url).then(dom => fun.getImgSrcArr(".site-reader__image", dom));
         },
         button: [4],
         insertImg: [
@@ -11634,7 +11481,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("#links+.title+div>a");
-            return fun.fetchDoc(url).then(doc => fun.ge("img[data-src]", doc) ? fun.gae("img[data-src]", doc) : fun.gae("#lightgallery a", doc));
+            return fun.fetchDoc(url).then(dom => fun.ge("img[data-src]", dom) ? fun.gae("img[data-src]", dom) : fun.gae("#lightgallery a", dom));
         },
         button: [4],
         insertImg: ["//div[a[img]]", 2],
@@ -11670,35 +11517,31 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "18H漫画",
-        host: ["18hmanga.click"],
-        reg: /(18hmanga\.click)\/.+\//,
-        init: "setTimeout(()=>{fun.gae('.g1-nav-single a').forEach(e=>{e.removeAttribute('target')})},2000)",
-        include: ".g1-content-narrow",
-        imgs: () => {
-            let selector = "//div[@itemprop='articleBody']//noscript[contains(text(),'upload')]";
-            return fun.ge(selector) ? fun.gae(selector).map(e => e.innerText.match(/src="([^"]+)/)[1]) : fun.gae("div[itemprop=articleBody] img[src*=upload]");
-        },
+        host: ["18hmanga.com"],
+        reg: /(18hmanga\.com)\/[^\/]+\/$/,
+        init: () => fun.remove(".code-block,#secondary,body>div[id][class][style]"),
+        imgs: ".entry-content>img,.entry-content>p>img",
         button: [4],
-        insertImg: ["div[itemprop=articleBody]", 2],
+        insertImg: [".entry-content", 2],
         autoDownload: [0],
         next: "#content .g1-teaser-prev",
         prev: "#content .g1-teaser-next",
-        customTitle: "h1.entry-title",
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.code-block,#secondary{display:none!important}",
+        customTitle: ".entry-title",
+        css: ".g1-column-2of3{width:100%!important}",
         category: "hcomic"
     }, {
         name: "18H漫画",
-        host: ["18hmanga.click"],
-        reg: /(18hmanga\.click)\/.+\//,
-        init: "setTimeout(()=>{fun.gae('.g1-nav-single a').forEach(e=>{e.removeAttribute('target')})},2000)",
+        host: ["18hmanga.com"],
+        reg: /(18hmanga\.com)\/.+\//,
+        include: "//a[contains(text(),'Read More')]",
+        init: () => fun.remove("body>div[id][class][style]"),
         imgs: () => {
             fun.showMsg(displayLanguage.str_01, 0);
             let fetchNum = 0;
-            let resArr = fun.gae("//a[contains(text(),'Read More')]", doc, doc).map((a, i, arr) => {
-                return fun.fetchDoc(a.href).then(doc => {
+            let resArr = fun.gau("//a[contains(text(),'Read More')]").map((url, i, arr) => {
+                return fun.fetchDoc(url).then(dom => {
                     fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${arr.length}`, 0);
-                    let selector = "//div[@itemprop='articleBody']//noscript[contains(text(),'upload')]";
-                    return fun.ge(selector, doc, doc) ? fun.gae(selector, doc, doc).map(e => e.innerText.match(/src="([^"]+)/)[1]) : fun.gae("div[itemprop=articleBody] img[src*=upload]", doc);
+                    return fun.gae(".entry-content>img,.entry-content>p>img", dom);
                 });
             })
             return Promise.all(resArr).then(arr => arr.flat());
@@ -11709,7 +11552,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         ],
         go: 1,
         customTitle: ".g1-breadcrumbs-item>span[itemprop=name]",
-        css: "div[class][id][style*=fixed]{display:none!important;}",
         category: "hcomic"
     }, {
         name: "18漫畫",
@@ -11744,8 +11586,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             if (options.fancybox == 1) {
                 fun.showMsg("Get Thumbnailsing...");
                 let url = fun.gu("//a[text()='Gallery Info']");
-                let doc = await fun.iframeDoc(url, ".gallery-preview img");
-                thumbnailsSrcArray = fun.gae(".gallery-preview img", doc).map(e => e.dataset.src ?? e.src);
+                let dom = await fun.iframeDoc(url, ".gallery-preview img");
+                thumbnailsSrcArray = fun.gae(".gallery-preview img", dom).map(e => e.dataset.src ?? e.src);
             }
             return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo.id, our_galleryinfo[i], "webp", undefined, "a"));
         },
@@ -11898,7 +11740,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     return _unsafeWindow.shareArr[0].match(/《([^》]+)/)[1] + " - " + fun.gt(".comic-name");
                 } catch {
                     let url = fun.gu("//a[contains(text(),'全集')]");
-                    let comicName = await fun.fetchDoc(url).then(doc => fun.gt("h1.title", 1, doc));
+                    let comicName = await fun.fetchDoc(url).then(dom => fun.gt("h1.title", 1, dom));
                     return comicName + " - " + fun.gt(".center-title");
                 }
             }
@@ -12018,18 +11860,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         prev: ".j-rd-prev,.prev-btn",
         customTitle: () => fun.ge(".rd-article-wr") ? fun.gt(".j-comic-title") + " - " + fun.gt(".comic-title>a").replace(/\d+p/i, "") : _unsafeWindow.shareArr[0].match(/《([^》]+)/)[1] + " - " + fun.gt(".comic-name").replace(/\d+p/i, ""),
         css: ".image-container{display:none!important;}",
-        category: "hcomic"
-    }, {
-        name: "琴瑟漫畫/琴瑟書庫",
-        host: ["sixcomic.com", "sixacg.com", "www.sixacg.org", "6acg.top"],
-        reg: /^https?:\/\/((www\.)?sixcomic\.com|(www\.)?sixacg\.com|(www\.)?sixacg\.org|6acg\.top)\/chapter\/\d+$/,
-        imgs: ".comicpage img:not([data-original*='qssk.top']),#cp_img img:not([data-original*='qssk.top'])",
-        button: [4],
-        insertImg: [".comicpage,#cp_img", 2],
-        autoDownload: [0],
-        next: "//a[@href and not(starts-with(@href,'java')) and text()='下一章']",
-        prev: "//a[@href and not(starts-with(@href,'java')) and text()='上一章']",
-        customTitle: () => fun.title(/免费阅读|在线阅读/, 1),
         category: "hcomic"
     }, {
         name: "特漫网",
@@ -12450,8 +12280,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 let arr = fun.gt(".read__crumb").split("  ");
                 return arr[1] + " - " + arr[2];
             } else {
-                let doc = await fun.fetchDoc(fun.gu(".nav_left>a"));
-                return fun.title(" - 有色漫画", 0, doc) + " - " + fun.title(" - 有色漫画");
+                let dom = await fun.fetchDoc(fun.gu(".nav_left>a"));
+                return fun.title(" - 有色漫画", 0, dom) + " - " + fun.title(" - 有色漫画");
             }
         },
         category: "hcomic"
@@ -12852,9 +12682,9 @@ if (next) {
         autoDownload: [0],
         next: () => _unsafeWindow.nextLink,
         prev: "#prevvol",
-        customTitle: (doc = document) => {
-            let t = doc.title.split(" ")[0];
-            let n = fun.gt("#chapter", 1, doc);
+        customTitle: (dom = document) => {
+            let t = dom.title.split(" ")[0];
+            let n = fun.gt("#chapter", 1, dom);
             return t + " - " + n;
         },
         preloadNext: () => {
@@ -12972,7 +12802,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[img[contains(@src,'xiayizhang')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'shangyizhang')]][starts-with(@href,'/m')]",
-        customTitle: (doc = document) => fun.title("_", 2, doc).replace("漫畫", ""),
+        customTitle: (dom = document) => fun.title("_", 2, dom).replace("漫畫", ""),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gst("MANGABZ_IMAGE_COUNT", nextDoc);
             fun.script(code, 0, 1);
@@ -13087,7 +12917,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[img[contains(@src,'reader-bottom-right-2')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'reader-bottom-right-1')]][starts-with(@href,'/m')]",
-        customTitle: (doc = document) => fun.title("_", 2, doc).replace("漫畫", ""),
+        customTitle: (dom = document) => fun.title("_", 2, dom).replace("漫畫", ""),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gst("XMANHUA_IMAGE_COUNT", nextDoc);
             fun.script(code, 0, 1);
@@ -13205,7 +13035,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
-        customTitle: (doc = document) => fun.title("_", 2, doc),
+        customTitle: (dom = document) => fun.title("_", 2, dom),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gst("DM5_IMAGE_COUNT", nextDoc);
             fun.script(code, 0, 1);
@@ -13289,7 +13119,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
-        customTitle: (doc = document) => fun.title("_", 2, doc),
+        customTitle: (dom = document) => fun.title("_", 2, dom),
         preloadNext: (nextDoc, obj) => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextDoc), obj.customTitle(nextDoc), "next"),
         css: "body{overflow:unset!important}",
         infiniteScroll: true,
@@ -13366,7 +13196,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[img[contains(@src,'reader-bottom-right-2')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'reader-bottom-right-1')]][starts-with(@href,'/m')]",
-        customTitle: (doc = document) => fun.title("_", 2, doc).replace("漫畫", ""),
+        customTitle: (dom = document) => fun.title("_", 2, dom).replace("漫畫", ""),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gst("YYMANHUA_IMAGE_COUNT", nextDoc);
             fun.script(code, 0, 1);
@@ -13459,17 +13289,17 @@ if (next) {
             return null;
         },
         prev: "//a[text()='上一章'] | //a[img[@alt='上一章']]",
-        customTitle: (doc = document) => {
+        customTitle: (dom = document) => {
             let host = fun.lh;
             if (/dm5|manhuaren|1kkk|mangabz|xmanhua|yymanhua/.test(host) && !/sixmanhua/.test(host)) {
-                return fun.title("_", 2, doc);
+                return fun.title("_", 2, dom);
             } else if (/sixmanhua/.test(host)) {
-                return fun.title("_", 3, doc);
+                return fun.title("_", 3, dom);
             } else if (/manben/.test(host)) {
                 if (fun.ge("#comicTitle")) {
-                    return fun.gt("#chapter", 1, doc) + " " + fun.gt(".title-comicHeading", 1, doc);
+                    return fun.gt("#chapter", 1, dom) + " " + fun.gt(".title-comicHeading", 1, dom);
                 } else {
-                    return fun.title(" ", 2, doc);
+                    return fun.title(" ", 2, dom);
                 }
             }
         },
@@ -13600,7 +13430,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[img[contains(@src,'xiayizhang')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'shangyizhang')]][starts-with(@href,'/m')]",
-        customTitle: (doc = document) => fun.title("_", 2, doc).replace("漫畫", ""),
+        customTitle: (dom = document) => fun.title("_", 2, dom).replace("漫畫", ""),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gst("MH234_IMAGE_COUNT", nextDoc);
             fun.script(code, 0, 1);
@@ -13737,8 +13567,8 @@ if (next) {
         host: ["m.manhuagui.com"],
         enable: 1,
         reg: () => /m\.manhuagui\.com\/comic\/\d+\/\d+.html/.test(fun.url) && comicInfiniteScrollMode != 1,
-        json: (doc = document) => {
-            let code = fun.gst("x6c", doc).trim().slice(26);
+        json: (dom = document) => {
+            let code = fun.gst("x6c", dom).trim().slice(26);
             return JSON.parse(fun.run(code).slice(11, -12));
         },
         init: () => {
@@ -13750,7 +13580,7 @@ if (next) {
         autoDownload: [0],
         next: () => siteJson.nextId == 0 ? null : fun.ge("#mangaTitle a").href + siteJson.nextId + ".html",
         prev: "//a[text()='上一章']",
-        customTitle: (doc = document) => fun.gt("#mangaTitle", 1, doc),
+        customTitle: (dom = document) => fun.gt("#mangaTitle", 1, dom),
         preloadNext: (nextDoc, obj) => {
             let json = obj.json(nextDoc);
             let arr = obj.imgs(json);
@@ -13831,8 +13661,8 @@ if (next) {
         enable: 1,
         reg: () => /((www|tw)\.manhuagui\.com)|www\.mhgui\.com\/comic\/\d+\/\d+.html|cocomanga\.xyz\/comic\/\d+\/\d+\.html/.test(fun.url) && comicInfiniteScrollMode != 1,
         init: "$(document).unbind('keydown');",
-        imgs: (doc = document) => {
-            let code = fun.gst("x6c", doc).slice(26, -1);
+        imgs: (dom = document) => {
+            let code = fun.gst("x6c", dom).slice(26, -1);
             let json = fun.run(fun.run(code).slice(11, -11));
             let domain;
             /manhuagui|mhgui/.test(fun.lh) ? domain = "https://i.hamreus.com" : domain = "https://i1.cocomanga.xyz";
@@ -13849,7 +13679,7 @@ if (next) {
             return cInfo.nextId == 0 ? null : location.origin + "/comic/" + cInfo.bid + "/" + cInfo.nextId + ".html";
         },
         prev: "//a[text()='上一章']",
-        customTitle: (doc = document) => fun.gt("h1>a", 1, doc) + " - " + fun.gt("h2", 1, doc),
+        customTitle: (dom = document) => fun.gt("h1>a", 1, dom) + " - " + fun.gt("h2", 1, dom),
         preloadNext: true,
         css: ".tbCenter{max-width:1400px!important;width:auto!important;height:auto!important}",
         infiniteScroll: true,
@@ -13913,13 +13743,13 @@ if (next) {
             fun.run("document['onkeydown']=null;");
             await fun.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter,.bottom-bar-tool");
         },
-        imgs: (doc = document) => [...new Set(fun.gae(".comic-contain amp-img", doc).map(e => e.dataset.src ?? e.getAttribute("src")))],
+        imgs: (dom = document) => [...new Set(fun.gae(".comic-contain amp-img", dom).map(e => e.dataset.src ?? e.getAttribute("src")))],
         button: [4],
         insertImg: [".comic-contain", 2],
         autoDownload: [0],
         next: "//div[@class='next_chapter']/a[contains(text(),'下一話') or contains(text(),'下一话')]",
         prev: 1,
-        customTitle: (doc = document) => fun.title(" - ", 3, doc),
+        customTitle: (dom = document) => fun.title(" - ", 3, dom),
         preloadNext: true,
         css: ".chapter-main.scroll-mode~*:not(.next_chapter):not(.bottom-bar){display:none!important}",
         infiniteScroll: true,
@@ -14081,9 +13911,9 @@ if (next) {
         reg: () => /^https?:\/\/www\.cartoonmad\.com\/comic\/\d+\.html|^https?:\/\/cc\.fun8\.us\/post\/\d+\.html/.test(fun.url) && comicInfiniteScrollMode != 1,
         exclude: "#info table[align]",
         init: () => fun.cartoonmadUI(),
-        imgs: (doc = document) => {
-            let imgDir = fun.ge("img[onload],img[oncontextmenu]", doc).src.match(/.+\//)[0];
-            let max = fun.ge(".onpage", doc).parentNode.lastElementChild.previousElementSibling.innerText;
+        imgs: (dom = document) => {
+            let imgDir = fun.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//)[0];
+            let max = fun.ge(".onpage", dom).parentNode.lastElementChild.previousElementSibling.innerText;
             fun.remove("//tr[td[a[@class='onpage']]]");
             return fun.arr(max).map((_, i) => imgDir + String((i + 1)).padStart(3, "0") + ".jpg");
         },
@@ -14092,8 +13922,8 @@ if (next) {
         autoDownload: [0],
         next: "//td[@width='150' and a[img[@src='/image/rad.gif']]]/a | //a[b]",
         prev: "//td[@width='150' and a[img[@src='/image/rad1.gif']]]/a",
-        customTitle: async (doc = document) => {
-            let src = fun.ge("img[onload],img[oncontextmenu]", doc).src;
+        customTitle: async (dom = document) => {
+            let src = fun.ge("img[onload],img[oncontextmenu]", dom).src;
             let comicId = new URL(src).pathname.split("/")[3];
             let comicIdData = JSON.parse(localStorage.getItem("comicIdData")) ?? {};
             if (comicIdData[comicId] === null || comicIdData[comicId] === undefined) {
@@ -14107,10 +13937,10 @@ if (next) {
                 let comicName = await fun.xhrDoc(`https://www.cartoonmad.com/comic/${comicId}.html`, "", PCUA).then(comicDoc => fun.ge("meta[name=Keywords]", comicDoc).content.split(",")[0]);
                 comicIdData[comicId] = comicName;
                 localStorage.setItem("comicIdData", JSON.stringify(comicIdData));
-                return comicName + " - " + doc.title;
+                return comicName + " - " + dom.title;
             } else {
                 let comicName = comicIdData[comicId];
-                return comicName + " - " + doc.title;
+                return comicName + " - " + dom.title;
             }
         },
         preloadNext: true,
@@ -14165,7 +13995,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[label[text()='下一章']][contains(@href,'chapter')]",
         prev: "//a[label[text()='上一章']][contains(@href,'chapter')]",
-        customTitle: (doc = document) => fun.attr("meta[name='description']", "content", doc),
+        customTitle: (dom = document) => fun.attr("meta[name='description']", "content", dom),
         preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".mdui-container .mdui-col-xs-4:nth-child(2){display:none!important;}.mdui-col-xs-4{width:50%!important}",
         category: "comic"
@@ -14174,13 +14004,13 @@ if (next) {
         host: ["comic.acgn.cc"],
         enable: 0,
         reg: /comic\.acgn\.cc\/view/,
-        imgs: (doc = document) => fun.gae(".pic[_src][id]", doc).map(e => e.getAttribute("_src")),
+        imgs: (dom = document) => fun.gae(".pic[_src][id]", dom).map(e => e.getAttribute("_src")),
         button: [4],
         insertImg: ["#pic_list", 2],
         autoDownload: [0],
         next: ".display_right>a",
         prev: ".display_left>a",
-        customTitle: (doc = document) => fun.gt(".hotrmtexth1>a", 1, doc),
+        customTitle: (dom = document) => fun.gt(".hotrmtexth1>a", 1, dom),
         preloadNext: true,
         css: ".btn_wrap{display:none!important}",
         category: "comic"
@@ -14316,15 +14146,12 @@ if (next) {
         category: "comic autoPager"
     }, {
         name: "亲亲漫画",
-        host: ["www.acgwd.com", "m.acgwd.com", "www.magayuan.com", "m.magayuan.com"],
+        host: ["www.acgud.com", "m.acgud.com"],
         enable: 0,
-        reg: /^https?:\/\/((www|m)\.acgwd\.com|(www|m)\.magayuan\.com)\/manhua\/\d+\/\d+\.html/,
+        reg: /^https?:\/\/(www|m)\.(acgud|acgwd)\.com\/manhua\/\d+\/\d+\.html/,
         init: () => {
             fun.clearAllTimer(3);
-            let div = document.createElement("div");
-            div.id = "imgBox";
-            let x = fun.ge("#images");
-            x.parentNode.insertBefore(div, x.nextSibling);
+            fun.createImgBox("#images", 2);
         },
         imgs: () => {
             const {
@@ -14332,10 +14159,16 @@ if (next) {
                 SinConf,
                 chapterPath
             } = _unsafeWindow;
-            return chapterImages.map(e => SinConf.resHost[0].domain + "/" + chapterPath + e);
+            return chapterImages.map(e => {
+                if (e.includes("images/comic/")) {
+                    return SinConf.resHost[0].domain + "/" + e;
+                } else {
+                    return chapterImages.map(e => SinConf.resHost[0].domain + "/" + chapterPath + e);
+                }
+            });
         },
         button: [4],
-        insertImg: ["#imgBox", 2],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
         autoDownload: [0],
         next: () => {
             const {
@@ -14345,8 +14178,8 @@ if (next) {
             return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
         },
         prev: "//a[contains(text(),'上一章')]",
-        customTitle: (doc = document) => {
-            let code = fun.gst("jmzz20191018", doc);
+        customTitle: (dom = document) => {
+            let code = fun.gst("jmzz20191018", dom);
             let arr = code.match(/jmzz20191018\(([^\)]+)\)/)[1].replaceAll('"', "").split(",");
             return arr[3] + " - " + arr[1];
         },
@@ -14359,6 +14192,56 @@ if (next) {
             jmzz20191018();
             fun.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
             _unsafeWindow._0x5097 = null;
+        },
+        css: "#images,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}#action li{width:50%!important}",
+        category: "comic"
+    }, {
+        name: "漫畫園",
+        host: ["www.magayuan.com", "m.magayuan.com"],
+        enable: 0,
+        reg: /^https?:\/\/(www|m)\.magayuan\.com\/maga\/\d+\/\d+\.html$/,
+        init: () => {
+            fun.clearAllTimer(3);
+            fun.createImgBox("#images", 2);
+        },
+        imgs: () => {
+            const {
+                chapterImages,
+                SinConf,
+                chapterPath
+            } = _unsafeWindow;
+            return chapterImages.map(e => {
+                if (e.includes("images/comic/")) {
+                    return SinConf.resHost[0].domain + "/" + e;
+                } else {
+                    return chapterImages.map(e => SinConf.resHost[0].domain + "/" + chapterPath + e);
+                }
+            });
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        autoDownload: [0],
+        next: () => {
+            const {
+                nextChapterData,
+                comicUrl
+            } = _unsafeWindow;
+            return nextChapterData?.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
+        },
+        prev: "//a[contains(text(),'上一章')]",
+        customTitle: (dom = document) => {
+            let code = fun.gst("pt20191007", dom);
+            let arr = code.match(/pt20191007\(([^\)]+)\)/)[1].replaceAll('"', "").split(",");
+            return arr[3] + " - " + arr[1];
+        },
+        preloadNext: async (nextDoc, obj) => {
+            const {
+                pt20191007
+            } = _unsafeWindow;
+            let code = fun.gst("chapterImages", nextDoc);
+            fun.script(code, 0, 1);
+            pt20191007();
+            fun.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
         },
         css: "#images,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}#action li{width:50%!important}",
         category: "comic"
@@ -14393,12 +14276,12 @@ if (next) {
             return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
         },
         prev: "//a[contains(text(),'上一章')]",
-        customTitle: (doc = document) => {
+        customTitle: (dom = document) => {
             if (/^https?:\/\/www/.test(siteUrl)) {
-                let arr = fun.gt(".title", 1, doc).split(" / ");
+                let arr = fun.gt(".title", 1, dom).split(" / ");
                 return arr[0] + " - " + arr[1];
             } else {
-                let code = fun.gst("SinMH.initChapter", doc);
+                let code = fun.gst("SinMH.initChapter", dom);
                 let arr = code.match(/SinMH.initChapter\(([^\)]+)\)/)[1].replaceAll('"', "").split(",");
                 return arr[3] + " - " + arr[1];
             }
@@ -14611,9 +14494,9 @@ if (next) {
             return nextChapterData.id > 0 ? nextChapterData.url : null;
         },
         prev: 1,
-        customTitle: (doc = document) => {
+        customTitle: (dom = document) => {
             if (fun.lh == "m.gmh1234.com") {
-                let s = fun.gst("initChapter", doc).match(/SinTheme\.initChapter\(([^\)]+)\);/)[1].replaceAll('"', "").split(",");
+                let s = fun.gst("initChapter", dom).match(/SinTheme\.initChapter\(([^\)]+)\);/)[1].replaceAll('"', "").split(",");
                 return s[3] + " - " + s[1];
             } else {
                 let data = JSON.parse(localStorage.history)[0];
@@ -14665,8 +14548,8 @@ if (next) {
         host: ["m.92mh.com"],
         enable: 0,
         reg: /^https?:\/\/m\.92mh\.com\/manhua\/\d+\/\d+\.html/i,
-        imgs: (url = siteUrl, doc = document, msg = 1, request = 0) => {
-            let max = fun.gt(".image-content p", 1, doc).match(/\/(\d+)/)[1];
+        imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => {
+            let max = fun.gt(".image-content p", 1, dom).match(/\/(\d+)/)[1];
             return fun.getImg("#manga-image", max, 5, null, 20, url, msg, request);
         },
         button: [4],
@@ -14677,7 +14560,7 @@ if (next) {
             return next ? next.href : null;
         },
         prev: 1,
-        customTitle: (doc = document) => fun.title("在线", 1, doc),
+        customTitle: (dom = document) => fun.title("在线", 1, dom),
         preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
         category: "comic"
@@ -14705,7 +14588,7 @@ if (next) {
             return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
         },
         prev: ".prevC",
-        customTitle: (doc = document) => fun.title(" - ", 3, doc),
+        customTitle: (dom = document) => fun.title(" - ", 3, dom),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gst("chapterImages", nextDoc);
             fun.script(code, 0, 1);
@@ -14718,7 +14601,7 @@ if (next) {
         enable: 0,
         reg: /(wap|m)\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
         init: () => _this.next() ? fun.addUrlHtml(_this.next(), "#chapter-image", 1) : null,
-        imgs: (url = siteUrl, doc = document, msg = 1, request = 0) => fun.getImg("#chapter-image img", fun.gt("#k_total", 1, doc), 5, null, 20, url, msg, request),
+        imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => fun.getImg("#chapter-image img", fun.gt("#k_total", 1, dom), 5, null, 20, url, msg, request),
         button: [4],
         insertImg: ["#chapter-image", 2],
         autoDownload: [0],
@@ -14727,7 +14610,7 @@ if (next) {
             return next ? next.href : null;
         },
         prev: 1,
-        customTitle: (doc = document) => fun.title("在线", 1, doc),
+        customTitle: (dom = document) => fun.title("在线", 1, dom),
         preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: ".a-90mh{display:none!important}",
         category: "comic"
@@ -14749,7 +14632,7 @@ if (next) {
         autoDownload: [0],
         next: ".next>a",
         prev: ".pre>a",
-        customTitle: (doc = document) => fun.title(" - ", 3, doc),
+        customTitle: (dom = document) => fun.title(" - ", 3, dom),
         preloadNext: (nextDoc, obj) => {
             let code = fun.gst("chapterImages", nextDoc);
             fun.script(code, 0, 1);
@@ -14861,7 +14744,7 @@ if (next) {
             return nextUrlid == "" ? null : fun.gu("a#cartoon_url") + nextUrlid + ".html";
         },
         prev: ".btn-prev",
-        customTitle: (doc = document) => fun.title(",", 1, doc).replace("漫画", ""),
+        customTitle: (dom = document) => fun.title(",", 1, dom).replace("漫画", ""),
         preloadNext: (nextDoc, obj) => {
             let code = fun.gst("picTree", nextDoc);
             fun.script(code, 0, 1);
@@ -14941,7 +14824,7 @@ if (next) {
             return mhInfo.nextUrlid == "" ? null : fun.gu("#mangaTitle>a") + mhInfo.nextUrlid + ".html";
         },
         prev: "//a[text()='上一章']",
-        customTitle: (doc = document) => fun.gt("#mangaTitle", 1, doc),
+        customTitle: (dom = document) => fun.gt("#mangaTitle", 1, dom),
         preloadNext: (nextDoc, obj) => {
             let code = fun.gst("mhInfo", nextDoc);
             fun.script(code, 0, 1);
@@ -15051,7 +14934,7 @@ if (next) {
         next: ".rd-aside a.j-rd-next",
         prev: ".rd-aside a.j-rd-prev",
         autoClick: "//div[@class='rd-aside__item j-rd-mod'][span[text()='卷轴']]",
-        customTitle: (doc = document) => fun.title(" - ", 1, doc),
+        customTitle: (dom = document) => fun.title(" - ", 1, dom),
         preloadNext: async (nextDoc, obj) => {
             let json = await obj.fetchJson(new URL(nextLink).pathname);
             fun.picPreload(obj.imgs(json), obj.customTitle(nextDoc), "next")
@@ -15071,7 +14954,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[contains(text(),'下一章')]",
         prev: "//a[contains(text(),'上一章')]",
-        customTitle: (doc = document) => fun.gt(".bo_tit", 1, doc).replace("\\n", "").replace(">", "-"),
+        customTitle: (dom = document) => fun.gt(".bo_tit", 1, dom).replace("\\n", "").replace(">", "-"),
         preloadNext: true,
         css: ".addg{display:none!important;}",
         category: "comic"
@@ -15088,7 +14971,7 @@ if (next) {
         ],
         include: ".rd-article-wr",
         init: "document.onkeydown=null;",
-        imgs: (doc = document) => fun.getImgSrcArr("img[data-original]:not([data-original*='/template/pc/default/']),.lazy-read:not([data-original*='/template/pc/default/']),img[data-src]", doc),
+        imgs: (dom = document) => fun.getImgSrcArr("img[data-original]:not([data-original*='/template/pc/default/']),.lazy-read:not([data-original*='/template/pc/default/']),img[data-src]", dom),
         button: [4],
         insertImg: [".rd-article-wr", 2],
         autoDownload: [0],
@@ -15106,15 +14989,15 @@ if (next) {
         },
         prev: ".rd-aside a.j-rd-prev",
         autoClick: "//div[@class='rd-aside__item j-rd-mod'][span[text()='卷轴']]",
-        customTitle: (doc = document) => {
+        customTitle: (dom = document) => {
             if (/www\.mhua5\.com|www\.mhw\d\.com/.test(fun.lh)) {
-                return fun.title(" - 漫画屋", 0, doc).replace("-", " - ");
+                return fun.title(" - 漫画屋", 0, dom).replace("-", " - ");
             } else if (/www\.cmh5\.com/.test(fun.lh)) {
-                return fun.attr("meta[name=description]", "content", doc).split(" - 漫画屋")[0].replace("当前阅读的是", "").replace("的", " - ");
+                return fun.attr("meta[name=description]", "content", dom).split(" - 漫画屋")[0].replace("当前阅读的是", "").replace("的", " - ");
             } else if (/www\.umh5\.com|www\.biqug\.org/.test(fun.lh)) {
-                return fun.gt(".j-comic-title", 1, doc) + " - " + fun.gt(".last-crumb", 1, doc);
+                return fun.gt(".j-comic-title", 1, dom) + " - " + fun.gt(".last-crumb", 1, dom);
             } else {
-                return fun.title(/下拉|在线/, 1, doc).replace("-", " - ").replace(/漫画|\[\d+P\]/i, "");
+                return fun.title(/下拉|在线/, 1, dom).replace("-", " - ").replace(/漫画|\[\d+P\]/i, "");
             }
         },
         preloadNext: true,
@@ -15131,7 +15014,7 @@ if (next) {
             /m\.wujinmh\.com\/\d+-\d+\.html/i,
             /wap\.veryim\.com\/\w+\/\d+\/\d+\.html/i
         ],
-        imgs: (doc = document) => fun.getImgSrcArr(".comic-page img,img[data-src],img[data-original]", doc),
+        imgs: (dom = document) => fun.getImgSrcArr(".comic-page img,img[data-src],img[data-original]", dom),
         autoDownload: [0],
         next: async () => {
             if (/www\.mhua5\.com|www\.cmh5\.com|www\.umh5\.com|www\.mhw\d\.com|www\.biqug\.org/.test(fun.lh)) {
@@ -15150,15 +15033,15 @@ if (next) {
             }
         },
         prev: 1,
-        customTitle: (doc = document) => {
+        customTitle: (dom = document) => {
             if (/www\.mhua5\.com|www\.cmh5\.com/.test(fun.lh)) {
-                return fun.title(" - 漫画屋", 0, doc).replace("-", " - ");
+                return fun.title(" - 漫画屋", 0, dom).replace("-", " - ");
             } else if (/m\.mkzhan\.com/.test(fun.lh)) {
-                return fun.title(" - 漫客栈", 0, doc).trim();
+                return fun.title(" - 漫客栈", 0, dom).trim();
             } else if (/www\.umh5\.com|www\.mhw\d\.com|www\.biqug\.org|m\.cuiman\.com/.test(fun.lh)) {
-                return _unsafeWindow.shareArr[0].match(/《([^》]+)/)[1] + " - " + fun.gt(".comic-name", 1, doc);
+                return _unsafeWindow.shareArr[0].match(/《([^》]+)/)[1] + " - " + fun.gt(".comic-name", 1, dom);
             } else {
-                return fun.title(/下拉|在线/, 1, doc).trim().replace("-", " - ");
+                return fun.title(/下拉|在线/, 1, dom).trim().replace("-", " - ");
             }
         },
         preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, ".comic-page img,img[data-src],img[data-original],canvas[data-src]", 30000).then(nextIframeDoc => fun.picPreload(obj.imgs(nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
@@ -15188,13 +15071,13 @@ if (next) {
                 }
             });
         },
-        imgs: (doc = document) => fun.gae(".readForm canvas", doc).map(e => atob(e.dataset.sc)),
+        imgs: (dom = document) => fun.gae(".readForm canvas", dom).map(e => atob(e.dataset.sc)),
         button: [4],
         insertImg: [".readForm", 2],
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')]",
-        customTitle: (doc = document) => doc.title.split("漫画章节")[0] + " - " + fun.gt(".comic-name", 1, doc),
+        customTitle: (dom = document) => dom.title.split("漫画章节")[0] + " - " + fun.gt(".comic-name", 1, dom),
         preloadNext: true,
         category: "comic"
     }, {
@@ -15208,7 +15091,7 @@ if (next) {
         autoDownload: [0],
         next: "a.J_next_eposide_btn[href*=chapter]",
         prev: "a.J_prev_eposide_btn[href*=chapter]",
-        customTitle: (doc = document) => fun.gt(".cartoon-title>a:first-child", 1, doc) + " - " + fun.gt(".cartoon-title>a:last-child", 1, doc),
+        customTitle: (dom = document) => fun.gt(".cartoon-title>a:first-child", 1, dom) + " - " + fun.gt(".cartoon-title>a:last-child", 1, dom),
         preloadNext: (nextDoc, obj) => {
             fun.iframeVar(nextLink, "newImgs").then(w => {
                 let srcs = w.newImgs.map(e => e.url);
@@ -15275,7 +15158,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'html')]",
         prev: "//a[text()='上一章'][contains(@href,'html')]",
-        customTitle: (doc = document) => doc.title.split("免费")[0].replace("漫画", ""),
+        customTitle: (dom = document) => dom.title.split("免费")[0].replace("漫画", ""),
         preloadNext: (nextDoc, obj) => {
             fun.iframeVar(nextLink, "newImgs").then(w => {
                 let srcs = w.newImgs.map(e => e.url);
@@ -15376,7 +15259,7 @@ if (next) {
             return nextLink_b == "" ? null : location.origin + nextLink_b;
         },
         prev: "//a[contains(text(),'上一章')]",
-        customTitle: (doc = document) => fun.title(" - ", 3, doc),
+        customTitle: (dom = document) => fun.title(" - ", 3, dom),
         preloadNext: async (nextDoc, obj) => {
             let code = fun.gst("eval", nextDoc);
             fun.script(code, 0, 1);
@@ -15416,8 +15299,8 @@ if (next) {
                 host = 3;
             }
             let nextXPath = `//dd[a[contains(@href,'${chapterId}')]]/following-sibling::dd[1]/a[${host}]`;
-            return fun.xhrDoc(_this.comicListUrl()).then(doc => {
-                let next = fun.ge(nextXPath, doc, doc);
+            return fun.xhrDoc(_this.comicListUrl()).then(dom => {
+                let next = fun.ge(nextXPath, dom, dom);
                 return next ? next.href : null;
             })
         },
@@ -15460,8 +15343,8 @@ if (next) {
                     host = 3;
                 }
                 let nextXPath = `//dd[a[contains(@href,'${chapterId}')]]/following-sibling::dd[1]/a[${host}]`;
-                return fun.xhrDoc(_this.comicListUrl()).then(doc => {
-                    let next = fun.ge(nextXPath, doc, doc);
+                return fun.xhrDoc(_this.comicListUrl()).then(dom => {
+                    let next = fun.ge(nextXPath, dom, dom);
                     return next ? next.href : null;
                 })
             },
@@ -15511,8 +15394,8 @@ if (next) {
             let comicListUrl = fun.gu(".subNav a");
             let chapterId = siteUrl.split("/")[5];
             let nextXPath = `//li[a[contains(@href,'${chapterId}')]]/preceding-sibling::li[1]/a`;
-            return fun.xhrDoc(comicListUrl).then(doc => {
-                let next = fun.ge(nextXPath, doc, doc);
+            return fun.xhrDoc(comicListUrl).then(dom => {
+                let next = fun.ge(nextXPath, dom, dom);
                 return next ? next.href : null;
             })
         },
@@ -15552,8 +15435,8 @@ if (next) {
         next: () => {
             let chapterId = siteUrl.split("/")[5];
             let nextXPath = `//li[a[contains(@href,'${chapterId}')]]/preceding-sibling::li[1]/a`;
-            return fun.xhrDoc(_this.comicListUrl()).then(doc => {
-                let next = fun.ge(nextXPath, doc, doc);
+            return fun.xhrDoc(_this.comicListUrl()).then(dom => {
+                let next = fun.ge(nextXPath, dom, dom);
                 return next ? next.href : null;
             })
         },
@@ -15597,8 +15480,8 @@ if (next) {
                 let comicListUrl = fun.gu(".subNav a");
                 let chapterId = (nextLink ?? siteUrl).split("/")[5];
                 let nextXPath = `//li[a[contains(@href,'${chapterId}')]]/preceding-sibling::li[1]/a`;
-                return fun.xhrDoc(comicListUrl).then(doc => {
-                    let next = fun.ge(nextXPath, doc, doc);
+                return fun.xhrDoc(comicListUrl).then(dom => {
+                    let next = fun.ge(nextXPath, dom, dom);
                     return next ? next.href : null;
                 })
             },
@@ -15634,8 +15517,8 @@ if (next) {
                         "Referer": url,
                         "User-Agent": MobileUA
                     }
-                }).then(doc => {
-                    let code = fun.gst("eval", doc).match(/eval.+\)\)/)[0].slice(4);
+                }).then(dom => {
+                    let code = fun.gst("eval", dom).match(/eval.+\)\)/)[0].slice(4);
                     let imgData = fun.run(fun.run(code).match(/picdata[^;]+/)[0]);
                     return imgData.map(e => "https://res.xiaoqinre.com/" + e);
                 });
@@ -15659,8 +15542,8 @@ if (next) {
                     "Referer": url,
                     "User-Agent": MobileUA
                 }
-            }).then(doc => {
-                let code = fun.gst("eval", doc).match(/eval.+\)\)/)[0].slice(4);
+            }).then(dom => {
+                let code = fun.gst("eval", dom).match(/eval.+\)\)/)[0].slice(4);
                 let imgData = fun.run(fun.run(code).match(/picdata[^;]+/)[0]);
                 return imgData.map(e => "https://res.xiaoqinre.com/" + e);
             });
@@ -15674,8 +15557,8 @@ if (next) {
         enable: 1,
         reg: () => /m\.gaonaojin\.com\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode != 1,
         init: () => fun.createImgBox("#cp_img", 2),
-        imgs: (doc = document) => {
-            let code = fun.gst("eval", doc).match(/eval.+\)\)/)[0].slice(4);
+        imgs: (dom = document) => {
+            let code = fun.gst("eval", dom).match(/eval.+\)\)/)[0].slice(4);
             let imgData = fun.run(fun.run(code).match(/picdata[^;]+/)[0]);
             return imgData.map(e => "https://res.xiaoqinre.com/" + e);
         },
@@ -15686,7 +15569,7 @@ if (next) {
         autoDownload: [0],
         next: "a.btn.next",
         prev: "a.btn.prev",
-        customTitle: (doc = document) => fun.title("免费", 1, doc),
+        customTitle: (dom = document) => fun.title("免费", 1, dom),
         preloadNext: true,
         infiniteScroll: true,
         category: "comic"
@@ -15730,8 +15613,8 @@ if (next) {
         host: ["www.dashumanhua.com", "www.shilunart.com"],
         enable: 1,
         reg: () => /(www\.dashumanhua\.com|www\.shilunart\.com)\/comic\/\w+\/.+\.html/i.test(fun.url) && comicInfiniteScrollMode != 1,
-        imgs: (doc = document) => {
-            let code = fun.gst("picTree", doc);
+        imgs: (dom = document) => {
+            let code = fun.gst("picTree", dom);
             let m = code.match(/eval.+\)\)/)[0].slice(4);
             return fun.run(fun.run(m).slice(12, -1));
         },
@@ -15740,7 +15623,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[text()='下一话' and not(contains(@href,'--1'))]",
         prev: "//a[text()='上一话' and not(contains(@href,'--1'))]",
-        customTitle: (doc = document) => fun.gt(".setnmh-bookname h1", 1, doc) + " - " + fun.gt(".setnmh-bookname h2", 1, doc),
+        customTitle: (dom = document) => fun.gt(".setnmh-bookname h1", 1, dom) + " - " + fun.gt(".setnmh-bookname h2", 1, dom),
         preloadNext: true,
         infiniteScroll: true,
         category: "comic"
@@ -15798,8 +15681,8 @@ if (next) {
         name: "Godamanga.ART 英文漫画",
         enable: 1,
         reg: () => {
-            let hosts = ["godamanga.art", "godamh.org"];
-            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$/i.test(fun.lp) && fun.ge("h1#htitle") && comicInfiniteScrollMode != 1;
+            let hosts = ["godamanga.art", "godamh.org", "manhuascans.org"];
+            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/\w+$/i.test(fun.lp) && comicInfiniteScrollMode != 1;
         },
         xhrOptions: {
             cache: "no-cache"
@@ -15809,28 +15692,19 @@ if (next) {
         button: [4],
         insertImg: [".touch-manipulation", 2],
         autoDownload: [0],
-        next: "#nextchaptera",
-        prev: "#prevchaptera",
-        customTitle: (doc = document) => fun.gt("ol.inline-flex>li:nth-child(2) a", 1, doc) + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a", 1, doc),
-        preloadNext: () => {
-            let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-            let {
-                host,
-                ms,
-                cs
-            } = setdata;
-            let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
-            fun.fetchDoc(api).then(dom => {
-                let next = fun.ge("#c-imagelist", dom)?.dataset?.next;
-                if (!!next) {
-                    let nextApi = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
-                    fun.fetchDoc(nextApi).then(nextDom => {
-                        let dataE = fun.ge("#c-imagelist", nextDom);
-                        let srcs = fun.getImgSrcArr(".touch-manipulation img", nextDom);
-                        let text = dataE.dataset.title + " - " + dataE.dataset.ctitle;
-                        fun.picPreload(srcs, text, "next");
-                    });
-                }
+        next: "#nextChapterLink[href^='/manga/']",
+        prev: "#preChapterLink",
+        customTitle: (dom = document) => fun.gt("ol.inline-flex>li:nth-child(2) a", 1, dom) + " - " + fun.gt("ol.inline-flex>li:nth-child(3) a", 1, dom),
+        preloadNext: (dom) => {
+            let dataE = fun.ge("#chapterContent", dom);
+            let ms = dataE.dataset.ms;
+            let cs = dataE.dataset.cs;
+            let ct = dataE.dataset.ct;
+            let host = dataE.dataset.host;
+            let api = `${host}/chapter/getcontent?m=${ms}&c=${cs}`;
+            fun.fetchDoc(api).then(nextDom => {
+                let srcs = fun.getImgSrcArr(".touch-manipulation img", nextDom);
+                fun.picPreload(srcs, ct, "next");
             });
         },
         infiniteScroll: true,
@@ -15839,15 +15713,22 @@ if (next) {
         name: "Godamanga.ART 英文漫画 自動翻頁",
         enable: 1,
         reg: () => {
-            let hosts = ["godamanga.art", "godamh.org"];
-            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$/i.test(fun.lp) && fun.ge("h1#htitle") && comicInfiniteScrollMode == 1;
+            let hosts = ["godamanga.art", "godamh.org", "manhuascans.org"];
+            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/\w+$/i.test(fun.lp) && comicInfiniteScrollMode == 1;
         },
         xhrOptions: {
             cache: "no-cache"
         },
-        getSrcs: (dom) => fun.getImgSrcArr(".touch-manipulation img", dom),
-        getImgs: (dom = document) => {
-            let srcs = _this.getSrcs(dom);
+        getSrcs: (dom) => {
+            let dataE = fun.ge("#chapterContent", dom);
+            let ms = dataE.dataset.ms;
+            let cs = dataE.dataset.cs;
+            let host = dataE.dataset.host;
+            let api = `${host}/chapter/getcontent?m=${ms}&c=${cs}`;
+            return fun.fetchDoc(api).then(apitDom => fun.getImgSrcArr(".touch-manipulation img", apitDom));
+        },
+        getImgs: async (dom = document) => {
+            let srcs = await _this.getSrcs(dom);
             return fun.createImgArray(srcs);
         },
         init: async () => {
@@ -15864,28 +15745,10 @@ if (next) {
             ele: (dom) => _this.getImgs(dom),
             observer: "#FullPictureLoadMainImgBox>img",
             pos: ["#FullPictureLoadMainImgBox", 0],
-            next: async (dom) => {
-                let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-                let {
-                    host,
-                    ms,
-                    cs
-                } = setdata;
-                let dataE = fun.ge("#c-imagelist", dom);
-                if (!dataE) {
-                    let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
-                    dataE = await fun.fetchDoc(api).then(apiDom => fun.ge("#c-imagelist", apiDom));
-                }
-                let next = dataE.dataset?.next;
-                if (!!next) {
-                    return `${host}/chapter/getinfo?m=${ms}&c=${next}`;
-                } else {
-                    return null;
-                }
-            },
-            title: (dom) => fun.ge("#c-imagelist", dom).dataset.ctitle,
+            next: "#nextChapterLink[href^='/manga/']",
+            title: (dom) => fun.ge("#chapterContent", dom).dataset.ct,
             history: 0,
-            hide: "div:has(>#c-recommed),.justify-center:has(>.border-t)",
+            hide: "div.justify-center:has(>.w-full),.pb-14",
             preloadNextPage: 1
         },
         category: "comic autoPager"
@@ -16291,7 +16154,7 @@ if (next) {
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
-        customTitle: (doc = document) => fun.gt("h1.title", 1, doc),
+        customTitle: (dom = document) => fun.gt("h1.title", 1, dom),
         preloadNext: (nextDoc, obj) => fun.iframeDoc(nextLink, ".comiclist img:not([src*=loading])", 30000).then(nextIframeDoc => fun.picPreload(fun.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
@@ -16364,7 +16227,7 @@ if (next) {
         prev: 1,
         customTitle: async () => {
             let url = fun.gu(".back>a");
-            let comicName = await fun.fetchDoc(url).then(doc => fun.ge("#bookcase", doc).dataset.name);
+            let comicName = await fun.fetchDoc(url).then(dom => fun.ge("#bookcase", dom).dataset.name);
             return comicName + " - " + fun.gt(".h1");
         },
         category: "comic"
@@ -17199,13 +17062,13 @@ if (next) {
             let comicListUrl = decodeURIComponent(siteUrl.replace(/[^\/]+\/$/i, ""));
             let chapter = decodeURIComponent(siteUrl.match(/[^\/]+\/$/)[0]);
             let nextXPath = `//div[@id='content']/li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
-            return fun.fetchDoc(comicListUrl).then(doc => {
-                let next = fun.ge(nextXPath, doc, doc);
+            return fun.fetchDoc(comicListUrl).then(dom => {
+                let next = fun.ge(nextXPath, dom, dom);
                 return next ? comicListUrl + next.getAttribute("href") : null;
             });
         },
         prev: 1,
-        customTitle: (doc = document) => fun.title("第1页", 1, doc),
+        customTitle: (dom = document) => fun.title("第1页", 1, dom),
         preloadNext: async (nextDoc, obj) => {
             let json = await obj.fetchJson(nextLink);
             fun.picPreload(await obj.imgs(json, 0), obj.customTitle(nextDoc), "next");
@@ -17224,13 +17087,13 @@ if (next) {
             /^https?:\/\/(www|m)\.dagemanhua\.com\/manhua\/\d+\/\d+\.html$/i
         ],
         init: "document.onkeydown=null;$('body').unbind();",
-        imgs: (doc = document) => fun.gae("option[jhc-data]", doc).map(e => e.getAttribute("jhc-data").replace("-mht.middle.webp", "")).map(e => e.replace(new URL(e).protocol, location.protocol)),
+        imgs: (dom = document) => fun.gae("option[jhc-data]", dom).map(e => e.getAttribute("jhc-data").replace("-mht.middle.webp", "")).map(e => e.replace(new URL(e).protocol, location.protocol)),
         button: [4],
         insertImg: [".mh_list,#content", 2],
         autoDownload: [0],
         next: "//a[text()='下一章'][contains(@href,'chapter')]",
         prev: "//a[text()='上一章'][contains(@href,'chapter')]",
-        customTitle: (doc = document) => fun.attr("meta[name='keywords']", "content", doc).replace(",", " - "),
+        customTitle: (dom = document) => fun.attr("meta[name='keywords']", "content", dom).replace(",", " - "),
         preloadNext: true,
         css: "#prePage,#nextPage,select,.jump-list,.apjg,a[href*=taobao]{display:none!important;}",
         category: "comic"
@@ -17255,7 +17118,7 @@ if (next) {
         autoPager: {
             ele: ".mdui-col-lg-2",
             observer: ".mdui-col-lg-2",
-            next: doc => fun.ge("span.current+a", doc) ? siteUrl.replace(/\?page=\d+/, "") + "?page=" + fun.ge("span.current+a", doc).getAttribute("href").match(/\d+/)[0] : null,
+            next: (dom) => fun.ge("span.current+a", dom) ? siteUrl.replace(/\?page=\d+/, "") + "?page=" + fun.ge("span.current+a", dom).getAttribute("href").match(/\d+/)[0] : null,
             re: ".pages",
             title: () => "Page " + nextLink.match(/\d+$/)[0]
         },
@@ -17617,8 +17480,8 @@ if (next) {
                     [...document.querySelectorAll("img[alt='post thumbnail']:not([data-src])")].forEach(img => {
                         let thumbnail = img.dataset.src ?? img.src;
                         img.dataset.thumb = thumbnail;
-                        fun.fetchDoc(img.parentNode.parentNode.href).then(doc => {
-                            let original = doc.querySelector(".image-gallery-image").src;
+                        fun.fetchDoc(img.parentNode.parentNode.href).then(dom => {
+                            let original = dom.querySelector(".image-gallery-image").src;
                             img.dataset.src = original;
                             img.src = original;
                         });
@@ -17741,8 +17604,8 @@ if (next) {
                 const lazyLoad = () => {
                     [...document.querySelectorAll("a.tw-relative:not([data-src]):not([fetch])")].forEach(a => {
                         a.setAttribute("fetch", "fetch");
-                        fun.fetchDoc(a.href).then(doc => {
-                            let data = JSON.parse(doc.querySelector("generator-v3-component").attributes[0].nodeValue);
+                        fun.fetchDoc(a.href).then(dom => {
+                            let data = JSON.parse(dom.querySelector("generator-v3-component").attributes[0].nodeValue);
                             let original = data.path;
                             a.dataset.src = original;
                             let img = a.querySelector("img");
@@ -18472,9 +18335,9 @@ if (next) {
                 isFetching = false;
                 if (msg == 1) fun.hideMsg();
                 for (let i = 0; i < htmls.length; i++) {
-                    let doc = fun.doc(htmls[i]);
-                    let imgs = fun.gae(img, doc, doc);
-                    //debug(`\nfun.getImg() DOM${i}`, doc);
+                    let dom = fun.doc(htmls[i]);
+                    let imgs = fun.gae(img, dom, dom);
+                    //debug(`\nfun.getImg() DOM${i}`, dom);
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
                         check.ok ? imgsArray.push(decodeURIComponent(check.src)) : debug(`\nfun.getImg() imgs[${p}]錯誤`, imgs[p]);
@@ -18504,8 +18367,8 @@ if (next) {
                 }).then(buffer => {
                     const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                     const htmlText = decoder.decode(buffer);
-                    let doc = fun.doc(htmlText);
-                    fun.gae(img, doc, doc).forEach(ele => {
+                    let dom = fun.doc(htmlText);
+                    fun.gae(img, dom, dom).forEach(ele => {
                         let check = fun.checkImgSrc(ele);
                         if (ele.tagName == "IMG" && check.ok) ele.src = check.src;
                         if (id == 1) {
@@ -18514,9 +18377,9 @@ if (next) {
                         }
                     });
                     if (isString(replaceElement)) {
-                        fun.gae(".invisible", doc).forEach(ele => ele.classList.remove("invisible"));
+                        fun.gae(".invisible", dom).forEach(ele => ele.classList.remove("invisible"));
                         let ce = fun.gae(replaceElement);
-                        let re = fun.gae(replaceElement, doc, doc);
+                        let re = fun.gae(replaceElement, dom, dom);
                         if (ce.length === re.length) {
                             ce.forEach((e, i) => (e.outerHTML = re[i].outerHTML));
                         }
@@ -18538,9 +18401,9 @@ if (next) {
                 isFetching = false;
                 fun.hideMsg();
                 for (let i = 0; i < htmls.length; i++) {
-                    let doc = fun.doc(htmls[i]);
-                    let imgs = fun.gae(img, doc, doc);
-                    //debug(`\nfun.getImgO() DOM${i}`, doc);
+                    let dom = fun.doc(htmls[i]);
+                    let imgs = fun.gae(img, dom, dom);
+                    //debug(`\nfun.getImgO() DOM${i}`, dom);
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
                         check.ok ? imgsArray.push(decodeURIComponent(check.src)) : debug(`\nfun.getImgO() imgs[${p}]錯誤`, imgs[p]);
@@ -18567,24 +18430,24 @@ if (next) {
                 load.innerText = "Loading...";
                 targetEle.parentNode.insertBefore(load, targetEle.nextSibling);
                 await fun.delay(time, 0);
-                let doc = null;
+                let dom = null;
                 for (let i = 1; i < 20; i++) {
-                    doc = await fun.iframeSrcDoc(url, img);
-                    if (doc !== null) {
+                    dom = await fun.iframeSrcDoc(url, img);
+                    if (dom !== null) {
                         break;
                     } else {
                         fun.remove("#FullPictureLoadIframe");
                     }
                 }
-                if (doc) {
-                    debug("iframeDoc" + index, doc);
-                    fun.gae(img, doc, doc).forEach(ele => {
+                if (dom) {
+                    debug("iframeDoc" + index, dom);
+                    fun.gae(img, dom, dom).forEach(ele => {
                         imgsArray.push(ele);
                         targetEle.parentNode.insertBefore(ele.cloneNode(true), targetEle.nextSibling);
                     });
                     if (rEle) {
                         let ce = fun.gae(rEle);
-                        let re = fun.gae(rEle, doc, doc);
+                        let re = fun.gae(rEle, dom, dom);
                         if (ce.length === re.length) {
                             ce.forEach((e, i) => (e.outerHTML = re[i].outerHTML));
                         }
@@ -18664,9 +18527,9 @@ if (next) {
                 } else if (mode == 1) {
                     let res = await html(links[i]);
                     resArr.push(res);
-                    let doc = fun.doc(res);
-                    debug(`\nfun.getImgA()單線程模式 DOM\n${links[i].href}`, doc);
-                    let imgs = fun.gae(elementSelector, doc, doc);
+                    let dom = fun.doc(res);
+                    debug(`\nfun.getImgA()單線程模式 DOM\n${links[i].href}`, dom);
+                    let imgs = fun.gae(elementSelector, dom, dom);
                     let imgHtml = "";
                     for (let p = 0; p < imgs.length; p++) {
                         let imgSrc;
@@ -18689,9 +18552,9 @@ if (next) {
                     await fun.delay(200, 0);
                     resArr.push(res);
                     if (i !== 0) {
-                        let doc = fun.doc(res);
+                        let dom = fun.doc(res);
                         let tE = fun.gae(elementSelector).at(-1);
-                        let eles = fun.gae(elementSelector, doc, doc);
+                        let eles = fun.gae(elementSelector, dom, dom);
                         eles.forEach(e => tE.parentNode.insertBefore(e, tE.nextSibling));
                     }
                 }
@@ -18700,9 +18563,9 @@ if (next) {
                 isFetching = false;
                 fun.hideMsg();
                 for (let i = 0; i < htmls.length; i++) {
-                    let doc = fun.doc(htmls[i]);
-                    //if (mode != 1) debug(`\nfun.getImgA() DOM${i}`, doc);
-                    let imgs = fun.gae(elementSelector, doc, doc);
+                    let dom = fun.doc(htmls[i]);
+                    //if (mode != 1) debug(`\nfun.getImgA() DOM${i}`, dom);
+                    let imgs = fun.gae(elementSelector, dom, dom);
                     for (let p = 0; p < imgs.length; p++) {
                         let check = fun.checkImgSrc(imgs[p], rText);
                         check.ok ? imgsArray.push(check.src) : console.error("\nfun.getImgA() PromiseAll出錯", imgs[p]);
@@ -18721,9 +18584,9 @@ if (next) {
             isString(aSelector) ? links = fun.gau(aSelector) : links = aSelector;
             let resArr = links.map(async (url, i, arr) => {
                 await fun.delay(time * i, 0);
-                return fun.xhrDoc(url).then(doc => {
+                return fun.xhrDoc(url).then(dom => {
                     fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                    return fun.gae(imgSelector, doc, doc);
+                    return fun.gae(imgSelector, dom, dom);
                 });
             });
             return Promise.all(resArr).then(arr => {
@@ -18886,18 +18749,18 @@ if (next) {
             }).filter(item => item));
         },
         //指定元素選擇器或元素陣列，返回過濾出圖片網址陣列。
-        getImgSrcArr: (img, doc = document) => {
+        getImgSrcArr: (img, dom = document) => {
             let imgs;
-            isString(img) ? imgs = fun.gae(img, doc, doc) : imgs = img;
+            isString(img) ? imgs = fun.gae(img, dom, dom) : imgs = img;
             let srcs = imgs.map(ele => {
                 let check = fun.checkImgSrc(ele);
                 return check.ok ? check.src : null;
             }).filter(item => item);
             return [...new Set(srcs)];
         },
-        getImgSrcset: (img, doc = document) => {
+        getImgSrcset: (img, dom = document) => {
             let imgs;
-            isString(img) ? imgs = fun.gae(img, doc, doc) : imgs = img;
+            isString(img) ? imgs = fun.gae(img, dom, dom) : imgs = img;
             let srcs = imgs.map(ele => {
                 let srcset = ele.getAttribute("srcset");
                 if (srcset) {
@@ -19066,31 +18929,31 @@ if (next) {
                 let resArr = links.map(async (url, i, arr) => {
                     await fun.delay(100 * i, 0);
                     if (/imx\.to/.test(url)) {
-                        return fun.imxXHR(url).then(doc => {
+                        return fun.imxXHR(url).then(dom => {
                             fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                            let img = fun.ge("#container img", doc);
+                            let img = fun.ge("#container img", dom);
                             return img ? img.src : null;
                         });
                     } else if (/imagebam/.test(url)) {
-                        return fun.imageBamXHR(url).then(doc => {
+                        return fun.imageBamXHR(url).then(dom => {
                             fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                            let img = fun.ge("img.main-image", doc);
+                            let img = fun.ge("img.main-image", dom);
                             return img ? img.src : null;
                         });
                     } else if (/postimg/.test(url)) {
                         return fun.xhr(url, {
                             responseType: "document"
-                        }).then(doc => {
+                        }).then(dom => {
                             fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                            let a = fun.ge("a#download", doc);
+                            let a = fun.ge("a#download", dom);
                             return a ? a.href : null;
                         });
                     } else {
                         return fun.xhr(url, {
                             responseType: "document"
-                        }).then(doc => {
+                        }).then(dom => {
                             fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                            let img = fun.ge("#imgpreview,#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid", doc);
+                            let img = fun.ge("#imgpreview,#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid", dom);
                             return img ? img.src : null;
                         });
                     }
@@ -19374,25 +19237,25 @@ if (next) {
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
-                    let doc = iframe.contentDocument || iframe.contentWindow.document;
-                    if (!doc) resolve(fun.doc("none"));
-                    doc.body.scrollTop = 9999999;
-                    doc.documentElement.scrollTop = 9999999;
+                    let dom = iframe.contentDocument || iframe.contentWindow.document;
+                    if (!dom) resolve(fun.doc("none"));
+                    dom.body.scrollTop = 9999999;
+                    dom.documentElement.scrollTop = 9999999;
                     try {
                         await fun.delay(siteData.autoPager?.loadTime || 200, 0);
                     } catch {
                         await fun.delay(200, 0);
                     }
-                    if (isString(selector)) await fun.waitEle(selector, 600, doc);
+                    if (isString(selector)) await fun.waitEle(selector, 600, dom);
                     if (isFn(callback)) {
-                        await callback(doc, iframe.contentWindow);
+                        await callback(dom, iframe.contentWindow);
                     }
                     let frameCode = siteData.frameCode;
                     if (!!frameCode) {
-                        fun.script(frameCode, 0, 1, doc);
+                        fun.script(frameCode, 0, 1, dom);
                     }
                     frameWindow = iframe.contentWindow;
-                    resolve(doc);
+                    resolve(dom);
                     iframe.remove();
                 };
                 if (iframe.attachEvent) {
@@ -19429,25 +19292,25 @@ if (next) {
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
-                    let doc = iframe.contentDocument || iframe.contentWindow.document;
-                    if (!doc) resolve(fun.doc("none"));
-                    doc.body.scrollTop = 9999999;
-                    doc.documentElement.scrollTop = 9999999;
+                    let dom = iframe.contentDocument || iframe.contentWindow.document;
+                    if (!dom) resolve(fun.doc("none"));
+                    dom.body.scrollTop = 9999999;
+                    dom.documentElement.scrollTop = 9999999;
                     try {
                         await fun.delay(siteData.autoPager?.loadTime || 200, 0);
                     } catch {
                         await fun.delay(200, 0);
                     }
-                    if (isString(selector)) await fun.waitEle(selector, 600, doc);
+                    if (isString(selector)) await fun.waitEle(selector, 600, dom);
                     if (isFn(callback)) {
-                        await callback(doc, iframe.contentWindow);
+                        await callback(dom, iframe.contentWindow);
                     }
                     let frameCode = siteData.frameCode;
                     if (!!frameCode) {
-                        fun.script(frameCode, 0, 1, doc);
+                        fun.script(frameCode, 0, 1, dom);
                     }
                     frameWindow = iframe.contentWindow;
-                    resolve(doc);
+                    resolve(dom);
                     iframe.remove();
                 };
                 if (iframe.attachEvent) {
@@ -19637,11 +19500,11 @@ if (next) {
             let xhrNum = 0;
             fun.showMsg(displayLanguage.str_16, 0);
             for (let i = 0; i < links.length; i++) {
-                let res = fun.fetchDoc(links[i]).then(doc => {
+                let res = fun.fetchDoc(links[i]).then(dom => {
                     debug(`\nfun.getEle() URL`, decodeURIComponent(links[i]));
                     fun.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
-                    //debug(`fun.getEle()\n${decodeURIComponent(links[i])}\n`, doc);
-                    return fun.gae(elements, doc, doc);
+                    //debug(`fun.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
+                    return fun.gae(elements, dom, dom);
                 });
                 resArr.push(res);
                 await fun.delay(time, 0);
@@ -19676,11 +19539,11 @@ if (next) {
             let xhrNum = 0;
             fun.showMsg(displayLanguage.str_16, 0);
             for (let i = 0; i < links.length; i++) {
-                let res = fun.xhrDoc(links[i]).then(doc => {
+                let res = fun.xhrDoc(links[i]).then(dom => {
                     debug(`\nfun.getEle() URL`, decodeURIComponent(links[i]));
                     fun.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
-                    //debug(`fun.getEle()\n${decodeURIComponent(links[i])}\n`, doc);
-                    return fun.gae(elements, doc, doc);
+                    //debug(`fun.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
+                    return fun.gae(elements, dom, dom);
                 });
                 resArr.push(res);
                 await fun.delay(time, 0);
@@ -20292,8 +20155,8 @@ if (next) {
                             }
                             if (/e-hentai\.org|exhentai\.org/.test(fun.lh)) {
                                 let url = error.target.dataset.loadfail ?? fun.gae(".gdtm a,.gdtl a")[error.target.dataset.index].href;
-                                let newSrc = await fun.fetchDoc(url).then(async doc => {
-                                    let loadfail = fun.ge("#loadfail", doc);
+                                let newSrc = await fun.fetchDoc(url).then(async dom => {
+                                    let loadfail = fun.ge("#loadfail", dom);
                                     let newUrl = url.replace(/\?nl=.+$/, "") + "?nl=" + loadfail.getAttribute("onclick").split("'")[1];
                                     error.target.dataset.loadfail = newUrl;
                                     return await fun.fetchDoc(newUrl).then(newDoc => {
@@ -20379,8 +20242,8 @@ if (next) {
         //fun.script("code")，返回script
         //fun.script("code",0,1)，script插入到document.body
         //fun.script("srcUrl",1,1)，script插入到document.body
-        script: async (code, src = 0, pos = 0, doc = document) => {
-            let script = doc.createElement("script");
+        script: async (code, src = 0, pos = 0, dom = document) => {
+            let script = dom.createElement("script");
             script.className = "FullPictureLoadScript";
             if (src == 0) {
                 script.type = "text/javascript";
@@ -20392,13 +20255,13 @@ if (next) {
                 if (src == 1) {
                     await new Promise(resolve => {
                         script.src = code;
-                        doc.body.appendChild(script);
+                        dom.body.appendChild(script);
                         script.onload = () => {
                             resolve();
                         }
                     });
                 } else {
-                    doc.body.appendChild(script);
+                    dom.body.appendChild(script);
                 }
             }
             if (siteData.category === "comic autoPager") {
@@ -20436,12 +20299,12 @@ if (next) {
             });
         },
         //等待元素
-        waitEle: (selector, max = 200, doc = document) => {
+        waitEle: (selector, max = 200, dom = document) => {
             let loopNum = 0;
             return new Promise(resolve => {
                 let loop = setInterval(() => {
                     loopNum += 1;
-                    let e = fun.ge(selector, doc, doc);
+                    let e = fun.ge(selector, dom, dom);
                     if (isEle(e)) {
                         clearInterval(loop);
                         resolve(e);
@@ -20636,8 +20499,8 @@ if (next) {
                         }
                         let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                         let htmlText = decoder.decode(data.response);
-                        let doc = fun.doc(htmlText);
-                        resolve(doc);
+                        let dom = fun.doc(htmlText);
+                        resolve(dom);
                     },
                     onerror: error => {
                         console.error(`\nfun.xhrDoc()出錯:\n${decodeURIComponent(url)}`, error);
@@ -20693,25 +20556,25 @@ if (next) {
             return fun.arr(num).map((_, i) => `//${randomServer}/${imageDir}/${galleryId}/${(i + 1)}.${fun.ex(_unsafeWindow.g_th[i + 1][0])}`);
         },
         //漫漫聚和KuKu动漫取得圖片網址的函式
-        getKukudmSrc: async (url = siteUrl, doc = document, msg = 1) => {
+        getKukudmSrc: async (url = siteUrl, dom = document, msg = 1) => {
             if (url === null) return;
-            if (fun.ge("//title[contains(text(),'404')]", doc, doc)) return [];
+            if (fun.ge("//title[contains(text(),'404')]", dom, dom)) return [];
             if (!getImgFn.includes("getKukudmSrc")) getImgFn += " > fun.getKukudmSrc()";
             let timeId = setTimeout(() => msg === 1 ? location.reload() : null, 20000);
             if (msg == 1) fun.showMsg(displayLanguage.str_05, 0);
             let max;
-            fun.ge("//td[input]", doc, doc) ? max = fun.gt("//td[input]", 1, doc).match(/共(\d+)/)[1] : max = fun.gt(".bottom .subNav", 1, doc).match(/\/(\d+)/)[1];
+            fun.ge("//td[input]", dom, dom) ? max = fun.gt("//td[input]", 1, dom).match(/共(\d+)/)[1] : max = fun.gt(".bottom .subNav", 1, dom).match(/\/(\d+)/)[1];
             url = url.replace(/1\.htm$/, "");
             let links = fun.arr(max).map((_, i) => url + (i + 1) + ".htm");
             let xhrNum = 0;
             let resArr = links.map(url => {
-                return fun.xhrDoc(url).then(doc => {
+                return fun.xhrDoc(url).then(dom => {
                     if (msg == 1) fun.showMsg(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
-                    let script = fun.gst("document.write", doc);
+                    let script = fun.gst("document.write", dom);
                     let htmlCode = script.replace("document.write(", "").replace(");", "");
                     let htmlText = fun.run(`(${htmlCode}).toString()`);
-                    let dom = fun.doc(htmlText);
-                    let imgs = [...dom.images];
+                    let tempDom = fun.doc(htmlText);
+                    let imgs = [...tempDom.images];
                     if (imgs.length > 1) {
                         return {
                             src1: decodeURIComponent(imgs[0].src),
@@ -22086,20 +21949,20 @@ if (next) {
         if (!!imgSrcs?.length && imgSrcs.length > 0) {
 
             let newWindow;
-            let doc;
+            let dom;
             try {
                 newWindow = _unsafeWindow.open("about:blank", "_blank");
-                doc = newWindow.document;
+                dom = newWindow.document;
             } catch {
                 alert("An error occurred\nUnable to use window.open()");
                 return;
             }
-            doc.write(`<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no"><title>${customTitle ?? document.title}</title><link rel="icon" href="/favicon.ico"></head><body style="text-align: center;"><div id="imgBox"></div></body></html>`);
+            dom.write(`<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no"><title>${customTitle ?? document.title}</title><link rel="icon" href="/favicon.ico"></head><body style="text-align: center;"><div id="imgBox"></div></body></html>`);
 
             newWindow.fun = fun;
             newWindow.newImgs = imgSrcs;
 
-            const newWindowStyle = doc.createElement("style");
+            const newWindowStyle = dom.createElement("style");
             newWindowStyle.id = "newWindowStyle";
             newWindowStyle.type = "text/css";
             newWindowStyle.innerHTML = `
@@ -22179,15 +22042,15 @@ img.sbs {
     background-color: rgba(0,0,0,.94)!important;
 }
 `;
-            doc.head.appendChild(newWindowStyle);
+            dom.head.appendChild(newWindowStyle);
 
             if (newTabViewLightGallery == 0) {
 
-                const fancyboxStyle = doc.createElement("style");
+                const fancyboxStyle = dom.createElement("style");
                 fancyboxStyle.id = "FancyboxStyle";
                 fancyboxStyle.type = "text/css";
                 fancyboxStyle.innerHTML = FancyboxV5Css;
-                doc.head.appendChild(fancyboxStyle);
+                dom.head.appendChild(fancyboxStyle);
 
                 const JF_code = JqueryJS + FancyboxV5JS + `
 var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))();
@@ -22297,14 +22160,14 @@ function setFancybox() {
 `;
 
                 /*
-                //受限於Content Security Policy (CSP) 內容安全政策
-                const jQueryScript = doc.createElement("script");
-                jQueryScript.id = "jQueryScript";
-                jQueryScript.type = "text/javascript";
-                jQueryScript.innerHTML = JF_code;
-                doc.body.appendChild(jQueryScript);
-                */
-                _GM_addElement(doc.body, "script", {
+                    //受限於Content Security Policy (CSP) 內容安全政策
+                    const jQueryScript = dom.createElement("script");
+                    jQueryScript.id = "jQueryScript";
+                    jQueryScript.type = "text/javascript";
+                    jQueryScript.innerHTML = JF_code;
+                    dom.body.appendChild(jQueryScript);
+                    */
+                _GM_addElement(dom.body, "script", {
                     textContent: JF_code
                 });
 
@@ -22440,24 +22303,24 @@ if (newWindowDataViewMode == 1) {
 `;
 
                 /*
-                //受限於Content Security Policy (CSP) 內容安全政策
-                const newWindowScript = doc.createElement("script");
-                newWindowScript.id = "newWindowScript";
-                newWindowScript.type = "text/javascript";
-                newWindowScript.innerHTML = newWindowScriptCode;
-                doc.body.appendChild(newWindowScript);
-                */
-                _GM_addElement(doc.body, "script", {
+                    //受限於Content Security Policy (CSP) 內容安全政策
+                    const newWindowScript = dom.createElement("script");
+                    newWindowScript.id = "newWindowScript";
+                    newWindowScript.type = "text/javascript";
+                    newWindowScript.innerHTML = newWindowScriptCode;
+                    dom.body.appendChild(newWindowScript);
+                    */
+                _GM_addElement(dom.body, "script", {
                     textContent: newWindowScriptCode
                 });
 
             } else {
 
-                const ViewerStyle = doc.createElement("style");
+                const ViewerStyle = dom.createElement("style");
                 ViewerStyle.id = "ViewerStyle";
                 ViewerStyle.type = "text/css";
                 ViewerStyle.innerHTML = ViewerJsCss;
-                doc.head.appendChild(ViewerStyle);
+                dom.head.appendChild(ViewerStyle);
 
                 const VV_code = ViewerJs + `
 var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
@@ -22480,13 +22343,13 @@ document.addEventListener("viewed", event => {
 
                 /*
                 //受限於Content Security Policy (CSP) 內容安全政策
-                const ViewerScript = doc.createElement("script");
+                const ViewerScript = dom.createElement("script");
                 ViewerScript.id = "ViewerScript";
                 ViewerScript.type = "text/javascript";
                 ViewerScript.innerHTML = VV_code;
-                doc.body.appendChild(ViewerScript);
+                dom.body.appendChild(ViewerScript);
                 */
-                _GM_addElement(doc.body, "script", {
+                _GM_addElement(dom.body, "script", {
                     textContent: VV_code
                 });
 
@@ -22619,13 +22482,13 @@ if (newWindowDataViewMode == 1) {
 
                 /*
                 //受限於Content Security Policy (CSP) 內容安全政策
-                const newWindowScript = doc.createElement("script");
+                const newWindowScript = dom.createElement("script");
                 newWindowScript.id = "newWindowScript";
                 newWindowScript.type = "text/javascript";
                 newWindowScript.innerHTML = newWindowScriptCode;
-                doc.body.appendChild(newWindowScript);
+                dom.body.appendChild(newWindowScript);
                 */
-                _GM_addElement(doc.body, "script", {
+                _GM_addElement(dom.body, "script", {
                     textContent: newWindowScriptCode
                 });
 
