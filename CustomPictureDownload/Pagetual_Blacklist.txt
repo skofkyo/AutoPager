@@ -1,4 +1,4 @@
-2024/05/29 21:15
+2024/06/01 00:23
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1029,6 +1029,7 @@ tu928美女写真网
 ROSI美女写真
 /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
+/^https?:\/\/www\.xiaolis\.cc\/html\/\d+$/
 
 图片屋
 *://*tupianwu.com/*
@@ -1528,7 +1529,7 @@ GODA漫画閱讀
 *://baozimh.one/chapter/*.html
 
 GodaComic 英文漫画
-*://godamh.org/chapter/*.html
+*://manhuascans.org/manga/*/*
 
 漫畫屋閱讀
 *://mh5.tw/series-*
