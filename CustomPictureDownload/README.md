@@ -986,7 +986,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/05/29 21:15</p>
+<p>2024/06/01 00:23</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
 <p>
@@ -1166,7 +1166,13 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.rosi211.cc/">ROSI小莉写真</a>
+                    <a href="https://www.rosi211.cc/">ROSI小莉写真官网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xiaolis.cc/">ROSI小莉写真网</a>
                 </td>
                 <td></td>
             </tr>
@@ -1234,26 +1240,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://aiavr.uk/">图集网</a>
-                </td>
-                <td>
-                    <a href="https://user.aiavr.uk/">user.aiavr.uk</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://xgirl.one/">XGirl</a>
-                </td>
-                <td>SPA網頁，分類添加了自動翻頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://xerocos.com/">Xerocos</a>
-                </td>
-                <td>SPA網頁，分類添加了自動翻頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.v2ph.com/">微圖坊</a>
                 </td>
                 <td>
@@ -1289,12 +1275,6 @@ imgs: async () => {
             <tr>
                 <td>
                     <a href="https://girlsteam.club/">女神部落</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.mfpho.com/">柔丝映画</a>
                 </td>
                 <td></td>
             </tr>
@@ -1365,12 +1345,6 @@ imgs: async () => {
                 <td>
                     <a href="https://www.zhaotaotu.one/">zhaotaotu.one</a>， <a href="https://kantaotu.cc/">Xiuno BBS</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://www.meituku.org/">美图库</a>
-                </td>
-                <td>China IP限定</td>
             </tr>
             <tr>
                 <td>
@@ -1974,13 +1948,13 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://books.xxgirls.vip/">淫淫小说写真馆</a>
+                    <a href="https://books.xxgirls.vip/arttype/30.html">淫淫小说写真馆</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://torontolove.cc/">多伦多情色</a>
+                    <a href="https://torontolove.cc/?topic2=76">多伦多情色</a>
                 </td>
                 <td></td>
             </tr>
@@ -2338,12 +2312,6 @@ imgs: async () => {
             <tr>
                 <td>
                     <a href="https://influencersgonewild.com/">Influencers GoneWild</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://fanleaks.club/">Fan Leaks</a>
                 </td>
                 <td></td>
             </tr>
@@ -2714,7 +2682,7 @@ imgs: async () => {
                     <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
                 </td>
                 <td>
-                    <a href="https://cutexinh.com/">CuteXinh</a>， <a href="https://babeasia.com/">Babe Asia</a>， <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://nongbong.com/">Nóng Bỏng</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>
+                    <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>
                 </td>
             </tr>
             <tr>
@@ -3286,21 +3254,9 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://showgirlx.net/">ShowGirlx</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.superbeautygirlx.top/">Forum Girl</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://app.degoo.com/">Degoo Cloud</a>
-                </td>
-                <td>輔助ShowGirlx使用的圖床，先手動點開第一張預覽縮圖，展開第一張大圖後，按0輸入標題輸入圖片數量，等待抓取完畢。</td>
             </tr>
             <tr>
                 <td>
@@ -3344,21 +3300,29 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
+                    <a href="https://xgirl.one/">XGirl</a>
+                </td>
+                <td>SPA網頁，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xerocos.com/">Xerocos</a>
+                </td>
+                <td>SPA網頁，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://aiavr.uk/">图集网</a>
+                </td>
+                <td>
+                    <a href="https://user.aiavr.uk/">user.aiavr.uk</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://nicegirl4u.cyou/">NICEGIRL4U</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://ycyweb.cloudapp.net/">三界异次元</a>
-                </td>
-                <td>很久沒新圖了</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.lianjiajr.net/">好视角</a>
-                </td>
-                <td>很久沒新圖了</td>
             </tr>
             <tr>
                 <td>
@@ -3393,12 +3357,6 @@ imgs: async () => {
                 <td>
                     <a href="https://www.img3xgirls.com/">www.img3xgirls.com</a>，很久沒新圖了
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.nvshen5.com/">好女神网</a>
-                </td>
-                <td>很久沒新圖了</td>
             </tr>
             <tr>
                 <td>
@@ -3576,12 +3534,6 @@ imgs: async () => {
                 <td>
                     <a href="https://www.xofulitu9ok999.xyz/xoxo">www.xofulitu9ok999.xyz</a>，分類添加了自動翻頁
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.fulizx101.cc/index.php/art/type/id/67.html">福利中心</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>坏哥哥</td>
@@ -4395,14 +4347,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://sixacg.org/">琴瑟漫畫</a>
-                </td>
-                <td>
-                    <a href="https://6acg.top/">琴瑟書庫</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.44te.com/">特漫网</a>
                 </td>
                 <td></td>
@@ -4449,7 +4393,7 @@ imgs: async () => {
                 <td>
                     <a href="https://h-webtoon.com/">韓漫射</a>
                 </td>
-                <td>同格式， <a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>， <a href="https://18hmanga.click/">18hmanga.click</a>
+                <td>同格式， <a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>， <a href="https://18hmanga.com/">18hmanga.com</a>
                 </td>
             </tr>
             <tr>
@@ -4617,7 +4561,7 @@ imgs: async () => {
                 <td>
                     <a href="https://manhuascans.org/">GodaComic 英文漫画</a>
                 </td>
-                <td>閱讀頁域名為godamh.org，有無限滾動模式加預讀</td>
+                <td>有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
@@ -4906,18 +4850,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.webtoons.com/zh-hant/">LINE WEBTOON</a>
-                </td>
-                <td>目錄聚集所有章節、閱讀，預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.dongmanmanhua.cn/">咚漫</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.dongman.la/">動漫啦</a>
                 </td>
                 <td>預設關閉</td>
@@ -5067,6 +4999,18 @@ imgs: async () => {
             <tr>
                 <td>
                     <a href="https://www.kukanmanhua.com/">酷看漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.webtoons.com/zh-hant/">LINE WEBTOON</a>
+                </td>
+                <td>目錄聚集所有章節、閱讀，預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.dongmanmanhua.cn/">咚漫</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
