@@ -6,7 +6,7 @@
 *://manga.bilibili.com/mc*/*?from=manga_detail
 /^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
 *://baozimh.one/chapter/*.html
-*://godamh.org/chapter/*.html
+*://manhuascans.org/manga/*/*
 *manhuagui.com/comic/*/*.html
 *m.manhuagui.com*
 *manmanju.*/comiclist/*/*/*.htm
@@ -683,6 +683,7 @@ https://www.eyval.net/*
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
+/^https?:\/\/www\.xiaolis\.cc\/html\/\d+$/
 /^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i
 /photo\.camcam\.cc\/[^/]+\/$/
 /sxchinesegirlz(\d+)?\.\w+\/\d+\/\d+\/\d+\/.+\/$/
