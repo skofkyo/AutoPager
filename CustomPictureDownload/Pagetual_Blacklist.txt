@@ -1,4 +1,4 @@
-2024/06/01 00:23
+2024/06/03 17:26
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -531,13 +531,13 @@ SexyAsianGirl
 *://youwu.*/albums/*
 
 HotAsianX
-*://hotasianx.com/albums/*
+*://hotasianx.*/albums/*
 
 色图
-*://setu.pics/albums/*
+*://setu.*/albums/*
 
 亚色图库
-*://yase.pics/albums/*
+*://yase.*/albums/*
 
 Chinese Beauties
 *://sxchinesegirlz01.xyz/*/*/*/*/
@@ -643,7 +643,7 @@ Kenh69
 *www.mhgirl.com/tuji/*.html
 
 福利姬美图
-*fuligirl.top/albums/*
+*fuligirl.*/albums/*
 
 青年美圖
 *jrants.com/*.html
