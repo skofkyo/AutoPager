@@ -1,16 +1,17 @@
 <h1>測試通過環境：</h1>
 <pre>
-2024/05/24
+2024/06/03
 PC
-Chrome 125.0.6422.77 + Tampermonkey 5.1.1
-Edge 125.0.2535.51 + Tampermonkey 5.1.1
-Cent Browser  5.1.1130.82 + Tampermonkey 5.1.1
-FireFox 126.0 + Tampermonkey 5.1.1
+Chrome 125.0.6422.77 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
+Edge 125.0.2535.51 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
+Cent Browser  5.1.1130.82 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
+FireFox 126.0 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
 Android
-Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1
+Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
 Firefox for Android 126.0 + Tampermonkey 5.1.1
 Waterfox for Android 1.0.7 + Tampermonkey 5.1.1
-XBrowser 4.6.0
+XBrowser 4.6.2
+ViaBrowser 5.6.1
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <p>PS：暴力猴Violentmonkey不兼容Fancybox5會報錯，連Android上的Via瀏覽器、X瀏覽器都能正常引入使用Fancybox5了。</p>
@@ -986,7 +987,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/06/01 00:23</p>
+<p>2024/06/03 17:26</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
 <p>
@@ -1856,12 +1857,6 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://ijjiao.com/people">街角图片社</a>
-                </td>
-                <td>需透過微信公眾號取得密碼登錄，China IP限定</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.evacg.org/">E次元</a>
                 </td>
                 <td></td>
@@ -2385,7 +2380,7 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://setu.pics/">色图</a>
+                    <a href="https://setu.lol/">色图</a>
                 </td>
                 <td></td>
             </tr>
@@ -2985,7 +2980,7 @@ imgs: async () => {
                 <td>
                     <a href="https://www.imagefap.com/">ImageFap</a>
                 </td>
-                <td>只支援PC版</td>
+                <td>只支援PC版，大圖需在photo頁</td>
             </tr>
             <tr>
                 <td>
