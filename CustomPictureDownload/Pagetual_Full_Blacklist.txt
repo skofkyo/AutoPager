@@ -339,7 +339,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *www.22mm.net/a/*.html
 *.neihantu.net/zhainannvshen/*.html
 *www.zanmm.com/tupian/*.html
-*fuligirl.top/albums/*
+*://fuligirl.*/albums/*
 *://www.baobua.net/post/*
 *baobua.com/post/*
 *jrants.com/*.html
@@ -622,9 +622,9 @@ https://www.eyval.net/*
 *://www.7k1a.com/*.html
 *://www.mfpho.com/*.html
 *://www.hutu6.com/*/*.html
-*://hotasianx.com/albums/*
-*://setu.pics/albums/*
-*://yase.pics/albums/*
+*://hotasianx.*/albums/*
+*://setu.*/albums/*
+*://yase.*/albums/*
 *://asianporn.li/photo/*/*/
 *crtys.net/?action-imagelist-uid-*
 *crtys.net/html/*/n-*.html
