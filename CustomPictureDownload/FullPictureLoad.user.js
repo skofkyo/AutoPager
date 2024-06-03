@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.12
+// @version            2.2.13
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -51,7 +51,7 @@
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 // ==/UserScript==
 
-(async (JSZip, Fancybox, jQuery) => {
+(async (JSZip, Fancybox, $) => {
     "use strict";
 
     if (document.querySelector("body.no-js")) return; //Cloudflare檢測連線安全性時，不運行腳本
@@ -71,7 +71,6 @@
         viewMode: 0, //0：置中、1：並排
         fancybox: 1 //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
     };
-    const $ = jQuery;
     const _unsafeWindow = unsafeWindow ?? window;
     const language = _unsafeWindow.navigator.language;
     let siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "");
@@ -2237,43 +2236,6 @@
         customTitle: "h3",
         category: "nsfw2"
     }, {
-        name: "街角图片社",
-        host: ["ijjiao.com"],
-        reg: /^https?:\/\/ijjiao\.com\/\d+\/\d+\/\d+\/album/,
-        exclude: "//span[text()='加载更多']",
-        init: async () => await fun.waitEle(".v-pagination"),
-        imgs: async () => {
-            let max = fun.gt("//li[button[@aria-label='Next page']]", 2);
-            let url = siteUrl.replace(/\/\d+$/, "");
-            let links = fun.arr(max).map((_, i) => url + "/" + (i + 1));
-            fun.showMsg(displayLanguage.str_07, 0);
-            let check = await fun.fetchDoc(links[1]).then(dom => {
-                let code = fun.gst("photoList", dom);
-                let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
-                return photoList.length < 1 ? false : true;
-            });
-            if (check) {
-                fun.showMsg(displayLanguage.str_05, 0);
-                let fetchNum = 0;
-                let resArr = links.map((url, i, arr) => {
-                    return fun.fetchDoc(url).then(dom => {
-                        fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
-                        let code = fun.gst("photoList", dom);
-                        let photoList = fun.run(code.match(/photoList:([^\]]+\])/)[1]);
-                        return photoList;
-                    });
-                });
-                return Promise.all(resArr).then(data => data.flat().map(e => e.photourl));
-            } else {
-                alert("登錄狀態已失效！請手動點擊第2頁，觸發密碼輸入框重新登錄。");
-                return [];
-            }
-        },
-        button: [4],
-        insertImg: ["//div[div[@class='image-item']]", 2],
-        customTitle: "h3",
-        category: "nsfw1"
-    }, {
         name: "美妹妹",
         host: ["www.meimeimei.org"],
         reg: /www\.meimeimei\.org\/\d+\/\d+\/$|www\.meimeimei\.org\/\d+\/\d+\/\d+\.html/,
@@ -3118,15 +3080,7 @@
         name: "1Y Beauties",
         host: ["www.1y.is"],
         reg: /^https?:\/\/www\.1y\.is\/[\w-]+\/[^\.]+\.html$/,
-        imgs: async () => {
-            let max;
-            try {
-                [max] = fun.gu(".page-links>a:last-child").match(/\d+$/);
-            } catch {
-                max = 1;
-            }
-            return fun.getImg(".entry-content img", max);
-        },
+        imgs: () => fun.getImgA(".entry-content img", ".page-links a"),
         capture: () => _this.imgs(),
         customTitle: ".entry-title",
         category: "nsfw1"
@@ -3791,18 +3745,23 @@
         category: "nsfw2"
     }, {
         name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图",
-        host: ["youwu.lol", "hotasianx.com", "setu.pics", "yase.pics", "fuligirl.top"],
+        host: ["youwu.lol", "hotasianx.com", "setu.lol", "yase.pics", "fuligirl.top"],
         reg: [
             /^https:\/\/youwu\.\w+\/albums\//,
-            /^https?:\/\/hotasianx\.com\/albums\//,
-            /^https?:\/\/setu\.pics\/albums\//,
-            /^https?:\/\/yase\.pics\/albums\//,
-            /^https?:\/\/fuligirl\.top\/albums\//
+            /^https?:\/\/hotasianx\.\w+\/albums\//,
+            /^https?:\/\/setu\.\w+\/albums\//,
+            /^https?:\/\/yase\.\w+\/albums\//,
+            /^https?:\/\/fuligirl\.\w+\/albums\//
+        ],
+        include: [
+            "img.block",
+            "//div[img[@title]]",
+            "#main>h1"
         ],
         imgs: () => fun.getImg("img.block", fun.gt("a[rel=next]", 2) || 1),
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
-        customTitle: () => fun.gt("#main>h1").replace(/\(\d+[\w\s\\\/\.+-／]+\)?|\[\d+[\w\s\\\/\.+-／]+\]?|（\d+[\w\s\\\/\.+-／]+）?|【\d+[\w\s\\\/\.+-／]+】?|\d+P/gi, "").replace(/未分类性感写真|^.+人体|AI图区/, "").replace(/（\d+月\d+打赏群(自购)?资源）/gi, "").trim(),
+        customTitle: () => fun.gt("#main>h1").replace(/\(\d+[\w\s\\\/\.+-／]+\)?|\[\d+[\w\s\\\/\.+-／]+\]?|（\d+[\w\s\\\/\.+-／]+）?|【\d+[\w\s\\\/\.+-／]+】?|\d+P/gi, "").replace(/未分类性感写真|^.+人体|AI图区/, "").replace(/（\d+月\d+打赏群(自购)?资源）/gi, "").replaceAll("🐾", "").trim(),
         category: "nsfw2"
     }, {
         name: "美图",
@@ -14333,7 +14292,7 @@ if (next) {
                 let nextText = code.match(/nextChapterData[\s=]+([^;]+)/)[1];
                 let cUrlText = code.match(/comicUrl[\s="]+([^"]+)/)[1];
                 let nextrData = JSON.parse(nextText);
-                if (nextrData?.id && nextrData?.id > 0) {
+                if (nextrData?.id > 0) {
                     return cUrlText + nextrData.id + ".html";
                 } else {
                     if (/^m\./.test(fun.lh) && r === 1) {
@@ -14368,12 +14327,12 @@ if (next) {
             await fun.waitVar("SinConf");
             fun.run("setTimeout(()=>{$(document).unbind('keyup');$(document).unbind('keydown')},4000)");
         },
-        imgs: (frame) => {
+        imgs: (frame = _unsafeWindow) => {
             const {
                 SinConf,
                 chapterImages,
                 chapterPath
-            } = (frame ?? _unsafeWindow);
+            } = frame;
             let host = SinConf.resHost1 ?? SinConf.resHost[0].domain;
             return chapterImages.map(e => /^http/.test(e) ? e : host + "/" + chapterPath + e);
         },
@@ -14472,13 +14431,7 @@ if (next) {
                 SinConf,
                 chapterPath
             } = _unsafeWindow;
-            return chapterImages.map(e => {
-                if (/^http/.test(e)) {
-                    return e;
-                } else {
-                    return SinConf.resHost[0].domain + "/" + chapterPath + e;
-                }
-            });
+            return chapterImages.map(e => /^http/.test(e) ? e : SinConf.resHost[0].domain + "/" + chapterPath + e);
         },
         button: [4],
         insertImg: ["#images", 2],
@@ -17184,20 +17137,21 @@ if (next) {
     }, {
         name: "漫畫類 自動展開目錄",
         reg: [
-            /(mangabz|xmanhua|dm5|1kkk|manben|mkzhan)\.com\/[\w-]+\/$/,
+            /(mangabz|xmanhua|yymanhua|dm5|1kkk|manhuaren|manben|mkzhan)\.com\/[\w-]+\//,
             /(m\.dmzj\.com|m\.gmh1234\.com)\/(info|comic)\/\d+\.html$/,
             /(dgmanhua|acgwd|magayuan|manhua456|dashumanhua|shilunart|mh160|szcdmj)\.(com|cc)\/(comic|manhua|manga|maga|kanmanhua|szcbook)\/[\w-]+\/?$/,
             /www\.mhua5\.com\/[\w-]+\.html/,
             /m\.guoman\.net\/comic\/\w+/,
             /(www|m)\.77mh\.\w+\/colist_\d+\.html/,
-            /www\.manhw\.com\/index\.php\/comic\/\w+$/
+            /www\.manhw\.com\/index\.php\/comic\/\w+$/,
+            /m\.gaonaojin\.com\/\w+\/$/
         ],
         init: async () => {
             if (["www.magayuan.com", "m.magayuan.com"].includes(fun.lh)) {
                 fun.css(".Introduct_Sub{background:url(https://m.idmzj.com/images/int_bg.png)!important;background-size:100% 100%!important}");
             }
         },
-        autoClick: "span.more,a.detail-list-form-more,a.detail-list-more,.deatil-list-more>a,.detail-more,.moreChapter,.show-more,a#zhankai,.gengduo_dt1>button,.morechapter>button,.gengduo_dt1>a,.chapterList+.more,li.add,a.extend,a.action-collapse:not(.on),.chapter__more .down,.listmore,.more.chapLiList-cont>a,.m-load-more-sm>a,.more>a,.allmulu,.show-more>a,.morechp,.nnmore>a",
+        autoClick: ["span.more,a.detail-list-form-more,a.detail-list-more,.deatil-list-more>a,.detail-more,.moreChapter,.show-more,a#zhankai,.gengduo_dt1>button,.morechapter>button,.gengduo_dt1>a,.chapterList+.more,li.add,a.extend,a.action-collapse:not(.on),.chapter__more .down,.listmore,.more.chapLiList-cont>a,.m-load-more-sm>a,.more>a,.allmulu,.show-more>a,.morechp,.nnmore>a", 1000],
         css: ".comic-info-box+a,.cartoon-introduction.cmg,.cartoon-introduction+a,.msloga,.comic_intro>a,.Introduct+a,[class^='ad']{display:none!important}",
         category: "none"
     }, {
@@ -22159,14 +22113,12 @@ function setFancybox() {
 }
 `;
 
-                /*
-                    //受限於Content Security Policy (CSP) 內容安全政策
-                    const jQueryScript = dom.createElement("script");
-                    jQueryScript.id = "jQueryScript";
-                    jQueryScript.type = "text/javascript";
-                    jQueryScript.innerHTML = JF_code;
-                    dom.body.appendChild(jQueryScript);
-                    */
+                //受限於Content Security Policy (CSP) 內容安全政策
+                //const jQueryScript = dom.createElement("script");
+                //jQueryScript.id = "jQueryScript";
+                //jQueryScript.type = "text/javascript";
+                //jQueryScript.innerHTML = JF_code;
+                //dom.body.appendChild(jQueryScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: JF_code
                 });
@@ -22302,14 +22254,12 @@ if (newWindowDataViewMode == 1) {
 
 `;
 
-                /*
-                    //受限於Content Security Policy (CSP) 內容安全政策
-                    const newWindowScript = dom.createElement("script");
-                    newWindowScript.id = "newWindowScript";
-                    newWindowScript.type = "text/javascript";
-                    newWindowScript.innerHTML = newWindowScriptCode;
-                    dom.body.appendChild(newWindowScript);
-                    */
+                //受限於Content Security Policy (CSP) 內容安全政策
+                //const newWindowScript = dom.createElement("script");
+                //newWindowScript.id = "newWindowScript";
+                //newWindowScript.type = "text/javascript";
+                //newWindowScript.innerHTML = newWindowScriptCode;
+                //dom.body.appendChild(newWindowScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: newWindowScriptCode
                 });
@@ -22341,14 +22291,12 @@ document.addEventListener("viewed", event => {
 });
 `;
 
-                /*
                 //受限於Content Security Policy (CSP) 內容安全政策
-                const ViewerScript = dom.createElement("script");
-                ViewerScript.id = "ViewerScript";
-                ViewerScript.type = "text/javascript";
-                ViewerScript.innerHTML = VV_code;
-                dom.body.appendChild(ViewerScript);
-                */
+                //const ViewerScript = dom.createElement("script");
+                //ViewerScript.id = "ViewerScript";
+                //ViewerScript.type = "text/javascript";
+                //ViewerScript.innerHTML = VV_code;
+                //dom.body.appendChild(ViewerScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: VV_code
                 });
@@ -22480,14 +22428,12 @@ if (newWindowDataViewMode == 1) {
 
 `;
 
-                /*
                 //受限於Content Security Policy (CSP) 內容安全政策
-                const newWindowScript = dom.createElement("script");
-                newWindowScript.id = "newWindowScript";
-                newWindowScript.type = "text/javascript";
-                newWindowScript.innerHTML = newWindowScriptCode;
-                dom.body.appendChild(newWindowScript);
-                */
+                //const newWindowScript = dom.createElement("script");
+                //newWindowScript.id = "newWindowScript";
+                //newWindowScript.type = "text/javascript";
+                //newWindowScript.innerHTML = newWindowScriptCode;
+                //dom.body.appendChild(newWindowScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: newWindowScriptCode
                 });
