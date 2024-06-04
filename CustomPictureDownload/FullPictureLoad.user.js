@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.13
+// @version            2.2.14
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -306,7 +306,7 @@
         init: () => fun.gae(".gallery-blur-item").forEach(e => (e.className = "gallery-item gallery-fancy-item")),
         imgs: () => {
             thumbnailsSrcArray = fun.getImgSrcArr(".article-content img[src*='-285x285']");
-            fun.showMsg("fun.xhrHEA(check)...", 0);
+            fun.showMsg("fun.xhrHEAD(check)...", 0);
             let xhrNum = 0;
             return thumbnailsSrcArray.map(async (e, i, arr) => {
                 let src = e.replace("-285x285", "");
@@ -3747,7 +3747,7 @@
         name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图",
         host: ["youwu.lol", "hotasianx.com", "setu.lol", "yase.pics", "fuligirl.top"],
         reg: [
-            /^https:\/\/youwu\.\w+\/albums\//,
+            /^https?:\/\/youwu\.\w+\/albums\//,
             /^https?:\/\/hotasianx\.\w+\/albums\//,
             /^https?:\/\/setu\.\w+\/albums\//,
             /^https?:\/\/yase\.\w+\/albums\//,
@@ -4919,9 +4919,14 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: "img.small{max-width:100% !important;max-height:auto !important}.cmd_bar.wide{display:none!important}",
         category: "nsfw1"
     }, {
-        name: "トップページ | AI.img",
-        host: ["aiimg.fun"],
-        reg: /^https?:\/\/aiimg\.fun\/note\/public\.php\?id=\d+/,
+        name: "AI.img/AI2D",
+        host: ["aiimg.fun", "ai2d.fun"],
+        reg: [
+            /^https?:\/\/aiimg\.fun\/note\/public\.php\?id=\d+/,
+            /^https?:\/\/ai2d\.fun\/note\/public\.php\?id=\d+/,
+            /^https?:\/\/ai2d\.fun\/ubox\/rom\.php\?id=\d+/
+        ],
+        exclude: ".not_found.small",
         init: () => fun.createImgBox(".thums", 2),
         imgs: async () => {
             await fun.getNP(".thums>.item", ".pager>a.now+a", null, ".pager");
@@ -4930,10 +4935,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".thums"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".thums,.slideshow,.pager,.search_range"], 2
         ],
-        customTitle: "h1",
-        category: "nsfw1"
+        customTitle: () => fun.gt("h1").replace(/\s\(\d+枚\)/, "").replaceAll("/", "／"),
+        category: "nsfw2"
     }, {
         name: "NEWSグラビアアイドル.net",
         host: ["news.idolsenka.net"],
@@ -10725,6 +10730,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: "h1.entry-title",
         category: "hcomic"
     }, {
+        name: "MANGA DISTRICT",
+        host: ["mangadistrict.com"],
+        reg: /^https?:\/\/mangadistrict\.com\/read-scan\/[\w-]+\/[\w-]+\/$/,
+        imgs: ".reading-content img",
+        button: [4],
+        insertImg: [".reading-content", 2],
+        autoDownload: [0],
+        next: "a.next_page",
+        prev: "a.prev_page",
+        customTitle: "#chapter-heading",
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "hcomic"
+    }, {
         name: "AllPornComic",
         host: ["allporncomic.com"],
         reg: /^https?:\/\/allporncomic\.com\/porncomic\/[^\/]+\/[^\/]+\/$/i,
@@ -12245,6 +12263,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         category: "hcomic"
     }, {
+        name: "Tranh 18",
+        host: ["tranh18.com", "m.tranh18.com"],
+        reg: /^https?:\/\/(m\.)?tranh18\.com\/\w+\/chapter\/\d+$/i,
+        imgs: ".comicpage img,#cp_img img",
+        button: [4],
+        insertImg: [".comiclist,#cp_img", 2],
+        autoDownload: [0],
+        next: "//a[text()='Chap sau'][@href] | //a[p[text()='Chap sau']][@href]",
+        prev: "//a[text()='Chap trước'][@href] | //a[p[text()='Chap trước']][@href]",
+        customTitle: () => fun.title("-Truyện Tranh 18"),
+        css: ".ads{display:none!important;}",
+        category: "hcomic"
+    }, {
         name: "污污漫畫",
         host: ["www.55comic.com", "www.comicbox.xyz", "www.wuwucomic.xyz"],
         reg: /^https?:\/\/(www\.55comic\.com|www\.comicbox\.xyz|www\.wuwucomic\.xyz)\/chapter\/\d+$/i,
@@ -13699,6 +13730,7 @@ if (next) {
         enable: 1,
         reg: () => /\/comic\/chapter\/[^/]+\/\w+\.html/i.test(fun.url) && fun.ge("//title[contains(text(),'包子')]") && comicInfiniteScrollMode != 1,
         init: async () => {
+            fun.addMutationObserver(() => fun.remove("div[id*='ads'],div[id='interstitial_fade'],iframe"));
             fun.run("document['onkeydown']=null;");
             await fun.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter,.bottom-bar-tool");
         },
@@ -13708,9 +13740,9 @@ if (next) {
         autoDownload: [0],
         next: "//div[@class='next_chapter']/a[contains(text(),'下一話') or contains(text(),'下一话')]",
         prev: 1,
-        customTitle: (dom = document) => fun.title(" - ", 3, dom),
+        customTitle: (dom = document) => fun.title(" - ", 3, dom).replace(/\(\d+\/\d+\)/, ""),
         preloadNext: true,
-        css: ".chapter-main.scroll-mode~*:not(.next_chapter):not(.bottom-bar){display:none!important}",
+        css: "div[id*='ads'],div[id='interstitial_fade'],iframe,.chapter-main.scroll-mode~*:not(.next_chapter):not(.bottom-bar){display:none!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -13730,6 +13762,7 @@ if (next) {
             return fun.createImgArray(srcs);
         },
         init: async () => {
+            fun.addMutationObserver(() => fun.remove("div[id*='ads'],div[id='interstitial_fade'],iframe"));
             fun.run("document['onkeydown']=null;");
             let imgs = _this.getImgs();
             let tE = fun.ge(".comic-contain");
@@ -13756,7 +13789,7 @@ if (next) {
             hide: ".comic-chapter>.l-content",
             preloadNextPage: 1
         },
-        css: ".chapter-main.scroll-mode~*:not(.next_chapter,.bottom-bar,.l-content),.mobadsq{display:none!important}.comic-contain{width: 100%;margin: 0 auto;max-width:970px;",
+        css: "div[id*='ads'],div[id='interstitial_fade'],iframe,.chapter-main.scroll-mode~*:not(.next_chapter,.bottom-bar,.l-content),.mobadsq{display:none!important}.comic-contain{width: 100%;margin: 0 auto;max-width:970px;",
         category: "comic autoPager"
     }, {
         name: "包子漫画 展開目錄",
@@ -14134,7 +14167,7 @@ if (next) {
                 nextChapterData,
                 comicUrl
             } = _unsafeWindow;
-            return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
+            return nextChapterData?.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
         },
         prev: "//a[contains(text(),'上一章')]",
         customTitle: (dom = document) => {
@@ -14185,7 +14218,7 @@ if (next) {
                 nextChapterData,
                 comicUrl
             } = _unsafeWindow;
-            return nextChapterData?.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
+            return nextChapterData?.id > 0 ? nextChapterData.url : null;
         },
         prev: "//a[contains(text(),'上一章')]",
         customTitle: (dom = document) => {
@@ -14232,7 +14265,7 @@ if (next) {
                 nextChapterData,
                 comicUrl
             } = _unsafeWindow;
-            return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
+            return nextChapterData?.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
         },
         prev: "//a[contains(text(),'上一章')]",
         customTitle: (dom = document) => {
@@ -14344,8 +14377,8 @@ if (next) {
                 nextChapterData,
                 comicUrl
             } = _unsafeWindow;
-            if (nextChapterData.id && nextChapterData.id > 0) {
-                let url = new URL(comicUrl + nextChapterData.id + ".html");
+            if (nextChapterData?.id > 0) {
+                let url = new URL(nextChapterData.url);
                 return url.protocol != location.protocol ? url.href.replace(url.protocol, location.protocol) : url;
             }
             return null;
@@ -14390,8 +14423,8 @@ if (next) {
                 nextChapterData,
                 comicUrl
             } = _unsafeWindow;
-            if (nextChapterData.id && nextChapterData.id > 0) {
-                let url = new URL(comicUrl + nextChapterData.id + ".html");
+            if (nextChapterData?.id > 0) {
+                let url = new URL(nextChapterData.url);
                 return url.protocol != location.protocol ? url.href.replace(url.protocol, location.protocol) : url;
             }
             return null;
@@ -14519,9 +14552,9 @@ if (next) {
         category: "comic"
     }, {
         name: "90漫画",
-        host: ["www.90mh.com", "www.90mh.org"],
+        host: ["www.90mh.org"],
         enable: 0,
-        reg: /www\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
+        reg: /www\.90mh\.org\/manhua\/\w+\/\d+\.html/i,
         imgs: () => {
             const {
                 chapterImages,
@@ -14538,7 +14571,7 @@ if (next) {
                 nextChapterData,
                 comicUrl
             } = _unsafeWindow;
-            return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
+            return nextChapterData?.id > 0 ? nextChapterData.url : null;
         },
         prev: ".prevC",
         customTitle: (dom = document) => fun.title(" - ", 3, dom),
@@ -14550,9 +14583,9 @@ if (next) {
         category: "comic"
     }, {
         name: "90漫画M",
-        host: ["wap.90mh.com", "m.90mh.org"],
+        host: ["m.90mh.org"],
         enable: 0,
-        reg: /(wap|m)\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
+        reg: /m\.90mh\.(com|org)\/manhua\/\w+\/\d+\.html/i,
         init: () => _this.next() ? fun.addUrlHtml(_this.next(), "#chapter-image", 1) : null,
         imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => fun.getImg("#chapter-image img", fun.gt("#k_total", 1, dom), 5, null, 20, url, msg, request),
         button: [4],
@@ -14614,59 +14647,22 @@ if (next) {
                 nextChapterData,
                 comicUrl
             } = _unsafeWindow;
-            return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
+            return nextChapterData?.id > 0 ? nextChapterData.url : null;
         },
         prev: "//a[text()='上一章']",
         customTitle: () => {
             const {
-                pagtitle
+                pageTitle
             } = _unsafeWindow;
-            let s = pagtitle.split(" - ");
+            let s = pageTitle.split(" - ");
             return s[1] + " - " + s[0];
         },
         preloadNext: (nextDoc, obj) => {
             let code = fun.gst("chapterImages", nextDoc);
             fun.script(code, 0, 1);
-            fun.picPreload(obj.imgs(), nextDoc.title, "next");
+            fun.picPreload(obj.imgs(), obj.customTitle(), "next");
         },
         css: ".letchepter>div,.letchepter>section,#FullPictureLoad~*{display:none!important}",
-        category: "comic"
-    }, {
-        name: "漫画看",
-        host: ["www.mhkan.com"],
-        enable: 0,
-        reg: /www\.mhkan\.com\/manhua\/\w+\/\d+\.html/i,
-        init: "try{$(document).unbind('keydown');$(document).unbind('keyup')}catch(e){}fun.remove(\"//div[@class='main'][h3]\");",
-        imgs: () => _unsafeWindow.chapterImages,
-        button: [4],
-        insertImg: [
-            ["#images,#imagesOld", 2, "#images,#imagesOld"], 2
-        ],
-        autoDownload: [0],
-        next: () => {
-            const {
-                nextChapterData,
-                comicUrl
-            } = _unsafeWindow;
-            let next = fun.ge(".next>a,a.next,a.nextC");
-            if (next) {
-                if (/SinTheme\.nextChapter/.test(next.href)) {
-                    return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
-                } else {
-                    return next.href;
-                }
-            }
-            return null;
-        },
-        prev: ".pre>a,a.prev,a.prevC",
-        autoClick: "#chapter-pagination:not(.active),#mode_pagination",
-        customTitle: () => fun.gt(".title h1") + " - " + fun.gt(".title h2"),
-        preloadNext: (nextDoc, obj) => {
-            let code = fun.gst("chapterImages", nextDoc);
-            fun.script(code, 0, 1);
-            fun.picPreload(obj.imgs(), nextDoc.title, "next");
-        },
-        css: "#qTcms_picID{display:none!important}",
         category: "comic"
     }, {
         name: "来漫画",
@@ -14837,33 +14833,6 @@ if (next) {
         },
         css: "#jusha1{display:none!important}.action-list li{width:50% !important}#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none !important}",
         category: "comic autoPager"
-    }, {
-        name: "漫画看M",
-        host: ["m.mhkan.com"],
-        enable: 0,
-        reg: /^https?:\/\/m\.mhkan\.com\/manhua\/\w+\/\d+\.html/i,
-        imgs: () => _unsafeWindow.chapterImages,
-        button: [4],
-        insertImg: [".chapter-content", 2],
-        autoDownload: [0],
-        next: () => {
-            const {
-                nextChapterData,
-                comicUrl
-            } = _unsafeWindow;
-            return nextChapterData.id && nextChapterData.id > 0 ? comicUrl + nextChapterData.id + ".html" : null;
-        },
-        prev: "//a[text()='上一章']",
-        customTitle: () => {
-            let data = JSON.parse(localStorage.history)[0];
-            return data.comic_name + " - " + data.read_chapter
-        },
-        preloadNext: (nextDoc, obj) => {
-            let code = fun.gst("chapterImages", nextDoc);
-            fun.script(code, 0, 1);
-            fun.picPreload(obj.imgs(), nextDoc.title, "next");
-        },
-        category: "comic"
     }, {
         name: "漫客栈",
         host: ["www.mkzhan.com"],
@@ -15635,7 +15604,7 @@ if (next) {
         enable: 1,
         reg: () => {
             let hosts = ["godamanga.art", "godamh.org", "manhuascans.org"];
-            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/\w+$/i.test(fun.lp) && comicInfiniteScrollMode != 1;
+            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/[\w-]+$/i.test(fun.lp) && comicInfiniteScrollMode != 1;
         },
         xhrOptions: {
             cache: "no-cache"
@@ -15667,7 +15636,7 @@ if (next) {
         enable: 1,
         reg: () => {
             let hosts = ["godamanga.art", "godamh.org", "manhuascans.org"];
-            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/\w+$/i.test(fun.lp) && comicInfiniteScrollMode == 1;
+            return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/[\w-]+$/i.test(fun.lp) && comicInfiniteScrollMode == 1;
         },
         xhrOptions: {
             cache: "no-cache"
@@ -17859,7 +17828,7 @@ if (next) {
                 str_118: "圖集標題已更新",
                 str_119: "FancyboxV5滾輪圖片縮放",
                 str_120: "此網站分頁檢視使用ViewerJs插件",
-                str_121: "關閉圖片導覽快速鍵",
+                str_121: "關閉圖片導覽快捷鍵",
                 str_122: "此漫畫站使用無限滾動閱讀模式",
                 str_123: "此網站顯示眼睛圖示和圖片數量",
                 str_124: "此網站下載影片",
@@ -21334,7 +21303,7 @@ if (next) {
         if (isArray(autoDownload)) {
             [start] = autoDownload;
         }
-        let titleReplace = document.title.replace(/\(\d+[\w\s\\\/\.+-／]+\)?|\[\d+[\w\s\\\/\.+-／]+\]?|（\d+[\w\s\\\/\.+-／]+）?|【\d+[\w\s\\\/\.+-]+／】?|\d+P/i, "").replace(/[\/\?<>\\:\*\|":]/g, " ").trim();
+        let titleReplace = document.title.replace(/\(\d+[\w\s\\\/\.+-／]+\)?|\[\d+[\w\s\\\/\.+-／]+\]?|（\d+[\w\s\\\/\.+-／]+）?|【\d+[\w\s\\\/\.+-]+／】?|\d+P/i, "").replace(/[\?<>\\:\*\|":]/g, " ").replaceAll("/", "／").trim();
         if (fastDownload) {
             selector = siteData.imgs;
             titleText = (customTitle || titleReplace);
@@ -23575,7 +23544,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     const getTitle = async () => {
                         let text;
                         if (isString(title)) {
-                            text = fun.gt(title)?.replace(/\(\d+[\w\s\\\/\.+-／]+\)?|\[\d+[\w\s\\\/\.+-／]+\]?|（\d+[\w\s\\\/\.+-／]+）?|【\d+[\w\s\\\/\.+-／]+】?|\d+P/i, "")?.trim();
+                            text = fun.gt(title)?.replace(/\(\d+[\w\s\\\/\.+-／]+\)?|\[\d+[\w\s\\\/\.+-／]+\]?|（\d+[\w\s\\\/\.+-／]+）?|【\d+[\w\s\\\/\.+-／]+】?|\d+P/i, "")?.replaceAll("/", "／")?.trim();
                         } else if (isFn(title)) {
                             text = await title();
                         }
@@ -23824,7 +23793,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     }
 
-    if (showOptions && isArray(siteData.insertImg)) {
+    if (!hasTouchEvents && showOptions && isArray(siteData.insertImg)) {
         _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + displayLanguage.str_121 : "✔️ " + displayLanguage.str_121, () => {
             TurnOffImageNavigationShortcutKeys == 0 ? _GM_setValue("TurnOffImageNavigationShortcutKeys", 1) : _GM_setValue("TurnOffImageNavigationShortcutKeys", 0);
             location.reload();
@@ -23846,10 +23815,12 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     }
 
     if (siteData.category && ["nsfw1", "nsfw2", "hcomic", "comic", "lazyLoad"].includes(siteData.category)) {
-        _GM_registerMenuCommand(FancyboxWheelOptions == 0 ? "❌ " + displayLanguage.str_119 : "✔️ " + displayLanguage.str_119, () => {
-            FancyboxWheelOptions == 0 ? _GM_setValue("FancyboxWheelOptions", 1) : _GM_setValue("FancyboxWheelOptions", 0);
-            location.reload();
-        });
+        if (!hasTouchEvents) {
+            _GM_registerMenuCommand(FancyboxWheelOptions == 0 ? "❌ " + displayLanguage.str_119 : "✔️ " + displayLanguage.str_119, () => {
+                FancyboxWheelOptions == 0 ? _GM_setValue("FancyboxWheelOptions", 1) : _GM_setValue("FancyboxWheelOptions", 0);
+                location.reload();
+            });
+        }
         _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + displayLanguage.str_120 : "✔️ " + displayLanguage.str_120, () => {
             newTabViewLightGallery == 0 ? localStorage.setItem("newTabViewLightGallery", 1) : localStorage.setItem("newTabViewLightGallery", 0);
             location.reload();
