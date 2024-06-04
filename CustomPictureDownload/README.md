@@ -1,14 +1,14 @@
 <h1>測試通過環境：</h1>
 <pre>
-2024/06/03
+2024/06/04
 PC
-Chrome 125.0.6422.77 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
-Edge 125.0.2535.51 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
+Chrome 125.0.6422.142 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
+Edge 125.0.2535.85 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
 Cent Browser  5.1.1130.82 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
-FireFox 126.0 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
+FireFox 126.0.1 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
 Android
 Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
-Firefox for Android 126.0 + Tampermonkey 5.1.1
+Firefox for Android 126.0.1 + Tampermonkey 5.1.1
 Waterfox for Android 1.0.7 + Tampermonkey 5.1.1
 XBrowser 4.6.2
 ViaBrowser 5.6.1
@@ -2770,6 +2770,14 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
+                    <a href="https://ai2d.fun/note/list.php?smt=logined&type_type=auto">AI2D</a>
+                </td>
+                <td>
+                    <a href="https://aiimg.fun/note/list.php">AI.img</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.mizugigurabia.com/">水着グラビア</a>
                 </td>
                 <td></td>
@@ -3931,7 +3939,13 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://allporncomic.com/">AllPornComic</a>
+                    <a href="https://allporncomic.com/porncomic/">AllPornComic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangadistrict.com/">MANGA DISTRICT</a>
                 </td>
                 <td></td>
             </tr>
@@ -4905,14 +4919,6 @@ imgs: async () => {
                 </td>
                 <td>
                     <a href="http://h5.ykmh.com/">h5.ykmh.com</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.mhkan.com/">漫画看</a>
-                </td>
-                <td>
-                    <a href="https://m.mhkan.com/">m.mhkan.com</a>，預設關閉
                 </td>
             </tr>
             <tr>
