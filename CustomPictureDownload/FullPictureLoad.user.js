@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.2.14
+// @version            2.3.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -17833,7 +17833,13 @@ if (next) {
                 str_123: "此網站顯示眼睛圖示和圖片數量",
                 str_124: "此網站下載影片",
                 str_125: "🧹 重置此網站儲存的所有腳本設定",
-                str_126: "🧹 重置腳本儲存的所有全局設定"
+                str_126: "🧹 重置腳本儲存的所有全局設定",
+                str_127: "右鍵：匯出圖址(7)",
+                str_128: hasTouchEvents ? "打開收藏" : "打開收藏(9)",
+                str_129: hasTouchEvents ? "關閉收藏" : "關閉收藏(9)",
+                str_130: "編輯收藏",
+                str_131: "保存",
+                str_132: "關閉"
             };
             break;
         case "zh":
@@ -17965,7 +17971,13 @@ if (next) {
                 str_123: "此网站显示眼睛图标和图片数量",
                 str_124: "此网站下载视频",
                 str_125: "🧹 重置此网站存储的所有脚本设置",
-                str_126: "🧹 重置脚本存储的所有全局设置"
+                str_126: "🧹 重置脚本存储的所有全局设置",
+                str_127: "右键：导出图址(7)",
+                str_128: hasTouchEvents ? "打开收藏" : "打开收藏(9)",
+                str_129: hasTouchEvents ? "关闭收藏" : "关闭收藏(9)",
+                str_130: "编辑收藏",
+                str_131: "保存",
+                str_132: "关闭"
             };
             break;
         default:
@@ -18016,7 +18028,7 @@ if (next) {
                 str_44: "No Picture Element",
                 str_45: "URLs Copied ",
                 str_46: "About To Scroll...",
-                str_47: "Left Click：Download And Compress\nMiddle Click：Export URLs.txt\nLeft Click：Copy Image URL And Title Or Aggregate Images",
+                str_47: "Left Click：Download And Compress\nMiddle Click：Export URLs.txt\nRight Click：Copy Image URL And Title Or Aggregate Images",
                 str_48: "Downloading & Compressing, Please Try Again Later!",
                 str_49: "Get Pictureing Please Try Again Later!",
                 str_50: "",
@@ -18095,7 +18107,13 @@ if (next) {
                 str_123: "This website Show eye icon and picture number",
                 str_124: "This website downloads videos",
                 str_125: "🧹 Reset all script settings stored on this site",
-                str_126: "🧹 Reset all saved global settings"
+                str_126: "🧹 Reset all saved global settings",
+                str_127: "Right Click：Export URLs(7)",
+                str_128: hasTouchEvents ? "Open Favor" : "Open Favor(9)",
+                str_129: hasTouchEvents ? "close Favor" : "close Favor(9)",
+                str_130: "Edit Favor",
+                str_131: "save",
+                str_132: "close"
             };
             break;
     }
@@ -19668,20 +19686,36 @@ if (next) {
                 let width = "24%";
                 if (isString(customWidth)) width = customWidth;
                 const buttonObj = [{
+                    id: "FullPictureLoadOpenFavoritesBtn",
+                    className: "FullPictureLoadPageButtonTop",
+                    text: displayLanguage.str_128,
+                    cfn: event => {
+                        event.preventDefault();
+                        let b = fun.ge("#FullPictureLoadOpenFavoritesBtn");
+                        let f = fun.ge("#FullPictureLoadFavorUl");
+                        let t = fun.ge("#editFavorDiv");
+                        if (f || t) {
+                            fun.remove("#FullPictureLoadFavorUl,#editFavorDiv");
+                            b.innerText = displayLanguage.str_128;
+                        } else {
+                            createFavor();
+                            b.innerText = displayLanguage.str_129;
+                        }
+                    }
+                }, {
                     id: "FullPictureLoadCopyURLBtn",
                     className: "FullPictureLoadPageButtonTop",
                     text: displayLanguage.str_105,
+                    title: displayLanguage.str_127,
                     cfn: event => {
                         event.preventDefault();
                         copyImgSrcTextB();
-                    }
-                }, {
-                    id: "FullPictureLoadExportURLBtn",
-                    className: "FullPictureLoadPageButtonTop",
-                    text: displayLanguage.str_104,
-                    cfn: event => {
-                        event.preventDefault();
-                        exportImgSrcText();
+                    },
+                    mfn: event => {
+                        if (event.button == 2) {
+                            event.preventDefault();
+                            exportImgSrcText();
+                        }
                     }
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
@@ -19753,6 +19787,7 @@ if (next) {
                     //button.style.height = "24px";
                     button.innerText = obj.text;
                     button.oncontextmenu = () => false;
+                    if (!!obj.title) button.title = obj.title;
                     if (!!obj.cfn) button.addEventListener("click", obj.cfn);
                     if (!!obj.mfn) button.addEventListener("mousedown", obj.mfn);
                     buttonDiv.appendChild(button);
@@ -22819,6 +22854,7 @@ if (newWindowDataViewMode == 1) {
     `;
     }
 
+    const favor_columns = hasTouchEvents ? "1fr 1fr 1fr" : "1fr 1fr 1fr 1fr";
     const FullPictureLoadStyle = `
 .fancybox-container,.fancybox__container {
     z-index: 2147483647 !important;
@@ -23220,8 +23256,68 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
 .fancybox-infobar *,.fancybox__infobar,a[data-fancybox-download],a[data-fancybox-download]:hover,a[data-fancybox-download]:link,a[data-fancybox-download]:visited,a[data-fancybox-download]:active {
     color: white;
 }
+
 a[data-fancybox]:hover {
     opacity: 1 !important;
+}
+
+#FullPictureLoadFavorUl {
+    width: 100%;
+    background-color: transparent !important;
+    padding-left: 0;
+    list-style-type: none;
+    display: grid !important;
+    grid-template-columns: ${favor_columns};
+    padding: 2px;
+    list-style: none;
+    margin: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.favor-item {
+    float: left;
+    width: unset !important;
+    min-height: unset !important;
+    margin:0px 10px 10px 0px !important;
+    line-height: 25px;
+    padding: 3px;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+#editFavorTextarea {
+    width: 98%;
+    height: 20em;
+    resize: vertical !important;
+    background-color: unset !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+    margin: 5px !important;
+    padding: 5px !important;
+}
+
+#editFavorDiv {
+    background-color: #FAFAFB;
+    margin: 0 0 6px 0 !important;
+}
+
+.editFavorButton {
+    min-width: 70px;
+    line-height: 25px;
+    margin: 5px !important;
+    float: none !important;
+    padding: 0 !important;
+    color: #000000 !important;
+    border: 1px solid #a0a0a0 !important;
+    background-color: transparent !important;
 }
                 `;
 
@@ -23962,6 +24058,98 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     }
 
+    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\n小黃書,https://xchina.biz/\n8色人體攝影,https://8se.me/\n紳士会所,https://www.hentaiclub.net/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n图宅网,https://www.tuzac.com/\n秀色女神,https://www.xsnvshen.co/\nAVJB,https://avjb.com/albums/\nHotAsiaGirl,https://hotgirl.asia/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
+
+    const createFavorTextarea = () => {
+        let tE = ge("#FullPictureLoadOptionsButtonParentDiv");
+        if (!tE) return;
+        let favorData = _GM_getValue("favorData", defaultFavor);
+        let editFavorDiv = document.createElement("div");
+        editFavorDiv.id = "editFavorDiv";
+        let textarea = document.createElement("textarea");
+        textarea.id = "editFavorTextarea";
+        editFavorDiv.appendChild(textarea);
+        tE.parentNode.insertBefore(editFavorDiv, tE.nextSibling);
+        [{
+            text: displayLanguage.str_131,
+            id: "editFavorSaveBtn",
+            cfn: event => {
+                event.preventDefault();
+                _GM_setValue("favorData", textarea.value);
+                createFavor();
+                editFavorDiv.remove();
+            }
+        }, {
+            text: displayLanguage.str_132,
+            id: "editFavorCloseBtn",
+            cfn: event => {
+                event.preventDefault();
+                let b = fun.ge("#FullPictureLoadOpenFavoritesBtn");
+                b.innerText = displayLanguage.str_128;
+                editFavorDiv.remove();
+            }
+        }].forEach(obj => {
+            let button = document.createElement("button");
+            button.id = obj.id;
+            button.className = "editFavorButton";
+            button.innerText = obj.text;
+            if (!!obj.cfn) button.addEventListener("click", obj.cfn);
+            editFavorDiv.appendChild(button);
+        });
+        textarea.value = favorData;
+        editFavorDiv.scrollIntoView({
+            block: "center",
+            inline: "center"
+        });
+    };
+
+    const createFavor = () => {
+        let tE = ge("#FullPictureLoadOptionsButtonParentDiv");
+        if (!tE) return;
+        let favorData = _GM_getValue("favorData", defaultFavor);
+        let parentWidth = tE.parentNode.clientWidth;
+        let FavorUl = document.createElement("ul");
+        FavorUl.id = "FullPictureLoadFavorUl";
+        FavorUl.style.maxWidth = parentWidth + "px";
+        tE.parentNode.insertBefore(FavorUl, tE.nextSibling);
+        let favorDataArray = favorData.split("\n").filter(item => item);
+        let textColor = "#000";
+        let backgroundColor = "#15d3bf";
+        for (let favor of favorDataArray) {
+            try {
+                let [name, value] = favor.split(",");
+                if (name === "text-color") {
+                    textColor = value;
+                } else if (name === "background-color") {
+                    backgroundColor = value;
+                } else {
+                    let li = document.createElement("li");
+                    li.className = "favor-item";
+                    li.style.backgroundColor = backgroundColor;
+                    li.style.color = textColor;
+                    let a = document.createElement("a");
+                    a.innerText = name;
+                    a.href = value;
+                    a.style.color = textColor;
+                    li.appendChild(a);
+                    FavorUl.appendChild(li);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        let li = document.createElement("li");
+        li.className = "favor-item";
+        li.style.backgroundColor = backgroundColor;
+        li.style.color = textColor;
+        li.innerText = displayLanguage.str_130;
+        li.addEventListener("click", () => {
+            createFavorTextarea();
+            FavorUl.remove();
+        });
+        FavorUl.appendChild(li);
+    };
+
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !siteData.category.includes("lazyLoad") && !siteData.category.includes("none") && !siteData.category.includes("ad")) {
         if (siteData.key != 0) {
             if (!hasTouchEvents) {
@@ -23999,6 +24187,19 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 if (event.code == "Numpad6" || event.key == "6") return autoScrollEles(); //數字鍵6
                 if (event.code == "Numpad7" || event.key == "7") return exportImgSrcText(); //數字鍵7
                 if (event.code == "Numpad8" || event.key == "8") return newTabView(); //數字鍵8
+                if (event.code == "Numpad9" || event.key == "9") { //數字鍵9
+                    let b = fun.ge("#FullPictureLoadOpenFavoritesBtn");
+                    let f = fun.ge("#FullPictureLoadFavorUl");
+                    let t = fun.ge("#editFavorDiv");
+                    if (f || t) {
+                        fun.remove("#FullPictureLoadFavorUl,#editFavorDiv");
+                        b.innerText = displayLanguage.str_128;
+                    } else {
+                        createFavor();
+                        b.innerText = displayLanguage.str_129;
+                    }
+                    return;
+                }
                 if (event.code == "NumpadSubtract" || event.key == "-") { //數字鍵-
                     fun.clearSetTimeout();
                     return reduceZoom();
