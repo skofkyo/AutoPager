@@ -447,6 +447,7 @@ https://www.eyval.net/*
 *://www.hmllk.com/chapter/*
 *://*guixiu.org/post/*.html
 *://*.pic88.cc/e/*/*.html
+*://www.ku138.cc/b/*/*.html
 *://www.momotk.com/*.html
 *://momotk*.uno/*.html
 *://18cute.monster/chapter/*
