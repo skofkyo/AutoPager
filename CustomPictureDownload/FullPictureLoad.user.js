@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.3.0
+// @version            2.3.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -204,7 +204,7 @@
             }
             return title;
         },
-        css: "body{overflow:unset!important}.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(a):not(*[class^=fancybox]),.photoMask,.banner_ad{display: none!important;}",
+        css: "body{overflow:unset!important}a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(a):not(*[class^=fancybox]),.photoMask,.banner_ad{display: none!important;}",
         topButton: true,
         downloadVideo: true,
         category: "nsfw2"
@@ -481,7 +481,7 @@
         category: "nsfw2"
     }, {
         name: "秀人集",
-        host: ["www.123781.xyz"],
+        host: ["www.123783.xyz"],
         reg: () => /\/\w+\/\d+\.html$/.test(siteUrl) && fun.ge("//div[@class='item_info']//a[text()='秀人集']"),
         init: () => {
             let pag = fun.gae(".page");
@@ -499,7 +499,7 @@
         category: "nsfw1"
     }, {
         name: "秀人美女網",
-        host: ["www.xrmn09.top", "xrmn9.ooov.bf"],
+        host: ["www.xiu01.top"],
         reg: () => /\/\w+\/\d+\/\d+\.html$/.test(siteUrl) && fun.ge("//div[@class='single-cat']/a[text()='秀人美女网']"),
         imgs: () => fun.getImg(".content p img[alt]", fun.gt(".page a:last-child", 2), 3, null, 200),
         button: [4],
@@ -513,7 +513,7 @@
         category: "nsfw1"
     }, {
         name: "极品性感美女",
-        host: ["www.12356787.xyz", "x006.nnnq.bf", "尤物网.Com"],
+        host: ["www.xgmn5.top", "尤物网.Com"],
         reg: () => /\/\w+\/\w+\.html$/.test(siteUrl) && fun.ge("//div[@class='toptip']/a[text()='极品性感美女']"),
         init: () => {
             let pag = fun.gae(".pagination");
@@ -667,6 +667,16 @@
         ],
         customTitle: ".PsBox",
         css: ".m_adv,.m_kanp{display:none!important}",
+        category: "nsfw1"
+    }, {
+        name: "美女写真网",
+        host: ["www.ku138.cc"],
+        reg: /^https?:\/\/www\.ku138\.cc\/\w+\/\d+\/\d+\.html$/,
+        imgs: () => fun.getImgA(".content img", ".page>a[href]"),
+        button: [4],
+        insertImg: [".content", 2],
+        customTitle: () => fun.ge("meta[name=keywords]").content,
+        css: ".center:has(>.dibu1),.center:has(>.dibu2){display:none!important}",
         category: "nsfw1"
     }, {
         name: "雅拉图",
@@ -6126,9 +6136,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             return fun.gae(".td-post-content .tdb-block-inner.td-fix-index img").map(e => decodeURIComponent(e.src));
         },
         button: [4],
-        insertImg: [".td-post-content .tdb-block-inner.td-fix-index", 2],
+        insertImg: [".td-post-content .tdb-block-inner.td-fix-index", 2, 1000],
         go: 1,
-        customTitle: () => fun.gt(".tdb-title-text").replace(/\d+P([\d\s\+P]+)?/, "").replaceAll("|", "-").trim(),
+        customTitle: () => fun.gt(".tdb-title-text").replace(/\d+P[\d\s]+V|\d+P([\d\s\+P]+)?/, "").replaceAll("|", "-").trim(),
         downloadVideo: true,
         category: "nsfw1"
     }, {
@@ -8610,6 +8620,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         insertImg: [".container.clearfix", 2],
         go: 1,
         customTitle: ".main-title:not(.recommend-title)",
+        css: ".custom_link-wrapper,div:has(>#floating-ad){display:none!important;}",
         category: "nsfw2"
     }, {
         name: "XO福利圖 分類自動翻頁",
@@ -8624,6 +8635,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             title: (dom) => "Page" + fun.gt(".paging-item--current", 1, dom)
         },
         openInNewTab: ".picture-list a:not([target=_blank])",
+        css: ".custom_link-wrapper,div:has(>#floating-ad){display:none!important;}",
         category: "autoPager"
     }, {
         name: "MOMO图库",
@@ -9717,7 +9729,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "HentaiNexus圖片清單頁",
         host: ["hentainexus.com"],
-        reg: /^https?:\/\/hentainexus\.com\/view\/\d+$/,
+        reg: () => !hasTouchEvents && /^https?:\/\/hentainexus\.com\/view\/\d+$/.test(fun.url),
         init: () => fun.createImgBox("//div[div[@class='columns is-multiline']][@class='box']", 2),
         imgs: async () => {
             thumbnailsSrcArray = fun.getImgSrcArr(".card-image img");
@@ -12517,7 +12529,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             fun.clearAllTimer(1);
             if (autoScrollAllElement === 1) _this.scrollEle();
         },
-        imgs: () => fun.ge(".mh_comicpic img[src^=blob]") ? fun.imgBlobArr(".mh_comicpic img[src^=blob]") : fun.gae(".mh_comicpic img[src]"),
+        imgs: () => fun.ge(".mh_comicpic img[src^=blob]") ? fun.imgBlobUrlArr(".mh_comicpic img[src^=blob]") : fun.gae(".mh_comicpic img[src]"),
         //scrollEle: [".mh_comicpic img", 600],
         scrollEle: () => fun.aotoScrollEles(".mh_comicpic", (ele) => isEle(fun.ge("img[src]", ele)), 10000),
         next: "//a[text()='下一章']",
@@ -12839,7 +12851,7 @@ if (next) {
         },
         init: async () => {
             fun.MangabzUI();
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fun.ge("#cp_img");
                 tE.innerHTML = "";
@@ -12954,7 +12966,7 @@ if (next) {
         },
         init: async () => {
             fun.XmanhuaUI();
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fun.ge("#cp_img");
                 tE.innerHTML = "";
@@ -13076,7 +13088,7 @@ if (next) {
             return fun.createImgArray(srcs)
         },
         init: async () => {
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fun.ge("#cp_img");
                 tE.innerHTML = "";
@@ -13233,7 +13245,7 @@ if (next) {
         },
         init: async () => {
             fun.XmanhuaUI();
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fun.ge("#cp_img");
                 tE.innerHTML = "";
@@ -15240,7 +15252,7 @@ if (next) {
         include: "td img",
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         init: async () => {
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await fun.getKukudmSrc(siteUrl, document, 0).then(srcs => fun.createImgArray(srcs)).then(async imgs => {
                 let tE = fun.ge("//td[input]");
                 tE.innerHTML = "";
@@ -15376,7 +15388,7 @@ if (next) {
         include: ".classBox img,.imgBox",
         init: async () => {
             fun.remove("//center[iframe] | //a[img] | //ul[center[li[@class='txtA']]]");
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await fun.getKukudmSrc(siteUrl, document, 0).then(urls => fun.createImgArray(urls)).then(async imgs => {
                 let tE = fun.ge(".imgBox");
                 tE.innerHTML = "";
@@ -15678,7 +15690,7 @@ if (next) {
         name: "GODA漫畫/包子漫畫",
         enable: 1,
         reg: () => {
-            let hosts = ["news.cocolamanhua.com", "baozimh.one"];
+            let hosts = ["n.cocolamanhua.com", "baozimh.one"];
             return hosts.includes(fun.lh) && /^\/[\w-]+\/$|^\/[\w-]+\/$|^\/chapter\/\d+\.html$/i.test(fun.lp) && fun.ge("h2#title") && comicInfiniteScrollMode != 1;
         },
         init: async () => {
@@ -15729,7 +15741,7 @@ if (next) {
         name: "GODA漫畫/包子漫畫 自動翻頁",
         enable: 1,
         reg: () => {
-            let hosts = ["news.cocolamanhua.com", "baozimh.one"];
+            let hosts = ["n.cocolamanhua.com", "baozimh.one"];
             return hosts.includes(fun.lh) && /^\/[\w-]+\/$|^\/[\w-]+\/$|^\/chapter\/\d+\.html$/i.test(fun.lp) && fun.ge("h2#title") && comicInfiniteScrollMode == 1;
         },
         getSrcs: (json = siteJson) => json.data.info.images.map(e => e.url),
@@ -16267,7 +16279,7 @@ if (next) {
         },
         init: async () => {
             fun.copymangaUI();
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fun.ge(".comicContent-list");
                 tE.innerHTML = "";
@@ -16446,7 +16458,7 @@ if (next) {
             });
         },
         init: async () => {
-            fun.showMsg("自動翻頁初始化中...", 0);
+            fun.showMsg(displayLanguage.str_135, 0);
             await _this.getData();
             let imgs = fun.createImgArray(globalImgArray);
             let tE = fun.ge(".comicContentPopupImageList");
@@ -16879,7 +16891,7 @@ if (next) {
             await fun.waitEle(".content-img.lazy_img[src^=blob]");
             if (autoScrollAllElement === 1) _this.scrollEle();
         },
-        imgs: () => fun.imgBlobArr(".content-img[src^=blob]"),
+        imgs: () => fun.imgBlobUrlArr(".content-img[src^=blob]"),
         scrollEle: () => fun.aotoScrollEles(".img-content .content-img", (img) => /^blob/.test(img.src)),
         next: ".view-fix-bottom-bar-item-menu-next",
         prev: ".view-fix-bottom-bar-item-menu-prev",
@@ -17839,7 +17851,10 @@ if (next) {
                 str_129: hasTouchEvents ? "關閉收藏" : "關閉收藏(9)",
                 str_130: "編輯收藏",
                 str_131: "保存",
-                str_132: "關閉"
+                str_132: "關閉",
+                str_133: "選單",
+                str_134: "浮動選單",
+                str_135: "無限滾動初始化中..."
             };
             break;
         case "zh":
@@ -17977,7 +17992,10 @@ if (next) {
                 str_129: hasTouchEvents ? "关闭收藏" : "关闭收藏(9)",
                 str_130: "编辑收藏",
                 str_131: "保存",
-                str_132: "关闭"
+                str_132: "关闭",
+                str_133: "菜单",
+                str_134: "浮动菜单",
+                str_135: "无限滚动初始化中..."
             };
             break;
         default:
@@ -18067,9 +18085,9 @@ if (next) {
                 str_83: "Reset",
                 str_84: "Save",
                 str_85: hasTouchEvents ? "Settings" : "Settings(*)",
-                str_86: hasTouchEvents ? "Toggle" : "Toggle(5)",
-                str_87: hasTouchEvents ? "Zoom" : "Zoom(-+)",
-                str_88: hasTouchEvents ? "Cancel" : "Cancel(.)",
+                str_86: hasTouchEvents ? "Toggle" : "ToggleMode(5)",
+                str_87: hasTouchEvents ? "Zoom" : "ToggleZoom(-+)",
+                str_88: hasTouchEvents ? "Cancel" : "CancelZoom(.)",
                 str_89: "Pause Automatic Page Turning",
                 str_90: "Enable Automatic Page Turning",
                 str_91: "Initialization Settings",
@@ -18085,10 +18103,10 @@ if (next) {
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
-                str_104: hasTouchEvents ? "Export" : "Export URLs(7)",
-                str_105: hasTouchEvents ? "Copy" : "Copy URLs(1)",
-                str_106: hasTouchEvents ? "TabView" : "New Tab View(8)",
-                str_107: hasTouchEvents ? "Download" : "Fast Download(3)",
+                str_104: hasTouchEvents ? "Export" : "ExportURLs(7)",
+                str_105: hasTouchEvents ? "Copy" : "CopyURLs(1)",
+                str_106: hasTouchEvents ? "TabView" : "NewTabView(8)",
+                str_107: hasTouchEvents ? "Download" : "FastDownload(3)",
                 str_108: "※Where the message appears ( 0 ~ 4 )：",
                 str_109: "0: Center, 1: Upper left, 2: Upper right, 3: Lower left, 4: Lower right",
                 str_110: "※Convert Webp to Jpg",
@@ -18109,11 +18127,14 @@ if (next) {
                 str_125: "🧹 Reset all script settings stored on this site",
                 str_126: "🧹 Reset all saved global settings",
                 str_127: "Right Click：Export URLs(7)",
-                str_128: hasTouchEvents ? "Open Favor" : "Open Favor(9)",
-                str_129: hasTouchEvents ? "close Favor" : "close Favor(9)",
+                str_128: hasTouchEvents ? "OpenFavor" : "OpenFavor(9)",
+                str_129: hasTouchEvents ? "CloseFavor" : "CloseFavor(9)",
                 str_130: "Edit Favor",
                 str_131: "save",
-                str_132: "close"
+                str_132: "close",
+                str_133: "Menu",
+                str_134: "Float Menu",
+                str_135: "Infinite Scroll Initializing"
             };
             break;
     }
@@ -19691,16 +19712,7 @@ if (next) {
                     text: displayLanguage.str_128,
                     cfn: event => {
                         event.preventDefault();
-                        let b = fun.ge("#FullPictureLoadOpenFavoritesBtn");
-                        let f = fun.ge("#FullPictureLoadFavorUl");
-                        let t = fun.ge("#editFavorDiv");
-                        if (f || t) {
-                            fun.remove("#FullPictureLoadFavorUl,#editFavorDiv");
-                            b.innerText = displayLanguage.str_128;
-                        } else {
-                            createFavor();
-                            b.innerText = displayLanguage.str_129;
-                        }
+                        toggleFavor();
                     }
                 }, {
                     id: "FullPictureLoadCopyURLBtn",
@@ -20657,7 +20669,7 @@ if (next) {
                 quality: quality
             }).then(blob => URL.createObjectURL(blob));
         },
-        imgBlobArr: async (selector, type = "image/jpeg", quality = 1) => {
+        imgBlobUrlArr: async (selector, type = "image/jpeg", quality = 1) => {
             fun.showMsg(displayLanguage.str_53, 0);
             await fun.delay(200, 0);
             let num = 0;
@@ -21382,7 +21394,7 @@ if (next) {
                     promiseBlobArray.push(promiseBlob);
                 }
             }
-            if (videosSrcArray.length > 0 && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
+            if (videosSrcArray.length > 0 && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1 && !hasTouchEvents) {
                 const padStart = String(videosNum).length;
                 loopMsg = setInterval(() => {
                     fun.showMsg("Video Downloading...", 0);
@@ -21426,7 +21438,7 @@ if (next) {
                         let blobData = blobDataArray[i].blob;
                         let type = blobData.type;
                         try {
-                            if (/octet-stream/.test(type) || hasTouchEvents && type == "") {
+                            if (/octet-stream/.test(type) || hasTouchEvents && type === "") {
                                 if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
                                     blobData = await fun.convertImage(blobData, "image/webp");
                                     ex = "webp";
@@ -21434,7 +21446,7 @@ if (next) {
                                     blobData = await fun.convertImage(blobData);
                                     ex = "jpg";
                                 }
-                                if (hasTouchEvents && type == "") {
+                                if (type === "") {
                                     fun.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
                                 } else {
                                     fun.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
@@ -21458,7 +21470,7 @@ if (next) {
                             }
                         }
                         let fileName;
-                        ex == "mp4" ? fileName = `${blobDataArray[i].picNum}V.${(ex)}` : fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
+                        ["mp4", "webm", "mov"].includes(ex) ? fileName = `${blobDataArray[i].picNum}V.${(ex)}` : fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
                         if (options.zip == 1) {
                             //console.log(`第${n}/${blobDataArray.length}張，檔案名：${fileName}，大小：${parseInt(blobDataArray[i].blob.size / 1024, 10)} Kb`);
                             zipFolder.file(fileName, blobData, {
@@ -22563,12 +22575,14 @@ if (newWindowDataViewMode == 1) {
         menuDiv.id = "FullPictureLoadFixedMenu";
         const menuObj = [{
             text: displayLanguage.str_106,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 newTabView();
             }
         }, {
             text: displayLanguage.str_107,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 fastDownload = true;
@@ -22576,18 +22590,21 @@ if (newWindowDataViewMode == 1) {
             }
         }, {
             text: displayLanguage.str_104,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 exportImgSrcText();
             }
         }, {
             text: displayLanguage.str_105,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 copyImgSrcTextB();
             }
         }, {
             text: displayLanguage.str_88,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 fun.clearSetTimeout();
@@ -22595,6 +22612,7 @@ if (newWindowDataViewMode == 1) {
             }
         }, {
             text: displayLanguage.str_87,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 fun.clearSetTimeout();
@@ -22608,12 +22626,14 @@ if (newWindowDataViewMode == 1) {
             }
         }, {
             text: displayLanguage.str_86,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 toggleImgMode();
             }
         }, {
             text: displayLanguage.str_85,
+            show: 0,
             cfn: event => {
                 event.preventDefault();
                 if (!fun.ge("body>#FullPictureLoadOptions")) {
@@ -22622,10 +22642,14 @@ if (newWindowDataViewMode == 1) {
                 }
                 fun.ge("#FullPictureLoadOptions").removeAttribute("style");
             }
+        }, {
+            text: displayLanguage.str_133,
+            show: 1
         }];
         const createMenu = obj => {
             let item = document.createElement("div");
             item.innerText = obj.text;
+            if (obj.show === 0) item.classList.add("itemNoShow");
             item.oncontextmenu = () => false;
             if (!!obj.cfn) item.addEventListener("click", obj.cfn);
             if (!!obj.mfn) item.addEventListener("mousedown", obj.mfn);
@@ -22633,6 +22657,26 @@ if (newWindowDataViewMode == 1) {
         };
         [...menuObj].forEach(obj => createMenu(obj));
         document.body.appendChild(menuDiv);
+        menuDiv.onmouseenter = () => {
+            fun.gae(".itemNoShow", menuDiv).forEach(e => {
+                e.classList.remove("itemNoShow");
+                e.classList.add("itemShow");
+                e.width = "112px";
+            });
+            menuDiv.style.width = "124px";
+            menuDiv.lastChild.width = "112px";
+            menuDiv.lastChild.innerText = displayLanguage.str_134;
+        }
+        menuDiv.onmouseleave = () => {
+            fun.gae(".itemShow", menuDiv).forEach(e => {
+                e.classList.remove("itemShow");
+                e.classList.add("itemNoShow");
+                e.width = "44px";
+            });
+            menuDiv.style.width = "54px";
+            menuDiv.lastChild.width = "44px";
+            menuDiv.lastChild.innerText = displayLanguage.str_133;
+        }
     };
 
     //元素模擬點擊
@@ -22793,7 +22837,7 @@ if (newWindowDataViewMode == 1) {
     //根據使用者設置更改腳本選項元素的值
     const optionsSetValue = () => {
         ge("#FullPictureLoadOptionsIcon").checked = options.icon == 1 ? true : false;
-        ge("#FullPictureLoadOptionsMsgPos").value = _GM_getValue("FullPictureLoadMsgPos");
+        ge("#FullPictureLoadOptionsMsgPos").value = _GM_getValue("FullPictureLoadMsgPos", 0);
         ge("#FullPictureLoadOptionsThreading").value = options.threading;
         ge("#FullPictureLoadOptionsZip").checked = options.zip == 1 ? true : false;
         ge("#FullPictureLoadOptionsExtension").value = options.file_extension;
@@ -22982,21 +23026,19 @@ if (newWindowDataViewMode == 1) {
     font-family: Arial, sans-serif !important;
     font-size: 14px !important;
     color: #000000 !important;
-    width: 112px !important;
     height: auto !important;
     padding: 5px 5px 2px 5px !important;
     position: fixed !important;
-    left: 24px !important;
+    left: 12px !important;
     bottom: 152px !important;
     border: #ccc 1px solid !important;
     border-radius: 3px !important;
     background-color: #fff !important;
-    opacity: 0;
+    opacity: 0.4;
     z-index: 2147483647 !important;
 }
 
 #FullPictureLoadFixedMenu > div, #FullPictureLoadFixedMenuB > div {
-    width: 100px !important;
     height: 24px !important;
     line-height: 24px !important;
     overflow: hidden !important;
@@ -23016,6 +23058,10 @@ if (newWindowDataViewMode == 1) {
 
 #FullPictureLoadFixedMenu:hover {
   opacity: 1;
+}
+
+#FullPictureLoadFixedMenu .itemNoShow {
+  display: none !important;
 }
 
 #FullPictureLoadFixedMenuB {
@@ -23933,7 +23979,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
     let FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
 
     let downloadVideo = siteData.downloadVideo;
-    if (!!downloadVideo && downloadVideo === true) {
+    if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
         _GM_registerMenuCommand(FullPictureLoadCustomDownloadVideo == 0 ? "❌ " + displayLanguage.str_124 : "✔️ " + displayLanguage.str_124, () => {
             FullPictureLoadCustomDownloadVideo == 0 ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
             location.reload();
@@ -24058,7 +24104,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     }
 
-    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\n小黃書,https://xchina.biz/\n8色人體攝影,https://8se.me/\n紳士会所,https://www.hentaiclub.net/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n图宅网,https://www.tuzac.com/\n秀色女神,https://www.xsnvshen.co/\nAVJB,https://avjb.com/albums/\nHotAsiaGirl,https://hotgirl.asia/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
+    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\n小黃書,https://xchina.biz/\n8色人體攝影,https://8se.me/\n紳士会所,https://www.hentaiclub.net/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n图宅网,https://www.tuzac.com/\nModels Vibe,https://www.modelsvibe.com/\nAVJB,https://avjb.com/albums/\nHotAsiaGirl,https://hotgirl.asia/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
 
     const createFavorTextarea = () => {
         let tE = ge("#FullPictureLoadOptionsButtonParentDiv");
@@ -24071,21 +24117,21 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         editFavorDiv.appendChild(textarea);
         tE.parentNode.insertBefore(editFavorDiv, tE.nextSibling);
         [{
-            text: displayLanguage.str_131,
-            id: "editFavorSaveBtn",
-            cfn: event => {
-                event.preventDefault();
-                _GM_setValue("favorData", textarea.value);
-                createFavor();
-                editFavorDiv.remove();
-            }
-        }, {
             text: displayLanguage.str_132,
             id: "editFavorCloseBtn",
             cfn: event => {
                 event.preventDefault();
                 let b = fun.ge("#FullPictureLoadOpenFavoritesBtn");
                 b.innerText = displayLanguage.str_128;
+                editFavorDiv.remove();
+            }
+        }, {
+            text: displayLanguage.str_131,
+            id: "editFavorSaveBtn",
+            cfn: event => {
+                event.preventDefault();
+                _GM_setValue("favorData", textarea.value);
+                createFavor();
                 editFavorDiv.remove();
             }
         }].forEach(obj => {
@@ -24150,6 +24196,19 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         FavorUl.appendChild(li);
     };
 
+    const toggleFavor = () => {
+        let b = ge("#FullPictureLoadOpenFavoritesBtn");
+        let f = ge("#FullPictureLoadFavorUl");
+        let t = ge("#editFavorDiv");
+        if (f || t) {
+            fun.remove("#FullPictureLoadFavorUl,#editFavorDiv");
+            b.innerText = displayLanguage.str_128;
+        } else {
+            createFavor();
+            b.innerText = displayLanguage.str_129;
+        }
+    };
+
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !siteData.category.includes("lazyLoad") && !siteData.category.includes("none") && !siteData.category.includes("ad")) {
         if (siteData.key != 0) {
             if (!hasTouchEvents) {
@@ -24187,19 +24246,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 if (event.code == "Numpad6" || event.key == "6") return autoScrollEles(); //數字鍵6
                 if (event.code == "Numpad7" || event.key == "7") return exportImgSrcText(); //數字鍵7
                 if (event.code == "Numpad8" || event.key == "8") return newTabView(); //數字鍵8
-                if (event.code == "Numpad9" || event.key == "9") { //數字鍵9
-                    let b = fun.ge("#FullPictureLoadOpenFavoritesBtn");
-                    let f = fun.ge("#FullPictureLoadFavorUl");
-                    let t = fun.ge("#editFavorDiv");
-                    if (f || t) {
-                        fun.remove("#FullPictureLoadFavorUl,#editFavorDiv");
-                        b.innerText = displayLanguage.str_128;
-                    } else {
-                        createFavor();
-                        b.innerText = displayLanguage.str_129;
-                    }
-                    return;
-                }
+                if (event.code == "Numpad9" || event.key == "9") return toggleFavor(); //數字鍵9
                 if (event.code == "NumpadSubtract" || event.key == "-") { //數字鍵-
                     fun.clearSetTimeout();
                     return reduceZoom();
