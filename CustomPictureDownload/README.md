@@ -116,7 +116,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     },
     repeat: 1, //重複取得圖片元素，用於SPA網頁
     thums: ".thums", //Fancybox要用的縮略圖網址選擇器
-    scrollEle: ["元素", time],//[自動捲動元素, 捲動的間隔], 綁定快捷鍵數字鍵6
+    scrollEle: ["元素", time],//[自動滾動元素, 滾動的間隔], 綁定快捷鍵數字鍵6
     scrollEle: async () => {
         …code;
     },
@@ -129,7 +129,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         //插入圖片後要執行的代碼
         code;
     },
-    go: 1, //insertImg配套選項，圖片插入在頁面偏下位置時，捲動至第一張大圖的位置。
+    go: 1, //insertImg配套選項，圖片插入在頁面偏下位置時，滾動至第一張大圖的位置。
     customTitle: ".title", //元素選擇器取得元素的字串。
     customTitle: () => {
         code;
@@ -154,8 +154,8 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     openInNewTab: ".manga-cover>a:not([target=_blank])", //指定的A元素在新分頁開啟
     topButton: true, //添加返回頂部按鈕
     threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
-    fetch: 1, //使用Fetch API下載圖片，需要網站有支援CORS
-    referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.4khd.com/"或空""
+    fetch: 1, //使用Fetch API下載圖片，需要網站有開放CORS
+    referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
     infiniteScroll: true, //漫畫類標記有無限滾動模式
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
@@ -428,8 +428,8 @@ fun.attr(String, String, HTMLDocument or HTMLElement);
 //pos 0，添加進指定的元素裡面
 //pos 1，插入在指定的元素之前
 //pos 2，插入在指定的元素之後
-fun.createImgBox(selector);
-fun.createImgBox(selector, pos = 0);
+fun.createImgBox("selector");
+fun.createImgBox("selector", pos = 0);
 fun.createImgBox(String, Number);
 </pre>
 <pre>
@@ -484,7 +484,7 @@ fun.xml(String);
 <pre>
 //顯示簡短訊息
 //time ms，0持續顯示
-fun.showMsg("字串", time = 1000));
+fun.showMsg("字串", time = 1000);
 fun.showMsg(String, Number);
 </pre>
 <pre>
@@ -532,7 +532,7 @@ fun.run(String);
 //num陣列的長度
 fun.arr(num);
 fun.arr(num).map((_, i) => {
-    return (i+1);
+    return (i + 1);
 });
 fun.arr(Number);
 </pre>
@@ -578,13 +578,13 @@ fun.addUrlHtml(String, String, Number, String);
 </pre>
 <pre>
 //創建script元素
-fun.script(string, number= 0, number = 0, doc = document)
+fun.script(string, number= 0, number = 0, doc = document);
 //返回script
-fun.script("code")
+fun.script("code");
 //插入到document.body
-fun.script("code",0,1)
+fun.script("code", 0, 1);
 //src插入到document.body
-fun.script("srcUrl",1,1)
+fun.script("srcUrl", 1, 1);
 </pre>
 <pre>
 //依序滾動元素
@@ -600,7 +600,7 @@ fun.scrollEles(String, Number);
 fun.aotoScrollEles("selector", callback, time = 5000);
 fun.aotoScrollEles(String, Function or AsyncFunction, Number);
 //callback例子
-//ele參數為捲動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
+//ele參數為滾動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
 let callback = (ele) => fun.ge("img[src]", ele);
 //此例為判斷元素的src屬性是否已經轉為BlobURL
 let callback = (img) => /^blob/.test(img.src);
@@ -651,20 +651,20 @@ fun.imgToBlobURL(String, String, Number);
 [...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
 </pre>
 <pre>
-//包裝fun.imgToBlobURL函式。
+//封裝fun.imgToBlobURL函式。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
 //quality 壓縮比率 0 ~ 1
 //返回BlobURL陣列
-fun.imgBlobArr("selector", type = "image/jpeg", quality = 1);
-fun.imgBlobArr(String, String, Number);
+fun.imgBlobUrlArr("selector", type = "image/jpeg", quality = 1);
+fun.imgBlobUrlArr(String, String, Number);
 //例子1
-fun.imgBlobArr(".mh_comicpic img[src^=blob]");
+fun.imgBlobUrlArr(".mh_comicpic img[src^=blob]");
 //例子2
-fun.imgBlobArr(".image>img");
+fun.imgBlobUrlArr(".image>img");
 </pre>
 <pre>
-//使用Promise包裝GM_xmlhttpRequest
+//使用Promise封裝GM_xmlhttpRequest
 //只取得回應標頭，不接收完整資料，快速確認鏈結的存活狀態。
 fun.xhrHEAD("url");
 let status = await fun.xhrHEAD("url").then(res => res.status);
@@ -678,14 +678,14 @@ if (status == 200) {
 fun.xhrHEAD(String);
 </pre>
 <pre>
-//使用Promise包裝GM_xmlhttpRequest
+//使用Promise封裝GM_xmlhttpRequest
 //傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址陣列
 //imx.to、imagebam、postimg...等等
 fun.getImageHost([links]);
 fun.getImageHost(Array);
 </pre>
 <pre>
-//使用Promise包裝GM_xmlhttpRequest
+//使用Promise封裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
 fun.xhr("url", details = {});
 fun.xhr("url", {
@@ -701,7 +701,7 @@ fun.xhr("url", {
 fun.xhr(String, Object);
 </pre>
 <pre>
-//使用Promise包裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
+//使用Promise封裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
 fun.xhrDoc("url", details = {})
 fun.xhrDoc("url", {
     headers: {
@@ -724,7 +724,8 @@ fun.fetchDoc("url").then(doc => {
 fun.fetchDoc(String, Object);
 </pre>
 <pre>
-//使用Promise包裝iframe框架，返回iframe框架的document。
+//必須同源不能跨域
+//使用Promise封裝iframe框架，返回iframe框架的document。
 //selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
 let callback = (dom, frame) => { //參數dom為iframe的document，參數frame為iframe的contentWindow
@@ -734,7 +735,8 @@ await fun.iframeDoc("url", "selector", time = 5000, callback);
 fun.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
-//使用Promise包裝Fetch API搭配iframe框架，返回iframe框架的document。
+//必須同源不能跨域
+//使用Promise封裝Fetch API搭配iframe框架，返回iframe框架的document。
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
 //selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
@@ -745,12 +747,14 @@ await fun.iframeSrcDoc("url", "selector", time = 5000, callback);
 fun.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
-//使用Promise包裝iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
+//必須同源不能跨域
+//使用Promise封裝iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
 let iframe = await fun.iframeVar("url", "declares", time = 1000);
 fun.iframeVar(String, String, Number);
 </pre>
 <pre>
-//使用Promise包裝iframe框架，讓調用iframe框架能像fetch的寫法
+//必須同源不能跨域
+//使用Promise封裝iframe框架，讓調用iframe框架能像fetch的寫法
 const details = {
     loadTime: 1000, //框架的讀取時間
     waitEle: "img", //指定等待框架直至出現該元素的選擇器
@@ -895,21 +899,20 @@ fun.getImgCorsA(String, String or Array, Number);
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
 fun.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器或函式", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
 //判斷為最後一頁的函式舉例
-//doc是下一頁的document
+//參數doc是下一頁的document
 const last = doc => {
     let ele = fun.ge("#showmore", doc);
-    return ele.dataset.page >= ele.dataset.max ? true : false;
+    return ele.dataset.page >= ele.dataset.max;
 }
 const last = doc => {
     let currentPage = fun.ge("#pagenum", doc).innerText.match(/\d+/)[0]; //下一頁的當前頁數
     let totalPage = fun.ge("#pagenum", doc).innerText.match(/\/(\d+)/)[1]; //下一頁的最大頁數
     return currentPage >= totalPage ? true : false; //當前頁數大於等於最大頁數是最後一頁
 }
-//用在規則init
-fun.getNP("selector", "nextLinkEle", lastEle, "paginationEle", time, dataset, msg);
-fun.getNP("selector", "nextLinkEle");
+await fun.getNP("selector", "nextLinkEle", lastEle, "paginationEle", time, dataset, msg);
+await fun.getNP("selector", "nextLinkEle");
 fun.getNP(String, String, String or Function or AsyncFunction, String or null, Number, String, Number);
-//用在規則imgs，需要用async/await
+//用在規則imgs
 //應用在包子漫畫的用法
 imgs: async () => {
     await fun.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter");
@@ -939,13 +942,14 @@ imgs: async () => {
 <h1>腳本有綁定按鍵</h1>
 <p>數字鍵 0 下載壓縮</p>
 <p>數字鍵 1 複製圖片網址或手動模式的插入圖片</p>
-<p>數字鍵 2 捲動至第一張大圖</p>
+<p>數字鍵 2 滾動至第一張大圖</p>
 <p>數字鍵 3 一鍵下載</p>
-<p>數字鍵 4 捲動至最後一張大圖</p>
+<p>數字鍵 4 滾動至最後一張大圖</p>
 <p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式</p>
 <p>數字鍵 6 有自動滾動元素規則時調用</p>
 <p>數字鍵 7 匯出網址MediaURLs.txt文件</p>
 <p>數字鍵 8 開啟新空白頁載入圖集圖片</p>
+<p>數字鍵 9 打開/關閉自訂網站收藏集</p>
 <p>數字鍵 - 減鍵圖片以10%為單位比例縮小，會記憶縮放比例</p>
 <p>數字鍵 + 加鍵圖片以10%為單位比例放大，會記憶縮放比例</p>
 <p>數字鍵 . 點鍵取消縮放恢復為自動</p>
@@ -956,7 +960,7 @@ imgs: async () => {
 <br>
 <p>按0、Enter，2步驟開始下載。</p>
 <p>按1，複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
-<p>按2，捲動至腳本插入的第一張大圖</p>
+<p>按2，滾動至腳本插入的第一張大圖</p>
 <p>按3，一鍵下載，跳過自定義標題的步驟。</p>
 <br>
 <p>PS：需重複獲取原始圖片元素的規則，按1無法複製圖片網址，需點擊頁面功能按鈕或浮動選單按鈕的複製圖址。</p>
@@ -987,7 +991,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/06/03 17:26</p>
+<p>2024/06/06 21:35</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
 <p>
@@ -1003,7 +1007,69 @@ imgs: async () => {
 <img src="https://i.imgur.com/xQJePAo.jpg">
 <img src="https://i.imgur.com/GMsIaj9.jpg">
 <img src="https://i.imgur.com/OibRD2N.jpg">
-<p>※備註SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈結。</p>
+<h2>自定義編輯網站收藏說明</h2>
+<details>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+<br>
+<p>基本格式</p>
+<p>name,value</p>
+<p>文字顏色</p>
+<pre>text-color,#000</pre>
+<p>背景顏色</p>
+<pre>background-color,#15d3bf</pre>
+<p>網站名稱,網址</p>
+<pre>小黃書,https://xchina.biz/</pre>
+<p>入門，不搞的那麼多花裡胡哨，直接網站名稱,網址。</p>
+<pre>
+4KHD,https://www.4khd.com/
+小黃書,https://xchina.biz/
+8色人體攝影,https://8se.me/
+紳士会所,https://www.hentaiclub.net/
+</pre>
+<p>進階，統一修改文字顏色和背景顏色。</p>
+<pre>
+text-color,#111
+background-color,#16d4cf
+4KHD,https://www.4khd.com/
+小黃書,https://xchina.biz/
+8色人體攝影,https://8se.me/
+紳士会所,https://www.hentaiclub.net/
+</pre>
+<p>高階，花裡胡哨，每4個收藏就換一種背景顏色，當然也能穿插改文字顏色。</p>
+<pre>
+4KHD,https://www.4khd.com/
+小黃書,https://xchina.biz/
+8色人體攝影,https://8se.me/
+紳士会所,https://www.hentaiclub.net/
+background-color,#DD7CE8
+丝袜客,https://siwake.cc/
+萌图社,http://www.446m.com/
+图宅网,https://www.tuzac.com/
+秀色女神,https://www.xsnvshen.co/
+background-color,#BDE87C
+AVJB,https://avjb.com/albums/
+HotAsiaGirl,https://hotgirl.asia/
+HotGirl World,https://www.hotgirl2024.com/
+MIC MIC IDOL,https://www.micmicidol.club/
+background-color,#7C87E8
+Xasiat,https://www.xasiat.com/albums/
+XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
+色图,https://setu.lol/
+紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html
+</pre>
+<p>更多應用方式</p>
+<p>應用一，用醒目的顏色來區分大尺度、清涼、H漫、漫畫。</p>
+<p>應用二，用醒目的顏色來區分喜好度。</p>
+<br>
+<p>線上顏色選擇器</p>
+<a href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>
+</details>
+<h2>※備註</h2>
+<p>SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈結。</p>
 <h2>老司機類內置規則支持列表</h2>
 <details>
     <summary>
@@ -1026,7 +1092,7 @@ imgs: async () => {
         <tbody>
             <tr>
                 <td>
-                    <a href="https://web.telegram.org/k//">Telegram Web</a>
+                    <a href="https://web.telegram.org/k/">Telegram Web</a>
                 </td>
                 <td>從Telegram網頁版上的telegra.ph下載圖片，會被CentBrowser(5.0.1002.354)瀏覽器判斷為不安全封鎖下載，請自行決定是否保留檔案，從 <a href="https://tgstat.com/">TGStat</a>搜索cosplay、nsfw、Cosplay鉴赏 ，可以挖到不少你懂得。 </td>
             </tr>
@@ -1089,7 +1155,7 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.321781.xyz/">极品性感美女</a>
+                    <a href="https://www.xgmn5.top/">极品性感美女</a>
                 </td>
                 <td>
                     <a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com
@@ -2129,6 +2195,12 @@ imgs: async () => {
             </tr>
             <tr>
                 <td>
+                    <a href="https://4kup.net/">4KUP</a>
+                </td>
+                <td>圖片服務器屏蔽部分地區需要VPN才能顯示，高解析原圖需要下載，聚集的只是預覽圖</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://spacemiss.com/">Spacemiss.com</a>
                 </td>
                 <td></td>
@@ -2156,12 +2228,6 @@ imgs: async () => {
                     <a href="https://asianpink.net/">AsianPink</a>
                 </td>
                 <td>高解析原圖需要下載，聚集的只是預覽圖</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://4kup.net/">4KUP</a>
-                </td>
-                <td>圖片服務器屏蔽部分地區需要VPN才能顯示，高解析原圖需要下載，聚集的只是預覽圖</td>
             </tr>
             <tr>
                 <td>
@@ -3286,6 +3352,12 @@ imgs: async () => {
                 <td>
                     <a href="https://m.pic88.cc/">m.pic88.cc</a>，Pic8.cc
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ku138.cc/">美女写真网</a>
+                </td>
+                <td>China IP限定</td>
             </tr>
             <tr>
                 <td>
@@ -4557,7 +4629,7 @@ imgs: async () => {
                     <a href="https://godamh.com/">GODA漫畫</a>
                 </td>
                 <td>
-                    <a href="https://nav.telltome.net/">发布页</a> ，閱讀頁域名為news.cocolamanhua.com，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料，如有此情況需uBlock加信任名單。<pre>https://news.cocolamanhua.com/*/</pre>腳本自帶去廣告，還你乾淨的閱讀感受。
+                    <a href="https://nav.telltome.net/">发布页</a> ，閱讀頁域名為n.cocolamanhua.com，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料，如有此情況需uBlock加信任名單。<pre>https://n.cocolamanhua.com/*/</pre>腳本自帶去廣告，還你乾淨的閱讀感受。
                 </td>
             </tr>
             <tr>
@@ -4755,14 +4827,14 @@ imgs: async () => {
                 <td>
                     <a href="https://www.colamanga.com/">COLAMANGA</a>
                 </td>
-                <td>方向鍵上下章，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，下載需先觸發載入全部圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
+                <td>方向鍵上下章，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，下載需先觸發載入全部圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://manwa.me/">漫蛙</a>
                 </td>
                 <td>uBlock加信任名單
-                    <pre>https://manwa.me/chapter/*</pre> ，手動按6自動捲動等待全部圖片載入，或勾選腳本管理器選單的自動捲動所有惰性載入的圖片元素，載入頁面後立即開始自動捲動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
+                    <pre>https://manwa.me/chapter/*</pre> ，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
                 </td>
             </tr>
             <tr>
