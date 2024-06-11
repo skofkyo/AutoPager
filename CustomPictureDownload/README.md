@@ -107,6 +107,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     },
     init: async () => await fun.waitEle("元素選擇器"), //等待直至元素出現
     init: async () => await fun.waitVar("屬性名"), //等待直至window物件的屬性出現
+    init: () => fun.addMutationObserver(() => fun.remove("div[class][style*='z-index']")), //動態刪除元素
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
     //IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
@@ -154,7 +155,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     openInNewTab: ".manga-cover>a:not([target=_blank])", //指定的A元素在新分頁開啟
     topButton: true, //添加返回頂部按鈕
     threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
-    fetch: 1, //使用Fetch API下載圖片，需要網站有開放CORS
+    fetch: 1, //使用Fetch API下載圖片，需要圖片下載請求的伺服器有開放CORS。
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
     infiniteScroll: true, //漫畫類標記有無限滾動模式
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
@@ -322,7 +323,7 @@ fun.gae(selector, doc)
         },
         wait: async () => { 
             //請求完下一頁後要優先執行的代碼
-            //用於改變globalImgArray、tempNextLink、customTitle，方便後續調用
+            //用於改變腳本變量globalImgArray、tempNextLink、customTitle，方便後續調用
             //可參照拷貝漫畫M自動翻頁規則的用法
             code;
             return Promise;
@@ -411,7 +412,7 @@ fun.gt("selector", mode = 1, doc = document);
 fun.gt(String, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//取得非src腳本的字串
+//取得非外部引入的script的字串
 //searchValue，關鍵字串或正則表達式
 fun.gst(searchValue);
 fun.gst(searchValue, doc = document);
@@ -458,7 +459,7 @@ fun.getImgSrcset(Array [HTMLImageElement]);
 //3返回【字串切割[1] + "字串" + 字串切割[0]】
 fun.title("字串");
 fun.title("字串", mode, doc = document);
-fun.title(String or RegExp, Number, HTMLDocument or HTMLElement);
+fun.title(String or RegExp, Number, HTMLDocument);
 </pre>
 <pre>
 //觀察元素變化執行callback
@@ -587,23 +588,37 @@ fun.script("code", 0, 1);
 fun.script("srcUrl", 1, 1);
 </pre>
 <pre>
-//依序滾動元素
+//依序自動滾動元素
 //selector 元素選擇器
 //ms 滾動的間隔時間
-fun.scrollEles("selector", ms = 100);
+//top 1滾動完後返回頂部0部返回
+fun.scrollEles("selector", ms = 100, top = 1);
 fun.scrollEles(String, Number);
 
-//依序滾動元素EX
+//依序自動滾動元素EX
 //selector 元素選擇器
 //callback判斷
 //time判斷逾時的時間
-fun.aotoScrollEles("selector", callback, time = 5000);
+//top 1滾動完後返回頂部0部返回
+fun.aotoScrollEles("selector", callback, time = 5000, top = 1);
 fun.aotoScrollEles(String, Function or AsyncFunction, Number);
 //callback例子
 //ele參數為滾動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
 let callback = (ele) => fun.ge("img[src]", ele);
 //此例為判斷元素的src屬性是否已經轉為BlobURL
 let callback = (img) => /^blob/.test(img.src);
+
+//也可以用於動態捕獲，有些網站會動態創建元素，進入可視範圍才創建新元素，並且可能也會刪除之前創建的元素。
+let arr = [];
+await fun.aotoScrollEles("img.gallery-item", (ele) => {
+    if (/\/media\//.test(ele.src)) {
+        arr.push(ele.src);
+        return true;
+    } else {
+        return false;
+    }
+}, 1000);
+return [...new Set(arr)];
 </pre>
 <pre>
 //確認元素和圖片網址，嘗試取得網址和補全網址 返回一個obj。
@@ -853,9 +868,9 @@ fun.getCorsEle(Array, String, String or Array [String, Number], String or null, 
 -1 ==> -2
 //mode20
  ==> -p-2
-
-fun.getImg("圖片元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
-fun.getImg("img selector", max, mode = 1, rText = [null, null], time = 100);
+//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+fun.getImg("元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
+fun.getImg("selector", max, mode = 1, rText = [null, null], time = 100);
 fun.getImg(String, Number, Number, Array [String or RegExp, String] or null, Number);
 
 //獨立出來的可調用函式，返回修改後的鏈結
@@ -864,8 +879,9 @@ fun.getModeUrl("url", mode, num);
 <pre>
 //xhr抓取圖片元素，返回圖片網址陣列
 //fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
-fun.getImgO("圖片元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
-fun.getImgO("img selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
+//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+fun.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
+fun.getImgO("selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 fun.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
 </pre>
 <pre>
@@ -883,16 +899,18 @@ fun.getImgIframe(String, Number, Number, String or  null, Number, Number)
 //數字大於等於100，請求間隔模式單位毫秒。
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
-fun.getImgA("圖片元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
-fun.getImgA("img selector", "a selector", mode = 0, rText = [null, null], showMsg = 1);
-fun.getImgA("圖片元素選擇器", "A元素選擇器");
-fun.getImgA("圖片元素選擇器", [網址陣列]);
+//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+fun.getImgA("元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
+fun.getImgA("selector", "a selector", mode = 0, rText = [null, null], showMsg = 1);
+fun.getImgA("元素選擇器", "A元素選擇器");
+fun.getImgA("元素選擇器", [網址陣列]);
 fun.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
 </pre>
 <pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址陣列
-fun.getImgCorsA("圖片元素選擇器", "A元素選擇器", time = 100);
-fun.getImgCorsA("圖片元素選擇器", [網址陣列], time = 100);
+//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+fun.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
+fun.getImgCorsA("元素選擇器", [網址陣列], time = 100);
 fun.getImgCorsA(String, String or Array, Number);
 </pre>
 <pre>
@@ -993,7 +1011,7 @@ imgs: async () => {
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
 <p>2024/06/06 21:35</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
-<p>除了東方永頁禁用規則外的完整東方永頁機黑名單複製貼上即完事
+<p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
@@ -1049,7 +1067,7 @@ background-color,#DD7CE8
 丝袜客,https://siwake.cc/
 萌图社,http://www.446m.com/
 图宅网,https://www.tuzac.com/
-秀色女神,https://www.xsnvshen.co/
+Models Vibe,https://www.modelsvibe.com/
 background-color,#BDE87C
 AVJB,https://avjb.com/albums/
 HotAsiaGirl,https://hotgirl.asia/
@@ -1295,6 +1313,14 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://buondua.com/">Buon Dua</a>
+                </td>
+                <td>
+                    <a href="https://buondua.us/">buondua.us</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://xiutaku.com/">Xiutaku</a>
                 </td>
                 <td></td>
@@ -1367,7 +1393,9 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.jk.rs/">日式JK</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://v2.jk.rs/">日式JK旧版</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1459,7 +1487,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://paopoi.com/">泡泡</a>
+                    <a href="https://luer.ee/">泡泡</a>
                 </td>
                 <td></td>
             </tr>
@@ -1471,7 +1499,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.costhisfox.com/">扮之狐狸</a>
+                    <a href="https://www.costhisfox.com/cosfulimeitu">扮之狐狸</a>
                 </td>
                 <td></td>
             </tr>
@@ -1625,6 +1653,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://foamgirl.net/">FoamGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://xiaojiejie.me/">小姐姐么</a>
                 </td>
                 <td></td>
@@ -1720,14 +1754,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.ikanins.com/">爱看 INS</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.dmmtu.com/">第一美女图</a>
-                </td>
-                <td>
-                    <a href="https://www.kkmnt.com/">www.kkmnt.com</a>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -1909,10 +1935,10 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="http://inewgirl.com/">女神社</a>
+                    <a href="https://nshens.com/web/">女神社</a>
                 </td>
                 <td>
-                    <a href="https://nshens.com/">nshens.com</a>， <a href="https://lovens.cc/">lovens.cc</a>，VIP限定的沒有VIP帳號只會重複抓到第一頁的圖片
+                    <a href="https://inewgirl.com/web/">inewgirl.com</a>， <a href="https://lovens.shop/">lovens.shop</a>，VIP限定的沒有VIP帳號只會重複抓到第一頁的圖片
                 </td>
             </tr>
             <tr>
@@ -2269,6 +2295,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.tupic.top/">TUPIC.TOP</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://taotu200.com/">套图200网</a>
                 </td>
                 <td></td>
@@ -2512,7 +2544,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://thotbook.tv/">ThotBook.tv</a>
+                    <a href="https://thotbook.co/">ThotBook</a>
                 </td>
                 <td></td>
             </tr>
@@ -2696,14 +2728,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://buondua.com/">Buon Dua</a>
-                </td>
-                <td>
-                    <a href="https://buondua.us/">buondua.us</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://hotgirl.biz/">Hotgirl.biz</a>
                 </td>
                 <td></td>
@@ -2753,12 +2777,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://foamgirl.net/">FoamGirl</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3168,7 +3186,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://fitnakedgirls.com/">FitNakedGirls</a>
+                    <a href="https://fitnakedgirls.com/photos/">FitNakedGirls</a>
                 </td>
                 <td></td>
             </tr>
@@ -3233,13 +3251,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.tupic.top/">TUPIC.TOP</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://dirtychicks.net/photo-gallery/">DirtyChicks</a>
+                    <a href="https://bitchesgirls.tv/albums/">Bitchesgirls.Tv</a>
                 </td>
                 <td></td>
             </tr>
@@ -3586,7 +3598,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://shinv.link/">湿女吧</a>
+                    <a href="https://shinv.pics/">湿女吧</a>
                 </td>
                 <td></td>
             </tr>
@@ -4069,7 +4081,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.55comics.com/">污污漫书</a>
                 </td>
                 <td>
-                    <a href="https://www.55manshu.com/">55漫書</a>
+                    <a href="https://www.55manshu.com/">55漫書</a>，需要自動滾動元素，動態捕獲canvas轉為BlobURL。
                 </td>
             </tr>
             <tr>
