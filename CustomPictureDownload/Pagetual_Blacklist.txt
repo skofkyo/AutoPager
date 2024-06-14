@@ -1,4 +1,4 @@
-2024/06/06 21:35
+2024/06/14 18:46
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -473,8 +473,8 @@ Coomer
 
 性趣套图
 *://myjkwd.com/e/action/ShowInfo.php?*
-*://enpeta.com/e/action/ShowInfo.php?*
-*://xjzi.top/e/action/ShowInfo.php?*
+*://*enpeta.com/e/action/ShowInfo.php?*
+*://*xjzi.top/e/action/ShowInfo.php?*
 *://xqtt.xqtt.de/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
@@ -1526,7 +1526,7 @@ http://*.wuqimh.net/*/*.html
 *://www.shilunart.com/comic/*/read-*.html
 
 GODA漫画閱讀
-/^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
+*://n.cocolamanhua.com/chapter/*.html
 
 包子漫畫閱讀
 *://baozimh.one/chapter/*.html
