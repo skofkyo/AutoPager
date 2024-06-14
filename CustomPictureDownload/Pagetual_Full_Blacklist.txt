@@ -4,7 +4,7 @@
 *://*copymanga.tv/comic/*/chapter/*
 *://*mangacopy.com/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
-/^https?:\/\/news\.cocolamanhua\.com\/[^\/]+\/$/
+*://n.cocolamanhua.com/chapter/*.html
 *://baozimh.one/chapter/*.html
 *://manhuascans.org/manga/*/*
 *manhuagui.com/comic/*/*.html
@@ -172,8 +172,8 @@ https://www.nuyet.com/gallery/*
 *://www.jeya.*/*/*.html
 *://www.mevtu.com/*/*.html
 *://myjkwd.com/e/action/ShowInfo.php?*
-*://enpeta.com/e/action/ShowInfo.php?*
-*://xjzi.top/e/action/ShowInfo.php?*
+*://*enpeta.com/e/action/ShowInfo.php?*
+*://*xjzi.top/e/action/ShowInfo.php?*
 *://xqtt.xqtt.de/e/action/ShowInfo.php?*
 *://534798.xyz/e/action/ShowInfo.php?*
 *://539765.xyz/e/action/ShowInfo.php?*
