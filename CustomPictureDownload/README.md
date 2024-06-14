@@ -1009,7 +1009,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/06/06 21:35</p>
+<p>2024/06/14 18:46</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1487,6 +1487,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.ciycos.top/">Y次元</a>
+                </td>
+                <td>需註冊登錄</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://luer.ee/">泡泡</a>
                 </td>
                 <td></td>
@@ -1637,7 +1643,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://8ezy.com/">8E资源站</a>
                 </td>
-                <td>如出現清空網頁內容的情況，是因為有反擋廣告套件機制，需加入擋廣告白名單。</td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2015,16 +2021,18 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.mmav.me/photo/">萌妹社区</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.madoucun.com/arttype/57.html">麻豆村</a>
                 </td>
                 <td>
                     <a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>， <a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>， <a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>， <a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>， <a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>， <a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>， <a href="https://www.proncn.com/arttype/57.html">中国P站</a>， <a href="https://www.proncn.com/arttype/57.html">麻豆101</a>， <a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>， <a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>， <a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>， <a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a>， <a href="https://www.9ccg.org/arttype/57.html">9草吃瓜网</a>， <a href="https://www.royalmcn.com/arttype/57.html">皇家华人</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.91hdzq.cc/category/%E6%88%90%E4%BA%BA%E8%89%B2%E5%9B%BE/">91HD视频</a>
+                </td>
+                <td>
+                    <a href="https://www.91hd.com/">發布頁</a>
                 </td>
             </tr>
             <tr>
@@ -2272,12 +2280,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://vtecy.top/">二次元图库</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.coszip.com/">COSPLAY ZIP</a>
                 </td>
                 <td></td>
             </tr>
@@ -2775,7 +2777,8 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://ososedki.com/">OSOSEDKI</a>
                 </td>
                 <td>
-                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>
+
                 </td>
             </tr>
             <tr>
@@ -3102,7 +3105,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://bitchesgirls.com/">BITCHES GIRLS</a>
                 </td>
-                <td>影片可匯出網址候用Motrix下載</td>
+                <td>影片可匯出網址後用Motrix下載</td>
             </tr>
             <tr>
                 <td>
@@ -4081,7 +4084,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.55comics.com/">污污漫书</a>
                 </td>
                 <td>
-                    <a href="https://www.55manshu.com/">55漫書</a>，需要自動滾動元素，動態捕獲canvas轉為BlobURL。
+                    <a href="https://www.55manshu.com/">55漫書</a>
                 </td>
             </tr>
             <tr>
@@ -4205,19 +4208,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 </td>
                 <td>
                     <a href="https://yumanse.com/">欲漫涩</a>， <a href="https://fumanwu.org/">腐漫屋</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.jjmhw.cc/">久久漫画网</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.ikanmh.xyz/">漫小肆</a>
-                </td>
-                <td>網址發布頁： <a href="http://www.hmfby.com/">www.hmfby.com</a>， <a href="http://web.hmfby.com/">web.hmfby.com</a>
                 </td>
             </tr>
             <tr>
@@ -4549,18 +4539,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.topcomic.online/">嘿嘿漫画</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.viptoon.bond/">顶漫漫画</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://javcomics.site/">日本禁漫屋</a>
                 </td>
                 <td></td>
@@ -4569,13 +4547,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.55comic.com/">污污漫畫</a>
                 </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://400manhua.com/">400漫画网</a>
-                </td>
-                <td></td>
+                <td>需要自動滾動元素，動態捕獲canvas轉為BlobURL。</td>
             </tr>
         </tbody>
     </table>
@@ -4791,12 +4763,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://komiic.com/">Komiic</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://dogemanga.com/">漫畫狗</a>
                 </td>
                 <td></td>
@@ -4888,6 +4854,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://m.idmzj.com/">m.idmzj.com</a>，預設關閉
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://komiic.com/">Komiic</a>
+                </td>
+                <td>SPA網頁，預設關閉，網站每天有瀏覽限制。</td>
             </tr>
             <tr>
                 <td>
@@ -5077,6 +5049,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.bikamanhua.com/">哔咔漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.52hah.com/">聚合漫画屋</a>
                 </td>
                 <td>預設關閉</td>
@@ -5084,6 +5062,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://www.kukanmanhua.com/">酷看漫画</a>
+                </td>
+                <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pipiman.com/">皮皮漫画</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
