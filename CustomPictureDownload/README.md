@@ -1489,7 +1489,9 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.ciycos.top/">Y次元</a>
                 </td>
-                <td>需註冊登錄</td>
+                <td>
+                    <a href="https://www.gifmzt.com/">www.gifmzt.com</a>，需註冊登錄。
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1791,6 +1793,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://fulituku.neocities.org/">福利图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.95mm.vip/">MM 范</a>
                 </td>
                 <td></td>
@@ -1979,6 +1987,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://mikagogo.com/">米卡插画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://pic.3loumao.org/">3楼猫图库</a>
                 </td>
                 <td></td>
@@ -2021,10 +2035,16 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.madoucun.com/arttype/57.html">麻豆村</a>
+                    <a href="https://www.avideom.com/">阿维迪姆</a>
+                </td>
+                <td>需註冊，移動端免登入</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.madoucun.com/arttype/5.html">麻豆村</a>
                 </td>
                 <td>
-                    <a href="https://www.mamamcn.com/arttype/57.html">麻麻传媒</a>， <a href="https://www.wuyamcn.com/arttype/57.html">乌鸦传媒</a>， <a href="https://www.tangxvlog.com/arttype/57.html">糖心vlog</a>， <a href="https://www.guodongmcn.com/arttype/57.html">果冻传媒</a>， <a href="https://www.mrrabbit.org/arttype/57.html">兔子先生</a>， <a href="https://www.xvideo.bar/arttype/57.html">中国X站</a>， <a href="https://www.proncn.com/arttype/57.html">中国P站</a>， <a href="https://www.proncn.com/arttype/57.html">麻豆101</a>， <a href="https://www.mdcg.club/arttype/57.html">麻豆吃瓜社区</a>， <a href="https://www.minimcn.com/arttype/57.html">mini传媒</a>， <a href="https://www.xkmcn.net/arttype/57.html">星空无限传媒</a>， <a href="https://www.tianmeimcn.com/arttype/57.html">天美传媒</a>， <a href="https://www.9ccg.org/arttype/57.html">9草吃瓜网</a>， <a href="https://www.royalmcn.com/arttype/57.html">皇家华人</a>
+                    <a href="https://www.mamamcn.com/arttype/5.html">麻麻传媒</a>， <a href="https://www.wuyamcn.com/arttype/5.html">乌鸦传媒</a>， <a href="https://www.tangxvlog.com/arttype/5.html">糖心vlog</a>， <a href="https://www.guodongmcn.com/arttype/5.html">果冻传媒</a>， <a href="https://www.mrrabbit.org/arttype/5.html">兔子先生</a>， <a href="https://www.xvideo.bar/arttype/5.html">中国X站</a>， <a href="https://www.proncn.com/arttype/5.html">中国P站</a>， <a href="https://www.proncn.com/arttype/5.html">麻豆101</a>， <a href="https://www.mdcg.club/arttype/5.html">麻豆吃瓜社区</a>， <a href="https://www.minimcn.com/arttype/5.html">mini传媒</a>， <a href="https://www.xkmcn.net/arttype/5.html">星空无限传媒</a>， <a href="https://www.tianmeimcn.com/arttype/5.html">天美传媒</a>， <a href="https://www.9ccg.org/arttype/5.html">9草吃瓜网</a>， <a href="https://www.royalmcn.com/arttype/5.html">皇家华人</a>， <a href="https://www.qqmcn.net/arttype/5.html">扣扣传媒</a>， <a href="https://www.kuaibo.club/arttype/5.html">快播社</a>
                 </td>
             </tr>
             <tr>
@@ -2510,7 +2530,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://sharecosplay.com/">Share Cosplay</a>
+                    <a href="https://galleryepic.com/zh">Gallery Epic</a>
                 </td>
                 <td>高解析原圖需要下載，聚集的只是預覽圖</td>
             </tr>
@@ -2680,7 +2700,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.cosplay69.net/">Cosplay69</a>
+                    <a href="https://cosplay69.net/category/album/">Cosplay69</a>
                 </td>
                 <td></td>
             </tr>
@@ -2713,12 +2733,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://mitaku.net/">Mitaku</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://nudeslegion.com/">Nudeslegion</a>
                 </td>
                 <td></td>
             </tr>
@@ -3247,6 +3261,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.assesphoto.com/">Asses Photo</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.freexcafe.com/">FreeXcafe</a>
                 </td>
                 <td></td>
@@ -3502,6 +3522,14 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.mayihz.com/">蚂蚁图库</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mtianle.com/">每天乐图片网</a>
+                </td>
+                <td>
+                    <a href="https://m.mtianle.com/">m.mtianle.com</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4107,6 +4135,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://hacg.antbyw.com/plugin.php?id=jameson_manhua">蚂蚁搬运网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://caitlin.top/">Caitlin.top</a>
                 </td>
                 <td></td>
@@ -4269,15 +4303,15 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://boylove.cc/">香香腐宅</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://yidan.in/">一耽女孩</a>
                 </td>
                 <td>SPA網頁，限定Mobile</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://kkcomic.vip/">快看禁漫</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
