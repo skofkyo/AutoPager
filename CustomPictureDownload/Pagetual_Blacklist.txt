@@ -1,4 +1,4 @@
-2024/06/16 01:23
+2024/06/23 02:45
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -518,6 +518,9 @@ https://zzup.com/*
 BuzzAV
 *://*.buzzav.com/album/*
 
+Photobook.club
+https://photobook.club/*
+
 SexyGirl
 *://sexygirl.cc/a/*.html
 
@@ -601,7 +604,7 @@ MM1311
 *://m888.top/*/*.html
 
 Xasiat
-*://www.xasiat.com/albums/*
+*://www.xasiat.com/*albums/*
 
 找套图
 *://www.zhaotaotu.cc/thread-*.htm
@@ -611,6 +614,9 @@ XGirl
 
 Xerocos
 *://xerocos.com/*
+
+COSERMM
+https://cosermm.blog.2nt.com/*
 
 尤美图库
 *://www.umeitu.com/img/*.html
@@ -803,12 +809,10 @@ HotGirl World
 
 CosBlay
 *://cosblay.com/*.html
+*://*.cosblay.com/*/*.html
 
 風流雜誌
 *://trendszine.com/*.html
-
-泰撲美圖
-*://www.tiplogo.com/*.html
 
 Love Asian Babes
 *amazon-love.com*
@@ -845,6 +849,9 @@ MrDeepFakes
 
 五歌的开心网
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
+
+Gallery Epic
+*galleryepic.com*
 
 움짤저장소 KPOP GIRLGROUPS ACTOR
 *://kkoreaactor.blogspot.com/*/*/*.html*
@@ -980,12 +987,16 @@ MrDeepFakes
 *://www.rodwy.com/tupian/*.html
 *://www.y521.com/tupian/.html
 *://www.opks.cc/meiwen/*.html
+*://www.qo6q.com/tupian/*.html
 
 万德美图屋
 *://www.wind5.com/tu*.html
 
 蚂蚁图库
 *://www.mayihz.com/tu*.html
+
+每天乐图片网
+*://*.mtianle.com/*/*.html
 
 eyval.net
 https://www.eyval.net/*
@@ -1202,10 +1213,8 @@ Pururin
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 
 ACG漫画网
-*://www.acg*mh.com/*/*.html
-*://www.cool-manga.com/*/*.html
-*porn-comic.com/*/*.html
-*://www.acgnbus.com/*/*.html
+/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
+*://*acgnbus.com/*/*.html
 
 禁漫天堂
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
@@ -1234,8 +1243,8 @@ Caitlin.top
 *://www.18mh.cc/index-look-name-*-id-*
 *://m.18mh.cc/look/name/*
 
-Orzqwq
-*://orzqwq.com/manga/*/
+Comic18H
+*://www.comic18h.com/chapter/*.html
 
 18H 宅宅愛動漫
 *://18h.animezilla.com/manga/*
