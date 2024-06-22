@@ -271,10 +271,8 @@ https://www.nuyet.com/gallery/*
 *://18h.mm-cg.com/*_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
 *://mhdnf.xyz/play?linkId=*
-*://www.acg*mh.com/*/*.html
-*://www.cool-manga.com/*/*.html
-*porn-comic.com/*/*.html
-*://www.acgnbus.com/*/*.html
+/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
+*://*acgnbus.com/*/*.html
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
 *://*wnacg.*/photos-index-aid-*.html
 *://bunmh.com/read/*/*.html
@@ -284,9 +282,9 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.177pic*.com/html/*/*/*.html
 *://www.18mh.cc/index-look-name-*-id-*
 *://m.18mh.cc/look/name/*
+*://www.comic18h.com/chapter/*.html
 *://18h.animezilla.com/manga/*
 *://www.ho5ho.com/*/*/server*
-*://orzqwq.com/manga/*/
 *://asiacomics.com/chapter/*
 *://*coszip.com/*.html*
 *://www.pictoa.com/albums/*/*.html
@@ -294,6 +292,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://www.imagefap.com/pictures/*
 *://www.imagefap.com/photo/*
 *://*.buzzav.com/album/*
+https://photobook.club/*
 *://sexygirl.cc/a/*.html
 *://*kanmeitu*/p/*.html
 *://www.sexyasiangirl.xyz/album/*.html
@@ -325,7 +324,7 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *magazinejapanese5.blog.jp*
 *magazinejapanese6.blog.jp*
 *://kenshin.hk/*/*/*/*/*
-*://www.xasiat.com/albums/*
+*://www.xasiat.com/*albums/*
 *://www.zhaotaotu.cc/thread-*.htm
 *://www.umeitu.com/img/*.html
 *://*.jxmm.net/pic/*.html
@@ -405,8 +404,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 /^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/g\/\w+\.html\//
 /^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$|^https?:\/\/(www\.hotgirl\.world|www\.hotgirl2024\.com)\/search\.html\/\?(page=\d+&)?q=/
 *://cosblay.com/*.html
+*://*.cosblay.com/*/*.html
 *://trendszine.com/*.html
-*://www.tiplogo.com/*.html
 *amazon-love.com*
 *://byoru.net/*/
 *huamaobizhi.com/*
@@ -610,6 +609,7 @@ https://www.eyval.net/*
 *://www.rodwy.com/tupian/*.html
 *://www.y521.com/tupian/.html
 *://www.opks.cc/meiwen/*.html
+*://www.qo6q.com/tupian/*.html
 *://www.wind5.com/tu*.html
 *erotic.pics*
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
@@ -633,6 +633,7 @@ https://www.eyval.net/*
 *://thismore.fun/view/*php*
 *://xgirl.one/*
 *://xerocos.com/*
+https://cosermm.blog.2nt.com/*
 *://*.win3000.com/*/*.html
 *://www.shunv*i.com/*/*.html
 *://mrdeepfakes.com/photo/*/*
@@ -642,6 +643,7 @@ https://www.eyval.net/*
 *://kkoreaactor.blogspot.com/*/*/*.html*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
+*://*.mtianle.com/*/*.html
 *://ososedki.com/*photos/*
 *://cosplayasian.com/*post/*
 *://cosplaythots.com/*p/*
@@ -659,6 +661,7 @@ https://www.eyval.net/*
 *://m.xtushe.com/photo/*.html
 *://www.girldir.com/photos/*_list/
 *://www.mntuce.com/*/.html
+*galleryepic.com*
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
