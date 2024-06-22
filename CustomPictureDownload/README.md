@@ -65,7 +65,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
 </pre>
 <h1>簡介：</h1>
 <p>寫這個腳本的緣由是，想讓下載、複製鏈結不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
-<p>聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支援自定義規則方便重複使用，後續擴充規則更容易。</p>
+<p>聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支持自定義規則方便重複使用，後續擴充規則更容易。</p>
 <p>用戶寫的規則請自行另外備份，規則只會寫死在腳本裡不會線上規則化，腳本更新就會覆蓋規則。</p>
 <p>如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。</p>
 <h1>關於自動下載：</h1> 當修改了腳本UI選項設定或快捷鍵[ Ctrl + . ]或腳本內的站點規則啟用了自動下載時，站點規則insertImg的自動插入圖片將無效，瀏覽器的下載設定需關閉下載前詢問儲存位置和設定好預設的下載路徑，全自動需要有NEXT做搭配，每個站點第一次啟用時需等待連續下載2~3次後，觸發瀏覽器詢問是否同意允許下載多個檔案，需同意後後續才能成功下載，並且讓分頁保持在前景運行不然壓縮進度會停住，可以開一個獨立視窗一個分頁用作下載用，最好的方式是拉兩個視窗一個佔1/3畫面掛下載一個佔3/2畫面瀏覽。 <h1>圖片全載規則示例：</h1>
@@ -290,8 +290,7 @@ fun.gae(selector, doc)
                 return null;
             }
         },
-        re: ".pages",
-        history: 1
+        re: ".pages"
     },
     category: "autoPager"
 }, {
@@ -1009,7 +1008,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/06/14 18:46</p>
+<p>2024/06/23 02:45</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1140,7 +1139,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.yalayi.com/">雅拉伊</a>
                 </td>
-                <td>免VIP僅支援PC版和圖片命名是簡單數字遞增的。</td>
+                <td>免VIP僅適用PC版和圖片命名是簡單數字遞增的。</td>
             </tr>
             <tr>
                 <td>
@@ -1391,6 +1390,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="http://www.042l.com/">萌萝社</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.jk.rs/">日式JK</a>
                 </td>
                 <td>
@@ -1411,6 +1416,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://cosermm.blog.2nt.com/">COSERMM</a>
+                </td>
+                <td>分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://baoruba.com/">私图网</a>
                 </td>
                 <td></td>
@@ -1420,6 +1431,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://tukuku.cc/">图库库</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sxgirl.site/">Hot Idol free update</a>
+                </td>
+                <td>此網站使用圖床imgtaxi.com，大圖無法外連線上看但可以下載。</td>
             </tr>
             <tr>
                 <td>
@@ -1651,7 +1668,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.aixiurentu.com/">秀人图</a>
                 </td>
-                <td>只支援免費</td>
+                <td>只支持免費</td>
             </tr>
             <tr>
                 <td>
@@ -1662,6 +1679,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://foamgirl.net/">FoamGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://girl18.net/">Girl 18+</a>
                 </td>
                 <td></td>
             </tr>
@@ -1681,6 +1704,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.zhxszone.com/">最好秀色</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://coserlab.io/">Coser Lab</a>
                 </td>
                 <td>4K~8K高解析</td>
@@ -1691,6 +1720,14 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 </td>
                 <td>
                     <a href="https://www.counv.com/">维秘秀</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mt1.meitu1.sbs/">第一美女套图网</a>
+                </td>
+                <td>
+                    <a href="https://meitu.sbs/">最新域名</a>
                 </td>
             </tr>
             <tr>
@@ -1782,6 +1819,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://cgdd.net/">吃瓜大队</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>欲图网</td>
+                <td>
+                    <a href="https://github.com/nanrenlulu/nanrenlulu/wiki/">最新地址(图片)</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1932,7 +1975,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://trendszine.com/">風流雜誌</a>
                 </td>
                 <td>
-                    <a href="https://cosblay.com/">CosBlay</a>
+                    <a href="https://cosblay.com/">CosBlay</a>，CosBlay網頁語系不同，圖集列表也不同。
                 </td>
             </tr>
             <tr>
@@ -1982,6 +2025,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://www.mtutuu.com/">萌次元</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.a2cy.com/">推次元</a>
                 </td>
                 <td></td>
             </tr>
@@ -2267,6 +2316,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://yanxiangrong.github.io/chunmomo/">蠢沫沫</a>
+                </td>
+                <td>非原圖</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.cosersets.com/1">Cosersets</a>
                 </td>
                 <td>SPA網頁，請在圖片頁做操作，可用0、1、3、7、8，Ctrl + Alt + T可修改圖集標題。</td>
@@ -2456,7 +2511,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://tangmoc.com/">TangMoc</a>
+                    <a href="https://tangmoc.com/blog/topic/164AF033943823F/hotgirl-model">TangMoc</a>
                 </td>
                 <td></td>
             </tr>
@@ -2512,6 +2567,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://sstk.neocities.org/">涩涩图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://meitu.neocities.org/">美图</a>
                 </td>
                 <td>很多posts都404...</td>
@@ -2532,7 +2593,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://galleryepic.com/zh">Gallery Epic</a>
                 </td>
-                <td>高解析原圖需要下載，聚集的只是預覽圖</td>
+                <td>高解析原圖需要下載，聚集的只是預覽圖，分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2543,6 +2604,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://thehentaiworld.com/hentai-cosplay-images/">The Hentai World</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://packsparapobres.com/">Packs para pobres</a>
                 </td>
                 <td></td>
             </tr>
@@ -2706,6 +2773,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.erocosplay.org/">Ero Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.simply-porn.com/galleries">Simply Porn</a>
                 </td>
                 <td>SPA網頁</td>
@@ -2721,6 +2794,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://cosplayporn.online/category/cosplay/">Cosplay Porn</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asupan.art/">Asupan</a>
+                </td>
+                <td>很多缺圖不完整</td>
             </tr>
             <tr>
                 <td>
@@ -2852,6 +2931,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://nisokudemosandal.blog.jp/">エロマニア　猿！</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://gravureidols.top/">Gravure Idols</a>
                 </td>
                 <td></td>
@@ -2958,6 +3043,18 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://photobook.club/">Photobook.club</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xasia.pics/">xasia</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.eyval.net/">eyval.net</a>
                 </td>
                 <td>分類添加了自動翻頁</td>
@@ -3058,7 +3155,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.xasiat.com/albums/">Xasiat</a>
                 </td>
-                <td></td>
+                <td>圖集分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -3088,13 +3185,13 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.imagefap.com/">ImageFap</a>
                 </td>
-                <td>只支援PC版，大圖需在photo頁</td>
+                <td>只適用PC版，大圖需在photo頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://zzup.com/user-album/3338/petmer/index.html">ZzUp.Com</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td><a href="https://zzup.com/user-album/2269/youmii/index.html">youmii</a>，分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -3154,7 +3251,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://vipergirls.to/">ViperGirls</a>
                 </td>
-                <td>只支援PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
+                <td>只適用PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
             </tr>
             <tr>
                 <td>
@@ -3345,6 +3442,18 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://dirtyship.com/phototype/cosplayer/">DirtyShip.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sexythots.com/photoss/">SexyThots.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://sexygirlspics.com/">SexyGirlsPics</a>
                 </td>
                 <td></td>
@@ -3358,6 +3467,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://www.superbeautygirlx.top/">Forum Girl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nudetagram.com/">Nude Tagram</a>
                 </td>
                 <td></td>
             </tr>
@@ -3424,7 +3539,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://aiavr.uk/">图集网</a>
                 </td>
                 <td>
-                    <a href="https://user.aiavr.uk/">user.aiavr.uk</a>
+                    <a href="https://user.aiavr.uk/">user.aiavr.uk</a>，爬取的圖片資料混雜，不屬於該圖集的圖片卻放在一起，評價不及格的爬蟲。
                 </td>
             </tr>
             <tr>
@@ -3508,7 +3623,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.tzala.com/">桃子啦</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式135個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">同格式136個</a>
                 </td>
             </tr>
             <tr>
@@ -3611,6 +3726,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://nick20.com/pic/index.html">尼克成人網</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xsmpic.com/">小濕妹圖庫</a>
                 </td>
                 <td></td>
             </tr>
@@ -4089,6 +4210,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.comic18h.com/">Comic18H</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="http://18p.fun/">開車漫畫</a>
                 </td>
                 <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
@@ -4305,7 +4432,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://yidan.in/">一耽女孩</a>
                 </td>
-                <td>SPA網頁，限定Mobile</td>
+                <td>SPA網頁，Mobile限定</td>
             </tr>
             <tr>
                 <td>
@@ -4419,14 +4546,14 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.diyihm.com/">日韩漫画</a>
                 </td>
-                <td>限定Mobile， <a href="https://www.lltoon.com/">www.lltoon.com</a>， <a href="https://www.rrtoon.com/">www.rrtoon.com</a>
+                <td>Mobile限定， <a href="https://www.lltoon.com/">www.lltoon.com</a>， <a href="https://www.rrtoon.com/">www.rrtoon.com</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://wwtoon.com/">歪歪漫画</a>
                 </td>
-                <td>限定Mobile， <a href="https://www.zztoon.com/">www.zztoon.com</a>， <a href="https://www.vvtoon.com/">www.vvtoon.com</a>
+                <td>Mobile限定， <a href="https://www.zztoon.com/">www.zztoon.com</a>， <a href="https://www.vvtoon.com/">www.vvtoon.com</a>
                 </td>
             </tr>
             <tr>
