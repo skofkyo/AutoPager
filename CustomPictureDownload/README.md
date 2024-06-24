@@ -382,7 +382,7 @@ fun.ge("selector", node);
 fun.ge(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//返回指定的所有元素陣列，支持CSS/Xpath選擇器
+//返回指定的所有元素的陣列，支持CSS/Xpath選擇器
 fun.gae("selector");
 fun.gae("selector", doc = document);
 fun.gae("selector", node);
@@ -395,7 +395,7 @@ fun.gu("selector", doc = document);
 fun.gu(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//取得指定的所有A元素的href陣列
+//取得指定的所有A元素的hre的f陣列
 fun.gau("selector");
 fun.gau("selector", doc = document);
 fun.gau(String, HTMLDocument or HTMLElement);
@@ -693,7 +693,7 @@ fun.xhrHEAD(String);
 </pre>
 <pre>
 //使用Promise封裝GM_xmlhttpRequest
-//傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址陣列
+//傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址的陣列
 //imx.to、imagebam、postimg...等等
 fun.getImageHost([links]);
 fun.getImageHost(Array);
@@ -876,7 +876,7 @@ fun.getImg(String, Number, Number, Array [String or RegExp, String] or null, Num
 fun.getModeUrl("url", mode, num);
 </pre>
 <pre>
-//xhr抓取圖片元素，返回圖片網址陣列
+//xhr抓取圖片元素，返回圖片網址的陣列
 //fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
 //IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
 fun.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
@@ -890,7 +890,7 @@ fun.getImgIframe("img selector", max, mode, paginationEle = null, time = 1000, s
 fun.getImgIframe(String, Number, Number, String or  null, Number, Number)
 </pre>
 <pre>
-//xhr抓取圖片元素，返回圖片網址陣列
+//xhr抓取圖片元素，返回圖片網址的陣列
 //mode
 //0多線程(預設)
 //1單線程
@@ -906,7 +906,7 @@ fun.getImgA("元素選擇器", [網址陣列]);
 fun.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
 </pre>
 <pre>
-//xhr抓取圖片元素，可跨域抓圖片，返回圖片網址陣列
+//xhr抓取圖片元素，可跨域抓圖片，返回圖片網址的陣列
 //IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
 fun.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
 fun.getImgCorsA("元素選擇器", [網址陣列], time = 100);
@@ -1008,7 +1008,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/06/23 02:45</p>
+<p>2024/06/25 02:41</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1541,7 +1541,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.shzx.org/b/12-0.html">四海资讯</a>
                 </td>
                 <td>
-                    <a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
+                    <a href="https://www.entbao.com/b/23-0.html">娱乐宝</a>，<a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
                 </td>
             </tr>
             <tr>
