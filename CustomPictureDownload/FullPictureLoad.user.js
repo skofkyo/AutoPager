@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.3.5
+// @version            2.3.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -449,10 +449,10 @@
         css: "div.web{display:none!important;}",
         category: "nsfw1"
     }, {
-        name: "四海资讯/娱乐吧/娱乐屋/美女图片库",
+        name: "四海资讯/娱乐吧/娱乐屋/娱乐宝/美女图片库",
         link: "https://www.shzx.org/b/12-0.html",
         reg: () => {
-            let hosts = ["www.shzx.org", "m.shzx.org", "www.yuleba.org", "m.entba.net", "www.entwu.com", "m.entwu.com", "www.xwbzx.com", "m.xwbzx.com"];
+            let hosts = ["www.shzx.org", "m.shzx.org", "www.yuleba.org", "m.entba.net", "www.entwu.com", "m.entwu.com", "www.xwbzx.com", "m.xwbzx.com", "www.entbao.com", "m.entbao.com"];
             return hosts.includes(fun.lh) && /\/a\/[\d-]+\.html$/.test(fun.lp);
         },
         imgs: () => {
@@ -1186,6 +1186,7 @@
             next: "li:has(>span#current)+li>a",
             re: "#pagination"
         },
+        openInNewTab: ".grid-items a:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "美图社",
@@ -2121,8 +2122,8 @@
         category: "nsfw1"
     }, {
         name: "推次元",
-        host: ["www.a2cy.com"],
-        reg: /^https?:\/\/www\.a2cy\.com\/phone\/list\/\w+\/\d+\.html$/,
+        host: ["www.a2cy.com", "a2cy.com"],
+        reg: /^https?:\/\/(www\.)?a2cy\.com\/phone\/list\/\w+\/\d+\.html$/,
         imgs: ".imgBox img",
         customTitle: "h1",
         category: "nsfw1"
@@ -2668,10 +2669,18 @@
         reg: /^https?:\/\/www\.zhxszone\.com\/\??\d+\.html$/,
         imgs: () => {
             let srcs = fun.getImgSrcArr("#play img");
-            return srcs.map(src => {
-                let s = src.split("https://").filter(i => i);
-                return s.length > 1 ? "https://" + s[0] : src;
+            let srcArr = [];
+            srcs.forEach(src => {
+                let arr = src.split("https").filter(i => i);
+                if (arr.length > 1) {
+                    for (src of arr) {
+                        srcArr.push("https" + src);
+                    }
+                } else {
+                    srcArr.push(src);
+                }
             });
+            return srcArr;
         },
         button: [4],
         insertImg: ["#play", 2],
@@ -4014,6 +4023,7 @@
             ["#FullPictureLoadMainImgBox", 0, ".grid,div.row:has(>.bg-dark)"], 2
         ],
         customTitle: () => fun.ge("h1.text-uppercase:not(.mt-2)").textContent.replace(/^[\w\s]+:/i, "").trim(),
+        css: "noindex:has(>div>center),div:has(>center>noindex){display:none!important;}",
         category: "nsfw2"
     }, {
         name: "Packs para pobres/Pack de chicas",
@@ -4066,12 +4076,19 @@
         name: "NudoStar",
         host: ["nudostar.com"],
         reg: /^https?:\/\/nudostar\.com\/[^\/]+\//,
-        include: "h1.entry-title",
-        init: () => fun.createImgBox(".crp_related", 1),
-        imgs: "//p/a[img]",
+        include: [
+            "h1.entry-title",
+            ".pagination-single",
+            "//p/a[img]"
+        ],
+        init: () => fun.createImgBox(".pagination-single", 1),
+        imgs: () => {
+            videosSrcArray = fun.gae("video.wp-video-shortcode>source").map(e => e.src);
+            return fun.gae("//p/a[img]");
+        },
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "//p[a[img]]"], 2
+            ["#FullPictureLoadMainImgBox", 0, "//p[a[img]] | //div[@class='wp-video']"], 2
         ],
         go: 1,
         autoDownload: [0],
@@ -4503,12 +4520,16 @@
                 let x = fun.ge(".entry-content");
                 fun.gae(".iframe-container,iframe[scrolling]").forEach(e => x.parentNode.insertBefore(e, x));
             }
-            fun.createImgBox(".gallery", 1);
+            if (fun.ge(".gallery")) {
+                fun.createImgBox(".gallery", 1);
+            } else {
+                fun.createImgBox(".entry-content");
+            }
         },
         imgs: () => fun.fetchDoc(fun.url).then(dom => fun.gae("a[data-fancybox],.gallery-item a,.entry-content img[alt]", dom)),
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".gallery"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".gallery,.entry-content p:has(>img)"], 2
         ],
         autoDownload: [0],
         next: ".nav-previous>a",
@@ -4580,6 +4601,7 @@
             ".gallery a",
             ".elementor-heading-title"
         ],
+        exclude: "//a[text()='Login']",
         init: () => {
             let video = fun.ge(".fluid_video_wrapper");
             if (video) {
@@ -5338,7 +5360,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "エロマニア　猿！",
         host: ["nisokudemosandal.blog.jp"],
-        reg: /^https?:\/\/nisokudemosandal\.blog\.jp\/archives\/\d+\.html$/,
+        reg: /^https?:\/\/nisokudemosandal\.blog\.jp\/archives\/\d+\.html/,
         imgs: ".article-body a[title]:has(>img)",
         autoDownload: [0],
         next: "//li[@class='prev']/a | //a[text()='前の記事']",
@@ -11934,8 +11956,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         name: "Roku Hentai",
         host: ["rokuhentai.com"],
         reg: /^https?:\/\/rokuhentai\.com\/\w+$/,
+        include: ".site-page-card__media",
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".site-page-card__media");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.url + "/0";
             return fun.fetchDoc(url).then(dom => fun.getImgSrcArr(".site-reader__image", dom));
@@ -19270,6 +19292,21 @@ if (next) {
             }).filter(item => item);
             return srcs;
         },
+        getBackgroundImage: (selector, dom = document) => {
+            let eles;
+            isString(selector) ? eles = fun.gae(selector, dom, dom) : eles = selector;
+            let srcs = eles.map(ele => {
+                let backgroundImage = ele?.style?.backgroundImage;
+                if (!!backgroundImage) {
+                    let [, imgSrc] = backgroundImage.split('"');
+                    imgSrc = imgSrc?.trim();
+                    return imgSrc;
+                } else {
+                    return null;
+                }
+            }).filter(item => item);
+            return [...new Set(srcs)];
+        },
         //從頭一路翻到尾的自動翻頁函式
         getNP: async (pageEle, nextLinkEle, lastEle = null, replaceElement = null, time = 0, dataset = null, mag = 1, retry = 10) => {
             //翻頁模式聚集所有圖片或是預覽縮圖然後fun.getImgA()
@@ -20502,7 +20539,7 @@ if (next) {
                     let lastImg = imgs.at(-1);
                     fun.comicNextObserver.observe(lastImg);
                 }
-                fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = ""));
+                fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = "unset"));
                 if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
                     Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                 }
@@ -21594,7 +21631,7 @@ if (next) {
         }
     };
 
-    if (!/copymanga|mangacopy|sexythots|sstk\.neocities\.org/.test(fun.lh)) {
+    if (!/copymanga|mangacopy|sexythots|\.neocities\.org/.test(fun.lh)) {
         loading_bak = fun.dataURLtoBlobURL(loading_bak);
         autoPagerLoading_gif = fun.dataURLtoBlobURL(autoPagerLoading_gif);
     }
