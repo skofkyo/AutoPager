@@ -462,6 +462,8 @@ https://www.eyval.net/*
 *://m.entba.net/a/*.html
 *://www.entwu.com/a/*.html
 *://m.entwu.com/a/*.html
+*://www.entbao.com/a/*.html
+*://m.entbao.com/a/*.html
 *://www.xwbzx.com/a/*.html
 *://m.xwbzx.com/a/*.html
 *://www.fjrx.org/plus/view-*.html
@@ -662,6 +664,7 @@ https://cosermm.blog.2nt.com/*
 *://www.girldir.com/photos/*_list/
 *://www.mntuce.com/*/.html
 *galleryepic.com*
+*://*042l.com/*/*.html
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
