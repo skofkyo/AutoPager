@@ -1,4 +1,4 @@
-2024/06/23 02:45
+2024/06/25 02:41
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -211,6 +211,10 @@ PhimVu
 娱乐屋
 *://www.entwu.com/a/*.html
 *://m.entwu.com/a/*.html
+
+娱乐宝
+*://www.entbao.com/a/*.html
+*://m.entbao.com/a/*.html
 
 美女图片库
 *://www.xwbzx.com/a/*.html
@@ -715,6 +719,9 @@ COSPLAY BOOBS
 
 爱看美图网
 *.ikmt.net/*/*/*/*.html
+
+萌萝社
+*://*042l.com/*/*.html
 
 妮兔美图
 *.nitutu.com/*/*/*.html
