@@ -1326,6 +1326,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://xtaku.com/">Xtaku</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://kiutaku.com/">Kiutaku</a>
                 </td>
                 <td></td>
@@ -1533,7 +1539,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.xwbar.com/web/meinv/">新闻吧</a>
                 </td>
                 <td>
-                    <a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>， <a href="https://www.fjrx.org/web/meinv/">福建热线</a>， <a href="https://www.sdrx.org/web/meinv/">山东热线</a>， <a href="https://www.gxrx.org/web/meinv/">广西热线</a>， <a href="https://www.whrx.org/web/meinv/">武汉热线</a>， <a href="http://www.tjrx.org/web/meinv/">天津热线</a>， <a href="https://www.ynrx.org/web/meinv/">云南热线</a>， <a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
+                    <a href="https://www.xwwu.net/web/meinv/">新闻屋</a>，<a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>， <a href="https://www.fjrx.org/web/meinv/">福建热线</a>， <a href="https://www.sdrx.org/web/meinv/">山东热线</a>， <a href="https://www.gxrx.org/web/meinv/">广西热线</a>， <a href="https://www.whrx.org/web/meinv/">武汉热线</a>， <a href="http://www.tjrx.org/web/meinv/">天津热线</a>， <a href="https://www.ynrx.org/web/meinv/">云南热线</a>， <a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
                 </td>
             </tr>
             <tr>
@@ -1706,7 +1712,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.zhxszone.com/">最好秀色</a>
                 </td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2272,6 +2278,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://asigirl.com/">Asigirl.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://misskon.com/">MissKON.com</a>
                 </td>
                 <td>完整無修正的圖片需要下載，聚集的只是預覽圖</td>
@@ -2319,6 +2331,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://yanxiangrong.github.io/chunmomo/">蠢沫沫</a>
                 </td>
                 <td>非原圖</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tokar.fantasyfactory.xyz/">Tokar浵卡 Cosplay</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2393,6 +2411,18 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.modelsvibe.com/">Models Vibe</a>
                 </td>
                 <td>分類添加了自動翻頁功能</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.beatifulleg.com/">Beautiful Leg</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://larose.vip/">Digital AI Gallery</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2569,17 +2599,19 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://sstk.neocities.org/">涩涩图库</a>
                 </td>
-                <td></td>
-            </tr>
-            <tr>
                 <td>
-                    <a href="https://meitu.neocities.org/">美图</a>
+                    <a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>
                 </td>
-                <td>很多posts都404...</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://fuligirl.top/">福利姬美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.lspimg.com/">美图鉴赏</a>
                 </td>
                 <td></td>
             </tr>
@@ -2627,6 +2659,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://findhername.net/">Find Her Name</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://faps.club/main10/">OnlyFaps</a>
                 </td>
                 <td></td>
@@ -2667,7 +2705,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://vk.com/">VK</a>
                 </td>
-                <td>作用在相簿頁，例如：https://vk.com/album-74498063_255021373</td>
+                <td>作用在相簿頁，只支持PC版，例如：https://vk.com/album-213073007_283330987</td>
             </tr>
             <tr>
                 <td>
@@ -2862,7 +2900,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
                 </td>
                 <td>
-                    <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>
+                    <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>， <a href="https://xinh.pro/">Xinh Pro</a>
                 </td>
             </tr>
             <tr>
@@ -2870,7 +2908,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://ososedki.com/">OSOSEDKI</a>
                 </td>
                 <td>
-                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>，<a href="https://hentaibitches.com/">HENTAI BITCHES</a>，<a href="https://leaksfan.com/">LEAKSFANS</a>，<a href="https://charmingass.com/">CHARMINGASS</a>，<a href="https://leakspie.com/">LEAKS PIE</a>，<a href="https://cherryleaks.com/">CHERRY LEAKS</a>
                 </td>
             </tr>
             <tr>
@@ -2890,6 +2928,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://erogirl.net/">Erogirl</a>
                 </td>
                 <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://photobeach.blogspot.com/">Photo Beach</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3243,6 +3287,50 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://yaustal.com/stil_moda/">ЯУстал</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jb5.ru/shoubiz/onlyfans-sliv/">МЕДИА ТРЕНД</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://altgoddess.com/">alt Goddess</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://clannadhouse.com/">TIỆM TẠP HÓA KỲ DIỆU</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://anicos.net/">AniCos</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://geekfan.site/">geekfan.site</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dtf.ru/u/660597-salvatore-ganacci">DTF</a>
+                </td>
+                <td>
+<a href="https://dtf.ru/u/36100-tursall">Tursall</a>，SPA網頁，點開作者的PO文，作用在PO文首樓的圖集，手動插入圖片。
+</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://eropics.to/">Eropics</a>
                 </td>
                 <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片。</td>
@@ -3533,6 +3621,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://xerocos.com/">Xerocos</a>
                 </td>
                 <td>SPA網頁，分類添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meitu.neocities.org/">美图</a>
+                </td>
+                <td>很多posts都404...</td>
             </tr>
             <tr>
                 <td>
@@ -3841,7 +3935,13 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://kungfutv.net/">Kungfutv</a>
+                    <a href="https://kungfutv.net/label/anime-girl/">Kungfutv</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://seriesdonghua.net/cosplay">Series Donghua</a>
                 </td>
                 <td></td>
             </tr>
@@ -4364,11 +4464,9 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://91manwu.com/vodtype/4.html">91漫屋</a>
+                    <a href="https://yumanse.com/">欲漫涩</a>
                 </td>
-                <td>
-                    <a href="https://yumanse.com/">欲漫涩</a>， <a href="https://fumanwu.org/">腐漫屋</a>
-                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
