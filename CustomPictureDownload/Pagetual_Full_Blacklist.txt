@@ -86,6 +86,7 @@ https://www.nuyet.com/gallery/*
 *://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
 *://*.xwbar.com/plus/view-*.html
+*://*.xwwu.net/plus/view-*.html
 *://www.xiuren*.*/*/*.html
 *://www.xr*.xyz/*/*.html
 *://www.xrmn*.*/*/*/*.html
@@ -271,7 +272,7 @@ https://www.nuyet.com/gallery/*
 *://18h.mm-cg.com/*_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
 *://mhdnf.xyz/play?linkId=*
-/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
+/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www.)?acgn-manga\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
 *://*acgnbus.com/*/*.html
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
 *://*wnacg.*/photos-index-aid-*.html
@@ -688,6 +689,9 @@ https://cosermm.blog.2nt.com/*
 /^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/
 /^https?:\/\/anhdoitruy\.com\/[^\/]+\/$/
 /^https?:\/\/anhnguoilon\.com\/[^\/]+\/$/
+/^https?:\/\/xinh\.pro\/[^\/]+\/$/
+/^https?:\/\/anhkhieudam\.com\/[^\/]+\/$/
+/^https?:\/\/hinhsexviet\.com\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
@@ -708,7 +712,7 @@ https://cosermm.blog.2nt.com/*
 /^https?://(www\.)?manben\.com/m\d+(-p\d+)?//
 /^https?://(www|tel|en|cnc|hk|m)?\.?(dm5|1kkk)\.(com|cn)/(m|ch|vol|other)[-_0-9]+//
 /(www\.)?(tuao8?|tumm|\d+mm|luge8?)\.[a-z]{2,3}/(post|web)//
-/(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}/m?n\w+\.aspx/
+/(www\.)?\d{2,3}(m|w|fa\w?|aa|xx)?\.[a-z]{2,4}\/m?n\w+\.aspx/
 /^https?://hotgirl\.asia/[^/]+/$/
 /pimpandhost\.com/album/\d+/
 /^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
