@@ -1,4 +1,4 @@
-2024/06/25 02:41
+2024/06/28 22:44
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -28,7 +28,7 @@ yymanhua
 /(www\.)?(tuao8?|tumm|\d+mm|luge8?)\.[a-z]{2,3}\/(post|web)\//
 
 24FA圖片
-/(www\.)?\d{2,3}(m|w|faw|fa|aa)?\.[a-z]{2,4}\/m?n\w+\.aspx/
+/(www\.)?\d{2,3}(m|w|fa\w?|aa|xx)?\.[a-z]{2,4}\/m?n\w+\.aspx/
 
 HotAsiaGirl圖片
 /^https?:\/\/hotgirl\.asia\/[^/]+\/$/
@@ -164,6 +164,9 @@ PhimVu
 新闻吧
 *://www.xinwenba.net/plus/view-*.html
 *://*.xwbar.com/plus/view-*.html
+
+新闻屋
+*://*.xwwu.net/plus/view-*.html
 
 新娱乐在线
 *://www.dv67.com/plus/view-*.html
@@ -435,6 +438,9 @@ HOTGIRLchina
 /^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/
 /^https?:\/\/anhdoitruy\.com\/[^\/]+\/$/
 /^https?:\/\/anhnguoilon\.com\/[^\/]+\/$/
+/^https?:\/\/xinh\.pro\/[^\/]+\/$/
+/^https?:\/\/anhkhieudam\.com\/[^\/]+\/$/
+/^https?:\/\/hinhsexviet\.com\/[^\/]+\/$/
 
 FoamGirl
 *://foamgirl.net/*.html
@@ -1220,7 +1226,7 @@ Pururin
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 
 ACG漫画网
-/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
+/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www.)?acgn-manga\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
 *://*acgnbus.com/*/*.html
 
 禁漫天堂
