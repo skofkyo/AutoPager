@@ -1,4 +1,4 @@
-2024/06/28 22:44
+2024/07/03 05:10
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -342,6 +342,9 @@ MEITU131
 8E资源站
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
 
+丝袜室
+*://www.siwashi.xyz/*/*.html
+
 孔雀海/洛丽网/ladymao图库/懒人看图/尤物秀
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 /^https?:\/\/(www\.)?ladymao\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
@@ -631,6 +634,9 @@ https://cosermm.blog.2nt.com/*
 尤美图库
 *://www.umeitu.com/img/*.html
 
+美图网
+*://*meitu8.cc/*/*/*.html
+
 精选美女网
 *://*.jxmm.net/pic/*.html
 
@@ -661,6 +667,9 @@ Kenh69
 
 福利姬美图
 *fuligirl.*/albums/*
+
+mm131美女图片
+*://mm131.click/albums/*
 
 青年美圖
 *jrants.com/*.html
@@ -1011,6 +1020,9 @@ Gallery Epic
 每天乐图片网
 *://*.mtianle.com/*/*.html
 
+爱套图
+*://www.aitaotu.cc/photo/*.html
+
 eyval.net
 https://www.eyval.net/*
 
@@ -1067,6 +1079,9 @@ ROSI美女写真
 
 图片吧/14MM图片网
 /^https:\/\/(www\.tp8\.org|www\.14mm\.(net|cn))\/\d+\.html$/
+
+妹妹图集
+/^https?:\/\/www\.mmtuji\.com\/\d+\.html$/
 
 Asian Porn
 *://asianporn.li/photo/*/*/
@@ -1433,6 +1448,7 @@ COCOMANGA閱讀
 
 KuKu动漫閱讀
 *ikukudm.*/comiclist/*/*/*.htm
+*dididm.*/comiclist/*/*/*.htm
 *m.3840p.xyz/comiclist/*/*/*.htm
 *sbxrb11.3840p.xyz/comiclist/*/*/*.htm
 *s*.wap.ikukudm.cc/comiclist/*/*/*.htm
