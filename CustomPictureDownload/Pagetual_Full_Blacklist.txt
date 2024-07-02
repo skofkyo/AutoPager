@@ -11,6 +11,7 @@
 *m.manhuagui.com*
 *manmanju.*/comiclist/*/*/*.htm
 *ikukudm.*/comiclist/*/*/*.htm
+*dididm.*/comiclist/*/*/*.htm
 *m.3840p.xyz/comiclist/*/*/*.htm
 *sbxrb11.3840p.xyz/comiclist/*/*/*.htm
 *s*.wap.ikukudm.cc/comiclist/*/*/*.htm
@@ -328,6 +329,7 @@ https://photobook.club/*
 *://www.xasiat.com/*albums/*
 *://www.zhaotaotu.cc/thread-*.htm
 *://www.umeitu.com/img/*.html
+*://*meitu8.cc/*/*/*.html
 *://*.jxmm.net/pic/*.html
 *.930t*.com/*/*/*.html
 *://www.superbeautygirlx.com/*/*/*.html
@@ -341,6 +343,7 @@ https://photobook.club/*
 *.neihantu.net/zhainannvshen/*.html
 *www.zanmm.com/tupian/*.html
 *://fuligirl.*/albums/*
+*://mm131.click/albums/*
 *://www.baobua.net/post/*
 *baobua.com/post/*
 *jrants.com/*.html
@@ -647,6 +650,7 @@ https://cosermm.blog.2nt.com/*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
 *://*.mtianle.com/*/*.html
+*://www.aitaotu.cc/photo/*.html
 *://ososedki.com/*photos/*
 *://cosplayasian.com/*post/*
 *://cosplaythots.com/*p/*
@@ -666,6 +670,7 @@ https://cosermm.blog.2nt.com/*
 *://www.mntuce.com/*/.html
 *galleryepic.com*
 *://*042l.com/*/*.html
+*://www.siwashi.xyz/*/*.html
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
@@ -682,6 +687,7 @@ https://cosermm.blog.2nt.com/*
 /^https?:\/\/(twhentai\.com|mttang\.club|(\w+\.)?hentai\.desi)\/\??(hentai_manga|hentai_doujin|hentai_western)\/\d+\/$/
 /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/
 /^https:\/\/(www\.tp8\.org|www\.14mm\.(net|cn))\/\d+\.html$/
+/^https?:\/\/www\.mmtuji\.com\/\d+\.html$/
 /^https?:\/\/www\.888meinv\.com\/\w+\/\d+$/
 /^https?:\/\/babeasia\.com\/\d+\/[^\/]+\/$/
 /^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/
