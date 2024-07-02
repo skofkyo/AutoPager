@@ -1672,6 +1672,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.siwashi.xyz/">丝袜室</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.aixiurentu.com/">秀人图</a>
                 </td>
                 <td>只支持免費</td>
@@ -1691,6 +1697,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://girl18.net/">Girl 18+</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mmtuji.com/">妹妹图集</a>
                 </td>
                 <td></td>
             </tr>
@@ -1993,6 +2005,18 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://928r.com/">美图社</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://taotu123.com/">套图网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meitu8.cc/">美图网</a>
                 </td>
                 <td></td>
             </tr>
@@ -2541,6 +2565,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://truepic.net/">True Pic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://tangmoc.com/blog/topic/164AF033943823F/hotgirl-model">TangMoc</a>
                 </td>
                 <td></td>
@@ -2606,6 +2636,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://fuligirl.top/">福利姬美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mm131.click/">mm131美女图片</a>
                 </td>
                 <td></td>
             </tr>
@@ -3281,6 +3317,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.redpics.top/">Redpics</a>
+                </td>
+                <td>SPA網頁，手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://sxypix.com/">SXYPIX</a>
                 </td>
                 <td></td>
@@ -3742,6 +3784,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.aitaotu.cc/">爱套图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mm.tvv.tw/">妹妹图</a>
                 </td>
                 <td>很久沒新圖了</td>
@@ -3749,6 +3797,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="http://www.xiuren.org/">Xiuren 秀人网</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ons.ooo/">ONS漂亮MM图库</a>
                 </td>
                 <td>很久沒新圖了</td>
             </tr>
@@ -4412,6 +4466,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.ikanmh.xyz/">漫小肆</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.vnacg.com/">VN漫画网</a>
                 </td>
                 <td>
@@ -4950,10 +5010,10 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.ikukudm.cc/">KuKu动漫</a>
+                    <a href="http://manhua.dididm.cc/">KuKu动漫</a>
                 </td>
                 <td>
-                    <a href="https://m.ikukudm.cc/">m.ikukudm.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
+                    <a href="http://m.dididm.cc/">m.dididm.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
                 </td>
             <tr>
                 <td>
