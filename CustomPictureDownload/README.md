@@ -1346,6 +1346,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://sizupro.com/">微圖坊偽</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.meitule.net/">美图乐</a>
                 </td>
                 <td></td>
@@ -1678,6 +1684,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.ccy.moe/">超次元</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.aixiurentu.com/">秀人图</a>
                 </td>
                 <td>只支持免費</td>
@@ -1861,6 +1873,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://www.95mm.vip/">MM 范</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.tuiimg.com/meinv/">推图网</a>
                 </td>
                 <td></td>
             </tr>
@@ -2450,12 +2468,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="http://www.yalatu.com/">雅拉图</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.asianude4u.net/">Asianude4u</a>
                 </td>
                 <td></td>
@@ -2641,13 +2653,37 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://xiurentu.pics/">秀人图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ugirls.pics/">UGIRLS</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mm131.click/">mm131美女图片</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.jiangtutu7.icu/">酱图图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.lspimg.com/">美图鉴赏</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.vvcon.cn/cosplay">VVCON美瞳网</a>
                 </td>
                 <td></td>
             </tr>
@@ -2944,7 +2980,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://ososedki.com/">OSOSEDKI</a>
                 </td>
                 <td>
-                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>，<a href="https://hentaibitches.com/">HENTAI BITCHES</a>，<a href="https://leaksfan.com/">LEAKSFANS</a>，<a href="https://charmingass.com/">CHARMINGASS</a>，<a href="https://leakspie.com/">LEAKS PIE</a>，<a href="https://cherryleaks.com/">CHERRY LEAKS</a>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>，<a href="https://hentaibitches.com/">HENTAI BITCHES</a>，<a href="https://leaksfan.com/">LEAKSFANS</a>，<a href="https://charmingass.com/">CHARMINGASS</a>，<a href="https://leakspie.com/">LEAKS PIE</a>，<a href="https://cherryleaks.com/">CHERRY LEAKS</a>，<a href="https://sweetleaks.com/">SWEETLEAKS</a>
                 </td>
             </tr>
             <tr>
@@ -3403,6 +3439,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://teenphotos.forumes.ru/">Teen Photos</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://imx.to/">imx.to</a>
                 </td>
                 <td>輔助點擊，能在gallery頁進行下載。</td>
@@ -3578,6 +3620,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.tiktaks.de/">ᑕ❶ᑐ Onlyfans +18</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://sexythots.com/photoss/">SexyThots.com</a>
                 </td>
                 <td></td>
@@ -3731,7 +3779,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.6evu.com/">遛无写真</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式24個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式33個</a>
                 </td>
             </tr>
             <tr>
@@ -3920,6 +3968,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.xofulitu9ok999.xyz/xoxo">www.xofulitu9ok999.xyz</a>，分類添加了自動翻頁
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xxav.one/tuwen/">XXAV</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>坏哥哥</td>
