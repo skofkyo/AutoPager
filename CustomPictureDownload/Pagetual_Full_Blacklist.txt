@@ -99,6 +99,7 @@ https://www.nuyet.com/gallery/*
 *://meirentu.*/pic/*.html
 *://www.xg*.*/*/*.html
 *://*v2ph.*/album/*
+*://sizupro.com/detail/*
 *://*meitule.*/photo/*.html
 *://*meitulu.*/photo/*.html
 *://www.win4000.com/meinv*.html
@@ -303,7 +304,6 @@ https://photobook.club/*
 *://www.xiuwo.net/tu/*.html
 *://www.jnmmw.com/meimei/*.html
 *rmm8.com/tu/*.html
-*://xiuren0.com/*.html
 *://www.emonl.com/*.html
 *://www.cybesx.com/*.html
 *://www.yalatu.com/big-image.html?type=*&imageId=*
@@ -328,7 +328,8 @@ https://photobook.club/*
 *://kenshin.hk/*/*/*/*/*
 *://www.xasiat.com/*albums/*
 *://www.zhaotaotu.cc/thread-*.htm
-*://www.umeitu.com/img/*.html
+*://*umeitu.com/img/*.html
+*://*m5mm.com/photo/*.html
 *://*meitu8.cc/*/*/*.html
 *://*.jxmm.net/pic/*.html
 *.930t*.com/*/*/*.html
@@ -343,7 +344,10 @@ https://photobook.club/*
 *.neihantu.net/zhainannvshen/*.html
 *www.zanmm.com/tupian/*.html
 *://fuligirl.*/albums/*
+*xiurentu.*/albums/*
+*ugirls.*/albums/*
 *://mm131.click/albums/*
+*://www.jiangtutu7.icu/*albums/*
 *://www.baobua.net/post/*
 *baobua.com/post/*
 *jrants.com/*.html
@@ -370,6 +374,7 @@ https://photobook.club/*
 *cutegirlsaddict.blogspot.com/*/*/*.html*
 *portrait.knit.bid/*/*
 *://taotuhome.com/*.html
+*://*.taotuzj.com/*/*.html
 *123548.xyz/e/action/ShowInfo.php*
 *://sixcomic.com/chapter/*
 *://www.sixacg.org/chapter/*
@@ -389,6 +394,7 @@ https://photobook.club/*
 *://nsphb.com/*/*.html
 *://www.xiurenugril.com/*.html
 *://www.aixiuren.com/*.html
+*://www.ixiuren.com/*.html
 *://www.hotgirlpix.com/p/*
 *://www.tokyomotion.net/album/*/*
 *://bitchesgirls.com/*/*/
@@ -671,6 +677,7 @@ https://cosermm.blog.2nt.com/*
 *galleryepic.com*
 *://*042l.com/*/*.html
 *://www.siwashi.xyz/*/*.html
+*://www.ccy.moe/*/*/*/*/*/*
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
