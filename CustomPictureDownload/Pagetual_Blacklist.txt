@@ -1,4 +1,4 @@
-2024/07/03 05:10
+2024/07/09 20:00
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -260,6 +260,9 @@ PhimVu
 微圖坊
 *://*v2ph.*/album/*
 
+微圖坊偽
+*://sizupro.com/detail/*
+
 美图乐
 *://*meitule.*/photo/*.html
 *://*meitulu.*/photo/*.html
@@ -344,6 +347,9 @@ MEITU131
 
 丝袜室
 *://www.siwashi.xyz/*/*.html
+
+超次元
+*://www.ccy.moe/*/*/*/*/*/*
 
 孔雀海/洛丽网/ladymao图库/懒人看图/尤物秀
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
@@ -582,9 +588,6 @@ RMM吧
 爱秀美女
 *://wap.kunv.cc/*/*.html
 
-秀人图集
-*://xiuren0.com/*.html
-
 柠檬皮
 *://www.emonl.com/*.html
 *://www.cybesx.com/*.html
@@ -632,7 +635,10 @@ COSERMM
 https://cosermm.blog.2nt.com/*
 
 尤美图库
-*://www.umeitu.com/img/*.html
+*://*umeitu.com/img/*.html
+
+M5MM
+*://*m5mm.com/photo/*.html
 
 美图网
 *://*meitu8.cc/*/*/*.html
@@ -668,8 +674,17 @@ Kenh69
 福利姬美图
 *fuligirl.*/albums/*
 
+秀人图
+*xiurentu.*/albums/*
+
+UGIRLS
+*ugirls.*/albums/*
+
 mm131美女图片
 *://mm131.click/albums/*
+
+酱图图
+*://www.jiangtutu7.icu/*albums/*
 
 青年美圖
 *jrants.com/*.html
@@ -762,6 +777,7 @@ CUTE GIRLS ADDICT
 
 套图之家
 *://taotuhome.com/*.html
+*://*.taotuzj.com/*/*.html
 
 淑女爱
 *://*.shunv*i.com/*/*.html
@@ -790,6 +806,7 @@ LUVBP
 秀人图
 *://www.xiurenugril.com/*.html
 *://www.aixiuren.com/*.html
+*://www.ixiuren.com/*.html
 
 Hot Girl Pix
 *://www.hotgirlpix.com/p/*
