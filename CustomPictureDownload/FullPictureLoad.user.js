@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.3.10
+// @version            2.3.11
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -368,7 +368,21 @@
         customTitle: () => fun.title(/^[a-z-\s\.I]+:/i).split("|")[0].trim(),
         category: "nsfw2"
     }, {
-        name: "www.depvailon.com crimejunkiespodcast.com pic.yailay.com nungvl.net www.kaizty.com lootiu.com depday.info thismore.fun cosxuxi.club baobua.com cn.looives.com redseats.org",
+        host: [
+            "www.depvailon.com",
+            "crimejunkiespodcast.com",
+            "pic.yailay.com",
+            "nungvl.net",
+            "www.kaizty.com",
+            "lootiu.com",
+            "depday.info",
+            "thismore.fun",
+            "cosxuxi.club",
+            "baobua.com",
+            "cn.looives.com",
+            "redseats.org",
+            "allianceforrabiescontrol.org"
+        ],
         reg: [
             /^https?:\/\/(www\.depvailon\.com|crimejunkiespodcast\.com)\/(?!\?page=|\?m=).+\.html/i,
             /^https?:\/\/(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html/i,
@@ -379,7 +393,8 @@
             /^https?:\/\/cosxuxi\.club\/[^\.]+\.html/i,
             /^https?:\/\/baobua\.com\/post\/[^\.]+\.html/i,
             /^https?:\/\/cn\.looives\.com\/view\/[^\.]+\.cfg/i,
-            /^https?:\/\/redseats\.org\/gallery\/[^\.]+\.cfg/i
+            /^https?:\/\/redseats\.org\/gallery\/[^\.]+\.cfg/i,
+            /^https?:\/\/allianceforrabiescontrol\.org\/[^\.]+\.html$/
         ],
         init: async () => {
             await fun.clearElementEvent();
@@ -433,7 +448,31 @@
         name: "新闻吧/新闻屋/新娱乐在线/新娱乐网/福建热线/山东热线/广西热线/武汉热线/天津热线/云南热线/甘肃热线",
         link: "https://www.xinwenba.net/web/meinv/",
         reg: () => {
-            let hosts = ["www.xinwenba.net", "www.xwbar.com", "m.xwbar.com", "www.dv67.com", "m.dv67.com", "www.xinent.net", "m.xinent.net", "www.fjrx.org", "m.fjrx.org", "www.sdrx.org", "m.sdrx.org", "www.gxrx.org", "m.gxrx.org", "www.whrx.org", "m.whrx.org", "www.tjrx.org", "m.tjrx.org", "www.ynrx.org", "m.ynrx.org", "www.gsrx.org", "m.gsrx.org", "www.xwwu.net", "m.xwwu.net"];
+            let hosts = [
+                "www.xinwenba.net",
+                "www.xwbar.com",
+                "m.xwbar.com",
+                "www.dv67.com",
+                "m.dv67.com",
+                "www.xinent.net",
+                "m.xinent.net",
+                "www.fjrx.org",
+                "m.fjrx.org",
+                "www.sdrx.org",
+                "m.sdrx.org",
+                "www.gxrx.org",
+                "m.gxrx.org",
+                "www.whrx.org",
+                "m.whrx.org",
+                "www.tjrx.org",
+                "m.tjrx.org",
+                "www.ynrx.org",
+                "m.ynrx.org",
+                "www.gsrx.org",
+                "m.gsrx.org",
+                "www.xwwu.net",
+                "m.xwwu.net"
+            ];
             return hosts.includes(fun.lh) && /\/plus\/view-\d+-\d+\.html$/.test(fun.lp);
         },
         include: ".main img",
@@ -458,7 +497,18 @@
         name: "四海资讯/娱乐吧/娱乐屋/娱乐宝/美女图片库",
         link: "https://www.shzx.org/b/12-0.html",
         reg: () => {
-            let hosts = ["www.shzx.org", "m.shzx.org", "www.yuleba.org", "m.entba.net", "www.entwu.com", "m.entwu.com", "www.xwbzx.com", "m.xwbzx.com", "www.entbao.com", "m.entbao.com"];
+            let hosts = [
+                "www.shzx.org",
+                "m.shzx.org",
+                "www.yuleba.org",
+                "m.entba.net",
+                "www.entwu.com",
+                "m.entwu.com",
+                "www.xwbzx.com",
+                "m.xwbzx.com",
+                "www.entbao.com",
+                "m.entbao.com"
+            ];
             return hosts.includes(fun.lh) && /\/a\/[\d-]+\.html$/.test(fun.lp);
         },
         imgs: () => {
@@ -1084,26 +1134,26 @@
         customTitle: ".article-header>h1",
         category: "nsfw2"
     }, {
-        name: "XGirl/Xerocos",
-        host: ["xgirl.one", "xerocos.com"],
-        reg: /^https?:\/\/(xgirl\.one|xerocos\.com)\/view\//,
-        init: async () => {
-            await fun.waitEle("//span[text()='Sponsored ads']");
-            fun.remove("//div[iframe]|//*[span[text()='Sponsored ads']]", 1000);
-        },
+        name: "XGirl/MissBby.com/Xerocos",
+        host: ["xgirl.one", "missbby.com", "xerocos.com"],
+        reg: [
+            /^https?:\/\/(xgirl\.one|missbby\.com)\/[^\/]+$/,
+            /^https?:\/\/xerocos\.com\/view\//
+        ],
+        include: "//div[strong[contains(text(),'Album Name')]]",
         imgs: () => fun.getImgA(".items-center.min-h-screen img", "a[class*=bg-pink-500][href*='page=']"),
         button: [4],
         insertImg: [".items-center.min-h-screen", 2],
+        insertImgAF: () => fun.remove("//div[iframe]|//*[span[text()='Sponsored ads']]"),
         customTitle: () => fun.dt({
             s: "//div[strong[contains(text(),'Album Name')]]",
             d: "Album Name: "
         }),
         category: "nsfw2"
     }, {
-        name: "XGirl 分類自動翻頁",
+        name: "XGirl/MissBby.com 分類自動翻頁",
         enable: 1,
-        reg: /^https?:\/\/xgirl\.one\//,
-        reg: () => /^https?:\/\/xgirl\.one\//.test(siteUrl) && fun.ge("//div[@class='flex py-4 justify-center md:justify-between mt-4']") && fun.ge("//a[text()='Next']"),
+        reg: () => /^https?:\/\/(xgirl\.one|missbby\.com)\//.test(siteUrl) && fun.ge("//div[@class='flex py-4 justify-center md:justify-between mt-4']") && fun.ge("//a[text()='Next']"),
         autoPager: {
             mode: 1,
             waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']//img",
@@ -2699,7 +2749,19 @@
         category: "nsfw1"
     }, {
         name: "秀窝/RMM吧/赞MM/恩图集/美Girl图集/狐图网/930圖片網/爱秀美女/四魔写真/JN美眉网",
-        host: ["www.xiuwo.net", "rmm8.com", "www.zanmm.com", "www.entuji.com", "www.mhgirl.com", "www.hutu6.com", "www.930tu.com", "www.930tp.com", "wap.kunv.cc", "www.smkwan.com", "www.jnmmw.com"],
+        host: [
+            "www.xiuwo.net",
+            "rmm8.com",
+            "www.zanmm.com",
+            "www.entuji.com",
+            "www.mhgirl.com",
+            "www.hutu6.com",
+            "www.930tu.com",
+            "www.930tp.com",
+            "wap.kunv.cc",
+            "www.smkwan.com",
+            "www.jnmmw.com"
+        ],
         reg: [
             /(www\.xiuwo\.net|rmm8\.com|www\.mhgirl\.com|wap\.kunv\.cc)\/tu([\w]+)?\/\d+\.html/,
             /www\.zanmm\.com\/tupian\/\d+\.html/,
@@ -4117,6 +4179,15 @@
         customTitle: ".container>h1",
         category: "nsfw1"
     }, {
+        name: "Cosplay 18 Plus",
+        host: ["cosplay18plus.com"],
+        reg: /^https?:\/\/cosplay18plus\.com\/cosplay\/[^\/]+\/$/,
+        imgs: ".post-content img",
+        button: [4],
+        insertImg: [".post-content", 2],
+        customTitle: ".post-title",
+        category: "nsfw2"
+    }, {
         name: "SexyAsianGirl",
         host: ["www.sexyasiangirl.xyz"],
         reg: /www\.sexyasiangirl\.xyz\/album\/\d+\.html/,
@@ -4245,7 +4316,21 @@
         category: "nsfw2"
     }, {
         name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS",
-        host: ["cosplayasian.com", "cosplaythots.com", "cosplayrule34.com", "waifubitches.com", "cosplayboobs.com", "cosplayleaks.com", "vipthots.com", "hentaibitches.com", "leaksfan.com", "charmingass.com", "leakspie.com", "cherryleaks.com", "sweetleaks.com"],
+        host: [
+            "cosplayasian.com",
+            "cosplaythots.com",
+            "cosplayrule34.com",
+            "waifubitches.com",
+            "cosplayboobs.com",
+            "cosplayleaks.com",
+            "vipthots.com",
+            "hentaibitches.com",
+            "leaksfan.com",
+            "charmingass.com",
+            "leakspie.com",
+            "cherryleaks.com",
+            "sweetleaks.com"
+        ],
         reg: [
             /^https?:\/\/cosplayasian\.com\/([a-z]{2}\/)?post\/\d+/,
             /^https?:\/\/cosplaythots\.com\/([a-z]{2}\/)?p\/\d+/,
@@ -5268,7 +5353,16 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "HOTGIRLchina格式",
-        host: ["hotgirlchina.com", "anhnguoimau.com", "anhnguoidep.com", "anhdoitruy.com", "anhnguoilon.com", "xinh.pro", "anhkhieudam.com", "hinhsexviet.com"],
+        host: [
+            "hotgirlchina.com",
+            "anhnguoimau.com",
+            "anhnguoidep.com",
+            "anhdoitruy.com",
+            "anhnguoilon.com",
+            "xinh.pro",
+            "anhkhieudam.com",
+            "hinhsexviet.com"
+        ],
         reg: [
             /hotgirlchina\.com\/.+(photos?|videos?|anh)?\/?/,
             /^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/,
@@ -5572,12 +5666,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         }),
         category: "nsfw1"
     }, {
-        name: "千葉熊的出沒地/CyberKuma的部落格",
-        host: ["chibakuma.pixnet.net", "cyberkuma.pixnet.net"],
+        name: "千葉熊的出沒地/CyberKuma的部落格/快樂氰化物",
+        host: ["chibakuma.pixnet.net", "cyberkuma.pixnet.net", "cypherlockhart.pixnet.net"],
         link: "https://www.pixnet.net/pcard/ChibaKuma",
         reg: [
             /^https?:\/\/chibakuma\.pixnet\.net\/blog\/post\/\d+/,
-            /^https?:\/\/cyberkuma\.pixnet\.net\/blog\/post\/\d+/
+            /^https?:\/\/cyberkuma\.pixnet\.net\/blog\/post\/\d+/,
+            /^https?:\/\/cypherlockhart\.pixnet\.net\/blog\/post\/\d+/
         ],
         imgs: "#article-content-inner img,.article-content-inner img",
         button: [4],
@@ -5864,11 +5959,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/blog\.livedoor\.jp\/pururungazou\/archives\/\d+\.html$/,
         imgs: () => {
             videosSrcArray = fun.gae("video[src]").map(e => e.src);
-            return fun.gae(`.entry-content img[src*='/pururungazou/imgs/'],
+            return fun.gae(`
+            .entry-content img[src*='/pururungazou/imgs/'],
             .entry-content img[src*='/media/'],
             .article-body img[src*='/pururungazou/imgs/'],
             .article-body img[src*='/media/'],
-            a[title][href*='thetv.jp/i/']`).map(e => {
+            a[title][href*='thetv.jp/i/']
+            `).map(e => {
                 if (e.nodeName === "A") {
                     return e.href.replace(/\?w=.+$/, "");
                 } else {
@@ -6994,18 +7091,43 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "麻豆村/麻麻传媒/乌鸦传媒/糖心vlog/果冻传媒/兔子先生/中国X站/中国P站/麻豆101/麻豆吃瓜社区/mini传媒/星空无限传媒/天美传媒/9草吃瓜网/皇家华人/扣扣传媒/快播社/大象传媒官网",
-        host: ["madoucun.com", "madoumcn.com", "www.model-mcn.com", "modeltvmcn.com", "mamamcn.com", "wuyamcn.com", "tangxvlog.com", "guodongmcn.com", "mrrabbit.org", "xvideo.bar", "proncn.com", "md101.tv", "mdcg.club", "minimcn.com", "xkmcn.net", "tianmeimcn.com", "9ccg.org", "hkdoll.org", "royalmcn.com", "psychoporn.org", "qqmcn.net", "kuaibo.club", "dxmcn.net"],
+        host: [
+            "madoucun.com",
+            "madoumcn.com",
+            "www.model-mcn.com",
+            "modeltvmcn.com",
+            "mamamcn.com",
+            "wuyamcn.com",
+            "tangxvlog.com",
+            "guodongmcn.com",
+            "mrrabbit.org",
+            "xvideo.bar",
+            "proncn.com",
+            "md101.tv",
+            "mdcg.club",
+            "minimcn.com",
+            "xkmcn.net",
+            "tianmeimcn.com",
+            "9ccg.org",
+            "hkdoll.org",
+            "royalmcn.com",
+            "psychoporn.org",
+            "qqmcn.net",
+            "kuaibo.club",
+            "dxmcn.net",
+            "18comic.cyou"
+        ],
         link: "/arttype/57.html",
         reg: [
-            /^https?:\/\/(www\.)?madoucun(\d+)?\.(com|org|net|cc)\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?madoucun(\d+)?\.(com|org|net|cc|cn)\/artdetail-\d+/,
             /^https?:\/\/(www\.)?(mamamcn|madoumcn|modeltvmcn|model-mcn)\.com\/artdetail-\d+/,
             /^https?:\/\/(www\.)?wuyamcn\.com\/artdetail-\d+/,
-            /^https?:\/\/(www\.)?tangxvlog\.com\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?(tangxvlog|txvlogtv)\.com\/artdetail-\d+/,
             /^https?:\/\/(www\.)?guodongmcn\.com\/artdetail-\d+/,
             /^https?:\/\/(www\.)?mrrabbit\.org\/artdetail-\d+/,
             /^https?:\/\/(www\.)?xvideo\.bar\/artdetail-\d+/,
             /^https?:\/\/(www\.)?proncn\.com\/artdetail-\d+/,
-            /^https?:\/\/(\w+\.)?md101\.(tv|org)\/artdetail-\d+/,
+            /^https?:\/\/(\w+\.)?md101\.(tv|org|top)\/artdetail-\d+/,
             /^https?:\/\/(www\.)?mdcg\.club\/artdetail-\d+/,
             /^https?:\/\/(www\.)?minimcn\.com\/artdetail-\d+/,
             /^https?:\/\/(www\.)?xkmcn\.net\/artdetail-\d+/,
@@ -7016,7 +7138,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             /^https?:\/\/(www\.)?psychoporn\.org\/artdetail-\d+/,
             /^https?:\/\/(www\.)?qqmcn\.net\/artdetail-\d+/,
             /^https?:\/\/(www\.)?kuaibo\.club\/artdetail-\d+/,
-            /^https?:\/\/(www\.)?dxmcn\.net\/artdetail-\d+/
+            /^https?:\/\/(www\.)?dxmcn\.net\/artdetail-\d+/,
+            /^https?:\/\/(www\.)?18comic\.cyou\/artdetail-\d+/
         ],
         include: ".hl-article-box img,.news-content img",
         exclude: "#aplayer",
@@ -8558,7 +8681,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             });
         },
         imgs: async () => {
-            let aEles = fun.gae(".entry-content a[href^='//imgspice.com/'],.entry-content a[href^='//imagetwist.com/'],.entry-content a[href*='postimg.cc'],.entry-content a[href*='fastpic.org'],.entry-content a[href*='vipr.im'],.entry-content a[href*='pixhost.to']:not([href*='/gallery/']),.entry-content a[href*='turboimagehost'],.entry-content a[href*='imgbox.com'],.entry-content a[href*='imagevenue'],.entry-content a[href*='imx.to'],.entry-content a[href*='imagebam']");
+            let aEles = fun.gae(`
+            .entry-content a[href^='//imgspice.com/'],
+            .entry-content a[href^='//imagetwist.com/'],
+            .entry-content a[href*='postimg.cc'],
+            .entry-content a[href*='fastpic.org'],
+            .entry-content a[href*='vipr.im'],
+            .entry-content a[href*='pixhost.to']:not([href*='/gallery/']),
+            .entry-content a[href*='turboimagehost'],
+            .entry-content a[href*='imgbox.com'],
+            .entry-content a[href*='imagevenue'],
+            .entry-content a[href*='imx.to'],
+            .entry-content a[href*='imagebam']
+            `);
             thumbnailsSrcArray = aEles.map(a => fun.ge("img", a).src);
             let URLs = aEles.map(a => a.href);
             return fun.getImageHost(URLs);
@@ -8584,7 +8719,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     if (event.target.querySelector("a[href$='.jpg']:not([href^='http://imagetwist.com/'])")) {
                         links = [...event.target.querySelectorAll("a[href$='.jpg']")].map(a => a.href);
                     } else {
-                        links = [...event.target.querySelectorAll("a[href^='https://imgspice.com/'],a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href^='http://imagetwist.com/'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                        links = [...event.target.querySelectorAll(`
+                            a[href^='https://imgspice.com/'],
+                            a[href*='imx.to']:not([href*='/u/i/']),
+                            a[href*='pixhost.to'],
+                            a[href^='http://imagetwist.com/'],
+                            a[href*='postimg.cc'],
+                            a[href*='fastpic.org'],
+                            a[href*='vipr.im'],
+                            a[href*='turboimagehost'],
+                            a[href*='imgbox.com'],
+                            a[href*='imagevenue'],
+                            a[href*='imagebam']
+                            `)].map(a => a.href);
                     }
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
@@ -8606,7 +8753,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     if (event.target.parentNode.querySelector("a[href$='.jpg']:not([href^='http://imagetwist.com/'])")) {
                         links = [...event.target.parentNode.querySelectorAll("a[href$='.jpg']")].map(a => a.href);
                     } else {
-                        links = [...event.target.parentNode.querySelectorAll("a[href^='https://imgspice.com/'],a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href^='http://imagetwist.com/'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                        links = [...event.target.parentNode.querySelectorAll(`
+                        a[href^='https://imgspice.com/'],
+                        a[href*='imx.to']:not([href*='/u/i/']),
+                        a[href*='pixhost.to'],
+                        a[href^='http://imagetwist.com/'],
+                        a[href*='postimg.cc'],
+                        a[href*='fastpic.org'],
+                        a[href*='vipr.im'],
+                        a[href*='turboimagehost'],
+                        a[href*='imgbox.com'],
+                        a[href*='imagevenue'],
+                        a[href*='imagebam']
+                        `)].map(a => a.href);
                     }
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
@@ -8625,7 +8784,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         init: () => {
             document.addEventListener("click", event => {
                 if (event.target.className === "container") {
-                    let links = [...event.target.querySelectorAll("a[href^='https://imgspice.com/'],a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href^='http://imagetwist.com/'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                    let links = [...event.target.querySelectorAll(`
+                    a[href^='https://imgspice.com/'],
+                    a[href*='imx.to']:not([href*='/u/i/']),
+                    a[href*='pixhost.to'],
+                    a[href^='http://imagetwist.com/'],
+                    a[href*='postimg.cc'],
+                    a[href*='fastpic.org'],
+                    a[href*='vipr.im'],
+                    a[href*='turboimagehost'],
+                    a[href*='imgbox.com'],
+                    a[href*='imagevenue'],
+                    a[href*='imagebam']
+                    `)].map(a => a.href);
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
                     debug("captureLinksArray", captureLinksArray);
@@ -8643,7 +8814,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         init: () => {
             document.addEventListener("click", event => {
                 if (event.target.className === "post_wrapper") {
-                    let links = [...event.target.querySelectorAll("a[href^='https://imgspice.com/'],a[href*='imx.to']:not([href*='/u/i/']),a[href*='pixhost.to'],a[href^='http://imagetwist.com/'],a[href*='postimg.cc'],a[href*='fastpic.org'],a[href*='vipr.im'],a[href*='turboimagehost'],a[href*='imgbox.com'],a[href*='imagevenue'],a[href*='imagebam']")].map(a => a.href);
+                    let links = [...event.target.querySelectorAll(`
+                    a[href^='https://imgspice.com/'],
+                    a[href*='imx.to']:not([href*='/u/i/']),
+                    a[href*='pixhost.to'],
+                    a[href^='http://imagetwist.com/'],
+                    a[href*='postimg.cc'],
+                    a[href*='fastpic.org'],
+                    a[href*='vipr.im'],
+                    a[href*='turboimagehost'],
+                    a[href*='imgbox.com'],
+                    a[href*='imagevenue'],
+                    a[href*='imagebam']
+                    `)].map(a => a.href);
                     captureLinksArray = links;
                     fun.showMsg(`Capture ${links.length} Links`);
                     debug("captureLinksArray", captureLinksArray);
@@ -8731,8 +8914,146 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "3K图片网格式",
         reg: () => {
-            let hosts1 = ["www.021zxy.com", "www.0b23.com", "www.1001yy.com", "www.18qqt.com", "www.1taz.com", "www.2cra.com", "www.3ktu.com", "www.4k1k.com", "www.5269se.com", "www.579993.com", "www.714g.com", "www.777url.com", "www.803352.com", "www.832771.com", "www.959278.com", "www.aizibang.com", "www.ajkie.com", "www.ao5z.com", "www.aolangde.com", "www.biutu.com", "www.bjimx.com", "www.btsmmm.com", "www.bysga.com", "www.cdnecs.com", "www.cgareg.com", "www.cmylzx.com", "www.cpbdj.com", "www.csjgzy.com", "www.csltx.com", "www.cunedu.com", "www.czxbjc.com", "www.deenli.com", "www.diu5.com", "www.dymux.com", "www.edu-zytc.com", "www.fs120yy.com", "www.fssrr.com", "www.fxqmm.com", "www.fyzwe.com", "www.fzxfl.com", "www.ghsfc.com", "www.gkiev.com", "www.gknrnb.com", "www.gmcpx.com", "www.gxwpjc.com", "www.hceday.com", "www.hdz39.com", "www.hiuin.com", "www.hmcby.com", "www.hmrzry.com", "www.hsnmm.com", "www.hsudhf.com", "www.hyqcxs.com", "www.i9ke.com", "www.iduobi.com", "www.jnnmm.com", "www.jsjfgkgs.com", "www.jxaxsy.com", "www.jxybjk.com", "www.jye8.com", "www.ksruisj.com", "www.ksxx360.com", "www.ksxx365.com", "www.kyy41.com", "www.lcylaa.com", "www.linguifa.com", "www.lql1.com", "www.lzxjw.comc", "www.mash120.com", "www.mmdmlt.com", "www.mmokok.com", "www.mmxsl.com", "www.mokhee.com", "www.muhour.com", "www.nangluan.com", "www.nanitu.com", "www.ngptp.com", "www.nrrqq.com", "www.nxzths.com", "www.opks.cc", "www.php-art.com", "www.ppmlx.com", "www.qo6q.com", "www.qdsyhj.com", "www.qmjxg.com", "www.qxttsl.com", "www.qyjafk.com", "www.rodwy.com", "www.rzjyz.com", "www.sitpf.com", "www.smgcjk.com", "www.sqhyyz.com", "www.srzx168.com", "www.sskge.com", "www.sxji56.com", "www.sy-sme.com", "www.szckpt.com", "www.t7mm.com", "www.timitm.com", "www.tjsyyl.com", "www.tzala.com", "www.uwzyf.com", "www.wjjlf.com", "www.woxiutu.com", "www.wpslgs.com", "www.wslak.com", "www.wsvdj.com", "www.wt768.com", "www.wykpc.com", "www.wzcswy.com", "www.xcd100.com", "www.xgxff.com", "www.xhtrz.com", "www.xhycg.com", "www.xizhuai.com", "www.xr70.com", "www.xscmt.com", "www.xthkw.com", "www.xwdwz.com", "www.y521.com", "www.yachw.com", "www.ycwlx.com", "www.yjpfxs.com", "www.yqx101.com", "www.yunkay.com", "www.yvxji.com", "www.yymul.com", "www.yzbywh.com", "www.zggsdh.com", "www.zkjmpx.com", "www.zlsmm.com", "www.zqydc.com"];
-            let hosts2 = ["www.7tul.com", "www.meinv007.com", "www.meinv173.com", "www.tufada.com"];
+            let hosts1 = [
+                "www.021zxy.com",
+                "www.0b23.com",
+                "www.1001yy.com",
+                "www.18qqt.com",
+                "www.1taz.com",
+                "www.2cra.com",
+                "www.3ktu.com",
+                "www.4k1k.com",
+                "www.5269se.com",
+                "www.579993.com",
+                "www.714g.com",
+                "www.777url.com",
+                "www.803352.com",
+                "www.832771.com",
+                "www.959278.com",
+                "www.aizibang.com",
+                "www.ajkie.com",
+                "www.ao5z.com",
+                "www.aolangde.com",
+                "www.biutu.com",
+                "www.bjimx.com",
+                "www.btsmmm.com",
+                "www.bysga.com",
+                "www.cdnecs.com",
+                "www.cgareg.com",
+                "www.cmylzx.com",
+                "www.cpbdj.com",
+                "www.csjgzy.com",
+                "www.csltx.com",
+                "www.cunedu.com",
+                "www.czxbjc.com",
+                "www.deenli.com",
+                "www.diu5.com",
+                "www.dymux.com",
+                "www.edu-zytc.com",
+                "www.fs120yy.com",
+                "www.fssrr.com",
+                "www.fxqmm.com",
+                "www.fyzwe.com",
+                "www.fzxfl.com",
+                "www.ghsfc.com",
+                "www.gkiev.com",
+                "www.gknrnb.com",
+                "www.gmcpx.com",
+                "www.gxwpjc.com",
+                "www.hceday.com",
+                "www.hdz39.com",
+                "www.hiuin.com",
+                "www.hmcby.com",
+                "www.hmrzry.com",
+                "www.hsnmm.com",
+                "www.hsudhf.com",
+                "www.hyqcxs.com",
+                "www.i9ke.com",
+                "www.iduobi.com",
+                "www.jnnmm.com",
+                "www.jsjfgkgs.com",
+                "www.jxaxsy.com",
+                "www.jxybjk.com",
+                "www.jye8.com",
+                "www.ksruisj.com",
+                "www.ksxx360.com",
+                "www.ksxx365.com",
+                "www.kyy41.com",
+                "www.lcylaa.com",
+                "www.linguifa.com",
+                "www.lql1.com",
+                "www.lzxjw.comc",
+                "www.mash120.com",
+                "www.mmdmlt.com",
+                "www.mmokok.com",
+                "www.mmxsl.com",
+                "www.mokhee.com",
+                "www.muhour.com",
+                "www.nangluan.com",
+                "www.nanitu.com",
+                "www.ngptp.com",
+                "www.nrrqq.com",
+                "www.nxzths.com",
+                "www.opks.cc",
+                "www.php-art.com",
+                "www.ppmlx.com",
+                "www.qo6q.com",
+                "www.qdsyhj.com",
+                "www.qmjxg.com",
+                "www.qxttsl.com",
+                "www.qyjafk.com",
+                "www.rodwy.com",
+                "www.rzjyz.com",
+                "www.sitpf.com",
+                "www.smgcjk.com",
+                "www.sqhyyz.com",
+                "www.srzx168.com",
+                "www.sskge.com",
+                "www.sxji56.com",
+                "www.sy-sme.com",
+                "www.szckpt.com",
+                "www.t7mm.com",
+                "www.timitm.com",
+                "www.tjsyyl.com",
+                "www.tzala.com",
+                "www.uwzyf.com",
+                "www.wjjlf.com",
+                "www.woxiutu.com",
+                "www.wpslgs.com",
+                "www.wslak.com",
+                "www.wsvdj.com",
+                "www.wt768.com",
+                "www.wykpc.com",
+                "www.wzcswy.com",
+                "www.xcd100.com",
+                "www.xgxff.com",
+                "www.xhtrz.com",
+                "www.xhycg.com",
+                "www.xizhuai.com",
+                "www.xr70.com",
+                "www.xscmt.com",
+                "www.xthkw.com",
+                "www.xwdwz.com",
+                "www.y521.com",
+                "www.yachw.com",
+                "www.ycwlx.com",
+                "www.yjpfxs.com",
+                "www.yqx101.com",
+                "www.yunkay.com",
+                "www.yvxji.com",
+                "www.yymul.com",
+                "www.yzbywh.com",
+                "www.zggsdh.com",
+                "www.zkjmpx.com",
+                "www.zlsmm.com",
+                "www.zqydc.com"
+            ];
+            let hosts2 = [
+                "www.7tul.com",
+                "www.meinv007.com",
+                "www.meinv173.com",
+                "www.tufada.com"
+            ];
             return hosts1.includes(fun.lh) && /\/\w+\/\d+\.html$/.test(fun.lp) || hosts2.includes(fun.lh) && /\/tu\d+\.html$/.test(fun.lp);
         },
         include: "#showimg img,.img-box img",
@@ -8986,7 +9307,18 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "欧洲人体艺术套图网/亚洲人体艺术/日本人体艺术/美女人体艺术/一千美女",
-        host: ["www.ozrt.live", "ozrt.live", "www.yzrt.live", "yzrt.live", "www.rbrt.live", "rbrt.live", "www.mnrt.live", "mnrt.live", "www.yqmn.live", "yqmn.live"],
+        host: [
+            "www.ozrt.live",
+            "ozrt.live",
+            "www.yzrt.live",
+            "yzrt.live",
+            "www.rbrt.live",
+            "rbrt.live",
+            "www.mnrt.live",
+            "mnrt.live",
+            "www.yqmn.live",
+            "yqmn.live"
+        ],
         reg: /^https?:\/\/((www\.)?(ozrt|yzrt|rbrt|mnrt|yqmn)\.live)\/(index\.php)?\?action-imagelist-uid-/,
         imgs: async () => {
             await fun.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
@@ -9012,7 +9344,14 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "中国人体艺术模特网/好312图库/空图美女网",
-        host: ["www.crtys.net", "crtys.net", "www.hao312.live", "hao312.live", "www.kongtu.com", "www.kongtu.com"],
+        host: [
+            "www.crtys.net",
+            "crtys.net",
+            "www.hao312.live",
+            "hao312.live",
+            "www.kongtu.com",
+            "kongtu.com"
+        ],
         reg: /^https?:\/\/((www\.)?crtys\.net|(www\.)?hao312\.live|(www\.)?kongtu\.com)\/post\/\d+$/,
         init: () => {
             fun.clearAllTimer();
@@ -9075,7 +9414,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "Girl Girl Go",
-        host: ["girlgirlgo.org", "girlgirlgo.net", "girlgirlgo.xyz", "girlgirlgo.top", "girlgirlgo.icu", "girlgirlgo.biz", "girlygirlpic.com"],
         reg: /^https?:\/\/(\w{2}\.)?(girlgirlgo|girlygirlpic)\.(org|net|xyz|icu|com|biz|top)\/a\/\w+/,
         imgs: ".figure-link",
         button: [4],
@@ -9093,7 +9431,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "QGirlz/CuteLadyPic",
-        host: ["qgirlz.com", "cuteladypic.com"],
         reg: /^https?:\/\//,
         include: [
             ".main-image",
@@ -9108,7 +9445,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "cn.angirlz.com", //SPA
-        host: ["cn.angirlz.com"],
         reg: /^https?:\/\/\w{2}\.angirlz\.com\/album\/\w+/,
         imgs: async () => await fun.waitEle(".loading[style$=hidden]") ? fun.gae("#divGallery a") : [],
         button: [4],
@@ -9116,8 +9452,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: "h1",
         category: "nsfw2"
     }, {
-        name: "KawaiiX系列",
-        host: ["bunnyxgirl.com", "letsgirlz.com", "bootyxgirl.com", "xbeautyzone.com"],
+        name: "KawaiiX系列 一",
         reg: /^https?:\/\/(bunnyxgirl|letsgirlz|bootyxgirl|xbeautyzone)\.com\/[^/]+\/.+/,
         include: ".separator>a",
         imgs: ".separator>a",
@@ -9128,8 +9463,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: ".breadcrumbs>span:last-child",
         category: "nsfw2"
     }, {
-        name: "KawaiiX系列",
-        host: ["cn.bunnyxgirl.com", "cn.letsgirlz.com", "cn.bestxleg.com", "cn.xbeautyzone.com"],
+        name: "KawaiiX系列 二",
         reg: /^https?:\/\/\w{2}\.(bunnyxgirl|letsgirlz|bestxleg|xbeautyzone)\.com\/[^/]+\/\w+/,
         include: ".separator>a",
         imgs: () => fun.getImg(".separator>a", (fun.gt(".nav-links>*:last-child", 2) || 1), 16),
@@ -9141,7 +9475,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 分頁",
-        host: ["cn.kawaiithong.com", "cn.kawaiix.com", "cn.kawaiixgirl.com", "cn.kawaiixpic.com", "cn.kinkygirlz.com", "cn.kawaiimetas.com", "cn.assxpic.com", "cn.metaxpic.com", "cn.metaxgirl.com", "cn.eroticxgirl.com", "cn.sexyxpic.com", "cn.hottyxpic.com", "cn.thongxxx.com", "cn.juicexgirl.com", "cn.eroticxpic.com", "cn.bustyxgirl.com", "cn.beautyxgirl.com", "cn.bellexpic.com", "cn.pantyxpic.com", "cn.peachgirlz.com", "cn.pantyxart.com", "cn.beautyxpic.com", "cn.cutemetas.com", "cn.cutexpic.com", "cn.perfectxbody.com", "cn.sexyqgirl.com", "cn.bestxhips.com", "cn.bestxass.com", "cn.assgirlz.com", "cn.bestxbum.com", "cn.adultmetas.com cn", "eroticxpic.com", "cn.xxxthong.com", "cn.thongxgirl.com", "cn.bestxlingerie.com", "cn.sexyxart.com", "cn.hotxhips.com", "cn.hotbeautypic", "cn.greatxgirl.com", "cn.asianxpic.com", "cn.bootyxgirl.com", "cn.tokyohotgirl.com"],
         reg: /^https?:\/\//,
         include: [
             "//a[@data-title and picture/source]",
@@ -9160,8 +9493,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: ".flex-grid:not(.masonry){display:block!important;}",
         category: "nsfw2"
     }, {
-        name: "KawaiiX系列",
-        host: ["kawaiithong.com", "kawaiix.com", "kawaiixgirl.com", "kawaiixpic.com", "kinkygirlz.com", "kawaiimetas.com", "assxpic.com", "metaxpic.com", "metaxgirl.com", "eroticxgirl.com", "sexyxpic.com", "hottyxpic.com", "thongxxx.com", "juicexgirl.com", "adultmetas.com", "eroticxpic.com", "bustyxgirl.com", "beautyxgirl.com", "bellexpic.com", "pantyxpic.com", "www.peachgirlz.com", "peachgirlz.com", "pantyxart.com", "beautyxpic.com", "cutemetas.com", "cutexpic.com", "perfectxbody.com", "sexyqgirl.com", "bestxhips.com", "assgirlz.com", "beautifulmetas.com", "pantyxgirl.com", "greatxpic.com", "xartpic.com", "perfectxpic.com", "bestxboobs.com", "artthong.com", "hotbeautypic.com", "greatxgirl.com", "asianxpic.com", "bestxleg.com", "tokyohotgirl.com", "bestxass.com"],
+        name: "KawaiiX系列 三",
         reg: /^https?:\/\//,
         include: [
             "//a[@data-title and picture/source]",
@@ -9829,7 +10161,24 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "禁漫天堂",
         reg: () => {
-            let hosts = ["18comic.vip", "18comic.org", "18comic-cn.vip", "18comic-palworld.club", "18comic-c.xyz", "18comic-c.art", "18comic-fun.xyz", "jmcomic.me", "jmcomic1.me", "jm-comic1.art", "jm-comic2.art", "jm-comic3.art", "18comic-ff7rebirth.xyz", "18comic-ff7rebirth.quest", "18comic-ff7rebirth.club"];
+            let hosts = [
+                "18comic.vip",
+                "18comic.org",
+                "18comic-cn.vip",
+                "18comic-palworld.club",
+                "18comic-c.xyz",
+                "18comic-c.art",
+                "18comic-fun.xyz",
+                "jmcomic.me",
+                "jmcomic1.me",
+                "jm-comic1.art",
+                "jm-comic2.art",
+                "jm-comic3.art",
+                "18comic-ff7rebirth.xyz",
+                "18comic-ff7rebirth.quest",
+                "18comic-ff7rebirth.club",
+                "18comic-erdtree.cc"
+            ];
             return fun.indexOf(hosts, fun.lh);
         },
         init: () => {
@@ -9955,7 +10304,14 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "nhentai圖片清單頁",
-        host: ["nhentai.net", "nyahentai.red", "www.hentai.name", "nhentai.xxx", "nhentai.to", "simplyhentai.org"],
+        host: [
+            "nhentai.net",
+            "nyahentai.red",
+            "www.hentai.name",
+            "nhentai.xxx",
+            "nhentai.to",
+            "simplyhentai.org"
+        ],
         reg: /(nhentai\.net|nyahentai\.red|www\.hentai\.name|nhentai\.xxx|nhentai\.to|simplyhentai\.org)\/g\/\d+\/?$/,
         imgs: async () => {
             thumbnailsSrcArray = fun.getImgSrcArr("a.gallerythumb>img");
@@ -10042,7 +10398,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "nyahentai.red閱讀頁",
-        host: ["nyahentai.red"],
         reg: /^https?:\/\/nyahentai\.red\/g\/\d+\/\d+\/$/,
         imgs: () => {
             let [imgDir] = fun.ge("#image-container img").src.match(/.+\//);
@@ -10055,7 +10410,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "www.hentai.name閱讀頁",
-        host: ["www.hentai.name"],
         reg: /^https?:\/\/www\.hentai\.name\/g\/\d+\/\d+\/$/,
         imgs: () => {
             let max = fun.gt(".num-pages");
@@ -10069,7 +10423,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "simplyhentai.org閱讀頁",
-        host: ["simplyhentai.org"],
         reg: /^https?:\/\/simplyhentai\.org\/g\/\d+\/\d+\/$/,
         imgs: () => {
             let max = fun.gt(".num-pages");
@@ -10083,7 +10436,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "akuma.moe",
-        host: ["akuma.moe"],
         reg: /^https?:\/\/akuma\.moe\/g\/\w+$/i,
         init: async () => await fun.waitEle("#pages"),
         imgs: async () => {
@@ -10189,7 +10541,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "autoPager"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/圖片清單頁",
-        host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net", "nyahentai.info"],
+        host: [
+            "cathentai.net",
+            "hentaibeeg.com",
+            "hentaicolor.net",
+            "nyahentai.info"
+        ],
         reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net|nyahentai\.info)\/[^/]+\/(#collapse)?$/i,
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
@@ -10208,7 +10565,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/List Read頁",
-        host: ["cathentai.net", "hentaibeeg.com", "hentaicolor.net", "nyahentai.info"],
+        host: [
+            "cathentai.net",
+            "hentaibeeg.com",
+            "hentaicolor.net",
+            "nyahentai.info"
+        ],
         reg: /(cathentai\.net|hentaibeeg\.com|hentaicolor\.net|nyahentai\.info)\/read\/\d+\.html$/i,
         imgs: () => fun.run(fun.gt("#listImgH")),
         button: [4],
@@ -11941,12 +12303,25 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             fun.remove(".dlh,iframe:not(#FullPictureLoadIframe)");
             fun.remove("//body/div[a[img]] | //div[@class='Introduct']/a[div[img]] | //div[a[img[@alt='Game Tip']]]");
             fun.addMutationObserver(() => fun.remove(".dlh,iframe:not(#FullPictureLoadIframe)"));
-            await fun.getNP(".gallary_item", ".thispage+a", null, ".paginator");
+            //await fun.getNP(".gallary_item", ".thispage+a", null, ".paginator");
         },
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
-            let url = fun.gu("a[href*='slide'],a[href*='slist']");
-            return fun.iframeVar(url, "imglist").then(w => w.imglist.map(e => e.url));
+            //let url = fun.gu("a[href*='slide'],a[href*='slist']");
+            //return fun.iframeVar(url, "imglist").then(w => w.imglist.map(e => e.url));
+            let [galleryId] = fun.lp.match(/\d+/);
+            let pages = fun.ge(".thispage~.next:last-child");
+            if (pages) {
+                let max = fun.gt(".thispage~.next:last-child", 2);
+                let links = [];
+                for (let i = 2; i <= max; i++) {
+                    let pageUrl = `/photos-index-page-${i}-aid-${galleryId}.html`;
+                    links.push(pageUrl);
+                }
+                await fun.getEle(links, ".gallary_item", [".gallary_wrap>ul", 0], ".bot_toolbar:has(>.paginator)");
+            }
+            let galleryUrl = `/photos-gallery-aid-${galleryId}.html`;
+            return fetch(galleryUrl).then(res => res.text()).then(text => text.match(/\/\/[\w\.]+\/data\/[\w\/\.-]+/gi));
         },
         thums: ".gallary_item img",
         button: [4],
@@ -11954,7 +12329,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             [".gallary_wrap,.Introduct", 0], 2
         ],
         go: 1,
-        customTitle: () => fun.title(/ - 紳士漫畫| - 绅士漫画|-紳士漫畫|-绅士漫画/, 1).replace(/\d+P/i, "").trim(),
+        customTitle: () => fun.dt({
+            d: / - 紳士漫畫.*$| - 绅士漫画.*$|-紳士漫畫.*$|-绅士漫画.*$/
+        }),
         category: "hcomic"
     }, {
         name: "紳士漫畫 下拉閱讀頁",
@@ -11963,8 +12340,31 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: () => _unsafeWindow.imglist.map(e => e.url),
         button: [4],
         insertImg: ["#img_list", 2],
-        customTitle: () => fun.title(" - 列表", 1).replace(/\d+P/i, "").trim(),
+        customTitle: () => fun.dt({
+            d: " - 列表"
+        }),
         css: "div[align=center],#control_block{display:none!important;}",
+        category: "hcomic"
+    }, {
+        name: "紳夜漫畫",
+        host: ["syacomic01.website", "syacomic.com", "www.syacomic02.xyz"],
+        reg: /^https?:\/\/(www\.)?syacomic(\d+)?\.\w+\/detail\/\d+$/,
+        init: async () => {
+            let [id] = fun.lp.match(/\d+/);
+            let fetchJson = await fetch(`https://api.nftbaoyi.com/comic/${id}`).then(res => res.json());
+            siteJson = fetchJson;
+            debug("\n此頁JSON資料\n", siteJson);
+            await fun.waitEle(".grid img");
+            fun.createImgBox(".grid", 1);
+        },
+        imgs: () => siteJson.book_pages.map(e => e.img_url),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".grid,a.justify-center,div:has(>.custom-pagination)"], 2
+        ],
+        customTitle: () => fun.dt({
+            t: siteJson.name
+        }),
         category: "hcomic"
     }, {
         name: "Comics",
@@ -12125,7 +12525,20 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         name: "头牌漫画网",
         link: "https://xs8.me/",
         reg: () => {
-            let hosts = ["tptoon.com", "www.x88du.com", "81tsw.com", "www.81xxs.com", "www.mttoon.com", "biqu.in", "www.dybqg.com", "toupaimh.com", "tpmhw.com", "toupai8.com", "www.dmmtu.com", "www.kkmnt.com"];
+            let hosts = [
+                "tptoon.com",
+                "www.x88du.com",
+                "81tsw.com",
+                "www.81xxs.com",
+                "www.mttoon.com",
+                "biqu.in",
+                "www.dybqg.com",
+                "toupaimh.com",
+                "tpmhw.com",
+                "toupai8.com",
+                "www.dmmtu.com",
+                "www.kkmnt.com"
+            ];
             return hosts.includes(fun.lh) && /^\/chapter\/\d+\.html$/.test(fun.lp);
         },
         init: async () => {
@@ -12556,7 +12969,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "一之涩漫画/哈塔兹漫画/布罗塔漫画/物二漫画",
-        host: ["1zse.com", "hatazi.com", "www.bulota.com", "522160.xyz", "522161.xyz", "522162.xyz", "522163.xyz", "522164.xyz", "522168.xyz", "522168.xyz", "522167.xyz", "522168.xyz", "522169.xyz"],
+        host: [
+            "1zse.com",
+            "hatazi.com",
+            "www.bulota.com",
+            "522160.xyz"
+        ],
         reg: /^https?:\/\/(1zse\.com|hatazi\.com|www\.bulota\.com|52216\d\.xyz)\/index\.php\/\d+\.html/,
         init: () => {
             fun.addMutationObserver(() => fun.remove("#eruda,.__chobitsu-hide__,#lightboxOverlay,#lightbox"));
@@ -12934,7 +13352,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "顶通漫画",
-        host: ["toptoon.shop", "toptoon.buzz", "toptooncn.club", "toptooncn.info", "toptooncn.life", "toptooncn.top", "toptoonapp.com", "toptoon123.xyz", "toptooncn.xyz", "toptoon123.link", "toptoonapp.club"],
+        host: [
+            "toptoon.shop",
+            "toptoon.buzz",
+            "toptooncn.club",
+            "toptooncn.info",
+            "toptooncn.life",
+            "toptooncn.top",
+            "toptoonapp.com",
+            "toptoon123.xyz",
+            "toptooncn.xyz",
+            "toptoon123.link",
+            "toptoonapp.club"
+        ],
         reg: /^https?:\/\/toptoon(\w+)?\.\w+\/\w+\/\d+\.html/,
         imgs: "#txtbox img",
         button: [4],
@@ -13152,6 +13582,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         prev: "//a[text()='Chap trước'][@href] | //a[p[text()='Chap trước']][@href]",
         customTitle: () => fun.title("-Truyện Tranh 18"),
         css: ".ads{display:none!important;}",
+        category: "hcomic"
+    }, {
+        name: "LXMANGA",
+        host: ["lxmanga.life"],
+        reg: /^https?:\/\/lxmanga\.life\/[\w-]+\/[\w-]+\/[\w-]+/i,
+        include: "//nav[li[span[starts-with(text(),'Danh')]]]",
+        imgs: "img.lazy.max-w-full",
+        button: [4],
+        insertImg: [".text-center:has(img.lazy.max-w-full)", 2],
+        autoDownload: [0],
+        next: "//a[button[span[text()='Chương sau']]][not(starts-with(@href,'javascript'))]",
+        prev: "//a[button[span[text()='Chương trước']]][not(starts-with(@href,'javascript'))]",
+        customTitle: () => fun.title(" - ", 3),
         category: "hcomic"
     }, {
         name: "污污漫畫",
@@ -21818,8 +22261,11 @@ if (next) {
         }
     };
 
-    if (!/copymanga|mangacopy|sexythots|\.neocities\.org/.test(fun.lh)) {
-        loading_bak = fun.dataURLtoBlobURL(loading_bak);
+    const loadingBakBlobURL = fun.dataURLtoBlobURL(loading_bak);
+    const checkBlobURL = await fun.checkImgStatus(loadingBakBlobURL);
+
+    if (checkBlobURL.ok) {
+        loading_bak = loadingBakBlobURL;
         autoPagerLoading_gif = fun.dataURLtoBlobURL(autoPagerLoading_gif);
     }
 
