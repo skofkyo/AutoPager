@@ -644,6 +644,7 @@ https://www.eyval.net/*
 *crtys.net/html/*/n-*.html
 *://thismore.fun/view/*php*
 *://xgirl.one/*
+*://missbby.com/*
 *://xerocos.com/*
 https://cosermm.blog.2nt.com/*
 *://*.win3000.com/*/*.html
@@ -652,6 +653,7 @@ https://cosermm.blog.2nt.com/*
 *://*.shunv*i.com/*/*.html
 *://cosxuxi.club/*.html*
 *://redseats.org/gallery/*.cfg*
+*://allianceforrabiescontrol.org/*.html
 *://kkoreaactor.blogspot.com/*/*/*.html*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
