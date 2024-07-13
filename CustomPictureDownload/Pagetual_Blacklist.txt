@@ -1,4 +1,4 @@
-2024/07/09 20:00
+2024/07/14 01:14
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -142,6 +142,9 @@ CosXuxi Club
 
 RedSeats.Org
 *://redseats.org/gallery/*.cfg*
+
+CosXuxi Club
+*://allianceforrabiescontrol.org/*.html
 
 BaoBua
 *://baobua.com/post/*.html*
@@ -627,6 +630,9 @@ Xasiat
 
 XGirl
 *://xgirl.one/*
+
+MissBby.com
+*://missbby.com/*
 
 Xerocos
 *://xerocos.com/*
