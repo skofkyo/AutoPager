@@ -1039,7 +1039,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/07/09 20:00</p>
+<p>2024/07/14 01:14</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1198,7 +1198,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
-                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://depday.info/">Depday-Info</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>
+                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://depday.info/">Depday-Info</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://allianceforrabiescontrol.org/">CosXuxi Club</a>
                 </td>
             </tr>
             <tr>
@@ -1823,6 +1823,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://cyberkuma.pixnet.net/blog">CyberKuma的部落格</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cypherlockhart.pixnet.net/blog">快樂氰化物</a>
                 </td>
                 <td></td>
             </tr>
@@ -2590,6 +2596,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>
                     <a href="https://www.hotgirlpix.com/">Hot Girl Pix</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplay18plus.com/">Cosplay 18 Plus</a>
                 </td>
                 <td></td>
             </tr>
@@ -3708,7 +3720,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://xgirl.one/">XGirl</a>
+                    <a href="https://missbby.com/">MissBby.com</a>
                 </td>
                 <td>SPA網頁，分類添加了自動翻頁</td>
             </tr>
@@ -4494,6 +4506,12 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://syacomic.com/">紳夜漫畫</a>
+                </td>
+                <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://web.nicecat.cc/">NiceCat</a>
                 </td>
                 <td>SPA網頁，請在info頁做操作。</td>
@@ -4936,6 +4954,18 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.55comic.com/">污污漫畫</a>
                 </td>
                 <td>需要自動滾動元素，動態捕獲canvas轉為BlobURL。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tranh18.com/">Tranh 18</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://lxmanga.life/">LXMANGA</a>
+                </td>
+                <td></td>
             </tr>
         </tbody>
     </table>
