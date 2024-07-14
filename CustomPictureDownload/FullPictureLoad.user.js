@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.3.11
+// @version            2.3.12
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1149,6 +1149,7 @@
             s: "//div[strong[contains(text(),'Album Name')]]",
             d: "Album Name: "
         }),
+        css: ".md\:px-16,.xl\:px-20{padding:unset!important}.max-w-3xl{max-width:100%!important}",
         category: "nsfw2"
     }, {
         name: "XGirl/MissBby.com 分類自動翻頁",
@@ -2795,9 +2796,12 @@
         ],
         init: () => {
             _unsafeWindow.onresize = null;
-            let e = fun.ge("#image_div>p");
-            if (e) {
-                tempEles.push(e);
+            let p = fun.ge("#image_div>p");
+            if (p) {
+                let a = fun.ge("a", p);
+                if (!a) {
+                    tempEles.push(p);
+                }
             }
         },
         imgs: () => {
@@ -12360,11 +12364,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: () => siteJson.book_pages.map(e => e.img_url),
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".grid,a.justify-center,div:has(>.custom-pagination)"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".grid,a.justify-center,div:has(>a.block),div:has(>.custom-pagination)"], 2
         ],
         customTitle: () => fun.dt({
             t: siteJson.name
         }),
+        css: "body>ins{display:none!important;}",
         category: "hcomic"
     }, {
         name: "Comics",
@@ -12771,7 +12776,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu(".title+div>a");
-            return fun.fetchDoc(url).then(dom => fun.ge("img[data-src]", dom) ? fun.gae("img[data-src]", dom) : fun.gae("#lightgallery a", dom));
+            return fun.fetchDoc(url).then(dom => fun.ge("img[data-src]", dom) ? fun.gae("img[data-src]", dom) : fun.gae("#lightgallery a,.gallary a", dom));
         },
         button: [4],
         insertImg: ["//div[a[img]]", 2],
@@ -12786,7 +12791,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         name: "色漫网",
         host: ["www.cartoon18.com"],
         reg: /www\.cartoon18\.com\/([\w-]+\/)?story\/\d+\/full/,
-        imgs: () => fun.ge("img[data-src]") ? fun.gae("img[data-src]") : fun.gae("#lightgallery a"),
+        imgs: () => fun.ge("img[data-src]") ? fun.gae("img[data-src]") : fun.gae("#lightgallery a,.gallary a"),
         button: [4],
         insertImg: ["#lightgallery", 2],
         category: "hcomic"
