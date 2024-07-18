@@ -379,6 +379,29 @@ fun.gae(selector, doc)
     </summary>
     <br>
 <pre>
+//匹配網址和頁面元素，用於規則reg是函式的寫法
+//h = hosts 匹配網站的域名，格式可為字串、正則、字串或正則的陣列
+//p = pathname 匹配網址的路徑，格式可為字串或正則
+//s = search 匹配網址的搜尋，格式可為字串或正則
+//e = elements 匹配網頁的元素選擇器，格式可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
+const object = {
+    //String or RegExp or Array [String or RegExp]
+    h: [
+        "example.com",
+        /^example\.com$/
+    ],
+    //String or RegExp
+    p: "",
+    //String or RegExp
+    s: "",
+    //String or Array [String]
+    e: [
+        "selector"
+    ]
+}
+fun.checkUrl(object);
+</pre>
+<pre>
 //返回一個指定元素，支持CSS/Xpath選擇器
 fun.ge("selector");
 fun.ge("selector", doc = document);
@@ -399,7 +422,7 @@ fun.gu("selector", doc = document);
 fun.gu(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//取得指定的所有A元素的hre的f陣列
+//取得指定的所有A元素的hre的陣列
 fun.gau("selector");
 fun.gau("selector", doc = document);
 fun.gau(String, HTMLDocument or HTMLElement);
@@ -1039,7 +1062,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/07/14 01:14</p>
+<p>2024/07/16 21:29</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1105,7 +1128,7 @@ HotGirl World,https://www.hotgirl2024.com/
 MIC MIC IDOL,https://www.micmicidol.club/
 background-color,#7C87E8
 Xasiat,https://www.xasiat.com/albums/
-XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
+XO福利圖,https://www.xofulitu521.xyz/xoxo
 色图,https://setu.lol/
 紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html
 </pre>
@@ -1219,7 +1242,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.123784.xyz/">秀人集</a>
+                    <a href="https://www.123786.xyz/">秀人集</a>
                 </td>
                 <td>永久域名Xiurenba.Com及(秀人集.com)</td>
             </tr>
@@ -1324,7 +1347,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://weme.su/">微密猫</a>
+                    <a href="https://www.wemimao.vip/">微密猫</a>
                 </td>
                 <td></td>
             </tr>
@@ -1370,7 +1393,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://sizupro.com/">微圖坊偽</a>
+                    <a href="https://sizupro.com/">偽微圖坊</a>
                 </td>
                 <td></td>
             </tr>
@@ -1416,7 +1439,9 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://dongti.blog.2nt.com/">胴体的诱惑</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://meituba.blog.2nt.com/">美图吧</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1562,14 +1587,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 </td>
                 <td>
                     <a href="https://www.entbao.com/b/23-0.html">娱乐宝</a>，<a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.nvhai8.com/">女人吧</a>
-                </td>
-                <td>
-                    <a href="https://m.nvhai8.com/">m.nvhai8.com</a>
                 </td>
             </tr>
             <tr>
@@ -2038,7 +2055,9 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://928r.com/">美图社</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://060k.com/">花瓣美女</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2137,14 +2156,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                     <a href="https://www.avideom.com/">阿维迪姆</a>
                 </td>
                 <td>需註冊，移動端免登入</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.madoucun.com/arttype/5.html">麻豆村</a>
-                </td>
-                <td>
-                    <a href="https://www.mamamcn.com/arttype/5.html">麻麻传媒</a>， <a href="https://www.wuyamcn.com/arttype/5.html">乌鸦传媒</a>， <a href="https://www.tangxvlog.com/arttype/5.html">糖心vlog</a>， <a href="https://www.guodongmcn.com/arttype/5.html">果冻传媒</a>， <a href="https://www.mrrabbit.org/arttype/5.html">兔子先生</a>， <a href="https://www.xvideo.bar/arttype/5.html">中国X站</a>， <a href="https://www.proncn.com/arttype/5.html">中国P站</a>， <a href="https://www.proncn.com/arttype/5.html">麻豆101</a>， <a href="https://www.mdcg.club/arttype/5.html">麻豆吃瓜社区</a>， <a href="https://www.minimcn.com/arttype/5.html">mini传媒</a>， <a href="https://www.xkmcn.net/arttype/5.html">星空无限传媒</a>， <a href="https://www.tianmeimcn.com/arttype/5.html">天美传媒</a>， <a href="https://www.9ccg.org/arttype/5.html">9草吃瓜网</a>， <a href="https://www.royalmcn.com/arttype/5.html">皇家华人</a>， <a href="https://www.qqmcn.net/arttype/5.html">扣扣传媒</a>， <a href="https://www.kuaibo.club/arttype/5.html">快播社</a>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -3817,7 +3828,7 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             <tr>
                 <td>仿紳士漫畫UI寫真圖庫</td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/hentaigallery.txt">同格式90個</a>，分類添加了自動翻頁
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/hentaigallery.txt">同格式90個</a>
                 </td>
             </tr>
             <tr>
@@ -3874,7 +3885,19 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.288mn.com/a/vm/">288美女图库</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="http://www.mm1311.net/">MM1311</a>
+                </td>
+                <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://langnv.neocities.org/">浪女吧</a>
                 </td>
                 <td>很久沒新圖了</td>
             </tr>
@@ -3987,10 +4010,10 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo">XO福利圖</a>
+                    <a href="https://www.xofulitu521.xyz/xoxo">XO福利圖</a>
                 </td>
                 <td>
-                    <a href="https://www.xofulitu9ok999.xyz/xoxo">www.xofulitu9ok999.xyz</a>，分類添加了自動翻頁
+                    <a href="https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/">網站跳轉</a>，分類添加了自動翻頁
                 </td>
             </tr>
             <tr>
@@ -4567,12 +4590,6 @@ XO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo
                 <td>
                     <a href="https://www.kmh123.xyz/">永久发布页</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://bunmh.com/">包子漫畫</a>
-                </td>
-                <td>有的需要重新繪製還原被分割的圖片</td>
             </tr>
             <tr>
                 <td>
