@@ -306,7 +306,7 @@ https://photobook.club/*
 *rmm8.com/tu/*.html
 *://www.emonl.com/*.html
 *://www.cybesx.com/*.html
-*://www.yalatu.com/big-image.html?type=*&imageId=*
+*://www.288mn.com/a/*/*/*.html
 *://*.656g.com/tid/*.html
 *://*.mm1311.net/*/*.html
 *://*.eemm.cc/pic/*.html
@@ -464,7 +464,7 @@ https://www.eyval.net/*
 *://www.nudedxxx.com/photo/*.shtml
 *://www.871651.com/*.html
 *://18jjj.cyou/chapter/*
-*://diedk1123-ake33i.xofulitu2za222.sbs/arttype/*
+*://*xofulitu*/arttype/*
 *://toptoon*/*/*.html
 *://www.xinent.net/plus/view-*.html
 *://m.xinent.net/plus/view-*.html
@@ -666,7 +666,8 @@ https://cosermm.blog.2nt.com/*
 *://waifubitches.com/*gallery/*
 *://cosplayboobs.com/*album/*
 *://www.mzpic.com/*.html
-*://928r.com/post/*.html
+*://*928r.com/post/*.html
+*://*060k.com/post/*.html
 *www.gai.vn*
 *://yinaw.com/*.html
 *://www.55comics.com/chapter/*.html
