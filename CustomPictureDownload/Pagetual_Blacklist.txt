@@ -1,4 +1,4 @@
-2024/07/14 01:14
+2024/07/16 21:29
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -604,11 +604,11 @@ MM5MM5美女图片
 MM1311
 *://*.mm1311.net/*/*.html
 
+288美女图库
+*://www.288mn.com/a/*/*/*.html
+
 656G精品套图
 *://*.656g.com/tid/*.html
-
-雅拉图
-*://www.yalatu.com/big-image.html?type=*&imageId=*
 
 18AV
 *18av.mm-cg.com/*cg_content/*/content.html
@@ -770,6 +770,9 @@ CUTE GIRLS ADDICT
 
 美图社
 *://928r.com/post/*.html
+
+花瓣美女
+*://*060k.com/post/*.html
 
 美女写真
 *portrait.knit.bid/*/*
@@ -1084,7 +1087,7 @@ Nuded Photo
 *://www.871651.com/*.html
 
 XO福利圖
-*://diedk1123-ake33i.xofulitu2za222.sbs/arttype/*
+*://*xofulitu*/arttype/*
 
 tu928美女写真网
 /^https?:\/\/tu928\.com\/\d+\.html/
