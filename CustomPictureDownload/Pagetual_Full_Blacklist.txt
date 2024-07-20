@@ -72,6 +72,8 @@ https://www.nuyet.com/gallery/*
 *://www.24tupian.org/hd2/*.html
 *://xchina.*/photo/*
 *://*.xchina.*/photo/*
+*://xchina.*/amertuer/*
+*://*.xchina.*/amertuer/*
 *://8se.me/photo/*
 *://*.8se.me/photo/*
 *://w3.javsx.com/photos/*.html
@@ -299,7 +301,6 @@ https://photobook.club/*
 *://sexygirl.cc/a/*.html
 *://*kanmeitu*/p/*.html
 *://www.sexyasiangirl.xyz/album/*.html
-*://sxchinesegirlz01.xyz/*/*/*/*/
 *://*.tuzac.com/file/*
 *://www.xiuwo.net/tu/*.html
 *://www.jnmmw.com/meimei/*.html
@@ -326,7 +327,9 @@ https://photobook.club/*
 *magazinejapanese5.blog.jp*
 *magazinejapanese6.blog.jp*
 *://kenshin.hk/*/*/*/*/*
-*://www.xasiat.com/*albums/*
+*://www.xasiat.com/*albums/*.
+*://*areegator.net/*albums/*
+*://*snapmoms.com/*albums/*
 *://www.zhaotaotu.cc/thread-*.htm
 *://*umeitu.com/img/*.html
 *://*m5mm.com/photo/*.html
@@ -714,7 +717,7 @@ https://cosermm.blog.2nt.com/*
 /^https?:\/\/www\.xiaolis\.cc\/html\/\d+$/
 /^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i
 /photo\.camcam\.cc\/[^/]+\/$/
-/sxchinesegirlz(\d+)?\.\w+\/\d+\/\d+\/\d+\/.+\/$/
+/^https?:\/\/sxchinesegirlz(\d+)?\.\w+\/\?p=\d+$/
 /^https?:\/\/tu928\.com\/\d+\.html/
 /^https:\/\/(18manga\.top|mt91\.top|cn18h\.top)\/imgs\.php\?id=/
 /^https://www\.hexieshe\.cn/\d+/$/
@@ -733,7 +736,7 @@ https://cosermm.blog.2nt.com/*
 /pimpandhost\.com/album/\d+/
 /^https?://(xiutaku\.com|kiutaku\.com)/\d+$/
 /^https?://www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com/\w+/\w+/\d+/\d+\.html$/
-/(www\.rosi\d\.(com|net)|www\.sfjpg\.\w+|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
+/(rosi8\.(com|net)|sfjpg\.com|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
 *://heysexgirl.com/*
 *www.modelsvibe.com*
 /(www\.jjmhw\.cc|www\.ikanmh\.xyz|www\.mxshm\.site|www\.92hm\.life|www\.ikanhm\.xyz|592mh\.top|592hm\.top|52wxz\.top|52kanmh\.top|52kanhm\.top|52hmw\.top|92comic\.top|91comic\.top|18comic2\.top|ikanyy\.top|18hm\.top|yycomic\.top|18hcomic\.top|18xcomic\.top|18xmh\.top|18xhm\.top|iikanwxz\.top|ikwxz\.top|wxzmh\.top|mxsmh\d.com|mxsmh\d+.top|mxs\d+\.top)\/chapter\/\d+/
