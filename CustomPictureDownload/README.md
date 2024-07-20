@@ -175,6 +175,12 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         }
         return false;
     },
+    reg: () => fun.checkUrl({
+        h: "",
+        p: "",
+        s: "",
+        e: "",
+    }),
     delay: 300,
     include: "",
     include: [""],
@@ -384,6 +390,7 @@ fun.gae(selector, doc)
 //p = pathname 匹配網址的路徑，格式可為字串或正則
 //s = search 匹配網址的搜尋，格式可為字串或正則
 //e = elements 匹配網頁的元素選擇器，格式可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
+//規則屬性imgs和customTitle如為字串，會自動判斷頁面元素
 const object = {
     //String or RegExp or Array [String or RegExp]
     h: [
@@ -1062,7 +1069,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/07/16 21:29</p>
+<p>2024/07/20 15:56</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1414,7 +1421,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="http://www.mfsft.com/">免费私房图</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a> ，發布頁， <a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>， 相似仿站， <a href="https://www.rosi8.com/">www.rosi8.com</a>， <a href="https://www.sfjpg.com/">www.sfjpg.com</a>， <a href="https://www.sfjpg.net/">www.sfjpg.net</a>， <a href="https://www.kanmeitu.net/">www.kanmeitu.net</a>， <a href="https://www.kanmeitu1.com/">www.kanmeitu1.com</a>， <a href="https://kanmeitu1.cc/">kanmeitu1.cc</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mfsft.txt">同系列網站166個</a> ，發布頁， <a href="http://js.jctuk.com/dz.html">http://js.jctuk.com/dz.html</a>， 相似仿站， <a href="http://www.rosi8.com/">魅狸图片网</a>， <a href="https://www.sfjpg.com/">美女私房照</a>， <a href="https://www.kanmeitu.net/">看妹图</a>
                 </td>
             </tr>
             <tr>
@@ -1876,12 +1883,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td></td>
             </tr>
             <tr>
-                <td>欲图网</td>
-                <td>
-                    <a href="https://github.com/nanrenlulu/nanrenlulu/wiki/">最新地址(图片)</a>
-                </td>
-            </tr>
-            <tr>
                 <td>
                     <a href="https://taotu.org/">套圖TAOTU.ORG</a>
                 </td>
@@ -2049,7 +2050,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://xx.knit.bid/">爱妹子</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://mm.187187.xyz/">mm.187187.xyz</a>，<a href="https://999888.best/">999888.best</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2365,7 +2368,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://spacemiss.com/">Spacemiss.com</a>
+                    <a href="https://spacemiss.com/">Space of Miss Beautiful</a>
                 </td>
                 <td></td>
             </tr>
@@ -2786,8 +2789,8 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://bunkr-albums.io/">Bunkr</a>
                 </td>
-                <td>影片可匯出網址後用Motrix下載，
-                    <pre>Referer：https://bunkr.si/</pre>，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁
+                <td>手動插入圖片，影片可匯出網址後用Motrix下載，
+                    <pre>Referer：https://bunkr.fi/</pre>，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁
                 </td>
             </tr>
             <tr>
