@@ -1,4 +1,4 @@
-2024/07/16 21:29
+2024/07/20 15:56
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -46,7 +46,7 @@ Xiutaku/Kiutaku
 /^https?:\/\/www\.(ywmmt|mnwht|ycmeinv|yhsft|yhmnt|mfsft|jpsft|akxzt|flwht|threnti|ywnmt|ztmeinv|mstaotu|tstaotu|ywmtw|mgtaotu|prmzt|xrtaotu|jjtaotu|prmeinv|axtaotu|mgmeinv|xsmeinv|ugtaotu|msmeinv|flxzw|axmeinv|swtaotu|hjtaotu|nsxzw|ugmeinv|hytaotu|xrmeinv|zfmeinv|jpmnt|zttaotu|mfmzt|ykmeinv|qjtaotu|pmtaotu|ddtaotu|plxzw|mfxzt|mtgqt|fltuku|yhtuku|ycmeitu|mttuku|xhtuku|qjtuku|jpflt|ycwht|yctuk|akywt|ywtuk|jctuk|xstuk|xgtuk|mztuk|xztuk|sytuk|gcxzt|tsxzt|gqxzt|mfnmt|spxzt|yhxzt|mtxzt|nsxzt|jdxzt|spmeitu|jpmzw|yhmeitu|mzmeitu|qpmzt|flsft|ywsft|wkmzt|snmzt|thmzt|brtaotu|aimzt|qtmzt|mtmnt|jrmzt|yztaotu|jrmeinv|xsmzt|zbtaotu|yhmnw|zbmzt|xjjtaotu|jpnst|ywmeitu|jrmnt|ftmeinv|xjjmzt|smtaotu|mtywt|sfsnt|jdtaotu|xgyouwu|ywmzt|xgywt|mtflt|nmtaotu|mtmnw|flmeitu|gqtaot|plmeitu|zpmzt|mtmzt|mtwht|sfwht|gqsft|yhmeinv|jdmnt|yctaotu|wkrenti|yzrenti|mtsyt|sptaotu|mttaotu|wsgtu|ywtaotu|sfmzt|sftaotu|gcmeinv|nstaotu|xhtaotu|jdwht|mtmeinv|gqwht|jpywt|jcwht|tptaotu|spyouwu|xgmeitu|nsmeitu|jstaotu|yhtaotu|sytaotu|nsxiez|swmzt|jpmzt|yhflt|sfywt|ywxzt|plmzt|sfmtw|jpyouwu|sfxzt|zftaotu|ycmzt|whtaotu|jpxzt|sftuku|plwht|symzt|sfmnt|sfnmt|jcmeinv|tsmnt|jjmeinv|wsgmzt|gqnmt)\.com\/\w+\/\w+\/\d+\/\d+\.html$/
 
 免費私房圖仿站
-/(www\.rosi\d\.(com|net)|www\.sfjpg\.\w+|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
+/(rosi8\.(com|net)|sfjpg\.com|kanmeitu\d?\.\w+)\/\w+\/\d+\.html$/
 
 
 有的太複雜除了正則還需要依靠元素判斷，只能寫成東方永頁機禁用規則。
@@ -101,6 +101,8 @@ https://www.nuyet.com/gallery/*
 小黃書
 *://xchina.*/photo/*
 *://*.xchina.*/photo/*
+*://xchina.*/amertuer/*
+*://*.xchina.*/amertuer/*
 
 8色人体摄影
 *://8se.me/photo/*
@@ -153,7 +155,7 @@ Chinese in beauty
 *://cn.looives.com/view/*.cfg*
 
 Chinese Beauties
-/sxchinesegirlz(\d+)?\.\w+\/\d+\/\d+\/\d+\/.+\/$/
+/^https?:\/\/sxchinesegirlz(\d+)?\.\w+\/\?p=\d+$/
 
 photo.camcam.cc
 /photo\.camcam\.cc\/[^/]+\/$/
@@ -564,9 +566,6 @@ HotAsianX
 亚色图库
 *://yase.*/albums/*
 
-Chinese Beauties
-*://sxchinesegirlz01.xyz/*/*/*/*/
-
 图宅网
 *://*.tuzac.com/file/*
 
@@ -624,6 +623,8 @@ MM1311
 
 Xasiat
 *://www.xasiat.com/*albums/*
+*://*areegator.net/*albums/*
+*://*snapmoms.com/*albums/*
 
 找套图
 *://www.zhaotaotu.cc/thread-*.htm
