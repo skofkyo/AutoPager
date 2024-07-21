@@ -1249,7 +1249,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.123786.xyz/">秀人集</a>
+                    <a href="https://www.1231238.xyz/">秀人集</a>
                 </td>
                 <td>永久域名Xiurenba.Com及(秀人集.com)</td>
             </tr>
@@ -4542,6 +4542,13 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 </td>
                 <td>SPA網頁，請在info頁做操作。</td>
             </tr>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://koharu.to/">Koharu</a>
+                </td>
+                <td>SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片鏈結轉為BlobURL，取得全部圖片需要等待一段時間。</td>
+            </tr>
             <tr>
                 <td>
                     <a href="https://pixiv.app/">Comics</a>
@@ -4588,7 +4595,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://acgtoon.com/">ACG糖</a>
+                    <a href="https://www.acgotang.com/">ACG糖</a>
                 </td>
                 <td>
                     <a href="https://www.kmh123.xyz/">永久发布页</a>
@@ -4949,7 +4956,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://hanime1.biz/home">hanime1.biz</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://anime01.xyz/">科學域名</a>
+                </td>
             </tr>
             <tr>
                 <td>
