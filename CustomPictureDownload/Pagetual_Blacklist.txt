@@ -1,4 +1,4 @@
-2024/07/20 15:56
+2024/07/23 15:42
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -101,8 +101,8 @@ https://www.nuyet.com/gallery/*
 小黃書
 *://xchina.*/photo/*
 *://*.xchina.*/photo/*
-*://xchina.*/amertuer/*
-*://*.xchina.*/amertuer/*
+*://xchina.*/amateur/*
+*://*.xchina.*/amateur/*
 
 8色人体摄影
 *://8se.me/photo/*
@@ -163,8 +163,8 @@ photo.camcam.cc
 PhimVu
 /^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i
 
-萝丝派
-*://www.yylsp.com/*.html
+Kutekorean.Com
+/^https?:\/\/m\.kutekorean\.com\/[^\.]+\.html$/i
 
 新闻吧
 *://www.xinwenba.net/plus/view-*.html
@@ -272,8 +272,9 @@ PhimVu
 *://*meitule.*/photo/*.html
 *://*meitulu.*/photo/*.html
 
-COSPLAY ZIP
-*://*coszip.com/*.html*
+Elysium
+*://www.elysium.pro/Photobooks/Album/*
+*://www.elysium.pro/Cosplay/Album/*
 
 淑女爱
 *://www.shunv*i.com/*/*.html
@@ -413,6 +414,9 @@ Nude Babes
 Mitaku
 *://mitaku.net/*/*/
 
+EroAsian
+*://eroasian.net/photo-set/*
+
 4KHD
 *://www.4khd.com/content/*/*.html
 
@@ -455,6 +459,7 @@ HOTGIRLchina
 /^https?:\/\/xinh\.pro\/[^\/]+\/$/
 /^https?:\/\/anhkhieudam\.com\/[^\/]+\/$/
 /^https?:\/\/hinhsexviet\.com\/[^\/]+\/$/
+/^https?:\/\/anhmienphi\.com\/[^\/]+\/$/
 
 FoamGirl
 *://foamgirl.net/*.html
