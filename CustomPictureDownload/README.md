@@ -1069,7 +1069,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/07/20 15:56</p>
+<p>2024/07/23 15:42</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1536,6 +1536,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.elysium.pro/">Elysium</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.qixianzi.com/">七仙子图片</a>
                 </td>
                 <td>
@@ -1645,7 +1651,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.xiuwo.net/">秀窝</a>
                 </td>
                 <td>
-                    <a href="https://rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://wap.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>
+                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://wap.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>
                 </td>
             </tr>
             <tr>
@@ -2965,6 +2971,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://eroasian.net/">EroAsian</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://cosplayworld.net/">Cosplay World</a>
                 </td>
                 <td></td>
@@ -3004,7 +3016,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
                 </td>
                 <td>
-                    <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>， <a href="https://xinh.pro/">Xinh Pro</a>
+                    <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>， <a href="https://xinh.pro/">Xinh Pro</a>， <a href="https://anhkhieudam.com/">Ảnh Khiêu Dâm</a>， <a href="https://hinhsexviet.com/">Hình Sex Việt</a>， <a href="https://anhmienphi.com/">Ảnh Miễn Phí</a>
                 </td>
             </tr>
             <tr>
@@ -3012,7 +3024,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://ososedki.com/">OSOSEDKI</a>
                 </td>
                 <td>
-                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>，<a href="https://hentaibitches.com/">HENTAI BITCHES</a>，<a href="https://leaksfan.com/">LEAKSFANS</a>，<a href="https://charmingass.com/">CHARMINGASS</a>，<a href="https://leakspie.com/">LEAKS PIE</a>，<a href="https://cherryleaks.com/">CHERRY LEAKS</a>，<a href="https://sweetleaks.com/">SWEETLEAKS</a>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>，<a href="https://hentaibitches.com/">HENTAI BITCHES</a>，<a href="https://leaksfan.com/">LEAKSFANS</a>，<a href="https://charmingass.com/">CHARMINGASS</a>，<a href="https://leakspie.com/">LEAKS PIE</a>，<a href="https://cherryleaks.com/">CHERRY LEAKS</a>，<a href="https://sweetleaks.com/">SWEETLEAKS</a>，<a href="https://ocosplay.com/">OCOSPLAY</a>
                 </td>
             </tr>
             <tr>
@@ -3217,6 +3229,14 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://m.phimvuspot.com/">PhimVu</a>
                 </td>
+                <td>
+                    <a href="https://m.kutekorean.com/">Kutekorean.Com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hayvn.net/girl-xinh">HayVn.Net</a>
+                </td>
                 <td></td>
             </tr>
             <tr>
@@ -3247,9 +3267,27 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://truepichk.blogspot.com/">True Pic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://min-bin.blogspot.com/">min: archive</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://500brothersfun.blogspot.com/">500 Brothers</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://blognudemodels.blogspot.com/">Nude Models</a>
+                </td>
+                <td>點開PO文後，可以3、8。</td>
             </tr>
             <tr>
                 <td>
@@ -3439,6 +3477,18 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://fotoslava.ru/">Фото идеи и картинки</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cojo.ru/">Картинки и фото</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://dtf.ru/u/660597-salvatore-ganacci">DTF</a>
                 </td>
                 <td>
@@ -3489,10 +3539,10 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://thotsbay.tv/">Thotsbay</a>
+                    <a href="https://hotleaks.tv/">Hotleaks</a>
                 </td>
                 <td>
-                    <a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片
+                    <a href="https://thotsbay.tv/">Thotsbay</a>，<a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片
                 </td>
             </tr>
             <tr>
@@ -3717,6 +3767,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.ku138.cc/">美女写真网</a>
                 </td>
                 <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://qqdk2019.net/">悄悄的看2019</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4013,6 +4069,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://g-avstar.com/meitushe/">G-AVSTAR</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.xofulitu521.xyz/xoxo">XO福利圖</a>
                 </td>
                 <td>
@@ -4158,6 +4220,18 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://akuma.moe/">akuma.moe</a>
                 </td>
                 <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yabai.si/g">Yabai!</a>
+                </td>
+                <td>作用在圖片清單頁，SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sukidesu.moe/latest">Sukidesu.moe</a>
+                </td>
+                <td>作用在圖片清單頁，SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -4486,6 +4560,22 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://hanman18.com/">Hanman18.com</a>
+                </td>
+                <td>
+                    <a href="https://manga18.club/">Manga18.club</a>，<a href="https://18porncomic.com/">18PornComic</a>，作用在閱讀頁。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cndoujin.net/">CNdoujin.net</a>
+                </td>
+                <td>
+                    <a href="doujin18.net/">Doujin18.net</a>，作用在閱讀頁，兩個網站的爬取內容不一樣。
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://18kami.com/">18Kami.com</a>
                 </td>
                 <td></td>
@@ -4513,7 +4603,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.nicohentai.com/">逆次元逆ACG</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://www.freeacg.org/">www.freeacg.org</a>，<a href="https://nico.yt/">nico.yt</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5074,6 +5166,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://manhuascans.org/">GodaComic 英文漫画</a>
                 </td>
                 <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhuascan.us/">Manhuascan 英文漫画</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
