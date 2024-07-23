@@ -72,8 +72,8 @@ https://www.nuyet.com/gallery/*
 *://www.24tupian.org/hd2/*.html
 *://xchina.*/photo/*
 *://*.xchina.*/photo/*
-*://xchina.*/amertuer/*
-*://*.xchina.*/amertuer/*
+*://xchina.*/amateur/*
+*://*.xchina.*/amateur/*
 *://8se.me/photo/*
 *://*.8se.me/photo/*
 *://w3.javsx.com/photos/*.html
@@ -86,7 +86,6 @@ https://www.nuyet.com/gallery/*
 *://pic.yailay.com/articles/*.html*
 *://nungvl.net/gallerys/*.cg*
 *://lootiu.com/gallery/*.cfg*
-*://www.yylsp.com/*.html
 *://www.xinwenba.net/plus/view-*.html
 *://*.xwbar.com/plus/view-*.html
 *://*.xwwu.net/plus/view-*.html
@@ -291,7 +290,8 @@ https://www.htmanga*.top/photos-index-aid-*.html
 *://18h.animezilla.com/manga/*
 *://www.ho5ho.com/*/*/server*
 *://asiacomics.com/chapter/*
-*://*coszip.com/*.html*
+*://www.elysium.pro/Photobooks/Album/*
+*://www.elysium.pro/Cosplay/Album/*
 *://www.pictoa.com/albums/*/*.html
 *://www.imagefap.com/gallery/*
 *://www.imagefap.com/pictures/*
@@ -669,6 +669,8 @@ https://cosermm.blog.2nt.com/*
 *://waifubitches.com/*gallery/*
 *://cosplayboobs.com/*album/*
 *://www.mzpic.com/*.html
+*://mitaku.net/*/*/
+*://eroasian.net/photo-set/*
 *://*928r.com/post/*.html
 *://*060k.com/post/*.html
 *www.gai.vn*
@@ -711,11 +713,13 @@ https://cosermm.blog.2nt.com/*
 /^https?:\/\/xinh\.pro\/[^\/]+\/$/
 /^https?:\/\/anhkhieudam\.com\/[^\/]+\/$/
 /^https?:\/\/hinhsexviet\.com\/[^\/]+\/$/
+/^https?:\/\/anhmienphi\.com\/[^\/]+\/$/
 /^https?:\/\/(mrcong\.com|misskon\.com)\/[^\/]+\/$/
 /^https?:\/\/((www\.)?rosixiezhen\.\w+|(www\.)?rosi\d{3}\.\w+|(www\.)?\dmeinv\.cc|www\.silk-necktie\.com)\/\w+\/\w+\.html/
 /^https?:\/\/(www\.)?rosi\d+\.cc\/\d+$/
 /^https?:\/\/www\.xiaolis\.cc\/html\/\d+$/
 /^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i
+/^https?:\/\/m\.kutekorean\.com\/[^\.]+\.html$/i
 /photo\.camcam\.cc\/[^/]+\/$/
 /^https?:\/\/sxchinesegirlz(\d+)?\.\w+\/\?p=\d+$/
 /^https?:\/\/tu928\.com\/\d+\.html/
