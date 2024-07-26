@@ -275,12 +275,10 @@ https://www.nuyet.com/gallery/*
 *://18h.mm-cg.com/*_content/*/content.html
 *://litu100.xyz/comic/id-*/*.html
 *://mhdnf.xyz/play?linkId=*
-/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www.)?acgn-manga\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
+/^https?:\/\/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www\.)?h-mangas\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
 *://*acgnbus.com/*/*.html
 /^https?:\/\/(18comic.(vip|org)|jmcomic\d?\.me|jm-comic\d.art)\/photo\/\d+/
-*://*wnacg.*/photos-index-aid-*.html
-*://bunmh.com/read/*/*.html
-https://www.htmanga*.top/photos-index-aid-*.html
+/^https?:\/\/((www\.)?wnacg\.com|(www\.)hm\d{1,2}\.lol|(www\.)wn\d{1,2}\.cc|(www\.)?hentaicomic\.ru)\/photos-index-aid-/
 *://ahri8.top/readOnline2.php?ID=*
 *caitlin.top/index.php?route=comic/readOnline*
 *://www.177pic*.com/html/*/*/*.html
@@ -398,6 +396,7 @@ https://photobook.club/*
 *://www.xiurenugril.com/*.html
 *://www.aixiuren.com/*.html
 *://www.ixiuren.com/*.html
+https://asigirl.com/*
 *://www.hotgirlpix.com/p/*
 *://www.tokyomotion.net/album/*/*
 *://bitchesgirls.com/*/*/
@@ -673,7 +672,7 @@ https://cosermm.blog.2nt.com/*
 *://eroasian.net/photo-set/*
 *://*928r.com/post/*.html
 *://*060k.com/post/*.html
-*www.gai.vn*
+*://*gai.vn*
 *://yinaw.com/*.html
 *://www.55comics.com/chapter/*.html
 *://www.55manshu.com/chapter/*.html
