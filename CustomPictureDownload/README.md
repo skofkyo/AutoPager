@@ -17,7 +17,13 @@ ViaBrowser 5.6.1
 <p>PS：暴力猴Violentmonkey不兼容Fancybox5會報錯，連Android上的Via瀏覽器、X瀏覽器都能正常引入使用Fancybox5了。</p>
 <h1>提醒：</h1>
 <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
-<p>請自行修改腳本將所有cdn.jsdelivr.net替換成cdn.bootcdn.net</p>
+<p>請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com或cdn.bootcdn.net</p>
+<details>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看依賴庫 」</strong>
+        </kbd>
+    </summary>
 <pre>
 cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
@@ -32,6 +38,19 @@ cdn.jsdelivr.net
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
 <pre>
+unpkg.com
+// @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
+// @require            https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
+// @require            https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
+// @resource FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV3JS https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+// @resource FancyboxV3Css https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+// @resource ViewerJs https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js
+// @resource ViewerJsCss https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css
+</pre>
+<pre>
 cdn.bootcdn.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
@@ -44,6 +63,7 @@ cdn.bootcdn.net
 // @resource ViewerJs https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.js
 // @resource ViewerJsCss https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.css
 </pre>
+</details>
 <br>
 <p>2023/11/03</p>
 <p>1.6.0開始Fancybox從3.5.7升級至5.0.24，部分網站依然調用3.5.7，網站如果有自帶LIGHTBOX之類的插件，則不調用腳本的Fancybox避免各種衝突，如有遇到FancyboxV5版圖片沒有置中錯位偏右請反饋。</p>
@@ -76,7 +96,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         </kbd>
     </summary>
     <br>
-    <pre>
+<pre>
 [{
     name: "規則名稱",
     enable: 0, //填0禁用此規則
@@ -242,7 +262,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     …
 }]
 </pre>
-    <pre>
+<pre>
 // 網站自帶燈箱功能，不注入FancyboxCSS樣式
 fancybox: {
     v: 3,
@@ -275,7 +295,7 @@ fancybox: {
     <p>簡易實現自動翻頁功能，圖片全載的實驗性輔助功能，需要動態加載的大多都翻不了。</p>
     <p>點擊標題分隔條和雙擊頁面空白處，暫停或啟用自動翻頁。</p>
     <p>需要更高級的自動翻頁功能請使用東方永頁機。</p>
-    <pre>
+<pre>
 變量doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
 舉例選取元素
 doc.querySelector(selector)
@@ -283,7 +303,7 @@ doc.querySelector(selector)
 fun.ge(selector, doc)
 fun.gae(selector, doc)
 </pre>
-    <pre>
+<pre>
 {
     name: "哈哈漫画 www.hahacomic.com 分類自動翻頁",
     enable: 1,
@@ -348,14 +368,18 @@ fun.gae(selector, doc)
             return false
         },
         showTitle: 0, //0不顯示下一頁的標題分隔條，顯示則省略。
-        title: (dom) => {
+        pageNum: "span.current", //頁數文字選擇器，標題文字簡略為Page 2
+        pageNum: (dom) => {
+            return num;
+        },
+        title: (dom) => { //完整定義標題文字
             //自定義標題分隔條要顯示的文字，不使用則省略。
             code;
-            return titleText
+            return titleText;
             //先經過代碼判斷返回obj。
             return {
                 ok: (true添加標題,false不添加),
-                text: titleText
+                text: titleText;
             }
         },
         hide: "selector", //暫時隱藏元素，當暫停翻頁或最後一頁時取消隱藏。
@@ -583,7 +607,7 @@ let callback = (dom, win) => {
 await fun.wait(callback, dom = document, win = window);
 fun.wait(Function or AsyncFunction, HTMLDocument, Window);
 </pre>
-    <pre>
+<pre>
 //功能基本等同eval()
 fun.run("code");
 fun.run(String);
@@ -709,10 +733,10 @@ await fun.checkImgStatus(src);
 fun.checkImgStatus(String);
 </pre>
 <pre>
-//確認加了CDN的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址
+//確認加了CDN的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址				
 <p>//wsrv.nl，i0.wp.com</p>
 await fun.checkImageCDN([圖片網址陣列]);
-fun.checkImageCDN(Array);
+fun.checkImageCDN(Array);			
 </pre>
 <pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得，無法繪製跨域的圖片，會出現跨域汙染的錯誤。
@@ -1069,7 +1093,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/07/23 15:42</p>
+<p>2024/07/27 04:46</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1092,23 +1116,23 @@ imgs: async () => {
             <strong>「 點擊展開查看 」</strong>
         </kbd>
     </summary>
-<br>
-<p>基本格式</p>
-<p>name,value</p>
-<p>文字顏色</p>
-<pre>text-color,#000</pre>
-<p>背景顏色</p>
-<pre>background-color,#15d3bf</pre>
-<p>網站名稱,網址</p>
-<pre>小黃書,https://xchina.biz/</pre>
-<p>入門，不搞的那麼多花裡胡哨，直接網站名稱,網址。</p>
-<pre>
+    <br>
+    <p>基本格式</p>
+    <p>name,value</p>
+    <p>文字顏色</p>
+    <pre>text-color,#000</pre>
+    <p>背景顏色</p>
+    <pre>background-color,#15d3bf</pre>
+    <p>網站名稱,網址</p>
+    <pre>小黃書,https://xchina.biz/</pre>
+    <p>入門，不搞的那麼多花裡胡哨，直接網站名稱,網址。</p>
+    <pre>
 4KHD,https://www.4khd.com/
 小黃書,https://xchina.biz/
 8色人體攝影,https://8se.me/
 紳士会所,https://www.hentaiclub.net/
 </pre>
-<p>進階，統一修改文字顏色和背景顏色。</p>
+    <p>進階，統一修改文字顏色和背景顏色。</p>
 <pre>
 text-color,#111
 background-color,#16d4cf
@@ -1117,7 +1141,7 @@ background-color,#16d4cf
 8色人體攝影,https://8se.me/
 紳士会所,https://www.hentaiclub.net/
 </pre>
-<p>高階，花裡胡哨，每4個收藏就換一種背景顏色，當然也能穿插改文字顏色。</p>
+    <p>高階，花裡胡哨，每4個收藏就換一種背景顏色，當然也能穿插改文字顏色。</p>
 <pre>
 4KHD,https://www.4khd.com/
 小黃書,https://xchina.biz/
@@ -1139,12 +1163,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
 色图,https://setu.lol/
 紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html
 </pre>
-<p>更多應用方式</p>
-<p>應用一，用醒目的顏色來區分大尺度、清涼、H漫、漫畫。</p>
-<p>應用二，用醒目的顏色來區分喜好度。</p>
-<br>
-<p>線上顏色選擇器</p>
-<a href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>
+    <p>更多應用方式</p>
+    <p>應用一，用醒目的顏色來區分大尺度、清涼、H漫、漫畫。</p>
+    <p>應用二，用醒目的顏色來區分喜好度。</p>
+    <br>
+    <p>線上顏色選擇器</p>
+    <a href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>
 </details>
 <h2>※備註</h2>
 <p>SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈結。</p>
@@ -1243,9 +1267,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.xiu01.top/">秀人美女網</a>
                 </td>
-                <td>
-                   永久域名：Xrmnw.Com 秀人美女.Top
-                </td>
+                <td> 永久域名：Xrmnw.Com 秀人美女.Top </td>
             </tr>
             <tr>
                 <td>
@@ -1591,7 +1613,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.xwbar.com/web/meinv/">新闻吧</a>
                 </td>
                 <td>
-                    <a href="https://www.xwwu.net/web/meinv/">新闻屋</a>，<a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>， <a href="https://www.fjrx.org/web/meinv/">福建热线</a>， <a href="https://www.sdrx.org/web/meinv/">山东热线</a>， <a href="https://www.gxrx.org/web/meinv/">广西热线</a>， <a href="https://www.whrx.org/web/meinv/">武汉热线</a>， <a href="http://www.tjrx.org/web/meinv/">天津热线</a>， <a href="https://www.ynrx.org/web/meinv/">云南热线</a>， <a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
+                    <a href="https://www.xwwu.net/web/meinv/">新闻屋</a>， <a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>， <a href="https://www.fjrx.org/web/meinv/">福建热线</a>， <a href="https://www.sdrx.org/web/meinv/">山东热线</a>， <a href="https://www.gxrx.org/web/meinv/">广西热线</a>， <a href="https://www.whrx.org/web/meinv/">武汉热线</a>， <a href="http://www.tjrx.org/web/meinv/">天津热线</a>， <a href="https://www.ynrx.org/web/meinv/">云南热线</a>， <a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
                 </td>
             </tr>
             <tr>
@@ -1599,7 +1621,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.shzx.org/b/12-0.html">四海资讯</a>
                 </td>
                 <td>
-                    <a href="https://www.entbao.com/b/23-0.html">娱乐宝</a>，<a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
+                    <a href="https://www.entbao.com/b/23-0.html">娱乐宝</a>， <a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
                 </td>
             </tr>
             <tr>
@@ -1742,7 +1764,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://girl18.net/">Girl 18+</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="http://bikiniz.net/">Bikini Girl</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1881,6 +1905,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://5zipai.com/">5zipai.com</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://shaonvtu.xyz/">52自拍</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2057,7 +2087,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://xx.knit.bid/">爱妹子</a>
                 </td>
                 <td>
-                    <a href="https://mm.187187.xyz/">mm.187187.xyz</a>，<a href="https://999888.best/">999888.best</a>
+                    <a href="https://mm.187187.xyz/">mm.187187.xyz</a>， <a href="https://999888.best/">999888.best</a>
                 </td>
             </tr>
             <tr>
@@ -2092,7 +2122,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://chottie.com/blog/">Chottie</a>
                 </td>
-                <td>同上</td>
+                <td>
+                    <a href="https://chinesehottie.com/blog/">chinesehottie.com</a>， 同上
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2338,7 +2370,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://asigirl.com/">Asigirl.com</a>
                 </td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2566,6 +2598,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://influencersgonewild.com/">Influencers GoneWild</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tuyetnhan.com/">Ảnh đẹp</a>
                 </td>
                 <td></td>
             </tr>
@@ -3024,7 +3062,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://ososedki.com/">OSOSEDKI</a>
                 </td>
                 <td>
-                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>，<a href="https://cosplaythots.com/">COSPLAYTHOTS</a>，<a href="https://cosplayrule34.com/">COSPLAYRULE34</a>，<a href="https://waifubitches.com/">WAIFUBITCHES</a>，<a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>，<a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>，<a href="https://vipthots.com/">VIPTHOTS</a>，<a href="https://hentaibitches.com/">HENTAI BITCHES</a>，<a href="https://leaksfan.com/">LEAKSFANS</a>，<a href="https://charmingass.com/">CHARMINGASS</a>，<a href="https://leakspie.com/">LEAKS PIE</a>，<a href="https://cherryleaks.com/">CHERRY LEAKS</a>，<a href="https://sweetleaks.com/">SWEETLEAKS</a>，<a href="https://ocosplay.com/">OCOSPLAY</a>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>， <a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>， <a href="https://vipthots.com/">VIPTHOTS</a>， <a href="https://hentaibitches.com/">HENTAI BITCHES</a>， <a href="https://leaksfan.com/">LEAKSFANS</a>， <a href="https://charmingass.com/">CHARMINGASS</a>， <a href="https://leakspie.com/">LEAKS PIE</a>， <a href="https://cherryleaks.com/">CHERRY LEAKS</a>， <a href="https://sweetleaks.com/">SWEETLEAKS</a>， <a href="https://ocosplay.com/">OCOSPLAY</a>， <a href="https://webcharming.com/">WEB CHARMING</a>
                 </td>
             </tr>
             <tr>
@@ -3215,7 +3253,25 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://niwatori.my.id/2023/">niwatori.my.id</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://xasia.pics/">xasia</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sexygirl.one/">SexyGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://beautypics.org/">Sexy Girl Pictures</a>
                 </td>
                 <td></td>
             </tr>
@@ -3383,7 +3439,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://zzup.com/user-album/3338/petmer/index.html">ZzUp.Com</a>
                 </td>
-                <td><a href="https://zzup.com/user-album/2269/youmii/index.html">youmii</a>，分類添加了自動翻頁</td>
+                <td>
+                    <a href="https://zzup.com/user-album/2269/youmii/index.html">youmii</a>，分類添加了自動翻頁
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3492,8 +3550,8 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://dtf.ru/u/660597-salvatore-ganacci">DTF</a>
                 </td>
                 <td>
-<a href="https://dtf.ru/u/36100-tursall">Tursall</a>，SPA網頁，點開作者的PO文，作用在PO文首樓的圖集，手動插入圖片。
-</td>
+                    <a href="https://dtf.ru/u/36100-tursall">Tursall</a>，SPA網頁，點開作者的PO文，作用在PO文首樓的圖集，手動插入圖片。
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3542,7 +3600,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://hotleaks.tv/">Hotleaks</a>
                 </td>
                 <td>
-                    <a href="https://thotsbay.tv/">Thotsbay</a>，<a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片
+                    <a href="https://thotsbay.tv/">Thotsbay</a>， <a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片
                 </td>
             </tr>
             <tr>
@@ -4563,7 +4621,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://hanman18.com/">Hanman18.com</a>
                 </td>
                 <td>
-                    <a href="https://manga18.club/">Manga18.club</a>，<a href="https://18porncomic.com/">18PornComic</a>，作用在閱讀頁。
+                    <a href="https://manga18.club/">Manga18.club</a>， <a href="https://18porncomic.com/">18PornComic</a>，作用在閱讀頁。
                 </td>
             </tr>
             <tr>
@@ -4604,7 +4662,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.nicohentai.com/">逆次元逆ACG</a>
                 </td>
                 <td>
-                    <a href="https://www.freeacg.org/">www.freeacg.org</a>，<a href="https://nico.yt/">nico.yt</a>
+                    <a href="https://www.freeacg.org/">www.freeacg.org</a>， <a href="https://nico.yt/">nico.yt</a>
                 </td>
             </tr>
             <tr>
@@ -4619,14 +4677,15 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.wnacg.com/">紳士漫畫</a>
                 </td>
-                <td>作用在圖片清單、下拉閱讀頁， <a href="http://www.hentaicomic.ru/">www.hentaicomic.ru</a>， <a href="https://wnacg.date/">紳士漫畫地址發布頁</a>
+                <td>作用在圖片清單、下拉閱讀頁， <a href="https://www.hentaicomic.ru/">www.hentaicomic.ru</a>， <a href="https://wnacg.date/">紳士漫畫地址發布頁</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://syacomic.com/">紳夜漫畫</a>
                 </td>
-                <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a></td>
+                <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4873,9 +4932,15 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://nnhanman.org/">鸟鸟韩漫</a>
+                    <a href="https://nnhanman6.com/">鸟鸟韩漫</a>
                 </td>
                 <td>寫真請點開第一章，直接翻到底。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://atm333.com/">凹凸漫</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -5152,7 +5217,8 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://godamh.com/">GODA漫畫</a>
                 </td>
                 <td>
-                    <a href="https://nav.telltome.net/">发布页</a> ，閱讀頁域名為n.cocolamanhua.com，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料，如有此情況需uBlock加信任名單。<pre>https://n.cocolamanhua.com/*/</pre>腳本自帶去廣告，還你乾淨的閱讀感受。
+                    <a href="https://nav.telltome.net/">发布页</a> ，閱讀頁域名為n.cocolamanhua.com，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料，如有此情況需uBlock加信任名單。
+                    <pre>https://n.cocolamanhua.com/*/</pre>腳本自帶去廣告，還你乾淨的閱讀感受。
                 </td>
             </tr>
             <tr>
@@ -5426,7 +5492,8 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="http://www.zerobyw8.com/">zero搬运网</a>
                 </td>
-                <td>預設關閉，<a href="https://zerobyw.github.io/">域名</a></td>
+                <td>預設關閉， <a href="https://zerobyw.github.io/">域名</a>
+                </td>
             </tr>
             <tr>
                 <td>
