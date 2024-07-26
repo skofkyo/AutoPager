@@ -1,4 +1,4 @@
-2024/07/23 15:42
+2024/07/27 04:46
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -823,6 +823,9 @@ LUVBP
 *://www.aixiuren.com/*.html
 *://www.ixiuren.com/*.html
 
+Asigirl.com
+https://asigirl.com/*
+
 Hot Girl Pix
 *://www.hotgirlpix.com/p/*
 
@@ -1119,7 +1122,7 @@ Asian Porn
 *://asianporn.li/photo/*/*/
 
 Gai.vn
-*www.gai.vn*
+*://*gai.vn*
 
 壹纳网
 *://yinaw.com/*.html
@@ -1273,7 +1276,7 @@ Pururin
 /^https?:\/\/(91manwu\.com|fumanwu\.org)\/vodplay\/[\d-]+\.html$/
 
 ACG漫画网
-/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www.)?acgn-manga\.com|(www\.)?cool-manga\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
+/^https?:\/\/((www\.)?acg[a-z]mh\.com|(www\.)?acgmh[a-z]\.com|(www\.)?h-mangas\.com|(www\.)?porn-comic\.com)\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html/
 *://*acgnbus.com/*/*.html
 
 禁漫天堂
@@ -1284,11 +1287,7 @@ ACG漫画网
 *://www.55manshu.com/chapter/*.html
 
 紳士漫畫
-*://wnacg.*/photos-index-aid-*.html
-https://www.htmanga*.top/photos-index-aid-*.html
-
-包子漫畫
-*://bunmh.com/read/*/*.html
+/^https?:\/\/((www\.)?wnacg\.com|(www\.)hm\d{1,2}\.lol|(www\.)wn\d{1,2}\.cc|(www\.)?hentaicomic\.ru)\/photos-index-aid-/
 
 松鼠症倉庫
 *://ahri8.top/readOnline2.php?ID=*
