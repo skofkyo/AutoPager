@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.4.4
+// @version            2.4.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -54,7 +54,7 @@
 (async (JSZip, Fancybox, $) => {
     "use strict";
 
-    if (document.querySelector("body.no-js:not(.has-preloader)")) return; //Cloudflare檢測連線安全性時，不運行腳本
+    if (document.querySelector("body.no-js:not(.has-preloader,.single-post)")) return; //Cloudflare檢測連線安全性時，不運行腳本
 
     let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
         enable: 0, //!!!維持0不要改!!!
@@ -82,8 +82,8 @@
     let displayLanguage = {};
     let globalImgArray = [];
     let captureSrcArray = [];
-    let thumbnailsSrcArray = [];
-    let videosSrcArray = [];
+    let thumbnailSrcArray = [];
+    let videoSrcArray = [];
     let promiseBlobArray = [];
     let captureLinksArray = [];
     let customTitle = null;
@@ -130,7 +130,7 @@
                     videos,
                     domain
                 } = _unsafeWindow;
-                videosSrcArray = videos.map(e => domain + e.url);
+                videoSrcArray = videos.map(e => domain + e.url);
             }
             const [, album_id] = /id-([^.]+)/.exec(fun.lp);
             let [numP] = fun.gt(".tab-content div:has(>.fa-picture-o)").match(/\d+/);
@@ -154,7 +154,7 @@
                 const OOOI = thumb_src.includes("/0001_600x0.webp");
                 const [photoUrl] = /^https?:\/\/[^\/]+\/[^\/]+\//.exec(thumb_src);
                 if (OOOI) {
-                    thumbnailsSrcArray = srcArrFn(numP, photoUrl, 2);
+                    thumbnailSrcArray = srcArrFn(numP, photoUrl, 2);
                     return srcArrFn(numP, photoUrl);
                 } else {
                     let max;
@@ -170,17 +170,17 @@
                     if (max > 1) {
                         await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager", 1500);
                     }
-                    thumbnailsSrcArray = fun.getImgSrcArr("img.cr_only");
-                    if (numP != thumbnailsSrcArray.length) {
+                    thumbnailSrcArray = fun.getImgSrcArr("img.cr_only");
+                    if (numP != thumbnailSrcArray.length) {
                         setTimeout(() => {
                             fun.hideMsg();
                             fun.showMsg("圖片數量不符合，請反饋", 5000);
                         }, 1500)
                     }
                     if (fun.lp.includes("amateur")) {
-                        return thumbnailsSrcArray;
+                        return thumbnailSrcArray;
                     } else {
-                        return thumbnailsSrcArray.map(e => e.replace("_600x0", "").replace(".webp", ".jpg"));
+                        return thumbnailSrcArray.map(e => e.replace("_600x0", "").replace(".webp", ".jpg"));
                     }
                 }
             } else {
@@ -320,10 +320,10 @@
         exclude: "#erphpdown",
         init: () => fun.gae(".gallery-blur-item").forEach(e => (e.className = "gallery-item gallery-fancy-item")),
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".article-content img[src*='-285x285']");
+            thumbnailSrcArray = fun.getImgSrcArr(".article-content img[src*='-285x285']");
             fun.showMsg("fun.xhrHEAD(check)...", 0);
             let xhrNum = 0;
-            return thumbnailsSrcArray.map(async (e, i, arr) => {
+            return thumbnailSrcArray.map(async (e, i, arr) => {
                 let src = e.replace("-285x285", "");
                 let res = await fun.xhrHEAD(src);
                 fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
@@ -775,8 +775,8 @@
         reg: /^https?:\/\/www\.girldir\.com\/photos\/\w+_list\/$/i,
         imgs: async () => {
             await fun.getNP(".list-page-box>.item", "li.active+li>a", null, ".pagination");
-            thumbnailsSrcArray = fun.getImgSrcArr(".list-page-box img");
-            return thumbnailsSrcArray.map(e => e.replace(".medium.", ".big."));
+            thumbnailSrcArray = fun.getImgSrcArr(".list-page-box img");
+            return thumbnailSrcArray.map(e => e.replace(".medium.", ".big."));
         },
         button: [4],
         insertImg: [".list-page-box", 2],
@@ -984,8 +984,8 @@
         host: ["xiurenwang.me"],
         reg: /^https?:\/\/xiurenwang\.me\/photo\.php\?id=\w+/i,
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".intro>img");
-            return thumbnailsSrcArray.map(e => e.replace("_600x0", "").replace(".webp", ".jpg"));
+            thumbnailSrcArray = fun.getImgSrcArr(".intro>img");
+            return thumbnailSrcArray.map(e => e.replace("_600x0", "").replace(".webp", ".jpg"));
         },
         button: [4],
         insertImg: [".intro", 2],
@@ -1045,7 +1045,7 @@
             }
         },
         imgs: async () => {
-            videosSrcArray = fun.gae("video>source").map(e => e.src);
+            videoSrcArray = fun.gae("video>source").map(e => e.src);
             if (fun.ge("//div[contains(text(),'分页阅读')]")) {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let links = fun.gau("//div[contains(text(),'分页阅读')]/a");
@@ -1221,12 +1221,12 @@
         reg: /^https?:\/\/(xgirl\.one|missbby\.com)\//,
         autoPager: {
             mode: 1,
-            waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']//img",
-            ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4']",
+            waitEle: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4 xl:grid-cols-4']//img",
+            ele: "//div[@class='flex py-4 justify-center md:justify-between mt-4']/preceding-sibling::div[1][@class='grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4 xl:grid-cols-4']",
             pos: ["//div[@class='flex py-4 justify-center md:justify-between mt-4']", 1],
             next: "//a[text()='Next']",
             re: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
-            title: () => "Page " + nextLink.match(/\d+$/)[0],
+            pageNum: () => nextLink.match(/\d+$/)[0],
             bottom: screen.height * 2
         },
         openInNewTab: ".grid a:not([target=_blank])",
@@ -1242,7 +1242,7 @@
             pos: ["//div[@class='flex py-4 justify-center md:justify-between mt-4']", 1],
             next: "//a[text()='Next']",
             re: "//div[@class='flex py-4 justify-center md:justify-between mt-4']",
-            title: () => "Page " + nextLink.match(/\d+$/)[0],
+            pageNum: () => nextLink.match(/\d+$/)[0],
             aF: () => fun.gae(".blur-2xl").forEach(e => e.classList.remove("blur-2xl")),
             bottom: screen.height * 2
         },
@@ -1268,7 +1268,7 @@
         reg: /^https?:\/\/(www\.)?cup2d\.com\/[^\/]+\/$/i,
         imgs: () => {
             let imgs = fun.gae("img[data-high-res-src]");
-            thumbnailsSrcArray = imgs.map(e => e.src);
+            thumbnailSrcArray = imgs.map(e => e.src);
             return imgs;
         },
         button: [4],
@@ -1299,7 +1299,8 @@
             ele: "#grid-container",
             observer: "#grid-container>.grid-items",
             next: "li:has(>span#current)+li>a",
-            re: "#pagination"
+            re: "#pagination",
+            pageNum: "li:has(>span#current)"
         },
         openInNewTab: ".grid-items a:not([target=_blank])",
         category: "autoPager"
@@ -1557,7 +1558,7 @@
                 }
                 return false;
             },
-            title: () => "Page " + currentPageNum
+            pageNum: () => currentPageNum
         },
         openInNewTab: "a.headling_main_a:not([target=_blank])",
         category: "autoPager"
@@ -1590,7 +1591,7 @@
                 let links = fun.gau(".pagination>.page-item:not(.disabled)>a:not([aria-label=Next])");
                 await fun.getEle(links, "div[data-lg-thumb=data-thumbnail]>div", "div[data-lg-thumb=data-thumbnail]", "nav:has(>.pagination)");
             }
-            thumbnailsSrcArray = fun.gae("a[data-thumbnail]:not([data-video])").map(e => e.dataset.thumbnail);
+            thumbnailSrcArray = fun.gae("a[data-thumbnail]:not([data-video])").map(e => e.dataset.thumbnail);
             return fun.gae("a[data-thumbnail]:not([data-video])");
         },
         button: [4],
@@ -2016,8 +2017,8 @@
             fun.ge(".bigPic").outerHTML = '<div class="imgBox"></div>';
         },
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".previewPic img");
-            return thumbnailsSrcArray.map(e => e.replace(/d-|\/180x320/g, ""));
+            thumbnailSrcArray = fun.getImgSrcArr(".previewPic img");
+            return thumbnailSrcArray.map(e => e.replace(/d-|\/180x320/g, ""));
         },
         button: [4],
         insertImg: [".imgBox", 2],
@@ -2238,11 +2239,11 @@
         imgs: async () => {
             await fun.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a");
             try {
-                thumbnailsSrcArray = fun.gae(".list-item-image img").map(e => e.src.replace(/(-\d+)-1(\.md\.\w+)$/i, "$1$2")).sort((a, b) => a.match(/-(\d+)\.md\./)[1] - b.match(/-(\d+)\.md\./)[1]);
+                thumbnailSrcArray = fun.gae(".list-item-image img").map(e => e.src.replace(/(-\d+)-1(\.md\.\w+)$/i, "$1$2")).sort((a, b) => a.match(/-(\d+)\.md\./)[1] - b.match(/-(\d+)\.md\./)[1]);
             } catch {
-                thumbnailsSrcArray = fun.gae(".list-item-image img").map(e => e.src).sort();
+                thumbnailSrcArray = fun.gae(".list-item-image img").map(e => e.src).sort();
             }
-            return thumbnailsSrcArray.map(e => e.replace(".md.", "."));
+            return thumbnailSrcArray.map(e => e.replace(".md.", "."));
         },
         button: [4],
         insertImg: ["#list-most-recent", 2],
@@ -2299,8 +2300,8 @@
                 }));
             });
             return Promise.all(resArr).then(data => {
-                videosSrcArray = data.flat().filter(item => item.video).map(e => e.video);
-                thumbnailsSrcArray = data.flat().filter(item => item.thumbnail).map(e => e.thumbnail);
+                videoSrcArray = data.flat().filter(item => item.video).map(e => e.video);
+                thumbnailSrcArray = data.flat().filter(item => item.thumbnail).map(e => e.thumbnail);
                 return data.flat().filter(item => item.original).map(e => e.original);
             });
         },
@@ -2402,7 +2403,7 @@
         },
         imgs: () => {
             let images = siteJson.initial.gallery.images;
-            thumbnailsSrcArray = images.map(e => e.sizes.thumb);
+            thumbnailSrcArray = images.map(e => e.sizes.thumb);
             images.map(e => e.sizes.full);
             return images.map(e => e.sizes.full);
         },
@@ -2489,7 +2490,7 @@
             let video = fun.ge("a[href^='/video/']");
             if (video) {
                 let url = fun.gu("a[href^='/video/']");
-                videosSrcArray = await fun.fetchDoc(url).then(dom => fun.gae("video>source", dom).map(e => e.src));
+                videoSrcArray = await fun.fetchDoc(url).then(dom => fun.gae("video>source", dom).map(e => e.src));
             }
             let viewUrl = fun.gu("//a[text()='View Photos']");
             return fun.iframeVar(viewUrl, "list").then(w => w.list.flat());
@@ -2520,7 +2521,7 @@
     }, {
         name: "女神社",
         host: ["nshens.com", "inewgirl.com", "lovens.shop"],
-        reg: /^https?:\/\/(nshens\.com|inewgirl\.com)\/(web\/)?\d+\/\d+\/\d+\/[^/]+$/,
+        reg: /^https?:\/\/((www\.)?nshens\.com|(www\.)?inewgirl\.com)\/(web\/)?\d+\/\d+\/\d+\/[^/]+$/,
         exclude: ".justify-center>button>.v-btn__content",
         init: async () => await fun.waitEle("h3"),
         imgs: async () => {
@@ -2545,14 +2546,14 @@
         category: "nsfw2"
     }, {
         name: "女神社",
-        reg: /^https?:\/\/(nshens\.com|inewgirl\.com)\/latestpost$/,
+        reg: /^https?:\/\/((www\.)?nshens\.com|(www\.)?inewgirl\.com)\/latestpost$/,
         delay: 500,
         observerClick: "//button[span[text()='加載更多'] or span[text()='加载更多'] or span[text()='Load More'] or span[text()='Tải thêm']]",
         category: "autoPager"
     }, {
         name: "Chottie", //很多都需要VIP，不然只會重複抓到第一頁的圖片
-        host: ["chottie.com"],
-        reg: /^https?:\/\/chottie\.com\/blog\/(\w{2}\/)?archives\/\d+$/,
+        host: ["chottie.com", "chinesehottie.com"],
+        reg: /^https?:\/\/((www\.)?chottie\.com|(www\.)?chinesehottie\.com)\/blog\/(\w{2}\/)?archives\/\d+$/,
         exclude: ".justify-center>button>.v-btn__content",
         init: async () => await fun.waitEle("h3"),
         imgs: async () => {
@@ -2714,7 +2715,7 @@
             }
             let dom = fun.doc(html);
             let datas = fun.gae("img[data]", dom).map(e => e.getAttribute("data"));
-            thumbnailsSrcArray = datas.map(data => "https://imgs.diercun.com" + data);
+            thumbnailSrcArray = datas.map(data => "https://imgs.diercun.com" + data);
             return datas.map(data => "https://big.diercun.com" + _unsafeWindow.getbig(data));
         },
         button: [4],
@@ -2737,8 +2738,8 @@
             if (pages.length > 0 && liImgs.length < 21) {
                 await fun.getEle(pages, ".mtp>li", [".mtp", 0]);
             }
-            thumbnailsSrcArray = fun.gae(".mtp img").map(e => decodeURIComponent(e.src));
-            return thumbnailsSrcArray.map(url => {
+            thumbnailSrcArray = fun.gae(".mtp img").map(e => decodeURIComponent(e.src));
+            return thumbnailSrcArray.map(url => {
                 let i = url.lastIndexOf("/");
                 let murl = url.substring(i + 1);
                 url = url.replace(murl, murl.substring(1));
@@ -2765,7 +2766,7 @@
             fun.gae(".thumb-nsfw").forEach(e => e.classList.remove("thumb-nsfw"));
         },
         imgs: async () => {
-            thumbnailsSrcArray = fun.gae(".images-card img").map(e => e.dataset.src ?? e.src);
+            thumbnailSrcArray = fun.gae(".images-card img").map(e => e.dataset.src ?? e.src);
             fun.clearAllTimer(2);
             fun.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
@@ -2808,7 +2809,7 @@
             ele: "//div[@class='row'][div[div[@class='mixs-card']]] | //div[@class='table-responsive table-sm-no-border'] | //div[div[div[@class='thumbnail']]] | //div[@class='tags-wrap']",
             next: ".pagination li.active+li>a",
             re: ".pagination",
-            title: (dom) => "Page " + fun.gt(".pagination li.active", 1, dom),
+            pageNum: ".pagination li.active",
             bF: (dom) => {
                 fun.gae(".mixs-card-img:not(.lock)", dom).forEach(e => {
                     let url = e.attributes[1].value.replaceAll("'", "");
@@ -3003,14 +3004,14 @@
             observer: "#index_ajax_list>li",
             next: "a.page-num-current+a:not([title])",
             re: ".pagebar",
-            title: (dom) => "Page " + fun.gt("a.page-num-current", 1, dom),
+            pageNum: "a.page-num-current"
         },
         openInNewTab: "#index_ajax_list a:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "Girl 18+",
-        host: ["girl18.net"],
-        reg: /^https?:\/\/girl18\.net\/\w+\/\d+\/\d+\/\d+\//,
+        name: "Girl 18+/Bikini Girl",
+        host: ["girl18.net", "bikiniz.net"],
+        reg: /^https?:\/\/((www\.)?girl18\.net|(www\.)?bikiniz\.net)\/\w+\/\d+\/\d+\/\d+\//,
         imgs: "#content img",
         button: [4],
         insertImg: ["#content", 2],
@@ -3023,7 +3024,7 @@
         reg: /^https?:\/\/coserlab\.io\/archives\/\d+$/,
         exclude: ".card-body .error-empty",
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("a.masonry-image img");
+            thumbnailSrcArray = fun.getImgSrcArr("a.masonry-image img");
             fun.showMsg("fun.xhrHEA(check)...", 0);
             let xhrNum = 0;
             return fun.gau("a.masonry-image").map(u => u.replace("-scaled", "")).map(async (src, i, arr) => {
@@ -3094,7 +3095,7 @@
         host: ["legskr.com"],
         reg: /^https?:\/\/legskr\.com\/album\/detail\/\d+\.html$/,
         imgs: () => {
-            thumbnailsSrcArray = fun.gae("#lightgallery .img-fluid[data-src]").map(e => e.dataset.src ?? e.src);
+            thumbnailSrcArray = fun.gae("#lightgallery .img-fluid[data-src]").map(e => e.dataset.src ?? e.src);
             return fun.gae("#lightgallery div.col-6[data-src]");
         },
         button: [4],
@@ -3754,8 +3755,8 @@
         host: ["www.xsnvshen.co"],
         reg: /^https?:\/\/www\.xsnvshen\.(co|com)\/album\/\d+/,
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("img[id^='imglist'][data-original]");
-            return thumbnailsSrcArray.map(e => e.replace("thumb_600x900/", ""));
+            thumbnailSrcArray = fun.getImgSrcArr("img[id^='imglist'][data-original]");
+            return thumbnailSrcArray.map(e => e.replace("thumb_600x900/", ""));
         },
         button: [4],
         insertImg: ["//li[img[@id='bigImg']]", 2],
@@ -3768,8 +3769,8 @@
         reg: /^https?:\/\/m\.xsnvshen\.(co|com)\/album\/\d+/,
         imgs: async () => {
             let [max] = fun.gt(".pg_current").match(/\d+$/);
-            thumbnailsSrcArray = await fun.getImg("#arcbox img.lazy", max, 6);
-            return thumbnailsSrcArray.map(e => e.replace("thumb_600x900/", ""));
+            thumbnailSrcArray = await fun.getImg("#arcbox img.lazy", max, 6);
+            return thumbnailSrcArray.map(e => e.replace("thumb_600x900/", ""));
         },
         button: [4],
         insertImg: [
@@ -3860,7 +3861,7 @@
             next: ".pagination__item--active+a",
             re: ".pagination",
             lazySrc: "img[data-src]",
-            title: dom => "Page " + fun.gt(".pagination__item--active", 1, dom),
+            pageNum: ".pagination__item--active",
             aF: () => _this.init(),
             bottom: screen.height * 2
         },
@@ -4085,10 +4086,10 @@
             let imgSrcs = fun.gae("#content>div").map(node => {
                 if (fun.ge("img[src*='icon-play.svg']", node)) {
                     let videoSrc = fun.ge("img", node).src.replace("https://fapello.com/", "https://cdn.fapello.com/").replace("_300px", "").replace(/\.jpg$/i, ".mp4");
-                    videosSrcArray.push(videoSrc);
+                    videoSrcArray.push(videoSrc);
                     return null;
                 } else {
-                    thumbnailsSrcArray.push(fun.ge("img", node).src);
+                    thumbnailSrcArray.push(fun.ge("img", node).src);
                     let imgSrc = fun.ge("img", node).src.replace("_300px", "");
                     return imgSrc;
                 }
@@ -4134,8 +4135,8 @@
                 tempDom1 = fun.doc(html);
                 picNum = [...tempDom1.images].length; //圖片數量
                 console.log("圖片數量", picNum);
-                thumbnailsSrcArray = [...tempDom1.images].map(e => e.dataset.src);
-                console.log("縮圖地址", thumbnailsSrcArray);
+                thumbnailSrcArray = [...tempDom1.images].map(e => e.dataset.src);
+                console.log("縮圖地址", thumbnailSrcArray);
             });
             let videoNum = total - picNum;
             let videoPages = Math.ceil(videoNum / 16);
@@ -4174,11 +4175,11 @@
                     mp4Arr = mp4Arr.filter(item => item);
                     fun.hideMsg();
                     console.log("MP4地址", mp4Arr);
-                    videosSrcArray = mp4Arr;
+                    videoSrcArray = mp4Arr;
                 });
             });
         },
-        imgs: () => thumbnailsSrcArray.map(e => e.replace(".md.", ".")),
+        imgs: () => thumbnailSrcArray.map(e => e.replace(".md.", ".")),
         button: [4],
         insertImg: ["#content", 3],
         insertImgAF: () => {
@@ -4197,11 +4198,11 @@
             if (medias > 24) {
                 let max = Math.ceil(medias / 24);
                 let links = fun.arr(max).map((_, i) => siteUrl + "/page/" + (i + 1));
-                thumbnailsSrcArray = await fun.getImgA(".model-media-prew img", links);
-                return thumbnailsSrcArray.map(e => e.replace("/300px/", "/full/").replace("_300px", ""));
+                thumbnailSrcArray = await fun.getImgA(".model-media-prew img", links);
+                return thumbnailSrcArray.map(e => e.replace("/300px/", "/full/").replace("_300px", ""));
             } else {
-                thumbnailsSrcArray = fun.getImgSrcArr(".model-media-prew img");
-                return thumbnailsSrcArray.map(e => e.replace("/300px/", "/full/").replace("_300px", ""));
+                thumbnailSrcArray = fun.getImgSrcArr(".model-media-prew img");
+                return thumbnailSrcArray.map(e => e.replace("/300px/", "/full/").replace("_300px", ""));
             }
         },
         button: [4],
@@ -4236,8 +4237,8 @@
         reg: /^https?:\/\/thefappening\.plus\/[^\/]+\/$/,
         imgs: async () => {
             await fun.getNP(".gallery__item", "//a[text()='Next']", null, ".fusion-meta-info");
-            thumbnailsSrcArray = fun.gae(".gallery_thumb").map(e => e.src).reverse();
-            return thumbnailsSrcArray.map(e => e.replace(/_s(\.\w+)$/, "$1"));
+            thumbnailSrcArray = fun.gae(".gallery_thumb").map(e => e.src).reverse();
+            return thumbnailSrcArray.map(e => e.replace(/_s(\.\w+)$/, "$1"));
         },
         button: [4],
         insertImg: [".post-content", 2],
@@ -4261,8 +4262,8 @@
         reg: /^https?:\/\/thefappeningblog\.com\/gallery\/[^\/]+\/$/,
         imgs: async () => {
             await fun.getNP(".item_content", ".nav-next>a", null, ".nav-single");
-            thumbnailsSrcArray = fun.gae(".item_img>img").map(e => e.src).reverse();
-            return thumbnailsSrcArray.map(e => e.replace(/_\d+px(\.\w+)$/, "$1"));
+            thumbnailSrcArray = fun.gae(".item_img>img").map(e => e.src).reverse();
+            return thumbnailSrcArray.map(e => e.replace(/_\d+px(\.\w+)$/, "$1"));
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -4276,8 +4277,8 @@
         imgs: async () => {
             const last = (dom) => !fun.ge(".leftocontar .previzako", dom);
             await fun.getNP(".leftocontar .previzako", "//a[contains(text(),'Next')]", last, ".morebutaro");
-            thumbnailsSrcArray = fun.gae(".leftocontar .previzakoimag>img:not([src$='leaks.png'])").map(e => e.src).reverse();
-            return thumbnailsSrcArray.map(e => e.replace(/_\d+px(\.\w+)$/, "$1"));
+            thumbnailSrcArray = fun.gae(".leftocontar .previzakoimag>img:not([src$='leaks.png'])").map(e => e.src).reverse();
+            return thumbnailSrcArray.map(e => e.replace(/_\d+px(\.\w+)$/, "$1"));
         },
         button: [4],
         insertImg: [
@@ -4295,8 +4296,8 @@
         reg: /^https?:\/\/nudostar\.tv\/models\/[^\/]+\/$/,
         imgs: async () => {
             await fun.getNP("#list_videos_common_videos_list_items>.item", ".next>a", null, "#list_models_models_list_pagination");
-            thumbnailsSrcArray = fun.gae("#list_videos_common_videos_list img.thumb").map(e => e.src).reverse();
-            return thumbnailsSrcArray.map(e => e.replace(/_\d+px(\.\w+)$/, "$1"));
+            thumbnailSrcArray = fun.gae("#list_videos_common_videos_list img.thumb").map(e => e.src).reverse();
+            return thumbnailSrcArray.map(e => e.replace(/_\d+px(\.\w+)$/, "$1"));
         },
         button: [4],
         insertImg: [".list-videos", 2],
@@ -4308,8 +4309,8 @@
         reg: /^https?:\/\/nudogram\.com\/models\/[^\/]+\/$/,
         imgs: async () => {
             await fun.getNP("#list_videos_common_videos_list_items>.item", "//li[span]/following-sibling::li[1]/a", null, ".pagination");
-            thumbnailsSrcArray = fun.gae("#list_videos_common_videos_list div.img>img").map(e => e.src).reverse();
-            return thumbnailsSrcArray.map(e => e.replace(/_\d+(\.\w+)$/, "$1"));
+            thumbnailSrcArray = fun.gae("#list_videos_common_videos_list div.img>img").map(e => e.src).reverse();
+            return thumbnailSrcArray.map(e => e.replace(/_\d+(\.\w+)$/, "$1"));
         },
         button: [4],
         insertImg: [".list-videos", 2],
@@ -4343,7 +4344,7 @@
             ".entry-content"
         ],
         imgs: () => {
-            videosSrcArray = fun.gae("video>source[type='video/mp4']").map(e => e.src);
+            videoSrcArray = fun.gae("video>source[type='video/mp4']").map(e => e.src);
             return fun.gae(".entry-content img[data-src]").map(e => fun.lo + e.dataset.src);
         },
         capture: () => _this.imgs(),
@@ -4392,7 +4393,7 @@
                 }
                 let thumbnails = json.map(e => e.thumbnail);
                 imgsSrcArr = imgsSrcArr.concat(images);
-                thumbnailsSrcArray = thumbnailsSrcArray.concat(thumbnails);
+                thumbnailSrcArray = thumbnailSrcArray.concat(thumbnails);
                 if (json.length < 48) break;
             }
             return imgsSrcArr;
@@ -4444,8 +4445,8 @@
         init: () => fun.clearAllTimer(),
         imgs: async () => {
             await fun.waitEle("#showCon img");
-            videosSrcArray = fun.gae("#showCon video").map(e => /\.mp4/.test(e.src) ? e.src : null).filter(item => item);
-            thumbnailsSrcArray = fun.gae("#showCon img").map(e => /zipai/.test(e.src) ? e.src.replace(/&w=\d+/, "&w=100") : null).filter(item => item);
+            videoSrcArray = fun.gae("#showCon video").map(e => /\.mp4/.test(e.src) ? e.src : null).filter(item => item);
+            thumbnailSrcArray = fun.gae("#showCon img").map(e => /zipai/.test(e.src) ? e.src.replace(/&w=\d+/, "&w=100") : null).filter(item => item);
             return fun.gae("#showCon img").map(e => /zipai/.test(e.src) ? e.src.replace(/&output.+/, "") : null).filter(item => item);
         },
         button: [4],
@@ -4459,11 +4460,30 @@
         css: ".affs{display:none!important}.content_left img{cursor:unset}",
         category: "nsfw2"
     }, {
+        name: "52自拍",
+        host: ["shaonvtu.xyz"],
+        reg: /^https?:\/\/shaonvtu\.xyz\/\?d-\d+\.html$/i,
+        imgs: () => {
+            let pages = fun.ge(".pagination");
+            if (pages) {
+                let [, max] = fun.gu("a[title=尾页]").match(/(\d+)\.html$/);
+                return fun.getImg(".content>img", max, 5);
+            } else {
+                return fun.gae(".content>img");
+            }
+        },
+        button: [4],
+        insertImg: [
+            [".content>img", 1, ".content>img:not(.FullPictureLoadImage)"], 2
+        ],
+        customTitle: ".content>h1",
+        category: "nsfw2"
+    }, {
         name: "吃瓜大队",
         host: ["cgdd.net"],
         reg: /^https?:\/\/cgdd\.net\/\d+\.html$/i,
         imgs: () => {
-            videosSrcArray = fun.gae(".article-content video>source").map(e => e.src);
+            videoSrcArray = fun.gae(".article-content video>source").map(e => e.src);
             return fun.gae(".article-content img");
         },
         capture: () => _this.imgs(),
@@ -4546,6 +4566,7 @@
         reg: /^https?:\/\/(www|m)\.tuiimg\.com\/meinv\/\d+\//,
         link: "https://www.tuiimg.com/meinv/",
         init: async () => {
+            fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.url.replace("www.tuiimg.com", "m.tuiimg.com");
             await fun.xhrDoc(url, {
                 headers: {
@@ -4626,7 +4647,7 @@
                 /^xiurentu\.\w+$/,
                 /^ugirls\.\w+$/,
                 "mm131.click",
-                "www.jiangtutu7.icu",
+                /^(www\.)?jiangtutu7.icu$/,
                 "jipin.pics"
             ],
             e: [
@@ -4713,7 +4734,7 @@
         host: ["ososedki.com"],
         reg: /^https?:\/\/ososedki\.com\/([a-z]{2}\/)?photos\//,
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("a[data-fancybox] img").sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
+            thumbnailSrcArray = fun.getImgSrcArr("a[data-fancybox] img").sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
             return fun.gau("a[data-fancybox]").sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
         },
         button: [4],
@@ -4721,7 +4742,7 @@
         customTitle: () => fun.ge("//meta[@property='og:description']").content,
         category: "nsfw2"
     }, {
-        name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY",
+        name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY/WEB CHARMING",
         host: [
             "cosplayasian.com",
             "cosplaythots.com",
@@ -4736,7 +4757,8 @@
             "leakspie.com",
             "cherryleaks.com",
             "sweetleaks.com",
-            "ocosplay.com"
+            "ocosplay.com",
+            "webcharming.com"
         ],
         reg: [
             /^https?:\/\/cosplayasian\.com\/([a-z]{2}\/)?post\/\d+/,
@@ -4752,7 +4774,8 @@
             /^https?:\/\/leakspie\.com\/([a-z]{2}\/)?img\/\d+/,
             /^https?:\/\/cherryleaks\.com\/([a-z]{2}\/)?image\/\d+/,
             /^https?:\/\/sweetleaks\.com\/([a-z]{2}\/)?pic\/\d+/,
-            /^https?:\/\/ocosplay\.com\/([a-z]{2}\/)?g\/\d+/
+            /^https?:\/\/ocosplay\.com\/([a-z]{2}\/)?g\/\d+/,
+            /^https?:\/\/webcharming\.com\/([a-z]{2}\/)?pics\/\d+/,
         ],
         init: () => fun.createImgBox(".grid,div.row:has(>.bg-dark)", 2),
         imgs: "a[data-fancybox],.grid-item>img,.grid-item->img",
@@ -4785,7 +4808,7 @@
             fun.remove(selectors);
         },
         imgs: () => {
-            videosSrcArray = fun.gae("video[src]").map(e => e.src);
+            videoSrcArray = fun.gae("video[src]").map(e => e.src);
             let imgSrcset = fun.ge(".tiled-gallery__gallery img[srcset]")
             if (!!imgSrcset) {
                 return fun.getImgSrcset(".tiled-gallery__gallery img[srcset]");
@@ -4828,7 +4851,7 @@
         }),
         init: () => fun.createImgBox(".pagination-single", 1),
         imgs: () => {
-            videosSrcArray = fun.gae("video.wp-video-shortcode>source").map(e => e.src);
+            videoSrcArray = fun.gae("video.wp-video-shortcode>source").map(e => e.src);
             return fun.gae("//p/a[img]");
         },
         button: [4],
@@ -4849,7 +4872,7 @@
         }),
         init: () => fun.createImgBox(".entry-after-content", 1),
         imgs: () => {
-            videosSrcArray = fun.gae("video.wp-video-shortcode>source").map(e => e.src);
+            videoSrcArray = fun.gae("video.wp-video-shortcode>source").map(e => e.src);
             return fun.gae("//p/a[img]|//p/img");
         },
         button: [4],
@@ -4870,7 +4893,7 @@
             e: ".wp-block-image"
         }),
         imgs: () => {
-            videosSrcArray = fun.gae(".entry-content video>source").map(e => e.src).reverse();
+            videoSrcArray = fun.gae(".entry-content video>source").map(e => e.src).reverse();
             let srcs = fun.getImgSrcset(".entry-content img[data-srcset]");
             return srcs.sort((a, b) => a.match(/-(\d+)-/)[1] - b.match(/-(\d+)-/)[1]);
         },
@@ -4894,7 +4917,7 @@
         ],
         include: "video>source,.mace-gallery-teaser",
         imgs: () => {
-            videosSrcArray = fun.gae("video>source").map(e => e.src);
+            videoSrcArray = fun.gae("video>source").map(e => e.src);
             let picArr1 = fun.gae(".entry-featured-media-main[itemprop='image'] meta[itemprop='url']").map(e => e.content);
             if (fun.ge(".mace-gallery-teaser")) {
                 let picArr2 = JSON.parse(fun.ge(".mace-gallery-teaser").dataset.g1Gallery).map(e => {
@@ -4931,7 +4954,7 @@
         host: ["erothots.co"],
         reg: () => !hasTouchEvents && /^https?:\/\/erothots\.co\/a\/[^\/]+\/[^\/]+/.test(fun.url),
         imgs: () => {
-            videosSrcArray = fun.gae("a[data-type='html5video']").map(e => e.dataset.src);
+            videoSrcArray = fun.gae("a[data-type='html5video']").map(e => e.dataset.src);
             return fun.gae("a[data-type='image']").map(e => e.dataset.src);
         },
         capture: () => _this.imgs(),
@@ -4945,7 +4968,7 @@
         include: ".entry-content img.size-full",
         init: () => fun.addMutationObserver(() => fun.remove("div[class][style*='z-index']")),
         imgs: () => {
-            videosSrcArray = fun.gae("video>source").map(e => e.src);
+            videoSrcArray = fun.gae("video>source").map(e => e.src);
             return fun.gae(".entry-content img.size-full").map(e => e.src);
         },
         capture: () => _this.imgs(),
@@ -4974,7 +4997,7 @@
         init: () => fun.createImgBox(".shrt-blk", 2),
         imgs: async () => {
             await fun.getNP("//h2[i]/following-sibling::div[1][@class='shrt-blk']/div", "//a[text()='Next ']", null, ".nv-blk");
-            thumbnailsSrcArray = fun.gae("//h2[i]/following-sibling::div[1][@class='shrt-blk']//img").map(e => e.src).sort();
+            thumbnailSrcArray = fun.gae("//h2[i]/following-sibling::div[1][@class='shrt-blk']//img").map(e => e.src).sort();
             return fun.getImgA(".lrg-pc>a", "//h2[i]/following-sibling::div[1][@class='shrt-blk']//a").then(arr => arr.sort());
         },
         button: [4],
@@ -4996,7 +5019,7 @@
         host: ["gotanynudes.com"],
         reg: /^https?:\/\/gotanynudes\.com\/[^\/]+\/$/i,
         imgs: () => {
-            videosSrcArray = fun.gae("video>source").map(e => e.src);
+            videoSrcArray = fun.gae("video>source").map(e => e.src);
             return fun.getImgSrcset(".entry-content  img[data-lazy-srcset]");
         },
         capture: () => _this.imgs(),
@@ -5009,7 +5032,7 @@
         host: ["thotslife.com"],
         reg: /^https?:\/\/thotslife\.com\/[^\/]+\/$/i,
         imgs: () => {
-            videosSrcArray = fun.gae("video>source").map(e => e.src);
+            videoSrcArray = fun.gae("video>source").map(e => e.src);
             return fun.getImgSrcset(".entry-content img");
         },
         capture: () => _this.imgs(),
@@ -5068,7 +5091,7 @@
         include: "//a[span[@class='faux-button'][text()='View']][@class='more-link']",
         init: () => fun.createImgBox("#site-content", 2),
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("img.size-large").sort();
+            thumbnailSrcArray = fun.getImgSrcArr("img.size-large").sort();
             let links = fun.gau("//a[span[@class='faux-button'][text()='View']][@class='more-link']");
             return fun.getImgA("img.wp-image", links).then(arr => arr.sort());
         },
@@ -5100,8 +5123,8 @@
         }),
         init: () => fun.createImgBox("#miniThumbContainer", 2),
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("#miniThumbContainer img[itemprop='thumbnail']");
-            return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)/, "$1"));
+            thumbnailSrcArray = fun.getImgSrcArr("#miniThumbContainer img[itemprop='thumbnail']");
+            return thumbnailSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)/, "$1"));
         },
         button: [4],
         insertImg: [
@@ -5581,7 +5604,7 @@
         reg: /^https?:\/\/cosplayworld\.net\/[^\/]+\/$/,
         include: ".entry-content",
         imgs: () => {
-            videosSrcArray = fun.gae("video.lazy").map(e => e.dataset.src ?? e.src);
+            videoSrcArray = fun.gae("video.lazy").map(e => e.dataset.src ?? e.src);
             return fun.gae(".entry-content img");
         },
         button: [4],
@@ -5683,9 +5706,20 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
         category: "ad"
     }, {
+        name: "Ảnh đẹp",
+        reg: () => fun.checkUrl({
+            h: "tuyetnhan.com",
+            p: /^\/[^\/]+\/$/
+        }),
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: ".card_title",
+        category: "nsfw1"
+    }, {
         name: "Gai.vn",
-        host: ["www.gai.vn"],
-        reg: /^https?:\/\/www\.gai\.vn\/[\w-]+$/,
+        host: ["gai.vn"],
+        reg: /^https?:\/\/(www\.)?gai\.vn\/[\w-]+$/,
         include: [
             "#content .gai-thumb>.vn-box",
             "a[data-fancybox='slide']"
@@ -5761,12 +5795,32 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "Asigirl.com",
-        host: ["asigirl.com"],
-        reg: /^https?:\/\/asigirl\.com\/[^\/]+\/$/,
-        include: "#asigirl-gallery",
+        reg: () => fun.checkUrl({
+            h: "asigirl.com",
+            p: /^\/[^\/]+\/$/
+        }),
+        init: () => fun.createImgBox("#asigirl-gallery", 1),
         imgs: "#asigirl-gallery a",
+        thums: "#asigirl-gallery a>img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#asigirl-gallery"], 2
+        ],
+        go: 1,
         customTitle: "#content-header-title",
         category: "nsfw1"
+    }, {
+        name: "Asigirl.com 分類自動翻頁",
+        enable: 1,
+        reg: /^https?:\/\/asigirl\.com\//,
+        autoPager: {
+            ele: ".oxy-posts",
+            observer: ".oxy-posts>*",
+            next: "span.current+a:not(.next)",
+            re: ".oxy-easy-posts-pages",
+            pageNum: "span.current"
+        },
+        category: "autoPager"
     }, {
         name: "4KHD",
         host: ["www.4khd.com", "nofzwn.xxtt.info", "wztel.xxtt.info"],
@@ -5775,8 +5829,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             p: /^\/content\/\d+\/[^\.\/]+\.html$/
         }),
         imgs: async () => {
-            thumbnailsSrcArray = await fun.getImgA("figure.wp-block-image>a>img,#basicExample>a>img,.entry-content>p>a>img", ".page-link-box a").then(arr => arr.map(e => e.replace(/\?w=\d+$/, "?w=100")));
-            let bigSrcArray = thumbnailsSrcArray.map(e => e.replace(/\/w\d+-rw\//, "/w7680-rw/").replace("?w=100", ""));
+            thumbnailSrcArray = await fun.getImgA("figure.wp-block-image>a>img,#basicExample>a>img,.entry-content>p>a>img", ".page-link-box a").then(arr => arr.map(e => e.replace(/\?w=\d+$/, "?w=100")));
+            let bigSrcArray = thumbnailSrcArray.map(e => e.replace(/\/w\d+-rw\//, "/w7680-rw/").replace("?w=100", ""));
             if (fun.lh === "www.4khd.com") {
                 return bigSrcArray;
             } else {
@@ -5988,7 +6042,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             siteJson = fetchJson;
         },
         imgs: () => {
-            thumbnailsSrcArray = siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.thumbnail.url);
+            thumbnailSrcArray = siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.thumbnail.url);
             return siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.serving_2560.url);
         },
         button: [4],
@@ -6078,7 +6132,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/hdpornpictures\.net\/id\/\d+\//,
         imgs: () => {
             let imgs = fun.gau("#tiles a.rel-link");
-            thumbnailsSrcArray = imgs.map(e => e + "?w=300");
+            thumbnailSrcArray = imgs.map(e => e + "?w=300");
             return imgs;
         },
         button: [4],
@@ -6091,7 +6145,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.hotzxgirl\.com\/\w+\/[^\.]+\.htm$/,
         exclude: "p[class='404info']",
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("#connbox .im-main-rec>a>img");
+            thumbnailSrcArray = fun.getImgSrcArr("#connbox .im-main-rec>a>img");
             return fun.gae("#connbox .im-main-rec>a").map(a => "http://" + a.href.split("/").at(-1).replaceAll("*", "/").replace(".asp", "").replace(/-\d+x\d+\./, "."));
         },
         button: [4],
@@ -6186,8 +6240,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["www.qiuyeshudian.com"],
         reg: /^https?:\/\/www\.qiuyeshudian\.com\/[^\/]+\/$/,
         imgs: () => {
-            thumbnailsSrcArray = fun.gae(".feature-box img,.entry-content img").map(e => e.dataset.src ?? e.src);
-            return thumbnailsSrcArray.length > 1 ? thumbnailsSrcArray.map(e => e.replace(/\?w=\d+&ssl=1/, "").replace(/\?resize.+/, "")) : [];
+            thumbnailSrcArray = fun.gae(".feature-box img,.entry-content img").map(e => e.dataset.src ?? e.src);
+            return thumbnailSrcArray.length > 1 ? thumbnailSrcArray.map(e => e.replace(/\?w=\d+&ssl=1/, "").replace(/\?resize.+/, "")) : [];
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -6251,7 +6305,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         init: () => fun.createImgBox(".thums", 2),
         imgs: async () => {
             await fun.getNP(".thums>.item", ".pager>a.now+a", null, ".pager");
-            thumbnailsSrcArray = fun.getImgSrcArr(".thums img");
+            thumbnailSrcArray = fun.getImgSrcArr(".thums img");
             return fun.gae("div.item[org_img_url]");
         },
         button: [4],
@@ -6315,7 +6369,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: "article.article,.article-list-outer>li",
             next: "//li[@class='current']/following-sibling::li[1]/a | //a[span[text()='次へ']]",
             re: ".pager,.pager_fixed,.fractional-page",
-            title: () => "Page " + nextLink.match(/\?p=(\d+)/)[1]
+            pageNum: () => nextLink.match(/\?p=(\d+)/)[1]
         },
         openInNewTab: ".autopagerize_page_element a[href]:not([target=_blank]),.article-list-outer a[href]:not([target=_blank])",
         category: "autoPager"
@@ -6399,7 +6453,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             if (fun.ge(".ngg-gallery-thumbnail-box")) {
                 await fun.getNP(".ngg-gallery-thumbnail-box", "span.current+a");
             }
-            thumbnailsSrcArray = fun.getImgSrcArr(".tiled-gallery a img,.ngg-gallery-thumbnail-box a img");
+            thumbnailSrcArray = fun.getImgSrcArr(".tiled-gallery a img,.ngg-gallery-thumbnail-box a img");
             return fun.gae(".tiled-gallery a,.ngg-gallery-thumbnail-box a");
         },
         button: [4],
@@ -6463,7 +6517,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         link: "http://blog.livedoor.jp/pururungazou/",
         reg: /^https?:\/\/blog\.livedoor\.jp\/pururungazou\/archives\/\d+\.html$/,
         imgs: () => {
-            videosSrcArray = fun.gae("video[src]").map(e => e.src);
+            videoSrcArray = fun.gae("video[src]").map(e => e.src);
             return fun.gae(`
             .entry-content img[src*='/pururungazou/imgs/'],
             .entry-content img[src*='/media/'],
@@ -6503,8 +6557,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.saladpuncher\.com\/\d+\/\d+\/[^\/]+\//,
         init: () => fun.createImgBox(".entry-container", 2),
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".rsTmb>img");
-            return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
+            thumbnailSrcArray = fun.getImgSrcArr(".rsTmb>img");
+            return thumbnailSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -6534,7 +6588,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     return a.href;
                 }
             });
-            thumbnailsSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
+            thumbnailSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
             return imgsSrcArr;
         },
         button: [4],
@@ -6575,11 +6629,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     }
                 });
             },
-            title: () => {
-                let num;
-                /start=/.test(nextLink) ? num = Number(nextLink.match(/start=(\d+)/)[1]) / 50 + 1 : num = 1;
-                return "Page " + num;
-            }
+            pageNum: () => /start=/.test(nextLink) ? Number(nextLink.match(/start=(\d+)/)[1]) / 50 + 1 : 1
         },
         openInNewTab: ".date-outer a[href]:not([target=_blank])",
         category: "autoPager"
@@ -6592,8 +6642,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         include: "a.fileThumb.image-link",
         init: () => fun.createImgBox(".post__body", 2),
         imgs: () => {
-            videosSrcArray = fun.gae("video>source").map(e => e.src);
-            thumbnailsSrcArray = fun.gae("a.fileThumb.image-link>img").map(e => {
+            videoSrcArray = fun.gae("video>source").map(e => e.src);
+            thumbnailSrcArray = fun.gae("a.fileThumb.image-link>img").map(e => {
                 if (e.dataset.src) {
                     return /^\/\//.test(e.dataset.src) ? location.protocol + e.dataset.src : e.dataset.src;
                 } else {
@@ -6622,7 +6672,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         include: "div.fileThumb[href]",
         init: () => fun.createImgBox(".scrape__body", 2),
         imgs: () => {
-            thumbnailsSrcArray = fun.gae("div.fileThumb>img").map(e => {
+            thumbnailSrcArray = fun.gae("div.fileThumb>img").map(e => {
                 if (e.dataset.src) {
                     return /^\/\//.test(e.dataset.src) ? location.protocol + e.dataset.src : e.dataset.src;
                 } else {
@@ -6756,7 +6806,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         include: ".entry-content div[data-src]",
         imgs: async () => {
             let divDataSrcs = await fun.getImgA(".entry-content div[data-src]", ".page-links a");
-            thumbnailsSrcArray = divDataSrcs.map(src => {
+            thumbnailSrcArray = divDataSrcs.map(src => {
                 let arr = src.split("/");
                 arr[arr.length - 1] = "thumbnail/s" + arr[arr.length - 1];
                 return arr.join("/");
@@ -6891,7 +6941,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: ".blog-posts-wrapper",
             next: "span.current+a",
             re: ".nav-links",
-            title: () => "Page " + nextLink.match(/\d+$/)[0]
+            pageNum: () => nextLink.match(/\d+$/)[0]
         },
         openInNewTab: ".blog-posts-wrapper a:not([target=_blank])",
         css: ".blog-posts-wrapper article.has-post-thumbnail .entry-container{margin:0 auto 0 !important}",
@@ -6949,7 +6999,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             if (fun.ge("embed[src*='sendvid']")) {
                 let links = fun.gae("embed").map(e => e.src);
                 let resArr = links.map(url => fun.xhrDoc(url).then(dom => fun.ge("video>source", dom).src));
-                videosSrcArray = await Promise.all(resArr);
+                videoSrcArray = await Promise.all(resArr);
             }
             return fun.getImg(".entry img", fun.gt("a[title=总数]"), 8)
         },
@@ -7092,7 +7142,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/asiantolick\.com\/post/,
         init: () => fun.createImgBox(".spotlight-group", 2),
         imgs: () => {
-            thumbnailsSrcArray = fun.gae("div[data-src]>img").map(e => e.src);
+            thumbnailSrcArray = fun.gae("div[data-src]>img").map(e => e.src);
             return fun.gae("div[data-src]").map(e => e.dataset.src);
         },
         button: [4],
@@ -7174,7 +7224,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     span.style.backgroundImage = `url("${span.dataset.imgUrl}")`;
                 });
             },
-            title: () => "Page " + currentPageNum
+            pageNum: () => currentPageNum
         },
         openInNewTab: ".td-cpt-post a:not([target=_blank])",
         css: ".tdi_60.td-a-rec{display:none!important;}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
@@ -7192,7 +7242,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         button: [4],
         insertImg: [".details-box-inner", 2],
         customTitle: ".title",
-        css: ".details-box-inner img{margin:0!important;}",
+        css: ".details-box-inner{padding:unset !important}.details-box-inner img{margin:0!important;}",
         category: "nsfw2"
     }, {
         name: "Digital AI Gallery",
@@ -7236,6 +7286,43 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             v: 3,
             css: false
         },
+        category: "nsfw1"
+    }, {
+        name: "niwatori.my.id",
+        link: "https://niwatori.my.id/2023/",
+        reg: () => fun.checkUrl({
+            h: "niwatori.my.id",
+            p: /^\/\d+\/\d+\/\d+\//,
+            e: ".wp-block-gallery img[srcset]"
+        }),
+        imgs: () => fun.getImgSrcset(".wp-block-gallery img[srcset]"),
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
+        name: "Sexy Girl Pictures",
+        reg: () => fun.checkUrl({
+            h: "beautypics.org",
+            p: /^\/archives\/\d+$/,
+            e: ".page-content img[srcset]"
+        }),
+        imgs: () => fun.getImgSrcset(".page-content img[srcset]"),
+        button: [4],
+        insertImg: [".page-content", 2],
+        customTitle: () => fun.title(" – Sexy Girl Pictures"),
+        category: "nsfw1"
+    }, {
+        name: "SexyGirl",
+        host: ["sexygirl.one"],
+        reg: /^https?:\/\/sexygirl\.one\/\w+\/[^\/]+\/$/,
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: ".s-title",
         category: "nsfw1"
     }, {
         name: "xasia",
@@ -7285,7 +7372,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     return a.href;
                 }
             });
-            thumbnailsSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
+            thumbnailSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
             return imgsSrcArr;
         },
         button: [4],
@@ -7303,7 +7390,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: ".blog-posts>.date-outer",
             re: "#blog-pager",
             stop: (dom) => !fun.ge(".date-outer", dom),
-            title: () => "Page" + (currentPageNum += 1)
+            pageNum: () => (currentPageNum += 1)
         },
         openInNewTab: ".date-outer a[href]:not([target=_blank])",
         category: "autoPager"
@@ -7379,7 +7466,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             }
         },
         imgs: () => {
-            videosSrcArray = fun.gau("video>source[type='video/mp4']+a[href*='.mp4']");
+            videoSrcArray = fun.gau("video>source[type='video/mp4']+a[href*='.mp4']");
             if (fun.ge(".mirror-image img[src*=blog]")) {
                 let imgsSrcArr = fun.gae(".mirror-image img[src*=blog]").map(e => {
                     let arr = e.src.split("/");
@@ -7390,7 +7477,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                         return e.src;
                     }
                 });
-                thumbnailsSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
+                thumbnailSrcArray = imgsSrcArr.map(e => e.replace("/s16000/", "/w100/"));
                 return imgsSrcArr;
             } else {
                 return fun.gae(".mirror-image img");
@@ -7418,7 +7505,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/blognudemodels\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html\?m=1$/,
         init: async () => await fun.waitEle(".separator img"),
         imgs: ".separator>a",
-        button: [0],
+        button: [4],
         insertImg: [
             [".separator", 1, ".separator,.separator~br"], 2
         ],
@@ -7427,7 +7514,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "500 Brothers",
         host: ["500brothersfun.blogspot.com"],
-        reg: /^https?:\/\/500brothersfun\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html$/,
+        reg: /^https?:\/\/500brothersfun\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
         init: () => fun.createImgBox(".separator", 1),
         imgs: () => fun.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/")),
         button: [4],
@@ -7439,7 +7526,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "min: archive/True Pic",
         host: ["min-bin.blogspot.com", "truepichk.blogspot.com"],
-        reg: /^https?:\/\/(min-bin|truepichk)\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html$/,
+        reg: /^https?:\/\/(min-bin|truepichk)\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
         imgs: () => fun.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/")),
         button: [4],
         insertImg: [".post-body", 2],
@@ -7449,11 +7536,25 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: ".entry-title",
         category: "nsfw2"
     }, {
+        name: "Tabakus Gallery",
+        reg: /^https?:\/\/tabakus\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
+        init: async () => {
+            await fun.waitEle(".separator img");
+            fun.createImgBox(".separator:has(>a>img[height])", 1);
+        },
+        imgs: ".separator>a:has(>img[height])",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".separator:has(>a>img),.separator~br"], 2
+        ],
+        customTitle: ".post_item>h1",
+        category: "nsfw2"
+    }, {
         name: "Graphis",
         host: ["20sanctuary-grahpis.blogspot.com"],
-        reg: /^https?:\/\/20sanctuary-grahpis\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html$/,
+        reg: /^https?:\/\/20sanctuary-grahpis\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
         imgs: () => {
-            thumbnailsSrcArray = fun.gae(".separator>a img").map(e => e.src.replace("/s320/", "/w100/"));
+            thumbnailSrcArray = fun.gae(".separator>a img").map(e => e.src.replace("/s320/", "/w100/"));
             return fun.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/"));
         },
         button: [4],
@@ -7465,7 +7566,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["asiaidols.wordpress.com"],
         reg: /^https?:\/\/asiaidols\.wordpress\.com\/\d+\/\d+\/\d+\/[^\/]+\/$/,
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("img[alt='image host']");
+            thumbnailSrcArray = fun.getImgSrcArr("img[alt='image host']");
             let imageHostLinks = fun.gau("//a[img[@alt='image host']]");
             return fun.getImageHost(imageHostLinks);
         },
@@ -7486,19 +7587,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: ".entry-title",
         category: "nsfw2"
     }, {
-        name: "Tabakus Gallery",
-        host: ["tabakus.blogspot.com"],
-        reg: /^https?:\/\/tabakus\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html$/,
-        imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".separator>a img").map(e => e.replace("/s400/", "/w100/"));
-            return fun.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/"));
-        },
-        button: [4],
-        insertImg: [".post-body", 2],
-        customTitle: ".post_item>h1",
-        downloadVideo: true,
-        category: "nsfw2"
-    }, {
         name: "BingMM",
         host: ["bingmm.com"],
         reg: /^https?:\/\/bingmm\.com\/\d+\.html$/i,
@@ -7516,7 +7604,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "Chinese Nude Art Photos",
         host: ["chinesenudeart.blogspot.com"],
-        reg: /^https?:\/\/chinesenudeart\.blogspot\.com\/\d+\/\d+\/[\w-]+\.html$/i,
+        reg: /^https?:\/\/chinesenudeart\.blogspot\.com\/\d+\/\d+\/[\w-]+\.html/i,
         imgs: ".entry-content a[href]",
         thums: ".entry-content a[href]>img",
         button: [4],
@@ -7539,9 +7627,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "CUTE GIRLS ADDICT",
         host: ["cutegirlsaddict.blogspot.com"],
-        reg: /^https?:\/\/cutegirlsaddict\.blogspot\.com\/\d+\/\d+\/[a-z0-9-]+\.html$/i,
+        reg: /^https?:\/\/cutegirlsaddict\.blogspot\.com\/\d+\/\d+\/[a-z0-9-]+\.html/i,
         imgs: async () => {
-            thumbnailsSrcArray = fun.gae(".separator>a>img").map(e => {
+            thumbnailSrcArray = fun.gae(".separator>a>img").map(e => {
                 let arr = e.src.split("/");
                 arr[7] = "w100";
                 return arr.join("/");
@@ -7607,7 +7695,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             }
         },
         imgs: () => {
-            videosSrcArray = fun.gae("video>source[type='video/mp4']").map(e => e.src);
+            videoSrcArray = fun.gae("video>source[type='video/mp4']").map(e => e.src);
             return fun.gae(".td-post-content .tdb-block-inner.td-fix-index img").map(e => decodeURIComponent(e.src));
         },
         button: [4],
@@ -7732,7 +7820,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["www.qinimg.com"],
         reg: /^https?:\/\/www\.qinimg\.com\/image\/\d+\.html$/,
         imgs: () => {
-            thumbnailsSrcArray = fun.gae("#image a>img").map(e => e.getAttribute("img") != "" ? e.getAttribute("img") : e.src);
+            thumbnailSrcArray = fun.gae("#image a>img").map(e => e.getAttribute("img") != "" ? e.getAttribute("img") : e.src);
             return fun.gae("#image a");
         },
         button: [4],
@@ -7798,7 +7886,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/nsfwalbum\.com\/album\/\d+$/,
         init: () => fun.createImgBox(".album", 2),
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".albumPhoto");
+            thumbnailSrcArray = fun.getImgSrcArr(".albumPhoto");
             fun.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
             return fun.gae(".album .item>a").map(async (a, i, arr) => {
@@ -7835,7 +7923,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/adultphotosets\.best\/index\.php\?newsid=\d+$/i,
         include: "//a[img[@data-src][@data-maxwidth]]",
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("//img[@data-src][@data-maxwidth]");
+            thumbnailSrcArray = fun.getImgSrcArr("//img[@data-src][@data-maxwidth]");
             let URLs = fun.gau("//a[img[@data-src][@data-maxwidth]]");
             return fun.getImageHost(URLs);
         },
@@ -7861,7 +7949,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.redpics\.top\/(japanese|korean|chinese|hardcore|softcore|lesbian)\/[\w-]+$/,
         imgs: () => {
             let aEles = fun.gae(".post-content a");
-            thumbnailsSrcArray = aEles.map(a => fun.ge("img", a).src);
+            thumbnailSrcArray = aEles.map(a => fun.ge("img", a).src);
             let URLs = aEles.map(a => a.href);
             return fun.getImageHost(URLs);
         },
@@ -7893,7 +7981,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 "body": `mode=w&param={"page":${(i+1)},"ghash":"${ghash}"}`,
                 "method": "POST"
             }).then(res => res.json()).then(json => json.r));
-            thumbnailsSrcArray = await Promise.all(resArr).then(data => data.flat()).then(arr => {
+            thumbnailSrcArray = await Promise.all(resArr).then(data => data.flat()).then(arr => {
                 let html = arr.join("");
                 let dom = fun.doc(html);
                 return fun.gae(".gall_cover", dom).map(e => e.dataset.src ?? e.src);
@@ -8049,7 +8137,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let links = fun.gau(".gallerybody a[href*='?p=']");
             links = [...new Set(links)];
             await fun.getEle(links, "#wtf>a", ["#wtf", 0]);
-            thumbnailsSrcArray = fun.gae("#wtf>a>img").map(img => img.src);
+            thumbnailSrcArray = fun.gae("#wtf>a>img").map(img => img.src);
             return fun.getImgCorsA("img.pic", "#wtf>a");
         },
         button: [4],
@@ -8068,7 +8156,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 messanger
             } = _unsafeWindow;
             let imgDir = fun.gu(".pic>a").match(/[^\d]+/)[0];
-            thumbnailsSrcArray = messanger.gdata.map(e => "https://thumbs.wikifeet.com/" + e.pid + ".jpg");
+            thumbnailSrcArray = messanger.gdata.map(e => "https://thumbs.wikifeet.com/" + e.pid + ".jpg");
             return messanger.gdata.map(e => imgDir + e.pid + ".jpg");
         },
         button: [4],
@@ -8154,7 +8242,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 resArr.push(res);
             }
             await Promise.all(resArr).then(data => {
-                videosSrcArray = data.filter(obj => "v" in obj)?.map(e => e.v);
+                videoSrcArray = data.filter(obj => "v" in obj)?.map(e => e.v);
                 srcs = data.filter(obj => "i" in obj)?.map(e => e.i);
             });
             return srcs;
@@ -8196,7 +8284,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 });
                 videoResArr.push(res);
             }
-            videosSrcArray = await Promise.all(videoResArr).then(data => data.filter(item => item));
+            videoSrcArray = await Promise.all(videoResArr).then(data => data.filter(item => item));
             return Promise.all(resArr);
         },
         button: [4],
@@ -8214,7 +8302,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             next: "a.bg-gray-300+a",
             re: ".justify-center",
             observer: ".table-auto>tbody",
-            title: (dom) => "Page " + fun.gt("a.bg-gray-300", 1, dom)
+            pageNum: "a.bg-gray-300"
         },
         category: "autoPager"
     }, {
@@ -8228,8 +8316,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             });
         },
         imgs: () => {
-            thumbnailsSrcArray = [...fun.gae("#galleryImages>.blockItem img")].map(e => e.dataset.src ?? e.src).sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
-            return thumbnailsSrcArray.map(e => e.replace("thumbs/", ""));
+            thumbnailSrcArray = [...fun.gae("#galleryImages>.blockItem img")].map(e => e.dataset.src ?? e.src).sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
+            return thumbnailSrcArray.map(e => e.replace("thumbs/", ""));
         },
         button: [4],
         insertImg: [".content", 2],
@@ -8262,7 +8350,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/r18hub\.com\/photo\/[\w-]+/,
         imgs: () => {
             let eles = fun.gae("#photos>li");
-            thumbnailsSrcArray = eles.map(e => e.dataset.thumb);
+            thumbnailSrcArray = eles.map(e => e.dataset.thumb);
             return eles.map(e => e.dataset.src);
         },
         button: [4],
@@ -8293,7 +8381,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 }
                 await fun.getEle(links, "//div[div[@class='picbox']]", ["//div[div[div[@class='picbox']]]", 0]);
             }
-            thumbnailsSrcArray = fun.gae(".picbox img").map(img => img.src);
+            thumbnailSrcArray = fun.gae(".picbox img").map(img => img.src);
             let links = fun.gau(".picbox>a");
             return fun.getImgA("//main//a[img]", links, 100);
         },
@@ -8315,7 +8403,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: "//div[div[@class='picbox']]",
             next: "//a[h3[span[@class='glyphicon glyphicon-arrow-right']]]",
             re: "//div[div[@class='imgpagebar']]",
-            title: () => "Page" + nextLink.match(/page-(\d+)/)[1]
+            pageNum: () => nextLink.match(/page-(\d+)/)[1]
         },
         category: "autoPager"
     }, {
@@ -8362,8 +8450,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/\w{2,3}\.eporner\.com\/gallery\/.+\//,
         init: () => fun.createImgBox(".photosgrid", 2),
         imgs: () => {
-            thumbnailsSrcArray = fun.gae("#container img").map(e => e.src);
-            return thumbnailsSrcArray.map(e => e.replace("_296x1000", ""));
+            thumbnailSrcArray = fun.gae("#container img").map(e => e.src);
+            return thumbnailSrcArray.map(e => e.replace("_296x1000", ""));
         },
         button: [4],
         insertImg: [
@@ -8380,7 +8468,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         init: () => fun.createImgBox(".photos", 2),
         imgs: async () => {
             await fun.getNP(".cell.photo", "li.active+li>a", null, ".pagination", 0, "img[data-src]");
-            thumbnailsSrcArray = fun.gae(".photos img.thumb").map(e => e.dataset.src ?? e.src);
+            thumbnailSrcArray = fun.gae(".photos img.thumb").map(e => e.dataset.src ?? e.src);
             return fun.getImgA("#image .img-reponsive", ".photos a");
         },
         button: [4],
@@ -8441,7 +8529,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 return num ? `${p}${num}/` : null;
             },
             re: ".load-more>a",
-            title: () => "Page " + nextLink.match(/\d+/)[0],
+            pageNum: () => nextLink.match(/\d+/)[0],
             lazySrc: "img[data-original]"
         },
         openInNewTab: "#list_albums_common_albums_list_items a:not([target=_blank])",
@@ -8469,7 +8557,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: "#masonry>article",
             next: "span.current+a",
             re: ".wp-pagenavi",
-            title: (dom) => "Page " + fun.gt("span.current", 1, dom)
+            pageNum: "span.current"
         },
         openInNewTab: "a.entry-thumbnail:not([target=_blank])",
         category: "autoPager"
@@ -8485,7 +8573,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 let json = JSON.parse(script.innerText.replace(/window.initials=|;/g, ""));
                 return json.photosGalleryModel.photos;
             }).flat();
-            thumbnailsSrcArray = photos.map(e => e.thumbURL);
+            thumbnailSrcArray = photos.map(e => e.thumbURL);
             return photos.map(e => e.imageURL);
         },
         init: "fun.remove('.mixed-list>.flex-element')",
@@ -8533,9 +8621,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             const getUrls = (dom = document) => {
                 let text = fun.ge(selector, dom).innerText;
                 let thumbnailUrls = text.match(/"thumbnailUrl":\s?"[^"]+/g).map(e => e.replace(/"thumbnailUrl":\s?"/, "")).filter(e => !/\/logos\//.test(e));
-                thumbnailsSrcArray = thumbnailsSrcArray.concat(thumbnailUrls);
+                thumbnailSrcArray = thumbnailSrcArray.concat(thumbnailUrls);
                 let urls = text.match(/"url":\s?"[^"]+/g).map(e => e.replace(/"url":\s?"/, ""));
-                urls.filter(e => /\.mp4$/.test(e)).forEach(e => videosSrcArray.push(e));
+                urls.filter(e => /\.mp4$/.test(e)).forEach(e => videoSrcArray.push(e));
                 return urls.filter(e => !/\/logos\/|\.mp4$/.test(e));
             }
             const max = _unsafeWindow.adConstants.pagesAmount;
@@ -8593,7 +8681,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let pagesArr = fun.arr(max).map((_, i) => getFn(fun.url + "?mode=async&function=get_block&block_id=album_view_album_view&load=more&from=" + (i + 1)));
             let resArr = firstArr.concat(pagesArr);
             return Promise.all(resArr).then(data => {
-                thumbnailsSrcArray = data.map(e => e.thumbsArr).flat();
+                thumbnailSrcArray = data.map(e => e.thumbsArr).flat();
                 return data.map(e => e.originalsArr).flat();
             });
         },
@@ -8623,9 +8711,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     return false;
                 }
             }, 1000);
-            videosSrcArray = fun.gae("[data-breakout='normal'] video").map(e => e.src);
-            thumbnailsSrcArray = [...new Set(arr)];
-            return thumbnailsSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
+            videoSrcArray = fun.gae("[data-breakout='normal'] video").map(e => e.src);
+            thumbnailSrcArray = [...new Set(arr)];
+            return thumbnailSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
         },
         button: [4],
         insertImg: ["//div[div[div[div[@data-hook='galleryViewer']]]]", 3],
@@ -8645,8 +8733,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             await fun.waitEle("[data-breakout='normal'] [data-hook='imageViewer'] [data-image-info]");
         },
         imgs: () => {
-            thumbnailsSrcArray = fun.gae("[data-breakout='normal'] [data-hook='imageViewer'] [data-image-info]>img").map(e => e.src);
-            return thumbnailsSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
+            thumbnailSrcArray = fun.gae("[data-breakout='normal'] [data-hook='imageViewer'] [data-image-info]>img").map(e => e.src);
+            return thumbnailSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
         },
         button: [4],
         insertImg: ["//div[@data-hook='post-description']", 2],
@@ -8666,8 +8754,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: async () => {
             fun.ge("img.gallery-item").scrollIntoView();
             await fun.delay(2000, 0);
-            thumbnailsSrcArray = fun.gae("img.gallery-item").map(e => e.src);
-            return thumbnailsSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
+            thumbnailSrcArray = fun.gae("img.gallery-item").map(e => e.src);
+            return thumbnailSrcArray.map(e => e.replace(/\/v1\/fill\/.+/, ""));
         },
         button: [4],
         insertImg: ["//div[@data-hook='post-description']", 2],
@@ -8680,7 +8768,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["www.erome.com"],
         reg: /^https?:\/\/[a-z]{2,3}\.erome\.com\/a\/\w+$/i,
         imgs: () => {
-            videosSrcArray = fun.gae(".video source[type='video/mp4']").map(e => e.src);
+            videoSrcArray = fun.gae(".video source[type='video/mp4']").map(e => e.src);
             return hasTouchEvents ? fun.gae(".img>img[data-src]") : fun.gae("div.img[data-src]");
         },
         button: [4],
@@ -8692,7 +8780,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["erome.pics"],
         reg: /^https?:\/\/erome\.pics\/a\/\d+\/$/i,
         imgs: () => {
-            videosSrcArray = fun.gae(".video source[type='video/mp4']").map(e => e.src);
+            videoSrcArray = fun.gae(".video source[type='video/mp4']").map(e => e.src);
             return hasTouchEvents ? fun.gae(".img>img[data-src]").map(e => e.currentSrc) : fun.gae("div.img[data-src]");
         },
         button: [4],
@@ -8762,11 +8850,11 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     });
                 });
                 return Promise.all(resArr).then(arr => {
-                    thumbnailsSrcArray = arr.flat().map(e => e.thumbnail);
+                    thumbnailSrcArray = arr.flat().map(e => e.thumbnail);
                     return arr.flat().map(e => e.original);
                 });
             } else {
-                thumbnailsSrcArray = fun.gae(".content img.thumb").map(e => e.dataset.original ?? e.src);
+                thumbnailSrcArray = fun.gae(".content img.thumb").map(e => e.dataset.original ?? e.src);
                 return fun.gae("a[data-fancybox-type=image]");
             }
         },
@@ -8781,9 +8869,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.pichunter\.com\/gallery\/\d+\//,
         imgs: () => {
             if (fun.ge(".flex-images figure>a>img")) {
-                thumbnailsSrcArray = fun.gae(".flex-images figure>a>img").map(e => e.getAttribute("xs"));
+                thumbnailSrcArray = fun.gae(".flex-images figure>a>img").map(e => e.getAttribute("xs"));
             } else {
-                thumbnailsSrcArray = fun.gae("#main-grid a img").map(e => e.src);
+                thumbnailSrcArray = fun.gae("#main-grid a img").map(e => e.src);
             }
             return fun.gae(".flex-images figure>a,#main-grid a");
         },
@@ -8841,8 +8929,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.pornpaw\.com\/gallery\/[\w-]+\.html$/i,
         delay: 500,
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("img[data-src]");
-            return thumbnailsSrcArray.map(e => e.replace("x160.", "."));
+            thumbnailSrcArray = fun.getImgSrcArr("img[data-src]");
+            return thumbnailSrcArray.map(e => e.replace("x160.", "."));
         },
         button: [4],
         insertImg: [
@@ -8896,7 +8984,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             }
             return Promise.all(resArr).then(data => data.flat()).then(arr => {
                 let thumbs = arr.map(e => e.thumb);
-                thumbnailsSrcArray = thumbs;
+                thumbnailSrcArray = thumbs;
                 let originals = arr.map(e => e.original);
                 return originals;
             });
@@ -8938,8 +9026,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.tokyomotion\.net\/album\/\d+\/.+/,
         imgs: async () => {
             await fun.getNP("div[id^=album_photo]", ".pagination li.active+li>a", null, ".pagination");
-            thumbnailsSrcArray = fun.gae(".thumb-overlay img").map(e => e.src);
-            return thumbnailsSrcArray.map(e => e.replace("tmb/", ""));
+            thumbnailSrcArray = fun.gae(".thumb-overlay img").map(e => e.src);
+            return thumbnailSrcArray.map(e => e.replace("tmb/", ""));
         },
         button: [4],
         insertImg: [
@@ -9040,7 +9128,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let url = siteUrl.replace(/\/\d+\/$/, "");
             let links = fun.arr(max).map((_, i) => url + `/${(i + 1)}/`);
             let imgSrcArray = await fun.getImgA("#display_image_detail a,#detail_list a", links, 100);
-            thumbnailsSrcArray = imgSrcArray.map(e => {
+            thumbnailSrcArray = imgSrcArray.map(e => {
                 let arr = e.split("/");
                 arr[arr.length - 1] = "p=305/" + arr[arr.length - 1];
                 return arr.join("/");
@@ -9070,13 +9158,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let max = fun.gt("#paginator>*:last-child", 3) || fun.gt(".paginator_page[rel=next]", 2) || 1;
             let url = siteUrl.replace(/page\/\d+\/$/, "");
             let links = fun.arr(max).map((_, i) => url + `page/${(i + 1)}/`);
-            thumbnailsSrcArray = await fun.getImgA(".icon-overlay img,#display_image_detail img", links, 100);
-            thumbnailsSrcArray = thumbnailsSrcArray.map(e => {
+            thumbnailSrcArray = await fun.getImgA(".icon-overlay img,#display_image_detail img", links, 100);
+            thumbnailSrcArray = thumbnailSrcArray.map(e => {
                 let arr = e.split("/");
                 arr[arr.length - 2] = "p=305";
                 return arr.join("/");
             });
-            return thumbnailsSrcArray.map(e => e.replace(/\/p=(700|305)/, ""));
+            return thumbnailSrcArray.map(e => e.replace(/\/p=(700|305)/, ""));
         },
         button: [4],
         insertImg: ["#display_image_detail,#detail_list", 2],
@@ -9112,8 +9200,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.smutpond\.com\/gallery-pics\/\?uid=/i,
         init: async () => await fun.delay(2000, 0),
         imgs: () => {
-            thumbnailsSrcArray = fun.gae(".viewerPreview img").slice(5).map(e => e.dataset.lazy ?? e.src);
-            thumbnailsSrcArray = [...new Set(thumbnailsSrcArray)];
+            thumbnailSrcArray = fun.gae(".viewerPreview img").slice(5).map(e => e.dataset.lazy ?? e.src);
+            thumbnailSrcArray = [...new Set(thumbnailSrcArray)];
             return fun.gae("img[alt=Pic]");
         },
         button: [4],
@@ -9216,7 +9304,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: async () => {
             let selector = ".images .imageContainer .image img";
             await fun.waitEle(selector);
-            thumbnailsSrcArray = fun.gae(selector).map(e => e.src);
+            thumbnailSrcArray = fun.gae(selector).map(e => e.src);
             let src = fun.attr(selector, "src");
             let images = fun.gae(selector);
             if (/imx\.to/.test(src)) {
@@ -9277,7 +9365,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             .entry-content a[href*='imx.to'],
             .entry-content a[href*='imagebam']
             `);
-            thumbnailsSrcArray = aEles.map(a => fun.ge("img", a).src);
+            thumbnailSrcArray = aEles.map(a => fun.ge("img", a).src);
             let URLs = aEles.map(a => a.href);
             return fun.getImageHost(URLs);
         },
@@ -10189,8 +10277,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         link: "https://nick20.com/pic/index.html",
         reg: /^https?:\/\/nick20\.com\/pic\/pic\d+\.html$/i,
         imgs: () => {
-            thumbnailsSrcArray = _unsafeWindow.Large_cgurl.filter(item => item);
-            return thumbnailsSrcArray.map(e => e.replace("https://thumbs", "https://images").replace("_t.", "_o."));
+            thumbnailSrcArray = _unsafeWindow.Large_cgurl.filter(item => item);
+            return thumbnailSrcArray.map(e => e.replace("https://thumbs", "https://images").replace("_t.", "_o."));
         },
         button: [4],
         insertImg: ["//center[img]", 2],
@@ -10378,7 +10466,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             next: ".paging-item--current+a",
             re: ".pagging-div",
             lazySrc: "img[data-src]",
-            title: (dom) => "Page" + fun.gt(".paging-item--current", 1, dom)
+            pageNum: ".paging-item--current"
         },
         openInNewTab: ".picture-list a:not([target=_blank])",
         css: ".custom_link-wrapper,div:has(>#floating-ad){display:none!important;}",
@@ -10453,7 +10541,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: async () => {
             await fun.getNP(".ngg-gallery-thumbnail-box", "span.current+a", null, ".ngg-navigation");
             let as = fun.gae(".ngg-gallery-thumbnail-box a");
-            thumbnailsSrcArray = as.map(a => a.dataset.thumbnail);
+            thumbnailSrcArray = as.map(a => a.dataset.thumbnail);
             return as.map(a => a.dataset.src);
         },
         button: [4],
@@ -10467,13 +10555,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         link: "https://wc2.es/myhl",
         reg: /^https?:\/\/(www\.wc1\.es|myhl\d.uno|www\.jb\d\.es)\/\d+\.html$/i,
         imgs: () => {
-            thumbnailsSrcArray = fun.gau(".gallery a");
+            thumbnailSrcArray = fun.gau(".gallery a");
             let xhrNum = 0;
             fun.showMsg("fun.xhrHEAD...", 0);
-            return thumbnailsSrcArray.map(async (e) => {
+            return thumbnailSrcArray.map(async (e) => {
                 let src = e.replace("-scaled", "");
                 let res = await fun.xhrHEAD(src);
-                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${thumbnailsSrcArray.length})`, 0);
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${thumbnailSrcArray.length})`, 0);
                 let status = res.status;
                 return status == 404 ? e : src;
             });
@@ -10598,8 +10686,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/(www\.mingtuiw\.com|mingtui\.net)\/archives\/\d+$/,
         exclude: ".swpm-more-tag-not-logged-in,.swpm-more-tag-restricted-msg",
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".entry-content img");
-            return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
+            thumbnailSrcArray = fun.getImgSrcArr(".entry-content img");
+            return thumbnailSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
         },
         button: [4],
         insertImg: [".entry-content>p", 2],
@@ -10623,8 +10711,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             return false;
         },
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".entry-content img");
-            return thumbnailsSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
+            thumbnailSrcArray = fun.getImgSrcArr(".entry-content img");
+            return thumbnailSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)$/, "$1"))
         },
         button: [4],
         insertImg: [".entry-content>p", 2],
@@ -10923,14 +11011,14 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                                 canvas.getContext("2d").drawImage(img, -Math.abs(w), 0);
                                 let dataURL = canvas.toDataURL("image/webp", 0.5);
                                 let thumbnailBlobURL = fun.dataURLtoBlobURL(dataURL);
-                                thumbnailsSrcArray.push(thumbnailBlobURL);
+                                thumbnailSrcArray.push(thumbnailBlobURL);
                                 //console.log(thumbnailBlobURL);
                                 heightIndex++;
                             }
                         }
                     });
                 } else {
-                    thumbnailsSrcArray = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => e.src);
+                    thumbnailSrcArray = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => e.src);
                 }
             }
             if (E_HENTAI_LoadOriginalImage == 1) {
@@ -11000,7 +11088,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             p: /^\/g\/\d+\/?$/
         }),
         imgs: async () => {
-            thumbnailsSrcArray = fun.getImgSrcArr("a.gallerythumb>img");
+            thumbnailSrcArray = fun.getImgSrcArr("a.gallerythumb>img");
             if (fun.lh === "nhentai.net") {
                 const hostArray = ["i", "i3", "i5", "i7"];
                 const randomHost = arr => {
@@ -11225,9 +11313,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                             "method": "POST",
                         }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images]);
                     });
-                    thumbnailsSrcArray = await Promise.all(resArr).then(data => fun.getImgSrcArr(data.flat()));
+                    thumbnailSrcArray = await Promise.all(resArr).then(data => fun.getImgSrcArr(data.flat()));
                 } else {
-                    thumbnailsSrcArray = fun.getImgSrcArr("#pages img");
+                    thumbnailSrcArray = fun.getImgSrcArr("#pages img");
                 }
             }
             let url = fun.gu("#pages a");
@@ -11271,7 +11359,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                     entries
                 } = thumbnails;
                 const thumbs = entries.map(e => base + e.path);
-                thumbnailsSrcArray = thumbs;
+                thumbnailSrcArray = thumbs;
                 const [maxSize] = Object.values(data).sort((a, b) => b.size - a.size);
                 //debug("\nmaxSize\n", maxSize);
                 const {
@@ -11353,7 +11441,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["3hentai.net"],
         reg: /^https?:\/\/3hentai\.net\/d\/\d+$/,
         imgs: async () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".single-thumb>a>img");
+            thumbnailSrcArray = fun.getImgSrcArr(".single-thumb>a>img");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu(".single-thumb>a");
             let json = await fun.fetchDoc(url).then(dom => {
@@ -11424,7 +11512,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let g_id = fun.ge("#load_id").value;
             let img_dir = fun.ge("#load_dir").value;
             let total_pages = fun.ge("#load_pages").value;
-            thumbnailsSrcArray = await fetch("/includes/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/includes/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -11477,7 +11565,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let g_id = fun.ge("#load_id").value;
             let img_dir = fun.ge("#load_dir").value;
             let total_pages = fun.ge("#load_pages").value;
-            thumbnailsSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -11543,7 +11631,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let g_id = fun.ge("#load_id").value;
             let img_dir = fun.ge("#load_dir").value;
             let total_pages = fun.ge("#load_pages").value;
-            thumbnailsSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -11598,7 +11686,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let g_id = fun.ge("#load_id").value;
             let img_dir = fun.ge("#load_dir").value;
             let total_pages = fun.ge("#load_pages").value;
-            thumbnailsSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -11641,7 +11729,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["lhentai.com", "simplyhentai.red"],
         reg: /^https?:\/\/(lhentai\.com|simplyhentai\.red)\/g\/\d+$/,
         imgs: async () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".gallerythumb img");
+            thumbnailSrcArray = fun.getImgSrcArr(".gallerythumb img");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("a.gallerythumb");
             let iframe = await fun.iframeVar(url, "images_ext");
@@ -11678,7 +11766,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             fun.createImgBox(".gallery-container", 2);
         },
         imgs: () => {
-            thumbnailsSrcArray = siteJson.images.map(e => "https://i.eahentai.com/file/ea-gallery/" + e.thumbnailUri);
+            thumbnailSrcArray = siteJson.images.map(e => "https://i.eahentai.com/file/ea-gallery/" + e.thumbnailUri);
             return siteJson.images.map(e => "https://i.eahentai.com/file/ea-gallery/" + e.imageUri);
         },
         button: [4],
@@ -11692,7 +11780,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/m-hentai\.net\/gallery\?id=\d+$/,
         init: () => fun.createImgBox(".bookthumbnailcontainer", 2),
         imgs: async () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".bookthumbnail .lazyloadimage");
+            thumbnailSrcArray = fun.getImgSrcArr(".bookthumbnail .lazyloadimage");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu(".bookthumbnail>a");
             return fun.iframeVar(url, "displayimagelist").then(w => w.displayimagelist.map(e => e.image_url));
@@ -11721,7 +11809,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: () => !hasTouchEvents && /^https?:\/\/hentainexus\.com\/view\/\d+$/.test(fun.url),
         init: () => fun.createImgBox(".box:has(>.is-multiline)", 2),
         imgs: async () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".card-image img");
+            thumbnailSrcArray = fun.getImgSrcArr(".card-image img");
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.gu("//a[div[@class='card']]");
             let iframe = await fun.iframeVar(url, "pageData");
@@ -11758,7 +11846,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         init: () => fun.createImgBox(".preview", 2),
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
-            thumbnailsSrcArray = await fetch("/wp-admin/admin-ajax.php", {
+            thumbnailSrcArray = await fetch("/wp-admin/admin-ajax.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -11895,7 +11983,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 let data = JSON.parse(ele.dataset.img);
                 let arr = data.images.sort((a, b) => a.page - b.page);
                 arr = arr.map(e => svr + "/" + data.directory + "/" + e.filename);
-                thumbnailsSrcArray = arr.map(e => e.replace(/(\.\w+)$/, "t$1"));
+                thumbnailSrcArray = arr.map(e => e.replace(/(\.\w+)$/, "t$1"));
                 return arr;
             });
         },
@@ -11922,7 +12010,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             //按頁數排列
             let arr = data.images.sort((a, b) => a.page - b.page);
             arr = arr.map(e => svr + "/" + data.directory + "/" + e.filename);
-            thumbnailsSrcArray = arr.map(e => e.replace(/(\.\w+)$/, "t$1"));
+            thumbnailSrcArray = arr.map(e => e.replace(/(\.\w+)$/, "t$1"));
             return arr;
         },
         button: [4],
@@ -11949,7 +12037,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         imgs: () => {
             let arr = fun.arr(siteJson.results.total_page).map((_, i) => `${siteJson.results.image_server + siteJson.results.id}/${i + 1}.jpg`);
-            thumbnailsSrcArray = arr.map(e => e.replace(/(\d+)(\.\w+)$/, "preview/$1t$2"));
+            thumbnailSrcArray = arr.map(e => e.replace(/(\d+)(\.\w+)$/, "preview/$1t$2"));
             return arr;
         },
         button: [4],
@@ -11979,7 +12067,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         imgs: () => {
             let arr = fun.arr(siteJson.results.total_page).map((_, i) => `${siteJson.results.image_server + siteJson.results.id}/${i + 1}.jpg`);
-            thumbnailsSrcArray = arr.map(e => e.replace(/(\d+)(\.\w+)$/, "preview/$1t$2"));
+            thumbnailSrcArray = arr.map(e => e.replace(/(\d+)(\.\w+)$/, "preview/$1t$2"));
             return arr;
         },
         button: [4],
@@ -12016,7 +12104,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let id = fun.ge("#load_id").value;
             let dir = fun.ge("#load_dir").value;
             let t_pages = fun.ge("#t_pages").value;
-            thumbnailsSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -12024,7 +12112,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 "body": `_token=${_token}&id=${id}&dir=${dir}&visible_pages=0&t_pages=${t_pages}&type=2`,
                 "method": "POST"
             }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
-            return thumbnailsSrcArray.map(e => e.replace("t.", "."));
+            return thumbnailSrcArray.map(e => e.replace("t.", "."));
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -12042,7 +12130,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let id = fun.ge("#gallery_id").value;
             let dir = fun.ge("#image_dir").value;
             let t_pages = fun.ge("#pages").value;
-            thumbnailsSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -12050,7 +12138,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 "body": `_token=${_token}&id=${id}&dir=${dir}&visible_pages=0&t_pages=${t_pages}&type=2`,
                 "method": "POST"
             }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
-            return thumbnailsSrcArray.map(e => e.replace("t.", "."));
+            return thumbnailSrcArray.map(e => e.replace("t.", "."));
         },
         button: [4],
         insertImg: [".rd_fimg", 2],
@@ -12069,7 +12157,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             return fetch(url).then(res => res.text()).then(text => {
                 let xml = fun.xml(text);
                 let imgs = fun.gae("image", xml);
-                thumbnailsSrcArray = imgs.map(e => e.getAttribute("thumbURL"));
+                thumbnailSrcArray = imgs.map(e => e.getAttribute("thumbURL"));
                 return imgs.map(e => e.getAttribute("linkURL"));
             });
         },
@@ -12176,7 +12264,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let [thumbs] = fun.gae(".thumbs");
             let imgs = fun.gae("img", thumbs);
             let links = fun.gau("a", thumbs);
-            thumbnailsSrcArray = fun.getImgSrcArr(imgs);
+            thumbnailSrcArray = fun.getImgSrcArr(imgs);
             return fun.getImgA(".big-picture>img", links);
         },
         button: [4],
@@ -12265,7 +12353,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         include: "#thumbnails",
         init: async () => await fun.waitEle(".doujin"),
         imgs: () => {
-            thumbnailsSrcArray = fun.gae("div[data-hash]").map(e => "https://static.doujins.com/t-" + e.dataset.hash + ".jpg");
+            thumbnailSrcArray = fun.gae("div[data-hash]").map(e => "https://static.doujins.com/t-" + e.dataset.hash + ".jpg");
             return fun.gae(".doujin[data-file]").map(e => e.dataset.file);
         },
         button: [4],
@@ -12286,7 +12374,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             siteJson = json;
         },
         imgs: () => {
-            thumbnailsSrcArray = siteJson.props.pageProps.data.pages.map(e => e.sizes.small_thumb);
+            thumbnailSrcArray = siteJson.props.pageProps.data.pages.map(e => e.sizes.small_thumb);
             return siteJson.props.pageProps.data.pages.map(e => e.sizes.full)
         },
         button: [4],
@@ -12391,8 +12479,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["myhentaigallery.com"],
         reg: /^https?:\/\/myhentaigallery\.com\/g\/\d+$/,
         imgs: () => {
-            thumbnailsSrcArray = fun.gae(".comic-thumb>img").map(e => e.src);
-            return thumbnailsSrcArray.map(e => e.replace("thumbnail", "original"));
+            thumbnailSrcArray = fun.gae(".comic-thumb>img").map(e => e.src);
+            return thumbnailSrcArray.map(e => e.replace("thumbnail", "original"));
         },
         button: [4],
         insertImg: [
@@ -12432,7 +12520,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let g_id = fun.ge("#load_id").value;
             let img_dir = fun.ge("#load_dir").value;
             let total_pages = fun.ge("#load_pages").value;
-            thumbnailsSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -12479,7 +12567,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let g_id = fun.ge("#load_id").value;
             let img_dir = fun.ge("#load_dir").value;
             let total_pages = fun.ge("#load_pages").value;
-            thumbnailsSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
@@ -12589,7 +12677,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         imgs: async () => {
             await fun.waitEle(".comic-gallery img");
-            thumbnailsSrcArray = siteJson.images.map(e => e.thumbnail_url);
+            thumbnailSrcArray = siteJson.images.map(e => e.thumbnail_url);
             return siteJson.images.map(e => e.source_url);
         },
         button: [4],
@@ -12620,7 +12708,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         imgs: async () => {
             await fun.waitEle(".vertical-image img[data-src]");
-            thumbnailsSrcArray = siteJson.images.map(e => e.thumbnail_url);
+            thumbnailSrcArray = siteJson.images.map(e => e.thumbnail_url);
             return siteJson.images.map(e => e.source_url);
         },
         button: [4],
@@ -12703,7 +12791,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             observer: "//div[@class='col-6 col-sm-3'][a[img]]",
             next: "//a[h3[span[@class='bi bi-caret-right-fill']]]",
             re: "//div[div[@class='imgpagebar']]",
-            title: () => "Page" + nextLink.match(/page-(\d+)/)[1]
+            pageNum: () => nextLink.match(/page-(\d+)/)[1]
         },
         css: ".autoPagerTitle{width:100%!important}",
         category: "autoPager"
@@ -13125,8 +13213,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             h: [
                 /^(www\.)?wnacg\.com$/,
                 /^(www\.)?hentaicomic\.ru$/,
-                /^www\.hm\d{1,2}\.lol$/,
-                /^www\.wn\d{1,2}\.cc$/
+                /^(www\.)hm\d{1,2}\.lol$/,
+                /^(www\.)wn\d{1,2}\.cc$/
             ],
             p: "/photos-index-aid-"
         }),
@@ -13175,8 +13263,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             h: [
                 /^(www\.)?wnacg\.com$/,
                 /^(www\.)?hentaicomic\.ru$/,
-                /^www\.hm\d{1,2}\.lol$/,
-                /^www\.wn\d{1,2}\.cc$/
+                /^(www\.)hm\d{1,2}\.lol$/,
+                /^(www\.)wn\d{1,2}\.cc$/
             ],
             p: /^\/photos-(slide|slidelow|list|slist)-aid-\d+\.html$/
         }),
@@ -13291,8 +13379,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/(twhentai\.com|mttang\.club|(\w+\.)?hentai\.desi)\/\??(hentai_manga|hentai_doujin|hentai_western)\/\d+\/$/,
         imgs: async () => {
             await fun.getNP("//div[div[a[@class='thumbnail'][img]]]", ".pagination li.active+li:not(.disabled)>a", null, ".pagination");
-            thumbnailsSrcArray = fun.getImgSrcArr(".recommended img");
-            return thumbnailsSrcArray.map(e => e.replace("-thumb265x385", ""));
+            thumbnailSrcArray = fun.getImgSrcArr(".recommended img");
+            return thumbnailSrcArray.map(e => e.replace("-thumb265x385", ""));
         },
         button: [4],
         insertImg: [
@@ -13503,6 +13591,21 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         insertImg: ["#lightgallery", 2],
         category: "hcomic"
     }, {
+        name: "凹凸漫",
+        host: ["atm333.com"],
+        reg: () => fun.checkUrl({
+            h: "atm333.com",
+            p: "/comicread/"
+        }),
+        imgs: "img.lazyload[data-original]",
+        button: [4],
+        insertImg: ["center:has(>div>img.lazyload[data-original])", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章']",
+        prev: "//a[text()='上一章']",
+        customTitle: () => fun.gt("center>h1") + " - " + fun.gt("center>h2"),
+        category: "hcomic"
+    }, {
         name: "韓漫射/绅士同人H漫",
         reg: () => fun.checkUrl({
             h: [
@@ -13613,7 +13716,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 fun.showMsg("Get Thumbnailsing...");
                 let url = fun.gu("//a[text()='Gallery Info']");
                 let dom = await fun.iframeDoc(url, ".gallery-preview img");
-                thumbnailsSrcArray = fun.gae(".gallery-preview img", dom).map(e => e.dataset.src ?? e.src);
+                thumbnailSrcArray = fun.gae(".gallery-preview img", dom).map(e => e.dataset.src ?? e.src);
             }
             return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo.id, our_galleryinfo[i], "webp", undefined, "a"));
         },
@@ -13951,8 +14054,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "hcomic"
     }, {
         name: "鸟鸟韩漫",
-        host: ["nnhanman.org"],
-        reg: /^https?:\/\/nnhanman\d?\.\w+\/comic\/[^\/]+\/chapter-\d+\.html/,
+        host: ["nnhanman6.com"],
+        reg: () => fun.checkUrl({
+            h: "nnhanman",
+            p: "chapter",
+            e: ".BarTit>h1"
+        }),
         imgs: async () => {
             if (/章$/.test(fun.gt(".BarTit>h1"))) {
                 await fun.getNP("img[data-original]", "#k_Pic_nextArr", null, "#action");
@@ -14102,8 +14209,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["www.rhmanhua11.xyz", "www.rhmanhua12.xyz"],
         reg: /^https?:\/\/www\.rhmanhua(\d+)?\.xyz\/artshow-\d+\.html/,
         imgs: () => {
-            thumbnailsSrcArray = fun.getImgSrcArr(".margin-fix img");
-            return thumbnailsSrcArray.map(e => e.replace(/t(\.\w+)$/, "$1"));
+            thumbnailSrcArray = fun.getImgSrcArr(".margin-fix img");
+            return thumbnailSrcArray.map(e => e.replace(/t(\.\w+)$/, "$1"));
         },
         button: [4],
         insertImg: [".list-videos", 2],
@@ -14199,8 +14306,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         imgs: async () => {
             await fun.waitEle(".blog_section img[title]:not([src*=cover])");
-            thumbnailsSrcArray = fun.getImgSrcArr(".blog_section img[title]:not([src*=cover])");
-            return thumbnailsSrcArray.map(e => e.replace(/t(\d+\.\w+)$/, "$1"));
+            thumbnailSrcArray = fun.getImgSrcArr(".blog_section img[title]:not([src*=cover])");
+            return thumbnailSrcArray.map(e => e.replace(/t(\d+\.\w+)$/, "$1"));
         },
         button: [4],
         insertImg: [
@@ -19029,7 +19136,7 @@ if (next) {
             observer: ".mdui-col-lg-2",
             next: (dom) => fun.ge("span.current+a", dom) ? siteUrl.replace(/\?page=\d+/, "") + "?page=" + fun.ge("span.current+a", dom).getAttribute("href").match(/\d+/)[0] : null,
             re: ".pages",
-            title: () => "Page " + nextLink.match(/\d+$/)[0]
+            pageNum: () => nextLink.match(/\d+$/)[0]
         },
         openInNewTab: ".mdui-col-lg-2>a",
         category: "autoPager"
@@ -20761,7 +20868,7 @@ if (next) {
             });
             return Promise.all(resArr).then(arr => arr.map(obj => {
                 if (/\.mp4$|\.mov$|\.ts$/i.test(obj.name)) {
-                    videosSrcArray.push(obj.url);
+                    videoSrcArray.push(obj.url);
                     return null;
                 } else {
                     return obj.url;
@@ -21153,8 +21260,13 @@ if (next) {
                 if (siteData.autoPager?.showTitle !== 0) {
                     let add = true;
                     let titleText = null;
+                    let num = siteData.autoPager?.pageNum;
                     let title = siteData.autoPager?.title;
-                    if (isFn(title)) {
+                    if (isString(num)) {
+                        titleText = `Page ${fun.gt(num, 1, doc)}`;
+                    } else if (isFn(num)) {
+                        titleText = `Page ${await num(doc)}`;
+                    } else if (isFn(title)) {
                         try {
                             titleText = await title(siteJson ?? doc);
                             if (isObject(titleText)) {
@@ -21896,12 +22008,12 @@ if (next) {
                 fragment.appendChild(buttonDiv);
             }
             let blackList = fancyboxBlackList();
-            if (options.fancybox == 1 && thumbnailsSrcArray.length > 0) {
-                if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(fun.lh) || !/^data/.test(thumbnailsSrcArray[0])) {
-                    thumbnailsSrcArray = [...new Set(thumbnailsSrcArray)];
+            if (options.fancybox == 1 && thumbnailSrcArray.length > 0) {
+                if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(fun.lh) || !/^data/.test(thumbnailSrcArray[0])) {
+                    thumbnailSrcArray = [...new Set(thumbnailSrcArray)];
                 }
             }
-            debug("\nfun.insertImg()插入圖片最後確認 thumbnailsSrcArray", thumbnailsSrcArray);
+            debug("\nfun.insertImg()插入圖片最後確認 thumbnailSrcArray", thumbnailSrcArray);
             debug("\nfun.insertImg()插入圖片最後確認 srcArr", srcArr);
             let padStart = String(srcArr.length).length;
             for (let i = 0; i < srcArr.length; i++) {
@@ -21909,7 +22021,7 @@ if (next) {
                 if (options.fancybox == 1 && !blackList) {
                     a.id = "imgLocationOriginal_" + i;
                     a.dataset.fancybox = "FullPictureLoadImageOriginal";
-                    thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = srcArr[i];
+                    thumbnailSrcArray.length > 0 && thumbnailSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailSrcArray[i] : a.dataset.thumb = srcArr[i];
                     a.href = srcArr[i];
                 }
                 let img = new Image();
@@ -21948,13 +22060,13 @@ if (next) {
                     fragment.appendChild(img);
                 }
             }
-            if (videosSrcArray.length > 0) {
-                debug("\nfun.insertImg()插入圖片最後確認 videosSrcArray", videosSrcArray);
+            if (videoSrcArray.length > 0) {
+                debug("\nfun.insertImg()插入圖片最後確認 videoSrcArray", videoSrcArray);
                 if (!hasTouchEvents && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1) {
                     let dbtn = fragment.querySelector("#FullPictureLoadFastDownloadBtn");
-                    dbtn.innerText = dbtn.innerText.replace("P", `P + ${videosSrcArray.length}V`);
+                    dbtn.innerText = dbtn.innerText.replace("P", `P + ${videoSrcArray.length}V`);
                 }
-                for (let i = 0; i < videosSrcArray.length; i++) {
+                for (let i = 0; i < videoSrcArray.length; i++) {
                     let video = document.createElement("video");
                     video.className = "FullPictureLoadVideo";
                     video.controls = true;
@@ -21963,7 +22075,7 @@ if (next) {
                     video.preload = "none";
                     video.style = "height: 500px;width: 100%;max-width:100%";
                     let source = document.createElement("source");
-                    source.src = videosSrcArray[i];
+                    source.src = videoSrcArray[i];
                     source.type = "video/mp4";
                     video.appendChild(source);
                     fragment.appendChild(video);
@@ -21973,7 +22085,7 @@ if (next) {
             end.id = "FullPictureLoadEnd";
             end.innerText = `${displayLanguage.str_52}：${noVideoNum}P`;
             fragment.appendChild(end);
-            if (srcArr.length > 0 || (srcArr.length >= 0 && videosSrcArray.length > 0)) {
+            if (srcArr.length > 0 || (srcArr.length >= 0 && videoSrcArray.length > 0)) {
                 const [, insertMode] = siteData.insertImg;
                 if (insertMode == 2 || insertMode == 3) {
                     fun.picPreload(srcArr);
@@ -22141,7 +22253,7 @@ if (next) {
             } else if (isArray(dt)) {
                 dt.forEach(r => (str = str.replace(r, "")));
             }
-            str = str.replace(/[\/\s]?[\(\[（【“]\d+[\w\s\\\/\.\+-／]+[\)\]）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "").replace(/\//g, "").replace(/\s|/, "").replace(/[\/\?<>\\:\*\|":]/g, " ").replace(/\s{2}/g, " ").trim();
+            str = str.replace(/[\/\s]?[\(\[［（【“]\d+[\w\s\\\/\.\+-／]+[\)\]］）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "").replace(/\//g, "").replace(/\s|/, "").replace(/[\/\?<>\\:\*\|":]/g, " ").replace(/\s{2}/g, " ").trim();
             return str;
         },
         //取得元素的屬性值
@@ -23414,7 +23526,7 @@ if (next) {
         globalImgArray = imgsSrcArr;
         let thums = siteData.thums;
         if (isString(thums)) {
-            thumbnailsSrcArray = fun.getImgSrcArr(thums);
+            thumbnailSrcArray = fun.getImgSrcArr(thums);
         }
         isFetching = false;
         return imgsSrcArr;
@@ -23485,7 +23597,7 @@ if (next) {
         }
         isDownloading = true;
         let imgsSrcArr = await getImgs(selector);
-        if (imgsSrcArr.length > 0 && titleText != null && titleText != "" || videosSrcArray.length > 0) {
+        if (imgsSrcArr.length > 0 && titleText != null && titleText != "" || videoSrcArray.length > 0) {
             fun.showMsg(displayLanguage.str_55, 0);
             let loopMsg;
             const imgsNum = imgsSrcArr.length;
@@ -23493,8 +23605,8 @@ if (next) {
             const zip = new JSZip();
             let zipFolder;
             let videosNum;
-            if (videosSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
-                videosNum = videosSrcArray.length;
+            if (videoSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
+                videosNum = videoSrcArray.length;
                 zipFolder = zip.folder(`${title} [${imgsNum}P + ${videosNum}V]`);
             } else {
                 zipFolder = zip.folder(`${title} [${imgsNum}P]`);
@@ -23509,16 +23621,16 @@ if (next) {
                     promiseBlobArray.push(promiseBlob);
                 }
             }
-            if (videosSrcArray.length > 0 && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1 && !hasTouchEvents) {
+            if (videoSrcArray.length > 0 && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1 && !hasTouchEvents) {
                 const padStart = String(videosNum).length;
                 loopMsg = setInterval(() => {
                     fun.showMsg("Video Downloading...", 0);
                 }, 2000);
-                for (let i = 0; i < videosSrcArray.length; i++) {
+                for (let i = 0; i < videoSrcArray.length; i++) {
                     let videoNum = getNum(i, padStart);
                     let promiseBlob;
                     await fun.checkDownloadThread();
-                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(videosSrcArray[i], videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_Download(videosSrcArray[i], videoNum, imgsNum + videosNum);
+                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(videoSrcArray[i], videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_Download(videoSrcArray[i], videoNum, imgsNum + videosNum);
                     promiseBlobArray.push(promiseBlob);
                 }
             }
@@ -23611,7 +23723,7 @@ if (next) {
                         }).then(async data => {
                             debug("\nZIP壓縮檔數據：", data);
                             let fileName;
-                            if (videosSrcArray.length > 0 && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
+                            if (videoSrcArray.length > 0 && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
                                 fileName = `${title} [${imgsNum}P + ${videosNum}V].${options.file_extension}`;
                             } else {
                                 fileName = `${title} [${imgsNum}P].${options.file_extension}`;
@@ -23644,13 +23756,13 @@ if (next) {
         if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
-        if (srcArr.length == 0 && videosSrcArray.length == 0) return showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0 && videoSrcArray.length == 0) return showMsg(displayLanguage.str_44);
         let picNum = srcArr.length;
         let titleText = (customTitle || document.title);
         let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
-        if (videosSrcArray.length > 0) {
-            srcArr = srcArr.concat(videosSrcArray);
-            fileName = `${titleText}[${picNum}P + ${videosSrcArray.length}V]_MediaURLs.txt`;
+        if (videoSrcArray.length > 0) {
+            srcArr = srcArr.concat(videoSrcArray);
+            fileName = `${titleText}[${picNum}P + ${videoSrcArray.length}V]_MediaURLs.txt`;
         }
         let str = srcArr.join("\n");
         let blob = new Blob([str], {
@@ -23672,7 +23784,7 @@ if (next) {
             const [insertTargetEle, insertMode] = siteData.insertImg;
             return fun.insertImg(srcArr, insertTargetEle, insertMode);
         }
-        if (videosSrcArray.length > 0) srcArr = srcArr.concat(videosSrcArray);
+        if (videoSrcArray.length > 0) srcArr = srcArr.concat(videoSrcArray);
         let textArr = [customTitle || document.title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
@@ -23686,7 +23798,7 @@ if (next) {
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
-        if (videosSrcArray.length > 0) srcArr = srcArr.concat(videosSrcArray);
+        if (videoSrcArray.length > 0) srcArr = srcArr.concat(videoSrcArray);
         let textArr = [customTitle || document.title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
@@ -23859,7 +23971,7 @@ if (next) {
                 if (options.fancybox == 1 && !blackList) {
                     a.id = "imgLocationSamll_" + i;
                     a.dataset.fancybox = "FullPictureLoadImageSmall";
-                    thumbnailsSrcArray.length > 0 && thumbnailsSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailsSrcArray[i] : a.dataset.thumb = src;
+                    thumbnailSrcArray.length > 0 && thumbnailSrcArray.length == srcArr.length ? a.dataset.thumb = thumbnailSrcArray[i] : a.dataset.thumb = src;
                     a.href = src;
                 }
                 let img = new Image();
@@ -24624,9 +24736,9 @@ if (newWindowDataViewMode == 1) {
                 let titleText = customTitle ?? document.title;
                 let picNum = srcArr.length;
                 let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
-                if (videosSrcArray.length > 0) {
-                    srcArr = srcArr.concat(videosSrcArray);
-                    fileName = `${titleText}[${picNum}P + ${videosSrcArray.length}V]_MediaURLs.txt`;
+                if (videoSrcArray.length > 0) {
+                    srcArr = srcArr.concat(videoSrcArray);
+                    fileName = `${titleText}[${picNum}P + ${videoSrcArray.length}V]_MediaURLs.txt`;
                 }
                 let str = srcArr.join("\n");
                 let blob = new Blob([str], {
@@ -25511,6 +25623,8 @@ a[data-fancybox]:hover {
     font: unset !important;
     font-family: Arial, sans-serif !important;
     font-size: 16px !important;
+    background-color: unset !important;
+    border-color: unset !important;
     margin:0 !important;
 }
 
