@@ -1894,6 +1894,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="http://shijiao.meinvnews.com/">好视角</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://zipaipic.com/">自拍图库</a>
                 </td>
                 <td>自拍图库.com</td>
@@ -3656,6 +3662,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.javbangers.com/albums/">JavBangers</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jjgirls.com/">JJGirls</a>
                 </td>
                 <td></td>
             </tr>
