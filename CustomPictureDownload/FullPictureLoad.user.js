@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.4.5
+// @version            2.4.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5808,6 +5808,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         ],
         go: 1,
         customTitle: "#content-header-title",
+        fancybox: {
+            v: 3,
+            insertLibrarys: 1
+        },
         category: "nsfw1"
     }, {
         name: "Asigirl.com 分類自動翻頁",
@@ -9966,6 +9970,49 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         prev: "//span[contains(text(),'下一篇')]/a",
         category: "nsfw1"
     }, {
+        name: "JJGirls",
+        reg: () => fun.checkUrl({
+            h: "jjgirls.com",
+            e: [
+                ".L664 a:has(>img:not([src^='/thumbs/']))",
+                ".L664 a>img:not([src^='/thumbs/'])"
+            ]
+        }),
+        init: () => fun.createImgBox(".L664"),
+        imgs: () => {
+            let pagesE = fun.ge(".matchlinks");
+            let pages = /\/\d+\/$/.test(fun.lp);
+            if (pagesE && pages) {
+                let url = fun.lp.replace(/\/\d+\/$/, "");
+                let max;
+                let link = fun.gu(".matchlinks>a:has(+img)");
+                if (/more$/.test(link)) {
+                    max = fun.gt(".matchlinks>a+b");
+                } else {
+                    [, max] = link.match(/\/(\d+)\/$/);
+                }
+                let links = fun.arr(max).map((_, i) => `${url}/${(i + 1)}/`);
+                return fun.getImgA(".L664 a:has(>img:not([src^='/thumbs/']))", links);
+            } else {
+                return fun.gae(".L664 a:has(>img:not([src^='/thumbs/']))");
+            }
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        category: "nsfw2"
+    }, {
+        name: "JJGirls M",
+        reg: () => fun.checkUrl({
+            h: "jjgirls.com"
+        }) && hasTouchEvents,
+        init: () => fun.createImgBox("div.p222308", 2),
+        imgs: "div.p222308>a:has(>img:not([src^='/temp'])):has(>img:not([src^='/thumbs']))",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        category: "nsfw2"
+    }, {
         name: "欧洲人体艺术套图网/亚洲人体艺术/日本人体艺术/美女人体艺术/一千美女",
         reg: () => fun.checkUrl({
             h: [
@@ -10388,6 +10435,21 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         imgs: () => siteJson.image,
         capture: () => siteJson.image,
         customTitle: () => siteJson.headline,
+        category: "nsfw2"
+    }, {
+        name: "好视角",
+        host: ["shijiao.meinvnews.com"],
+        reg: () => fun.checkUrl({
+            e: ".logo img[alt=好视角]",
+            p: /^\/\w+\.html$/
+        }),
+        imgs: ".tit+.text img:not([onerror])",
+        button: [4],
+        insertImg: [".tit+.text", 2],
+        autoDownload: [0],
+        next: "//p[contains(text(),'上一篇')]/a",
+        prev: "//p[contains(text(),'下一篇')]/a",
+        customTitle: ".tit>h1",
         category: "nsfw2"
     }, {
         name: "哔咔庇护所v2",
@@ -13213,8 +13275,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             h: [
                 /^(www\.)?wnacg\.com$/,
                 /^(www\.)?hentaicomic\.ru$/,
-                /^(www\.)hm\d{1,2}\.lol$/,
-                /^(www\.)wn\d{1,2}\.cc$/
+                /^(www\.)?hm\d{1,2}\.lol$/,
+                /^(www\.)?wn\d{1,2}\.cc$/
             ],
             p: "/photos-index-aid-"
         }),
@@ -13263,8 +13325,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             h: [
                 /^(www\.)?wnacg\.com$/,
                 /^(www\.)?hentaicomic\.ru$/,
-                /^(www\.)hm\d{1,2}\.lol$/,
-                /^(www\.)wn\d{1,2}\.cc$/
+                /^(www\.)?hm\d{1,2}\.lol$/,
+                /^(www\.)?wn\d{1,2}\.cc$/
             ],
             p: /^\/photos-(slide|slidelow|list|slist)-aid-\d+\.html$/
         }),
@@ -18917,10 +18979,13 @@ if (next) {
         category: "comic"
     }, {
         name: "漫蛙", //方向鍵上一章下一章、清除擋廣告警告、向下滾動隱藏工具列、反反偵錯，，下載需先手動觸發全部載入圖片，函式使用到canvas需要繪製過程會有點卡。
-        host: ["manwa.me", "manwaqq1.vip"],
+        host: ["manwa.me"],
         link: "https://fuw11.cc/maKapG",
         enable: 1,
-        reg: /(^https?:\/\/manwa\.me|manwaqq1\.vip)\/chapter\/\d+(\?img_host=\d)?$/,
+        reg: () => fun.checkUrl({
+            h: "manwa",
+            p: /^\/chapter\/\d+(\?img_host=\d)?$/
+        }),
         init: async () => {
             _unsafeWindow.Function.prototype.constructor = () => {};
             //await fun.scrollEles(".img-content img", 200);
@@ -18982,23 +19047,21 @@ if (next) {
         category: "comic"
     }, {
         name: "漫蛙選目錄展開全部章節",
-        host: ["manwa.me"],
-        enable: 1,
-        icon: 0,
-        key: 0,
-        reg: /(^https?:\/\/manwa\.me|manwaqq1\.vip)\/book\/\d+$/,
+        reg: () => fun.checkUrl({
+            h: "manwa",
+            p: /^\/book\/\d+$/
+        }),
         init: "Function.prototype.constructor=()=>{};titleSelect(this,'#chapter_indexes');charpterMore(this);",
-        category: "comic"
+        category: "none"
     }, {
         name: "漫蛙自動載入更多",
-        host: ["manwa.me"],
-        enable: 1,
-        icon: 0,
-        key: 0,
-        reg: /(^https?:\/\/manwa\.me|manwaqq1\.vip)\/update$/,
+        reg: () => fun.checkUrl({
+            h: "manwa",
+            p: /^\/update$/
+        }),
         init: "Function.prototype.constructor=()=>{};",
         observerClick: "#loadMore",
-        category: "comic"
+        category: "autoPager"
     }, {
         name: "開車漫画",
         host: ["18p.fun"],
