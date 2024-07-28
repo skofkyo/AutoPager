@@ -1093,7 +1093,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/07/27 04:46</p>
+<p>2024/07/28 19:32</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1101,13 +1101,9 @@ imgs: async () => {
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
-<img src="https://i.imgur.com/XZSEU41.jpg">
-<img src="https://i.imgur.com/b9iN0X2.jpg">
-<img src="https://i.imgur.com/0QQIHcI.jpg">
-<img src="https://i.imgur.com/XkfwWok.jpg">
-<img src="https://i.imgur.com/ToftahD.jpg">
-<img src="https://i.imgur.com/xQJePAo.jpg">
-<img src="https://i.imgur.com/GMsIaj9.jpg">
+<img src="https://i.imgur.com/xZN2uj7.jpg">
+<img src="https://i.imgur.com/J0Sz9ri.jpg">
+<img src="https://i.imgur.com/BxdTgBq.jpg">
 <img src="https://i.imgur.com/OibRD2N.jpg">
 <h2>自定義編輯網站收藏說明</h2>
 <details>
