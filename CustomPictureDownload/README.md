@@ -1057,6 +1057,7 @@ imgs: async () => {
 <p>數字鍵 . 點鍵取消縮放恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
+<p>Delete鍵 並排模式下當為漫畫類和並排數為2的H漫類，用於切換隱藏顯示第一張圖片，當沒有剛好並成雙頁跨頁大圖時使用。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
 <p>組合鍵 Ctrl + Alt + T 頁面選取文字後，按此快捷鍵可以快速設定為腳本用的圖集標題，沒有選取文字也會彈出輸入框能手動輸入自訂標題。</p>
 <br>
@@ -1081,19 +1082,21 @@ imgs: async () => {
 <br>
 <p>3.Fancybox模式</p>
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
-<p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)，漫畫類和H漫設定欄位為2使用並排模式後請勿使用，因為閱讀順序是錯誤的，需先切換回原始模式。</p>
+<p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)。</p>
 <br>
 <p>4.分頁檢視模式</p>
 <p>左下有浮動選單區塊，鼠標懸停彈出顯示。</p>
 <p>W鍵、A鍵、上左方向鍵跳轉到目前的上一張圖、S鍵、D鍵、下右方向鍵跳轉到目前的下一張圖</p>
-<p>數字鍵 0 切換為預設模式自動排列</p>
+<p>數字鍵 0 切換為圖片高度符合視口高度的預設模式</p>
 <p>數字鍵 1 切換為單圖置中模式</p>
-<p>數字鍵 2 切換為多圖並排模式</p>
+<p>數字鍵 2 切換為小尺寸圖片並排模式</p>
+<p>數字鍵 3 切換為圖片高度符合視口高度且順序右至左的模式</p>
+<p>Delete鍵 模式為3時用於切換隱藏顯示第一張圖片，當用來看漫畫但遇到雙頁的跨頁大圖，偏偏錯開差一張圖沒形成跨頁大圖，此時隱藏首張圖片就可並成跨頁大圖。</p>
 <p>PS：網站如果有Content Security Policy (CSP)限制，將沒有切換模式、圖片跳轉、Fancybox功能，或者莫名其妙不能使用window.open()，將無法使用分頁檢視功能。</p>
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/07/28 19:32</p>
+<p>2024/08/01 06:40</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1722,6 +1725,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.zyktu.top/">资源库图站</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://8ezy.com/">8E资源站</a>
                 </td>
                 <td></td>
@@ -1741,6 +1750,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.ixiuren.com/xiuren">秀人图</a>
+                </td>
+                <td>只支持免費</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yuzu8.com/">足控资源网</a>
                 </td>
                 <td>只支持免費</td>
             </tr>
@@ -2456,6 +2471,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.baobua.net/">www.baobua.net</a>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <a href="https://www.putmega.com/explore/recent/?list=albums&sort=date_desc&page=1">PutMega</a>
+                </td>
+                <td></td>
+            </tr>v
             <tr>
                 <td>
                     <a href="https://new.pixibb.com/">NEW PixiBB</a>
@@ -4404,15 +4425,15 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://cin.cx/">Download Doujin</a>
-                </td>
-                <td>作用在圖片清單頁，網站機制特殊不能直接用IMG載入圖片，但可下載。</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://hentaipaw.com/">HentaiPaw</a>
                 </td>
                 <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cin.cx/">Download Doujin</a>
+                </td>
+                <td>作用在圖片清單頁，手動插入圖片。</td>
             </tr>
             <tr>
                 <td>
