@@ -1,4 +1,4 @@
-2024/07/27 04:46
+2024/08/01 06:40
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -347,6 +347,9 @@ MEITU131
 
 秀色女神
 *://*.xsnvshen.co/album/*
+
+资源库图站
+*://*zyktu.top/index.php/archives/*/
 
 8E资源站
 /^https?:\/\/8ezy\.com\/[\w-]+\/$/
@@ -728,6 +731,9 @@ mm131美女图片
 
 PixiBB
 *www.pixibb.com/*
+
+PutMega
+*://*putmega.com/*
 
 优美图录
 *umei.net/tupian/*.html
@@ -1294,6 +1300,9 @@ ACG漫画网
 
 Caitlin.top
 *caitlin.top/index.php?route=comic/readOnline*
+
+老司機禁漫
+*://laosiji52.com/comic/*/*
 
 177漫画
 *://www.177pic*.com/html/*/*/*.html
