@@ -281,6 +281,7 @@ https://www.nuyet.com/gallery/*
 /^https?:\/\/((www\.)?wnacg\.com|(www\.)hm\d{1,2}\.lol|(www\.)wn\d{1,2}\.cc|(www\.)?hentaicomic\.ru)\/photos-index-aid-/
 *://ahri8.top/readOnline2.php?ID=*
 *caitlin.top/index.php?route=comic/readOnline*
+*://laosiji52.com/comic/*/*
 *://www.177pic*.com/html/*/*/*.html
 *://www.18mh.cc/index-look-name-*-id-*
 *://m.18mh.cc/look/name/*
@@ -361,6 +362,7 @@ https://photobook.club/*
 *enterdesk.com/*/*.html
 *nvhai8.com/body/*/*.htm
 *www.pixibb.com/*
+*://*putmega.com/*
 *umei.net/tupian/*.html
 *reprint-kh.com/archives/*
 *www.simply-cosplay.com*
@@ -685,6 +687,7 @@ https://cosermm.blog.2nt.com/*
 *://*042l.com/*/*.html
 *://www.siwashi.xyz/*/*.html
 *://www.ccy.moe/*/*/*/*/*/*
+*://*zyktu.top/index.php/archives/*/
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
