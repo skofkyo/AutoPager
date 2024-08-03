@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.5.1
+// @version            2.5.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -12435,34 +12435,35 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         init: async () => {
             await fun.waitEle("next-route-announcer");
             await fun.waitEle(".grid .group>img");
-            fun.createImgBox(".container:has(>.grid)");
         },
         imgs: async () => {
+            if (!fun.ge("#FullPictureLoadMainImgBox")) {
+                fun.createImgBox(".container:has(>.grid)");
+            }
             fun.showMsg("獲取數據中...", 0);
             let url = fun.gu(".container:has(>.grid) a");
             return fun.fetchDoc(url).then(dom => {
-                let code = fun.gst("startingPage", dom);
-                let arrText = code.replace(/\\/g, "").match(/\[\{.+"\}\],/)[0].slice(0, -1);
-                return JSON.parse(arrText).map(e => e.src);
+                let code = fun.gst("slides", dom);
+                let arr = JSON.parse(code.match(/\\"slides\\":([^\]]+\])/)[1].replaceAll("\\", ""));
+                return arr.map(e => e.src);
             });
         },
         thums: ".grid .group>img",
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0], 2
+            ["#FullPictureLoadMainImgBox", 0], 2, 3000
         ],
         go: 1,
         insertImgAF: () => {
             let loop = setInterval(() => {
                 if (!fun.ge(".FullPictureLoadImage")) {
-                    fun.createImgBox(".container:has(>.grid)");
                     fun.immediateInsertImg();
                 }
             }, 500);
             setTimeout(() => clearInterval(loop), 10000);
         },
         customTitle: () => fun.gt("h1.text-wrap").replace(/\/|\|/g, " "),
-        css: "#article-details+.mx-auto,.container:has(>div>script){display:none!important;}#article-details{margin-top:5rem!important}",
+        css: "#article-details+.mx-auto,.container:has(>div>script),#button-group a{display:none!important;}#article-details{margin-top:5rem!important}",
         category: "hcomic"
     }, {
         name: "HDpornComics圖片清單頁",
@@ -12605,7 +12606,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         thums: ".detail-gallery-item img",
         button: [4],
         insertImg: [
-            [".detail-gallery", 2], 2
+            [".detail-gallery", 2], 2, 3000
         ],
         insertImgAF: () => {
             fun.css(".detail-gallery{display:none!important;}");
@@ -18925,38 +18926,16 @@ if (next) {
         init: async () => {
             await fun.waitVar("x_tokens");
             fun.run("$(document).off();");
-            const toggleToolbar = e => {
-                if (e.wheelDelta < 0 || e.detail > 0) {
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                let st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
                     fun.ge(".view-title").style.top = "-60px";
                 } else {
                     fun.ge(".view-title").style.top = "0px";
                 }
-            };
-            document.addEventListener("wheel", toggleToolbar);
-            document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = event => {
-                if (["PageDown", "Space", "ArrowDown"].some(k => k === event.code)) {
-                    fun.ge(".view-title").style.top = "-60px";
-                } else {
-                    fun.ge(".view-title").style.top = "0px";
-                }
-            };
-            document.addEventListener("keydown", keyToggleToolbar);
-            if (hasTouchEvents) {
-                let startY, moveY, Y;
-                $("body").on("touchstart", (e) => {
-                    startY = e.originalEvent.changedTouches[0].pageY;
-                });
-                $("body").on("touchmove", (e) => {
-                    moveY = e.originalEvent.changedTouches[0].pageY;
-                    Y = moveY - startY;
-                    if (Y < 0) {
-                        fun.ge(".view-title").style.top = "-60px";
-                    } else if (Y > 0) {
-                        fun.ge(".view-title").style.top = "0px";
-                    }
-                });
-            }
+                lastScrollTop = st;
+            });
         },
         imgs: () => {
             const {
@@ -19095,8 +19074,10 @@ if (next) {
             //await fun.scrollEles(".img-content img", 200);
             fun.css(".ad-area{opacity:0!important;}#cp_img>.two-ad-area:nth-child(1)>.ad-area,#cp_img>.two-ad-area:nth-child(2){display:none!important}");
             fun.remove(".ad-area,body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(a):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox])", 5000);
-            const toggleToolbar = e => {
-                if (e.wheelDelta < 0 || e.detail > 0) {
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                let st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
                     $(".view-fix-top-bar").attr("style", "top: -60px;");
                     $(".view-fix-bottom-bar").attr("style", "bottom: -60px;");
                     $(".detail-comment-fix-bottom").hide("fast");
@@ -19105,40 +19086,8 @@ if (next) {
                     $(".view-fix-bottom-bar").attr("style", "bottom: 0px;");
                     $(".detail-comment-fix-bottom").show("fast");
                 }
-            };
-            document.addEventListener("wheel", toggleToolbar);
-            document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = event => {
-                if (["PageDown", "Space", "ArrowDown"].some(k => k === event.code)) {
-                    $(".view-fix-top-bar").attr("style", "top: -60px;");
-                    $(".view-fix-bottom-bar").attr("style", "bottom: -60px;");
-                    $(".detail-comment-fix-bottom").hide("fast");
-                } else {
-                    $(".view-fix-top-bar").attr("style", "top: 0px;");
-                    $(".view-fix-bottom-bar").attr("style", "bottom: 0px;");
-                    $(".detail-comment-fix-bottom").show("fast");
-                }
-            };
-            document.addEventListener("keydown", keyToggleToolbar);
-            if (hasTouchEvents) {
-                let startY, moveY, Y;
-                $("body").on("touchstart", (e) => {
-                    startY = e.originalEvent.changedTouches[0].pageY;
-                });
-                $("body").on("touchmove", (e) => {
-                    moveY = e.originalEvent.changedTouches[0].pageY;
-                    Y = moveY - startY;
-                    if (Y < 0) {
-                        $(".view-fix-top-bar").attr("style", "top: -60px;");
-                        $(".view-fix-bottom-bar").attr("style", "bottom: -60px;");
-                        $(".detail-comment-fix-bottom").hide("fast");
-                    } else if (Y > 0) {
-                        $(".view-fix-top-bar").attr("style", "top: 0px;");
-                        $(".view-fix-bottom-bar").attr("style", "bottom: 0px;");
-                        $(".detail-comment-fix-bottom").show("fast");
-                    }
-                });
-            }
+                lastScrollTop = st;
+            });
             await fun.waitEle(".content-img.lazy_img[src^=blob]");
             if (autoScrollAllElement === 1) _this.scrollEle();
         },
@@ -23291,27 +23240,18 @@ if (next) {
             }
         },
         copymangaUI: () => {
-            const toggleToolbar = e => {
-                if (e.wheelDelta < 0 || e.detail > 0) {
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                let st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
                     $("h4.header").attr("style", "top: -30px;");
                     $("div.footer").attr("style", "bottom: -41px;");
                 } else {
                     $("h4.header").removeAttr("style");
                     $("div.footer").removeAttr("style");
                 }
-            };
-            document.addEventListener("wheel", toggleToolbar);
-            document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = event => {
-                if (["PageDown", "Space", "ArrowDown"].some(k => k === event.code)) {
-                    $("h4.header").attr("style", "top: -30px;");
-                    $("div.footer").attr("style", "bottom: -41px;");
-                } else {
-                    $("h4.header").removeAttr("style");
-                    $("div.footer").removeAttr("style");
-                }
-            };
-            document.addEventListener("keydown", keyToggleToolbar);
+                lastScrollTop = st;
+            });
             fun.run("$(document).off();");
         },
         copymanga_M_UI: (c, h) => {
@@ -23348,26 +23288,20 @@ if (next) {
             });
         },
         MangabzUI: () => {
-            const toggleToolbar = e => {
-                if (e.wheelDelta < 0 || e.detail > 0) {
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                let st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
                     $(".top-bar").attr("style", "top: -74px;");
                 } else {
                     $(".top-bar").removeAttr("style");
                 }
-            };
-            document.addEventListener("wheel", toggleToolbar);
-            document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = event => {
-                if (["PageDown", "Space", "ArrowDown"].some(k => k === event.code)) {
-                    $(".top-bar").attr("style", "top: -74px;");
-                } else {
-                    $(".top-bar").removeAttr("style");
-                }
-            };
-            document.addEventListener("keydown", keyToggleToolbar);
+                lastScrollTop = st;
+            });
         },
         XmanhuaUI: () => {
             const clickToggleToolbar = () => {
+                if (fun.ge(".fancybox__container")) return;
                 let t = fun.ge(".header.toolbar");
                 if (t) {
                     $(".header").removeClass("toolbar");
@@ -23386,8 +23320,10 @@ if (next) {
                 }
             };
             document.addEventListener("click", clickToggleToolbar);
-            const toggleToolbar = event => {
-                if (event.wheelDelta < 0 || event.detail > 0) {
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                let st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
                     $(".header").addClass("toolbar");
                     $(".header").attr("style", "top: -64px;");
                     $(".reader-bottom").addClass("toolbar");
@@ -23398,23 +23334,8 @@ if (next) {
                     $(".reader-bottom").removeClass("toolbar");
                     $(".reader-bottom").removeAttr("style");
                 }
-            };
-            document.addEventListener("wheel", toggleToolbar);
-            document.addEventListener("DOMMouseScroll", toggleToolbar);
-            const keyToggleToolbar = event => {
-                if (["PageDown", "Space", "ArrowDown"].some(k => k === event.code)) {
-                    $(".header").addClass("toolbar");
-                    $(".header").attr("style", "top: -64px;");
-                    $(".reader-bottom").addClass("toolbar");
-                    $(".reader-bottom").attr("style", "bottom: -50px;");
-                } else {
-                    $(".header").removeClass("toolbar");
-                    $(".header").removeAttr("style");
-                    $(".reader-bottom").removeClass("toolbar");
-                    $(".reader-bottom").removeAttr("style");
-                }
-            };
-            document.addEventListener("keydown", keyToggleToolbar);
+                lastScrollTop = st;
+            });
         },
         _8ComicM_UI: () => {
             let textNode = document.querySelector(".book_inc_title")?.nextSibling;
