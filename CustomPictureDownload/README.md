@@ -1106,7 +1106,7 @@ imgs: async () => {
 <br>
 <img src="https://i.imgur.com/xZN2uj7.jpg">
 <img src="https://i.imgur.com/J0Sz9ri.jpg">
-<img src="https://i.imgur.com/BxdTgBq.jpg">
+<img src="https://i.imgur.com/z0p8wbT.jpg">
 <img src="https://i.imgur.com/OibRD2N.jpg">
 <h2>自定義編輯網站收藏說明</h2>
 <details>
@@ -2476,7 +2476,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.putmega.com/explore/recent/?list=albums&sort=date_desc&page=1">PutMega</a>
                 </td>
                 <td></td>
-            </tr>v
+            </tr>
             <tr>
                 <td>
                     <a href="https://new.pixibb.com/">NEW PixiBB</a>
