@@ -177,7 +177,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
     fetch: 1, //使用Fetch API下載圖片，需要圖片下載請求的伺服器有開放CORS。
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
-    infiniteScroll: true, //漫畫類標記有無限滾動模式
+    infiniteScroll: true, //漫畫分類標記有無限滾動模式
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
@@ -1057,7 +1057,7 @@ imgs: async () => {
 <p>數字鍵 . 點鍵取消縮放恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
-<p>Delete鍵 並排模式下當為漫畫類和並排數為2的H漫類，用於切換隱藏顯示第一張圖片，當沒有剛好並成雙頁跨頁大圖時使用。</p>
+<p>Delete鍵 並排模式下當為漫畫分類和並排數為2的H漫分類，用於切換隱藏顯示第一張圖片，當沒有剛好並成雙頁跨頁大圖時使用。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
 <p>組合鍵 Ctrl + Alt + T 頁面選取文字後，按此快捷鍵可以快速設定為腳本用的圖集標題，沒有選取文字也會彈出輸入框能手動輸入自訂標題。</p>
 <br>
@@ -1069,13 +1069,13 @@ imgs: async () => {
 <p>PS：需重複獲取原始圖片元素的規則，按1無法複製圖片網址，需點擊頁面功能按鈕或浮動選單按鈕的複製圖址。</p>
 <h1>圖片檢視模式</h1>
 <p>1.圖片置中模式</p>
-<p>上方向鍵跳轉到目前的上一張圖、下方向鍵跳轉到目前的下一張圖</p>
+<p>上方向鍵滾動到目前的上一張圖、下方向鍵滾動到目前的下一張圖</p>
 <br>
 <p>2.圖片並排模式</p>
-<p>上方向鍵跳轉到目前的上一排圖、下方向鍵跳轉到目前的下一排圖</p>
-<p>漫畫類當跳轉至最後一排後，繼續按下方向鍵會嘗試前往下一集。</p>
+<p>上方向鍵滾動到目前的上一排圖、下方向鍵滾動到目前的下一排圖</p>
+<p>漫畫分類當滾動至最後一排後，繼續按下方向鍵會嘗試前往下一集。</p>
 <p>所謂的目前是變量記憶的位置，並非當前瀏覽範圍的位置，滑鼠滾動變換位置不會改變變量。</p>
-<p>按了上方向鍵和下方向鍵以外的鍵後會再從頭開始跳轉。</p>
+<p>按了上方向鍵和下方向鍵以外的鍵後會再從頭開始滾動。</p>
 <br>
 <p>如果漫畫站的圖片並排後，圖片高度小於大於瀏覽範圍的高度，需要手動調整瀏覽器的縮放來適配達到最佳的觀看效果。</p>
 <p>Chrome內建的縮放跨度太大，建議安裝縮放 for Google Chrome，可以以10%、5%來縮放</p>
@@ -1086,17 +1086,17 @@ imgs: async () => {
 <br>
 <p>4.分頁檢視模式</p>
 <p>左下有浮動選單區塊，鼠標懸停彈出顯示。</p>
-<p>W鍵、A鍵、上左方向鍵跳轉到目前的上一張圖、S鍵、D鍵、下右方向鍵跳轉到目前的下一張圖</p>
+<p>W鍵、A鍵、上左方向鍵滾動到目前的上一張圖、S鍵、D鍵、下右方向鍵滾動到目前的下一張圖，當為comic分類且已是最後一張圖繼續按S鍵、下右方向鍵時關閉分頁</p>
 <p>數字鍵 0 切換為圖片高度符合視口高度的預設模式</p>
 <p>數字鍵 1 切換為單圖置中模式</p>
 <p>數字鍵 2 切換為小尺寸圖片並排模式</p>
 <p>數字鍵 3 切換為圖片高度符合視口高度且順序右至左的模式</p>
 <p>Delete鍵 模式為3時用於切換隱藏顯示第一張圖片，當用來看漫畫但遇到雙頁的跨頁大圖，偏偏錯開差一張圖沒形成跨頁大圖，此時隱藏首張圖片就可並成跨頁大圖。</p>
-<p>PS：網站如果有Content Security Policy (CSP)限制，將沒有切換模式、圖片跳轉、Fancybox功能，或者莫名其妙不能使用window.open()，將無法使用分頁檢視功能。</p>
+<p>PS：網站如果有Content Security Policy (CSP)限制，將沒有切換模式、圖片滾動、Fancybox功能，或者莫名其妙不能使用window.open()，將無法使用分頁檢視功能。</p>
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/08/01 06:40</p>
+<p>2024/08/08 16:51</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1171,7 +1171,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
 </details>
 <h2>※備註</h2>
 <p>SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈結。</p>
-<h2>老司機類內置規則支持列表</h2>
+<h2>老司機分類內置規則支持列表</h2>
 <details>
     <summary>
         <kbd>
@@ -1251,7 +1251,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
-                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://depday.info/">Depday-Info</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://allianceforrabiescontrol.org/">CosXuxi Club</a>
+                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://depday.info/">Depday-Info</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://allianceforrabiescontrol.org/">CosXuxi Club</a>， <a href="https://taa.kidsforums.com/">CosXuxi Club</a>
                 </td>
             </tr>
             <tr>
@@ -1364,7 +1364,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://ja.huamaobizhi.com/mixs/?lang=zh-CN">花猫壁纸</a>
                 </td>
                 <td>
-                    <a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類添加了自動翻頁。
+                    <a href="https://en.huamaobizhi.com/">en.huamaobizhi.com</a>，手動插入圖片，原圖沒有URL，需要POST直接取得原圖的Blob，非常吃記憶體，抓取過程需要等比較久，原圖是4K~8K的高質量圖片線上觀看會很卡，分類頁添加了自動翻頁。
                 </td>
             </tr>
             <tr>
@@ -1435,7 +1435,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://siwake.cc/">丝袜客</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -1507,7 +1507,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://cosermm.blog.2nt.com/">COSERMM</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -1573,7 +1573,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://heysexgirl.com/">嘿～色女孩</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -1803,7 +1803,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.zhxszone.com/">最好秀色</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2096,7 +2096,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://trendszine.com/">風流雜誌</a>
                 </td>
                 <td>
-                    <a href="https://cosblay.com/">CosBlay</a>，CosBlay網頁語系不同，圖集列表也不同。
+                    <a href="https://cosblay.com/">CosBlay</a>， <a href="https://www.hongimg.com/">虹圖</a>，網站網頁語言不同，圖集列表也不同。
                 </td>
             </tr>
             <tr>
@@ -2295,9 +2295,11 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://cav103.com/albums/">GavPorn相冊</a>
+                    <a href="https://www.99re.com/albums/">久久热</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://cav103.com/albums/">GavPorn</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2387,7 +2389,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://asigirl.com/">Asigirl.com</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2405,7 +2407,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.hotgirl2024.com/">HotGirl World</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2425,7 +2427,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://spacemiss.com/">Space of Miss Beautiful</a>
                 </td>
-                <td></td>
+                <td>影片鏈結可以用貓抓擷取，可用Motrix下載<pre>Referer: https://d000d.com/</pre></td>
             </tr>
             <tr>
                 <td>
@@ -2525,7 +2527,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.modelsvibe.com/">Models Vibe</a>
                 </td>
-                <td>分類添加了自動翻頁功能</td>
+                <td>分類頁添加了自動翻頁功能</td>
             </tr>
             <tr>
                 <td>
@@ -2778,7 +2780,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://galleryepic.com/zh">Gallery Epic</a>
                 </td>
-                <td>高解析原圖需要下載，聚集的只是預覽圖，分類添加了自動翻頁</td>
+                <td>高解析原圖需要下載，聚集的只是預覽圖，分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2857,7 +2859,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://bunkr-albums.io/">Bunkr</a>
                 </td>
                 <td>手動插入圖片，影片可匯出網址後用Motrix下載，
-                    <pre>Referer：https://bunkr.fi/</pre>，如果無法下載就需透過瀏覽器來下載，分類添加了自動翻頁
+                    <pre>Referer：https://bunkr.fi/</pre>，如果無法下載就需透過瀏覽器來下載，分類頁添加了自動翻頁
                 </td>
             </tr>
             <tr>
@@ -3085,7 +3087,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://ososedki.com/">OSOSEDKI</a>
                 </td>
                 <td>
-                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>， <a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>， <a href="https://vipthots.com/">VIPTHOTS</a>， <a href="https://hentaibitches.com/">HENTAI BITCHES</a>， <a href="https://leaksfan.com/">LEAKSFANS</a>， <a href="https://charmingass.com/">CHARMINGASS</a>， <a href="https://leakspie.com/">LEAKS PIE</a>， <a href="https://cherryleaks.com/">CHERRY LEAKS</a>， <a href="https://sweetleaks.com/">SWEETLEAKS</a>， <a href="https://ocosplay.com/">OCOSPLAY</a>， <a href="https://webcharming.com/">WEB CHARMING</a>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>， <a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>， <a href="https://vipthots.com/">VIPTHOTS</a>， <a href="https://hentaibitches.com/">HENTAI BITCHES</a>， <a href="https://leaksfan.com/">LEAKSFANS</a>， <a href="https://charmingass.com/">CHARMINGASS</a>， <a href="https://leakspie.com/">LEAKS PIE</a>， <a href="https://cherryleaks.com/">CHERRY LEAKS</a>， <a href="https://sweetleaks.com/">SWEETLEAKS</a>， <a href="https://ocosplay.com/">OCOSPLAY</a>， <a href="https://webcharming.com/">WEB CHARMING</a>， <a href="https://cosplaykittys.com/">COSPLAY KITTYS</a>， <a href="https://titspie.com/">TITSPIE</a>
                 </td>
             </tr>
             <tr>
@@ -3140,14 +3142,14 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.micmicidol.club/">MIC MIC IDOL</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a>
                 </td>
                 <td>
-                    <a href="https://magazinejapanese5.blog.jp/">グラビア週刊誌 5</a>， <a href="https://magazinejapanese6.blog.jp/">グラビア週刊誌 6</a>，分類添加了自動翻頁
+                    <a href="https://magazinejapanese5.blog.jp/">グラビア週刊誌 5</a>， <a href="https://magazinejapanese6.blog.jp/">グラビア週刊誌 6</a>，分類頁添加了自動翻頁
                 </td>
             </tr>
             <tr>
@@ -3232,6 +3234,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="http://rikitake.com/">Rikitake.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mabui-onna.com/">マブい女画像集</a>
                 </td>
                 <td></td>
@@ -3302,7 +3310,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.eyval.net/">eyval.net</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -3311,6 +3319,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://m.kutekorean.com/">Kutekorean.Com</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://instagirl.net/">Instagirl</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3426,7 +3440,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.xasiat.com/albums/">Xasiat</a>
                 </td>
-                <td>圖集分類添加了自動翻頁</td>
+                <td>圖集分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -3438,7 +3452,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://erotic.pics/">Erotic Pics</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -3463,7 +3477,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://zzup.com/user-album/3338/petmer/index.html">ZzUp.Com</a>
                 </td>
                 <td>
-                    <a href="https://zzup.com/user-album/2269/youmii/index.html">youmii</a>，分類添加了自動翻頁
+                    <a href="https://zzup.com/user-album/2269/youmii/index.html">youmii</a>，分類頁添加了自動翻頁
                 </td>
             </tr>
             <tr>
@@ -3547,6 +3561,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://anicos.net/">AniCos</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplaygirls.org/">AI and Cosplay</a>
                 </td>
                 <td></td>
             </tr>
@@ -3879,13 +3899,13 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://missbby.com/">MissBby.com</a>
                 </td>
-                <td>SPA網頁，分類添加了自動翻頁</td>
+                <td>SPA網頁，分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://xerocos.com/">Xerocos</a>
                 </td>
-                <td>SPA網頁，分類添加了自動翻頁</td>
+                <td>SPA網頁，分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -4069,7 +4089,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="http://51sex.vip/">51sex</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -4165,7 +4185,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.xofulitu521.xyz/xoxo">XO福利圖</a>
                 </td>
                 <td>
-                    <a href="https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/">網站跳轉</a>，分類添加了自動翻頁
+                    <a href="https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/">網站跳轉</a>，分類頁添加了自動翻頁
                 </td>
             </tr>
             <tr>
@@ -4269,7 +4289,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
         </tbody>
     </table>
 </details>
-<h2>H漫類內置規則支持列表</h2>
+<h2>H漫分類內置規則支持列表</h2>
 <details>
     <summary>
         <kbd>
@@ -4601,7 +4621,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://hentaipal.com/">HentaiPal.com</a>
                 </td>
-                <td>分類添加了自動翻頁</td>
+                <td>分類頁添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -4696,14 +4716,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.55comics.com/">污污漫书</a>
-                </td>
-                <td>
-                    <a href="https://www.55manshu.com/">55漫書</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.wnacg.com/">紳士漫畫</a>
                 </td>
                 <td>作用在圖片清單、下拉閱讀頁， <a href="https://www.hentaicomic.ru/">www.hentaicomic.ru</a>， <a href="https://wnacg.date/">紳士漫畫地址發布頁</a>
@@ -4790,6 +4802,20 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.apexmh.com/">頂點漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.55comics.com/">污污漫书</a>
+                </td>
+                <td>
+                    <a href="https://www.55manshu.com/">55漫書</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://wumtt.com/">污漫天堂</a>
                 </td>
                 <td></td>
             </tr>
@@ -5185,8 +5211,8 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
         </tbody>
     </table>
 </details>
-<h2>漫畫類內置規則支持列表</h2>
-<p>漫畫類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
+<h2>漫畫分類內置規則支持列表</h2>
+<p>漫畫分類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
 <p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
 <p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 勾選啟用當前漫畫站點規則 > 保存設定</p>
 <p>2023/11/25 常規模式，絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
@@ -5719,7 +5745,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
         </tbody>
     </table>
 </details>
-<h2>AI繪圖類內置規則支持列表</h2>
+<h2>AI繪圖分類內置規則支持列表</h2>
 <details>
     <summary>
         <kbd>
@@ -5810,7 +5836,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
         </tbody>
     </table>
 </details>
-<h2>輔助類內置規則支持列表</h2>
+<h2>輔助分類內置規則支持列表</h2>
 <details>
     <summary>
         <kbd>
@@ -5831,7 +5857,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
         </thead>
         <tbody>
             <tr>
-                <td>漫畫類</td>
+                <td>漫畫分類</td>
                 <td>自動展開目錄</td>
             </tr>
             <tr>
