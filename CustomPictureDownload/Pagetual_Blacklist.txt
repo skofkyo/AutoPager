@@ -1,4 +1,4 @@
-2024/08/01 06:40
+2024/08/08 16:51
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -148,6 +148,9 @@ RedSeats.Org
 CosXuxi Club
 *://allianceforrabiescontrol.org/*.html
 
+CosXuxi Club
+*://taa.kidsforums.com/*.html
+
 BaoBua
 *://baobua.com/post/*.html*
 
@@ -162,6 +165,9 @@ photo.camcam.cc
 
 PhimVu
 /^https?:\/\/m\.phimvuspot\.com\/\w+\/\w+\.cfg/i
+
+Instagirl
+*://instagirl.net/post/*
 
 Kutekorean.Com
 /^https?:\/\/m\.kutekorean\.com\/[^\.]+\.html$/i
@@ -876,6 +882,9 @@ CosBlay
 
 風流雜誌
 *://trendszine.com/*.html
+
+虹圖
+*://*.hongimg.com/*/*.html
 
 Love Asian Babes
 *amazon-love.com*
