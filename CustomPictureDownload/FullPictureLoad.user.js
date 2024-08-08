@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.5.2
+// @version            2.5.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -397,7 +397,8 @@
             "baobua.com",
             "cn.looives.com",
             "redseats.org",
-            "allianceforrabiescontrol.org"
+            "allianceforrabiescontrol.org",
+            "taa.kidsforums.com"
         ],
         reg: [
             /^https?:\/\/(www\.depvailon\.com|crimejunkiespodcast\.com)\/(?!\?page=|\?m=).+\.html/i,
@@ -410,7 +411,7 @@
             /^https?:\/\/baobua\.com\/post\/[^\.]+\.html/i,
             /^https?:\/\/cn\.looives\.com\/view\/[^\.]+\.cfg/i,
             /^https?:\/\/redseats\.org\/gallery\/[^\.]+\.cfg/i,
-            /^https?:\/\/allianceforrabiescontrol\.org\/[^\.]+\.html$/
+            /^https?:\/\/(allianceforrabiescontrol\.org|taa\.kidsforums\.com)\/[^\.]+\.html$/
         ],
         init: async () => {
             await fun.clearElementEvent();
@@ -1744,11 +1745,12 @@
         css: ".code-block{display:none!important;}",
         category: "nsfw2"
     }, {
-        name: "CosBlay/風流雜誌",
+        name: "CosBlay/風流雜誌/虹圖",
         host: ["cosblay.com", "trendszine.com"],
         reg: [
             /^https?:\/\/(cosblay\.com|trendszine\.com|www\.tiplogo\.com)\/\d+\.html/i,
-            /^https?:\/\/[a-z]{2}\.cosblay\.com\/\d+\/[^\.]+\.html$/
+            /^https?:\/\/[a-z]{2}\.cosblay\.com\/\d+\/[^\.]+\.html$/,
+            /^https?:\/\/[a-z]{2,3}\.hongimg.com\/\d+\/[^\.]+\.html$/
         ],
         imgs: () => fun.getImg(".entry-content img", fun.gt(".pgntn-page-pagination-block>*:last-child", 2) || 1, 7),
         button: [4],
@@ -3921,6 +3923,22 @@
         openInNewTab: ".articles-grid a:not([target=_blank])",
         category: "autoPager"
     }, {
+        name: "MaoJiuJiu/SkyBird/TightImg/SexCity",
+        reg: () => fun.checkUrl({
+            h: [
+                "www.maojiujiu.com",
+                "www.skybirdx.com",
+                "www.tightimg.com",
+                "www.sexscity.com"
+            ],
+            p: "/album/",
+            e: "#item_list img"
+        }),
+        imgs: () => fun.getImgA("#item_list img", ".pager>a:not(.current)"),
+        capture: () => _this.imgs(),
+        customTitle: "h1.title",
+        category: "nsfw1"
+    }, {
         name: "1Y Beauties",
         host: ["www.1y.is"],
         reg: /^https?:\/\/www\.1y\.is\/[\w-]+\/[^\.]+\.html$/,
@@ -4022,8 +4040,11 @@
         category: "nsfw1"
     }, {
         name: "Chinese Beauties",
-        host: ["sxchinesegirlz.one", "sxchinesegirlz01.xyz"],
-        reg: /^https?:\/\/sxchinesegirlz(\d+)?\.\w+\/\?p=\d+$/,
+        host: ["sxchinesegirlz.one"],
+        reg: () => fun.checkUrl({
+            e: "//p[@class='gridlane-site-title']/a[text()='Chinese Beauties']",
+            p: /^\/[^\/]+\/$/
+        }),
         imgs: () => fun.getImgA(".wp-block-image img", ".page-links>a"),
         button: [4],
         insertImg: [".entry-content", 2],
@@ -4709,6 +4730,11 @@
                 "#main>h1"
             ]
         }),
+        init: async () => {
+            fun.showMsg("Clear Element Event", 0);
+            fun.clearAllTimer();
+            await fun.clearElementEvent();
+        },
         imgs: () => fun.getImg("img.block", fun.gt("a[rel=next]", 2) || 1),
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
@@ -4722,6 +4748,7 @@
                 /🐾/g
             ]
         }),
+        css: "input[id]{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "美图鉴赏/美图鉴赏ACG",
@@ -4795,7 +4822,7 @@
         customTitle: () => fun.ge("//meta[@property='og:description']").content,
         category: "nsfw2"
     }, {
-        name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY/WEB CHARMING",
+        name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY/WEB CHARMING/COSPLAY KITTYS/TITSPIE",
         host: [
             "cosplayasian.com",
             "cosplaythots.com",
@@ -4811,7 +4838,9 @@
             "cherryleaks.com",
             "sweetleaks.com",
             "ocosplay.com",
-            "webcharming.com"
+            "webcharming.com",
+            "cosplaykittys.com",
+            "titspie.com"
         ],
         reg: [
             /^https?:\/\/cosplayasian\.com\/([a-z]{2}\/)?post\/\d+/,
@@ -4829,6 +4858,8 @@
             /^https?:\/\/sweetleaks\.com\/([a-z]{2}\/)?pic\/\d+/,
             /^https?:\/\/ocosplay\.com\/([a-z]{2}\/)?g\/\d+/,
             /^https?:\/\/webcharming\.com\/([a-z]{2}\/)?pics\/\d+/,
+            /^https?:\/\/cosplaykittys\.com\/([a-z]{2}\/)?g\/\d+/,
+            /^https?:\/\/titspie\.com\/([a-z]{2}\/)?photo\/\d+/,
         ],
         init: () => fun.createImgBox(".grid,div.row:has(>.bg-dark)", 2),
         imgs: "a[data-fancybox],.grid-item>img,.grid-item->img",
@@ -5438,6 +5469,21 @@
         css: "[class^='float']{display:none!important;}",
         category: "nsfw2"
     }, {
+        name: "Game-happy-life",
+        reg: () => fun.checkUrl({
+            h: "gamehappylife.top",
+            p: /^\/[^\/]+\/$/,
+            e: "figure.wp-block-image"
+        }),
+        imgs: () => fun.getImgA("figure.wp-block-image>a,figure.wp-block-image>img", ".page-links>a"),
+        button: [4],
+        insertImg: ["figure.wp-block-image", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: "h1.entry-title",
+        category: "nsfw1"
+    }, {
         name: "Cosplay69",
         host: ["www.cosplay69.net", "cosplay69.net"],
         reg: /^https?:\/\/(www\.)?cosplay69\.net\/[^\/]+\/$/,
@@ -5823,6 +5869,25 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         autoClick: ".s-hide",
         category: "nsfw1"
+    }, {
+        name: "Instagirl",
+        reg: () => fun.checkUrl({
+            h: "instagirl.net",
+            p: "/post/"
+        }),
+        init: () => fun.remove("#detect"),
+        imgs: () => fun.getImgA(".gallery img", ".pagination a:not([rel])"),
+        button: [4],
+        insertImg: [".gallery", 2],
+        customTitle: ".blog_details>h1",
+        category: "nsfw1"
+    }, {
+        name: "Instagirl AAD",
+        reg: () => fun.checkUrl({
+            h: "instagirl.net"
+        }),
+        init: () => fun.remove("#detect"),
+        category: "ad"
     }, {
         name: "MissKON.com",
         host: ["misskon.com"],
@@ -6529,7 +6594,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "力武靖写真集",
         host: ["lolita.lady.jp"],
-        reg: /^https?:\/\/lolita\.lady\.jp\/\w+\/book\.html$/,
+        reg: /^https?:\/\/lolita\.lady\.jp\/\w+\/book\.html/,
         imgs: ".grid img",
         button: [4],
         insertImg: [
@@ -6539,6 +6604,21 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         next: "div[align=right] a",
         prev: "div[align=left] a",
         customTitle: "#wrapper h3",
+        category: "nsfw2"
+    }, {
+        name: "Rikitake.com",
+        host: ["rikitake.com"],
+        reg: /^https?:\/\/rikitake\.com\/g\/\d+$/,
+        imgs: () => {
+            videoSrcArray = fun.gae("video>source").map(e => e.src);
+            return fun.gae("a[data-lightbox]");
+        },
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: () => fun.dt({
+            d: "|Rikitake.com"
+        }),
+        downloadVideo: true,
         category: "nsfw2"
     }, {
         name: "マブい女画像集",
@@ -7768,7 +7848,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         go: 1,
         customTitle: () => fun.gt(".tdb-title-text").replace(/\d+P[\d\s]+V|\d+P([\d\s\+P]+)?/, "").replaceAll("|", "-").trim(),
         css: ".td-a-ad{display:none!important;}",
-        downloadVideo: true,
+        //downloadVideo: true,
         category: "nsfw1"
     }, {
         name: "呦糖社",
@@ -8147,6 +8227,19 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         }),
         imgs: "a.fox-lightbox-gallery-item",
         customTitle: ".post-title",
+        category: "nsfw1"
+    }, {
+        name: "AI and Cosplay",
+        reg: () => fun.checkUrl({
+            h: "cosplaygirls.org",
+            p: "/view/"
+        }),
+        init: () => fun.remove("div:has(>.sticky-top)"),
+        imgs: "#photos img",
+        button: [4],
+        insertImg: ["#photos", 2],
+        customTitle: "h1",
+        css: ".col-12{flex:0 0 100%!important;max-width:100%!important}",
         category: "nsfw1"
     }, {
         name: "AniCos",
@@ -9150,13 +9243,17 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: ".topzanpage{display:none!important;}",
         category: "nsfw2"
     }, {
-        name: "GavPorn 相冊",
-        host: ["cav103.com"],
-        link: "https://cav103.com/albums/",
-        reg: /^https?:\/\/cav\d+\.com\/albums\/\d+\/\w+\//,
+        name: "久久热/GavPorn",
+        reg: () => fun.checkUrl({
+            h: [
+                "www.99re.com",
+                "cav103.com"
+            ],
+            p: "/albums/"
+        }),
         imgs: "a[data-fancybox-type]",
         button: [4],
-        insertImg: [".sponsor", 2],
+        insertImg: [".sponsor,.images", 2],
         customTitle: ".headline>h1",
         css: ".top{display:none!important}",
         category: "nsfw2"
@@ -10908,6 +11005,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             h: [
                 "www.nicohentai.com",
                 "www.freeacg.org",
+                "acg.taipei",
                 "nico.yt"
             ],
             p: /^\/(moeupup-\d-\d+\.html|showinfo-\d+-\d+-\d\.html)$/
@@ -12429,9 +12527,14 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: ".afs_ads,[data-type]{display:none!important}",
         category: "hcomic"
     }, {
-        name: "HentaiPaw圖片清單頁",
-        host: ["hentaipaw.com"],
-        reg: /^https?:\/\/hentaipaw\.com\/articles\/\d+/i,
+        name: "HentaiPaw圖片清單頁/Hentai-One圖片清單頁",
+        reg: () => fun.checkUrl({
+            h: [
+                "hentaipaw.com",
+                "ch.hentai-one.com"
+            ],
+            p: "/articles/"
+        }),
         init: async () => {
             await fun.waitEle("next-route-announcer");
             await fun.waitEle(".grid .group>img");
@@ -12451,9 +12554,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         thums: ".grid .group>img",
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0], 2, 3000
+            ["#FullPictureLoadMainImgBox", 0, "//div[@id='FullPictureLoadMainImgBox']/preceding-sibling::div[1]"], 2, 2000
         ],
-        go: 1,
         insertImgAF: () => {
             let loop = setInterval(() => {
                 if (!fun.ge(".FullPictureLoadImage")) {
@@ -12589,41 +12691,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         threading: 4,
         referer: "src",
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
-        category: "hcomic"
-    }, {
-        name: "Hentai-One圖片清單頁",
-        host: ["ch.hentai-one.com"],
-        reg: /^https?:\/\/ch\.hentai-one\.com\/articles\/\d+$/,
-        imgs: async () => {
-            let url = fun.gu(".detail-gallery-item a");
-            fun.showMsg(displayLanguage.str_05, 0);
-            return fun.fetchDoc(url).then(dom => {
-                let code = fun.gst("slides", dom);
-                let arr = JSON.parse(code.match(/\\"slides\\":([^\]]+\])/)[1].replaceAll("\\", ""));
-                return arr.map(e => e.src);
-            });
-        },
-        thums: ".detail-gallery-item img",
-        button: [4],
-        insertImg: [
-            [".detail-gallery", 2], 2, 3000
-        ],
-        insertImgAF: () => {
-            fun.css(".detail-gallery{display:none!important;}");
-            let loop = setInterval(() => {
-                if (!fun.ge(".FullPictureLoadImage")) {
-                    if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
-                    if (!hasTouchEvents) addFullPictureLoadFixedMenu();
-                    fun.immediateInsertImg();
-                }
-            }, 500);
-            setTimeout(() => clearInterval(loop), 10000);
-        },
-        customTitle: () => {
-            let text = fun.gt("h1.detail-ttl");
-            return text.indexOf("|") != -1 ? text.split("|")[1].trim() : text;
-        },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.article-button>a,.header-ad,.middle-ad{display:none!important;}",
         category: "hcomic"
     }, {
         name: "My Hentai Gallery圖片清單頁",
@@ -13454,7 +13521,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         name: "Comics",
         host: ["pixiv.app"],
         reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
-        imgs: ".bg-slate-100 img",
+        imgs: ".bg-slate-100 img,.shadow-md img",
         customTitle: "h1",
         category: "hcomic"
     }, {
@@ -14648,6 +14715,27 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title(" - 污污漫畫"),
         fetch: 1,
+        category: "hcomic"
+    }, {
+        name: "污漫天堂",
+        host: ["wumtt.com"],
+        reg: () => fun.checkUrl({
+            e: ".logo>a[title='污漫天堂']",
+            p: "/mangaread/"
+        }),
+        imgs: ".content>center>div>img",
+        button: [4],
+        insertImg: [".content>center>div:has(>img)", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章']",
+        prev: "//a[text()='上一章']",
+        customTitle: () => fun.dt({
+            s: ".content h1",
+            d: [
+                "《",
+                "》"
+            ]
+        }) + " - " + fun.gt(".content h2"),
         category: "hcomic"
     }, {
         name: "污污漫书/55漫書",
@@ -19900,7 +19988,7 @@ if (next) {
         };
     }
 
-    const fancyboxBlackList = () => siteData.fancybox?.blacklist === 1 ? true : false;
+    const fancyboxBlackList = () => siteData.fancybox?.blacklist === 1;
 
     switch (language) {
         case "zh-TW":
@@ -20003,7 +20091,7 @@ if (next) {
                 str_93: "並排模式",
                 str_94: "返回開頭了",
                 str_95: "前往下一集",
-                str_96: "已是最後下一集",
+                str_96: "已是最後一集",
                 str_97: "共",
                 str_98: "頁獲取出錯，建議反饋",
                 str_99: "重試第",
@@ -20145,7 +20233,7 @@ if (next) {
                 str_93: "并排模式",
                 str_94: "返回开头了",
                 str_95: "前往下一集",
-                str_96: "已是最后下一集",
+                str_96: "已是最后一集",
                 str_97: "共",
                 str_98: "页获取出错，建议反馈",
                 str_99: "重试第",
@@ -24139,6 +24227,7 @@ if (next) {
                     let num = (imgDivs[0].offsetHeight - img.height) / 2;
                     img.style.marginTop = `${num}px`;
                 }
+                await fun.delay(1200, 0);
                 imgDivs[0].scrollIntoView(scrollIntoViewOptions);
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
@@ -24234,7 +24323,14 @@ if (next) {
         if (isFetching || "eye" in siteData && siteData.eye === 0) return;
 
         let newWindowData = localStorage.getItem("newWindowData");
-        if (!newWindowData) localStorage.setItem("newWindowData", '{"ViewMode":0}');
+        if (newWindowData) {
+            newWindowData = JSON.parse(newWindowData);
+        } else {
+            localStorage.setItem("newWindowData", '{"ViewMode":0}');
+            newWindowData = {
+                "ViewMode": 0
+            }
+        }
 
         let imgSrcs;
         captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
@@ -24250,9 +24346,23 @@ if (next) {
                 alert("An error occurred\nUnable to use window.open()");
                 return;
             }
-            dom.write(`<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no"><title>${customTitle ?? document.title}</title><link rel="icon" href="/favicon.ico"></head><body style="text-align: center;"><div id="imgBox"></div></body></html>`);
+            dom.write(`
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no">
+        <title>${customTitle ?? document.title}</title>
+    </head>
+    <body style="text-align: center;">
+        <div id="imgBox"></div>
+    </body>
+</html>
+            `);
 
             newWindow.fun = fun;
+            newWindow.hasTouchEvents = hasTouchEvents;
+            newWindow.newWindowData = newWindowData;
+            newWindow.imgViewIndex = -1;
+            newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
 
             const newWindowStyle = dom.createElement("style");
@@ -24322,7 +24432,7 @@ img.single {
     margin: 0 auto;
     border: solid #fff;
 }
-img.sbs {
+img.small {
     display: inline-block;
     vertical-align: middle;
     width: auto;
@@ -24346,8 +24456,6 @@ img.sbs {
                 dom.head.appendChild(fancyboxStyle);
 
                 const JF_code = JqueryJS + FancyboxV5JS + `
-var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))();
-
 var scrollIntoViewOptions = {
     block: "center",
     behavior: "smooth",
@@ -24463,9 +24571,6 @@ function setFancybox() {
                 });
 
                 const newWindowScriptCode = `
-var newWindowDataViewMode = JSON.parse(localStorage.newWindowData).ViewMode;
-var imgViewIndex = -1;
-
 function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
@@ -24474,9 +24579,9 @@ function addFixedMenu() {
         text: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
         cfn: () => rtlImageLayout()
     }, {
-        id: "MenuSBSItem",
+        id: "MenuSmallItem",
         text: hasTouchEvents ? "Small Image" : "Small Image (2)",
-        cfn: () => SBSImageLayout()
+        cfn: () => smallImageLayout()
     }, {
         id: "MenuSinglePageItem",
         text: hasTouchEvents ? "Single Image" : "Single Image (1)",
@@ -24523,7 +24628,7 @@ document.addEventListener("keydown", event => {
     if (document.querySelector(".fancybox__container")) return;
     if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
     if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
-    if (event.code === "Numpad2" || event.key === "2") return SBSImageLayout();
+    if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
     if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
 });
 
@@ -24544,11 +24649,15 @@ document.addEventListener("keydown", event => {
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
-        if (imgViewIndex > imgs.length - 1) imgViewIndex = 0;
+        if (imgViewIndex > imgs.length - 1 && category === "comic") {
+            return window.close();
+        } else if (imgViewIndex > imgs.length - 1) {
+            imgViewIndex = 0;
+        }
         imgs.forEach(e => (e.style.border = ""));
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
-    } else if (event.code === "Delete" && newWindowDataViewMode === 3) {
+    } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
         const firstE = document.querySelector("#imgBox>*");
         if (firstE.style.display === "none") {
             firstE.style.display = "";
@@ -24572,8 +24681,7 @@ function createImgElement(mode) {
     window.scrollTo({
         top: 0
     });
-    newWindowDataViewMode = JSON.parse(localStorage.newWindowData).ViewMode;
-    if (newWindowDataViewMode === 3) {
+    if (newWindowData.ViewMode === 3) {
         document.querySelector("#imgBox").style.direction = "rtl";
     } else {
         document.querySelector("#imgBox").style.direction = "";
@@ -24602,34 +24710,38 @@ function createImgElement(mode) {
 }
 
 function defaultImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":0}');
+    newWindowData.ViewMode = 0;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
     createImgElement("default");
     document.querySelector("#MenuDefaultItem").classList.add("active");
 }
 
 function singleImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":1}');
+    newWindowData.ViewMode = 1;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
     createImgElement("single");
     document.querySelector("#MenuSinglePageItem").classList.add("active");
 }
 
-function SBSImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":2}');
-    createImgElement("sbs");
-    document.querySelector("#MenuSBSItem").classList.add("active");
+function smallImageLayout() {
+    newWindowData.ViewMode = 2;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    createImgElement("small");
+    document.querySelector("#MenuSmallItem").classList.add("active");
 }
 
 function rtlImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":3}');
+    newWindowData.ViewMode = 3;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
     createImgElement("default");
     document.querySelector("#MenuRTLItem").classList.add("active");
 }
 
-if (newWindowDataViewMode == 1) {
+if (newWindowData.ViewMode == 1) {
     singleImageLayout();
-} else if (newWindowDataViewMode == 2) {
-    SBSImageLayout();
-} else if (newWindowDataViewMode == 3) {
+} else if (newWindowData.ViewMode == 2) {
+    smallImageLayout();
+} else if (newWindowData.ViewMode == 3) {
     rtlImageLayout();
 } else {
     defaultImageLayout();
@@ -24685,10 +24797,6 @@ document.addEventListener("viewed", event => {
                 });
 
                 const newWindowScriptCode = `
-var hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))();
-var newWindowDataViewMode = JSON.parse(localStorage.newWindowData).ViewMode;
-var imgViewIndex = -1;
-
 function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
@@ -24697,9 +24805,9 @@ function addFixedMenu() {
         text: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
         cfn: () => rtlImageLayout()
     }, {
-        id: "MenuSBSItem",
+        id: "MenuSmallItem",
         text: hasTouchEvents ? "Small Image" : "Small Image (2)",
-        cfn: () => SBSImageLayout()
+        cfn: () => smallImageLayout()
     }, {
         id: "MenuSinglePageItem",
         text: hasTouchEvents ? "Single Image" : "Single Image (1)",
@@ -24746,7 +24854,7 @@ document.addEventListener("keydown", event => {
     if (document.querySelector(".viewer-container .viewer-canvas>img")) return;
     if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
     if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
-    if (event.code === "Numpad2" || event.key === "2") return SBSImageLayout();
+    if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
     if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
 });
 
@@ -24767,11 +24875,15 @@ document.addEventListener("keydown", event => {
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
-        if (imgViewIndex > imgs.length - 1) imgViewIndex = 0;
+        if (imgViewIndex > imgs.length - 1 && category === "comic") {
+            return window.close();
+        } else if (imgViewIndex > imgs.length - 1) {
+            imgViewIndex = 0;
+        }
         imgs.forEach(e => (e.style.border = ""));
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
-    } else if (event.code === "Delete" && newWindowDataViewMode === 3) {
+    } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
         const firstE = document.querySelector("#imgBox>*");
         if (firstE.style.display === "none") {
             firstE.style.display = "";
@@ -24795,8 +24907,7 @@ function createImgElement(mode) {
     window.scrollTo({
         top: 0
     });
-    newWindowDataViewMode = JSON.parse(localStorage.newWindowData).ViewMode;
-    if (newWindowDataViewMode === 3) {
+    if (newWindowData.ViewMode === 3) {
         document.querySelector("#imgBox").style.direction = "rtl";
     } else {
         document.querySelector("#imgBox").style.direction = "";
@@ -24820,34 +24931,38 @@ function createImgElement(mode) {
 }
 
 function defaultImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":0}');
+    newWindowData.ViewMode = 0;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
     createImgElement("default");
     document.querySelector("#MenuDefaultItem").classList.add("active");
 }
 
 function singleImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":1}');
+    newWindowData.ViewMode = 1;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
     createImgElement("single");
     document.querySelector("#MenuSinglePageItem").classList.add("active");
 }
 
-function SBSImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":2}');
-    createImgElement("sbs");
-    document.querySelector("#MenuSBSItem").classList.add("active");
+function smallImageLayout() {
+    newWindowData.ViewMode = 2;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    createImgElement("small");
+    document.querySelector("#MenuSmallItem").classList.add("active");
 }
 
 function rtlImageLayout() {
-    localStorage.setItem("newWindowData", '{"ViewMode":3}');
+    newWindowData.ViewMode = 3;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
     createImgElement("default");
     document.querySelector("#MenuRTLItem").classList.add("active");
 }
 
-if (newWindowDataViewMode == 1) {
+if (newWindowData.ViewMode == 1) {
     singleImageLayout();
-} else if (newWindowDataViewMode == 2) {
-    SBSImageLayout();
-} else if (newWindowDataViewMode == 3) {
+} else if (newWindowData.ViewMode == 2) {
+    smallImageLayout();
+} else if (newWindowData.ViewMode == 3) {
     rtlImageLayout();
 } else {
     defaultImageLayout();
@@ -26579,7 +26694,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     }
 
-    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotAsiaGirl,https://hotgirl.asia/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
+    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotAsiaGirl,https://hotgirl.asia/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://www.xofulitu521.xyz/xoxo\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
 
     const createFavorTextarea = () => {
         let tE = ge("#FullPictureLoadOptionsButtonParentDiv");
