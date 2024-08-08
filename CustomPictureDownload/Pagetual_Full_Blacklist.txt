@@ -420,6 +420,7 @@ https://asigirl.com/*
 *://cosblay.com/*.html
 *://*.cosblay.com/*/*.html
 *://trendszine.com/*.html
+*://*.hongimg.com/*/*.html
 *amazon-love.com*
 *://byoru.net/*/
 *huamaobizhi.com/*
@@ -658,6 +659,7 @@ https://cosermm.blog.2nt.com/*
 *://cosxuxi.club/*.html*
 *://redseats.org/gallery/*.cfg*
 *://allianceforrabiescontrol.org/*.html
+*://taa.kidsforums.com/*.html
 *://kkoreaactor.blogspot.com/*/*/*.html*
 *://wap.kunv.cc/*/*.html
 *://www.mayihz.com/tu*.html
@@ -688,6 +690,7 @@ https://cosermm.blog.2nt.com/*
 *://www.siwashi.xyz/*/*.html
 *://www.ccy.moe/*/*/*/*/*/*
 *://*zyktu.top/index.php/archives/*/
+*://instagirl.net/post/*
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
