@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.5.3
+// @version            2.5.4
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -215,10 +215,64 @@
             }
             return title;
         },
-        css: "body{overflow:unset!important}a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(a):not(*[class^=fancybox]),.photoMask,.banner_ad{display: none!important;}",
+        css: `
+body {
+    overflow: unset !important;
+}
+.push-slider,
+.article:has(>div>.media),
+div:has(>.links),
+a[clickmode=ad],
+a:has(>div>div>img),
+.photos>div.item,
+.jquery-modal.blocker.current,
+.push-top,
+.push-bottom,
+.slider-ad,
+.article.ad,
+.pager>.tips,
+.photoMask,
+.banner_ad {
+    display: none !important;
+}
+        `,
         topButton: true,
         downloadVideo: true,
         category: "nsfw2"
+    }, {
+        name: "小黃書/8色人體攝影 AD",
+        reg: () => fun.checkUrl({
+            h: [
+                /^([a-z]{2}\.)?xchina\.(co|biz|life|fun)$/,
+                /^(tw\.)?8se\.me$/
+            ]
+        }),
+        init: () => fun.addMutationObserver(() => fun.remove("[class*='exoclick']")),
+        css: `
+body {
+    overflow: unset !important;
+}
+[class*='exoclick'],
+.push-slider,
+.article:has(>div>.media),
+.article:has(>.like-960x80),
+div:has(>.links),
+a[clickmode=ad],
+a:has(>div>div>img),
+.photos>div.item,
+.jquery-modal.blocker.current,
+.push-top-container,
+.push-top,
+.push-bottom,
+.slider-ad,
+.article.ad,
+.pager>.tips,
+.photoMask,
+.banner_ad {
+    display: none !important;
+}
+        `,
+        category: "ad"
     }, {
         name: "紳士会所",
         host: ["www.hentaiclub.net"],
@@ -358,7 +412,6 @@
         next: ".prevNews>a",
         prev: ".nextNews>a",
         customTitle: "h1",
-        css: "body>section[id],#footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
         category: "nsfw2"
     }, {
         name: "Hit-x-Hot格式",
@@ -596,7 +649,7 @@
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".item_title>h1",
         //threading: 4,
-        css: ".item_info>a,p[align='center']:has(>img),.item_title>div[id],.item_title>a,.content br,.bottom_fixed,.update_area_lists>div[id],body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
+        css: ".item_info>a,p[align='center']:has(>img),.item_title>div[id],.item_title>a,.content br,.bottom_fixed,.update_area_lists>div[id]{display:none!important}",
         category: "nsfw1"
     }, {
         name: "极品性感美女",
@@ -625,7 +678,7 @@
         prev: ".article-nav-prev>a[href$=html]",
         customTitle: ".article-title",
         //threading: 4,
-        css: ".article-header>div[id],.article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id],body>.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(a):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
+        css: ".article-header>div[id],.article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id]{display:none!important}",
         category: "nsfw1"
     }, {
         name: "爱美女网",
@@ -991,8 +1044,13 @@
         button: [4],
         insertImg: [".intro", 2],
         customTitle: "h1",
-        css: "@media only screen and (max-width:640px){.paragraph .intro img{width:100%!important}}.banner,.banner_ad,.push-top,.push-bottom{display:none!important;}",
+        css: "@media only screen and (max-width:640px){.paragraph .intro img{width:100%!important}}.article:has(>div>.media),.banner,.banner_ad,.push-top,.push-bottom{display:none!important;}",
         category: "nsfw1"
+    }, {
+        name: "秀人网 AD",
+        reg: /^https?:\/\/xiurenwang\.me/,
+        css: ".article:has(>div>.media),.banner,.banner_ad,.push-top,.push-bottom{display:none!important;}",
+        category: "ad"
     }, {
         name: "秀人图",
         host: ["www.ixiuren.com", "www.xiurento.com", "www.aixiuren.com", "www.aixiurentu.com", "www.aixiurenwang.com"],
@@ -1746,7 +1804,7 @@
         category: "nsfw2"
     }, {
         name: "CosBlay/風流雜誌/虹圖",
-        host: ["cosblay.com", "trendszine.com"],
+        host: ["cosblay.com", "trendszine.com", "www.hongimg.com"],
         reg: [
             /^https?:\/\/(cosblay\.com|trendszine\.com|www\.tiplogo\.com)\/\d+\.html/i,
             /^https?:\/\/[a-z]{2}\.cosblay\.com\/\d+\/[^\.]+\.html$/,
@@ -3520,7 +3578,7 @@
             v: 3,
             insertLibrarys: 1
         },
-        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#qpai,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,#xtjpp,.interestline+.nav~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none !important}",
+        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#qpai,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,#xtjpp,#divftst,.interestline+.nav~span,.interestline+.nav~br{display:none !important}",
         category: "nsfw2"
     }, {
         name: "魅狸图片网/美女私房照/看妹图",
@@ -4638,7 +4696,7 @@
     }, {
         name: "推图网",
         reg: /^https?:\/\/(www|m)\.tuiimg\.com\/meinv\/\d+\//,
-        link: "https://www.tuiimg.com/meinv/",
+        link: "https://m.tuiimg.com/meinv/",
         init: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let url = fun.url.replace("www.tuiimg.com", "m.tuiimg.com");
@@ -4649,7 +4707,7 @@
                 }
             }).then(dom => {
                 let [, , , max, , next] = JSON.parse(fun.gst("_pd", dom).match(/_pd[\s=]+([^;]+)/)[1]);
-                let [path] = fun.ge("#content>img", dom).src.match(/.+\//);
+                let [path] = fun.ge("#content img", dom).src.match(/.+\//);
                 globalImgArray = fun.arr(max).map((_, i) => path + (i + 1) + ".jpg");
                 if (isNumber(next)) {
                     tempNextLink = fun.url.replace(/\d+/, next);
@@ -4741,14 +4799,13 @@
         customTitle: () => fun.dt({
             s: "#main>h1",
             d: [
-                /\s?\d+P\+?\d+V/,
                 /\(\d+[\w\s\\\/\.+-／]+\)?|\[\d+[\w\s\\\/\.+-／]+\]?|（\d+[\w\s\\\/\.+-／]+）?|【\d+[\w\s\\\/\.+-／]+】?|\d+P/gi,
+                /\s?\d+P\+?\d+V/,
                 /未分类性感写真|^.+人体|AI图区/,
                 /（\d+月\d+打赏群(自购)?资源）/gi,
                 /🐾/g
             ]
         }),
-        css: "input[id]{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "美图鉴赏/美图鉴赏ACG",
@@ -8651,7 +8708,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             ["#FullPictureLoadMainImgBox", 0, ".images"], 2
         ],
         customTitle: ".headline>h1",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.block-album{display:block!important}.block-album>.table,.top,.footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}",
+        css: "#FullPictureLoadEnd{color:rgb(255,255,255)}.block-album{display:block !important}.block-album>.table,.top,.footer~*:not([id^='pv-'],[class^='pv-'],#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]){display:none !important}",
         category: "nsfw2"
     }, {
         name: "Xasiat 自動翻頁",
@@ -10158,6 +10215,46 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         }) && hasTouchEvents,
         init: () => fun.createImgBox("div.p222308", 2),
         imgs: "div.p222308>a:has(>img:not([src^='/temp'])):has(>img:not([src^='/thumbs']))",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        category: "nsfw2"
+    }, {
+        name: "JavTube/PureJapanese/ThumbNow/69DV/JapaneseThumbs/AsiaUncensored",
+        reg: () => fun.checkUrl({
+            h: [
+                "javtube.com",
+                "purejapanese.com",
+                "thumbnow.com",
+                "69dv.com",
+                "japanesethumbs.com",
+                "asiauncensored.com"
+            ],
+            e: [
+                ".L664 a:has(>img:not([src^='/thumbs/']))",
+                ".L664 a>img:not([src^='/thumbs/'])"
+            ]
+        }),
+        init: () => fun.createImgBox(".L664"),
+        imgs: () => {
+            let pagesE = fun.ge(".matchlinks");
+            let pages = /\/\d+\/$/.test(fun.lp);
+            if (pagesE && pages) {
+                let url = fun.lp.replace(/\/\d+\/$/, "");
+                let max;
+                let last = fun.ge("//div[@class='matchlinks']/a[text()='Last']");
+                if (last) {
+                    let link = fun.gu("//div[@class='matchlinks']/a[text()='Last']");
+                    [, max] = link.match(/\/(\d+)\/$/);
+                } else {
+                    max = fun.gt(".matchlinks>a:last-child", 2);
+                }
+                let links = fun.arr(max).map((_, i) => `${url}/${(i + 1)}/`);
+                return fun.getImgA(".L664 a:has(>img:not([src^='/thumbs/']))", links);
+            } else {
+                return fun.gae(".L664 a:has(>img:not([src^='/thumbs/']))");
+            }
+        },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
@@ -11710,7 +11807,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         customTitle: ".middle-title",
         go: 1,
-        css: "#FullPictureLoadMainImgBox{max-width:1140px;margin-left:auto;margin-right:auto}ins,#doujin-page-footer-ban-agsy,#main-content+div~*:not(#FullPictureLoadOptions,#FullPictureLoad,#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage,.FullPictureLoadMsg){display:none!important;}",
+        css: "#FullPictureLoadMainImgBox{max-width:1140px;margin-left:auto;margin-right:auto}ins,#doujin-page-footer-ban-agsy,#main-content+div~*:not([id^='pv-'],[class^='pv-'],#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]){display:none!important;}",
         category: "hcomic"
     }, {
         name: "HentaiFox圖片清單頁",
@@ -12564,7 +12661,14 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             }, 500);
             setTimeout(() => clearInterval(loop), 10000);
         },
-        customTitle: () => fun.gt("h1.text-wrap").replace(/\/|\|/g, " "),
+        customTitle: () => {
+            if (fun.lh === "ch.hentai-one.com") {
+                let text = fun.gt("h1.text-wrap");
+                return text.includes("|") ? text.split("|")[1].trim() : text;
+            } else {
+                return fun.gt("h1.text-wrap").replace(/\/|\|/g, " ");
+            }
+        },
         css: "#article-details+.mx-auto,.container:has(>div>script),#button-group a{display:none!important;}#article-details{margin-top:5rem!important}",
         category: "hcomic"
     }, {
@@ -13840,7 +13944,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         next: "#content .g1-teaser-next",
         prev: "#content .g1-teaser-prev",
         customTitle: "h1.entry-title",
-        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.code-block,#secondary{display:none!important}",
+        css: "#simple-banner,.touchy-wrapper,.touchy-wrapper~*:not([id^='pv-'],[class^='pv-'],.pagetual_tipsWords,#pagetual-sideController,#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]),.code-block,#secondary{display:none!important}",
         category: "hcomic"
     }, {
         name: "18H漫画",
@@ -14046,7 +14150,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             s: "#content h1",
             d: /\[\d+P\]|〈|〉/gi
         }),
-        css: "body>*:not(#head,.container,#footer,#tbox,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,[class^='fancybox']){display:none!important;}",
+        css: "body>*:not(#head,.container,#footer,#tbox,[id^='pv-'],[class^='pv-'],#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]){display:none!important;}",
         category: "hcomic"
     }, {
         name: "那露漫画",
@@ -16492,7 +16596,7 @@ if (next) {
             fun.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
             _unsafeWindow._0x5097 = null;
         },
-        css: "#images,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}#action li{width:50%!important}",
+        css: "#images,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-'],[class^='pv-'],.pagetual_tipsWords,#pagetual-sideController,#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]){display:none!important}#action li{width:50%!important}",
         category: "comic"
     }, {
         name: "漫畫園",
@@ -16542,7 +16646,7 @@ if (next) {
             pt20191007();
             fun.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
         },
-        css: "#images,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]){display:none!important}#action li{width:50%!important}",
+        css: "#images,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not([id^='pv-'],[class^='pv-'],.pagetual_tipsWords,#pagetual-sideController,#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]){display:none!important}#action li{width:50%!important}",
         category: "comic"
     }, {
         name: "古风漫画网",
@@ -16592,7 +16696,7 @@ if (next) {
             fun.script(code, 0, 1);
             fun.picPreload(obj.imgs(), title, "next");
         },
-        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.footer):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
+        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.footer):not([id^='pv-'],[class^='pv-'],.pagetual_tipsWords,#pagetual-sideController,#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -16656,7 +16760,7 @@ if (next) {
             hide: ".comic-comment,.chapter-content+.imgBox",
             preloadNextPage: 1
         },
-        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.footer):not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
+        css: ".nav-pagination,.pageSelect,.nav-pagination,.img_land_prev,.img_land_next,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*:not(.footer):not([id^='pv-'],[class^='pv-'],.pagetual_tipsWords,#pagetual-sideController,#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]),.img_info{display:none!important}#action li{width:50%!important}",
         category: "comic autoPager"
     }, {
         name: "漫画456",
@@ -16855,7 +16959,7 @@ if (next) {
         prev: 1,
         customTitle: (dom = document) => fun.title("在线", 1, dom),
         preloadNext: async (nextDoc, obj) => fun.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
-        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox]),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
+        css: ".action-list li{width:50% !important}div[style*='text-align: left;'],.UnderPage~*:not([id^='pv-'],[class^='pv-'],.pagetual_tipsWords,#pagetual-sideController,#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}body{padding:0!important}",
         category: "comic"
     }, {
         name: "优酷漫画",
@@ -19161,7 +19265,7 @@ if (next) {
             _unsafeWindow.Function.prototype.constructor = () => {};
             //await fun.scrollEles(".img-content img", 200);
             fun.css(".ad-area{opacity:0!important;}#cp_img>.two-ad-area:nth-child(1)>.ad-area,#cp_img>.two-ad-area:nth-child(2){display:none!important}");
-            fun.remove(".ad-area,body>div[id]:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords):not(#comicRead):not(#fab):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(#FullPictureLoadOptions):not(a):not(#FullPictureLoadFixedMenu):not(*[class^=fancybox])", 5000);
+            fun.remove(".ad-area,body>div[id]:not([id^='pv-'],[class^='pv-'],.pagetual_tipsWords,#pagetual-sideController,#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox])", 5000);
             let lastScrollTop = 0;
             document.addEventListener("scroll", event => {
                 let st = event.srcElement.scrollingElement.scrollTop;
@@ -24421,6 +24525,7 @@ img.default {
     height: auto;
     max-width: 98vw;
     max-height: 99vh;
+    min-height: 99vh;
     border: solid #fff;
 }
 img.single {
