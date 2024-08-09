@@ -1,17 +1,17 @@
 <h1>測試通過環境：</h1>
 <pre>
-2024/06/04
+2024/08/09
 PC
-Chrome 125.0.6422.142 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
-Edge 125.0.2535.85 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
-Cent Browser  5.1.1130.82 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
-FireFox 126.0.1 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
+Chrome 127.0.6533.100 + Tampermonkey 5.2.3 or ScriptCat 0.16.5
+Edge 127.0.2651.98 + Tampermonkey 5.2.3 or ScriptCat 0.16.5
+Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
+FireFox 129.0 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
 Android
-Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or ScriptCat 0.16.3
-Firefox for Android 126.0.1 + Tampermonkey 5.1.1
+Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
+Firefox for Android 129.0 + Tampermonkey 5.1.1
 Waterfox for Android 1.0.7 + Tampermonkey 5.1.1
-XBrowser 4.6.2
-ViaBrowser 5.6.1
+XBrowser 4.8.0
+ViaBrowser 5.8.1
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <p>PS：暴力猴Violentmonkey不兼容Fancybox5會報錯，連Android上的Via瀏覽器、X瀏覽器都能正常引入使用Fancybox5了。</p>
@@ -24,6 +24,7 @@ ViaBrowser 5.6.1
             <strong>「 點擊展開查看依賴庫 」</strong>
         </kbd>
     </summary>
+<br>
 <pre>
 cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
@@ -368,7 +369,7 @@ fun.gae(selector, doc)
             return false
         },
         showTitle: 0, //0不顯示下一頁的標題分隔條，顯示則省略。
-        pageNum: "span.current", //頁數文字選擇器，標題文字簡略為Page 2
+        pageNum: "span.current", //頁數文字選擇器，標題文字簡略為Page n
         pageNum: (dom) => {
             return num;
         },
