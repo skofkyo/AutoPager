@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.5.5
+// @version            2.5.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -19123,10 +19123,11 @@ if (next) {
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
                     fun.ge(".view-title").style.top = "-60px";
-                } else {
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
                     fun.ge(".view-title").style.top = "0px";
+                    lastScrollTop = st;
                 }
-                lastScrollTop = st;
             });
         },
         imgs: () => {
@@ -19273,12 +19274,13 @@ if (next) {
                     $(".view-fix-top-bar").attr("style", "top: -60px;");
                     $(".view-fix-bottom-bar").attr("style", "bottom: -60px;");
                     $(".detail-comment-fix-bottom").hide("fast");
-                } else {
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
                     $(".view-fix-top-bar").attr("style", "top: 0px;");
                     $(".view-fix-bottom-bar").attr("style", "bottom: 0px;");
                     $(".detail-comment-fix-bottom").show("fast");
+                    lastScrollTop = st;
                 }
-                lastScrollTop = st;
             });
             await fun.waitEle(".content-img.lazy_img[src^=blob]");
             if (autoScrollAllElement === 1) _this.scrollEle();
@@ -23438,11 +23440,12 @@ if (next) {
                 if (st > lastScrollTop) {
                     $("h4.header").attr("style", "top: -30px;");
                     $("div.footer").attr("style", "bottom: -41px;");
-                } else {
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
                     $("h4.header").removeAttr("style");
                     $("div.footer").removeAttr("style");
+                    lastScrollTop = st;
                 }
-                lastScrollTop = st;
             });
             fun.run("$(document).off();");
         },
@@ -23485,10 +23488,11 @@ if (next) {
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
                     $(".top-bar").attr("style", "top: -74px;");
-                } else {
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
                     $(".top-bar").removeAttr("style");
+                    lastScrollTop = st;
                 }
-                lastScrollTop = st;
             });
         },
         XmanhuaUI: () => {
@@ -23520,13 +23524,14 @@ if (next) {
                     $(".header").attr("style", "top: -64px;");
                     $(".reader-bottom").addClass("toolbar");
                     $(".reader-bottom").attr("style", "bottom: -50px;");
-                } else {
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
                     $(".header").removeClass("toolbar");
                     $(".header").removeAttr("style");
                     $(".reader-bottom").removeClass("toolbar");
                     $(".reader-bottom").removeAttr("style");
+                    lastScrollTop = st;
                 }
-                lastScrollTop = st;
             });
         },
         _8ComicM_UI: () => {
@@ -24523,8 +24528,6 @@ img.default {
     vertical-align: middle;
     width: auto;
     height: auto;
-    max-width: 98vw;
-    max-height: 99vh;
     border: solid #fff;
 }
 img.single {
@@ -24720,11 +24723,12 @@ if (hasTouchEvents) {
         if (st > lastScrollTop) {
             scroll = "down";
             menu.style.display = "none";
-        } else {
+            lastScrollTop = st;
+        } else if (st < lastScrollTop - 20) {
             scroll = "up";
             menu.style.display = "";
+            lastScrollTop = st;
         }
-        lastScrollTop = st;
     });
 }
 
@@ -24762,12 +24766,10 @@ document.addEventListener("keydown", event => {
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
-        const firstE = document.querySelector("#imgBox>*");
-        if (firstE.style.display === "none") {
-            firstE.style.display = "";
-        } else {
-            firstE.style.display = "none";
-        }
+        const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
+        hideE.style.display = "none";
+    } else if (event.code === "Enter" && newWindowData.ViewMode === 3) {
+        [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
     } else {
         imgViewIndex = -1;
     }
@@ -24779,6 +24781,34 @@ function loadImgs() {
     const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
     fun.singleThreadLoadImgs(oddNumberImgs);
     fun.singleThreadLoadImgs(evenNumberImgs);
+}
+
+function aspectRatio() {
+    const verticalScreen = window.innerHeight / window.innerWidth > 1;
+    const imgs = [...document.images];
+    imgs.forEach(img => {
+        if (verticalScreen && img.className === "default") {
+            img.style.minWidth = "98vw";
+            img.style.maxWidth = "98vw";
+            img.style.minHeight = "";
+            img.style.maxHeight = "";
+        } else if (img.className === "default") {
+            img.style.minHeight = "99vh";
+            img.style.maxHeight = "99vh";
+            img.style.minWidth = "";
+            img.style.maxWidth = "98vw";
+        }
+    });
+}
+
+if (hasTouchEvents) {
+    window.addEventListener("deviceorientation", () => {
+        aspectRatio();
+    });
+} else {
+    window.addEventListener("resize", () => {
+        aspectRatio();
+    });
 }
 
 function createImgElement(mode) {
@@ -24793,7 +24823,6 @@ function createImgElement(mode) {
     imgViewIndex = -1;
     [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
     document.querySelector("#imgBox").innerHTML = "";
-    const verticalScreen = window.innerHeight > window.innerWidth;
     const imgElements = newImgs.map((src, i, arr) => {
         let a = document.createElement("a");
         a.href = src;
@@ -24803,17 +24832,13 @@ function createImgElement(mode) {
         img.className = mode;
         img.src = "${loading_bak}";
         img.dataset.src = src;
-        if (verticalScreen && mode === "default") {
-            img.style.minWidth = "98vw";
-        } else if (!verticalScreen && mode === "default") {
-            img.style.minHeight = "99vh";
-        }
         a.appendChild(img);
         return a;
     });
     document.querySelector("#imgBox").append(...imgElements);
     setFancybox();
     loadImgs();
+    aspectRatio();
     setTimeout(() => {
         [...document.images].forEach(img => fun.imagesObserver.observe(img));
     }, 1000);
@@ -24952,11 +24977,12 @@ if (hasTouchEvents) {
         if (st > lastScrollTop) {
             scroll = "down";
             menu.style.display = "none";
-        } else {
+            lastScrollTop = st;
+        } else if (st < lastScrollTop - 20) {
             scroll = "up";
             menu.style.display = "";
+            lastScrollTop = st;
         }
-        lastScrollTop = st;
     });
 }
 
@@ -24994,12 +25020,10 @@ document.addEventListener("keydown", event => {
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
-        const firstE = document.querySelector("#imgBox>*");
-        if (firstE.style.display === "none") {
-            firstE.style.display = "";
-        } else {
-            firstE.style.display = "none";
-        }
+        const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
+        hideE.style.display = "none";
+    } else if (event.code === "Enter" && newWindowData.ViewMode === 3) {
+        [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
     } else {
         imgViewIndex = -1;
     }
@@ -25011,6 +25035,30 @@ function loadImgs() {
     const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
     fun.singleThreadLoadImgs(oddNumberImgs);
     fun.singleThreadLoadImgs(evenNumberImgs);
+}
+
+function aspectRatio() {
+    const verticalScreen = window.innerHeight / window.innerWidth > 1;
+    const imgs = [...document.images];
+    imgs.forEach(img => {
+        if (verticalScreen && img.className === "default") {
+            img.style.minWidth = "98vw";
+            img.style.minHeight = "";
+        } else if (img.className === "default") {
+            img.style.minHeight = "99vh";
+            img.style.minWidth = "";
+        }
+    });
+}
+
+if (hasTouchEvents) {
+    window.addEventListener("deviceorientation", () => {
+        aspectRatio();
+    });
+} else {
+    window.addEventListener("resize", () => {
+        aspectRatio();
+    });
 }
 
 function createImgElement(mode) {
@@ -25025,22 +25073,17 @@ function createImgElement(mode) {
     imgViewIndex = -1;
     [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
     document.querySelector("#imgBox").innerHTML = "";
-    const verticalScreen = window.innerHeight > window.innerWidth;
     const imgElements = newImgs.map((src, i, arr) => {
         let img = document.createElement("img");
         img.className = mode;
         img.src = "${loading_bak}";
         img.dataset.src = src;
-        if (verticalScreen && mode === "default") {
-            img.style.minWidth = "98vw";
-        } else if (!verticalScreen && mode === "default") {
-            img.style.minHeight = "99vh";
-        }
         return img;
     });
     document.querySelector("#imgBox").append(...imgElements);
     ViewerJsInstance.update();
     loadImgs();
+    aspectRatio();
     setTimeout(() => {
         [...document.images].forEach(img => fun.imagesObserver.observe(img));
     }, 1000);
