@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.5.6
+// @version            2.5.7
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5418,6 +5418,57 @@ a:has(>div>div>img),
         customTitle: "h1.entry-title",
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
+    }, {
+        name: "Erohere",
+        reg: () => fun.checkUrl({
+            h: "erohere.online",
+            p: /^\/erohere\d+\/$/,
+        }),
+        init: () => fun.createImgBox("#album_masonry", 2),
+        imgs: async () => {
+            const getImgSrcs = urls => {
+                fun.showMsg(displayLanguage.str_01, 0);
+                let fetchNum = 0;
+                return urls.map((url, i, arr) => {
+                    return fun.fetchDoc(url).then(dom => {
+                        fun.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${arr.length}`, 0);
+                        return location.origin + fun.attr(".img_responsive>img", "srcset", dom).split(",")[0].replace(/\s{1,2}\d+w$/, "");
+                    });
+                });
+            };
+            let pages = fun.ge(".pagelist");
+            if (pages) {
+                let albumE = [];
+                let max = fun.gt(".pagelist .next", 2);
+                let url = location.pathname;
+                let pagelinks = [url];
+                for (let i = 2; i <= max; i++) {
+                    pagelinks.push(url + i);
+                }
+                fun.showMsg(displayLanguage.str_16, 0);
+                let fetchNum = 0;
+                let pageRes = pagelinks.map((url, i, arr) => {
+                    return fun.fetchDoc(url).then(dom => {
+                        fun.showMsg(`${displayLanguage.str_17}${fetchNum+=1}/${arr.length}`, 0);
+                        return fun.ge("#album_masonry", dom);
+                    });
+                });
+                albumE = await Promise.all(pageRes);
+                thumbnailSrcArray = albumE.map(e => fun.getImgSrcArr("img", e))?.flat();
+                let piclinks = albumE.map(e => fun.gau("a", e))?.flat();
+                return getImgSrcs(piclinks);
+            } else {
+                thumbnailSrcArray = fun.getImgSrcArr("#album_masonry img");
+                let piclinks = fun.gau("#album_masonry a");
+                return getImgSrcs(piclinks);
+            }
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#album_masonry,.pagelist-container"], 2
+        ],
+        customTitle: ".album_head>h1",
+        category: "nsfw1"
     }, {
         name: "yoel.uno",
         reg: /^https?:\/\/yoel\.uno\/[^\/]+\/$/,
@@ -22327,20 +22378,13 @@ if (next) {
             debug("\nfun.insertImg()插入圖片最後確認 srcArr", srcArr);
             let padStart = String(srcArr.length).length;
             for (let i = 0; i < srcArr.length; i++) {
-                let a = document.createElement("a");
-                if (options.fancybox == 1 && !blackList) {
-                    a.id = "imgLocationOriginal_" + i;
-                    a.dataset.fancybox = "FullPictureLoadImageOriginal";
-                    thumbnailSrcArray.length > 0 && thumbnailSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailSrcArray[i] : a.dataset.thumb = srcArr[i];
-                    a.href = srcArr[i];
-                }
                 let img = new Image();
                 img.alt = `no.${i + 1}`;
                 img.dataset.index = i;
                 img.className = "FullPictureLoadImage";
                 if (!!siteData.referrerpolicy) img.referrerPolicy = siteData.referrerpolicy;
                 //if (/vipr\.im/.test(srcArr[i])) img.referrerPolicy = "no-referrer";
-                if (options.zoom <= 10 && options.zoom > 0) {
+                if (options.zoom <= 10 && options.zoom > 0 && (blackList || options.fancybox !== 1)) {
                     img.style.width = `${options.zoom * 10}%`;
                     img.style.height = "auto";
                 }
@@ -22364,6 +22408,15 @@ if (next) {
                     };
                 }
                 if (options.fancybox == 1 && !blackList) {
+                    let a = document.createElement("a");
+                    a.id = "imgLocationOriginal_" + i;
+                    a.dataset.fancybox = "FullPictureLoadImageOriginal";
+                    thumbnailSrcArray.length > 0 && thumbnailSrcArray.length == noVideoNum ? a.dataset.thumb = thumbnailSrcArray[i] : a.dataset.thumb = srcArr[i];
+                    a.href = srcArr[i];
+                    if (options.zoom <= 10 && options.zoom > 0) {
+                        a.style.width = `${options.zoom * 10}%`;
+                        a.style.height = "auto";
+                    }
                     a.appendChild(img);
                     fragment.appendChild(a);
                 } else {
@@ -24164,7 +24217,16 @@ if (next) {
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             if (options.zoom > 0) {
-                gae(".FullPictureLoadImage:not(.small)").forEach(img => (img.style.width = `${options.zoom * 10}%`));
+                gae(".FullPictureLoadImage:not(.small)").forEach(img => {
+                    if (fancyboxBlackList() || options.fancybox !== 1) {
+                        img.style.width = `${options.zoom * 10}%`;
+                    } else {
+                        let pE = img.parentNode;
+                        if (pE.nodeName === "A") {
+                            pE.style.width = `${options.zoom * 10}%`;
+                        }
+                    }
+                });
                 fun.showMsg(`${displayLanguage.str_60} ${options.zoom * 10}%`);
             }
         }
@@ -24180,7 +24242,16 @@ if (next) {
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             if (options.zoom > 0 && options.zoom <= 10) {
-                gae(".FullPictureLoadImage:not(.small)").forEach(img => (img.style.width = `${options.zoom * 10}%`));
+                gae(".FullPictureLoadImage:not(.small)").forEach(img => {
+                    if (fancyboxBlackList() || options.fancybox !== 1) {
+                        img.style.width = `${options.zoom * 10}%`;
+                    } else {
+                        let pE = img.parentNode;
+                        if (pE.nodeName === "A") {
+                            pE.style.width = `${options.zoom * 10}%`;
+                        }
+                    }
+                });
                 fun.showMsg(`${displayLanguage.str_60} ${options.zoom * 10}%`);
             }
         }
@@ -25200,7 +25271,13 @@ if (newWindowData.ViewMode == 1) {
             ge("#FullPictureLoadOptionsZoom").value = options.zoom;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
-            gae(".FullPictureLoadImage:not(.small)").forEach(e => (e.style.width = ""));
+            gae(".FullPictureLoadImage:not(.small)").forEach(img => {
+                img.style.width = "";
+                let pE = img.parentNode;
+                if (pE.nodeName === "A") {
+                    pE.style.width = "";
+                }
+            });
             fun.showMsg(displayLanguage.str_61);
         }
     };
@@ -25850,8 +25927,8 @@ ${msgPosCss}
 a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadImageSmall] {
     position: unset !important;
     padding: 0 !important;
-    margin: 0 !important;
-    display: unset !important;
+    margin: 0 auto!important;
+    display: block !important;
 }
 
 #FullPictureLoadEnd {
