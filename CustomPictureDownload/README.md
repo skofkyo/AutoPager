@@ -1,6 +1,6 @@
 <h1>測試通過環境：</h1>
 <pre>
-2024/08/09
+2024/08/12
 PC
 Chrome 127.0.6533.100 + Tampermonkey 5.2.3 or ScriptCat 0.16.5
 Edge 127.0.2651.98 + Tampermonkey 5.2.3 or ScriptCat 0.16.5
@@ -8,8 +8,8 @@ Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
 FireFox 129.0 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
 Android
 Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
-Firefox for Android 129.0 + Tampermonkey 5.1.1
-Waterfox for Android 1.0.7 + Tampermonkey 5.1.1
+Firefox for Android 129.0 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
+Waterfox for Android 1.0.8.2 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
 XBrowser 4.8.0
 ViaBrowser 5.8.1
 </pre>
@@ -1098,7 +1098,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/08/08 16:51</p>
+<p>2024/08/14 0:38</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -3325,6 +3325,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://instagirl.net/">Instagirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://erohere.online/">Erohere</a>
                 </td>
                 <td></td>
             </tr>
