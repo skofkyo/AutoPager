@@ -1,4 +1,4 @@
-2024/08/08 16:51
+2024/08/14 0:38
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -891,6 +891,9 @@ Love Asian Babes
 
 Byoru
 *://byoru.net/*/
+
+Erohere
+*://erohere.online/erohere*/
 
 花猫壁纸
 *huamaobizhi.com/*
