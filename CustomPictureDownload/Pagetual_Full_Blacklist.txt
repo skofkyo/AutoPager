@@ -691,6 +691,7 @@ https://cosermm.blog.2nt.com/*
 *://www.ccy.moe/*/*/*/*/*/*
 *://*zyktu.top/index.php/archives/*/
 *://instagirl.net/post/*
+*://erohere.online/erohere*/
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
