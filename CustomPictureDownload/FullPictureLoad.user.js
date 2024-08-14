@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.5.7
+// @version            2.6.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -6654,6 +6654,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         next: "a.nav_link_l",
         prev: "a.f_row_r",
         customTitle: "h1.post_title",
+        setFancybox: true,
         category: "nsfw2"
     }, {
         name: "裏ピク",
@@ -6661,16 +6662,6 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/www\.urapic\.com\/blog-entry-\d+\.html$/,
         imgs: "//div[@class='entry-body']//a[img[@title]] | //div[@class='entry_body']//a[img[@title]]",
         customTitle: () => fun.gt(".entry-title,.entry_title>h1").replace(/[ｗ]+$/, ""),
-        category: "nsfw2"
-    }, {
-        name: "Gravure Idols",
-        host: ["gravureidols.top"],
-        reg: /^https?:\/\/gravureidols\.top\/\d+\/\d+\/\d+\/[^/]+\//,
-        imgs: ".content-inner p>a",
-        autoDownload: [0],
-        next: "a.prev-post",
-        prev: "a.next-post",
-        customTitle: ".jeg_post_title",
         category: "nsfw2"
     }, {
         name: "復刻書林",
@@ -23462,6 +23453,96 @@ if (next) {
                 return img;
             });
         },
+        setFancybox: (selector) => {
+            const loadSrcs = (srcArr) => {
+                const oddNumberSrcs = srcArr.filter((img, index) => index % 2 == 0);
+                const evenNumberSrcs = srcArr.filter((img, index) => index % 2 != 0);
+                fun.singleThreadLoadSrcs(oddNumberSrcs);
+                fun.singleThreadLoadSrcs(evenNumberSrcs);
+            };
+            fun.gae(selector).forEach(e => {
+                if (e.nodeName === "IMG") {
+                    let a = document.createElement("a");
+                    a.href = e.src;
+                    a.dataset.fancybox = "gallery";
+                    e.parentNode.insertBefore(a, e);
+                    a.appendChild(e);
+                } else if (e.nodeName === "A") {
+                    e.dataset.fancybox = "gallery";
+                    let img = e.querySelector("img");
+                    let src = img.dataset.src ?? img.src;
+                    e.dataset.thumb = src;
+                }
+            });
+            let srcs = fun.getImgSrcArr(selector);
+            loadSrcs(srcs);
+            let gallery = fun.gae("[data-fancybox]");
+            let scrollIntoViewOptions = {
+                block: "center",
+                behavior: "smooth",
+                inline: "center"
+            };
+            let FancyboxOptions;
+            if (hasTouchEvents) {
+                FancyboxOptions = {
+                    idle: false,
+                    Images: {
+                        Panzoom: {
+                            maxScale: 2
+                        }
+                    },
+                    Thumbs: {
+                        showOnStart: false
+                    },
+                    Toolbar: {
+                        display: {
+                            left: ["infobar"],
+                            middle: ["flipX", "flipY"],
+                            right: ["iterateZoom", "slideshow", "thumbs", "close"]
+                        }
+                    },
+                    on: {
+                        done: (fancybox, slide) => {
+                            if (fancybox.isCurrentSlide(slide)) {
+                                gallery[slide.index].scrollIntoView(scrollIntoViewOptions);
+                            } else {
+                                gallery[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                            }
+                        }
+                    }
+                };
+            } else {
+                FancyboxOptions = {
+                    idle: false,
+                    wheel: FancyboxWheelOptions === 0 ? "slide" : "zoom",
+                    Images: {
+                        Panzoom: {
+                            maxScale: 2
+                        }
+                    },
+                    Thumbs: {
+                        showOnStart: false
+                    },
+                    Toolbar: {
+                        display: {
+                            left: ["infobar"],
+                            middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                            right: ["slideshow", "fullscreen", "thumbs", "close"]
+                        }
+                    },
+                    on: {
+                        done: (fancybox, slide) => {
+                            if (fancybox.isCurrentSlide(slide)) {
+                                gallery[slide.index].scrollIntoView(scrollIntoViewOptions);
+                            } else {
+                                gallery[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                            }
+                        }
+                    }
+                };
+            }
+            Fancybox.bind("[data-fancybox]", FancyboxOptions);
+        },
         lazyload: async () => {
             let check = !!fun.ge("img.FullPictureLoadImage.lazyload");
             if (check) {
@@ -25732,6 +25813,9 @@ if (newWindowData.ViewMode == 1) {
 }
 
 #FullPictureLoadOptions input {
+    position: unset !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
     color: #000000 !important;
     height: 18px !important;
     border: 1px solid #a0a0a0 !important;
@@ -26709,6 +26793,8 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 }
                 let topButton = data.topButton;
                 if (isBoolean(topButton) && topButton === true) addReturnTopButton();
+                let setFancybox = data.setFancybox;
+                if (setFancybox && options.fancybox == 1 && isString(data.imgs)) fun.setFancybox(data.imgs);
                 break;
             }
         } catch (error) {
