@@ -885,17 +885,18 @@ fun.iframe("url", details).then(object => {
 fun.iframe(String, Object);
 </pre>
 <pre>
-//xhr抓取元素，不局限於圖片
+//xhr獲取元素，不局限於圖片
 //links網址陣列
-//selector要抓的元素
-//"targetEle"清空此元素放入allEle
-//["targetEle", pos] targetEle目標選擇器，pos放在此元素的位置，0裡面1之前2之後
+//selector要獲取的元素選擇器
+//targetEle = null，返回元素陣列
+//"targetEle"目標元素選擇器清空此元素放入allEle
+//["targetEle", pos] targetEle目標元素選擇器，pos放在此元素的位置，0裡面1之前2之後
 //time請求發送的間隔毫秒
-await fun.getEle([links], "selector", targetEle, removeEle = null, time = 100);
-fun.getEle(Array, String, String or Array [String, Number], String or null, Number);
+await fun.getEle([links], "selector", targetEle = null, removeEle = null, time = 100);
+fun.getEle(Array, String, null or String or Array [String, Number], null or String, Number);
 //跨域
-await fun.getCorsEle([links], "selector", targetEle, removeEle = null, time = 100);
-fun.getCorsEle(Array, String, String or Array [String, Number], String or null, Number);
+await fun.getCorsEle([links], "selector", targetEle = null, removeEle = null, time = 100);
+fun.getCorsEle(Array, String, null or String or Array [String, Number], null or String, Number);
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
@@ -1098,7 +1099,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/08/14 0:38</p>
+<p>2024/08/17 05:21</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1425,7 +1426,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://sizupro.com/">偽微圖坊</a>
                 </td>
-                <td></td>
+                <td>需註冊，大尺度非VIP只能抓到8~10張</td>
             </tr>
             <tr>
                 <td>
@@ -2932,9 +2933,11 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://thothub.to/albums/">Thothub Albums</a>
+                    <a href="https://thothub.vip/albums/">Thothub Albums</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://thothub.to/albums/">thothub.to</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2951,6 +2954,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://cosplaytele.com/">Cosplaytele</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.beautycosalbum.com/">GR Beauty COS Album</a>
                 </td>
                 <td></td>
             </tr>
@@ -3163,6 +3172,18 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://gravureidols.top/">Gravure Idols</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sekushipic.blogspot.com/">sekushipic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://idolarea.blogspot.com/">IDOL AREA</a>
                 </td>
                 <td></td>
             </tr>
@@ -4969,7 +4990,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://mobile.jymhapp.com/">九妖漫画</a>
+                    <a href="https://jyapp.info/">九妖漫画</a>
                 </td>
                 <td></td>
             </tr>
@@ -5527,7 +5548,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://komiic.com/">Komiic</a>
                 </td>
-                <td>SPA網頁，預設關閉，網站每天有瀏覽限制。</td>
+                <td>SPA網頁，預設關閉，網站每天有瀏覽限制，網站改版難以應對，下載圖片需先按6自動滾動讓圖片全部載入。</td>
             </tr>
             <tr>
                 <td>
