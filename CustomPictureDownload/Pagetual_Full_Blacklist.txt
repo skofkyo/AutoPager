@@ -1,4 +1,5 @@
 *m.happymh.com*
+*://komiic.com/comic/*chapter*images*
 *://ani.gamer.com.tw/animeVideo.php*
 *://*copymanga.site/comic/*/chapter/*
 *://*copymanga.tv/comic/*/chapter/*
@@ -691,7 +692,8 @@ https://cosermm.blog.2nt.com/*
 *://www.ccy.moe/*/*/*/*/*/*
 *://*zyktu.top/index.php/archives/*/
 *://instagirl.net/post/*
-*://erohere.online/erohere*/
+*://*erohere.online/erohere*/
+*://www.beautycosalbum.com/album/*.shtml
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
