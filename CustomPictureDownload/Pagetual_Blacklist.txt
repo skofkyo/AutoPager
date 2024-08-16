@@ -1,4 +1,4 @@
-2024/08/14 0:38
+2024/08/17 05:21
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -892,8 +892,11 @@ Love Asian Babes
 Byoru
 *://byoru.net/*/
 
+GR Beauty COS Album
+*://www.beautycosalbum.com/album/*.shtml
+
 Erohere
-*://erohere.online/erohere*/
+*://*erohere.online/erohere*/
 
 花猫壁纸
 *huamaobizhi.com/*
@@ -1485,6 +1488,9 @@ Roku Hentai
 
 嗨皮漫畫
 *m.happymh.com*
+
+Komiic
+*://komiic.com/comic/*chapter*images*
 
 COLAMANHUA
 /www\.colamanga\.com\/manga-.+\.html$/
