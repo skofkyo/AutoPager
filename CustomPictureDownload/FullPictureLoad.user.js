@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.6.1
+// @version            2.6.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -232,7 +232,8 @@ a:has(>div>div>img),
 .article.ad,
 .pager>.tips,
 .photoMask,
-.banner_ad {
+.banner_ad,
+.banner-sexgps {
     display: none !important;
 }
         `,
@@ -268,7 +269,8 @@ a:has(>div>div>img),
 .article.ad,
 .pager>.tips,
 .photoMask,
-.banner_ad {
+.banner_ad,
+.banner-sexgps {
     display: none !important;
 }
         `,
@@ -4495,11 +4497,15 @@ a:has(>div>div>img),
         downloadVideo: true,
         category: "nsfw2"
     }, {
-        name: "Hotleaks/Thotsbay/Hotleak/Leakedzone",
-        host: ["hotleaks.tv", "thotsbay.tv", "hotleak.vip", "leakedzone.com"],
-        reg: () => /^https?:\/\/(hotleaks\.tv|thotsbay\.tv|hotleak\.vip|leakedzone\.com)\/[\w\.]+(\/photo)?$/i.test(fun.url) && !/^\/home/.test(fun.lp),
+        name: "Hotleaks/Thotsbay/Hotleak/Leakedzone/BestThots/Thotporn",
+        host: ["hotleaks.tv", "thotsbay.tv", "hotleak.vip", "leakedzone.com", "bestthots.com", "thotporn.tv"],
+        reg: () => /^https?:\/\/(hotleaks\.tv|thotsbay\.tv|hotleak\.vip|leakedzone\.com|bestthots\.com|thotporn\.tv)\/[\w\.]+(\/photo)?$/i.test(fun.url) && !/^\/home/.test(fun.lp),
         init: () => {
-            if (location.href.split("/").length == 4) location.href = location.href + "/photo";
+            if (location.href.split("/").length === 4 && !fun.lh.includes("bestthots")) {
+                location.href = location.href + "/photo";
+            } else {
+                fun.ge("#photos-tab").click();
+            }
         },
         imgs: async () => {
             if (/\/photo/.test(location.href)) fun.clearAllTimer();
@@ -4531,6 +4537,8 @@ a:has(>div>div>img),
                 let images;
                 if (fun.lh == "leakedzone.com") {
                     images = json.map(e => e.thumbnail.replace("_300.", "."));
+                } else if (fun.lh == "bestthots.com") {
+                    images = json.map(e => e.image);
                 } else {
                     images = json.map(e => e.player);
                 }
@@ -4543,7 +4551,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#photos", 3],
-        customTitle: ".actor-name>h1",
+        customTitle: ".actor-name>h1,.actor-title-port",
         category: "nsfw2"
     }, {
         name: "Hot Girl Pix",
@@ -4891,7 +4899,7 @@ a:has(>div>div>img),
         customTitle: () => fun.ge("//meta[@property='og:description']").content,
         category: "nsfw2"
     }, {
-        name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY/WEB CHARMING/COSPLAY KITTYS/TITSPIE",
+        name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY/WEB CHARMING/COSPLAY KITTYS/TITSPIE/COSPLAY SOSEDKI",
         host: [
             "cosplayasian.com",
             "cosplaythots.com",
@@ -4909,7 +4917,8 @@ a:has(>div>div>img),
             "ocosplay.com",
             "webcharming.com",
             "cosplaykittys.com",
-            "titspie.com"
+            "titspie.com",
+            "cosplaysosedki.com"
         ],
         reg: [
             /^https?:\/\/cosplayasian\.com\/([a-z]{2}\/)?post\/\d+/,
@@ -4929,6 +4938,7 @@ a:has(>div>div>img),
             /^https?:\/\/webcharming\.com\/([a-z]{2}\/)?pics\/\d+/,
             /^https?:\/\/cosplaykittys\.com\/([a-z]{2}\/)?g\/\d+/,
             /^https?:\/\/titspie\.com\/([a-z]{2}\/)?photo\/\d+/,
+            /^https?:\/\/cosplaysosedki\.com\/([a-z]{2}\/)?g\/\d+/
         ],
         init: () => fun.createImgBox(".grid,div.row:has(>.bg-dark)", 2),
         imgs: "a[data-fancybox],.grid-item>img,.grid-item->img",
@@ -5764,8 +5774,10 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "Mitaku",
-        host: ["mitaku.net"],
-        reg: /^https?:\/\/mitaku\.net\/.+\/.+\/$/,
+        reg: () => fun.checkUrl({
+            h: "mitaku.net",
+            e: "a.msacwl-img-link[data-mfp-src]"
+        }),
         imgs: () => fun.ge("a.msacwl-img-link[data-mfp-src]") ? fun.gae("a.msacwl-img-link[data-mfp-src]").map(a => a.dataset.mfpSrc).slice(1, -1) : fun.gae(".msacwl-img").slice(1, -1),
         button: [4],
         insertImg: [
@@ -8904,14 +8916,32 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: /^https?:\/\/bitchesgirls\.com\/[^\/]+\/[^\/]+\/[^\/]+\/$/,
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
-            const selector = "script[type='application/ld+json']";
-            const getUrls = (dom = document) => {
-                let text = fun.ge(selector, dom).innerText;
-                let thumbnailUrls = text.match(/"thumbnailUrl":\s?"[^"]+/g).map(e => e.replace(/"thumbnailUrl":\s?"/, "")).filter(e => !/\/logos\//.test(e));
-                thumbnailSrcArray = thumbnailSrcArray.concat(thumbnailUrls);
-                let urls = text.match(/"url":\s?"[^"]+/g).map(e => e.replace(/"url":\s?"/, ""));
-                urls.filter(e => /\.mp4$/.test(e)).forEach(e => videoSrcArray.push(e));
-                return urls.filter(e => !/\/logos\/|\.mp4$/.test(e));
+            const getUrls = (dom = document, pageUrl = siteUrl) => {
+                let text = fun.gst("@context", dom);
+                let json = JSON.parse(text.replace(/\n/g, "").replace(/\s+/g, " "));
+                debug("\n此頁JSON資料\n", {
+                    url: pageUrl,
+                    json: json
+                });
+                let {
+                    image,
+                    video
+                } = json;
+                image = image?.filter(e => e["@type"] === "ImageObject");
+                video = video?.filter(e => e["@type"] === "VideoObject");
+                if (video.length > 0) {
+                    video.forEach(e => videoSrcArray.push(e.url));
+                }
+                if (image.length > 0) {
+                    let thumbnailUrls = image.map(e => e.thumbnailUrl);
+                    let srcs = image.map(e => e.url);
+                    thumbnailUrls = thumbnailUrls.filter(e => !e.includes("/logos/"));
+                    srcs = srcs.filter(e => !e.includes("/logos/"));
+                    thumbnailSrcArray = thumbnailSrcArray.concat(thumbnailUrls);
+                    return image.map(e => e.url);
+                } else {
+                    return [];
+                }
             }
             const max = _unsafeWindow.adConstants.pagesAmount;
             if (max > 1) {
@@ -8924,7 +8954,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 for (let i = 0; i < max; i++) {
                     let res = await fun.fetchDoc(links[i]).then(dom => {
                         fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
-                        return getUrls(dom);
+                        return getUrls(dom, links[i]);
                     });
                     resArr.push(res);
                 }
@@ -9049,6 +9079,16 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         customTitle: ".post-title__text",
         downloadVideo: true,
         css: "#POPUPS_ROOT{display:none!important;}",
+        category: "nsfw2"
+    }, {
+        name: "jimpicotphotography.com",
+        reg: () => fun.checkUrl({
+            h: "jimpicotphotography.com"
+        }),
+        imgs: ".con>img,#post-navigation img",
+        customTitle: () => fun.dt({
+            d: " - jimpicotphotography.com"
+        }),
         category: "nsfw2"
     }, {
         name: "EroMe",
@@ -11239,6 +11279,45 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         css: ".hidden-xs:has(>.pagination){display:none!important;}",
         category: "hcomic"
     }, {
+        name: "Doujindesu.XXX",
+        reg: () => fun.checkUrl({
+            h: "doujindesu.tv",
+            e: "#reader>.main"
+        }),
+        init: async () => {
+            await fun.waitEle("#reader>.main img");
+            for (const sheet of document.styleSheets) {
+                if (sheet.href?.includes("doujindesu.css")) {
+                    for (const rule of sheet.rules) {
+                        if (rule.selectorText === ".darkmode input, .darkmode button") {
+                            rule.style.setProperty("color", "#fff");
+                            return;
+                        }
+                    }
+                }
+            }
+        },
+        imgs: () => fun.gae("#reader>.main img"),
+        button: [4],
+        insertImg: ["#reader>.main", 2],
+        next: "a:has(>.fa-chevron-right):not([href='#'])",
+        prev: "a:has(>.fa-chevron-left):not([href='#'])",
+        customTitle: "#reader h1",
+        category: "hcomic"
+    }, {
+        name: "Doujindesu",
+        reg: () => fun.checkUrl({
+            h: "doujindesu.click"
+        }),
+        imgs: "#readerarea img",
+        button: [4],
+        insertImg: ["#readerarea", 2],
+        next: ".ch-next-btn:not(.disabled)",
+        prev: ".ch-prev-btn:not(.disabled)",
+        customTitle: ".entry-title",
+        css: ".blox.mlb.kln{display:none!important;}",
+        category: "hcomic"
+    }, {
         name: "禁漫天堂",
         reg: () => fun.checkUrl({
             h: [
@@ -11814,6 +11893,37 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         fetch: 1,
         category: "hcomic"
     }, {
+        name: "AnimeH",
+        reg: () => fun.checkUrl({
+            h: "animeh.to"
+        }),
+        imgs: () => {
+            if (!fun.ge("//div[span[text()='Page:']]")) {
+                return [];
+            }
+            let url = fun.ge("link[data-hid]").href + "?tab=reading";
+            let [max] = fun.gt("//div[span[text()='Page:']]").match(/\d+/);
+            return fun.fetchDoc(url).then(dom => {
+                let [, imgDir, ex] = fun.ge("#pictureViewer img", dom).dataset.src.match(/^(.+\/)\d+(\.\w+)$/i);
+                return fun.arr(max).map((_, i) => imgDir + (i + 1) + ex);
+            });
+        },
+        capture: () => _this.imgs(),
+        customTitle: () => {
+            let eles = fun.gae("body>[id^=Full]:not(#FullPictureLoadOptions)");
+            if (document.URL.includes("/hchapter/")) {
+                eles.forEach(e => (e.style.display = ""));
+            } else {
+                eles.forEach(e => (e.style.display = "none"));
+            }
+            return fun.dt({
+                s: "main h1",
+                d: "Hentai Manga"
+            });
+        },
+        observerTitle: true,
+        category: "hcomic"
+    }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/圖片清單頁",
         reg: () => fun.checkUrl({
             h: [
@@ -12114,6 +12224,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let img = fun.ge(".th_gp img");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
+            await fun.waitVar("g_th");
             return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
@@ -12128,6 +12239,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         host: ["hentaienvy.com"],
         reg: /^https?:\/\/hentaienvy\.com\/g\/\d+\/\d+\/$/,
         imgs: async () => {
+            await fun.waitVar("g_th");
             let max = fun.ge("#pages").value;
             let img = fun.ge("#fimg");
             let src = img.dataset.src ?? img.src;
@@ -12138,7 +12250,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         insertImg: [".rd_fimg", 2],
         customTitle: () => fun.title(/ - Page \d+ - HentaiEnvy/).replace("|", "-"),
         threading: 4,
-        css: ".rd_fimg{max-height:unset!important}",
+        css: ".rd_fimg{width:auto!important;max-height:unset!important}",
         category: "hcomic"
     }, {
         name: "lhentai.com/simplyhentai.red圖片清單頁",
@@ -12189,6 +12301,32 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
         customTitle: () => siteJson.title,
+        category: "hcomic"
+    }, {
+        name: "Fhentai圖片清單頁",
+        reg: () => fun.checkUrl({
+            h: "fhentai.net",
+            p: "/f/"
+        }),
+        imgs: async () => {
+            thumbnailSrcArray = fun.getImgSrcArr(".rounded-md:has(>.grid) img");
+            return thumbnailSrcArray.map(e => e.replace("/thumb/", "/raw/"));
+        },
+        button: [4],
+        insertImg: [".rounded-md:has(>.grid)", 2],
+        go: 1,
+        customTitle: "main h1",
+        category: "hcomic"
+    }, {
+        name: "Fhentai閱讀頁",
+        reg: () => fun.checkUrl({
+            h: "fhentai.net",
+            p: "/read/"
+        }),
+        imgs: "main .rounded-md img",
+        button: [4],
+        insertImg: ["main .rounded-md", 2],
+        customTitle: "main h1",
         category: "hcomic"
     }, {
         name: "M-Hentai圖片清單頁",
@@ -13082,9 +13220,9 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         insertImg: [".reader-page", 2],
         category: "hcomic"
     }, {
-        name: "nhentai圖片清單頁",
-        host: ["nhentai.com"],
-        reg: /^https?:\/\/(nhentai\.com)\/en\/comic\/[^\/]+$/,
+        name: "nHentai圖片清單頁/HentaiHand圖片清單頁",
+        host: ["nhentai.com", "hentaihand.com"],
+        reg: /^https?:\/\/(nhentai\.com|hentaihand\.com)\/en\/comic\/[^\/]+$/,
         init: async () => {
             let comic = fun.lp.split("/").at(3);
             let csrfToken = fun.ge("meta[name='csrf-token']").content;
@@ -13107,15 +13245,15 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         },
         button: [4],
         insertImg: [
-            ["//div[div[contains(@class,'comic-gallery')]]", 0], 2, 1000
+            ["//div[div[contains(@class,'comic-gallery')]]", 0, ".box-header,.comic-gallery"], 2, 1000
         ],
         go: 1,
         customTitle: () => siteJson.comic.alternative_title ?? siteJson.comic.title,
         category: "hcomic"
     }, {
-        name: "nhentai",
-        host: ["nhentai.com"],
-        reg: /^https?:\/\/nhentai\.com\/\w+\/comic\/[^/]+\/reader\//i,
+        name: "nHentai閱讀頁/HentaiHand閱讀頁",
+        host: ["nhentai.com", "hentaihand.com"],
+        reg: /^https?:\/\/(nhentai\.com|hentaihand\.com)\/\w+\/comic\/[^/]+\/reader\//i,
         init: async () => {
             let comic = fun.lp.split("/").at(3);
             let csrfToken = fun.ge("meta[name='csrf-token']").content;
@@ -15007,6 +15145,39 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         next: ".section_button a:has(>.fa-angle-right)",
         prev: ".section_button a:has(>.fa-angle-left)",
         customTitle: () => fun.title(" - Manhuascan.us"),
+        category: "comic"
+    }, {
+        name: "Mangago",
+        host: ["mangago.me", "mangago.zone", "youhim.me"],
+        reg: () => fun.checkUrl({
+            h: /mangago|youhim/,
+            p: /^\/read-manga\/|^\/chapter\//,
+            e: "#pic_container"
+        }),
+        init: async () => {
+            fun.clearAllTimer();
+            fun.createImgBox("#pic_container", 1, 1000);
+            fun.remove("#pic_container");
+            await fun.getEleF("#pagenavigation a", "#pic_container img", ["#FullPictureLoadMainImgBox", 0]);
+        },
+        imgs: () => fun.gae("#FullPictureLoadMainImgBox img"),
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 0],
+        next: () => {
+            if (fun.lp.includes("/chapter/")) {
+                let cid = fun.lp.split("/").at(-2);
+                let selector = `.chapter li:has(a[href*='${cid}'])+li>a`;
+                return fun.gu(selector);
+            } else {
+                return fun.gu("//p[contains(text(),'Next Chapter:')]/a");
+            }
+        },
+        prev: 1,
+        customTitle: () => {
+            let url = fun.gu(".widepage a");
+            return fun.fetchDoc(url).then(dom => fun.ge(".rating_wrap a", dom)?.title.replace("Peole who read ", "") + " - " + fun.gt("#dropdown-chapter-page"));
+        },
+        css: "#FullPictureLoadMainImgBox img[id^=page]{width:auto;height:auto;max-width:100%}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -22056,14 +22227,53 @@ if (next) {
         },
         //修改A元素以新分頁的方式開啟鏈結
         openInNewTab: selector => fun.gae(selector).forEach(a => a.setAttribute("target", "_blank")),
+        getEleF: async (links, elements, targetEle = null) => {
+            if (fun.ge(".FullPictureLoadImage")) return;
+            isFetching = true;
+            if (!getImgFn.includes("getEleF()")) getImgFn += " > fun.getEleF()";
+            fun.showMsg(displayLanguage.str_16, 0);
+            if (isString(links)) {
+                links = fun.gau(links);
+            }
+            let resArr = [];
+            let fetchNum = 0;
+            for (let url of links) {
+                let res = await fun.iframeDoc(url, elements).then(dom => {
+                    fun.clearAllTimer();
+                    fun.showMsg(`${displayLanguage.str_17}${fetchNum+=1}/${links.length}`, 0);
+                    let eles = fun.gae(elements, dom, dom);
+                    if (targetEle === null) {
+                        return eles;
+                    }
+                    let ele;
+                    let fragment = new DocumentFragment();
+                    eles.forEach(e => fragment.appendChild(e.cloneNode(true)));
+                    if (isArray(targetEle)) {
+                        const [selector, p] = targetEle;
+                        ele = fun.ge(selector);
+                        if (p == 0) ele.appendChild(fragment);
+                        else if (p == 1) ele.parentNode.insertBefore(fragment, ele);
+                        else if (p == 2) ele.parentNode.insertBefore(fragment, ele.nextSibling);
+                    }
+                    return eles;
+                });
+                resArr.push(res);
+            }
+            isFetching = false;
+            fun.hideMsg();
+            return Promise.all(resArr).then(arr => arr.flat());
+        },
         //傳入鏈結陣列並行請求取得元素插入到指定的位置
         getEle: async (links, elements, targetEle = null, removeEles = null, time = 100) => {
             if (fun.ge(".FullPictureLoadImage")) return;
             isFetching = true;
-            if (!getImgFn.includes("getEle()")) getImgFn += " > fun.getEle() > fun.gae()";
+            if (!getImgFn.includes("getEle()")) getImgFn += " > fun.getEle()";
             let resArr = [];
             let xhrNum = 0;
             fun.showMsg(displayLanguage.str_16, 0);
+            if (isString(links)) {
+                links = fun.gau(links);
+            }
             for (let i = 0; i < links.length; i++) {
                 let res = fun.fetchDoc(links[i]).then(dom => {
                     debug(`\nfun.getEle() URL`, decodeURIComponent(links[i]));
@@ -22103,10 +22313,13 @@ if (next) {
         getCorsEle: async (links, elements, targetEle = null, removeEles = null, time = 100) => {
             if (fun.ge(".FullPictureLoadImage")) return;
             isFetching = true;
-            if (!getImgFn.includes("getCorsEle()")) getImgFn += " > fun.getCorsEle() > fun.gae()";
+            if (!getImgFn.includes("getCorsEle()")) getImgFn += " > fun.getCorsEle()";
             let resArr = [];
             let xhrNum = 0;
             fun.showMsg(displayLanguage.str_16, 0);
+            if (isString(links)) {
+                links = fun.gau(links);
+            }
             for (let i = 0; i < links.length; i++) {
                 let res = fun.xhrDoc(links[i]).then(dom => {
                     debug(`\nfun.getCorsEle() URL`, decodeURIComponent(links[i]));
@@ -22294,11 +22507,15 @@ if (next) {
             ContentContainer && Observer.observe(ContentContainer, configObserver);
         },
         //創建用來添加圖片元素的主容器
-        createImgBox: (selector, pos = 0) => {
+        createImgBox: (selector, pos = 0, width = null) => {
             let div = document.createElement("div");
             div.id = "FullPictureLoadMainImgBox";
             div.style.display = "block";
             div.style.textAlign = "center";
+            div.style.margin = "0 auto";
+            if (isNumber(width)) {
+                div.style.maxWidth = width + "px";
+            }
             let targetEle = fun.ge(selector);
             if (pos == 0) targetEle.appendChild(div);
             if (pos == 1) targetEle.parentNode.insertBefore(div, targetEle);
@@ -22640,7 +22857,7 @@ if (next) {
             }
         },
         //選取所有指定的A素返回元素的href陣列
-        gau: (selector, contextNode = null, dom = document) => fun.gae(selector, contextNode, dom)?.map(a => a.href),
+        gau: (selector, contextNode = null, dom = document) => fun.gae(selector, contextNode, dom)?.map(a => a?.href),
         //返回網頁喧染後的元素字串
         gt: (selector, mode = 1, dom = document) => {
             try {
@@ -22677,11 +22894,11 @@ if (next) {
             }
             let dt = obj.d ?? "";
             if (isString(dt) && dt !== "" || isRegExp(dt)) {
-                str = str.replace(dt, "");
+                str = str?.replace(dt, "");
             } else if (isArray(dt)) {
-                dt.forEach(r => (str = str.replace(r, "")));
+                dt.forEach(r => (str = str?.replace(r, "")));
             }
-            str = str.replace(/[\/\s]?[\(\[［（【“]\d+[\w\s\\\/\.\+-／]+[\)\]］）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "").replace(/\//g, "").replace(/\s|/, "").replace(/[\/\?<>\\:\*\|":]/g, " ").replace(/\s{2}/g, " ").trim();
+            str = str?.replace(/[\/\s]?[\(\[［（【“]\d+[\w\s\\\/\.\+-／]+[\)\]］）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "").replace(/\//g, "").replace(/\s|/, "").replace(/[\/\?<>\\:\*\|":]/g, " ").replace(/\s{2,3}/g, " ").trim();
             return str;
         },
         //取得元素的屬性值
@@ -24040,7 +24257,7 @@ if (next) {
             imgs = await Promise.all(imgs); //取出new Promise的值
         }
         fun.hideMsg();
-        imgs = imgs.filter(item => item); //去除空、無用
+        imgs = imgs.filter(item => item).flat(); //去除空、無用
         let imgsSrcArr = imgs.map(img => {
             let check = fun.checkImgSrc(img);
             if (check.ok) {
@@ -25532,6 +25749,7 @@ if (newWindowData.ViewMode == 1) {
         if (ge("#FullPictureLoadFixedMenu")) return;
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenu";
+        menuDiv.style.width = "54px";
         const menuObj = [{
             name: "newTabView",
             text: displayLanguage.str_106,
@@ -25970,8 +26188,8 @@ if (newWindowData.ViewMode == 1) {
     border: unset !important;
     border-radius: unset !important;
     margin: unset !important;
+    padding: unset !important;
     z-index: 2147483647 !important;
-    opacity: 1 !important;
     cursor: pointer !important;
     pointer-events: auto !important;
     background: unset !important;
@@ -25988,7 +26206,7 @@ if (newWindowData.ViewMode == 1) {
     width: 32px !important;
     height: 32px !important;
     border-radius: unset !important;
-    z-index: 2147483647 !important;
+    z-index: 2147483600 !important;
     opacity: 1 !important;
     cursor: pointer !important;
     pointer-events: auto !important;
@@ -26054,7 +26272,7 @@ if (newWindowData.ViewMode == 1) {
     border-radius: 3px !important;
     background-color: #fff !important;
     opacity: 1;
-    z-index: 2147483647 !important;
+    z-index: 2147483600 !important;
     letter-spacing: unset !important;
 }
 
@@ -26073,7 +26291,7 @@ ${msgPosCss}
     border: 1px solid #303030;
     border-radius: 10px;
     position: fixed;
-    z-index: 2147483647;
+    z-index: 2147483640;
     opacity: 0.7;
 }
 
