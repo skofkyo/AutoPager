@@ -514,9 +514,10 @@ fun.attr(String, String, HTMLDocument or HTMLElement);
 //pos 0，添加進指定的元素裡面
 //pos 1，插入在指定的元素之前
 //pos 2，插入在指定的元素之後
+//width，指定最大寬度px
 fun.createImgBox("selector");
-fun.createImgBox("selector", pos = 0);
-fun.createImgBox(String, Number);
+fun.createImgBox("selector", pos = 0, width = null);
+fun.createImgBox(String, Number, Number);
 </pre>
 <pre>
 //指定元素選擇器或元素陣列，返回過濾出圖片網址的陣列。
@@ -886,17 +887,26 @@ fun.iframe(String, Object);
 </pre>
 <pre>
 //xhr獲取元素，不局限於圖片
-//links網址陣列
+//links，A元素選擇器或網址陣列
 //selector要獲取的元素選擇器
 //targetEle = null，返回元素陣列
 //"targetEle"目標元素選擇器清空此元素放入allEle
 //["targetEle", pos] targetEle目標元素選擇器，pos放在此元素的位置，0裡面1之前2之後
 //time請求發送的間隔毫秒
 await fun.getEle([links], "selector", targetEle = null, removeEle = null, time = 100);
-fun.getEle(Array, String, null or String or Array [String, Number], null or String, Number);
+fun.getEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
 //跨域
 await fun.getCorsEle([links], "selector", targetEle = null, removeEle = null, time = 100);
-fun.getCorsEle(Array, String, null or String or Array [String, Number], null or String, Number);
+fun.getCorsEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
+</pre>
+<pre>
+//使用iframe單一線程獲取元素，不局限於圖片，返回元素陣列
+//links，A元素選擇器或網址陣列
+//selector要獲取的元素選擇器
+//["targetEle", pos] targetEle目標元素選擇器，pos放在此元素的位置，0裡面1之前2之後，類翻頁模式。
+//time請求發送的間隔毫秒
+await fun.getEleF([links], "selector", targetEle = null);
+fun.getEleF(String or Array, String, null or Array [String, Number]);
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
@@ -3098,7 +3108,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://ososedki.com/">OSOSEDKI</a>
                 </td>
                 <td>
-                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>， <a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>， <a href="https://vipthots.com/">VIPTHOTS</a>， <a href="https://hentaibitches.com/">HENTAI BITCHES</a>， <a href="https://leaksfan.com/">LEAKSFANS</a>， <a href="https://charmingass.com/">CHARMINGASS</a>， <a href="https://leakspie.com/">LEAKS PIE</a>， <a href="https://cherryleaks.com/">CHERRY LEAKS</a>， <a href="https://sweetleaks.com/">SWEETLEAKS</a>， <a href="https://ocosplay.com/">OCOSPLAY</a>， <a href="https://webcharming.com/">WEB CHARMING</a>， <a href="https://cosplaykittys.com/">COSPLAY KITTYS</a>， <a href="https://titspie.com/">TITSPIE</a>
+                    <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>， <a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>， <a href="https://vipthots.com/">VIPTHOTS</a>， <a href="https://hentaibitches.com/">HENTAI BITCHES</a>， <a href="https://leaksfan.com/">LEAKSFANS</a>， <a href="https://charmingass.com/">CHARMINGASS</a>， <a href="https://leakspie.com/">LEAKS PIE</a>， <a href="https://cherryleaks.com/">CHERRY LEAKS</a>， <a href="https://sweetleaks.com/">SWEETLEAKS</a>， <a href="https://ocosplay.com/">OCOSPLAY</a>， <a href="https://webcharming.com/">WEB CHARMING</a>， <a href="https://cosplaykittys.com/">COSPLAY KITTYS</a>， <a href="https://titspie.com/">TITSPIE</a>， <a href="https://cosplaysosedki.com/">COSPLAY SOSEDKI</a>
                 </td>
             </tr>
             <tr>
@@ -3672,7 +3682,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://hotleaks.tv/">Hotleaks</a>
                 </td>
                 <td>
-                    <a href="https://thotsbay.tv/">Thotsbay</a>， <a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>，手動插入圖片
+                    <a href="https://thotsbay.tv/">Thotsbay</a>， <a href="https://hotleak.vip/">Hotleak</a>， <a href="https://leakedzone.com/">Leakedzone</a>， <a href="https://bestthots.com/">BestThots</a>， <a href="https://thotporn.tv/">Thotporn</a>，手動插入圖片
                 </td>
             </tr>
             <tr>
@@ -3704,6 +3714,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://cn.pornhub.com/albums">PornHub</a>
                 </td>
                 <td>很容易被短暫封IP...</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jimpicotphotography.com/">jimpicotphotography.com</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4371,6 +4387,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://animeh.to/manga-home?language=all">AnimeH</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://cathentai.net/">Cathentai</a>
                 </td>
                 <td>作用在圖片清單/List Read頁， <a href="https://hentaibeeg.com/">hentaibeeg.com</a>， <a href="https://hentaicolor.net/">hentaicolor.net</a>， <a href="https://nyahentai.info/">nyahentai.info</a>
@@ -4486,7 +4508,13 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://nhentai.com/xxx">nhentai.com</a>
+                    <a href="https://nhentai.com/en/latest">nHentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁，SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaihand.com/en/latest">HentaiHand</a>
                 </td>
                 <td>作用在圖片清單/閱讀頁，SPA網頁</td>
             </tr>
@@ -4553,6 +4581,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://lhentai.com/">lHentai</a>
+                </td>
+                <td>作用在圖片清單/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fhentai.net/">Fhentai</a>
                 </td>
                 <td>作用在圖片清單/閱讀頁</td>
             </tr>
@@ -4719,6 +4753,18 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.comic18h.com/">Comic18H</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://doujindesu.click/">Doujindesu</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://doujindesu.tv/">Doujindesu.XXX</a>
                 </td>
                 <td></td>
             </tr>
@@ -5322,6 +5368,14 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://manhuascan.us/">Manhuascan 英文漫画</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangago.me/">Mangago 英文漫画</a>
+                </td>
+                <td>
+                    <a href="https://www.mangago.zone/">mangago.zone</a>，<a href="https://www.youhim.me/">youhim.me</a>
+                </td>
             </tr>
             <tr>
                 <td>
