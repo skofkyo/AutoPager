@@ -1208,7 +1208,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://web.telegram.org/k/">Telegram Web</a>
                 </td>
-                <td>從Telegram網頁版上的telegra.ph下載圖片，會被CentBrowser(5.0.1002.354)瀏覽器判斷為不安全封鎖下載，請自行決定是否保留檔案，從 <a href="https://tgstat.com/">TGStat</a>搜索cosplay、nsfw、Cosplay鉴赏 ，可以挖到不少你懂得。 </td>
+                <td>從Telegram網頁版上的telegra.ph下載圖片，從 <a href="https://tgstat.com/">TGStat</a>搜索cosplay、nsfw、Cosplay鉴赏 ，可以挖到不少你懂得。 </td>
             </tr>
             <tr>
                 <td>
@@ -2264,12 +2264,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://123548.xyz/">网友自拍</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.photos18.com/">色情圖片網</a>
                 </td>
                 <td></td>
@@ -2833,12 +2827,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://faps.club/main10/">OnlyFaps</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://thotbook.co/">ThotBook</a>
                 </td>
                 <td></td>
@@ -2865,7 +2853,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://cyberdrop.me/">CyberDrop</a>
                 </td>
-                <td>手動插入圖片，需要知道檔案鏈結，例如：https://cyberdrop.me/a/gkQIiBxA，搜索引擎：https://www.flaru.com/en/cyberdrop.me/，下載會出錯時請調低線程數</td>
+                <td>手動插入圖片，需要知道檔案鏈結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
             </tr>
             <tr>
                 <td>
@@ -2981,7 +2969,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://quatvn.men/">Quatvn</a>
+                    <a href="https://quatvn.men/phim-sex-anh-sex">Quatvn</a>
                 </td>
                 <td></td>
             </tr>
@@ -3431,7 +3419,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.asiapornphoto.com/">Asia Porn Photo</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://www.assesphoto.com/">Asses Photo</a>，<a href="https://www.nudedxxx.com/">Nuded Photo</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3770,12 +3760,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.assesphoto.com/">Asses Photo</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.freexcafe.com/">FreeXcafe</a>
                 </td>
                 <td></td>
@@ -3795,12 +3779,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://hdpornpictures.net/">HD Porn Pictures</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.hotzxgirl.com/">Hot Sex Picture</a>
                 </td>
                 <td></td>
             </tr>
@@ -3891,12 +3869,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.pornpic.com/">PornPic</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.nudedxxx.com/">Nuded Photo</a>
                 </td>
                 <td></td>
             </tr>
@@ -5374,7 +5346,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.mangago.me/">Mangago 英文漫画</a>
                 </td>
                 <td>
-                    <a href="https://www.mangago.zone/">mangago.zone</a>，<a href="https://www.youhim.me/">youhim.me</a>
+                    <a href="https://www.mangago.zone/">mangago.zone</a>，<a href="https://www.youhim.me/">youhim.me</a>，只支持PC版。
                 </td>
             </tr>
             <tr>
