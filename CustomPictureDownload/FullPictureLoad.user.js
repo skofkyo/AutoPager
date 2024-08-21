@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.6.2
+// @version            2.7.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -87,9 +87,14 @@
     let promiseBlobArray = [];
     let captureLinksArray = [];
     let customTitle = null;
+    let FullPictureLoadAutoInsertImg = 1;
     let isDownloading = false;
     let isFetching = false;
     let isAutoScrolling = false;
+    let isValidPage = true;
+    let isAddFullPictureLoadButton = false;
+    let isAddFullPictureLoadFixedMenu = false;
+    let isAddnewTabViewButton = false;
     let fetchErrorArray = [];
     let fastDownload = false;
     let currentDownloadThread = 0;
@@ -2393,10 +2398,13 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "Luscious",
-        host: ["www.luscious.net", "luscious.net"],
-        reg: /^https?:\/\/(www\.)?luscious\.net\/albums\//,
+        reg: () => fun.checkUrl({
+            h: "luscious.net"
+        }),
         imgs: async () => {
+            if (!document.URL.includes("/albums/")) return [];
             fun.showMsg(displayLanguage.str_05, 0);
+            await fun.waitEle("a[href*='/read/'],.album-heading a");
             const getApiUrl = (id, page) => {
                 let searchParams = new URLSearchParams({
                     operationName: "PictureListInsideAlbum",
@@ -2428,11 +2436,19 @@ a:has(>div>div>img),
                 return data.flat().filter(item => item.original).map(e => e.original);
             });
         },
+        SPA: () => document.URL.includes("/albums/"),
+        capture: () => _this.imgs(),
         button: [4],
         insertImg: ["article.o-padding-top-bottom,.picture-frame-wrapper", 3],
         downloadVideo: true,
-        customTitle: ".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a",
-        observerTitle: true,
+        customTitle: () => {
+            if (document.URL.includes("/albums/")) {
+                return fun.gt(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a");
+            } else {
+                return null;
+            }
+        },
+        observerURL: true,
         css: "body.o-modal-no-scroll{overflow:unset!important}#modal-root{display:none!important;}",
         category: "hcomic"
     }, {
@@ -2517,43 +2533,6 @@ a:has(>div>div>img),
         },
         category: "nsfw1"
     }, {
-        name: "Simply Porn",
-        host: ["www.simply-porn.com"],
-        reg: /^https?:\/\/www\.simply-porn\.com\/gallery\/[^\/]+$/,
-        include: "div[data-react-props]",
-        init: async () => {
-            await fun.waitEle(".full-gutters>div>a>img", 600);
-            siteJson = JSON.parse(document.querySelector("div[data-react-props]")?.dataset.reactProps);
-            debug("\n此頁JSON資料\n", siteJson);
-        },
-        imgs: () => {
-            let images = siteJson.initial.gallery.images;
-            thumbnailSrcArray = images.map(e => e.sizes.thumb);
-            images.map(e => e.sizes.full);
-            return images.map(e => e.sizes.full);
-        },
-        button: [4],
-        insertImg: ["//div[@class='row full-gutters'][div[a[img]]]", 2],
-        customTitle: () => siteJson.initial.gallery.title,
-        fetch: 1,
-        category: "nsfw2"
-    }, {
-        name: "Simply Cosplay",
-        host: ["www.simply-cosplay.com"],
-        reg: /^https?:\/\/www\.simply-cosplay\.com\/gallery\//,
-        init: async () => {
-            fun.showMsg(displayLanguage.str_04, 0);
-            await fun.waitEle("h1.content-headline", 600);
-            await fun.waitEle(".swipe-area img", 600);
-        },
-        imgs: () => fun.gae(".swiper-slide img").map(e => e.dataset.src.replace("small_square_", "")),
-        button: [4],
-        insertImg: ["//div[div[div[div[@class='image-wrapper']]]]", 2],
-        customTitle: "h1.content-headline",
-        fetch: 1,
-        css: ".gallery-view .row{display:block}",
-        category: "nsfw2"
-    }, {
         name: "Cosplay Porn",
         host: ["cosplayporn.online"],
         link: "https://cosplayporn.online/category/cosplay/",
@@ -2590,9 +2569,10 @@ a:has(>div>div>img),
             }).then(res => res.json());
             return fetchJson.data.files.map(file => file.url);
         },
+        SPA: true,
         capture: () => _this.imgs(0),
         customTitle: () => fun.gt(".z-breadcrumbs")?.replace(/\n/g, " - ").replace(/首页 - |Cosersets - /, ""),
-        observerTitle: true,
+        observerURL: true,
         category: "nsfw1"
     }, {
         name: "小丁 (Fantasy Factory) Patreon Cosplay Leaks",
@@ -2602,11 +2582,12 @@ a:has(>div>div>img),
         imgs: () => {
             let urls = fun.gau(".item.file>a");
             videoSrcArray = urls.filter(url => url.includes(".mp4"));
-            return urls.filter(url => !url.includes(".mp4"));
+            return urls.filter(url => !/\.md$|\.mp4$/.test(url));
         },
+        SPA: true,
         capture: () => _this.imgs(),
         customTitle: () => fun.gt("#crumbbar")?.replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)"),
-        observerTitle: true,
+        observerURL: true,
         category: "nsfw1"
     }, {
         name: "Tokar浵卡 Cosplay",
@@ -4912,6 +4893,60 @@ a:has(>div>div>img),
         customTitle: ".entry-header>h1",
         category: "nsfw1"
     }, {
+        name: "HoeHot",
+        reg: () => fun.checkUrl({
+            h: "hoehot.com",
+            p: "/gallery/"
+        }),
+        imgs: async () => {
+            fun.createImgBox(".infinite-scroll-component__outerdiv", 1);
+            if (captureSrcArray.length > 0) {
+                fun.clearAllTimer();
+                return captureSrcArray;
+            }
+            fun.showMsg(displayLanguage.str_05, 0);
+            let srcs = [];
+            let [, , galleryId] = fun.lp.split("/");
+            let cursorId = "";
+            let loop = true;
+            const getData = (cid, gid) => fetch(`/api/model-media?cursor=${cid}&galleryId=${gid}`).then(res => res.json()).then(json => {
+                const num = json.medias.length;
+                if (num > 0) {
+                    cursorId = json.medias.at(-1).id;
+                    json.medias.forEach(e => {
+                        thumbnailSrcArray.push(e.urlThumb);
+                        srcs.push(e.url);
+                    });
+                }
+                if (num < 30 || num === 0) {
+                    loop = false;
+                }
+            });
+            while (loop) {
+                await getData(cursorId, galleryId);
+            }
+            fun.clearAllTimer();
+            return srcs;
+        },
+        capture: () => _this.imgs(),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".infinite-scroll-component__outerdiv:has(.container-img)"], 3
+        ],
+        customTitle: "main .my-1>h1",
+        openInNewTab: ".infinite-scroll-component a:not([target=_blank])",
+        css: "main a[rel]{display:none!important;}",
+        category: "nsfw2"
+    }, {
+        name: "HoeHot 清除無用請求",
+        reg: () => fun.checkUrl({
+            h: "hoehot.com"
+        }),
+        init: () => fun.addMutationObserver(() => setTimeout(() => fun.clearAllTimer(), 2000)),
+        openInNewTab: ".infinite-scroll-component a:not([target=_blank])",
+        css: "main a[rel]{display:none!important;}",
+        category: "none"
+    }, {
         name: "OSOSEDKI",
         host: ["ososedki.com"],
         reg: /^https?:\/\/ososedki\.com\/([a-z]{2}\/)?photos\//,
@@ -5113,18 +5148,6 @@ a:has(>div>div>img),
         reg: /^https:\/\/www\.tnapics\.com\/[\w-]+\/$/,
         imgs: "a[data-fslightbox]",
         customTitle: ".entry-title",
-        category: "nsfw2"
-    }, {
-        name: "EroThots",
-        host: ["erothots.co"],
-        reg: () => !hasTouchEvents && /^https?:\/\/erothots\.co\/a\/[^\/]+\/[^\/]+/.test(fun.url),
-        imgs: () => {
-            videoSrcArray = fun.gae("a[data-type='html5video']").map(e => e.dataset.src);
-            return fun.gae("a[data-type='image']").map(e => e.dataset.src);
-        },
-        capture: () => _this.imgs(),
-        customTitle: ".head-title",
-        downloadVideo: true,
         category: "nsfw2"
     }, {
         name: "Fapdungeon",
@@ -5622,6 +5645,20 @@ a:has(>div>div>img),
         customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
+        name: "XikXak",
+        reg: () => fun.checkUrl({
+            h: "www.xikxak.com",
+            p: /^\/\d+$/
+        }),
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: "h1.entry-title",
+        category: "nsfw1"
+    }, {
         name: "Cosplay69",
         host: ["www.cosplay69.net", "cosplay69.net"],
         reg: /^https?:\/\/(www\.)?cosplay69\.net\/[^\/]+\/$/,
@@ -5908,44 +5945,48 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Hình ảnh gái",
-        host: ["hinhanhgai.com"],
-        reg: /^https?:\/\/hinhanhgai\.com\/image\/\d+$/,
-        include: "//script[contains(text(),'full_url')]",
+        reg: () => fun.checkUrl({
+            h: "hinhanhgai.com"
+        }),
         imgs: () => {
-            /*
-//字串取得圖片網址
-const code = [...document.scripts].find(s => s.innerHTML.includes("full_url")).innerHTML;
-const matchObj = code.matchAll(/full_url="([^"]+)"/g);
-return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
-            */
-            const files = Object.values(_unsafeWindow.__NUXT__.data).find(obj => !!obj.files).files;
-            return files.filter(item => !!item.full_url).map(item => item.full_url);
+            if (document.URL.includes("/image/")) {
+                let id = document.URL.split("/").at(-1);
+                fun.showMsg(displayLanguage.str_05, 0);
+                return fetch(`/api/photo/${id}`).then(res => res.json()).then(json => {
+                    fun.hideMsg();
+                    return json.files.map(e => e.full_url);
+                });
+            } else if (document.URL.includes("/article/")) {
+                return fun.gae(".content img");
+            } else {
+                return [];
+            }
         },
         capture: () => _this.imgs(),
+        SPA: () => ["/image/", "/article/"].some(p => document.URL.includes(p)),
         autoDownload: [0],
         next: () => {
             let next = fun.ge("a.next[href^='/image/']");
             return next ? next.href : null;
         },
         prev: 1,
-        customTitle: "h1.title",
+        customTitle: () => {
+            if (document.URL.includes("/image/")) {
+                let id = document.URL.split("/").at(-1);
+                return fetch(`/api/photo/${id}`).then(res => res.json()).then(json => fun.dt({
+                    t: json.name
+                }));
+            } else if (document.URL.includes("/article/")) {
+                return fun.dt({
+                    s: "h1.title"
+                });
+            } else {
+                return null;
+            }
+        },
+        observerURL: true,
         css: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
         category: "nsfw1"
-    }, {
-        name: "Hình ảnh gái",
-        host: ["hinhanhgai.com"],
-        reg: /^https?:\/\/hinhanhgai\.com\/article\//,
-        include: "//script[contains(text(),'content')]",
-        imgs: ".content img",
-        capture: ".content img",
-        customTitle: "h1.title",
-        css: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
-        category: "nsfw1"
-    }, {
-        name: "Hình ảnh gái 廣告",
-        reg: /^https?:\/\/hinhanhgai\.com\//,
-        css: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float{display:none!important;}",
-        category: "ad"
     }, {
         name: "Ảnh đẹp",
         reg: () => fun.checkUrl({
@@ -5959,23 +6000,23 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "Gai.vn",
-        host: ["gai.vn"],
-        reg: /^https?:\/\/(www\.)?gai\.vn\/[\w-]+$/,
-        include: [
-            "#content .gai-thumb>.vn-box",
-            "a[data-fancybox='slide']"
-        ],
+        reg: () => fun.checkUrl({
+            h: "gai.vn"
+        }),
         imgs: async () => {
+            if (!["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fun.ge(s))) return [];
             await fun.getNP(".gai-thumb", "li.page-item.active+li:not(.disabled)>a");
             fun.remove("//div[nav[@aria-label='Page navigation']]");
             return fun.gae("a[data-fancybox='slide']");
         },
+        SPA: () => ["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fun.ge(s)) || !!fun.ge(".FullPictureLoadImage"),
         button: [4],
         insertImg: ["#content", 2],
         customTitle: ".nav-breadcrumb>.nav-breadcrumb-item:last-child",
         fancybox: {
             blacklist: 1
         },
+        observerURL: true,
         category: "nsfw1"
     }, {
         name: "imgcup.com",
@@ -6294,16 +6335,25 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "Erogirl",
-        host: ["erogirl.net"],
-        reg: /^https?:\/\/erogirl\.net\/p\//,
-        init: async () => {
-            let fetchJson = await fun.fetchDoc(fun.url).then(dom => {
-                let data = fun.gt("#__NEXT_DATA__", 1, dom);
-                let json = JSON.parse(data);
-                return json;
-            });
-            debug("\n此頁JSON資料\n", fetchJson);
-            siteJson = fetchJson;
+        reg: () => fun.checkUrl({
+            h: "erogirl.net"
+        }),
+        SPA: () => {
+            if (document.URL.includes("/p/") && !fun.ge(".FullPictureLoadImage")) {
+                isFetching = true;
+                return fun.fetchDoc(document.URL).then(dom => {
+                    let data = fun.gt("#__NEXT_DATA__", 1, dom);
+                    let json = JSON.parse(data);
+                    siteJson = json;
+                    debug("\n此頁JSON資料\n", siteJson);
+                    isFetching = false;
+                    return json;
+                });
+            } else if (fun.ge(".FullPictureLoadImage")) {
+                return true;
+            } else {
+                return false;
+            }
         },
         imgs: () => {
             thumbnailSrcArray = siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.thumbnail.url);
@@ -6315,8 +6365,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             let loop = setInterval(() => !fun.ge(".FullPictureLoadImage") ? fun.immediateInsertImg() : null, 500);
             setTimeout(() => clearInterval(loop), 10000);
         },
-        go: 1,
-        customTitle: () => siteJson.props.pageProps.post.title,
+        customTitle: () => siteJson?.props?.pageProps?.post?.title,
+        observerURL: true,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
@@ -7773,6 +7823,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         init: async () => await fun.waitEle("#gadget-dock"),
         imgs: ".separator>a",
         capture: ".separator>a",
+        SPA: () => document.URL.includes(".html"),
         customTitle: "title",
         observerTitle: true,
         category: "nsfw2"
@@ -7864,10 +7915,15 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "BingMM",
-        host: ["bingmm.com"],
-        reg: /^https?:\/\/bingmm\.com\/\d+\.html$/i,
-        init: () => fun.createImgBox(".entry-content p:has(>img)", 1),
-        imgs: ".entry-content img",
+        reg: () => fun.checkUrl({
+            h: "bingmm.com"
+        }),
+        imgs: async () => {
+            fun.createImgBox(".entry-content p:has(>img)", 1);
+            return fun.gae(".entry-content img");
+        },
+        SPA: () => document.URL.includes(".html"),
+        observerLoop: true,
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".entry-content p:has(>img)"], 2
@@ -8388,14 +8444,13 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw1"
     }, {
         name: "DTF",
-        host: "dtf.ru",
-        reg: /^https?:\/\/dtf\.ru\//,
+        reg: () => fun.checkUrl({
+            h: "dtf.ru"
+        }),
         imgs: () => {
             let post = fun.gae(".content__blocks")[0];
             if (post) {
-                if (!fun.ge("#FullPictureLoadMainImgBox")) {
-                    fun.createImgBox(".content", 1);
-                }
+                fun.createImgBox(".content", 1);
                 //let medias = Object.values(JSON.parse(_unsafeWindow.__INITIAL_STATE__)).find(obj => !!obj.blocks)?.blocks.filter(item => item.type === "media");
                 //return medias?.map(e => "https://leonardo.osnova.io/" + e.data.items[0].image.data.uuid);
                 let imgs = fun.gae(".block-wrapper.block-wrapper--media img", post);
@@ -8407,10 +8462,16 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 return [];
             }
         },
-        repeat: 1,
+        capture: () => _this.imgs(),
+        SPA: () => !!fun.ge(".comments"),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
-        customTitle: "title",
+        customTitle: async () => {
+            await fun.delay(1000, 0);
+            return fun.dt({
+                d: " — О, порно на DTF"
+            });
+        },
         observerURL: true,
         category: "nsfw2"
     }, {
@@ -9067,7 +9128,11 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "EroMe",
         host: ["www.erome.com"],
-        reg: /^https?:\/\/[a-z]{2,3}\.erome\.com\/a\/\w+$/i,
+        reg: () => fun.checkUrl({
+            h: "erome.com",
+            p: "/a/",
+            e: "div[id^='album'].page-content"
+        }),
         imgs: () => {
             videoSrcArray = fun.gae(".video source[type='video/mp4']").map(e => e.src);
             return hasTouchEvents ? fun.gae(".img>img[data-src]") : fun.gae("div.img[data-src]");
@@ -9078,8 +9143,11 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         category: "nsfw2"
     }, {
         name: "EroMe",
-        host: ["erome.pics"],
-        reg: /^https?:\/\/erome\.pics\/a\/\d+\/$/i,
+        reg: () => fun.checkUrl({
+            h: "erome.fan",
+            p: "/a/",
+            e: ".entry-content"
+        }),
         imgs: () => {
             videoSrcArray = fun.gae(".video source[type='video/mp4']").map(e => e.src);
             return hasTouchEvents ? fun.gae(".img>img[data-src]").map(e => e.currentSrc) : fun.gae("div.img[data-src]");
@@ -10596,7 +10664,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         reg: () => fun.checkUrl({
             e: [
                 ".hero+.hero,.entry-content,.d-flex>.col-24,.album-post",
-                ".entry-title,.album-title,.album-post-title,.col-12>h1,.album-h1"
+                ".entry-title,.album-title,.album-post-title,.col-12>h1,.album-h1",
+                "//a[@data-title and picture/source]"
             ]
         }),
         imgs: "//a[@data-title and picture/source]",
@@ -10844,6 +10913,23 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             ["#FullPictureLoadMainImgBox", 0, ".ngg-galleryoverview,.ngg-navigation"], 2
         ],
         customTitle: ".entry-title",
+        category: "nsfw2"
+    }, {
+        name: "瓜老師の鉴赏课",
+        reg: () => fun.checkUrl({
+            h: "photo.lovegua.com",
+            p: /^\/\d+\.html$/
+        }),
+        init: () => fun.createImgBox("p:has(>img)", 1),
+        imgs: "p:has(>img)>img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "p:has(>img)"], 2
+        ],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: ".title.single",
         category: "nsfw2"
     }, {
         name: "XO福利圖",
@@ -11841,7 +11927,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                         return new Promise(resolve => {
                             const xhr = new XMLHttpRequest;
                             xhr.responseType = "blob";
-                            xhr.open("GET", base + e.path);
+                            xhr.open("GET", base + e.path + `?w=${maxKey}`);
                             xhr.onload = () => {
                                 fun.showMsg(`${displayLanguage.str_06}${xhrNum+=1}/${arr.length}`, 0);
                                 resolve(URL.createObjectURL(xhr.response));
@@ -11856,6 +11942,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         button: [4],
         insertImg: ["#previews,main>.group", 0],
         customTitle: () => fun.gt("#title>h2") ?? fun.gt("#title>h1"),
+        SPA: () => document.URL.includes("/g/"),
         observerTitle: true,
         fetch: 1,
         category: "hcomic"
@@ -11875,19 +11962,12 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 return fun.arr(max).map((_, i) => imgDir + (i + 1) + ex);
             });
         },
+        SPA: () => !!fun.ge("//div[span[text()='Page:']]"),
         capture: () => _this.imgs(),
-        customTitle: () => {
-            let eles = fun.gae("body>[id^=Full]:not(#FullPictureLoadOptions)");
-            if (document.URL.includes("/hchapter/")) {
-                eles.forEach(e => (e.style.display = ""));
-            } else {
-                eles.forEach(e => (e.style.display = "none"));
-            }
-            return fun.dt({
-                s: "main h1",
-                d: "Hentai Manga"
-            });
-        },
+        customTitle: () => fun.dt({
+            s: "main h1",
+            d: "Hentai Manga"
+        }),
         observerTitle: true,
         category: "hcomic"
     }, {
@@ -12066,7 +12146,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 "body": `_token=${_token}&server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
             }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
-            if (!fun.ge("#FullPictureLoadMainImgBox")) fun.createImgBox("#comments_div");
+            fun.createImgBox("#comments_div");
             let max = fun.gt(".info_pg").match(/\d+/)[0];
             let img = fun.ge(".gp_th img");
             let src = img.dataset.src ?? img.src;
@@ -12327,7 +12407,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
     }, {
         name: "HentaiNexus圖片清單頁",
         host: ["hentainexus.com"],
-        reg: () => !hasTouchEvents && /^https?:\/\/hentainexus\.com\/view\/\d+$/.test(fun.url),
+        reg: /^https?:\/\/hentainexus\.com\/view\/\d+$/,
         init: () => fun.createImgBox(".box:has(>.is-multiline)", 2),
         imgs: async () => {
             thumbnailSrcArray = fun.getImgSrcArr(".card-image img");
@@ -12845,9 +12925,7 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
             await fun.waitEle(".grid .group>img");
         },
         imgs: async () => {
-            if (!fun.ge("#FullPictureLoadMainImgBox")) {
-                fun.createImgBox(".container:has(>.grid)");
-            }
+            fun.createImgBox(".container:has(>.grid)");
             fun.showMsg("獲取數據中...", 0);
             let url = fun.gu(".container:has(>.grid) a");
             return fun.fetchDoc(url).then(dom => {
@@ -13693,12 +13771,10 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
         name: "NiceCat",
         host: "web.nicecat.cc",
         reg: /^https?:\/\/web\.nicecat\.cc\//,
-        imgs: () => {
+        imgs: (msg = 1) => {
             if (/\/ComicDetailed\//.test(document.URL)) {
-                if (!fun.ge("#FullPictureLoadMainImgBox")) {
-                    fun.createImgBox("#recommend-info-body", 1);
-                }
-                fun.showMsg(displayLanguage.str_05, 0);
+                fun.createImgBox("#recommend-info-body", 1);
+                if (msg === 1) fun.showMsg(displayLanguage.str_05, 0);
                 let touristId = document.cookie.match(/tourist-id=([^;]+)/)[1];
                 let comicUid = document.URL.match(/\/id\.(.+)$/)[1];
                 return fetch("/api/ComicOrder/getComicOrder", {
@@ -13715,7 +13791,8 @@ return [...matchObj].map(arr => arr[1].replaceAll("\\u002F", "/"));
                 return [];
             }
         },
-        repeat: 1,
+        SPA: () => document.URL.includes("/ComicDetailed/"),
+        capture: () => _this.imgs(0),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         customTitle: () => {
@@ -16506,11 +16583,12 @@ if (next) {
         name: "Komiic",
         host: ["komiic.com"],
         enable: 0,
-        reg: /^https?:\/\/komiic\.com\/comic\/\d+\/chapter\//,
+        reg: /^https?:\/\/komiic\.com\//,
         init: async () => await fun.waitEle(".v-breadcrumbs"),
         imgs: "[data-kid]>img",
         scrollEle: () => fun.aotoScrollEles("[data-kid]", (ele) => isEle(fun.ge("img", ele)), 10000),
-        capture: async (url = siteUrl) => {
+        capture: async (url = document.URL) => {
+            if (!url.includes("/chapter/")) return [];
             fun.showMsg(displayLanguage.str_05, 0);
             let chapterId = url.match(/chapter\/(\d+)\/images/)[1];
             let body = {
@@ -16530,8 +16608,10 @@ if (next) {
             debug("\nimages JSON\n", json);
             return json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid);
         },
-        next: async () => {
-            let mhId = siteUrl.match(/comic\/(\d+)/)[1];
+        SPA: () => document.URL.includes("/chapter/"),
+        next: async (url = document.URL) => {
+            if (!url.includes("/chapter/")) return null;
+            let mhId = url.match(/comic\/(\d+)/)[1];
             let body = {
                 operationName: "chapterByComicId",
                 variables: {
@@ -16547,7 +16627,7 @@ if (next) {
                 "method": "POST"
             }).then(res => res.json());
             debug("\nchapter JSON\n", json);
-            let chapterId = siteUrl.match(/chapter\/(\d+)\/images/)[1];
+            let chapterId = url.match(/chapter\/(\d+)\/images/)[1];
             let chapters = json.data.chaptersByComicId;
             let nextUrl;
             for (let i = 0; i < chapters.length; i++) {
@@ -16569,7 +16649,6 @@ if (next) {
             let textArr = fun.gt(".v-breadcrumbs").split("\n");
             return textArr[1] + " - " + textArr[2];
         },
-        observerTitle: true,
         fetch: 1,
         category: "comic"
     }, {
@@ -20493,7 +20572,9 @@ if (next) {
                 str_134: "浮動選單",
                 str_135: "無限滾動初始化中...",
                 str_136: "右鍵：增加圖片縮放級別(+)",
-                str_137: "頁面圖片添加燈箱模式"
+                str_137: "頁面圖片添加燈箱模式",
+                str_138: "此網站禁用",
+                str_139: "啟用自動聚圖"
             };
             break;
         case "zh":
@@ -20636,7 +20717,9 @@ if (next) {
                 str_134: "浮动菜单",
                 str_135: "无限滚动初始化中...",
                 str_136: "右键：增加图片缩放级别(+)",
-                str_137: "页面图片添加灯箱模式"
+                str_137: "页面图片添加灯箱模式",
+                str_138: "此网站禁用",
+                str_139: "启用自动聚图"
             };
             break;
         default:
@@ -20777,13 +20860,21 @@ if (next) {
                 str_134: "Float Menu",
                 str_135: "Infinite Scroll Initializing",
                 str_136: "Right Click：Increase Image Zzoom Level(+)",
-                str_137: "Add Fancybox To Image"
+                str_137: "Add Fancybox To Image",
+                str_138: "This Website Is Disabled",
+                str_139: "Auto Insert Images"
             };
             break;
     }
 
+    let FullPictureLoadBlacklist = localStorage.getItem("FullPictureLoadBlacklist") ?? 0;
     _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
     _GM_registerMenuCommand("📓 Github README.md", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/README.md"));
+    _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + displayLanguage.str_138 : "✔️  " + displayLanguage.str_138, () => {
+        FullPictureLoadBlacklist == 0 ? localStorage.setItem("FullPictureLoadBlacklist", 1) : localStorage.setItem("FullPictureLoadBlacklist", 0);
+        location.reload();
+    });
+    if (FullPictureLoadBlacklist == 1) return;
 
     const fun = {
         url: (() => siteUrl)(),
@@ -20864,10 +20955,10 @@ if (next) {
                     checkE = !!fun.ge(elements);
                 }
             }
-            if ("imgs" in tempData && isString(imgSelector)) {
+            if ("imgs" in tempData && isString(imgSelector) && !"SPA" in tempData) {
                 checkI = !!fun.ge(imgSelector);
             }
-            if ("customTitle" in tempData && isString(titleSelector)) {
+            if ("customTitle" in tempData && isString(titleSelector) && !"SPA" in tempData) {
                 checkT = !!fun.ge(titleSelector);
             }
             return checkH && checkP && checkS && checkE && checkI && checkT;
@@ -22337,6 +22428,7 @@ if (next) {
         //單線程背景讀取圖片IMG元素陣列的圖片網址
         singleThreadLoadImgs: async imgArr => {
             for (let i = 0; i < imgArr.length; i++) {
+                if (!isValidPage) return;
                 if (!imgArr[i].dataset?.src) continue;
                 let loadSrc = imgArr[i].dataset.src;
                 let parent = imgArr[i].parentNode;
@@ -22371,6 +22463,7 @@ if (next) {
         //單線程背景讀取圖片網址陣列的圖片網址
         singleThreadLoadSrcs: async srcArr => {
             for (let src of srcArr) {
+                if (!isValidPage) return;
                 let temp = new Image();
                 temp.src = src;
                 await new Promise(resolve => {
@@ -22392,6 +22485,7 @@ if (next) {
                         temp = null;
                     };
                     temp.onerror = error => {
+                        if (!isValidPage) return;
                         if (fun.lh === "m.happymh.com") {
                             console.log(error);
                             resolve("ERROR");
@@ -22428,6 +22522,7 @@ if (next) {
             };
             page == "next" ? debug(`\n${title}\n圖片全載開始預讀下一頁`, srcArr) : debug(`\n${title}\n圖片全載Lazyloading開始預讀`);
             for (let i = 0; i < srcArr.length; i++) {
+                if (!isValidPage) return;
                 if (/youtube|\.mp4|\.m3u8$|\.webm$/.test(srcArr[i])) continue;
                 let load = await loadImg(srcArr[i], i);
                 if (load === "ERROR") {
@@ -22487,6 +22582,7 @@ if (next) {
         },
         //創建用來添加圖片元素的主容器
         createImgBox: (selector, pos = 0, width = null) => {
+            if (fun.ge("#FullPictureLoadMainImgBox")) return;
             let div = document.createElement("div");
             div.id = "FullPictureLoadMainImgBox";
             div.style.display = "block";
@@ -22502,6 +22598,7 @@ if (next) {
         },
         //插入圖片函式
         insertImg: (imgsArray, insertTargetEle, mode = 2) => {
+            if (fun.ge(".FullPictureLoadImage") || isFetching) return;
             let srcArr = [];
             for (let i = 0; i < imgsArray.length; i++) {
                 let check = fun.checkImgSrc(imgsArray[i]);
@@ -22805,11 +22902,18 @@ if (next) {
             }
         },
         immediateInsertImg: async () => {
-            let [insertSelector, insertMode, delayTime] = siteData.insertImg;
-            await fun.delay(delayTime || 0);
-            let selector = siteData.imgs;
-            let imgsSrcArray = await getImgs(selector);
-            fun.insertImg(imgsSrcArray, insertSelector, insertMode);
+            if (ge(".FullPictureLoadImage") || isFetching) return;
+            if ("SPA" in siteData && isFn(siteData.SPA)) {
+                let validPage = await siteData.SPA();
+                if (!validPage) return;
+            }
+            if (FullPictureLoadAutoInsertImg == 1) {
+                let [insertSelector, insertMode, delayTime] = siteData.insertImg;
+                await fun.delay(delayTime || 0);
+                let selector = siteData.imgs;
+                let imgsSrcArray = await getImgs(selector);
+                fun.insertImg(imgsSrcArray, insertSelector, insertMode);
+            }
         },
         //選取指定的元素返回元素
         ge: (selector, contextNode = null, dom = document) => {
@@ -24246,10 +24350,10 @@ if (next) {
                 return null;
             }
         }).filter(item => item);
-        if (siteData.category != "lazyLoad" && globalImgArray.length == 0) {
+        if (siteData.category !== "lazyLoad" && globalImgArray.length === 0 && imgs.length !== 0) {
             debug(`\ngetImgs()${getImgFn} 所有圖片網址：`, imgsSrcArr);
         }
-        if (siteData.category != "lazyLoad" && globalImgArray.length == 0) {
+        if (siteData.category !== "lazyLoad" && globalImgArray.length === 0 && imgs.length !== 0) {
             debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
         }
         imgsSrcArr = [...new Set(imgsSrcArr)];
@@ -24905,7 +25009,12 @@ if (next) {
         }
 
         let imgSrcs;
-        captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
+        if ("SPA" in siteData) {
+            let selector = siteData.capture ?? siteData.imgs;
+            imgSrcs = await getImgs(selector);
+        } else {
+            captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
+        }
 
         if (!!imgSrcs?.length && imgSrcs.length > 0) {
 
@@ -25612,6 +25721,7 @@ if (newWindowData.ViewMode == 1) {
     //創建新分頁檢視眼睛圖示按鈕和圖片數量元素
     const addnewTabViewButton = () => {
         if (ge("#FullPictureLoadEye")) return;
+        isAddnewTabViewButton = true;
         let img = new Image();
         img.id = "FullPictureLoadEye";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
@@ -25622,9 +25732,15 @@ if (newWindowData.ViewMode == 1) {
         menuDiv.id = "FullPictureLoadFixedMenuB";
         const menuObj = [{
             id: "FullPictureLoadCaptureNum",
-            text: 0,
-            cfn: () => {
-                let srcArr = captureSrcArray;
+            text: "0",
+            cfn: async () => {
+                let srcArr;
+                if (siteData.category === "lazyLoad") {
+                    srcArr = captureSrcArray;
+                } else {
+                    let selector = siteData.capture ?? siteData.imgs;
+                    srcArr = await getImgs(selector);
+                }
                 if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
                 let titleText = customTitle ?? document.title;
                 let picNum = srcArr.length;
@@ -25676,6 +25792,8 @@ if (newWindowData.ViewMode == 1) {
 
     //創建腳本在頁面左下的功能按鈕
     const addFullPictureLoadButton = () => {
+        if (ge("#FullPictureLoad")) return;
+        isAddFullPictureLoadButton = true;
         let img = new Image();
         img.id = "FullPictureLoad";
         img.className = "FullPictureLoadFixedBtn";
@@ -25726,6 +25844,7 @@ if (newWindowData.ViewMode == 1) {
     //創建浮動選單
     const addFullPictureLoadFixedMenu = () => {
         if (ge("#FullPictureLoadFixedMenu")) return;
+        isAddFullPictureLoadFixedMenu = true;
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenu";
         menuDiv.style.width = "54px";
@@ -26204,6 +26323,7 @@ if (newWindowData.ViewMode == 1) {
     border: #ccc 1px solid !important;
     border-radius: 3px !important;
     background-color: #fff !important;
+    box-sizing: unset !important;
     opacity: 0.4;
     z-index: 2147483647 !important;
 }
@@ -26215,6 +26335,7 @@ if (newWindowData.ViewMode == 1) {
     font-size: 14px !important;
     text-shadow: unset !important;
     text-align: center !important;
+    letter-spacing: unset !important;
     border: #ccc 1px solid !important;
     background-color: #f6f6f6 !important;
     padding: 0 5px 0 5px !important;
@@ -26769,6 +26890,120 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         new Function(str)();
     };
 
+    const addKeyEvent = async event => {
+        if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
+        if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
+        if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptions:not([style])")) return;
+        if (["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName)) return;
+        if (event.ctrlKey && event.altKey && (event.code === "KeyT" || event.key === "t" || event.key === "T")) {
+            let str = _unsafeWindow.getSelection().toString();
+            str == "" ? null : customTitle = str;
+            let newTitle = await prompt("New Title", customTitle);
+            newTitle == null ? null : customTitle = newTitle;
+            fun.showMsg(displayLanguage.str_118);
+            debug("圖集新標題", newTitle);
+        }
+        if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
+            fastDownload = false;
+            return DownloadFn();
+        }
+        if (event.code === "Numpad1" || event.key === "1") return copyImgSrcText(); //數字鍵1
+        if (event.code === "Numpad2" || event.key === "2") return goToImg("first"); //數字鍵2
+        if (event.code === "Numpad3" || event.key === "3") { //數字鍵3
+            fastDownload = true;
+            return DownloadFn();
+        }
+        if (event.code === "Numpad4" || event.key === "4") return goToImg("last"); //數字鍵4
+        if (event.code === "Numpad5" || event.key === "5") return toggleImgMode(); //數字鍵5
+        if (event.code === "Numpad6" || event.key === "6") return autoScrollEles(); //數字鍵6
+        if (event.code === "Numpad7" || event.key === "7") return exportImgSrcText(); //數字鍵7
+        if (event.code === "Numpad8" || event.key === "8") return newTabView(); //數字鍵8
+        if (event.code === "Numpad9" || event.key === "9") return toggleFavor(); //數字鍵9
+        if (event.code === "NumpadSubtract" || event.key === "-") { //數字鍵-
+            fun.clearSetTimeout();
+            return reduceZoom();
+        }
+        if (event.code === "NumpadAdd" || event.key === "+") { //數字鍵+
+            fun.clearSetTimeout();
+            return increaseZoom();
+        }
+        if (event.code === "NumpadDecimal" || event.key === ".") { //數字鍵.
+            fun.clearSetTimeout();
+            return cancelZoom();
+        }
+        if (event.code === "NumpadMultiply" || event.key === "*") { //數字鍵*
+            if (!ge("body>#FullPictureLoadOptions")) {
+                addFullPictureLoadOptionsMain();
+                optionsSetValue();
+            }
+            return ge("#FullPictureLoadOptions").removeAttribute("style");
+        }
+        if (event.code === "Escape" || event.key === "Escape") { //Esc鍵
+            ge("#FullPictureLoadOptions").style.display = "none";
+            return;
+        }
+        if (event.code === "NumpadDivide" || event.key === "/") { //數字鍵/
+            fun.showMsg(displayLanguage.str_91);
+            localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
+            setTimeout(() => location.reload(), 1000);
+            return;
+        }
+    };
+
+    const toggleUI = async () => {
+        if (!"SPA" in siteData || !isFn(siteData.SPA) || !!ge(".FullPictureLoadImage") || isFetching) return;
+        const validPage = siteData.SPA();
+        if (validPage === true || isPromise(validPage)) {
+            isValidPage = true;
+            if (isAddFullPictureLoadButton) addFullPictureLoadButton();
+            if (isAddFullPictureLoadFixedMenu) addFullPictureLoadFixedMenu();
+            if (isAddnewTabViewButton) addnewTabViewButton();
+            document.addEventListener("keydown", addKeyEvent);
+            if (isPromise(validPage)) {
+                await validPage;
+            }
+            if ("insertImg" in siteData) {
+                await fun.delay(1000, 0);
+                let [, insertMode, ] = siteData.insertImg;
+                if (insertMode === 1 || insertMode === 2) {
+                    fun.immediateInsertImg();
+                }
+            }
+        } else {
+            fun.remove(".FullPictureLoadFixedBtn,#FullPictureLoadEye,#FullPictureLoadFixedMenu,#FullPictureLoadFixedMenuB");
+            document.removeEventListener("keydown", addKeyEvent);
+            isValidPage = false;
+        }
+        await fun.delay(200, 0);
+    };
+
+    let tempLink = null;
+    const getNextLink = async (next) => {
+        isFn(next) ? tempLink = await next() : tempLink = fun.ge(next);
+        debug("\n圖片全載NEXT：", tempLink);
+        try {
+            if (tempLink !== null) {
+                isString(tempLink) ? nextLink = tempLink : null;
+                if (isEle(tempLink) && tempLink?.tagName == "A") {
+                    try {
+                        /^http/.test(tempLink.href) ? nextLink = tempLink.href : nextLink = null;
+                    } catch {}
+                }
+            }
+        } catch {}
+    }
+    const getTitle = async (title) => {
+        let text;
+        if (isString(title)) {
+            text = fun.dt({
+                s: title
+            });
+        } else if (isFn(title)) {
+            text = await title();
+        }
+        return text;
+    };
+
     let showOptions = false;
     let comicSwitch = false;
 
@@ -26876,26 +27111,17 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 }
                 let title = data.customTitle;
                 if (!!title) {
-                    const getTitle = async () => {
-                        let text;
-                        if (isString(title)) {
-                            text = fun.dt({
-                                s: title
-                            });
-                        } else if (isFn(title)) {
-                            text = await title();
-                        }
-                        return text;
-                    };
-                    customTitle = await getTitle();
+                    customTitle = await getTitle(title);
                     debug(`\n自定義標題：${customTitle}`);
                     if (!!data.observerTitle) {
                         fun.addMutationObserver(async () => {
-                            if (!!siteData.insertImg && !ge(".FullPictureLoadImage")) {
-                                fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = "none"));
+                            if (isFetching) return;
+                            await toggleUI();
+                            let newCustomTitle = await getTitle(title);
+                            if ("capture" in siteData && !newCustomTitle) {
+                                captureSrcB(1);
                             }
-                            let newCustomTitle = await getTitle();
-                            if (customTitle !== newCustomTitle && newCustomTitle != null) {
+                            if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined) {
                                 customTitle = newCustomTitle;
                                 debug(`\n自定義標題：${newCustomTitle}`);
                                 if ("capture" in siteData) {
@@ -26904,61 +27130,46 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                             }
                         });
                     }
-                    if (!!data.observerURL) {
-                        fun.addMutationObserver(async () => {
-                            if (!!siteData.insertImg && !ge(".FullPictureLoadImage")) {
-                                fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = "none"));
+                    const observerURL_CB = async () => {
+                        if (isFetching) return;
+                        await toggleUI();
+                        if (siteUrl !== _unsafeWindow.document.URL.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "")) {
+                            siteUrl = _unsafeWindow.document.URL;
+                            let newCustomTitle = await getTitle(title);
+                            if ("capture" in siteData && !newCustomTitle) {
+                                captureSrcB(1);
                             }
-                            if (siteUrl !== _unsafeWindow.document.URL.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "")) {
-                                siteUrl = _unsafeWindow.document.URL;
-                                let newCustomTitle = await getTitle();
-                                if (customTitle !== newCustomTitle && newCustomTitle != null) {
-                                    customTitle = newCustomTitle;
-                                    debug(`\n自定義標題：${newCustomTitle}`);
+                            if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined) {
+                                customTitle = newCustomTitle;
+                                debug(`\n自定義標題：${newCustomTitle}`);
+                                if ("capture" in siteData) {
+                                    captureSrcB();
                                 }
                             }
-                        }, MutationObserverConfig, document.body);
+                            if ("next" in siteData) {
+                                await getNextLink(siteData.next);
+                                //debug(`\nURL變換 nextLink：${nextLink}`);
+                            }
+                        }
+                    };
+                    if ("observerURL" in data) {
+                        fun.addMutationObserver(observerURL_CB);
+                    }
+                    if ("observerLoop" in data) {
+                        setInterval(observerURL_CB, 200);
                     }
                 }
                 let next = data.next;
                 if (!!next) {
-                    let link = null;
-                    const getNextLink = async () => {
-                        isFn(next) ? link = await next() : link = fun.ge(next);
-                        debug("\n圖片全載NEXT：", link);
-                        try {
-                            if (link !== null) {
-                                isString(link) ? nextLink = link : null;
-                                if (isEle(link) && link?.tagName == "A") {
-                                    try {
-                                        /^http/.test(link.href) ? nextLink = link.href : nextLink = null;
-                                    } catch {}
-                                }
-                            }
-                        } catch {}
-                    }
-                    await getNextLink();
-                    if (!!data.observerURL || !!data.observerNext) {
-                        let node;
-                        isString(data.observerNext) ? node = fun.ge(data.observerNext) : node = null;
-                        fun.addMutationObserver(async () => {
-                            if (/\?page=\d+$/.test(_unsafeWindow.document.URL)) return;
-                            if (siteUrl !== _unsafeWindow.document.URL.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "")) {
-                                siteUrl = _unsafeWindow.document.URL;
-                                await getNextLink();
-                                debug(`\nURL變換 nextLink：${nextLink}`);
-                            }
-                            if (data.observerNext) await getNextLink();
-                        }, MutationObserverConfig, node || document.body);
-                    }
+                    await getNextLink(next);
                     const callback = () => {
                         if (isFn(next)) {
                             fun.showMsg(displayLanguage.str_34, 0);
                             nextLink ? location.href = nextLink : fun.showMsg(displayLanguage.str_37);
                         } else if (isString(next)) {
-                            if (link) {
+                            if (tempLink) {
                                 //link.click();
-                                elementClick(link);
+                                elementClick(tempLink);
                                 fun.showMsg(displayLanguage.str_35);
                             } else {
                                 fun.showMsg(displayLanguage.str_37);
@@ -26972,11 +27183,16 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     });
                 }
                 let prev = data.prev;
-                if (isString(prev) && prev != 1) {
+                if (!!prev) {
                     document.addEventListener("keydown", event => {
                         if (ge(".fancybox-container,.fancybox__container")) return;
                         if (event.code === "ArrowLeft") {
                             event.preventDefault();
+                            if (prev === 1) {
+                                fun.showMsg(displayLanguage.str_38);
+                                history.back();
+                                return;
+                            }
                             let ele = fun.ge(prev);
                             if (ele) {
                                 //ele.click();
@@ -26985,15 +27201,6 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                             } else {
                                 fun.showMsg(displayLanguage.str_40);
                             }
-                        }
-                    });
-                } else if (prev == 1) {
-                    document.addEventListener("keydown", event => {
-                        if (ge(".fancybox-container,.fancybox__container")) return;
-                        if (event.code === "ArrowLeft") {
-                            event.preventDefault();
-                            fun.showMsg(displayLanguage.str_38);
-                            history.back();
                         }
                     });
                 }
@@ -27090,20 +27297,6 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     fun.openInNewTab(openInNewTab);
                     fun.addMutationObserver(() => fun.openInNewTab(openInNewTab));
                 }
-                let autoDownload = siteData.autoDownload;
-                if (isArray(autoDownload)) {
-                    let [autoStart] = autoDownload;
-                    if (autoStart == 1 || options.autoDownload == 1) DownloadFn();
-                }
-                let insertImg = data.insertImg;
-                if (isArray(insertImg)) {
-                    if (isArray(autoDownload)) {
-                        let [autoStart] = autoDownload;
-                        if (autoStart == 1 || options.autoDownload == 1) break;
-                    }
-                    let [, insertMode] = insertImg;
-                    if (insertMode == 1 || insertMode == 2) fun.immediateInsertImg();
-                }
                 let topButton = data.topButton;
                 if (isBoolean(topButton) && topButton === true) addReturnTopButton();
                 let setFancybox = data.setFancybox;
@@ -27120,6 +27313,39 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             debug("出錯之前的規則", customData[i - 1]);
             //alert(`圖片全載規則出錯 索引${i}`);
             return;
+        }
+    }
+
+    if ("insertImg" in siteData) {
+        let insertImg = siteData.insertImg;
+        let autoDownload = siteData.autoDownload;
+        if (isArray(insertImg)) {
+            let autoStart;
+            if (isArray(autoDownload)) {
+                [autoStart] = autoDownload;
+                autoStart = (autoStart == 1 || options.autoDownload == 1);
+            }
+            let [, insertMode] = insertImg;
+            if (insertMode == 1 && !autoStart || insertMode == 2 && !autoStart) {
+                FullPictureLoadAutoInsertImg = _GM_getValue("FullPictureLoadAutoInsertImg", 1);
+                _GM_registerMenuCommand(FullPictureLoadAutoInsertImg == 0 ? "❌ " + displayLanguage.str_139 : "✔️  " + displayLanguage.str_139, () => {
+                    FullPictureLoadAutoInsertImg == 0 ? _GM_setValue("FullPictureLoadAutoInsertImg", 1) : _GM_setValue("FullPictureLoadAutoInsertImg", 0);
+                    location.reload();
+                });
+                if (FullPictureLoadAutoInsertImg == 1) {
+                    fun.immediateInsertImg();
+                }
+            }
+        }
+    }
+
+    if ("autoDownload" in siteData) {
+        let autoDownload = siteData.autoDownload;
+        if (isArray(autoDownload)) {
+            let [autoStart] = autoDownload;
+            if (autoStart == 1 || options.autoDownload == 1) {
+                DownloadFn();
+            }
         }
     }
 
@@ -27301,8 +27527,12 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     };
 
-    const captureSrcB = async () => {
+    const captureSrcB = async (invalidPage = 0) => {
         if (isDownloading || isFetching) return;
+        if (invalidPage === 1 && !!ge("#FullPictureLoadCaptureNum") && ge("#FullPictureLoadCaptureNum")?.innerText != 0) {
+            ge("#FullPictureLoadCaptureNum").innerText = 0;
+            return;
+        }
         await fun.delay(1000, 0);
         let captureSrcArray = await getImgs(siteData.capture ?? siteData.imgs);
         let num = captureSrcArray.length;
@@ -27449,65 +27679,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 });
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
             }
-            document.addEventListener("keydown", async event => {
-                if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
-                if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
-                if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptions:not([style])")) return;
-                if (["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName)) return;
-                if (event.ctrlKey && event.altKey && (event.code === "KeyT" || event.key === "t" || event.key === "T")) {
-                    let str = _unsafeWindow.getSelection().toString();
-                    str == "" ? null : customTitle = str;
-                    let newTitle = await prompt("New Title", customTitle);
-                    newTitle == null ? null : customTitle = newTitle;
-                    fun.showMsg(displayLanguage.str_118);
-                    debug("圖集新標題", newTitle);
-                }
-                if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
-                    fastDownload = false;
-                    return DownloadFn();
-                }
-                if (event.code === "Numpad1" || event.key === "1") return copyImgSrcText(); //數字鍵1
-                if (event.code === "Numpad2" || event.key === "2") return goToImg("first"); //數字鍵2
-                if (event.code === "Numpad3" || event.key === "3") { //數字鍵3
-                    fastDownload = true;
-                    return DownloadFn();
-                }
-                if (event.code === "Numpad4" || event.key === "4") return goToImg("last"); //數字鍵4
-                if (event.code === "Numpad5" || event.key === "5") return toggleImgMode(); //數字鍵5
-                if (event.code === "Numpad6" || event.key === "6") return autoScrollEles(); //數字鍵6
-                if (event.code === "Numpad7" || event.key === "7") return exportImgSrcText(); //數字鍵7
-                if (event.code === "Numpad8" || event.key === "8") return newTabView(); //數字鍵8
-                if (event.code === "Numpad9" || event.key === "9") return toggleFavor(); //數字鍵9
-                if (event.code === "NumpadSubtract" || event.key === "-") { //數字鍵-
-                    fun.clearSetTimeout();
-                    return reduceZoom();
-                }
-                if (event.code === "NumpadAdd" || event.key === "+") { //數字鍵+
-                    fun.clearSetTimeout();
-                    return increaseZoom();
-                }
-                if (event.code === "NumpadDecimal" || event.key === ".") { //數字鍵.
-                    fun.clearSetTimeout();
-                    return cancelZoom();
-                }
-                if (event.code === "NumpadMultiply" || event.key === "*") { //數字鍵*
-                    if (!ge("body>#FullPictureLoadOptions")) {
-                        addFullPictureLoadOptionsMain();
-                        optionsSetValue();
-                    }
-                    return ge("#FullPictureLoadOptions").removeAttribute("style");
-                }
-                if (event.code === "Escape" || event.key === "Escape") { //Esc鍵
-                    ge("#FullPictureLoadOptions").style.display = "none";
-                    return;
-                }
-                if (event.code === "NumpadDivide" || event.key === "/") { //數字鍵/
-                    fun.showMsg(displayLanguage.str_91);
-                    localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
-                    setTimeout(() => location.reload(), 1000);
-                    return;
-                }
-            });
+            document.addEventListener("keydown", addKeyEvent);
         }
 
         if (siteData.icon == 0) {
@@ -27515,6 +27687,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         } else if (options.icon == 1 || siteData.icon == 1) {
             addFullPictureLoadButton();
         }
+        toggleUI();
     }
 
     if ("category" in siteData) {
