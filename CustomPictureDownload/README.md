@@ -165,8 +165,6 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         return link;
     },
     observerURL: true, //觀察URL變化重新取得標題字串和nextLink，用於SPA網頁
-    observerNext: true, //觀察元素變化重新取得nextLink
-    observerNext: ".read_nav", //指定觀察元素的子元素變化重新取得nextLink
     prev: "//a[text()='上一章']", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //插入自訂樣式，基本上就是用來隱藏廣告用的。
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
@@ -246,7 +244,6 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     },
     prev: "",
     observerURL: true,
-    observerNext: true,
     css: "",
     autoClick: "",
     autoClick: ["", time],
@@ -1924,6 +1921,14 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.xofulitu521.xyz/xoxo">XO福利圖</a>
+                </td>
+                <td>
+                    <a href="https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/">網站跳轉</a>，分類頁添加了自動翻頁
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://zipaipic.com/">自拍图库</a>
                 </td>
                 <td>自拍图库.com</td>
@@ -2655,7 +2660,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://imgcup.com/">imgcup.com</a>
                 </td>
-                <td>SPA網頁</td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2845,12 +2850,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://erothots.co/albums">EroThots</a>
-                </td>
-                <td>無法匯出、下載，需要透過快捷鍵複製URL給Motrix下載，來源爬取BITCHES GIRLS。</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://cyberdrop.me/">CyberDrop</a>
                 </td>
                 <td>手動插入圖片，需要知道檔案鏈結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
@@ -2987,6 +2986,18 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://gamehappylife.top/">Game-happy-life</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xikxak.com/">XikXak</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://cosplay69.net/category/album/">Cosplay69</a>
                 </td>
                 <td></td>
@@ -3002,18 +3013,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.erocosplay.org/">Ero Cosplay</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.simply-porn.com/galleries">Simply Porn</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.simply-cosplay.com/galleries/new">Simply Cosplay</a>
-                </td>
-                <td>SPA網頁，只支持galleries類別。</td>
             </tr>
             <tr>
                 <td>
@@ -3098,6 +3097,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>， <a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>， <a href="https://vipthots.com/">VIPTHOTS</a>， <a href="https://hentaibitches.com/">HENTAI BITCHES</a>， <a href="https://leaksfan.com/">LEAKSFANS</a>， <a href="https://charmingass.com/">CHARMINGASS</a>， <a href="https://leakspie.com/">LEAKS PIE</a>， <a href="https://cherryleaks.com/">CHERRY LEAKS</a>， <a href="https://sweetleaks.com/">SWEETLEAKS</a>， <a href="https://ocosplay.com/">OCOSPLAY</a>， <a href="https://webcharming.com/">WEB CHARMING</a>， <a href="https://cosplaykittys.com/">COSPLAY KITTYS</a>， <a href="https://titspie.com/">TITSPIE</a>， <a href="https://cosplaysosedki.com/">COSPLAY SOSEDKI</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hoehot.com/">HoeHot</a>
+                </td>
+                <td>手動插入圖片，SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -3555,7 +3560,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.redpics.top/">Redpics</a>
                 </td>
-                <td>SPA網頁，手動插入圖片</td>
+                <td>手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -3716,7 +3721,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.erome.com/explore">EroMe</a>
                 </td>
                 <td>
-                    <a href="https://erome.pics/explore/">EroMe erome.pics</a>
+                    <a href="https://erome.fan/explore/">EroMe erome.pics</a>
                 </td>
             </tr>
             <tr>
@@ -4199,11 +4204,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.xofulitu521.xyz/xoxo">XO福利圖</a>
+                    <a href="https://photo.lovegua.com/">瓜老師の鉴赏课</a>
                 </td>
-                <td>
-                    <a href="https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/">網站跳轉</a>，分類頁添加了自動翻頁
-                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4440,7 +4443,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.hentai321.top/">山寨3hentai</a>
                 </td>
-                <td>作用在圖片清單</td>
+                <td>作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td>
@@ -4452,7 +4455,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://eahentai.com/">EAHentai</a>
                 </td>
-                <td>作用在圖片清單，SPA網頁</td>
+                <td>作用在圖片清單頁，SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -4482,31 +4485,31 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://nhentai.com/en/latest">nHentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁，SPA網頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://hentaihand.com/en/latest">HentaiHand</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁，SPA網頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://hentaiera.com/">HentaiEra</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.tsumino.com/">TSUMINO</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="http://imhentai.xxx/">IMHentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
@@ -4524,19 +4527,19 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://pururin.to/">Pururin</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://9hentai.com/">9hentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://asmhentai.com/">AsmHentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
@@ -4554,19 +4557,19 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://lhentai.com/">lHentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://fhentai.net/">Fhentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://tmohentai.com/">TMOHentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
