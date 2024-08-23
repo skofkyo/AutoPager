@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.0
+// @version            2.7.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -23,6 +23,8 @@
 // @grant              GM.xmlHttpRequest
 // @grant              GM_registerMenuCommand
 // @grant              GM.registerMenuCommand
+// @grant              GM_unregisterMenuCommand
+// @grant              GM.unregisterMenuCommand
 // @grant              GM_openInTab
 // @grant              GM.openInTab
 // @grant              GM_getValue
@@ -7923,7 +7925,7 @@ a:has(>div>div>img),
             return fun.gae(".entry-content img");
         },
         SPA: () => document.URL.includes(".html"),
-        observerLoop: true,
+        observerURL: true,
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".entry-content p:has(>img)"], 2
@@ -11376,20 +11378,11 @@ a:has(>div>div>img),
             h: [
                 "18comic.vip",
                 "18comic.org",
-                "18comic-cn.vip",
-                "18comic-palworld.club",
-                "18comic-c.xyz",
-                "18comic-c.art",
-                "18comic-fun.xyz",
                 "jmcomic.me",
                 "jmcomic1.me",
-                "jm-comic1.art",
-                "jm-comic2.art",
-                "jm-comic3.art",
-                "18comic-ff7rebirth.xyz",
-                "18comic-ff7rebirth.quest",
-                "18comic-ff7rebirth.club",
-                "18comic-erdtree.cc"
+                "18comic-c104.xyz",
+                "18comic-zzz.xyz",
+                "18comic-c104.vip"
             ],
             p: /^\/photo\/\d+/
         }),
@@ -11397,7 +11390,7 @@ a:has(>div>div>img),
             setTimeout(() => {
                 fun.ge("#chk_cover").click();
                 fun.ge("#chk_guide").click();
-            }, 1000);
+            }, 2000);
             fun.remove("//div[contains(text(),'插件')] | //div[@class='col-xs-6'][div[@data-group]] | //div[@class='panel-body']//div[@data-group] | //div[@class='row'][div[div[@data-group]]] | //div[@class='div_sticky2 hidden-lg']");
             await fun.getNP(".scramble-page", ".pagination li.active+li>a:not(.prevnext)");
         },
@@ -11414,6 +11407,7 @@ a:has(>div>div>img),
             for (let i = 0; i < imgs.length; i++) {
                 let getRedraw = new Promise(async resolve => {
                     const url = imgs[i].dataset.original ?? imgs[i].dataset.src;
+                    let error = false;
                     if (url.includes(".gif") || aid < scramble_id) {
                         resolve(url);
                     } else {
@@ -11422,9 +11416,14 @@ a:has(>div>div>img),
                         const [id, ex] = fileName.split(".");
                         const img = new Image();
                         img.src = URL.createObjectURL(blob);
-                        await new Promise((resolve, reject) => {
-                            (img.onload = resolve, img.onerror = reject)
+                        await new Promise(load => {
+                            img.onload = load;
+                            img.onerror = () => {
+                                error = true;
+                                resolve(null);
+                            }
                         });
+                        if (error) return;
                         const imgWidth = img.naturalWidth;
                         const imgHeight = img.naturalHeight;
                         const canvas = new OffscreenCanvas(imgWidth, imgHeight);
@@ -11449,7 +11448,7 @@ a:has(>div>div>img),
                     }
                 });
                 arr.push(getRedraw);
-                await fun.delay(100);
+                await fun.delay(100, 0);
             }
             return arr;
         },
@@ -11481,27 +11480,18 @@ a:has(>div>div>img),
             h: [
                 "18comic.vip",
                 "18comic.org",
-                "18comic-cn.vip",
-                "18comic-palworld.club",
-                "18comic-c.xyz",
-                "18comic-c.art",
-                "18comic-fun.xyz",
                 "jmcomic.me",
                 "jmcomic1.me",
-                "jm-comic1.art",
-                "jm-comic2.art",
-                "jm-comic3.art",
-                "18comic-ff7rebirth.xyz",
-                "18comic-ff7rebirth.quest",
-                "18comic-ff7rebirth.club",
-                "18comic-erdtree.cc"
+                "18comic-c104.xyz",
+                "18comic-zzz.xyz",
+                "18comic-c104.vip"
             ]
         }),
         init: () => {
             setTimeout(() => {
                 fun.ge("#chk_cover").click();
                 fun.ge("#chk_guide").click();
-            }, 1000);
+            }, 2000);
             let selectors = [
                 "//div[contains(text(),'插件')]",
                 "//div[@class='col-xs-6'][div[@data-group]]",
@@ -11943,7 +11933,7 @@ a:has(>div>div>img),
         insertImg: ["#previews,main>.group", 0],
         customTitle: () => fun.gt("#title>h2") ?? fun.gt("#title>h1"),
         SPA: () => document.URL.includes("/g/"),
-        observerTitle: true,
+        observerURL: true,
         fetch: 1,
         category: "hcomic"
     }, {
@@ -11968,7 +11958,7 @@ a:has(>div>div>img),
             s: "main h1",
             d: "Hentai Manga"
         }),
-        observerTitle: true,
+        observerURL: true,
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/圖片清單頁",
@@ -20314,6 +20304,7 @@ if (next) {
     const _GM_listValues = (() => isFn(GM_listValues) ? GM_listValues : GM.listValues)();
     const _GM_deleteValue = (() => isFn(GM_deleteValue) ? GM_deleteValue : GM.deleteValue)();
     const _GM_registerMenuCommand = (() => isFn(GM_registerMenuCommand) ? GM_registerMenuCommand : GM.registerMenuCommand)();
+    const _GM_unregisterMenuCommand = (() => isFn(GM_unregisterMenuCommand) ? GM_unregisterMenuCommand : GM.unregisterMenuCommand)();
     const _GM_getResourceText = (() => isFn(GM_getResourceText) ? GM_getResourceText : GM.getResourceText)();
     const _GM_addElement = (() => isFn(GM_addElement) ? GM_addElement : GM.addElement)();
 
@@ -20870,7 +20861,7 @@ if (next) {
     let FullPictureLoadBlacklist = localStorage.getItem("FullPictureLoadBlacklist") ?? 0;
     _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
     _GM_registerMenuCommand("📓 Github README.md", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/README.md"));
-    _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + displayLanguage.str_138 : "✔️  " + displayLanguage.str_138, () => {
+    const FullPictureLoadBlacklist_menu_command_id = _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + displayLanguage.str_138 : "✔️  " + displayLanguage.str_138, () => {
         FullPictureLoadBlacklist == 0 ? localStorage.setItem("FullPictureLoadBlacklist", 1) : localStorage.setItem("FullPictureLoadBlacklist", 0);
         location.reload();
     });
@@ -20955,10 +20946,10 @@ if (next) {
                     checkE = !!fun.ge(elements);
                 }
             }
-            if ("imgs" in tempData && isString(imgSelector) && !"SPA" in tempData) {
+            if ("imgs" in tempData && isString(imgSelector) && !("SPA" in tempData)) {
                 checkI = !!fun.ge(imgSelector);
             }
-            if ("customTitle" in tempData && isString(titleSelector) && !"SPA" in tempData) {
+            if ("customTitle" in tempData && isString(titleSelector) && !("SPA" in tempData)) {
                 checkT = !!fun.ge(titleSelector);
             }
             return checkH && checkP && checkS && checkE && checkI && checkT;
@@ -22598,7 +22589,7 @@ if (next) {
         },
         //插入圖片函式
         insertImg: (imgsArray, insertTargetEle, mode = 2) => {
-            if (fun.ge(".FullPictureLoadImage") || isFetching) return;
+            if (fun.ge(".FullPictureLoadImage") || isFetching || isDownloading) return;
             let srcArr = [];
             for (let i = 0; i < imgsArray.length; i++) {
                 let check = fun.checkImgSrc(imgsArray[i]);
@@ -22902,7 +22893,7 @@ if (next) {
             }
         },
         immediateInsertImg: async () => {
-            if (ge(".FullPictureLoadImage") || isFetching) return;
+            if (ge(".FullPictureLoadImage") || isFetching || isDownloading) return;
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 let validPage = await siteData.SPA();
                 if (!validPage) return;
@@ -25951,10 +25942,10 @@ if (newWindowData.ViewMode == 1) {
             fun.gae(".itemShow", menuDiv).forEach(e => {
                 e.classList.remove("itemShow");
                 e.classList.add("itemNoShow");
-                e.width = "44px";
+                e.width = "36px";
             });
-            menuDiv.style.width = "54px";
-            menuDiv.lastChild.width = "44px";
+            menuDiv.style.width = "46px";
+            menuDiv.lastChild.width = "36px";
             menuDiv.lastChild.innerText = displayLanguage.str_133;
         }
     };
@@ -26318,7 +26309,7 @@ if (newWindowData.ViewMode == 1) {
     height: auto !important;
     padding: 5px 5px 2px 5px !important;
     position: fixed !important;
-    left: 12px !important;
+    left: 10px !important;
     bottom: 152px !important;
     border: #ccc 1px solid !important;
     border-radius: 3px !important;
@@ -26963,10 +26954,9 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 await validPage;
             }
             if ("insertImg" in siteData) {
-                await fun.delay(1000, 0);
                 let [, insertMode, ] = siteData.insertImg;
                 if (insertMode === 1 || insertMode === 2) {
-                    fun.immediateInsertImg();
+                    await fun.immediateInsertImg();
                 }
             }
         } else {
@@ -27115,7 +27105,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                     debug(`\n自定義標題：${customTitle}`);
                     if (!!data.observerTitle) {
                         fun.addMutationObserver(async () => {
-                            if (isFetching) return;
+                            if (isFetching || isDownloading) return;
                             await toggleUI();
                             let newCustomTitle = await getTitle(title);
                             if ("capture" in siteData && !newCustomTitle) {
@@ -27130,8 +27120,36 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                             }
                         });
                     }
-                    const observerURL_CB = async () => {
-                        if (isFetching) return;
+                    const observerURL_CB = async (mutationList, observer) => {
+                        if (observer) {
+                            observer.disconnect();
+                            setTimeout(async () => {
+                                const body = await fun.waitEle("body");
+                                observer.observe(body, MutationObserverConfig);
+                                await toggleUI();
+                            }, 200);
+                        }
+                        if (mutationList) {
+                            for (const mutation of mutationList) {
+                                if (mutation.type === "childList" && mutation.target.className?.includes("Full")) {
+                                    return;
+                                }
+                                const addedNodes = mutation.addedNodes;
+                                for (const node of addedNodes) {
+                                    if (node.id?.includes("Full")) {
+                                        return;
+                                    }
+                                }
+                                const removedNodes = mutation.removedNodes;
+                                for (const node of removedNodes) {
+                                    if (node.id?.includes("Full")) {
+                                        return;
+                                    }
+                                }
+                            }
+                            //console.log(mutationList);
+                        }
+                        if (isFetching || isDownloading) return;
                         await toggleUI();
                         if (siteUrl !== _unsafeWindow.document.URL.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "")) {
                             siteUrl = _unsafeWindow.document.URL;
@@ -27153,10 +27171,7 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                         }
                     };
                     if ("observerURL" in data) {
-                        fun.addMutationObserver(observerURL_CB);
-                    }
-                    if ("observerLoop" in data) {
-                        setInterval(observerURL_CB, 200);
+                        new MutationObserver(observerURL_CB).observe(document.body, MutationObserverConfig);
                     }
                 }
                 let next = data.next;
@@ -27316,6 +27331,11 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         }
     }
 
+    if (!("category" in siteData)) {
+        _GM_unregisterMenuCommand(FullPictureLoadBlacklist_menu_command_id);
+        return;
+    }
+
     if ("insertImg" in siteData) {
         let insertImg = siteData.insertImg;
         let autoDownload = siteData.autoDownload;
@@ -27454,15 +27474,32 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-    if (hasTouchEvents && siteData.insertImg && (siteData.insertImg[1] == 0 || siteData.insertImg[1] == 3)) {
+    if (hasTouchEvents && "insertImg" in siteData) {
         let timeId;
-        document.addEventListener("touchstart", event => {
-            if ((event.target.tagName == "IMG" && event.target.id != "FullPictureLoad") || event.target.tagName == "CANVAS") {
-                timeId = setTimeout(() => copyImgSrcText(), 500);
+        const touchstartCB = event => {
+            //console.log(event);
+            if (isFetching || isDownloading) return;
+            const check = () => {
+                if (["IMG", "CANVAS"].some(t => t === event.target.tagName) && event.target.id != "FullPictureLoad") {
+                    return true;
+                } else if (["A", "FIGURE", "SPAN"].some(t => t === event.target.tagName)) {
+                    return !!event.target.querySelector("img,canvas");
+                }
+                return false;
+            };
+            if (check()) {
+                timeId = setTimeout(() => {
+                    copyImgSrcText();
+                }, 500);
             }
-        });
-        document.addEventListener("touchmove", event => clearTimeout(timeId));
-        document.addEventListener("touchend", event => clearTimeout(timeId));
+        };
+        const clearCB = () => {
+            if (isFetching || isDownloading) return;
+            clearTimeout(timeId);
+        };
+        document.addEventListener("touchstart", touchstartCB);
+        document.addEventListener("touchmove", clearCB);
+        document.addEventListener("touchend", clearCB);
     }
 
     //debug("\n最終options物件\n", options);
