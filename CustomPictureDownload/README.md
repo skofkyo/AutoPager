@@ -4485,13 +4485,13 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://nhentai.com/en/latest">nHentai</a>
                 </td>
-                <td>作用在圖片清單頁/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁，SPA網頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://hentaihand.com/en/latest">HentaiHand</a>
                 </td>
-                <td>作用在圖片清單頁/閱讀頁</td>
+                <td>作用在圖片清單頁/閱讀頁，SPA網頁</td>
             </tr>
             <tr>
                 <td>
