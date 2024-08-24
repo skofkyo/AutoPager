@@ -364,6 +364,8 @@ https://photobook.club/*
 *nvhai8.com/body/*/*.htm
 *www.pixibb.com/*
 *://*putmega.com/*
+*://*imgbb.com/albums*
+*://ibb.co/album/*
 *umei.net/tupian/*.html
 *reprint-kh.com/archives/*
 *www.simply-cosplay.com*
