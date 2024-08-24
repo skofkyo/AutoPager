@@ -1,4 +1,4 @@
-2024/08/17 05:21
+2024/08/24 14:54
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -740,6 +740,10 @@ PixiBB
 
 PutMega
 *://*putmega.com/*
+
+ImgBB
+*://*imgbb.com/albums*
+*://ibb.co/album/*
 
 优美图录
 *umei.net/tupian/*.html
