@@ -61,7 +61,7 @@
     let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
         enable: 0, //!!!維持0不要改!!!
         icon: 1, //是否顯示左下圖示，1：開啟、0：關閉
-        threading: 32, //最大下載線程數
+        threading: 8, //最大下載線程數
         zip: 1, //1：圖片下載後壓縮打包，0：批量下載圖片，無法全自動下載
         file_extension: "zip", //zip or cbz
         autoDownload: 0, //!!!維持0不要改!!!建議透過UI選項設定來開啟，需要customData也有autoDownload
@@ -352,7 +352,6 @@ a:has(>div>div>img),
         button: [4, "24%", 4],
         insertImg: [".bigimg", 2],
         customTitle: () => fun.title(" - ", 3),
-        threading: 4,
         category: "nsfw1"
     }, {
         name: "JKF",
@@ -641,7 +640,6 @@ a:has(>div>div>img),
         next: "//span[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".item_title>h1",
-        //threading: 4,
         css: ".content br{display:none!important}",
         category: "nsfw1"
     }, {
@@ -658,7 +656,6 @@ a:has(>div>div>img),
         next: "//span[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".item_title>h1",
-        //threading: 4,
         css: ".item_info>a,p[align='center']:has(>img),.item_title>div[id],.item_title>a,.content br,.bottom_fixed,.update_area_lists>div[id]{display:none!important}",
         category: "nsfw1"
     }, {
@@ -687,7 +684,6 @@ a:has(>div>div>img),
         next: ".article-nav-next>a[href$=html]",
         prev: ".article-nav-prev>a[href$=html]",
         customTitle: ".article-title",
-        //threading: 4,
         css: ".article-header>div[id],.article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id]{display:none!important}",
         category: "nsfw1"
     }, {
@@ -701,7 +697,6 @@ a:has(>div>div>img),
         next: "//span/b[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span/b[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".focusbox h1+div",
-        //threading: 4,
         css: ".imgwebp br,img[src*='zz2.gif']{display:none!important}",
         category: "nsfw1"
     }, {
@@ -716,7 +711,6 @@ a:has(>div>div>img),
         next: "//span/b[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span/b[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".news-title-h1",
-        //threading: 4,
         css: ".newstext br,img[src*='zz2.gif']{display:none!important}",
         category: "nsfw1"
     }, {
@@ -738,7 +732,6 @@ a:has(>div>div>img),
         next: ".info-next li:last-child a",
         prev: ".info-next li:first-child a",
         customTitle: "h1",
-        //threading: 4,
         category: "nsfw1"
     }, {
         name: "美人图",
@@ -758,7 +751,6 @@ a:has(>div>div>img),
         next: "//span[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".item_title>h1",
-        //threading: 4,
         css: "img[alt]~br{display:none!important}",
         category: "nsfw1"
     }, {
@@ -1579,7 +1571,6 @@ a:has(>div>div>img),
         insertImg: [".photos-list", 2],
         customTitle: "h1",
         css: ".albums-list img,.photos-list img{opacity:1!important}",
-        threading: 8,
         category: "nsfw2"
     }, {
         name: "偽微圖坊",
@@ -1740,7 +1731,6 @@ a:has(>div>div>img),
         next: ".group-next>a",
         prev: ".group-prev>a",
         customTitle: ".ptitle>h1",
-        threading: 3,
         category: "nsfw1"
     }, {
         name: "MM1311",
@@ -2879,7 +2869,6 @@ a:has(>div>div>img),
         ],
         go: 1,
         topButton: true,
-        threading: 12,
         customTitle: ".gtitle1>h1",
         css: "body>.mask{display:none!important}",
         category: "nsfw1"
@@ -2906,7 +2895,6 @@ a:has(>div>div>img),
             [".mtp", 2, ".mtp"], 2
         ],
         topButton: true,
-        threading: 5,
         customTitle: ".tmsg>h1",
         css: ".tpmh img{filter:unset!important;}",
         category: "nsfw1"
@@ -4363,7 +4351,6 @@ a:has(>div>div>img),
             fun.remove("#showmore,#next_page,.content-action-buttons");
         },
         downloadVideo: true,
-        threading: 4,
         category: "nsfw2"
     }, {
         name: "Fapachi",
@@ -7017,7 +7004,6 @@ a:has(>div>div>img),
         customTitle: ".post__title",
         downloadVideo: true,
         topButton: true,
-        threading: 2,
         fetch: 1,
         category: "nsfw2"
     }, {
@@ -7042,7 +7028,6 @@ a:has(>div>div>img),
         go: 1,
         customTitle: ".scrape__title",
         topButton: true,
-        threading: 2,
         fetch: 1,
         category: "nsfw2"
     }, {
@@ -8806,7 +8791,6 @@ a:has(>div>div>img),
             ["#FullPictureLoadMainImgBox", 0, ".spotlight-group,#touch_to_see"], 2
         ],
         customTitle: () => fun.ge("#post_content h1").textContent.replaceAll("\n", "").trim(),
-        threading: 8,
         category: "nsfw2"
     }, {
         name: "EPORNER Photo",
@@ -9035,7 +9019,6 @@ a:has(>div>div>img),
         ],
         go: 1,
         css: "a#loadMore,.my-girls-popup-element{display:none!important}",
-        threading: 12,
         category: "nsfw2"
     }, {
         name: "X-video",
@@ -9404,7 +9387,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["//td[div[@id='slideshow']]", 2],
         customTitle: "#main h1",
-        threading: 8,
         category: "nsfw2"
     }, {
         name: "Fuskator 圖片清單頁",
@@ -9780,7 +9762,6 @@ a:has(>div>div>img),
             [".entry-footer", 2], 3
         ],
         go: 1,
-        threading: 10,
         customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
@@ -11622,7 +11603,6 @@ a:has(>div>div>img),
             return t.length > 0 ? t : fun.gt("#gn").replace(/\|.+|\[\d+[\w\.\+\s-]+\]/i, "").trim();
         },
         topButton: true,
-        threading: 4,
         category: "hcomic"
     }, {
         name: "E-Hentai圖片清單頁",
@@ -11640,7 +11620,6 @@ a:has(>div>div>img),
         customTitle: () => fun.title(" - E-Hentai", 1).replace(/\|.+/, "").replace(/\//, "").trim(),
         go: 1,
         topButton: true,
-        threading: 8,
         category: "hcomic"
     }, {
         name: "nhentai圖片清單頁",
@@ -11706,7 +11685,6 @@ a:has(>div>div>img),
                 return h2.length > 4 ? h2 : fun.gt("h1.title,h1");
             }
         },
-        threading: 8,
         go: 1,
         topButton: true,
         css: ".advt{display:none!important}",
@@ -11735,7 +11713,6 @@ a:has(>div>div>img),
             } = _unsafeWindow;
             return _gallery.title.japanese ?? _gallery.title.english;
         },
-        threading: 4,
         category: "hcomic"
     }, {
         name: "nyahentai.red閱讀頁",
@@ -11747,7 +11724,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#image-container", 2],
         customTitle: () => fun.title(" » ", 1),
-        threading: 4,
         category: "hcomic"
     }, {
         name: "www.hentai.name閱讀頁",
@@ -11760,7 +11736,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#image-container", 2],
         customTitle: () => fun.title(" - Hentai.name"),
-        threading: 4,
         category: "hcomic"
     }, {
         name: "simplyhentai.org閱讀頁",
@@ -11773,7 +11748,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#image-container", 2],
         customTitle: () => fun.title(" » ", 1),
-        threading: 4,
         category: "hcomic"
     }, {
         name: "Yabai!",
@@ -12055,7 +12029,6 @@ a:has(>div>div>img),
         customTitle: () => fun.gt("#main-info>h1,#main-info>h2").replace("|", "-"),
         go: 1,
         topButton: true,
-        threading: 4,
         //css: "#header-ban-agsy,#middle-ban-agsy,#footer-ban-agsy{display:none!important}.single-thumb-col{padding:0px!important;width:100%!important}",
         category: "hcomic"
     }, {
@@ -12073,7 +12046,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".reader-image", 2],
         customTitle: () => fun.gt(".reader-title").replace("|", "-"),
-        threading: 4,
         category: "hcomic"
     }, {
         name: "山寨3hentai圖片清單頁",
@@ -12126,7 +12098,6 @@ a:has(>div>div>img),
         customTitle: () => fun.gt(".info>h1").replace("|", "-"),
         go: 1,
         topButton: true,
-        threading: 4,
         category: "hcomic"
     }, {
         name: "HentaiFox閱讀頁",
@@ -12142,7 +12113,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".full_image", 2],
         customTitle: () => fun.title(/ - Page \d+ - HentaiFox/).replace("|", "-"),
-        threading: 4,
         category: "hcomic"
     }, {
         name: "HentaiZap圖片清單頁",
@@ -12245,7 +12215,6 @@ a:has(>div>div>img),
         customTitle: () => fun.ge(".subtitle") ? fun.gt(".subtitle") : fun.gt("h1"),
         go: 1,
         topButton: true,
-        threading: 4,
         category: "hcomic"
     }, {
         name: "HentaiRox閱讀頁",
@@ -12261,7 +12230,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".pre_img", 2],
         customTitle: () => fun.title(/ - Page \d+ - HentaiRox/).replace("|", "-"),
-        threading: 4,
         css: ".pre_img{max-height:unset!important}",
         category: "hcomic"
     }, {
@@ -12301,7 +12269,6 @@ a:has(>div>div>img),
         customTitle: () => fun.ge(".subtitle") ? fun.gt(".subtitle") : fun.gt("h1"),
         go: 1,
         topButton: true,
-        threading: 4,
         category: "hcomic"
     }, {
         name: "HentaiEnvy閱讀頁",
@@ -12318,7 +12285,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".rd_fimg", 2],
         customTitle: () => fun.title(/ - Page \d+ - HentaiEnvy/).replace("|", "-"),
-        threading: 4,
         css: ".rd_fimg{width:auto!important;max-height:unset!important}",
         category: "hcomic"
     }, {
@@ -13075,7 +13041,6 @@ a:has(>div>div>img),
         insertImg: [".comics-thumbnail-wrapper", 2],
         go: 1,
         customTitle: "h4.title",
-        threading: 4,
         referer: "src",
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
@@ -13100,7 +13065,6 @@ a:has(>div>div>img),
             t: fun.ge("//meta[@property='og:title']").content,
             d: /第\d+頁 - /
         }),
-        threading: 4,
         referer: "src",
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
@@ -13168,7 +13132,6 @@ a:has(>div>div>img),
         },
         go: 1,
         topButton: true,
-        threading: 4,
         category: "hcomic"
     }, {
         name: "IMHentai閱讀頁",
@@ -13179,7 +13142,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".pre_img", 2],
         customTitle: () => fun.title("-", 1),
-        threading: 4,
         category: "hcomic"
     }, {
         name: "HentaiEra圖片清單頁",
@@ -13371,7 +13333,6 @@ a:has(>div>div>img),
         next: "//li[a[contains(@class,'bg-info')]]/preceding-sibling::li[1]/a",
         prev: 1,
         customTitle: () => fun.gt(".reader-left-text.text-ellipsis").replace(/\//g, "-"),
-        //threading: 4,
         category: "hcomic"
     }, {
         name: "XlecX",
@@ -14372,7 +14333,6 @@ a:has(>div>div>img),
         insertImg: ["#comicImages", 2],
         customTitle: () => fun.title("|", 1),
         css: "body{overflow:unset!important}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
-        threading: 5,
         category: "hcomic"
     }, {
         name: "HO5HO",
@@ -14399,7 +14359,6 @@ a:has(>div>div>img),
             ["//div[div[article[div[div[a[img[@class='img-responsive']]]]]]]", 2], 2
         ],
         go: 1,
-        threading: 4,
         category: "hcomic"
     }, {
         name: "成人漫画 閱讀頁",
@@ -14409,7 +14368,6 @@ a:has(>div>div>img),
         imgs: ".img-responsive",
         button: [4],
         insertImg: ["//div[img[@class='img-responsive']]", 2],
-        threading: 4,
         category: "hcomic"
     }, {
         name: "H漫画",
@@ -16311,7 +16269,6 @@ if (next) {
         },
         prev: 1,
         customTitle: () => fun.title(" - 漫畫狗"),
-        threading: 1,
         css: ".imgBox{height:auto!important}.fixed-bottom{display:none!important}",
         category: "comic"
     }, {
@@ -16366,7 +16323,6 @@ if (next) {
             let arr = obj.imgs(json);
             fun.picPreload(arr, obj.customTitle(nextDoc), "next");
         },
-        threading: 3,
         css: ".action-list li{width:50% !important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,.clickforceads{display:none !important}",
         infiniteScroll: true,
         category: "comic"
@@ -16451,7 +16407,6 @@ if (next) {
         button: [4],
         insertImg: ["#tbBox", 2],
         autoDownload: [0],
-        threading: 3,
         next: () => {
             const {
                 cInfo
@@ -23301,9 +23256,17 @@ if (next) {
         },
         //確認目前下載線程
         checkDownloadThread: () => {
+            let threading;
+            if (options.threading > 32) {
+                threading = 32;
+            } else if (options.threading < 1) {
+                threading = 1;
+            } else {
+                threading = options.threading;
+            }
             return new Promise(resolve => {
                 let loop = setInterval(() => {
-                    if (currentDownloadThread <= options.threading) {
+                    if (currentDownloadThread <= threading) {
                         clearInterval(loop);
                         resolve();
                     }
