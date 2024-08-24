@@ -131,7 +131,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     init: () => fun.addMutationObserver(() => fun.remove("div[class][style*='z-index']")), //動態刪除元素
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
-    //IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+    //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
     imgs: () => { //也可自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變量或透過api取得的json。
         code;
         return Array;
@@ -518,7 +518,7 @@ fun.createImgBox(String, Number, Number);
 </pre>
 <pre>
 //指定元素選擇器或元素陣列，返回過濾出圖片網址的陣列。
-//IMG、DIV、A、SPAN、LI、FIGURE，支持dataset和backgroundImage
+//IMG、DIV、A、LINK、SPAN、LI、FIGURE，支持dataset和backgroundImage
 //不判斷srcset是因為不是所有網站都遵循srcset屬性的格式
 fun.getImgSrcArr("selector");
 fun.getImgSrcArr("selector", doc = document);
@@ -961,7 +961,7 @@ fun.getEleF(String or Array, String, null or Array [String, Number]);
 -1 ==> -2
 //mode20
  ==> -p-2
-//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fun.getImg("元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
 fun.getImg("selector", max, mode = 1, rText = [null, null], time = 100);
 fun.getImg(String, Number, Number, Array [String or RegExp, String] or null, Number);
@@ -972,7 +972,7 @@ fun.getModeUrl("url", mode, num);
 <pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
 //fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
-//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fun.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
 fun.getImgO("selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 fun.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
@@ -992,7 +992,7 @@ fun.getImgIframe(String, Number, Number, String or  null, Number, Number)
 //數字大於等於100，請求間隔模式單位毫秒。
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
-//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fun.getImgA("元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
 fun.getImgA("selector", "a selector", mode = 0, rText = [null, null], showMsg = 1);
 fun.getImgA("元素選擇器", "A元素選擇器");
@@ -1001,7 +1001,7 @@ fun.getImgA(String, String or Array, Number, , Array [String or RegExp, String] 
 </pre>
 <pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址的陣列
-//IMG、DIV、A、SPAN、LI、FIGURE，6種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A取href屬性。
+//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fun.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
 fun.getImgCorsA("元素選擇器", [網址陣列], time = 100);
 fun.getImgCorsA(String, String or Array, Number);
@@ -1106,7 +1106,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/08/17 05:21</p>
+<p>2024/08/24 14:54</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -2255,7 +2255,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://a.534798.xyz/">性趣套图</a>
+                    <a href="https://tt.xqtt.de/">性趣套图</a>
                 </td>
                 <td></td>
             </tr>
@@ -2484,6 +2484,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.baobua.net/">www.baobua.net</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://shiki17chen.imgbb.com/albums">ImgBB</a>
+                </td>
+                <td>作用在上傳者的相簿</td>
             </tr>
             <tr>
                 <td>
