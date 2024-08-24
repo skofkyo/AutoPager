@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.3
+// @version            2.7.4
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1611,7 +1611,7 @@ a:has(>div>div>img),
             }
         },
         button: [4],
-        insertImg: [".single-content", 1],
+        insertImg: [".single-content", 2],
         customTitle: "h1.entry-title",
         fancybox: {
             v: 3,
@@ -14433,7 +14433,6 @@ a:has(>div>div>img),
         imgs: ".comic-view,.comic-thumb",
         button: [4],
         insertImg: ["//div[img[@class='img-responsive comic-thumb']]", 2],
-        threading: 10,
         customTitle: "//ol/li[2]/a",
         category: "hcomic"
     }, {
@@ -14449,7 +14448,6 @@ a:has(>div>div>img),
             return next && next.href != siteUrl ? next.href : null;
         },
         prev: 1,
-        threading: 10,
         customTitle: () => fun.gt("//ol/li[2]/a") + " - " + fun.gt("//ol/li[3]"),
         category: "hcomic"
     }, {
@@ -15366,7 +15364,6 @@ a:has(>div>div>img),
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: () => fun.title(" COLAMANGA", 1),
-        threading: 10,
         css: ".mh_wrap{width:100%!important;min-width:100%!important}",
         category: "comic"
     }, {
@@ -19469,7 +19466,6 @@ if (next) {
         next: "//a[text()='下一章' and not(starts-with(@href,'javascript'))]",
         prev: "//a[text()='上一章' and not(starts-with(@href,'javascript'))]",
         customTitle: () => fun.gt("h2.h2>a") + " - " + fun.gt("span.h4:nth-child(5)"),
-        //threading: 4,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
@@ -19524,7 +19520,6 @@ if (next) {
                 fun.picPreload(srcs, text, "next");
             });
         },
-        threading: 4,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
@@ -20493,7 +20488,7 @@ if (next) {
                 str_26: "錯誤",
                 str_27: "下載失敗了",
                 str_28: "張",
-                str_29: "\n是否只保存目前下載成功的圖片？\n只要圖片不是100%掛掉，可以F5重新載入後重新下載試試看。",
+                str_29: "\n是否只保存目前下載成功的圖片？\n只要圖片不是100%掛掉，可以調低下載線程數或重新載入網頁後重新下載試試看。",
                 str_30: "圖片extension錯誤",
                 str_31: "壓縮進度: ",
                 str_32: "自動下載倒數",
@@ -20638,7 +20633,7 @@ if (next) {
                 str_26: "错误",
                 str_27: "下载失败了",
                 str_28: "张",
-                str_29: "\n是否只保存目前下载成功的图片？\n只要图片不是100%挂掉，可以F5重新加载后重新下载试试看。",
+                str_29: "\n是否只保存目前下载成功的图片？\n只要图片不是100%挂掉，可以调低下载线程数或重新加载网页后重新下载试试看。",
                 str_30: "图片extension错误",
                 str_31: "压缩进度: ",
                 str_32: "自动下载倒数",
@@ -20781,7 +20776,7 @@ if (next) {
                 str_26: "Error",
                 str_27: "Download Failed",
                 str_28: "P",
-                str_29: "\nDo you want to save only the pictures that have been successfully downloaded so far?\nAs long as the image is not 100% dead, you can reload it with F5 and try downloading it again.",
+                str_29: "\nDo you want to save only the pictures that have been successfully downloaded so far?\nAs long as the image is not 100% dead, you can reduce the number of download threads or reload the web page and try downloading again.",
                 str_30: "Image Extension Error",
                 str_31: "Compression Progress: ",
                 str_32: "Countdown ",
