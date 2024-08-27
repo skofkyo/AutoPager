@@ -1106,7 +1106,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/08/24 14:54</p>
+<p>2024/08/27 21:04</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -1321,6 +1321,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="http://www.502x.com/xiurenwang.html">秀人图吧</a>
                 </td>
                 <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meimeicun.com/">美眉村</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2443,7 +2449,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.1y.is/">1Y Beauties</a>
+                    <a href="https://photos.xtapo.org/">Photos XTAPO</a>
                 </td>
                 <td></td>
             </tr>
@@ -2575,7 +2581,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://fapello.com/">Fapello</a>
                 </td>
-                <td>手動插入圖片</td>
+                <td>
+                    <a href="https://faponic.autos/">faponic.autos</a>，<a href="https://fapomania.pics/">fapomania.pics</a>，手動插入圖片
+</td>
             </tr>
             <tr>
                 <td>
@@ -2727,6 +2735,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://setu.lol/">色图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://setushe.pics/">涩图社</a>
                 </td>
                 <td></td>
             </tr>
@@ -3891,6 +3905,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.1y.is/">1Y Beauties</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.pic88.cc/">高清图片吧</a>
                 </td>
                 <td>
@@ -4811,7 +4831,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://hacg.antbyw.com/plugin.php?id=jameson_manhua">蚂蚁搬运网</a>
+                    <a href="https://www.itsacg.com/plugin.php?id=jameson_manhua">紳士泛漫畫</a>
                 </td>
                 <td></td>
             </tr>
@@ -4829,10 +4849,16 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://nnhanman8.com/">鸟鸟韩漫</a>
+                </td>
+                <td>目錄頁手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://laosiji52.com/">老司機禁漫</a>
                 </td>
                 <td>
-                    <a href="https://laosiji6.com/">Laosiji6.com</a>
+                    <a href="https://laosiji6.com/">Laosiji6.com</a>，目錄頁手動插入圖片
                 </td>
             </tr>
             <tr>
@@ -5040,12 +5066,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://xs8.me/">地址发布页，Mobile限定</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://nnhanman6.com/">鸟鸟韩漫</a>
-                </td>
-                <td>寫真請點開第一章，直接翻到底。</td>
             </tr>
             <tr>
                 <td>
@@ -5456,6 +5476,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限滾動模式加預讀
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.antbyw.com/plugin.php?id=jameson_manhua">蚂蚁搬运网</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
