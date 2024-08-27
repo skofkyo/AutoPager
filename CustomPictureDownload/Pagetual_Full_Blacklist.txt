@@ -6,6 +6,7 @@
 *://*mangacopy.com/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
 *://n.cocolamanhua.com/chapter/*.html
+*://m.godamh.com/chapter/*.html
 *://baozimh.one/chapter/*.html
 *://manhuascans.org/manga/*/*
 *manhuagui.com/comic/*/*.html
