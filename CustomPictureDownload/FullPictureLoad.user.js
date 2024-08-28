@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.5
+// @version            2.7.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4288,53 +4288,6 @@ a:has(>div>div>img),
         capture: () => _this.imgs(),
         button: [4],
         insertImg: ["#content", 3],
-        insertImgAF: () => {
-            fun.run("jQuery(window).off()");
-            fun.remove("#showmore,#next_page");
-        },
-        customTitle: () => fun.title(" - fapello"),
-        downloadVideo: true,
-        category: "nsfw2"
-    }, {
-        name: "Fapello",
-        host: ["faponic.autos", "fapomania.pics"],
-        reg: /^https?:\/\/(faponic\.autos|fapomania\.pics)\/[^\/]+\/$/,
-        init: async () => {
-            if (fun.ge("#showmore")) {
-                let ele = fun.ge("#showmore");
-                let postId = ele.dataset.postId;
-                let max = ele.dataset.max;
-                if (max == 1) {
-                    tempEles = fun.gae(".almbs-content>div")
-                    return;
-                }
-                let links = [];
-                for (let i = 0; i < max; i++) {
-                    let api = `/wp-admin/admin-ajax.php?action=get_post_datac&post_id=${postId}&page=${i}`;
-                    links.push(api);
-                }
-                tempEles = await fun.getEle(links, ".almbs-content>div");
-            }
-        },
-        imgs: () => {
-            let imgSrcs = tempEles.map(node => {
-                if (fun.ge("img[src*='icon-play.svg']", node)) {
-                    let videoSrc = fun.ge("img", node).src.replace("https://fapello.com/", "https://cdn.fapello.com/").replace("_300px", "").replace(/\.jpg$/i, ".mp4");
-                    videoSrcArray.push(videoSrc);
-                    return null;
-                } else {
-                    thumbnailSrcArray.push(fun.ge("img", node).src);
-                    let imgSrc = fun.ge("img", node).src.replace("_300px", "");
-                    return imgSrc;
-                }
-            }).filter(item => item).sort();
-            thumbnailSrcArray.sort();
-            videoSrcArray.sort();
-            return imgSrcs;
-        },
-        capture: () => _this.imgs(),
-        button: [4],
-        insertImg: ["#mainbb", 3],
         insertImgAF: () => {
             fun.run("jQuery(window).off()");
             fun.remove("#showmore,#next_page");
@@ -10712,24 +10665,14 @@ a:has(>div>div>img),
         customTitle: "h1",
         category: "nsfw2"
     }, {
-        name: "KawaiiX系列 一",
+        name: "KawaiiX系列 一 分頁",
         reg: () => fun.checkUrl({
-            h: /^(bunnyxgirl|letsgirlz|bootyxgirl|xbeautyzone)\.com$/,
-            p: /^\/[^/]+\//
-        }),
-        imgs: ".separator>a",
-        button: [4],
-        insertImg: [
-            [".album-post-inner,.album-postmeta-primarypix", 2, ".separator"], 2
-        ],
-        customTitle: ".breadcrumbs>span:last-child",
-        category: "nsfw2"
-    }, {
-        name: "KawaiiX系列 二",
-        reg: () => fun.checkUrl({
-            h: /^\w{2}\.(bunnyxgirl|letsgirlz|bestxleg|xbeautyzone)\.com$/,
             p: /^\/[^/]+\/\w+/,
-            e: ".separator>a"
+            e: [
+                ".separator>a",
+                ".album-post-body .clear,.album-post-share-wrap",
+                ".nav-links"
+            ]
         }),
         imgs: () => fun.getImg(".separator>a", (fun.gt(".nav-links>*:last-child", 2) || 1), 16),
         button: [4],
@@ -10739,7 +10682,19 @@ a:has(>div>div>img),
         customTitle: ".breadcrumbs>span:last-child",
         category: "nsfw2"
     }, {
-        name: "KawaiiX系列 分頁",
+        name: "KawaiiX系列 一",
+        reg: () => fun.checkUrl({
+            e: ".album-post-inner,.album-postmeta-primarypix"
+        }),
+        imgs: ".separator>a",
+        button: [4],
+        insertImg: [
+            [".album-post-inner,.album-postmeta-primarypix", 2, ".separator"], 2
+        ],
+        customTitle: ".breadcrumbs>span:last-child",
+        category: "nsfw2"
+    }, {
+        name: "KawaiiX系列 二 分頁",
         reg: () => fun.checkUrl({
             e: [
                 "//a[@data-title and picture/source]",
@@ -10759,7 +10714,7 @@ a:has(>div>div>img),
         css: ".flex-grid:not(.masonry){display:block!important;}",
         category: "nsfw2"
     }, {
-        name: "KawaiiX系列 三",
+        name: "KawaiiX系列 二",
         reg: () => fun.checkUrl({
             e: [
                 ".hero+.hero,.entry-content,.d-flex>.col-24,.album-post",
@@ -19918,6 +19873,74 @@ if (next) {
         customTitle: () => siteJson.postTitle,
         category: "comic"
     }, {
+        name: "微漫画 目錄頁",
+        host: ["medibang.com"],
+        enable: 1,
+        reg: () => fun.checkUrl({
+            h: "medibang.com",
+            p: "/book/"
+        }) && !hasTouchEvents,
+        init: () => fun.createImgBox("#contentsDetailShow"),
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let links;
+            let chapterIds;
+            if (fun.ge("a.btn_more")) {
+                links = fun.gau("a.btn_more").reverse();
+                chapterIds = links.map(url => url.split("/").at(-1));
+            } else {
+                links = fun.gau(".btn_book_read>a");
+                chapterIds = links.map(url => url.split("/").at(-2));
+            }
+            let resArr = [];
+            let fetchNum = 0;
+            for (let id of chapterIds) {
+                let res = fetch(`/api/book/fixedList2/${id}/?quality=pc`).then(res => res.json()).then(json => {
+                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                    try {
+                        let arr = [json.coverUrl];
+                        json.chapterList[0].pageList.forEach(e => arr.push(e.publicBgImage));
+                        return arr;
+                    } catch (error) {
+                        console.error(error);
+                        return [];
+                    }
+                });
+                resArr.push(res);
+            }
+            return Promise.all(resArr).then(data => data.flat());
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: ".box_data>h1.tit",
+        category: "comic"
+    }, {
+        name: "微漫画 閱讀頁",
+        host: ["medibang.com"],
+        enable: 1,
+        reg: () => fun.checkUrl({
+            h: "medibang.com",
+            p: "/viewer/"
+        }) && !hasTouchEvents,
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let id = fun.lp.split("/").at(-2);
+            return fetch(`/api/book/fixedList2/${id}/?quality=pc`).then(res => res.json()).then(json => {
+                try {
+                    let arr = [json.coverUrl];
+                    json.chapterList[0].pageList.forEach(e => arr.push(e.publicBgImage));
+                    return arr;
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            });
+        },
+        capture: () => _this.imgs(),
+        css: ".mdModal.mdWd1{display:none!important;}",
+        category: "comic"
+    }, {
         name: "漫畫類 自動展開目錄",
         reg: [
             /(mangabz|xmanhua|yymanhua|dm5|1kkk|manhuaren|manben|mkzhan)\.com\/[\w-]+\//,
@@ -25196,6 +25219,14 @@ img.single {
     margin: 0 auto;
     border: solid #fff;
 }
+img.scroll {
+    width: auto;
+    height: auto;
+    max-width: 970px;
+    display: block;
+    margin: 0 auto;
+    border: unset !important;
+}
 img.small {
     display: inline-block;
     vertical-align: middle;
@@ -25250,14 +25281,20 @@ if (hasTouchEvents) {
             done: (fancybox, slide) => {
                 let slideIndex = slide.index;
                 let imgs = [...document.querySelectorAll("img")];
-                imgs.forEach(e => (e.style.border = ""));
+                if (newWindowData.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                }
                 if (fancybox.isCurrentSlide(slide)) {
                     imgViewIndex = slideIndex;
-                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    if (newWindowData.ViewMode != 4) {
+                        imgs[slideIndex].style.border = "solid #32a1ce";
+                    }
                     imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
                 } else {
                     imgViewIndex = fancybox.getSlide().index;
-                    imgs[slideIndex].style.border = "solid #32a1ce";
+                    if (newWindowData.ViewMode != 4) {
+                        imgs[slideIndex].style.border = "solid #32a1ce";
+                    }
                     imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
                 }
             },
@@ -25266,8 +25303,10 @@ if (hasTouchEvents) {
                 let slideIndex = fancybox.getSlide().index;
                 imgViewIndex = slideIndex;
                 let imgs = [...document.querySelectorAll("img")];
-                imgs.forEach(e => (e.style.border = ""));
-                imgs[slideIndex].style.border = "solid #32a1ce";
+                if (newWindowData.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[slideIndex].style.border = "solid #32a1ce";
+                }
                 imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
             }
         }
@@ -25339,6 +25378,10 @@ function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
+        id: "MenuScrollItem",
+        text: hasTouchEvents ? "Scroll" : "Scroll (4)",
+        cfn: () => scrollImageLayout()
+    }, {
         id: "MenuRTLItem",
         text: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
         cfn: () => rtlImageLayout()
@@ -25395,6 +25438,7 @@ document.addEventListener("keydown", event => {
     if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
     if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
     if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
+    if (event.code === "Numpad4" || event.key === "4") return scrollImageLayout();
 });
 
 document.addEventListener("keydown", event => {
@@ -25408,8 +25452,10 @@ document.addEventListener("keydown", event => {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
-        imgs.forEach(e => (e.style.border = ""));
-        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        if (newWindowData.ViewMode != 4) {
+            imgs.forEach(e => (e.style.border = ""));
+            imgs[imgViewIndex].style.border = "solid #32a1ce";
+        }
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
@@ -25419,8 +25465,10 @@ document.addEventListener("keydown", event => {
         } else if (imgViewIndex > imgs.length - 1) {
             imgViewIndex = 0;
         }
-        imgs.forEach(e => (e.style.border = ""));
-        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        if (newWindowData.ViewMode != 4) {
+            imgs.forEach(e => (e.style.border = ""));
+            imgs[imgViewIndex].style.border = "solid #32a1ce";
+        }
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
@@ -25529,12 +25577,21 @@ function rtlImageLayout() {
     document.querySelector("#MenuRTLItem").classList.add("active");
 }
 
+function scrollImageLayout() {
+    newWindowData.ViewMode = 4;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    createImgElement("scroll");
+    document.querySelector("#MenuScrollItem").classList.add("active");
+}
+
 if (newWindowData.ViewMode == 1) {
     singleImageLayout();
 } else if (newWindowData.ViewMode == 2) {
     smallImageLayout();
 } else if (newWindowData.ViewMode == 3) {
     rtlImageLayout();
+} else if (newWindowData.ViewMode == 4) {
+    scrollImageLayout();
 } else {
     defaultImageLayout();
 }
@@ -25567,9 +25624,11 @@ var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
 document.addEventListener("viewed", event => {
     let slideIndex = event.detail.index;
     let imgs = [...document.querySelectorAll("img")];
-    imgs.forEach(e => (e.style.border = ""));
     imgViewIndex = slideIndex;
-    imgs[slideIndex].style.border = "solid #32a1ce";
+    if (newWindowData.ViewMode != 4) {
+        imgs.forEach(e => (e.style.border = ""));
+        imgs[slideIndex].style.border = "solid #32a1ce";
+    }
     imgs[slideIndex].scrollIntoView({
         block: "center",
         behavior: "smooth",
@@ -25593,6 +25652,10 @@ function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
+        id: "MenuScrollItem",
+        text: hasTouchEvents ? "Scroll" : "Scroll (4)",
+        cfn: () => scrollImageLayout()
+    }, {
         id: "MenuRTLItem",
         text: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
         cfn: () => rtlImageLayout()
@@ -25649,6 +25712,7 @@ document.addEventListener("keydown", event => {
     if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
     if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
     if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
+    if (event.code === "Numpad4" || event.key === "4") return scrollImageLayout();
 });
 
 document.addEventListener("keydown", event => {
@@ -25662,8 +25726,10 @@ document.addEventListener("keydown", event => {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
-        imgs.forEach(e => (e.style.border = ""));
-        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        if (newWindowData.ViewMode != 4) {
+            imgs.forEach(e => (e.style.border = ""));
+            imgs[imgViewIndex].style.border = "solid #32a1ce";
+        }
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
@@ -25673,8 +25739,10 @@ document.addEventListener("keydown", event => {
         } else if (imgViewIndex > imgs.length - 1) {
             imgViewIndex = 0;
         }
-        imgs.forEach(e => (e.style.border = ""));
-        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        if (newWindowData.ViewMode != 4) {
+            imgs.forEach(e => (e.style.border = ""));
+            imgs[imgViewIndex].style.border = "solid #32a1ce";
+        }
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
     } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
@@ -25774,12 +25842,21 @@ function rtlImageLayout() {
     document.querySelector("#MenuRTLItem").classList.add("active");
 }
 
+function scrollImageLayout() {
+    newWindowData.ViewMode = 4;
+    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    createImgElement("scroll");
+    document.querySelector("#MenuScrollItem").classList.add("active");
+}
+
 if (newWindowData.ViewMode == 1) {
     singleImageLayout();
 } else if (newWindowData.ViewMode == 2) {
     smallImageLayout();
 } else if (newWindowData.ViewMode == 3) {
     rtlImageLayout();
+} else if (newWindowData.ViewMode == 4) {
+    scrollImageLayout();
 } else {
     defaultImageLayout();
 }
