@@ -2581,9 +2581,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://fapello.com/">Fapello</a>
                 </td>
-                <td>
-                    <a href="https://faponic.autos/">faponic.autos</a>，<a href="https://fapomania.pics/">fapomania.pics</a>，手動插入圖片
-</td>
+                <td>手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -5550,6 +5548,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.hahacomic.com/">哈哈漫画</a>
                 </td>
                 <td>漫畫列表添加自動翻頁功能</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://medibang.com/comics/">微漫画</a>
+                </td>
+                <td>只支持PC版，目錄頁手動插入圖片，閱讀頁手動分頁檢視。</td>
             </tr>
             <tr>
                 <td>
