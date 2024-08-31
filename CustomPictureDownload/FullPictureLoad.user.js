@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.7
+// @version            2.7.8
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -43,7 +43,6 @@
 // @noframes
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
@@ -53,7 +52,7 @@
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 // ==/UserScript==
 
-(async (JSZip, Fancybox, $) => {
+(async (JSZip, $) => {
     "use strict";
 
     if (document.querySelector("body.no-js:not(.has-preloader,.single-post)")) return; //Cloudflare檢測連線安全性時，不運行腳本
@@ -624,7 +623,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "秀人集",
-        host: ["www.1231238.xyz"],
+        host: ["www.xiuren009.top"],
         reg: () => fun.checkUrl({
             e: "//div[@class='item_info']//a[text()='秀人集']",
             p: /\/\w+\/\d+\.html$/
@@ -1143,6 +1142,20 @@ a:has(>div>div>img),
             insertLibrarys: 1
         },
         category: "nsfw1"
+    }, {
+        name: "牛叉资源网",
+        host: ["niuc.net"],
+        reg: /^https?:\/\/niuc\.net\/\d+\.html$/,
+        include: "//i[@class='czs-folder-l']/following-sibling::a[1][text()='美女写真' or text()='Cosplay' or text()='JAV.PHOTO']",
+        imgs: ".content-warp img",
+        button: [4],
+        insertImg: [".content-warp", 2],
+        customTitle: ".post-title",
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "nsfw2"
     }, {
         name: "8E资源站",
         host: ["8ezy.com"],
@@ -17585,7 +17598,7 @@ if (next) {
         customTitle: (dom = document) => fun.title(" - ", 1, dom),
         preloadNext: async (nextDoc, obj) => {
             let json = await obj.fetchJson(new URL(nextLink).pathname);
-            fun.picPreload(obj.imgs(json), obj.customTitle(nextDoc), "next")
+            fun.picPreload(obj.imgs(json), obj.customTitle(nextDoc), "next");
         },
         category: "comic"
     }, {
@@ -17606,6 +17619,81 @@ if (next) {
         preloadNext: true,
         css: ".addg{display:none!important;}",
         category: "comic"
+    }, {
+        name: "好国漫",
+        host: ["www.haoguoman.net", "m.haoguoman.net"],
+        enable: 1,
+        reg: () => /^https?:\/\/(www|m)\.haoguoman\.net\/\d+\/\d+\.html$/.test(fun.url) && comicInfiniteScrollMode != 1,
+        init: async () => {
+            await fun.wait(() => !!_unsafeWindow?.layui?.jecms?.base64?.decode);
+            fun.createImgBox("#pic-list", 2);
+            let code = fun.gst("params");
+            let [, dataBase64] = code.match(/params[\s='"]+([^'"]+)/);
+            dataBase64 = dataBase64.replace(_unsafeWindow.layui.jecms.base64.decode("WXhVcHFHcnM1JDN3WWc="), "");
+            let dataJson = JSON.parse(_unsafeWindow.layui.jecms.base64.decode(dataBase64));
+            siteJson = dataJson;
+        },
+        imgs: () => siteJson.chapter_images.split("###").map(url => {
+            if (!(/^http(s)?:\/\/.+/.test(url)) || url.startsWith("//")) {
+                url = siteJson.cdnurl + (url.startsWith("/") ? "" : "/") + url;
+            }
+            return url;
+        }),
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        autoDownload: [0],
+        next: "a.j-next,a.j-next_btn",
+        prev: "a.j-rd-prev,a.j-prev_btn",
+        customTitle: () => siteJson.comic_name + " - " + siteJson.chapter_title,
+        css: "#pic-list,#loading{display:none!important;}",
+        infiniteScroll: true,
+        category: "comic"
+    }, {
+        name: "好国漫 自動翻頁",
+        host: ["www.haoguoman.net", "m.haoguoman.net"],
+        enable: 1,
+        reg: () => /^https?:\/\/(www|m)\.haoguoman\.net\/\d+\/\d+\.html$/.test(fun.url) && comicInfiniteScrollMode == 1,
+        json: (dom = document) => {
+            let code = fun.gst("params", dom);
+            let [, dataBase64] = code.match(/params[\s='"]+([^'"]+)/);
+            dataBase64 = dataBase64.replace(_unsafeWindow.layui.jecms.base64.decode("WXhVcHFHcnM1JDN3WWc="), "");
+            let dataJson = JSON.parse(_unsafeWindow.layui.jecms.base64.decode(dataBase64));
+            siteJson = dataJson;
+            return dataJson;
+        },
+        getSrcs: (dom) => {
+            let json = _this.json(dom);
+            let srcs = json.chapter_images.split("###").map(url => {
+                if (!(/^http(s)?:\/\/.+/.test(url)) || url.startsWith("//")) {
+                    url = json.cdnurl + (url.startsWith("/") ? "" : "/") + url;
+                }
+                return url;
+            });
+            return srcs;
+        },
+        getImgs: (dom = document) => {
+            let srcs = _this.getSrcs(dom);
+            return fun.createImgArray(srcs);
+        },
+        init: async () => {
+            await fun.wait(() => !!_unsafeWindow?.layui?.jecms?.base64?.decode);
+            fun.createImgBox("#pic-list", 2);
+            let imgs = _this.getImgs();
+            let tE = fun.ge("#FullPictureLoadMainImgBox");
+            tE.append(...imgs);
+            await fun.lazyload();
+        },
+        autoPager: {
+            ele: (dom) => _this.getImgs(dom),
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            observer: "#FullPictureLoadMainImgBox>img",
+            next: "a.j-next,a.j-next_btn",
+            re: ".breadcrumb,#floatbtn>a.j-rd-prev,#floatbtn>a.j-next",
+            title: () => siteJson.chapter_title,
+            preloadNextPage: 1
+        },
+        css: "#pic-list,#loading{display:none!important;}",
+        category: "comic autoPager"
     }, {
         name: "漫画屋格式",
         host: ["www.mhua5.com", "www.mhw1.com", "www.cmh5.com", "www.umh5.com", "www.obq8.com", "www.wujinmh.com", "comics.veryim.com"],
@@ -20444,7 +20532,10 @@ if (next) {
         try {
             const jsArr = [JqueryJS, FancyboxV5JS];
             for (let code of jsArr) {
-                fun.script(code, 0, 1);
+                //fun.script(code, 0, 1);
+                _GM_addElement(document.body, "script", {
+                    textContent: code
+                });
             }
             fun.css(FancyboxV5Css);
         } catch (error) {
@@ -22990,7 +23081,7 @@ if (next) {
                 }
                 fun.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = "unset"));
                 if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
-                    Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
+                    _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                 }
                 if (!/tupianwu\.com/.test(fun.lh) && !fun.ge(".umRelevant.umBox") && !fun.ge(".videoPlayerWrap")) {
                     fun.MutationObserver_aff();
@@ -24040,7 +24131,7 @@ if (next) {
                     }
                 };
             }
-            Fancybox.bind("[data-fancybox]", FancyboxOptions);
+            _unsafeWindow.Fancybox.bind("[data-fancybox]", FancyboxOptions);
         },
         lazyload: async () => {
             let check = !!fun.ge("img.FullPictureLoadImage.lazyload");
@@ -24974,7 +25065,7 @@ if (next) {
                 gae(".FullPictureLoadVideo").forEach(e => tE.parentNode.insertBefore(e, tE));
             }
             if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
-                Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
+                _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
             }
             //tE.parentNode.style.textAlign = "center";
             tE.parentNode.style.display = "block";
@@ -25220,7 +25311,7 @@ img.single {
     border: solid #fff;
 }
 img.scroll {
-    width: auto;
+    width: 100%;
     height: auto;
     max-width: 970px;
     display: block;
@@ -26915,7 +27006,7 @@ a[data-fancybox]:hover {
             case "zh-HK":
             case "zh-Hant-TW":
             case "zh-Hant-HK":
-                Fancybox.defaults.l10n = {
+                _unsafeWindow.Fancybox.defaults.l10n = {
                     PANUP: "上移",
                     PANDOWN: "下移",
                     PANLEFT: "左移",
@@ -26934,8 +27025,8 @@ a[data-fancybox]:hover {
                     RESET: "重設",
                     TOGGLEFS: "切換全螢幕",
                     CLOSE: "關閉",
-                    NEXT: "上一個",
-                    PREV: "下一個",
+                    NEXT: "下一個",
+                    PREV: "上一個",
                     MODAL: "使用 ESC 鍵關閉",
                     ERROR: "發生了錯誤，請稍後再試",
                     IMAGE_ERROR: "找不到圖像",
@@ -26953,7 +27044,7 @@ a[data-fancybox]:hover {
             case "zh":
             case "zh-CN":
             case "zh-Hans-CN":
-                Fancybox.defaults.l10n = {
+                _unsafeWindow.Fancybox.defaults.l10n = {
                     PANUP: "上移",
                     PANDOWN: "下移",
                     PANLEFT: "左移",
@@ -26972,8 +27063,8 @@ a[data-fancybox]:hover {
                     RESET: "重置",
                     TOGGLEFS: "切换全屏",
                     CLOSE: "关闭",
-                    NEXT: "上一个",
-                    PREV: "下一个",
+                    NEXT: "下一个",
+                    PREV: "上一个",
                     MODAL: "使用 ESC 键关闭",
                     ERROR: "发生了错误，请稍后再试",
                     IMAGE_ERROR: "找不到图像",
@@ -26989,7 +27080,7 @@ a[data-fancybox]:hover {
                 };
                 break;
         };
-        Fancybox.defaults.animated = false;
+        _unsafeWindow.Fancybox.defaults.animated = false;
         //debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
     };
 
@@ -27290,17 +27381,17 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
                 await init_code();
             }
         }
-        if (options.fancybox == 1 && !isObject(siteData.fancybox) && siteData.category !== "none" && !isObject(siteData.autoPager)) {
-            fun.css(FancyboxV5Css);
-            Fancyboxl10nV5();
-        } else if (options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 5 && siteData.fancybox?.insertLibrarys == 1) {
-            addLibrarysV5();
-            Fancyboxl10nV5();
-        } else if (options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
+
+        if (options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
             addLibrarysV3();
             Fancyboxi18nV3();
             FancyboxOptionsV3();
+        } else if (options.fancybox == 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+            addLibrarysV5();
+            Fancyboxl10nV5();
+            fun.css(FancyboxV5Css);
         }
+
         if ("imgs" in siteData) {
             debug("\nCSS/Xpath/JS選擇器：" + siteData.imgs);
         }
@@ -27494,19 +27585,18 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             }
         }
         if ("observerClick" in siteData && isString(siteData.observerClick)) {
-            const observerClick = siteData.observerClick;
-            const ele = fun.ge(observerClick);
+            const selector = siteData.observerClick;
+            const ele = fun.ge(selector);
             if (!!ele) {
                 const observer = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             observer.unobserve(entry.target);
                             elementClick(entry.target);
-                            debug(`\n圖片全載observerClick("${observerClick}")`, entry.target);
+                            debug(`\n圖片全載observerClick("${selector}")`, entry.target);
                             setTimeout(async () => {
-                                const ele = fun.waitEle(observerClick, 30);
-                                if (!!ele) {
-                                    observer.observe(ele);
+                                if (await fun.waitEle(selector, 30)) {
+                                    observer.observe(fun.ge(selector));
                                 }
                             }, 1000);
                         }
@@ -27516,18 +27606,17 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
             }
         }
         if ("loadMore" in siteData && isString(siteData.loadMore)) {
-            const loadMore = siteData.loadMore;
+            const selector = siteData.loadMore;
             const callback = () => {
                 if (_unsafeWindow.innerHeight + _unsafeWindow.pageYOffset >= document.body.offsetHeight - 200) {
                     document.removeEventListener("scroll", callback);
-                    const ele = fun.ge(loadMore);
+                    const ele = fun.ge(selector);
                     if (!!ele) {
                         elementClick(ele);
-                        debug(`圖片全載loadMore("${loadMore}")`);
+                        debug(`圖片全載loadMore("${selector}")`);
                     }
                     setTimeout(async () => {
-                        const ele = await fun.waitEle(loadMore, 30);
-                        if (!!ele) {
+                        if (await fun.waitEle(selector, 30)) {
                             document.addEventListener("scroll", callback);
                         }
                     }, 1000);
@@ -28004,4 +28093,4 @@ console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
         });
     }
 
-})(JSZip, Fancybox, jQuery);
+})(JSZip, jQuery);
