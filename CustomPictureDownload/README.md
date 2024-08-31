@@ -1,16 +1,15 @@
 <h1>測試通過環境：</h1>
 <pre>
-2024/08/12
+2024/08/31
 PC
-Chrome 127.0.6533.100 + Tampermonkey 5.2.3 or ScriptCat 0.16.5
-Edge 127.0.2651.98 + Tampermonkey 5.2.3 or ScriptCat 0.16.5
-Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
-FireFox 129.0 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
+Chrome 128.0.6613.114 + Tampermonkey 5.2.3 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
+Edge 128.0.2739.54 + Tampermonkey 5.2.3 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
+Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
+FireFox 129.0.2 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
 Android
-Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
-Firefox for Android 129.0 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
-Waterfox for Android 1.0.8.2 + Tampermonkey 5.1.1 or ScriptCat 0.16.5
-XBrowser 4.8.0
+Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
+Firefox for Android 129.0 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
+XBrowser 4.8.1
 ViaBrowser 5.8.1
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
@@ -29,7 +28,6 @@ ViaBrowser 5.8.1
 cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-// @require            https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
@@ -42,7 +40,6 @@ cdn.jsdelivr.net
 unpkg.com
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
-// @require            https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
@@ -55,7 +52,6 @@ unpkg.com
 cdn.bootcdn.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-// @require            https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
 // @resource JqueryJS https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
 // @resource FancyboxV5JS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
@@ -1280,7 +1276,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.1231238.xyz/">秀人集</a>
+                    <a href="https://www.xiuren009.top/">秀人集</a>
                 </td>
                 <td>永久域名Xiurenba.Com及(秀人集.com)</td>
             </tr>
@@ -1742,6 +1738,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.zyktu.top/">资源库图站</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://niuc.net/">牛叉资源网</a>
                 </td>
                 <td></td>
             </tr>
@@ -5496,6 +5498,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限滾動模式加預讀
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.haoguoman.net/">好国漫</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
