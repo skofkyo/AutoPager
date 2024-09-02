@@ -257,24 +257,19 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
 }]
 </pre>
 <pre>
-// 網站自帶燈箱功能，不注入FancyboxCSS樣式
+// 網站自帶Fancybox燈箱功能，不注入FancyboxCSS樣式
 fancybox: {
     v: 3,
     css: false
 },
-// 不使用燈箱功能
-fancybox: {
-    blacklist: 1
-},
-// 頁面注入代碼，使用Fancybox3.5.7
+// 使用Fancybox3.5.7
 fancybox: {
     v: 3,
     insertLibrarys: 1
 },
-// 頁面注入代碼，使用Fancybox5
+// 不使用燈箱功能
 fancybox: {
-    v: 5,
-    insertLibrarys: 1
+    blacklist: 1
 },
 </pre>
 </details>
@@ -3145,6 +3140,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://photobeach.blogspot.com/">Photo Beach</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jangjooart.blogspot.com/">JANGJOO</a>
                 </td>
                 <td></td>
             </tr>
