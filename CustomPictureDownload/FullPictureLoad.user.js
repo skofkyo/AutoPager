@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.10
+// @version            2.7.11
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -19865,10 +19865,10 @@ if (next) {
         category: "comic"
     }, {
         name: "大哥漫画/漫画皮",
-        host: ["www.dagemanhua.com", "m.dagemanhua.com", "www.iimanhuapi.com", "m.iimanhuapi.com"],
+        host: ["www.dagemanhua.com", "m.dagemanhua.com", "www.manhuapi.cc", "m.manhuapi.cc"],
         enable: 1,
         reg: [
-            /^https?:\/\/(www|m)\.iimanhuapi\.com\/chapter\/\d+\.html$/i,
+            /^https?:\/\/(www|m)\.manhuapi\.cc\/chapter\/\d+\.html$/i,
             /^https?:\/\/(www|m)\.dagemanhua\.com\/manhua\/\d+\/\d+\.html$/i
         ],
         init: "document.onkeydown=null;$('body').unbind();",
@@ -19880,7 +19880,7 @@ if (next) {
         prev: "//a[text()='上一章'][contains(@href,'chapter')]",
         customTitle: (dom = document) => fun.attr("meta[name='keywords']", "content", dom).replace(",", " - "),
         preloadNext: true,
-        css: "#prePage,#nextPage,select,.jump-list,.apjg,a[href*=taobao]{display:none!important;}",
+        css: "#prePage,#nextPage,select[onchange],.jump-list,.apjg,a[href*=taobao]{display:none!important;}",
         category: "comic"
     }, {
         name: "哈哈漫画",
@@ -26374,6 +26374,14 @@ if (newWindowData.ViewMode == 1) {
     <input id="FullPictureLoadOptionsIcon" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_69}</label>
 </div>
+<div id="FullPictureLoadAutoInsertImgDIV" style="width: 348px; display: flex;">
+    <input id="FullPictureLoadAutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>※${displayLanguage.str_139}</label>
+</div>
+<div id="ShowFullPictureLoadFixedMenuDIV" style="width: 348px; display: flex;">
+    <input id="ShowFullPictureLoadFixedMenu" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>※${displayLanguage.str_117}</label>
+</div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_108}</label>
     <select id="FullPictureLoadOptionsMsgPos">
@@ -26428,7 +26436,7 @@ if (newWindowData.ViewMode == 1) {
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_80}</label>
-    <select id="FullPictureLoadOptionsColumn">
+    <select id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}">
         ${fun.arr(5).map((_, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
     </select>
 </div>
@@ -26458,6 +26466,8 @@ if (newWindowData.ViewMode == 1) {
             ge("#FullPictureLoadOptionsSaveBtn").addEventListener("click", event => {
                 event.preventDefault();
                 options.icon = ge("#FullPictureLoadOptionsIcon").checked == true ? 1 : 0;
+                _GM_setValue("FullPictureLoadAutoInsertImg", ge("#FullPictureLoadAutoInsertImg").checked == true ? 1 : 0);
+                _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFullPictureLoadFixedMenu").checked == true ? 1 : 0);
                 _GM_setValue("FullPictureLoadMsgPos", ge("#FullPictureLoadOptionsMsgPos").value);
                 options.threading = ge("#FullPictureLoadOptionsThreading").value;
                 options.zip = ge("#FullPictureLoadOptionsZip").checked == true ? 1 : 0;
@@ -26496,15 +26506,29 @@ if (newWindowData.ViewMode == 1) {
     //根據使用者設置更改腳本選項元素的值
     const optionsSetValue = () => {
         ge("#FullPictureLoadOptionsIcon").checked = options.icon == 1 ? true : false;
+        ge("#FullPictureLoadAutoInsertImg").checked = _GM_getValue("FullPictureLoadAutoInsertImg", 1) == 1 ? true : false;
+        ge("#ShowFullPictureLoadFixedMenu").checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
         ge("#FullPictureLoadOptionsMsgPos").value = _GM_getValue("FullPictureLoadMsgPos", 0);
         ge("#FullPictureLoadOptionsThreading").value = options.threading;
         ge("#FullPictureLoadOptionsZip").checked = options.zip == 1 ? true : false;
         ge("#FullPictureLoadOptionsExtension").value = options.file_extension;
-        ge("#FullPictureLoadOptionsConvert").checked = _GM_getValue("convertWebpToJpg") == 1 ? true : false;
+        ge("#FullPictureLoadOptionsConvert").checked = _GM_getValue("convertWebpToJpg", 1) == 1 ? true : false;
         ge("#FullPictureLoadOptionsAutoDownload").checked = options.autoDownload == 1 ? true : false;
         ge("#FullPictureLoadOptionsCountdown").value = options.autoDownloadCountdown;
         ge("#FullPictureLoadOptionsComic").checked = options.comic == 1 ? true : false;
         ge("#FullPictureLoadOptionsDouble").checked = options.doubleTouchNext == 1 ? true : false;
+        if ("insertImg" in siteData) {
+            const [, insertMode] = siteData.insertImg;
+            if (![1, 2].some(n => n == insertMode)) {
+                ge("#FullPictureLoadAutoInsertImgDIV").style.display = "none";
+            }
+        }
+        if (!("insertImg" in siteData)) {
+            ge("#FullPictureLoadAutoInsertImgDIV").style.display = "none";
+        }
+        if (hasTouchEvents) {
+            ge("#ShowFullPictureLoadFixedMenuDIV").style.display = "none";
+        }
         if (fancyboxBlackList()) {
             ge("#FullPictureLoadOptionsFancybox").checked = false;
             ge("#FullPictureLoadOptionsFancybox").style.display = "none";
@@ -26594,9 +26618,23 @@ if (newWindowData.ViewMode == 1) {
     z-index: 2147483647 !important;
 }
 
-#FullPictureLoadOptions label, #FullPictureLoadOptions select{
-    margin: 0 !important;
-    padding: 0 !important;
+#FullPictureLoadOptions label, #FullPictureLoadOptions select {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+#FullPictureLoadOptions select {
+    border: 1px solid #a0a0a0 !important;
+    background-color: transparent !important;
+    border-radius: 0px !important;
+    min-width: 60px !important;
+    height: unset !important;
+    -webkit-box-shadow: unset !important;
+    box-shadow: unset !important;
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
+    background-image: unset !important;
+    display: inline-block !important;
 }
 
 #FullPictureLoadOptions * {
@@ -27118,13 +27156,9 @@ a[data-fancybox]:hover {
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
         } else if (options.autoDownload !== 1) {
             let optionsJson = JSON.parse(getOptionsData);
-            if (optionsJson.viewMode === undefined) {
-                localStorage.removeItem("FullPictureLoadOptions");
-                let jsonStr = JSON.stringify(options);
-                localStorage.setItem("FullPictureLoadOptions", jsonStr);
-                //debug("圖片全載更新已初始化設定");
-            } else {
-                options = optionsJson;
+            options = {
+                ...options,
+                ...optionsJson
             }
             //debug("\nFull Picture Load Options Json\n", options);
         }
@@ -27132,6 +27166,7 @@ a[data-fancybox]:hover {
 
     //Fancybox5的語系
     const Fancyboxl10nV5 = () => {
+        if (!_unsafeWindow?.Fancybox?.defaults?.l10n) return;
         switch (language) {
             case "zh-TW":
             case "zh-HK":
@@ -27789,10 +27824,6 @@ a[data-fancybox]:hover {
                 const [, insertMode] = insertImg;
                 if (insertMode == 1 && !autoStart || insertMode == 2 && !autoStart) {
                     FullPictureLoadAutoInsertImg = _GM_getValue("FullPictureLoadAutoInsertImg", 1);
-                    _GM_registerMenuCommand(FullPictureLoadAutoInsertImg == 0 ? "❌ " + displayLanguage.str_139 : "✔️  " + displayLanguage.str_139, () => {
-                        FullPictureLoadAutoInsertImg == 0 ? _GM_setValue("FullPictureLoadAutoInsertImg", 1) : _GM_setValue("FullPictureLoadAutoInsertImg", 0);
-                        location.reload();
-                    });
                     if (FullPictureLoadAutoInsertImg == 1) {
                         fun.immediateInsertImg();
                     }
@@ -28010,8 +28041,16 @@ a[data-fancybox]:hover {
     }
 
     //捕獲圖片網址
-    const captureSrc = async () => {
+    const captureSrc = async (mutationList) => {
         if (isDownloading || isFetching) return;
+        if (mutationList) {
+            for (const mutation of mutationList) {
+                if (mutation.type === "childList" && mutation?.target?.id === "FullPictureLoadCaptureNum") {
+                    return;
+                }
+            }
+            //console.log(mutationList);
+        }
         let num = captureSrcArray.length;
         let imgSrcs = await getImgs(siteData.capture ?? siteData.imgs);
         let imagePreloadArray = [];
@@ -28054,10 +28093,7 @@ a[data-fancybox]:hover {
         }
         if (siteData.category === "lazyLoad" && siteData.eye != 0) {
             addnewTabViewButton();
-            captureSrc();
-        }
-        if (siteData.category === "lazyLoad" && siteData.eye != 0) {
-            fun.addMutationObserver(captureSrc, {
+            fun.addMutationObserver(captureSrc, document.body, {
                 childList: true,
                 subtree: true,
                 attributes: true
@@ -28065,7 +28101,7 @@ a[data-fancybox]:hover {
         }
     }
 
-    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://www.xofulitu521.xyz/xoxo\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
+    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
 
     const createFavorTextarea = () => {
         let tE = ge("#FullPictureLoadOptionsButtonParentDiv");
@@ -28175,10 +28211,6 @@ a[data-fancybox]:hover {
     if (options.enable == 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
         if (siteData.key != 0) {
             if (!hasTouchEvents) {
-                _GM_registerMenuCommand(ShowFullPictureLoadFixedMenu == 0 ? "❌ " + displayLanguage.str_117 : "✔️ " + displayLanguage.str_117, () => {
-                    ShowFullPictureLoadFixedMenu == 0 ? _GM_setValue("ShowFullPictureLoadFixedMenu", 1) : _GM_setValue("ShowFullPictureLoadFixedMenu", 0);
-                    location.reload();
-                });
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
             }
             document.addEventListener("keydown", addKeyEvent);
