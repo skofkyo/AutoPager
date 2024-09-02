@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.9
+// @version            2.7.10
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1151,10 +1151,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".content-warp", 2],
         customTitle: ".post-title",
-        fancybox: {
-            v: 3,
-            css: false
-        },
         category: "nsfw2"
     }, {
         name: "8E资源站",
@@ -6454,6 +6450,18 @@ a:has(>div>div>img),
         observerURL: true,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
+    }, {
+        name: "jangjoo",
+        host: ["jangjooart.blogspot.com"],
+        reg: /^https?:\/\/jangjooart\.blogspot\.com\/\d+\/\d+\/[\w-]+\.html/,
+        imgs: ".post-body img",
+        button: [4],
+        insertImg: [".post-body", 2],
+        autoDownload: [0],
+        next: ".blog-pager-older-link",
+        prev: ".blog-pager-newer-link",
+        customTitle: ".post_item h1",
+        category: "nsfw1"
     }, {
         name: "Photo Beach",
         host: ["photobeach.blogspot.com"],
@@ -16451,11 +16459,9 @@ if (next) {
         name: "Manhuagui看漫画M 点击查看下20条记录",
         host: ["m.manhuagui.com"],
         reg: /^https?:\/\/m\.manhuagui\.com\/(update|list|rank|user)\//,
-        icon: 0,
-        key: 0,
-        observerClick: "#more:not([style*=none])>.more-go",
+        loadMore: "#more:not([style*=none])>.more-go",
         openInNewTab: "#detail a:not([target=_blank])",
-        category: "comic"
+        category: "autoPager"
     }, {
         name: "Manhuagui看漫画",
         host: ["www.manhuagui.com", "tw.manhuagui.com", "www.mhgui.com"],
@@ -20696,17 +20702,17 @@ if (next) {
                 str_67: "⚙️ 設定",
                 str_68: "當前(※全局)網站 Full Picture Load 選項",
                 str_69: "顯示左下圖示按鈕",
-                str_70: "最大下載線程數 ( 1 ~ 32 )：",
+                str_70: "最大下載線程數：",
                 str_71: "下載後壓縮打包",
-                str_72: "壓縮檔副檔名 ( zip 或 cbz )：",
+                str_72: "壓縮檔副檔名：",
                 str_73: "自動下載",
                 str_74: " ( 快捷鍵 [ ctrl + . ] 開始或取消 )",
                 str_75: "自動下載倒數秒數：",
                 str_76: "啟用當前漫畫站點規則",
                 str_77: "移動裝置雙擊前往下一頁",
                 str_78: "Fancybox燈箱功能",
-                str_79: "圖片縮放比例 ( 0 ~ 10 )：",
-                str_80: "圖片並排數量 ( 2 ~ 6 )：",
+                str_79: "圖片縮放比例：",
+                str_80: "圖片並排數量：",
                 str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
                 str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
                 str_83: "重置設定",
@@ -20734,8 +20740,14 @@ if (next) {
                 str_105: hasTouchEvents ? "複製圖址" : "複製圖址(1)",
                 str_106: hasTouchEvents ? "分頁檢視" : "分頁檢視(8)",
                 str_107: hasTouchEvents ? "一鍵下載" : "一鍵下載(3)",
-                str_108: "※訊息顯示的位置 ( 0 ~ 4 )：",
-                str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
+                str_108: "※訊息顯示的位置：",
+                str_109: {
+                    c: "置中",
+                    ul: "左上",
+                    ur: "右上",
+                    ll: "左下",
+                    lr: "右下",
+                },
                 str_110: "※Webp轉換為Jpg",
                 str_111: "惰性載入大圖",
                 str_112: "惰性載入單欄布局",
@@ -20841,17 +20853,17 @@ if (next) {
                 str_67: "⚙️ 设置",
                 str_68: "当前(※全局)网站 Full Picture Load 设置",
                 str_69: "显示左下图标按钮",
-                str_70: "下载后最大下载线程数 ( 1 ~ 32 )：",
+                str_70: "下载后最大下载线程数：",
                 str_71: "压缩打包",
-                str_72: "压缩档文件扩展名 ( zip 或 cbz )：",
+                str_72: "压缩档文件扩展名：",
                 str_73: "自动下载",
                 str_74: " ( 快捷键 [ ctrl + . ] 开始或取消 )",
                 str_75: "自动下载倒数秒数：",
                 str_76: "启用当前漫画站点规则",
                 str_77: "移动设备双击前往下一页",
                 str_78: "Fancybox灯箱功能",
-                str_79: "图片缩放比例 ( 0 ~ 10 )：",
-                str_80: "图片并排数量 ( 2 ~ 6 )：",
+                str_79: "图片缩放比例：",
+                str_80: "图片并排数量：",
                 str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
                 str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
                 str_83: "重置设置",
@@ -20879,8 +20891,14 @@ if (next) {
                 str_105: hasTouchEvents ? "拷贝图址" : "拷贝图址(1)",
                 str_106: hasTouchEvents ? "分页视图" : "分页视图(8)",
                 str_107: hasTouchEvents ? "一键下载" : "一键下载(3)",
-                str_108: "※讯息显示的位置 ( 0 ~ 4 )：",
-                str_109: "0：置中、1：左上、2：右上、3：左下、4：右下",
+                str_108: "※讯息显示的位置：",
+                str_109: {
+                    c: "置中",
+                    ul: "左上",
+                    ur: "右上",
+                    ll: "左下",
+                    lr: "右下",
+                },
                 str_110: "※Webp转换为Jpg",
                 str_111: "懒加载大图",
                 str_112: "懒加载单栏布局",
@@ -20984,17 +21002,17 @@ if (next) {
                 str_67: "⚙️ Settings",
                 str_68: "Current(※Global) Website Full Picture Load Options",
                 str_69: "Show Lower Left Icon Button",
-                str_70: "Max Download Thread ( 1 ~ 32 )：",
+                str_70: "Max Download Thread：",
                 str_71: "Compressed Packaging",
-                str_72: "Compressed File Extension(zip or cbz)：",
+                str_72: "Compressed File Extension：",
                 str_73: "AutoDownload",
                 str_74: " ( [ ctrl + . ] Start or Cancel)",
                 str_75: "AutoDownload Countdown Sec：",
                 str_76: "Comic Site Rules Switch",
                 str_77: "Double Click Go To Next Page",
                 str_78: "Fancybox Plugin",
-                str_79: "Image Zoom Ratio ( 0 ~ 10 )：",
-                str_80: "Number Of Images Side By Side ( 2 ~ 6 )：",
+                str_79: "Image Zoom Ratio：",
+                str_80: "Number Of Images Side By Side：",
                 str_81: "Comic Category Fixed To 2",
                 str_82: hasTouchEvents ? "Cancel" : "Cancel (Esc)",
                 str_83: "Reset",
@@ -21022,8 +21040,14 @@ if (next) {
                 str_105: hasTouchEvents ? "Copy" : "CopyURLs(1)",
                 str_106: hasTouchEvents ? "TabView" : "NewTabView(8)",
                 str_107: hasTouchEvents ? "Download" : "FastDownload(3)",
-                str_108: "※Where the message appears ( 0 ~ 4 )：",
-                str_109: "0: Center, 1: Upper left, 2: Upper right, 3: Lower left, 4: Lower right",
+                str_108: "※Where the message appears：",
+                str_109: {
+                    c: "Center",
+                    ul: "Upper left",
+                    ur: "Upper right",
+                    ll: "Lower left",
+                    lr: "Lower right",
+                },
                 str_110: "※Convert Webp to Jpg",
                 str_111: "Lazy Load Full Resolution",
                 str_112: "Lazy Load Single Column Layout",
@@ -25334,7 +25358,6 @@ img.small {
             dom.head.appendChild(newWindowStyle);
 
             if (newTabViewLightGallery == 0) {
-
                 const fancyboxStyle = dom.createElement("style");
                 fancyboxStyle.id = "FancyboxStyle";
                 fancyboxStyle.type = "text/css";
@@ -25450,6 +25473,85 @@ if (hasTouchEvents) {
 }
 
 function setFancybox() {
+    switch (navigator.language) {
+        case "zh-TW":
+        case "zh-HK":
+        case "zh-Hant-TW":
+        case "zh-Hant-HK":
+            Fancybox.defaults.l10n = {
+                PANUP: "上移",
+                PANDOWN: "下移",
+                PANLEFT: "左移",
+                PANRIGHT: "右移",
+                ZOOMIN: "放大",
+                ZOOMOUT: "縮小",
+                TOGGLEZOOM: "切換縮放等級",
+                TOGGLE1TO1: "切換縮放等級",
+                ITERATEZOOM: "切換縮放等級",
+                ROTATECCW: "逆時針旋轉",
+                ROTATECW: "順時針旋轉",
+                FLIPX: "水平翻轉",
+                FLIPY: "垂直翻轉",
+                FITX: "水平適應",
+                FITY: "垂直適應",
+                RESET: "重設",
+                TOGGLEFS: "切換全螢幕",
+                CLOSE: "關閉",
+                NEXT: "下一個",
+                PREV: "上一個",
+                MODAL: "使用 ESC 鍵關閉",
+                ERROR: "發生了錯誤，請稍後再試",
+                IMAGE_ERROR: "找不到圖像",
+                ELEMENT_NOT_FOUND: "找不到 HTML 元素",
+                AJAX_NOT_FOUND: "載入 AJAX 時出錯: 未找到",
+                AJAX_FORBIDDEN: "載入 AJAX 時出錯: 被阻止",
+                IFRAME_ERROR: "載入頁面出錯",
+                TOGGLE_ZOOM: "切換縮放等級",
+                TOGGLE_THUMBS: "切換縮圖",
+                TOGGLE_SLIDESHOW: "切換幻燈片",
+                TOGGLE_FULLSCREEN: "切換全螢幕",
+                DOWNLOAD: "下載"
+            };
+            break;
+        case "zh":
+        case "zh-CN":
+        case "zh-Hans-CN":
+            Fancybox.defaults.l10n = {
+                PANUP: "上移",
+                PANDOWN: "下移",
+                PANLEFT: "左移",
+                PANRIGHT: "右移",
+                ZOOMIN: "放大",
+                ZOOMOUT: "缩小",
+                TOGGLEZOOM: "切换缩放级别",
+                TOGGLE1TO1: "切换缩放级别",
+                ITERATEZOOM: "切换缩放级别",
+                ROTATECCW: "逆时针旋转",
+                ROTATECW: "顺时针旋转",
+                FLIPX: "水平翻转",
+                FLIPY: "垂直翻转",
+                FITX: "水平适应",
+                FITY: "垂直适应",
+                RESET: "重置",
+                TOGGLEFS: "切换全屏",
+                CLOSE: "关闭",
+                NEXT: "下一个",
+                PREV: "上一个",
+                MODAL: "使用 ESC 键关闭",
+                ERROR: "发生了错误，请稍后再试",
+                IMAGE_ERROR: "找不到图像",
+                ELEMENT_NOT_FOUND: "找不到 HTML 元素",
+                AJAX_NOT_FOUND: "载入 AJAX 时出错: 未找到",
+                AJAX_FORBIDDEN: "载入 AJAX 时出错: 被阻止",
+                IFRAME_ERROR: "加载页面出错",
+                TOGGLE_ZOOM: "切换缩放级别",
+                TOGGLE_THUMBS: "切换缩略图",
+                TOGGLE_SLIDESHOW: "切换幻灯片",
+                TOGGLE_FULLSCREEN: "切换全屏",
+                DOWNLOAD: "下载"
+            };
+            break;
+    };
     Fancybox.bind("[data-fancybox]", FancyboxOptions);
 }
 `;
@@ -26269,46 +26371,70 @@ if (newWindowData.ViewMode == 1) {
     <p>${displayLanguage.str_68}</p>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsIcon" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_69}
+    <input id="FullPictureLoadOptionsIcon" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_69}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    ${displayLanguage.str_108}<input id="FullPictureLoadOptionsMsgPos" title="${displayLanguage.str_109}" style="width: 60px; margin: 0 6px !important;">
+    <label>${displayLanguage.str_108}</label>
+    <select id="FullPictureLoadOptionsMsgPos">
+        ${Object.values(displayLanguage.str_109).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
+    </select>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    ${displayLanguage.str_70}<input id="FullPictureLoadOptionsThreading" style="width: 60px; margin: 0 6px !important;">
+    <label>${displayLanguage.str_70}</label>
+    <select id="FullPictureLoadOptionsThreading">
+        ${fun.arr(32).map((_,i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
+    </select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsConvert" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_110}
+    <input id="FullPictureLoadOptionsConvert" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_110}</label>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsZip" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_71}
+    <input id="FullPictureLoadOptionsZip" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_71}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    ${displayLanguage.str_72}<input id="FullPictureLoadOptionsExtension" style="width: 60px; margin: 0 6px !important;">
+    <label>${displayLanguage.str_72}</label>
+    <select id="FullPictureLoadOptionsExtension">
+        ${["zip", "cbz"].map(v => `<option value="${v}">${v}</option>`).join("")}
+    </select>
 </div>
 <div id="FullPictureLoadOptionsAutoDownloadDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsAutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_73}${displayLanguage.str_74}
+    <input id="FullPictureLoadOptionsAutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_73}${displayLanguage.str_74}</label>
 </div>
 <div id="FullPictureLoadOptionsCountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    ${displayLanguage.str_75}<input id="FullPictureLoadOptionsCountdown" style="width: 60px; margin: 0 6px !important;">
+    <label>${displayLanguage.str_75}</label>
+    <input id="FullPictureLoadOptionsCountdown" style="width: 60px; margin: 0 6px !important;">
 </div>
 <div id="FullPictureLoadOptionsComicDIV" style="width: 348px; display: none;">
-    <input id="FullPictureLoadOptionsComic" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_76}
+    <input id="FullPictureLoadOptionsComic" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_76}</label>
 </div>
 <div id="FullPictureLoadOptionsDoubleDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsDouble" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_77}
+    <input id="FullPictureLoadOptionsDouble" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_77}</label>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_78}
+    <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_78}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    ${displayLanguage.str_79}<input id="FullPictureLoadOptionsZoom" title="10 = 100%、5 = 50%、0 = auto" style="width: 60px; margin: 0 6px !important;">
+    <label>${displayLanguage.str_79}</label>
+    <select id="FullPictureLoadOptionsZoom">
+        ${fun.arr(11).map((_, i) => `<option value="${i}">${i === 0 ? "Auto" : i + "0%"}</option>`).join("")}
+    </select>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    ${displayLanguage.str_80}<input id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}" style="width: 60px; margin: 0 6px !important;">
+    <label>${displayLanguage.str_80}</label>
+    <select id="FullPictureLoadOptionsColumn">
+        ${fun.arr(5).map((_, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
+    </select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">${displayLanguage.str_103}
+    <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_103}</label>
 </div>
 <button id="FullPictureLoadOptionsCancelBtn">${displayLanguage.str_82}</button>
 <button id="FullPictureLoadOptionsResetBtn">${displayLanguage.str_83}</button>
@@ -26466,6 +26592,11 @@ if (newWindowData.ViewMode == 1) {
     box-shadow: -2px 2px 5px rgb(0 0 0 / 30%) !important;
     background-color: #FAFAFB;
     z-index: 2147483647 !important;
+}
+
+#FullPictureLoadOptions label, #FullPictureLoadOptions select{
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 #FullPictureLoadOptions * {
@@ -27087,60 +27218,54 @@ a[data-fancybox]:hover {
     //Fancybox3的語系
     const Fancyboxi18nV3 = async () => {
         if (siteData.fancybox?.js === false) return;
-        let str = `
-switch (language) {
-    case "zh-TW":
-    case "zh-HK":
-    case "zh-Hant-TW":
-    case "zh-Hant-HK":
-        $.fancybox.defaults.i18n.tw = {
-            "CLOSE": "關閉",
-            "NEXT": "下一個",
-            "PREV": "上一個",
-            "ERROR": "無法載入請求的內容。 <br/> 請稍後重試。",
-            "PLAY_START": "開始幻燈片",
-            "PLAY_STOP": "暫停幻燈片",
-            "FULL_SCREEN": "全螢幕",
-            "THUMBS": "縮圖",
-            "DOWNLOAD": "下載",
-            "SHARE": "分享",
-            "ZOOM": "縮放"
-        };
-        $.fancybox.defaults.lang = "tw";
-        break;
-    case "zh":
-    case "zh-CN":
-    case "zh-Hans-CN":
-        $.fancybox.defaults.i18n.cn = {
-            "CLOSE": "关闭",
-            "NEXT": "下一个",
-            "PREV": "上一个",
-            "ERROR": "无法加载请求的内容。 <br/> 请稍后重试。",
-            "PLAY_START": "开始幻灯片",
-            "PLAY_STOP": "暂停幻灯片",
-            "FULL_SCREEN": "全面屏",
-            "THUMBS": "缩略图",
-            "DOWNLOAD": "下载",
-            "SHARE": "分享",
-            "ZOOM": "缩放"
-        };
-        $.fancybox.defaults.lang = "cn";
-        break;
-}
-        `;
-        new Function("language", str)(language);
+        switch (language) {
+            case "zh-TW":
+            case "zh-HK":
+            case "zh-Hant-TW":
+            case "zh-Hant-HK":
+                _unsafeWindow.jQuery.fancybox.defaults.i18n.tw = {
+                    "CLOSE": "關閉",
+                    "NEXT": "下一個",
+                    "PREV": "上一個",
+                    "ERROR": "無法載入請求的內容。 <br/> 請稍後重試。",
+                    "PLAY_START": "開始幻燈片",
+                    "PLAY_STOP": "暫停幻燈片",
+                    "FULL_SCREEN": "全螢幕",
+                    "THUMBS": "縮圖",
+                    "DOWNLOAD": "下載",
+                    "SHARE": "分享",
+                    "ZOOM": "縮放"
+                };
+                _unsafeWindow.jQuery.fancybox.defaults.lang = "tw";
+                break;
+            case "zh":
+            case "zh-CN":
+            case "zh-Hans-CN":
+                _unsafeWindow.jQuery.fancybox.defaults.i18n.cn = {
+                    "CLOSE": "关闭",
+                    "NEXT": "下一个",
+                    "PREV": "上一个",
+                    "ERROR": "无法加载请求的内容。 <br/> 请稍后重试。",
+                    "PLAY_START": "开始幻灯片",
+                    "PLAY_STOP": "暂停幻灯片",
+                    "FULL_SCREEN": "全面屏",
+                    "THUMBS": "缩略图",
+                    "DOWNLOAD": "下载",
+                    "SHARE": "分享",
+                    "ZOOM": "缩放"
+                };
+                _unsafeWindow.jQuery.fancybox.defaults.lang = "cn";
+                break;
+        }
     };
 
     //更改Fancybox3的預設選項
     const FancyboxOptionsV3 = () => {
         if (siteData.fancybox?.js === false) return; //"download",
-        let str = `
-$.fancybox.defaults.buttons = ["zoom", "slideShow", "fullScreen", "thumbs", "close"];
-$.fancybox.defaults.loop = true;
-$.fancybox.defaults.toolbar = true;
-console.log("fancybox 3.5.7 選項物件",$.fancybox.defaults);
-        `;
-        new Function(str)();
+        _unsafeWindow.jQuery.fancybox.defaults.buttons = ["zoom", "slideShow", "fullScreen", "thumbs", "close"];
+        _unsafeWindow.jQuery.fancybox.defaults.loop = true;
+        _unsafeWindow.jQuery.fancybox.defaults.toolbar = true;
+        //console.log("fancybox 3.5.7 選項物件", _unsafeWindow.jQuery.fancybox.defaults);
     };
 
     const addKeyEvent = async event => {
