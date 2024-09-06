@@ -2496,6 +2496,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://jpg5.su/tatsuya_shiba/albums">ImgBB</a>
+                </td>
+                <td>作用在上傳者的相簿</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.putmega.com/explore/recent/?list=albums&sort=date_desc&page=1">PutMega</a>
                 </td>
                 <td></td>
@@ -2736,6 +2742,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://setushe.pics/">涩图社</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meiru.neocities.org/">美乳小姐姐写真</a>
                 </td>
                 <td></td>
             </tr>
@@ -2984,6 +2996,18 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://quatvn.men/phim-sex-anh-sex">Quatvn</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://quatvn.baby/">Quatvn2</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eroxxx.co/">EroXXX</a>
                 </td>
                 <td></td>
             </tr>
@@ -3650,6 +3674,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://dtf.ru/u/36100-tursall">Tursall</a>，SPA網頁，點開作者的PO文，作用在PO文首樓的圖集，手動插入圖片。
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://girls.ucrazy.org/">uCrazy</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4864,6 +4894,26 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://atm333.com/">凹凸漫</a>
+                </td>
+                <td>
+                    <a href="https://xman5.com/">X漫</a>，<a href="https://rmtt6.com/">肉漫天堂</a>，目錄頁手動插入圖片
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.songshuhanman.com/">松鼠韓漫</a>
+                </td>
+                <td>目錄頁手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yemaohanman.com/">野貓韓漫</a>
+                </td>
+                <td>目錄頁手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://18mh.org/">18漫畫</a>
                 </td>
                 <td></td>
@@ -5067,12 +5117,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://xs8.me/">地址发布页，Mobile限定</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://atm333.com/">凹凸漫</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -5521,6 +5565,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://m.gaonaojin.com/">仙漫网M</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hmttmh.com/">韩漫天堂</a>
                 </td>
                 <td>有無限滾動模式加預讀</td>
             </tr>
