@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.13
+// @version            2.7.14
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1183,23 +1183,6 @@ a:has(>div>div>img),
         },
         category: "nsfw1"
     }, {
-        name: "图片屋",
-        host: ["www.tupianwu.com", "tupianwu.com"],
-        reg: /^https?:\/\/(www\.)?tupianwu\.com\/post\/\d+\//i,
-        init: "fun.clearAllTimer();",
-        autoClick: ".readmore>a",
-        imgs: ".LightGallery_Item",
-        button: [4],
-        insertImg: [
-            [".umBody", 0, ".LightGallery_Item"], 2
-        ],
-        autoDownload: [0],
-        next: ".prev>a",
-        prev: ".next>a",
-        customTitle: ".postTitle>h1",
-        css: "@media only screen and (max-width:480px){.container{padding:0px !important}}",
-        category: "nsfw1"
-    }, {
         name: "微密猫",
         reg: () => fun.checkUrl({
             e: ".logo>a[title=微密猫]",
@@ -1408,7 +1391,7 @@ a:has(>div>div>img),
         name: "找套图/Xiuno BBS",
         reg: () => fun.checkUrl({
             h: [
-                /^(www\.)?zhaotaotu\.(cc|one)$/,
+                /^(www\.)?zhaotaotu\.cc$/,
                 /^(www\.)?kantaotu\.cc$/
             ],
             p: /^\/\??thread-\d+\.htm$/
@@ -2027,24 +2010,6 @@ a:has(>div>div>img),
         css: ".appbox,.uk-page~section{display:none!important}.work-content img{max-width:100%!important}",
         category: "nsfw1"
     }, {
-        name: "唯一图库",
-        host: ["www.mmonly.com", "m.mmonly.com"],
-        reg: /^https?:\/\/(www|m)\.mmonly\.\w+\/\w+\/\w+\/\d+\.html$/i,
-        init: "$(document).off();",
-        imgs: () => {
-            let max;
-            try {
-                [max] = fun.gt(".pages a,.article_page a").match(/\d+/);
-            } catch {
-                max = 1;
-            }
-            return fun.getImg(".big-pic img,#ArticleBox img", max, 9);
-        },
-        button: [4],
-        insertImg: [".big-pic,#ArticleBox", 2],
-        customTitle: ".imgtitle>h1,.PsBox",
-        category: "nsfw1"
-    }, {
         name: "和邪社",
         host: ["www.hexieshe.cn", "hexieshe.cn"],
         reg: /^https?:\/\/(www\.)?hexieshe\.cn\/\d+\/$/i,
@@ -2466,6 +2431,11 @@ a:has(>div>div>img),
         customTitle: ".entry-title",
         observerClick: "#wpdp-close",
         category: "nsfw1"
+    }, {
+        name: "Cosplay Porn",
+        reg: /^https?:\/\/cosplayporn\.online\//,
+        observerClick: "#wpdp-close",
+        category: "ad"
     }, {
         name: "Cosersets",
         host: ["www.cosersets.com"],
@@ -2980,9 +2950,9 @@ a:has(>div>div>img),
         }),
         category: "nsfw1"
     }, {
-        name: "图片吧/14MM图片网",
-        host: ["www.tp8.org", "www.14mm.cn"],
-        reg: /^https:\/\/(www\.tp8\.org|www\.14mm\.\w+)\/\d+\.html$/,
+        name: "14MM图片网",
+        host: ["www.14mm.cn"],
+        reg: /^https:\/\/www\.14mm\.\w+\/\d+\.html$/,
         exclude: "//a[@rel='category tag'][text()='演出视频']",
         imgs: async () => {
             let max = fun.gt("a[title='最后页']");
@@ -4626,22 +4596,6 @@ a:has(>div>div>img),
         customTitle: "h1",
         category: "nsfw1"
     }, {
-        name: "MM 范",
-        host: ["www.95mm.vip"],
-        reg: /^https?:\/\/www\.95mm\.\w+\/\d+\.html/,
-        init: "$(document).unbind('keydown');$(document).unbind('keyup');",
-        imgs: () => {
-            let [, max] = fun.gt(".post-title").match(/\/(\d+)/);
-            return fun.getImg(".post img[alt]", max, 2);
-        },
-        button: [4],
-        insertImg: [".post", 2],
-        autoDownload: [0],
-        next: "//div[div[text()='上一组']]/preceding-sibling::div/a",
-        prev: "//div[div[text()='下一组']]/preceding-sibling::a",
-        customTitle: ".post-title",
-        category: "nsfw1"
-    }, {
         name: "推图网",
         reg: /^https?:\/\/(www|m)\.tuiimg\.com\/meinv\/\d+\//,
         link: "https://m.tuiimg.com/meinv/",
@@ -5780,26 +5734,6 @@ a:has(>div>div>img),
         customTitle: ".cm-entry-title",
         category: "nsfw2"
     }, {
-        name: "Cosplay World",
-        host: ["cosplayworld.net"],
-        reg: /^https?:\/\/cosplayworld\.net\/[^\/]+\/$/,
-        include: ".entry-content",
-        imgs: () => {
-            videoSrcArray = fun.gae("video.lazy").map(e => e.dataset.src ?? e.src);
-            return fun.gae(".entry-content img");
-        },
-        button: [4],
-        insertImg: [".entry-content", 2],
-        go: 1,
-        autoDownload: [0],
-        next: ".g1-nav-single-prev a",
-        prev: ".g1-nav-single-next a",
-        customTitle: () => fun.dt({
-            s: ".entry-inner .entry-title",
-            d: /.mitaku\.net./
-        }),
-        category: "nsfw2"
-    }, {
         name: "Byoru",
         host: ["byoru.net"],
         reg: /^https?:\/\/byoru\.net\/[^\/]+\/$/,
@@ -6081,7 +6015,6 @@ a:has(>div>div>img),
             "hotgirlchina.com",
             "anhnguoimau.com",
             "anhnguoidep.com",
-            "anhdoitruy.com",
             "anhnguoilon.com",
             "xinh.pro",
             "anhkhieudam.com",
@@ -6092,7 +6025,6 @@ a:has(>div>div>img),
             /^https?:\/\/hotgirlchina\.com\/.+(photos?|videos?|anh)?\/?/,
             /^https?:\/\/anhnguoimau\.com\/\d+\/[^\/]+\/$/,
             /^https?:\/\/anhnguoidep\.com\/[^\/]+\/$/,
-            /^https?:\/\/anhdoitruy\.com\/[^\/]+\/$/,
             /^https?:\/\/anhnguoilon\.com\/[^\/]+\/$/,
             /^https?:\/\/xinh\.pro\/[^\/]+\/$/,
             /^https?:\/\/anhkhieudam\.com\/[^\/]+\/$/,
@@ -6662,17 +6594,27 @@ a:has(>div>div>img),
     }, {
         name: "マブい女画像集",
         host: ["mabui-onna.com"],
-        reg: /^https?:\/\/mabui-onna\.com\/blog-entry-\d+\.html$/,
+        reg: /^https?:\/\/mabui-onna\.com\/blog-entry-\d+\.html/,
         init: () => {
             let texts = fun.gae("//div[@class='entry_body']//div[not(br)][not(a[img])][not(@class='fc2_footer')][not(@class='topentry_text')][not(@class='fc2button-clap')][not(@class='entry_footer')][not(@class='entry_data')]");
             if (texts.length > 0) {
                 let te = fun.ge(".topentry_text,.entry_body");
                 texts.forEach(e => te.parentNode.insertBefore(e, te));
             }
+            fun.createImgBox(".entry_body", 1);
         },
-        imgs: ".topentry_text div>a:not([href*='.html']),.entry_body div>a:not([href*='.html'])",
+        imgs: ".topentry div>a:not([href*='.html'],[href*='.dmm.']),.wrapper section div>a:not([href*='.html'],[href*='.dmm.'])",
         button: [4],
-        insertImg: [".topentry_text,.entry_body", 2],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "div:has(>a[target]>img[alt]),div[id^='bnc_ad']"], 2
+        ],
+        insertImgAF: () => {
+            let e = fun.ge("div:has(>a[href*='.dmm.'])");
+            if (e) {
+                let x = fun.ge(".entry_body");
+                x.parentNode.insertBefore(e, x);
+            }
+        },
         autoDownload: [0],
         next: "a.pager_next,.next_entry>a",
         prev: "a.pager_prev,.prev_entry>a",
@@ -7448,9 +7390,15 @@ a:has(>div>div>img),
         reg: () => fun.checkUrl({
             h: "beautypics.org",
             p: /^\/archives\/\d+$/,
-            e: ".page-content img[srcset]"
+            e: ".page-content img"
         }),
-        imgs: () => fun.getImgSrcset(".page-content img[srcset]"),
+        imgs: () => {
+            if (fun.ge(".page-content img[srcset]")) {
+                return fun.getImgSrcset(".page-content img[srcset]");
+            } else {
+                return fun.gae(".page-content img");
+            }
+        },
         button: [4],
         insertImg: [".page-content", 2],
         customTitle: () => fun.title(" – Sexy Girl Pictures"),
@@ -20007,12 +19955,50 @@ if (next) {
     }, {
         name: "網址清單新分頁開啟",
         host: ["github.com"],
-        delay: 1000,
         reg: [
-            /github\.com\/skofkyo\/AutoPager\/tree\/main\/CustomPictureDownload/,
+            /github\.com\/skofkyo\/AutoPager\/tree\/main\/CustomPictureDownload$/,
             /github\.com\/skofkyo\/AutoPager\/blob\/main\/CustomPictureDownload\/README\.md$/
         ],
-        openInNewTab: ".entry-content a[href]:not([target=_blank]):not([id])",
+        init: async () => {
+            await fun.waitEle(".markdown-body table a");
+            const cb = (open = 1) => {
+                let links = fun.gae(".markdown-body table a[select]");
+                if (links.length > 0) {
+                    links.forEach(a => {
+                        if (open === 1) {
+                            _GM_openInTab(a.href);
+                        }
+                        a.removeAttribute("select");
+                        a.removeAttribute("style");
+                    });
+                }
+            };
+            fun.gae(".markdown-body table a").forEach(a => {
+                a.addEventListener("mouseenter", (event) => {
+                    if (event.target.getAttribute("select") == "true") {
+                        event.target.removeAttribute("select");
+                        event.target.removeAttribute("style");
+                    } else {
+                        event.target.setAttribute("select", "true");
+                        Object.assign(event.target.style, {
+                            border: "solid",
+                            borderColor: "yellow"
+                        });
+                    }
+                });
+            });
+            document.addEventListener("keydown", event => {
+                if (event.code === "Escape" || event.key === "Escape") {
+                    return cb(0);
+                }
+                if (event.ctrlKey && event.altKey && (event.code === "KeyO" || event.key === "o" || event.key === "O")) {
+                    cb();
+                }
+            });
+            document.addEventListener("click", () => cb(0));
+        },
+        openInNewTab: ".markdown-body table a[href]:not([target=_blank]):not([id])",
+        css: ".markdown-body table a{text-decoration:none!important}",
         category: "none"
     }, {
         name: "google search 新分頁開啟",
