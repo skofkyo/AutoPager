@@ -1521,7 +1521,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="http://www.zhaotaotu.cc/">找套图</a>
                 </td>
                 <td>
-                    <a href="https://www.zhaotaotu.one/">zhaotaotu.one</a>， <a href="https://kantaotu.cc/">Xiuno BBS</a>
+                    <a href="https://kantaotu.cc/">Xiuno BBS</a>
                 </td>
             </tr>
             <tr>
@@ -1762,9 +1762,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.14mm.cn/">14MM图片网</a>
                 </td>
-                <td>
-                    <a href="https://www.tp8.org/">图片吧</a>
-                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -1788,7 +1786,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://mt1.meitu1.sbs/">第一美女套图网</a>
+                    <a href="https://a92.meitu1.sbs/">第一美女套图网</a>
                 </td>
                 <td>
                     <a href="https://meitu.sbs/">最新域名</a>
@@ -1860,7 +1858,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.xofulitu521.xyz/xoxo">XO福利圖</a>
+                    <a href="https://apes-swing-tree.xofulitu2qqq222.xyz/xoxo">XO福利圖</a>
                 </td>
                 <td>
                     <a href="https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/">網站跳轉</a>，分類頁添加了自動翻頁
@@ -1912,12 +1910,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.95mm.vip/">MM 范</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://m.tuiimg.com/meinv/">推图网</a>
                 </td>
                 <td></td>
@@ -1930,23 +1922,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://tupianwu.com/">图片屋</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.hexieshe.cn/">和邪社</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.mmonly.com/mmtp/">唯一图库</a>
-                </td>
-                <td>
-                    <a href="https://m.mmonly.com/mmtp/">m.mmonly.com</a>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -2973,12 +2951,6 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://cosplayworld.net/">Cosplay World</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://hotgirl.biz/">Hotgirl.biz</a>
                 </td>
                 <td></td>
@@ -3012,7 +2984,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
                 </td>
                 <td>
-                    <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhdoitruy.com/">Ảnh Đồi Trụy</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>， <a href="https://xinh.pro/">Xinh Pro</a>， <a href="https://anhkhieudam.com/">Ảnh Khiêu Dâm</a>， <a href="https://hinhsexviet.com/">Hình Sex Việt</a>， <a href="https://anhmienphi.com/">Ảnh Miễn Phí</a>
+                    <a href="https://anhnguoimau.com/">Ảnh Người Mẫu</a>， <a href="https://anhnguoidep.com/">Ảnh Người Đẹp</a>， <a href="https://anhnguoilon.com/">Ảnh Người Lớn</a>， <a href="https://xinh.pro/">Xinh Pro</a>， <a href="https://anhkhieudam.com/">Ảnh Khiêu Dâm</a>， <a href="https://hinhsexviet.com/">Hình Sex Việt</a>， <a href="https://anhmienphi.com/">Ảnh Miễn Phí</a>
                 </td>
             </tr>
             <tr>
@@ -5843,6 +5815,10 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td>README.md</td>
+                <td>鼠標懸停網站列表鏈結標記鏈結添加邊框，鏈結再次懸停取消標記，Ctrl + Alt + O快捷鍵打啟所有被標記的鏈結，按Esc或點擊頁面空白處取消所有標記。</td>
+            </tr>
             <tr>
                 <td>漫畫分類</td>
                 <td>自動展開目錄</td>
