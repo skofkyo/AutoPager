@@ -1,3 +1,6 @@
+<h1>安裝腳本</h1>
+<a href="https://github.com/skofkyo/AutoPager/raw/main/CustomPictureDownload/FullPictureLoad.user.js">圖片全載-FancyboxV5
+</a>
 <h1>測試通過環境：</h1>
 <pre>
 2024/08/31
@@ -13,7 +16,6 @@ XBrowser 4.8.1
 ViaBrowser 5.8.1
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
-<p>PS：暴力猴Violentmonkey不兼容Fancybox5會報錯，連Android上的Via瀏覽器、X瀏覽器都能正常引入使用Fancybox5了。</p>
 <h1>提醒：</h1>
 <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
 <p>請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com或cdn.bootcdn.net</p>
@@ -1775,6 +1777,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://coserlab.io/">Coser Lab</a>
                 </td>
                 <td>4K~8K高解析</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://zusi.net/">Zusi足丝</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4680,7 +4688,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://pixiv.app/">Comics</a>
                 </td>
-                <td></td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
