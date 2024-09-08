@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.14
+// @version            2.7.15
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3033,6 +3033,19 @@ a:has(>div>div>img),
             [".masonry-list", 2, ".masonry-list"], 2
         ],
         customTitle: "span.current",
+        category: "nsfw1"
+    }, {
+        name: "Zusi足丝",
+        reg: () => fun.checkUrl({
+            h: "zusi.net"
+        }),
+        init: () => [...document.getElementsByTagName("style")]?.find(s => s.textContent.includes("yuanshen.svg"))?.remove(),
+        imgs: ".masonry-list a.glightbox",
+        button: [4],
+        insertImg: [
+            [".masonry-list", 2, ".masonry-list"], 2
+        ],
+        customTitle: ".card-body h1",
         category: "nsfw1"
     }, {
         name: "孔雀海/洛丽网/ladymao图库/懒人看图",
@@ -13603,6 +13616,9 @@ a:has(>div>div>img),
         name: "Comics",
         host: ["pixiv.app"],
         reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
+        init: async () => await fun.waitEle("footer[class]"),
+        SPA: () => document.URL.includes("/comics/"),
+        observerURL: true,
         imgs: ".bg-slate-100 img,.shadow-md img",
         customTitle: "h1",
         category: "hcomic"
