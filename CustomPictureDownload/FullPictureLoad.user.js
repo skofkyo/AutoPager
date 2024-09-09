@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.17
+// @version            2.7.18
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1014,9 +1014,12 @@ a:has(>div>div>img),
         css: ".article:has(>div>.media),.banner,.banner_ad,.push-top,.push-bottom,.banner-sexgps{display:none!important;}",
         category: "ad"
     }, {
-        name: "秀人图",
-        host: ["www.ixiuren.com", "www.xiurento.com", "www.aixiuren.com", "www.aixiurentu.com", "www.aixiurenwang.com"],
-        reg: /^https?:\/\/www\.(ixiuren|xiurento|aixiuren(tu)?|aixiurenwang)\.com\/\d+\.html/i,
+        name: "秀人网图集",
+        host: ["www.aixiurenji.com", "www.aixiurentuji.com", "www.aixiurenwang.com"],
+        reg: () => fun.checkUrl({
+            e: ".logo-wrapper img.logo[alt='秀人网图集']",
+            p: /^\/\d+\.html/
+        }),
         exclude: "//button[contains(text(),'登录购买')]",
         imgs: () => fun.getImgA("a[data-fancybox],.entry-content img", ".fenye a"),
         button: [4],
@@ -1029,6 +1032,7 @@ a:has(>div>div>img),
             v: 3,
             css: false
         },
+        observerClick: ".ht-n-close-toggle",
         category: "nsfw1"
     }, {
         name: "足控资源网",
@@ -2704,8 +2708,11 @@ a:has(>div>div>img),
     }, {
         name: "爱死美女图片站",
         host: ["www.24tupian.org"],
-        reg: /^https?:\/\/www\.24tupian\.org\/\w+\/\d+\/\d+\/\d+\.html$/,
-        include: "img[data-original*='imgs.diercun.com']",
+        reg: () => fun.checkUrl({
+            h: "24tupian.org",
+            p: /^\/\w+\/\d+\/\d+\/\d+\.html$/,
+            e: "img[data-original*='imgs.diercun.com']"
+        }),
         imgs: async () => {
             let pid = fun.gt("#pid");
             let num = Number(fun.gt(".mores>a").match(/\d+/)[0]);
@@ -7616,6 +7623,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "sekushipic",
+        host: ["sekushipic.blogspot.com"],
         reg: /^https?:\/\/sekushipic\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
         imgs: ".separator>a",
         thums: ".separator img",
@@ -7631,6 +7639,7 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "IDOL AREA",
+        host: ["idolarea.blogspot.com"],
         reg: /^https?:\/\/idolarea\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
         imgs: ".separator>a",
         thums: ".separator img",
@@ -7659,6 +7668,19 @@ a:has(>div>div>img),
         ],
         customTitle: "title",
         category: "nsfw2"
+    }, {
+        name: "Curvy Asian",
+        host: ["curvyasian.blogspot.com"],
+        reg: /^https?:\/\/curvyasian\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
+        imgs: "#blogger-gallery a.item-link",
+        thums: "#blogger-gallery a.item-link img",
+        button: [4],
+        insertImg: ["#blogger-gallery", 2],
+        autoDownload: [0],
+        next: "a.blog-pager-older-link",
+        prev: "a.blog-pager-newer-link",
+        customTitle: ".entry-title",
+        category: "nsfw1"
     }, {
         name: "500 Brothers",
         host: ["500brothersfun.blogspot.com"],
