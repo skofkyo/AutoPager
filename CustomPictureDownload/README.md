@@ -1719,7 +1719,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.ixiuren.com/xiuren">秀人图</a>
+                    <a href="https://www.aixiurenji.com/xiuren">秀人网图集</a>
                 </td>
                 <td>只支持免費</td>
             </tr>
@@ -3311,6 +3311,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://500brothersfun.blogspot.com/">500 Brothers</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://curvyasian.blogspot.com/">Curvy Asian</a>
                 </td>
                 <td></td>
             </tr>
