@@ -1109,7 +1109,7 @@ imgs: async () => {
 <br>
 <img src="https://i.imgur.com/xZN2uj7.jpg">
 <img src="https://i.imgur.com/J0Sz9ri.jpg">
-<img src="https://i.imgur.com/z0p8wbT.jpg">
+<img src="https://i.imgur.com/VuSRtJ8.jpeg">
 <img src="https://i.imgur.com/OibRD2N.jpg">
 <h2>自定義編輯網站收藏說明</h2>
 <details>
