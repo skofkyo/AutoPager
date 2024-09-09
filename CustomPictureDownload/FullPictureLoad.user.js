@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.16
+// @version            2.7.17
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3549,9 +3549,23 @@ a:has(>div>div>img),
         name: "丝袜客",
         host: ["siwake.cc"],
         reg: /^https?:\/\/siwake\.cc\/post\//,
+        init: () => {
+            let e = fun.ge(".Content>.newfujian");
+            if (e) {
+                tempEles.push(e);
+            }
+        },
         imgs: ".Content>a",
         button: [4],
         insertImg: [".Content", 2],
+        insertImgAF: () => {
+            if (tempEles.length > 0) {
+                let x = fun.ge(".Content").firstChild;
+                for (let e of tempEles) {
+                    x.parentNode.insertBefore(e, x);
+                }
+            }
+        },
         autoDownload: [0],
         next: "a.fas",
         prev: "a.next.fas",
@@ -11028,18 +11042,18 @@ a:has(>div>div>img),
         name: "18Kami.com",
         host: ["18kami.com"],
         reg: /^https?:\/\/18kami\.com\/photo\/\d+/,
-        init: () => {
-            setTimeout(() => {
-                fun.ge("#chk_cover").click();
-            }, 1000);
-        },
         imgs: ".thumb-overlay-albums img",
         button: [4],
         insertImg: [".thumb-overlay-albums", 2],
         customTitle: ".panel-heading>.pull-left",
         fetch: 1,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        observerClick: "#chk_cover",
         category: "hcomic"
+    }, {
+        reg: /^https?:\/\/18kami\.com\//,
+        observerClick: "#chk_cover",
+        category: "ad"
     }, {
         name: "逆次元逆ACG",
         host: ["www.nicohentai.com", "www.freeacg.org", "www.freeacg2.org", "acg.taipei", "nico.yt"],
@@ -11061,20 +11075,38 @@ a:has(>div>div>img),
             });
             return text.replace(/\(\d+[\w\s\.\+-]+\)/i, "").replace(/［\d+[\w\s\.\+-]+］/i, "").trim();
         },
+        observerClick: "#chk_cover",
         category: "hcomic"
+    }, {
+        reg: () => fun.checkUrl({
+            e: "#Comic_Top_Nav img[alt=logo][src$='_nico.png']"
+        }),
+        observerClick: "#chk_cover",
+        category: "ad"
     }, {
         name: "Comic18H",
         host: ["www.comic18h.com"],
         reg: /^https:\/\/www\.comic18h\.com\/chapter\/\d+\.html$/,
-        init: async () => await fun.getNP("#readerarea>div", ".pagination li.active+li>a:not(.prevnext)"),
-        imgs: "#readerarea img",
+        imgs: async () => {
+            if (hasTouchEvents) {
+                await fun.getNP("#readerarea>div", "//ul[@class='pagination']//a[text()='Next»']");
+            } else {
+                await fun.getNP("#readerarea>div", ".pagination li.active+li>a:not(.prevnext)");
+            }
+            return fun.gae("#readerarea img");
+        },
         button: [4],
         insertImg: ["#readerarea", 2],
         next: "//a[text()='Next Article»'][contains(@href,'.html')]",
         prev: "//a[text()='«Previous Chapter'][contains(@href,'.html')]",
         customTitle: ".entry-title",
         css: ".hidden-xs:has(>.pagination){display:none!important;}",
+        observerClick: "#chk_cover",
         category: "hcomic"
+    }, {
+        reg: /^https?:\/\/www\.comic18h\.com\//,
+        observerClick: "#chk_cover",
+        category: "ad"
     }, {
         name: "Doujindesu.XXX",
         reg: () => fun.checkUrl({
@@ -11128,15 +11160,9 @@ a:has(>div>div>img),
             ],
             p: /^\/photo\/\d+/
         }),
-        init: async () => {
-            setTimeout(() => {
-                fun.ge("#chk_cover").click();
-                fun.ge("#chk_guide").click();
-            }, 2000);
-            fun.remove("//div[contains(text(),'插件')] | //div[@class='col-xs-6'][div[@data-group]] | //div[@class='panel-body']//div[@data-group] | //div[@class='row'][div[div[@data-group]]] | //div[@class='div_sticky2 hidden-lg']");
-            await fun.getNP(".scramble-page", ".pagination li.active+li>a:not(.prevnext)");
-        },
+        init: () => fun.remove("//div[contains(text(),'插件')] | //div[@class='col-xs-6'][div[@data-group]] | //div[@class='panel-body']//div[@data-group] | //div[@class='row'][div[div[@data-group]]] | //div[@class='div_sticky2 hidden-lg']"),
         imgs: async () => {
+            await fun.getNP(".scramble-page", ".pagination li.active+li>a:not(.prevnext)");
             fun.showMsg(displayLanguage.str_01, 0);
             const {
                 aid,
@@ -11215,6 +11241,7 @@ a:has(>div>div>img),
         },
         fetch: 1,
         css: ".hidden-lg:not(.panel)[style*='z-index']{display:none!important;}",
+        observerClick: "#chk_cover",
         category: "hcomic"
     }, {
         name: "禁漫天堂",
@@ -11230,10 +11257,6 @@ a:has(>div>div>img),
             ]
         }),
         init: () => {
-            setTimeout(() => {
-                fun.ge("#chk_cover").click();
-                fun.ge("#chk_guide").click();
-            }, 2000);
             let selectors = [
                 "//div[contains(text(),'插件')]",
                 "//div[@class='col-xs-6'][div[@data-group]]",
@@ -11244,6 +11267,7 @@ a:has(>div>div>img),
             fun.remove(selectors);
         },
         css: ".hidden-lg:not(.panel)[style*='z-index']{display:none!important;}",
+        observerClick: "#chk_cover",
         category: "ad"
     }, {
         name: "E-Hentai圖片清單頁",
@@ -25127,13 +25151,47 @@ if (next) {
     </body>
 </html>
             `);
-
+            let menuLanguage;
+            switch (language) {
+                case "zh-TW":
+                case "zh-HK":
+                case "zh-Hant-TW":
+                case "zh-Hant-HK":
+                    menuLanguage = {
+                        webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4)",
+                        rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
+                        small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2)",
+                        single: hasTouchEvents ? "單圖像模式" : "單圖像模式 (1)",
+                        default: hasTouchEvents ? "預設模式" : "預設模式 (0)",
+                    };
+                    break;
+                case "zh":
+                case "zh-CN":
+                case "zh-Hans-CN":
+                    menuLanguage = {
+                        webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4)",
+                        rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
+                        small: hasTouchEvents ? "小图像模式" : "小图像模式 (2)",
+                        single: hasTouchEvents ? "单图像模式" : "单图像模式 (1)",
+                        default: hasTouchEvents ? "默认模式" : "默认模式 (0)",
+                    };
+                    break;
+                default:
+                    menuLanguage = {
+                        webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
+                        rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
+                        small: hasTouchEvents ? "Small Image" : "Small Image (2)",
+                        single: hasTouchEvents ? "Single Image" : "Single Image (1)",
+                        default: hasTouchEvents ? "Default" : "Default (0)",
+                    };
+            };
             newWindow.fun = fun;
             newWindow.hasTouchEvents = hasTouchEvents;
             newWindow.newWindowData = newWindowData;
             newWindow.imgViewIndex = -1;
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
+            newWindow.menuLanguage = menuLanguage;
 
             const newWindowStyle = dom.createElement("style");
             newWindowStyle.id = "newWindowStyle";
@@ -25438,23 +25496,23 @@ function addFixedMenu() {
     menuDiv.id = "FixedMenu";
     const menuObj = [{
         id: "MenuScrollItem",
-        text: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
+        text: menuLanguage.webtoon,
         cfn: () => scrollImageLayout()
     }, {
         id: "MenuRTLItem",
-        text: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
+        text: menuLanguage.rtl,
         cfn: () => rtlImageLayout()
     }, {
         id: "MenuSmallItem",
-        text: hasTouchEvents ? "Small Image" : "Small Image (2)",
+        text: menuLanguage.small,
         cfn: () => smallImageLayout()
     }, {
         id: "MenuSinglePageItem",
-        text: hasTouchEvents ? "Single Image" : "Single Image (1)",
+        text: menuLanguage.single,
         cfn: () => singleImageLayout()
     }, {
         id: "MenuDefaultItem",
-        text: hasTouchEvents ? "Default" : "Default (0)",
+        text: menuLanguage.default,
         cfn: () => defaultImageLayout()
     }];
     const createMenu = obj => {
@@ -25712,23 +25770,23 @@ function addFixedMenu() {
     menuDiv.id = "FixedMenu";
     const menuObj = [{
         id: "MenuScrollItem",
-        text: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
+        text: menuLanguage.webtoon,
         cfn: () => scrollImageLayout()
     }, {
         id: "MenuRTLItem",
-        text: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
+        text: menuLanguage.rtl,
         cfn: () => rtlImageLayout()
     }, {
         id: "MenuSmallItem",
-        text: hasTouchEvents ? "Small Image" : "Small Image (2)",
+        text: menuLanguage.small,
         cfn: () => smallImageLayout()
     }, {
         id: "MenuSinglePageItem",
-        text: hasTouchEvents ? "Single Image" : "Single Image (1)",
+        text: menuLanguage.single,
         cfn: () => singleImageLayout()
     }, {
         id: "MenuDefaultItem",
-        text: hasTouchEvents ? "Default" : "Default (0)",
+        text: menuLanguage.default,
         cfn: () => defaultImageLayout()
     }];
     const createMenu = obj => {
