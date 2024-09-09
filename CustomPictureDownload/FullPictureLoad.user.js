@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.15
+// @version            2.7.16
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2910,7 +2910,15 @@ a:has(>div>div>img),
             /^https?:\/\/www\.mmtuji\.com\/\d+\.html$/
         ],
         init: () => {
-            _unsafeWindow.onresize = null;
+            if (fun.lh.includes("mmtuji")) {
+                _unsafeWindow.fuckyou = null;
+                _unsafeWindow.ck = null;
+                _unsafeWindow.hehe = null;
+                _unsafeWindow.comprehensiveCheck = null;
+                _unsafeWindow.onWindowSizeChange = null;
+                _unsafeWindow.onresize = null;
+                fun.clearAllTimer(3);
+            }
             let p = fun.ge("#image_div>p");
             if (p) {
                 let a = fun.ge("a", p);
@@ -19977,41 +19985,61 @@ if (next) {
         ],
         init: async () => {
             await fun.waitEle(".markdown-body table a");
-            const cb = (open = 1) => {
-                let links = fun.gae(".markdown-body table a[select]");
-                if (links.length > 0) {
-                    links.forEach(a => {
-                        if (open === 1) {
-                            _GM_openInTab(a.href);
-                        }
-                        a.removeAttribute("select");
-                        a.removeAttribute("style");
-                    });
-                }
-            };
-            fun.gae(".markdown-body table a").forEach(a => {
-                a.addEventListener("mouseenter", (event) => {
-                    if (event.target.getAttribute("select") == "true") {
-                        event.target.removeAttribute("select");
-                        event.target.removeAttribute("style");
-                    } else {
-                        event.target.setAttribute("select", "true");
-                        Object.assign(event.target.style, {
-                            border: "solid",
-                            borderColor: "yellow"
+            if (!hasTouchEvents) {
+                let select = false;
+                const cb = (open = 1) => {
+                    let links = fun.gae(".markdown-body table a[select]");
+                    if (links.length > 0) {
+                        links.forEach(a => {
+                            if (open === 1) {
+                                _GM_openInTab(a.href);
+                            }
+                            a.removeAttribute("select");
+                            a.removeAttribute("style");
                         });
+                        setTimeout(() => (select = false), 200);
+                    } else {
+                        select = false;
+                    }
+                };
+                fun.gae(".markdown-body table a").forEach(a => {
+                    a.addEventListener("mouseenter", (event) => {
+                        if (event.target.getAttribute("select") == "true") {
+                            event.target.removeAttribute("select");
+                            event.target.removeAttribute("style");
+                        } else {
+                            select = true;
+                            event.target.setAttribute("select", "true");
+                            Object.assign(event.target.style, {
+                                paddingLeft: "4px",
+                                paddingRight: "4px",
+                                borderWidth: "2px",
+                                borderStyle: "solid",
+                                borderColor: "#ff9933"
+                            });
+                        }
+                    });
+                });
+                document.addEventListener("keydown", event => {
+                    if (event.code === "Escape" || event.key === "Escape") {
+                        return cb(0);
+                    }
+                    if (event.ctrlKey && event.altKey && event.code === "KeyO") {
+                        cb();
                     }
                 });
-            });
-            document.addEventListener("keydown", event => {
-                if (event.code === "Escape" || event.key === "Escape") {
-                    return cb(0);
-                }
-                if (event.ctrlKey && event.altKey && (event.code === "KeyO" || event.key === "o" || event.key === "O")) {
-                    cb();
-                }
-            });
-            document.addEventListener("click", () => cb(0));
+                document.addEventListener("click", () => cb(0));
+                document.addEventListener("mousedown", event => {
+                    if (event.button == 2) {
+                        cb();
+                    }
+                });
+                document.addEventListener("contextmenu", event => {
+                    if (select) {
+                        event.preventDefault();
+                    }
+                });
+            }
         },
         openInNewTab: ".markdown-body table a[href]:not([target=_blank]):not([id])",
         css: ".markdown-body table a{text-decoration:none!important}",
