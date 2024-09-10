@@ -14567,9 +14567,8 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "野貓韓漫 閱讀頁",
-        host: ["www.yemaohanman.com"],
         reg: () => fun.checkUrl({
-            h: "yemaohanman",
+            e: ".logo img[alt^=野貓韓漫]",
             p: "/read/"
         }),
         imgs: ".module img",
@@ -14587,9 +14586,8 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "野貓韓漫 目錄頁",
-        host: ["www.yemaohanman.com"],
         reg: () => fun.checkUrl({
-            h: "yemaohanman",
+            e: ".logo img[alt^=野貓韓漫]",
             p: "/m/"
         }),
         init: () => fun.createImgBox(".module-info", 2),
