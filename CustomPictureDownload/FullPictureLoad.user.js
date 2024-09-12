@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.18
+// @version            2.7.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -15147,7 +15147,7 @@ a:has(>div>div>img),
                 }).observe(ge('#page-area'));
             }
         },
-        imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url.replace(/\?q=\d+/, "")) : [],
+        imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url /*.replace(/\?q=\d+/, "")*/ ) : [],
         referrerpolicy: "origin",
         button: [4],
         insertImg: ["//article[div[contains(@id,'imageLoader')]]", 3],
@@ -27446,7 +27446,7 @@ a[data-fancybox]:hover {
                 }
                 siteData = customData[i];
                 _this = customData[i];
-                if (siteData.category != "none") {
+                if (!siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
                     showOptions = true;
                 }
                 const loadingBakBlobURL = fun.dataURLtoBlobURL(loading_bak);
@@ -27465,6 +27465,23 @@ a[data-fancybox]:hover {
             debug("圖片全載規則出錯", customData[i]);
             debug("出錯之前的規則", customData[i - 1]);
             return;
+        }
+    }
+
+    if (showOptions) {
+        //_unsafeWindow.FullPictureLoadCustomData = customData;
+        //debug("\n圖片全載開啟了GM選單?\n", showOptions);
+        _GM_registerMenuCommand(displayLanguage.str_67, () => {
+            if (!ge("body>#FullPictureLoadOptions")) {
+                addFullPictureLoadOptionsMain();
+                optionsSetValue();
+            }
+            ge("#FullPictureLoadOptions").removeAttribute("style");
+        });
+        addFullPictureLoadOptionsMain();
+        optionsSetValue();
+        if (!ge("#FullPictureLoadMainStyle")) {
+            fun.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
     }
 
@@ -27816,23 +27833,6 @@ a[data-fancybox]:hover {
         debug("\n列出自動翻頁規則", autoPagerData);
         debug("\n列出去廣告規則", AD_Data);
         debug("\n列出未分類規則", noneData);
-    }
-
-    if (showOptions) {
-        //_unsafeWindow.FullPictureLoadCustomData = customData;
-        //debug("\n圖片全載開啟了GM選單?\n", showOptions);
-        _GM_registerMenuCommand(displayLanguage.str_67, () => {
-            if (!ge("body>#FullPictureLoadOptions")) {
-                addFullPictureLoadOptionsMain();
-                optionsSetValue();
-            }
-            ge("#FullPictureLoadOptions").removeAttribute("style");
-        });
-        addFullPictureLoadOptionsMain();
-        optionsSetValue();
-        if (!ge("#FullPictureLoadMainStyle")) {
-            fun.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
-        }
     }
 
     if (!hasTouchEvents && showOptions && isArray(siteData.insertImg)) {
