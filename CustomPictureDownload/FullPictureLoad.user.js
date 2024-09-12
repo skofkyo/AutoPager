@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.20
+// @version            2.7.21
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -8311,6 +8311,7 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "Nevsepic",
+        host: ["nevsepic.com.ua"],
         reg: () => fun.checkUrl({
             h: "nevsepic",
             e: [
@@ -8320,7 +8321,24 @@ a:has(>div>div>img),
             ]
         }),
         init: () => fun.createImgBox(".share_widget", 1),
-        imgs: () => fun.getImgA("a.highslide,.full-text img", ".navigation>a").then(srcs => srcs.filter(src => !src.includes("/thumbs/") && !src.includes("attach.png"))),
+        imgs: async () => {
+            let srcs;
+            let pages = fun.ge(".bottom-nav");
+            if (pages) {
+                let last = fun.ge(".navigation>a:last-child");
+                let max = last.innerText;
+                let url = last.pathname;
+                let links = [fun.url];
+                for (let i = 2; i <= max; i++) {
+                    let link = url.replace(/(\/page\,)(\d+\,)/, `$1${i + ","}`);
+                    links.push(link);
+                }
+                srcs = await fun.getImgA("a.highslide,.full-text img", links);
+            } else {
+                srcs = fun.getImgSrcArr("a.highslide,.full-text img");
+            }
+            return srcs.filter(src => !src.includes("/thumbs/") && !src.includes("attach.png"));
+        },
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".full-text img:not(.FullPictureLoadImage,[src$='attach.png']),.full-text img:not(.FullPictureLoadImage,[src$='attach.png'])~br,a.highslide,a.highslide~br,.bottom-nav"], 2
@@ -8329,6 +8347,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Nevsepic",
+        host: ["nevsepic.com.ua"],
         reg: () => fun.checkUrl({
             h: "nevsepic",
             e: [
@@ -8336,8 +8355,22 @@ a:has(>div>div>img),
                 ".share_widget"
             ]
         }),
-        imgs: () => {
-            let srcs = fun.getImgSrcArr(".full-text img,a.highslide");
+        imgs: async () => {
+            let srcs;
+            let pages = fun.ge(".bottom-nav");
+            if (pages) {
+                let last = fun.ge(".navigation>a:last-child");
+                let max = last.innerText;
+                let url = last.pathname;
+                let links = [fun.url];
+                for (let i = 2; i <= max; i++) {
+                    let link = url.replace(/(\/page\,)(\d+\,)/, `$1${i + ","}`);
+                    links.push(link);
+                }
+                srcs = await fun.getImgA("a.highslide,.full-text img", links);
+            } else {
+                srcs = fun.getImgSrcArr("a.highslide,.full-text img");
+            }
             return srcs.filter(src => !src.includes("/thumbs/") && !src.includes("attach.png"));
         },
         capture: () => _this.imgs(),
