@@ -1,5 +1,5 @@
 <h1>安裝腳本</h1>
-<a href="https://github.com/skofkyo/AutoPager/raw/main/CustomPictureDownload/FullPictureLoad.user.js">圖片全載-FancyboxV5
+<a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">圖片全載-FancyboxV5
 </a>
 <h1>測試通過環境：</h1>
 <pre>
@@ -3531,6 +3531,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://cojo.ru/">Картинки и фото</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nevsepic.com.ua/">Nevsepic</a>
                 </td>
                 <td></td>
             </tr>
