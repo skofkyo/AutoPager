@@ -2688,6 +2688,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://sanshang.neocities.org/">三上悠亚写真图片</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.lspimg.com/">美图鉴赏</a>
                 </td>
                 <td>
@@ -4943,6 +4949,22 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.manhuatianxia.com/">韩漫天下</a>
+                </td>
+                <td>
+                    <a href="https://github.com/dongmanhezi/dizhi">地址发布页</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hanmanzx.com/">韩漫在线</a>
+                </td>
+                <td>
+                    <a href="https://github.com/dongmanhezi/dizhi">地址发布页</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://jyapp.info/">九妖漫画</a>
                 </td>
                 <td></td>
@@ -5714,7 +5736,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://manga.bilibili.com/">哔哩哔哩漫画</a>
                 </td>
-                <td></td>
+                <td>預設關閉</td>
             </tr>
             <tr>
                 <td>
