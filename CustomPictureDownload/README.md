@@ -1787,6 +1787,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.m2ph.xyz/">美图坊</a>
+                </td>
+                <td>需註冊登錄，並至少點開過一部寫真後，刷新頁面才能正常使用。</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.loxiu.com/">洛秀网</a>
                 </td>
                 <td>
