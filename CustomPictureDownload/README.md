@@ -2880,6 +2880,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://cosplay18.pics/">Cosplay18</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.beautycosalbum.com/">GR Beauty COS Album</a>
                 </td>
                 <td></td>
