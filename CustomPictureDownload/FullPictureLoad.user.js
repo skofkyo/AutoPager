@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.22
+// @version            2.7.23
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -100,7 +100,6 @@
     let fastDownload = false;
     let currentDownloadThread = 0;
     let downloadNum = 0;
-    let errorNum = 0;
     let getImgFn = "";
     let doc = document;
     let autoPagerSwitch = true;
@@ -3080,9 +3079,16 @@ a:has(>div>div>img),
     }, {
         name: "美图坊",
         host: ["m2ph.xyz", "www.m2ph.xyz"],
-        reg: () => fun.checkUrl({
-            h: "m2ph.xyz"
-        }) && ["flutter.password", "flutter.account", "flutter.HistoryImage"].every(k => k in localStorage),
+        reg: () => {
+            try {
+                let checkHost = fun.lh.includes("m2ph.xyz");
+                let checkLocalStorage = ["flutter.password", "flutter.account", "flutter.HistoryImage"].every(k => k in localStorage);
+                let checkHistory = JSON.parse(JSON.parse(localStorage["flutter.HistoryImage"]))?.length > 0;
+                return checkHost && checkLocalStorage && checkHistory;
+            } catch {
+                return false;
+            }
+        },
         getFirstHistory: () => JSON.parse(JSON.parse(localStorage["flutter.HistoryImage"]))[0],
         getImg: () => document.querySelector("flt-glass-pane")?.shadowRoot?.querySelector("img"),
         getImgSrc: () => _this.getImg()?.src,
@@ -5475,6 +5481,20 @@ a:has(>div>div>img),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
+        name: "Cosplay18",
+        reg: () => fun.checkUrl({
+            h: "cosplay18.pics",
+            p: /^\/[^/]+\/$/,
+        }),
+        imgs: ".single-page img",
+        button: [4],
+        insertImg: [
+            [".single-page", 0, ".single-page>ul"], 2
+        ],
+        customTitle: "h1.entry-title",
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        category: "nsfw2"
+    }, {
         name: "GR Beauty COS Album",
         reg: () => fun.checkUrl({
             h: "www.beautycosalbum.com",
@@ -5648,11 +5668,13 @@ a:has(>div>div>img),
     }, {
         name: "Cosplay69",
         host: ["www.cosplay69.net", "cosplay69.net"],
-        reg: /^https?:\/\/(www\.)?cosplay69\.net\/[^\/]+\/$/,
-        include: "//a[@rel='category tag'][text()='Album']",
+        reg: () => fun.checkUrl({
+            h: "cosplay69.net",
+            p: /^\/[^\/]+\/$/,
+            e: "//a[@rel='category tag'][text()='Album']"
+        }) && !["sssins.com", "nicezzz.com"].some(t => document.documentElement.innerText.includes(t)),
         init: async () => {
             await fun.waitEle(".entry-content img");
-            await fun.clearElementEvent();
             fun.addMutationObserver(() => {
                 document.documentElement.style.overflow = "";
                 document.body.classList.remove("has-header-ad", "tie-popup-is-opend");
@@ -5666,13 +5688,13 @@ a:has(>div>div>img),
             if (fun.ge(".gallery")) {
                 fun.createImgBox(".gallery", 1);
             } else {
-                fun.createImgBox(".entry-content p:has(>img)", 1);
+                fun.createImgBox(".entry-content p:has(>img),.entry-content ul", 1);
             }
         },
         imgs: () => fun.fetchDoc(fun.url).then(dom => fun.gae("a[data-fancybox],.gallery-item a,.entry-content img[alt]:not(.crp_thumb,[src*='/banner'])", dom)),
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".gallery,.entry-content p:has(>img:not(.crp_thumb))"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".gallery,.entry-content p:has(>img:not(.crp_thumb)),.entry-content ul"], 2
         ],
         autoDownload: [0],
         next: ".nav-previous>a",
@@ -15290,8 +15312,6 @@ a:has(>div>div>img),
         host: ["m.happymh.com"],
         enable: 0,
         reg: /^https?:\/\/m\.happymh\.com\/reads/,
-        include: "#root",
-        exclude: ".no-js",
         fetchJson: (url = siteUrl) => {
             let [, , mangaCode, id] = new URL(url).pathname.split("/");
             let api = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v2.13`;
@@ -15326,7 +15346,7 @@ a:has(>div>div>img),
                 }).observe(ge('#page-area'));
             }
         },
-        imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url /*.replace(/\?q=\d+/, "")*/ ) : [],
+        imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url) : [],
         referrerpolicy: "origin",
         button: [4],
         insertImg: ["//article[div[contains(@id,'imageLoader')]]", 3],
@@ -22272,12 +22292,12 @@ if (next) {
                 if (pagerTitles.length > 3) {
                     let parentE = pagerTitles[0].parentNode;
                     pagerTitles[0].remove();
-                    let eles = [...parentE.childNodes];
-                    for (let i = 0; i < eles.length; i++) {
-                        if (eles[i].className === "autoPagerTitle") {
+                    let nodes = [...parentE.childNodes];
+                    for (let i = 0; i < nodes.length; i++) {
+                        if (nodes[i].className === "autoPagerTitle") {
                             break;
                         }
-                        eles[i].remove();
+                        nodes[i].remove();
                     }
                 }
             }
@@ -22784,6 +22804,7 @@ if (next) {
         },
         //圖片預讀函式
         picPreload: async (srcArr, title = (customTitle || document.title), page = "current") => {
+            const errorNumArr = new Array(srcArr.length).fill(0);
             const loadImg = async (src, index) => {
                 await new Promise(resolve => {
                     const temp = new Image();
@@ -22792,23 +22813,22 @@ if (next) {
                     }
                     temp.onload = () => {
                         resolve("OK");
-                        temp = null;
                     };
                     temp.onerror = error => {
                         if (!isValidPage) return;
-                        if (fun.lh === "m.happymh.com") {
-                            console.log(error);
-                            resolve("ERROR");
-                            return;
-                        }
+                        const errorNum = errorNumArr[index] + 1;
+                        errorNumArr[index] = errorNum;
                         if (src.includes("https://wsrv.nl/") && !fun.ge("//a[@rel='home'][text()='4KHD']")) {
                             src = src.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
                         } else if (src.includes(".wp.com/") && !fun.ge("//a[@rel='home'][text()='4KHD']")) {
                             src = src.replace(/i\d\.wp\.com\/|\?.+$/g, ""); //WordPressCDN
                         }
-                        if (errorNum > 1000) return;
-                        if (!/e-hentai\.org|exhentai\.org/.test(fun.lh)) errorNum += 1;
                         if (/e-hentai\.org|exhentai\.org/.test(fun.lh)) {
+                            resolve("OK");
+                            return;
+                        }
+                        if (errorNum >= 10) {
+                            debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片已達到10次上限：\n${src}`);
                             resolve("OK");
                             return;
                         }
@@ -22822,11 +22842,10 @@ if (next) {
                                 debug(`\n圖片全載Lazyloading預讀出錯 樱花漫画 重新載入另一個圖片伺服器的圖片網址：\n${src}\nto\n${src.replace(Gm.getMediaHost(media), media)}`);
                                 loadImg(src.replace(Gm.getMediaHost(media), media), index);
                             } else {
-                                debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}`);
+                                debug(`\n圖片全載Lazyloading預讀重新載入出錯的圖片：\n${src}\n錯誤次數：${errorNum}`);
                                 loadImg(src, index);
                             }
                         }, 2000);
-                        temp = null;
                     };
                     temp.src = src;
                 });
@@ -22836,12 +22855,6 @@ if (next) {
                 if (!isValidPage) return;
                 if (/youtube|\.mp4|\.m3u8$|\.webm$/.test(srcArr[i])) continue;
                 let load = await loadImg(srcArr[i], i);
-                if (load === "ERROR") {
-                    _GM_openInTab(srcArr[0], {
-                        active: true
-                    });
-                    return;
-                }
             }
             page == "next" ? debug(`\n${title}\n圖片全載下一頁預讀結束`) : debug(`\n${title}\n圖片全載Lazyloading預讀結束`);
         },
@@ -23054,6 +23067,7 @@ if (next) {
                 if ("referrerpolicy" in siteData) {
                     img.setAttribute("referrerpolicy", siteData.referrerpolicy);
                 }
+                img.dataset.errorNum = 0;
                 //if (/vipr\.im/.test(srcArr[i])) img.referrerPolicy = "no-referrer";
                 if (options.zoom <= 10 && options.zoom > 0 && (blackList || options.fancybox !== 1)) {
                     img.style.width = `${options.zoom * 10}%`;
@@ -23068,8 +23082,12 @@ if (next) {
                         img.classList.remove("error");
                     };
                     img.onerror = error => {
-                        if (errorNum > 100) return;
-                        errorNum += 1;
+                        const num = Number(error.target.dataset.errorNum);
+                        if (num < 10) {
+                            error.target.dataset.errorNum = num + 1;
+                        } else {
+                            return;
+                        }
                         error.target.classList.add("error");
                         setTimeout(() => {
                             debug(`\nfun.insertImg()重新載入出錯的圖片：\n${error.target.src}`);
@@ -23355,10 +23373,12 @@ if (next) {
                         entry.target.src = realSrc;
                         entry.target.classList.remove("lazyload");
                         entry.target.onload = () => {
-                            if (!/^data/.test(entry.target.src)) entry.target.classList.remove("error");
+                            if (!/^(data|blob)/.test(entry.target.src)) {
+                                entry.target.classList.remove("error");
+                            }
                         };
                         entry.target.onerror = async (error) => {
-                            if (realSrc.includes("https://wsrv.nl/") && !fun.ge("//a[@rel='home'][text()='4KHD']")) {
+                            if (realSrc.includes("wsrv.nl/") && !fun.ge("//a[@rel='home'][text()='4KHD']")) {
                                 let newSrc = realSrc.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
                                 entry.target.dataset.src = newSrc;
                                 if (!!fancyboxA) {
@@ -23373,8 +23393,12 @@ if (next) {
                                     fancyboxA.dataset.thumb = newSrc;
                                 }
                             }
-                            if (errorNum > 1000) return;
-                            if (!/e-hentai\.org|exhentai\.org/.test(fun.lh)) errorNum += 1;
+                            const errorNum = Number(entry.target.dataset?.errorNum) || 0;
+                            if (errorNum < 10) {
+                                entry.target.dataset.errorNum = errorNum + 1;
+                            } else {
+                                return;
+                            }
                             if (/www\.yinghuamh\.net/.test(fun.lh)) {
                                 const {
                                     Gm,
@@ -23382,7 +23406,7 @@ if (next) {
                                 } = _unsafeWindow;
                                 error.target.dataset.src = error.target.dataset.src.replace(Gm.getMediaHost(media), media);
                             }
-                            if (/e-hentai\.org|exhentai\.org/.test(fun.lh)) {
+                            if (/e-hentai\.org|exhentai\.org/.test(fun.lh) && errorNum < 1) {
                                 let url = error.target.dataset.loadfail ?? fun.gae(".gdtm a,.gdtl a")[error.target.dataset.index].href;
                                 let newSrc = await fun.fetchDoc(url).then(async dom => {
                                     let loadfail = fun.ge("#loadfail", dom);
@@ -23411,7 +23435,7 @@ if (next) {
                                 } else if (/e-hentai\.org|exhentai\.org/.test(fun.lh)) {
                                     debug(`\nimagesObserver E紳士圖片出錯 重新載入新的圖片網址：\n${realSrc}\nto\n${error.target.dataset.src}`);
                                 } else {
-                                    debug(`\nimagesObserver重新載入出錯圖片：\n${realSrc}`);
+                                    debug(`\nimagesObserver重新載入出錯圖片：\n${realSrc}\n錯誤次數：${errorNum}`);
                                 }
                                 error.target.src = error.target.dataset.src;
                             }, 1000);
@@ -25161,11 +25185,28 @@ if (next) {
                 if ("referrerpolicy" in siteData) {
                     img.setAttribute("referrerpolicy", siteData.referrerpolicy);
                 }
-                if (siteData.insertImg[1] == 1) {
-                    img.src = src;
-                } else {
+                img.dataset.errorNum = 0;
+                if ([2, 3].some(n => siteData.insertImg[1] == n)) {
                     img.src = loading_bak;
                     img.dataset.src = src;
+                } else {
+                    img.decoding = "async";
+                    img.onload = () => {
+                        img.classList.remove("error");
+                    };
+                    img.onerror = error => {
+                        const num = Number(error.target.dataset.errorNum);
+                        if (num < 10) {
+                            error.target.dataset.errorNum = num + 1;
+                        } else {
+                            return;
+                        }
+                        error.target.classList.add("error");
+                        setTimeout(() => {
+                            error.target.src = error.target.src;
+                        }, 1000);
+                    };
+                    img.src = src;
                 }
                 let item = document.createElement("div");
                 item.style.width = width;
