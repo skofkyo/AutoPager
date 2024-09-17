@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.23
+// @version            2.7.24
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -55,10 +55,12 @@
 (async (JSZip, $) => {
     "use strict";
 
-    if (document.querySelector("body.no-js:not(.has-preloader,.single-post)")) return; //Cloudflare檢測連線安全性時，不運行腳本
+    if ((ge("body.no-js:not(.has-preloader,.single-post)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
+        debug("Cloudflare驗證中不運行腳本。");
+        return;
+    }
 
-    let options = { //預設選項基本上不要改動，如果改動了最好透過UI選項設定或按/，重置儲存在localStorage的設定
-        enable: 0, //!!!維持0不要改!!!
+    const defaultOptions = {
         icon: 1, //是否顯示左下圖示，1：開啟、0：關閉
         threading: 8, //最大下載線程數
         zip: 1, //1：圖片下載後壓縮打包，0：批量下載圖片，無法全自動下載
@@ -72,6 +74,8 @@
         viewMode: 0, //0：置中、1：並排
         fancybox: 1 //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
     };
+    let options = defaultOptions;
+
     const _unsafeWindow = unsafeWindow ?? window;
     const language = _unsafeWindow.navigator.language;
     let siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "");
@@ -15309,9 +15313,12 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
-        host: ["m.happymh.com"],
         enable: 0,
-        reg: /^https?:\/\/m\.happymh\.com\/reads/,
+        reg: () => fun.checkUrl({
+            h: "m.happymh.com",
+            p: "/reads/"
+        }),
+        exclude: ".captcha-area",
         fetchJson: (url = siteUrl) => {
             let [, , mangaCode, id] = new URL(url).pathname.split("/");
             let api = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v2.13`;
@@ -17324,9 +17331,9 @@ if (next) {
         category: "comic"
     }, {
         name: "来漫画",
-        host: ["www.laimanhua8.com"],
+        host: ["www.laimanhua8.com", "www.comemh.com"],
         enable: 1,
-        reg: () => /^https?:\/\/www\.laimanhua\d?\.(net|com)\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode != 1,
+        reg: () => /^https?:\/\/(www\.laimanhua\d?\.com|www\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode != 1,
         init: () => {
             fun.clearAllTimer();
             fun.createImgBox("#pic-list", 2);
@@ -17362,7 +17369,7 @@ if (next) {
         category: "comic"
     }, {
         name: "来漫画 自動翻頁",
-        reg: () => /^https?:\/\/www\.laimanhua\d?\.(net|com)\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode == 1,
+        reg: () => /^https?:\/\/(www\.laimanhua\d?\.com|www\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode == 1,
         getSrcs: (dom) => {
             const {
                 base64_decode,
@@ -17410,9 +17417,9 @@ if (next) {
         category: "comic autoPager"
     }, {
         name: "来漫画M",
-        host: ["m.laimanhua8.com"],
+        host: ["m.laimanhua8.com", "m.comemh.com"],
         enable: 1,
-        reg: () => /^https?:\/\/m\.laimanhua\d?\.com\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode != 1,
+        reg: () => /^https?:\/\/(m\.laimanhua\d?\.com|m\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode != 1,
         init: () => fun.clearAllTimer(),
         imgs: () => {
             const {
@@ -17431,7 +17438,7 @@ if (next) {
             return mhInfo.nextUrlid == "" ? null : fun.gu("#mangaTitle>a") + mhInfo.nextUrlid + ".html";
         },
         prev: "//a[text()='上一章']",
-        customTitle: (dom = document) => fun.gt("#mangaTitle", 1, dom),
+        customTitle: (dom = document) => fun.gt("#mangaTitle", 1, dom).replace(/\n/g, "").trim(),
         preloadNext: (nextDoc, obj) => {
             let code = fun.gst("mhInfo", nextDoc);
             fun.script(code, 0, 1);
@@ -17442,7 +17449,7 @@ if (next) {
         category: "comic"
     }, {
         name: "来漫画M 自動翻頁",
-        reg: () => /^https?:\/\/m\.laimanhua\d?\.com\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode == 1,
+        reg: () => /^https?:\/\/(m\.laimanhua\d?\.com|m\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fun.url) && comicInfiniteScrollMode == 1,
         json: (dom) => {
             let code = fun.gst("mhInfo", dom);
             let objText = code.match(/mhInfo[\s=]+([^;]+)/)[1];
@@ -20598,7 +20605,11 @@ if (next) {
         category: "lazyLoad"
     }];
 
-    const debug = (str, obj = "", title = "debug") => console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
+    //const debug = (str, obj = "", title = "debug") => console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
+    function debug(str, obj = "", title = "debug") {
+        console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
+    }
+
     const hasTouchEvents = (() => ("ontouchstart" in _unsafeWindow) || (_unsafeWindow.navigator.maxTouchPoints > 0) || (_unsafeWindow.navigator.msMaxTouchPoints > 0))();
     const isString = str => Object.prototype.toString.call(str) === "[object String]";
     const isNumber = num => Object.prototype.toString.call(num) === "[object Number]";
@@ -24451,7 +24462,12 @@ if (next) {
     };
 
     //CSS取得元素返回元素
-    const ge = (selector) => document.querySelector(selector);
+    //const ge = (selector) => document.querySelector(selector);
+
+    function ge(selector) {
+        return document.querySelector(selector);
+    }
+
     //CSS取得所有元素返回元素陣列
     const gae = (selector) => [...document.querySelectorAll(selector)];
     //Xpath取得元素返回元素
@@ -27332,14 +27348,11 @@ a[data-fancybox]:hover {
     const checkOptionsData = async () => {
         const getOptionsData = localStorage.getItem("FullPictureLoadOptions");
         if (getOptionsData === null && options.autoDownload !== 1) {
-            let jsonStr = JSON.stringify(options);
+            let jsonStr = JSON.stringify(defaultOptions);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
         } else if (options.autoDownload !== 1) {
             let optionsJson = JSON.parse(getOptionsData);
-            options = {
-                ...options,
-                ...optionsJson
-            }
+            options = Object.assign(defaultOptions, optionsJson);
             //debug("\nFull Picture Load Options Json\n", options);
         }
     };
@@ -27627,33 +27640,30 @@ a[data-fancybox]:hover {
                     comicSwitch = true;
                 }
                 let delay = data.delay;
-                if (!!delay) await fun.delay(delay, 0);
-                options.enable = 1;
+                if (isNumber(delay)) await fun.delay(delay, 0);
+                checkOptionsData();
                 if (data.enable == 0) {
-                    await checkOptionsData();
+                    //checkOptionsData();
                     if (options.comic == 1 && category === "comic") {
                         showOptions = true;
                         options.enable = 1;
                         debug("\n漫畫類預設關閉的此站規則已開啟");
                     } else {
                         //showOptions = true;
-                        options.enable = 0;
                         debug("\n此規則禁用", data);
                         continue;
                     }
                 }
-                if (data.enable != 0) await checkOptionsData();
+                //if (data.enable != 0) checkOptionsData();
                 let include = data.include;
                 if (isString(include)) {
                     if (!fun.ge(include)) {
-                        options.enable = 0;
                         debug("\n頁面沒有包含必須的元素", data);
                         continue;
                     }
                 } else if (isArray(include)) {
                     let checkEles = include.every(e => !!fun.ge(e));
                     if (!checkEles) {
-                        options.enable = 0;
                         debug("\n頁面沒有包含必須的所有元素", data);
                         continue;
                     }
@@ -27661,14 +27671,12 @@ a[data-fancybox]:hover {
                 let exclude = data.exclude;
                 if (isString(exclude)) {
                     if (!!fun.ge(exclude)) {
-                        options.enable = 0;
                         debug("\n頁面包含必須排除的元素", data);
                         continue;
                     }
                 } else if (isArray(exclude)) {
                     let checkEles = exclude.some(s => !!fun.ge(s));
                     if (checkEles) {
-                        options.enable = 0;
                         debug("\n頁面包含數組選擇器中必須排除的元素", data);
                         continue;
                     }
@@ -28387,7 +28395,7 @@ a[data-fancybox]:hover {
         }
     };
 
-    if (options.enable == 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+    if (!siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
         if (siteData.key != 0) {
             if (!hasTouchEvents) {
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
