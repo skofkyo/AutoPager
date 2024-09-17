@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.24
+// @version            2.7.25
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -125,7 +125,7 @@
         name: "小黃書/8色人體攝影",
         reg: () => fun.checkUrl({
             h: [
-                /^([a-z]{2}\.)?xchina\.(co|biz|life|fun)$/,
+                /^([a-z]{2}\.)?xchina\.(co|biz|fun)$/,
                 /^(tw\.)?8se\.me$/
             ],
             p: /^\/(photo|amateur)\/id-\w+\.html$/,
@@ -418,27 +418,21 @@ a:has(>div>div>img),
             "nungvl.net",
             "www.kaizty.com",
             "lootiu.com",
-            "depday.info",
             "thismore.fun",
             "cosxuxi.club",
             "baobua.com",
             "cn.looives.com",
-            "redseats.org",
-            "allianceforrabiescontrol.org",
-            "taa.kidsforums.com"
+            "redseats.org"
         ],
         reg: [
             /^https?:\/\/(www\.depvailon\.com|crimejunkiespodcast\.com)\/(?!\?page=|\?m=).+\.html/i,
             /^https?:\/\/(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html/i,
             /^https?:\/\/nungvl\.net\/gallerys\/\d+\.cg/i,
             /^https?:\/\/lootiu\.com\/gallery\/.+\.cfg/i,
-            /^https?:\/\/depday\.info\/v2\/\w+\.html/i,
             /^https?:\/\/thismore\.fun\/view\/[^\.]+\.php/i,
             /^https?:\/\/cosxuxi\.club\/[^\.]+\.html/i,
             /^https?:\/\/baobua\.com\/post\/[^\.]+\.html/i,
-            /^https?:\/\/cn\.looives\.com\/view\/[^\.]+\.cfg/i,
-            /^https?:\/\/redseats\.org\/gallery\/[^\.]+\.cfg/i,
-            /^https?:\/\/(allianceforrabiescontrol\.org|taa\.kidsforums\.com)\/[^\.]+\.html$/
+            /^https?:\/\/cn\.looives\.com\/view\/[^\.]+\.cfg/i
         ],
         init: async () => {
             await fun.clearElementEvent();
@@ -652,7 +646,7 @@ a:has(>div>div>img),
             let p = fun.gae("//article/p[not(img)]");
             if (p.length > 0) {
                 let te = fun.ge(".article-content");
-                p.forEach(e => te.parentNode.insertBefore(e, te));
+                p.forEach(e => insertBefore(te, e));
             }
         },
         imgs: () => fun.getImg(".article-content img[alt]", fun.gt("a.current~*:last-child", 2), 3, null, 100),
@@ -733,8 +727,8 @@ a:has(>div>div>img),
         init: () => {
             let ele = fun.ge(".PsBox");
             if (ele) {
-                let eleParent = ele.parentNode;
-                eleParent.parentNode.insertBefore(ele.cloneNode(true), eleParent);
+                let te = ele.parentNode.cloneNode(true);
+                insertBefore(te, ele);
             }
         },
         imgs: () => {
@@ -872,8 +866,8 @@ a:has(>div>div>img),
             if (pag.length > 0) pag[0].remove();
             let ele = fun.ge(".entry-header");
             if (ele) {
-                let x = fun.ge("article.post");
-                x.parentNode.insertBefore(ele, x);
+                let te = fun.ge("article.post");
+                insertBefore(te, ele);
             }
         },
         imgs: () => fun.getImgA("article img", ".wp-pagenavi a"),
@@ -1135,7 +1129,7 @@ a:has(>div>div>img),
             let e = fun.ge(".yarpp-related-website");
             let x = fun.ge(".entry-tags");
             if (e && x) {
-                x.parentNode.insertBefore(e, x);
+                insertBefore(x, e);
             }
         },
         imgs: async () => {
@@ -1503,7 +1497,7 @@ a:has(>div>div>img),
                     let tE = fun.gae("div.album-photo").at(-1);
                     imgs.forEach(img => {
                         img.dataset.src ? srcArr.push(img.dataset.src) : srcArr.push(img.src);
-                        if (page != 0) tE.parentNode.insertBefore(img.parentNode.cloneNode(true), tE.nextSibling);
+                        if (page != 0) insertAfter(tE, img.parentNode.cloneNode(true));
                     });
                     if (page != 0 && !vipEle && fun.ge(".pagination", dom)) fun.ge(".pagination").outerHTML = fun.ge(".pagination", dom).outerHTML;
                 });
@@ -2970,7 +2964,7 @@ a:has(>div>div>img),
             if (tempEles.length > 0) {
                 let x = fun.ge("#FullPictureLoadOptionsButtonParentDiv").parentNode.firstChild;
                 for (let e of tempEles) {
-                    x.parentNode.insertBefore(e, x);
+                    insertBefore(x, e);
                 }
             }
             fun.run("$(document).off()");
@@ -3547,7 +3541,7 @@ a:has(>div>div>img),
                 let te = fun.gae("#picg img[alt]").at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
-                    if (i != 0) te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
+                    if (i != 0) insertAfter(te, e.cloneNode(true));
                 });
                 if (i != 0) {
                     let ce = fun.gae("h1,.page .pagelist");
@@ -3661,7 +3655,7 @@ a:has(>div>div>img),
             if (tempEles.length > 0) {
                 let x = fun.ge(".Content").firstChild;
                 for (let e of tempEles) {
-                    x.parentNode.insertBefore(e, x);
+                    insertBefore(x, e);
                 }
             }
         },
@@ -3787,10 +3781,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#lightgallery", 2],
-        insertImgAF: () => {
-            let tE = fun.ge("#lightgallery");
-            tempEles.forEach(e => tE.appendChild(e));
-        },
+        insertImgAF: () => fun.ge("#lightgallery").append(...tempEles),
         autoDownload: [0],
         next: "//a[text()='上一篇']",
         prev: "//a[text()='下一篇']",
@@ -5461,7 +5452,7 @@ a:has(>div>div>img),
             let video = fun.ge(".online-video");
             if (video) {
                 let x = fun.ge("//p[a[img]]");
-                fun.gae(".online-video").forEach(e => x.parentNode.insertBefore(e, x));
+                fun.gae(".online-video").forEach(e => insertBefore(x, e));
             }
         },
         imgs: ".thecontent a,.content-inner>p>a",
@@ -5687,7 +5678,7 @@ a:has(>div>div>img),
             let iframe = fun.ge(".iframe-container,iframe[scrolling]");
             if (iframe) {
                 let x = fun.ge(".entry-content");
-                fun.gae(".iframe-container,iframe[scrolling]").forEach(e => x.parentNode.insertBefore(e, x));
+                fun.gae(".iframe-container,iframe[scrolling]").forEach(e => insertBefore(x, e));
             }
             if (fun.ge(".gallery")) {
                 fun.createImgBox(".gallery", 1);
@@ -5775,7 +5766,7 @@ a:has(>div>div>img),
             let video = fun.ge(".fluid_video_wrapper");
             if (video) {
                 let x = fun.ge(".gallery");
-                fun.gae(".fluid_video_wrapper").forEach(e => x.parentNode.insertBefore(e, x))
+                fun.gae(".fluid_video_wrapper").forEach(e => insertBefore(x, e));
             }
         },
         imgs: ".gallery .gallery-item a:has(>img:not([src$='/banner']))",
@@ -5896,7 +5887,7 @@ a:has(>div>div>img),
             if (eles.length > 0) {
                 let x = fun.ge(".s-post-content");
                 for (let e of eles) {
-                    x.parentNode.insertBefore(e, x);
+                    insertBefore(x, e);
                 }
             }
         },
@@ -6473,14 +6464,14 @@ a:has(>div>div>img),
             let p = fun.ge("//p[contains(text(),'寫真')]");
             if (p) {
                 let tE = fun.ge(".entry-content,.post-page-content");
-                tE.parentNode.insertBefore(p, tE);
+                insertBefore(tE, p);
             }
             let links = fun.gau("//a[button[contains(text(),'寫真')]]");
             await fun.getEle(links, ".entry-content>p>img,.post-page-content>p>img,.videoWrapper", ".entry-content,.post-page-content");
             let v = fun.ge(".videoWrapper");
             if (v) {
                 let tE = fun.ge(".entry-content,.post-page-content");
-                tE.parentNode.insertBefore(v, tE);
+                insertBefore(tE, v);
             }
         },
         imgs: ".entry-content>img,.post-page-content>img",
@@ -6753,7 +6744,7 @@ a:has(>div>div>img),
             let texts = fun.gae("//div[@class='entry_body']//div[not(br)][not(a[img])][not(@class='fc2_footer')][not(@class='topentry_text')][not(@class='fc2button-clap')][not(@class='entry_footer')][not(@class='entry_data')]");
             if (texts.length > 0) {
                 let te = fun.ge(".topentry_text,.entry_body");
-                texts.forEach(e => te.parentNode.insertBefore(e, te));
+                texts.forEach(e => insertBefore(te, e));
             }
             fun.createImgBox(".entry_body", 1);
         },
@@ -6766,7 +6757,7 @@ a:has(>div>div>img),
             let e = fun.ge("div:has(>a[href*='.dmm.'])");
             if (e) {
                 let x = fun.ge(".entry_body");
-                x.parentNode.insertBefore(e, x);
+                insertBefore(x, e);
             }
         },
         autoDownload: [0],
@@ -6897,7 +6888,7 @@ a:has(>div>div>img),
                             let img = new Image();
                             img.src = url.replace("/s72-c/", "/w400/").replace("=s72-c", "=w400");
                             img.alt = alt;
-                            script.parentNode.insertBefore(img, script.nextSibling);
+                            insertAfter(script, img);
                         }
                     }
                 });
@@ -7036,7 +7027,7 @@ a:has(>div>div>img),
                 let te = fun.gae(".pictures img").at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
-                    if (i != 0) te.parentNode.insertBefore(e.cloneNode(true), te.nextSibling);
+                    if (i != 0) insertAfter(te, e.cloneNode(true));
                 });
                 if (i != 0) {
                     let ce = fun.gae("#pages");
@@ -7411,7 +7402,7 @@ a:has(>div>div>img),
                 ele = ele.cloneNode(true);
                 fun.gae("img", ele).forEach(img => img.remove());
                 let tE = fun.ge(".td-post-content");
-                tE.parentNode.insertBefore(ele, tE);
+                insertBefore(tE, ele);
             }
             let ele2 = fun.ge("//p[contains(text(),'Number of pictures')]");
             if (!!ele2) {
@@ -7419,7 +7410,7 @@ a:has(>div>div>img),
                     ele2.previousSibling.innerHTML = ele2.previousSibling.innerHTML + "<br>" + ele2.innerText;
                     let e = ele2.previousSibling;
                     let te = ele2.previousSibling.parentNode;
-                    te.parentNode.insertBefore(e, te);
+                    insertBefore(te, e);
                 }
             }
         },
@@ -7704,7 +7695,7 @@ a:has(>div>div>img),
             let e = fun.ge(".relpost-thumb-wrapper");
             let f = fun.ge(".penci-entry-footer");
             if (e && f) {
-                f.parentNode.insertBefore(e, f);
+                insertBefore(f, e);
             }
         },
         imgs: () => {
@@ -7991,7 +7982,7 @@ a:has(>div>div>img),
             if (tempEles.length > 0) {
                 let x = fun.ge(".td-post-content .tdb-block-inner.td-fix-index").firstChild;
                 for (let e of tempEles) {
-                    x.parentNode.insertBefore(e, x);
+                    insertBefore(x, e);
                 }
             }
         },
@@ -8723,7 +8714,7 @@ a:has(>div>div>img),
         init: () => {
             fun.gae("#gallery>*:not(#galleryImages)").forEach(e => {
                 let x = e.parentNode.parentNode.parentNode.nextElementSibling;
-                x.parentNode.insertBefore(e, x);
+                insertBefore(x, e);
             });
         },
         imgs: () => {
@@ -9527,7 +9518,7 @@ a:has(>div>div>img),
             let ele = fun.ge("//div[span[a]]");
             if (ele) {
                 let tE = fun.ge("#display_image_detail,#detail_list");
-                tE.parentNode.insertBefore(ele, tE);
+                insertBefore(tE, ele);
             }
         },
         imgs: async () => {
@@ -15424,220 +15415,148 @@ a:has(>div>div>img),
         category: "none"
     }, {
         name: "8Comic無限動漫",
-        host: ["www.comicabc.com"],
+        host: ["www.8comic.com"],
         enable: 1,
-        reg: () => /^https?:\/\/(a|www)\.(comicabc|twobili)\.com\/(ReadComic|online)/.test(fun.url) && comicInfiniteScrollMode != 1,
+        reg: () => fun.checkUrl({
+            e: "//title[contains(text(),'無限動漫')]",
+            p: /^\/(ReadComic|online)/
+        }) && comicInfiniteScrollMode != 1,
         frameCode: `
-let code = [...document.scripts].find(s => s.innerHTML.includes("ge(e)")).innerHTML;
-let [, keyCode] = code.match(/ge\\([^.]+\\.src\\s?=\\s?([^;]+)/);
-let imgSrcArr = [];
-for (let i = 1; i <= ps; i++) {
-    let r = "(" + i + ")";
-    let src = new Function("return " + keyCode.replace(/\\(pp?\\)/g, r))();
-    imgSrcArr.push(src);
-}
-window.newImgs = imgSrcArr;
-let next = document.querySelector("#nextvol:not([style])");
-if (next && /ReadComic/.test(location.pathname)) {
-    window.nextLink = location.origin + rp + ni + "/" + ni + (fz + fz).substr((3 * ni) % fz.length, 10) + ".html";
-} else if (next) {
-    window.nextLink = reurl("ch", ni);
-} else {
-    window.nextLink = null;
+if ("unescape" in window) {
+    let code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
+    let [, chapterId] = code.match(/<img\\s+s="(.{15})/);
+    let getSrc = (id, p) => {
+        let src = id + p;
+        let a = src.substring(15);
+        let b = eval(src.substring(0, 5));
+        let c = eval(src.substring(5, 10));
+        let d = eval(src.substring(10, 15));
+        src = '%68%74%74%70s%3A%2F%2F%69%6D%67' + su(b, 0, 1) + '%2e%38%63%6f%6d%69%63%2e%63%6f%6d%2f' + su(b, 1, 1) + '%2F' + ti + '%2F' + c + '%2F' + nn(a) + '%5F' + su(d, mm(a), 3) + '%2E%6A%70%67';
+        src = unescape(src);
+        return src;
+    };
+    let srcs = new Array(ps).fill().map((_, i) => getSrc(chapterId, i + 1));
+    window.newImgs = srcs;
+    let url;
+    if (/ReadComic/.test(location.pathname)) {
+        url = location.origin + rp + ni + "/" + ni + (fz + fz).substr((3 * ni) % fz.length, 10) + ".html";
+    } else {
+        url = reurl("ch", ni);
+    }
+    if (url == document.URL) {
+        window.nextLink = null;
+    } else {
+        window.nextLink = url;
+    }
 }
         `,
-        init: () => {
+        init: async () => {
+            await fun.waitEle("#comics-pics img");
             fun.script(_this.frameCode, 0, 1);
-            fun.remove("//div[@class='text-center'] | //p[@class='text-center']");
-            let x = fun.ge("#TheTable").parentNode;
-            let e = fun.ge(".navtopbar2").cloneNode(true);
-            x.parentNode.insertBefore(e, x.nextSibling);
+            fun.createImgBox(".pinch-zoom-container", 2);
         },
         imgs: () => _unsafeWindow.newImgs,
         button: [4],
-        insertImg: ["//td[img[@id='TheImg']]", 2],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".pinch-zoom-container"], 2
+        ],
         autoDownload: [0],
         next: () => _unsafeWindow.nextLink,
         prev: "#prevvol",
-        customTitle: () => fun.gt(".text-view-title", 1) + " - 第" + fun.gt("#lastchapter", 1) + "集",
+        customTitle: () => fun.dt({
+            s: "#pt"
+        }),
         preloadNext: () => {
             if (!!_unsafeWindow.nextLink) {
                 fun.iframe(_unsafeWindow.nextLink, {
                     waitVar: "ge",
-                    waitEle: "#TheImg",
+                    waitEle: "#comics-pics img",
                     cb: async (dom, frame) => {
                         fun.script(_this.frameCode, 0, 1, dom);
-                        fun.picPreload(frame.newImgs, "第" + frame.ch + "集", "next");
+                        fun.picPreload(frame.newImgs, fun.dt({
+                            t: fun.gt("#pt", 1, dom)
+                        }), "next");
                     }
                 });
             }
         },
-        css: "td[style^=width],.view_gg_content{display:none!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
         name: "8Comic無限動漫 自動翻頁",
-        reg: () => /^https?:\/\/(a|www)\.(comicabc|twobili)\.com\/(ReadComic|online)/.test(fun.url) && comicInfiniteScrollMode == 1,
+        reg: () => fun.checkUrl({
+            e: "//title[contains(text(),'無限動漫')]",
+            p: /^\/(ReadComic|online)/
+        }) && comicInfiniteScrollMode == 1,
         frameCode: `
-let code = [...document.scripts].find(s => s.innerHTML.includes("ge(e)")).innerHTML;
-let [, keyCode] = code.match(/ge\\([^.]+\\.src\\s?=\\s?([^;]+)/);
-let imgSrcArr = [];
-for (let i = 1; i <= ps; i++) {
-    let r = "(" + i + ")";
-    let src = new Function("return " + keyCode.replace(/\\(pp?\\)/g, r))();
-    imgSrcArr.push(src);
-}
-window.newImgs = imgSrcArr;
-let next = document.querySelector("#nextvol:not([style])");
-if (next && /ReadComic/.test(location.pathname)) {
-    window.nextLink = location.origin + rp + ni + "/" + ni + (fz + fz).substr((3 * ni) % fz.length, 10) + ".html";
-} else if (next) {
-    window.nextLink = reurl("ch", ni);
-} else {
-    window.nextLink = null;
+if ("unescape" in window) {
+    let code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
+    let [, chapterId] = code.match(/<img\\s+s="(.{15})/);
+    let getSrc = (id, p) => {
+        let src = id + p;
+        let a = src.substring(15);
+        let b = eval(src.substring(0, 5));
+        let c = eval(src.substring(5, 10));
+        let d = eval(src.substring(10, 15));
+        src = '%68%74%74%70s%3A%2F%2F%69%6D%67' + su(b, 0, 1) + '%2e%38%63%6f%6d%69%63%2e%63%6f%6d%2f' + su(b, 1, 1) + '%2F' + ti + '%2F' + c + '%2F' + nn(a) + '%5F' + su(d, mm(a), 3) + '%2E%6A%70%67';
+        src = unescape(src);
+        return src;
+    };
+    let srcs = new Array(ps).fill().map((_, i) => getSrc(chapterId, i + 1));
+    window.newImgs = srcs;
+    let url;
+    if (/ReadComic/.test(location.pathname)) {
+        url = location.origin + rp + ni + "/" + ni + (fz + fz).substr((3 * ni) % fz.length, 10) + ".html";
+    } else {
+        url = reurl("ch", ni);
+    }
+    if (url == document.URL) {
+        window.nextLink = null;
+    } else {
+        window.nextLink = url;
+    }
 }
         `,
         init: async () => {
-            fun.remove("//div[@class='text-center'] | //p[@class='text-center']");
+            await fun.waitEle("#comics-pics img");
             fun.script(_this.frameCode, 0, 1);
+            let tE = fun.createImgBox(".pinch-zoom-container", 2);
+            fun.remove(".pinch-zoom-container");
             let imgs = fun.createImgArray(frameWindow.newImgs);
-            let tE = fun.ge("//td[img[@id='TheImg']]");
-            tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
         },
         autoPager: {
             mode: 1,
-            waitEle: "#TheImg",
+            waitEle: "#comics-pics img",
             ele: () => fun.createImgArray(frameWindow.newImgs),
-            pos: ["//td[img[@id='TheImg' or contains(@class,'FullPictureLoadImage')]]", 0],
-            observer: "//td[img[@id='TheImg' or contains(@class,'FullPictureLoadImage')]]/img",
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            observer: "#FullPictureLoadMainImgBox>img",
             next: () => frameWindow.nextLink,
-            title: () => fun.gt(".text-view-title") + ` - 第${frameWindow.ch}集`,
-            aF: () => {
-                _unsafeWindow.ch = frameWindow.ch;
+            title: (dom, frame) => {
+                if (hasTouchEvents) {
+                    return "第" + frame.ch + "集";
+                } else {
+                    return fun.dt({
+                        t: fun.gt("#pt", 1, dom)
+                    });
+                }
             },
-            hide: "div:has(>.item_eps_top_bar),.comment_block",
+            re: "#pt",
+            aF: () => (_unsafeWindow.ch = frameWindow.ch),
             preloadNextPage: () => {
                 if (!!frameWindow.nextLink) {
                     fun.iframe(frameWindow.nextLink, {
                         waitVar: "ge",
-                        waitEle: "#TheImg",
+                        waitEle: "#comics-pics img",
                         cb: async (dom, frame) => {
                             fun.script(_this.frameCode, 0, 1, dom);
-                            fun.picPreload(frame.newImgs, fun.gt(".text-view-title") + ` - 第${frame.ch}集`, "next");
+                            fun.picPreload(frame.newImgs, _this.autoPager.title(dom), "next");
                         }
                     });
                 }
             }
         },
-        css: "td[style^=width],.view_gg_content{display:none!important}",
-        category: "comic autoPager"
-    }, {
-        name: "8Comic無限動漫 手機版",
-        host: ["m.comicabc.com"],
-        enable: 1,
-        reg: () => /^https?:\/\/8\.twobili\.com\/comic\/insurance/.test(fun.url) && comicInfiniteScrollMode != 1,
-        frameCode: `
-let imgSrcArr = [];
-for (let i = 1; i <= ps; i++) {
-    let imgSrc = "https://img" + ss(c, 4, 2) + ".8comic.com/" + ss(c, 6, 1) + "/" + ti + "/" + ss(c, 0, 4) + "/" + nn([i]) + "_" + ss(c, mm([i]) + 10, 3, f) + ".jpg";
-    imgSrcArr.push(imgSrc);
-}
-window.newImgs = imgSrcArr;
-let next = document.querySelector("#nextvol:not([style])");
-if (next) {
-    window.nextLink = replaceurl("ch", ni);
-} else {
-    window.nextLink = null;
-}
-        `,
-        init: () => {
-            fun._8ComicM_UI();
-            fun.script(_this.frameCode, 0, 1);
-        },
-        button: [4],
-        imgs: () => _unsafeWindow.newImgs,
-        button: [4],
-        insertImg: ["//li[img[@id='TheImg']]", 2],
-        autoDownload: [0],
-        next: () => _unsafeWindow.nextLink,
-        prev: "#prevvol",
-        customTitle: (dom = document) => {
-            let t = dom.title.split(" ")[0];
-            let n = fun.gt("#chapter", 1, dom);
-            return t + " - " + n;
-        },
-        preloadNext: () => {
-            if (!!_unsafeWindow.nextLink) {
-                fun.iframe(_unsafeWindow.nextLink, {
-                    waitVar: "ge",
-                    waitEle: "#TheImg",
-                    cb: async (dom, frame) => {
-                        fun.script(_this.frameCode, 0, 1, dom);
-                        fun.picPreload(frame.newImgs, "第" + frame.ch + "集", "next");
-                    }
-                });
-            }
-        },
-        css: ".pinch-zoom-container{height:auto !important;display:contents !important}.view_tmenu+div[style],#pagenum,[onclick^='j'],#pageindex,ico+a+.material-icons.right-logo,.cd-popup,.ls-link-div{display:none !important}.view_menut a{width:33.3% !important;max-width:33.3% !important}",
-        infiniteScroll: true,
-        category: "comic"
-    }, {
-        name: "8Comic無限動漫 手機版 自動翻頁",
-        reg: () => /^https?:\/\/8\.twobili\.com\/comic\/insurance/.test(fun.url) && comicInfiniteScrollMode == 1,
-        frameCode: `
-let imgSrcArr = [];
-for (let i = 1; i <= ps; i++) {
-    let imgSrc = "https://img" + ss(c, 4, 2) + ".8comic.com/" + ss(c, 6, 1) + "/" + ti + "/" + ss(c, 0, 4) + "/" + nn([i]) + "_" + ss(c, mm([i]) + 10, 3, f) + ".jpg";
-    imgSrcArr.push(imgSrc);
-}
-window.newImgs = imgSrcArr;
-let next = document.querySelector("#nextvol:not([style])");
-if (next) {
-    window.nextLink = replaceurl("ch", ni);
-} else {
-    window.nextLink = null;
-}
-        `,
-        init: async () => {
-            fun._8ComicM_UI();
-            fun.script(_this.frameCode, 0, 1);
-            let imgs = fun.createImgArray(frameWindow.newImgs);
-            let tE = fun.ge("//li[img[@id='TheImg']]");
-            tE.innerHTML = "";
-            tE.append(...imgs);
-            await fun.lazyload();
-        },
-        autoPager: {
-            mode: 1,
-            waitEle: "#TheImg",
-            ele: () => fun.createImgArray(frameWindow.newImgs),
-            pos: ["//li[img[@id='TheImg' or contains(@class,'FullPictureLoadImage')]]", 0],
-            observer: "//li[img[@id='TheImg' or contains(@class,'FullPictureLoadImage')]]/img",
-            next: () => frameWindow.nextLink,
-            title: () => "第" + frameWindow.ch + "集",
-            aF: (dom) => {
-                fun.gae("#chapter").forEach(e => (e.innerText = fun.ge("#chapter", dom).innerText));
-                fun.gae("#nextname").forEach(e => (e.innerText = fun.ge("#nextname", dom).innerText));
-                fun.gae("#prevname").forEach(e => (e.innerText = fun.ge("#prevname", dom).innerText));
-                _unsafeWindow.ch = frameWindow.ch;
-            },
-            hide: ".book_inc_title",
-            preloadNextPage: () => {
-                if (!!frameWindow.nextLink) {
-                    fun.iframe(frameWindow.nextLink, {
-                        waitVar: "ge",
-                        waitEle: "#TheImg",
-                        cb: async (dom, frame) => {
-                            fun.script(_this.frameCode, 0, 1, dom);
-                            fun.picPreload(frame.newImgs, "第" + frame.ch + "集", "next");
-                        }
-                    });
-                }
-            }
-        },
-        css: ".pinch-zoom-container{height:auto !important;display:contents !important}.view_tmenu+div[style],#pagenum,[onclick^='j'],#pageindex,ico+a+.material-icons.right-logo,.cd-popup,.ls-link-div{display:none !important}.view_menut a{width:33.3% !important;max-width:33.3% !important}",
         category: "comic autoPager"
     }, {
         name: "Mangabz",
@@ -17022,11 +16941,9 @@ if (next) {
         init: async () => {
             fun.run("$(document).off();$('#images').off();");
             fun.remove("#skin");
-            fun.createImgBox("#images", 2);
+            let tE = fun.createImgBox("#images", 2);
             fun.remove("#images");
             let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
-            tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -17386,10 +17303,9 @@ if (next) {
         },
         init: async () => {
             fun.clearAllTimer();
-            fun.createImgBox("#pic-list", 2);
+            let tE = fun.createImgBox("#pic-list", 2);
             fun.remove("#pic-list");
             let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -17603,9 +17519,8 @@ if (next) {
         },
         init: async () => {
             await fun.wait(() => !!_unsafeWindow?.layui?.jecms?.base64?.decode);
-            fun.createImgBox("#pic-list", 2);
+            let tE = fun.createImgBox("#pic-list", 2);
             let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -17900,7 +17815,7 @@ if (next) {
             if (fun.indexOf(fun.lh, "m.77mh")) {
                 let p = fun.ge(".page_num");
                 let m = fun.ge(".mg-co");
-                p ? m.parentNode.insertBefore(p.cloneNode(true), m.nextSibling) : null;
+                p ? insertAfter(m, p.cloneNode(true)) : null;
                 let selectors = [".pagelist", "//div[div[@style and a[img[@width]]]]"];
                 fun.remove(selectors);
             } else {
@@ -17908,7 +17823,7 @@ if (next) {
                 new Function(str)();
                 let p = fun.ge("#pnpage");
                 let m = fun.ge("#main");
-                p ? m.parentNode.insertBefore(p.cloneNode(true), m.nextSibling) : null;
+                p ? insertAfter(m, p.cloneNode(true)) : null;
                 let selectors = [".qrcode_div", "#bdcotopnew", "#main>*:not(#comicImg)"];
                 fun.remove(selectors);
             }
@@ -18066,12 +17981,12 @@ if (next) {
             fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
             let nav = fun.ge("ul.subNav").cloneNode(true);
             let tE = fun.ge("div.bottom");
-            tE.parentNode.insertBefore(nav, tE);
+            insertBefore(tE, nav);
             await fun.remove("meta[name=viewport]");
             const meta = document.createElement("meta");
             meta.name = "viewport";
             meta.content = "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=2.0,user-scalable=no";
-            document.head.appendChild(meta);
+            document.head.append(meta);
             let url = await _this.next();
             if (url) fun.addUrlHtml(url, ".bottom", 0);
         },
@@ -18171,12 +18086,12 @@ if (next) {
             fun.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
             let nav = fun.ge("ul.subNav").cloneNode(true);
             let tE = fun.ge("div.bottom");
-            tE.parentNode.insertBefore(nav, tE);
+            insertBefore(tE, nav);
             await fun.remove("meta[name=viewport]");
             const meta = document.createElement("meta");
             meta.name = "viewport";
             meta.content = "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=2.0,user-scalable=no";
-            document.head.appendChild(meta);
+            document.head.append(meta);
         },
         autoPager: {
             ele: (dom) => fun.getKukudmSrc(nextLink, dom, 0).then(urls => fun.createImgArray(urls)),
@@ -18293,11 +18208,9 @@ if (next) {
             return fun.createImgArray(srcs);
         },
         init: async () => {
-            fun.createImgBox("#cp_img", 2);
+            let tE = fun.createImgBox("#cp_img", 2);
             await fun.remove("#cp_img");
             let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
-            tE.innerHTML = "";
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -18359,10 +18272,9 @@ if (next) {
             return fun.createImgArray(srcs);
         },
         init: async () => {
-            fun.createImgBox("#pic-list", 2);
+            let tE = fun.createImgBox("#pic-list", 2);
             fun.remove("#pic-list,.loading-box");
             let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -18453,10 +18365,9 @@ if (next) {
         init: async () => {
             await fun.waitVar("newImgs");
             _unsafeWindow.newImgs = [];
-            fun.createImgBox("#comicContain", 2);
+            let tE = fun.createImgBox("#comicContain", 2);
             fun.remove("#comicContain");
             let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -18539,10 +18450,9 @@ if (next) {
             return fun.createImgArray(srcs);
         },
         init: async () => {
-            fun.createImgBox("#mainView_img", 2);
+            let tE = fun.createImgBox("#mainView_img", 2);
             fun.remove("#mainView_img");
             let imgs = _this.getImgs();
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             $("#FullPictureLoadMainImgBox").click(() => {
                 $(".reader-footer").fadeToggle(300);
@@ -18633,10 +18543,9 @@ if (next) {
         init: async () => {
             await fun.waitEle(".touch-manipulation img");
             let imgs = await _this.getImgs();
-            fun.createImgBox(".touch-manipulation", 2);
+            let tE = fun.createImgBox(".touch-manipulation", 2);
             fun.remove("//div[ins[@class='adsbygoogle']]");
             await fun.remove(".touch-manipulation");
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -18739,10 +18648,9 @@ if (next) {
             }).then(res => res.json());
             siteJson = fetchJson;
             let imgs = _this.getImgs();
-            fun.createImgBox(".touch-manipulation", 2);
+            let tE = fun.createImgBox(".touch-manipulation", 2);
             fun.remove("//div[ins[@class='adsbygoogle']]");
             await fun.remove(".touch-manipulation");
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -18875,9 +18783,8 @@ if (next) {
         },
         init: async () => {
             let imgs = _this.getImgs();
-            fun.createImgBox("//td[//img[@onclick]] | //div[@class='UnderPage']", 2);
+            let tE = fun.createImgBox("//td[//img[@onclick]] | //div[@class='UnderPage']", 2);
             fun.remove("//td[//img[@onclick]] | //div[@class='UnderPage']");
-            let tE = fun.ge("#FullPictureLoadMainImgBox");
             tE.append(...imgs);
             await fun.lazyload();
         },
@@ -19286,11 +19193,11 @@ if (next) {
                                 let a = document.createElement("a");
                                 a.id = "lastRead";
                                 a.target = "_blank";
-                                let tableRight = document.querySelector(".table-default-right");
-                                tableRight.insertBefore(a, tableRight.firstElementChild);
+                                let tableRight = fun.ge(".table-default-right");
+                                tableRight.insertAdjacentElement("afterbegin", a);
                                 const span = document.createElement("span");
                                 span.innerText = "最後閱讀：";
-                                tableRight.insertBefore(span, tableRight.firstElementChild);
+                                tableRight.insertAdjacentElement("afterbegin", span);
                                 a.href = lastReadUrl;
                                 a.innerText = lastText;
                             } else if (!!lastE) {
@@ -20619,7 +20526,7 @@ if (next) {
     const isArray = arr => Object.prototype.toString.call(arr) === "[object Array]";
     const isFn = fn => ["[object Function]", "[object AsyncFunction]"].some(e => e === Object.prototype.toString.call(fn));
     const isPromise = p => Object.prototype.toString.call(p) === "[object Promise]";
-    const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e));
+    const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e)) || Object.prototype.toString.call(e) === "[object DocumentFragment]";
     const _GM_xmlhttpRequest = (() => isFn(GM_xmlhttpRequest) ? GM_xmlhttpRequest : GM.xmlHttpRequest)();
     const _GM_openInTab = (() => isFn(GM_openInTab) ? GM_openInTab : GM.openInTab)();
     const _GM_getValue = (() => isFn(GM_getValue) ? GM_getValue : GM.getValue)();
@@ -21492,7 +21399,7 @@ if (next) {
                         if (ele.tagName == "IMG" && check.ok) ele.src = check.src;
                         if (id == 1) {
                             let targetEle = fun.gae(img).at(-1);
-                            targetEle.parentNode.insertBefore(ele.cloneNode(true), targetEle.nextSibling);
+                            insertAfter(targetEle, ele.cloneNode(true));
                         }
                     });
                     if (isString(replaceElement)) {
@@ -21547,7 +21454,7 @@ if (next) {
                 let load = document.createElement("p");
                 load.className = "FullPictureLoadLoading";
                 load.innerText = "Loading...";
-                targetEle.parentNode.insertBefore(load, targetEle.nextSibling);
+                insertAfter(targetEle, load);
                 await fun.delay(time, 0);
                 let dom = null;
                 for (let i = 1; i < 20; i++) {
@@ -21562,7 +21469,7 @@ if (next) {
                     debug("iframeDoc" + index, dom);
                     fun.gae(img, dom, dom).forEach(ele => {
                         imgsArray.push(ele);
-                        targetEle.parentNode.insertBefore(ele.cloneNode(true), targetEle.nextSibling);
+                        insertAfter(targetEle, ele.cloneNode(true));
                     });
                     if (rEle) {
                         let ce = fun.gae(rEle);
@@ -21674,7 +21581,7 @@ if (next) {
                         let dom = fun.doc(res);
                         let tE = fun.gae(elementSelector).at(-1);
                         let eles = fun.gae(elementSelector, dom, dom);
-                        eles.forEach(e => tE.parentNode.insertBefore(e, tE.nextSibling));
+                        eles.forEach(e => insertAfter(tE, e));
                     }
                 }
             }
@@ -22023,10 +21930,9 @@ if (next) {
                     }
                     //debug(`\nfun.getNP() > getNextPageEles() DOM\n${decodeURIComponent(url)}`, dom);
                     let eles = fun.gae(pageEle, dom, dom);
-                    let fragment = new DocumentFragment();
-                    eles.forEach(ele => fragment.appendChild(ele.cloneNode(true)));
+                    let fragment = new DocumentFragment.append(...eles);;
                     let targetEle = fun.gae(pageEle).at(-1);
-                    targetEle.parentNode.insertBefore(fragment, targetEle.nextSibling);
+                    insertAfter(targetEle, fragment);
                     if (replaceElement) {
                         let currentPageEles = fun.gae(replaceElement);
                         let nextPageEles = fun.gae(replaceElement, dom, dom);
@@ -22235,11 +22141,11 @@ if (next) {
                     currentPageEles.forEach((e, i) => (e.outerHTML = nextPageEles[i].outerHTML));
                 }
             }
-            let newEle, tE;
+            let newEles, tE;
             let pos = siteData.autoPager?.pos;
             if (isFn(eleSelector) && pos || isString(eleSelector)) {
                 if (isFn(eleSelector)) {
-                    newEle = await eleSelector(doc);
+                    newEles = await eleSelector(doc);
                 } else if (isString(eleSelector)) {
                     let nextEle = fun.ge(eleSelector, doc, doc);
                     if (!nextEle) {
@@ -22248,7 +22154,7 @@ if (next) {
                         return;
                     }
                     tE = fun.gae(eleSelector).at(-1);
-                    newEle = fun.gae(eleSelector, doc, doc);
+                    newEles = fun.gae(eleSelector, doc, doc);
                 }
                 let fragment = new DocumentFragment();
                 if (siteData.autoPager?.showTitle !== 0) {
@@ -22262,7 +22168,7 @@ if (next) {
                         titleText = `Page ${await num(doc)}`;
                     } else if (isFn(title)) {
                         try {
-                            titleText = await title(siteJson ?? doc);
+                            titleText = await title(siteJson || doc, frameWindow);
                             if (isObject(titleText)) {
                                 titleText.ok ? titleText = titleText.text : add = false;
                             }
@@ -22274,22 +22180,22 @@ if (next) {
                         if (mode == "json") {
                             url = document.URL;
                         }
-                        fragment.appendChild(fun.titleUrlEle(url, (titleText || doc?.title || document.title)));
+                        fragment.append(fun.titleUrlEle(url, (titleText || doc?.title || document.title)));
                     }
                 }
-                newEle.forEach(e => fragment.appendChild(e.cloneNode(true)));
+                fragment.append(...newEles);
                 if (isArray(pos) && pos.length == 2 && isString(pos[0]) && isNumber(pos[1])) {
                     const [selector, p] = pos;
                     tE = fun.ge(selector);
                     if (p === 0) { //元素裡面
-                        tE.appendChild(fragment);
+                        tE.append(fragment);
                     } else if (p === 1) { //元素之前
-                        tE.parentNode.insertBefore(fragment, tE);
+                        insertBefore(tE, fragment);
                     } else if (p === 2) { //元素之後
-                        tE.parentNode.insertBefore(fragment, tE.nextSibling);
+                        insertAfter(tE, fragment);
                     }
                 } else {
-                    tE.parentNode.insertBefore(fragment, tE.nextSibling);
+                    insertBefore(tE, fragment);
                 }
             } else if (isFn(eleSelector)) {
                 await eleSelector(doc);
@@ -22374,7 +22280,7 @@ if (next) {
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 //iframe.style.display = "none";
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
-                document.body.appendChild(iframe);
+                document.body.append(iframe);
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -22429,7 +22335,7 @@ if (next) {
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 //iframe.style.display = "none";
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
-                document.body.appendChild(iframe);
+                document.body.append(iframe);
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -22468,7 +22374,7 @@ if (next) {
             iframe.src = url;
             iframe.style.display = "none";
             iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-            document.body.appendChild(iframe);
+            document.body.append(iframe);
             await fun.delay(time, 0);
             await new Promise(resolve => {
                 let loop = setInterval(() => {
@@ -22489,7 +22395,7 @@ if (next) {
                 iframe.src = url;
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-                document.body.appendChild(iframe);
+                document.body.append(iframe);
                 const call = async () => {
                     const {
                         loadTime,
@@ -22579,7 +22485,7 @@ if (next) {
             let a = document.createElement("a");
             a.href = url;
             a.innerText = title;
-            div.appendChild(a);
+            div.append(a);
             div.addEventListener("click", event => fun.toggleAutoPager());
             return div;
         },
@@ -22598,15 +22504,15 @@ if (next) {
                         const [selector, p] = pos;
                         tE = fun.ge(selector);
                         if (p === 0) { //元素裡面
-                            tE.appendChild(img);
+                            tE.append(img);
                         } else if (p === 1) { //元素之前
-                            tE.parentNode.insertBefore(img, tE);
+                            insertBefore(tE, img);
                         } else if (p === 2) { //元素之後
-                            tE.parentNode.insertBefore(img, tE.nextSibling);
+                            insertAfter(tE, img);
                         }
                     } else {
                         tE = fun.gae(siteData.autoPager.ele).at(-1);
-                        tE.parentNode.insertBefore(img, tE.nextSibling);
+                        insertAfter(tE, img);
                     }
                 } catch {
                     fun.showMsg(displayLanguage.str_57, 0);
@@ -22651,14 +22557,13 @@ if (next) {
                         return eles;
                     }
                     let ele;
-                    let fragment = new DocumentFragment();
-                    eles.forEach(e => fragment.appendChild(e.cloneNode(true)));
+                    let fragment = new DocumentFragment.append(...eles);
                     if (isArray(targetEle)) {
                         const [selector, p] = targetEle;
                         ele = fun.ge(selector);
-                        if (p == 0) ele.appendChild(fragment);
-                        else if (p == 1) ele.parentNode.insertBefore(fragment, ele);
-                        else if (p == 2) ele.parentNode.insertBefore(fragment, ele.nextSibling);
+                        if (p == 0) ele.append(fragment);
+                        else if (p == 1) insertBefore(ele, fragment);
+                        else if (p == 2) insertAfter(ele, fragment);
                     }
                     return eles;
                 });
@@ -22697,18 +22602,17 @@ if (next) {
                     return eles;
                 }
                 let ele;
-                let fragment = new DocumentFragment();
-                eles.forEach(e => fragment.appendChild(e.cloneNode(true)));
+                let fragment = new DocumentFragment.append(...eles);
                 if (isArray(targetEle)) {
                     const [selector, p] = targetEle;
                     ele = fun.ge(selector);
-                    if (p == 0) ele.appendChild(fragment);
-                    else if (p == 1) ele.parentNode.insertBefore(fragment, ele);
-                    else if (p == 2) ele.parentNode.insertBefore(fragment, ele.nextSibling);
+                    if (p == 0) ele.append(fragment);
+                    else if (p == 1) insertBefore(ele, fragment);
+                    else if (p == 2) insertAfter(ele, fragment);
                 } else if (isString(targetEle)) {
                     ele = fun.ge(targetEle);
                     ele.innerHTML = "";
-                    ele.appendChild(fragment);
+                    ele.append(fragment);
                 }
                 if (removeEles) fun.remove(removeEles);
                 fun.fetchErrorMsg();
@@ -22743,18 +22647,17 @@ if (next) {
                     return eles;
                 }
                 let ele;
-                let fragment = new DocumentFragment();
-                eles.forEach(e => fragment.appendChild(e.cloneNode(true)));
+                let fragment = new DocumentFragment.append(...eles);
                 if (isArray(targetEle)) {
                     const [selector, p] = targetEle;
                     ele = fun.ge(selector);
-                    if (p == 0) ele.appendChild(fragment);
-                    else if (p == 1) ele.parentNode.insertBefore(fragment, ele);
-                    else if (p == 2) ele.parentNode.insertBefore(fragment, ele.nextSibling);
+                    if (p == 0) ele.append(fragment);
+                    else if (p == 1) insertBefore(ele, fragment);
+                    else if (p == 2) insertAfter(ele, fragment);
                 } else if (isString(targetEle)) {
                     ele = fun.ge(targetEle);
                     ele.innerHTML = "";
-                    ele.appendChild(fragment);
+                    ele.append(fragment);
                 }
                 if (removeEles) fun.remove(removeEles);
                 fun.fetchErrorMsg();
@@ -22927,9 +22830,10 @@ if (next) {
                 div.style.maxWidth = width + "px";
             }
             let targetEle = fun.ge(selector);
-            if (pos == 0) targetEle.appendChild(div);
-            if (pos == 1) targetEle.parentNode.insertBefore(div, targetEle);
-            if (pos == 2) targetEle.parentNode.insertBefore(div, targetEle.nextSibling);
+            if (pos == 0) targetEle.append(div);
+            if (pos == 1) insertBefore(targetEle, div);
+            if (pos == 2) insertAfter(targetEle, div);
+            return div;
         },
         //插入圖片函式
         insertImg: (imgsArray, insertTargetEle, mode = 2) => {
@@ -22954,7 +22858,7 @@ if (next) {
                 if (isNumber(insertBr)) {
                     for (let i = 1; i <= insertBr; i++) {
                         let br = document.createElement("br");
-                        fragment.appendChild(br);
+                        fragment.append(br);
                     }
                 }
                 let width = "24%";
@@ -23056,10 +22960,10 @@ if (next) {
                     if (!!obj.title) button.title = obj.title;
                     if (!!obj.cfn) button.addEventListener("click", obj.cfn);
                     if (!!obj.mfn) button.addEventListener("mousedown", obj.mfn);
-                    buttonDiv.appendChild(button);
+                    buttonDiv.append(button);
                 };
                 [...buttonObj].forEach(obj => createButton(obj));
-                fragment.appendChild(buttonDiv);
+                fragment.append(buttonDiv);
             }
             let blackList = fancyboxBlackList();
             if (options.fancybox == 1 && thumbnailSrcArray.length > 0) {
@@ -23117,10 +23021,10 @@ if (next) {
                         a.style.width = `${options.zoom * 10}%`;
                         a.style.height = "auto";
                     }
-                    a.appendChild(img);
-                    fragment.appendChild(a);
+                    a.append(img);
+                    fragment.append(a);
                 } else {
-                    fragment.appendChild(img);
+                    fragment.append(img);
                 }
             }
             if (videoSrcArray.length > 0) {
@@ -23140,14 +23044,14 @@ if (next) {
                     let source = document.createElement("source");
                     source.src = videoSrcArray[i];
                     source.type = "video/mp4";
-                    video.appendChild(source);
-                    fragment.appendChild(video);
+                    video.append(source);
+                    fragment.append(video);
                 }
             }
             let end = document.createElement("p");
             end.id = "FullPictureLoadEnd";
             end.innerText = `${displayLanguage.str_52}：${noVideoNum}P`;
-            fragment.appendChild(end);
+            fragment.append(end);
             if (srcArr.length > 0 || (srcArr.length >= 0 && videoSrcArray.length > 0)) {
                 const [, insertMode] = siteData.insertImg;
                 if (insertMode == 2 || insertMode == 3) {
@@ -23159,15 +23063,15 @@ if (next) {
                         let [selector, pos, removeSelector] = insertTargetEle;
                         targetEle = fun.ge(selector);
                         if (pos == 0) {
-                            targetEle.appendChild(fragment);
+                            targetEle.append(fragment);
                             //targetEle.style.textAlign = "center";
                             targetEle.style.display = "block";
                         } else if (pos == 1) {
-                            targetEle.parentNode.insertBefore(fragment, targetEle);
+                            insertBefore(targetEle, fragment);
                             //targetEle.parentNode.style.textAlign = "center";
                             targetEle.parentNode.style.display = "block";
                         } else if (pos == 2) {
-                            targetEle.parentNode.insertBefore(fragment, targetEle.nextSibling);
+                            insertAfter(targetEle, fragment);
                             //targetEle.parentNode.style.textAlign = "center";
                             targetEle.parentNode.style.display = "block";
                         }
@@ -23176,7 +23080,7 @@ if (next) {
                     } else if (isString(insertTargetEle)) {
                         targetEle = fun.ge(insertTargetEle);
                         targetEle.innerHTML = "";
-                        targetEle.appendChild(fragment);
+                        targetEle.append(fragment);
                         //targetEle.style.textAlign = "center";
                         targetEle.style.display = "block";
                         if (siteData.msg != 0 && siteData.category != "comic") fun.showMsg(displayLanguage.str_18);
@@ -23491,7 +23395,7 @@ if (next) {
             div.className = "FullPictureLoadMsg";
             div.style.display = "none";
             div.innerText = "none";
-            document.body.appendChild(div);
+            document.body.append(div);
         },
         //創建style元素
         css: (css, id = null) => {
@@ -23500,7 +23404,7 @@ if (next) {
             if (isString(id)) style.id = id;
             style.className = "FullPictureLoadStyle";
             style.innerHTML = css;
-            document.head.appendChild(style);
+            document.head.append(style);
         },
         //創建script元素
         //fun.script("code")，返回script
@@ -23522,10 +23426,10 @@ if (next) {
                             resolve();
                         };
                         script.src = code;
-                        dom.body.appendChild(script);
+                        dom.body.append(script);
                     });
                 } else {
-                    dom.body.appendChild(script);
+                    dom.body.append(script);
                 }
             }
             if (siteData.category === "comic autoPager") {
@@ -24081,7 +23985,7 @@ if (next) {
             a.href = url;
             a.target = target;
             a.style = "display: none;";
-            document.body.appendChild(a);
+            document.body.append(a);
             a.click();
             a.remove();
         },
@@ -24212,8 +24116,8 @@ if (next) {
                         a.href = src;
                         a.dataset.fancybox = "gallery";
                         a.dataset.thumb = src;
-                        e.parentNode.insertBefore(a, e);
-                        a.appendChild(e);
+                        insertBefore(e, a);
+                        a.append(e);
                     }
                 } else if (e.nodeName === "A") {
                     let img = e.querySelector("img");
@@ -24433,30 +24337,15 @@ if (next) {
                 }
             });
         },
-        _8ComicM_UI: () => {
-            let textNode = document.querySelector(".book_inc_title")?.nextSibling;
-            if (textNode?.nodeName == "#text" && textNode?.textContent?.indexOf("alert") > -1) textNode.remove();
-            fun.ge("#pageindex").parentNode.appendChild(fun.ge("#prevvol").cloneNode(true));
-            fun.ge("#pageindex").parentNode.appendChild(fun.ge("#nextvol").cloneNode(true));
-            let ul = fun.ge("#TheTable>ul");
-            let v1 = fun.ge(".view_tmenu").cloneNode(true);
-            let v2 = fun.gae(".view_menut")[1];
-            ul.appendChild(v2);
-            ul.appendChild(v1);
-            let b1 = fun.ge(".book_inc_title");
-            let b2 = fun.ge(".book_link_item");
-            ul.appendChild(b1);
-            if (b2) ul.appendChild(b2);
-        },
         cartoonmadUI: () => {
             fun.run("document.onkeydown=null;");
             fun.remove("//td[div[@id='sidebar-follow']] | //td[ins[@class='adsbygoogle']] | //tr[td[script]] | //select");
             let ele = fun.ge("//tr[td[@bgcolor='#EAEAEA']]");
-            if (ele) ele.parentNode.appendChild(ele.cloneNode(true));
+            if (ele) ele.parentNode.append(ele.cloneNode(true));
             let eleM = fun.ge("//tr[td[table[@bgcolor='#CCCCCC']]]");
             if (eleM) {
                 let x = eleM.parentNode.lastElementChild.previousElementSibling;
-                x.parentNode.insertBefore(eleM.cloneNode(true), x);
+                insertBefore(x, eleM.cloneNode(true));
             }
         }
     };
@@ -24481,6 +24370,22 @@ if (next) {
             nodes.push(node);
         }
         return nodes;
+    };
+
+    const insertBefore = (targetNode, newNode) => {
+        if ([targetNode, newNode].every(e => isEle(e))) {
+            targetNode.parentNode.insertBefore(newNode, targetNode);
+        } else {
+            console.error("insertBefore參數錯誤\n", targetNode, Object.prototype.toString.call(targetNode), newNode, Object.prototype.toString.call(newNode));
+        }
+    };
+
+    const insertAfter = (targetNode, newNode) => {
+        if ([targetNode, newNode].every(e => isEle(e))) {
+            targetNode.parentNode.insertBefore(newNode, targetNode.nextSibling);
+        } else {
+            console.error("insertAfter參數錯誤\n", targetNode, Object.prototype.toString.call(targetNode), newNode, Object.prototype.toString.call(newNode));
+        }
     };
 
     //數字字串補0
@@ -24651,7 +24556,7 @@ if (next) {
         let a = document.createElement("a");
         a.href = objURL;
         a.download = fileName;
-        document.body.appendChild(a);
+        document.body.append(a);
         a.click();
         a.remove();
         setTimeout(() => URL.revokeObjectURL(objURL), 1000);
@@ -25016,7 +24921,7 @@ if (next) {
             textArea.style.opacity = 0;
             textArea.style.left = "-999999px";
             textArea.style.top = "-999999px";
-            document.body.appendChild(textArea);
+            document.body.append(textArea);
             textArea.focus();
             textArea.select();
             return new Promise((res, rej) => {
@@ -25237,18 +25142,18 @@ if (next) {
                 item.style.padding = "0.1%";
                 item.style.border = "1px solid #a0a0a0";
                 if (options.fancybox == 1 && !blackList) {
-                    a.appendChild(img);
-                    item.appendChild(a);
-                    imgBox.appendChild(item);
+                    a.append(img);
+                    item.append(a);
+                    imgBox.append(item);
                 } else {
-                    item.appendChild(img);
-                    imgBox.appendChild(item);
+                    item.append(img);
+                    imgBox.append(item);
                 }
             });
             let tE = ge("#FullPictureLoadEnd");
-            tE.parentNode.insertBefore(imgBox, tE);
+            insertBefore(tE, imgBox);
             if (ge(".FullPictureLoadVideo")) {
-                gae(".FullPictureLoadVideo").forEach(e => tE.parentNode.insertBefore(e, tE));
+                gae(".FullPictureLoadVideo").forEach(e => insertBefore(tE, e));
             }
             if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
                 _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
@@ -25551,14 +25456,14 @@ img.small {
     background-color: rgba(0,0,0,.94)!important;
 }
 `;
-            dom.head.appendChild(newWindowStyle);
+            dom.head.append(newWindowStyle);
 
             if (newTabViewLightGallery == 0) {
                 const fancyboxStyle = dom.createElement("style");
                 fancyboxStyle.id = "FancyboxStyle";
                 fancyboxStyle.type = "text/css";
                 fancyboxStyle.innerHTML = FancyboxV5Css;
-                dom.head.appendChild(fancyboxStyle);
+                dom.head.append(fancyboxStyle);
 
                 const JF_code = JqueryJS + FancyboxV5JS + `
 var scrollIntoViewOptions = {
@@ -25757,7 +25662,7 @@ function setFancybox() {
                 //jQueryScript.id = "jQueryScript";
                 //jQueryScript.type = "text/javascript";
                 //jQueryScript.innerHTML = JF_code;
-                //dom.body.appendChild(jQueryScript);
+                //dom.body.append(jQueryScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: JF_code
                 });
@@ -25794,10 +25699,10 @@ function addFixedMenu() {
         item.innerText = obj.text;
         item.oncontextmenu = () => false;
         if (!!obj.cfn) item.addEventListener("click", obj.cfn);
-        menuDiv.appendChild(item);
+        menuDiv.append(item);
     };
     menuObj.forEach(obj => createMenu(obj));
-    document.body.appendChild(menuDiv);
+    document.body.append(menuDiv);
 }
 addFixedMenu();
 
@@ -25926,7 +25831,7 @@ function createImgElement(mode) {
         img.className = mode;
         img.src = "${loading_bak}";
         img.dataset.src = src;
-        a.appendChild(img);
+        a.append(img);
         return a;
     });
     document.querySelector("#imgBox").append(...imgElements);
@@ -25992,7 +25897,7 @@ if (newWindowData.ViewMode == 1) {
                 //newWindowScript.id = "newWindowScript";
                 //newWindowScript.type = "text/javascript";
                 //newWindowScript.innerHTML = newWindowScriptCode;
-                //dom.body.appendChild(newWindowScript);
+                //dom.body.append(newWindowScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: newWindowScriptCode
                 });
@@ -26003,7 +25908,7 @@ if (newWindowData.ViewMode == 1) {
                 ViewerStyle.id = "ViewerStyle";
                 ViewerStyle.type = "text/css";
                 ViewerStyle.innerHTML = ViewerJsCss;
-                dom.head.appendChild(ViewerStyle);
+                dom.head.append(ViewerStyle);
 
                 const VV_code = ViewerJs + `
 var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
@@ -26031,7 +25936,7 @@ document.addEventListener("viewed", event => {
                 //ViewerScript.id = "ViewerScript";
                 //ViewerScript.type = "text/javascript";
                 //ViewerScript.innerHTML = VV_code;
-                //dom.body.appendChild(ViewerScript);
+                //dom.body.append(ViewerScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: VV_code
                 });
@@ -26068,10 +25973,10 @@ function addFixedMenu() {
         item.innerText = obj.text;
         item.oncontextmenu = () => false;
         if (!!obj.cfn) item.addEventListener("click", obj.cfn);
-        menuDiv.appendChild(item);
+        menuDiv.append(item);
     };
     menuObj.forEach(obj => createMenu(obj));
-    document.body.appendChild(menuDiv);
+    document.body.append(menuDiv);
 }
 addFixedMenu();
 
@@ -26257,7 +26162,7 @@ if (newWindowData.ViewMode == 1) {
                 //newWindowScript.id = "newWindowScript";
                 //newWindowScript.type = "text/javascript";
                 //newWindowScript.innerHTML = newWindowScriptCode;
-                //dom.body.appendChild(newWindowScript);
+                //dom.body.append(newWindowScript);
                 _GM_addElement(dom.body, "script", {
                     textContent: newWindowScriptCode
                 });
@@ -26278,7 +26183,7 @@ if (newWindowData.ViewMode == 1) {
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => newTabView());
-        document.body.appendChild(img);
+        document.body.append(img);
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenuB";
         const menuObj = [{
@@ -26316,10 +26221,10 @@ if (newWindowData.ViewMode == 1) {
             item.oncontextmenu = () => false;
             if (!!obj.cfn) item.addEventListener("click", obj.cfn);
             if (!!obj.mfn) item.addEventListener("mousedown", obj.mfn);
-            menuDiv.appendChild(item);
+            menuDiv.append(item);
         };
         [...menuObj].forEach(obj => createMenu(obj));
-        document.body.appendChild(menuDiv);
+        document.body.append(menuDiv);
     };
 
     //清除圖片縮放級別
@@ -26365,7 +26270,7 @@ if (newWindowData.ViewMode == 1) {
                 copyImgSrcText();
             }
         });
-        document.body.appendChild(img);
+        document.body.append(img);
         if ("insertImg" in siteData) {
             let img2 = new Image();
             img2.id = "FullPictureLoadGoToFirstImage";
@@ -26374,7 +26279,7 @@ if (newWindowData.ViewMode == 1) {
             img2.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA7BJREFUWEetl29olVUYwH/n3jvvGpp/WtNlIdoK1MJazBwO0/mlZqFgRCgGfZC7TTbwixqbMnPiHIIwmdd9MYiMhD4o6gqirenGsoF/MLfaahFz3a1Shlv7e9/3yHnnxXvv3vee96574P3wcp4/v/M8z3nOOQK3o67Oj2+0EMlWPKxEkg3Wp0YIQQiTLgQXCWc0UV4+4ca00Ao1HM3G8B0CuROYp5WfFhgGcQ5v+FMCFaFEOs4An1WlM+6vRIq9QIZLx/Fiowh5kvSJaj6uGrezYQ9QX7sEYV4A3pyl43i160jPNvbsG4ifmAlwquZVfDQieV7nfJE/3RJ5MGG7uFh1wT3CFFF24E70RCyAWrnH7NA5V0pH8gooW51r2Tp19wYHO1qROmIFYXryoiPxBEDlfCz9B13YlULd+s0EVq6JcdfQdZvytu/1EHCdp8Y3RmriCUDwWDVSVOgq1s55RMc1hJBHKfmkUulNA1hbzftbomp3Wnk8sEuIUbxGjtqi0wCnjwdBFjut3q3z5CIhzlC6v0Qw3eH+cWoyyTpPAmKYcMazgtM17wCNTk0iUc51Re8iHUWC+pozCAJ2DeL/OHcVCUmDIFjTgmRDPMDB3HzUl4qxq7mR87//MtOU4KpKQTfwUvTsgjl+QrtK8Qr9WeUGsG2gn02Xz9uJ9iiAYWBu9OwbmYtp36YOv9SM/8JTZH1ez5RpxhscsQWYP8fPnzsCZPh8MQph0+THv0MULFlqS9Y60M+6rGx8Hk/M/Nlf71B87Ts7HQtgRgqUZNkruZxYt/Fxp4JJ0+Cj5m/IeXoB1XkFtgCVHa10Dt2ndu0GcuYvtGR+fvAvO5uu0DV03yEFDkWopNVqtix70QrdFz2d9D4cYt+atQkBam//ZEFvXrqMCcPg2sA95zxaReiwDZ203AC4rhxrGyZoRHaGUgoARdpWHA+RQoDHrVh50BxG0RApBAhSeqDU9XEcgUgRwAhpRg67KwaTupAoiD2rX+dk/ibbOtvb3kz93Zv6GhTiECX7jyjBpK9k+Yufo+W9D22dvHXpK9oH/9IAiDYyxwr5oGoyFkD9ubyUfln4Lu+veDnG0de93exouqxz3kdaOE+FPiI4q2u5OqRKVr3G2y8st+x82/cHwc5bGDLRvVj0Ycgtia/lEayUP0xEG2nh7dErd45AZCY1T7MRhKjlmbHjkZzH50h/4M/ucfoQOEeacdhu1dEQeoCItPPzXCVenTj9SNmJ4BLeRS0EAlP6/QiPAMXOipDq4W0VAAAAAElFTkSuQmCC";
             img2.setAttribute("title", displayLanguage.str_62);
             img2.addEventListener("click", () => goToImg("first"));
-            document.body.appendChild(img2);
+            document.body.append(img2);
             let img3 = new Image();
             img3.id = "FullPictureLoadGoToLastImage";
             img3.className = "FullPictureLoadFixedBtn";
@@ -26388,7 +26293,7 @@ if (newWindowData.ViewMode == 1) {
                     exportImgSrcText();
                 }
             });
-            document.body.appendChild(img3);
+            document.body.append(img3);
         }
     };
 
@@ -26484,10 +26389,10 @@ if (newWindowData.ViewMode == 1) {
             item.oncontextmenu = () => false;
             if (!!obj.cfn) item.addEventListener("click", obj.cfn);
             if (!!obj.mfn) item.addEventListener("mousedown", obj.mfn);
-            menuDiv.appendChild(item);
+            menuDiv.append(item);
         };
         [...menuObj].forEach(obj => createMenu(obj));
-        document.body.appendChild(menuDiv);
+        document.body.append(menuDiv);
         menuDiv.onmouseenter = () => {
             fun.gae(".itemNoShow", menuDiv).forEach(e => {
                 e.classList.remove("itemNoShow");
@@ -26536,8 +26441,8 @@ if (newWindowData.ViewMode == 1) {
         let img = new Image();
         img.src = "data:image/png;base64,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";
         img.className = "FullPictureLoadImageReturnTop";
-        a.appendChild(img);
-        document.body.appendChild(a);
+        a.append(img);
+        document.body.append(a);
     };
 
     //列出寫真站
@@ -26645,7 +26550,7 @@ if (newWindowData.ViewMode == 1) {
 <button id="FullPictureLoadOptionsSaveBtn">${displayLanguage.str_84}</button>
 `;
         FullPictureLoadOptionsMain.innerHTML = FullPictureLoadOptionsMainHtmlStr;
-        document.body.appendChild(FullPictureLoadOptionsMain);
+        document.body.append(FullPictureLoadOptionsMain);
 
         const FullPictureLoadOptionsButtonAddEvent = () => {
             ge("#FullPictureLoadOptionsCancelBtn").addEventListener("click", event => {
@@ -28300,8 +28205,8 @@ a[data-fancybox]:hover {
         let textarea = document.createElement("textarea");
         textarea.id = "editFavorTextarea";
         textarea.style.width = (parentWidth - 20) + "px";
-        editFavorDiv.appendChild(textarea);
-        tE.parentNode.insertBefore(editFavorDiv, tE.nextSibling);
+        editFavorDiv.append(textarea);
+        insertAfter(tE, editFavorDiv);
         [{
             text: displayLanguage.str_132,
             id: "editFavorCloseBtn",
@@ -28326,7 +28231,7 @@ a[data-fancybox]:hover {
             button.className = "editFavorButton";
             button.innerText = obj.text;
             if (!!obj.cfn) button.addEventListener("click", obj.cfn);
-            editFavorDiv.appendChild(button);
+            editFavorDiv.append(button);
         });
         textarea.value = favorData;
         editFavorDiv.scrollIntoView({
@@ -28343,7 +28248,7 @@ a[data-fancybox]:hover {
         let FavorUl = document.createElement("ul");
         FavorUl.id = "FullPictureLoadFavorUl";
         FavorUl.style.maxWidth = parentWidth + "px";
-        tE.parentNode.insertBefore(FavorUl, tE.nextSibling);
+        insertAfter(tE, FavorUl);
         let favorDataArray = favorData.split("\n").filter(item => item);
         let textColor = "#000";
         let backgroundColor = "#15d3bf";
@@ -28363,8 +28268,8 @@ a[data-fancybox]:hover {
                     a.innerText = name;
                     a.href = value;
                     a.style.color = textColor;
-                    li.appendChild(a);
-                    FavorUl.appendChild(li);
+                    li.append(a);
+                    FavorUl.append(li);
                 }
             } catch (error) {
                 console.error(error);
@@ -28379,7 +28284,7 @@ a[data-fancybox]:hover {
             createFavorTextarea();
             FavorUl.remove();
         });
-        FavorUl.appendChild(li);
+        FavorUl.append(li);
     };
 
     const toggleFavor = () => {
