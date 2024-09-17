@@ -500,7 +500,8 @@ fun.attr("selector","屬性", doc = document);
 fun.attr(String, String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//創建一個DIV用來放圖片，#FullPictureLoadMainImgBox
+//創建一個DIV用來放圖片，返回DIV
+//元素ID，#FullPictureLoadMainImgBox
 //pos 0，添加進指定的元素裡面
 //pos 1，插入在指定的元素之前
 //pos 2，插入在指定的元素之後
@@ -1206,7 +1207,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://xchina.biz/">小黃書</a>
                 </td>
                 <td>
-                    <a href="https://xchina.co/">xchina.co</a>， <a href="https://xchina.fun/">xchina.fun</a>， <a href="https://xchina.life/">xchina.life</a>
+                    <a href="https://xchina.co/">xchina.co</a>， <a href="https://xchina.fun/">xchina.fun</a>
                 </td>
             </tr>
             <tr>
@@ -1247,7 +1248,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
-                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://depday.info/">Depday-Info</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://allianceforrabiescontrol.org/">CosXuxi Club</a>， <a href="https://taa.kidsforums.com/">CosXuxi Club</a>
+                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>
                 </td>
             </tr>
             <tr>
@@ -5237,11 +5238,9 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
         <tbody>
             <tr>
                 <td>
-                    <a href="https://www.comicabc.com/">8Comic無限動漫</a>
+                    <a href="https://www.8comic.com/">8Comic無限動漫</a>
                 </td>
-                <td>
-                    <a href="https://m.comicbus.com/">m.comicbus.com</a>，有無限滾動模式加預讀
-                </td>
+                <td>有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
