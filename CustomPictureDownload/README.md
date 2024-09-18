@@ -2689,13 +2689,19 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.jiangtutu7.icu/">酱图图</a>
+                    <a href="https://www.jtttututu.top/">酱图图</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
                     <a href="https://sanshang.neocities.org/">三上悠亚写真图片</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://setumeow.com/">色图喵</a>
                 </td>
                 <td></td>
             </tr>
@@ -4736,13 +4742,13 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://ahri-gallery-xfjd-2024-04-25.top/">Ahri Gallery分機</a>
+                    <a href="https://caitlin.top/">Caitlin.top</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://caitlin.top/">Caitlin.top</a>
+                    <a href="https://ahri-gallery-xfjd-2024-04-25.top/">Ahri Gallery分機</a>
                 </td>
                 <td></td>
             </tr>
@@ -4779,6 +4785,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.yemaohanman.com/">野貓韓漫</a>
                 </td>
                 <td>目錄頁手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.setumeow.com/">色图喵h漫画</a>
+                </td>
+                <td>作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td>
