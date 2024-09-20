@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.27
+// @version            2.7.28
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1036,8 +1036,15 @@ a:has(>div>div>img),
             v: 3,
             css: false
         },
-        observerClick: ".ht-n-close-toggle",
+        observerClick: [".swal2-close", ".ht-n-close-toggle"],
         category: "nsfw1"
+    }, {
+        name: "秀人网图集",
+        reg: () => fun.checkUrl({
+            e: ".logo-wrapper img.logo[alt='秀人网图集']"
+        }),
+        observerClick: [".swal2-close", ".ht-n-close-toggle"],
+        category: "ad"
     }, {
         name: "足控资源网",
         host: ["www.zukong8.com", "www.yuzu8.com", "aisituba.com"],
@@ -2289,7 +2296,8 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["article.o-padding-top-bottom,.picture-frame-wrapper", 3],
         downloadVideo: true,
-        customTitle: () => {
+        customTitle: async () => {
+            await fun.delay(500, 0);
             if (document.URL.includes("/albums/")) {
                 return fun.gt(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a");
             } else {
@@ -2390,7 +2398,7 @@ a:has(>div>div>img),
         host: ["www.cosersets.com"],
         link: "https://www.cosersets.com/1",
         reg: /^https?:\/\/www\.cosersets\.com/,
-        init: async () => await fun.waitEle(".z-breadcrumbs"),
+        init: async () => await fun.waitEle(".z-breadcrumbs .z-breadcrumbs__item"),
         imgs: async (msg = 1) => {
             if (msg === 1) fun.showMsg(displayLanguage.str_05, 0);
             let body = {
@@ -2412,7 +2420,10 @@ a:has(>div>div>img),
         },
         SPA: true,
         capture: () => _this.imgs(0),
-        customTitle: () => fun.gt(".z-breadcrumbs")?.replace(/\n/g, " - ").replace(/首页 - |Cosersets - /, ""),
+        customTitle: async () => {
+            await fun.delay(500, 0);
+            return fun.gt(".z-breadcrumbs")?.replace(/\n/g, " - ").replace(/首页 - |Cosersets - /, "");
+        },
         observerURL: true,
         category: "nsfw1"
     }, {
@@ -2427,7 +2438,10 @@ a:has(>div>div>img),
         },
         SPA: true,
         capture: () => _this.imgs(),
-        customTitle: () => fun.gt("#crumbbar")?.replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)"),
+        customTitle: async () => {
+            await fun.delay(500, 0);
+            return fun.gt("#crumbbar")?.replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)")
+        },
         observerURL: true,
         category: "nsfw1"
     }, {
@@ -2496,12 +2510,6 @@ a:has(>div>div>img),
         insertImg: ["//div[a[div[@class='v-image v-responsive theme--light']]]", 2],
         customTitle: "h3",
         category: "nsfw2"
-    }, {
-        name: "女神社",
-        reg: /^https?:\/\/((www\.)?nshens\.com|(www\.)?inewgirl\.com)\/latestpost$/,
-        delay: 500,
-        observerClick: "//button[span[text()='加載更多'] or span[text()='加载更多'] or span[text()='Load More'] or span[text()='Tải thêm']]",
-        category: "autoPager"
     }, {
         name: "Chottie", //很多都需要VIP，不然只會重複抓到第一頁的圖片
         host: ["chottie.com", "chinesehottie.com"],
@@ -7493,39 +7501,15 @@ a:has(>div>div>img),
         customTitle: ".s-title",
         category: "nsfw1"
     }, {
-        name: "xasia",
-        host: ["xasia.pics"],
-        reg: /^https?:\/\/xasia\.pics\/\d+\/\d+\/\d+\/[^\/]+\/$/,
-        init: () => fun.createImgBox("//section[@class='post-content']//p[img]", 1),
-        imgs: ".post-content img",
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "//p[img]"], 2
-        ],
-        go: 1,
-        autoDownload: [0],
-        next: "article.prev>a",
-        prev: "article.next>a",
-        customTitle: "h1.title",
-        category: "nsfw1"
-    }, {
-        name: "Photobook.club",
-        host: ["photobook.club"],
-        reg: /^https?:\/\/photobook\.club\/[^\/]+\/$/,
+        name: "Danryoku",
+        host: ["danryoku.com"],
+        reg: /^https?:\/\/danryoku\.com\/[^\/]+\/$/,
         imgs: ".dynamic-entry-content img",
         button: [4],
         insertImg: [".dynamic-entry-content", 2],
         go: 1,
         customTitle: "h1.gb-headline",
         category: "nsfw1"
-    }, {
-        name: "Photobook.club Load More",
-        host: ["photobook.club"],
-        reg: /^https?:\/\/photobook\.club\//,
-        include: ".nav-links",
-        observerClick: ".load-more>a",
-        openInNewTab: "#main a:not([target=_blank])",
-        category: "autoPager"
     }, {
         name: "eyval.net",
         host: ["www.eyval.net"],
@@ -8236,7 +8220,7 @@ a:has(>div>div>img),
                 _unsafeWindow.adde_modal_detector(false);
             }
         },
-        imgs: "a[data-fancybox]",
+        imgs: "a[data-fancybox],.mpc-grid-images img",
         autoDownload: [0],
         next: ".mk-post-next",
         prev: ".mk-post-prev",
@@ -8435,14 +8419,17 @@ a:has(>div>div>img),
             h: "ucrazy.org"
         }),
         init: () => fun.addMutationObserver(() => fun.remove(".banner:has(>#advideo_adv_container)")),
-        imgs: ".news__content_wrapper img",
-        capture: () => fun.gae(".news__content_wrapper img"),
+        imgs: ".news__content_wrapper img:not(.news__tags-more-icon)",
+        capture: () => fun.gae(".news__content_wrapper img:not(.news__tags-more-icon)"),
         SPA: () => !!fun.ge("#addcomment"),
         button: [4],
         customTitle: async () => {
             await fun.delay(1000, 0);
             return fun.dt({
-                d: " | uCrazy.org"
+                d: [
+                    " | uCrazy.org",
+                    " | girls.uCrazy.org"
+                ]
             });
         },
         observerURL: true,
@@ -9557,16 +9544,6 @@ a:has(>div>div>img),
         },
         category: "nsfw2"
     }, {
-        name: "Girlsreleased 載入更多",
-        reg: () => fun.checkUrl({
-            h: "girlsreleased.com",
-            e: "//button[text()='more']"
-        }),
-        delay: 1000,
-        observerClick: "//button[text()='more']",
-        openInNewTab: ".content .main a",
-        category: "autoPager"
-    }, {
         name: "Girlsreleased",
         reg: () => fun.checkUrl({
             h: "girlsreleased.com",
@@ -9610,6 +9587,14 @@ a:has(>div>div>img),
         referer: "src",
         css: "@media only screen and (max-width:1920px){#FullPictureLoadMainImgBox{width:100%;max-width:1400px;margin:0 auto}}",
         category: "nsfw2"
+    }, {
+        name: "Girlsreleased 載入更多",
+        reg: () => fun.checkUrl({
+            h: "girlsreleased.com"
+        }),
+        observerClick: "//button[text()='more']",
+        openInNewTab: ".content .main a",
+        category: "autoPager"
     }, {
         name: "Eropics", // vipr.im,Imagetwist.com圖床無法外連但可以下載
         host: ["eropics.to"],
@@ -10255,42 +10240,6 @@ a:has(>div>div>img),
         next: ".prev>a",
         prev: ".next>a",
         customTitle: "h1.tit",
-        category: "nsfw2"
-    }, {
-        name: "性爱吧",
-        reg: () => fun.checkUrl({
-            h: [
-                "www.xingaiba.com",
-                "xingaiba.com"
-            ],
-            s: "action-viewnews-itemid-",
-            e: "//span[contains(text(),'美图类别')]"
-        }),
-        imgs: async () => {
-            await fun.getNP("#carousel_photo_container>*", "strong+a:not(.next)", null, ".pages");
-            return fun.gae("#carousel_photo_container img");
-        },
-        button: [4],
-        insertImg: ["#carousel_photo_container", 2],
-        autoDownload: [0],
-        next: "div[style^='TEXT-ALIGN']>a:first-child",
-        prev: "div[style^='TEXT-ALIGN']>a:last-child",
-        customTitle: ".n_content>h1",
-        category: "nsfw2"
-    }, {
-        name: "阳雀人体艺术",
-        host: ["www.yangque.xyz", "yangque.xyz"],
-        reg: /^https?:\/\/(www\.)?yangque\.xyz\/html\/\d+\/n-\d+\.html$/,
-        imgs: async () => {
-            await fun.getNP(".image-box>*", "strong+a:not(.next)", null, ".pages");
-            return fun.gae(".image-box img");
-        },
-        button: [4],
-        insertImg: [".image-box", 2],
-        autoDownload: [0],
-        next: "a[title^='下一篇']",
-        prev: "a[title^='上一篇']",
-        customTitle: ".article-title>h1",
         category: "nsfw2"
     }, {
         name: "上流时尚人体艺术",
@@ -11073,14 +11022,7 @@ a:has(>div>div>img),
             });
             return text.replace(/\(\d+[\w\s\.\+-]+\)/i, "").replace(/［\d+[\w\s\.\+-]+］/i, "").trim();
         },
-        observerClick: "#chk_cover",
         category: "hcomic"
-    }, {
-        reg: () => fun.checkUrl({
-            e: "#Comic_Top_Nav img[alt=logo][src$='_nico.png']"
-        }),
-        observerClick: "#chk_cover",
-        category: "ad"
     }, {
         name: "Comic18H",
         host: ["www.comic18h.com"],
@@ -11239,7 +11181,7 @@ a:has(>div>div>img),
         },
         fetch: 1,
         css: ".hidden-lg:not(.panel)[style*='z-index']{display:none!important;}",
-        observerClick: "#chk_cover",
+        observerClick: ["#chk_cover", "#chk_guide"],
         category: "hcomic"
     }, {
         name: "禁漫天堂",
@@ -11265,7 +11207,7 @@ a:has(>div>div>img),
             fun.remove(selectors);
         },
         css: ".hidden-lg:not(.panel)[style*='z-index']{display:none!important;}",
-        observerClick: "#chk_cover",
+        observerClick: ["#chk_cover", "#chk_guide"],
         category: "ad"
     }, {
         name: "E-Hentai圖片清單頁",
@@ -11689,7 +11631,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#previews,main>.group", 0],
-        customTitle: () => fun.gt("#title>h2") ?? fun.gt("#title>h1"),
+        customTitle: () => fun.getText(["#title>h2", "#title>h1"]),
         SPA: () => document.URL.includes("/g/"),
         observerURL: true,
         fetch: 1,
@@ -11742,7 +11684,7 @@ a:has(>div>div>img),
             ["#thumbnail-container", 2], 2
         ],
         go: 1,
-        customTitle: () => fun.gt("#info>h4") || fun.gt("#info>h1"),
+        customTitle: () => fun.getText(["#info>h4", "#info>h1"]),
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/List Read頁",
@@ -12059,7 +12001,7 @@ a:has(>div>div>img),
             [".thumbs", 2], 2
         ],
         go: 1,
-        customTitle: () => fun.gt("#info>h2") || fun.gt("#info>h1"),
+        customTitle: () => fun.getText(["#info>h2", "#info>h1"]),
         category: "hcomic"
     }, {
         name: "lhentai.com/simplyhentai.red閱讀頁",
@@ -12132,10 +12074,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
-        customTitle: () => {
-            let str = fun.gt(".gallerysubtitle") ?? fun.gt(".gallerytitle");
-            return str.trim();
-        },
+        customTitle: () => fun.getText([".gallerysubtitle", ".gallerytitle"]),
         category: "hcomic"
     }, {
         name: "M-Hentai閱讀頁",
@@ -12361,7 +12300,7 @@ a:has(>div>div>img),
             if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
             if (!hasTouchEvents && ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
         },
-        customTitle: () => fun.ge("[placeholder=Japanese]").value || fun.ge("[placeholder='Alternative names']").value,
+        customTitle: () => fun.ge("[placeholder=Japanese]")?.value || fun.ge("[placeholder='Alternative names']")?.value,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "none"
     }, {
@@ -12380,7 +12319,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".img-viewer", 2],
-        customTitle: () => fun.ge("[placeholder=Japanese]").value || fun.ge("[placeholder='Alternative names']").value,
+        customTitle: () => fun.ge("[placeholder=Japanese]")?.value || fun.ge("[placeholder='Alternative names']")?.value,
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.box.img-reader .img-viewer{position:unset!important;white-space:unset!important}",
         category: "hcomic"
     }, {
@@ -12482,7 +12421,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
-        customTitle: () => fun.gt(".info>h2") || fun.gt(".info>h1"),
+        customTitle: () => fun.getText([".info>h2", ".info>h1"]),
         css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
@@ -12605,7 +12544,7 @@ a:has(>div>div>img),
             ["#thumbnail-container", 2], 2
         ],
         go: 1,
-        customTitle: () => fun.gt("#info>h2") ?? fun.gt("#info>h1"),
+        customTitle: () => fun.getText(["#info>h2", "#info>h1"]),
         category: "hcomic"
     }, {
         name: "HENTAIVSMANGA.COM閱讀頁",
@@ -12942,7 +12881,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
-        customTitle: () => fun.gt(".subtitle") ?? fun.gt("h1"),
+        customTitle: () => fun.getText([".subtitle", "h1"]),
         category: "hcomic"
     }, {
         name: "HentaiEra閱讀頁",
@@ -13164,7 +13103,7 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".gallery"], 2, 1000
         ],
-        customTitle: () => fun.ge("#gn+h1") ? fun.gt("#gn+h1") : fun.gt("#gn,.entry-title"),
+        customTitle: () => fun.getText(["#gn+h1", "#gn,.entry-title"]),
         fancybox: {
             v: 3,
             css: false
@@ -13715,7 +13654,7 @@ a:has(>div>div>img),
         customTitle: () => fun.title("_免费阅读", 1),
         category: "hcomic"
     }, {
-        name: "VN漫画网 清單頁 www.vnacg.com",
+        name: "VN漫画网 清單頁",
         host: ["www.vnacg.com"],
         reg: /^https?:\/\/www\.vnacg\.com\/detail\/\d+\.html/,
         observerClick: ".layui-flow-more>a",
@@ -13820,7 +13759,7 @@ a:has(>div>div>img),
                         return "webp";
                     default:
                         return "jpg";
-                };
+                }
             };
             let counter = 0;
             let max = Image_List.length;
@@ -13887,7 +13826,7 @@ a:has(>div>div>img),
                         return "webp";
                     default:
                         return "jpg";
-                };
+                }
             };
             let counter = 0;
             let max = Image_List.length;
@@ -13907,10 +13846,7 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, "#more-information1>div.row:has(img)"], 2
         ],
-        customTitle: () => {
-            let selectors = [".row>.col-xs-12>h2", "div.name>h2", ".gallery_title", ".gallery_title2"];
-            return fun.getText(selectors);
-        },
+        customTitle: () => fun.getText([".row>.col-xs-12>h2", "div.name>h2", ".gallery_title", ".gallery_title2"]),
         category: "hcomic"
     }, {
         name: "蚂蚁搬运网/紳士泛漫畫",
@@ -15301,16 +15237,6 @@ a:has(>div>div>img),
             json.status == 0 ? fun.picPreload(json.data.scans.map(e => e.url), json.data.manga_name + " - " + json.data.chapter_name, "next") : debug("預讀下一頁失敗");
         },
         css: "footer>article>div{padding: 0.5rem 0 !important}",
-        category: "comic"
-    }, {
-        name: "嗨皮漫畫更新頁，自動點擊載入更多，鏈接新分頁打開",
-        host: ["m.happymh.com"],
-        reg: /^https?:\/\/m\.happymh\.com\/latest/,
-        enable: 0,
-        icon: 0,
-        key: 0,
-        observerClick: ".more-div-btn",
-        openInNewTab: ".manga-cover>a:not([target=_blank])",
         category: "comic"
     }, {
         name: "嗨皮漫畫展開目錄",
@@ -22776,7 +22702,6 @@ if ("unescape" in window) {
         //插入圖片函式
         insertImg: (imgsArray, insertTargetEle, mode = 2) => {
             if (fun.ge(".FullPictureLoadImage") || isFetching || isDownloading) return;
-            _unsafeWindow.stop();
             let srcArr = [];
             for (let i = 0; i < imgsArray.length; i++) {
                 let check = fun.checkImgSrc(imgsArray[i]);
@@ -23142,7 +23067,7 @@ if ("unescape" in window) {
             if (isString(selector)) {
                 let ele = fun.ge(selector, dom);
                 text = ele?.innerText;
-                if (!!ele && text?.length > 0) {
+                if (!!ele && !!text && text?.length > 0) {
                     return fun.dt({
                         t: text
                     });
@@ -23151,7 +23076,7 @@ if ("unescape" in window) {
                 for (let s of selector) {
                     let ele = fun.ge(s, dom);
                     text = ele?.innerText;
-                    if (!!ele && text?.length > 0) {
+                    if (!!ele && !!text && text?.length > 0) {
                         return fun.dt({
                             t: text
                         });
@@ -23404,8 +23329,14 @@ if ("unescape" in window) {
             return new Promise(resolve => setTimeout(resolve, time));
         },
         //等待函式寫法
-        wait: (callback, dom = document, win = _unsafeWindow) => {
+        wait: (callback, dom = document, win = _unsafeWindow, num = 300) => {
             if (!isFn(callback)) return;
+            if (dom === null || Object.prototype.toString.call(dom) !== "[object HTMLDocument]") {
+                dom = document;
+            }
+            if (win === null || Object.prototype.toString.call(win) !== "[object Window]") {
+                win = _unsafeWindow;
+            }
             let loopNum = 0;
             return new Promise(resolve => {
                 const loopFn = async () => {
@@ -23414,7 +23345,7 @@ if ("unescape" in window) {
                         resolve(true);
                         return;
                     }
-                    if (loopNum >= 300) {
+                    if (loopNum >= num) {
                         debug(`fun.wait()達循環上限。`);
                         resolve(false);
                         return;
@@ -24686,6 +24617,10 @@ if ("unescape" in window) {
             if (!autoDownload || !!autoDownload && start != 1 && options.autoDownload != 1) {
                 selector = siteData.imgs;
                 titleText = await prompt(displayLanguage.str_51, (customTitle || titleReplace));
+                if (titleText === null) {
+                    showMsg(displayLanguage.str_41);
+                    return;
+                }
             } else if (!!autoDownload) {
                 if (start == 1 || options.autoDownload == 1) {
                     selector = siteData.imgs;
@@ -25357,7 +25292,7 @@ if ("unescape" in window) {
                         single: hasTouchEvents ? "Single Image" : "Single Image (1)",
                         default: hasTouchEvents ? "Default" : "Default (0)",
                     };
-            };
+            }
             newWindow.fun = fun;
             newWindow.hasTouchEvents = hasTouchEvents;
             newWindow.newWindowData = newWindowData;
@@ -25648,7 +25583,7 @@ function setFancybox() {
                 DOWNLOAD: "下载"
             };
             break;
-    };
+    }
     Fancybox.bind("[data-fancybox]", FancyboxOptions);
 }
 `;
@@ -27339,7 +27274,7 @@ a[data-fancybox]:hover {
                     DOWNLOAD: "下载"
                 };
                 break;
-        };
+        }
         _unsafeWindow.Fancybox.defaults.animated = false;
         //debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
     };
@@ -27408,7 +27343,7 @@ a[data-fancybox]:hover {
             let newTitle = await prompt("New Title", customTitle);
             newTitle == null ? null : customTitle = newTitle;
             fun.showMsg(displayLanguage.str_118);
-            debug("圖集新標題", newTitle);
+            debug("圖集新標題", newTitle || customTitle);
         }
         if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
             fastDownload = false;
@@ -27710,7 +27645,7 @@ a[data-fancybox]:hover {
                 if ("capture" in siteData && !newCustomTitle) {
                     captureSrcB(1);
                 }
-                if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined) {
+                if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined && newCustomTitle !== "") {
                     customTitle = newCustomTitle;
                     debug(`\n自定義標題：${newCustomTitle}`);
                     if ("capture" in siteData) {
@@ -27732,6 +27667,13 @@ a[data-fancybox]:hover {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
                         await toggleUI();
+                        if ("customTitle" in siteData && !("capture" in siteData)) {
+                            const newCustomTitle = await getTitle(siteData.customTitle);
+                            if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined && newCustomTitle !== "") {
+                                customTitle = newCustomTitle;
+                                debug(`\n自定義標題：${newCustomTitle}`);
+                            }
+                        }
                     }, 200);
                 }
                 if (mutationList) {
@@ -27763,9 +27705,13 @@ a[data-fancybox]:hover {
                     siteUrl = _unsafeWindow.document.URL;
                     const newCustomTitle = await getTitle(siteData.customTitle);
                     if ("capture" in siteData && !newCustomTitle) {
-                        captureSrcB(1);
+                        await captureSrcB(1);
+                        const newCustomTitle = await getTitle(siteData.customTitle);
+                        if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined && newCustomTitle !== "") {
+                            customTitle = newCustomTitle;
+                        }
                     }
-                    if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined) {
+                    if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined && newCustomTitle !== "") {
                         customTitle = newCustomTitle;
                         debug(`\n自定義標題：${newCustomTitle}`);
                         if ("capture" in siteData) {
@@ -27852,26 +27798,38 @@ a[data-fancybox]:hover {
                 }
             }
         }
-        if ("observerClick" in siteData && isString(siteData.observerClick)) {
-            const selector = siteData.observerClick;
-            const ele = fun.ge(selector);
-            if (!!ele) {
-                const observer = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            observer.unobserve(entry.target);
-                            elementClick(entry.target);
-                            debug(`\n圖片全載observerClick("${selector}")`, entry.target);
-                            setTimeout(async () => {
-                                if (await fun.waitEle(selector, 30)) {
-                                    observer.observe(fun.ge(selector));
-                                }
-                            }, 1000);
-                        }
-                    });
-                });
-                setTimeout(() => observer.observe(ele), 1000)
+        if ("observerClick" in siteData) {
+            const observerClick = siteData.observerClick;
+            let selectors;
+            if (isString(observerClick)) {
+                selectors = [observerClick];
+            } else {
+                selectors = observerClick;
             }
+            fun.wait(() => selectors.some(selector => !!fun.ge(selector)), null, null, 30).then(() => {
+                selectors.forEach((selector, i) => {
+                    setTimeout(() => {
+                        let ele = fun.ge(selector);
+                        if (ele) {
+                            const observer = new IntersectionObserver((entries, observer) => {
+                                entries.forEach(entry => {
+                                    if (entry.isIntersecting) {
+                                        observer.unobserve(entry.target);
+                                        elementClick(entry.target);
+                                        debug(`\n圖片全載observerClick("${selector}")\n`, entry.target);
+                                        setTimeout(async () => {
+                                            if (await fun.waitEle(selector, 30)) {
+                                                observer.observe(fun.ge(selector));
+                                            }
+                                        }, 1000);
+                                    }
+                                });
+                            });
+                            observer.observe(ele);
+                        }
+                    }, (i + 1) * 200);
+                });
+            });
         }
         if ("loadMore" in siteData && isString(siteData.loadMore)) {
             const selector = siteData.loadMore;
