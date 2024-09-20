@@ -168,6 +168,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
     autoClick: ["元素", 1000], //元素,延遲毫秒時間(預設1000)
     observerClick: "元素", //使用Intersection Observer API，元素進入可視範圍內才點擊
+    observerClick: ["元素A", "元素B"],
     loadMore: "元素", //監聽scroll事件，滾至頁面底部時點擊元素，能簡單做到自動載入更多
     openInNewTab: ".manga-cover>a:not([target=_blank])", //指定的A元素在新分頁開啟
     topButton: true, //添加返回頂部按鈕
@@ -246,6 +247,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     autoClick: "",
     autoClick: ["", time],
     observerClick: "",
+    observerClick: [""],
     loadMore: "",
     openInNewTab: "",
     topButton: true,
@@ -462,9 +464,10 @@ fun.gt(String, Number, HTMLDocument or HTMLElement);
 <pre>
 //取得元素的字串
 //選擇器為陣列時，依序判斷元素是否存在與字串數是否大於0。
+//例如要拿h1,h2的字串，h1元素在前是英文，h2元素在後是中文，想要先拿中文就寫成["h2", "h1"]。
 fun.getText("selector");
 fun.getText("selector", doc = document);
-fun.getText(String or Array, Number, HTMLDocument or HTMLElement);
+fun.getText(String or Array, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //刪除指定字串返回字串
@@ -599,13 +602,13 @@ await fun.waitVar("declares", max = 200);
 fun.waitVar(String, Number);
 </pre>
 <pre>
-//等待函式寫法，最大循環300次100ms，30秒。
+//等待函式寫法，預設最大循環300次100ms，30秒。
 //callback返回真假值或物件，undefined、null、NaN識別為false。
 let callback = (dom, win) => {
     return dom.querySelector("img") && ("jQuery" in win);
 };
-await fun.wait(callback, dom = document, win = window);
-fun.wait(Function or AsyncFunction, HTMLDocument, Window);
+await fun.wait(callback, dom = document, win = window, num = 300);
+fun.wait(Function or AsyncFunction, HTMLDocument or null, Window or null, Number);
 </pre>
 <pre>
 //功能基本等同eval()
@@ -3222,19 +3225,13 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://photobook.club/">Photobook.club</a>
+                    <a href="https://danryoku.com/">Danryoku</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
                     <a href="https://niwatori.my.id/2023/">niwatori.my.id</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://xasia.pics/">xasia</a>
                 </td>
                 <td></td>
             </tr>
@@ -3900,7 +3897,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.6evu.com/">遛无写真</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式33個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式29個</a>
                 </td>
             </tr>
             <tr>
@@ -4030,7 +4027,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.crtys.net/">人体艺术</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">同系列網站10個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">同系列網站8個</a>
                 </td>
             </tr>
             <tr>
