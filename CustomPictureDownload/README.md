@@ -1423,7 +1423,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://buondua.com/">Buon Dua</a>
                 </td>
                 <td>
-                    <a href="https://buondua.us/">buondua.us</a>
+                    <a href="https://buondua.us/">buondua.us</a>，<a href="https://missbaby.top/">MISS BABY</a>
                 </td>
             </tr>
             <tr>
@@ -1820,7 +1820,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="http://www.m2ph.xyz/">美图坊</a>
                 </td>
-                <td>需註冊登錄，並至少點開過一部寫真後，刷新頁面才能正常使用。</td>
+                <td>Mobile限定，需註冊登錄，並至少點開過一部寫真後，刷新頁面才能正常使用。</td>
             </tr>
             <tr>
                 <td>
@@ -2302,6 +2302,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.twoimg.com/people">TWOIMG</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://xiuren.biz/">Xiuren</a>
                 </td>
                 <td></td>
@@ -2311,6 +2317,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://asigirl.com/">Asigirl.com</a>
                 </td>
                 <td>分類頁添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosymodel.com/">Cosymodel</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2773,7 +2785,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://cyberdrop.me/">CyberDrop</a>
                 </td>
-                <td>手動插入圖片，需要知道檔案鏈結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
+                <td>手動插入圖片，需要知道檔案鏈結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，<a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
             </tr>
             <tr>
                 <td>
@@ -2787,7 +2799,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://vk.com/">VK</a>
                 </td>
-                <td>作用在相簿頁，只支持PC版，例如：https://vk.com/album-213073007_283330987</td>
+                <td>作用在相簿頁，只支持PC版，例如：<a href="https://vk.com/album-213073007_283330987">https://vk.com/album-213073007_283330987</a>，<a href="https://vk.com/album-200938487_302684407">https://vk.com/album-200938487_302684407</a></td>
             </tr>
             <tr>
                 <td>
@@ -3226,6 +3238,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://danryoku.com/">Danryoku</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://minisuka.top/">MINISUKA</a>
                 </td>
                 <td></td>
             </tr>
@@ -5234,6 +5252,14 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.relamanhua.org/">熱辣漫畫</a>
+                </td>
+                <td>
+                    <a href="https://www.2024manga.com/">www.2024manga.com</a>，付費漫畫依然需要有付費帳號登入後才能看全部，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.manhuagui.com/">Manhuagui看漫画</a>
                 </td>
                 <td>
@@ -5516,7 +5542,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://m.happymh.com/">嗨皮漫畫</a>
                 </td>
-                <td>圖片手動插入、閱讀、展開目錄、自動點擊載入、漫畫鏈接新分頁打開，預設關閉</td>
+                <td>圖片手動插入、閱讀、展開目錄、漫畫鏈接新分頁打開，預設關閉，需要無限滾動閱讀的話移步專用腳本<a href="https://greasyfork.org/scripts/459843">https://greasyfork.org/scripts/459843</a></td>
             </tr>
             <tr>
                 <td>
