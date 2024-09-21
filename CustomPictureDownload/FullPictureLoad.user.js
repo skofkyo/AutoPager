@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.28
+// @version            2.7.29
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1839,6 +1839,24 @@ a:has(>div>div>img),
         }),
         category: "nsfw1"
     }, {
+        name: "TWOIMG",
+        link: "https://www.twoimg.com/people",
+        reg: () => fun.checkUrl({
+            h: "www.twoimg.com",
+            p: /^\/\d+\.html$/
+        }),
+        imgs: ".gallery a",
+        thums: ".gallery img",
+        button: [4],
+        insertImg: [
+            [".article-content", 0, ".gallery"], 2
+        ],
+        autoDownload: [0],
+        next: ".article-nav-prev a",
+        prev: ".article-nav-next a",
+        customTitle: ".article-title",
+        category: "nsfw1"
+    }, {
         name: "mn52图库",
         host: ["www.mn52.com", "wap.mn52.com"],
         link: "https://www.mn52.com/xingganmeinv/",
@@ -3019,12 +3037,15 @@ a:has(>div>div>img),
         name: "美图坊",
         host: ["m2ph.xyz", "www.m2ph.xyz"],
         reg: () => {
-            try {
-                let checkHost = fun.lh.includes("m2ph.xyz");
-                let checkLocalStorage = ["flutter.password", "flutter.account", "flutter.HistoryImage"].every(k => k in localStorage);
-                let checkHistory = JSON.parse(JSON.parse(localStorage["flutter.HistoryImage"]))?.length > 0;
-                return checkHost && checkLocalStorage && checkHistory;
-            } catch {
+            if (fun.lh.includes("m2ph.xyz")) {
+                try {
+                    let checkLocalStorage = ["flutter.password", "flutter.account", "flutter.HistoryImage"].every(k => k in localStorage);
+                    let checkHistory = JSON.parse(JSON.parse(localStorage["flutter.HistoryImage"]))?.length > 0;
+                    return checkLocalStorage && checkHistory && hasTouchEvents;
+                } catch {
+                    return false;
+                }
+            } else {
                 return false;
             }
         },
@@ -3207,12 +3228,10 @@ a:has(>div>div>img),
                 "www.4tck.com",
                 "www.54k5.com",
                 "www.5pwc.com",
-                "www.5tck.com",
                 "www.6evu.com",
                 "www.6kpo.com",
                 "www.6tck.com",
                 "www.6vtr.com",
-                "www.7c0a.com",
                 "www.7k1a.com",
                 "www.7tck.com",
                 "www.7u8t.com",
@@ -3221,14 +3240,11 @@ a:has(>div>div>img),
                 "www.df10.net",
                 "www.eshh.net",
                 "www.game1313.net",
-                "www.gr2e.com",
-                "www.joerei.com",
                 "www.te2zn.com",
                 "www.tmm123.vip",
                 "www.wangblog.net",
                 "www.wjstbs.net",
                 "www.wsqap.com",
-                "www.wushengguang.biz",
                 "www.zhaixiaonan.com"
             ],
             p: /^\/\d+\.html$/,
@@ -5993,6 +6009,20 @@ a:has(>div>div>img),
         customTitle: "h1",
         category: "nsfw2"
     }, {
+        name: "Cosymodel",
+        reg: () => fun.checkUrl({
+            h: "cosymodel.com",
+            p: /^\/[^\/]+\/$/
+        }),
+        imgs: ".tdb_single_content .tdb-block-inner img",
+        button: [4],
+        insertImg: [".tdb_single_content .tdb-block-inner", 2],
+        autoDownload: [0],
+        next: ".tdb-post-prev a",
+        prev: ".tdb-post-next a",
+        customTitle: ".tdb-title-text",
+        category: "nsfw1"
+    }, {
         name: "Xiuren",
         host: ["xiuren.biz"],
         reg: /^https?:\/\/xiuren\.biz\/[^\/]+\/$/,
@@ -6083,13 +6113,19 @@ a:has(>div>div>img),
         customTitle: "h1.elementor-heading-title",
         category: "nsfw1"
     }, {
-        name: "Buon Dua",
-        host: ["buondua.com", "buondua.us"],
+        name: "Buon Dua/MISS BABY",
+        reg: () => fun.checkUrl({
+            h: [
+                "buondua.com",
+                "buondua.us",
+                "missbaby.top"
+            ],
+            e: ".article-fulltext img[alt]"
+        }),
         init: () => {
             fun.remove("//div[text()='Sponsored ads']");
             fun.remove(".search-form~*");
         },
-        reg: /^https?:\/\/buondua\.(com|us)\/(?!hot|tag|collection)[^\?]+$/,
         imgs: () => fun.getImg(".article-fulltext img[alt]", fun.gt(".pagination-list>span:last-child>a").match(/\d+/)[0]),
         button: [4],
         insertImg: [".article-fulltext", 2],
@@ -7511,6 +7547,17 @@ a:has(>div>div>img),
         customTitle: "h1.gb-headline",
         category: "nsfw1"
     }, {
+        name: "MINISUKA",
+        host: ["minisuka.top"],
+        reg: /^https?:\/\/minisuka\.top\/\d+\/\d+\/\d+\/[^\/]+\/$/,
+        imgs: ".wp-block-gallery img",
+        button: [4],
+        insertImg: [
+            [".entry-content", 0, ".wp-block-gallery"], 2
+        ],
+        customTitle: ".entry-title",
+        category: "nsfw2"
+    }, {
         name: "eyval.net",
         host: ["www.eyval.net"],
         reg: /^https?:\/\/www\.eyval\.net\/\d+\/\d+\/[\w-]+\.html/,
@@ -8519,7 +8566,8 @@ a:has(>div>div>img),
                 }).then(res => res.json()).then(json => {
                     let isV = /^video/.test(json.type);
                     let isI = /^image/.test(json.type);
-                    if (isV || isI) {
+                    let isO = json.type === "application/octet-stream";
+                    if (isV || isI || isO) {
                         return fetch(json.auth_url, {
                             "headers": {
                                 "accept": "application/json, text/plain, */*",
@@ -10324,29 +10372,31 @@ a:has(>div>div>img),
         reg: () => fun.checkUrl({
             p: /^\/[^/]+\/\w+/,
             e: [
-                ".separator>a",
+                ".separator>a[href]",
                 ".album-post-body .clear,.album-post-share-wrap",
                 ".nav-links"
             ]
         }),
-        imgs: () => fun.getImg(".separator>a", (fun.gt(".nav-links>*:last-child", 2) || 1), 16),
+        imgs: () => fun.getImg(".separator>a[href]", (fun.gt(".nav-links>*:last-child", 2) || 1), 16),
         button: [4],
         insertImg: [
             [".album-post-body .clear,.album-post-share-wrap", 1, "div[itemprop='description articleBody'],.album-post-body>*:not(.album-post-inner):not(.album-post-share-wrap):not(#FullPictureLoadOptionsButtonParentDiv,.FullPictureLoadImage,a[data-fancybox]):not(#FullPictureLoadEnd)"], 2
         ],
         customTitle: ".breadcrumbs>span:last-child",
+        css: "#openRss{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 一",
         reg: () => fun.checkUrl({
             e: ".album-post-inner,.album-postmeta-primarypix"
         }),
-        imgs: ".separator>a",
+        imgs: ".separator>a[href]",
         button: [4],
         insertImg: [
             [".album-post-inner,.album-postmeta-primarypix", 2, ".separator"], 2
         ],
         customTitle: ".breadcrumbs>span:last-child",
+        css: "#openRss{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 二 分頁",
@@ -10366,7 +10416,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".hero+.hero,.entry-content,.d-flex>.col-24,.album-post", 2],
         customTitle: () => fun.gt(".entry-title,.album-title,.album-post-title,.col-12>h1,.album-h1").split(" No.")[0].trim(),
-        css: ".flex-grid:not(.masonry){display:block!important;}",
+        css: ".flex-grid:not(.masonry){display:block!important;}#openRss,div.loading[style]{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 二",
@@ -10381,6 +10431,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".hero+.hero,.entry-content,.d-flex>.col-24,.album-post,.album-h1", 2],
         customTitle: () => fun.title(/\s-\s[\w\.]+$/i).replace(/\s?\(\d+\s?photos\)/, "").trim(),
+        css: "#openRss,div.loading[style]{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "壹纳网",
@@ -11086,6 +11137,202 @@ a:has(>div>div>img),
         customTitle: ".entry-title",
         css: ".blox.mlb.kln{display:none!important;}",
         category: "hcomic"
+    }, {
+        name: "熱辣漫畫",
+        reg: () => fun.checkUrl({
+            h: [
+                /^(www\.)?relamanhua\.org$/,
+                "www.2024manga.com"
+            ],
+            e: [
+                ".disData[contentKey]",
+                ".comicContent-list"
+            ]
+        }) && comicInfiniteScrollMode != 1,
+        init: async () => {
+            await fun.waitVar("webpackJsonp");
+            fun.createImgBox(".comicContent-list", 1);
+        },
+        imgs: () => {
+            let contentKey = fun.attr(".disData", "contentKey");
+            return fun.cm_decrypt(contentKey).map(e => e.url);
+        },
+        button: [4, "24%", 2],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".comicContent-list"], 2
+        ],
+        next: "//a[text()='下一話'][starts-with(@href,'/')]",
+        prev: "//a[text()='上一話'][starts-with(@href,'/')]",
+        customTitle: () => fun.dt({
+            d: / - 熱辣漫畫.+$/
+        }),
+        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        infiniteScroll: true,
+        category: "comic"
+    }, {
+        name: "熱辣漫畫 自動翻頁",
+        reg: () => fun.checkUrl({
+            h: [
+                /^(www\.)?relamanhua\.org$/,
+                "www.2024manga.com"
+            ],
+            e: [
+                ".disData[contentKey]",
+                ".comicContent-list"
+            ]
+        }) && comicInfiniteScrollMode == 1,
+        getSrcs: (dom) => {
+            let contentKey = fun.attr(".disData", "contentKey", dom);
+            let srcs = fun.cm_decrypt(contentKey).map(e => e.url);
+            return srcs;
+        },
+        getImgs: (dom = document) => {
+            let srcs = _this.getSrcs(dom);
+            return fun.createImgArray(srcs);
+        },
+        init: async () => {
+            await fun.waitVar("webpackJsonp");
+            let tE = fun.createImgBox(".comicContent-list", 1);
+            let imgs = _this.getImgs();
+            tE.innerHTML = "";
+            tE.append(...imgs);
+            fun.remove(".comicContent-list");
+            await fun.lazyload();
+        },
+        autoPager: {
+            ele: (dom) => _this.getImgs(dom),
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            observer: "#FullPictureLoadMainImgBox>img",
+            next: "//a[text()='下一話'][starts-with(@href,'/')]",
+            title: (dom) => dom.title.replace(/ - 熱辣漫畫.+$/, ""),
+            re: ".header,.footer",
+            preloadNextPage: 1
+        },
+        category: "comic autoPager"
+    }, {
+        name: "熱辣漫畫M",
+        reg: () => fun.checkUrl({
+            h: [
+                "m.relamanhua.org",
+                "m.2024manga.com"
+            ],
+            p: "/v2h5/comicContent/"
+        }) && comicInfiniteScrollMode != 1,
+        xhrJson: (url = siteUrl) => {
+            let split = url.split("/");
+            let word = split.at(-2);
+            let id = split.at(-1);
+            let api = `https://mapi.fgjfghkk.club/api/v3/comic/${word}/chapter/${id}?platform=1&_update=true`;
+            return fetch(api).then(res => res.json());
+        },
+        init: async () => {
+            fun.clearAllTimer(3);
+            if ("aboutBlank" in _unsafeWindow) _unsafeWindow.aboutBlank = null;
+            siteJson = await _this.xhrJson();
+            debug("\n此頁JSON資料\n", siteJson);
+            let word = siteUrl.split("/").at(-2);
+            let url = `/v2h5/details/comic/${word}`;
+            let hUrl = "/v2h5/index";
+            const addHtml = (url, text) => {
+                let str = `<div style="padding: 10px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
+                fun.ge("#comicContentMain").insertAdjacentHTML("afterend", str);
+            };
+            addHtml(hUrl, "首頁");
+            addHtml(url, "目錄");
+            let nUrl = _this.next();
+            if (nUrl) addHtml(nUrl, "點選進入下一話");
+        },
+        imgs: (json = siteJson) => json.results.chapter.contents.map(e => e.url),
+        button: [4],
+        insertImg: ["#comicContentMain", 2],
+        next: () => {
+            let next = siteJson.results.chapter.next;
+            return next ? siteUrl.replace(/[\w-]+$/, "") + next : null;
+        },
+        customTitle: () => siteJson.results.comic.name + " - " + siteJson.results.chapter.name,
+        preloadNext: (nextDoc, obj) => {
+            obj.xhrJson(nextLink).then(json => {
+                let srcs = obj.imgs(json);
+                let title = json.results.comic.name + " - " + json.results.chapter.name;
+                fun.picPreload(srcs, title, "next");
+            });
+        },
+        fancybox: {
+            blacklist: 1
+        },
+        infiniteScroll: true,
+        css: ".comicFixed{display:none!important}.comicContentPopup #comicContentMain{position:unset!important}",
+        category: "comic"
+    }, {
+        name: "熱辣漫畫M 自動翻頁",
+        reg: () => fun.checkUrl({
+            h: [
+                "m.relamanhua.org",
+                "m.2024manga.com"
+            ],
+            p: "/v2h5/comicContent/"
+        }) && comicInfiniteScrollMode == 1,
+        getData: () => {
+            let split = document.URL.split("/");
+            let word = split.at(-2);
+            let id = split.at(-1);
+            let api = `https://mapi.fgjfghkk.club/api/v3/comic/${word}/chapter/${id}?platform=1&_update=true`;
+            return fetch(api).then(res => res.json()).then(json => {
+                globalImgArray = json.results.chapter.contents.map(e => e.url);
+                customTitle = json.results.chapter.name;
+                let next = json.results.chapter?.next;
+                console.log("\n熱辣漫畫M_JSON\n", json, globalImgArray, customTitle, next);
+                if (!!next) {
+                    tempNextLink = document.URL.replace(/[^\/]+$/, "") + next;
+                } else {
+                    tempNextLink = null;
+                }
+            });
+        },
+        init: async () => {
+            fun.showMsg(displayLanguage.str_135, 0);
+            await _this.getData();
+            let imgs = fun.createImgArray(globalImgArray);
+            let tE = fun.ge("#comicContentMain");
+            tE.innerHTML = "";
+            tE.append(...imgs);
+            await fun.lazyload();
+            fun.clearAllTimer(3);
+            if ("aboutBlank" in _unsafeWindow) _unsafeWindow.aboutBlank = null;
+            fun.hideMsg();
+            let word = siteUrl.split("/").at(-2);
+            let url = `/v2h5/details/comic/${word}`;
+            let hUrl = "/v2h5/index";
+            const addHtml = (url, text) => {
+                let str = `<div style="padding: 10px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
+                fun.ge("#comicContentMain").insertAdjacentHTML("afterend", str);
+            };
+            addHtml(hUrl, "首頁");
+            addHtml(url, "目錄");
+        },
+        autoPager: {
+            ele: () => fun.createImgArray(globalImgArray),
+            pos: ["#comicContentMain", 0],
+            observer: "#comicContentMain>img",
+            next: () => tempNextLink,
+            wait: async () => await _this.getData(),
+            title: () => customTitle
+        },
+        css: ".comicFixed{display:none!important}.comicContentPopup #comicContentMain{position:unset!important}",
+        category: "comic autoPager"
+    }, {
+        name: "熱辣漫畫 清除不給開啟開發人員工具",
+        reg: () => fun.checkUrl({
+            h: [
+                /^(www\.|m.)?relamanhua\.org$/,
+                /^(www\.|m.)?2024manga.com$/
+            ],
+        }),
+        init: () => {
+            if ("aboutBlank" in _unsafeWindow) _unsafeWindow.aboutBlank = null;
+            setTimeout(() => fun.clearAllTimer(3), 1000);
+        },
+        category: "ad"
     }, {
         name: "禁漫天堂",
         reg: () => fun.checkUrl({
@@ -24274,6 +24521,42 @@ if ("unescape" in window) {
                 let x = eleM.parentNode.lastElementChild.previousElementSibling;
                 insertBefore(x, eleM.cloneNode(true));
             }
+        },
+        cm_decrypt: (raw) => {
+            function initCypto() {
+                const c = [];
+                function r(i) {
+                    if (c[i]) return c[i].exports;
+                    c[i] = {
+                        i,
+                        l: false,
+                        exports: {}
+                    };
+                    const e = c[i];
+                    const wj = _unsafeWindow.webpackJsonp;
+                    wj[0][1][i].call(e.exports, e, e.exports, r);
+                    e.l = true;
+                    return e.exports;
+                }
+                return r(6);
+            }
+            const decrypt = (raw) => {
+                const dio = "xxxmanga.woo.key";
+                const cypto = initCypto();
+                const str = raw;
+                const header = str.substring(0, 16);
+                const body = str.substring(16, str.length);
+                const dioEn = cypto.enc.Utf8.parse(dio);
+                const headerEn = cypto.enc.Utf8.parse(header);
+                const bHex = cypto.enc.Hex.parse(body);
+                const b64 = cypto.enc.Base64.stringify(bHex);
+                return cypto.AES.decrypt(b64, dioEn, {
+                    iv: headerEn,
+                    mode: cypto.mode.CBC,
+                    padding: cypto.pad.Pkcs7
+                }).toString(cypto.enc.Utf8).toString();
+            };
+            return JSON.parse(decrypt(raw));
         }
     };
 
