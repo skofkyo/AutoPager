@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.7.30
+// @version            2.8.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -72,7 +72,8 @@
         zoom: 0, //1 ~ 10 腳本插入的圖片縮放比例，10 = 100%，9 = 90%，0 = auto
         column: 4, //圖片並排顯示的數量 2 ~ 6
         viewMode: 0, //0：置中、1：並排
-        fancybox: 1 //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
+        fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
+        shadowGallery: 0 //影子畫廊，1：開啟、0：關閉
     };
     let options = defaultOptions;
 
@@ -15457,6 +15458,29 @@ a:has(>div>div>img),
                 return data.map(e => baseUrl + "/data/" + hash + "/" + e);
             });
         },
+        next: async () => {
+            if (new URL(document.URL).pathname.startsWith("/chapter/")) {
+                await fun.waitEle("#chapter-selector li[data-value]");
+                let id = location.pathname.split("/").at(-1);
+                let chapters = [...document.querySelectorAll("#chapter-selector li[data-value]")];
+                let nextUrl = null;
+                chapters.some((e, i, a) => {
+                    if (e.dataset.value == id) {
+                        if (a[i - 1] === undefined) {
+                            nextUrl = null;
+                        } else {
+                            nextUrl = "https://mangadex.org/chapter/" + a[i - 1].dataset.value;
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                return nextUrl;
+            } else {
+                return null;
+            }
+        },
         customTitle: async () => {
             await fun.wait((d) => d.title != "" && !d.title.includes("Loading"));
             let text = fun.dt({
@@ -15500,6 +15524,30 @@ a:has(>div>div>img),
                 }
                 return data.map(e => baseUrl + "/chapter/" + chapter_id + "/" + hash + `/${quality}/` + e.filename);
             });
+        },
+        next: async () => {
+            if (new URL(document.URL).pathname.includes("/chapter/")) {
+                let id = location.pathname.split("/").at(-1);
+                await fun.waitEle(`select.relative option[value=${id}]`);
+                let chapters = [...document.querySelectorAll("select.relative option")];
+                let nextUrl = null;
+                chapters.some((e, i, a) => {
+                    if (e.value == id) {
+                        if (a[i - 1] === undefined) {
+                            nextUrl = null;
+                        } else {
+                            nextUrl = "https://namicomi.com/en/chapter/" + a[i - 1].value;
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                return nextUrl;
+            } else {
+                return null;
+            }
+
         },
         customTitle: async () => {
             let text = fun.dt({
@@ -20993,7 +21041,19 @@ if ("unescape" in window) {
                 str_136: "右鍵：增加圖片縮放級別(+)",
                 str_137: "頁面圖片添加燈箱模式",
                 str_138: "此網站禁用",
-                str_139: "啟用自動聚圖"
+                str_139: "啟用自動聚圖",
+                str_140: "啟用影子畫廊",
+                str_141: "影子畫廊",
+                str_142: "離開畫廊",
+                str_143: "下一話",
+                str_144: "下一篇",
+                galleryMenu: {
+                    webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4)",
+                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
+                    small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2)",
+                    single: hasTouchEvents ? "單圖像模式" : "單圖像模式 (1)",
+                    default: hasTouchEvents ? "預設模式" : "預設模式 (0)",
+                }
             };
             break;
         case "zh":
@@ -21144,7 +21204,19 @@ if ("unescape" in window) {
                 str_136: "右键：增加图片缩放级别(+)",
                 str_137: "页面图片添加灯箱模式",
                 str_138: "此网站禁用",
-                str_139: "启用自动聚图"
+                str_139: "启用自动聚图",
+                str_140: "启用影子画廊",
+                str_141: "影子画廊",
+                str_142: "离开画廊",
+                str_143: "下一话",
+                str_144: "下一篇",
+                galleryMenu: {
+                    webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4)",
+                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
+                    small: hasTouchEvents ? "小图像模式" : "小图像模式 (2)",
+                    single: hasTouchEvents ? "单图像模式" : "单图像模式 (1)",
+                    default: hasTouchEvents ? "默认模式" : "默认模式 (0)",
+                }
             };
             break;
         default:
@@ -21293,7 +21365,19 @@ if ("unescape" in window) {
                 str_136: "Right Click：Increase Image Zzoom Level(+)",
                 str_137: "Add Fancybox To Image",
                 str_138: "This Website Is Disabled",
-                str_139: "Auto Insert Images"
+                str_139: "Auto Insert Images",
+                str_140: "Enable Shadow Gallery",
+                str_141: "Shadow Gallery",
+                str_142: "Close gallery",
+                str_143: "Next Chapter",
+                str_144: "Next Post",
+                galleryMenu: {
+                    webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
+                    rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
+                    small: hasTouchEvents ? "Small Image" : "Small Image (2)",
+                    single: hasTouchEvents ? "Single Image" : "Single Image (1)",
+                    default: hasTouchEvents ? "Default" : "Default (0)",
+                }
             };
             break;
     }
@@ -23065,19 +23149,12 @@ if ("unescape" in window) {
                         toggleFavor();
                     }
                 }, {
-                    id: "FullPictureLoadCopyURLBtn",
+                    id: "FullPictureLoadShadowGalleryBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: displayLanguage.str_105,
-                    title: displayLanguage.str_127,
+                    text: displayLanguage.str_141,
                     cfn: event => {
                         event.preventDefault();
-                        copyImgSrcTextB();
-                    },
-                    mfn: event => {
-                        if (event.button == 2) {
-                            event.preventDefault();
-                            exportImgSrcText();
-                        }
+                        createShadowGallery();
                     }
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
@@ -25495,7 +25572,7 @@ if ("unescape" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (ge("#FullPictureLoadOptions:not([style])")) return;
+                    if (ge("#FullPictureLoadOptions:not([style])") || ge("#minShadowGallery")) return;
                     if (event.code === "ArrowUp") {
                         if (ge(".fancybox-container,.fancybox__container")) return;
                         event.preventDefault();
@@ -25625,47 +25702,14 @@ if ("unescape" in window) {
     </body>
 </html>
             `);
-            let menuLanguage;
-            switch (language) {
-                case "zh-TW":
-                case "zh-HK":
-                case "zh-Hant-TW":
-                case "zh-Hant-HK":
-                    menuLanguage = {
-                        webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4)",
-                        rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
-                        small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2)",
-                        single: hasTouchEvents ? "單圖像模式" : "單圖像模式 (1)",
-                        default: hasTouchEvents ? "預設模式" : "預設模式 (0)",
-                    };
-                    break;
-                case "zh":
-                case "zh-CN":
-                case "zh-Hans-CN":
-                    menuLanguage = {
-                        webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4)",
-                        rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
-                        small: hasTouchEvents ? "小图像模式" : "小图像模式 (2)",
-                        single: hasTouchEvents ? "单图像模式" : "单图像模式 (1)",
-                        default: hasTouchEvents ? "默认模式" : "默认模式 (0)",
-                    };
-                    break;
-                default:
-                    menuLanguage = {
-                        webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
-                        rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
-                        small: hasTouchEvents ? "Small Image" : "Small Image (2)",
-                        single: hasTouchEvents ? "Single Image" : "Single Image (1)",
-                        default: hasTouchEvents ? "Default" : "Default (0)",
-                    };
-            }
+
             newWindow.fun = fun;
             newWindow.hasTouchEvents = hasTouchEvents;
             newWindow.newWindowData = newWindowData;
             newWindow.imgViewIndex = -1;
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
-            newWindow.menuLanguage = menuLanguage;
+            newWindow.menuLanguage = displayLanguage.galleryMenu;
 
             const newWindowStyle = dom.createElement("style");
             newWindowStyle.id = "newWindowStyle";
@@ -26471,6 +26515,405 @@ if (newWindowData.ViewMode == 1) {
         }
     };
 
+    //創建影子畫廊
+    const createShadowGallery = async () => {
+
+        if (hasTouchEvents || ge("#minShadowGallery")) return;
+
+        let newWindowData = localStorage.getItem("newWindowData");
+        if (newWindowData) {
+            newWindowData = JSON.parse(newWindowData);
+        } else {
+            localStorage.setItem("newWindowData", '{"ViewMode":0}');
+            newWindowData = {
+                "ViewMode": 0
+            }
+        }
+
+        let imgViewIndex = -1;
+
+        const scrollIntoViewOptions = {
+            block: "center",
+            inline: "center"
+        };
+
+        const createStyle = css => {
+            const style = document.createElement("style");
+            style.type = "text/css";
+            style.innerHTML = css;
+            return style;
+        };
+
+        const mainHtml = '<div id="minShadowGallery" style="display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        document.body.insertAdjacentHTML("beforeend", mainHtml);
+
+        const minShadowGallery = ge("#minShadowGallery");
+        const shadow = minShadowGallery.attachShadow({
+            mode: "open"
+        });
+
+        const hideSelector = "body>*:not(#minShadowGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        gae(hideSelector).forEach(e => (e.style.display = "none"));
+
+        const closeGallery = () => {
+            window.removeEventListener("keydown", kEvent);
+            gae(hideSelector).forEach(e => (e.style.display = ""));
+            minShadowGallery.remove();
+        };
+
+        const kEvent = (event) => {
+            const imgs = [...shadow.querySelectorAll("img")];
+            if (event.code === "Escape" && !ge(".fancybox__container")) {
+                closeGallery();
+            }
+            if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
+            if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
+            if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
+            if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
+            if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
+
+            if (event.code === "KeyN") {
+                let next = shadow.querySelector("#next a");
+                if (next) {
+                    next.click();
+                }
+            }
+
+            if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+                event.preventDefault();
+                imgViewIndex--;
+                if (imgs[imgViewIndex] === undefined) {
+                    imgViewIndex = imgs.length - 1;
+                }
+                if (newWindowData.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
+                event.preventDefault();
+                imgViewIndex++;
+                let next = shadow.querySelector("#next");
+                if (imgs[imgViewIndex] === undefined && next) {
+                    next.scrollIntoView(scrollIntoViewOptions);
+                } else if (imgs[imgViewIndex] === undefined) {
+                    imgViewIndex = 0;
+                }
+                if (newWindowData.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+            } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
+                const hideE = [...shadow.querySelectorAll("img")][imgViewIndex];
+                hideE.style.display = "none";
+            } else if (event.code === "Enter" && newWindowData.ViewMode === 3) {
+                [...shadow.querySelectorAll("img")].forEach(e => (e.style.display = ""));
+            } else {
+                imgViewIndex = -1;
+            }
+        };
+        window.addEventListener("keydown", kEvent);
+
+        const style = createStyle(`
+#FixedMenu {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #000000;
+    width: 122px;
+    height: auto;
+    padding: 5px 5px 2px 5px;
+    position: fixed;
+    left: -128px;
+    bottom: 0px;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    background-color: #fff;
+    z-index: 2147483647;
+}
+#FixedMenu:hover {
+  left: 0px;
+}
+.FixedMenuitem {
+    width: 110px;
+    height: 24px;
+    line-height: 24px;
+    overflow: hidden;
+    font-size: 14px;
+    border: #ccc 1px solid;
+    background-color: #f6f6f6;
+    padding: 0 5px 0 5px;
+    margin: 0 2px 3px 0;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.FixedMenuitem.active {
+    color: #fff;
+    background: #1790E6;
+}
+img.default {
+    vertical-align: middle;
+    width: auto;
+    height: auto;
+    max-height: 100vh;
+    border: solid #fff;
+}
+img.single {
+    width: auto;
+    height: auto;
+    max-width: 99%;
+    max-height: 99vh;
+    display: block;
+    margin: 0 auto;
+    border: solid #fff;
+}
+img.webtoon {
+    width: 100%;
+    height: auto;
+    max-width: 800px;
+    display: block;
+    margin: 0 auto;
+    border: unset !important;
+}
+img.small {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    height: auto;
+    max-width: 31.8%;
+    max-height: 33vh;
+    border: solid #fff;
+}
+#next {
+    display: block;
+    padding: 10px 0;
+    text-align: center;
+    background-color: #F6F6F6;
+}
+#next a {
+    display: block;
+    color: rgb(0, 0, 0);
+    font-size: 26px;
+    line-height: 50px;
+    height: 50px;
+    text-align: center;
+    text-decoration: unset !important;
+}
+        `);
+        shadow.appendChild(style);
+
+        const mainElement = document.createElement("div");
+
+        Object.assign(mainElement.style, {
+            left: "0",
+            right: "0",
+            top: "0",
+            bottom: "0",
+            width: "100vw",
+            height: "100vh",
+            margin: "auto",
+            padding: "0",
+            position: "fixed",
+            opacity: "1",
+            zIndex: "2147483647",
+            backgroundColor: "#333",
+            color: "#222",
+            fontSize: "14px",
+            overflowY: "scroll",
+            textAlign: "center"
+        });
+        shadow.appendChild(mainElement);
+
+        let srcs;
+        if ("SPA" in siteData) {
+            let selector = siteData.capture ?? siteData.imgs;
+            srcs = await getImgs(selector);
+        } else {
+            captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
+        }
+
+        function loadImgs() {
+            const imgs = [...shadow.querySelectorAll("img")];
+            const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
+            const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
+            fun.singleThreadLoadImgs(oddNumberImgs);
+            fun.singleThreadLoadImgs(evenNumberImgs);
+        }
+
+        function createGalleryElement(mode) {
+            mainElement.scrollTo({
+                top: 0
+            });
+            imgViewIndex = -1;
+            if (newWindowData.ViewMode === 3) {
+                mainElement.style.direction = "rtl";
+            } else {
+                mainElement.style.direction = "";
+            }
+            [...shadow.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            mainElement.innerHTML = "";
+            const imgElements = srcs.map(src => {
+                let img = new Image();
+                img.className = mode;
+                img.src = loading_bak;
+                img.dataset.src = src;
+                img.dataset.fancybox = "gallery";
+                return img;
+            });
+            mainElement.append(...imgElements);
+            loadImgs();
+            setTimeout(() => {
+                [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
+            }, 1000);
+            if (!("fancybox" in siteData)) {
+                _unsafeWindow.Fancybox.bind(mainElement, "img", {
+                    idle: false,
+                    wheel: FancyboxWheelOptions === 0 ? "slide" : "zoom",
+                    Images: {
+                        Panzoom: {
+                            maxScale: 2
+                        }
+                    },
+                    Thumbs: {
+                        showOnStart: false
+                    },
+                    Toolbar: {
+                        display: {
+                            left: ["infobar"],
+                            middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                            right: ["slideshow", "fullscreen", "thumbs", "close"]
+                        }
+                    },
+                    on: {
+                        done: (fancybox, slide) => {
+                            let slideIndex = slide.index;
+                            let imgs = [...mainElement.querySelectorAll("img")];
+                            imgs.forEach(e => (e.style.border = ""));
+                            if (fancybox.isCurrentSlide(slide)) {
+                                imgViewIndex = slideIndex;
+                                imgs[slideIndex].style.border = "solid #32a1ce";
+                                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                            } else {
+                                imgViewIndex = fancybox.getSlide().index;
+                                imgs[slideIndex].style.border = "solid #32a1ce";
+                                imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                            }
+                        },
+                        close: fancybox => {
+                            document.body.classList.remove("hide-scrollbar");
+                            let slideIndex = fancybox.getSlide().index;
+                            imgViewIndex = slideIndex;
+                            let imgs = [...mainElement.querySelectorAll("img")];
+                            imgs.forEach(e => (e.style.border = ""));
+                            imgs[slideIndex].style.border = "solid #32a1ce";
+                            imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                        }
+                    }
+                });
+            }
+            if (nextLink) {
+                let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}</a></div>`;
+                mainElement.insertAdjacentHTML("beforeend", html);
+            }
+        }
+
+        function addFixedMenu() {
+            let menuDiv = document.createElement("div");
+            menuDiv.id = "FixedMenu";
+            const menuObj = [{
+                id: "MenuCancelItem",
+                text: displayLanguage.str_142,
+                cfn: () => closeGallery()
+            }, {
+                id: "MenuWebtoonItem",
+                text: displayLanguage.galleryMenu.webtoon,
+                cfn: () => webtoonImageLayout()
+            }, {
+                id: "MenuRTLItem",
+                text: displayLanguage.galleryMenu.rtl,
+                cfn: () => rtlImageLayout()
+            }, {
+                id: "MenuSmallItem",
+                text: displayLanguage.galleryMenu.small,
+                cfn: () => smallImageLayout()
+            }, {
+                id: "MenuSinglePageItem",
+                text: displayLanguage.galleryMenu.single,
+                cfn: () => singleImageLayout()
+            }, {
+                id: "MenuDefaultItem",
+                text: displayLanguage.galleryMenu.default,
+                cfn: () => defaultImageLayout()
+            }];
+            const createMenu = obj => {
+                let item = document.createElement("div");
+                item.id = obj.id;
+                item.className = "FixedMenuitem";
+                item.innerText = obj.text;
+                item.oncontextmenu = () => false;
+                if (!!obj.cfn) item.addEventListener("click", obj.cfn);
+                menuDiv.append(item);
+            };
+            menuObj.forEach(obj => createMenu(obj));
+            shadow.append(menuDiv);
+        }
+        addFixedMenu();
+
+        function defaultImageLayout() {
+            newWindowData.ViewMode = 0;
+            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            createGalleryElement("default");
+            shadow.querySelector("#MenuDefaultItem").classList.add("active");
+        }
+
+        function singleImageLayout() {
+            newWindowData.ViewMode = 1;
+            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            createGalleryElement("single");
+            shadow.querySelector("#MenuSinglePageItem").classList.add("active");
+        }
+
+        function smallImageLayout() {
+            newWindowData.ViewMode = 2;
+            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            createGalleryElement("small");
+            shadow.querySelector("#MenuSmallItem").classList.add("active");
+        }
+
+        function rtlImageLayout() {
+            newWindowData.ViewMode = 3;
+            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            createGalleryElement("default");
+            shadow.querySelector("#MenuRTLItem").classList.add("active");
+        }
+
+        function webtoonImageLayout() {
+            newWindowData.ViewMode = 4;
+            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            createGalleryElement("webtoon");
+            shadow.querySelector("#MenuWebtoonItem").classList.add("active");
+        }
+
+        if (newWindowData.ViewMode == 1) {
+            singleImageLayout();
+        } else if (newWindowData.ViewMode == 2) {
+            smallImageLayout();
+        } else if (newWindowData.ViewMode == 3) {
+            rtlImageLayout();
+        } else if (newWindowData.ViewMode == 4) {
+            webtoonImageLayout();
+        } else {
+            defaultImageLayout();
+        }
+
+    };
+
     //創建新分頁檢視眼睛圖示按鈕和圖片數量元素
     const addnewTabViewButton = () => {
         if (ge("#FullPictureLoadEye")) return;
@@ -26602,6 +27045,13 @@ if (newWindowData.ViewMode == 1) {
         menuDiv.id = "FullPictureLoadFixedMenu";
         menuDiv.style.width = "54px";
         const menuObj = [{
+            text: displayLanguage.str_141,
+            show: 0,
+            cfn: event => {
+                event.preventDefault();
+                createShadowGallery();
+            }
+        }, {
             name: "newTabView",
             text: displayLanguage.str_106,
             show: 0,
@@ -26842,6 +27292,10 @@ if (newWindowData.ViewMode == 1) {
     <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_103}</label>
 </div>
+<div style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_140}</label>
+</div>
 <button id="FullPictureLoadOptionsCancelBtn">${displayLanguage.str_82}</button>
 <button id="FullPictureLoadOptionsResetBtn">${displayLanguage.str_83}</button>
 <button id="FullPictureLoadOptionsSaveBtn">${displayLanguage.str_84}</button>
@@ -26879,6 +27333,7 @@ if (newWindowData.ViewMode == 1) {
                 options.zoom = ge("#FullPictureLoadOptionsZoom").value;
                 options.column = ge("#FullPictureLoadOptionsColumn").value;
                 options.viewMode = ge("#FullPictureLoadOptionsviewMode").checked == true ? 1 : 0;
+                options.shadowGallery = ge("#FullPictureLoadOptionsShadowGalleryMode").checked == true ? 1 : 0;
                 let jsonStr = JSON.stringify(options);
                 localStorage.setItem("FullPictureLoadOptions", jsonStr);
                 location.reload();
@@ -26936,6 +27391,7 @@ if (newWindowData.ViewMode == 1) {
         ge("#FullPictureLoadOptionsZoom").value = options.zoom;
         siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn").value = 2 : ge("#FullPictureLoadOptionsColumn").value = options.column;
         ge("#FullPictureLoadOptionsviewMode").checked = options.viewMode == 1 ? true : false;
+        ge("#FullPictureLoadOptionsShadowGalleryMode").checked = options.shadowGallery == 1 ? true : false;
         if (comicSwitch) {
             ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
         }
@@ -27107,7 +27563,7 @@ if (newWindowData.ViewMode == 1) {
     border-radius: unset !important;
     margin: unset !important;
     padding: unset !important;
-    z-index: 2147483647 !important;
+    z-index: 2147483640 !important;
     cursor: pointer !important;
     pointer-events: auto !important;
     background: unset !important;
@@ -27145,7 +27601,7 @@ if (newWindowData.ViewMode == 1) {
     background-color: #fff !important;
     box-sizing: unset !important;
     opacity: 0.4;
-    z-index: 2147483647 !important;
+    z-index: 2147483640 !important;
 }
 
 #FullPictureLoadFixedMenu > div, #FullPictureLoadFixedMenuB > div {
@@ -27699,6 +28155,7 @@ a[data-fancybox]:hover {
     };
 
     const addKeyEvent = async event => {
+        if (ge("#minShadowGallery")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
         if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
         if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptions:not([style])")) return;
@@ -28261,7 +28718,11 @@ a[data-fancybox]:hover {
                 if (insertMode == 1 && !autoStart || insertMode == 2 && !autoStart) {
                     FullPictureLoadAutoInsertImg = _GM_getValue("FullPictureLoadAutoInsertImg", 1);
                     if (FullPictureLoadAutoInsertImg == 1) {
-                        fun.immediateInsertImg();
+                        if (options.shadowGallery == 1) {
+                            await fun.immediateInsertImg();
+                        } else {
+                            fun.immediateInsertImg();
+                        }
                     }
                 }
             }
@@ -28274,6 +28735,11 @@ a[data-fancybox]:hover {
                     DownloadFn();
                 }
             }
+        }
+        if (options.shadowGallery == 1 && options.autoDownload != 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+            setTimeout(() => {
+                createShadowGallery();
+            }, 100);
         }
         if ("openInNewTab" in siteData && isString(siteData.openInNewTab)) {
             const openInNewTab = siteData.openInNewTab;
