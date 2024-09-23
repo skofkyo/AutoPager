@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.5.9
+// @version            2.5.10
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -264,7 +264,7 @@
                         img.alt = jsonData.data.chapter_name;
                         img.src = scan.url;
                         preloadDiv.append(img);
-                        await new Promise(resolve => setTimeout(resolve, 200));
+                        await delay(200);
                     }
                 } else if (jsonData.status == 403) {
                     console.log(text + "獲取數據失敗\n", jsonData);
@@ -275,169 +275,183 @@
         }).catch(error => console.error(error));
     };
 
-    const configCSS = `
-#happymhConfigElement {
-    text-align: center;
-    width: 300px;
-    height: auto;
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    margin-left: -150px;
-    border: 1px solid #a0a0a0;
-    border-radius: 3px;
-    box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
-    background-color: #FAFAFB;
-    z-index: 10000;
-}
-#happymhConfigElement div,
-#happymhConfigElement label,
-#happymhConfigElement button {
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    color: black;
-    float: none;
-    line-height: 18px;
-}
-#happymhConfigElement .title {
-    width: 100%;
-}
-#happymhConfigElement div.item {
-    width: 348px;
-    display: flex;
-}
-#happymhConfigElement label.select {
-    margin: 0 5px;
-}
-#happymhConfigElement div {
-    margin-bottom: 4px;
-    padding: 1px 4px;
-}
-#happymhConfigElement input[type=checkbox] {
-    width: 14px;
-    margin: 0 6px;
-}
-#happymhConfigElement button {
-    width: auto;
-    min-width: 80px;
-    max-width: 100px;
-    min-height: unset;
-    max-height: 24px;
-    margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 4px;
-    display: inline-block;
-    color: #000000;
-    border: 1px solid #a0a0a0;
-    background-color: transparent;
-    border-radius: unset;
-}
-`;
-    addGlobalStyle(configCSS);
-
     const createConfigElement = () => {
-        const main = document.createElement("div");
-        main.id = "happymhConfigElement";
-        const mainHtmlStr = `
-<div class="title" style="width: 100%;">
-    ${i18n.config.title}
-</div>
-<div class="item">
-    <input id="arrowKeyInput" type="checkbox">
-    <label>${i18n.config.arrowKey}</label>
-</div>
-<div class="item">
-    <input id="doubleClickInput" type="checkbox">
-    <label>${i18n.config.doubleClick}</label>
-</div>
-<div class="item">
-    <input id="autoNextInput" type="checkbox">
-    <label>${i18n.config.autoNext}</label>
-</div>
-<div class="item">
-    <label class="select">${i18n.config.autoNextSec}</label>
-    <select id="autoNextSec">
-        ${new Array(10).fill().map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
-    </select>
-</div>
-<div class="item">
-    <input id="autoShowAllInput" type="checkbox">
-    <label>${i18n.config.autoShowAll}</label>
-</div>
-<div class="item">
-    <input id="openInNewTabInput" type="checkbox">
-    <label>${i18n.config.openInNewTab}</label>
-</div>
-<div class="item">
-    <input id="autoReloadInput" type="checkbox">
-    <label>${i18n.config.autoReload}</label>
-</div>
-<div class="item">
-    <input id="preloadInput" type="checkbox">
-    <label>${i18n.config.preload}</label>
-</div>
-<div class="item">
-    <input id="removeAdInput" type="checkbox">
-    <label>${i18n.config.removeAd}</label>
-</div>
-<div class="item">
-    <input id="infiniteScrollInput" type="checkbox">
-    <label>${i18n.config.infiniteScroll}</label>
-</div>
-<div class="item">
-    <input id="highQualityInput" type="checkbox">
-    <label>${i18n.config.highQuality}</label>
-</div>
-<div class="item">
-    <input id="historyInput" type="checkbox">
-    <label>${i18n.config.history}</label>
-</div>
-<button id="cancelBtn">${i18n.config.cancel}</button>
-<button id="resetBtn">${i18n.config.reset}</button>
-<button id="saveBtn">${i18n.config.save}</button>
-`;
-        main.innerHTML = mainHtmlStr;
-        ge("#arrowKeyInput", main).checked = configs.arrowKey == 1 ? true : false;
-        ge("#doubleClickInput", main).checked = configs.doubleClick == 1 ? true : false;
-        ge("#preloadInput", main).checked = configs.preload == 1 ? true : false;
-        ge("#autoReloadInput", main).checked = configs.autoReload == 1 ? true : false;
-        ge("#autoNextInput", main).checked = configs.autoNext == 1 ? true : false;
-        ge("#autoNextSec", main).value = configs.autoNextSec;
-        ge("#autoShowAllInput", main).checked = configs.autoShowAll == 1 ? true : false;
-        ge("#openInNewTabInput", main).checked = configs.openInNewTab == 1 ? true : false;
-        ge("#removeAdInput", main).checked = configs.removeAd == 1 ? true : false;
-        ge("#infiniteScrollInput", main).checked = configs.infiniteScroll == 1 ? true : false;
-        ge("#highQualityInput", main).checked = configs.highQuality == 1 ? true : false;
-        ge("#historyInput", main).checked = configs.history == 1 ? true : false;
-        ge("#cancelBtn", main).addEventListener("click", event => {
-            event.preventDefault();
-            main.remove();
+
+        const mainElement = document.createElement("div");
+        mainElement.id = "mainHappymhConfigShadowElement";
+
+        const shadow = mainElement.attachShadow({
+            mode: "closed"
         });
-        ge("#resetBtn", main).addEventListener("click", event => {
+
+        shadow.innerHTML = `
+<style type="text/css">
+    #happymhConfigElement {
+        text-align: center;
+        width: 300px;
+        height: auto;
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        margin-left: -150px;
+        border: 1px solid #a0a0a0;
+        border-radius: 3px;
+        box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
+        background-color: #FAFAFB;
+        z-index: 10000;
+    }
+
+    #happymhConfigElement div,
+    #happymhConfigElement label,
+    #happymhConfigElement button {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        color: black;
+        float: none;
+        line-height: 18px;
+    }
+
+    #happymhConfigElement .title {
+        width: 100%;
+    }
+
+    #happymhConfigElement div.item {
+        width: 348px;
+        display: flex;
+    }
+
+    #happymhConfigElement label.select {
+        margin: 0 5px;
+    }
+
+    #happymhConfigElement div {
+        margin-bottom: 4px;
+        padding: 1px 4px;
+    }
+
+    #happymhConfigElement input[type=checkbox] {
+        width: 14px;
+        margin: 0 6px;
+    }
+
+    #happymhConfigElement button {
+        width: auto;
+        min-width: 80px;
+        max-width: 100px;
+        min-height: unset;
+        max-height: 24px;
+        margin-left: 2px;
+        margin-right: 2px;
+        margin-bottom: 4px;
+        display: inline-block;
+        color: #000000;
+        border: 1px solid #a0a0a0;
+        background-color: transparent;
+        border-radius: unset;
+    }
+</style>
+<div id="happymhConfigElement">
+    <div class="title" style="width: 100%;">
+        ${i18n.config.title}
+    </div>
+    <div class="item">
+        <input id="arrowKeyInput" type="checkbox">
+        <label>${i18n.config.arrowKey}</label>
+    </div>
+    <div class="item">
+        <input id="doubleClickInput" type="checkbox">
+        <label>${i18n.config.doubleClick}</label>
+    </div>
+    <div class="item">
+        <input id="autoNextInput" type="checkbox">
+        <label>${i18n.config.autoNext}</label>
+    </div>
+    <div class="item">
+        <label class="select">自動下一話延遲(秒)</label>
+        <select id="autoNextSec">
+            ${new Array(10).fill().map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
+        </select>
+    </div>
+    <div class="item">
+        <input id="autoShowAllInput" type="checkbox">
+        <label>${i18n.config.autoShowAll}</label>
+    </div>
+    <div class="item">
+        <input id="openInNewTabInput" type="checkbox">
+        <label>${i18n.config.openInNewTab}</label>
+    </div>
+    <div class="item">
+        <input id="autoReloadInput" type="checkbox">
+        <label>${i18n.config.autoReload}</label>
+    </div>
+    <div class="item">
+        <input id="preloadInput" type="checkbox">
+        <label>${i18n.config.preload}</label>
+    </div>
+    <div class="item">
+        <input id="removeAdInput" type="checkbox">
+        <label>${i18n.config.removeAd}</label>
+    </div>
+    <div class="item">
+        <input id="infiniteScrollInput" type="checkbox">
+        <label>${i18n.config.infiniteScroll}</label>
+    </div>
+    <div class="item">
+        <input id="highQualityInput" type="checkbox">
+        <label>${i18n.config.highQuality}</label>
+    </div>
+    <div class="item">
+        <input id="historyInput" type="checkbox">
+        <label>${i18n.config.history}</label>
+    </div>
+    <button id="cancelBtn">${i18n.config.cancel}</button>
+    <button id="resetBtn">${i18n.config.reset}</button>
+    <button id="saveBtn">${i18n.config.save}</button>
+</div>
+        `;
+
+        ge("#arrowKeyInput", shadow).checked = configs.arrowKey == 1 ? true : false;
+        ge("#doubleClickInput", shadow).checked = configs.doubleClick == 1 ? true : false;
+        ge("#preloadInput", shadow).checked = configs.preload == 1 ? true : false;
+        ge("#autoReloadInput", shadow).checked = configs.autoReload == 1 ? true : false;
+        ge("#autoNextInput", shadow).checked = configs.autoNext == 1 ? true : false;
+        ge("#autoNextSec", shadow).value = configs.autoNextSec;
+        ge("#autoShowAllInput", shadow).checked = configs.autoShowAll == 1 ? true : false;
+        ge("#openInNewTabInput", shadow).checked = configs.openInNewTab == 1 ? true : false;
+        ge("#removeAdInput", shadow).checked = configs.removeAd == 1 ? true : false;
+        ge("#infiniteScrollInput", shadow).checked = configs.infiniteScroll == 1 ? true : false;
+        ge("#highQualityInput", shadow).checked = configs.highQuality == 1 ? true : false;
+        ge("#historyInput", shadow).checked = configs.history == 1 ? true : false;
+        ge("#cancelBtn", shadow).addEventListener("click", event => {
             event.preventDefault();
-            main.remove();
+            mainElement.remove();
+        });
+        ge("#resetBtn", shadow).addEventListener("click", event => {
+            event.preventDefault();
+            mainElement.remove();
             GM_deleteValue("configs");
             _unsafeWindow.location.reload();
         });
-        ge("#saveBtn", main).addEventListener("click", event => {
+        ge("#saveBtn", shadow).addEventListener("click", event => {
             event.preventDefault();
-            configs.arrowKey = ge("#arrowKeyInput", main).checked == true ? 1 : 0;
-            configs.doubleClick = ge("#doubleClickInput", main).checked == true ? 1 : 0;
-            configs.preload = ge("#preloadInput", main).checked == true ? 1 : 0;
-            configs.autoReload = ge("#autoReloadInput", main).checked == true ? 1 : 0;
-            configs.autoNext = ge("#autoNextInput", main).checked == true ? 1 : 0;
-            configs.autoNextSec = ge("#autoNextSec", main).value;
-            configs.autoShowAll = ge("#autoShowAllInput", main).checked == true ? 1 : 0;
-            configs.openInNewTab = ge("#openInNewTabInput", main).checked == true ? 1 : 0;
-            configs.removeAd = ge("#removeAdInput", main).checked == true ? 1 : 0;
-            configs.infiniteScroll = ge("#infiniteScrollInput", main).checked == true ? 1 : 0;
-            configs.highQuality = ge("#highQualityInput", main).checked == true ? 1 : 0;
-            configs.history = ge("#historyInput", main).checked == true ? 1 : 0;
-            main.remove();
+            configs.arrowKey = ge("#arrowKeyInput", shadow).checked == true ? 1 : 0;
+            configs.doubleClick = ge("#doubleClickInput", shadow).checked == true ? 1 : 0;
+            configs.preload = ge("#preloadInput", shadow).checked == true ? 1 : 0;
+            configs.autoReload = ge("#autoReloadInput", shadow).checked == true ? 1 : 0;
+            configs.autoNext = ge("#autoNextInput", shadow).checked == true ? 1 : 0;
+            configs.autoNextSec = ge("#autoNextSec", shadow).value;
+            configs.autoShowAll = ge("#autoShowAllInput", shadow).checked == true ? 1 : 0;
+            configs.openInNewTab = ge("#openInNewTabInput", shadow).checked == true ? 1 : 0;
+            configs.removeAd = ge("#removeAdInput", shadow).checked == true ? 1 : 0;
+            configs.infiniteScroll = ge("#infiniteScrollInput", shadow).checked == true ? 1 : 0;
+            configs.highQuality = ge("#highQualityInput", shadow).checked == true ? 1 : 0;
+            configs.history = ge("#historyInput", shadow).checked == true ? 1 : 0;
+            mainElement.remove();
             GM_setValue("configs", configs);
             _unsafeWindow.location.reload();
         });
-        document.body.append(main);
+
+        document.body.append(mainElement);
     };
 
     GM_registerMenuCommand(i18n.commandMenu.settings, () => createConfigElement());
@@ -487,6 +501,7 @@
 
     if (configs.arrowKey == 1 && isReadPage) {
         document.addEventListener("keydown", event => {
+            if (ge("#mainHappymhConfigShadowElement")) return;
             if (event.code === "ArrowRight") {
                 const nextE = ge("//a[span[text()='下一话' or text()='下一話'] and starts-with(@href,'/reads/')]");
                 if (isString(nextChapterUrl)) {
@@ -512,6 +527,7 @@
 
     if (configs.doubleClick == 1 && isReadPage) {
         document.addEventListener("dblclick", () => {
+            if (ge("#mainHappymhConfigShadowElement")) return;
             const nextE = ge("footer a");
             _unsafeWindow.location.href = nextE.href;
         });
