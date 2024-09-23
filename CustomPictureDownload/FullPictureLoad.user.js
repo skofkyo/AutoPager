@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.0
+// @version            2.8.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -21043,8 +21043,8 @@ if ("unescape" in window) {
                 str_138: "此網站禁用",
                 str_139: "啟用自動聚圖",
                 str_140: "啟用影子畫廊",
-                str_141: "影子畫廊",
-                str_142: "離開畫廊",
+                str_141: hasTouchEvents ? "影子畫廊" : "影子畫廊(G)",
+                str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
                 str_144: "下一篇",
                 galleryMenu: {
@@ -21206,8 +21206,8 @@ if ("unescape" in window) {
                 str_138: "此网站禁用",
                 str_139: "启用自动聚图",
                 str_140: "启用影子画廊",
-                str_141: "影子画廊",
-                str_142: "离开画廊",
+                str_141: hasTouchEvents ? "影子画廊" : "影子画廊(G)",
+                str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
                 str_144: "下一篇",
                 galleryMenu: {
@@ -21368,7 +21368,8 @@ if ("unescape" in window) {
                 str_139: "Auto Insert Images",
                 str_140: "Enable Shadow Gallery",
                 str_141: "Shadow Gallery",
-                str_142: "Close gallery",
+                str_141: hasTouchEvents ? "Shadow Gallery" : "Shadow Gallery(G)",
+                str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
                 galleryMenu: {
@@ -23219,6 +23220,19 @@ if ("unescape" in window) {
                         cancelZoom();
                     }
                 }];
+
+                if (hasTouchEvents) {
+                    buttonObj[1] = {
+                        id: "FullPictureLoadCopyURLBtn",
+                        className: "FullPictureLoadPageButtonTop",
+                        text: displayLanguage.str_105,
+                        cfn: event => {
+                            event.preventDefault();
+                            copyImgSrcTextB();
+                        }
+                    };
+                }
+
                 const createButton = obj => {
                     let button = document.createElement("button");
                     button.id = obj.id;
@@ -23375,15 +23389,13 @@ if ("unescape" in window) {
                 if (TurnOffImageNavigationShortcutKeys != 1) {
                     let imgsNum = 0;
                     document.addEventListener("keydown", event => {
-                        if (fun.ge("#FullPictureLoadOptions:not([style])")) return;
+                        if (fun.ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
                         if (event.code === "ArrowUp") {
-                            if (fun.ge(".fancybox-container,.fancybox__container")) return;
                             if (imgsNum > 0 && viewMode == 0) {
                                 imgsNum -= 1;
                                 imgs[imgsNum].scrollIntoView();
                             }
                         } else if (event.code === "ArrowDown") {
-                            if (fun.ge(".fancybox-container,.fancybox__container")) return;
                             event.preventDefault();
                             if (imgsNum < imgs.length && viewMode == 0) {
                                 imgsNum += 1;
@@ -25572,16 +25584,14 @@ if ("unescape" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (ge("#FullPictureLoadOptions:not([style])") || ge("#minShadowGallery")) return;
+                    if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
                     if (event.code === "ArrowUp") {
-                        if (ge(".fancybox-container,.fancybox__container")) return;
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
                             imgsNum -= column;
                             imgDivs[imgsNum].scrollIntoView(scrollIntoViewOptions);
                         }
                     } else if (event.code === "ArrowDown") {
-                        if (ge(".fancybox-container,.fancybox__container")) return;
                         event.preventDefault();
                         if (imgsNum < imgDivs.length && imgsNum != imgDivs.length && viewMode == 1) {
                             imgsNum += column;
@@ -26180,6 +26190,7 @@ function createImgElement(mode) {
     loadImgs();
     aspectRatio();
     setTimeout(() => {
+        aspectRatio();
         [...document.images].forEach(img => fun.imagesObserver.observe(img));
     }, 1000);
 }
@@ -26445,6 +26456,7 @@ function createImgElement(mode) {
     loadImgs();
     aspectRatio();
     setTimeout(() => {
+        aspectRatio();
         [...document.images].forEach(img => fun.imagesObserver.observe(img));
     }, 1000);
 }
@@ -26518,7 +26530,11 @@ if (newWindowData.ViewMode == 1) {
     //創建影子畫廊
     const createShadowGallery = async () => {
 
-        if (hasTouchEvents || ge("#minShadowGallery")) return;
+        if (hasTouchEvents) return;
+
+        if (ge("#minShadowGallery")) {
+            ge("#minShadowGallery").remove();
+        }
 
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData) {
@@ -26544,7 +26560,7 @@ if (newWindowData.ViewMode == 1) {
             return style;
         };
 
-        const mainHtml = '<div id="minShadowGallery" style="display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        const mainHtml = '<div id="minShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
         const minShadowGallery = ge("#minShadowGallery");
@@ -26556,29 +26572,27 @@ if (newWindowData.ViewMode == 1) {
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const closeGallery = () => {
-            window.removeEventListener("keydown", kEvent);
+            _unsafeWindow.removeEventListener("keydown", kEvent);
             gae(hideSelector).forEach(e => (e.style.display = ""));
-            minShadowGallery.remove();
+            ge("#overflowYHidden")?.remove();
+            minShadowGallery?.remove();
         };
 
         const kEvent = (event) => {
+            if (ge(".fancybox__container")) return;
             const imgs = [...shadow.querySelectorAll("img")];
-            if (event.code === "Escape" && !ge(".fancybox__container")) {
-                closeGallery();
-            }
+            if (event.code === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
             if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
             if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
             if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
-
             if (event.code === "KeyN") {
                 let next = shadow.querySelector("#next a");
                 if (next) {
                     next.click();
                 }
             }
-
             if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
                 event.preventDefault();
                 imgViewIndex--;
@@ -26613,9 +26627,20 @@ if (newWindowData.ViewMode == 1) {
                 imgViewIndex = -1;
             }
         };
-        window.addEventListener("keydown", kEvent);
+        _unsafeWindow.addEventListener("keydown", kEvent);
+
+        fun.css(`
+html,body {
+    overflow-y: hidden !important;
+}
+        `, "overflowYHidden");
 
         const style = createStyle(`
+p {
+    display: block;
+    padding: 0;
+    margin: 0;
+}
 #FixedMenu {
     text-align: center;
     font-family: Arial, sans-serif;
@@ -26661,7 +26686,9 @@ img.default {
     vertical-align: middle;
     width: auto;
     height: auto;
+    min-height: 100vh;
     max-height: 100vh;
+    max-width: 99%;
     border: solid #fff;
 }
 img.single {
@@ -26709,6 +26736,7 @@ img.small {
         shadow.appendChild(style);
 
         const mainElement = document.createElement("div");
+        mainElement.id = "imgBox";
 
         Object.assign(mainElement.style, {
             left: "0",
@@ -26751,11 +26779,6 @@ img.small {
                 top: 0
             });
             imgViewIndex = -1;
-            if (newWindowData.ViewMode === 3) {
-                mainElement.style.direction = "rtl";
-            } else {
-                mainElement.style.direction = "";
-            }
             [...shadow.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
             mainElement.innerHTML = "";
             const imgElements = srcs.map(src => {
@@ -26766,7 +26789,16 @@ img.small {
                 img.dataset.fancybox = "gallery";
                 return img;
             });
-            mainElement.append(...imgElements);
+            const p = document.createElement("p");
+            if (newWindowData.ViewMode === 3) {
+                p.style.direction = "rtl";
+            }
+            if (siteData.category.includes("comic")) {
+                p.style.padding = "0 6%";
+                p.style.margin = "0 auto";
+            }
+            p.append(...imgElements);
+            mainElement.append(p);
             loadImgs();
             setTimeout(() => {
                 [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
@@ -28155,7 +28187,7 @@ a[data-fancybox]:hover {
     };
 
     const addKeyEvent = async event => {
-        if (ge("#minShadowGallery")) return;
+        if (ge(".fancybox-container,.fancybox__container,#minShadowGallery")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
         if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
         if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptions:not([style])")) return;
@@ -28167,6 +28199,9 @@ a[data-fancybox]:hover {
             newTitle == null ? null : customTitle = newTitle;
             fun.showMsg(displayLanguage.str_118);
             debug("圖集新標題", newTitle || customTitle);
+        }
+        if (event.code === "KeyG") { //數字鍵0
+            return createShadowGallery();
         }
         if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
             fastDownload = false;
@@ -28580,14 +28615,14 @@ a[data-fancybox]:hover {
                 document.addEventListener("dblclick", () => callback());
             }
             document.addEventListener("keydown", event => {
-                if (ge(".fancybox-container,.fancybox__container")) return;
+                if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
                 if (event.code === "ArrowRight") callback();
             });
         }
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
-                if (ge(".fancybox-container,.fancybox__container")) return;
+                if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
                 if (event.code === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
@@ -28736,10 +28771,10 @@ a[data-fancybox]:hover {
                 }
             }
         }
-        if (options.shadowGallery == 1 && options.autoDownload != 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+        if (options.shadowGallery == 1 && options.autoDownload != 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
             setTimeout(() => {
                 createShadowGallery();
-            }, 100);
+            }, 200);
         }
         if ("openInNewTab" in siteData && isString(siteData.openInNewTab)) {
             const openInNewTab = siteData.openInNewTab;
@@ -28831,7 +28866,7 @@ a[data-fancybox]:hover {
 
     if (!!autoDownload) {
         document.addEventListener("keydown", event => {
-            if (ge("#FullPictureLoadOptions:not([style])")) return;
+            if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
