@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.1
+// @version            2.8.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -65,6 +65,7 @@
         threading: 8, //最大下載線程數
         zip: 1, //1：圖片下載後壓縮打包，0：批量下載圖片，無法全自動下載
         file_extension: "zip", //zip or cbz
+        autoInsert: 1, //頁面容器自動聚圖，1：開啟、0：關閉
         autoDownload: 0, //!!!維持0不要改!!!建議透過UI選項設定來開啟，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有NEXT時自動下載的倒數秒數
         comic: 0, //1，忽視漫畫站點開關選項，啟用漫畫規則
@@ -93,7 +94,6 @@
     let promiseBlobArray = [];
     let captureLinksArray = [];
     let customTitle = null;
-    let FullPictureLoadAutoInsertImg = 1;
     let isDownloading = false;
     let isFetching = false;
     let isAutoScrolling = false;
@@ -1462,7 +1462,7 @@ a:has(>div>div>img),
             let [picTotalNum] = fun.gt("dd:last-child").match(/\d+/);
             let pagePicNum = fun.gae(".album-photo img[alt]").length;
             let max = Math.ceil(picTotalNum / pagePicNum);
-            let links = fun.arr(max).map((_, i) => siteUrl.replace(/\?hl=.+|\?page=\d+/, "") + `?page=${(i + 1)}`);
+            let links = fun.arr(max, (v, i) => siteUrl.replace(/\?hl=.+|\?page=\d+/, "") + `?page=${(i + 1)}`);
             let srcArr = [];
             let status = 200;
             let vip = false;
@@ -1571,7 +1571,7 @@ a:has(>div>div>img),
             } catch {
                 max = 1;
             }
-            let links = fun.arr(max).map((_, i) => siteUrl + "/" + (i + 1));
+            let links = fun.arr(max, (v, i) => siteUrl + "/" + (i + 1));
             return fun.getImgA("#bigimg", links);
         },
         button: [4, "24%"],
@@ -1796,7 +1796,7 @@ a:has(>div>div>img),
         include: ".suoyou",
         imgs: () => {
             let [, max] = fun.gt(".suoyou").match(/\/(\d+)/);
-            let links = fun.arr(max).map((_, i) => siteUrl + "/" + (i + 1));
+            let links = fun.arr(max, (v, i) => siteUrl + "/" + (i + 1));
             return fun.getImgA(".pannel img", links);
         },
         button: [4],
@@ -1814,7 +1814,7 @@ a:has(>div>div>img),
         include: "#allnum",
         imgs: () => {
             let max = fun.gt("#allnum");
-            let links = fun.arr(max).map((_, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
             return fun.getImgA(".picsbox img", links, 2);
         },
         button: [4],
@@ -1829,7 +1829,7 @@ a:has(>div>div>img),
         include: "#thenum",
         imgs: () => {
             let [max] = fun.gt("//span[b[@id='thenum']]").match(/\d+$/);
-            let links = fun.arr(max).map((_, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
             return fun.getImgA(".swiper-slide img", links, 200);
         },
         button: [4],
@@ -1878,7 +1878,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/www\.win3000\.com\/\w+\/\d+\.html$/,
         imgs: () => {
             let [max] = fun.gt(".title>span").match(/\d+$/);
-            let links = fun.arr(max).map((_, i) => siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
             return fun.getImgA(".pic-cont img", links);
         },
         button: [4],
@@ -1895,7 +1895,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/m\.win3000\.com\/\w+\/\d+\.html$/,
         imgs: () => {
             let max = fun.gt(".show-page>i");
-            let links = fun.arr(max).map((_, i) => siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
             return fun.getImgA(".pic-showbox .imgbox img", links);
         },
         button: [4],
@@ -2044,7 +2044,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/www\.92meinv\.com\/article.+\.html$/,
         imgs: () => {
             let [, max] = fun.gt(".des>h1,.post_title_topimg").match(/\/\s?(\d+)/);
-            let links = fun.arr(max).map((_, i) => siteUrl.replace(/\.html$/, "") + "-" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => siteUrl.replace(/\.html$/, "") + "-" + (i + 1) + ".html");
             return fun.getImgA(".pp.hh img[alt],#image_div img", links, 200);
         },
         button: [4],
@@ -2061,7 +2061,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/m\.92meinv\.com\/article-\d+\.html$/,
         imgs: () => {
             let max = fun.gt(".article-page>*:last-child", 2);
-            let links = fun.arr(max).map((_, i) => siteUrl.replace(/\.html$/, "") + "-" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => siteUrl.replace(/\.html$/, "") + "-" + (i + 1) + ".html");
             return fun.getImgA(".arcmain img,#image_div img", links, 200);
         },
         button: [4],
@@ -2290,7 +2290,7 @@ a:has(>div>div>img),
             let id = Number(new URL(fun.gu("a[href*='/read/'],.album-heading a")).pathname.split("/")[2].match(/\d+$/)[0]);
             let max = await fetch(getApiUrl(id, 1)).then(res => res.json()).then(json => json.data.picture.list.info.total_pages);
             let fetchNum = 0;
-            let resArr = fun.arr(max).map((_, i) => {
+            let resArr = fun.arr(max, (v, i) => {
                 let url = getApiUrl(id, (i + 1));
                 return fetch(url).then(res => {
                     fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
@@ -2512,7 +2512,7 @@ a:has(>div>div>img),
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let [max] = fun.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
-            let links = fun.arr(max).map((_, i) => siteUrl + "/" + (i + 1));
+            let links = fun.arr(max, (v, i) => siteUrl + "/" + (i + 1));
             let fetchNum = 0;
             let resArr = links.map((url, i, arr) => {
                 return fun.fetchDoc(url).then(dom => {
@@ -2538,7 +2538,7 @@ a:has(>div>div>img),
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let [max] = fun.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
-            let links = fun.arr(max).map((_, i) => siteUrl + "/" + (i + 1));
+            let links = fun.arr(max, (v, i) => siteUrl + "/" + (i + 1));
             let fetchNum = 0;
             let resArr = links.map((url, i, arr) => {
                 return fun.fetchDoc(url).then(dom => {
@@ -2575,10 +2575,10 @@ a:has(>div>div>img),
             let links = [];
             if (/\.html/.test(siteUrl)) {
                 let url = fun.gu(".pageCurr").replace("_1.html", "");
-                links = fun.arr(max).map((_, i) => url + "_" + (i + 1) + ".html");
+                links = fun.arr(max, (v, i) => url + "_" + (i + 1) + ".html");
             } else {
                 let url = fun.gu(".pageCurr").replace("1.html", "");
-                links = fun.arr(max).map((_, i) => url + (i + 1) + ".html");
+                links = fun.arr(max, (v, i) => url + (i + 1) + ".html");
             }
             return fun.getImgA(".img>img", links, 100);
         },
@@ -2613,7 +2613,7 @@ a:has(>div>div>img),
             let id = fun.url.match(/\?aid=(\d+)/)[1];
             let total = await fetch(`/api/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
-            let links = fun.arr(pages).map((_, i) => `/api/image/list?aid=${id}&pageNum=${i+1}`);
+            let links = fun.arr(pages, (v, i) => `/api/image/list?aid=${id}&pageNum=${i + 1}`);
             let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
             return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.sourceUrl == null ? e.sourceWeb + e.url : e.sourceWeb + e.sourceUrl));
         },
@@ -2637,7 +2637,7 @@ a:has(>div>div>img),
             let id = fun.url.match(/\?aid=(\d+)/)[1];
             let total = await fetch(`https://admin.aiavr.uk/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
-            let links = fun.arr(pages).map((_, i) => `https://admin.aiavr.uk/image/list?aid=${id}&pageNum=${i+1}`);
+            let links = fun.arr(pages, (v, i) => `https://admin.aiavr.uk/image/list?aid=${id}&pageNum=${i + 1}`);
             let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
             return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.sourceUrl == null ? e.sourceWeb + e.url : e.sourceWeb + e.sourceUrl));
         },
@@ -2665,7 +2665,7 @@ a:has(>div>div>img),
             }
             let total = await fetch(`https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
-            let links = fun.arr(pages).map((_, i) => `https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=${i+1}`);
+            let links = fun.arr(pages, (v, i) => `https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=${i + 1}`);
             let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
             return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.imgUrl == null ? null : "https://image.51x.uk/xinshijie" + e.imgUrl).filter(item => item));
         },
@@ -3679,7 +3679,7 @@ a:has(>div>div>img),
         }),
         imgs: async () => {
             let max = fun.gt("//li[a[text()='下页']]", 2);
-            let links = fun.arr(max).map((_, i) => siteUrl + "?page=" + (i + 1));
+            let links = fun.arr(max, (v, i) => siteUrl + "?page=" + (i + 1));
             return fun.getImgA(".container>.container>img", links, 300);
         },
         button: [4],
@@ -3697,7 +3697,7 @@ a:has(>div>div>img),
         }),
         imgs: async () => {
             let [max] = fun.gau("a[href*=gotoPage]").at(-2).match(/\d+/);
-            let links = fun.arr(max).map((_, i) => siteUrl + "?page=" + (i + 1));
+            let links = fun.arr(max, (v, i) => siteUrl + "?page=" + (i + 1));
             return fun.getImgA(".details_item>img", links, 300);
         },
         button: [4],
@@ -4231,18 +4231,16 @@ a:has(>div>div>img),
             let max = ele.dataset.max;
             fun.showMsg(displayLanguage.str_05, 0);
             let ajaxNum = 0;
-            let resArr = fun.arr(max).map((_, i, arr) => {
-                return new Promise(resolve => {
-                    $.ajax({
-                        url: `/ajax/model_new/${model_bid}/page-${i+1}/photos`,
-                        dataType: "html",
-                        success: (data) => {
-                            fun.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${arr.length}`, 0);
-                            resolve(data);
-                        }
-                    });
+            let resArr = fun.arr(max, (v, i) => new Promise(resolve => {
+                $.ajax({
+                    url: `/ajax/model_new/${model_bid}/page-${i + 1}/photos`,
+                    dataType: "html",
+                    success: (data) => {
+                        fun.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${max}`, 0);
+                        resolve(data);
+                    }
                 });
-            });
+            }));
             let tempDom1;
             let picNum;
             await Promise.all(resArr).then(async arr => {
@@ -4260,18 +4258,16 @@ a:has(>div>div>img),
             let videoNum = total - picNum;
             let videoPages = Math.ceil(videoNum / 16);
             fun.showMsg(displayLanguage.str_05, 0);
-            let resArr2 = fun.arr(videoPages).map((_, i, arr) => {
-                return new Promise(resolve => {
-                    $.ajax({
-                        url: `/ajax/model_new/${model_bid}/page-${i+1}/videos`,
-                        dataType: "html",
-                        success: (data) => {
-                            fun.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${arr.length}`, 0);
-                            resolve(data);
-                        }
-                    });
+            let resArr2 = fun.arr(videoPages, (v, i) => new Promise(resolve => {
+                $.ajax({
+                    url: `/ajax/model_new/${model_bid}/page-${i + 1}/videos`,
+                    dataType: "html",
+                    success: (data) => {
+                        fun.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${videoPages}`, 0);
+                        resolve(data);
+                    }
                 });
-            });
+            }));
             let tempDom2;
             await Promise.all(resArr2).then(async arr => {
                 await fun.delay(1000, 0);
@@ -4317,7 +4313,7 @@ a:has(>div>div>img),
             let medias = Number(fun.gt("//p[contains(text(),'Media')]").match(/\d+/)[0]);
             if (medias > 24) {
                 let max = Math.ceil(medias / 24);
-                let links = fun.arr(max).map((_, i) => siteUrl + "/page/" + (i + 1));
+                let links = fun.arr(max, (v, i) => siteUrl + "/page/" + (i + 1));
                 thumbnailSrcArray = await fun.getImgA(".model-media-prew img", links).then(arr => arr.filter(src => src.includes("/models/")).sort());
                 return thumbnailSrcArray.map(e => e.replace("/300px/", "/full/").replace("_300px", ""));
             } else {
@@ -4693,7 +4689,7 @@ a:has(>div>div>img),
             }).then(dom => {
                 let [, , , max, , next] = JSON.parse(fun.gst("_pd", dom).match(/_pd[\s=]+([^;]+)/)[1]);
                 let [path] = fun.ge("#content img", dom).src.match(/.+\//);
-                globalImgArray = fun.arr(max).map((_, i) => path + (i + 1) + ".jpg");
+                globalImgArray = fun.arr(max, (v, i) => path + (i + 1) + ".jpg");
                 if (isNumber(next)) {
                     tempNextLink = fun.url.replace(/\d+/, next);
                 }
@@ -6973,7 +6969,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/www\.taotuzj\.com\/\w+\/\d+\.html$/i,
         imgs: () => {
             let [, max] = fun.gu("//a[text()='尾页']").match(/_(\d+)\.html$/);
-            let links = fun.arr(max).map((_, i) => i == 0 ? fun.url : fun.url.replace(".html", "") + `_${i + 1}.html`);
+            let links = fun.arr(max, (v, i) => i == 0 ? fun.url : fun.url.replace(".html", "") + `_${i + 1}.html`);
             return fun.getImgA(".content img[alt]", links);
         },
         button: [4],
@@ -6986,7 +6982,7 @@ a:has(>div>div>img),
         reg: /^https:\/\/m\.taotuzj\.com\/\w+\/\d+\.html$/i,
         imgs: () => {
             let [max] = fun.gt("a.allpage").match(/\d+$/);
-            let links = fun.arr(max).map((_, i) => i == 0 ? fun.url : fun.url.replace(".html", "") + `_${i + 1}.html`);
+            let links = fun.arr(max, (v, i) => i == 0 ? fun.url : fun.url.replace(".html", "") + `_${i + 1}.html`);
             return fun.getImgA(".content img[alt]", links);
         },
         button: [4],
@@ -7009,7 +7005,7 @@ a:has(>div>div>img),
             let imgsArr = [];
             let max = fun.gt("#pages>*:last-child", 2) || 1;
             let url = siteUrl.replace(/(-\d+)?\.html$/, "");
-            let links = fun.arr(max).map((_, i) => url + "-" + (i + 1) + ".html")
+            let links = fun.arr(max, (v, i) => url + "-" + (i + 1) + ".html");
             for (let i = 0; i < links.length; i++) {
                 let dom = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
@@ -7100,7 +7096,7 @@ a:has(>div>div>img),
             let firstImg = fun.attr("#img_src img", "src");
             let [imgDir] = firstImg.match(/.+\//);
             let [, max] = fun.gt("//span[contains(text(),'页次')]").match(/\/(\d+)/);
-            let arr = fun.arr(max).map((_, i) => imgDir + (i + 1) + ".jpg");
+            let arr = fun.arr(max, (v, i) => imgDir + (i + 1) + ".jpg");
             let a = fun.ge("#img_src");
             if (a) a.outerHTML = `<div class="CustomPictureBox">${fun.ge("img", a).outerHTML}</div>`;
             return arr;
@@ -7126,7 +7122,7 @@ a:has(>div>div>img),
             let [id] = fun.attr("#auto-play", "data").match(/\d+/);
             fun.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
-            return fun.arr(max).map((_, i) => fetch(`/api/?ac=get_album_images&id=${id}&num=${i+1}`).then(res => res.json()).then(json => {
+            return fun.arr(max, (v, i) => fetch(`/api/?ac=get_album_images&id=${id}&num=${i + 1}`).then(res => res.json()).then(json => {
                 fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
                 return json.src;
             }));
@@ -8210,9 +8206,9 @@ a:has(>div>div>img),
                 "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "x-requested-with": "XMLHttpRequest"
             };
-            let resArr = fun.arr(pages).map((_, i) => fetch("/php/apg.php", {
+            let resArr = fun.arr(pages, (v, i) => fetch("/php/apg.php", {
                 "headers": headers,
-                "body": `mode=w&param={"page":${(i+1)},"ghash":"${ghash}"}`,
+                "body": `mode=w&param={"page":${(i + 1)},"ghash":"${ghash}"}`,
                 "method": "POST"
             }).then(res => res.json()).then(json => json.r));
             thumbnailSrcArray = await Promise.all(resArr).then(data => data.flat()).then(arr => {
@@ -9037,7 +9033,7 @@ a:has(>div>div>img),
                 });
             };
             let firstArr = [getFn(fun.url + "?mode=async&function=get_block&block_id=album_view_album_view")];
-            let pagesArr = fun.arr(max).map((_, i) => getFn(fun.url + "?mode=async&function=get_block&block_id=album_view_album_view&load=more&from=" + (i + 1)));
+            let pagesArr = fun.arr(max, (v, i) => getFn(fun.url + "?mode=async&function=get_block&block_id=album_view_album_view&load=more&from=" + (i + 1)));
             let resArr = firstArr.concat(pagesArr);
             return Promise.all(resArr).then(data => {
                 thumbnailSrcArray = data.map(e => e.thumbsArr).flat();
@@ -9152,7 +9148,7 @@ a:has(>div>div>img),
                 fun.showMsg(displayLanguage.str_05, 0);
                 let max = Number(fun.gt("//li[@class='next action-item']/preceding-sibling::li[@class='page action-item'][1]//span[@class='text']"));
                 let fetchNum = 0;
-                let resArr = fun.arr(max).map((_, i) => {
+                let resArr = fun.arr(max, (v, i) => {
                     let url = siteUrl + "?mode=async&function=get_block&block_id=album_view_album_view&sort_by=&from=" + (i + 1);
                     return fun.fetchDoc(url).then(dom => {
                         fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
@@ -9447,7 +9443,7 @@ a:has(>div>div>img),
         imgs: async () => {
             let [max] = document.title.split("/").at(-1).match(/\d+/);
             let url = siteUrl.replace(/\/\d+\/$/, "");
-            let links = fun.arr(max).map((_, i) => url + `/${(i + 1)}/`);
+            let links = fun.arr(max, (v, i) => url + `/${(i + 1)}/`);
             let imgSrcArray = await fun.getImgA("#display_image_detail a,#detail_list a", links, 100);
             thumbnailSrcArray = imgSrcArray.map(e => {
                 let arr = e.split("/");
@@ -9478,7 +9474,7 @@ a:has(>div>div>img),
         imgs: async () => {
             let max = fun.gt("#paginator>*:last-child", 3) || fun.gt(".paginator_page[rel=next]", 2) || 1;
             let url = siteUrl.replace(/page\/\d+\/$/, "");
-            let links = fun.arr(max).map((_, i) => url + `page/${(i + 1)}/`);
+            let links = fun.arr(max, (v, i) => url + `page/${(i + 1)}/`);
             thumbnailSrcArray = await fun.getImgA(".icon-overlay img,#display_image_detail img", links, 100);
             thumbnailSrcArray = thumbnailSrcArray.map(e => {
                 let arr = e.split("/");
@@ -9976,7 +9972,7 @@ a:has(>div>div>img),
         init: () => fun.setStyleSheet(),
         imgs: () => {
             let [max] = fun.gt("#page>*:last-child").match(/\d+/);
-            let links = fun.arr(max).map((_, i) => i === 0 ? fun.url : fun.url + "index" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => i === 0 ? fun.url : fun.url + "index" + (i + 1) + ".html");
             return fun.getImgA("#content_news img", links);
         },
         button: [4],
@@ -9997,7 +9993,7 @@ a:has(>div>div>img),
         imgs: () => {
             let [, max] = fun.gu("//a[text()='尾页']").match(/-(\d+)\.html$/);
             let url = fun.url.replace(/(-\d+)?\.html$/, "");
-            let links = fun.arr(max).map((_, i) => url + "-" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => url + "-" + (i + 1) + ".html");
             return fun.getImgA(".fed-arti-content img", links);
         },
         button: [4],
@@ -10016,7 +10012,7 @@ a:has(>div>div>img),
         init: () => fun.setStyleSheet(),
         imgs: () => {
             let [max] = fun.gt(".fed-page-info>*:last-child").match(/\d+/);
-            let links = fun.arr(max).map((_, i) => i === 0 ? fun.url : fun.url + "index" + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => i === 0 ? fun.url : fun.url + "index" + (i + 1) + ".html");
             return fun.getImgA(".fed-arti-content img", links);
         },
         button: [4],
@@ -10168,7 +10164,7 @@ a:has(>div>div>img),
                 } else {
                     [, max] = link.match(/\/(\d+)\/$/);
                 }
-                let links = fun.arr(max).map((_, i) => `${url}/${(i + 1)}/`);
+                let links = fun.arr(max, (v, i) => `${url}/${(i + 1)}/`);
                 return fun.getImgA(".L664 a:has(>img:not([src^='/thumbs/']))", links);
             } else {
                 return fun.gae(".L664 a:has(>img:not([src^='/thumbs/']))");
@@ -10219,7 +10215,7 @@ a:has(>div>div>img),
                 } else {
                     max = fun.gt(".matchlinks>a:last-child", 2);
                 }
-                let links = fun.arr(max).map((_, i) => `${url}/${(i + 1)}/`);
+                let links = fun.arr(max, (v, i) => `${url}/${(i + 1)}/`);
                 return fun.getImgA(".L664 a:has(>img:not([src^='/thumbs/']))", links);
             } else {
                 return fun.gae(".L664 a:has(>img:not([src^='/thumbs/']))");
@@ -11606,7 +11602,7 @@ a:has(>div>div>img),
                 let [imgDir] = src.match(/.+\//);
                 let url = fun.gu(".gallery_thumbs a");
                 let iframe = await fun.iframeVar(url, "g_th");
-                return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(iframe.g_th.fl[(i + 1)][0])}`);
+                return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(iframe.g_th.fl[(i + 1)][0])}`);
             } else if (fun.lh === "nhentai.to") {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let url = fun.gu("a.gallerythumb");
@@ -11680,7 +11676,7 @@ a:has(>div>div>img),
         imgs: () => {
             let max = fun.gt(".num-pages");
             let [, imgDir, ex] = fun.ge("#image-container img").src.match(/(.+\/)\d+(\.\w+)$/);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}${ex}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}${ex}`);
         },
         button: [4],
         insertImg: ["#image-container", 2],
@@ -11692,7 +11688,7 @@ a:has(>div>div>img),
         imgs: () => {
             let max = fun.gt(".num-pages");
             let [, imgDir, ex] = fun.ge("#image-container img").src.match(/(.+\/)\d+(\.\w+)$/);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}${ex}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}${ex}`);
         },
         button: [4],
         insertImg: ["#image-container", 2],
@@ -11792,18 +11788,16 @@ a:has(>div>div>img),
                 let pages = pag.cnt;
                 if (pages > 40) {
                     let max = Math.ceil(pages / 20);
-                    let resArr = fun.arr(max).map((_, i) => {
-                        return fetch(pag.act, {
-                            "headers": {
-                                "accept": "*/*",
-                                "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-                                "x-csrf-token": ajx.hdr["X-CSRF-TOKEN"],
-                                "x-requested-with": "XMLHttpRequest"
-                            },
-                            "body": `index=${i}`,
-                            "method": "POST",
-                        }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images]);
-                    });
+                    let resArr = fun.arr(max, (v, i) => fetch(pag.act, {
+                        "headers": {
+                            "accept": "*/*",
+                            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                            "x-csrf-token": ajx.hdr["X-CSRF-TOKEN"],
+                            "x-requested-with": "XMLHttpRequest"
+                        },
+                        "body": `index=${i}`,
+                        "method": "POST",
+                    }).then(res => res.text()).then(text => fun.doc(text)).then(dom => [...dom.images]));
                     thumbnailSrcArray = await Promise.all(resArr).then(data => fun.getImgSrcArr(data.flat()));
                 } else {
                     thumbnailSrcArray = fun.getImgSrcArr("#pages img");
@@ -11901,7 +11895,7 @@ a:has(>div>div>img),
             let [max] = fun.gt("//div[span[text()='Page:']]").match(/\d+/);
             return fun.fetchDoc(url).then(dom => {
                 let [, imgDir, ex] = fun.ge("#pictureViewer img", dom).dataset.src.match(/^(.+\/)\d+(\.\w+)$/i);
-                return fun.arr(max).map((_, i) => imgDir + (i + 1) + ex);
+                return fun.arr(max, (v, i) => imgDir + (i + 1) + ex);
             });
         },
         SPA: () => !!fun.ge("//div[span[text()='Page:']]"),
@@ -11969,7 +11963,7 @@ a:has(>div>div>img),
             });
             let max = json.lastPage;
             let imgDir = json.baseUriImg.replace("%s", "");
-            return fun.arr(max).map((_, i) => imgDir + json.pages[(i + 1)].f);
+            return fun.arr(max, (v, i) => imgDir + json.pages[(i + 1)].f);
         },
         button: [4],
         insertImg: [
@@ -11990,7 +11984,7 @@ a:has(>div>div>img),
             } = _unsafeWindow;
             let max = readerPages.lastPage;
             let imgDir = readerPages.baseUriImg.replace("%s", "");
-            return fun.arr(max).map((_, i) => imgDir + readerPages.pages[(i + 1)].f);
+            return fun.arr(max, (v, i) => imgDir + readerPages.pages[(i + 1)].f);
         },
         button: [4],
         insertImg: [".reader-image", 2],
@@ -12040,7 +12034,7 @@ a:has(>div>div>img),
             let img = fun.ge(".gallery_thumb img");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -12057,7 +12051,7 @@ a:has(>div>div>img),
             let img = fun.ge("#gimg");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: [".full_image", 2],
@@ -12092,7 +12086,7 @@ a:has(>div>div>img),
             let img = fun.ge(".gp_th img");
             let src = img.dataset.src ?? img.src;
             let imgDir = src.match(/.+\//)[0];
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: [
@@ -12111,7 +12105,7 @@ a:has(>div>div>img),
             let img = fun.ge("#fimg");
             let src = img.dataset.src ?? img.src;
             let imgDir = src.match(/.+\//)[0];
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: [".mid_rd", 2],
@@ -12157,7 +12151,7 @@ a:has(>div>div>img),
             let img = fun.ge(".gthumb img");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -12174,7 +12168,7 @@ a:has(>div>div>img),
             let img = fun.ge("#gimg");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: [".pre_img", 2],
@@ -12211,7 +12205,7 @@ a:has(>div>div>img),
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
             await fun.waitVar("g_th");
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -12229,7 +12223,7 @@ a:has(>div>div>img),
             let img = fun.ge("#fimg");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: [".rd_fimg", 2],
@@ -12426,7 +12420,7 @@ a:has(>div>div>img),
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
             let max = fun.ge("#pages").value;
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th.fl[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th.fl[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: [".reader_overlay", 2],
@@ -12462,7 +12456,7 @@ a:has(>div>div>img),
             let src = div.style.background.split('"')[1];
             let [imgDir] = src.match(/.+\//);
             let max = fun.gae("div[style*='background']").length;
-            return fun.arr(max).map((_, i) => imgDir + String(i).padStart(3, "0") + ".webp");
+            return fun.arr(max, (v, i) => imgDir + String(i).padStart(3, "0") + ".webp");
         },
         button: [4],
         insertImg: [
@@ -12481,7 +12475,7 @@ a:has(>div>div>img),
             let src = img.dataset.original ?? img.src;
             let [imgDir] = src.match(/.+\//);
             let max = fun.gae("#select-page option").length;
-            return fun.arr(max).map((_, i) => imgDir + String(i).padStart(3, "0") + ".webp");
+            return fun.arr(max, (v, i) => imgDir + String(i).padStart(3, "0") + ".webp");
         },
         button: [4],
         insertImg: [".reader-info+.text-center", 2],
@@ -12592,7 +12586,7 @@ a:has(>div>div>img),
             siteJson = json;
         },
         imgs: () => {
-            let arr = fun.arr(siteJson.results.total_page).map((_, i) => `${siteJson.results.image_server + siteJson.results.id}/${i + 1}.jpg`);
+            let arr = fun.arr(siteJson.results.total_page, (v, i) => `${siteJson.results.image_server + siteJson.results.id}/${i + 1}.jpg`);
             thumbnailSrcArray = arr.map(e => e.replace(/(\d+)(\.\w+)$/, "preview/$1t$2"));
             return arr;
         },
@@ -12622,7 +12616,7 @@ a:has(>div>div>img),
             siteJson = json;
         },
         imgs: () => {
-            let arr = fun.arr(siteJson.results.total_page).map((_, i) => `${siteJson.results.image_server + siteJson.results.id}/${i + 1}.jpg`);
+            let arr = fun.arr(siteJson.results.total_page, (v, i) => `${siteJson.results.image_server + siteJson.results.id}/${i + 1}.jpg`);
             thumbnailSrcArray = arr.map(e => e.replace(/(\d+)(\.\w+)$/, "preview/$1t$2"));
             return arr;
         },
@@ -12805,7 +12799,7 @@ a:has(>div>div>img),
         imgs: () => {
             let max = fun.gt(".num-pages");
             let url = fun.url.replace(/\d+\/$/, "");
-            let links = fun.arr(max).map((_, i) => url + (i + 1) + "/");
+            let links = fun.arr(max, (v, i) => url + (i + 1) + "/");
             return fun.getImgA("#image-container img", links);
         },
         button: [4],
@@ -13128,7 +13122,7 @@ a:has(>div>div>img),
             let img = fun.ge(".gthumb img");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/^.+\//);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -13149,7 +13143,7 @@ a:has(>div>div>img),
             let img = fun.ge("#gimg");
             let src = img.dataset.src ?? img.src;
             let [imgDir] = src.match(/.+\//);
-            return fun.arr(max).map((_, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
+            return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
         insertImg: [".imgBox", 2],
@@ -13171,7 +13165,7 @@ a:has(>div>div>img),
                 imgDir = newUrl.origin + newUrl.pathname.replace("[PAGE]", "");
                 return newUrl.search;
             });
-            return fun.arr(prges).map((_, i) => imgDir + (i + 1) + key);
+            return fun.arr(prges, (v, i) => imgDir + (i + 1) + key);
         },
         button: [4],
         insertImg: [
@@ -13200,7 +13194,7 @@ a:has(>div>div>img),
             let newUrl = new URL(url);
             let imgDir = newUrl.origin + newUrl.pathname.replace("[PAGE]", "");
             let key = newUrl.search;
-            return fun.arr(max).map((_, i) => imgDir + (i + 1) + key);
+            return fun.arr(max, (v, i) => imgDir + (i + 1) + key);
         },
         button: [4],
         insertImg: [".reader-page", 2],
@@ -13893,12 +13887,10 @@ a:has(>div>div>img),
             let api = `/e/extend/api/show.php?id=${_unsafeWindow.info.id}&page=`;
             let max = await fetch(`${api}1`).then(res => res.json()).then(res => res.pages);
             let fetchNum = 0;
-            let resArr = fun.arr(max).map((_, i) => {
-                return fetch(`${api + (i + 1)}`).then(res => res.json()).then(json => {
-                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
-                    return json.data;
-                });
-            });
+            let resArr = fun.arr(max, (v, i) => fetch(`${api + (i + 1)}`).then(res => res.json()).then(json => {
+                fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                return json.data;
+            }));
             return Promise.all(resArr).then(data => data.flat().map(e => e.src));
         },
         button: [4],
@@ -15099,7 +15091,7 @@ a:has(>div>div>img),
         imgs: async () => {
             let max = fun.gt("#td-Act+#td-Series").match(/\d+/)[0];
             let [, imgDir, , ex] = fun.gu(".article-content a").match(/^(.+\/)(\d+)(\.\w+)$/);
-            return fun.arr(max).map((_, i) => imgDir + (i + 1) + ex);
+            return fun.arr(max, (v, i) => imgDir + (i + 1) + ex);
         },
         button: [4],
         insertImg: [
@@ -15127,7 +15119,7 @@ a:has(>div>div>img),
                 let lastA = fun.gae("a", tempDoc).at(-1);
                 let max = lastA.href.match(/(\d+)\.\w+$/)[1];
                 let [, imgDir, , ex] = fun.gu("#imgs>a").match(/^(.+\/)(\d+)(\.\w+)$/);
-                return fun.arr(max).map((_, i) => imgDir + (i + 1) + ex);
+                return fun.arr(max, (v, i) => imgDir + (i + 1) + ex);
             } else {
                 return fun.gae("#imgs>a");
             }
@@ -15348,7 +15340,7 @@ a:has(>div>div>img),
         ],
         imgs: async () => {
             let max = fun.gt("//li[a[text()='下一页»' or text()='下一頁»']]", 2);
-            let links = fun.arr(max).map((_, i) => i == 0 ? fun.url : fun.url + "?p=" + (i + 1));
+            let links = fun.arr(max, (v, i) => i == 0 ? fun.url : fun.url + "?p=" + (i + 1));
             return fun.getImgA(".scramble-page img", links);
         },
         button: [4],
@@ -15669,22 +15661,22 @@ a:has(>div>div>img),
             p: "/online/"
         }) && comicInfiniteScrollMode != 1,
         frameCode: `
-if ("unescape" in window) {
-    let code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
-    let [, chapter_code] = code.match(/<img\\s+s="(.{15})/);
-    let getSrc = (id, p) => {
-        let src = id + p;
-        let a = src.substring(15);
-        let b = eval(src.substring(0, 5));
-        let c = eval(src.substring(5, 10));
-        let d = eval(src.substring(10, 15));
-        src = "%68%74%74%70s%3A%2F%2F%69%6D%67" + su(b, 0, 1) + "%2e%38%63%6f%6d%69%63%2e%63%6f%6d%2f" + su(b, 1, 1) + "%2F" + ti + "%2F" + c + "%2F" + nn(a) + "%5F" + su(d, mm(a), 3) + "%2E%6A%70%67";
-        src = unescape(src);
+if ("ge" in window) {
+    const code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
+    const [, obfuscated_chapter_code] = code.match(/img\\s+s="([^"]+)/);
+    const chapter_code = obfuscated_chapter_code.replace(/'|\\+\\w\\+/g, "");
+    const getSrc = (a) => {
+        const b = window[chapter_code.substring(0, 5)];
+        const c = window[chapter_code.substring(5, 10)];
+        const d = window[chapter_code.substring(10, 15)];
+        const src = "https://img" + su(b, 0, 1) + ".8comic.com/" + su(b, 1, 1) + "/" + ti + "/" + c + "/" + nn(a) + "_" + su(d, mm(a), 3) + ".jpg";
         return src;
     };
-    let srcs = new Array(ps).fill().map((_, i) => getSrc(chapter_code, i + 1));
+    const srcs = Array.from({
+        length: ps
+    }, (v, i) => getSrc(i + 1));
     window.newImgs = srcs;
-    let url = reurl("ch", ni);
+    const url = reurl("ch", ni);
     if (url == document.URL) {
         window.nextLink = null;
     } else {
@@ -15694,6 +15686,7 @@ if ("unescape" in window) {
         `,
         init: async () => {
             await fun.waitEle("#comics-pics img");
+            await fun.waitVar("unescape");
             fun.script(_this.frameCode, 0, 1);
             fun.createImgBox(".pinch-zoom-container", 2);
         },
@@ -15731,22 +15724,22 @@ if ("unescape" in window) {
             p: "/online/"
         }) && comicInfiniteScrollMode == 1,
         frameCode: `
-if ("unescape" in window) {
-    let code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
-    let [, chapter_code] = code.match(/<img\\s+s="(.{15})/);
-    let getSrc = (id, p) => {
-        let src = id + p;
-        let a = src.substring(15);
-        let b = eval(src.substring(0, 5));
-        let c = eval(src.substring(5, 10));
-        let d = eval(src.substring(10, 15));
-        src = "%68%74%74%70s%3A%2F%2F%69%6D%67" + su(b, 0, 1) + "%2e%38%63%6f%6d%69%63%2e%63%6f%6d%2f" + su(b, 1, 1) + "%2F" + ti + "%2F" + c + "%2F" + nn(a) + "%5F" + su(d, mm(a), 3) + "%2E%6A%70%67";
-        src = unescape(src);
+if ("ge" in window) {
+    const code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
+    const [, obfuscated_chapter_code] = code.match(/img\\s+s="([^"]+)/);
+    const chapter_code = obfuscated_chapter_code.replace(/'|\\+\\w\\+/g, "");
+    const getSrc = (a) => {
+        const b = window[chapter_code.substring(0, 5)];
+        const c = window[chapter_code.substring(5, 10)];
+        const d = window[chapter_code.substring(10, 15)];
+        const src = "https://img" + su(b, 0, 1) + ".8comic.com/" + su(b, 1, 1) + "/" + ti + "/" + c + "/" + nn(a) + "_" + su(d, mm(a), 3) + ".jpg";
         return src;
     };
-    let srcs = new Array(ps).fill().map((_, i) => getSrc(chapter_code, i + 1));
+    const srcs = Array.from({
+        length: ps
+    }, (v, i) => getSrc(i + 1));
     window.newImgs = srcs;
-    let url = reurl("ch", ni);
+    const url = reurl("ch", ni);
     if (url == document.URL) {
         window.nextLink = null;
     } else {
@@ -15813,7 +15806,7 @@ if ("unescape" in window) {
                 MANGABZ_VIEWSIGN
             } = _unsafeWindow;
             let fetchNum = 0;
-            let resArr = fun.arr(MANGABZ_IMAGE_COUNT).map((_, i) => {
+            let resArr = fun.arr(MANGABZ_IMAGE_COUNT, (v, i) => {
                 let searchParams = new URLSearchParams({
                     cid: MANGABZ_CID,
                     page: i + 1,
@@ -15928,7 +15921,7 @@ if ("unescape" in window) {
                 XMANHUA_VIEWSIGN
             } = _unsafeWindow;
             let fetchnUm = 0;
-            let resArr = fun.arr(XMANHUA_IMAGE_COUNT).map((_, i) => {
+            let resArr = fun.arr(XMANHUA_IMAGE_COUNT, (v, i) => {
                 let searchParams = new URLSearchParams({
                     cid: XMANHUA_CID,
                     page: i + 1,
@@ -16044,7 +16037,7 @@ if ("unescape" in window) {
             let fetchNum = 0;
             let keyE = fun.ge("#dm5_key");
             let key = keyE.value;
-            let resArr = fun.arr(DM5_IMAGE_COUNT).map((_, i) => {
+            let resArr = fun.arr(DM5_IMAGE_COUNT, (v, i) => {
                 let searchParams = new URLSearchParams({
                     cid: DM5_CID,
                     page: i + 1,
@@ -16207,7 +16200,7 @@ if ("unescape" in window) {
                 YYMANHUA_VIEWSIGN
             } = _unsafeWindow;
             let fetchnUm = 0;
-            let resArr = fun.arr(YYMANHUA_IMAGE_COUNT).map((_, i) => {
+            let resArr = fun.arr(YYMANHUA_IMAGE_COUNT, (v, i) => {
                 let searchParams = new URLSearchParams({
                     cid: YYMANHUA_CID,
                     page: i + 1,
@@ -16528,12 +16521,10 @@ if ("unescape" in window) {
         imgs: () => {
             let max = fun.gt(".HG_COMIC_READER_indicator>div:last-child");
             let fetchNum = 0;
-            return fun.arr(max).map((_, i) => {
-                return fetch(`/api${fun.lp}/page?pageNum=${(i + 1)}`).then(res => res.json()).then(json => {
-                    fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
-                    return json.data.url;
-                });
-            });
+            return fun.arr(max, (v, i) => fetch(`/api${fun.lp}/page?pageNum=${(i + 1)}`).then(res => res.json()).then(json => {
+                fun.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                return json.data.url;
+            }));
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
@@ -16909,7 +16900,7 @@ if ("unescape" in window) {
             let imgDir = fun.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//)[0];
             let max = fun.ge(".onpage", dom).parentNode.lastElementChild.previousElementSibling.innerText;
             fun.remove("//tr[td[a[@class='onpage']]]");
-            return fun.arr(max).map((_, i) => imgDir + String((i + 1)).padStart(3, "0") + ".jpg");
+            return fun.arr(max, (v, i) => imgDir + String((i + 1)).padStart(3, "0") + ".jpg");
         },
         button: [4],
         insertImg: ["//td[a[img[@oncontextmenu]]] | //td[a[img[@oncontextmenu]]]", 2],
@@ -16951,7 +16942,7 @@ if ("unescape" in window) {
         getSrcs: (dom) => {
             let imgDir = fun.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//)[0];
             let max = fun.ge(".onpage", dom).parentNode.lastElementChild.previousElementSibling.innerText;
-            let srcs = fun.arr(max).map((_, i) => imgDir + String((i + 1)).padStart(3, "0") + ".jpg");
+            let srcs = fun.arr(max, (v, i) => imgDir + String((i + 1)).padStart(3, "0") + ".jpg");
             return srcs;
         },
         getImgs: (dom = document) => {
@@ -19609,7 +19600,7 @@ if ("unescape" in window) {
         init: "$(document).unbind('click');",
         imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => {
             let max = fun.ge("#total", dom).value;
-            let links = fun.arr(max).map((_, i) => fun.getModeUrl(url, 20, (i + 1)));
+            let links = fun.arr(max, (v, i) => fun.getModeUrl(url, 20, (i + 1)));
             return fun.getImgA("#ComicPic", links, 100, null, msg, request);
         },
         button: [4],
@@ -19632,7 +19623,7 @@ if ("unescape" in window) {
         init: "$(document).unbind();document.onkeydown=null;",
         imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => {
             let max = fun.ge("#total", dom).value;
-            let links = fun.arr(max).map((_, i) => url.replace(/\d+\.html$/, "") + (i + 1) + ".html");
+            let links = fun.arr(max, (v, i) => url.replace(/\d+\.html$/, "") + (i + 1) + ".html");
             return fun.getImgA("#cpimg", links, 100, null, msg, request);
         },
         button: [4],
@@ -21041,7 +21032,7 @@ if ("unescape" in window) {
                 str_136: "右鍵：增加圖片縮放級別(+)",
                 str_137: "頁面圖片添加燈箱模式",
                 str_138: "此網站禁用",
-                str_139: "啟用自動聚圖",
+                str_139: "啟用頁面容器自動聚圖",
                 str_140: "啟用影子畫廊",
                 str_141: hasTouchEvents ? "影子畫廊" : "影子畫廊(G)",
                 str_142: "離開畫廊 (Esc)",
@@ -21204,7 +21195,7 @@ if ("unescape" in window) {
                 str_136: "右键：增加图片缩放级别(+)",
                 str_137: "页面图片添加灯箱模式",
                 str_138: "此网站禁用",
-                str_139: "启用自动聚图",
+                str_139: "启用页面容器自动聚图",
                 str_140: "启用影子画廊",
                 str_141: hasTouchEvents ? "影子画廊" : "影子画廊(G)",
                 str_142: "离开画廊 (Esc)",
@@ -21365,7 +21356,7 @@ if ("unescape" in window) {
                 str_136: "Right Click：Increase Image Zzoom Level(+)",
                 str_137: "Add Fancybox To Image",
                 str_138: "This Website Is Disabled",
-                str_139: "Auto Insert Images",
+                str_139: "Page Content Auto Insert Images",
                 str_140: "Enable Shadow Gallery",
                 str_141: "Shadow Gallery",
                 str_141: hasTouchEvents ? "Shadow Gallery" : "Shadow Gallery(G)",
@@ -23435,7 +23426,7 @@ if ("unescape" in window) {
                 let validPage = await siteData.SPA();
                 if (!validPage) return;
             }
-            if (FullPictureLoadAutoInsertImg == 1) {
+            if (options.autoInsert == 1) {
                 let [insertSelector, insertMode, delayTime] = siteData.insertImg;
                 await fun.delay(delayTime || 0);
                 let selector = siteData.imgs;
@@ -23557,7 +23548,17 @@ if ("unescape" in window) {
             }
         },
         //創建一個指定長度的陣列
-        arr: num => new Array(Number(num)).fill(),
+        arr: (num, cb = null) => {
+            if (isFn(cb)) {
+                return Array.from({
+                    length: Number(num)
+                }, cb);
+            } else {
+                return Array.from({
+                    length: Number(num)
+                });
+            }
+        },
         //顯示簡短的訊息
         showMsg: (text, time = 1000) => {
             if (!fun.ge("body>.FullPictureLoadMsg")) fun.addFullPictureLoadMsg();
@@ -24074,7 +24075,7 @@ if ("unescape" in window) {
             const num = fun.ge("#pages,#load_pages").value ?? "";
             const cId = Number(fun.ge("#u_id,#load_dir+#gallery_id").value ?? "");
             const randomServer = _unsafeWindow.random_server ?? findServer(cId);
-            return fun.arr(num).map((_, i) => `//${randomServer}/${imageDir}/${galleryId}/${(i + 1)}.${fun.ex(_unsafeWindow.g_th[i + 1][0])}`);
+            return fun.arr(num, (v, i) => `//${randomServer}/${imageDir}/${galleryId}/${(i + 1)}.${fun.ex(_unsafeWindow.g_th[i + 1][0])}`);
         },
         //漫漫聚和KuKu动漫取得圖片網址的函式
         getKukudmSrc: async (url = siteUrl, dom = document, msg = 1) => {
@@ -24086,7 +24087,7 @@ if ("unescape" in window) {
             let max;
             fun.ge("//td[input]", dom, dom) ? max = fun.gt("//td[input]", 1, dom).match(/共(\d+)/)[1] : max = fun.gt(".bottom .subNav", 1, dom).match(/\/(\d+)/)[1];
             url = url.replace(/1\.htm$/, "");
-            let links = fun.arr(max).map((_, i) => url + (i + 1) + ".htm");
+            let links = fun.arr(max, (v, i) => url + (i + 1) + ".htm");
             let xhrNum = 0;
             let resArr = links.map(url => {
                 return fun.xhrDoc(url).then(dom => {
@@ -26546,6 +26547,14 @@ if (newWindowData.ViewMode == 1) {
             }
         }
 
+        let srcs;
+        if ("SPA" in siteData) {
+            let selector = siteData.capture ?? siteData.imgs;
+            srcs = await getImgs(selector);
+        } else {
+            captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
+        }
+
         let imgViewIndex = -1;
 
         const scrollIntoViewOptions = {
@@ -26685,9 +26694,9 @@ p {
 img.default {
     vertical-align: middle;
     width: auto;
-    height: auto;
-    min-height: 100vh;
-    max-height: 100vh;
+    object-fit: contain;
+    min-height: 99vh;
+    max-height: 99vh;
     max-width: 99%;
     border: solid #fff;
 }
@@ -26758,14 +26767,6 @@ img.small {
         });
         shadow.appendChild(mainElement);
 
-        let srcs;
-        if ("SPA" in siteData) {
-            let selector = siteData.capture ?? siteData.imgs;
-            srcs = await getImgs(selector);
-        } else {
-            captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
-        }
-
         function loadImgs() {
             const imgs = [...shadow.querySelectorAll("img")];
             const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
@@ -26803,7 +26804,7 @@ img.small {
             setTimeout(() => {
                 [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
             }, 1000);
-            if (!("fancybox" in siteData)) {
+            if (!("fancybox" in siteData) && options.fancybox == 1) {
                 _unsafeWindow.Fancybox.bind(mainElement, "img", {
                     idle: false,
                     wheel: FancyboxWheelOptions === 0 ? "slide" : "zoom",
@@ -27256,7 +27257,7 @@ img.small {
 </div>
 <div id="FullPictureLoadAutoInsertImgDIV" style="width: 348px; display: flex;">
     <input id="FullPictureLoadAutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>※${displayLanguage.str_139}</label>
+    <label>${displayLanguage.str_139}</label>
 </div>
 <div id="ShowFullPictureLoadFixedMenuDIV" style="width: 348px; display: flex;">
     <input id="ShowFullPictureLoadFixedMenu" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -27268,15 +27269,15 @@ img.small {
         ${Object.values(displayLanguage.str_109).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
     </select>
 </div>
-<div style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_70}</label>
-    <select id="FullPictureLoadOptionsThreading">
-        ${fun.arr(32).map((_,i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
-    </select>
-</div>
 <div style="width: 348px; display: flex;">
     <input id="FullPictureLoadOptionsConvert" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_110}</label>
+</div>
+<div style="width: 348px; display: flex; margin-left: 6px;">
+    <label>${displayLanguage.str_70}</label>
+    <select id="FullPictureLoadOptionsThreading">
+        ${fun.arr(32, (_,i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
+    </select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="FullPictureLoadOptionsZip" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -27311,20 +27312,20 @@ img.small {
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_79}</label>
     <select id="FullPictureLoadOptionsZoom">
-        ${fun.arr(11).map((_, i) => `<option value="${i}">${i === 0 ? "Auto" : i + "0%"}</option>`).join("")}
+        ${fun.arr(11, (v, i) => `<option value="${i}">${i === 0 ? "Auto" : i + "0%"}</option>`).join("")}
     </select>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_80}</label>
     <select id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}">
-        ${fun.arr(5).map((_, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
+        ${fun.arr(5, (v, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
     </select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_103}</label>
 </div>
-<div style="width: 348px; display: flex;">
+<div id="FullPictureLoadOptionsShadowGalleryModeDIV" style="width: 348px; display: flex;">
     <input id="FullPictureLoadOptionsShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_140}</label>
 </div>
@@ -27350,7 +27351,7 @@ img.small {
             ge("#FullPictureLoadOptionsSaveBtn").addEventListener("click", event => {
                 event.preventDefault();
                 options.icon = ge("#FullPictureLoadOptionsIcon").checked == true ? 1 : 0;
-                _GM_setValue("FullPictureLoadAutoInsertImg", ge("#FullPictureLoadAutoInsertImg").checked == true ? 1 : 0);
+                options.autoInsert = ge("#FullPictureLoadAutoInsertImg").checked == true ? 1 : 0;
                 _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFullPictureLoadFixedMenu").checked == true ? 1 : 0);
                 _GM_setValue("FullPictureLoadMsgPos", ge("#FullPictureLoadOptionsMsgPos").value);
                 options.threading = ge("#FullPictureLoadOptionsThreading").value;
@@ -27391,7 +27392,7 @@ img.small {
     //根據使用者設置更改腳本選項元素的值
     const optionsSetValue = () => {
         ge("#FullPictureLoadOptionsIcon").checked = options.icon == 1 ? true : false;
-        ge("#FullPictureLoadAutoInsertImg").checked = _GM_getValue("FullPictureLoadAutoInsertImg", 1) == 1 ? true : false;
+        ge("#FullPictureLoadAutoInsertImg").checked = options.autoInsert == 1 ? true : false;
         ge("#ShowFullPictureLoadFixedMenu").checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
         ge("#FullPictureLoadOptionsMsgPos").value = _GM_getValue("FullPictureLoadMsgPos", 0);
         ge("#FullPictureLoadOptionsThreading").value = options.threading;
@@ -27413,6 +27414,7 @@ img.small {
         }
         if (hasTouchEvents) {
             ge("#ShowFullPictureLoadFixedMenuDIV").style.display = "none";
+            ge("#FullPictureLoadOptionsShadowGalleryModeDIV").style.display = "none";
         }
         if (fancyboxBlackList()) {
             ge("#FullPictureLoadOptionsFancybox").checked = false;
@@ -27494,7 +27496,7 @@ img.small {
     width: 360px !important;
     height: auto !important;
     position: fixed !important;
-    top: ${hasTouchEvents ? "2px" : "20%"};
+    top: ${hasTouchEvents ? "10%" : "20%"};
     left: 50%;
     margin-left: -180px;
     border: 1px solid #a0a0a0 !important;
@@ -28751,8 +28753,7 @@ a[data-fancybox]:hover {
                 }
                 const [, insertMode] = insertImg;
                 if (insertMode == 1 && !autoStart || insertMode == 2 && !autoStart) {
-                    FullPictureLoadAutoInsertImg = _GM_getValue("FullPictureLoadAutoInsertImg", 1);
-                    if (FullPictureLoadAutoInsertImg == 1) {
+                    if (options.autoInsert == 1) {
                         if (options.shadowGallery == 1) {
                             await fun.immediateInsertImg();
                         } else {
@@ -28772,9 +28773,13 @@ a[data-fancybox]:hover {
             }
         }
         if (options.shadowGallery == 1 && options.autoDownload != 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
-            setTimeout(() => {
-                createShadowGallery();
-            }, 200);
+            if ("SPA" in siteData && isFn(siteData.SPA)) {
+                if (siteData.SPA()) {
+                    setTimeout(() => createShadowGallery(), 200);
+                }
+            } else {
+                setTimeout(() => createShadowGallery(), 200);
+            }
         }
         if ("openInNewTab" in siteData && isString(siteData.openInNewTab)) {
             const openInNewTab = siteData.openInNewTab;
