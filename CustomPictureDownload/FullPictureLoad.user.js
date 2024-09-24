@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.2
+// @version            2.8.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -14170,6 +14170,7 @@ a:has(>div>div>img),
         go: 1,
         customTitle: () => fun.title(" - Roku Hentai"),
         css: ".site-bottom-ad-slot{display:none!important}",
+        fetch: 1,
         category: "hcomic"
     }, {
         name: "Roku Hentai",
@@ -14179,6 +14180,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".site-reader", 2],
         css: ".site-reader--right-to-left,.site-reader--left-to-right{overflow-x:auto!important;overflow-y:auto!important}.site-reader{padding-bottom:0px!important}.site-reader{display:block!important;}.site-bottom-ad-slot{display:none!important}",
+        fetch: 1,
         category: "hcomic"
     }, {
         name: "177 漫画/XXIAV寫真館",
@@ -24814,10 +24816,14 @@ if ("ge" in window) {
             fetch(srcUrl, {
                 headers: {
                     "accept": "*/*",
+                    //"accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                    //"cache-control": "no-cache",
                     "upgrade-insecure-requests": "1"
                 },
                 referrer: getReferer(srcUrl),
-                referrerPolicy: "strict-origin-when-cross-origin"
+                referrerPolicy: "strict-origin-when-cross-origin",
+                /***同域請求攜帶cookie***/
+                //credentials: "same-origin"
             }).then(async res => {
                 return {
                     data: res,
@@ -24961,7 +24967,11 @@ if ("ge" in window) {
     const getImgs = async selector => {
         isFetching = true;
         let imgs = null;
-        if (ge(".FullPictureLoadImage,.FullPictureLoadVideo") && siteData.repeat != 1) {
+        if (!("SPA" in siteData) && !("capture" in siteData) && siteData.repeat != 1 && globalImgArray.length > 0) {
+            isFetching = false;
+            imgs = globalImgArray;
+            return imgs;
+        } else if (ge(".FullPictureLoadImage,.FullPictureLoadVideo") && siteData.repeat != 1) {
             imgs = gae(".FullPictureLoadImage:not(.small)");
         } else if (isFn(selector)) {
             imgs = await selector();
@@ -25182,6 +25192,24 @@ if ("ge" in window) {
                         } catch {
                             if (/^image/.test(type)) {
                                 ex = "jpg";
+                            } else if (type === "") {
+                                let url = URL.createObjectURL(blobData);
+                                let check = await fun.checkImgStatus(url, 0);
+                                if (check.ok) {
+                                    if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
+                                        ex = "webp";
+                                        fun.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                        blobData = await fun.convertImage(blobData, "image/webp");
+                                    } else {
+                                        ex = "jpg";
+                                        fun.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                        blobData = await fun.convertImage(blobData);
+                                    }
+                                } else {
+                                    console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", blobDataArray[i]);
+                                    fun.showMsg(displayLanguage.str_30, 0);
+                                    return;
+                                }
                             } else {
                                 console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", blobDataArray[i]);
                                 fun.showMsg(displayLanguage.str_30, 0);
@@ -25687,6 +25715,8 @@ if ("ge" in window) {
         if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
             imgSrcs = await getImgs(selector);
+        } else if (!("capture" in siteData)) {
+            globalImgArray.length > 0 ? imgSrcs = globalImgArray : imgSrcs = await getImgs(siteData.imgs);
         } else {
             captureSrcArray.length > 0 ? imgSrcs = captureSrcArray : imgSrcs = await getImgs(siteData.imgs);
         }
@@ -26551,9 +26581,13 @@ if (newWindowData.ViewMode == 1) {
         if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
             srcs = await getImgs(selector);
+        } else if (!("capture" in siteData)) {
+            globalImgArray.length > 0 ? srcs = globalImgArray : srcs = await getImgs(siteData.imgs);
         } else {
             captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
         }
+
+        if (srcs.length < 1) return;
 
         let imgViewIndex = -1;
 
@@ -26699,6 +26733,7 @@ img.default {
     max-height: 99vh;
     max-width: 99%;
     border: solid #fff;
+    background-color: #fff;
 }
 img.single {
     width: auto;
@@ -27414,6 +27449,9 @@ img.small {
         }
         if (hasTouchEvents) {
             ge("#ShowFullPictureLoadFixedMenuDIV").style.display = "none";
+            ge("#FullPictureLoadOptionsShadowGalleryModeDIV").style.display = "none";
+        }
+        if ("SPA" in siteData) {
             ge("#FullPictureLoadOptionsShadowGalleryModeDIV").style.display = "none";
         }
         if (fancyboxBlackList()) {
@@ -28468,12 +28506,28 @@ a[data-fancybox]:hover {
         }
         if ("observerTitle" in siteData && isBoolean(siteData.observerTitle) && siteData.observerTitle === true) {
             const observerTitle_CB = async (mutationList, observer) => {
+                //console.log(mutationList);
+                if (mutationList) {
+                    const mutationList_removedNodes = [...mutationList].filter(item => item.type === "childList" && item?.removedNodes?.length > 0);
+                    if (mutationList_removedNodes.length > 0) {
+                        for (const mutation of mutationList_removedNodes) {
+                            const removedNodes = mutation.removedNodes;
+                            for (const node of removedNodes) {
+                                if (node?.id == "minShadowGallery") {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
                 if (observer) {
                     observer.disconnect();
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        await toggleUI();
+                        if (!ge("#minShadowGallery")) {
+                            await toggleUI();
+                        }
                     }, 200);
                 }
                 if (mutationList) {
@@ -28482,7 +28536,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "minShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
@@ -28498,7 +28552,7 @@ a[data-fancybox]:hover {
                                 }
                             }
                         }
-                        //console.log(mutationList_addedNodes);v
+                        //console.log(mutationList_addedNodes);
                     } catch {}
                 }
                 if (isFetching || isDownloading) return;
@@ -28523,12 +28577,27 @@ a[data-fancybox]:hover {
         }
         if ("observerURL" in siteData && isBoolean(siteData.observerURL) && siteData.observerURL === true) {
             const observerURL_CB = async (mutationList, observer) => {
+                if (mutationList) {
+                    const mutationList_removedNodes = [...mutationList].filter(item => item.type === "childList" && item?.removedNodes?.length > 0);
+                    if (mutationList_removedNodes.length > 0) {
+                        for (const mutation of mutationList_removedNodes) {
+                            const removedNodes = mutation.removedNodes;
+                            for (const node of removedNodes) {
+                                if (node?.id == "minShadowGallery") {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
                 if (observer) {
                     observer.disconnect();
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        await toggleUI();
+                        if (!ge("#minShadowGallery")) {
+                            await toggleUI();
+                        }
                         if ("customTitle" in siteData && !("capture" in siteData)) {
                             const newCustomTitle = await getTitle(siteData.customTitle);
                             if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined && newCustomTitle !== "") {
@@ -28544,7 +28613,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "minShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
