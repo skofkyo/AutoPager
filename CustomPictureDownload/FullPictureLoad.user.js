@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.4
+// @version            2.8.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -18969,6 +18969,90 @@ if ("ge" in window) {
         customTitle: () => document.title.split(" - ")[0].replace(/正在觀看|（\d+P）/ig, "").replace(">", " - "),
         css: ".ptview>img{width:100%!important;height:auto!important;max-width:1000px!important;border:none!important;box-shadow:none!important;padding:0!important;margin:0 auto!important}",
         category: "comic"
+    }, {
+        name: "如漫画",
+        host: ["www.rumanhua.com", "rumanhua.com", "m.rumanhua.com"],
+        reg: () => fun.checkUrl({
+            h: "rumanhua.com",
+            p: /^\/\w+\/\w+.html$/i
+        }) && comicInfiniteScrollMode != 1,
+        init: () => fun.createImgBox("#pics", 1),
+        imgs: ".main_img img",
+        button: [4],
+        insertImg: [".main_img", 2],
+        autoDownload: [0],
+        next: "a[href$=html]:has(>.folat-next1),a[href$=html]:has(>.i-rd-next)",
+        prev: "a[href$=html]:has(>.folat-prev1),a[href$=html]:has(>.i-rd-prev)",
+        customTitle: (dom = document) => {
+            let text = fun.dt({
+                t: dom.title,
+                d: " - 如漫画"
+            });
+            let textArr = text.split("_");
+            return textArr[1] + " - " + textArr[0];
+        },
+        preloadNext: (nextDoc, obj) => {
+            fun.iframe(nextLink, {
+                waitEle: ".main_img img",
+                waitVar: "__c0rst96",
+                cb: (dom, frame) => {
+                    let srcs = fun.getImgSrcArr(obj.imgs, dom);
+                    fun.picPreload(srcs, obj.customTitle(dom), "next");
+                }
+            });
+        },
+        infiniteScroll: true,
+        category: "comic"
+    }, {
+        name: "如漫画 自動翻頁",
+        reg: () => fun.checkUrl({
+            h: "rumanhua.com",
+            p: /^\/\w+\/\w+.html$/i
+        }) && comicInfiniteScrollMode == 1,
+        getSrcs: (dom) => fun.getImgSrcArr(".main_img img", dom),
+        getImgs: (dom = document) => fun.createImgArray(_this.getSrcs(dom)),
+        init: async () => {
+            let imgs = _this.getImgs();
+            let tE = fun.ge(".main_img");
+            tE.innerHTML = "";
+            tE.append(...imgs);
+            await fun.lazyload();
+        },
+        autoPager: {
+            mode: 1,
+            waitEle: ".main_img img[src^=http]",
+            ele: (dom) => _this.getImgs(dom),
+            pos: [".main_img", 0],
+            observer: ".main_img>img",
+            next: "a[href$=html]:has(>.folat-next1),a[href$=html]:has(>.i-rd-next)",
+            re: ".footer-right>a,.main_control,.chaphead,.chapter-end,.chap-footer",
+            title: (dom) => {
+                let text = fun.dt({
+                    t: dom.title,
+                    d: " - 如漫画"
+                });
+                let textArr = text.split("_");
+                if (hasTouchEvents) {
+                    return textArr[0];
+                } else {
+                    return textArr[1] + " - " + textArr[0];
+                }
+            },
+            preloadNextPage: (dom) => {
+                let next = fun.ge(_this.autoPager.next, dom);
+                if (!!next) {
+                    fun.iframe(next.href, {
+                        waitEle: ".main_img img[src^=http]",
+                        waitVar: "__c0rst96",
+                        cb: async (dom, frame) => {
+                            let srcs = fun.getImgSrcArr(".main_img img", dom);
+                            fun.picPreload(srcs, _this.autoPager.title(dom), "next");
+                        }
+                    });
+                }
+            }
+        },
+        category: "comic autoPager"
     }, {
         name: "漫画网",
         host: ["www.manhua3.com", "manhuami.cc"],
