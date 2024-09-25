@@ -5441,6 +5441,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
+                    <a href="https:/www.rumanhua.com/">如漫画</a>
+                </td>
+                <td><a href="https://m.rumanhua.com/">m.rumanhua.com</a>，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://manhuami.cc/">漫画网</a>
                 </td>
                 <td><a href="https://www.manhua3.com/">www.manhua3.com</a>，有無限滾動模式加預讀</td>
