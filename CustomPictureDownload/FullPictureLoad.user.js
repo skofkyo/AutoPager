@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.3
+// @version            2.8.4
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5324,7 +5324,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["//div[@class='flex flex-col items-center'][div[div[a[img]]]] | //div[@class='flex flex-col items-center'][div[div[img]]]", 2],
         customTitle: ".justify-between h2",
-        viewMode: 1,
         category: "nsfw1"
     }, {
         name: "Gallery Epic Cosplays 分類自動翻頁",
@@ -9172,7 +9171,6 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#album_view_album_view", 2],
-        viewMode: 1,
         customTitle: ".player-title",
         category: "nsfw2"
     }, {
@@ -11575,6 +11573,7 @@ a:has(>div>div>img),
                 "www.hentai.name",
                 "nhentai.xxx",
                 "nhentai.to",
+                "nhentai.website",
                 "simplyhentai.org"
             ],
             p: /^\/g\/\d+\/?$/
@@ -11603,12 +11602,18 @@ a:has(>div>div>img),
                 let url = fun.gu(".gallery_thumbs a");
                 let iframe = await fun.iframeVar(url, "g_th");
                 return fun.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fun.ex(iframe.g_th.fl[(i + 1)][0])}`);
-            } else if (fun.lh === "nhentai.to") {
+            } else if (fun.lh === "nhentai.to" || fun.lh === "nhentai.website") {
                 fun.showMsg(displayLanguage.str_05, 0);
                 let url = fun.gu("a.gallerythumb");
-                let iframe = await fun.iframeVar(url, "reader");
-                let imgDir = iframe.reader.media_url + "/galleries/" + iframe.reader.gallery.media_id + "/";
-                return iframe.reader.gallery.images.pages.map((e, i) => `${imgDir}${(i + 1)}.${fun.ex(e.t)}`);
+                return fun.iframeVar(url, "reader").then(frame => {
+                    const {
+                        gallery,
+                        image_cache
+                    } = frame.reader;
+                    const k = "1";
+                    const [path] = image_cache[k].image.src.match(/^.+\//);
+                    return gallery.images.pages.map((e, i) => `${path}${(i + 1)}.${fun.ex(e.t)}`);
+                });
             } else if (fun.lh === "simplyhentai.org") {
                 return fun.gae(".thumbs img,.thumb-container img").map(e => e.dataset.src ? e.dataset.src.replace(/t(\.\w+)$/, "$1") : e.src.replace(/t(\.\w+)$/, "$1"));
             } else if (fun.lh === "www.hentai.name") {
@@ -12426,9 +12431,9 @@ a:has(>div>div>img),
         insertImg: [".reader_overlay", 2],
         category: "hcomic"
     }, {
-        name: "nhentai.to閱讀頁",
-        host: ["nhentai.to"],
-        reg: /^https?:\/\/nhentai\.to\/g\/\d+\/\d+$/,
+        name: "nhentai.to/nhentai.website閱讀頁",
+        host: ["nhentai.to", "nhentai.website"],
+        reg: /^https?:\/\/nhentai\.(to|website)\/g\/\d+\/\d+$/,
         init: async () => await fun.waitVar("reader"),
         imgs: () => {
             const {
@@ -18965,6 +18970,79 @@ if ("ge" in window) {
         css: ".ptview>img{width:100%!important;height:auto!important;max-width:1000px!important;border:none!important;box-shadow:none!important;padding:0!important;margin:0 auto!important}",
         category: "comic"
     }, {
+        name: "漫画网",
+        host: ["www.manhua3.com", "manhuami.cc"],
+        reg: () => fun.checkUrl({
+            e: [
+                "div.logo>a[title=漫画网]>img[alt=漫画网]",
+                "#pics"
+            ],
+            p: /^\/[\d-]+\.html$/
+        }) && comicInfiniteScrollMode != 1,
+        init: () => fun.createImgBox("#pics", 1),
+        imgs: (frame = _unsafeWindow) => frame.params.images.map(e => e.url),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#pics"], 2
+        ],
+        autoDownload: [0],
+        next: "//a[text()='下一章'][starts-with(@href,'/')]",
+        prev: "//a[text()='上一章'][starts-with(@href,'/')]",
+        customTitle: (dom = document) => fun.dt({
+            t: dom.title,
+            d: "在线阅读-漫画网"
+        }).replace("_", " - "),
+        preloadNext: (nextDoc, obj) => {
+            fun.iframeVar(nextLink, "params").then(w => {
+                let srcs = obj.imgs(w);
+                fun.picPreload(srcs, obj.customTitle(nextDoc), "next");
+            });
+        },
+        infiniteScroll: true,
+        css: "@media (max-width:559px){.main{padding:20px 0px 0!important;}}",
+        category: "comic"
+    }, {
+        name: "漫画网 自動翻頁",
+        reg: () => fun.checkUrl({
+            e: [
+                "div.logo>a[title=漫画网]>img[alt=漫画网]",
+                "#pics"
+            ],
+            p: /^\/[\d-]+\.html$/
+        }) && comicInfiniteScrollMode == 1,
+        getSrcs: () => frameWindow.params.images.map(e => e.url),
+        getImgs: () => fun.createImgArray(_this.getSrcs()),
+        init: async () => {
+            let imgs = _this.getImgs();
+            let tE = fun.createImgBox("#pics", 1);
+            tE.append(...imgs);
+            fun.remove("#pics");
+            await fun.lazyload();
+        },
+        autoPager: {
+            mode: 1,
+            waitEle: "#pics img",
+            ele: () => _this.getImgs(),
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            observer: "#FullPictureLoadMainImgBox>img",
+            next: "//a[text()='下一章'][starts-with(@href,'/')]",
+            re: ".btn.paediy",
+            title: (dom) => {
+                let text = fun.dt({
+                    t: dom.title,
+                    d: "在线阅读-漫画网"
+                });
+                if (hasTouchEvents) {
+                    return text.split("_")[1];
+                } else {
+                    return text.replace("_", " - ");
+                }
+            },
+            preloadNextPage: 1
+        },
+        css: "@media (max-width:559px){.main{padding:20px 0px 0!important;}}",
+        category: "comic autoPager"
+    }, {
         name: "漫画160/非常爱漫新站",
         host: ["www.mh160.cc", "m.mh160.cc", "www.veryim.com"],
         enable: 1,
@@ -20992,7 +21070,7 @@ if ("ge" in window) {
                 str_100: "次",
                 str_101: "網址.txt已匯出",
                 str_102: "格式轉換中...",
-                str_103: "啟用並排模式",
+                str_103: "頁面容器預設使用並排模式",
                 str_104: hasTouchEvents ? "匯出圖址" : "匯出圖址(7)",
                 str_105: hasTouchEvents ? "複製圖址" : "複製圖址(1)",
                 str_106: hasTouchEvents ? "分頁檢視" : "分頁檢視(8)",
@@ -21034,8 +21112,8 @@ if ("ge" in window) {
                 str_136: "右鍵：增加圖片縮放級別(+)",
                 str_137: "頁面圖片添加燈箱模式",
                 str_138: "此網站禁用",
-                str_139: "啟用頁面容器自動聚圖",
-                str_140: "啟用影子畫廊",
+                str_139: "自動聚圖至頁面容器",
+                str_140: "自動進入影子畫廊",
                 str_141: hasTouchEvents ? "影子畫廊" : "影子畫廊(G)",
                 str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
@@ -21043,7 +21121,7 @@ if ("ge" in window) {
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
-                    small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2)",
+                    small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2,R)",
                     single: hasTouchEvents ? "單圖像模式" : "單圖像模式 (1)",
                     default: hasTouchEvents ? "預設模式" : "預設模式 (0)",
                 }
@@ -21155,7 +21233,7 @@ if ("ge" in window) {
                 str_100: "次",
                 str_101: "网址.txt已导出",
                 str_102: "格式转换中...",
-                str_103: "启用并排模式",
+                str_103: "页面容器默认使用并排模式",
                 str_104: hasTouchEvents ? "导出图址" : "导出图址(7)",
                 str_105: hasTouchEvents ? "拷贝图址" : "拷贝图址(1)",
                 str_106: hasTouchEvents ? "分页视图" : "分页视图(8)",
@@ -21197,8 +21275,8 @@ if ("ge" in window) {
                 str_136: "右键：增加图片缩放级别(+)",
                 str_137: "页面图片添加灯箱模式",
                 str_138: "此网站禁用",
-                str_139: "启用页面容器自动聚图",
-                str_140: "启用影子画廊",
+                str_139: "自动聚图至页面容器",
+                str_140: "自動進入影子畫廊",
                 str_141: hasTouchEvents ? "影子画廊" : "影子画廊(G)",
                 str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
@@ -21206,7 +21284,7 @@ if ("ge" in window) {
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
-                    small: hasTouchEvents ? "小图像模式" : "小图像模式 (2)",
+                    small: hasTouchEvents ? "小图像模式" : "小图像模式 (2,R)",
                     single: hasTouchEvents ? "单图像模式" : "单图像模式 (1)",
                     default: hasTouchEvents ? "默认模式" : "默认模式 (0)",
                 }
@@ -21368,7 +21446,7 @@ if ("ge" in window) {
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
-                    small: hasTouchEvents ? "Small Image" : "Small Image (2)",
+                    small: hasTouchEvents ? "Small Image" : "Small Image (2,R)",
                     single: hasTouchEvents ? "Single Image" : "Single Image (1)",
                     default: hasTouchEvents ? "Default" : "Default (0)",
                 }
@@ -23173,11 +23251,7 @@ if ("ge" in window) {
                     text: displayLanguage.str_85,
                     cfn: event => {
                         event.preventDefault();
-                        if (!fun.ge("body>#FullPictureLoadOptions")) {
-                            addFullPictureLoadOptionsMain();
-                            optionsSetValue();
-                        }
-                        fun.ge("#FullPictureLoadOptions").removeAttribute("style");
+                        createPictureLoadOptionsShadowElement();
                     }
                 }, {
                     id: "FullPictureLoadToggleImgModeBtn",
@@ -23382,7 +23456,7 @@ if ("ge" in window) {
                 if (TurnOffImageNavigationShortcutKeys != 1) {
                     let imgsNum = 0;
                     document.addEventListener("keydown", event => {
-                        if (fun.ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
+                        if (fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
                         if (event.code === "ArrowUp") {
                             if (imgsNum > 0 && viewMode == 0) {
                                 imgsNum -= 1;
@@ -24738,8 +24812,8 @@ if ("ge" in window) {
     //CSS取得元素返回元素
     //const ge = (selector) => document.querySelector(selector);
 
-    function ge(selector) {
-        return document.querySelector(selector);
+    function ge(selector, node = null) {
+        return (node || document).querySelector(selector);
     }
 
     //CSS取得所有元素返回元素陣列
@@ -24771,6 +24845,13 @@ if ("ge" in window) {
         } else {
             console.error("insertAfter參數錯誤\n", targetNode, Object.prototype.toString.call(targetNode), newNode, Object.prototype.toString.call(newNode));
         }
+    };
+
+    const createStyle = css => {
+        const style = document.createElement("style");
+        style.type = "text/css";
+        style.innerHTML = css;
+        return style;
     };
 
     //數字字串補0
@@ -25066,7 +25147,7 @@ if ("ge" in window) {
 
     //圖片影片下載函式
     const DownloadFn = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
         let selector, titleText;
         let autoDownload = siteData.autoDownload;
         let start;
@@ -25168,17 +25249,26 @@ if ("ge" in window) {
                         let type = blobData.type;
                         try {
                             if (/octet-stream/.test(type) || hasTouchEvents && type === "") {
-                                if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
-                                    blobData = await fun.convertImage(blobData, "image/webp");
-                                    ex = "webp";
+                                let url = URL.createObjectURL(blobData);
+                                let check = await fun.checkImgStatus(url, 0);
+                                URL.revokeObjectURL(url);
+                                if (check.ok) {
+                                    if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
+                                        blobData = await fun.convertImage(blobData, "image/webp");
+                                        ex = "webp";
+                                    } else {
+                                        blobData = await fun.convertImage(blobData);
+                                        ex = "jpg";
+                                    }
+                                    if (type === "") {
+                                        fun.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                    } else {
+                                        fun.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                    }
                                 } else {
-                                    blobData = await fun.convertImage(blobData);
-                                    ex = "jpg";
-                                }
-                                if (type === "") {
-                                    fun.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
-                                } else {
-                                    fun.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                    console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", blobDataArray[i]);
+                                    fun.showMsg(displayLanguage.str_30, 0);
+                                    return;
                                 }
                             } else if ((/webp/i.test(type) || /\.webp/i.test(blobDataArray[i].finalUrl)) && !type.includes("image/jpeg") && convertWebpToJpg == 1) {
                                 blobData = await fun.convertImage(blobData);
@@ -25195,6 +25285,7 @@ if ("ge" in window) {
                             } else if (type === "") {
                                 let url = URL.createObjectURL(blobData);
                                 let check = await fun.checkImgStatus(url, 0);
+                                URL.revokeObjectURL(url);
                                 if (check.ok) {
                                     if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
                                         ex = "webp";
@@ -25273,7 +25364,7 @@ if ("ge" in window) {
 
     //匯出網址
     const exportImgSrcText = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         if (srcArr.length == 0 && videoSrcArray.length == 0) return showMsg(displayLanguage.str_44);
@@ -25295,7 +25386,7 @@ if ("ge" in window) {
 
     //複製網址或手動模式的插入圖片
     const copyImgSrcText = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         siteData.insertImg ? debug("手動插入圖片") : debug("複製網址");
@@ -25314,7 +25405,7 @@ if ("ge" in window) {
 
     //複製網址
     const copyImgSrcTextB = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
@@ -25348,7 +25439,7 @@ if ("ge" in window) {
 
     //滾動至首張圖片(動畫效果)
     const goToNo1Img = (time = 1000) => {
-        if (ge("#FullPictureLoadOptions:not([style])")) return;
+        if (ge("#FullPictureLoadOptionsShadowElement")) return;
         let ele;
         ge("#FullPictureLoadImgBox:not([style*=none])") ? ele = ge(".FullPictureLoadImage.small") : ele = ge(".FullPictureLoadImage");
         if (ele) {
@@ -25379,7 +25470,7 @@ if ("ge" in window) {
 
     //自動滾動元素
     const autoScrollEles = () => {
-        if (ge("#FullPictureLoadOptions:not([style])")) return;
+        if (ge("#FullPictureLoadOptionsShadowElement")) return;
         let scrollEle = siteData.scrollEle;
         if (isFn(scrollEle)) {
             scrollEle();
@@ -25391,7 +25482,7 @@ if ("ge" in window) {
 
     //減少圖片縮放級別
     const reduceZoom = () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
         if (options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom == 0 ? options.zoom = 10 : options.zoom = options.zoom -= 1;
             if (options.zoom == 0) cancelZoom();
@@ -25416,7 +25507,7 @@ if ("ge" in window) {
 
     //增加圖片縮放級別
     const increaseZoom = () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
         if (options.zoom > 1 && options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = options.zoom += 1;
             if (options.zoom > 10) cancelZoom();
@@ -25443,7 +25534,7 @@ if ("ge" in window) {
 
     //切換圖片檢視模式
     const toggleImgMode = async () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
         let column;
         if (gae(".FullPictureLoadImage").length < 1) {
             fun.showMsg("沒有圖片或只有影片");
@@ -25613,7 +25704,7 @@ if ("ge" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
+                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
                     if (event.code === "ArrowUp") {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
@@ -26124,6 +26215,14 @@ document.addEventListener("keydown", event => {
         inline: "center"
     };
     const imgs = [...document.querySelectorAll("img")];
+    if (event.code === "KeyR" && newWindowData.ViewMode == 2) {
+        let box = document.querySelector("#imgBox");
+        if (box.style.direction == "rtl") {
+            box.style.direction = "ltr";
+        } else {
+            box.style.direction = "rtl";
+        }
+    }
     if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
@@ -26399,6 +26498,14 @@ document.addEventListener("keydown", event => {
         inline: "center"
     };
     const imgs = [...document.querySelectorAll("img")];
+    if (event.code === "KeyR" && newWindowData.ViewMode == 2) {
+        let box = document.querySelector("#imgBox");
+        if (box.style.direction == "rtl") {
+            box.style.direction = "ltr";
+        } else {
+            box.style.direction = "rtl";
+        }
+    }
     if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
@@ -26563,8 +26670,8 @@ if (newWindowData.ViewMode == 1) {
 
         if (hasTouchEvents) return;
 
-        if (ge("#minShadowGallery")) {
-            ge("#minShadowGallery").remove();
+        if (ge("#mainShadowGallery")) {
+            ge("#mainShadowGallery").remove();
         }
 
         let newWindowData = localStorage.getItem("newWindowData");
@@ -26596,29 +26703,22 @@ if (newWindowData.ViewMode == 1) {
             inline: "center"
         };
 
-        const createStyle = css => {
-            const style = document.createElement("style");
-            style.type = "text/css";
-            style.innerHTML = css;
-            return style;
-        };
-
-        const mainHtml = '<div id="minShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        const mainHtml = '<div id="mainShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
-        const minShadowGallery = ge("#minShadowGallery");
-        const shadow = minShadowGallery.attachShadow({
-            mode: "open"
+        const mainShadowGallery = ge("#mainShadowGallery");
+        const shadow = mainShadowGallery.attachShadow({
+            mode: "closed"
         });
 
-        const hideSelector = "body>*:not(#minShadowGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        const hideSelector = "body>*:not(#mainShadowGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const closeGallery = () => {
             _unsafeWindow.removeEventListener("keydown", kEvent);
             gae(hideSelector).forEach(e => (e.style.display = ""));
             ge("#overflowYHidden")?.remove();
-            minShadowGallery?.remove();
+            mainShadowGallery?.remove();
         };
 
         const kEvent = (event) => {
@@ -26634,6 +26734,14 @@ if (newWindowData.ViewMode == 1) {
                 let next = shadow.querySelector("#next a");
                 if (next) {
                     next.click();
+                }
+            }
+            if (event.code === "KeyR" && newWindowData.ViewMode == 2) {
+                let box = shadow.querySelector("#imgBox");
+                if (box.style.direction == "rtl") {
+                    box.style.direction = "ltr";
+                } else {
+                    box.style.direction = "rtl";
                 }
             }
             if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
@@ -26780,7 +26888,7 @@ img.small {
         shadow.appendChild(style);
 
         const mainElement = document.createElement("div");
-        mainElement.id = "imgBox";
+        mainElement.id = "shadowGallery";
 
         Object.assign(mainElement.style, {
             left: "0",
@@ -26826,10 +26934,11 @@ img.small {
                 return img;
             });
             const p = document.createElement("p");
+            p.id = "imgBox";
             if (newWindowData.ViewMode === 3) {
                 p.style.direction = "rtl";
             }
-            if (siteData.category.includes("comic")) {
+            if (siteData.category.includes("comic") && newWindowData.ViewMode != 4) {
                 p.style.padding = "0 6%";
                 p.style.margin = "0 auto";
             }
@@ -26886,7 +26995,7 @@ img.small {
                 });
             }
             if (nextLink) {
-                let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}</a></div>`;
+                let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</a></div>`;
                 mainElement.insertAdjacentHTML("beforeend", html);
             }
         }
@@ -27037,7 +27146,7 @@ img.small {
 
     //清除圖片縮放級別
     const cancelZoom = () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptions:not([style])")) return;
+        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
         if (ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = 0;
             ge("#FullPictureLoadOptionsZoom").value = options.zoom;
@@ -27186,11 +27295,7 @@ img.small {
             show: 0,
             cfn: event => {
                 event.preventDefault();
-                if (!fun.ge("body>#FullPictureLoadOptions")) {
-                    addFullPictureLoadOptionsMain();
-                    optionsSetValue();
-                }
-                fun.ge("#FullPictureLoadOptions").removeAttribute("style");
+                createPictureLoadOptionsShadowElement();
             }
         }, {
             text: displayLanguage.str_133,
@@ -27278,10 +27383,106 @@ img.small {
     const noneData = customData.filter(item => item.category === "none");
 
     //創建腳本選項元素
-    const addFullPictureLoadOptionsMain = () => {
-        const FullPictureLoadOptionsMain = document.createElement("div");
-        FullPictureLoadOptionsMain.id = "FullPictureLoadOptions";
-        FullPictureLoadOptionsMain.style.display = "none";
+    const createPictureLoadOptionsShadowElement = () => {
+
+        const mainHtml = '<div id="FullPictureLoadOptionsShadowElement" style="display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        document.body.insertAdjacentHTML("beforeend", mainHtml);
+
+        const mainElement = document.querySelector("#FullPictureLoadOptionsShadowElement");
+        const shadow = mainElement.attachShadow({
+            mode: "open"
+        });
+
+        const style = createStyle(`
+#FullPictureLoadOptions {
+    text-align: center;
+    width: 360px !important;
+    height: auto !important;
+    position: fixed !important;
+    top: ${hasTouchEvents ? "10%" : "20%"};
+    left: 50%;
+    margin-left: -180px;
+    border: 1px solid #a0a0a0 !important;
+    border-radius: 3px !important;
+    box-shadow: -2px 2px 5px rgb(0 0 0 / 30%) !important;
+    background-color: #FAFAFB;
+    z-index: 2147483647 !important;
+}
+
+#FullPictureLoadOptions label, #FullPictureLoadOptions select {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+#FullPictureLoadOptions select {
+    border: 1px solid #a0a0a0 !important;
+    background-color: transparent !important;
+    border-radius: 0px !important;
+    min-width: 60px !important;
+    height: unset !important;
+    -webkit-box-shadow: unset !important;
+    box-shadow: unset !important;
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
+    background-image: unset !important;
+    display: inline-block !important;
+}
+
+#FullPictureLoadOptions * {
+    font: unset !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 14px !important;
+    color: black;
+    float: none !important;
+    line-height: 18px !important;
+    margin-bottom: 4px !important;
+    padding: 1px 4px !important;
+    width: auto;
+}
+
+#FullPictureLoadOptions button {
+    width: auto;
+    min-width: 102px;
+    max-width: 110px;
+    min-height: unset !important;
+    max-height: 24px !important;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px !important;
+    display: inline-block;
+    color: #000000 !important;
+    border: 1px solid #a0a0a0 !important;
+    background-color: transparent !important;
+    border-radius: unset !important;
+}
+
+#FullPictureLoadOptions input {
+    position: unset !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    color: #000000 !important;
+    height: 18px !important;
+    border: 1px solid #a0a0a0 !important;
+    border-radius: unset !important;
+    background-color: transparent !important;
+    outline: unset !important;
+    display: unset !important;
+    -webkit-appearance: auto !important;
+}
+
+#FullPictureLoadOptions p {
+    text-align: center !important;
+    margin-block-start: 0px !important;
+    margin-block-end: 0px !important;
+    margin-inline-start: 0px !important;
+    margin-inline-end: 0px !important;
+}
+
+`);
+        shadow.appendChild(style);
+
+        const main = document.createElement("div");
+        main.id = "FullPictureLoadOptions";
         const FullPictureLoadOptionsMainHtmlStr = `
 <div style="width: 100%;">
     <p>${displayLanguage.str_68}</p>
@@ -27368,112 +27569,91 @@ img.small {
 <button id="FullPictureLoadOptionsResetBtn">${displayLanguage.str_83}</button>
 <button id="FullPictureLoadOptionsSaveBtn">${displayLanguage.str_84}</button>
 `;
-        FullPictureLoadOptionsMain.innerHTML = FullPictureLoadOptionsMainHtmlStr;
-        document.body.append(FullPictureLoadOptionsMain);
+        main.innerHTML = FullPictureLoadOptionsMainHtmlStr;
 
-        const FullPictureLoadOptionsButtonAddEvent = () => {
-            ge("#FullPictureLoadOptionsCancelBtn").addEventListener("click", event => {
-                event.preventDefault();
-                ge("#FullPictureLoadOptions").style.display = "none";
-            });
-            ge("#FullPictureLoadOptionsResetBtn").addEventListener("click", event => {
-                event.preventDefault();
-                localStorage.removeItem("FullPictureLoadOptions");
-                _GM_setValue("FullPictureLoadMsgPos", 0);
-                _GM_setValue("convertWebpToJpg", 0);
-                location.reload();
-            });
-            ge("#FullPictureLoadOptionsSaveBtn").addEventListener("click", event => {
-                event.preventDefault();
-                options.icon = ge("#FullPictureLoadOptionsIcon").checked == true ? 1 : 0;
-                options.autoInsert = ge("#FullPictureLoadAutoInsertImg").checked == true ? 1 : 0;
-                _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFullPictureLoadFixedMenu").checked == true ? 1 : 0);
-                _GM_setValue("FullPictureLoadMsgPos", ge("#FullPictureLoadOptionsMsgPos").value);
-                options.threading = ge("#FullPictureLoadOptionsThreading").value;
-                options.zip = ge("#FullPictureLoadOptionsZip").checked == true ? 1 : 0;
-                options.file_extension = ge("#FullPictureLoadOptionsExtension").value;
-                _GM_setValue("convertWebpToJpg", ge("#FullPictureLoadOptionsConvert").checked == true ? 1 : 0);
-                options.comic = ge("#FullPictureLoadOptionsComic").checked == true ? 1 : 0;
-                options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload").checked == true ? 1 : 0;
-                options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown").value;
-                options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble").checked == true ? 1 : 0;
-                options.fancybox = ge("#FullPictureLoadOptionsFancybox").checked == true ? 1 : 0;
-                options.zoom = ge("#FullPictureLoadOptionsZoom").value;
-                options.column = ge("#FullPictureLoadOptionsColumn").value;
-                options.viewMode = ge("#FullPictureLoadOptionsviewMode").checked == true ? 1 : 0;
-                options.shadowGallery = ge("#FullPictureLoadOptionsShadowGalleryMode").checked == true ? 1 : 0;
-                let jsonStr = JSON.stringify(options);
-                localStorage.setItem("FullPictureLoadOptions", jsonStr);
-                location.reload();
-            });
-        };
-        FullPictureLoadOptionsButtonAddEvent();
-
-        let optionsObserverTimeid = setTimeout(() => optionsObserver.disconnect(), 5000);
-
-        const optionsObserver = new MutationObserver((mutationsList, observer) => {
-            //網站如果使用了rocket-loader.min.js，會修改含input的HTML，導致FullPictureLoadOptions結構樣式跑掉，必須再修改回來。
-            if (fun.ge("div.icheckbox_square-blue", FullPictureLoadOptionsMain)) {
-                FullPictureLoadOptionsMain.innerHTML = FullPictureLoadOptionsMainHtmlStr;
-                FullPictureLoadOptionsButtonAddEvent();
-                optionsSetValue();
-                clearTimeout(optionsObserverTimeid);
-                observer.disconnect();
-            }
-        });
-        optionsObserver.observe(FullPictureLoadOptionsMain, MutationObserverConfig);
-    };
-
-    //根據使用者設置更改腳本選項元素的值
-    const optionsSetValue = () => {
-        ge("#FullPictureLoadOptionsIcon").checked = options.icon == 1 ? true : false;
-        ge("#FullPictureLoadAutoInsertImg").checked = options.autoInsert == 1 ? true : false;
-        ge("#ShowFullPictureLoadFixedMenu").checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
-        ge("#FullPictureLoadOptionsMsgPos").value = _GM_getValue("FullPictureLoadMsgPos", 0);
-        ge("#FullPictureLoadOptionsThreading").value = options.threading;
-        ge("#FullPictureLoadOptionsZip").checked = options.zip == 1 ? true : false;
-        ge("#FullPictureLoadOptionsExtension").value = options.file_extension;
-        ge("#FullPictureLoadOptionsConvert").checked = _GM_getValue("convertWebpToJpg", 1) == 1 ? true : false;
-        ge("#FullPictureLoadOptionsAutoDownload").checked = options.autoDownload == 1 ? true : false;
-        ge("#FullPictureLoadOptionsCountdown").value = options.autoDownloadCountdown;
-        ge("#FullPictureLoadOptionsComic").checked = options.comic == 1 ? true : false;
-        ge("#FullPictureLoadOptionsDouble").checked = options.doubleTouchNext == 1 ? true : false;
+        ge("#FullPictureLoadOptionsIcon", main).checked = options.icon == 1 ? true : false;
+        ge("#FullPictureLoadAutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
+        ge("#ShowFullPictureLoadFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
+        ge("#FullPictureLoadOptionsMsgPos", main).value = _GM_getValue("FullPictureLoadMsgPos", 0);
+        ge("#FullPictureLoadOptionsThreading", main).value = options.threading;
+        ge("#FullPictureLoadOptionsZip", main).checked = options.zip == 1 ? true : false;
+        ge("#FullPictureLoadOptionsExtension", main).value = options.file_extension;
+        ge("#FullPictureLoadOptionsConvert", main).checked = _GM_getValue("convertWebpToJpg", 1) == 1 ? true : false;
+        ge("#FullPictureLoadOptionsAutoDownload", main).checked = options.autoDownload == 1 ? true : false;
+        ge("#FullPictureLoadOptionsCountdown", main).value = options.autoDownloadCountdown;
+        ge("#FullPictureLoadOptionsComic", main).checked = options.comic == 1 ? true : false;
+        ge("#FullPictureLoadOptionsDouble", main).checked = options.doubleTouchNext == 1 ? true : false;
         if ("insertImg" in siteData) {
             const [, insertMode] = siteData.insertImg;
             if (![1, 2].some(n => n == insertMode)) {
-                ge("#FullPictureLoadAutoInsertImgDIV").style.display = "none";
+                ge("#FullPictureLoadAutoInsertImgDIV", main).style.display = "none";
             }
         }
         if (!("insertImg" in siteData)) {
-            ge("#FullPictureLoadAutoInsertImgDIV").style.display = "none";
+            ge("#FullPictureLoadAutoInsertImgDIV", main).style.display = "none";
         }
         if (hasTouchEvents) {
-            ge("#ShowFullPictureLoadFixedMenuDIV").style.display = "none";
-            ge("#FullPictureLoadOptionsShadowGalleryModeDIV").style.display = "none";
+            ge("#ShowFullPictureLoadFixedMenuDIV", main).style.display = "none";
+            ge("#FullPictureLoadOptionsShadowGalleryModeDIV", main).style.display = "none";
         }
         if ("SPA" in siteData) {
-            ge("#FullPictureLoadOptionsShadowGalleryModeDIV").style.display = "none";
+            ge("#FullPictureLoadOptionsShadowGalleryModeDIV", main).style.display = "none";
         }
         if (fancyboxBlackList()) {
-            ge("#FullPictureLoadOptionsFancybox").checked = false;
-            ge("#FullPictureLoadOptionsFancybox").style.display = "none";
+            ge("#FullPictureLoadOptionsFancybox", main).checked = false;
+            ge("#FullPictureLoadOptionsFancybox", main).style.display = "none";
         } else {
-            ge("#FullPictureLoadOptionsFancybox").checked = options.fancybox == 1 ? true : false;
+            ge("#FullPictureLoadOptionsFancybox", main).checked = options.fancybox == 1 ? true : false;
         }
-        ge("#FullPictureLoadOptionsZoom").value = options.zoom;
-        siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn").value = 2 : ge("#FullPictureLoadOptionsColumn").value = options.column;
-        ge("#FullPictureLoadOptionsviewMode").checked = options.viewMode == 1 ? true : false;
-        ge("#FullPictureLoadOptionsShadowGalleryMode").checked = options.shadowGallery == 1 ? true : false;
+        ge("#FullPictureLoadOptionsZoom", main).value = options.zoom;
+        siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn", main).value = 2 : ge("#FullPictureLoadOptionsColumn", main).value = options.column;
+        ge("#FullPictureLoadOptionsviewMode", main).checked = options.viewMode == 1 ? true : false;
+        ge("#FullPictureLoadOptionsShadowGalleryMode", main).checked = options.shadowGallery == 1 ? true : false;
         if (comicSwitch) {
-            ge("#FullPictureLoadOptionsComicDIV").style.display = "flex";
+            ge("#FullPictureLoadOptionsComicDIV", main).style.display = "flex";
         }
         let autoDownload = siteData.autoDownload;
         if (hasTouchEvents && showOptions || !autoDownload && showOptions) {
-            gae("#FullPictureLoadOptionsAutoDownloadDIV,#FullPictureLoadOptionsCountdownDIV").forEach(e => (e.style.display = "none"));
+            fun.gae("#FullPictureLoadOptionsAutoDownloadDIV,#FullPictureLoadOptionsCountdownDIV", main).forEach(e => (e.style.display = "none"));
         }
         if (!hasTouchEvents && showOptions || (hasTouchEvents && showOptions && !siteData.next)) {
-            ge("#FullPictureLoadOptionsDoubleDIV").style.display = "none";
+            ge("#FullPictureLoadOptionsDoubleDIV", main).style.display = "none";
         }
+
+        ge("#FullPictureLoadOptionsCancelBtn", main).addEventListener("click", () => {
+            mainElement.remove();
+        });
+        ge("#FullPictureLoadOptionsResetBtn", main).addEventListener("click", event => {
+            event.preventDefault();
+            localStorage.removeItem("FullPictureLoadOptions");
+            _GM_setValue("FullPictureLoadMsgPos", 0);
+            _GM_setValue("convertWebpToJpg", 0);
+            location.reload();
+        });
+        ge("#FullPictureLoadOptionsSaveBtn", main).addEventListener("click", event => {
+            event.preventDefault();
+            options.icon = ge("#FullPictureLoadOptionsIcon", main).checked == true ? 1 : 0;
+            options.autoInsert = ge("#FullPictureLoadAutoInsertImg", main).checked == true ? 1 : 0;
+            _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFullPictureLoadFixedMenu", main).checked == true ? 1 : 0);
+            _GM_setValue("FullPictureLoadMsgPos", ge("#FullPictureLoadOptionsMsgPos", main).value);
+            options.threading = ge("#FullPictureLoadOptionsThreading", main).value;
+            options.zip = ge("#FullPictureLoadOptionsZip", main).checked == true ? 1 : 0;
+            options.file_extension = ge("#FullPictureLoadOptionsExtension", main).value;
+            _GM_setValue("convertWebpToJpg", ge("#FullPictureLoadOptionsConvert", main).checked == true ? 1 : 0);
+            options.comic = ge("#FullPictureLoadOptionsComic", main).checked == true ? 1 : 0;
+            options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload", main).checked == true ? 1 : 0;
+            options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown", main).value;
+            options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble", main).checked == true ? 1 : 0;
+            options.fancybox = ge("#FullPictureLoadOptionsFancybox", main).checked == true ? 1 : 0;
+            options.zoom = ge("#FullPictureLoadOptionsZoom", main).value;
+            options.column = ge("#FullPictureLoadOptionsColumn", main).value;
+            options.viewMode = ge("#FullPictureLoadOptionsviewMode", main).checked == true ? 1 : 0;
+            options.shadowGallery = ge("#FullPictureLoadOptionsShadowGalleryMode", main).checked == true ? 1 : 0;
+            let jsonStr = JSON.stringify(options);
+            localStorage.setItem("FullPictureLoadOptions", jsonStr);
+            location.reload();
+        });
+        shadow.appendChild(main);
     };
 
     //腳本的CSS樣式
@@ -27527,90 +27707,6 @@ img.small {
     border: unset;
     z-index: 99;
     opacity: 0.6;
-}
-
-#FullPictureLoadOptions {
-    text-align: center;
-    width: 360px !important;
-    height: auto !important;
-    position: fixed !important;
-    top: ${hasTouchEvents ? "10%" : "20%"};
-    left: 50%;
-    margin-left: -180px;
-    border: 1px solid #a0a0a0 !important;
-    border-radius: 3px !important;
-    box-shadow: -2px 2px 5px rgb(0 0 0 / 30%) !important;
-    background-color: #FAFAFB;
-    z-index: 2147483647 !important;
-}
-
-#FullPictureLoadOptions label, #FullPictureLoadOptions select {
-    margin: 0px !important;
-    padding: 0px !important;
-}
-
-#FullPictureLoadOptions select {
-    border: 1px solid #a0a0a0 !important;
-    background-color: transparent !important;
-    border-radius: 0px !important;
-    min-width: 60px !important;
-    height: unset !important;
-    -webkit-box-shadow: unset !important;
-    box-shadow: unset !important;
-    -webkit-appearance: auto !important;
-    appearance: auto !important;
-    background-image: unset !important;
-    display: inline-block !important;
-}
-
-#FullPictureLoadOptions * {
-    font: unset !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 14px !important;
-    color: black;
-    float: none !important;
-    line-height: 18px !important;
-    margin-bottom: 4px !important;
-    padding: 1px 4px !important;
-    width: auto;
-}
-
-#FullPictureLoadOptions button {
-    width: auto;
-    min-width: 102px;
-    max-width: 110px;
-    min-height: unset !important;
-    max-height: 24px !important;
-    margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 4px !important;
-    display: inline-block;
-    color: #000000 !important;
-    border: 1px solid #a0a0a0 !important;
-    background-color: transparent !important;
-    border-radius: unset !important;
-}
-
-#FullPictureLoadOptions input {
-    position: unset !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    color: #000000 !important;
-    height: 18px !important;
-    border: 1px solid #a0a0a0 !important;
-    border-radius: unset !important;
-    background-color: transparent !important;
-    outline: unset !important;
-    display: unset !important;
-    -webkit-appearance: auto !important;
-}
-
-#FullPictureLoadOptions p {
-    text-align: center !important;
-    margin-block-start: 0px !important;
-    margin-block-end: 0px !important;
-    margin-inline-start: 0px !important;
-    margin-inline-end: 0px !important;
 }
 
 #FullPictureLoad {
@@ -28226,11 +28322,12 @@ a[data-fancybox]:hover {
         //console.log("fancybox 3.5.7 選項物件", _unsafeWindow.jQuery.fancybox.defaults);
     };
 
+    //頁面容器快捷鍵
     const addKeyEvent = async event => {
-        if (ge(".fancybox-container,.fancybox__container,#minShadowGallery")) return;
+        if (ge(".fancybox-container,.fancybox__container,#mainShadowGallery")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
         if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
-        if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptions:not([style])")) return;
+        if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptionsShadowElement")) return;
         if (["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName)) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyT" || event.key === "t" || event.key === "T")) {
             let str = _unsafeWindow.getSelection().toString();
@@ -28272,14 +28369,10 @@ a[data-fancybox]:hover {
             return cancelZoom();
         }
         if (event.code === "NumpadMultiply" || event.key === "*") { //數字鍵*
-            if (!ge("body>#FullPictureLoadOptions")) {
-                addFullPictureLoadOptionsMain();
-                optionsSetValue();
-            }
-            return ge("#FullPictureLoadOptions").removeAttribute("style");
+            createPictureLoadOptionsShadowElement();
         }
         if (event.code === "Escape" || event.key === "Escape") { //Esc鍵
-            ge("#FullPictureLoadOptions").style.display = "none";
+            ge("#FullPictureLoadOptionsShadowElement")?.remove();
             return;
         }
         if (event.code === "NumpadDivide" || event.key === "/") { //數字鍵/
@@ -28446,15 +28539,7 @@ a[data-fancybox]:hover {
     if (showOptions) {
         //_unsafeWindow.FullPictureLoadCustomData = customData;
         //debug("\n圖片全載開啟了GM選單?\n", showOptions);
-        _GM_registerMenuCommand(displayLanguage.str_67, () => {
-            if (!ge("body>#FullPictureLoadOptions")) {
-                addFullPictureLoadOptionsMain();
-                optionsSetValue();
-            }
-            ge("#FullPictureLoadOptions").removeAttribute("style");
-        });
-        addFullPictureLoadOptionsMain();
-        optionsSetValue();
+        _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
         if (!ge("#FullPictureLoadMainStyle")) {
             fun.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
@@ -28513,7 +28598,7 @@ a[data-fancybox]:hover {
                         for (const mutation of mutationList_removedNodes) {
                             const removedNodes = mutation.removedNodes;
                             for (const node of removedNodes) {
-                                if (node?.id == "minShadowGallery") {
+                                if (node?.id == "mainShadowGallery") {
                                     return;
                                 }
                             }
@@ -28525,7 +28610,7 @@ a[data-fancybox]:hover {
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        if (!ge("#minShadowGallery")) {
+                        if (!ge("#mainShadowGallery")) {
                             await toggleUI();
                         }
                     }, 200);
@@ -28536,7 +28621,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "minShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "mainShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
@@ -28583,7 +28668,7 @@ a[data-fancybox]:hover {
                         for (const mutation of mutationList_removedNodes) {
                             const removedNodes = mutation.removedNodes;
                             for (const node of removedNodes) {
-                                if (node?.id == "minShadowGallery") {
+                                if (node?.id == "mainShadowGallery") {
                                     return;
                                 }
                             }
@@ -28595,7 +28680,7 @@ a[data-fancybox]:hover {
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        if (!ge("#minShadowGallery")) {
+                        if (!ge("#mainShadowGallery")) {
                             await toggleUI();
                         }
                         if ("customTitle" in siteData && !("capture" in siteData)) {
@@ -28613,7 +28698,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "minShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "mainShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
@@ -28686,14 +28771,14 @@ a[data-fancybox]:hover {
                 document.addEventListener("dblclick", () => callback());
             }
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
+                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
                 if (event.code === "ArrowRight") callback();
             });
         }
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
+                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
                 if (event.code === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
@@ -28940,7 +29025,7 @@ a[data-fancybox]:hover {
 
     if (!!autoDownload) {
         document.addEventListener("keydown", event => {
-            if (ge("#FullPictureLoadOptions:not([style]),.fancybox-container,.fancybox__container,#minShadowGallery")) return;
+            if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
