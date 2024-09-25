@@ -619,10 +619,8 @@ fun.run(String);
 //創建空陣列，取代[] for push()的寫法
 //num陣列的長度
 fun.arr(num);
-fun.arr(num).map((_, i) => {
-    return (i + 1);
-});
-fun.arr(Number);
+fun.arr(num, (_, i) => (i + 1));
+fun.arr(Number, Function);
 </pre>
 <pre>
 //移除元素
@@ -1122,6 +1120,7 @@ imgs: async () => {
 <p>數字鍵 2 切換為小尺寸圖片並排模式</p>
 <p>數字鍵 3 切換為圖片高度符合視口高度且順序右至左的模式</p>
 <p>W鍵、A鍵、上左方向鍵滾動到目前的上一張圖、S鍵、D鍵、下右方向鍵滾動到目前的下一張圖，當為comic分類且已是最後一張圖繼續按則關閉分頁</p>
+<p>R鍵 模式為2時用於切換排列方向右至左、左至右。</p>
 <p>Delete鍵 模式為3時用於隱藏當前圖片導覽索引的圖片(藍色邊框)，看漫畫時手動調整讓後面的圖片能正常並成雙頁跨頁大圖。</p>
 <p>Enter鍵 模式為3時用於取消所有隱藏的圖片。</p>
 <p>PS：網站如果有Content Security Policy (CSP)限制，將沒有切換模式、圖片滾動、Fancybox功能，或者莫名其妙不能使用window.open()，將無法使用分頁檢視功能。</p>
@@ -4263,7 +4262,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://nhentai.net/">nhentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁， <a href="https://nyahentai.red/">nyahentai.red</a>， <a href="https://www.hentai.name/">www.hentai.name</a>， <a href="https://nhentai.xxx/">nhentai.xxx</a>， <a href="https://nhentai.to/">nhentai.to</a>， <a href="https://simplyhentai.org/">simplyhentai.org</a>， <a href="https://simplyhentai.red/">simplyhentai.red</a>
+                <td>作用在圖片清單/閱讀頁， <a href="https://nyahentai.red/">nyahentai.red</a>， <a href="https://www.hentai.name/">www.hentai.name</a>， <a href="https://nhentai.xxx/">nhentai.xxx</a>， <a href="https://nhentai.to/">nhentai.to</a>， <a href="https://nhentai.website/">nhentai.website</a>， <a href="https://simplyhentai.org/">simplyhentai.org</a>， <a href="https://simplyhentai.red/">simplyhentai.red</a>
                 </td>
             </tr>
             <tr>
@@ -5438,6 +5437,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.haoguoman.net/">好国漫</a>
                 </td>
                 <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhuami.cc/">漫画网</a>
+                </td>
+                <td><a href="https://www.manhua3.com/">www.manhua3.com</a>，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
