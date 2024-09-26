@@ -1,4 +1,4 @@
-2024/08/27 21:04
+2024/09/26 14:59
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -553,17 +553,14 @@ ImageFap
 ZzUp.Com
 https://zzup.com/*
 
-BuzzAV
-*://*.buzzav.com/album/*
-
-Photobook.club
-https://photobook.club/*
-
 SexyGirl
 *://sexygirl.cc/a/*.html
 
 dongojyousan.com
 *://www.dongojyousan.com/articles/*.html*
+
+AHottie
+*://ahottie.net/albums/*
 
 SexyAsianGirl
 *://www.sexyasiangirl.xyz/album/*.html
@@ -1531,6 +1528,12 @@ https://manhua.fffdm.com/*/*/
 国漫吧
 *:/*.guoman8.cc/44224/088.html
 
+好国漫
+*://*haoguoman.net/*/*.html
+
+如漫画
+*://*rumanhua.com/*/*.html
+
 大古漫画
 https://*.dgmanhua.com/manhua/*/*.html
 
@@ -1722,6 +1725,10 @@ http://www.17fuman.com/*/*/*.html
 *://*copymanga.tv/comic/*/chapter/*
 *://*mangacopy.com/comic/*/chapter/*
 
+熱辣漫畫
+*://*.relamanhua.org/comic/*/chapter/*
+*://*2024manga.com/comic/*/chapter/*
+
 二次元動漫閱讀
 *://www.2animx.com/index-look-name-*
 
@@ -1759,7 +1766,7 @@ manhuab.com/manhua/*/*.html
 *://*.dagemanhua.com/manhua/*/*.html
 
 漫画皮
-*://*.iimanhuapi.com/chapter/*.html
+*://*.manhuapi.cc/chapter/*.html
 
 野蛮漫画
 *://yemancomic.com/chapter/*/*.html
