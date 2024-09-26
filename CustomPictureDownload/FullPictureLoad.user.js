@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.7
+// @version            2.8.8
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -132,7 +132,10 @@
             p: /^\/(photo|amateur)\/id-\w+\.html$/,
             e: ".tab-content div:has(>.fa-picture-o)"
         }),
-        init: () => fun.remove("//div[@id='tab_1']/div[contains(text(),'推')] | //div[@class='rules']/ul/li[contains(text(),'推')]"),
+        init: () => {
+            fun.run("$(document).off('keydown');");
+            fun.remove("//div[@id='tab_1']/div[contains(text(),'推')] | //div[@class='rules']/ul/li[contains(text(),'推')]");
+        },
         imgs: async () => {
             const isMp4 = fun.ge("video[src$='mp4']");
             if (!!isMp4) {
@@ -15682,20 +15685,9 @@ a:has(>div>div>img),
             p: "/online/"
         }) && comicInfiniteScrollMode != 1,
         frameCode: `
-if ("ge" in window) {
-    const code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
-    const [, obfuscated_chapter_code] = code.match(/img\\s+s="([^"]+)/);
-    const chapter_code = obfuscated_chapter_code.replace(/'|\\+\\w\\+/g, "");
-    const getSrc = (a) => {
-        const b = window[chapter_code.substring(0, 5)];
-        const c = window[chapter_code.substring(5, 10)];
-        const d = window[chapter_code.substring(10, 15)];
-        const src = "https://img" + su(b, 0, 1) + ".8comic.com/" + su(b, 1, 1) + "/" + ti + "/" + c + "/" + nn(a) + "_" + su(d, mm(a), 3) + ".jpg";
-        return src;
-    };
-    const srcs = Array.from({
-        length: ps
-    }, (v, i) => getSrc(i + 1));
+if ("xx" in window) {
+    const html = decodeURIComponent(window.xx);
+    const srcs = html.match(/\\/\\/[^"]+/g).map(e => location.protocol + e);
     window.newImgs = srcs;
     const url = reurl("ch", ni);
     if (url == document.URL) {
@@ -15725,8 +15717,7 @@ if ("ge" in window) {
         preloadNext: () => {
             if (!!_unsafeWindow.nextLink) {
                 fun.iframe(_unsafeWindow.nextLink, {
-                    waitVar: "ge",
-                    waitEle: "#comics-pics img",
+                    waitVar: "xx",
                     cb: async (dom, frame) => {
                         fun.script(_this.frameCode, 0, 1, dom);
                         fun.picPreload(frame.newImgs, fun.dt({
@@ -15745,20 +15736,9 @@ if ("ge" in window) {
             p: "/online/"
         }) && comicInfiniteScrollMode == 1,
         frameCode: `
-if ("ge" in window) {
-    const code = [...document.scripts].find(s => s.textContent.includes("ge(e)")).textContent;
-    const [, obfuscated_chapter_code] = code.match(/img\\s+s="([^"]+)/);
-    const chapter_code = obfuscated_chapter_code.replace(/'|\\+\\w\\+/g, "");
-    const getSrc = (a) => {
-        const b = window[chapter_code.substring(0, 5)];
-        const c = window[chapter_code.substring(5, 10)];
-        const d = window[chapter_code.substring(10, 15)];
-        const src = "https://img" + su(b, 0, 1) + ".8comic.com/" + su(b, 1, 1) + "/" + ti + "/" + c + "/" + nn(a) + "_" + su(d, mm(a), 3) + ".jpg";
-        return src;
-    };
-    const srcs = Array.from({
-        length: ps
-    }, (v, i) => getSrc(i + 1));
+if ("xx" in window) {
+    const html = decodeURIComponent(window.xx);
+    const srcs = html.match(/\\/\\/[^"]+/g).map(e => location.protocol + e);
     window.newImgs = srcs;
     const url = reurl("ch", ni);
     if (url == document.URL) {
@@ -15798,8 +15778,7 @@ if ("ge" in window) {
             preloadNextPage: () => {
                 if (!!frameWindow.nextLink) {
                     fun.iframe(frameWindow.nextLink, {
-                        waitVar: "ge",
-                        waitEle: "#comics-pics img",
+                        waitVar: "xx",
                         cb: async (dom, frame) => {
                             fun.script(_this.frameCode, 0, 1, dom);
                             fun.picPreload(frame.newImgs, _this.autoPager.title(dom, frame), "next");
@@ -21018,8 +20997,14 @@ if ("ge" in window) {
         }
     };
 
-    let FancyboxWheelOptions = _GM_getValue("FancyboxWheelOptions", 0);
-    const FancyboxSlideshowTimeout = _GM_getValue("FancyboxSlideshowTimeout", 3);
+    const FancyboxWheelValue = _GM_getValue("FancyboxWheel", 1);
+    let FancyboxWheel;
+    if (FancyboxWheelValue == 0) {
+        FancyboxWheel = "zoom";
+    } else {
+        FancyboxWheel = "slide";
+    }
+    const FancyboxSlideshowTimeout = Number(_GM_getValue("FancyboxSlideshowTimeout", 3));
     const FancyboxSlideshowTimeoutNum = FancyboxSlideshowTimeout == 0 ? 500 : (FancyboxSlideshowTimeout * 1000);
 
     let FancyboxOptions;
@@ -21031,7 +21016,11 @@ if ("ge" in window) {
             Images: {
                 Panzoom: {
                     maxScale: 2
-                }
+                },
+                zoom: false
+            },
+            Slideshow: {
+                timeout: FancyboxSlideshowTimeoutNum,
             },
             Thumbs: {
                 showOnStart: false
@@ -21062,13 +21051,18 @@ if ("ge" in window) {
     } else {
         FancyboxOptions = {
             idle: false,
-            wheel: FancyboxWheelOptions === 0 ? "slide" : "zoom",
+            wheel: FancyboxWheel,
             Images: {
                 Panzoom: {
                     maxScale: 2
-                }
+                },
+                zoom: false
+            },
+            Slideshow: {
+                timeout: FancyboxSlideshowTimeoutNum,
             },
             Thumbs: {
+                type: "classic",
                 showOnStart: false
             },
             Toolbar: {
@@ -21182,8 +21176,8 @@ if ("ge" in window) {
                 str_76: "啟用當前漫畫站點規則",
                 str_77: "移動裝置雙擊前往下一頁",
                 str_78: "Fancybox燈箱功能",
-                str_79: "圖片縮放比例：",
-                str_80: "圖片並排數量：",
+                str_79: "頁面容器圖片縮放比例：",
+                str_80: "頁面容器圖片並排數量：",
                 str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
                 str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
                 str_83: "重置設定",
@@ -21255,12 +21249,17 @@ if ("ge" in window) {
                 str_143: "下一話",
                 str_144: "下一篇",
                 str_145: "Fancybox5幻燈片播放時間間隔：",
+                str_146: "Fancybox5滾輪操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4)",
-                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
+                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2,R)",
                     single: hasTouchEvents ? "單圖像模式" : "單圖像模式 (1)",
-                    default: hasTouchEvents ? "預設模式" : "預設模式 (0)",
+                    default: hasTouchEvents ? "預設模式" : "預設模式 (0,R)",
+                },
+                FancyboxWheel: {
+                    z: "縮放",
+                    s: "滑動"
                 }
             };
             break;
@@ -21346,8 +21345,8 @@ if ("ge" in window) {
                 str_76: "启用当前漫画站点规则",
                 str_77: "移动设备双击前往下一页",
                 str_78: "Fancybox灯箱功能",
-                str_79: "图片缩放比例：",
-                str_80: "图片并排数量：",
+                str_79: "页面容器图片缩放比例：",
+                str_80: "页面容器图片并排数量：",
                 str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
                 str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
                 str_83: "重置设置",
@@ -21419,12 +21418,17 @@ if ("ge" in window) {
                 str_143: "下一话",
                 str_144: "下一篇",
                 str_145: "Fancybox5幻灯片播放时间间隔：",
+                str_146: "Fancybox5滚轮操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4)",
-                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
+                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvents ? "小图像模式" : "小图像模式 (2,R)",
                     single: hasTouchEvents ? "单图像模式" : "单图像模式 (1)",
-                    default: hasTouchEvents ? "默认模式" : "默认模式 (0)",
+                    default: hasTouchEvents ? "默认模式" : "默认模式 (0,R)",
+                },
+                FancyboxWheel: {
+                    z: "缩放",
+                    s: "滑动"
                 }
             };
             break;
@@ -21582,12 +21586,17 @@ if ("ge" in window) {
                 str_143: "Next Chapter",
                 str_144: "Next Post",
                 str_145: "Fancybox5 Slideshow Play Delay：",
+                str_146: "Fancybox5 Wheel：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
-                    rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
+                    rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
                     small: hasTouchEvents ? "Small Image" : "Small Image (2,R)",
                     single: hasTouchEvents ? "Single Image" : "Single Image (1)",
-                    default: hasTouchEvents ? "Default" : "Default (0)",
+                    default: hasTouchEvents ? "Default" : "Default (0,R)",
+                },
+                FancyboxWheel: {
+                    z: "zoom",
+                    s: "slide"
                 }
             };
             break;
@@ -24706,12 +24715,14 @@ if ("ge" in window) {
                     Images: {
                         Panzoom: {
                             maxScale: 2
-                        }
+                        },
+                        zoom: false,
                     },
                     Slideshow: {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
                     Thumbs: {
+                        type: "classic",
                         showOnStart: false
                     },
                     Toolbar: {
@@ -24734,16 +24745,18 @@ if ("ge" in window) {
             } else {
                 FancyboxOptions = {
                     idle: false,
-                    wheel: FancyboxWheelOptions === 0 ? "slide" : "zoom",
+                    wheel: FancyboxWheel,
                     Images: {
                         Panzoom: {
                             maxScale: 2
-                        }
+                        },
+                        zoom: false
                     },
                     Slideshow: {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
                     Thumbs: {
+                        type: "classic",
                         showOnStart: false
                     },
                     Toolbar: {
@@ -26002,11 +26015,11 @@ body {
     font-family: Arial, sans-serif;
     font-size: 14px;
     color: #000000;
-    width: 122px;
+    width: 132px;
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: ${hasTouchEvents ? "0px" : "-128px"};
+    left: ${hasTouchEvents ? "0px" : "-138px"};
     bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -26017,7 +26030,7 @@ body {
   left: 0px;
 }
 .FixedMenuitem {
-    width: 110px;
+    width: 120px;
     height: 24px;
     line-height: 24px;
     overflow: hidden;
@@ -26098,12 +26111,14 @@ if (hasTouchEvents) {
         Images: {
             Panzoom: {
                 maxScale: 2
-            }
+            },
+            zoom: false
         },
         Slideshow: {
             timeout: ${FancyboxSlideshowTimeoutNum},
         },
         Thumbs: {
+            type: "classic",
             showOnStart: false
         },
         Toolbar: {
@@ -26150,16 +26165,18 @@ if (hasTouchEvents) {
 } else {
     FancyboxOptions = {
         idle: false,
-        wheel: ${FancyboxWheelOptions === 0 ? '"slide"' : '"zoom"'},
+        wheel: "${FancyboxWheel}",
         Images: {
             Panzoom: {
                 maxScale: 2
-            }
+            },
+            zoom: false
         },
         Slideshow: {
             timeout: ${FancyboxSlideshowTimeoutNum},
         },
         Thumbs: {
+            type: "classic",
             showOnStart: false
         },
         Toolbar: {
@@ -26366,7 +26383,7 @@ document.addEventListener("keydown", event => {
         inline: "center"
     };
     const imgs = [...document.querySelectorAll("img")];
-    if (event.code === "KeyR" && newWindowData.ViewMode == 2) {
+    if (event.code === "KeyR" && [0, 2, 3].some(m => newWindowData.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
             box.style.direction = "ltr";
@@ -26649,7 +26666,7 @@ document.addEventListener("keydown", event => {
         inline: "center"
     };
     const imgs = [...document.querySelectorAll("img")];
-    if (event.code === "KeyR" && newWindowData.ViewMode == 2) {
+    if (event.code === "KeyR" && [0, 2, 3].some(m => newWindowData.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
             box.style.direction = "ltr";
@@ -26887,7 +26904,7 @@ if (newWindowData.ViewMode == 1) {
                     next.click();
                 }
             }
-            if (event.code === "KeyR" && newWindowData.ViewMode == 2) {
+            if (event.code === "KeyR" && [0, 2, 3].some(m => newWindowData.ViewMode == m)) {
                 let box = shadow.querySelector("#imgBox");
                 if (box.style.direction == "rtl") {
                     box.style.direction = "ltr";
@@ -26948,11 +26965,11 @@ p {
     font-family: Arial, sans-serif;
     font-size: 14px;
     color: #000000;
-    width: 122px;
+    width: 132px;
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: -128px;
+    left: -138px;
     bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -26963,7 +26980,7 @@ p {
   left: 0px;
 }
 .FixedMenuitem {
-    width: 110px;
+    width: 120px;
     height: 24px;
     line-height: 24px;
     overflow: hidden;
@@ -27102,16 +27119,18 @@ img.small {
             if (!("fancybox" in siteData) && options.fancybox == 1) {
                 _unsafeWindow.Fancybox.bind(mainElement, "img", {
                     idle: false,
-                    wheel: FancyboxWheelOptions === 0 ? "slide" : "zoom",
+                    wheel: FancyboxWheel,
                     Images: {
                         Panzoom: {
                             maxScale: 2
-                        }
+                        },
+                        zoom: false
                     },
                     Slideshow: {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
                     Thumbs: {
+                        type: "classic",
                         showOnStart: false
                     },
                     Toolbar: {
@@ -27645,10 +27664,6 @@ img.small {
     <input id="FullPictureLoadOptionsIcon" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_69}</label>
 </div>
-<div id="FullPictureLoadAutoInsertImgDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadAutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_139}</label>
-</div>
 <div id="ShowFullPictureLoadFixedMenuDIV" style="width: 348px; display: flex;">
     <input id="ShowFullPictureLoadFixedMenu" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>※${displayLanguage.str_117}</label>
@@ -27659,9 +27674,61 @@ img.small {
         ${Object.values(displayLanguage.str_109).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
     </select>
 </div>
-<div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsConvert" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_110}</label>
+<div id="FullPictureLoadAutoInsertImgDIV" style="width: 348px; display: flex;">
+    <input id="FullPictureLoadAutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_139}</label>
+</div>
+<div id="FullPictureLoadOptionsZoomDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>${displayLanguage.str_79}</label>
+    <select id="FullPictureLoadOptionsZoom">
+        ${fun.arr(11, (v, i) => `<option value="${i}">${i === 0 ? "Auto" : i + "0%"}</option>`).join("")}
+    </select>
+</div>
+<div id="FullPictureLoadOptionsviewModeDIV" style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_103}</label>
+</div>
+<div id="FullPictureLoadOptionsColumnDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>${displayLanguage.str_80}</label>
+    <select id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}">
+        ${fun.arr(5, (v, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
+    </select>
+</div>
+<div id="FullPictureLoadOptionsShadowGalleryModeDIV" style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_140}</label>
+</div>
+<div id="FullPictureLoadOptionsFancyboxDIV" style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_78}</label>
+</div>
+<div id="FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>※${displayLanguage.str_145}</label>
+    <select id="FullPictureLoadOptionsFancyboxSlideshowTimeout">
+        ${fun.arr(61, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
+    </select>
+</div>
+<div id="FullPictureLoadFancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>※${displayLanguage.str_146}</label>
+    <select id="FullPictureLoadFancyboxWheel">
+        ${Object.values(displayLanguage.FancyboxWheel).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
+    </select>
+</div>
+<div id="FullPictureLoadOptionsComicDIV" style="width: 348px; display: none;">
+    <input id="FullPictureLoadOptionsComic" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_76}</label>
+</div>
+<div id="FullPictureLoadOptionsDoubleDIV" style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsDouble" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_77}</label>
+</div>
+<div id="FullPictureLoadOptionsAutoDownloadDIV" style="width: 348px; display: flex;">
+    <input id="FullPictureLoadOptionsAutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_73}${displayLanguage.str_74}</label>
+</div>
+<div id="FullPictureLoadOptionsCountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>${displayLanguage.str_75}</label>
+    <input id="FullPictureLoadOptionsCountdown" style="width: 60px; margin: 0 6px !important;">
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_70}</label>
@@ -27679,51 +27746,13 @@ img.small {
         ${["zip", "cbz"].map(v => `<option value="${v}">${v}</option>`).join("")}
     </select>
 </div>
-<div id="FullPictureLoadOptionsAutoDownloadDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsAutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_73}${displayLanguage.str_74}</label>
-</div>
-<div id="FullPictureLoadOptionsCountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_75}</label>
-    <input id="FullPictureLoadOptionsCountdown" style="width: 60px; margin: 0 6px !important;">
-</div>
-<div id="FullPictureLoadOptionsComicDIV" style="width: 348px; display: none;">
-    <input id="FullPictureLoadOptionsComic" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_76}</label>
-</div>
-<div id="FullPictureLoadOptionsDoubleDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsDouble" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_77}</label>
-</div>
-<div id="FullPictureLoadOptionsFancyboxDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_78}</label>
-</div>
-<div id="FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${displayLanguage.str_145}</label>
-    <select id="FullPictureLoadOptionsFancyboxSlideshowTimeout">
-        ${fun.arr(11, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
-    </select>
-</div>
-<div style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_79}</label>
-    <select id="FullPictureLoadOptionsZoom">
-        ${fun.arr(11, (v, i) => `<option value="${i}">${i === 0 ? "Auto" : i + "0%"}</option>`).join("")}
-    </select>
-</div>
-<div style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_80}</label>
-    <select id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}">
-        ${fun.arr(5, (v, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
-    </select>
-</div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_103}</label>
+    <input id="FullPictureLoadOptionsConvert" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_110}</label>
 </div>
-<div id="FullPictureLoadOptionsShadowGalleryModeDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
-    <label>${displayLanguage.str_140}</label>
+<div id="FullPictureLoadCustomDownloadVideoDIV" style="width: 348px; display: none;">
+    <input id="FullPictureLoadCustomDownloadVideo" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_124}</label>
 </div>
 <button id="FullPictureLoadOptionsCancelBtn">${displayLanguage.str_82}</button>
 <button id="FullPictureLoadOptionsResetBtn">${displayLanguage.str_83}</button>
@@ -27751,21 +27780,27 @@ img.small {
         }
         if (!("insertImg" in siteData)) {
             ge("#FullPictureLoadAutoInsertImgDIV", main).style.display = "none";
+            ge("#FullPictureLoadOptionsZoomDIV", main).style.display = "none";
+            ge("#FullPictureLoadOptionsviewModeDIV", main).style.display = "none";
+            ge("#FullPictureLoadOptionsColumnDIV", main).style.display = "none";
         }
         if (hasTouchEvents) {
             ge("#ShowFullPictureLoadFixedMenuDIV", main).style.display = "none";
             ge("#FullPictureLoadOptionsShadowGalleryModeDIV", main).style.display = "none";
+            ge("#FullPictureLoadFancyboxWheelDIV", main).style.display = "none";
         }
-        if ("SPA" in siteData) {
+        if (isBoolean(siteData.SPA)) {
             ge("#FullPictureLoadOptionsShadowGalleryModeDIV", main).style.display = "none";
         }
         if (fancyboxBlackList()) {
             ge("#FullPictureLoadOptionsFancybox", main).checked = false;
             ge("#FullPictureLoadOptionsFancyboxDIV", main).style.display = "none";
             ge("#FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV", main).style.display = "none";
+            ge("#FullPictureLoadFancyboxWheelDIV", main).style.display = "none";
         } else {
             ge("#FullPictureLoadOptionsFancybox", main).checked = options.fancybox == 1 ? true : false;
             ge("#FullPictureLoadOptionsFancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
+            ge("#FullPictureLoadFancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
         }
         ge("#FullPictureLoadOptionsZoom", main).value = options.zoom;
         siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn", main).value = 2 : ge("#FullPictureLoadOptionsColumn", main).value = options.column;
@@ -27781,15 +27816,24 @@ img.small {
         if (!hasTouchEvents && showOptions || (hasTouchEvents && showOptions && !siteData.next)) {
             ge("#FullPictureLoadOptionsDoubleDIV", main).style.display = "none";
         }
-
+        let FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
+        let downloadVideo = siteData.downloadVideo;
+        if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
+            ge("#FullPictureLoadCustomDownloadVideoDIV", main).style.display = "flex";
+            ge("#FullPictureLoadCustomDownloadVideo", main).checked = FullPictureLoadCustomDownloadVideo == 1 ? true : false;
+        }
         ge("#FullPictureLoadOptionsCancelBtn", main).addEventListener("click", () => {
             mainElement.remove();
         });
         ge("#FullPictureLoadOptionsResetBtn", main).addEventListener("click", event => {
             event.preventDefault();
             localStorage.removeItem("FullPictureLoadOptions");
+            localStorage.removeItem("FullPictureLoadCustomDownloadVideo");
             _GM_setValue("FullPictureLoadMsgPos", 0);
+            _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
             _GM_setValue("convertWebpToJpg", 0);
+            _GM_setValue("FancyboxSlideshowTimeout", 3);
+            _GM_setValue("FancyboxWheel", 1);
             location.reload();
         });
         ge("#FullPictureLoadOptionsSaveBtn", main).addEventListener("click", event => {
@@ -27808,10 +27852,14 @@ img.small {
             options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble", main).checked == true ? 1 : 0;
             options.fancybox = ge("#FullPictureLoadOptionsFancybox", main).checked == true ? 1 : 0;
             _GM_setValue("FancyboxSlideshowTimeout", ge("#FullPictureLoadOptionsFancyboxSlideshowTimeout", main).value);
+            _GM_setValue("FancyboxWheel", ge("#FullPictureLoadFancyboxWheel", main).value);
             options.zoom = ge("#FullPictureLoadOptionsZoom", main).value;
             options.column = ge("#FullPictureLoadOptionsColumn", main).value;
             options.viewMode = ge("#FullPictureLoadOptionsviewMode", main).checked == true ? 1 : 0;
             options.shadowGallery = ge("#FullPictureLoadOptionsShadowGalleryMode", main).checked == true ? 1 : 0;
+            if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
+                ge("#FullPictureLoadCustomDownloadVideo", main).checked == true ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
+            }
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             location.reload();
@@ -29091,7 +29139,7 @@ a[data-fancybox]:hover {
         }
         if (options.shadowGallery == 1 && options.autoDownload != 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
             if ("SPA" in siteData && isFn(siteData.SPA)) {
-                if (siteData.SPA()) {
+                if (await siteData.SPA()) {
                     setTimeout(() => createShadowGallery(), 200);
                 }
             } else {
@@ -29155,12 +29203,6 @@ a[data-fancybox]:hover {
     }
 
     if (siteData.category && ["nsfw1", "nsfw2", "hcomic", "comic", "lazyLoad"].some(c => c === siteData.category)) {
-        if (!hasTouchEvents) {
-            _GM_registerMenuCommand(FancyboxWheelOptions == 0 ? "❌ " + displayLanguage.str_119 : "✔️ " + displayLanguage.str_119, () => {
-                FancyboxWheelOptions == 0 ? _GM_setValue("FancyboxWheelOptions", 1) : _GM_setValue("FancyboxWheelOptions", 0);
-                location.reload();
-            });
-        }
         _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + displayLanguage.str_120 : "✔️ " + displayLanguage.str_120, () => {
             newTabViewLightGallery == 0 ? localStorage.setItem("newTabViewLightGallery", 1) : localStorage.setItem("newTabViewLightGallery", 0);
             location.reload();
@@ -29170,16 +29212,6 @@ a[data-fancybox]:hover {
     if (siteData.category === "comic" && siteData.infiniteScroll || siteData.category === "comic autoPager") {
         _GM_registerMenuCommand(comicInfiniteScrollMode == 0 ? "❌ " + displayLanguage.str_122 : "✔️  " + displayLanguage.str_122, () => {
             comicInfiniteScrollMode == 0 ? localStorage.setItem("FullPictureLoadComicInfiniteScrollMode", 1) : localStorage.setItem("FullPictureLoadComicInfiniteScrollMode", 0);
-            location.reload();
-        });
-    }
-
-    let FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
-
-    let downloadVideo = siteData.downloadVideo;
-    if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
-        _GM_registerMenuCommand(FullPictureLoadCustomDownloadVideo == 0 ? "❌ " + displayLanguage.str_124 : "✔️ " + displayLanguage.str_124, () => {
-            FullPictureLoadCustomDownloadVideo == 0 ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
             location.reload();
         });
     }
