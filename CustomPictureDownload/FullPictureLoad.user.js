@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.6
+// @version            2.8.7
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -21019,6 +21019,8 @@ if ("ge" in window) {
     };
 
     let FancyboxWheelOptions = _GM_getValue("FancyboxWheelOptions", 0);
+    const FancyboxSlideshowTimeout = _GM_getValue("FancyboxSlideshowTimeout", 3);
+    const FancyboxSlideshowTimeoutNum = FancyboxSlideshowTimeout == 0 ? 500 : (FancyboxSlideshowTimeout * 1000);
 
     let FancyboxOptions;
     let slideIndex = null;
@@ -21252,6 +21254,7 @@ if ("ge" in window) {
                 str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
                 str_144: "下一篇",
+                str_145: "Fancybox5幻燈片播放時間間隔：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
@@ -21415,6 +21418,7 @@ if ("ge" in window) {
                 str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
                 str_144: "下一篇",
+                str_145: "Fancybox5幻灯片播放时间间隔：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3)",
@@ -21577,6 +21581,7 @@ if ("ge" in window) {
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
+                str_145: "Fancybox5 Slideshow Play Delay：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3)",
@@ -24703,6 +24708,9 @@ if ("ge" in window) {
                             maxScale: 2
                         }
                     },
+                    Slideshow: {
+                        timeout: FancyboxSlideshowTimeoutNum,
+                    },
                     Thumbs: {
                         showOnStart: false
                     },
@@ -24731,6 +24739,9 @@ if ("ge" in window) {
                         Panzoom: {
                             maxScale: 2
                         }
+                    },
+                    Slideshow: {
+                        timeout: FancyboxSlideshowTimeoutNum,
                     },
                     Thumbs: {
                         showOnStart: false
@@ -26089,6 +26100,9 @@ if (hasTouchEvents) {
                 maxScale: 2
             }
         },
+        Slideshow: {
+            timeout: ${FancyboxSlideshowTimeoutNum},
+        },
         Thumbs: {
             showOnStart: false
         },
@@ -26141,6 +26155,9 @@ if (hasTouchEvents) {
             Panzoom: {
                 maxScale: 2
             }
+        },
+        Slideshow: {
+            timeout: ${FancyboxSlideshowTimeoutNum},
         },
         Thumbs: {
             showOnStart: false
@@ -27091,6 +27108,9 @@ img.small {
                             maxScale: 2
                         }
                     },
+                    Slideshow: {
+                        timeout: FancyboxSlideshowTimeoutNum,
+                    },
                     Thumbs: {
                         showOnStart: false
                     },
@@ -27675,9 +27695,15 @@ img.small {
     <input id="FullPictureLoadOptionsDouble" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_77}</label>
 </div>
-<div style="width: 348px; display: flex;">
+<div id="FullPictureLoadOptionsFancyboxDIV" style="width: 348px; display: flex;">
     <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_78}</label>
+</div>
+<div id="FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>※${displayLanguage.str_145}</label>
+    <select id="FullPictureLoadOptionsFancyboxSlideshowTimeout">
+        ${fun.arr(11, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
+    </select>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_79}</label>
@@ -27735,9 +27761,11 @@ img.small {
         }
         if (fancyboxBlackList()) {
             ge("#FullPictureLoadOptionsFancybox", main).checked = false;
-            ge("#FullPictureLoadOptionsFancybox", main).style.display = "none";
+            ge("#FullPictureLoadOptionsFancyboxDIV", main).style.display = "none";
+            ge("#FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV", main).style.display = "none";
         } else {
             ge("#FullPictureLoadOptionsFancybox", main).checked = options.fancybox == 1 ? true : false;
+            ge("#FullPictureLoadOptionsFancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
         }
         ge("#FullPictureLoadOptionsZoom", main).value = options.zoom;
         siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn", main).value = 2 : ge("#FullPictureLoadOptionsColumn", main).value = options.column;
@@ -27779,6 +27807,7 @@ img.small {
             options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown", main).value;
             options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble", main).checked == true ? 1 : 0;
             options.fancybox = ge("#FullPictureLoadOptionsFancybox", main).checked == true ? 1 : 0;
+            _GM_setValue("FancyboxSlideshowTimeout", ge("#FullPictureLoadOptionsFancyboxSlideshowTimeout", main).value);
             options.zoom = ge("#FullPictureLoadOptionsZoom", main).value;
             options.column = ge("#FullPictureLoadOptionsColumn", main).value;
             options.viewMode = ge("#FullPictureLoadOptionsviewMode", main).checked == true ? 1 : 0;
