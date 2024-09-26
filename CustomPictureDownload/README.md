@@ -1132,7 +1132,7 @@ imgs: async () => {
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/08/27 21:04</p>
+<p>2024/09/26 14:59</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>
@@ -2623,6 +2623,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.sexyasiangirl.xyz/">SexyAsianGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ahottie.net/">AHottie</a>
                 </td>
                 <td></td>
             </tr>
@@ -5489,18 +5495,10 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.dagemanhua.com/">大哥漫画</a>
+                    <a href="https://www.manhuapi.cc/">漫画皮</a>
                 </td>
                 <td>
-                    <a href="https://m.dagemanhua.com/">m.dagemanhua.com</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.iimanhuapi.com/">漫画皮</a>
-                </td>
-                <td>
-                    <a href="https://m.iimanhuapi.com/">m.iimanhuapi.com</a>
+                    <a href="https://m.manhuapi.cc/">m.manhuapi.cc</a>
                 </td>
             </tr>
             <tr>
