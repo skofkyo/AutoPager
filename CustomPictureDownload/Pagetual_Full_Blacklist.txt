@@ -5,6 +5,8 @@
 *://*copymanga.tv/comic/*/chapter/*
 *://*mangacopy.com/comic/*/chapter/*
 *://manga.bilibili.com/mc*/*?from=manga_detail
+*://*.relamanhua.org/comic/*/chapter/*
+*://*2024manga.com/comic/*/chapter/*
 *://n.cocolamanhua.com/chapter/*.html
 *://m.godamh.com/chapter/*.html
 *://baozimh.one/chapter/*.html
@@ -57,6 +59,8 @@
 *://www.hahacomic.com/manhua/list.html*
 *://*.guoman.net/chapter/*.html
 *:/*.guoman8.cc/*/*.html
+*://*haoguoman.net/*/*.html
+*://*rumanhua.com/*/*.html
 https://www.fffdm.com/manhua/*
 https://manhua.fffdm.com/*/*/
 https://*.dgmanhua.com/manhua/*/*.html
@@ -297,10 +301,9 @@ https://www.nuyet.com/gallery/*
 *://www.imagefap.com/gallery/*
 *://www.imagefap.com/pictures/*
 *://www.imagefap.com/photo/*
-*://*.buzzav.com/album/*
-https://photobook.club/*
 *://sexygirl.cc/a/*.html
 *://*kanmeitu*/p/*.html
+*://ahottie.net/albums/*
 *://www.sexyasiangirl.xyz/album/*.html
 *://*.tuzac.com/file/*
 *://www.xiuwo.net/tu/*.html
@@ -432,7 +435,7 @@ https://asigirl.com/*
 *://www.shzx.org/a/*.html
 *://m.shzx.org/a/*.html
 *://*.dagemanhua.com/manhua/*/*.html
-*://*.iimanhuapi.com/chapter/*.html
+*://*.manhuapi.cc/chapter/*.html
 *://*.golden-koi.net/chapter/*.html*
 *://*.tuhao456.com/chapter/*.html*
 *://nnhanman.net/comic/*/chapter-*.html
