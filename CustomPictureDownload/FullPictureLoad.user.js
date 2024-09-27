@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.9
+// @version            2.8.10
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -74,7 +74,8 @@
         column: 4, //圖片並排顯示的數量 2 ~ 6
         viewMode: 0, //0：置中、1：並排
         fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
-        shadowGallery: 0 //自動進入影子畫廊，1：自動、0：手動
+        shadowGallery: 0, //自動進入影子畫廊，1：自動、0：手動
+        shadowGalleryWheel: 0 //影子畫廊模式0、1、3滾輪，1：切換圖片、0：畫廊滾動
     };
     const FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
     let options = defaultOptions;
@@ -21093,6 +21094,7 @@ if ("xx" in window) {
 
     const fancyboxBlackList = () => siteData.fancybox?.blacklist === 1;
 
+    //顯示語言
     switch (language) {
         case "zh-TW":
         case "zh-HK":
@@ -21204,7 +21206,7 @@ if ("xx" in window) {
                 str_103: "頁面容器預設使用並排模式",
                 str_104: hasTouchEvents ? "匯出圖址" : "匯出圖址(7)",
                 str_105: hasTouchEvents ? "複製圖址" : "複製圖址(1)",
-                str_106: hasTouchEvents ? "分頁檢視" : "分頁檢視(8)",
+                str_106: hasTouchEvents ? "分頁畫廊" : "分頁畫廊(8)",
                 str_107: hasTouchEvents ? "一鍵下載" : "一鍵下載(3)",
                 str_108: "※訊息顯示的位置：",
                 str_109: {
@@ -21251,6 +21253,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻燈片播放時間間隔：",
                 str_146: "Fancybox5滾輪操作：",
+                str_147: "影子畫廊(0,1,3)滾輪操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21261,6 +21264,10 @@ if ("xx" in window) {
                 FancyboxWheel: {
                     z: "縮放",
                     s: "滑動"
+                },
+                ShadowGalleryWheel: {
+                    d: "畫廊滾動",
+                    t: "切換圖片"
                 }
             };
             break;
@@ -21373,7 +21380,7 @@ if ("xx" in window) {
                 str_103: "页面容器默认使用并排模式",
                 str_104: hasTouchEvents ? "导出图址" : "导出图址(7)",
                 str_105: hasTouchEvents ? "拷贝图址" : "拷贝图址(1)",
-                str_106: hasTouchEvents ? "分页视图" : "分页视图(8)",
+                str_106: hasTouchEvents ? "分页画廊" : "分页画廊(8)",
                 str_107: hasTouchEvents ? "一键下载" : "一键下载(3)",
                 str_108: "※讯息显示的位置：",
                 str_109: {
@@ -21420,6 +21427,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻灯片播放时间间隔：",
                 str_146: "Fancybox5滚轮操作：",
+                str_147: "影子画廊(0,1,3)滚轮操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21430,6 +21438,10 @@ if ("xx" in window) {
                 FancyboxWheel: {
                     z: "缩放",
                     s: "滑动"
+                },
+                ShadowGalleryWheel: {
+                    d: "画廊滚动",
+                    t: "切换图片"
                 }
             };
             break;
@@ -21588,6 +21600,7 @@ if ("xx" in window) {
                 str_144: "Next Post",
                 str_145: "Fancybox5 Slideshow Play Delay：",
                 str_146: "Fancybox5 Wheel：",
+                str_147: "Shadow Gallery (0,1,3) Wheel：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -21598,6 +21611,10 @@ if ("xx" in window) {
                 FancyboxWheel: {
                     z: "zoom",
                     s: "slide"
+                },
+                ShadowGalleryWheel: {
+                    d: "Scroll",
+                    t: "Toggle Image"
                 }
             };
             break;
@@ -25645,7 +25662,6 @@ if ("xx" in window) {
         if (options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom == 0 ? options.zoom = 10 : options.zoom = options.zoom -= 1;
             if (options.zoom == 0) cancelZoom();
-            ge("#FullPictureLoadOptionsZoom").value = options.zoom;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             if (options.zoom > 0) {
@@ -25670,7 +25686,6 @@ if ("xx" in window) {
         if (options.zoom > 1 && options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = options.zoom += 1;
             if (options.zoom > 10) cancelZoom();
-            ge("#FullPictureLoadOptionsZoom").value = options.zoom;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             if (options.zoom > 0 && options.zoom <= 10) {
@@ -26001,6 +26016,7 @@ if ("xx" in window) {
             newWindow.hasTouchEvents = hasTouchEvents;
             newWindow.config = config;
             newWindow.imgViewIndex = -1;
+            newWindow.webtoonWidth = config.webtoonWidth;
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
             newWindow.menuLanguage = displayLanguage.galleryMenu;
@@ -26135,7 +26151,7 @@ if (hasTouchEvents) {
             done: (fancybox, slide) => {
                 let slideIndex = slide.index;
                 let imgs = [...document.querySelectorAll("img")];
-                if (newWindowData.ViewMode != 4) {
+                if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
                 }
                 if (fancybox.isCurrentSlide(slide)) {
@@ -26312,8 +26328,6 @@ function setFancybox() {
                 });
 
                 const newWindowScriptCode = `
-var webtoonWidth = config.webtoonWidth;
-
 function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
@@ -26434,18 +26448,20 @@ document.addEventListener("keydown", event => {
     }
 });
 
-if (config.ViewMode == 4) {
-    document.addEventListener("wheel", (event) => {
-        if (event.ctrlKey || event.altKey || event.shiftKey) {
-            if (event.deltaY < 0) {
-                increaseWidth();
-            }
-            if (event.deltaY > 0) {
-                reduceWidth();
-            }
+document.addEventListener("wheel", (event) => {
+    if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.deltaY < 0) {
+            increaseWidth();
         }
-    });
-}
+        if (event.deltaY > 0) {
+            reduceWidth();
+        }
+    }
+}, {
+    passive: false
+});
 
 function loadImgs() {
     const imgs = [...document.querySelectorAll("img")];
@@ -26653,8 +26669,6 @@ document.addEventListener("viewed", event => {
                 });
 
                 const newWindowScriptCode = `
-var webtoonWidth = config.webtoonWidth;
-
 function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
@@ -26775,18 +26789,20 @@ document.addEventListener("keydown", event => {
     }
 });
 
-if (config.ViewMode == 4) {
-    document.addEventListener("wheel", (event) => {
-        if (event.ctrlKey || event.altKey || event.shiftKey) {
-            if (event.deltaY < 0) {
-                increaseWidth();
-            }
-            if (event.deltaY > 0) {
-                reduceWidth();
-            }
+document.addEventListener("wheel", (event) => {
+    if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.deltaY < 0) {
+            increaseWidth();
         }
-    });
-}
+        if (event.deltaY > 0) {
+            reduceWidth();
+        }
+    }
+}, {
+    passive: false
+});
 
 function loadImgs() {
     const imgs = [...document.querySelectorAll("img")];
@@ -27040,9 +27056,6 @@ if (config.ViewMode == 1) {
         };
 
         const closeGallery = () => {
-            if (config.ViewMode == 4) {
-                _unsafeWindow.removeEventListener("wheel", wEvent);
-            }
             _unsafeWindow.removeEventListener("resize", aspectRatio);
             _unsafeWindow.removeEventListener("keydown", kEvent);
             gae(hideSelector).forEach(e => (e.style.display = ""));
@@ -27050,8 +27063,10 @@ if (config.ViewMode == 1) {
             mainShadowGallery?.remove();
         };
 
-        const wEvent = (event) => {
-            if (event.ctrlKey || event.altKey || event.shiftKey) {
+        const toggleWidthEvent = (event) => {
+            if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+                event.preventDefault();
+                event.stopPropagation();
                 if (event.deltaY < 0) {
                     increaseWidth();
                 }
@@ -27061,9 +27076,47 @@ if (config.ViewMode == 1) {
             }
         };
 
-        if (config.ViewMode == 4) {
-            _unsafeWindow.addEventListener("wheel", wEvent);
-        }
+        mainShadowGallery.addEventListener("wheel", toggleWidthEvent, {
+            passive: false
+        });
+
+        const toggleImage = (event) => {
+            if (options.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                if (!ge(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const imgs = [...shadow.querySelectorAll("img")];
+                    if (event.deltaY < 0 && imgViewIndex >= 0) {
+                        imgViewIndex--;
+                        if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
+                        if (config.ViewMode != 4) {
+                            imgs.forEach(e => (e.style.border = ""));
+                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                        }
+                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                    } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
+                        imgViewIndex++;
+                        let next = shadow.querySelector("#next");
+                        if (imgs[imgViewIndex] === undefined && next) {
+                            next.scrollIntoView(scrollIntoViewOptions);
+                        } else if (imgs[imgViewIndex] === undefined) {
+                            imgViewIndex = 0;
+                        }
+                        if (config.ViewMode != 4) {
+                            imgs.forEach(e => (e.style.border = ""));
+                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                        }
+                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                    } else {
+                        imgViewIndex = -1;
+                    }
+                }
+            }
+        };
+
+        mainShadowGallery.addEventListener("wheel", toggleImage, {
+            passive: false
+        });
 
         const aspectRatio = () => {
             const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
@@ -27523,7 +27576,6 @@ img.small {
         if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
         if (ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = 0;
-            ge("#FullPictureLoadOptionsZoom").value = options.zoom;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
             gae(".FullPictureLoadImage:not(.small)").forEach(img => {
@@ -27862,170 +27914,177 @@ img.small {
     <p>${displayLanguage.str_68}</p>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsIcon" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="icon" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_69}</label>
 </div>
-<div id="ShowFullPictureLoadFixedMenuDIV" style="width: 348px; display: flex;">
-    <input id="ShowFullPictureLoadFixedMenu" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="ShowFixedMenuDIV" style="width: 348px; display: flex;">
+    <input id="ShowFixedMenu" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>※${displayLanguage.str_117}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_108}</label>
-    <select id="FullPictureLoadOptionsMsgPos">
+    <select id="MsgPos">
         ${Object.values(displayLanguage.str_109).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
     </select>
 </div>
-<div id="FullPictureLoadAutoInsertImgDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadAutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="AutoInsertImgDIV" style="width: 348px; display: flex;">
+    <input id="AutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_139}</label>
 </div>
-<div id="FullPictureLoadOptionsZoomDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_79}</label>
-    <select id="FullPictureLoadOptionsZoom">
+    <select id="Zoom">
         ${fun.arr(11, (v, i) => `<option value="${i}">${i === 0 ? "Auto" : i + "0%"}</option>`).join("")}
     </select>
 </div>
-<div id="FullPictureLoadOptionsviewModeDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsviewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="viewModeDIV" style="width: 348px; display: flex;">
+    <input id="viewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_103}</label>
 </div>
-<div id="FullPictureLoadOptionsColumnDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_80}</label>
-    <select id="FullPictureLoadOptionsColumn" title="${displayLanguage.str_81}">
+    <select id="Column" title="${displayLanguage.str_81}">
         ${fun.arr(5, (v, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
     </select>
 </div>
-<div id="FullPictureLoadOptionsShadowGalleryModeDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="ShadowGalleryModeDIV" style="width: 348px; display: flex;">
+    <input id="ShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_140}</label>
 </div>
-<div id="FullPictureLoadOptionsFancyboxDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>影子畫廊滾輪操作：</label>
+    <select id="ShadowGalleryWheel">
+        ${Object.values(displayLanguage.ShadowGalleryWheel).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
+    </select>
+</div>
+<div id="FancyboxDIV" style="width: 348px; display: flex;">
+    <input id="Fancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_78}</label>
 </div>
-<div id="FullPictureLoadFancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>※${displayLanguage.str_146}</label>
-    <select id="FullPictureLoadFancyboxWheel">
+    <select id="FancyboxWheel">
         ${Object.values(displayLanguage.FancyboxWheel).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
     </select>
 </div>
-<div id="FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="FancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>※${displayLanguage.str_145}</label>
-    <select id="FullPictureLoadOptionsFancyboxSlideshowTimeout">
+    <select id="FancyboxSlideshowTimeout">
         ${fun.arr(61, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
     </select>
 </div>
-<div id="FullPictureLoadOptionsComicDIV" style="width: 348px; display: none;">
-    <input id="FullPictureLoadOptionsComic" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="ComicDIV" style="width: 348px; display: none;">
+    <input id="Comic" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_76}</label>
 </div>
-<div id="FullPictureLoadOptionsDoubleDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsDouble" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="DoubleDIV" style="width: 348px; display: flex;">
+    <input id="Double" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_77}</label>
 </div>
-<div id="FullPictureLoadOptionsAutoDownloadDIV" style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsAutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="AutoDownloadDIV" style="width: 348px; display: flex;">
+    <input id="AutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_73}${displayLanguage.str_74}</label>
 </div>
-<div id="FullPictureLoadOptionsCountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_75}</label>
-    <input id="FullPictureLoadOptionsCountdown" style="width: 60px; margin: 0 6px !important;">
+    <input id="Countdown" style="width: 60px; margin: 0 6px !important;">
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_70}</label>
-    <select id="FullPictureLoadOptionsThreading">
+    <select id="Threading">
         ${fun.arr(32, (_,i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
     </select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsZip" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="Zip" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_71}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_72}</label>
-    <select id="FullPictureLoadOptionsExtension">
+    <select id="Extension">
         ${["zip", "cbz"].map(v => `<option value="${v}">${v}</option>`).join("")}
     </select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FullPictureLoadOptionsConvert" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="Convert" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_110}</label>
 </div>
-<div id="FullPictureLoadCustomDownloadVideoDIV" style="width: 348px; display: none;">
-    <input id="FullPictureLoadCustomDownloadVideo" type="checkbox" style="width: 14px; margin: 0 6px;">
+<div id="CustomDownloadVideoDIV" style="width: 348px; display: none;">
+    <input id="CustomDownloadVideo" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_124}</label>
 </div>
-<button id="FullPictureLoadOptionsCancelBtn">${displayLanguage.str_82}</button>
-<button id="FullPictureLoadOptionsResetBtn">${displayLanguage.str_83}</button>
-<button id="FullPictureLoadOptionsSaveBtn">${displayLanguage.str_84}</button>
+<button id="CancelBtn">${displayLanguage.str_82}</button>
+<button id="ResetBtn">${displayLanguage.str_83}</button>
+<button id="SaveBtn">${displayLanguage.str_84}</button>
 `;
         main.innerHTML = FullPictureLoadOptionsMainHtmlStr;
 
-        ge("#FullPictureLoadOptionsIcon", main).checked = options.icon == 1 ? true : false;
-        ge("#FullPictureLoadAutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
-        ge("#ShowFullPictureLoadFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
-        ge("#FullPictureLoadOptionsMsgPos", main).value = _GM_getValue("FullPictureLoadMsgPos", 0);
-        ge("#FullPictureLoadOptionsThreading", main).value = options.threading;
-        ge("#FullPictureLoadOptionsZip", main).checked = options.zip == 1 ? true : false;
-        ge("#FullPictureLoadOptionsExtension", main).value = options.file_extension;
-        ge("#FullPictureLoadOptionsConvert", main).checked = _GM_getValue("convertWebpToJpg", 1) == 1 ? true : false;
-        ge("#FullPictureLoadOptionsAutoDownload", main).checked = options.autoDownload == 1 ? true : false;
-        ge("#FullPictureLoadOptionsCountdown", main).value = options.autoDownloadCountdown;
-        ge("#FullPictureLoadOptionsComic", main).checked = options.comic == 1 ? true : false;
-        ge("#FullPictureLoadOptionsDouble", main).checked = options.doubleTouchNext == 1 ? true : false;
+        ge("#icon", main).checked = options.icon == 1 ? true : false;
+        ge("#AutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
+        ge("#ShowFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
+        ge("#MsgPos", main).value = _GM_getValue("FullPictureLoadMsgPos", 0);
+        ge("#Threading", main).value = options.threading;
+        ge("#Zip", main).checked = options.zip == 1 ? true : false;
+        ge("#Extension", main).value = options.file_extension;
+        ge("#Convert", main).checked = _GM_getValue("convertWebpToJpg", 1) == 1 ? true : false;
+        ge("#AutoDownload", main).checked = options.autoDownload == 1 ? true : false;
+        ge("#Countdown", main).value = options.autoDownloadCountdown;
+        ge("#Comic", main).checked = options.comic == 1 ? true : false;
+        ge("#Double", main).checked = options.doubleTouchNext == 1 ? true : false;
         if ("insertImg" in siteData) {
             const [, insertMode] = siteData.insertImg;
             if (![1, 2].some(n => n == insertMode)) {
-                ge("#FullPictureLoadAutoInsertImgDIV", main).style.display = "none";
+                ge("#AutoInsertImgDIV", main).style.display = "none";
             }
         }
         if (!("insertImg" in siteData)) {
-            ge("#FullPictureLoadAutoInsertImgDIV", main).style.display = "none";
-            ge("#FullPictureLoadOptionsZoomDIV", main).style.display = "none";
-            ge("#FullPictureLoadOptionsviewModeDIV", main).style.display = "none";
-            ge("#FullPictureLoadOptionsColumnDIV", main).style.display = "none";
+            ge("#AutoInsertImgDIV", main).style.display = "none";
+            ge("#ZoomDIV", main).style.display = "none";
+            ge("#viewModeDIV", main).style.display = "none";
+            ge("#ColumnDIV", main).style.display = "none";
         }
         if (hasTouchEvents) {
-            ge("#ShowFullPictureLoadFixedMenuDIV", main).style.display = "none";
-            ge("#FullPictureLoadOptionsShadowGalleryModeDIV", main).style.display = "none";
-            ge("#FullPictureLoadFancyboxWheelDIV", main).style.display = "none";
+            ge("#ShowFixedMenuDIV", main).style.display = "none";
+            ge("#ShadowGalleryModeDIV", main).style.display = "none";
+            ge("#FancyboxWheelDIV", main).style.display = "none";
         }
         if (isBoolean(siteData.SPA)) {
-            ge("#FullPictureLoadOptionsShadowGalleryModeDIV", main).style.display = "none";
+            ge("#ShadowGalleryModeDIV", main).style.display = "none";
         }
         if (fancyboxBlackList()) {
-            ge("#FullPictureLoadOptionsFancybox", main).checked = false;
-            ge("#FullPictureLoadOptionsFancyboxDIV", main).style.display = "none";
-            ge("#FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV", main).style.display = "none";
-            ge("#FullPictureLoadFancyboxWheelDIV", main).style.display = "none";
+            ge("#Fancybox", main).checked = false;
+            ge("#FancyboxDIV", main).style.display = "none";
+            ge("#FancyboxSlideshowTimeoutDIV", main).style.display = "none";
+            ge("#FancyboxWheelDIV", main).style.display = "none";
         } else {
-            ge("#FullPictureLoadOptionsFancybox", main).checked = options.fancybox == 1 ? true : false;
-            ge("#FullPictureLoadOptionsFancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
-            ge("#FullPictureLoadFancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
+            ge("#Fancybox", main).checked = options.fancybox == 1 ? true : false;
+            ge("#FancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
+            ge("#FancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
         }
-        ge("#FullPictureLoadOptionsZoom", main).value = options.zoom;
-        siteData.category == "comic" ? ge("#FullPictureLoadOptionsColumn", main).value = 2 : ge("#FullPictureLoadOptionsColumn", main).value = options.column;
-        ge("#FullPictureLoadOptionsviewMode", main).checked = options.viewMode == 1 ? true : false;
-        ge("#FullPictureLoadOptionsShadowGalleryMode", main).checked = options.shadowGallery == 1 ? true : false;
+        ge("#Zoom", main).value = options.zoom;
+        siteData.category == "comic" ? ge("#Column", main).value = 2 : ge("#Column", main).value = options.column;
+        ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
+        ge("#ShadowGalleryMode", main).checked = options.shadowGallery == 1 ? true : false;
+        ge("#ShadowGalleryWheel", main).value = options.shadowGalleryWheel;
         if (comicSwitch) {
-            ge("#FullPictureLoadOptionsComicDIV", main).style.display = "flex";
+            ge("#ComicDIV", main).style.display = "flex";
         }
         let autoDownload = siteData.autoDownload;
         if (hasTouchEvents && showOptions || !autoDownload && showOptions) {
-            fun.gae("#FullPictureLoadOptionsAutoDownloadDIV,#FullPictureLoadOptionsCountdownDIV", main).forEach(e => (e.style.display = "none"));
+            fun.gae("#AutoDownloadDIV,#CountdownDIV", main).forEach(e => (e.style.display = "none"));
         }
         if (!hasTouchEvents && showOptions || (hasTouchEvents && showOptions && !siteData.next)) {
-            ge("#FullPictureLoadOptionsDoubleDIV", main).style.display = "none";
+            ge("#DoubleDIV", main).style.display = "none";
         }
         let downloadVideo = siteData.downloadVideo;
         if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
-            ge("#FullPictureLoadCustomDownloadVideoDIV", main).style.display = "flex";
-            ge("#FullPictureLoadCustomDownloadVideo", main).checked = FullPictureLoadCustomDownloadVideo == 1 ? true : false;
+            ge("#CustomDownloadVideoDIV", main).style.display = "flex";
+            ge("#CustomDownloadVideo", main).checked = FullPictureLoadCustomDownloadVideo == 1 ? true : false;
         }
-        ge("#FullPictureLoadOptionsCancelBtn", main).addEventListener("click", () => {
+        ge("#CancelBtn", main).addEventListener("click", () => {
             mainElement.remove();
         });
-        ge("#FullPictureLoadOptionsResetBtn", main).addEventListener("click", event => {
+        ge("#ResetBtn", main).addEventListener("click", event => {
             event.preventDefault();
             localStorage.removeItem("FullPictureLoadOptions");
             localStorage.removeItem("FullPictureLoadCustomDownloadVideo");
@@ -28036,29 +28095,30 @@ img.small {
             _GM_setValue("FancyboxWheel", 1);
             location.reload();
         });
-        ge("#FullPictureLoadOptionsSaveBtn", main).addEventListener("click", event => {
+        ge("#SaveBtn", main).addEventListener("click", event => {
             event.preventDefault();
-            options.icon = ge("#FullPictureLoadOptionsIcon", main).checked == true ? 1 : 0;
-            options.autoInsert = ge("#FullPictureLoadAutoInsertImg", main).checked == true ? 1 : 0;
-            _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFullPictureLoadFixedMenu", main).checked == true ? 1 : 0);
-            _GM_setValue("FullPictureLoadMsgPos", ge("#FullPictureLoadOptionsMsgPos", main).value);
-            options.threading = ge("#FullPictureLoadOptionsThreading", main).value;
-            options.zip = ge("#FullPictureLoadOptionsZip", main).checked == true ? 1 : 0;
-            options.file_extension = ge("#FullPictureLoadOptionsExtension", main).value;
-            _GM_setValue("convertWebpToJpg", ge("#FullPictureLoadOptionsConvert", main).checked == true ? 1 : 0);
-            options.comic = ge("#FullPictureLoadOptionsComic", main).checked == true ? 1 : 0;
-            options.autoDownload = ge("#FullPictureLoadOptionsAutoDownload", main).checked == true ? 1 : 0;
-            options.autoDownloadCountdown = ge("#FullPictureLoadOptionsCountdown", main).value;
-            options.doubleTouchNext = ge("#FullPictureLoadOptionsDouble", main).checked == true ? 1 : 0;
-            options.fancybox = ge("#FullPictureLoadOptionsFancybox", main).checked == true ? 1 : 0;
-            _GM_setValue("FancyboxSlideshowTimeout", ge("#FullPictureLoadOptionsFancyboxSlideshowTimeout", main).value);
-            _GM_setValue("FancyboxWheel", ge("#FullPictureLoadFancyboxWheel", main).value);
-            options.zoom = ge("#FullPictureLoadOptionsZoom", main).value;
-            options.column = ge("#FullPictureLoadOptionsColumn", main).value;
-            options.viewMode = ge("#FullPictureLoadOptionsviewMode", main).checked == true ? 1 : 0;
-            options.shadowGallery = ge("#FullPictureLoadOptionsShadowGalleryMode", main).checked == true ? 1 : 0;
+            options.icon = ge("#icon", main).checked == true ? 1 : 0;
+            options.autoInsert = ge("#AutoInsertImg", main).checked == true ? 1 : 0;
+            _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFixedMenu", main).checked == true ? 1 : 0);
+            _GM_setValue("FullPictureLoadMsgPos", ge("#MsgPos", main).value);
+            options.threading = ge("#Threading", main).value;
+            options.zip = ge("#Zip", main).checked == true ? 1 : 0;
+            options.file_extension = ge("#Extension", main).value;
+            _GM_setValue("convertWebpToJpg", ge("#Convert", main).checked == true ? 1 : 0);
+            options.comic = ge("#Comic", main).checked == true ? 1 : 0;
+            options.autoDownload = ge("#AutoDownload", main).checked == true ? 1 : 0;
+            options.autoDownloadCountdown = ge("#Countdown", main).value;
+            options.doubleTouchNext = ge("#Double", main).checked == true ? 1 : 0;
+            options.fancybox = ge("#Fancybox", main).checked == true ? 1 : 0;
+            _GM_setValue("FancyboxSlideshowTimeout", ge("#FancyboxSlideshowTimeout", main).value);
+            _GM_setValue("FancyboxWheel", ge("#FancyboxWheel", main).value);
+            options.zoom = ge("#Zoom", main).value;
+            options.column = ge("#Column", main).value;
+            options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
+            options.shadowGallery = ge("#ShadowGalleryMode", main).checked == true ? 1 : 0;
+            options.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
             if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
-                ge("#FullPictureLoadCustomDownloadVideo", main).checked == true ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
+                ge("#CustomDownloadVideo", main).checked == true ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
             }
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
