@@ -76,6 +76,7 @@
         fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
         shadowGallery: 0 //自動進入影子畫廊，1：自動、0：手動
     };
+    const FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
     let options = defaultOptions;
 
     const _unsafeWindow = unsafeWindow ?? window;
@@ -21251,7 +21252,7 @@ if ("xx" in window) {
                 str_145: "Fancybox5幻燈片播放時間間隔：",
                 str_146: "Fancybox5滾輪操作：",
                 galleryMenu: {
-                    webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4)",
+                    webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2,R)",
                     single: hasTouchEvents ? "單圖像模式" : "單圖像模式 (1)",
@@ -21420,7 +21421,7 @@ if ("xx" in window) {
                 str_145: "Fancybox5幻灯片播放时间间隔：",
                 str_146: "Fancybox5滚轮操作：",
                 galleryMenu: {
-                    webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4)",
+                    webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvents ? "小图像模式" : "小图像模式 (2,R)",
                     single: hasTouchEvents ? "单图像模式" : "单图像模式 (1)",
@@ -21588,7 +21589,7 @@ if ("xx" in window) {
                 str_145: "Fancybox5 Slideshow Play Delay：",
                 str_146: "Fancybox5 Wheel：",
                 galleryMenu: {
-                    webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4)",
+                    webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
                     small: hasTouchEvents ? "Small Image" : "Small Image (2,R)",
                     single: hasTouchEvents ? "Single Image" : "Single Image (1)",
@@ -25950,15 +25951,18 @@ if ("xx" in window) {
 
         if (isFetching || "eye" in siteData && siteData.eye === 0) return;
 
+        const default_Config = {
+            ViewMode: 0,
+            webtoonWidth: 800
+        };
         let newWindowData = localStorage.getItem("newWindowData");
-        if (newWindowData) {
+        if (newWindowData == null) {
+            localStorage.setItem("newWindowData", JSON.stringify(default_Config));
+            newWindowData = {};
+        } else if (isString(newWindowData)) {
             newWindowData = JSON.parse(newWindowData);
-        } else {
-            localStorage.setItem("newWindowData", '{"ViewMode":0}');
-            newWindowData = {
-                "ViewMode": 0
-            }
         }
+        const config = Object.assign(default_Config, newWindowData);
 
         let imgSrcs;
         if ("SPA" in siteData) {
@@ -25995,7 +25999,7 @@ if ("xx" in window) {
 
             newWindow.fun = fun;
             newWindow.hasTouchEvents = hasTouchEvents;
-            newWindow.newWindowData = newWindowData;
+            newWindow.config = config;
             newWindow.imgViewIndex = -1;
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
@@ -26015,7 +26019,7 @@ body {
     font-family: Arial, sans-serif;
     font-size: 14px;
     color: #000000;
-    width: 132px;
+    width: ${hasTouchEvents ? "102px" : "132px"};
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
@@ -26030,7 +26034,7 @@ body {
   left: 0px;
 }
 .FixedMenuitem {
-    width: 120px;
+    width: ${hasTouchEvents ? "90px" : "120px"};
     height: 24px;
     line-height: 24px;
     overflow: hidden;
@@ -26066,10 +26070,9 @@ img.single {
     margin: 0 auto;
     border: solid #fff;
 }
-img.scroll {
+img.webtoon {
     width: 100%;
     height: auto;
-    max-width: 800px;
     display: block;
     margin: 0 auto;
     border: unset !important;
@@ -26137,13 +26140,13 @@ if (hasTouchEvents) {
                 }
                 if (fancybox.isCurrentSlide(slide)) {
                     imgViewIndex = slideIndex;
-                    if (newWindowData.ViewMode != 4) {
+                    if (config.ViewMode != 4) {
                         imgs[slideIndex].style.border = "solid #32a1ce";
                     }
                     imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
                 } else {
                     imgViewIndex = fancybox.getSlide().index;
-                    if (newWindowData.ViewMode != 4) {
+                    if (config.ViewMode != 4) {
                         imgs[slideIndex].style.border = "solid #32a1ce";
                     }
                     imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
@@ -26154,7 +26157,7 @@ if (hasTouchEvents) {
                 let slideIndex = fancybox.getSlide().index;
                 imgViewIndex = slideIndex;
                 let imgs = [...document.querySelectorAll("img")];
-                if (newWindowData.ViewMode != 4) {
+                if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[slideIndex].style.border = "solid #32a1ce";
                 }
@@ -26309,13 +26312,15 @@ function setFancybox() {
                 });
 
                 const newWindowScriptCode = `
+var webtoonWidth = config.webtoonWidth;
+
 function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
-        id: "MenuScrollItem",
+        id: "MenuWebtoonItem",
         text: menuLanguage.webtoon,
-        cfn: () => scrollImageLayout()
+        cfn: () => webtoonImageLayout()
     }, {
         id: "MenuRTLItem",
         text: menuLanguage.rtl,
@@ -26373,7 +26378,7 @@ document.addEventListener("keydown", event => {
     if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
     if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
     if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
-    if (event.code === "Numpad4" || event.key === "4") return scrollImageLayout();
+    if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
 });
 
 document.addEventListener("keydown", event => {
@@ -26383,7 +26388,13 @@ document.addEventListener("keydown", event => {
         inline: "center"
     };
     const imgs = [...document.querySelectorAll("img")];
-    if (event.code === "KeyR" && [0, 2, 3].some(m => newWindowData.ViewMode == m)) {
+    if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+        increaseWidth();
+    }
+    if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+        reduceWidth();
+    }
+    if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
             box.style.direction = "ltr";
@@ -26395,7 +26406,7 @@ document.addEventListener("keydown", event => {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
-        if (newWindowData.ViewMode != 4) {
+        if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
@@ -26408,20 +26419,33 @@ document.addEventListener("keydown", event => {
         } else if (imgViewIndex > imgs.length - 1) {
             imgViewIndex = 0;
         }
-        if (newWindowData.ViewMode != 4) {
+        if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
-    } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
+    } else if (event.code === "Delete" && config.ViewMode == 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
         hideE.style.display = "none";
-    } else if (event.code === "Enter" && newWindowData.ViewMode === 3) {
+    } else if (event.code === "Enter" && config.ViewMode == 3) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
     } else {
         imgViewIndex = -1;
     }
 });
+
+if (config.ViewMode == 4) {
+    document.addEventListener("wheel", (event) => {
+        if (event.ctrlKey || event.altKey || event.shiftKey) {
+            if (event.deltaY < 0) {
+                increaseWidth();
+            }
+            if (event.deltaY > 0) {
+                reduceWidth();
+            }
+        }
+    });
+}
 
 function loadImgs() {
     const imgs = [...document.querySelectorAll("img")];
@@ -26459,11 +26483,41 @@ if (hasTouchEvents) {
     });
 }
 
+function increaseWidth() {
+    let imgs = [...document.querySelectorAll("img")];
+    if (webtoonWidth < 1200 && webtoonWidth < window.outerWidth) {
+        webtoonWidth = (Number(webtoonWidth) + 50);
+        config.webtoonWidth = webtoonWidth;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+    } else {
+        webtoonWidth = 800;
+        config.webtoonWidth = 800;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = "800px"));
+    }
+}
+
+function reduceWidth() {
+    let imgs = [...document.querySelectorAll("img")];
+    if (webtoonWidth > 200) {
+        webtoonWidth = (Number(webtoonWidth) - 50);
+        config.webtoonWidth = webtoonWidth;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+    } else {
+        webtoonWidth = 800;
+        config.webtoonWidth = 800;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = "800px"));
+    }
+}
+
 function createImgElement(mode) {
     window.scrollTo({
         top: 0
     });
-    if (newWindowData.ViewMode === 3) {
+    if (config.ViewMode == 3) {
         document.querySelector("#imgBox").style.direction = "rtl";
     } else {
         document.querySelector("#imgBox").style.direction = "";
@@ -26480,6 +26534,9 @@ function createImgElement(mode) {
         img.className = mode;
         img.src = "${loading_bak}";
         img.dataset.src = src;
+        if (config.ViewMode == 4) {
+            img.style.maxWidth = webtoonWidth + "px";
+        }
         a.append(img);
         return a;
     });
@@ -26493,49 +26550,53 @@ function createImgElement(mode) {
     }, 1000);
 }
 
+function saveConfig() {
+    localStorage.setItem("newWindowData", JSON.stringify(config));
+}
+
 function defaultImageLayout() {
-    newWindowData.ViewMode = 0;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 0;
+    saveConfig();
     createImgElement("default");
     document.querySelector("#MenuDefaultItem").classList.add("active");
 }
 
 function singleImageLayout() {
-    newWindowData.ViewMode = 1;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 1;
+    saveConfig();
     createImgElement("single");
     document.querySelector("#MenuSinglePageItem").classList.add("active");
 }
 
 function smallImageLayout() {
-    newWindowData.ViewMode = 2;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 2;
+    saveConfig();
     createImgElement("small");
     document.querySelector("#MenuSmallItem").classList.add("active");
 }
 
 function rtlImageLayout() {
-    newWindowData.ViewMode = 3;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 3;
+    saveConfig();
     createImgElement("default");
     document.querySelector("#MenuRTLItem").classList.add("active");
 }
 
-function scrollImageLayout() {
-    newWindowData.ViewMode = 4;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
-    createImgElement("scroll");
-    document.querySelector("#MenuScrollItem").classList.add("active");
+function webtoonImageLayout() {
+    config.ViewMode = 4;
+    saveConfig();
+    createImgElement("webtoon");
+    document.querySelector("#MenuWebtoonItem").classList.add("active");
 }
 
-if (newWindowData.ViewMode == 1) {
+if (config.ViewMode == 1) {
     singleImageLayout();
-} else if (newWindowData.ViewMode == 2) {
+} else if (config.ViewMode == 2) {
     smallImageLayout();
-} else if (newWindowData.ViewMode == 3) {
+} else if (config.ViewMode == 3) {
     rtlImageLayout();
-} else if (newWindowData.ViewMode == 4) {
-    scrollImageLayout();
+} else if (config.ViewMode == 4) {
+    webtoonImageLayout();
 } else {
     defaultImageLayout();
 }
@@ -26569,7 +26630,7 @@ document.addEventListener("viewed", event => {
     let slideIndex = event.detail.index;
     let imgs = [...document.querySelectorAll("img")];
     imgViewIndex = slideIndex;
-    if (newWindowData.ViewMode != 4) {
+    if (config.ViewMode != 4) {
         imgs.forEach(e => (e.style.border = ""));
         imgs[slideIndex].style.border = "solid #32a1ce";
     }
@@ -26592,13 +26653,15 @@ document.addEventListener("viewed", event => {
                 });
 
                 const newWindowScriptCode = `
+var webtoonWidth = config.webtoonWidth;
+
 function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
-        id: "MenuScrollItem",
+        id: "MenuWebtoonItem",
         text: menuLanguage.webtoon,
-        cfn: () => scrollImageLayout()
+        cfn: () => webtoonImageLayout()
     }, {
         id: "MenuRTLItem",
         text: menuLanguage.rtl,
@@ -26656,7 +26719,7 @@ document.addEventListener("keydown", event => {
     if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
     if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
     if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
-    if (event.code === "Numpad4" || event.key === "4") return scrollImageLayout();
+    if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
 });
 
 document.addEventListener("keydown", event => {
@@ -26666,7 +26729,13 @@ document.addEventListener("keydown", event => {
         inline: "center"
     };
     const imgs = [...document.querySelectorAll("img")];
-    if (event.code === "KeyR" && [0, 2, 3].some(m => newWindowData.ViewMode == m)) {
+    if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+        increaseWidth();
+    }
+    if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+        reduceWidth();
+    }
+    if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
             box.style.direction = "ltr";
@@ -26678,7 +26747,7 @@ document.addEventListener("keydown", event => {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
-        if (newWindowData.ViewMode != 4) {
+        if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
@@ -26691,20 +26760,33 @@ document.addEventListener("keydown", event => {
         } else if (imgViewIndex > imgs.length - 1) {
             imgViewIndex = 0;
         }
-        if (newWindowData.ViewMode != 4) {
+        if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
-    } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
+    } else if (event.code === "Delete" && config.ViewMode == 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
         hideE.style.display = "none";
-    } else if (event.code === "Enter" && newWindowData.ViewMode === 3) {
+    } else if (event.code === "Enter" && config.ViewMode == 3) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
     } else {
         imgViewIndex = -1;
     }
 });
+
+if (config.ViewMode == 4) {
+    document.addEventListener("wheel", (event) => {
+        if (event.ctrlKey || event.altKey || event.shiftKey) {
+            if (event.deltaY < 0) {
+                increaseWidth();
+            }
+            if (event.deltaY > 0) {
+                reduceWidth();
+            }
+        }
+    });
+}
 
 function loadImgs() {
     const imgs = [...document.querySelectorAll("img")];
@@ -26738,11 +26820,41 @@ if (hasTouchEvents) {
     });
 }
 
+function increaseWidth() {
+    let imgs = [...document.querySelectorAll("img")];
+    if (webtoonWidth < 1200 && webtoonWidth < window.outerWidth) {
+        webtoonWidth = (Number(webtoonWidth) + 50);
+        config.webtoonWidth = webtoonWidth;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+    } else {
+        webtoonWidth = 800;
+        config.webtoonWidth = 800;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = "800px"));
+    }
+}
+
+function reduceWidth() {
+    let imgs = [...document.querySelectorAll("img")];
+    if (webtoonWidth > 200) {
+        webtoonWidth = (Number(webtoonWidth) - 50);
+        config.webtoonWidth = webtoonWidth;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+    } else {
+        webtoonWidth = 800;
+        config.webtoonWidth = 800;
+        saveConfig();
+        imgs.forEach(e => (e.style.maxWidth = "800px"));
+    }
+}
+
 function createImgElement(mode) {
     window.scrollTo({
         top: 0
     });
-    if (newWindowData.ViewMode === 3) {
+    if (config.ViewMode == 3) {
         document.querySelector("#imgBox").style.direction = "rtl";
     } else {
         document.querySelector("#imgBox").style.direction = "";
@@ -26755,6 +26867,9 @@ function createImgElement(mode) {
         img.className = mode;
         img.src = "${loading_bak}";
         img.dataset.src = src;
+        if (config.ViewMode == 4) {
+            img.style.maxWidth = webtoonWidth + "px";
+        }
         return img;
     });
     document.querySelector("#imgBox").append(...imgElements);
@@ -26767,49 +26882,53 @@ function createImgElement(mode) {
     }, 1000);
 }
 
+function saveConfig() {
+    localStorage.setItem("newWindowData", JSON.stringify(config));
+}
+
 function defaultImageLayout() {
-    newWindowData.ViewMode = 0;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 0;
+    saveConfig();
     createImgElement("default");
     document.querySelector("#MenuDefaultItem").classList.add("active");
 }
 
 function singleImageLayout() {
-    newWindowData.ViewMode = 1;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 1;
+    saveConfig();
     createImgElement("single");
     document.querySelector("#MenuSinglePageItem").classList.add("active");
 }
 
 function smallImageLayout() {
-    newWindowData.ViewMode = 2;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 2;
+    saveConfig();
     createImgElement("small");
     document.querySelector("#MenuSmallItem").classList.add("active");
 }
 
 function rtlImageLayout() {
-    newWindowData.ViewMode = 3;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+    config.ViewMode = 3;
+    saveConfig();
     createImgElement("default");
     document.querySelector("#MenuRTLItem").classList.add("active");
 }
 
-function scrollImageLayout() {
-    newWindowData.ViewMode = 4;
-    localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+function webtoonImageLayout() {
+    config.ViewMode = 4;
+    saveConfig();
     createImgElement("scroll");
-    document.querySelector("#MenuScrollItem").classList.add("active");
+    document.querySelector("#MenuWebtoonItem").classList.add("active");
 }
 
-if (newWindowData.ViewMode == 1) {
+if (config.ViewMode == 1) {
     singleImageLayout();
-} else if (newWindowData.ViewMode == 2) {
+} else if (config.ViewMode == 2) {
     smallImageLayout();
-} else if (newWindowData.ViewMode == 3) {
+} else if (config.ViewMode == 3) {
     rtlImageLayout();
-} else if (newWindowData.ViewMode == 4) {
-    scrollImageLayout();
+} else if (config.ViewMode == 4) {
+    webtoonImageLayout();
 } else {
     defaultImageLayout();
 }
@@ -26842,15 +26961,19 @@ if (newWindowData.ViewMode == 1) {
             ge("#mainShadowGallery").remove();
         }
 
+        const default_Config = {
+            ViewMode: 0,
+            webtoonWidth: 800
+        };
         let newWindowData = localStorage.getItem("newWindowData");
-        if (newWindowData) {
+        if (newWindowData == null) {
+            localStorage.setItem("newWindowData", JSON.stringify(default_Config));
+            newWindowData = {};
+        } else if (isString(newWindowData)) {
             newWindowData = JSON.parse(newWindowData);
-        } else {
-            localStorage.setItem("newWindowData", '{"ViewMode":0}');
-            newWindowData = {
-                "ViewMode": 0
-            }
         }
+        const config = Object.assign(default_Config, newWindowData);
+        let webtoonWidth = config.webtoonWidth;
 
         let srcs;
         if ("SPA" in siteData) {
@@ -26882,12 +27005,84 @@ if (newWindowData.ViewMode == 1) {
         const hideSelector = "body>*:not(#mainShadowGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
+        const saveConfig = () => {
+            localStorage.setItem("newWindowData", JSON.stringify(config));
+        };
+
+        const increaseWidth = () => {
+            let imgs = [...shadow.querySelectorAll("img")];
+            if (webtoonWidth < 1200 && webtoonWidth < window.outerWidth) {
+                webtoonWidth = (Number(webtoonWidth) + 50);
+                config.webtoonWidth = webtoonWidth;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+            } else {
+                webtoonWidth = 800;
+                config.webtoonWidth = 800;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = "800px"));
+            }
+        };
+
+        const reduceWidth = () => {
+            let imgs = [...shadow.querySelectorAll("img")];
+            if (webtoonWidth > 200) {
+                webtoonWidth = (Number(webtoonWidth) - 50);
+                config.webtoonWidth = webtoonWidth;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+            } else {
+                webtoonWidth = 800;
+                config.webtoonWidth = 800;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = "800px"));
+            }
+        };
+
         const closeGallery = () => {
+            if (config.ViewMode == 4) {
+                _unsafeWindow.removeEventListener("wheel", wEvent);
+            }
+            _unsafeWindow.removeEventListener("resize", aspectRatio);
             _unsafeWindow.removeEventListener("keydown", kEvent);
             gae(hideSelector).forEach(e => (e.style.display = ""));
             ge("#overflowYHidden")?.remove();
             mainShadowGallery?.remove();
         };
+
+        const wEvent = (event) => {
+            if (event.ctrlKey || event.altKey || event.shiftKey) {
+                if (event.deltaY < 0) {
+                    increaseWidth();
+                }
+                if (event.deltaY > 0) {
+                    reduceWidth();
+                }
+            }
+        };
+
+        if (config.ViewMode == 4) {
+            _unsafeWindow.addEventListener("wheel", wEvent);
+        }
+
+        const aspectRatio = () => {
+            const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
+            const imgs = [...shadow.querySelectorAll("img")];
+            imgs.forEach(img => {
+                if (verticalScreen && img.className === "default") {
+                    img.style.maxWidth = "96vw";
+                    img.style.maxHeight = "";
+                    img.style.minWidth = "96vw";
+                    img.style.minHeight = "";
+                } else if (img.className === "default") {
+                    img.style.maxHeight = "99vh";
+                    img.style.maxWidth = "";
+                    img.style.minHeight = "99vh";
+                    img.style.minWidth = "";
+                }
+            });
+        };
+        _unsafeWindow.addEventListener("resize", aspectRatio);
 
         const kEvent = (event) => {
             if (ge(".fancybox__container")) return;
@@ -26904,7 +27099,13 @@ if (newWindowData.ViewMode == 1) {
                     next.click();
                 }
             }
-            if (event.code === "KeyR" && [0, 2, 3].some(m => newWindowData.ViewMode == m)) {
+            if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+                increaseWidth();
+            }
+            if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+                reduceWidth();
+            }
+            if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
                 let box = shadow.querySelector("#imgBox");
                 if (box.style.direction == "rtl") {
                     box.style.direction = "ltr";
@@ -26918,7 +27119,7 @@ if (newWindowData.ViewMode == 1) {
                 if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = imgs.length - 1;
                 }
-                if (newWindowData.ViewMode != 4) {
+                if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
@@ -26932,15 +27133,15 @@ if (newWindowData.ViewMode == 1) {
                 } else if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = 0;
                 }
-                if (newWindowData.ViewMode != 4) {
+                if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
                 imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
-            } else if (event.code === "Delete" && newWindowData.ViewMode === 3) {
+            } else if (event.code === "Delete" && config.ViewMode == 3) {
                 const hideE = [...shadow.querySelectorAll("img")][imgViewIndex];
                 hideE.style.display = "none";
-            } else if (event.code === "Enter" && newWindowData.ViewMode === 3) {
+            } else if (event.code === "Enter" && config.ViewMode == 3) {
                 [...shadow.querySelectorAll("img")].forEach(e => (e.style.display = ""));
             } else {
                 imgViewIndex = -1;
@@ -27004,10 +27205,8 @@ p {
 img.default {
     vertical-align: middle;
     width: auto;
+    height: auto;
     object-fit: contain;
-    min-height: 99vh;
-    max-height: 99vh;
-    max-width: 99%;
     border: solid #fff;
     background-color: #fff;
 }
@@ -27023,7 +27222,7 @@ img.single {
 img.webtoon {
     width: 100%;
     height: auto;
-    max-width: 800px;
+    max-width: ${webtoonWidth}px;
     display: block;
     margin: 0 auto;
     border: unset !important;
@@ -27103,17 +27302,19 @@ img.small {
             });
             const p = document.createElement("p");
             p.id = "imgBox";
-            if (newWindowData.ViewMode === 3) {
+            if (config.ViewMode == 3) {
                 p.style.direction = "rtl";
             }
-            if (siteData.category.includes("comic") && newWindowData.ViewMode != 4) {
+            if (siteData.category.includes("comic") && config.ViewMode != 4) {
                 p.style.padding = "0 6%";
                 p.style.margin = "0 auto";
             }
             p.append(...imgElements);
             mainElement.append(p);
             loadImgs();
+            aspectRatio();
             setTimeout(() => {
+                aspectRatio();
                 [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
             }, 1000);
             if (!("fancybox" in siteData) && options.fancybox == 1) {
@@ -27216,47 +27417,47 @@ img.small {
         addFixedMenu();
 
         function defaultImageLayout() {
-            newWindowData.ViewMode = 0;
-            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            config.ViewMode = 0;
+            saveConfig();
             createGalleryElement("default");
             shadow.querySelector("#MenuDefaultItem").classList.add("active");
         }
 
         function singleImageLayout() {
-            newWindowData.ViewMode = 1;
-            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            config.ViewMode = 1;
+            saveConfig();
             createGalleryElement("single");
             shadow.querySelector("#MenuSinglePageItem").classList.add("active");
         }
 
         function smallImageLayout() {
-            newWindowData.ViewMode = 2;
-            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            config.ViewMode = 2;
+            saveConfig();
             createGalleryElement("small");
             shadow.querySelector("#MenuSmallItem").classList.add("active");
         }
 
         function rtlImageLayout() {
-            newWindowData.ViewMode = 3;
-            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            config.ViewMode = 3;
+            saveConfig();
             createGalleryElement("default");
             shadow.querySelector("#MenuRTLItem").classList.add("active");
         }
 
         function webtoonImageLayout() {
-            newWindowData.ViewMode = 4;
-            localStorage.setItem("newWindowData", JSON.stringify(newWindowData));
+            config.ViewMode = 4;
+            saveConfig();
             createGalleryElement("webtoon");
             shadow.querySelector("#MenuWebtoonItem").classList.add("active");
         }
 
-        if (newWindowData.ViewMode == 1) {
+        if (config.ViewMode == 1) {
             singleImageLayout();
-        } else if (newWindowData.ViewMode == 2) {
+        } else if (config.ViewMode == 2) {
             smallImageLayout();
-        } else if (newWindowData.ViewMode == 3) {
+        } else if (config.ViewMode == 3) {
             rtlImageLayout();
-        } else if (newWindowData.ViewMode == 4) {
+        } else if (config.ViewMode == 4) {
             webtoonImageLayout();
         } else {
             defaultImageLayout();
@@ -27702,16 +27903,16 @@ img.small {
     <input id="FullPictureLoadOptionsFancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_78}</label>
 </div>
-<div id="FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${displayLanguage.str_145}</label>
-    <select id="FullPictureLoadOptionsFancyboxSlideshowTimeout">
-        ${fun.arr(61, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
-    </select>
-</div>
 <div id="FullPictureLoadFancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>※${displayLanguage.str_146}</label>
     <select id="FullPictureLoadFancyboxWheel">
         ${Object.values(displayLanguage.FancyboxWheel).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
+    </select>
+</div>
+<div id="FullPictureLoadOptionsFancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>※${displayLanguage.str_145}</label>
+    <select id="FullPictureLoadOptionsFancyboxSlideshowTimeout">
+        ${fun.arr(61, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
     </select>
 </div>
 <div id="FullPictureLoadOptionsComicDIV" style="width: 348px; display: none;">
@@ -27816,7 +28017,6 @@ img.small {
         if (!hasTouchEvents && showOptions || (hasTouchEvents && showOptions && !siteData.next)) {
             ge("#FullPictureLoadOptionsDoubleDIV", main).style.display = "none";
         }
-        let FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
         let downloadVideo = siteData.downloadVideo;
         if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
             ge("#FullPictureLoadCustomDownloadVideoDIV", main).style.display = "flex";
@@ -28958,7 +29158,10 @@ a[data-fancybox]:hover {
         if ("next" in siteData) {
             const next = siteData.next;
             const nextE = await getNextLink(next);
-            const callback = () => {
+            const callback = (event) => {
+                if (event.type === "dblclick") {
+                    if (["is-next", "is-prev", "fancybox-button"].some(n => event?.target?.className?.includes(n))) return;
+                }
                 if (isFn(next)) {
                     fun.showMsg(displayLanguage.str_34, 0);
                     if (isString(nextE)) {
@@ -28979,11 +29182,11 @@ a[data-fancybox]:hover {
                 }
             };
             if (hasTouchEvents && !!siteData.next && options.doubleTouchNext == 1) {
-                document.addEventListener("dblclick", () => callback());
+                document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
                 if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
-                if (event.code === "ArrowRight") callback();
+                if (event.code === "ArrowRight") callback(event);
             });
         }
         if ("prev" in siteData) {
