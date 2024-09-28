@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.10
+// @version            2.8.11
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -26416,7 +26416,11 @@ document.addEventListener("keydown", event => {
             box.style.direction = "rtl";
         }
     }
-    if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+    if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+        imgViewIndex = imgs.length - 1;
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+    } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -26757,7 +26761,11 @@ document.addEventListener("keydown", event => {
             box.style.direction = "rtl";
         }
     }
-    if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+    if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+        imgViewIndex = imgs.length - 1;
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+    } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -27080,13 +27088,20 @@ if (config.ViewMode == 1) {
             passive: false
         });
 
+        let nextButtonIsShown = false;
+
         const toggleImage = (event) => {
             if (options.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
                 if (!ge(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
                     event.preventDefault();
                     event.stopPropagation();
                     const imgs = [...shadow.querySelectorAll("img")];
-                    if (event.deltaY < 0 && imgViewIndex >= 0) {
+                    const next = shadow.querySelector("#next a");
+                    if (event.deltaY < 0 && imgViewIndex < 0) {
+                        imgViewIndex = imgs.length - 1;
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                    } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         imgViewIndex--;
                         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                         if (config.ViewMode != 4) {
@@ -27094,11 +27109,14 @@ if (config.ViewMode == 1) {
                             imgs[imgViewIndex].style.border = "solid #32a1ce";
                         }
                         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                    } else if (event.deltaY > 0 && nextButtonIsShown) {
+                        return setTimeout(() => next.click(), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
-                        let next = shadow.querySelector("#next");
-                        if (imgs[imgViewIndex] === undefined && next) {
-                            next.scrollIntoView(scrollIntoViewOptions);
+                        if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
+                            next.parentElement.style.border = "solid #32a1ce";
+                            next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                            nextButtonIsShown = true;
                         } else if (imgs[imgViewIndex] === undefined) {
                             imgViewIndex = 0;
                         }
@@ -27140,6 +27158,7 @@ if (config.ViewMode == 1) {
         const kEvent = (event) => {
             if (ge(".fancybox__container")) return;
             const imgs = [...shadow.querySelectorAll("img")];
+            const next = shadow.querySelector("#next a");
             if (event.code === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
@@ -27147,7 +27166,6 @@ if (config.ViewMode == 1) {
             if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
             if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
             if (event.code === "KeyN") {
-                let next = shadow.querySelector("#next a");
                 if (next) {
                     next.click();
                 }
@@ -27166,7 +27184,12 @@ if (config.ViewMode == 1) {
                     box.style.direction = "rtl";
                 }
             }
-            if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+            if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+                event.preventDefault();
+                imgViewIndex = imgs.length - 1;
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+            } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
                 event.preventDefault();
                 imgViewIndex--;
                 if (imgs[imgViewIndex] === undefined) {
@@ -27177,12 +27200,15 @@ if (config.ViewMode == 1) {
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
                 imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
+                return setTimeout(() => next.click(), 500);
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
                 event.preventDefault();
                 imgViewIndex++;
-                let next = shadow.querySelector("#next");
-                if (imgs[imgViewIndex] === undefined && next) {
-                    next.scrollIntoView(scrollIntoViewOptions);
+                if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
+                    next.parentElement.style.border = "solid #32a1ce";
+                    next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                    nextButtonIsShown = true;
                 } else if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = 0;
                 }
@@ -27952,7 +27978,7 @@ img.small {
     <label>${displayLanguage.str_140}</label>
 </div>
 <div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>影子畫廊滾輪操作：</label>
+    <label>${displayLanguage.str_147}</label>
     <select id="ShadowGalleryWheel">
         ${Object.values(displayLanguage.ShadowGalleryWheel).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
     </select>
@@ -28046,10 +28072,12 @@ img.small {
         if (hasTouchEvents) {
             ge("#ShowFixedMenuDIV", main).style.display = "none";
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
+            ge("#ShadowGalleryWheelDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
         }
         if (isBoolean(siteData.SPA)) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
+            ge("#ShadowGalleryWheelDIV", main).style.display = "none";
         }
         if (fancyboxBlackList()) {
             ge("#Fancybox", main).checked = false;
