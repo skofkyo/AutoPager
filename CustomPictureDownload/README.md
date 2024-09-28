@@ -3,17 +3,18 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/08/31
+2024/09/28
 PC
-Chrome 128.0.6613.114 + Tampermonkey 5.2.3 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
-Edge 128.0.2739.54 + Tampermonkey 5.2.3 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
-Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
-FireFox 129.0.2 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
+Chrome 129.0.6668.71 + Tampermonkey 5.3.0 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+Edge 129.0.2792.65 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+FireFox 130.0.1 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
 Android
-Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
-Firefox for Android 129.0 + Tampermonkey 5.1.1 or Violentmonkey 2.20.0 or ScriptCat 0.16.5
-XBrowser 4.8.1
-ViaBrowser 5.8.1
+Edge Canary 131.0.2861.0 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+Firefox for Android 130.0.1 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+XBrowser 4.8.2
+ViaBrowser 5.9.0
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>提醒：</h1>
@@ -2951,6 +2952,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://www.xikxak.com/">XikXak</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xiunice.com/">Xiunice.com</a>
                 </td>
                 <td></td>
             </tr>
