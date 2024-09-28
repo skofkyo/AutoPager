@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.11
+// @version            2.8.12
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -21208,7 +21208,7 @@ if ("xx" in window) {
                 str_105: hasTouchEvents ? "複製圖址" : "複製圖址(1)",
                 str_106: hasTouchEvents ? "分頁畫廊" : "分頁畫廊(8)",
                 str_107: hasTouchEvents ? "一鍵下載" : "一鍵下載(3)",
-                str_108: "※訊息顯示的位置：",
+                str_108: "※訊息提示顯示的位置：",
                 str_109: {
                     c: "置中",
                     ul: "左上",
@@ -21253,7 +21253,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻燈片播放時間間隔：",
                 str_146: "Fancybox5滾輪操作：",
-                str_147: "影子畫廊(0,1,3)滾輪操作：",
+                str_147: "影子畫廊 (0、1、3) 滾輪操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21382,7 +21382,7 @@ if ("xx" in window) {
                 str_105: hasTouchEvents ? "拷贝图址" : "拷贝图址(1)",
                 str_106: hasTouchEvents ? "分页画廊" : "分页画廊(8)",
                 str_107: hasTouchEvents ? "一键下载" : "一键下载(3)",
-                str_108: "※讯息显示的位置：",
+                str_108: "※讯息提示显示的位置：",
                 str_109: {
                     c: "置中",
                     ul: "左上",
@@ -21427,7 +21427,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻灯片播放时间间隔：",
                 str_146: "Fancybox5滚轮操作：",
-                str_147: "影子画廊(0,1,3)滚轮操作：",
+                str_147: "影子画廊 (0、1、3) 滚轮操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21600,7 +21600,7 @@ if ("xx" in window) {
                 str_144: "Next Post",
                 str_145: "Fancybox5 Slideshow Play Delay：",
                 str_146: "Fancybox5 Wheel：",
-                str_147: "Shadow Gallery (0,1,3) Wheel：",
+                str_147: "Shadow Gallery (0、1、3) Wheel：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -27101,6 +27101,7 @@ if (config.ViewMode == 1) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
                         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        nextButtonIsShown = false;
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         imgViewIndex--;
                         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -27109,7 +27110,9 @@ if (config.ViewMode == 1) {
                             imgs[imgViewIndex].style.border = "solid #32a1ce";
                         }
                         imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        nextButtonIsShown = false;
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
+                        next.parentElement.style.backgroundColor = "gray";
                         return setTimeout(() => next.click(), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
@@ -27189,6 +27192,7 @@ if (config.ViewMode == 1) {
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                 imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                nextButtonIsShown = false;
             } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
                 event.preventDefault();
                 imgViewIndex--;
@@ -27200,7 +27204,9 @@ if (config.ViewMode == 1) {
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
                 imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                nextButtonIsShown = false;
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
+                next.parentElement.style.backgroundColor = "gray";
                 return setTimeout(() => next.click(), 500);
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
                 event.preventDefault();
@@ -27319,7 +27325,8 @@ img.small {
     display: block;
     padding: 10px 0;
     text-align: center;
-    background-color: #F6F6F6;
+    border: solid #fff;
+    background-color: antiquewhite;
 }
 #next a {
     display: block;
