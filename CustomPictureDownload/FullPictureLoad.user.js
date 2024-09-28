@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.12
+// @version            2.8.13
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5629,6 +5629,20 @@ a:has(>div>div>img),
         prev: ".nav-next>a",
         customTitle: "h1.entry-title",
         category: "nsfw1"
+    }, {
+        name: "Xiunice.com",
+        reg: () => fun.checkUrl({
+            h: "xiunice",
+            p: /^\/[^\/]+$/
+        }),
+        init: () => fun.createImgBox(".wp-block-gallery", 1),
+        imgs: ".wp-block-gallery a",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".wp-block-gallery"], 2
+        ],
+        customTitle: () => fun.title(" - Xiunice.com"),
+        category: "nsfw2"
     }, {
         name: "Cosplay69",
         host: ["www.cosplay69.net", "cosplay69.net"],
@@ -21226,7 +21240,7 @@ if ("xx" in window) {
                 str_117: "顯示浮動選單",
                 str_118: "圖集標題已更新",
                 str_119: "FancyboxV5滾輪圖片縮放",
-                str_120: "此網站分頁檢視使用ViewerJs插件",
+                str_120: "此網站分頁畫廊使用ViewerJs插件",
                 str_121: "關閉圖片導覽快捷鍵",
                 str_122: "此漫畫站使用無限滾動閱讀模式",
                 str_123: "此網站顯示眼睛圖示和圖片數量",
@@ -21235,7 +21249,7 @@ if ("xx" in window) {
                 str_126: "🧹 重置腳本儲存的所有全局設定",
                 str_127: "右鍵：匯出圖址(7)",
                 str_128: hasTouchEvents ? "打開收藏" : "打開收藏(9)",
-                str_129: hasTouchEvents ? "關閉收藏" : "關閉收藏(9)",
+                str_129: "關閉收藏",
                 str_130: "編輯收藏",
                 str_131: "保存",
                 str_132: "關閉",
@@ -21380,7 +21394,7 @@ if ("xx" in window) {
                 str_103: "页面容器默认使用并排模式",
                 str_104: hasTouchEvents ? "导出图址" : "导出图址(7)",
                 str_105: hasTouchEvents ? "拷贝图址" : "拷贝图址(1)",
-                str_106: hasTouchEvents ? "分页画廊" : "分页画廊(8)",
+                str_106: hasTouchEvents ? "标签画廊" : "标签画廊(8)",
                 str_107: hasTouchEvents ? "一键下载" : "一键下载(3)",
                 str_108: "※讯息提示显示的位置：",
                 str_109: {
@@ -21400,7 +21414,7 @@ if ("xx" in window) {
                 str_117: "显示浮动菜单",
                 str_118: "图集标题已更新",
                 str_119: "FancyboxV5滚轮图片缩放",
-                str_120: "此网站分页视图使用ViewerJs插件",
+                str_120: "此网站标签画廊使用ViewerJs插件",
                 str_121: "关闭图片导览快捷键",
                 str_122: "此漫画站使用无限滚动阅读模式",
                 str_123: "此网站显示眼睛图标和图片数量",
@@ -21409,7 +21423,7 @@ if ("xx" in window) {
                 str_126: "🧹 重置脚本存储的所有全局设置",
                 str_127: "右键：导出图址(7)",
                 str_128: hasTouchEvents ? "打开收藏" : "打开收藏(9)",
-                str_129: hasTouchEvents ? "关闭收藏" : "关闭收藏(9)",
+                str_129: "关闭收藏",
                 str_130: "编辑收藏",
                 str_131: "保存",
                 str_132: "关闭",
@@ -21581,7 +21595,7 @@ if ("xx" in window) {
                 str_126: "🧹 Reset all saved global settings",
                 str_127: "Right Click：Export URLs(7)",
                 str_128: hasTouchEvents ? "OpenFavor" : "OpenFavor(9)",
-                str_129: hasTouchEvents ? "CloseFavor" : "CloseFavor(9)",
+                str_129: "Close Favor",
                 str_130: "Edit Favor",
                 str_131: "save",
                 str_132: "close",
@@ -23384,7 +23398,7 @@ if ("xx" in window) {
                     text: displayLanguage.str_128,
                     cfn: event => {
                         event.preventDefault();
-                        toggleFavor();
+                        createFavorShadowElement();
                     }
                 }, {
                     id: "FullPictureLoadShadowGalleryBtn",
@@ -23622,7 +23636,7 @@ if ("xx" in window) {
                 if (TurnOffImageNavigationShortcutKeys != 1) {
                     let imgsNum = 0;
                     document.addEventListener("keydown", event => {
-                        if (fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
+                        if (fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
                         if (event.code === "ArrowUp") {
                             if (imgsNum > 0 && viewMode == 0) {
                                 imgsNum -= 1;
@@ -25878,7 +25892,7 @@ if ("xx" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
+                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k)) return;
                     if (event.code === "ArrowUp") {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
@@ -26396,7 +26410,7 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("keydown", event => {
-    if (document.querySelector(".fancybox__container")) return;
+    if (document.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
     const scrollIntoViewOptions = {
         block: "center",
         inline: "center"
@@ -26741,7 +26755,7 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("keydown", event => {
-    if (document.querySelector(".viewer-container .viewer-canvas>img")) return;
+    if (document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k)) return;
     const scrollIntoViewOptions = {
         block: "center",
         inline: "center"
@@ -27035,7 +27049,7 @@ if (config.ViewMode == 1) {
 
         const increaseWidth = () => {
             let imgs = [...shadow.querySelectorAll("img")];
-            if (webtoonWidth < 1200 && webtoonWidth < window.outerWidth) {
+            if (webtoonWidth < 1200 && webtoonWidth < _unsafeWindow.outerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
                 saveConfig();
@@ -27159,7 +27173,7 @@ if (config.ViewMode == 1) {
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
         const kEvent = (event) => {
-            if (ge(".fancybox__container")) return;
+            if (ge(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
             const imgs = [...shadow.querySelectorAll("img")];
             const next = shadow.querySelector("#next a");
             if (event.code === "Escape") return closeGallery();
@@ -27681,6 +27695,13 @@ img.small {
         menuDiv.id = "FullPictureLoadFixedMenu";
         menuDiv.style.width = "54px";
         const menuObj = [{
+            text: displayLanguage.str_128,
+            show: 0,
+            cfn: event => {
+                event.preventDefault();
+                createFavorShadowElement();
+            }
+        }, {
             text: displayLanguage.str_141,
             show: 0,
             cfn: event => {
@@ -27849,7 +27870,7 @@ img.small {
 
         const mainElement = document.querySelector("#FullPictureLoadOptionsShadowElement");
         const shadow = mainElement.attachShadow({
-            mode: "open"
+            mode: "closed"
         });
 
         const style = createStyle(`
@@ -28552,88 +28573,6 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
 a[data-fancybox]:hover {
     opacity: 1 !important;
 }
-
-#FullPictureLoadFavorUl {
-    width: 100%;
-    background-color: transparent !important;
-    padding-left: 0;
-    list-style-type: none !important;
-    display: grid !important;
-    grid-template-columns: ${favor_columns};
-    padding: 2px;
-    list-style: none !important;
-    margin: 0;
-    border: 0;
-    font: inherit !important;
-    vertical-align: baseline;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-}
-
-.favor-item {
-    float: left !important;
-    width: unset !important;
-    height: unset !important;
-    min-height: unset !important;
-    max-height: 44px !important;
-    margin:0px 10px 10px 0px !important;
-    position: unset !important;
-    line-height: 26px !important;
-    padding: 3px !important;
-    font: unset !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 16px !important;
-    text-align: center !important;
-    border-radius: 8px !important;
-    white-space: nowrap !important;
-    list-style: none !important;
-}
-
-.favor-item a {
-    display: block !important;
-    text-align: center !important;
-    text-decoration: unset !important;
-    font: unset !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 16px !important;
-    background-color: unset !important;
-    border-color: unset !important;
-    margin:0 !important;
-}
-
-#editFavorTextarea {
-    display:block !important;
-    height: 30em;
-    resize: both !important;
-    overflow: auto !important;
-    background-color: unset !important;
-    color: #000000 !important;
-    border-color: #000000 !important;
-    margin: 0px auto !important;
-    padding: 5px !important;
-    max-width: unset !important;
-    max-height: unset !important;
-}
-
-#editFavorDiv {
-    text-align: center !important;
-    background-color: #FAFAFB;
-    margin: 0 0 6px 0 !important;
-    padding-top: 10px !important;
-}
-
-.editFavorButton {
-    min-width: 70px;
-    line-height: 25px;
-    margin: 5px !important;
-    float: none !important;
-    padding: 0 !important;
-    color: #000000 !important;
-    border: 1px solid #a0a0a0 !important;
-    background-color: transparent !important;
-}
                 `;
 
     let noGoToFirstImage = _GM_getValue("noGoToFirstImage", 0);
@@ -28830,7 +28769,7 @@ a[data-fancybox]:hover {
 
     //頁面容器快捷鍵
     const addKeyEvent = async event => {
-        if (ge(".fancybox-container,.fancybox__container,#mainShadowGallery")) return;
+        if (ge(".fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
         if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
         if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptionsShadowElement")) return;
@@ -28861,7 +28800,7 @@ a[data-fancybox]:hover {
         if (event.code === "Numpad6" || event.key === "6") return autoScrollEles(); //數字鍵6
         if (event.code === "Numpad7" || event.key === "7") return exportImgSrcText(); //數字鍵7
         if (event.code === "Numpad8" || event.key === "8") return newTabView(); //數字鍵8
-        if (event.code === "Numpad9" || event.key === "9") return toggleFavor(); //數字鍵9
+        if (event.code === "Numpad9" || event.key === "9") return createFavorShadowElement(); //數字鍵9
         if (event.code === "NumpadSubtract" || event.key === "-") { //數字鍵-
             fun.clearSetTimeout();
             return reduceZoom();
@@ -29280,14 +29219,14 @@ a[data-fancybox]:hover {
                 document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
+                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowRight") callback(event);
             });
         }
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
+                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
@@ -29518,7 +29457,7 @@ a[data-fancybox]:hover {
 
     if (!!autoDownload) {
         document.addEventListener("keydown", event => {
-            if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery")) return;
+            if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
@@ -29581,7 +29520,7 @@ a[data-fancybox]:hover {
         let preloadNext = siteData.preloadNext;
         try {
             if (!!nextLink && !!preloadNext && !isDownloading) {
-                window.addEventListener("message", event => {
+                _unsafeWindow.addEventListener("message", event => {
                     if (!!event.data?.iframePicArr) {
                         fun.picPreload(event.data.iframePicArr, event.data?.title, "next");
                     }
@@ -29673,111 +29612,240 @@ a[data-fancybox]:hover {
         }
     }
 
-    const defaultFavor = "text-color,#000\nbackground-color,#15d3bf\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html"
+    const defaultFavor = "text-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
 
-    const createFavorTextarea = () => {
-        let tE = ge("#FullPictureLoadOptionsButtonParentDiv");
-        if (!tE) return;
-        let parentWidth = tE.parentNode.clientWidth;
-        let favorData = _GM_getValue("favorData", defaultFavor);
-        let editFavorDiv = document.createElement("div");
-        editFavorDiv.id = "editFavorDiv";
-        let textarea = document.createElement("textarea");
-        textarea.id = "editFavorTextarea";
-        textarea.style.width = (parentWidth - 20) + "px";
-        editFavorDiv.append(textarea);
-        insertAfter(tE, editFavorDiv);
-        [{
-            text: displayLanguage.str_132,
-            id: "editFavorCloseBtn",
-            cfn: event => {
-                event.preventDefault();
-                let b = fun.ge("#FullPictureLoadOpenFavoritesBtn");
-                b.innerText = displayLanguage.str_128;
-                editFavorDiv.remove();
-            }
-        }, {
-            text: displayLanguage.str_131,
-            id: "editFavorSaveBtn",
-            cfn: event => {
-                event.preventDefault();
-                _GM_setValue("favorData", textarea.value);
-                createFavor();
-                editFavorDiv.remove();
-            }
-        }].forEach(obj => {
-            let button = document.createElement("button");
-            button.id = obj.id;
-            button.className = "editFavorButton";
-            button.innerText = obj.text;
-            if (!!obj.cfn) button.addEventListener("click", obj.cfn);
-            editFavorDiv.append(button);
-        });
-        textarea.value = favorData;
-        editFavorDiv.scrollIntoView({
-            block: "center",
-            inline: "center"
-        });
-    };
+    const createFavorShadowElement = () => {
 
-    const createFavor = () => {
-        let tE = ge("#FullPictureLoadOptionsButtonParentDiv");
-        if (!tE) return;
-        let favorData = _GM_getValue("favorData", defaultFavor);
-        let parentWidth = tE.parentNode.clientWidth;
-        let FavorUl = document.createElement("ul");
-        FavorUl.id = "FullPictureLoadFavorUl";
-        FavorUl.style.maxWidth = parentWidth + "px";
-        insertAfter(tE, FavorUl);
-        let favorDataArray = favorData.split("\n").filter(item => item);
-        let textColor = "#000";
-        let backgroundColor = "#15d3bf";
-        for (let favor of favorDataArray) {
-            try {
-                let [name, value] = favor.split(",");
-                if (name === "text-color") {
-                    textColor = value;
-                } else if (name === "background-color") {
-                    backgroundColor = value;
-                } else {
-                    let li = document.createElement("li");
-                    li.className = "favor-item";
-                    li.style.backgroundColor = backgroundColor;
-                    li.style.color = textColor;
-                    let a = document.createElement("a");
-                    a.innerText = name;
-                    a.href = value;
-                    a.style.color = textColor;
-                    li.append(a);
-                    FavorUl.append(li);
+        const mainHtml = '<div id="FullPictureLoadFavorSites" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        document.body.insertAdjacentHTML("beforeend", mainHtml);
+
+        const FavorSitesShadowElement = ge("#FullPictureLoadFavorSites");
+        const shadow = FavorSitesShadowElement.attachShadow({
+            mode: "closed"
+        });
+
+        fun.css(`
+html,body {
+    overflow: hidden !important;
+}
+        `, "overflowYHidden");
+
+        const style = createStyle(`
+#FavorUl {
+    width: 100%;
+    background-color: transparent !important;
+    list-style-type: none !important;
+    display: grid !important;
+    list-style: none !important;
+    margin: 10px 0px 0px 0px;
+    padding: 0px;
+    border: 0;
+    font: inherit !important;
+    vertical-align: baseline;
+}
+
+.favor-item {
+    float: left !important;
+    width: unset !important;
+    height: unset !important;
+    min-height: unset !important;
+    max-height: 44px !important;
+    margin:0px 10px 10px 0px !important;
+    position: unset !important;
+    line-height: 26px !important;
+    padding: 3px !important;
+    font: unset !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 16px !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    list-style: none !important;
+}
+
+.favor-item a {
+    display: block !important;
+    text-align: center !important;
+    text-decoration: unset !important;
+    font: unset !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 16px !important;
+    background-color: unset !important;
+    border-color: unset !important;
+    margin:0 !important;
+}
+
+#editFavorTextarea {
+    display:block !important;
+    height: 30em;
+    resize: both !important;
+    overflow: auto !important;
+    background-color: unset !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+    margin: 0px auto !important;
+    padding: 5px !important;
+    max-width: unset !important;
+    max-height: unset !important;
+}
+
+#editFavorDiv {
+    text-align: center !important;
+    background-color: #fafafa;
+    margin: 0 !important;
+    padding-top: 10px !important;
+}
+
+.editFavorButton {
+    min-width: 70px;
+    line-height: 25px;
+    margin: 5px !important;
+    float: none !important;
+    padding: 0 !important;
+    color: #000000 !important;
+    border: 1px solid #a0a0a0 !important;
+    background-color: transparent !important;
+}
+`);
+        shadow.append(style);
+
+        const FavorSitesElement = document.createElement("div");
+
+        Object.assign(FavorSitesElement.style, {
+            left: "0",
+            right: "0",
+            top: "0",
+            bottom: "0",
+            width: "99vw",
+            height: "98vh",
+            margin: "auto",
+            padding: "10px",
+            position: "fixed",
+            opacity: "1",
+            zIndex: "2147483647",
+            backgroundColor: "#fafafa",
+            color: "#222",
+            fontSize: "14px",
+            overflow: "scroll"
+        });
+        shadow.append(FavorSitesElement);
+
+        const reSize_cb = () => {
+            let ul = ge("#FavorUl", shadow);
+            if (ul) {
+                ul.style.gridTemplateColumns = `${fun.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
+            }
+            let edit = ge("#editFavorDiv", shadow);
+            if (edit) {
+                edit.style.width = "calc(100% - 10px)";
+                edit.style.height = "calc(100% - 30px)";
+                let textarea = ge("#editFavorTextarea", shadow);
+                textarea.style.width = "calc(100% - 10px)";
+                textarea.style.height = "calc(100% - 30px)";
+            }
+        };
+
+        const createFavorTextarea = () => {
+            let favorData = _GM_getValue("favorData", defaultFavor);
+            let editFavorDiv = document.createElement("div");
+            editFavorDiv.id = "editFavorDiv";
+            editFavorDiv.style.width = "calc(100% - 10px)";
+            editFavorDiv.style.height = "calc(100% - 30px)";
+            let textarea = document.createElement("textarea");
+            textarea.id = "editFavorTextarea";
+            textarea.style.width = "calc(100% - 10px)";
+            textarea.style.height = "calc(100% - 30px)";
+            editFavorDiv.append(textarea);
+            FavorSitesElement.appendChild(editFavorDiv);
+            [{
+                text: displayLanguage.str_132,
+                id: "editFavorCloseBtn",
+                cfn: event => {
+                    event.preventDefault();
+                    editFavorDiv.remove();
+                    createFavor();
                 }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        let li = document.createElement("li");
-        li.className = "favor-item";
-        li.style.backgroundColor = backgroundColor;
-        li.style.color = textColor;
-        li.innerText = displayLanguage.str_130;
-        li.addEventListener("click", () => {
-            createFavorTextarea();
-            FavorUl.remove();
-        });
-        FavorUl.append(li);
-    };
+            }, {
+                text: displayLanguage.str_131,
+                id: "editFavorSaveBtn",
+                cfn: event => {
+                    event.preventDefault();
+                    _GM_setValue("favorData", textarea.value);
+                    editFavorDiv.remove();
+                    createFavor();
+                }
+            }].forEach(obj => {
+                let button = document.createElement("button");
+                button.id = obj.id;
+                button.className = "editFavorButton";
+                button.innerText = obj.text;
+                button.addEventListener("click", obj.cfn);
+                editFavorDiv.append(button);
+            });
+            textarea.value = favorData;
+        };
 
-    const toggleFavor = () => {
-        let b = ge("#FullPictureLoadOpenFavoritesBtn");
-        let f = ge("#FullPictureLoadFavorUl");
-        let t = ge("#editFavorDiv");
-        if (f || t) {
-            fun.remove("#FullPictureLoadFavorUl,#editFavorDiv");
-            b.innerText = displayLanguage.str_128;
-        } else {
-            createFavor();
-            b.innerText = displayLanguage.str_129;
-        }
+        const createFavor = () => {
+            let favorData = _GM_getValue("favorData", defaultFavor);
+            let FavorUl = document.createElement("ul");
+            FavorUl.id = "FavorUl";
+            FavorUl.style.width = "calc(100% -40px)";
+            FavorUl.style.height = "calc(100% -40px)";
+            FavorUl.style.gridTemplateColumns = `${fun.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
+            FavorSitesElement.appendChild(FavorUl);
+            let favorDataArray = favorData.split("\n").filter(item => item);
+            let textColor = "#000";
+            let backgroundColor = "#aceebb";
+            for (let favor of favorDataArray) {
+                try {
+                    let [name, value] = favor.split(",");
+                    if (name === "text-color") {
+                        textColor = value;
+                    } else if (name === "background-color") {
+                        backgroundColor = value;
+                    } else {
+                        let li = document.createElement("li");
+                        li.className = "favor-item";
+                        li.style.backgroundColor = backgroundColor;
+                        li.style.color = textColor;
+                        let a = document.createElement("a");
+                        a.innerText = name;
+                        a.href = value;
+                        a.style.color = textColor;
+                        li.append(a);
+                        FavorUl.append(li);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            [{
+                text: displayLanguage.str_130,
+                cfn: () => {
+                    createFavorTextarea();
+                    FavorUl.remove();
+                }
+            }, {
+                text: displayLanguage.str_129,
+                cfn: () => {
+                    FavorSitesShadowElement.remove();
+                    ge("#overflowYHidden")?.remove();
+                    _unsafeWindow.removeEventListener("resize", reSize_cb);
+                }
+            }].forEach(obj => {
+                let li = document.createElement("li");
+                li.className = "favor-item";
+                li.style.backgroundColor = backgroundColor;
+                li.style.color = textColor;
+                li.innerText = obj.text;
+                li.addEventListener("click", obj.cfn);
+                FavorUl.append(li);
+            });
+        };
+        createFavor();
+
+        _unsafeWindow.addEventListener("resize", reSize_cb);
+
     };
 
     if (!siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
