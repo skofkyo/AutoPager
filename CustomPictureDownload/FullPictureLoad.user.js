@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.13
+// @version            2.8.14
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -44,8 +44,8 @@
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-// @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
 // @resource FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 // @resource FancyboxV3Css https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 // @resource ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
@@ -1027,7 +1027,7 @@ a:has(>div>div>img),
         name: "秀人网图集",
         host: ["www.aixiurenji.com", "www.aixiurentuji.com", "www.aixiurenwang.com"],
         reg: () => fun.checkUrl({
-            e: ".logo-wrapper img.logo[alt='秀人网图集']",
+            e: ".logo-wrapper img.logo[alt='秀人网图集'],.logo-wrapper img.logo[alt='秀人网美女图集']",
             p: /^\/\d+\.html/
         }),
         exclude: "//button[contains(text(),'登录购买')]",
@@ -1047,7 +1047,7 @@ a:has(>div>div>img),
     }, {
         name: "秀人网图集",
         reg: () => fun.checkUrl({
-            e: ".logo-wrapper img.logo[alt='秀人网图集']"
+            e: ".logo-wrapper img.logo[alt='秀人网图集'],.logo-wrapper img.logo[alt='秀人网美女图集']",
         }),
         observerClick: [".swal2-close", ".ht-n-close-toggle"],
         category: "ad"
@@ -1194,7 +1194,15 @@ a:has(>div>div>img),
         host: ["www.uyn8.cn"],
         reg: /^https?:\/\/www\.uyn8\.cn\/archives\/\d+/i,
         init: "fun.clearAllTimer();",
-        imgs: ".entry-content img",
+        imgs: () => {
+            fun.showMsg("fun.xhrHEA(check)...", 0);
+            let xhrNum = 0;
+            let srcs = fun.getImgSrcArr(".entry-content img");
+            return srcs.map((src, i, arr) => fun.xhrHEAD(src).then(res => {
+                fun.showMsg(`fun.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
+                return res.finalUrl;
+            }));
+        },
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: ".entry-title",
@@ -6066,7 +6074,17 @@ a:has(>div>div>img),
             ["#FullPictureLoadMainImgBox", 0, "#asigirl-gallery"], 2
         ],
         go: 1,
-        customTitle: "#content-header-title",
+        customTitle: () => {
+            if (fun.ge("#content-header-title")) {
+                return fun.dt({
+                    s: "#content-header-title"
+                });
+            } else if (fun.ge("meta[property='og:image:alt']")) {
+                return fun.attr("meta[property='og:image:alt']", "content");
+            } else {
+                return document.title;
+            }
+        },
         fancybox: {
             v: 3,
             insertLibrarys: 1
@@ -10935,8 +10953,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "中国街拍",
-        host: ["www.cnjiepai.xyz"],
-        reg: /^https?:\/\/www\.cnjiepai\.xyz\/\d+\/[\w-]+\.html$/i,
+        host: ["jiepai.sifang.app"],
+        reg: () => fun.checkUrl({
+            e: "meta[content=中国街拍]",
+            p: /^\/\d+\/[\w-]+\.html$/
+        }),
         imgs: "a[data-fancybox]",
         button: [4],
         insertImg: [
@@ -14263,6 +14284,27 @@ a:has(>div>div>img),
         reg: () => fun.checkUrl({
             h: "www.cartoon18.com",
             p: "/v/",
+            e: ".title+div>a.btn-info"
+        }),
+        init: () => fun.createImgBox(".row.mb-4", 2),
+        imgs: () => {
+            fun.showMsg(displayLanguage.str_05, 0);
+            let urls = fun.gau(".title+div>a.btn-info");
+            return fun.getImgA("img[data-src],#lightgallery a,.gallary a", urls, 2000);
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        css: "#chromeModal,.modal-backdrop{display:none!important;}",
+        category: "hcomic"
+    }, {
+        name: "色漫网",
+        reg: () => fun.checkUrl({
+            h: "www.cartoon18.com",
+            p: "/v/",
             e: ".title+div>a>i.fa-play"
         }),
         imgs: () => {
@@ -14290,6 +14332,9 @@ a:has(>div>div>img),
         imgs: () => fun.ge("img[data-src]") ? fun.gae("img[data-src]") : fun.gae("#lightgallery a,.gallary a"),
         button: [4],
         insertImg: ["#lightgallery,.gallary", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一話']",
+        prev: "//a[text()='上一話']",
         fancybox: {
             v: 3,
             css: false
@@ -15715,7 +15760,6 @@ if ("xx" in window) {
         `,
         init: async () => {
             await fun.waitEle("#comics-pics img");
-            await fun.waitVar("unescape");
             fun.script(_this.frameCode, 0, 1);
             fun.createImgBox(".pinch-zoom-container", 2);
         },
@@ -20183,7 +20227,7 @@ if ("xx" in window) {
             siteJson = json;
         },
         imgs: async (json = siteJson, msg = null) => {
-            let hostArr = ["https://p5.fffdm.live/", "https://p6.fffdm.live/", "https://p1.fffdm.live/"];
+            let hostArr = fun.gau("link[rel='dns-prefetch']");
             let firstPic = json.cont[0];
             let testArr = hostArr.map(e => e + firstPic);
             let ok = false;
@@ -21028,6 +21072,7 @@ if ("xx" in window) {
 
     if (hasTouchEvents) {
         FancyboxOptions = {
+            Hash: false,
             idle: false,
             Images: {
                 Panzoom: {
@@ -21066,6 +21111,7 @@ if ("xx" in window) {
         };
     } else {
         FancyboxOptions = {
+            Hash: false,
             idle: false,
             wheel: FancyboxWheel,
             Images: {
@@ -22211,6 +22257,7 @@ if ("xx" in window) {
                     "data-mfp-src",
                     "data-wpfc-original-src",
                     "data-high-res-src",
+                    "data-full-path",
                     "data-thumb",
                     "bigimg",
                     "lg-data-src",
@@ -22802,11 +22849,8 @@ if ("xx" in window) {
                 const iframe = document.createElement("iframe");
                 iframe.name = "FullPictureLoad-iframe";
                 iframe.id = "FullPictureLoadIframe";
-                iframe.src = url;
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-                //iframe.style.display = "none";
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
-                document.body.append(iframe);
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -22836,6 +22880,8 @@ if ("xx" in window) {
                 } else {
                     iframe.onload = () => call();
                 }
+                iframe.src = url;
+                document.body.append(iframe);
             });
         },
         //先用Fetch API取得網頁原始碼，再傳入Iframe框架加載網頁返回框架的document
@@ -22857,11 +22903,9 @@ if ("xx" in window) {
                 const iframe = document.createElement("iframe");
                 iframe.name = "FullPictureLoad-iframe";
                 iframe.id = "FullPictureLoadIframe";
-                iframe.srcdoc = resText;
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 //iframe.style.display = "none";
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
-                document.body.append(iframe);
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -22891,6 +22935,8 @@ if ("xx" in window) {
                 } else {
                     iframe.onload = () => call();
                 }
+                iframe.srcdoc = resText;
+                document.body.append(iframe);
             });
         },
         //使用Iframe框架加載網頁，直到框架的window出現指定的屬性，返回框架window
@@ -22918,10 +22964,8 @@ if ("xx" in window) {
             return new Promise(async (resolve, reject) => {
                 const iframe = document.createElement("iframe");
                 iframe.id = "FullPictureLoadIframe";
-                iframe.src = url;
                 iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-                document.body.append(iframe);
                 const call = async () => {
                     const {
                         loadTime,
@@ -22968,6 +23012,8 @@ if ("xx" in window) {
                     iframe.onload = () => call();
                 }
                 iframe.error = reject;
+                iframe.src = url;
+                document.body.append(iframe);
             });
         },
         //無限滾動函式用來觀察元素觸發自動翻頁
@@ -23636,7 +23682,7 @@ if ("xx" in window) {
                 if (TurnOffImageNavigationShortcutKeys != 1) {
                     let imgsNum = 0;
                     document.addEventListener("keydown", event => {
-                        if (fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
+                        if (fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
                         if (event.code === "ArrowUp") {
                             if (imgsNum > 0 && viewMode == 0) {
                                 imgsNum -= 1;
@@ -24187,11 +24233,15 @@ if ("xx" in window) {
             });
         },
         //用Promise封裝GM_xmlhttpRequest
-        xhrHEAD: url => {
+        xhrHEAD: (url, details = {}) => {
             return new Promise(resolve => {
                 _GM_xmlhttpRequest({
                     method: "HEAD",
                     url: url,
+                    headers: {
+                        "Referer": _unsafeWindow.location.href,
+                        "User-Agent": _unsafeWindow.navigator.userAgent
+                    },
                     timeout: 20000,
                     onload: data => {
                         resolve(data);
@@ -24207,7 +24257,8 @@ if ("xx" in window) {
                         resolve({
                             status: 524
                         });
-                    }
+                    },
+                    ...details
                 });
             });
         },
@@ -24743,6 +24794,7 @@ if ("xx" in window) {
             let FancyboxOptions;
             if (hasTouchEvents) {
                 FancyboxOptions = {
+                    Hash: false,
                     idle: false,
                     Images: {
                         Panzoom: {
@@ -24776,6 +24828,7 @@ if ("xx" in window) {
                 };
             } else {
                 FancyboxOptions = {
+                    Hash: false,
                     idle: false,
                     wheel: FancyboxWheel,
                     Images: {
@@ -25892,7 +25945,7 @@ if ("xx" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k)) return;
+                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k)) return;
                     if (event.code === "ArrowUp") {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
@@ -26140,6 +26193,7 @@ var FancyboxOptions = {};
 
 if (hasTouchEvents) {
     FancyboxOptions = {
+        Hash: false,
         idle: false,
         Images: {
             Panzoom: {
@@ -26197,6 +26251,7 @@ if (hasTouchEvents) {
     }
 } else {
     FancyboxOptions = {
+        Hash: false,
         idle: false,
         wheel: "${FancyboxWheel}",
         Images: {
@@ -26995,9 +27050,15 @@ if (config.ViewMode == 1) {
 
         if (hasTouchEvents) return;
 
-        if (ge("#mainShadowGallery")) {
-            ge("#mainShadowGallery").remove();
+        if ("fancybox" in siteData) {
+            return createIframeGallery();
         }
+
+        if (ge("#FullPictureLoadShadowGallery")) {
+            ge("#FullPictureLoadShadowGallery").remove();
+        }
+
+        fun.hideMsg();
 
         const default_Config = {
             ViewMode: 0,
@@ -27032,15 +27093,16 @@ if (config.ViewMode == 1) {
             inline: "center"
         };
 
-        const mainHtml = '<div id="mainShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        const mainHtml = '<div id="FullPictureLoadShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
-        const mainShadowGallery = ge("#mainShadowGallery");
-        const shadow = mainShadowGallery.attachShadow({
-            mode: "closed"
+        const FullPictureLoadShadowGallery = ge("#FullPictureLoadShadowGallery");
+        const shadow = FullPictureLoadShadowGallery.attachShadow({
+            mode: "closed",
+            delegatesFocus: true
         });
 
-        const hideSelector = "body>*:not(#mainShadowGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        const hideSelector = "body>*:not(#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const saveConfig = () => {
@@ -27082,7 +27144,7 @@ if (config.ViewMode == 1) {
             _unsafeWindow.removeEventListener("keydown", kEvent);
             gae(hideSelector).forEach(e => (e.style.display = ""));
             ge("#overflowYHidden")?.remove();
-            mainShadowGallery?.remove();
+            FullPictureLoadShadowGallery?.remove();
         };
 
         const toggleWidthEvent = (event) => {
@@ -27098,7 +27160,7 @@ if (config.ViewMode == 1) {
             }
         };
 
-        mainShadowGallery.addEventListener("wheel", toggleWidthEvent, {
+        FullPictureLoadShadowGallery.addEventListener("wheel", toggleWidthEvent, {
             passive: false
         });
 
@@ -27127,7 +27189,7 @@ if (config.ViewMode == 1) {
                         nextButtonIsShown = false;
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
                         next.parentElement.style.backgroundColor = "gray";
-                        return setTimeout(() => next.click(), 500);
+                        return setTimeout(() => (location.href = next.href), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
@@ -27149,7 +27211,7 @@ if (config.ViewMode == 1) {
             }
         };
 
-        mainShadowGallery.addEventListener("wheel", toggleImage, {
+        FullPictureLoadShadowGallery.addEventListener("wheel", toggleImage, {
             passive: false
         });
 
@@ -27184,7 +27246,7 @@ if (config.ViewMode == 1) {
             if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
             if (event.code === "KeyN") {
                 if (next) {
-                    next.click();
+                    return (location.href = next.href);
                 }
             }
             if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
@@ -27221,7 +27283,7 @@ if (config.ViewMode == 1) {
                 nextButtonIsShown = false;
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
                 next.parentElement.style.backgroundColor = "gray";
-                return setTimeout(() => next.click(), 500);
+                return setTimeout(() => (location.href = next.href), 500);
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
                 event.preventDefault();
                 imgViewIndex++;
@@ -27255,7 +27317,7 @@ html,body {
         `, "overflowYHidden");
 
         const style = createStyle(`
-p {
+p#imgBox {
     display: block;
     padding: 0;
     margin: 0;
@@ -27417,8 +27479,9 @@ img.small {
                 aspectRatio();
                 [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
             }, 1000);
-            if (!("fancybox" in siteData) && options.fancybox == 1) {
+            if (options.fancybox == 1) {
                 _unsafeWindow.Fancybox.bind(mainElement, "img", {
+                    Hash: false,
                     idle: false,
                     wheel: FancyboxWheel,
                     Images: {
@@ -27549,6 +27612,618 @@ img.small {
             saveConfig();
             createGalleryElement("webtoon");
             shadow.querySelector("#MenuWebtoonItem").classList.add("active");
+        }
+
+        if (config.ViewMode == 1) {
+            singleImageLayout();
+        } else if (config.ViewMode == 2) {
+            smallImageLayout();
+        } else if (config.ViewMode == 3) {
+            rtlImageLayout();
+        } else if (config.ViewMode == 4) {
+            webtoonImageLayout();
+        } else {
+            defaultImageLayout();
+        }
+
+    };
+
+    //創建框架畫廊
+    const createIframeGallery = async () => {
+
+        fun.hideMsg();
+
+        const default_Config = {
+            ViewMode: 0,
+            webtoonWidth: 800
+        };
+
+        let newWindowData = localStorage.getItem("newWindowData");
+        if (newWindowData == null) {
+            localStorage.setItem("newWindowData", JSON.stringify(default_Config));
+            newWindowData = {};
+        } else if (isString(newWindowData)) {
+            newWindowData = JSON.parse(newWindowData);
+        }
+        const config = Object.assign(default_Config, newWindowData);
+
+        let webtoonWidth = config.webtoonWidth;
+
+        let srcs;
+        if ("SPA" in siteData) {
+            let selector = siteData.capture ?? siteData.imgs;
+            srcs = await getImgs(selector);
+        } else if (!("capture" in siteData)) {
+            globalImgArray.length > 0 ? srcs = globalImgArray : srcs = await getImgs(siteData.imgs);
+        } else {
+            captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
+        }
+
+        if (srcs.length < 1) return;
+
+        let imgViewIndex = -1;
+
+        const scrollIntoViewOptions = {
+            block: "center",
+            inline: "center"
+        };
+
+        const iframe = document.createElement("iframe");
+        iframe.id = "FullPictureLoadIframeGallery";
+        Object.assign(iframe.style, {
+            left: "0",
+            right: "0",
+            top: "0",
+            bottom: "0",
+            width: "100vw",
+            height: "100vh",
+            minWidth: "100vw",
+            minHeight: "100vh",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
+            margin: "auto",
+            padding: "0",
+            position: "fixed",
+            opacity: "1",
+            zIndex: "2147483646",
+            backgroundColor: "#333",
+            color: "#222"
+        });
+        document.body.append(iframe);
+
+        const win = iframe.contentWindow;
+        const dom = iframe.contentDocument;
+
+        _GM_addElement(dom.body, "script", {
+            textContent: FancyboxV5JS
+        });
+        _GM_addElement(dom.head, "style", {
+            textContent: FancyboxV5Css + `
+.fancybox__container {
+    z-index: 2147483647 !important;
+}
+            `
+        });
+
+        const hideSelector = "body>*:not(#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        gae(hideSelector).forEach(e => (e.style.display = "none"));
+
+        const saveConfig = () => {
+            localStorage.setItem("newWindowData", JSON.stringify(config));
+        };
+
+        const increaseWidth = () => {
+            let imgs = [...dom.querySelectorAll("img")];
+            if (webtoonWidth < 1200 && webtoonWidth < win.outerWidth) {
+                webtoonWidth = (Number(webtoonWidth) + 50);
+                config.webtoonWidth = webtoonWidth;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+            } else {
+                webtoonWidth = 800;
+                config.webtoonWidth = 800;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = "800px"));
+            }
+        };
+
+        const reduceWidth = () => {
+            let imgs = [...dom.querySelectorAll("img")];
+            if (webtoonWidth > 200) {
+                webtoonWidth = (Number(webtoonWidth) - 50);
+                config.webtoonWidth = webtoonWidth;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
+            } else {
+                webtoonWidth = 800;
+                config.webtoonWidth = 800;
+                saveConfig();
+                imgs.forEach(e => (e.style.maxWidth = "800px"));
+            }
+        };
+
+        const closeGallery = () => {
+            _unsafeWindow.removeEventListener("resize", aspectRatio);
+            gae(hideSelector).forEach(e => (e.style.display = ""));
+            ge("#overflowYHidden")?.remove();
+            iframe.remove();
+        };
+
+        const toggleWidthEvent = (event) => {
+            if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+                event.preventDefault();
+                event.stopPropagation();
+                if (event.deltaY < 0) {
+                    increaseWidth();
+                }
+                if (event.deltaY > 0) {
+                    reduceWidth();
+                }
+            }
+        };
+
+        dom.addEventListener("wheel", toggleWidthEvent, {
+            passive: false
+        });
+
+        let nextButtonIsShown = false;
+
+        const toggleImage = (event) => {
+            if (options.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                if (!event.ctrlKey && !event.altKey && !event.shiftKey) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const imgs = [...dom.querySelectorAll("img")];
+                    const next = dom.querySelector("#next a");
+                    if (event.deltaY < 0 && imgViewIndex < 0) {
+                        imgViewIndex = imgs.length - 1;
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        nextButtonIsShown = false;
+                    } else if (event.deltaY < 0 && imgViewIndex >= 0) {
+                        imgViewIndex--;
+                        if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
+                        if (config.ViewMode != 4) {
+                            imgs.forEach(e => (e.style.border = ""));
+                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                        }
+                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        nextButtonIsShown = false;
+                    } else if (event.deltaY > 0 && nextButtonIsShown) {
+                        next.parentElement.style.backgroundColor = "gray";
+                        return setTimeout(() => (location.href = next.href), 500);
+                    } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
+                        imgViewIndex++;
+                        if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
+                            next.parentElement.style.border = "solid #32a1ce";
+                            next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                            nextButtonIsShown = true;
+                        } else if (imgs[imgViewIndex] === undefined) {
+                            imgViewIndex = 0;
+                        }
+                        if (config.ViewMode != 4) {
+                            imgs.forEach(e => (e.style.border = ""));
+                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                        }
+                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                    } else {
+                        imgViewIndex = -1;
+                    }
+                }
+            }
+        };
+
+        dom.addEventListener("wheel", toggleImage, {
+            passive: false
+        });
+
+        const aspectRatio = () => {
+            const verticalScreen = win.innerHeight / win.innerWidth > 1;
+            const imgs = [...dom.querySelectorAll("img")];
+            imgs.forEach(img => {
+                if (verticalScreen && img.className === "default") {
+                    img.style.maxWidth = "96vw";
+                    img.style.maxHeight = "";
+                    img.style.minWidth = "96vw";
+                    img.style.minHeight = "";
+                } else if (img.className === "default") {
+                    img.style.maxHeight = "99vh";
+                    img.style.maxWidth = "";
+                    img.style.minHeight = "99vh";
+                    img.style.minWidth = "";
+                }
+            });
+        };
+        _unsafeWindow.addEventListener("resize", aspectRatio);
+
+        const kEvent = (event) => {
+            if (dom.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
+            const imgs = [...dom.querySelectorAll("img")];
+            const next = dom.querySelector("#next a");
+            if (event.code === "Escape") return closeGallery();
+            if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
+            if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
+            if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
+            if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
+            if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
+            if (event.code === "KeyN") {
+                if (next) {
+                    return (location.href = next.href);
+                }
+            }
+            if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+                increaseWidth();
+            }
+            if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+                reduceWidth();
+            }
+            if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
+                let box = dom.querySelector("#imgBox");
+                if (box.style.direction == "rtl") {
+                    box.style.direction = "ltr";
+                } else {
+                    box.style.direction = "rtl";
+                }
+            }
+            if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+                event.preventDefault();
+                imgViewIndex = imgs.length - 1;
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                nextButtonIsShown = false;
+            } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+                event.preventDefault();
+                imgViewIndex--;
+                if (imgs[imgViewIndex] === undefined) {
+                    imgViewIndex = imgs.length - 1;
+                }
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                nextButtonIsShown = false;
+            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
+                next.parentElement.style.backgroundColor = "gray";
+                return setTimeout(() => (location.href = next.href), 500);
+            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
+                event.preventDefault();
+                imgViewIndex++;
+                if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
+                    next.parentElement.style.border = "solid #32a1ce";
+                    next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                    nextButtonIsShown = true;
+                } else if (imgs[imgViewIndex] === undefined) {
+                    imgViewIndex = 0;
+                }
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+            } else if (event.code === "Delete" && config.ViewMode == 3) {
+                const hideE = [...dom.querySelectorAll("img")][imgViewIndex];
+                hideE.style.display = "none";
+            } else if (event.code === "Enter" && config.ViewMode == 3) {
+                [...dom.querySelectorAll("img")].forEach(e => (e.style.display = ""));
+            } else {
+                imgViewIndex = -1;
+            }
+        };
+        dom.addEventListener("keydown", kEvent);
+
+        fun.css(`
+html,body {
+    overflow-y: hidden !important;
+}
+        `, "overflowYHidden");
+        _GM_addElement(dom.head, "style", {
+            textContent: `
+p#imgBox {
+    display: block;
+    padding: 0;
+    margin: 0;
+}
+#FixedMenu {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #000000;
+    width: 132px;
+    height: auto;
+    padding: 5px 5px 2px 5px;
+    position: fixed;
+    left: -138px;
+    bottom: 0px;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    background-color: #fff;
+    z-index: 2147483647;
+}
+#FixedMenu:hover {
+  left: 0px;
+}
+.FixedMenuitem {
+    width: 120px;
+    height: 24px;
+    line-height: 24px;
+    overflow: hidden;
+    font-size: 14px;
+    border: #ccc 1px solid;
+    background-color: #f6f6f6;
+    padding: 0 5px 0 5px;
+    margin: 0 2px 3px 0;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.FixedMenuitem.active {
+    color: #fff;
+    background: #1790E6;
+}
+img.default {
+    vertical-align: middle;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: solid #fff;
+    background-color: #fff;
+}
+img.single {
+    width: auto;
+    height: auto;
+    max-width: 99%;
+    max-height: 99vh;
+    display: block;
+    margin: 0 auto;
+    border: solid #fff;
+}
+img.webtoon {
+    width: 100%;
+    height: auto;
+    max-width: ${webtoonWidth}px;
+    display: block;
+    margin: 0 auto;
+    border: unset !important;
+}
+img.small {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    height: auto;
+    max-width: 31.8%;
+    max-height: 33vh;
+    border: solid #fff;
+}
+#next {
+    display: block;
+    padding: 10px 0;
+    text-align: center;
+    border: solid #fff;
+    background-color: antiquewhite;
+}
+#next a {
+    display: block;
+    color: rgb(0, 0, 0);
+    font-size: 26px;
+    line-height: 50px;
+    height: 50px;
+    text-align: center;
+    text-decoration: unset !important;
+}
+            `
+        });
+
+        const mainElement = document.createElement("div");
+        mainElement.id = "Gallery";
+
+        Object.assign(mainElement.style, {
+            left: "0",
+            right: "0",
+            top: "0",
+            bottom: "0",
+            width: "100vw",
+            height: "100vh",
+            margin: "auto",
+            padding: "0",
+            position: "fixed",
+            opacity: "1",
+            zIndex: "2147483647",
+            backgroundColor: "#333",
+            color: "#222",
+            fontSize: "14px",
+            overflowY: "scroll",
+            textAlign: "center"
+        });
+        dom.body.appendChild(mainElement);
+
+        function loadImgs() {
+            const imgs = [...dom.querySelectorAll("img")];
+            const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
+            const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
+            fun.singleThreadLoadImgs(oddNumberImgs);
+            fun.singleThreadLoadImgs(evenNumberImgs);
+        }
+
+        function createGalleryElement(mode) {
+            mainElement.scrollTo({
+                top: 0
+            });
+            iframe.focus();
+            imgViewIndex = -1;
+            [...dom.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            mainElement.innerHTML = "";
+            const imgElements = srcs.map((src, i) => {
+                let img = new Image();
+                img.className = mode;
+                img.src = loading_bak;
+                img.dataset.src = src;
+                img.dataset.fancybox = "gallery";
+                img.dataset.index = i;
+                return img;
+            });
+            const p = document.createElement("p");
+            p.id = "imgBox";
+            if (config.ViewMode == 3) {
+                p.style.direction = "rtl";
+            }
+            if (siteData.category.includes("comic") && config.ViewMode != 4) {
+                p.style.padding = "0 6%";
+                p.style.margin = "0 auto";
+            }
+            p.append(...imgElements);
+            mainElement.append(p);
+            loadImgs();
+            aspectRatio();
+            setTimeout(() => {
+                aspectRatio();
+                [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
+            }, 1000);
+            if (options.fancybox == 1) {
+                [...mainElement.querySelectorAll("img")].forEach(img => {
+                    img.addEventListener("click", (event) => {
+                        const Fancybox = win.Fancybox;
+                        if (Fancyboxl10nV5() != "EN") {
+                            Fancybox.defaults.l10n = Fancyboxl10nV5();
+                        }
+                        const index = Number(event.target.dataset.index);
+                        Fancybox.fromNodes([...mainElement.querySelectorAll("img")], {
+                            Hash: false,
+                            idle: false,
+                            wheel: FancyboxWheel,
+                            startIndex: index,
+                            Images: {
+                                Panzoom: {
+                                    maxScale: 2
+                                },
+                                zoom: false
+                            },
+                            Slideshow: {
+                                timeout: FancyboxSlideshowTimeoutNum,
+                            },
+                            Thumbs: {
+                                showOnStart: false
+                            },
+                            Toolbar: {
+                                display: {
+                                    left: ["infobar"],
+                                    middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                                    right: ["slideshow", "fullscreen", "thumbs", "close"]
+                                }
+                            },
+                            on: {
+                                done: (fancybox, slide) => {
+                                    let slideIndex = slide.index;
+                                    let imgs = [...dom.querySelectorAll("img")];
+                                    imgs.forEach(e => (e.style.border = ""));
+                                    if (fancybox.isCurrentSlide(slide)) {
+                                        imgViewIndex = slideIndex;
+                                        imgs[slideIndex].style.border = "solid #32a1ce";
+                                        imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                                    } else {
+                                        imgViewIndex = fancybox.getSlide().index;
+                                        imgs[slideIndex].style.border = "solid #32a1ce";
+                                        imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                                    }
+                                },
+                                close: fancybox => {
+                                    let slideIndex = fancybox.getSlide().index;
+                                    imgViewIndex = slideIndex;
+                                    let imgs = [...dom.querySelectorAll("img")];
+                                    imgs.forEach(e => (e.style.border = ""));
+                                    imgs[slideIndex].style.border = "solid #32a1ce";
+                                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+            if (nextLink) {
+                let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</a></div>`;
+                mainElement.insertAdjacentHTML("beforeend", html);
+            }
+        }
+
+        function addFixedMenu() {
+            let menuDiv = document.createElement("div");
+            menuDiv.id = "FixedMenu";
+            const menuObj = [{
+                id: "MenuCancelItem",
+                text: displayLanguage.str_142,
+                cfn: () => closeGallery()
+            }, {
+                id: "MenuWebtoonItem",
+                text: displayLanguage.galleryMenu.webtoon,
+                cfn: () => webtoonImageLayout()
+            }, {
+                id: "MenuRTLItem",
+                text: displayLanguage.galleryMenu.rtl,
+                cfn: () => rtlImageLayout()
+            }, {
+                id: "MenuSmallItem",
+                text: displayLanguage.galleryMenu.small,
+                cfn: () => smallImageLayout()
+            }, {
+                id: "MenuSinglePageItem",
+                text: displayLanguage.galleryMenu.single,
+                cfn: () => singleImageLayout()
+            }, {
+                id: "MenuDefaultItem",
+                text: displayLanguage.galleryMenu.default,
+                cfn: () => defaultImageLayout()
+            }];
+            const createMenu = obj => {
+                let item = document.createElement("div");
+                item.id = obj.id;
+                item.className = "FixedMenuitem";
+                item.innerText = obj.text;
+                item.oncontextmenu = () => false;
+                if (!!obj.cfn) item.addEventListener("click", obj.cfn);
+                menuDiv.append(item);
+            };
+            menuObj.forEach(obj => createMenu(obj));
+            dom.body.append(menuDiv);
+        }
+        addFixedMenu();
+
+        function defaultImageLayout() {
+            config.ViewMode = 0;
+            saveConfig();
+            createGalleryElement("default");
+            dom.querySelector("#MenuDefaultItem").classList.add("active");
+        }
+
+        function singleImageLayout() {
+            config.ViewMode = 1;
+            saveConfig();
+            createGalleryElement("single");
+            dom.querySelector("#MenuSinglePageItem").classList.add("active");
+        }
+
+        function smallImageLayout() {
+            config.ViewMode = 2;
+            saveConfig();
+            createGalleryElement("small");
+            dom.querySelector("#MenuSmallItem").classList.add("active");
+        }
+
+        function rtlImageLayout() {
+            config.ViewMode = 3;
+            saveConfig();
+            createGalleryElement("default");
+            dom.querySelector("#MenuRTLItem").classList.add("active");
+        }
+
+        function webtoonImageLayout() {
+            config.ViewMode = 4;
+            saveConfig();
+            createGalleryElement("webtoon");
+            dom.querySelector("#MenuWebtoonItem").classList.add("active");
         }
 
         if (config.ViewMode == 1) {
@@ -28630,13 +29305,13 @@ a[data-fancybox]:hover {
 
     //Fancybox5的語系
     const Fancyboxl10nV5 = () => {
-        if (!_unsafeWindow?.Fancybox?.defaults?.l10n) return;
+        let l10n;
         switch (language) {
             case "zh-TW":
             case "zh-HK":
             case "zh-Hant-TW":
             case "zh-Hant-HK":
-                _unsafeWindow.Fancybox.defaults.l10n = {
+                l10n = {
                     PANUP: "上移",
                     PANDOWN: "下移",
                     PANLEFT: "左移",
@@ -28674,7 +29349,7 @@ a[data-fancybox]:hover {
             case "zh":
             case "zh-CN":
             case "zh-Hans-CN":
-                _unsafeWindow.Fancybox.defaults.l10n = {
+                l10n = {
                     PANUP: "上移",
                     PANDOWN: "下移",
                     PANLEFT: "左移",
@@ -28709,9 +29384,15 @@ a[data-fancybox]:hover {
                     DOWNLOAD: "下载"
                 };
                 break;
+            default:
+                l10n = "EN";
         }
-        _unsafeWindow.Fancybox.defaults.animated = false;
-        //debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
+        if (_unsafeWindow?.Fancybox?.defaults?.l10n && l10n != "EN") {
+            _unsafeWindow.Fancybox.defaults.l10n = l10n;
+            _unsafeWindow.Fancybox.defaults.animated = false;
+            //debug("\nFancybox 5.0.xx 預設選項物件 Fancybox.defaults\n", Fancybox.defaults);
+        }
+        return l10n;
     };
 
     //Fancybox3的語系
@@ -28769,7 +29450,7 @@ a[data-fancybox]:hover {
 
     //頁面容器快捷鍵
     const addKeyEvent = async event => {
-        if (ge(".fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
+        if (ge(".fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
         if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
         if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptionsShadowElement")) return;
@@ -28782,8 +29463,11 @@ a[data-fancybox]:hover {
             fun.showMsg(displayLanguage.str_118);
             debug("圖集新標題", newTitle || customTitle);
         }
-        if (event.code === "KeyG") { //數字鍵0
+        if (event.code === "KeyG") { //G鍵
             return createShadowGallery();
+        }
+        if (event.code === "KeyI") { //I鍵
+            return createIframeGallery();
         }
         if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
             fastDownload = false;
@@ -29043,7 +29727,7 @@ a[data-fancybox]:hover {
                         for (const mutation of mutationList_removedNodes) {
                             const removedNodes = mutation.removedNodes;
                             for (const node of removedNodes) {
-                                if (node?.id == "mainShadowGallery") {
+                                if (node?.id == "FullPictureLoadShadowGallery") {
                                     return;
                                 }
                             }
@@ -29055,7 +29739,7 @@ a[data-fancybox]:hover {
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        if (!ge("#mainShadowGallery")) {
+                        if (!ge("#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery")) {
                             await toggleUI();
                         }
                     }, 200);
@@ -29066,7 +29750,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "mainShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "FullPictureLoadShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
@@ -29113,7 +29797,7 @@ a[data-fancybox]:hover {
                         for (const mutation of mutationList_removedNodes) {
                             const removedNodes = mutation.removedNodes;
                             for (const node of removedNodes) {
-                                if (node?.id == "mainShadowGallery") {
+                                if (node?.id == "FullPictureLoadShadowGallery") {
                                     return;
                                 }
                             }
@@ -29125,7 +29809,7 @@ a[data-fancybox]:hover {
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        if (!ge("#mainShadowGallery")) {
+                        if (!ge("#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery")) {
                             await toggleUI();
                         }
                         if ("customTitle" in siteData && !("capture" in siteData)) {
@@ -29143,7 +29827,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "mainShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "FullPictureLoadShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
@@ -29219,14 +29903,14 @@ a[data-fancybox]:hover {
                 document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
+                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowRight") callback(event);
             });
         }
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
+                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
@@ -29457,7 +30141,7 @@ a[data-fancybox]:hover {
 
     if (!!autoDownload) {
         document.addEventListener("keydown", event => {
-            if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#mainShadowGallery,#FullPictureLoadFavorSites")) return;
+            if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
