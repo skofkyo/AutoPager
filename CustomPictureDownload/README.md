@@ -32,8 +32,8 @@ cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min
-// @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
 // @resource FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 // @resource FancyboxV3Css https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 // @resource ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
@@ -44,24 +44,12 @@ unpkg.com
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
-// @resource FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.umd.js
-// @resource FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.31/dist/fancybox/fancybox.css
+// @resource FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
+// @resource FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
 // @resource FancyboxV3JS https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
 // @resource FancyboxV3Css https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 // @resource ViewerJs https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js
 // @resource ViewerJsCss https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css
-</pre>
-<pre>
-cdn.bootcdn.net
-// @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
-// @require            https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-// @resource JqueryJS https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-// @resource FancyboxV5JS https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.js
-// @resource FancyboxV5Css https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.css
-// @resource FancyboxV3JS https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js
-// @resource FancyboxV3Css https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css
-// @resource ViewerJs https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.js
-// @resource ViewerJsCss https://cdn.bootcdn.net/ajax/libs/viewerjs/1.11.5/viewer.min.css
 </pre>
 </details>
 <br>
@@ -1127,11 +1115,11 @@ imgs: async () => {
 <p>Enter鍵 模式為3時用於取消所有隱藏的圖片。</p>
 <p>+、-鍵和Ctrl、Alt、ShiftKey + 滾輪 模式為4時可增加減少圖片的寬度。</p>
 <p>PS：網站如果有Content Security Policy (CSP)限制，將沒有切換模式、圖片滾動、Fancybox功能，或者莫名其妙不能使用window.open()，將無法使用分頁檢視功能。</p>
-<p>5.影子畫廊模式(限定PC使用)</p>
+<p>5.Shadow DOM影子畫廊模式(限定PC使用)</p>
 <p>快捷鍵同分頁檢視模式</p>
 <p>Esc鍵 離開畫廊</p>
 <p>N鍵 前往下一話或下一篇，如果有的話。</p>
-<p>Fancybox功能由於CSS衝突部分網站無法支持。</p>
+<p>Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將轉用iframe構建畫廊。</p>
 <br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
@@ -4221,7 +4209,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.cnjiepai.xyz/all.html">中国街拍</a>
+                    <a href="https://jiepai.sifang.app/all.html">中国街拍</a>
                 </td>
                 <td></td>
             </tr>
