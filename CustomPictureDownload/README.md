@@ -19,7 +19,7 @@ ViaBrowser 5.9.0
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>提醒：</h1>
 <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
-<p>請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com或cdn.bootcdn.net</p>
+<p>請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com</p>
 <details>
     <summary>
         <kbd>
