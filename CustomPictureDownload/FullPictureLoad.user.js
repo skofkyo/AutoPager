@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.14
+// @version            2.8.15
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -74,8 +74,7 @@
         column: 4, //圖片並排顯示的數量 2 ~ 6
         viewMode: 0, //0：置中、1：並排
         fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
-        shadowGallery: 0, //自動進入影子畫廊，1：自動、0：手動
-        shadowGalleryWheel: 0 //影子畫廊模式0、1、3滾輪，1：切換圖片、0：畫廊滾動
+        shadowGallery: 0 //自動進入影子畫廊，1：自動、0：手動
     };
     const FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
     let options = defaultOptions;
@@ -122,6 +121,16 @@
     const MutationObserverConfig = {
         childList: true,
         subtree: true
+    };
+    const smoothScrollIntoView = {
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+    };
+    const instantScrollIntoView = {
+        behavior: "instant",
+        block: "center",
+        inline: "center"
     };
     //自定義站點規則
     const customData = [{
@@ -21287,7 +21296,7 @@ if ("xx" in window) {
                 str_118: "圖集標題已更新",
                 str_119: "FancyboxV5滾輪圖片縮放",
                 str_120: "此網站分頁畫廊使用ViewerJs插件",
-                str_121: "關閉圖片導覽快捷鍵",
+                str_121: "關閉頁面容器圖片導覽快捷鍵",
                 str_122: "此漫畫站使用無限滾動閱讀模式",
                 str_123: "此網站顯示眼睛圖示和圖片數量",
                 str_124: "此網站下載影片",
@@ -21313,7 +21322,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻燈片播放時間間隔：",
                 str_146: "Fancybox5滾輪操作：",
-                str_147: "影子畫廊 (0、1、3) 滾輪操作：",
+                str_147: "畫廊 (0、1、3) 滾輪操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21461,7 +21470,7 @@ if ("xx" in window) {
                 str_118: "图集标题已更新",
                 str_119: "FancyboxV5滚轮图片缩放",
                 str_120: "此网站标签画廊使用ViewerJs插件",
-                str_121: "关闭图片导览快捷键",
+                str_121: "关闭页面容器图片导览快捷键",
                 str_122: "此漫画站使用无限滚动阅读模式",
                 str_123: "此网站显示眼睛图标和图片数量",
                 str_124: "此网站下载视频",
@@ -21487,7 +21496,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻灯片播放时间间隔：",
                 str_146: "Fancybox5滚轮操作：",
-                str_147: "影子画廊 (0、1、3) 滚轮操作：",
+                str_147: "画廊 (0、1、3) 滚轮操作：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21633,7 +21642,7 @@ if ("xx" in window) {
                 str_118: "Album title has been updated",
                 str_119: "FancyboxV5 Wheel Toggle Zoom",
                 str_120: "This Website New Tab View uses ViewerJs Plug-in",
-                str_121: "Turn Off Image Navigation Shortcut Keys",
+                str_121: "Turn Off Page Content Image Navigation Shortcut Keys",
                 str_122: "This website uses Infinite Scroll Read Mode",
                 str_123: "This website Show eye icon and picture number",
                 str_124: "This website downloads videos",
@@ -21660,7 +21669,7 @@ if ("xx" in window) {
                 str_144: "Next Post",
                 str_145: "Fancybox5 Slideshow Play Delay：",
                 str_146: "Fancybox5 Wheel：",
-                str_147: "Shadow Gallery (0、1、3) Wheel：",
+                str_147: "Gallery (0、1、3) Wheel：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -24667,19 +24676,14 @@ if ("xx" in window) {
                 "#FullPictureLoadImgBox:not([style*=none]) .FullPictureLoadImage.small",
                 ".FullPictureLoadImage:not(.small)"
             ];
-            let options = {
-                block: "center",
-                behavior: "smooth",
-                inline: "center",
-            };
             if (!!elementById) {
                 elementById.scrollIntoView();
             } else if (fun.ge(".swiper-slide.swiper-slide-active") && fun.ge(sa)) {
-                fun.gae(sa)[slideIndex].scrollIntoView(options);
+                fun.gae(sa)[slideIndex].scrollIntoView(smoothScrollIntoView);
             } else if (fun.ge(sb)) {
-                fun.gae(sb)[slideIndex].scrollIntoView(options);
+                fun.gae(sb)[slideIndex].scrollIntoView(smoothScrollIntoView);
             } else if (fun.ge(sc)) {
-                fun.gae(sc)[slideIndex].scrollIntoView(options);
+                fun.gae(sc)[slideIndex].scrollIntoView(smoothScrollIntoView);
             } else {
                 console.error(" # ", "未定位id！");
             }
@@ -24786,11 +24790,6 @@ if ("xx" in window) {
                 return;
             }
             let gallery = fun.gae("[data-fancybox]");
-            let scrollIntoViewOptions = {
-                block: "center",
-                behavior: "smooth",
-                inline: "center"
-            };
             let FancyboxOptions;
             if (hasTouchEvents) {
                 FancyboxOptions = {
@@ -24819,9 +24818,9 @@ if ("xx" in window) {
                     on: {
                         done: (fancybox, slide) => {
                             if (fancybox.isCurrentSlide(slide)) {
-                                gallery[slide.index].scrollIntoView(scrollIntoViewOptions);
+                                gallery[slide.index].scrollIntoView(smoothScrollIntoView);
                             } else {
-                                gallery[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                                gallery[fancybox.getSlide().index].scrollIntoView(smoothScrollIntoView);
                             }
                         }
                     }
@@ -24854,9 +24853,9 @@ if ("xx" in window) {
                     on: {
                         done: (fancybox, slide) => {
                             if (fancybox.isCurrentSlide(slide)) {
-                                gallery[slide.index].scrollIntoView(scrollIntoViewOptions);
+                                gallery[slide.index].scrollIntoView(smoothScrollIntoView);
                             } else {
-                                gallery[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                                gallery[fancybox.getSlide().index].scrollIntoView(smoothScrollIntoView);
                             }
                         }
                     }
@@ -25927,10 +25926,6 @@ if ("xx" in window) {
                 fun.comicNextObserver.observe(lastImg);
             }
             let imgsNum = 0;
-            const scrollIntoViewOptions = {
-                block: "center",
-                inline: "center"
-            };
             if (imgDivs[0].nextSibling && siteData.category == "comic") {
                 await fun.checkImgStatus(imgDivs[0].nextSibling.querySelector("img").dataset.src, "Wait Loading...");
                 if (imgDivs[0].offsetHeight < imgDivs[0].nextSibling.offsetHeight) {
@@ -25941,7 +25936,7 @@ if ("xx" in window) {
                     img.style.marginTop = `${num}px`;
                 }
                 await fun.delay(1200, 0);
-                imgDivs[0].scrollIntoView(scrollIntoViewOptions);
+                imgDivs[0].scrollIntoView(instantScrollIntoView);
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
@@ -25950,7 +25945,7 @@ if ("xx" in window) {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
                             imgsNum -= column;
-                            imgDivs[imgsNum].scrollIntoView(scrollIntoViewOptions);
+                            imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
                         }
                     } else if (event.code === "ArrowDown") {
                         event.preventDefault();
@@ -25972,9 +25967,9 @@ if ("xx" in window) {
                                     imgDivs[imgsNum].src = imgDivs[imgsNum].dataset.src;
                                     await fun.checkImgStatus(imgDivs[imgsNum].dataset.src, "Wait Loading...");
                                 }
-                                imgDivs[imgsNum].scrollIntoView(scrollIntoViewOptions);
+                                imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
                                 await fun.delay(200);
-                                imgDivs[imgsNum].scrollIntoView(scrollIntoViewOptions);
+                                imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
                             } catch {
                                 if (siteData.category === "comic" && siteData.next && siteData.insertImg) {
                                     if (isString(siteData.next)) {
@@ -25999,7 +25994,7 @@ if ("xx" in window) {
                                     }
                                 } else {
                                     imgsNum = 0;
-                                    imgDivs[0].scrollIntoView(scrollIntoViewOptions);
+                                    imgDivs[0].scrollIntoView(instantScrollIntoView);
                                     fun.showMsg(displayLanguage.str_94);
                                 }
                             }
@@ -26028,14 +26023,11 @@ if ("xx" in window) {
 
     const newTabViewLightGallery = localStorage.getItem("newTabViewLightGallery") ?? 0;
 
-    //新分頁空白頁檢視圖片
-    const newTabView = async () => {
-
-        if (isFetching || "eye" in siteData && siteData.eye === 0) return;
-
+    const getConfig = () => {
         const default_Config = {
             ViewMode: 0,
-            webtoonWidth: 800
+            webtoonWidth: 800,
+            shadowGalleryWheel: 0
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -26045,6 +26037,30 @@ if ("xx" in window) {
             newWindowData = JSON.parse(newWindowData);
         }
         const config = Object.assign(default_Config, newWindowData);
+        return config;
+    };
+
+    const saveConfig = (config = getConfig()) => {
+        localStorage.setItem("newWindowData", JSON.stringify(config));
+    };
+
+    const setDefault = () => {
+        localStorage.removeItem("FullPictureLoadOptions");
+        localStorage.removeItem("FullPictureLoadCustomDownloadVideo");
+        localStorage.removeItem("newWindowData");
+        _GM_setValue("FullPictureLoadMsgPos", 0);
+        _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
+        _GM_setValue("convertWebpToJpg", 0);
+        _GM_setValue("FancyboxSlideshowTimeout", 3);
+        _GM_setValue("FancyboxWheel", 1);
+    };
+
+    //新分頁空白頁檢視圖片
+    const newTabView = async () => {
+
+        if (isFetching || "eye" in siteData && siteData.eye === 0) return;
+
+        const config = getConfig();
 
         let imgSrcs;
         if ("SPA" in siteData) {
@@ -26083,6 +26099,8 @@ if ("xx" in window) {
             newWindow.hasTouchEvents = hasTouchEvents;
             newWindow.config = config;
             newWindow.imgViewIndex = -1;
+            newWindow.smoothScrollIntoView = smoothScrollIntoView;
+            newWindow.instantScrollIntoView = instantScrollIntoView;
             newWindow.webtoonWidth = config.webtoonWidth;
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
@@ -26183,12 +26201,6 @@ img.small {
                 dom.head.append(fancyboxStyle);
 
                 const JF_code = JqueryJS + FancyboxV5JS + `
-var scrollIntoViewOptions = {
-    block: "center",
-    behavior: "smooth",
-    inline: "center"
-};
-
 var FancyboxOptions = {};
 
 if (hasTouchEvents) {
@@ -26227,13 +26239,13 @@ if (hasTouchEvents) {
                     if (config.ViewMode != 4) {
                         imgs[slideIndex].style.border = "solid #32a1ce";
                     }
-                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                    imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
                 } else {
                     imgViewIndex = fancybox.getSlide().index;
                     if (config.ViewMode != 4) {
                         imgs[slideIndex].style.border = "solid #32a1ce";
                     }
-                    imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                    imgs[fancybox.getSlide().index].scrollIntoView(smoothScrollIntoView);
                 }
             },
             close: fancybox => {
@@ -26245,7 +26257,7 @@ if (hasTouchEvents) {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[slideIndex].style.border = "solid #32a1ce";
                 }
-                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
             }
         }
     }
@@ -26282,11 +26294,11 @@ if (hasTouchEvents) {
                 if (fancybox.isCurrentSlide(slide)) {
                     imgViewIndex = slideIndex;
                     imgs[slideIndex].style.border = "solid #32a1ce";
-                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                    imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
                 } else {
                     imgViewIndex = fancybox.getSlide().index;
                     imgs[slideIndex].style.border = "solid #32a1ce";
-                    imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                    imgs[fancybox.getSlide().index].scrollIntoView(smoothScrollIntoView);
                 }
             },
             close: fancybox => {
@@ -26296,7 +26308,7 @@ if (hasTouchEvents) {
                 let imgs = [...document.querySelectorAll("img")];
                 imgs.forEach(e => (e.style.border = ""));
                 imgs[slideIndex].style.border = "solid #32a1ce";
-                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
             }
         }
     }
@@ -26466,10 +26478,6 @@ document.addEventListener("keydown", event => {
 
 document.addEventListener("keydown", event => {
     if (document.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
-    const scrollIntoViewOptions = {
-        block: "center",
-        inline: "center"
-    };
     const imgs = [...document.querySelectorAll("img")];
     if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
         increaseWidth();
@@ -26488,7 +26496,7 @@ document.addEventListener("keydown", event => {
     if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
         imgViewIndex = imgs.length - 1;
         imgs[imgViewIndex].style.border = "solid #32a1ce";
-        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
@@ -26497,7 +26505,7 @@ document.addEventListener("keydown", event => {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
-        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
@@ -26510,13 +26518,13 @@ document.addEventListener("keydown", event => {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
-        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (event.code === "Delete" && config.ViewMode == 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
         hideE.style.display = "none";
     } else if (event.code === "Enter" && config.ViewMode == 3) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
-    } else {
+    } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
         imgViewIndex = -1;
     }
 });
@@ -26530,6 +26538,43 @@ document.addEventListener("wheel", (event) => {
         }
         if (event.deltaY > 0) {
             reduceWidth();
+        }
+    }
+}, {
+    passive: false
+});
+
+document.addEventListener("wheel", (event) => {
+    if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+        if (!document.querySelector(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+            event.preventDefault();
+            event.stopPropagation();
+            const imgs = [...document.querySelectorAll("img")];
+            if (event.deltaY < 0 && imgViewIndex < 0) {
+                imgViewIndex = imgs.length - 1;
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            } else if (event.deltaY < 0 && imgViewIndex >= 0) {
+                imgViewIndex--;
+                if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
+                imgViewIndex++;
+                if (imgs[imgViewIndex] === undefined) {
+                    imgViewIndex = 0;
+                }
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            } else {
+                imgViewIndex = -1;
+            }
         }
     }
 }, {
@@ -26723,11 +26768,7 @@ document.addEventListener("viewed", event => {
         imgs.forEach(e => (e.style.border = ""));
         imgs[slideIndex].style.border = "solid #32a1ce";
     }
-    imgs[slideIndex].scrollIntoView({
-        block: "center",
-        behavior: "smooth",
-        inline: "center"
-    });
+    imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
 });
 `;
 
@@ -26811,10 +26852,6 @@ document.addEventListener("keydown", event => {
 
 document.addEventListener("keydown", event => {
     if (document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k)) return;
-    const scrollIntoViewOptions = {
-        block: "center",
-        inline: "center"
-    };
     const imgs = [...document.querySelectorAll("img")];
     if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
         increaseWidth();
@@ -26833,7 +26870,7 @@ document.addEventListener("keydown", event => {
     if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
         imgViewIndex = imgs.length - 1;
         imgs[imgViewIndex].style.border = "solid #32a1ce";
-        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
@@ -26842,7 +26879,7 @@ document.addEventListener("keydown", event => {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
-        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
@@ -26855,13 +26892,13 @@ document.addEventListener("keydown", event => {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
         }
-        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (event.code === "Delete" && config.ViewMode == 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
         hideE.style.display = "none";
     } else if (event.code === "Enter" && config.ViewMode == 3) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
-    } else {
+    } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
         imgViewIndex = -1;
     }
 });
@@ -26875,6 +26912,43 @@ document.addEventListener("wheel", (event) => {
         }
         if (event.deltaY > 0) {
             reduceWidth();
+        }
+    }
+}, {
+    passive: false
+});
+
+document.addEventListener("wheel", (event) => {
+    if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+        if (!document.querySelector(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+            event.preventDefault();
+            event.stopPropagation();
+            const imgs = [...document.querySelectorAll("img")];
+            if (event.deltaY < 0 && imgViewIndex < 0) {
+                imgViewIndex = imgs.length - 1;
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            } else if (event.deltaY < 0 && imgViewIndex >= 0) {
+                imgViewIndex--;
+                if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
+                imgViewIndex++;
+                if (imgs[imgViewIndex] === undefined) {
+                    imgViewIndex = 0;
+                }
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            } else {
+                imgViewIndex = -1;
+            }
         }
     }
 }, {
@@ -26895,10 +26969,14 @@ function aspectRatio() {
     imgs.forEach(img => {
         if (verticalScreen && img.className === "default") {
             img.style.minWidth = "98vw";
+            img.style.maxWidth = "98vw";
             img.style.minHeight = "";
+            img.style.maxHeight = "";
         } else if (img.className === "default") {
             img.style.minHeight = "99vh";
+            img.style.maxHeight = "99vh";
             img.style.minWidth = "";
+            img.style.maxWidth = "98vw";
         }
     });
 }
@@ -27060,18 +27138,8 @@ if (config.ViewMode == 1) {
 
         fun.hideMsg();
 
-        const default_Config = {
-            ViewMode: 0,
-            webtoonWidth: 800
-        };
-        let newWindowData = localStorage.getItem("newWindowData");
-        if (newWindowData == null) {
-            localStorage.setItem("newWindowData", JSON.stringify(default_Config));
-            newWindowData = {};
-        } else if (isString(newWindowData)) {
-            newWindowData = JSON.parse(newWindowData);
-        }
-        const config = Object.assign(default_Config, newWindowData);
+        const config = getConfig();
+
         let webtoonWidth = config.webtoonWidth;
 
         let srcs;
@@ -27088,38 +27156,28 @@ if (config.ViewMode == 1) {
 
         let imgViewIndex = -1;
 
-        const scrollIntoViewOptions = {
-            block: "center",
-            inline: "center"
-        };
-
         const mainHtml = '<div id="FullPictureLoadShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
         const FullPictureLoadShadowGallery = ge("#FullPictureLoadShadowGallery");
         const shadow = FullPictureLoadShadowGallery.attachShadow({
-            mode: "closed",
-            delegatesFocus: true
+            mode: "closed"
         });
 
         const hideSelector = "body>*:not(#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
         gae(hideSelector).forEach(e => (e.style.display = "none"));
-
-        const saveConfig = () => {
-            localStorage.setItem("newWindowData", JSON.stringify(config));
-        };
 
         const increaseWidth = () => {
             let imgs = [...shadow.querySelectorAll("img")];
             if (webtoonWidth < 1200 && webtoonWidth < _unsafeWindow.outerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
                 webtoonWidth = 800;
                 config.webtoonWidth = 800;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = "800px"));
             }
         };
@@ -27129,12 +27187,12 @@ if (config.ViewMode == 1) {
             if (webtoonWidth > 200) {
                 webtoonWidth = (Number(webtoonWidth) - 50);
                 config.webtoonWidth = webtoonWidth;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
                 webtoonWidth = 800;
                 config.webtoonWidth = 800;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = "800px"));
             }
         };
@@ -27167,7 +27225,7 @@ if (config.ViewMode == 1) {
         let nextButtonIsShown = false;
 
         const toggleImage = (event) => {
-            if (options.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+            if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
                 if (!ge(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -27176,7 +27234,7 @@ if (config.ViewMode == 1) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
-                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                         nextButtonIsShown = false;
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         imgViewIndex--;
@@ -27185,7 +27243,7 @@ if (config.ViewMode == 1) {
                             imgs.forEach(e => (e.style.border = ""));
                             imgs[imgViewIndex].style.border = "solid #32a1ce";
                         }
-                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                         nextButtonIsShown = false;
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
                         next.parentElement.style.backgroundColor = "gray";
@@ -27194,7 +27252,7 @@ if (config.ViewMode == 1) {
                         imgViewIndex++;
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                             next.parentElement.style.border = "solid #32a1ce";
-                            next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                            next.parentElement.scrollIntoView(instantScrollIntoView);
                             nextButtonIsShown = true;
                         } else if (imgs[imgViewIndex] === undefined) {
                             imgViewIndex = 0;
@@ -27203,7 +27261,7 @@ if (config.ViewMode == 1) {
                             imgs.forEach(e => (e.style.border = ""));
                             imgs[imgViewIndex].style.border = "solid #32a1ce";
                         }
-                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                     } else {
                         imgViewIndex = -1;
                     }
@@ -27267,7 +27325,7 @@ if (config.ViewMode == 1) {
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
-                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
                 event.preventDefault();
@@ -27279,7 +27337,7 @@ if (config.ViewMode == 1) {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
-                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
                 next.parentElement.style.backgroundColor = "gray";
@@ -27289,7 +27347,7 @@ if (config.ViewMode == 1) {
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                     next.parentElement.style.border = "solid #32a1ce";
-                    next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                    next.parentElement.scrollIntoView(instantScrollIntoView);
                     nextButtonIsShown = true;
                 } else if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = 0;
@@ -27298,13 +27356,13 @@ if (config.ViewMode == 1) {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
-                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else if (event.code === "Delete" && config.ViewMode == 3) {
                 const hideE = [...shadow.querySelectorAll("img")][imgViewIndex];
                 hideE.style.display = "none";
             } else if (event.code === "Enter" && config.ViewMode == 3) {
                 [...shadow.querySelectorAll("img")].forEach(e => (e.style.display = ""));
-            } else {
+            } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
                 imgViewIndex = -1;
             }
         };
@@ -27512,11 +27570,11 @@ img.small {
                             if (fancybox.isCurrentSlide(slide)) {
                                 imgViewIndex = slideIndex;
                                 imgs[slideIndex].style.border = "solid #32a1ce";
-                                imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                                imgs[slideIndex].scrollIntoView(instantScrollIntoView);
                             } else {
                                 imgViewIndex = fancybox.getSlide().index;
                                 imgs[slideIndex].style.border = "solid #32a1ce";
-                                imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                                imgs[fancybox.getSlide().index].scrollIntoView(instantScrollIntoView);
                             }
                         },
                         close: fancybox => {
@@ -27526,7 +27584,7 @@ img.small {
                             let imgs = [...mainElement.querySelectorAll("img")];
                             imgs.forEach(e => (e.style.border = ""));
                             imgs[slideIndex].style.border = "solid #32a1ce";
-                            imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                            imgs[slideIndex].scrollIntoView(instantScrollIntoView);
                         }
                     }
                 });
@@ -27581,35 +27639,35 @@ img.small {
 
         function defaultImageLayout() {
             config.ViewMode = 0;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("default");
             shadow.querySelector("#MenuDefaultItem").classList.add("active");
         }
 
         function singleImageLayout() {
             config.ViewMode = 1;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("single");
             shadow.querySelector("#MenuSinglePageItem").classList.add("active");
         }
 
         function smallImageLayout() {
             config.ViewMode = 2;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("small");
             shadow.querySelector("#MenuSmallItem").classList.add("active");
         }
 
         function rtlImageLayout() {
             config.ViewMode = 3;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("default");
             shadow.querySelector("#MenuRTLItem").classList.add("active");
         }
 
         function webtoonImageLayout() {
             config.ViewMode = 4;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("webtoon");
             shadow.querySelector("#MenuWebtoonItem").classList.add("active");
         }
@@ -27633,19 +27691,7 @@ img.small {
 
         fun.hideMsg();
 
-        const default_Config = {
-            ViewMode: 0,
-            webtoonWidth: 800
-        };
-
-        let newWindowData = localStorage.getItem("newWindowData");
-        if (newWindowData == null) {
-            localStorage.setItem("newWindowData", JSON.stringify(default_Config));
-            newWindowData = {};
-        } else if (isString(newWindowData)) {
-            newWindowData = JSON.parse(newWindowData);
-        }
-        const config = Object.assign(default_Config, newWindowData);
+        const config = getConfig();
 
         let webtoonWidth = config.webtoonWidth;
 
@@ -27662,11 +27708,6 @@ img.small {
         if (srcs.length < 1) return;
 
         let imgViewIndex = -1;
-
-        const scrollIntoViewOptions = {
-            block: "center",
-            inline: "center"
-        };
 
         const iframe = document.createElement("iframe");
         iframe.id = "FullPictureLoadIframeGallery";
@@ -27708,21 +27749,17 @@ img.small {
         const hideSelector = "body>*:not(#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
-        const saveConfig = () => {
-            localStorage.setItem("newWindowData", JSON.stringify(config));
-        };
-
         const increaseWidth = () => {
             let imgs = [...dom.querySelectorAll("img")];
             if (webtoonWidth < 1200 && webtoonWidth < win.outerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
                 webtoonWidth = 800;
                 config.webtoonWidth = 800;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = "800px"));
             }
         };
@@ -27732,12 +27769,12 @@ img.small {
             if (webtoonWidth > 200) {
                 webtoonWidth = (Number(webtoonWidth) - 50);
                 config.webtoonWidth = webtoonWidth;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
                 webtoonWidth = 800;
                 config.webtoonWidth = 800;
-                saveConfig();
+                saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = "800px"));
             }
         };
@@ -27769,7 +27806,7 @@ img.small {
         let nextButtonIsShown = false;
 
         const toggleImage = (event) => {
-            if (options.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+            if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
                 if (!event.ctrlKey && !event.altKey && !event.shiftKey) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -27778,7 +27815,7 @@ img.small {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
-                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                         nextButtonIsShown = false;
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         imgViewIndex--;
@@ -27787,7 +27824,7 @@ img.small {
                             imgs.forEach(e => (e.style.border = ""));
                             imgs[imgViewIndex].style.border = "solid #32a1ce";
                         }
-                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                         nextButtonIsShown = false;
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
                         next.parentElement.style.backgroundColor = "gray";
@@ -27796,7 +27833,7 @@ img.small {
                         imgViewIndex++;
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                             next.parentElement.style.border = "solid #32a1ce";
-                            next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                            next.parentElement.scrollIntoView(instantScrollIntoView);
                             nextButtonIsShown = true;
                         } else if (imgs[imgViewIndex] === undefined) {
                             imgViewIndex = 0;
@@ -27805,7 +27842,7 @@ img.small {
                             imgs.forEach(e => (e.style.border = ""));
                             imgs[imgViewIndex].style.border = "solid #32a1ce";
                         }
-                        imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                     } else {
                         imgViewIndex = -1;
                     }
@@ -27869,7 +27906,7 @@ img.small {
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
-                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
                 event.preventDefault();
@@ -27881,7 +27918,7 @@ img.small {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
-                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
                 next.parentElement.style.backgroundColor = "gray";
@@ -27891,7 +27928,7 @@ img.small {
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                     next.parentElement.style.border = "solid #32a1ce";
-                    next.parentElement.scrollIntoView(scrollIntoViewOptions);
+                    next.parentElement.scrollIntoView(instantScrollIntoView);
                     nextButtonIsShown = true;
                 } else if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = 0;
@@ -27900,13 +27937,13 @@ img.small {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[imgViewIndex].style.border = "solid #32a1ce";
                 }
-                imgs[imgViewIndex].scrollIntoView(scrollIntoViewOptions);
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else if (event.code === "Delete" && config.ViewMode == 3) {
                 const hideE = [...dom.querySelectorAll("img")][imgViewIndex];
                 hideE.style.display = "none";
             } else if (event.code === "Enter" && config.ViewMode == 3) {
                 [...dom.querySelectorAll("img")].forEach(e => (e.style.display = ""));
-            } else {
+            } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
                 imgViewIndex = -1;
             }
         };
@@ -28123,11 +28160,11 @@ img.small {
                                     if (fancybox.isCurrentSlide(slide)) {
                                         imgViewIndex = slideIndex;
                                         imgs[slideIndex].style.border = "solid #32a1ce";
-                                        imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                                        imgs[slideIndex].scrollIntoView(instantScrollIntoView);
                                     } else {
                                         imgViewIndex = fancybox.getSlide().index;
                                         imgs[slideIndex].style.border = "solid #32a1ce";
-                                        imgs[fancybox.getSlide().index].scrollIntoView(scrollIntoViewOptions);
+                                        imgs[fancybox.getSlide().index].scrollIntoView(instantScrollIntoView);
                                     }
                                 },
                                 close: fancybox => {
@@ -28136,7 +28173,7 @@ img.small {
                                     let imgs = [...dom.querySelectorAll("img")];
                                     imgs.forEach(e => (e.style.border = ""));
                                     imgs[slideIndex].style.border = "solid #32a1ce";
-                                    imgs[slideIndex].scrollIntoView(scrollIntoViewOptions);
+                                    imgs[slideIndex].scrollIntoView(instantScrollIntoView);
                                 }
                             }
                         });
@@ -28193,35 +28230,35 @@ img.small {
 
         function defaultImageLayout() {
             config.ViewMode = 0;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("default");
             dom.querySelector("#MenuDefaultItem").classList.add("active");
         }
 
         function singleImageLayout() {
             config.ViewMode = 1;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("single");
             dom.querySelector("#MenuSinglePageItem").classList.add("active");
         }
 
         function smallImageLayout() {
             config.ViewMode = 2;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("small");
             dom.querySelector("#MenuSmallItem").classList.add("active");
         }
 
         function rtlImageLayout() {
             config.ViewMode = 3;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("default");
             dom.querySelector("#MenuRTLItem").classList.add("active");
         }
 
         function webtoonImageLayout() {
             config.ViewMode = 4;
-            saveConfig();
+            saveConfig(config);
             createGalleryElement("webtoon");
             dom.querySelector("#MenuWebtoonItem").classList.add("active");
         }
@@ -28540,6 +28577,8 @@ img.small {
     //創建腳本選項元素
     const createPictureLoadOptionsShadowElement = () => {
 
+        const config = getConfig();
+
         const mainHtml = '<div id="FullPictureLoadOptionsShadowElement" style="display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
@@ -28796,7 +28835,7 @@ img.small {
         siteData.category == "comic" ? ge("#Column", main).value = 2 : ge("#Column", main).value = options.column;
         ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
         ge("#ShadowGalleryMode", main).checked = options.shadowGallery == 1 ? true : false;
-        ge("#ShadowGalleryWheel", main).value = options.shadowGalleryWheel;
+        ge("#ShadowGalleryWheel", main).value = config.shadowGalleryWheel;
         if (comicSwitch) {
             ge("#ComicDIV", main).style.display = "flex";
         }
@@ -28817,13 +28856,7 @@ img.small {
         });
         ge("#ResetBtn", main).addEventListener("click", event => {
             event.preventDefault();
-            localStorage.removeItem("FullPictureLoadOptions");
-            localStorage.removeItem("FullPictureLoadCustomDownloadVideo");
-            _GM_setValue("FullPictureLoadMsgPos", 0);
-            _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
-            _GM_setValue("convertWebpToJpg", 0);
-            _GM_setValue("FancyboxSlideshowTimeout", 3);
-            _GM_setValue("FancyboxWheel", 1);
+            setDefault();
             location.reload();
         });
         ge("#SaveBtn", main).addEventListener("click", event => {
@@ -28847,7 +28880,8 @@ img.small {
             options.column = ge("#Column", main).value;
             options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
             options.shadowGallery = ge("#ShadowGalleryMode", main).checked == true ? 1 : 0;
-            options.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
+            config.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
+            saveConfig(config);
             if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
                 ge("#CustomDownloadVideo", main).checked == true ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
             }
@@ -29506,7 +29540,7 @@ a[data-fancybox]:hover {
         }
         if (event.code === "NumpadDivide" || event.key === "/") { //數字鍵/
             fun.showMsg(displayLanguage.str_91);
-            localStorage.removeItem("FullPictureLoadOptions"); //重置當前網站的用戶設定恢復為預設選項
+            setDefault(); //重置用戶設定恢復為預設選項
             setTimeout(() => location.reload(), 1000);
             return;
         }
