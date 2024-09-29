@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.15
+// @version            2.8.16
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -11199,6 +11199,12 @@ a:has(>div>div>img),
             await fun.waitVar("webpackJsonp");
             fun.copymangaUI();
             fun.createImgBox(".comicContent-list", 1);
+            let readHistoryData = localStorage.getItem("readHistory");
+            let [, , word, , id] = fun.lp.split("/");
+            let json;
+            readHistoryData ? json = JSON.parse(readHistoryData) : json = {};
+            json[word] = id;
+            localStorage.setItem("readHistory", JSON.stringify(json));
         },
         imgs: (dom = document) => {
             let contentKey = fun.attr(".disData", "contentKey", dom);
@@ -11230,6 +11236,14 @@ a:has(>div>div>img),
                 ".comicContent-list"
             ]
         }) && comicInfiniteScrollMode == 1,
+        setReadHistory: () => {
+            let readHistoryData = localStorage.getItem("readHistory");
+            let [, , word, , id] = new URL(document.URL).pathname.split("/");
+            let json;
+            readHistoryData ? json = JSON.parse(readHistoryData) : json = {};
+            json[word] = id;
+            localStorage.setItem("readHistory", JSON.stringify(json));
+        },
         getSrcs: (dom) => {
             let contentKey = fun.attr(".disData", "contentKey", dom);
             let srcs = fun.cm_decrypt(contentKey).map(e => e.url.replace("800x.", "1500x."));
@@ -11248,6 +11262,7 @@ a:has(>div>div>img),
             tE.append(...imgs);
             fun.remove(".comicContent-list");
             await fun.lazyload();
+            _this.setReadHistory();
         },
         autoPager: {
             ele: (dom) => _this.getImgs(dom),
@@ -11256,9 +11271,61 @@ a:has(>div>div>img),
             next: "//a[text()='下一話'][starts-with(@href,'/')]",
             title: (dom) => dom.title.replace(/ - 熱辣漫畫.+$/, ""),
             re: ".header,.footer",
-            preloadNextPage: 1
+            preloadNextPage: 1,
+            aF: () => _this.setReadHistory()
         },
         category: "comic autoPager"
+    }, {
+        name: "熱辣漫畫 目錄頁",
+        reg: () => fun.checkUrl({
+            h: [
+                /^(www\.)?relamanhua\.org$/,
+                "www.2024manga.com"
+            ],
+            p: /^\/comic\/\w+$/
+        }),
+        init: async () => {
+            await fun.waitEle(".tab-pane.show.active a");
+            const updateLastChapter = () => {
+                let [, , comic] = fun.lp.split("/");
+                let readHistoryData = localStorage.getItem("readHistory");
+                if (!!readHistoryData) {
+                    let json = JSON.parse(readHistoryData);
+                    if (comic in json) {
+                        let selector = `.tab-content a[href$="${json[comic]}"]`;
+                        fun.gae(".lastchapter").forEach(a => a.classList.remove("lastchapter"));
+                        fun.gae(selector).forEach(a => a.classList.add("lastchapter"));
+                        setTimeout(() => {
+                            let lastReadUrl = fun.lp + "/chapter/" + json[comic];
+                            let lastText = fun.ge(".lastchapter").title;
+                            let lastE = fun.ge("#lastRead");
+                            if (!lastE && !fun.ge("//span[contains(text(),'最後閱讀')]")) {
+                                let a = document.createElement("a");
+                                a.id = "lastRead";
+                                a.target = "_blank";
+                                let tableRight = fun.ge(".table-default-right");
+                                tableRight.insertAdjacentElement("afterbegin", a);
+                                const span = document.createElement("span");
+                                span.innerText = "最後閱讀：";
+                                tableRight.insertAdjacentElement("afterbegin", span);
+                                a.href = lastReadUrl;
+                                a.innerText = lastText;
+                            } else if (!!lastE) {
+                                let a = lastE;
+                                a.href = lastReadUrl;
+                                a.innerText = lastText;
+                            }
+                        }, 200);
+                    }
+                }
+            };
+            updateLastChapter();
+            document.addEventListener("visibilitychange", updateLastChapter);
+            if ("aboutBlank" in _unsafeWindow) _unsafeWindow.aboutBlank = null;
+            setTimeout(() => fun.clearAllTimer(3), 1000);
+        },
+        css: ".lastchapter{color:#fff !important;background:#ff0000}.comicDetailAds{display:none!important;}",
+        category: "none"
     }, {
         name: "熱辣漫畫M",
         reg: () => fun.checkUrl({
