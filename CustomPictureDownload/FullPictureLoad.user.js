@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.16
+// @version            2.8.17
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -6113,7 +6113,7 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "4KHD",
-        host: ["www.4khd.com", "nofzwn.xxtt.info", "wztel.xxtt.info"],
+        host: ["www.4khd.com", "cfntz.xxtt.info", "ckdfv.xxtt.info", "svqds.xxtt.info"],
         reg: () => fun.checkUrl({
             e: "//a[@rel='home'][text()='4KHD']",
             p: /^\/content\/\d+\/[^\.\/]+\.html$/
@@ -6122,10 +6122,14 @@ a:has(>div>div>img),
             thumbnailSrcArray = await fun.getImgA("figure.wp-block-image>a>img,#basicExample>a>img,.entry-content>p>a>img", ".page-link-box a").then(arr => arr.map(e => e.replace(/\?w=\d+$/, "?w=100")));
             let bigSrcArray = thumbnailSrcArray.map(e => e.replace(/\/w\d+-rw\//, "/w7680-rw/").replace("?w=100", ""));
             if (fun.lh === "www.4khd.com") {
+                if (bigSrcArray[0].startsWith("https://img.4khd.com")) {
+                    let host = new URL(bigSrcArray[0]).host;
+                    return bigSrcArray.map(src => src.replace(host, "i0.wp.com/" + host));
+                }
                 return bigSrcArray;
             } else {
                 let oldImgOrigin = new URL(bigSrcArray[0]).origin;
-                let newImgOrigin = "https://i0.wp.com/pic.4khd.com";
+                let newImgOrigin = "https://i0.wp.com/img.4khd.com";
                 return bigSrcArray.map(src => src.replace(oldImgOrigin, newImgOrigin));
             }
         },
@@ -8173,7 +8177,8 @@ a:has(>div>div>img),
                     return src.replace("/t/", "/i/");
                 } else {
                     await fun.delay(100 * i, 0);
-                    return fetch(a.href).then(res => res.text()).then(text => {
+                    return fetch(a.href).then(res => res.text()).then(async text => {
+                        await fun.delay(200 * i, 0);
                         let id = a.href.split("/").at(-1);
                         let spirit = fun.run(text.match(/var\sspirit\s?=\s?([^;]+);/)[1]);
                         let api = `/backend.php?&spirit=${spirit}&photo=${id}`;
@@ -15743,9 +15748,9 @@ a:has(>div>div>img),
                         let f = ge("footer>article");
                         let item = ge("footer>article>div:nth-child(2)");
                         item.querySelectorAll("a").forEach(a => a.classList.add("MuiButton-containedPrimary"));
-                        let p = gx("//a[span[text()='上一话' or text()='上一話'] and contains(@href,'reads')]");
+                        let p = gx("//a[span[text()='上一话' or text()='上一話'] and contains(@href,'/reads/')]");
                         if (p) p.classList.add("MuiButton-containedPrimary");
-                        let n = gx("//a[span[text()='下一话' or text()='下一話'] and contains(@href,'readMore')]");
+                        let n = gx("//a[span[text()='下一话' or text()='下一話'] and contains(@href,'/readMore/')]");
                         if (n) {
                             n.classList.remove("MuiButton-containedPrimary");
                             n.firstChild.innerText = "^_^感谢您的阅读~已经没有下一话了哦~";
@@ -15753,13 +15758,14 @@ a:has(>div>div>img),
                     }
                 }).observe(ge('#page-area'));
             }
+            await fun.waitEle("footer a[href^='/reads/'],footer a[href^='/readMore/']");
         },
         imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url) : [],
         referrerpolicy: "origin",
         button: [4],
         insertImg: ["//article[div[contains(@id,'imageLoader')]]", 3],
         autoDownload: [0],
-        next: "//a[span[text()='下一話' or text()='下一话']][contains(@href,'reads')]",
+        next: "//a[span[text()='下一話' or text()='下一话']][contains(@href,'/reads/')]",
         prev: "//a[span[text()='上一話' or text()='上一话']]",
         customTitle: () => siteJson.data.manga_name + " - " + siteJson.data.chapter_name,
         preloadNext: async (nextDoc, obj) => {
@@ -21075,6 +21081,8 @@ if ("xx" in window) {
     }
 
     const hasTouchEvents = (() => ("ontouchstart" in _unsafeWindow) || (_unsafeWindow.navigator.maxTouchPoints > 0) || (_unsafeWindow.navigator.msMaxTouchPoints > 0))();
+    const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
+    const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
     const isString = str => Object.prototype.toString.call(str) === "[object String]";
     const isNumber = num => Object.prototype.toString.call(num) === "[object Number]";
     const isBoolean = b => Object.prototype.toString.call(b) === "[object Boolean]";
@@ -21094,6 +21102,14 @@ if ("xx" in window) {
     const _GM_unregisterMenuCommand = (() => isFn(GM_unregisterMenuCommand) ? GM_unregisterMenuCommand : GM.unregisterMenuCommand)();
     const _GM_getResourceText = (() => isFn(GM_getResourceText) ? GM_getResourceText : GM.getResourceText)();
     const _GM_addElement = (() => isFn(GM_addElement) ? GM_addElement : GM.addElement)();
+
+    if (isXBrowser) {
+        debug("\n當前使用的是X瀏覽器");
+    }
+
+    if (isVia) {
+        debug("\n當前使用的是VIA瀏覽器");
+    }
 
     const JqueryJS = _GM_getResourceText("JqueryJS");
     const FancyboxV5JS = _GM_getResourceText("FancyboxV5JS");
@@ -21142,6 +21158,7 @@ if ("xx" in window) {
     }
     const FancyboxSlideshowTimeout = Number(_GM_getValue("FancyboxSlideshowTimeout", 3));
     const FancyboxSlideshowTimeoutNum = FancyboxSlideshowTimeout == 0 ? 500 : (FancyboxSlideshowTimeout * 1000);
+    const FancyboxSlideshowTransition = _GM_getValue("FancyboxSlideshowTransition", "fade");
 
     let FancyboxOptions;
     let slideIndex = null;
@@ -21159,6 +21176,9 @@ if ("xx" in window) {
             Slideshow: {
                 timeout: FancyboxSlideshowTimeoutNum,
             },
+            Carousel: {
+                transition: FancyboxSlideshowTransition,
+            },
             Thumbs: {
                 showOnStart: false
             },
@@ -21166,7 +21186,7 @@ if ("xx" in window) {
                 display: {
                     left: ["infobar"],
                     middle: ["flipX", "flipY"],
-                    right: [ /*"download", */ "iterateZoom", "slideshow", "thumbs", "close"]
+                    right: ["iterateZoom", "slideshow", "thumbs", "close"]
                 }
             },
             on: {
@@ -21199,6 +21219,9 @@ if ("xx" in window) {
             Slideshow: {
                 timeout: FancyboxSlideshowTimeoutNum,
             },
+            Carousel: {
+                transition: FancyboxSlideshowTransition,
+            },
             Thumbs: {
                 type: "classic",
                 showOnStart: false
@@ -21206,8 +21229,8 @@ if ("xx" in window) {
             Toolbar: {
                 display: {
                     left: ["infobar"],
-                    middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
-                    right: [ /*"download", */ "slideshow", "fullscreen", "thumbs", "close"]
+                    middle: ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                    right: ["slideshow", "fullscreen", "thumbs", "close"]
                 }
             },
             on: {
@@ -21390,6 +21413,7 @@ if ("xx" in window) {
                 str_145: "Fancybox5幻燈片播放時間間隔：",
                 str_146: "Fancybox5滾輪操作：",
                 str_147: "畫廊 (0、1、3) 滾輪操作：",
+                str_148: "Fancybox5幻燈片過場效果：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21400,6 +21424,12 @@ if ("xx" in window) {
                 FancyboxWheel: {
                     z: "縮放",
                     s: "滑動"
+                },
+                FancyboxTransition: {
+                    crossfade: "淡入淡出",
+                    fade: "淡出",
+                    slide: "滑動",
+                    classic: "經典"
                 },
                 ShadowGalleryWheel: {
                     d: "畫廊滾動",
@@ -21564,6 +21594,7 @@ if ("xx" in window) {
                 str_145: "Fancybox5幻灯片播放时间间隔：",
                 str_146: "Fancybox5滚轮操作：",
                 str_147: "画廊 (0、1、3) 滚轮操作：",
+                str_148: "Fancybox5幻灯片过场效果：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21574,6 +21605,12 @@ if ("xx" in window) {
                 FancyboxWheel: {
                     z: "缩放",
                     s: "滑动"
+                },
+                FancyboxTransition: {
+                    crossfade: "淡入淡出",
+                    fade: "淡出",
+                    slide: "滑动",
+                    classic: "经典"
                 },
                 ShadowGalleryWheel: {
                     d: "画廊滚动",
@@ -21737,6 +21774,7 @@ if ("xx" in window) {
                 str_145: "Fancybox5 Slideshow Play Delay：",
                 str_146: "Fancybox5 Wheel：",
                 str_147: "Gallery (0、1、3) Wheel：",
+                str_148: "Fancybox5 Slideshow Transition：",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -21747,6 +21785,12 @@ if ("xx" in window) {
                 FancyboxWheel: {
                     z: "zoom",
                     s: "slide"
+                },
+                FancyboxTransition: {
+                    crossfade: "crossfade",
+                    fade: "fade",
+                    slide: "slide",
+                    classic: "classic"
                 },
                 ShadowGalleryWheel: {
                     d: "Scroll",
@@ -24871,6 +24915,9 @@ if ("xx" in window) {
                     Slideshow: {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
+                    Carousel: {
+                        transition: FancyboxSlideshowTransition,
+                    },
                     Thumbs: {
                         type: "classic",
                         showOnStart: false
@@ -24906,6 +24953,9 @@ if ("xx" in window) {
                     Slideshow: {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
+                    Carousel: {
+                        transition: FancyboxSlideshowTransition,
+                    },
                     Thumbs: {
                         type: "classic",
                         showOnStart: false
@@ -24913,7 +24963,7 @@ if ("xx" in window) {
                     Toolbar: {
                         display: {
                             left: ["infobar"],
-                            middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                            middle: ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
                             right: ["slideshow", "fullscreen", "thumbs", "close"]
                         }
                     },
@@ -25082,7 +25132,6 @@ if ("xx" in window) {
         cm_decrypt: (raw) => {
             function initCypto() {
                 const c = [];
-
                 function r(i) {
                     if (c[i]) return c[i].exports;
                     c[i] = {
@@ -26120,6 +26169,7 @@ if ("xx" in window) {
         _GM_setValue("convertWebpToJpg", 0);
         _GM_setValue("FancyboxSlideshowTimeout", 3);
         _GM_setValue("FancyboxWheel", 1);
+        _GM_setValue("FancyboxSlideshowTransition", "fade");
     };
 
     //新分頁空白頁檢視圖片
@@ -26283,6 +26333,9 @@ if (hasTouchEvents) {
         Slideshow: {
             timeout: ${FancyboxSlideshowTimeoutNum},
         },
+        Carousel: {
+            transition: "${FancyboxSlideshowTransition}",
+        },
         Thumbs: {
             type: "classic",
             showOnStart: false
@@ -26342,6 +26395,9 @@ if (hasTouchEvents) {
         Slideshow: {
             timeout: ${FancyboxSlideshowTimeoutNum},
         },
+        Carousel: {
+            transition: "${FancyboxSlideshowTransition}",
+        },
         Thumbs: {
             type: "classic",
             showOnStart: false
@@ -26349,8 +26405,8 @@ if (hasTouchEvents) {
         Toolbar: {
             display: {
                 left: ["infobar"],
-                middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
-                right: ["download", "slideshow", "fullscreen", "thumbs", "close"]
+                middle: ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                right: ["slideshow", "fullscreen", "thumbs", "close"]
             }
         },
         on: {
@@ -26672,6 +26728,11 @@ function aspectRatio() {
             img.style.maxWidth = "98vw";
         }
     });
+    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+        imgs.forEach(e => (e.style.border = ""));
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
+    }
 }
 
 if (hasTouchEvents) {
@@ -27046,6 +27107,11 @@ function aspectRatio() {
             img.style.maxWidth = "98vw";
         }
     });
+    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+        imgs.forEach(e => (e.style.border = ""));
+        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
+    }
 }
 
 if (hasTouchEvents) {
@@ -27356,6 +27422,11 @@ if (config.ViewMode == 1) {
                     img.style.minWidth = "";
                 }
             });
+            if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+                imgs.forEach(e => (e.style.border = ""));
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
+            }
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
@@ -27618,6 +27689,9 @@ img.small {
                     Slideshow: {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
+                    Carousel: {
+                        transition: FancyboxSlideshowTransition,
+                    },
                     Thumbs: {
                         type: "classic",
                         showOnStart: false
@@ -27625,7 +27699,7 @@ img.small {
                     Toolbar: {
                         display: {
                             left: ["infobar"],
-                            middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                            middle: ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
                             right: ["slideshow", "fullscreen", "thumbs", "close"]
                         }
                     },
@@ -27937,6 +28011,11 @@ img.small {
                     img.style.minWidth = "";
                 }
             });
+            if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+                imgs.forEach(e => (e.style.border = ""));
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
+            }
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
@@ -28209,13 +28288,22 @@ img.small {
                             Slideshow: {
                                 timeout: FancyboxSlideshowTimeoutNum,
                             },
+                            Carousel: {
+                                classes: {
+                                    "container": "fancybox__carousel",
+                                    "viewport": "fancybox__viewport",
+                                    "track": "fancybox__track",
+                                    "slide": "fancybox__slide"
+                                },
+                                transition: FancyboxSlideshowTransition
+                            },
                             Thumbs: {
                                 showOnStart: false
                             },
                             Toolbar: {
                                 display: {
                                     left: ["infobar"],
-                                    middle: ["iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                                    middle: ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
                                     right: ["slideshow", "fullscreen", "thumbs", "close"]
                                 }
                             },
@@ -28808,6 +28896,12 @@ img.small {
         ${fun.arr(61, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
     </select>
 </div>
+<div id="FancyboxTransitionDIV" style="width: 348px; display: flex; margin-left: 6px;">
+    <label>※${displayLanguage.str_148}</label>
+    <select id="FancyboxTransition">
+        ${Object.keys(displayLanguage.FancyboxTransition).map((k) => `<option value="${k}">${displayLanguage.FancyboxTransition[k]}</option>`).join("")}
+    </select>
+</div>
 <div id="ComicDIV" style="width: 348px; display: none;">
     <input id="Comic" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_76}</label>
@@ -28883,6 +28977,7 @@ img.small {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
+            ge("#FancyboxTransitionDIV", main).style.display = "none";
         }
         if (isBoolean(siteData.SPA)) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
@@ -28893,10 +28988,12 @@ img.small {
             ge("#FancyboxDIV", main).style.display = "none";
             ge("#FancyboxSlideshowTimeoutDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
+            ge("#FancyboxTransitionDIV", main).style.display = "none";
         } else {
             ge("#Fancybox", main).checked = options.fancybox == 1 ? true : false;
             ge("#FancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
             ge("#FancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
+            ge("#FancyboxTransition", main).value = _GM_getValue("FancyboxSlideshowTransition", "fade");
         }
         ge("#Zoom", main).value = options.zoom;
         siteData.category == "comic" ? ge("#Column", main).value = 2 : ge("#Column", main).value = options.column;
@@ -28943,6 +29040,7 @@ img.small {
             options.fancybox = ge("#Fancybox", main).checked == true ? 1 : 0;
             _GM_setValue("FancyboxSlideshowTimeout", ge("#FancyboxSlideshowTimeout", main).value);
             _GM_setValue("FancyboxWheel", ge("#FancyboxWheel", main).value);
+            _GM_setValue("FancyboxSlideshowTransition", ge("#FancyboxTransition", main).value);
             options.zoom = ge("#Zoom", main).value;
             options.column = ge("#Column", main).value;
             options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
@@ -29807,7 +29905,6 @@ a[data-fancybox]:hover {
             Fancyboxl10nV5();
             fun.css(FancyboxV5Css);
         }
-
         if ("imgs" in siteData) {
             debug("\nCSS/Xpath/JS選擇器：" + siteData.imgs);
         }
@@ -30159,7 +30256,7 @@ a[data-fancybox]:hover {
                 }
             }
         }
-        if (options.shadowGallery == 1 && options.autoDownload != 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
+        if (options.shadowGallery == 1 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 if (await siteData.SPA()) {
                     setTimeout(() => createShadowGallery(), 200);
@@ -30501,8 +30598,8 @@ html,body {
             right: "0",
             top: "0",
             bottom: "0",
-            width: "99vw",
-            height: "98vh",
+            width: "99%",
+            height: "98%",
             margin: "auto",
             padding: "10px",
             position: "fixed",
