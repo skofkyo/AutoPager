@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.17
+// @version            2.8.18
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -76,6 +76,7 @@
         fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
         shadowGallery: 0 //自動進入影子畫廊，1：自動、0：手動
     };
+    const FullPictureLoadShowEye = localStorage.getItem("FullPictureLoadShowEye") ?? 1;
     const FullPictureLoadCustomDownloadVideo = localStorage.getItem("FullPictureLoadCustomDownloadVideo") ?? 1;
     let options = defaultOptions;
 
@@ -112,6 +113,7 @@
     let httpFetchError = false;
     let currentPageNum = 0;
     let nextLink = null;
+    let nextElement = null;
     let tempNextLink = null;
     let tempEles = [];
     const PC_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
@@ -2920,12 +2922,14 @@ a:has(>div>div>img),
                 _unsafeWindow.onresize = null;
                 fun.clearAllTimer(3);
             }
-            let p = fun.ge("#image_div>p");
-            if (p) {
-                let a = fun.ge("a", p);
-                if (!a) {
-                    tempEles.push(p);
-                }
+            let ps = fun.gae("#image_div>p");
+            if (ps.length > 0) {
+                ps.forEach(p => {
+                    let a = fun.ge("a", p);
+                    if (!a) {
+                        tempEles.push(p);
+                    }
+                });
             }
         },
         imgs: () => {
@@ -2957,6 +2961,7 @@ a:has(>div>div>img),
                 /（\d+月\d+打赏群(自购)?资源）/
             ]
         }),
+        css: ".content_left>p{margin:0}",
         category: "nsfw1"
     }, {
         name: "14MM图片网",
@@ -4506,7 +4511,7 @@ a:has(>div>div>img),
             if (location.href.split("/").length === 4 && !fun.lh.includes("bestthots")) {
                 location.href = location.href + "/photo";
             } else {
-                fun.ge("#photos-tab").click();
+                EClick("#photos-tab");
             }
         },
         imgs: async () => {
@@ -5339,7 +5344,7 @@ a:has(>div>div>img),
             await fun.wait(() => {
                 let button = fun.ge("//button[text()='加载更多' or text()='More']");
                 if (!!button) {
-                    button.click();
+                    EClick(button);
                 }
                 return !button;
             });
@@ -15784,7 +15789,7 @@ a:has(>div>div>img),
             window.addEventListener("load", async () => {
                 await fun.delay(1000, 0);
                 if (fun.ge("//div[contains(text(),'给本王显示全部章节')]")) {
-                    fun.ge('#expandButton').click();
+                    EClick("#expandButton");
                 }
             });
         },
@@ -20545,12 +20550,12 @@ if ("xx" in window) {
             }
             if (hasTouchEvents) {
                 if (["xmanhua", "yymanhua"].some(h => fun.lh.includes(h)) && fun.ge("//a[text()='章節']")) {
-                    fun.ge("//a[text()='章節']").click();
+                    EClick("//a[text()='章節']");
                 }
             }
             if (fun.lh.includes("haoguoman")) {
                 setTimeout(() => {
-                    fun.ge(".j-chapter-more")?.click();
+                    EClick(".j-chapter-more");
                 }, 1500);
             }
         },
@@ -20597,7 +20602,7 @@ if ("xx" in window) {
             let t = fun.ge("title");
             t.innerText = t.innerText.replace(/-\sSupjav.com.+/, "").trim();
             let ele = "#vserver.play-button";
-            if (await fun.waitEle(ele)) fun.ge(ele).click();
+            if (await fun.waitEle(ele)) EClick(ele);
         },
         category: "none"
     }, {
@@ -20606,7 +20611,7 @@ if ("xx" in window) {
         reg: /^https?:\/\/ouo\./,
         init: async () => {
             let ele = "#btn-main:not(.disabled)";
-            if (await fun.waitEle(ele)) fun.ge(ele).click();
+            if (await fun.waitEle(ele)) EClick(ele);
         },
         category: "none"
     }, {
@@ -20615,7 +20620,7 @@ if ("xx" in window) {
         reg: /^https?:\/\/cutt?y\.(io|app)\/\w+/i,
         init: async () => {
             let ele = "//button[@id='submit-button' and text()= 'Continue' or text()= 'I am not a robot' or text()= 'Go ->']";
-            if (await fun.waitEle(ele)) fun.ge(ele).click();
+            if (await fun.waitEle(ele)) EClick(ele);
         },
         category: "none"
     }, {
@@ -20638,7 +20643,7 @@ if ("xx" in window) {
             let selectorArr = ["#output:not([style*=none]) button", "#gotolink:not([disabled])"];
             for (let selector of selectorArr) {
                 await fun.waitEle(selector);
-                fun.ge(selector).click();
+                EClick(selector);
                 await fun.delay(200);
             }
         },
@@ -20650,7 +20655,7 @@ if ("xx" in window) {
         init: async () => {
             let ele = ".btn.active";
             setInterval(async () => {
-                if (await fun.waitEle(ele)) fun.ge(ele).click();
+                if (await fun.waitEle(ele)) EClick(ele);
             }, 1000);
         },
         category: "none"
@@ -20677,7 +20682,7 @@ if ("xx" in window) {
         host: ["stfly.me"],
         reg: () => fun.ge("img[src^='https://stfly.me/']") ? true : false,
         init: async () => {
-            if (await fun.waitEle(".btn-captcha:not(.disable)")) setInterval(() => fun.ge(".btn-captcha:not(.disable)").click(), 3000);
+            if (await fun.waitEle(".btn-captcha:not(.disable)")) setInterval(() => EClick(".btn-captcha:not(.disable)"), 3000);
         },
         category: "none"
     }, {
@@ -20685,7 +20690,7 @@ if ("xx" in window) {
         host: ["link1s.com"],
         reg: () => fun.ge("a.site-logo[href='https://link1s.com/'],a.logo-image[href='https://link1s.com/']") ? true : false,
         init: async () => {
-            if (await fun.waitEle("//button[@onclick='link1sgo()'] | //button[@id='link' and contains(@style,'none')] | //a[text()='Get Link']")) fun.ge("//button[@onclick='link1sgo()'] | //a[@id='link1s'] | //a[text()='Get Link']").click();
+            if (await fun.waitEle("//button[@onclick='link1sgo()'] | //button[@id='link' and contains(@style,'none')] | //a[text()='Get Link']")) EClick("//button[@onclick='link1sgo()'] | //a[@id='link1s'] | //a[text()='Get Link']");
         },
         category: "none"
     }, {
@@ -20783,7 +20788,7 @@ if ("xx" in window) {
                         let elePath = ele.querySelector("span>svg>path");
                         if (elePath) {
                             let d = elePath.getAttribute("d");
-                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") ele.click();
+                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") EClick(ele);
                             await fun.delay(1000, 0);
                         }
                     } catch {}
@@ -20792,7 +20797,7 @@ if ("xx" in window) {
                     let elePath = ele.querySelector("span>svg>path");
                     if (elePath) {
                         let d = elePath.getAttribute("d");
-                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") ele.click();
+                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") EClick(ele);
                     }
                 });
             };
@@ -21388,7 +21393,7 @@ if ("xx" in window) {
                 str_120: "此網站分頁畫廊使用ViewerJs插件",
                 str_121: "關閉頁面容器圖片導覽快捷鍵",
                 str_122: "此漫畫站使用無限滾動閱讀模式",
-                str_123: "此網站顯示眼睛圖示和圖片數量",
+                str_123: "顯示右下捕獲之眼圖示",
                 str_124: "此網站下載影片",
                 str_125: "🧹 重置此網站儲存的所有腳本設定",
                 str_126: "🧹 重置腳本儲存的所有全局設定",
@@ -21422,8 +21427,8 @@ if ("xx" in window) {
                     default: hasTouchEvents ? "預設模式" : "預設模式 (0,R)",
                 },
                 FancyboxWheel: {
-                    z: "縮放",
-                    s: "滑動"
+                    z: "圖片縮放",
+                    s: "圖片切換"
                 },
                 FancyboxTransition: {
                     crossfade: "淡入淡出",
@@ -21433,7 +21438,7 @@ if ("xx" in window) {
                 },
                 ShadowGalleryWheel: {
                     d: "畫廊滾動",
-                    t: "切換圖片"
+                    t: "圖片切換"
                 }
             };
             break;
@@ -21569,7 +21574,7 @@ if ("xx" in window) {
                 str_120: "此网站标签画廊使用ViewerJs插件",
                 str_121: "关闭页面容器图片导览快捷键",
                 str_122: "此漫画站使用无限滚动阅读模式",
-                str_123: "此网站显示眼睛图标和图片数量",
+                str_123: "显示右下捕获之眼图标",
                 str_124: "此网站下载视频",
                 str_125: "🧹 重置此网站存储的所有脚本设置",
                 str_126: "🧹 重置脚本存储的所有全局设置",
@@ -21603,8 +21608,8 @@ if ("xx" in window) {
                     default: hasTouchEvents ? "默认模式" : "默认模式 (0,R)",
                 },
                 FancyboxWheel: {
-                    z: "缩放",
-                    s: "滑动"
+                    z: "图片缩放",
+                    s: "图片切换"
                 },
                 FancyboxTransition: {
                     crossfade: "淡入淡出",
@@ -21614,7 +21619,7 @@ if ("xx" in window) {
                 },
                 ShadowGalleryWheel: {
                     d: "画廊滚动",
-                    t: "切换图片"
+                    t: "图片切换"
                 }
             };
             break;
@@ -21748,7 +21753,7 @@ if ("xx" in window) {
                 str_120: "This Website New Tab View uses ViewerJs Plug-in",
                 str_121: "Turn Off Page Content Image Navigation Shortcut Keys",
                 str_122: "This website uses Infinite Scroll Read Mode",
-                str_123: "This website Show eye icon and picture number",
+                str_123: "Show Capture Eye Icon",
                 str_124: "This website downloads videos",
                 str_125: "🧹 Reset all script settings stored on this site",
                 str_126: "🧹 Reset all saved global settings",
@@ -25132,6 +25137,7 @@ if ("xx" in window) {
         cm_decrypt: (raw) => {
             function initCypto() {
                 const c = [];
+
                 function r(i) {
                     if (c[i]) return c[i].exports;
                     c[i] = {
@@ -25492,7 +25498,7 @@ if ("xx" in window) {
                     location.href = ele;
                 } else {
                     fun.showMsg(displayLanguage.str_35);
-                    ele.click();
+                    EClick(ele);
                 }
             }, max * 1000);
         } else if (!ele && start == 1 || !ele && options.autoDownload == 1) {
@@ -26092,8 +26098,7 @@ if ("xx" in window) {
                                         let next = fun.ge(siteData.next);
                                         if (next) {
                                             fun.showMsg(displayLanguage.str_95, 3000);
-                                            //next.click();
-                                            elementClick(next);
+                                            EClick(next);
                                         } else {
                                             imgsNum = 0 - column;
                                             fun.showMsg(displayLanguage.str_96, 3000);
@@ -26161,9 +26166,19 @@ if ("xx" in window) {
     };
 
     const setDefault = () => {
-        localStorage.removeItem("FullPictureLoadOptions");
-        localStorage.removeItem("FullPictureLoadCustomDownloadVideo");
-        localStorage.removeItem("newWindowData");
+        const keys = [
+            "newTabViewLightGallery",
+            "newWindowData",
+            "FullPictureLoadComicInfiniteScrollMode",
+            "FullPictureLoadOptions",
+            "FullPictureLoadCustomDownloadVideo",
+            "FullPictureLoadShowEye"
+        ];
+        for (const key of keys) {
+            if (!!localStorage.getItem(key)) {
+                localStorage.removeItem(key);
+            }
+        }
         _GM_setValue("FullPictureLoadMsgPos", 0);
         _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
         _GM_setValue("convertWebpToJpg", 0);
@@ -26175,7 +26190,7 @@ if ("xx" in window) {
     //新分頁空白頁檢視圖片
     const newTabView = async () => {
 
-        if (isFetching || "eye" in siteData && siteData.eye === 0) return;
+        if (isDragging || isFetching || "eye" in siteData && siteData.eye === 0) return;
 
         const config = getConfig();
 
@@ -27730,9 +27745,48 @@ img.small {
                     }
                 });
             }
-            if (nextLink) {
+            if (isString(nextLink)) {
                 let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</a></div>`;
                 mainElement.insertAdjacentHTML("beforeend", html);
+                if (config.ViewMode == 4) {
+                    const next = ge("#next", mainElement);
+                    let isEvent = false;
+                    let dNum = 0;
+                    const nextObserver = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                nextButtonIsShown = true;
+                                next.style.border = "solid #32a1ce";
+                                if (!isEvent) {
+                                    isEvent = true;
+                                    FullPictureLoadShadowGallery.addEventListener("wheel", (event) => {
+                                        if (event.ctrlKey || event.altKey || event.shiftKey) return;
+                                        if (event.deltaY < 0) {
+                                            dNum = 0;
+                                            next.style.border = "";
+                                            nextButtonIsShown = false;
+                                        } else if (event.deltaY > 0 && nextButtonIsShown) {
+                                            dNum++;
+                                            if (dNum > 1) {
+                                                next.style.backgroundColor = "gray";
+                                                return setTimeout(() => (location.href = nextLink), 500);
+                                            }
+                                        }
+                                    }, {
+                                        passive: false
+                                    });
+                                }
+                            } else {
+                                dNum = 0;
+                                next.style.border = "";
+                                nextButtonIsShown = false;
+                            }
+                        });
+                    }, {
+                        threshold: 0.9,
+                    });
+                    nextObserver.observe(next);
+                }
             }
         }
 
@@ -28335,9 +28389,48 @@ img.small {
                     });
                 });
             }
-            if (nextLink) {
+            if (isString(nextLink)) {
                 let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</a></div>`;
                 mainElement.insertAdjacentHTML("beforeend", html);
+                if (config.ViewMode == 4) {
+                    const next = ge("#next", mainElement);
+                    let isEvent = false;
+                    let dNum = 0;
+                    const nextObserver = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                nextButtonIsShown = true;
+                                next.style.border = "solid #32a1ce";
+                                if (!isEvent) {
+                                    isEvent = true;
+                                    dom.addEventListener("wheel", (event) => {
+                                        if (event.ctrlKey || event.altKey || event.shiftKey) return;
+                                        if (event.deltaY < 0) {
+                                            dNum = 0;
+                                            next.style.border = "";
+                                            nextButtonIsShown = false;
+                                        } else if (event.deltaY > 0 && nextButtonIsShown) {
+                                            dNum++;
+                                            if (dNum > 1) {
+                                                next.style.backgroundColor = "gray";
+                                                return setTimeout(() => (location.href = nextLink), 500);
+                                            }
+                                        }
+                                    }, {
+                                        passive: false
+                                    });
+                                }
+                            } else {
+                                dNum = 0;
+                                next.style.border = "";
+                                nextButtonIsShown = false;
+                            }
+                        });
+                    }, {
+                        threshold: 0.9,
+                    });
+                    nextObserver.observe(next);
+                }
             }
         }
 
@@ -28433,17 +28526,25 @@ img.small {
     };
 
     //創建新分頁檢視眼睛圖示按鈕和圖片數量元素
+    let imgDown = false;
+    let isDragging = false;
+    let isDraggEvent = false;
+    let startX, startY, startLeft, startTop;
     const addnewTabViewButton = () => {
         if (ge("#FullPictureLoadEye")) return;
         isAddnewTabViewButton = true;
         let img = new Image();
         img.id = "FullPictureLoadEye";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
+        img.style.bottom = "24px";
+        img.style.right = "24px";
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => newTabView());
         document.body.append(img);
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenuB";
+        menuDiv.style.bottom = "22px";
+        menuDiv.style.right = "64px";
         const menuObj = [{
             id: "FullPictureLoadCaptureNum",
             text: "0",
@@ -28483,6 +28584,90 @@ img.small {
         };
         [...menuObj].forEach(obj => createMenu(obj));
         document.body.append(menuDiv);
+
+        const getXY = (event) => {
+            let x, y;
+            if (event.type.includes("mouse")) {
+                x = event.clientX;
+                y = event.clientY;
+            } else {
+                x = event.changedTouches[0].clientX;
+                y = event.changedTouches[0].clientY;
+            }
+            return {
+                x: x,
+                y: y
+            }
+        };
+
+        const downEvent = (event) => {
+            const obj = getXY(event);
+            imgDown = true;
+            startX = obj.x;
+            startY = obj.y;
+            startLeft = img.offsetLeft;
+            startTop = img.offsetTop;
+        };
+
+        const moveEvent = (event) => {
+            if (!imgDown) return;
+            event.preventDefault();
+            const obj = getXY(event);
+            isDragging = true;
+            const dx = obj.x - startX;
+            const dy = obj.y - startY;
+            img.style.top = startTop + dy + "px";
+            img.style.bottom = "auto";
+            img.style.left = startLeft + dx + "px";
+            img.style.right = "auto";
+            menuDiv.style.top = (img.offsetTop - ((menuDiv.offsetHeight - 32) / 2)) + "px";
+            menuDiv.style.bottom = "auto";
+            menuDiv.style.left = (img.offsetLeft - (menuDiv.offsetWidth + 10)) + "px";
+            menuDiv.style.right = "auto";
+        };
+
+        let upEvent = (event) => {
+            imgDown = false;
+            setTimeout(() => {
+                isDragging = false;
+            }, 100);
+        };
+
+        let resizeEvent = () => {
+            img.style.top = "auto";
+            img.style.bottom = "24px";
+            img.style.left = "auto";
+            img.style.right = "24px";
+            menuDiv.style.top = "auto";
+            menuDiv.style.bottom = "22px";
+            menuDiv.style.left = "auto";
+            menuDiv.style.right = "64px";
+        };
+
+        if (hasTouchEvents) {
+            img.addEventListener('touchstart', downEvent, {
+                passive: false,
+                capture: true
+            });
+            if (!isDraggEvent) {
+                isDraggEvent = true;
+                document.addEventListener("touchmove", moveEvent, {
+                    passive: false,
+                    capture: true
+                });
+                document.addEventListener("touchend", upEvent);
+                _unsafeWindow.addEventListener("resize", resizeEvent);
+            }
+        } else {
+            img.addEventListener("mousedown", downEvent);
+            if (!isDraggEvent) {
+                isDraggEvent = true;
+                document.addEventListener("mousemove", moveEvent);
+                document.addEventListener("mouseup", upEvent);
+                _unsafeWindow.addEventListener("resize", resizeEvent);
+            }
+        }
+
     };
 
     //清除圖片縮放級別
@@ -28683,21 +28868,22 @@ img.small {
     };
 
     //元素模擬點擊
-    const elementClick = ele => {
-        const dispatchTouchEvent = (_ele, type) => {
-            let touchEvent = document.createEvent("UIEvent");
-            touchEvent.initUIEvent(type, true, true);
-            touchEvent.touches = [{
-                clientX: 1,
-                clientY: 1
-            }];
-            _ele.dispatchEvent(touchEvent);
-        };
-        if (hasTouchEvents) {
-            dispatchTouchEvent(ele, "touchstart");
-            dispatchTouchEvent(ele, "touchend");
+    const EClick = obj => {
+        const event = new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: _unsafeWindow
+        });
+        if (isEle(obj)) {
+            obj.dispatchEvent(event);
+        } else if (isString(obj)) {
+            let ele = fun.ge(obj);
+            if (isEle(ele)) {
+                ele.dispatchEvent(event);
+            } else {
+                console.error("EClick點擊元素參數錯誤", obj);
+            }
         }
-        ele.click();
     };
 
     //創建返回頂部按鈕
@@ -28840,6 +29026,10 @@ img.small {
     <input id="icon" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_69}</label>
 </div>
+<div id="ShowEyeDIV" style="width: 348px; display: none;">
+    <input id="ShowEye" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_123}</label>
+</div>
 <div id="ShowFixedMenuDIV" style="width: 348px; display: flex;">
     <input id="ShowFixedMenu" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>※${displayLanguage.str_117}</label>
@@ -28960,6 +29150,10 @@ img.small {
         ge("#Countdown", main).value = options.autoDownloadCountdown;
         ge("#Comic", main).checked = options.comic == 1 ? true : false;
         ge("#Double", main).checked = options.doubleTouchNext == 1 ? true : false;
+        if (siteData.category != "lazyLoad" && ("capture" in siteData)) {
+            ge("#ShowEyeDIV", main).style.display = "flex";
+            ge("#ShowEye", main).checked = FullPictureLoadShowEye == 1 ? true : false;
+        }
         if ("insertImg" in siteData) {
             const [, insertMode] = siteData.insertImg;
             if (![1, 2].some(n => n == insertMode)) {
@@ -28977,7 +29171,6 @@ img.small {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
-            ge("#FancyboxTransitionDIV", main).style.display = "none";
         }
         if (isBoolean(siteData.SPA)) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
@@ -29047,6 +29240,9 @@ img.small {
             options.shadowGallery = ge("#ShadowGalleryMode", main).checked == true ? 1 : 0;
             config.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
             saveConfig(config);
+            if (siteData.category != "lazyLoad" && ("capture" in siteData)) {
+                ge("#ShowEye", main).checked == true ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
+            }
             if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
                 ge("#CustomDownloadVideo", main).checked == true ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
             }
@@ -29089,7 +29285,6 @@ img.small {
     `;
     }
 
-    const favor_columns = hasTouchEvents ? "1fr 1fr 1fr" : "1fr 1fr 1fr 1fr";
     const FullPictureLoadStyle = `
 .fancybox-container,.fancybox__container {
     z-index: 2147483647 !important;
@@ -29142,10 +29337,8 @@ img.small {
 }
 
 #FullPictureLoadEye {
-    bottom: 24px !important;
-    display: block !important;
     position: fixed !important;
-    right: 24px !important;
+    display: block !important;
     width: 32px !important;
     height: 32px !important;
     border-radius: unset !important;
@@ -29210,10 +29403,9 @@ img.small {
     color: #000000 !important;
     width: 112px !important;
     height: auto !important;
+    min-height: 29px !important;
     padding: 5px 5px 2px 5px !important;
     position: fixed !important;
-    right: 64px !important;
-    bottom: 22px !important;
     border: #ccc 1px solid !important;
     border-radius: 3px !important;
     background-color: #fff !important;
@@ -29662,6 +29854,7 @@ a[data-fancybox]:hover {
             fun.showMsg(displayLanguage.str_118);
             debug("圖集新標題", newTitle || customTitle);
         }
+        if (event.ctrlKey || event.altKey || event.shiftKey) return;
         if (event.code === "KeyG") { //G鍵
             return createShadowGallery();
         }
@@ -29752,8 +29945,12 @@ a[data-fancybox]:hover {
                         if (/^http/.test(tempLink.href)) {
                             nextLink = tempLink.href;
                             return tempLink;
+                        } else {
+                            nextElement = tempLink;
                         }
                     } catch {}
+                } else if (isEle(tempLink)) {
+                    nextElement = tempLink;
                 }
             }
         } catch {}
@@ -30083,14 +30280,13 @@ a[data-fancybox]:hover {
                     if (isString(nextE)) {
                         location.href = nextE;
                     } else if (isEle(nextE)) {
-                        elementClick(nextE);
+                        EClick(nextE);
                     } else {
                         fun.showMsg(displayLanguage.str_37);
                     }
                 } else if (isString(next)) {
                     if (isEle(nextE)) {
-                        //link.click();
-                        elementClick(nextE);
+                        EClick(nextE);
                         fun.showMsg(displayLanguage.str_35);
                     } else {
                         fun.showMsg(displayLanguage.str_37);
@@ -30118,8 +30314,7 @@ a[data-fancybox]:hover {
                     }
                     let ele = fun.ge(prev);
                     if (ele) {
-                        //ele.click();
-                        elementClick(ele);
+                        EClick(ele);
                         fun.showMsg(displayLanguage.str_39);
                     } else {
                         fun.showMsg(displayLanguage.str_40);
@@ -30134,14 +30329,14 @@ a[data-fancybox]:hover {
                 setTimeout(() => {
                     let ele = fun.ge(selector);
                     if (ele) {
-                        elementClick(ele);
+                        EClick(ele);
                         debug(`\n圖片全載autoClick("${selector}")`, ele);
                     }
                 }, delay ?? 1000);
             } else if (isString(autoClick)) {
                 let ele = fun.ge(autoClick);
                 if (!!ele) {
-                    elementClick(ele);
+                    EClick(ele);
                     debug(`\n圖片全載autoClick("${autoClick}")`, ele);
                 }
             }
@@ -30163,7 +30358,7 @@ a[data-fancybox]:hover {
                                 entries.forEach(entry => {
                                     if (entry.isIntersecting) {
                                         observer.unobserve(entry.target);
-                                        elementClick(entry.target);
+                                        EClick(entry.target);
                                         debug(`\n圖片全載observerClick("${selector}")\n`, entry.target);
                                         setTimeout(async () => {
                                             if (await fun.waitEle(selector, 30)) {
@@ -30186,7 +30381,7 @@ a[data-fancybox]:hover {
                     document.removeEventListener("scroll", callback);
                     const ele = fun.ge(selector);
                     if (!!ele) {
-                        elementClick(ele);
+                        EClick(ele);
                         debug(`圖片全載loadMore("${selector}")`);
                     }
                     setTimeout(async () => {
@@ -30424,15 +30619,6 @@ a[data-fancybox]:hover {
         }
     }, 1000);
 
-    let FullPictureLoadShowEye = localStorage.getItem("FullPictureLoadShowEye") ?? 1;
-
-    if (siteData.category != "lazyLoad" && !!siteData.capture) {
-        _GM_registerMenuCommand(FullPictureLoadShowEye == 0 ? "❌ " + displayLanguage.str_123 : "✔️  " + displayLanguage.str_123, () => {
-            FullPictureLoadShowEye == 0 ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
-            location.reload();
-        });
-    }
-
     //捕獲圖片網址
     const captureSrc = async (mutationList) => {
         if (isDownloading || isFetching) return;
@@ -30572,10 +30758,10 @@ html,body {
 }
 
 #editFavorDiv {
-    text-align: center !important;
+    text-align: center;
     background-color: #fafafa;
-    margin: 0 !important;
-    padding-top: 10px !important;
+    margin: 0;
+    padding-top: 6px;
 }
 
 .editFavorButton {
@@ -30613,17 +30799,31 @@ html,body {
         shadow.append(FavorSitesElement);
 
         const reSize_cb = () => {
+            const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
             let ul = ge("#FavorUl", shadow);
             if (ul) {
                 ul.style.gridTemplateColumns = `${fun.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
+                if (hasTouchEvents) {
+                    if (verticalScreen) {
+                        ul.style.width = "calc(100% - 5px)";
+                    } else {
+                        ul.style.width = "calc(100% - 2px)";
+                    }
+                }
             }
             let edit = ge("#editFavorDiv", shadow);
-            if (edit) {
-                edit.style.width = "calc(100% - 10px)";
-                edit.style.height = "calc(100% - 30px)";
-                let textarea = ge("#editFavorTextarea", shadow);
-                textarea.style.width = "calc(100% - 10px)";
-                textarea.style.height = "calc(100% - 30px)";
+            if (edit && hasTouchEvents) {
+                if (verticalScreen) {
+                    edit.style.width = "calc(100% - 18px)";
+                } else {
+                    edit.style.width = "calc(100% - 14px)";
+                }
+            } else if (edit) {
+                if (verticalScreen) {
+                    edit.style.width = "calc(100% - 2px)";
+                } else {
+                    edit.style.width = "calc(100% - 6px)";
+                }
             }
         };
 
@@ -30631,8 +30831,17 @@ html,body {
             let favorData = _GM_getValue("favorData", defaultFavor);
             let editFavorDiv = document.createElement("div");
             editFavorDiv.id = "editFavorDiv";
-            editFavorDiv.style.width = "calc(100% - 10px)";
-            editFavorDiv.style.height = "calc(100% - 30px)";
+            if (hasTouchEvents) {
+                const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
+                if (verticalScreen) {
+                    editFavorDiv.style.width = "calc(100% - 18px)";
+                } else {
+                    editFavorDiv.style.width = "calc(100% - 14px)";
+                }
+            } else {
+                editFavorDiv.style.width = "calc(100% - 6px)";
+            }
+            editFavorDiv.style.height = "calc(100% - 20px)";
             let textarea = document.createElement("textarea");
             textarea.id = "editFavorTextarea";
             textarea.style.width = "calc(100% - 10px)";
@@ -30671,9 +30880,15 @@ html,body {
             let favorData = _GM_getValue("favorData", defaultFavor);
             let FavorUl = document.createElement("ul");
             FavorUl.id = "FavorUl";
-            FavorUl.style.width = "calc(100% -40px)";
-            FavorUl.style.height = "calc(100% -40px)";
             FavorUl.style.gridTemplateColumns = `${fun.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
+            if (hasTouchEvents) {
+                const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
+                if (verticalScreen) {
+                    FavorUl.style.width = "calc(100% - 5px)";
+                } else {
+                    FavorUl.style.width = "calc(100% - 2px)";
+                }
+            }
             FavorSitesElement.appendChild(FavorUl);
             let favorDataArray = favorData.split("\n").filter(item => item);
             let textColor = "#000";
