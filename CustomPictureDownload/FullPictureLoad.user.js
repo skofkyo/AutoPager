@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.18
+// @version            2.8.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -10690,6 +10690,7 @@ a:has(>div>div>img),
         prev: "//p[contains(text(),'下一篇')]/a",
         customTitle: ".tit>h1,.grjs h1",
         css: ".tit+.text img{width:100%!important}.tit+.pic img{margin:auto!important}.mbx_nav~div:not([class]),body>em{display:none!important;}",
+        gallery: 1,
         category: "nsfw2"
     }, {
         name: "哔咔庇护所v2",
@@ -21314,7 +21315,7 @@ if ("xx" in window) {
                 str_47: "左鍵：進行下載打包壓縮\n中鍵：匯出網址URLs.txt文件\n右鍵：複製圖片網址和標題或手動模式聚集所有圖片",
                 str_48: "下載&壓縮中請稍後再操作！",
                 str_49: "獲取圖片中請稍後再操作！",
-                str_50: "",
+                str_50: "自訂網站收藏的網址在新分頁開啟",
                 str_51: "請輸入自訂壓縮檔資料夾名稱",
                 str_52: "聚圖數量",
                 str_53: "圖片繪製中...",
@@ -21495,7 +21496,7 @@ if ("xx" in window) {
                 str_47: "左键：进行下载打包压缩\n中键：导出网址URLs.txt文档\n右键：拷贝图片网址和标题或手动模式聚集所有图片",
                 str_48: "下载&压缩中请稍后再操作！",
                 str_49: "获取图片中请稍后再操作！",
-                str_50: "",
+                str_50: "自定义网站收藏的网址在新标籤页打开",
                 str_51: "请输入自定义压缩档文件夹名称",
                 str_52: "聚图数量",
                 str_53: "图片绘制中...",
@@ -21674,7 +21675,7 @@ if ("xx" in window) {
                 str_47: "Left Click：Download And Compress\nMiddle Click：Export URLs.txt\nRight Click：Copy Image URL And Title Or Aggregate Images",
                 str_48: "Downloading & Compressing, Please Try Again Later!",
                 str_49: "Get Pictureing Please Try Again Later!",
-                str_50: "",
+                str_50: "Favored Website URL Open in New Tab",
                 str_51: "Please Enter A Custom zip File Folder Name",
                 str_52: "Number Of Pictures",
                 str_53: "Picture Drawing...",
@@ -26181,6 +26182,7 @@ if ("xx" in window) {
         }
         _GM_setValue("FullPictureLoadMsgPos", 0);
         _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
+        _GM_setValue("FavorOpenInNewTab", 0);
         _GM_setValue("convertWebpToJpg", 0);
         _GM_setValue("FancyboxSlideshowTimeout", 3);
         _GM_setValue("FancyboxWheel", 1);
@@ -27276,7 +27278,7 @@ if (config.ViewMode == 1) {
 
         if (hasTouchEvents) return;
 
-        if ("fancybox" in siteData) {
+        if (("fancybox" in siteData) || ("gallery" in siteData && siteData.gallery == 1)) {
             return createIframeGallery();
         }
 
@@ -27945,7 +27947,7 @@ img.small {
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const increaseWidth = () => {
-            let imgs = [...dom.querySelectorAll("img")];
+            let imgs = [...mainElement.querySelectorAll("img")];
             if (webtoonWidth < 1200 && webtoonWidth < win.outerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
@@ -27960,7 +27962,7 @@ img.small {
         };
 
         const reduceWidth = () => {
-            let imgs = [...dom.querySelectorAll("img")];
+            let imgs = [...mainElement.querySelectorAll("img")];
             if (webtoonWidth > 200) {
                 webtoonWidth = (Number(webtoonWidth) - 50);
                 config.webtoonWidth = webtoonWidth;
@@ -28005,7 +28007,7 @@ img.small {
                 if (!event.ctrlKey && !event.altKey && !event.shiftKey) {
                     event.preventDefault();
                     event.stopPropagation();
-                    const imgs = [...dom.querySelectorAll("img")];
+                    const imgs = [...mainElement.querySelectorAll("img")];
                     const next = dom.querySelector("#next a");
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
@@ -28051,7 +28053,7 @@ img.small {
 
         const aspectRatio = () => {
             const verticalScreen = win.innerHeight / win.innerWidth > 1;
-            const imgs = [...dom.querySelectorAll("img")];
+            const imgs = [...mainElement.querySelectorAll("img")];
             imgs.forEach(img => {
                 if (verticalScreen && img.className === "default") {
                     img.style.maxWidth = "96vw";
@@ -28075,7 +28077,7 @@ img.small {
 
         const kEvent = (event) => {
             if (dom.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
-            const imgs = [...dom.querySelectorAll("img")];
+            const imgs = [...mainElement.querySelectorAll("img")];
             const next = dom.querySelector("#next a");
             if (event.code === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
@@ -28255,7 +28257,7 @@ img.small {
             `
         });
 
-        const mainElement = document.createElement("div");
+        const mainElement = dom.createElement("div");
         mainElement.id = "Gallery";
 
         Object.assign(mainElement.style, {
@@ -28279,7 +28281,7 @@ img.small {
         dom.body.appendChild(mainElement);
 
         function loadImgs() {
-            const imgs = [...dom.querySelectorAll("img")];
+            const imgs = [...mainElement.querySelectorAll("img")];
             const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
             const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
             fun.singleThreadLoadImgs(oddNumberImgs);
@@ -28342,15 +28344,6 @@ img.small {
                             Slideshow: {
                                 timeout: FancyboxSlideshowTimeoutNum,
                             },
-                            Carousel: {
-                                classes: {
-                                    "container": "fancybox__carousel",
-                                    "viewport": "fancybox__viewport",
-                                    "track": "fancybox__track",
-                                    "slide": "fancybox__slide"
-                                },
-                                transition: FancyboxSlideshowTransition
-                            },
                             Thumbs: {
                                 showOnStart: false
                             },
@@ -28364,7 +28357,7 @@ img.small {
                             on: {
                                 done: (fancybox, slide) => {
                                     let slideIndex = slide.index;
-                                    let imgs = [...dom.querySelectorAll("img")];
+                                    let imgs = [...mainElement.querySelectorAll("img")];
                                     imgs.forEach(e => (e.style.border = ""));
                                     if (fancybox.isCurrentSlide(slide)) {
                                         imgViewIndex = slideIndex;
@@ -28379,7 +28372,7 @@ img.small {
                                 close: fancybox => {
                                     let slideIndex = fancybox.getSlide().index;
                                     imgViewIndex = slideIndex;
-                                    let imgs = [...dom.querySelectorAll("img")];
+                                    let imgs = [...mainElement.querySelectorAll("img")];
                                     imgs.forEach(e => (e.style.border = ""));
                                     imgs[slideIndex].style.border = "solid #32a1ce";
                                     imgs[slideIndex].scrollIntoView(instantScrollIntoView);
@@ -28530,6 +28523,7 @@ img.small {
     let isDragging = false;
     let isDraggEvent = false;
     let startX, startY, startLeft, startTop;
+    let eventImg, eventMenu;
     const addnewTabViewButton = () => {
         if (ge("#FullPictureLoadEye")) return;
         isAddnewTabViewButton = true;
@@ -28541,6 +28535,7 @@ img.small {
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => newTabView());
         document.body.append(img);
+        eventImg = img;
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenuB";
         menuDiv.style.bottom = "22px";
@@ -28584,6 +28579,7 @@ img.small {
         };
         [...menuObj].forEach(obj => createMenu(obj));
         document.body.append(menuDiv);
+        eventMenu = menuDiv;
 
         const getXY = (event) => {
             let x, y;
@@ -28605,8 +28601,8 @@ img.small {
             imgDown = true;
             startX = obj.x;
             startY = obj.y;
-            startLeft = img.offsetLeft;
-            startTop = img.offsetTop;
+            startLeft = eventImg.offsetLeft;
+            startTop = eventImg.offsetTop;
         };
 
         const moveEvent = (event) => {
@@ -28616,17 +28612,19 @@ img.small {
             isDragging = true;
             const dx = obj.x - startX;
             const dy = obj.y - startY;
-            img.style.top = startTop + dy + "px";
-            img.style.bottom = "auto";
-            img.style.left = startLeft + dx + "px";
-            img.style.right = "auto";
-            menuDiv.style.top = (img.offsetTop - ((menuDiv.offsetHeight - 32) / 2)) + "px";
-            menuDiv.style.bottom = "auto";
-            menuDiv.style.left = (img.offsetLeft - (menuDiv.offsetWidth + 10)) + "px";
-            menuDiv.style.right = "auto";
+            eventImg.style.top = startTop + dy + "px";
+            eventImg.style.bottom = "auto";
+            eventImg.style.left = startLeft + dx + "px";
+            eventImg.style.right = "auto";
+            eventMenu.style.opacity = "0";
+            eventMenu.style.top = (eventImg.offsetTop - ((eventMenu.offsetHeight - 32) / 2)) + "px";
+            eventMenu.style.bottom = "auto";
+            eventMenu.style.left = (eventImg.offsetLeft - (eventMenu.offsetWidth + 10)) + "px";
+            eventMenu.style.right = "auto";
         };
 
         let upEvent = (event) => {
+            eventMenu.style.opacity = "1";
             imgDown = false;
             setTimeout(() => {
                 isDragging = false;
@@ -28634,18 +28632,18 @@ img.small {
         };
 
         let resizeEvent = () => {
-            img.style.top = "auto";
-            img.style.bottom = "24px";
-            img.style.left = "auto";
-            img.style.right = "24px";
-            menuDiv.style.top = "auto";
-            menuDiv.style.bottom = "22px";
-            menuDiv.style.left = "auto";
-            menuDiv.style.right = "64px";
+            eventImg.style.top = "auto";
+            eventImg.style.bottom = "24px";
+            eventImg.style.left = "auto";
+            eventImg.style.right = "24px";
+            eventMenu.style.top = "auto";
+            eventMenu.style.bottom = "22px";
+            eventMenu.style.left = "auto";
+            eventMenu.style.right = "64px";
         };
 
         if (hasTouchEvents) {
-            img.addEventListener('touchstart', downEvent, {
+            img.addEventListener("touchstart", downEvent, {
                 passive: false,
                 capture: true
             });
@@ -28934,7 +28932,7 @@ img.small {
     width: 360px !important;
     height: auto !important;
     position: fixed !important;
-    top: ${hasTouchEvents ? "10%" : "20%"};
+    top: ${hasTouchEvents ? "10%" : "14%"};
     left: 50%;
     margin-left: -180px;
     border: 1px solid #a0a0a0 !important;
@@ -29040,6 +29038,10 @@ img.small {
         ${Object.values(displayLanguage.str_109).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
     </select>
 </div>
+<div style="width: 348px; display: flex;">
+    <input id="FavorNewTab" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>※${displayLanguage.str_50}</label>
+</div>
 <div id="AutoInsertImgDIV" style="width: 348px; display: flex;">
     <input id="AutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_139}</label>
@@ -29141,6 +29143,7 @@ img.small {
         ge("#icon", main).checked = options.icon == 1 ? true : false;
         ge("#AutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
         ge("#ShowFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
+        ge("#FavorNewTab", main).checked = _GM_getValue("FavorOpenInNewTab", 0) == 1 ? true : false;
         ge("#MsgPos", main).value = _GM_getValue("FullPictureLoadMsgPos", 0);
         ge("#Threading", main).value = options.threading;
         ge("#Zip", main).checked = options.zip == 1 ? true : false;
@@ -29221,6 +29224,7 @@ img.small {
             options.icon = ge("#icon", main).checked == true ? 1 : 0;
             options.autoInsert = ge("#AutoInsertImg", main).checked == true ? 1 : 0;
             _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFixedMenu", main).checked == true ? 1 : 0);
+            _GM_setValue("FavorOpenInNewTab", ge("#FavorNewTab", main).checked == true ? 1 : 0);
             _GM_setValue("FullPictureLoadMsgPos", ge("#MsgPos", main).value);
             options.threading = ge("#Threading", main).value;
             options.zip = ge("#Zip", main).checked == true ? 1 : 0;
@@ -30682,6 +30686,8 @@ a[data-fancybox]:hover {
 
     const defaultFavor = "text-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
 
+    let FavorOpenInNewTab = _GM_getValue("FavorOpenInNewTab", 0);
+
     const createFavorShadowElement = () => {
 
         const mainHtml = '<div id="FullPictureLoadFavorSites" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
@@ -30908,6 +30914,9 @@ html,body {
                         let a = document.createElement("a");
                         a.innerText = name;
                         a.href = value;
+                        if (FavorOpenInNewTab == 1) {
+                            a.setAttribute("target", "_blank");
+                        }
                         a.style.color = textColor;
                         li.append(a);
                         FavorUl.append(li);
