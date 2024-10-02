@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.19
+// @version            2.8.20
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -97,6 +97,8 @@
     let captureLinksArray = [];
     let customTitle = null;
     let isDownloading = false;
+    let isStopDownload = false;
+    let isCountdowning = false;
     let isFetching = false;
     let isAutoScrolling = false;
     let isValidPage = true;
@@ -21420,6 +21422,7 @@ if ("xx" in window) {
                 str_146: "Fancybox5滾輪操作：",
                 str_147: "畫廊 (0、1、3) 滾輪操作：",
                 str_148: "Fancybox5幻燈片過場效果：",
+                str_149: "已取消下載！！！",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21601,6 +21604,7 @@ if ("xx" in window) {
                 str_146: "Fancybox5滚轮操作：",
                 str_147: "画廊 (0、1、3) 滚轮操作：",
                 str_148: "Fancybox5幻灯片过场效果：",
+                str_149: "已取消下载！！！",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21781,6 +21785,7 @@ if ("xx" in window) {
                 str_146: "Fancybox5 Wheel：",
                 str_147: "Gallery (0、1、3) Wheel：",
                 str_148: "Fancybox5 Slideshow Transition：",
+                str_149: "Download Canceled！！！",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -25233,6 +25238,7 @@ if ("xx" in window) {
     };
 
     const getDataMsg = (text, picNum, imgsNum) => {
+        if (isStopDownload) return;
         if (picNum != "none") fun.showMsg(`${displayLanguage.str_23}${downloadNum += 1}/${imgsNum}${displayLanguage.str_24}${text}`, 0);
     };
 
@@ -25277,6 +25283,10 @@ if ("xx" in window) {
                 }
             }).then(obj => {
                 currentDownloadThread--;
+                if (isStopDownload) {
+                    resolve("stop");
+                    return;
+                }
                 if (obj.blob.size < 100) {
                     getDataMsg(displayLanguage.str_26, picNum, imgsNum);
                     resolve({
@@ -25328,6 +25338,10 @@ if ("xx" in window) {
                 },
                 onload: async data => {
                     currentDownloadThread--;
+                    if (isStopDownload) {
+                        resolve("stop");
+                        return;
+                    }
                     let blob = data.response;
                     //debug("GM blob", blob);
                     //XBrowser Blob的type是""
@@ -25485,23 +25499,24 @@ if ("xx" in window) {
         let ele;
         isFn(next) ? ele = await next() : ele = fun.ge(next);
         if (!!ele && start == 1 || !!ele && options.autoDownload == 1) {
+            isCountdowning = true;
             let max = time || options.autoDownloadCountdown;
-            let countdownNum = max;
+            let countdownNum = Number(max);
             fun.showMsg(`${displayLanguage.str_32}${max}${displayLanguage.str_33}`, 0);
-            for (let i = 1; i < max; i++) {
-                setTimeout(() => {
-                    fun.showMsg(`${displayLanguage.str_32}${countdownNum-=1}${displayLanguage.str_33}`, 0);
-                }, i * 1000);
+            for (let i = 1; i <= Number(max); i++) {
+                await fun.delay(1000, 0);
+                if (isStopDownload) return;
+                fun.showMsg(`${displayLanguage.str_32}${countdownNum-=1}${displayLanguage.str_33}`, 0);
             }
-            setTimeout(() => {
-                if (isFn(next)) {
-                    fun.showMsg(displayLanguage.str_34);
-                    location.href = ele;
-                } else {
-                    fun.showMsg(displayLanguage.str_35);
-                    EClick(ele);
-                }
-            }, max * 1000);
+            await fun.delay(500, 0);
+            if (isStopDownload) return;
+            if (isFn(next) && isString(ele)) {
+                fun.showMsg(displayLanguage.str_34);
+                location.href = ele;
+            } else if (isEle(ele)) {
+                fun.showMsg(displayLanguage.str_35);
+                EClick(ele);
+            }
         } else if (!ele && start == 1 || !ele && options.autoDownload == 1) {
             fun.showMsg(displayLanguage.str_36, 0);
             options.autoDownload = 0;
@@ -25513,6 +25528,10 @@ if ("xx" in window) {
     //圖片影片下載函式
     const DownloadFn = async () => {
         if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
+        isStopDownload = false;
+        currentDownloadThread = 0;
+        downloadNum = 0;
+        promiseBlobArray = [];
         let selector, titleText;
         let autoDownload = siteData.autoDownload;
         let start;
@@ -25565,6 +25584,7 @@ if ("xx" in window) {
                     let picNum = getNum(i, padStart);
                     let promiseBlob;
                     await fun.checkDownloadThread();
+                    if (isStopDownload) return (promiseBlobArray = []);
                     siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_Download(imgsSrcArr[i], picNum, imgsNum);
                     promiseBlobArray.push(promiseBlob);
                 }
@@ -25578,6 +25598,11 @@ if ("xx" in window) {
                     let videoNum = getNum(i, padStart);
                     let promiseBlob;
                     await fun.checkDownloadThread();
+                    if (isStopDownload) {
+                        clearInterval(loopMsg);
+                        promiseBlobArray = [];
+                        return;
+                    }
                     siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(videoSrcArray[i], videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_Download(videoSrcArray[i], videoNum, imgsNum + videosNum);
                     promiseBlobArray.push(promiseBlob);
                 }
@@ -25587,6 +25612,11 @@ if ("xx" in window) {
                 try {
                     clearInterval(loopMsg);
                 } catch {}
+                if (isStopDownload) {
+                    data = null;
+                    promiseBlobArray = [];
+                    return;
+                }
                 debug("\nPromiseAllData：", data);
                 let blobDataArray = data.filter(item => item.load); //成功下載
                 let errorDataArray = data.filter(item => item.error); //下載錯誤
@@ -26643,7 +26673,9 @@ document.addEventListener("keydown", event => {
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
         if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
-            imgs[imgViewIndex].style.border = "solid #32a1ce";
+            if (imgs[imgViewIndex] !== undefined) {
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+            }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
@@ -26656,7 +26688,9 @@ document.addEventListener("keydown", event => {
         }
         if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
-            imgs[imgViewIndex].style.border = "solid #32a1ce";
+            if (imgs[imgViewIndex] !== undefined) {
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+            }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (event.code === "Delete" && config.ViewMode == 3) {
@@ -26699,7 +26733,9 @@ document.addEventListener("wheel", (event) => {
                 if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
@@ -26709,7 +26745,9 @@ document.addEventListener("wheel", (event) => {
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else {
@@ -26745,7 +26783,7 @@ function aspectRatio() {
             img.style.maxWidth = "98vw";
         }
     });
-    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvents) {
         imgs.forEach(e => (e.style.border = ""));
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
@@ -26764,7 +26802,7 @@ if (hasTouchEvents) {
 
 function increaseWidth() {
     let imgs = [...document.querySelectorAll("img")];
-    if (webtoonWidth < 1200 && webtoonWidth < window.outerWidth) {
+    if (webtoonWidth < 1900 && webtoonWidth < window.innerWidth) {
         webtoonWidth = (Number(webtoonWidth) + 50);
         config.webtoonWidth = webtoonWidth;
         saveConfig();
@@ -26779,7 +26817,7 @@ function increaseWidth() {
 
 function reduceWidth() {
     let imgs = [...document.querySelectorAll("img")];
-    if (webtoonWidth > 200) {
+    if (webtoonWidth > 100) {
         webtoonWidth = (Number(webtoonWidth) - 50);
         config.webtoonWidth = webtoonWidth;
         saveConfig();
@@ -27022,7 +27060,9 @@ document.addEventListener("keydown", event => {
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
         if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
-            imgs[imgViewIndex].style.border = "solid #32a1ce";
+            if (imgs[imgViewIndex] !== undefined) {
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+            }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
@@ -27035,7 +27075,9 @@ document.addEventListener("keydown", event => {
         }
         if (config.ViewMode != 4) {
             imgs.forEach(e => (e.style.border = ""));
-            imgs[imgViewIndex].style.border = "solid #32a1ce";
+            if (imgs[imgViewIndex] !== undefined) {
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+            }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if (event.code === "Delete" && config.ViewMode == 3) {
@@ -27078,7 +27120,9 @@ document.addEventListener("wheel", (event) => {
                 if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
@@ -27088,7 +27132,9 @@ document.addEventListener("wheel", (event) => {
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else {
@@ -27124,7 +27170,7 @@ function aspectRatio() {
             img.style.maxWidth = "98vw";
         }
     });
-    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvents) {
         imgs.forEach(e => (e.style.border = ""));
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
@@ -27143,7 +27189,7 @@ if (hasTouchEvents) {
 
 function increaseWidth() {
     let imgs = [...document.querySelectorAll("img")];
-    if (webtoonWidth < 1200 && webtoonWidth < window.outerWidth) {
+    if (webtoonWidth < 1900 && webtoonWidth < window.innerWidth) {
         webtoonWidth = (Number(webtoonWidth) + 50);
         config.webtoonWidth = webtoonWidth;
         saveConfig();
@@ -27158,7 +27204,7 @@ function increaseWidth() {
 
 function reduceWidth() {
     let imgs = [...document.querySelectorAll("img")];
-    if (webtoonWidth > 200) {
+    if (webtoonWidth > 100) {
         webtoonWidth = (Number(webtoonWidth) - 50);
         config.webtoonWidth = webtoonWidth;
         saveConfig();
@@ -27319,7 +27365,7 @@ if (config.ViewMode == 1) {
 
         const increaseWidth = () => {
             let imgs = [...shadow.querySelectorAll("img")];
-            if (webtoonWidth < 1200 && webtoonWidth < _unsafeWindow.outerWidth) {
+            if (webtoonWidth < 1900 && webtoonWidth < _unsafeWindow.innerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
@@ -27334,7 +27380,7 @@ if (config.ViewMode == 1) {
 
         const reduceWidth = () => {
             let imgs = [...shadow.querySelectorAll("img")];
-            if (webtoonWidth > 200) {
+            if (webtoonWidth > 100) {
                 webtoonWidth = (Number(webtoonWidth) - 50);
                 config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
@@ -27380,7 +27426,7 @@ if (config.ViewMode == 1) {
                     event.preventDefault();
                     event.stopPropagation();
                     const imgs = [...shadow.querySelectorAll("img")];
-                    const next = shadow.querySelector("#next a");
+                    const next = shadow.querySelector("#next");
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -27391,27 +27437,33 @@ if (config.ViewMode == 1) {
                         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                         if (config.ViewMode != 4) {
                             imgs.forEach(e => (e.style.border = ""));
-                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            if (imgs[imgViewIndex] !== undefined) {
+                                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            }
                         }
                         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                         nextButtonIsShown = false;
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
-                        next.parentElement.style.backgroundColor = "gray";
-                        return setTimeout(() => (location.href = next.href), 500);
+                        next.style.backgroundColor = "gray";
+                        return setTimeout(() => (location.href = nextLink), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
-                            next.parentElement.style.border = "solid #32a1ce";
-                            next.parentElement.scrollIntoView(instantScrollIntoView);
+                            next.style.border = "solid #32a1ce";
+                            next.scrollIntoView(instantScrollIntoView);
                             nextButtonIsShown = true;
                         } else if (imgs[imgViewIndex] === undefined) {
                             imgViewIndex = 0;
                         }
                         if (config.ViewMode != 4) {
                             imgs.forEach(e => (e.style.border = ""));
-                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            if (imgs[imgViewIndex] !== undefined) {
+                                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            }
                         }
-                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        if (imgs[imgViewIndex] !== undefined) {
+                            imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        }
                     } else {
                         imgViewIndex = -1;
                     }
@@ -27450,7 +27502,7 @@ if (config.ViewMode == 1) {
         const kEvent = (event) => {
             if (ge(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
             const imgs = [...shadow.querySelectorAll("img")];
-            const next = shadow.querySelector("#next a");
+            const next = shadow.querySelector("#next");
             if (event.code === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
@@ -27459,7 +27511,8 @@ if (config.ViewMode == 1) {
             if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
             if (event.code === "KeyN") {
                 if (next) {
-                    return (location.href = next.href);
+                    next.style.backgroundColor = "gray";
+                    return (location.href = nextLink);
                 }
             }
             if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
@@ -27490,26 +27543,30 @@ if (config.ViewMode == 1) {
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
-                next.parentElement.style.backgroundColor = "gray";
-                return setTimeout(() => (location.href = next.href), 500);
+                next.style.backgroundColor = "gray";
+                return setTimeout(() => (location.href = nextLink), 500);
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
-                    next.parentElement.style.border = "solid #32a1ce";
-                    next.parentElement.scrollIntoView(instantScrollIntoView);
+                    next.style.border = "solid #32a1ce";
+                    next.scrollIntoView(instantScrollIntoView);
                     nextButtonIsShown = true;
                 } else if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = 0;
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else if (event.code === "Delete" && config.ViewMode == 3) {
@@ -27532,6 +27589,7 @@ html,body {
         const style = createStyle(`
 p#imgBox {
     display: block;
+    min-height: calc(100vh - 70px);
     padding: 0;
     margin: 0;
 }
@@ -27612,19 +27670,16 @@ img.small {
 }
 #next {
     display: block;
-    padding: 10px 0;
     text-align: center;
+    padding: 10px 0;
     border: solid #fff;
-    background-color: antiquewhite;
-}
-#next a {
-    display: block;
     color: rgb(0, 0, 0);
+    background-color: antiquewhite;
     font-size: 26px;
     line-height: 50px;
     height: 50px;
-    text-align: center;
     text-decoration: unset !important;
+    cursor: pointer !important;
 }
         `);
         shadow.appendChild(style);
@@ -27748,10 +27803,14 @@ img.small {
                 });
             }
             if (isString(nextLink)) {
-                let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</a></div>`;
+                let html = `<div id="next">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</div>`;
                 mainElement.insertAdjacentHTML("beforeend", html);
-                if (config.ViewMode == 4) {
-                    const next = ge("#next", mainElement);
+                const next = ge("#next", mainElement);
+                next.addEventListener("click", () => {
+                    next.style.backgroundColor = "gray";
+                    return setTimeout(() => (location.href = nextLink), 200);
+                });
+                if (config.shadowGalleryWheel != 1 && [0, 1, 3].some(m => config.ViewMode == m) || [2, 4].some(m => config.ViewMode == m)) {
                     let isEvent = false;
                     let dNum = 0;
                     const nextObserver = new IntersectionObserver((entries, observer) => {
@@ -27769,13 +27828,13 @@ img.small {
                                             nextButtonIsShown = false;
                                         } else if (event.deltaY > 0 && nextButtonIsShown) {
                                             dNum++;
-                                            if (dNum > 1) {
+                                            if (dNum > 2) {
                                                 next.style.backgroundColor = "gray";
                                                 return setTimeout(() => (location.href = nextLink), 500);
                                             }
                                         }
                                     }, {
-                                        passive: false
+                                        passive: true
                                     });
                                 }
                             } else {
@@ -27948,7 +28007,7 @@ img.small {
 
         const increaseWidth = () => {
             let imgs = [...mainElement.querySelectorAll("img")];
-            if (webtoonWidth < 1200 && webtoonWidth < win.outerWidth) {
+            if (webtoonWidth < 1900 && webtoonWidth < win.innerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
@@ -27963,7 +28022,7 @@ img.small {
 
         const reduceWidth = () => {
             let imgs = [...mainElement.querySelectorAll("img")];
-            if (webtoonWidth > 200) {
+            if (webtoonWidth > 100) {
                 webtoonWidth = (Number(webtoonWidth) - 50);
                 config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
@@ -28008,7 +28067,7 @@ img.small {
                     event.preventDefault();
                     event.stopPropagation();
                     const imgs = [...mainElement.querySelectorAll("img")];
-                    const next = dom.querySelector("#next a");
+                    const next = dom.querySelector("#next");
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -28019,27 +28078,33 @@ img.small {
                         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                         if (config.ViewMode != 4) {
                             imgs.forEach(e => (e.style.border = ""));
-                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            if (imgs[imgViewIndex] !== undefined) {
+                                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            }
                         }
                         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                         nextButtonIsShown = false;
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
-                        next.parentElement.style.backgroundColor = "gray";
-                        return setTimeout(() => (location.href = next.href), 500);
+                        next.style.backgroundColor = "gray";
+                        return setTimeout(() => (location.href = nextLink), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
-                            next.parentElement.style.border = "solid #32a1ce";
-                            next.parentElement.scrollIntoView(instantScrollIntoView);
+                            next.style.border = "solid #32a1ce";
+                            next.scrollIntoView(instantScrollIntoView);
                             nextButtonIsShown = true;
                         } else if (imgs[imgViewIndex] === undefined) {
                             imgViewIndex = 0;
                         }
                         if (config.ViewMode != 4) {
                             imgs.forEach(e => (e.style.border = ""));
-                            imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            if (imgs[imgViewIndex] !== undefined) {
+                                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                            }
                         }
-                        imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        if (imgs[imgViewIndex] !== undefined) {
+                            imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        }
                     } else {
                         imgViewIndex = -1;
                     }
@@ -28078,7 +28143,7 @@ img.small {
         const kEvent = (event) => {
             if (dom.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
             const imgs = [...mainElement.querySelectorAll("img")];
-            const next = dom.querySelector("#next a");
+            const next = dom.querySelector("#next");
             if (event.code === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
@@ -28087,7 +28152,8 @@ img.small {
             if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
             if (event.code === "KeyN") {
                 if (next) {
-                    return (location.href = next.href);
+                    next.style.backgroundColor = "gray";
+                    return (location.href = nextLink);
                 }
             }
             if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
@@ -28118,33 +28184,39 @@ img.small {
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
-                next.parentElement.style.backgroundColor = "gray";
-                return setTimeout(() => (location.href = next.href), 500);
+                next.style.backgroundColor = "gray";
+                return setTimeout(() => (location.href = nextLink), 500);
             } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
-                    next.parentElement.style.border = "solid #32a1ce";
-                    next.parentElement.scrollIntoView(instantScrollIntoView);
+                    next.style.border = "solid #32a1ce";
+                    next.scrollIntoView(instantScrollIntoView);
                     nextButtonIsShown = true;
                 } else if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = 0;
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (imgs[imgViewIndex] !== undefined) {
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
                 }
-                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                if (imgs[imgViewIndex] !== undefined) {
+                    imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                }
             } else if (event.code === "Delete" && config.ViewMode == 3) {
-                const hideE = [...dom.querySelectorAll("img")][imgViewIndex];
+                const hideE = [...mainElement.querySelectorAll("img")][imgViewIndex];
                 hideE.style.display = "none";
             } else if (event.code === "Enter" && config.ViewMode == 3) {
-                [...dom.querySelectorAll("img")].forEach(e => (e.style.display = ""));
+                [...mainElement.querySelectorAll("img")].forEach(e => (e.style.display = ""));
             } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
                 imgViewIndex = -1;
             }
@@ -28160,6 +28232,7 @@ html,body {
             textContent: `
 p#imgBox {
     display: block;
+    min-height: calc(100vh - 70px);
     padding: 0;
     margin: 0;
 }
@@ -28240,19 +28313,16 @@ img.small {
 }
 #next {
     display: block;
-    padding: 10px 0;
     text-align: center;
+    padding: 10px 0;
     border: solid #fff;
-    background-color: antiquewhite;
-}
-#next a {
-    display: block;
     color: rgb(0, 0, 0);
+    background-color: antiquewhite;
     font-size: 26px;
     line-height: 50px;
     height: 50px;
-    text-align: center;
     text-decoration: unset !important;
+    cursor: pointer !important;
 }
             `
         });
@@ -28383,10 +28453,14 @@ img.small {
                 });
             }
             if (isString(nextLink)) {
-                let html = `<div id="next"><a href="${nextLink}">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</a></div>`;
+                let html = `<div id="next">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</div>`;
                 mainElement.insertAdjacentHTML("beforeend", html);
-                if (config.ViewMode == 4) {
-                    const next = ge("#next", mainElement);
+                const next = ge("#next", mainElement);
+                next.addEventListener("click", () => {
+                    next.style.backgroundColor = "gray";
+                    return setTimeout(() => (location.href = nextLink), 200);
+                });
+                if (config.shadowGalleryWheel != 1) {
                     let isEvent = false;
                     let dNum = 0;
                     const nextObserver = new IntersectionObserver((entries, observer) => {
@@ -28404,13 +28478,13 @@ img.small {
                                             nextButtonIsShown = false;
                                         } else if (event.deltaY > 0 && nextButtonIsShown) {
                                             dNum++;
-                                            if (dNum > 1) {
+                                            if (dNum > 2) {
                                                 next.style.backgroundColor = "gray";
                                                 return setTimeout(() => (location.href = nextLink), 500);
                                             }
                                         }
                                     }, {
-                                        passive: false
+                                        passive: true
                                     });
                                 }
                             } else {
@@ -29108,7 +29182,9 @@ img.small {
 </div>
 <div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_75}</label>
-    <input id="Countdown" style="width: 60px; margin: 0 6px !important;">
+    <select id="Countdown">
+        ${fun.arr(60, (v, i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
+    </select>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_70}</label>
@@ -29153,7 +29229,7 @@ img.small {
         ge("#Countdown", main).value = options.autoDownloadCountdown;
         ge("#Comic", main).checked = options.comic == 1 ? true : false;
         ge("#Double", main).checked = options.doubleTouchNext == 1 ? true : false;
-        if (siteData.category != "lazyLoad" && ("capture" in siteData)) {
+        if (siteData.category != "lazyLoad" && ("capture" in siteData) || isString(siteData.imgs) && !isArray(siteData.insertImg)) {
             ge("#ShowEyeDIV", main).style.display = "flex";
             ge("#ShowEye", main).checked = FullPictureLoadShowEye == 1 ? true : false;
         }
@@ -29244,7 +29320,7 @@ img.small {
             options.shadowGallery = ge("#ShadowGalleryMode", main).checked == true ? 1 : 0;
             config.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
             saveConfig(config);
-            if (siteData.category != "lazyLoad" && ("capture" in siteData)) {
+            if (siteData.category != "lazyLoad" && ("capture" in siteData) || isString(siteData.imgs) && !isArray(siteData.insertImg)) {
                 ge("#ShowEye", main).checked == true ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
             }
             if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
@@ -29858,7 +29934,6 @@ a[data-fancybox]:hover {
             fun.showMsg(displayLanguage.str_118);
             debug("圖集新標題", newTitle || customTitle);
         }
-        if (event.ctrlKey || event.altKey || event.shiftKey) return;
         if (event.code === "KeyG") { //G鍵
             return createShadowGallery();
         }
@@ -29897,6 +29972,18 @@ a[data-fancybox]:hover {
             createPictureLoadOptionsShadowElement();
         }
         if (event.code === "Escape" || event.key === "Escape") { //Esc鍵
+            if (!isStopDownload && isDownloading) {
+                isStopDownload = true;
+                isDownloading = false;
+                fun.clearAllTimer(2);
+                fun.showMsg(displayLanguage.str_149);
+            }
+            if (isCountdowning) {
+                isCountdowning = false;
+                isStopDownload = true;
+                fun.clearAllTimer(2);
+                fun.showMsg(displayLanguage.str_149);
+            }
             ge("#FullPictureLoadOptionsShadowElement")?.remove();
             return;
         }
@@ -30537,6 +30624,7 @@ a[data-fancybox]:hover {
     let autoDownload = siteData.autoDownload;
 
     if (!!autoDownload) {
+        //自動下載快捷鍵
         document.addEventListener("keydown", event => {
             if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) {
@@ -30547,6 +30635,8 @@ a[data-fancybox]:hover {
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
                     setTimeout(() => location.reload(), 2000);
                 } else {
+                    isStopDownload = true;
+                    fun.clearAllTimer(2);
                     options.autoDownload = 0;
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
