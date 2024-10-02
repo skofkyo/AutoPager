@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.21
+// @version            2.8.22
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -21089,6 +21089,7 @@ if ("xx" in window) {
     }
 
     const hasTouchEvents = (() => ("ontouchstart" in _unsafeWindow) || (_unsafeWindow.navigator.maxTouchPoints > 0) || (_unsafeWindow.navigator.msMaxTouchPoints > 0))();
+    const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
     const isString = str => Object.prototype.toString.call(str) === "[object String]";
@@ -23645,7 +23646,7 @@ if ("xx" in window) {
                     }
                 }];
 
-                if (hasTouchEvents) {
+                if (hasTouchEvents || isFirefox && ("fancybox" in siteData) || isFirefox && siteData.gallery == 1) {
                     buttonObj[1] = {
                         id: "FullPictureLoadCopyURLBtn",
                         className: "FullPictureLoadPageButtonTop",
@@ -27945,6 +27946,8 @@ img.small {
     //創建框架畫廊
     const createIframeGallery = async () => {
 
+        if (isFirefox && ("fancybox" in siteData) || isFirefox && siteData.gallery == 1) return;
+
         fun.hideMsg();
 
         const config = getConfig();
@@ -27967,6 +27970,7 @@ img.small {
 
         const iframe = document.createElement("iframe");
         iframe.id = "FullPictureLoadIframeGallery";
+        iframe.src = "about:blank";
         Object.assign(iframe.style, {
             left: "0",
             right: "0",
@@ -28826,6 +28830,7 @@ img.small {
                 createFavorShadowElement();
             }
         }, {
+            name: "shadowGallery",
             text: displayLanguage.str_141,
             show: 0,
             cfn: event => {
@@ -28906,7 +28911,7 @@ img.small {
             show: 1
         }];
         const createMenu = obj => {
-            if (!siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) || "newTabView" === obj.name && siteData.eye === 0) return;
+            if (!siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) || "newTabView" === obj.name && siteData.eye === 0 || isFirefox && ("fancybox" in siteData) && obj.name === "shadowGallery" || isFirefox && siteData.gallery == 1 && obj.name === "shadowGallery") return;
             let item = document.createElement("div");
             item.innerText = obj.text;
             if (obj.show === 0) item.classList.add("itemNoShow");
@@ -29250,6 +29255,9 @@ img.small {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
+        }
+        if (isFirefox && ("fancybox" in siteData) || isFirefox && siteData.gallery == 1) {
+            ge("#ShadowGalleryModeDIV", main).style.display = "none";
         }
         if (isBoolean(siteData.SPA)) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
