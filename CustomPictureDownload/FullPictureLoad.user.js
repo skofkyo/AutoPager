@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.23
+// @version            2.8.24
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -9704,7 +9704,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/eropics\.\w+\/\d+\/\d+\/\d+\//i,
         init: () => {
             document.addEventListener("keydown", event => {
-                if (event.ctrlKey && event.altKey && event.code === "KeyC") {
+                if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) {
                     event.preventDefault();
                     let arr = fun.gau(".entry-content a");
                     let str = arr.join("\n");
@@ -16222,7 +16222,7 @@ if ("xx" in window) {
             fun.picPreload(await obj.imgs(0), obj.customTitle(nextDoc), "next");
         },
         topButton: true,
-        css: "body{overflow:unset!important}",
+        css: "body{overflow:unset!important}.view-ad,.view-mask{display:none!important;}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -16285,7 +16285,7 @@ if ("xx" in window) {
             hide: ".view-comment",
             preloadNextPage: 1
         },
-        css: "body{overflow:unset!important}a[href^='javascript:Show'],.chapterpager{display:none!important;}",
+        css: "body{overflow:unset!important}a[href^='javascript:Show'],.chapterpager,.view-ad,.view-mask{display:none!important;}",
         category: "comic autoPager"
     }, {
         name: "DM5/極速 條漫模式",
@@ -20752,7 +20752,7 @@ if ("xx" in window) {
                     if (event.code === "Escape" || event.key === "Escape") {
                         return cb(0);
                     }
-                    if (event.ctrlKey && event.altKey && event.code === "KeyO") {
+                    if (event.ctrlKey && event.altKey && (event.code === "KeyO" || event.key === "o" || event.key === "O")) {
                         cb();
                     }
                 });
@@ -21167,7 +21167,7 @@ if ("xx" in window) {
     }
     const FancyboxSlideshowTimeout = Number(_GM_getValue("FancyboxSlideshowTimeout", 3));
     const FancyboxSlideshowTimeoutNum = FancyboxSlideshowTimeout == 0 ? 500 : (FancyboxSlideshowTimeout * 1000);
-    const FancyboxSlideshowTransition = _GM_getValue("FancyboxSlideshowTransition", "fade");
+    const FancyboxSlideshowTransition = _GM_getValue("FancyboxSlideshowTransition", "fade") == "no" ? "false" : _GM_getValue("FancyboxSlideshowTransition", "fade");
 
     let FancyboxOptions;
     let slideIndex = null;
@@ -21176,6 +21176,8 @@ if ("xx" in window) {
         FancyboxOptions = {
             Hash: false,
             idle: false,
+            showClass: false,
+            hideClass: false,
             Images: {
                 Panzoom: {
                     maxScale: 2
@@ -21218,6 +21220,8 @@ if ("xx" in window) {
         FancyboxOptions = {
             Hash: false,
             idle: false,
+            showClass: false,
+            hideClass: false,
             wheel: FancyboxWheel,
             Images: {
                 Panzoom: {
@@ -21229,7 +21233,7 @@ if ("xx" in window) {
                 timeout: FancyboxSlideshowTimeoutNum,
             },
             Carousel: {
-                transition: FancyboxSlideshowTransition,
+                transition: FancyboxSlideshowTransition
             },
             Thumbs: {
                 type: "classic",
@@ -21439,7 +21443,8 @@ if ("xx" in window) {
                     crossfade: "淡入淡出",
                     fade: "淡出",
                     slide: "滑動",
-                    classic: "經典"
+                    classic: "經典",
+                    no: "無過場效果"
                 },
                 ShadowGalleryWheel: {
                     d: "畫廊滾動",
@@ -21621,7 +21626,8 @@ if ("xx" in window) {
                     crossfade: "淡入淡出",
                     fade: "淡出",
                     slide: "滑动",
-                    classic: "经典"
+                    classic: "经典",
+                    no: "无过场效果"
                 },
                 ShadowGalleryWheel: {
                     d: "画廊滚动",
@@ -21799,10 +21805,11 @@ if ("xx" in window) {
                     s: "slide"
                 },
                 FancyboxTransition: {
-                    crossfade: "crossfade",
-                    fade: "fade",
-                    slide: "slide",
-                    classic: "classic"
+                    crossfade: "Crossfade",
+                    fade: "Fade",
+                    slide: "Slide",
+                    classic: "Classic",
+                    no: "No Animation"
                 },
                 ShadowGalleryWheel: {
                     d: "Scroll",
@@ -23007,11 +23014,7 @@ if ("xx" in window) {
                     resolve(dom);
                     iframe.remove();
                 };
-                if (iframe.attachEvent) {
-                    iframe.attachEvent("onload", () => call());
-                } else {
-                    iframe.onload = () => call();
-                }
+                iframe.onload = () => call();
                 iframe.src = url;
                 document.body.append(iframe);
             });
@@ -23062,11 +23065,7 @@ if ("xx" in window) {
                     resolve(dom);
                     iframe.remove();
                 };
-                if (iframe.attachEvent) {
-                    iframe.attachEvent("onload", () => call());
-                } else {
-                    iframe.onload = () => call();
-                }
+                iframe.onload = () => call();
                 iframe.srcdoc = resText;
                 document.body.append(iframe);
             });
@@ -23138,11 +23137,7 @@ if ("xx" in window) {
                     //console.log("iframe window", iframe.contentWindow);
                     resolve(object);
                 };
-                if (!!iframe.attachEvent) {
-                    iframe.attachEvent("onload", () => call());
-                } else {
-                    iframe.onload = () => call();
-                }
+                iframe.onload = () => call();
                 iframe.error = reject;
                 iframe.src = url;
                 document.body.append(iframe);
@@ -23815,12 +23810,12 @@ if ("xx" in window) {
                     let imgsNum = 0;
                     document.addEventListener("keydown", event => {
                         if (fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
-                        if (event.code === "ArrowUp") {
+                        if (event.code === "ArrowUp" || event.key === "ArrowUp") {
                             if (imgsNum > 0 && viewMode == 0) {
                                 imgsNum -= 1;
                                 imgs[imgsNum].scrollIntoView();
                             }
-                        } else if (event.code === "ArrowDown") {
+                        } else if (event.code === "ArrowDown" || event.key === "ArrowDown") {
                             event.preventDefault();
                             if (imgsNum < imgs.length && viewMode == 0) {
                                 imgsNum += 1;
@@ -24113,7 +24108,7 @@ if ("xx" in window) {
                         const comicSpaceClickNext = () => {
                             let click = 0;
                             const callback = event => {
-                                if (event.code === "Space") {
+                                if (event.code === "Space" || event.key === " ") {
                                     click += 1;
                                     if (click >= 5) {
                                         document.removeEventListener("keydown", callback);
@@ -24918,6 +24913,8 @@ if ("xx" in window) {
                 FancyboxOptions = {
                     Hash: false,
                     idle: false,
+                    showClass: false,
+                    hideClass: false,
                     Images: {
                         Panzoom: {
                             maxScale: 2
@@ -24928,7 +24925,7 @@ if ("xx" in window) {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
                     Carousel: {
-                        transition: FancyboxSlideshowTransition,
+                        transition: FancyboxSlideshowTransition
                     },
                     Thumbs: {
                         type: "classic",
@@ -24955,6 +24952,8 @@ if ("xx" in window) {
                 FancyboxOptions = {
                     Hash: false,
                     idle: false,
+                    showClass: false,
+                    hideClass: false,
                     wheel: FancyboxWheel,
                     Images: {
                         Panzoom: {
@@ -24966,7 +24965,7 @@ if ("xx" in window) {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
                     Carousel: {
-                        transition: FancyboxSlideshowTransition,
+                        transition: FancyboxSlideshowTransition
                     },
                     Thumbs: {
                         type: "classic",
@@ -26094,14 +26093,14 @@ if ("xx" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k)) return;
-                    if (event.code === "ArrowUp") {
+                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+                    if (event.code === "ArrowUp" || event.key === "ArrowUp") {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
                             imgsNum -= column;
                             imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
                         }
-                    } else if (event.code === "ArrowDown") {
+                    } else if (event.code === "ArrowDown" || event.key === "ArrowDown") {
                         event.preventDefault();
                         if (imgsNum < imgDivs.length && imgsNum != imgDivs.length && viewMode == 1) {
                             imgsNum += column;
@@ -26271,10 +26270,7 @@ if ("xx" in window) {
             newWindow.newImgs = imgSrcs;
             newWindow.menuLanguage = displayLanguage.galleryMenu;
 
-            const newWindowStyle = dom.createElement("style");
-            newWindowStyle.id = "newWindowStyle";
-            newWindowStyle.type = "text/css";
-            newWindowStyle.innerHTML = `
+            let newWindowStyleCss = `
 body {
     background-color: #333;
     display: block;
@@ -26356,6 +26352,20 @@ img.small {
     background-color: rgba(0,0,0,.94)!important;
 }
 `;
+            if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
+                newWindowStyleCss += `
+.fancybox__container .to-next>.fancybox__content,
+.fancybox__container .to-prev>.fancybox__content {
+    display: none !important
+}
+            `;
+            }
+
+            const newWindowStyle = dom.createElement("style");
+            newWindowStyle.id = "newWindowStyle";
+            newWindowStyle.type = "text/css";
+            newWindowStyle.innerHTML = newWindowStyleCss;
+
             dom.head.append(newWindowStyle);
 
             if (newTabViewLightGallery == 0) {
@@ -26372,6 +26382,8 @@ if (hasTouchEvents) {
     FancyboxOptions = {
         Hash: false,
         idle: false,
+        showClass: false,
+        hideClass: false,
         Images: {
             Panzoom: {
                 maxScale: 2
@@ -26382,7 +26394,7 @@ if (hasTouchEvents) {
             timeout: ${FancyboxSlideshowTimeoutNum},
         },
         Carousel: {
-            transition: "${FancyboxSlideshowTransition}",
+            transition: "${FancyboxSlideshowTransition}"
         },
         Thumbs: {
             type: "classic",
@@ -26433,6 +26445,8 @@ if (hasTouchEvents) {
     FancyboxOptions = {
         Hash: false,
         idle: false,
+        showClass: false,
+        hideClass: false,
         wheel: "${FancyboxWheel}",
         Images: {
             Panzoom: {
@@ -26444,7 +26458,7 @@ if (hasTouchEvents) {
             timeout: ${FancyboxSlideshowTimeoutNum},
         },
         Carousel: {
-            transition: "${FancyboxSlideshowTransition}",
+            transition: "${FancyboxSlideshowTransition}"
         },
         Thumbs: {
             type: "classic",
@@ -26648,15 +26662,15 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("keydown", event => {
-    if (document.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
+    if (document.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
     const imgs = [...document.querySelectorAll("img")];
-    if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+    if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.key === k))) {
         increaseWidth();
     }
-    if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+    if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
         reduceWidth();
     }
-    if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
+    if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
             box.style.direction = "ltr";
@@ -26664,11 +26678,11 @@ document.addEventListener("keydown", event => {
             box.style.direction = "rtl";
         }
     }
-    if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+    if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w, "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
         imgViewIndex = imgs.length - 1;
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+    } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w, "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -26679,7 +26693,7 @@ document.addEventListener("keydown", event => {
             }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
+    } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
         if (imgViewIndex > imgs.length - 1 && category === "comic") {
@@ -26694,12 +26708,12 @@ document.addEventListener("keydown", event => {
             }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if (event.code === "Delete" && config.ViewMode == 3) {
+    } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
         hideE.style.display = "none";
-    } else if (event.key === "Enter" && config.ViewMode == 3) {
+    } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
-    } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
+    } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "+", "=", "-", "_"].some(k => event.key === k)) {
         imgViewIndex = -1;
     }
 });
@@ -27035,15 +27049,15 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("keydown", event => {
-    if (document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k)) return;
+    if (document.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
     const imgs = [...document.querySelectorAll("img")];
-    if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+    if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.key === k))) {
         increaseWidth();
     }
-    if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+    if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
         reduceWidth();
     }
-    if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
+    if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
             box.style.direction = "ltr";
@@ -27051,11 +27065,11 @@ document.addEventListener("keydown", event => {
             box.style.direction = "rtl";
         }
     }
-    if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+    if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w, "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
         imgViewIndex = imgs.length - 1;
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+    } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w, "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -27066,7 +27080,7 @@ document.addEventListener("keydown", event => {
             }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
+    } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
         event.preventDefault();
         imgViewIndex++;
         if (imgViewIndex > imgs.length - 1 && category === "comic") {
@@ -27081,12 +27095,12 @@ document.addEventListener("keydown", event => {
             }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if (event.code === "Delete" && config.ViewMode == 3) {
+    } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
         hideE.style.display = "none";
-    } else if (event.key === "Enter" && config.ViewMode == 3) {
+    } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
-    } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
+    } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "+", "=", "-", "_"].some(k => event.key === k)) {
         imgViewIndex = -1;
     }
 });
@@ -27324,20 +27338,13 @@ if (config.ViewMode == 1) {
     const createShadowGallery = async () => {
 
         if (hasTouchEvents) return;
-
         if (("fancybox" in siteData) || ("gallery" in siteData && siteData.gallery == 1)) {
             return createIframeGallery();
         }
-
         if (ge("#FullPictureLoadShadowGallery")) {
             ge("#FullPictureLoadShadowGallery").remove();
         }
-
         fun.hideMsg();
-
-        const config = getConfig();
-
-        let webtoonWidth = config.webtoonWidth;
 
         let srcs;
         if ("SPA" in siteData) {
@@ -27348,10 +27355,13 @@ if (config.ViewMode == 1) {
         } else {
             captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
         }
-
         if (srcs.length < 1) return;
 
+        const config = getConfig();
+        let webtoonWidth = config.webtoonWidth;
         let imgViewIndex = -1;
+        let nextButtonIsShown = false;
+        let dNum = 0;
 
         const mainHtml = '<div id="FullPictureLoadShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
@@ -27418,8 +27428,6 @@ if (config.ViewMode == 1) {
         FullPictureLoadShadowGallery.addEventListener("wheel", toggleWidthEvent, {
             passive: false
         });
-
-        let nextButtonIsShown = false;
 
         const toggleImage = (event) => {
             if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
@@ -27501,28 +27509,35 @@ if (config.ViewMode == 1) {
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
         const kEvent = (event) => {
-            if (ge(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
+            if (ge(".fancybox__container") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
             const imgs = [...shadow.querySelectorAll("img")];
             const next = shadow.querySelector("#next");
-            if (event.code === "Escape") return closeGallery();
-            if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
-            if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
-            if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
-            if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
-            if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
-            if (event.code === "KeyN") {
+            if (event.code === "Escape" || event.key === "Escape") return closeGallery();
+            if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
+            if (event.code === "Numpad1" || event.code === "Digit1" || event.key === "1") return singleImageLayout();
+            if (event.code === "Numpad2" || event.code === "Digit2" || event.key === "2") return smallImageLayout();
+            if (event.code === "Numpad3" || event.code === "Digit3" || event.key === "3") return rtlImageLayout();
+            if (event.code === "Numpad4" || event.code === "Digit4" || event.key === "4") return webtoonImageLayout();
+            if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
                     next.style.backgroundColor = "gray";
                     return (location.href = nextLink);
                 }
             }
-            if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+            if ((["Space", "PageDown"].some(k => event.code === k) || [" ", "PageDown"].some(k => event.key === k)) && nextButtonIsShown) {
+                dNum++;
+                if (dNum > 2) {
+                    next.style.backgroundColor = "gray";
+                    return (location.href = nextLink);
+                }
+            }
+            if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
                 increaseWidth();
             }
-            if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+            if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
                 reduceWidth();
             }
-            if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
+            if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
                 let box = shadow.querySelector("#imgBox");
                 if (box.style.direction == "rtl") {
                     box.style.direction = "ltr";
@@ -27530,13 +27545,13 @@ if (config.ViewMode == 1) {
                     box.style.direction = "rtl";
                 }
             }
-            if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+            if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
-            } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+            } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 event.preventDefault();
                 imgViewIndex--;
                 if (imgs[imgViewIndex] === undefined) {
@@ -27550,10 +27565,10 @@ if (config.ViewMode == 1) {
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
-            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
+            } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 next.style.backgroundColor = "gray";
                 return setTimeout(() => (location.href = nextLink), 500);
-            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
+            } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
@@ -27570,12 +27585,12 @@ if (config.ViewMode == 1) {
                     }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-            } else if (event.code === "Delete" && config.ViewMode == 3) {
+            } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
                 const hideE = [...shadow.querySelectorAll("img")][imgViewIndex];
                 hideE.style.display = "none";
-            } else if (event.key === "Enter" && config.ViewMode == 3) {
+            } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
                 [...shadow.querySelectorAll("img")].forEach(e => (e.style.display = ""));
-            } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
+            } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
             }
         };
@@ -27687,6 +27702,7 @@ img.small {
 
         const mainElement = document.createElement("div");
         mainElement.id = "shadowGallery";
+        mainElement.tabIndex = "0";
 
         Object.assign(mainElement.style, {
             left: "0",
@@ -27720,6 +27736,7 @@ img.small {
             mainElement.scrollTo({
                 top: 0
             });
+            mainElement.focus();
             imgViewIndex = -1;
             [...shadow.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
             mainElement.innerHTML = "";
@@ -27744,14 +27761,18 @@ img.small {
             mainElement.append(p);
             loadImgs();
             aspectRatio();
-            setTimeout(() => {
-                aspectRatio();
-                [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
-            }, 1000);
+            fun.wait(() => imgElements[0]?.offsetHeight > 100).then(() => {
+                setTimeout(() => {
+                    aspectRatio();
+                    [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
+                }, 1000);
+            });
             if (options.fancybox == 1) {
                 _unsafeWindow.Fancybox.bind(mainElement, "img", {
                     Hash: false,
                     idle: false,
+                    showClass: false,
+                    hideClass: false,
                     wheel: FancyboxWheel,
                     Images: {
                         Panzoom: {
@@ -27763,7 +27784,7 @@ img.small {
                         timeout: FancyboxSlideshowTimeoutNum,
                     },
                     Carousel: {
-                        transition: FancyboxSlideshowTransition,
+                        transition: FancyboxSlideshowTransition
                     },
                     Thumbs: {
                         type: "classic",
@@ -27812,15 +27833,14 @@ img.small {
                     return setTimeout(() => (location.href = nextLink), 200);
                 });
                 if (config.shadowGalleryWheel != 1 && [0, 1, 3].some(m => config.ViewMode == m) || [2, 4].some(m => config.ViewMode == m)) {
-                    let isEvent = false;
-                    let dNum = 0;
+                    let isEventAdded = false;
                     const nextObserver = new IntersectionObserver((entries, observer) => {
                         entries.forEach(entry => {
                             if (entry.isIntersecting) {
                                 nextButtonIsShown = true;
                                 next.style.border = "solid #32a1ce";
-                                if (!isEvent) {
-                                    isEvent = true;
+                                if (!isEventAdded) {
+                                    isEventAdded = true;
                                     FullPictureLoadShadowGallery.addEventListener("wheel", (event) => {
                                         if (event.ctrlKey || event.altKey || event.shiftKey) return;
                                         if (event.deltaY < 0) {
@@ -27948,10 +27968,6 @@ img.small {
 
         fun.hideMsg();
 
-        const config = getConfig();
-
-        let webtoonWidth = config.webtoonWidth;
-
         let srcs;
         if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
@@ -27964,7 +27980,11 @@ img.small {
 
         if (srcs.length < 1) return;
 
+        const config = getConfig();
+        let webtoonWidth = config.webtoonWidth;
         let imgViewIndex = -1;
+        let nextButtonIsShown = false;
+        let dNum = 0;
 
         const iframe = document.createElement("iframe");
         iframe.id = "FullPictureLoadIframeGallery";
@@ -27990,12 +28010,8 @@ img.small {
         document.body.append(iframe);
 
         await new Promise((resolve) => {
-            if (!!iframe.attachEvent) {
-                iframe.attachEvent("onload", resolve);
-            } else {
-                iframe.onload = resolve;
-            }
-            iframe.src = "about:blank";
+            iframe.onload = resolve;
+            //iframe.src = "about:blank";
         });
 
         const win = iframe.contentWindow;
@@ -28068,8 +28084,6 @@ img.small {
         dom.addEventListener("wheel", toggleWidthEvent, {
             passive: false
         });
-
-        let nextButtonIsShown = false;
 
         const toggleImage = (event) => {
             if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
@@ -28151,42 +28165,49 @@ img.small {
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
         const kEvent = (event) => {
-            if (dom.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k)) return;
+            if (dom.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
             const imgs = [...mainElement.querySelectorAll("img")];
-            const next = dom.querySelector("#next");
-            if (event.code === "Escape") return closeGallery();
-            if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
-            if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
-            if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
-            if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
-            if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
-            if (event.code === "KeyN") {
+            const next = mainElement.querySelector("#next");
+            if (event.code === "Escape" || event.key === "Escape") return closeGallery();
+            if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
+            if (event.code === "Numpad1" || event.code === "Digit1" || event.key === "1") return singleImageLayout();
+            if (event.code === "Numpad2" || event.code === "Digit2" || event.key === "2") return smallImageLayout();
+            if (event.code === "Numpad3" || event.code === "Digit3" || event.key === "3") return rtlImageLayout();
+            if (event.code === "Numpad4" || event.code === "Digit4" || event.key === "4") return webtoonImageLayout();
+            if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
                     next.style.backgroundColor = "gray";
                     return (location.href = nextLink);
                 }
             }
-            if (config.ViewMode == 4 && ["NumpadAdd", "Equal"].some(k => event.code === k)) {
+            if ((["Space", "PageDown"].some(k => event.code === k) || [" ", "PageDown"].some(k => event.key === k)) && nextButtonIsShown) {
+                dNum++;
+                if (dNum > 2) {
+                    next.style.backgroundColor = "gray";
+                    return (location.href = nextLink);
+                }
+            }
+            if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
                 increaseWidth();
             }
-            if (config.ViewMode == 4 && ["NumpadSubtract", "Minus"].some(k => event.code === k)) {
+            if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
                 reduceWidth();
             }
-            if (event.code === "KeyR" && [0, 2, 3].some(m => config.ViewMode == m)) {
-                let box = dom.querySelector("#imgBox");
+            if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
+                let box = mainElement.querySelector("#imgBox");
                 if (box.style.direction == "rtl") {
                     box.style.direction = "ltr";
                 } else {
                     box.style.direction = "rtl";
                 }
             }
-            if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex < 0) {
+            if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
-            } else if (["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => k === event.code) && imgViewIndex >= 0) {
+            } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 event.preventDefault();
                 imgViewIndex--;
                 if (imgs[imgViewIndex] === undefined) {
@@ -28200,10 +28221,10 @@ img.small {
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
-            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && nextButtonIsShown) {
+            } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 next.style.backgroundColor = "gray";
                 return setTimeout(() => (location.href = nextLink), 500);
-            } else if (["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => k === event.code) && imgViewIndex <= imgs.length - 1) {
+            } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
@@ -28219,15 +28240,13 @@ img.small {
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
                     }
                 }
-                if (imgs[imgViewIndex] !== undefined) {
-                    imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-                }
-            } else if (event.code === "Delete" && config.ViewMode == 3) {
+                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
                 const hideE = [...mainElement.querySelectorAll("img")][imgViewIndex];
                 hideE.style.display = "none";
-            } else if (event.key === "Enter" && config.ViewMode == 3) {
+            } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
                 [...mainElement.querySelectorAll("img")].forEach(e => (e.style.display = ""));
-            } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k)) {
+            } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
             }
         };
@@ -28336,9 +28355,19 @@ img.small {
 }
             `
         });
-
+        if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
+            _GM_addElement(dom.head, "style", {
+                textContent: `
+.fancybox__container .to-next>.fancybox__content,
+.fancybox__container .to-prev>.fancybox__content {
+    display: none !important
+}
+            `
+            });
+        }
         const mainElement = dom.createElement("div");
-        mainElement.id = "Gallery";
+        mainElement.id = "iframeGallery";
+        mainElement.tabIndex = "0";
 
         Object.assign(mainElement.style, {
             left: "0",
@@ -28372,7 +28401,7 @@ img.small {
             mainElement.scrollTo({
                 top: 0
             });
-            iframe.focus();
+            mainElement.focus();
             imgViewIndex = -1;
             [...dom.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
             mainElement.innerHTML = "";
@@ -28398,10 +28427,12 @@ img.small {
             mainElement.append(p);
             loadImgs();
             aspectRatio();
-            setTimeout(() => {
-                aspectRatio();
-                [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
-            }, 1000);
+            fun.wait(() => imgElements[0]?.offsetHeight > 100).then(() => {
+                setTimeout(() => {
+                    aspectRatio();
+                    [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
+                }, 1000);
+            });
             if (options.fancybox == 1) {
                 [...mainElement.querySelectorAll("img")].forEach(img => {
                     img.addEventListener("click", (event) => {
@@ -28413,6 +28444,8 @@ img.small {
                         Fancybox.fromNodes([...mainElement.querySelectorAll("img")], {
                             Hash: false,
                             idle: false,
+                            showClass: false,
+                            hideClass: false,
                             wheel: FancyboxWheel,
                             startIndex: index,
                             Images: {
@@ -28423,6 +28456,10 @@ img.small {
                             },
                             Slideshow: {
                                 timeout: FancyboxSlideshowTimeoutNum,
+                            },
+                            Carousel: {
+                                ...Fancybox.defaults.Carousel,
+                                transition: FancyboxSlideshowTransition
                             },
                             Thumbs: {
                                 showOnStart: false
@@ -28471,15 +28508,14 @@ img.small {
                     return setTimeout(() => (location.href = nextLink), 200);
                 });
                 if (config.shadowGalleryWheel != 1) {
-                    let isEvent = false;
-                    let dNum = 0;
+                    let isEventAdded = false;
                     const nextObserver = new IntersectionObserver((entries, observer) => {
                         entries.forEach(entry => {
                             if (entry.isIntersecting) {
                                 nextButtonIsShown = true;
                                 next.style.border = "solid #32a1ce";
-                                if (!isEvent) {
-                                    isEvent = true;
+                                if (!isEventAdded) {
+                                    isEventAdded = true;
                                     dom.addEventListener("wheel", (event) => {
                                         if (event.ctrlKey || event.altKey || event.shiftKey) return;
                                         if (event.deltaY < 0) {
@@ -29934,7 +29970,7 @@ a[data-fancybox]:hover {
     const addKeyEvent = async event => {
         if (ge(".fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
-        if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) return;
+        if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) return;
         if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptionsShadowElement")) return;
         if (["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName)) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyT" || event.key === "t" || event.key === "T")) {
@@ -29945,10 +29981,10 @@ a[data-fancybox]:hover {
             fun.showMsg(displayLanguage.str_118);
             debug("圖集新標題", newTitle || customTitle);
         }
-        if (event.code === "KeyG") { //G鍵
+        if (event.code === "KeyG" || event.key === "g" || event.key === "G") { //G鍵
             return createShadowGallery();
         }
-        if (event.code === "KeyI") { //I鍵
+        if (event.code === "KeyI" || event.key === "i" || event.key === "I") { //I鍵
             return createIframeGallery();
         }
         if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
@@ -29975,7 +30011,7 @@ a[data-fancybox]:hover {
             fun.clearSetTimeout();
             return increaseZoom();
         }
-        if (event.code === "NumpadDecimal" || event.key === ".") { //數字鍵.
+        if (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".") { //數字鍵.
             fun.clearSetTimeout();
             return cancelZoom();
         }
@@ -30195,6 +30231,9 @@ a[data-fancybox]:hover {
         if ("css" in siteData && isString(siteData.css)) {
             fun.css(siteData.css);
         }
+        if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
+            fun.css(".fancybox__container .to-next>.fancybox__content,.fancybox__container .to-prev>.fancybox__content{display:none!important}");
+        }
         if (options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
             addLibrarysV3();
             Fancyboxi18nV3();
@@ -30400,14 +30439,14 @@ a[data-fancybox]:hover {
             }
             document.addEventListener("keydown", event => {
                 if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
-                if (event.code === "ArrowRight") callback(event);
+                if (event.code === "ArrowRight" || event.key === "ArrowRight") callback(event);
             });
         }
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
                 if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
-                if (event.code === "ArrowLeft") {
+                if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
                         fun.showMsg(displayLanguage.str_38);
@@ -30638,7 +30677,7 @@ a[data-fancybox]:hover {
         //自動下載快捷鍵
         document.addEventListener("keydown", event => {
             if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
-            if (event.ctrlKey && (event.code === "NumpadDecimal" || event.key === ".")) {
+            if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
                     options.autoDownload = 1;
