@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.25
+// @version            2.8.26
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4793,13 +4793,6 @@ a:has(>div>div>img),
                 "#main>h1,header>h1"
             ]
         }),
-        init: async () => {
-            _unsafeWindow.stop();
-            fun.showMsg("Clear Element Event", 0);
-            fun.clearAllTimer();
-            await fun.clearElementEvent();
-            fun.hideMsg();
-        },
         imgs: () => fun.getImg("img.block", fun.gt("a[rel=next]", 2) || 1),
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
@@ -4813,7 +4806,7 @@ a:has(>div>div>img),
                 /🐾/g
             ]
         }),
-        css: "div.flex.m-1:has(>a[style])",
+        css: "div.flex.m-1:has(>a[style]),iframe[id][class][width][height][style]{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "色图喵",
@@ -21433,6 +21426,7 @@ if ("xx" in window) {
                 str_147: "畫廊 (0、1、3) 滾輪操作：",
                 str_148: "Fancybox5幻燈片過場效果：",
                 str_149: "已取消下載！！！",
+                str_150: "JK滾動",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21616,6 +21610,7 @@ if ("xx" in window) {
                 str_147: "画廊 (0、1、3) 滚轮操作：",
                 str_148: "Fancybox5幻灯片过场效果：",
                 str_149: "已取消下载！！！",
+                str_150: "JK滚动",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21798,6 +21793,7 @@ if ("xx" in window) {
                 str_147: "Gallery (0、1、3) Wheel：",
                 str_148: "Fancybox5 Slideshow Transition：",
                 str_149: "Download Canceled！！！",
+                str_150: "JK Scroll",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -26196,7 +26192,8 @@ if ("xx" in window) {
         const default_Config = {
             ViewMode: 0,
             webtoonWidth: 800,
-            shadowGalleryWheel: 0
+            shadowGalleryWheel: 0,
+            jumpNum: 100
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -27548,6 +27545,24 @@ if (config.ViewMode == 1) {
                     return (location.href = nextLink);
                 }
             }
+            if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
+                let num = mainElement.scrollTop + Number(config.jumpNum);
+                if (num > mainElement.scrollHeight) {
+                    num = mainElement.scrollHeight;
+                }
+                mainElement.scrollTo({
+                    top: num
+                });
+            }
+            if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
+                let num = mainElement.scrollTop - Number(config.jumpNum);
+                if (num <= 0) {
+                    num = 0;
+                }
+                mainElement.scrollTo({
+                    top: num
+                });
+            }
             if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
                 increaseWidth();
             }
@@ -27663,6 +27678,10 @@ p#imgBox {
     -ms-user-select: none;
     user-select: none;
 }
+#MenuJumpItem {
+    width: 130px;
+    padding: 0px;
+}
 .FixedMenuitem.active {
     color: #fff;
     background: #1790E6;
@@ -27713,6 +27732,15 @@ img.small {
     height: 50px;
     text-decoration: unset !important;
     cursor: pointer !important;
+}
+#FixedMenu select {
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 0 auto;
+}
+#FixedMenu select option {
+    text-align:center;
 }
         `);
         shadow.appendChild(style);
@@ -27901,6 +27929,8 @@ img.small {
                 text: displayLanguage.str_142,
                 cfn: () => closeGallery()
             }, {
+                id: "MenuJumpItem",
+            }, {
                 id: "MenuWebtoonItem",
                 text: displayLanguage.galleryMenu.webtoon,
                 cfn: () => webtoonImageLayout()
@@ -27925,13 +27955,27 @@ img.small {
                 let item = document.createElement("div");
                 item.id = obj.id;
                 item.className = "FixedMenuitem";
-                item.innerText = obj.text;
+                if (!!obj.text) item.innerText = obj.text;
                 item.oncontextmenu = () => false;
                 if (!!obj.cfn) item.addEventListener("click", obj.cfn);
                 menuDiv.append(item);
             };
             menuObj.forEach(obj => createMenu(obj));
+            let select = document.createElement("select");
+            let html = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
+            select.insertAdjacentHTML("afterbegin", html);
+            menuDiv.querySelector("#MenuJumpItem").append(select);
             shadow.append(menuDiv);
+            select.value = config.jumpNum;
+            select.addEventListener("change", () => {
+                config.jumpNum = select.value;
+                saveConfig(config);
+                menuDiv.style.left = "0";
+                setTimeout(() => {
+                    menuDiv.style.left = "";
+                    mainElement.focus();
+                }, 500);
+            });
         }
         addFixedMenu();
 
@@ -28208,6 +28252,24 @@ img.small {
                     return (location.href = nextLink);
                 }
             }
+            if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
+                let num = mainElement.scrollTop + Number(config.jumpNum);
+                if (num > mainElement.scrollHeight) {
+                    num = mainElement.scrollHeight;
+                }
+                mainElement.scrollTo({
+                    top: num
+                });
+            }
+            if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
+                let num = mainElement.scrollTop - Number(config.jumpNum);
+                if (num <= 0) {
+                    num = 0;
+                }
+                mainElement.scrollTo({
+                    top: num
+                });
+            }
             if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
                 increaseWidth();
             }
@@ -28323,6 +28385,10 @@ p#imgBox {
     -ms-user-select: none;
     user-select: none;
 }
+#MenuJumpItem {
+    width: 130px;
+    padding: 0px;
+}
 .FixedMenuitem.active {
     color: #fff;
     background: #1790E6;
@@ -28373,6 +28439,15 @@ img.small {
     height: 50px;
     text-decoration: unset !important;
     cursor: pointer !important;
+}
+#FixedMenu select {
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 0 auto;
+}
+#FixedMenu select option {
+    text-align:center;
 }
             `
         });
@@ -28580,6 +28655,8 @@ img.small {
                 text: displayLanguage.str_142,
                 cfn: () => closeGallery()
             }, {
+                id: "MenuJumpItem",
+            }, {
                 id: "MenuWebtoonItem",
                 text: displayLanguage.galleryMenu.webtoon,
                 cfn: () => webtoonImageLayout()
@@ -28604,13 +28681,27 @@ img.small {
                 let item = document.createElement("div");
                 item.id = obj.id;
                 item.className = "FixedMenuitem";
-                item.innerText = obj.text;
+                if (!!obj.text) item.innerText = obj.text;
                 item.oncontextmenu = () => false;
                 if (!!obj.cfn) item.addEventListener("click", obj.cfn);
                 menuDiv.append(item);
             };
             menuObj.forEach(obj => createMenu(obj));
+            let select = document.createElement("select");
+            let html = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
+            select.insertAdjacentHTML("afterbegin", html);
+            menuDiv.querySelector("#MenuJumpItem").append(select);
             dom.body.append(menuDiv);
+            select.value = config.jumpNum;
+            select.addEventListener("change", () => {
+                config.jumpNum = select.value;
+                saveConfig(config);
+                menuDiv.style.left = "0";
+                setTimeout(() => {
+                    menuDiv.style.left = "";
+                    mainElement.focus();
+                }, 500);
+            });
         }
         addFixedMenu();
 
