@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.26
+// @version            2.8.27
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -96,6 +96,7 @@
     let promiseBlobArray = [];
     let captureLinksArray = [];
     let customTitle = null;
+    let isEsc = false;
     let isDownloading = false;
     let isStopDownload = false;
     let isCountdowning = false;
@@ -8672,7 +8673,7 @@ a:has(>div>div>img),
             for (let url of links) {
                 let res = fun.xhrDoc(url).then(dom => {
                     fun.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
-                    let img = dom.querySelector(".lightgallery>img");
+                    let img = fun.ge(".lightgallery>img", dom);
                     return img ? img.src : null;
                 });
                 resArr.push(res);
@@ -8681,7 +8682,7 @@ a:has(>div>div>img),
             let videoResArr = [];
             for (let url of videoLinks) {
                 let res = fun.xhrDoc(url).then(dom => {
-                    let video = dom.querySelector("#player>source");
+                    let video = fun.ge("#player>source", dom);
                     return video ? video.src : null;
                 });
                 videoResArr.push(res);
@@ -21427,6 +21428,7 @@ if ("xx" in window) {
                 str_148: "Fancybox5幻燈片過場效果：",
                 str_149: "已取消下載！！！",
                 str_150: "JK滾動",
+                str_151: "JK平滑滾動",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21611,6 +21613,7 @@ if ("xx" in window) {
                 str_148: "Fancybox5幻灯片过场效果：",
                 str_149: "已取消下载！！！",
                 str_150: "JK滚动",
+                str_151: "JK平滑滚动",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21794,6 +21797,7 @@ if ("xx" in window) {
                 str_148: "Fancybox5 Slideshow Transition：",
                 str_149: "Download Canceled！！！",
                 str_150: "JK Scroll",
+                str_151: "JK Smooth Scroll",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -24702,6 +24706,13 @@ if ("xx" in window) {
             isAutoScrolling = true;
             let eles = fun.gae(ele);
             for (let e of eles) {
+                if (isEsc) {
+                    isAutoScrolling = false;
+                    _unsafeWindow.scrollTo({
+                        top: 0
+                    });
+                    return;
+                }
                 e.scrollIntoView({
                     behavior: "smooth",
                     block: "end"
@@ -24725,6 +24736,14 @@ if ("xx" in window) {
             let imgNum = imgs.length;
             const autoScrollIntoView = async (arr, num) => {
                 for (let i = 0; i < arr.length; i++) {
+                    if (isEsc) {
+                        fun.hideMsg();
+                        isAutoScrolling = false;
+                        _unsafeWindow.scrollTo({
+                            top: 0
+                        });
+                        return;
+                    }
                     fun.showMsg(`AutoScroll ${n += 1}/${num}`, 0);
                     await new Promise(resolve => {
                         let timeId = setTimeout(() => {
@@ -24733,6 +24752,17 @@ if ("xx" in window) {
                             resolve();
                         }, time);
                         let loop = setInterval(async () => {
+                            if (isEsc) {
+                                clearTimeout(timeId);
+                                clearInterval(loop);
+                                fun.hideMsg();
+                                isAutoScrolling = false;
+                                _unsafeWindow.scrollTo({
+                                    top: 0
+                                });
+                                resolve();
+                                return;
+                            }
                             arr[i].scrollIntoView();
                             if (await callback(arr[i])) {
                                 clearTimeout(timeId);
@@ -25200,7 +25230,7 @@ if ("xx" in window) {
     }
 
     //CSS取得所有元素返回元素陣列
-    const gae = (selector) => [...document.querySelectorAll(selector)];
+    const gae = (selector, node = null) => [...(node || document).querySelectorAll(selector)];
     //Xpath取得元素返回元素
     const gx = (xpath) => document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     //Xpath取得所有元素返回元素陣列
@@ -26193,7 +26223,8 @@ if ("xx" in window) {
             ViewMode: 0,
             webtoonWidth: 800,
             shadowGalleryWheel: 0,
-            jumpNum: 100
+            jumpNum: 100,
+            behavior: "instant"
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -27389,7 +27420,7 @@ if (config.ViewMode == 1) {
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const increaseWidth = () => {
-            let imgs = [...shadow.querySelectorAll("img")];
+            let imgs = gae("img", shadow);
             if (webtoonWidth < 1900 && webtoonWidth < _unsafeWindow.innerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
@@ -27404,7 +27435,7 @@ if (config.ViewMode == 1) {
         };
 
         const reduceWidth = () => {
-            let imgs = [...shadow.querySelectorAll("img")];
+            let imgs = gae("img", shadow);
             if (webtoonWidth > 100) {
                 webtoonWidth = (Number(webtoonWidth) - 50);
                 config.webtoonWidth = webtoonWidth;
@@ -27448,8 +27479,8 @@ if (config.ViewMode == 1) {
                 if (!ge(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
                     event.preventDefault();
                     event.stopPropagation();
-                    const imgs = [...shadow.querySelectorAll("img")];
-                    const next = shadow.querySelector("#next");
+                    const imgs = gae("img", shadow);
+                    const next = ge("#next", shadow);
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -27500,7 +27531,7 @@ if (config.ViewMode == 1) {
 
         const aspectRatio = () => {
             const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
-            const imgs = [...shadow.querySelectorAll("img")];
+            const imgs = gae("img", shadow);
             imgs.forEach(img => {
                 if (verticalScreen && img.className === "default") {
                     img.style.maxWidth = "96vw";
@@ -27524,8 +27555,8 @@ if (config.ViewMode == 1) {
 
         const kEvent = (event) => {
             if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
-            const imgs = [...shadow.querySelectorAll("img")];
-            const next = shadow.querySelector("#next");
+            const imgs = gae("img", shadow);
+            const next = ge("#next", shadow);
             if (event.code === "Escape" || event.key === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.code === "Digit1" || event.key === "1") return singleImageLayout();
@@ -27550,8 +27581,9 @@ if (config.ViewMode == 1) {
                 if (num > mainElement.scrollHeight) {
                     num = mainElement.scrollHeight;
                 }
-                mainElement.scrollTo({
-                    top: num
+                return mainElement.scrollTo({
+                    top: num,
+                    behavior: config.behavior
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
@@ -27559,8 +27591,9 @@ if (config.ViewMode == 1) {
                 if (num <= 0) {
                     num = 0;
                 }
-                mainElement.scrollTo({
-                    top: num
+                return mainElement.scrollTo({
+                    top: num,
+                    behavior: config.behavior
                 });
             }
             if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
@@ -27570,7 +27603,7 @@ if (config.ViewMode == 1) {
                 reduceWidth();
             }
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
-                let box = shadow.querySelector("#imgBox");
+                let box = ge("#imgBox", shadow);
                 if (box.style.direction == "rtl") {
                     box.style.direction = "ltr";
                 } else {
@@ -27618,10 +27651,10 @@ if (config.ViewMode == 1) {
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
-                const hideE = [...shadow.querySelectorAll("img")][imgViewIndex];
+                const hideE = gae("img", shadow)[imgViewIndex];
                 hideE.style.display = "none";
             } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
-                [...shadow.querySelectorAll("img")].forEach(e => (e.style.display = ""));
+                gae("img", shadow).forEach(e => (e.style.display = ""));
             } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
             }
@@ -27658,7 +27691,7 @@ p#imgBox {
     z-index: 2147483647;
 }
 #FixedMenu:hover {
-  left: 0px;
+    left: 0px;
 }
 .FixedMenuitem {
     width: 120px;
@@ -27684,7 +27717,7 @@ p#imgBox {
 }
 .FixedMenuitem.active {
     color: #fff;
-    background: #1790E6;
+    background: #1790e6;
 }
 img.default {
     vertical-align: middle;
@@ -27706,10 +27739,10 @@ img.single {
 img.webtoon {
     width: 100%;
     height: auto;
-    max-width: ${webtoonWidth}px;
+    max-width: 800px;
     display: block;
     margin: 0 auto;
-    border: unset !important;
+    border: unset;
 }
 img.small {
     display: inline-block;
@@ -27730,17 +27763,25 @@ img.small {
     font-size: 26px;
     line-height: 50px;
     height: 50px;
-    text-decoration: unset !important;
-    cursor: pointer !important;
+    text-decoration: unset;
+    cursor: pointer;
 }
 #FixedMenu select {
+    text-align: center;
+    background-color: #f6f6f6;
     border: none;
     width: 100%;
     height: 100%;
-    padding: 0 auto;
+    padding: 0 auto;
 }
 #FixedMenu select option {
-    text-align:center;
+    text-align: center;
+}
+#behaviorInput {
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    margin-top: ${isFirefox ? "2px" : "0px"};
 }
         `);
         shadow.appendChild(style);
@@ -27770,7 +27811,7 @@ img.small {
         shadow.appendChild(mainElement);
 
         function loadImgs() {
-            const imgs = [...shadow.querySelectorAll("img")];
+            const imgs = gae("img", shadow);
             const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
             const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
             fun.singleThreadLoadImgs(oddNumberImgs);
@@ -27783,14 +27824,18 @@ img.small {
             });
             mainElement.focus();
             imgViewIndex = -1;
-            [...shadow.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            gae(".FixedMenuitem", shadow).forEach(item => item.classList.remove("active"));
             mainElement.innerHTML = "";
-            const imgElements = srcs.map(src => {
+            const imgElements = srcs.map((src, i) => {
                 let img = new Image();
                 img.className = mode;
                 img.src = loading_bak;
                 img.dataset.src = src;
                 img.dataset.fancybox = "gallery";
+                img.dataset.index = i;
+                if (mode === "webtoon") {
+                    img.style.maxWidth = webtoonWidth + "px";
+                }
                 return img;
             });
             const p = document.createElement("p");
@@ -27806,14 +27851,25 @@ img.small {
             mainElement.append(p);
             loadImgs();
             aspectRatio();
-            fun.wait(() => imgElements[0]?.offsetHeight > 100).then(() => {
+            fun.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
-                    [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
+                    gae("img", shadow).forEach(img => fun.imagesObserver.observe(img));
                 }, 1000);
             });
+            if (options.fancybox != 1) {
+                imgElements.forEach(img => {
+                    img.onclick = (event) => {
+                        imgViewIndex = Number(img.dataset.index);
+                        if (config.ViewMode != 4) {
+                            imgElements.forEach(e => (e.style.border = ""));
+                            event.target.style.border = "solid #32a1ce";
+                        }
+                    }
+                });
+            }
             if (options.fancybox == 1) {
-                _unsafeWindow.Fancybox.bind(mainElement, "img", {
+                _unsafeWindow.Fancybox.bind(mainElement, "[data-fancybox]", {
                     Hash: false,
                     idle: false,
                     showClass: false,
@@ -27846,7 +27902,7 @@ img.small {
                         done: (fancybox, slide) => {
                             isOpenFancybox = true;
                             let slideIndex = slide.index;
-                            let imgs = [...mainElement.querySelectorAll("img")];
+                            let imgs = gae("img", mainElement);
                             imgs.forEach(e => (e.style.border = ""));
                             if (fancybox.isCurrentSlide(slide)) {
                                 imgViewIndex = slideIndex;
@@ -27862,7 +27918,7 @@ img.small {
                             document.body.classList.remove("hide-scrollbar");
                             let slideIndex = fancybox.getSlide().index;
                             imgViewIndex = slideIndex;
-                            let imgs = [...mainElement.querySelectorAll("img")];
+                            let imgs = gae("img", mainElement);
                             imgs.forEach(e => (e.style.border = ""));
                             imgs[slideIndex].style.border = "solid #32a1ce";
                             imgs[slideIndex].scrollIntoView(instantScrollIntoView);
@@ -27916,7 +27972,11 @@ img.small {
                     }, {
                         threshold: 0.9,
                     });
-                    nextObserver.observe(next);
+                    fun.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
+                        setTimeout(() => {
+                            nextObserver.observe(next);
+                        }, 1000);
+                    });
                 }
             }
         }
@@ -27928,6 +27988,8 @@ img.small {
                 id: "MenuCancelItem",
                 text: displayLanguage.str_142,
                 cfn: () => closeGallery()
+            }, {
+                id: "MenuBehaviorItem"
             }, {
                 id: "MenuJumpItem",
             }, {
@@ -27961,20 +28023,38 @@ img.small {
                 menuDiv.append(item);
             };
             menuObj.forEach(obj => createMenu(obj));
-            let select = document.createElement("select");
-            let html = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
-            select.insertAdjacentHTML("afterbegin", html);
-            menuDiv.querySelector("#MenuJumpItem").append(select);
+
+            let jumpSelect = document.createElement("select");
+            let jumpOption = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
+            jumpSelect.insertAdjacentHTML("afterbegin", jumpOption);
+            ge("#MenuJumpItem", menuDiv).append(jumpSelect);
+
+            let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
+            let behaviorInput = document.createElement("input");
+            behaviorInput.id = "behaviorInput";
+            behaviorInput.type = "checkbox";
+            behaviorDiv.append(behaviorInput);
+            let behaviorLabel = document.createElement("label");
+            behaviorLabel.innerText = displayLanguage.str_151;
+            behaviorDiv.append(behaviorLabel);
+
             shadow.append(menuDiv);
-            select.value = config.jumpNum;
-            select.addEventListener("change", () => {
-                config.jumpNum = select.value;
+
+            jumpSelect.value = config.jumpNum;
+            jumpSelect.addEventListener("change", () => {
+                config.jumpNum = jumpSelect.value;
                 saveConfig(config);
                 menuDiv.style.left = "0";
                 setTimeout(() => {
                     menuDiv.style.left = "";
                     mainElement.focus();
                 }, 500);
+            });
+
+            behaviorInput.checked = config.behavior == "smooth" ? true : false;
+            behaviorInput.addEventListener("change", () => {
+                config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
+                saveConfig(config);
             });
         }
         addFixedMenu();
@@ -27983,35 +28063,35 @@ img.small {
             config.ViewMode = 0;
             saveConfig(config);
             createGalleryElement("default");
-            shadow.querySelector("#MenuDefaultItem").classList.add("active");
+            ge("#MenuDefaultItem", shadow).classList.add("active");
         }
 
         function singleImageLayout() {
             config.ViewMode = 1;
             saveConfig(config);
             createGalleryElement("single");
-            shadow.querySelector("#MenuSinglePageItem").classList.add("active");
+            ge("#MenuSinglePageItem", shadow).classList.add("active");
         }
 
         function smallImageLayout() {
             config.ViewMode = 2;
             saveConfig(config);
             createGalleryElement("small");
-            shadow.querySelector("#MenuSmallItem").classList.add("active");
+            ge("#MenuSmallItem", shadow).classList.add("active");
         }
 
         function rtlImageLayout() {
             config.ViewMode = 3;
             saveConfig(config);
             createGalleryElement("default");
-            shadow.querySelector("#MenuRTLItem").classList.add("active");
+            ge("#MenuRTLItem", shadow).classList.add("active");
         }
 
         function webtoonImageLayout() {
             config.ViewMode = 4;
             saveConfig(config);
             createGalleryElement("webtoon");
-            shadow.querySelector("#MenuWebtoonItem").classList.add("active");
+            ge("#MenuWebtoonItem", shadow).classList.add("active");
         }
 
         if (config.ViewMode == 1) {
@@ -28097,7 +28177,7 @@ img.small {
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const increaseWidth = () => {
-            let imgs = [...mainElement.querySelectorAll("img")];
+            let imgs = gae("img", mainElement);
             if (webtoonWidth < 1900 && webtoonWidth < win.innerWidth) {
                 webtoonWidth = (Number(webtoonWidth) + 50);
                 config.webtoonWidth = webtoonWidth;
@@ -28112,7 +28192,7 @@ img.small {
         };
 
         const reduceWidth = () => {
-            let imgs = [...mainElement.querySelectorAll("img")];
+            let imgs = gae("img", mainElement);
             if (webtoonWidth > 100) {
                 webtoonWidth = (Number(webtoonWidth) - 50);
                 config.webtoonWidth = webtoonWidth;
@@ -28155,8 +28235,8 @@ img.small {
                 if (!event.ctrlKey && !event.altKey && !event.shiftKey) {
                     event.preventDefault();
                     event.stopPropagation();
-                    const imgs = [...mainElement.querySelectorAll("img")];
-                    const next = dom.querySelector("#next");
+                    const imgs = gae("img", mainElement);
+                    const next = ge("#next", mainElement);
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -28207,7 +28287,7 @@ img.small {
 
         const aspectRatio = () => {
             const verticalScreen = win.innerHeight / win.innerWidth > 1;
-            const imgs = [...mainElement.querySelectorAll("img")];
+            const imgs = gae("img", mainElement);
             imgs.forEach(img => {
                 if (verticalScreen && img.className === "default") {
                     img.style.maxWidth = "96vw";
@@ -28231,8 +28311,8 @@ img.small {
 
         const kEvent = (event) => {
             if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
-            const imgs = [...mainElement.querySelectorAll("img")];
-            const next = mainElement.querySelector("#next");
+            const imgs = gae("img", mainElement);
+            const next = ge("#next", mainElement);
             if (event.code === "Escape" || event.key === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.code === "Digit1" || event.key === "1") return singleImageLayout();
@@ -28257,8 +28337,9 @@ img.small {
                 if (num > mainElement.scrollHeight) {
                     num = mainElement.scrollHeight;
                 }
-                mainElement.scrollTo({
-                    top: num
+                return mainElement.scrollTo({
+                    top: num,
+                    behavior: config.behavior
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
@@ -28266,8 +28347,9 @@ img.small {
                 if (num <= 0) {
                     num = 0;
                 }
-                mainElement.scrollTo({
-                    top: num
+                return mainElement.scrollTo({
+                    top: num,
+                    behavior: config.behavior
                 });
             }
             if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
@@ -28277,7 +28359,7 @@ img.small {
                 reduceWidth();
             }
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
-                let box = mainElement.querySelector("#imgBox");
+                let box = ge("#imgBox", mainElement);
                 if (box.style.direction == "rtl") {
                     box.style.direction = "ltr";
                 } else {
@@ -28325,10 +28407,10 @@ img.small {
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
             } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
-                const hideE = [...mainElement.querySelectorAll("img")][imgViewIndex];
+                const hideE = gae("img", mainElement)[imgViewIndex];
                 hideE.style.display = "none";
             } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
-                [...mainElement.querySelectorAll("img")].forEach(e => (e.style.display = ""));
+                gae("img", mainElement).forEach(e => (e.style.display = ""));
             } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
             }
@@ -28365,7 +28447,7 @@ p#imgBox {
     z-index: 2147483647;
 }
 #FixedMenu:hover {
-  left: 0px;
+    left: 0px;
 }
 .FixedMenuitem {
     width: 120px;
@@ -28391,7 +28473,7 @@ p#imgBox {
 }
 .FixedMenuitem.active {
     color: #fff;
-    background: #1790E6;
+    background: #1790e6;
 }
 img.default {
     vertical-align: middle;
@@ -28413,10 +28495,10 @@ img.single {
 img.webtoon {
     width: 100%;
     height: auto;
-    max-width: ${webtoonWidth}px;
+    max-width: 800px;
     display: block;
     margin: 0 auto;
-    border: unset !important;
+    border: unset;
 }
 img.small {
     display: inline-block;
@@ -28437,19 +28519,27 @@ img.small {
     font-size: 26px;
     line-height: 50px;
     height: 50px;
-    text-decoration: unset !important;
-    cursor: pointer !important;
+    text-decoration: unset;
+    cursor: pointer;
 }
 #FixedMenu select {
+    text-align: center;
+    background-color: #f6f6f6;
     border: none;
     width: 100%;
     height: 100%;
-    padding: 0 auto;
+    padding: 0 auto;
 }
 #FixedMenu select option {
-    text-align:center;
+    text-align: center;
 }
-            `
+#behaviorInput {
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    margin-top: ${isFirefox ? "2px" : "0px"};
+}
+        `
         });
         if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
             _GM_addElement(dom.head, "style", {
@@ -28486,7 +28576,7 @@ img.small {
         dom.body.appendChild(mainElement);
 
         function loadImgs() {
-            const imgs = [...mainElement.querySelectorAll("img")];
+            const imgs = gae("img", mainElement);
             const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
             const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
             fun.singleThreadLoadImgs(oddNumberImgs);
@@ -28499,7 +28589,7 @@ img.small {
             });
             mainElement.focus();
             imgViewIndex = -1;
-            [...dom.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
+            gae(".FixedMenuitem", dom).forEach(item => item.classList.remove("active"));
             mainElement.innerHTML = "";
             const imgElements = srcs.map((src, i) => {
                 let img = new Image();
@@ -28508,6 +28598,9 @@ img.small {
                 img.dataset.src = src;
                 img.dataset.fancybox = "gallery";
                 img.dataset.index = i;
+                if (mode === "webtoon") {
+                    img.style.maxWidth = webtoonWidth + "px";
+                }
                 return img;
             });
             const p = document.createElement("p");
@@ -28523,21 +28616,32 @@ img.small {
             mainElement.append(p);
             loadImgs();
             aspectRatio();
-            fun.wait(() => imgElements[0]?.offsetHeight > 100).then(() => {
+            fun.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
-                    [...mainElement.querySelectorAll("img")].forEach(img => fun.imagesObserver.observe(img));
+                    gae("img", mainElement).forEach(img => fun.imagesObserver.observe(img));
                 }, 1000);
             });
+            if (options.fancybox != 1) {
+                imgElements.forEach(img => {
+                    img.onclick = (event) => {
+                        imgViewIndex = Number(img.dataset.index);
+                        if (config.ViewMode != 4) {
+                            imgElements.forEach(e => (e.style.border = ""));
+                            event.target.style.border = "solid #32a1ce";
+                        }
+                    }
+                });
+            }
             if (options.fancybox == 1) {
-                [...mainElement.querySelectorAll("img")].forEach(img => {
+                gae("img", mainElement).forEach(img => {
                     img.addEventListener("click", (event) => {
                         const Fancybox = win.Fancybox;
                         if (Fancyboxl10nV5() != "EN") {
                             Fancybox.defaults.l10n = Fancyboxl10nV5();
                         }
                         const index = Number(event.target.dataset.index);
-                        Fancybox.fromNodes([...mainElement.querySelectorAll("img")], {
+                        Fancybox.fromNodes(gae("[data-fancybox]", mainElement), {
                             Hash: false,
                             idle: false,
                             showClass: false,
@@ -28571,7 +28675,7 @@ img.small {
                                 done: (fancybox, slide) => {
                                     isOpenFancybox = true;
                                     let slideIndex = slide.index;
-                                    let imgs = [...mainElement.querySelectorAll("img")];
+                                    let imgs = gae("img", mainElement);
                                     imgs.forEach(e => (e.style.border = ""));
                                     if (fancybox.isCurrentSlide(slide)) {
                                         imgViewIndex = slideIndex;
@@ -28586,7 +28690,7 @@ img.small {
                                 close: fancybox => {
                                     let slideIndex = fancybox.getSlide().index;
                                     imgViewIndex = slideIndex;
-                                    let imgs = [...mainElement.querySelectorAll("img")];
+                                    let imgs = gae("img", mainElement);
                                     imgs.forEach(e => (e.style.border = ""));
                                     imgs[slideIndex].style.border = "solid #32a1ce";
                                     imgs[slideIndex].scrollIntoView(instantScrollIntoView);
@@ -28642,7 +28746,11 @@ img.small {
                     }, {
                         threshold: 0.9,
                     });
-                    nextObserver.observe(next);
+                    fun.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
+                        setTimeout(() => {
+                            nextObserver.observe(next);
+                        }, 1000);
+                    });
                 }
             }
         }
@@ -28654,6 +28762,8 @@ img.small {
                 id: "MenuCancelItem",
                 text: displayLanguage.str_142,
                 cfn: () => closeGallery()
+            }, {
+                id: "MenuBehaviorItem"
             }, {
                 id: "MenuJumpItem",
             }, {
@@ -28687,20 +28797,38 @@ img.small {
                 menuDiv.append(item);
             };
             menuObj.forEach(obj => createMenu(obj));
-            let select = document.createElement("select");
-            let html = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
-            select.insertAdjacentHTML("afterbegin", html);
-            menuDiv.querySelector("#MenuJumpItem").append(select);
+
+            let jumpSelect = document.createElement("select");
+            let jumpOption = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
+            jumpSelect.insertAdjacentHTML("afterbegin", jumpOption);
+            ge("#MenuJumpItem", menuDiv).append(jumpSelect);
+
+            let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
+            let behaviorInput = document.createElement("input");
+            behaviorInput.id = "behaviorInput";
+            behaviorInput.type = "checkbox";
+            behaviorDiv.append(behaviorInput);
+            let behaviorLabel = document.createElement("label");
+            behaviorLabel.innerText = displayLanguage.str_151;
+            behaviorDiv.append(behaviorLabel);
+
             dom.body.append(menuDiv);
-            select.value = config.jumpNum;
-            select.addEventListener("change", () => {
-                config.jumpNum = select.value;
+
+            jumpSelect.value = config.jumpNum;
+            jumpSelect.addEventListener("change", () => {
+                config.jumpNum = jumpSelect.value;
                 saveConfig(config);
                 menuDiv.style.left = "0";
                 setTimeout(() => {
                     menuDiv.style.left = "";
                     mainElement.focus();
                 }, 500);
+            });
+
+            behaviorInput.checked = config.behavior == "smooth" ? true : false;
+            behaviorInput.addEventListener("change", () => {
+                config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
+                saveConfig(config);
             });
         }
         addFixedMenu();
@@ -28709,35 +28837,35 @@ img.small {
             config.ViewMode = 0;
             saveConfig(config);
             createGalleryElement("default");
-            dom.querySelector("#MenuDefaultItem").classList.add("active");
+            ge("#MenuDefaultItem", dom).classList.add("active");
         }
 
         function singleImageLayout() {
             config.ViewMode = 1;
             saveConfig(config);
             createGalleryElement("single");
-            dom.querySelector("#MenuSinglePageItem").classList.add("active");
+            ge("#MenuSinglePageItem", dom).classList.add("active");
         }
 
         function smallImageLayout() {
             config.ViewMode = 2;
             saveConfig(config);
             createGalleryElement("small");
-            dom.querySelector("#MenuSmallItem").classList.add("active");
+            ge("#MenuSmallItem", dom).classList.add("active");
         }
 
         function rtlImageLayout() {
             config.ViewMode = 3;
             saveConfig(config);
             createGalleryElement("default");
-            dom.querySelector("#MenuRTLItem").classList.add("active");
+            ge("#MenuRTLItem", dom).classList.add("active");
         }
 
         function webtoonImageLayout() {
             config.ViewMode = 4;
             saveConfig(config);
             createGalleryElement("webtoon");
-            dom.querySelector("#MenuWebtoonItem").classList.add("active");
+            ge("#MenuWebtoonItem", dom).classList.add("active");
         }
 
         if (config.ViewMode == 1) {
@@ -28757,7 +28885,7 @@ img.small {
     //創建新分頁檢視眼睛圖示按鈕和圖片數量元素
     let imgDown = false;
     let isDragging = false;
-    let isDraggEvent = false;
+    let isAddDraggEvent = false;
     let startX, startY, startLeft, startTop;
     let eventImg, eventMenu;
     const addnewTabViewButton = () => {
@@ -28859,7 +28987,7 @@ img.small {
             eventMenu.style.right = "auto";
         };
 
-        let upEvent = (event) => {
+        const upEvent = (event) => {
             eventMenu.style.opacity = "1";
             imgDown = false;
             setTimeout(() => {
@@ -28867,7 +28995,7 @@ img.small {
             }, 100);
         };
 
-        let resizeEvent = () => {
+        const resizeEvent = () => {
             eventImg.style.top = "auto";
             eventImg.style.bottom = "24px";
             eventImg.style.left = "auto";
@@ -28883,8 +29011,8 @@ img.small {
                 passive: false,
                 capture: true
             });
-            if (!isDraggEvent) {
-                isDraggEvent = true;
+            if (!isAddDraggEvent) {
+                isAddDraggEvent = true;
                 document.addEventListener("touchmove", moveEvent, {
                     passive: false,
                     capture: true
@@ -28894,8 +29022,8 @@ img.small {
             }
         } else {
             img.addEventListener("mousedown", downEvent);
-            if (!isDraggEvent) {
-                isDraggEvent = true;
+            if (!isAddDraggEvent) {
+                isAddDraggEvent = true;
                 document.addEventListener("mousemove", moveEvent);
                 document.addEventListener("mouseup", upEvent);
                 _unsafeWindow.addEventListener("resize", resizeEvent);
@@ -29158,7 +29286,7 @@ img.small {
         const mainHtml = '<div id="FullPictureLoadOptionsShadowElement" style="display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
-        const mainElement = document.querySelector("#FullPictureLoadOptionsShadowElement");
+        const mainElement = ge("#FullPictureLoadOptionsShadowElement");
         const shadow = mainElement.attachShadow({
             mode: "closed"
         });
@@ -29166,47 +29294,48 @@ img.small {
         const style = createStyle(`
 #FullPictureLoadOptions {
     text-align: center;
-    width: 360px !important;
-    height: auto !important;
-    position: fixed !important;
-    top: ${hasTouchEvents ? "10%" : "14%"};
+    width: 360px;
+    height: auto;
+    position: fixed;
+    top: 10%;
     left: 50%;
     margin-left: -180px;
-    border: 1px solid #a0a0a0 !important;
-    border-radius: 3px !important;
-    box-shadow: -2px 2px 5px rgb(0 0 0 / 30%) !important;
-    background-color: #FAFAFB;
-    z-index: 2147483647 !important;
+    border: 1px solid #a0a0a0;
+    border-radius: 3px;
+    box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
+    background-color: #fafafb;
+    z-index: 2147483647;
 }
 
-#FullPictureLoadOptions label, #FullPictureLoadOptions select {
-    margin: 0px !important;
-    padding: 0px !important;
+#FullPictureLoadOptions label,
+#FullPictureLoadOptions select {
+    margin: 0px;
+    padding: 0px;
 }
 
 #FullPictureLoadOptions select {
-    border: 1px solid #a0a0a0 !important;
-    background-color: transparent !important;
-    border-radius: 0px !important;
-    min-width: 60px !important;
-    height: unset !important;
-    -webkit-box-shadow: unset !important;
-    box-shadow: unset !important;
-    -webkit-appearance: auto !important;
-    appearance: auto !important;
-    background-image: unset !important;
-    display: inline-block !important;
+    border: 1px solid #a0a0a0;
+    background-color: transparent;
+    border-radius: 0px;
+    min-width: 60px;
+    height: unset;
+    -webkit-box-shadow: unset;
+    box-shadow: unset;
+    -webkit-appearance: auto;
+    appearance: auto;
+    background-image: unset;
+    display: inline-block;
 }
 
 #FullPictureLoadOptions * {
-    font: unset !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 14px !important;
+    font: unset;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
     color: black;
-    float: none !important;
-    line-height: 18px !important;
-    margin-bottom: 4px !important;
-    padding: 1px 4px !important;
+    float: none;
+    line-height: 18px;
+    margin-bottom: 4px;
+    padding: 1px 4px;
     width: auto;
 }
 
@@ -29214,41 +29343,40 @@ img.small {
     width: auto;
     min-width: 102px;
     max-width: 110px;
-    min-height: unset !important;
-    max-height: 24px !important;
+    min-height: unset;
+    max-height: 24px;
     margin-left: 2px;
     margin-right: 2px;
-    margin-bottom: 4px !important;
+    margin-bottom: 4px;
     display: inline-block;
-    color: #000000 !important;
-    border: 1px solid #a0a0a0 !important;
-    background-color: transparent !important;
-    border-radius: unset !important;
+    color: #000000;
+    border: 1px solid #a0a0a0;
+    background-color: transparent;
+    border-radius: unset;
 }
 
 #FullPictureLoadOptions input {
-    position: unset !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    color: #000000 !important;
-    height: 18px !important;
-    border: 1px solid #a0a0a0 !important;
-    border-radius: unset !important;
-    background-color: transparent !important;
-    outline: unset !important;
-    display: unset !important;
-    -webkit-appearance: auto !important;
+    position: unset;
+    opacity: 1;
+    pointer-events: auto;
+    color: #000000;
+    height: 18px;
+    border: 1px solid #a0a0a0;
+    border-radius: unset;
+    background-color: transparent;
+    outline: unset;
+    display: unset;
+    -webkit-appearance: auto;
 }
 
 #FullPictureLoadOptions p {
-    text-align: center !important;
-    margin-block-start: 0px !important;
-    margin-block-end: 0px !important;
-    margin-inline-start: 0px !important;
-    margin-inline-end: 0px !important;
+    text-align: center;
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
-
-`);
+        `);
         shadow.appendChild(style);
 
         const main = document.createElement("div");
@@ -30147,6 +30275,8 @@ a[data-fancybox]:hover {
                 fun.clearAllTimer(2);
                 fun.showMsg(displayLanguage.str_149);
             }
+            isEsc = true;
+            setTimeout(() => (isEsc = false), 200);
             ge("#FullPictureLoadOptionsShadowElement")?.remove();
             return;
         }
@@ -30963,60 +31093,60 @@ html,body {
         const style = createStyle(`
 #FavorUl {
     width: 100%;
-    background-color: transparent !important;
-    list-style-type: none !important;
-    display: grid !important;
-    list-style: none !important;
+    background-color: transparent;
+    list-style-type: none;
+    display: grid;
+    list-style: none;
     margin: 10px 0px 0px 0px;
     padding: 0px;
     border: 0;
-    font: inherit !important;
+    font: inherit;
     vertical-align: baseline;
 }
 
 .favor-item {
-    float: left !important;
-    width: unset !important;
-    height: unset !important;
-    min-height: unset !important;
-    max-height: 44px !important;
-    margin:0px 10px 10px 0px !important;
-    position: unset !important;
-    line-height: 26px !important;
-    padding: 3px !important;
-    font: unset !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 16px !important;
-    text-align: center !important;
-    border-radius: 8px !important;
-    white-space: nowrap !important;
-    list-style: none !important;
+    float: left;
+    width: unset;
+    height: unset;
+    min-height: unset;
+    max-height: 44px;
+    margin: 0px 10px 10px 0px;
+    position: unset;
+    line-height: 26px;
+    padding: 3px;
+    font: unset;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 8px;
+    white-space: nowrap;
+    list-style: none;
 }
 
 .favor-item a {
-    display: block !important;
-    text-align: center !important;
-    text-decoration: unset !important;
-    font: unset !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 16px !important;
-    background-color: unset !important;
-    border-color: unset !important;
-    margin:0 !important;
+    display: block;
+    text-align: center;
+    text-decoration: unset;
+    font: unset;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    background-color: unset;
+    border-color: unset;
+    margin: 0;
 }
 
 #editFavorTextarea {
-    display:block !important;
+    display: block;
     height: 30em;
-    resize: both !important;
-    overflow: auto !important;
-    background-color: unset !important;
-    color: #000000 !important;
-    border-color: #000000 !important;
-    margin: 0px auto !important;
-    padding: 5px !important;
-    max-width: unset !important;
-    max-height: unset !important;
+    resize: both;
+    overflow: auto;
+    background-color: unset;
+    color: #000000;
+    border-color: #000000;
+    margin: 0px auto;
+    padding: 5px;
+    max-width: unset;
+    max-height: unset;
 }
 
 #editFavorDiv {
@@ -31029,14 +31159,14 @@ html,body {
 .editFavorButton {
     min-width: 70px;
     line-height: 25px;
-    margin: 5px !important;
-    float: none !important;
-    padding: 0 !important;
-    color: #000000 !important;
-    border: 1px solid #a0a0a0 !important;
-    background-color: transparent !important;
+    margin: 5px;
+    float: none;
+    padding: 0;
+    color: #000000;
+    border: 1px solid #a0a0a0;
+    background-color: transparent;
 }
-`);
+        `);
         shadow.append(style);
 
         const FavorSitesElement = document.createElement("div");
