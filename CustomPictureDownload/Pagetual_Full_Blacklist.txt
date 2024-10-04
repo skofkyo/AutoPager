@@ -102,6 +102,7 @@ https://www.nuyet.com/gallery/*
 *://www.imn5.*/*/*/*.html
 *://www.2mn.cc/mm/*.html
 *://www.ikmn*.*/*/*.html
+*://www.ik*.top/*/*.html
 *://www.plmn*.*/*/*.html
 *://meirentu.*/pic/*.html
 *://www.xg*.*/*/*.html
@@ -288,6 +289,7 @@ https://www.nuyet.com/gallery/*
 *://ahri8.top/readOnline2.php?ID=*
 *caitlin.top/index.php?route=comic/readOnline*
 *://laosiji52.com/comic/*/*
+*://www.cartoon18.com/story/*/full*
 *://www.177pic*.com/html/*/*/*.html
 *://www.18mh.cc/index-look-name-*-id-*
 *://m.18mh.cc/look/name/*
