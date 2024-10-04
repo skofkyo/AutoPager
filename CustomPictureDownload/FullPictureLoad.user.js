@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.27
+// @version            2.8.28
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -106,6 +106,7 @@
     let isAddFullPictureLoadButton = false;
     let isAddFullPictureLoadFixedMenu = false;
     let isAddnewTabViewButton = false;
+    let isOpenGallery = false;
     let fetchErrorArray = [];
     let fastDownload = false;
     let currentDownloadThread = 0;
@@ -2991,14 +2992,14 @@ a:has(>div>div>img),
             srcs.forEach(src => {
                 let arr = src.split("https").filter(i => i);
                 if (arr.length > 1) {
-                    for (src of arr) {
-                        srcArr.push("https" + src);
+                    for (let src of arr) {
+                        srcArr.push("https" + decodeURIComponent(src).replace(/".+$/, ""));
                     }
                 } else {
-                    srcArr.push(src);
+                    srcArr.push(decodeURIComponent(src));
                 }
             });
-            return srcArr;
+            return srcArr.filter(src => [".wp.com", ".jpg"].every(s => src.includes(s)));
         },
         button: [4],
         insertImg: ["#play", 2],
@@ -21231,7 +21232,6 @@ if ("xx" in window) {
                 transition: FancyboxSlideshowTransition
             },
             Thumbs: {
-                type: "classic",
                 showOnStart: false
             },
             Toolbar: {
@@ -23814,7 +23814,7 @@ if ("xx" in window) {
                 if (TurnOffImageNavigationShortcutKeys != 1) {
                     let imgsNum = 0;
                     document.addEventListener("keydown", event => {
-                        if (fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
+                        if (isOpenGallery || fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
                         if (event.code === "ArrowUp" || event.key === "ArrowUp") {
                             if (imgsNum > 0 && viewMode == 0) {
                                 imgsNum -= 1;
@@ -24959,7 +24959,6 @@ if ("xx" in window) {
                         transition: FancyboxSlideshowTransition
                     },
                     Thumbs: {
-                        type: "classic",
                         showOnStart: false
                     },
                     Toolbar: {
@@ -25005,7 +25004,6 @@ if ("xx" in window) {
                         transition: FancyboxSlideshowTransition
                     },
                     Thumbs: {
-                        type: "classic",
                         showOnStart: false
                     },
                     Toolbar: {
@@ -26136,7 +26134,7 @@ if ("xx" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+                    if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
                     if (event.code === "ArrowUp" || event.key === "ArrowUp") {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
@@ -26442,7 +26440,6 @@ if (hasTouchEvents) {
             transition: "${FancyboxSlideshowTransition}"
         },
         Thumbs: {
-            type: "classic",
             showOnStart: false
         },
         Toolbar: {
@@ -26506,7 +26503,6 @@ if (hasTouchEvents) {
             transition: "${FancyboxSlideshowTransition}"
         },
         Thumbs: {
-            type: "classic",
             showOnStart: false
         },
         Toolbar: {
@@ -26724,10 +26720,12 @@ document.addEventListener("keydown", event => {
         }
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
+        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
         imgViewIndex = imgs.length - 1;
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
+        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -26739,6 +26737,7 @@ document.addEventListener("keydown", event => {
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
+        if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
         event.preventDefault();
         imgViewIndex++;
         if (imgViewIndex > imgs.length - 1 && category === "comic") {
@@ -27111,10 +27110,12 @@ document.addEventListener("keydown", event => {
         }
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
+        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
         imgViewIndex = imgs.length - 1;
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
+        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -27126,6 +27127,7 @@ document.addEventListener("keydown", event => {
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
+        if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
         event.preventDefault();
         imgViewIndex++;
         if (imgViewIndex > imgs.length - 1 && category === "comic") {
@@ -27402,6 +27404,8 @@ if (config.ViewMode == 1) {
         }
         if (srcs.length < 1) return;
 
+        isOpenGallery = true;
+
         const config = getConfig();
         let webtoonWidth = config.webtoonWidth;
         let imgViewIndex = -1;
@@ -27416,7 +27420,7 @@ if (config.ViewMode == 1) {
             mode: "closed"
         });
 
-        const hideSelector = "body>*:not(#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        const hideSelector = "body>*:not(script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const increaseWidth = () => {
@@ -27455,6 +27459,7 @@ if (config.ViewMode == 1) {
             gae(hideSelector).forEach(e => (e.style.display = ""));
             ge("#overflowYHidden")?.remove();
             FullPictureLoadShadowGallery?.remove();
+            isOpenGallery = false;
         };
 
         const toggleWidthEvent = (event) => {
@@ -27611,12 +27616,14 @@ if (config.ViewMode == 1) {
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex--;
                 if (imgs[imgViewIndex] === undefined) {
@@ -27631,9 +27638,11 @@ if (config.ViewMode == 1) {
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
+                if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 next.style.backgroundColor = "gray";
                 return setTimeout(() => (location.href = nextLink), 500);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
+                if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
@@ -27829,10 +27838,15 @@ img.small {
             const imgElements = srcs.map((src, i) => {
                 let img = new Image();
                 img.className = mode;
+                img.dataset.index = i;
+                img.dataset.fancybox = "gallery";
                 img.src = loading_bak;
                 img.dataset.src = src;
-                img.dataset.fancybox = "gallery";
-                img.dataset.index = i;
+                if (thumbnailSrcArray.length > 0) {
+                    img.dataset.thumb = thumbnailSrcArray[i];
+                } else {
+                    img.dataset.thumb = src;
+                }
                 if (mode === "webtoon") {
                     img.style.maxWidth = webtoonWidth + "px";
                 }
@@ -27888,7 +27902,6 @@ img.small {
                         transition: FancyboxSlideshowTransition
                     },
                     Thumbs: {
-                        type: "classic",
                         showOnStart: false
                     },
                     Toolbar: {
@@ -28125,6 +28138,8 @@ img.small {
 
         if (srcs.length < 1) return;
 
+        isOpenGallery = true;
+
         const config = getConfig();
         let webtoonWidth = config.webtoonWidth;
         let imgViewIndex = -1;
@@ -28173,7 +28188,7 @@ img.small {
             `
         });
 
-        const hideSelector = "body>*:not(#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        const hideSelector = "body>*:not(script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
         gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const increaseWidth = () => {
@@ -28211,6 +28226,7 @@ img.small {
             gae(hideSelector).forEach(e => (e.style.display = ""));
             ge("#overflowYHidden")?.remove();
             iframe.remove();
+            isOpenGallery = false;
         };
 
         const toggleWidthEvent = (event) => {
@@ -28367,12 +28383,14 @@ img.small {
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex--;
                 if (imgs[imgViewIndex] === undefined) {
@@ -28387,9 +28405,11 @@ img.small {
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
+                if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 next.style.backgroundColor = "gray";
                 return setTimeout(() => (location.href = nextLink), 500);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
+                if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
@@ -28594,10 +28614,15 @@ img.small {
             const imgElements = srcs.map((src, i) => {
                 let img = new Image();
                 img.className = mode;
+                img.dataset.index = i;
+                img.dataset.fancybox = "gallery";
                 img.src = loading_bak;
                 img.dataset.src = src;
-                img.dataset.fancybox = "gallery";
-                img.dataset.index = i;
+                if (thumbnailSrcArray.length > 0) {
+                    img.dataset.thumb = thumbnailSrcArray[i];
+                } else {
+                    img.dataset.thumb = src;
+                }
                 if (mode === "webtoon") {
                     img.style.maxWidth = webtoonWidth + "px";
                 }
@@ -30212,7 +30237,7 @@ a[data-fancybox]:hover {
 
     //頁面容器快捷鍵
     const addKeyEvent = async event => {
-        if (isOpenFancybox || ge(".fancybox-container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
+        if (isOpenFancybox || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
         if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) return;
         if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptionsShadowElement")) return;
@@ -30521,7 +30546,7 @@ a[data-fancybox]:hover {
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        if (!ge("#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery")) {
+                        if (!isOpenGallery) {
                             await toggleUI();
                         }
                     }, 200);
@@ -30591,7 +30616,7 @@ a[data-fancybox]:hover {
                     setTimeout(async () => {
                         const body = await fun.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        if (!ge("#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery")) {
+                        if (!isOpenGallery) {
                             await toggleUI();
                         }
                         if ("customTitle" in siteData && !("capture" in siteData)) {
@@ -30684,14 +30709,14 @@ a[data-fancybox]:hover {
                 document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
+                if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowRight" || event.key === "ArrowRight") callback(event);
             });
         }
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
-                if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
+                if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
@@ -30922,7 +30947,7 @@ a[data-fancybox]:hover {
     if (!!autoDownload) {
         //自動下載快捷鍵
         document.addEventListener("keydown", event => {
-            if (ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadShadowGallery,#FullPictureLoadIframeGallery,#FullPictureLoadFavorSites")) return;
+            if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
