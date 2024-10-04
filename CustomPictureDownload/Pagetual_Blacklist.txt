@@ -1,4 +1,4 @@
-2024/09/26 14:59
+2024/10/05 00:45
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -261,6 +261,7 @@ Kutekorean.Com
 
 爱看美女网
 *://www.ikmn*.*/*/*.html
+*://www.ik*.top/*/*.html
 
 漂亮美女网
 *://www.plmn*.*/*/*.html
@@ -1319,6 +1320,9 @@ Caitlin.top
 
 老司機禁漫
 *://laosiji52.com/comic/*/*
+
+色漫网
+*://www.cartoon18.com/story/*/full*
 
 177漫画
 *://www.177pic*.com/html/*/*/*.html
