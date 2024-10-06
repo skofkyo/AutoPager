@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.28
+// @version            2.8.29
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -106,6 +106,7 @@
     let isAddFullPictureLoadButton = false;
     let isAddFullPictureLoadFixedMenu = false;
     let isAddnewTabViewButton = false;
+    let isOpenOptionsUI = false;
     let isOpenGallery = false;
     let fetchErrorArray = [];
     let fastDownload = false;
@@ -4798,6 +4799,7 @@ a:has(>div>div>img),
         imgs: () => fun.getImg("img.block", fun.gt("a[rel=next]", 2) || 1),
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
+        next: "//span[contains(text(),'上一篇')]/following-sibling::a[1]",
         customTitle: () => fun.dt({
             s: "#main>h1,header>h1",
             d: [
@@ -4808,7 +4810,7 @@ a:has(>div>div>img),
                 /🐾/g
             ]
         }),
-        css: "div.flex.m-1:has(>a[style]),iframe[id][class][width][height][style]{display:none!important;}",
+        css: "div.flex.m-1:has(>a[style]),.my-2:has(>a[target][referrerpolicy][style]),iframe[id][class][width][height][style]{display:none!important;}",
         category: "nsfw2"
     }, {
         name: "色图喵",
@@ -8533,6 +8535,47 @@ a:has(>div>div>img),
         observerURL: true,
         category: "nsfw2"
     }, {
+        name: "Дзен",
+        reg: () => fun.checkUrl({
+            h: "dzen.ru"
+        }),
+        imgs: () => {
+            if (_this.SPA()) {
+                return fun.wait(() => {
+                    fun.showMsg(displayLanguage.str_04, 0);
+                    let imgs = fun.gae("figure img");
+                    if (imgs.length > 0) {
+                        if (imgs.at(-1).getAttribute("srcset")?.includes("w, ")) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }).then(() => {
+                    fun.hideMsg();
+                    return fun.getImgSrcArr("figure img[srcset]");
+                });
+            } else {
+                return [];
+            }
+        },
+        capture: () => _this.imgs(),
+        SPA: () => {
+            let url = new URL(document.URL);
+            return url.pathname.startsWith("/a/") && url.search === "";
+        },
+        button: [4],
+        customTitle: async () => {
+            await fun.delay(1000, 0);
+            return fun.dt({
+                d: /\|.+$/
+            });
+        },
+        observerURL: true,
+        category: "nsfw2"
+    }, {
         name: "URLGalleries",
         host: ["urlgalleries.net"],
         reg: /^https?:\/\/[^\.]+\.urlgalleries\.net\/porn-gallery-\d+\//,
@@ -12143,8 +12186,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/hentaifox\.com\/gallery\/\d+\/$/,
         include: "//a[text()=' Read Online']",
         init: async () => {
-            await fun.waitEle(".gallery_thumb img");
-            await fun.waitVar("g_th");
+            await fun.wait((_, win) => !!ge(".gallery_thumb img") && ("g_th" in win));
             fun.createImgBox(".gallery_bottom");
         },
         imgs: async () => {
@@ -12177,7 +12219,8 @@ a:has(>div>div>img),
         name: "HentaiFox閱讀頁",
         host: ["hentaifox.com"],
         reg: /^https?:\/\/hentaifox\.com\/g\/\d+\/\d+\/$/,
-        imgs: async () => {
+        init: () => fun.wait((_, win) => !!ge("#gimg") && ("g_th" in win)),
+        imgs: () => {
             let max = fun.ge("#pages").value;
             let img = fun.ge("#gimg");
             let src = img.dataset.src ?? img.src;
@@ -12192,10 +12235,7 @@ a:has(>div>div>img),
         name: "HentaiZap圖片清單頁",
         host: ["hentaizap.com"],
         reg: /^https?:\/\/hentaizap\.com\/gallery\/\d+\/$/,
-        inti: async () => {
-            await fun.waitEle(".gp_th img");
-            await fun.waitVar("g_th");
-        },
+        inti: async () => await fun.wait((_, win) => !!ge(".gp_th img") && ("g_th" in win)),
         imgs: async () => {
             fun.showMsg(displayLanguage.str_05, 0);
             let _token = fun.attr('meta[name="csrf-token"]', "content");
@@ -12957,8 +12997,7 @@ a:has(>div>div>img),
         host: ["hentaihere.com"],
         reg: /^https?:\/\/hentaihere\.com\/m\/\w+\/\d+\/\d+\/$/i,
         init: async () => {
-            await fun.waitVar("rff_imageList");
-            await fun.waitVar("jQuery");
+            await fun.wait((_, win) => ("rff_imageList" in win) && ("jQuery" in win));
             setTimeout(() => fun.run("jQuery(document).off();"), 1000);
         },
         imgs: () => _unsafeWindow.rff_imageList.map(e => "https://hentaicdn.com/hentai" + e),
@@ -12979,10 +13018,7 @@ a:has(>div>div>img),
             ],
             p: "/articles/"
         }),
-        init: async () => {
-            await fun.waitEle("next-route-announcer");
-            await fun.waitEle(".grid .group>img");
-        },
+        init: async () => await fun.wait(() => !!ge("next-route-announcer") && !!ge(".grid .group>img")),
         imgs: async () => {
             fun.createImgBox(".container:has(>.grid)");
             fun.showMsg("獲取數據中...", 0);
@@ -14950,8 +14986,7 @@ a:has(>div>div>img),
         host: ["yidan.in", "yidan.one", "yidan.app"],
         reg: /^https?:\/\/yidan\.(in|one|app)\/#\/pages\/read\/read\?no=\d+&id=\d+(&episodesId=\d+)?/,
         init: async () => {
-            await fun.waitEle(".read-article img");
-            await fun.waitEle("uni-view.last-bum");
+            await fun.wait((_, win) => !!ge(".read-article img") && !!ge("uni-view.last-bum"));
             fun.ge("uni-view.last-bum").addEventListener("click", () => setTimeout(() => location.reload(), 300));
             fun.showMsg(displayLanguage.str_05, 0);
             let [, no, mhid] = fun.url.match(/no=(\d+)&id=(\d+)/);
@@ -15137,8 +15172,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/(www|m)\.okcomic\.net\/\w+\/\d+\/\d+\.html/,
         delay: 1000,
         init: async () => {
-            await fun.waitEle("//script[contains(text(),'qTcms_S_m_murl_e')]");
-            await fun.waitVar("base64_decode");
+            await fun.wait((_, win) => !!fun.ge("//script[contains(text(),'qTcms_S_m_murl_e')]") && ("base64_decode" in win));
             fun.run("document.onkeydown=null");
             fun.remove(".imgBox");
         },
@@ -15605,22 +15639,26 @@ a:has(>div>div>img),
         SPA: () => new URL(document.URL).pathname.startsWith("/chapter/"),
         observerURL: true,
         imgs: () => {
-            fun.showMsg(displayLanguage.str_05, 0);
-            const chapter_id = new URL(document.URL).pathname.split("/").at(-1);
-            return fetch(`https://api.mangadex.org/at-home/server/${chapter_id}?forcePort443=false`).then(res => res.json()).then(json => {
-                fun.hideMsg();
-                const {
-                    baseUrl,
-                    chapter: {
-                        data,
-                        hash
-                    }
-                } = json;
-                return data.map(e => baseUrl + "/data/" + hash + "/" + e);
-            });
+            if (_this.SPA()) {
+                fun.showMsg(displayLanguage.str_05, 0);
+                const chapter_id = new URL(document.URL).pathname.split("/").at(-1);
+                return fetch(`https://api.mangadex.org/at-home/server/${chapter_id}?forcePort443=false`).then(res => res.json()).then(json => {
+                    fun.hideMsg();
+                    const {
+                        baseUrl,
+                        chapter: {
+                            data,
+                            hash
+                        }
+                    } = json;
+                    return data.map(e => baseUrl + "/data/" + hash + "/" + e);
+                });
+            } else {
+                return [];
+            }
         },
         next: async () => {
-            if (new URL(document.URL).pathname.startsWith("/chapter/")) {
+            if (_this.SPA()) {
                 await fun.waitEle("#chapter-selector li[data-value]");
                 let id = location.pathname.split("/").at(-1);
                 let chapters = [...document.querySelectorAll("#chapter-selector li[data-value]")];
@@ -15643,7 +15681,7 @@ a:has(>div>div>img),
             }
         },
         customTitle: async () => {
-            await fun.wait((d) => d.title != "" && !d.title.includes("Loading"));
+            await _this.init();
             let text = fun.dt({
                 d: [
                     /^[\d\s\|]+/,
@@ -15663,31 +15701,35 @@ a:has(>div>div>img),
         SPA: () => new URL(document.URL).pathname.includes("/chapter/"),
         observerURL: true,
         imgs: () => {
-            fun.showMsg(displayLanguage.str_05, 0);
-            const chapter_id = new URL(document.URL).pathname.split("/").at(-1);
-            return fetch(`https://api.namicomi.com/images/chapter/${chapter_id}?newQualities=true`).then(res => res.json()).then(json => {
-                fun.hideMsg();
-                const {
-                    data: {
-                        baseUrl,
-                        hash,
+            if (_this.SPA()) {
+                fun.showMsg(displayLanguage.str_05, 0);
+                const chapter_id = new URL(document.URL).pathname.split("/").at(-1);
+                return fetch(`https://api.namicomi.com/images/chapter/${chapter_id}?newQualities=true`).then(res => res.json()).then(json => {
+                    fun.hideMsg();
+                    const {
+                        data: {
+                            baseUrl,
+                            hash,
+                        }
+                    } = json;
+                    let data;
+                    let quality;
+                    let keys = ["source", "high", "medium", "low"];
+                    for (let k of keys) {
+                        if (Array.isArray(json.data[k])) {
+                            data = json.data[k];
+                            quality = k;
+                            break;
+                        }
                     }
-                } = json;
-                let data;
-                let quality;
-                let keys = ["source", "high", "medium", "low"];
-                for (let k of keys) {
-                    if (Array.isArray(json.data[k])) {
-                        data = json.data[k];
-                        quality = k;
-                        break;
-                    }
-                }
-                return data.map(e => baseUrl + "/chapter/" + chapter_id + "/" + hash + `/${quality}/` + e.filename);
-            });
+                    return data.map(e => baseUrl + "/chapter/" + chapter_id + "/" + hash + `/${quality}/` + e.filename);
+                });
+            } else {
+                return [];
+            }
         },
         next: async () => {
-            if (new URL(document.URL).pathname.includes("/chapter/")) {
+            if (_this.SPA()) {
                 let id = location.pathname.split("/").at(-1);
                 await fun.waitEle(`select.relative option[value=${id}]`);
                 let chapters = [...document.querySelectorAll("select.relative option")];
@@ -17408,8 +17450,7 @@ if ("xx" in window) {
         enable: 0,
         reg: /^https?:\/\/m\.manhua456\.com\/manhua\/\w+\/\d+\.html/,
         init: async () => {
-            await fun.waitVar("pageTitle");
-            await fun.waitVar("jQuery");
+            await fun.wait((_, win) => ("pageTitle" in win) && ("jQuery" in win));
             fun.run("jQuery('#images').unbind('click');");
         },
         imgs: (frame = _unsafeWindow) => {
@@ -19070,6 +19111,22 @@ if ("xx" in window) {
         },
         css: "iframe,.bannersUite,.w-full:has(>amp-ad){display:none!important;}",
         category: "comic autoPager"
+    }, {
+        name: "漫画時間 日文漫画",
+        enable: 1,
+        reg: () => fun.checkUrl({
+            h: "www.mangajikan.com",
+            p: "chapter-"
+        }),
+        imgs: ".more-box img",
+        button: [4],
+        insertImg: [".more-box", 2],
+        autoDownload: [0],
+        next: "//a[text()='次の章'][starts-with(@href,'/')]",
+        prev: "//a[text()='前の章'][starts-with(@href,'/')]",
+        customTitle: (dom) => fun.title(" - 無料読み - Manga Jikan", 0, dom),
+        preloadNext: true,
+        category: "comic"
     }, {
         name: "漫畫屋",
         host: ["mh5.tw"],
@@ -23814,7 +23871,7 @@ if ("xx" in window) {
                 if (TurnOffImageNavigationShortcutKeys != 1) {
                     let imgsNum = 0;
                     document.addEventListener("keydown", event => {
-                        if (isOpenGallery || fun.ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
+                        if (isOpenOptionsUI || isOpenGallery || fun.ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                         if (event.code === "ArrowUp" || event.key === "ArrowUp") {
                             if (imgsNum > 0 && viewMode == 0) {
                                 imgsNum -= 1;
@@ -25133,7 +25190,7 @@ if ("xx" in window) {
         },
         XmanhuaUI: () => {
             const clickToggleToolbar = () => {
-                if (fun.ge(".fancybox__container")) return;
+                if (isOpenGallery) return;
                 let t = fun.ge(".header.toolbar");
                 if (t) {
                     $(".header").removeClass("toolbar");
@@ -25568,7 +25625,7 @@ if ("xx" in window) {
 
     //圖片影片下載函式
     const DownloadFn = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (checkGeting() || isOpenOptionsUI) return;
         isStopDownload = false;
         currentDownloadThread = 0;
         downloadNum = 0;
@@ -25800,7 +25857,7 @@ if ("xx" in window) {
 
     //匯出網址
     const exportImgSrcText = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         if (srcArr.length == 0 && videoSrcArray.length == 0) return showMsg(displayLanguage.str_44);
@@ -25822,7 +25879,7 @@ if ("xx" in window) {
 
     //複製網址或手動模式的插入圖片
     const copyImgSrcText = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         siteData.insertImg ? debug("手動插入圖片") : debug("複製網址");
@@ -25841,7 +25898,7 @@ if ("xx" in window) {
 
     //複製網址
     const copyImgSrcTextB = async () => {
-        if (checkGeting() || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
@@ -25875,7 +25932,6 @@ if ("xx" in window) {
 
     //滾動至首張圖片(動畫效果)
     const goToNo1Img = (time = 1000) => {
-        if (ge("#FullPictureLoadOptionsShadowElement")) return;
         let ele;
         ge("#FullPictureLoadImgBox:not([style*=none])") ? ele = ge(".FullPictureLoadImage.small") : ele = ge(".FullPictureLoadImage");
         if (ele) {
@@ -25906,7 +25962,7 @@ if ("xx" in window) {
 
     //自動滾動元素
     const autoScrollEles = () => {
-        if (ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (isOpenOptionsUI) return;
         let scrollEle = siteData.scrollEle;
         if (isFn(scrollEle)) {
             scrollEle();
@@ -25918,7 +25974,7 @@ if ("xx" in window) {
 
     //減少圖片縮放級別
     const reduceZoom = () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (isFetching || !siteData.insertImg || isOpenOptionsUI) return;
         if (options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom == 0 ? options.zoom = 10 : options.zoom = options.zoom -= 1;
             if (options.zoom == 0) cancelZoom();
@@ -25942,7 +25998,7 @@ if ("xx" in window) {
 
     //增加圖片縮放級別
     const increaseZoom = () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (isFetching || !siteData.insertImg || isOpenOptionsUI) return;
         if (options.zoom > 1 && options.zoom <= 10 && ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = options.zoom += 1;
             if (options.zoom > 10) cancelZoom();
@@ -25968,7 +26024,7 @@ if ("xx" in window) {
 
     //切換圖片檢視模式
     const toggleImgMode = async () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (isFetching || !siteData.insertImg || isOpenOptionsUI) return;
         let column;
         if (gae(".FullPictureLoadImage").length < 1) {
             fun.showMsg("沒有圖片或只有影片");
@@ -26134,7 +26190,7 @@ if ("xx" in window) {
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
-                    if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+                    if (isOpenOptionsUI || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
                     if (event.code === "ArrowUp" || event.key === "ArrowUp") {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
@@ -26312,6 +26368,8 @@ if ("xx" in window) {
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
             newWindow.menuLanguage = displayLanguage.galleryMenu;
+            newWindow.isOpenFancybox = false;
+            newWindow.l10n = Fancyboxl10nV5();
 
             let newWindowStyleCss = `
 body {
@@ -26334,9 +26392,9 @@ body {
     border-radius: 3px;
     background-color: #fff;
     z-index: 2;
-}
-#FixedMenu:hover {
-  left: 0px;
+    &:hover {
+        left: 0px;
+    }
 }
 .FixedMenuitem {
     width: ${hasTouchEvents ? "90px" : "120px"};
@@ -26451,6 +26509,7 @@ if (hasTouchEvents) {
         },
         on: {
             done: (fancybox, slide) => {
+                isOpenFancybox = true;
                 let slideIndex = slide.index;
                 let imgs = [...document.querySelectorAll("img")];
                 if (config.ViewMode != 4) {
@@ -26480,6 +26539,9 @@ if (hasTouchEvents) {
                     imgs[slideIndex].style.border = "solid #32a1ce";
                 }
                 imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
+                setTimeout(() => {
+                    isOpenFancybox = false;
+                }, 200);
             }
         }
     }
@@ -26514,6 +26576,7 @@ if (hasTouchEvents) {
         },
         on: {
             done: (fancybox, slide) => {
+                isOpenFancybox = true;
                 let slideIndex = slide.index;
                 let imgs = [...document.querySelectorAll("img")];
                 imgs.forEach(e => (e.style.border = ""));
@@ -26535,90 +26598,17 @@ if (hasTouchEvents) {
                 imgs.forEach(e => (e.style.border = ""));
                 imgs[slideIndex].style.border = "solid #32a1ce";
                 imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
+                setTimeout(() => {
+                    isOpenFancybox = false;
+                }, 200);
             }
         }
     }
 }
 
 function setFancybox() {
-    switch (navigator.language) {
-        case "zh-TW":
-        case "zh-HK":
-        case "zh-Hant-TW":
-        case "zh-Hant-HK":
-            Fancybox.defaults.l10n = {
-                PANUP: "上移",
-                PANDOWN: "下移",
-                PANLEFT: "左移",
-                PANRIGHT: "右移",
-                ZOOMIN: "放大",
-                ZOOMOUT: "縮小",
-                TOGGLEZOOM: "切換縮放等級",
-                TOGGLE1TO1: "切換縮放等級",
-                ITERATEZOOM: "切換縮放等級",
-                ROTATECCW: "逆時針旋轉",
-                ROTATECW: "順時針旋轉",
-                FLIPX: "水平翻轉",
-                FLIPY: "垂直翻轉",
-                FITX: "水平適應",
-                FITY: "垂直適應",
-                RESET: "重設",
-                TOGGLEFS: "切換全螢幕",
-                CLOSE: "關閉",
-                NEXT: "下一個",
-                PREV: "上一個",
-                MODAL: "使用 ESC 鍵關閉",
-                ERROR: "發生了錯誤，請稍後再試",
-                IMAGE_ERROR: "找不到圖像",
-                ELEMENT_NOT_FOUND: "找不到 HTML 元素",
-                AJAX_NOT_FOUND: "載入 AJAX 時出錯: 未找到",
-                AJAX_FORBIDDEN: "載入 AJAX 時出錯: 被阻止",
-                IFRAME_ERROR: "載入頁面出錯",
-                TOGGLE_ZOOM: "切換縮放等級",
-                TOGGLE_THUMBS: "切換縮圖",
-                TOGGLE_SLIDESHOW: "切換幻燈片",
-                TOGGLE_FULLSCREEN: "切換全螢幕",
-                DOWNLOAD: "下載"
-            };
-            break;
-        case "zh":
-        case "zh-CN":
-        case "zh-Hans-CN":
-            Fancybox.defaults.l10n = {
-                PANUP: "上移",
-                PANDOWN: "下移",
-                PANLEFT: "左移",
-                PANRIGHT: "右移",
-                ZOOMIN: "放大",
-                ZOOMOUT: "缩小",
-                TOGGLEZOOM: "切换缩放级别",
-                TOGGLE1TO1: "切换缩放级别",
-                ITERATEZOOM: "切换缩放级别",
-                ROTATECCW: "逆时针旋转",
-                ROTATECW: "顺时针旋转",
-                FLIPX: "水平翻转",
-                FLIPY: "垂直翻转",
-                FITX: "水平适应",
-                FITY: "垂直适应",
-                RESET: "重置",
-                TOGGLEFS: "切换全屏",
-                CLOSE: "关闭",
-                NEXT: "下一个",
-                PREV: "上一个",
-                MODAL: "使用 ESC 键关闭",
-                ERROR: "发生了错误，请稍后再试",
-                IMAGE_ERROR: "找不到图像",
-                ELEMENT_NOT_FOUND: "找不到 HTML 元素",
-                AJAX_NOT_FOUND: "载入 AJAX 时出错: 未找到",
-                AJAX_FORBIDDEN: "载入 AJAX 时出错: 被阻止",
-                IFRAME_ERROR: "加载页面出错",
-                TOGGLE_ZOOM: "切换缩放级别",
-                TOGGLE_THUMBS: "切换缩略图",
-                TOGGLE_SLIDESHOW: "切换幻灯片",
-                TOGGLE_FULLSCREEN: "切换全屏",
-                DOWNLOAD: "下载"
-            };
-            break;
+    if (l10n !== "EN") {
+        Fancybox.defaults.l10n = l10n;
     }
     Fancybox.bind("[data-fancybox]", FancyboxOptions);
 }
@@ -26679,7 +26669,7 @@ if (hasTouchEvents) {
     let lastScrollTop = 0;
     let scroll = "";
     document.addEventListener("scroll", event => {
-        if (document.querySelector(".fancybox__container")) return;
+        if (isOpenFancybox) return;
         let st = event.srcElement.scrollingElement.scrollTop;
         if (st > lastScrollTop) {
             scroll = "down";
@@ -26694,7 +26684,7 @@ if (hasTouchEvents) {
 }
 
 document.addEventListener("keydown", event => {
-    if (document.querySelector(".fancybox__container")) return;
+    if (isOpenFancybox) return;
     if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
     if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
     if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
@@ -26703,21 +26693,34 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("keydown", event => {
-    if (document.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+    if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
     const imgs = [...document.querySelectorAll("img")];
     if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.key === k))) {
-        increaseWidth();
+        return increaseWidth();
     }
     if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
-        reduceWidth();
+        return reduceWidth();
     }
     if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
-            box.style.direction = "ltr";
+            return (box.style.direction = "ltr");
         } else {
-            box.style.direction = "rtl";
+            return (box.style.direction = "rtl");
         }
+    }
+    if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
+        event.preventDefault();
+        if (event.code === "Home" || event.key === "Home") {
+            imgViewIndex = 0;
+        } else {
+            imgViewIndex = imgs.length - 1;
+        }
+        if (config.ViewMode != 4) {
+            imgs.forEach(e => (e.style.border = ""));
+            imgs[imgViewIndex].style.border = "solid #32a1ce";
+        }
+        return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
         if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
@@ -26752,10 +26755,12 @@ document.addEventListener("keydown", event => {
             }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
+    } else if ((event.code === "Delete" || event.key === "Delete")) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
-        hideE.style.display = "none";
-    } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
+        if (hideE !== undefined) {
+            hideE.style.display = "none";
+        }
+    } else if ((event.code === "Enter" || event.key === "Enter")) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
     } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "+", "=", "-", "_"].some(k => event.key === k)) {
         imgViewIndex = -1;
@@ -26763,7 +26768,7 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("wheel", (event) => {
-    if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+    if (!isOpenFancybox && config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
         event.preventDefault();
         event.stopPropagation();
         if (event.deltaY < 0) {
@@ -26778,8 +26783,8 @@ document.addEventListener("wheel", (event) => {
 });
 
 document.addEventListener("wheel", (event) => {
-    if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
-        if (!document.querySelector(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+    if (!isOpenFancybox && config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+        if (!event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
             event.preventDefault();
             event.stopPropagation();
             const imgs = [...document.querySelectorAll("img")];
@@ -26901,7 +26906,7 @@ function createImgElement(mode) {
     imgViewIndex = -1;
     [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
     document.querySelector("#imgBox").innerHTML = "";
-    const imgElements = newImgs.map((src, i, arr) => {
+    const imgElements = newImgs.map(src => {
         let a = document.createElement("a");
         a.href = src;
         a.dataset.fancybox = "gallery";
@@ -27093,21 +27098,34 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("keydown", event => {
-    if (document.querySelector(".fancybox__container") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+    if (document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
     const imgs = [...document.querySelectorAll("img")];
     if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.key === k))) {
-        increaseWidth();
+        return increaseWidth();
     }
     if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
-        reduceWidth();
+        return reduceWidth();
     }
     if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
-            box.style.direction = "ltr";
+            return (box.style.direction = "ltr");
         } else {
-            box.style.direction = "rtl";
+            return (box.style.direction = "rtl");
         }
+    }
+    if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
+        event.preventDefault();
+        if (event.code === "Home" || event.key === "Home") {
+            imgViewIndex = 0;
+        } else {
+            imgViewIndex = imgs.length - 1;
+        }
+        if (config.ViewMode != 4) {
+            imgs.forEach(e => (e.style.border = ""));
+            imgs[imgViewIndex].style.border = "solid #32a1ce";
+        }
+        return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
         if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
@@ -27142,10 +27160,12 @@ document.addEventListener("keydown", event => {
             }
         }
         imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-    } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
+    } else if ((event.code === "Delete" || event.key === "Delete")) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
-        hideE.style.display = "none";
-    } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
+        if (hideE !== undefined) {
+            hideE.style.display = "none";
+        }
+    } else if ((event.code === "Enter" || event.key === "Enter")) {
         [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
     } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "+", "=", "-", "_"].some(k => event.key === k)) {
         imgViewIndex = -1;
@@ -27153,7 +27173,7 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("wheel", (event) => {
-    if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+    if (!document.querySelector(".viewer-container .viewer-canvas>img") && config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
         event.preventDefault();
         event.stopPropagation();
         if (event.deltaY < 0) {
@@ -27168,8 +27188,8 @@ document.addEventListener("wheel", (event) => {
 });
 
 document.addEventListener("wheel", (event) => {
-    if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
-        if (!document.querySelector(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+    if (!document.querySelector(".viewer-container .viewer-canvas>img") && config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+        if (!event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
             event.preventDefault();
             event.stopPropagation();
             const imgs = [...document.querySelectorAll("img")];
@@ -27291,7 +27311,7 @@ function createImgElement(mode) {
     imgViewIndex = -1;
     [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
     document.querySelector("#imgBox").innerHTML = "";
-    const imgElements = newImgs.map((src, i, arr) => {
+    const imgElements = newImgs.map(src => {
         let img = document.createElement("img");
         img.className = mode;
         img.src = "${loading_bak}";
@@ -27384,14 +27404,13 @@ if (config.ViewMode == 1) {
     //創建影子畫廊
     const createShadowGallery = async () => {
 
-        if (hasTouchEvents) return;
         if (("fancybox" in siteData) || ("gallery" in siteData && siteData.gallery == 1)) {
             return createIframeGallery();
         }
-        if (ge("#FullPictureLoadShadowGallery")) {
-            ge("#FullPictureLoadShadowGallery").remove();
-        }
-        fun.hideMsg();
+
+        if (hasTouchEvents || isOpenGallery || isOpenOptionsUI) return;
+
+        isOpenGallery = true;
 
         let srcs;
         if ("SPA" in siteData) {
@@ -27402,9 +27421,9 @@ if (config.ViewMode == 1) {
         } else {
             captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
         }
-        if (srcs.length < 1) return;
+        if (srcs.length < 1) return (isOpenGallery = false);
 
-        isOpenGallery = true;
+        fun.hideMsg();
 
         const config = getConfig();
         let webtoonWidth = config.webtoonWidth;
@@ -27457,13 +27476,13 @@ if (config.ViewMode == 1) {
             _unsafeWindow.removeEventListener("resize", aspectRatio);
             _unsafeWindow.removeEventListener("keydown", kEvent);
             gae(hideSelector).forEach(e => (e.style.display = ""));
-            ge("#overflowYHidden")?.remove();
+            fun.remove("#overflowYHidden");
             FullPictureLoadShadowGallery?.remove();
             isOpenGallery = false;
         };
 
         const toggleWidthEvent = (event) => {
-            if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+            if (!isOpenFancybox && config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
                 event.preventDefault();
                 event.stopPropagation();
                 if (event.deltaY < 0) {
@@ -27480,8 +27499,8 @@ if (config.ViewMode == 1) {
         });
 
         const toggleImage = (event) => {
-            if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
-                if (!ge(".fancybox__container") && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+            if (!isOpenFancybox && config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                if (!event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
                     event.preventDefault();
                     event.stopPropagation();
                     const imgs = gae("img", shadow);
@@ -27545,7 +27564,7 @@ if (config.ViewMode == 1) {
                     img.style.minHeight = "";
                 } else if (img.className === "default") {
                     img.style.maxHeight = "99vh";
-                    img.style.maxWidth = "";
+                    img.style.maxWidth = "100%";
                     img.style.minHeight = "99vh";
                     img.style.minWidth = "";
                 }
@@ -27568,6 +27587,21 @@ if (config.ViewMode == 1) {
             if (event.code === "Numpad2" || event.code === "Digit2" || event.key === "2") return smallImageLayout();
             if (event.code === "Numpad3" || event.code === "Digit3" || event.key === "3") return rtlImageLayout();
             if (event.code === "Numpad4" || event.code === "Digit4" || event.key === "4") return webtoonImageLayout();
+            if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
+                event.preventDefault();
+                dNum = 0;
+                nextButtonIsShown = false;
+                if (event.code === "Home" || event.key === "Home") {
+                    imgViewIndex = 0;
+                } else {
+                    imgViewIndex = imgs.length - 1;
+                }
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
                     next.style.backgroundColor = "gray";
@@ -27602,24 +27636,27 @@ if (config.ViewMode == 1) {
                 });
             }
             if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
-                increaseWidth();
+                return increaseWidth();
             }
             if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
-                reduceWidth();
+                return reduceWidth();
             }
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", shadow);
                 if (box.style.direction == "rtl") {
-                    box.style.direction = "ltr";
+                    return (box.style.direction = "ltr");
                 } else {
-                    box.style.direction = "rtl";
+                    return (box.style.direction = "rtl");
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
-                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
@@ -27659,10 +27696,12 @@ if (config.ViewMode == 1) {
                     }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-            } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
+            } else if ((event.code === "Delete" || event.key === "Delete")) {
                 const hideE = gae("img", shadow)[imgViewIndex];
-                hideE.style.display = "none";
-            } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
+                if (hideE !== undefined) {
+                    hideE.style.display = "none";
+                }
+            } else if ((event.code === "Enter" || event.key === "Enter")) {
                 gae("img", shadow).forEach(e => (e.style.display = ""));
             } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
@@ -27698,9 +27737,12 @@ p#imgBox {
     border-radius: 3px;
     background-color: #fff;
     z-index: 2147483647;
-}
-#FixedMenu:hover {
-    left: 0px;
+    transform: translate(0);
+    transition: all .8s ease-in-out;
+    &:hover {
+        transform: translate(138px);
+        transition: all .2s ease-in-out;
+    }
 }
 .FixedMenuitem {
     width: 120px;
@@ -27960,7 +28002,7 @@ img.small {
                                 if (!isEventAdded) {
                                     isEventAdded = true;
                                     FullPictureLoadShadowGallery.addEventListener("wheel", (event) => {
-                                        if (event.ctrlKey || event.altKey || event.shiftKey) return;
+                                        if (isOpenFancybox || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) return;
                                         if (event.deltaY < 0) {
                                             dNum = 0;
                                             next.style.border = "";
@@ -28038,8 +28080,12 @@ img.small {
             menuObj.forEach(obj => createMenu(obj));
 
             let jumpSelect = document.createElement("select");
-            let jumpOption = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
-            jumpSelect.insertAdjacentHTML("afterbegin", jumpOption);
+            for (let i = 1; i <= 100; i++) {
+                let option = document.createElement("option");
+                option.value = i * 100;
+                option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                jumpSelect.append(option);
+            }
             ge("#MenuJumpItem", menuDiv).append(jumpSelect);
 
             let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
@@ -28057,11 +28103,6 @@ img.small {
             jumpSelect.addEventListener("change", () => {
                 config.jumpNum = jumpSelect.value;
                 saveConfig(config);
-                menuDiv.style.left = "0";
-                setTimeout(() => {
-                    menuDiv.style.left = "";
-                    mainElement.focus();
-                }, 500);
             });
 
             behaviorInput.checked = config.behavior == "smooth" ? true : false;
@@ -28124,7 +28165,9 @@ img.small {
     //創建框架畫廊
     const createIframeGallery = async () => {
 
-        fun.hideMsg();
+        if (hasTouchEvents || isOpenGallery || isOpenOptionsUI) return;
+
+        isOpenGallery = true;
 
         let srcs;
         if ("SPA" in siteData) {
@@ -28135,10 +28178,9 @@ img.small {
         } else {
             captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
         }
+        if (srcs.length < 1) return (isOpenGallery = false);
 
-        if (srcs.length < 1) return;
-
-        isOpenGallery = true;
+        fun.hideMsg();
 
         const config = getConfig();
         let webtoonWidth = config.webtoonWidth;
@@ -28224,13 +28266,13 @@ img.small {
         const closeGallery = () => {
             _unsafeWindow.removeEventListener("resize", aspectRatio);
             gae(hideSelector).forEach(e => (e.style.display = ""));
-            ge("#overflowYHidden")?.remove();
+            fun.remove("#overflowYHidden");
             iframe.remove();
             isOpenGallery = false;
         };
 
         const toggleWidthEvent = (event) => {
-            if (config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
+            if (!isOpenFancybox && config.ViewMode == 4 && (event.ctrlKey || event.altKey || event.shiftKey)) {
                 event.preventDefault();
                 event.stopPropagation();
                 if (event.deltaY < 0) {
@@ -28247,8 +28289,8 @@ img.small {
         });
 
         const toggleImage = (event) => {
-            if (config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
-                if (!event.ctrlKey && !event.altKey && !event.shiftKey) {
+            if (!isOpenFancybox && config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                if (!event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
                     event.preventDefault();
                     event.stopPropagation();
                     const imgs = gae("img", mainElement);
@@ -28312,7 +28354,7 @@ img.small {
                     img.style.minHeight = "";
                 } else if (img.className === "default") {
                     img.style.maxHeight = "99vh";
-                    img.style.maxWidth = "";
+                    img.style.maxWidth = "100%";
                     img.style.minHeight = "99vh";
                     img.style.minWidth = "";
                 }
@@ -28335,6 +28377,21 @@ img.small {
             if (event.code === "Numpad2" || event.code === "Digit2" || event.key === "2") return smallImageLayout();
             if (event.code === "Numpad3" || event.code === "Digit3" || event.key === "3") return rtlImageLayout();
             if (event.code === "Numpad4" || event.code === "Digit4" || event.key === "4") return webtoonImageLayout();
+            if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
+                event.preventDefault();
+                dNum = 0;
+                nextButtonIsShown = false;
+                if (event.code === "Home" || event.key === "Home") {
+                    imgViewIndex = 0;
+                } else {
+                    imgViewIndex = imgs.length - 1;
+                }
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
+                return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+            }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
                     next.style.backgroundColor = "gray";
@@ -28369,24 +28426,27 @@ img.small {
                 });
             }
             if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
-                increaseWidth();
+                return increaseWidth();
             }
             if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
-                reduceWidth();
+                return reduceWidth();
             }
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", mainElement);
                 if (box.style.direction == "rtl") {
-                    box.style.direction = "ltr";
+                    return (box.style.direction = "ltr");
                 } else {
-                    box.style.direction = "rtl";
+                    return (box.style.direction = "rtl");
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
-                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                if (config.ViewMode != 4) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
@@ -28426,10 +28486,12 @@ img.small {
                     }
                 }
                 imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
-            } else if ((event.code === "Delete" || event.key === "Delete") && config.ViewMode == 3) {
+            } else if ((event.code === "Delete" || event.key === "Delete")) {
                 const hideE = gae("img", mainElement)[imgViewIndex];
-                hideE.style.display = "none";
-            } else if ((event.code === "Enter" || event.key === "Enter") && config.ViewMode == 3) {
+                if (hideE !== undefined) {
+                    hideE.style.display = "none";
+                }
+            } else if ((event.code === "Enter" || event.key === "Enter")) {
                 gae("img", mainElement).forEach(e => (e.style.display = ""));
             } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
@@ -28465,9 +28527,12 @@ p#imgBox {
     border-radius: 3px;
     background-color: #fff;
     z-index: 2147483647;
-}
-#FixedMenu:hover {
-    left: 0px;
+    transform: translate(0);
+    transition: all .8s ease-in-out;
+    &:hover {
+        transform: translate(138px);
+        transition: all .2s ease-in-out;
+    }
 }
 .FixedMenuitem {
     width: 120px;
@@ -28746,7 +28811,7 @@ img.small {
                                 if (!isEventAdded) {
                                     isEventAdded = true;
                                     dom.addEventListener("wheel", (event) => {
-                                        if (event.ctrlKey || event.altKey || event.shiftKey) return;
+                                        if (isOpenFancybox || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) return;
                                         if (event.deltaY < 0) {
                                             dNum = 0;
                                             next.style.border = "";
@@ -28824,8 +28889,12 @@ img.small {
             menuObj.forEach(obj => createMenu(obj));
 
             let jumpSelect = document.createElement("select");
-            let jumpOption = fun.arr(100, (v, i) => `<option value="${(i + 1) * 100}">${displayLanguage.str_150}${(i + 1) * 100}px</option>`).join("");
-            jumpSelect.insertAdjacentHTML("afterbegin", jumpOption);
+            for (let i = 1; i <= 100; i++) {
+                let option = document.createElement("option");
+                option.value = i * 100;
+                option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                jumpSelect.append(option);
+            }
             ge("#MenuJumpItem", menuDiv).append(jumpSelect);
 
             let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
@@ -28843,11 +28912,6 @@ img.small {
             jumpSelect.addEventListener("change", () => {
                 config.jumpNum = jumpSelect.value;
                 saveConfig(config);
-                menuDiv.style.left = "0";
-                setTimeout(() => {
-                    menuDiv.style.left = "";
-                    mainElement.focus();
-                }, 500);
             });
 
             behaviorInput.checked = config.behavior == "smooth" ? true : false;
@@ -29059,7 +29123,7 @@ img.small {
 
     //清除圖片縮放級別
     const cancelZoom = () => {
-        if (isFetching || !siteData.insertImg || ge("#FullPictureLoadOptionsShadowElement")) return;
+        if (isFetching || !siteData.insertImg || isOpenOptionsUI) return;
         if (ge(".FullPictureLoadImage:not(.small)")) {
             options.zoom = 0;
             let jsonStr = JSON.stringify(options);
@@ -29306,6 +29370,8 @@ img.small {
     //創建腳本選項元素
     const createPictureLoadOptionsShadowElement = () => {
 
+        isOpenOptionsUI = true;
+
         const config = getConfig();
 
         const mainHtml = '<div id="FullPictureLoadOptionsShadowElement" style="display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
@@ -29424,9 +29490,7 @@ img.small {
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_108}</label>
-    <select id="MsgPos">
-        ${Object.values(displayLanguage.str_109).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
-    </select>
+    <select id="MsgPos"></select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="FavorNewTab" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29438,9 +29502,7 @@ img.small {
 </div>
 <div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_79}</label>
-    <select id="Zoom">
-        ${fun.arr(11, (v, i) => `<option value="${i}">${i === 0 ? "Auto" : i + "0%"}</option>`).join("")}
-    </select>
+    <select id="Zoom"></select>
 </div>
 <div id="viewModeDIV" style="width: 348px; display: flex;">
     <input id="viewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29448,9 +29510,7 @@ img.small {
 </div>
 <div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_80}</label>
-    <select id="Column" title="${displayLanguage.str_81}">
-        ${fun.arr(5, (v, i) => `<option value="${i + 2}">${i + 2}</option>`).join("")}
-    </select>
+    <select id="Column" title="${displayLanguage.str_81}"></select>
 </div>
 <div id="ShadowGalleryModeDIV" style="width: 348px; display: flex;">
     <input id="ShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29458,9 +29518,7 @@ img.small {
 </div>
 <div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_147}</label>
-    <select id="ShadowGalleryWheel">
-        ${Object.values(displayLanguage.ShadowGalleryWheel).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
-    </select>
+    <select id="ShadowGalleryWheel"></select>
 </div>
 <div id="FancyboxDIV" style="width: 348px; display: flex;">
     <input id="Fancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29468,21 +29526,15 @@ img.small {
 </div>
 <div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>※${displayLanguage.str_146}</label>
-    <select id="FancyboxWheel">
-        ${Object.values(displayLanguage.FancyboxWheel).map((v, i) => `<option value="${i}">${v}</option>`).join("")}
-    </select>
+    <select id="FancyboxWheel"></select>
 </div>
 <div id="FancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>※${displayLanguage.str_145}</label>
-    <select id="FancyboxSlideshowTimeout">
-        ${fun.arr(61, (v, i) => `<option value="${i}">${i === 0 ? "500 ms" : i + " sec"}</option>`).join("")}
-    </select>
+    <select id="FancyboxSlideshowTimeout"></select>
 </div>
 <div id="FancyboxTransitionDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>※${displayLanguage.str_148}</label>
-    <select id="FancyboxTransition">
-        ${Object.keys(displayLanguage.FancyboxTransition).map((k) => `<option value="${k}">${displayLanguage.FancyboxTransition[k]}</option>`).join("")}
-    </select>
+    <select id="FancyboxTransition"></select>
 </div>
 <div id="ComicDIV" style="width: 348px; display: none;">
     <input id="Comic" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29498,15 +29550,11 @@ img.small {
 </div>
 <div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_75}</label>
-    <select id="Countdown">
-        ${fun.arr(60, (v, i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
-    </select>
+    <select id="Countdown"></select>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_70}</label>
-    <select id="Threading">
-        ${fun.arr(32, (_,i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
-    </select>
+    <select id="Threading"></select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="Zip" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29514,9 +29562,7 @@ img.small {
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_72}</label>
-    <select id="Extension">
-        ${["zip", "cbz"].map(v => `<option value="${v}">${v}</option>`).join("")}
-    </select>
+    <select id="Extension"></select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="Convert" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29531,6 +29577,86 @@ img.small {
 <button id="SaveBtn">${displayLanguage.str_84}</button>
 `;
         main.innerHTML = FullPictureLoadOptionsMainHtmlStr;
+
+        const MsgPosSelect = ge("#MsgPos", main);
+        Object.values(displayLanguage.str_109).forEach((v, i) => {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = v;
+            MsgPosSelect.append(option);
+        });
+
+        const ZoomSelect = ge("#Zoom", main);
+        for (let i = 0; i < 11; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = i === 0 ? "Auto" : i + "0%";
+            ZoomSelect.append(option);
+        }
+
+        const ColumnSelect = ge("#Column", main);
+        for (let i = 2; i <= 6; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = i;
+            ColumnSelect.append(option);
+        }
+
+        const ShadowGalleryWheelSelect = ge("#ShadowGalleryWheel", main);
+        Object.values(displayLanguage.ShadowGalleryWheel).forEach((v, i) => {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = v;
+            ShadowGalleryWheelSelect.append(option);
+        });
+
+        const FancyboxWheelSelect = ge("#FancyboxWheel", main);
+        Object.values(displayLanguage.FancyboxWheel).forEach((v, i) => {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = v;
+            FancyboxWheelSelect.append(option);
+        });
+
+        const FancyboxSlideshowTimeoutSelect = ge("#FancyboxSlideshowTimeout", main);
+        for (let i = 0; i < 61; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = i === 0 ? "500 ms" : i + " sec";
+            FancyboxSlideshowTimeoutSelect.append(option);
+        }
+
+        const FancyboxTransitionSelect = ge("#FancyboxTransition", main);
+        for (const [k, v] of Object.entries(displayLanguage.FancyboxTransition)) {
+            const option = document.createElement("option");
+            option.value = k;
+            option.innerText = v;
+            FancyboxTransitionSelect.append(option);
+        }
+
+        const CountdownSelect = ge("#Countdown", main);
+        for (let i = 1; i <= 60; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = i;
+            CountdownSelect.append(option);
+        }
+
+        const ThreadingSelect = ge("#Threading", main);
+        for (let i = 1; i <= 32; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = i;
+            ThreadingSelect.append(option);
+        }
+
+        const ExtensionSelect = ge("#Extension", main);
+        ["zip", "cbz"].forEach(v => {
+            const option = document.createElement("option");
+            option.value = v;
+            option.innerText = v;
+            ExtensionSelect.append(option);
+        });
 
         ge("#icon", main).checked = options.icon == 1 ? true : false;
         ge("#AutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
@@ -29572,7 +29698,7 @@ img.small {
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
         }
         if (fancyboxBlackList()) {
-            ge("#Fancybox", main).checked = false;
+            //ge("#Fancybox", main).checked = false;
             ge("#FancyboxDIV", main).style.display = "none";
             ge("#FancyboxSlideshowTimeoutDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
@@ -29605,6 +29731,7 @@ img.small {
         }
         ge("#CancelBtn", main).addEventListener("click", () => {
             mainElement.remove();
+            setTimeout(() => (isOpenOptionsUI = false), 200);
         });
         ge("#ResetBtn", main).addEventListener("click", event => {
             event.preventDefault();
@@ -29682,7 +29809,8 @@ img.small {
     }
 
     const FullPictureLoadStyle = `
-.fancybox-container,.fancybox__container {
+.fancybox-container,
+.fancybox__container {
     z-index: 2147483647 !important;
 }
 
@@ -29762,7 +29890,8 @@ img.small {
     z-index: 2147483640 !important;
 }
 
-#FullPictureLoadFixedMenu > div, #FullPictureLoadFixedMenuB > div {
+#FullPictureLoadFixedMenu > div,
+#FullPictureLoadFixedMenuB > div {
     height: 24px !important;
     line-height: 24px !important;
     overflow: hidden !important;
@@ -29785,11 +29914,11 @@ img.small {
 
 #FullPictureLoadFixedMenu:hover,
 .FullPictureLoadFixedBtn:hover {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
 #FullPictureLoadFixedMenu .itemNoShow {
-  display: none !important;
+    display: none !important;
 }
 
 #FullPictureLoadFixedMenuB {
@@ -29868,17 +29997,18 @@ ${msgPosCss}
     border: none !important;
     border-radius: unset !important;
     padding: 0 !important;
-    margin: 0 auto 10Px !important;
+    margin: 0 auto 10px !important;
 }
 
-#FullPictureLoadImgBox>div {
+#FullPictureLoadImgBox > div {
     height: auto;
 }
 
-a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadImageSmall] {
+a[data-fancybox="FullPictureLoadImageOriginal"],
+a[data-fancybox="FullPictureLoadImageSmall"] {
     position: unset !important;
     padding: 0 !important;
-    margin: 0 auto!important;
+    margin: 0 auto !important;
     display: block !important;
 }
 
@@ -29891,7 +30021,30 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     margin: 5px auto !important;
 }
 
-#FullPictureLoadEnd~*:not(h3,ul,.tags):not(#FullPictureLoadFixedMenu):not(#FullPictureLoadOptions):not(.FullPictureLoadMsg):not(.FullPictureLoadFixedBtn):not(a[href='javascript:void(0);']):not(.post-info):not(.post-tags):not(.article-tags):not(*[class^=fancybox]):not(div[tabindex]):not(.row):not(.text-center):not(.link-d):not(#myrating):not(.gallery-a):not(.pagination):not(div[class^=picnext]):not(a.zwf):not(p):not(.bo_nav) {
+#FullPictureLoadEnd
+    ~ *:not(
+        h3,
+        ul,
+        p,
+        .tags,
+        [id^="Full"],
+        [class^="Full"],
+        a[href="javascript:void(0);"],
+        .post-info,
+        .post-tags,
+        .article-tags,
+        *[class^="fancybox"],
+        div[tabindex],
+        .row,
+        .text-center,
+        .link-d,
+        #myrating,
+        .gallery-a,
+        .pagination,
+        div[class^="picnext"],
+        a.zwf,
+        .bo_nav
+    ) {
     display: none !important;
 }
 
@@ -29917,7 +30070,13 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     margin: 10px 5px;
     border: 1px solid #e0e0e0;
     background-color: #f0f0f0;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#f9f9f9), to(#f0f0f0));
+    background: -webkit-gradient(
+        linear,
+        0 0,
+        0 100%,
+        from(#f9f9f9),
+        to(#f0f0f0)
+    );
     background: -moz-linear-gradient(top, #f9f9f9, #f0f0f0);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
     border-radius: 5px;
@@ -29927,7 +30086,13 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     color: white;
     border: 1px solid #0e0e0e;
     background-color: #0f0f0f;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#9f9f9f), to(#0f0f0f));
+    background: -webkit-gradient(
+        linear,
+        0 0,
+        0 100%,
+        from(#9f9f9f),
+        to(#0f0f0f)
+    );
     background: -moz-linear-gradient(top, #9f9f9f, #0f0f0f);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
     border-radius: 5px;
@@ -29986,7 +30151,7 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     cursor: default;
     box-sizing: border-box;
     background: unset !important;
-    background-color: #F6F6F6 !important;
+    background-color: #f6f6f6 !important;
     border: 1px solid #a0a0a0 !important;
     cursor: pointer !important;
 }
@@ -30014,13 +30179,15 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     cursor: default;
     box-sizing: border-box;
     background: unset !important;
-    background-color: #F6F6F6 !important;
+    background-color: #f6f6f6 !important;
     border: 1px solid #a0a0a0 !important;
     cursor: pointer !important;
 }
 
-#FullPictureLoadOptions button:hover,.FullPictureLoadPageButtonTop:hover,.FullPictureLoadPageButtonBottom:hover {
-  color: black !important;
+#FullPictureLoadOptions button:hover,
+.FullPictureLoadPageButtonTop:hover,
+.FullPictureLoadPageButtonBottom:hover {
+    color: black !important;
 }
 
 .viewer-open:not(.fancybox-active) {
@@ -30028,7 +30195,13 @@ a[data-fancybox=FullPictureLoadImageOriginal],a[data-fancybox=FullPictureLoadIma
     padding-right: 0px !important;
 }
 
-.fancybox-infobar *,.fancybox__infobar,a[data-fancybox-download],a[data-fancybox-download]:hover,a[data-fancybox-download]:link,a[data-fancybox-download]:visited,a[data-fancybox-download]:active {
+.fancybox-infobar *,
+.fancybox__infobar,
+a[data-fancybox-download],
+a[data-fancybox-download]:hover,
+a[data-fancybox-download]:link,
+a[data-fancybox-download]:visited,
+a[data-fancybox-download]:active {
     color: white;
 }
 
@@ -30240,7 +30413,7 @@ a[data-fancybox]:hover {
         if (isOpenFancybox || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyC" || event.key === "c" || event.key === "C")) return;
         if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) return;
-        if ((event.code != "Escape" || event.key != "Escape") && ge("#FullPictureLoadOptionsShadowElement")) return;
+        if ((event.code != "Escape" || event.key != "Escape") && isOpenOptionsUI) return;
         if (["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName)) return;
         if (event.ctrlKey && event.altKey && (event.code === "KeyT" || event.key === "t" || event.key === "T")) {
             let str = _unsafeWindow.getSelection().toString();
@@ -30253,7 +30426,7 @@ a[data-fancybox]:hover {
         if (event.code === "KeyG" || event.key === "g" || event.key === "G") { //G鍵
             return createShadowGallery();
         }
-        if (event.code === "KeyI" || event.key === "i" || event.key === "I") { //I鍵
+        if ((!event.ctrlKey && !event.shiftKey) && (event.code === "KeyI" || event.key === "i" || event.key === "I")) { //I鍵
             return createIframeGallery();
         }
         if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
@@ -30302,7 +30475,11 @@ a[data-fancybox]:hover {
             }
             isEsc = true;
             setTimeout(() => (isEsc = false), 200);
-            ge("#FullPictureLoadOptionsShadowElement")?.remove();
+            let UI = ge("#FullPictureLoadOptionsShadowElement");
+            if (UI) {
+                UI.remove();
+                setTimeout(() => (isOpenOptionsUI = false), 200);
+            }
             return;
         }
         if (event.code === "NumpadDivide" || event.key === "/") { //數字鍵/
@@ -30328,7 +30505,12 @@ a[data-fancybox]:hover {
             if ("insertImg" in siteData) {
                 let [, insertMode, ] = siteData.insertImg;
                 if (insertMode === 1 || insertMode === 2) {
-                    await fun.immediateInsertImg();
+                    if (options.autoInsert == 1) {
+                        await fun.immediateInsertImg();
+                    }
+                    if (options.shadowGallery == 1) {
+                        await createShadowGallery();
+                    }
                 }
             }
         } else {
@@ -30534,7 +30716,7 @@ a[data-fancybox]:hover {
                         for (const mutation of mutationList_removedNodes) {
                             const removedNodes = mutation.removedNodes;
                             for (const node of removedNodes) {
-                                if (node?.id == "FullPictureLoadShadowGallery") {
+                                if (node?.id == "FullPictureLoadOptionsShadowElement" || node?.id == "FullPictureLoadShadowGallery" || node?.id == "FullPictureLoadIframeGallery") {
                                     return;
                                 }
                             }
@@ -30557,7 +30739,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "FullPictureLoadShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "FullPictureLoadOptionsShadowElement", "FullPictureLoadShadowGallery", "FullPictureLoadIframeGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
@@ -30604,7 +30786,7 @@ a[data-fancybox]:hover {
                         for (const mutation of mutationList_removedNodes) {
                             const removedNodes = mutation.removedNodes;
                             for (const node of removedNodes) {
-                                if (node?.id == "FullPictureLoadShadowGallery") {
+                                if (node?.id == "FullPictureLoadOptionsShadowElement" || node?.id == "FullPictureLoadShadowGallery" || node?.id == "FullPictureLoadIframeGallery") {
                                     return;
                                 }
                             }
@@ -30634,7 +30816,7 @@ a[data-fancybox]:hover {
                         if (mutationList_addedNodes.length === 0) {
                             return;
                         }
-                        const strings = ["FullPictureLoad", "FullPictureLoadShadowGallery", "pagetual", "comicRead", "Autopage", "pv-"];
+                        const strings = ["FullPictureLoad", "FullPictureLoadOptionsShadowElement", "FullPictureLoadShadowGallery", "FullPictureLoadIframeGallery", "pagetual", "comicRead", "Autopage", "pv-"];
                         for (const mutation of mutationList_addedNodes) {
                             const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(e => e);
                             const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
@@ -30709,14 +30891,14 @@ a[data-fancybox]:hover {
                 document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
-                if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
+                if (isOpenOptionsUI || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowRight" || event.key === "ArrowRight") callback(event);
             });
         }
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
-                if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
+                if (isOpenOptionsUI || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
@@ -30947,7 +31129,7 @@ a[data-fancybox]:hover {
     if (!!autoDownload) {
         //自動下載快捷鍵
         document.addEventListener("keydown", event => {
-            if (isOpenGallery || ge("#FullPictureLoadOptionsShadowElement,.fancybox-container,.fancybox__container,#FullPictureLoadFavorSites")) return;
+            if (isOpenOptionsUI || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fun.showMsg(displayLanguage.str_64, 0);
@@ -31056,6 +31238,9 @@ a[data-fancybox]:hover {
         });
         if (ge("#FullPictureLoadCaptureNum") && num < captureSrcArray.length) {
             ge("#FullPictureLoadCaptureNum").innerText = captureSrcArray.length;
+            if (options.shadowGallery == 1) {
+                setTimeout(() => createShadowGallery(), 200);
+            }
         }
         if (lazyLoadPreloadImages == 1) {
             fun.picPreload(imagePreloadArray, "Lazy Load Mode");
@@ -31073,6 +31258,9 @@ a[data-fancybox]:hover {
         let num = captureSrcArray.length;
         if (ge("#FullPictureLoadCaptureNum")) {
             ge("#FullPictureLoadCaptureNum").innerText = num;
+            if (options.shadowGallery == 1) {
+                setTimeout(() => createShadowGallery(), 200);
+            }
         }
     };
 
@@ -31346,7 +31534,7 @@ html,body {
                 text: displayLanguage.str_129,
                 cfn: () => {
                     FavorSitesShadowElement.remove();
-                    ge("#overflowYHidden")?.remove();
+                    fun.remove("#overflowYHidden");
                     _unsafeWindow.removeEventListener("resize", reSize_cb);
                 }
             }].forEach(obj => {
