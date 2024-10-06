@@ -1067,6 +1067,8 @@ imgs: async () => {
 <p>數字鍵 . 點鍵取消縮放恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
+<p>G鍵 打開Shadow DOM畫廊，Fancybox5與網站燈箱插件衝突時調用Iframe畫廊。</p>
+<p>I鍵 打開Iframe畫廊。</p>
 <p>Esc鍵 可中途取消當前的圖片下載。</p>
 <p>Delete鍵 並排模式下當為漫畫分類和並排數為2的H漫分類，用於切換隱藏顯示第一張圖片，當沒有剛好並成雙頁跨頁大圖時使用。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
@@ -1079,10 +1081,9 @@ imgs: async () => {
 <br>
 <p>PS：需重複獲取原始圖片元素的規則，按1無法複製圖片網址，需點擊頁面功能按鈕或浮動選單按鈕的複製圖址。</p>
 <h1>圖片檢視模式</h1>
-<p>1.圖片置中模式</p>
+<h3>1.圖片置中模式</h3>
 <p>上方向鍵滾動到目前的上一張圖、下方向鍵滾動到目前的下一張圖</p>
-<br>
-<p>2.圖片並排模式</p>
+<h3>2.圖片並排模式</h3>
 <p>上方向鍵滾動到目前的上一排圖、下方向鍵滾動到目前的下一排圖</p>
 <p>漫畫分類當滾動至最後一排後，繼續按下方向鍵會嘗試前往下一集。</p>
 <p>所謂的目前是變量記憶的位置，並非當前瀏覽範圍的位置，滑鼠滾動變換位置不會改變變量。</p>
@@ -1090,12 +1091,10 @@ imgs: async () => {
 <br>
 <p>如果漫畫站的圖片並排後，圖片高度小於大於瀏覽範圍的高度，需要手動調整瀏覽器的縮放來適配達到最佳的觀看效果。</p>
 <p>Chrome內建的縮放跨度太大，建議安裝縮放 for Google Chrome，可以以10%、5%來縮放</p>
-<br>
-<p>3.Fancybox模式</p>
+<h3>3.Fancybox模式</h3>
 <p>點擊腳本插入的圖片開啟Fancybox圖片燈箱展示功能</p>
 <p>右和下方向鍵下一張圖(不會觸發前往下一頁)，左和上方向鍵上一張圖(不會觸發前往上一頁)。</p>
-<br>
-<p>4.分頁畫廊模式</p>
+<h3>4.分頁畫廊模式</h3>
 <p>左下有浮動選單區塊，鼠標懸停彈出顯示。</p>
 <p>數字鍵 0 切換為圖片高度符合視口高度的預設模式</p>
 <p>數字鍵 1 切換為單圖置中模式</p>
@@ -1103,14 +1102,15 @@ imgs: async () => {
 <p>數字鍵 3 切換為圖片高度符合視口高度且順序右至左的模式</p>
 <p>數字鍵 4 切換為條漫模式</p>
 <p>W鍵、A鍵、上左方向鍵滾動到目前的上一張圖、S鍵、D鍵、下右方向鍵滾動到目前的下一張圖，當為comic分類且已是最後一張圖繼續按則關閉分頁</p>
-<p>條漫模式下，上下方向鍵為預設行為，不會滾動圖片。</p>
-<p>R鍵 模式為2時用於切換排列方向右至左、左至右。</p>
-<p>Delete鍵 模式為3時用於隱藏當前圖片導覽索引的圖片(藍色邊框)，看漫畫時手動調整讓後面的圖片能正常並成雙頁跨頁大圖。</p>
-<p>Enter鍵 模式為3時用於取消所有隱藏的圖片。</p>
-<p>+、-鍵和Ctrl、Alt、ShiftKey + 滾輪 模式為4時可增加減少圖片的寬度。</p>
-<p>畫廊為條漫模式，修飾鍵Ctrl、Alt、Shift + 滾輪，可調整圖片寬度。</p>
-<p>PS：網站如果有Content Security Policy (CSP)限制，將沒有切換模式、圖片滾動、Fancybox功能，或者莫名其妙不能使用window.open()，將無法使用分頁檢視功能。</p>
-<p>5.影子畫廊模式(限定PC使用)</p>
+<p>HOME鍵 滾動定位至第一張圖</p>
+<p>END鍵 滾動定位至最後一張圖</p>
+<p>R鍵 模式為0、2、3時用於臨時切換排列方向右至左、左至右。</p>
+<p>Delete鍵 用於隱藏當前圖片導覽索引的圖片(藍色邊框)，看漫畫時手動調整讓後面的圖片能正常並成雙頁跨頁大圖。</p>
+<p>Enter鍵 用於取消所有用Delete鍵隱藏的圖片。</p>
+<p>畫廊為條漫模式時，上下方向鍵為預設行為，不會滾動圖片。</p>
+<p>畫廊為條漫模式時+、-鍵和修飾鍵Ctrl、Alt、ShiftKey + 滾輪 可增加減少圖片的寬度。</p>
+<p>PS：當瀏覽器封鎖彈出型視窗或uBlock Origin為了阻擋點擊鏈結觸發廣告把window.open修改成Proxy時，將無法使用分頁畫廊功能。</p>
+<h3>5.影子畫廊模式(限定PC使用)</h3>
 <p>快捷鍵基本同分頁畫廊模式</p>
 <p>Esc鍵 離開畫廊</p>
 <p>J、K鍵 畫廊滾動自定義滾動距離</p>
@@ -1119,13 +1119,11 @@ imgs: async () => {
 <p>畫廊 (0、1、3) 滾輪操作設定為切換圖片並且有NEXT按鈕時，當滾動到最後一張圖繼續往下滾會標記NEXT按鈕，再繼續往下滾NEXT按鈕變灰前往NEXT。</p>
 <p>畫廊滾輪操作非切換圖片並且有NEXT按鈕，當滾動到NEXT按鈕元素9成範圍進入視口時，再繼續往下滾2次以上NEXT按鈕變灰前往NEXT，往上滾則下滾次數歸零。</p>
 <p>Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將調用使用iframe構建的畫廊。</p>
-<br>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
 <p>2024/10/05 00:45</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
-<p>
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
@@ -1196,8 +1194,8 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
     <p>線上顏色選擇器</p>
     <a href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>
 </details>
-<h2>※備註</h2>
-<p>SPA網頁，腳本如果沒有生效請重新載入，或是先以新分頁的方式開啟鏈結。</p>
+<h2>規則支持列表備註</h2>
+<p>如果有備註為SPA網頁，腳本如果沒有生效的話請重新載入頁面，或是先以新分頁的方式開啟鏈結。</p>
 <p>版本2.7.14+，鼠標懸停網站列表鏈結時會標記鏈結添加邊框，鏈結再次懸停取消標記，按Ctrl + Alt + O快捷鍵或空白處按滑鼠右鍵打開所有被標記的鏈結，按Esc鍵或點擊頁面空白處取消所有標記。</p>
 <h2>老司機分類內置規則支持列表</h2>
 <details>
@@ -5296,23 +5294,29 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             </tr>
             <tr>
                 <td>
-                    <a href="https://manhuascans.org/">GodaComic 英文漫画</a>
+                    <a href="https://manhuascans.org/">GodaComic 英文漫畫</a>
                 </td>
                 <td>有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://manhuascan.us/">Manhuascan 英文漫画</a>
+                    <a href="https://manhuascan.us/">Manhuascan 英文漫畫</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.mangago.me/">Mangago 英文漫画</a>
+                    <a href="https://www.mangago.me/">Mangago 英文漫畫</a>
                 </td>
                 <td>
                     <a href="https://www.mangago.zone/">mangago.zone</a>，<a href="https://www.youhim.me/">youhim.me</a>，只支持PC版。
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangajikan.com/">漫画時間 日文漫畫</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
