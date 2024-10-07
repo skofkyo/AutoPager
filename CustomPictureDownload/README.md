@@ -105,9 +105,9 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     init: () => {
         code;
     },
-    init: async () => await fun.waitEle("元素選擇器"), //等待直至元素出現
-    init: async () => await fun.waitVar("屬性名"), //等待直至window物件的屬性出現
-    init: () => fun.addMutationObserver(() => fun.remove("div[class][style*='z-index']")), //動態刪除元素
+    init: async () => await fn.waitEle("元素選擇器"), //等待直至元素出現
+    init: async () => await fn.waitVar("屬性名"), //等待直至window物件的屬性出現
+    init: () => fn.addMutationObserver(() => fn.remove("div[class][style*='z-index']")), //動態刪除元素
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
     //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
@@ -174,7 +174,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
         }
         return false;
     },
-    reg: () => fun.checkUrl({
+    reg: () => fn.checkUrl({
         h: "",
         p: "",
         s: "",
@@ -212,7 +212,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     customTitle: () => {
         code
     },
-    customTitle: () => fun.dt({
+    customTitle: () => fn.dt({
         s: "",
         d: ""
     }),
@@ -274,8 +274,8 @@ fancybox: {
 舉例選取元素
 doc.querySelector(selector)
 [...doc.querySelectorAll(selector)]
-fun.ge(selector, doc)
-fun.gae(selector, doc)
+fn.ge(selector, doc)
+fn.gae(selector, doc)
 </pre>
 <pre>
 {
@@ -404,33 +404,33 @@ const object = {
         "selector"
     ]
 }
-fun.checkUrl(object);
+fn.checkUrl(object);
 </pre>
 <pre>
 //返回一個指定元素，支持CSS/Xpath選擇器
-fun.ge("selector");
-fun.ge("selector", doc = document);
-fun.ge("selector", node);
-fun.ge(String, HTMLDocument or HTMLElement);
+fn.ge("selector");
+fn.ge("selector", doc = document);
+fn.ge("selector", node);
+fn.ge(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //返回指定的所有元素的陣列，支持CSS/Xpath選擇器
-fun.gae("selector");
-fun.gae("selector", doc = document);
-fun.gae("selector", node);
-fun.gae(String, HTMLDocument or HTMLElement);
+fn.gae("selector");
+fn.gae("selector", doc = document);
+fn.gae("selector", node);
+fn.gae(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得指定的A元素的href
-fun.gu("selector");
-fun.gu("selector", doc = document);
-fun.gu(String, HTMLDocument or HTMLElement);
+fn.gu("selector");
+fn.gu("selector", doc = document);
+fn.gu(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得指定的所有A元素的hre的陣列
-fun.gau("selector");
-fun.gau("selector", doc = document);
-fun.gau(String, HTMLDocument or HTMLElement);
+fn.gau("selector");
+fn.gau("selector", doc = document);
+fn.gau(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得元素的字串
@@ -438,17 +438,17 @@ fun.gau(String, HTMLDocument or HTMLElement);
 //1返回指定元素的字串(預設)
 //2返回指定元素的上一個元素的字串
 //3返回指定元素的上上一個元素的字串
-fun.gt("selector");
-fun.gt("selector", mode = 1, doc = document);
-fun.gt(String, Number, HTMLDocument or HTMLElement);
+fn.gt("selector");
+fn.gt("selector", mode = 1, doc = document);
+fn.gt(String, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得元素的字串
 //選擇器為陣列時，依序判斷元素是否存在與字串數是否大於0。
 //例如要拿h1,h2的字串，h1元素在前是英文，h2元素在後是中文，想要先拿中文就寫成["h2", "h1"]。
-fun.getText("selector");
-fun.getText("selector", doc = document);
-fun.getText(String or Array, HTMLDocument or HTMLElement);
+fn.getText("selector");
+fn.getText("selector", doc = document);
+fn.getText(String or Array, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //刪除指定字串返回字串
@@ -460,7 +460,7 @@ const objetc = {
     t: String,
     d: String or RegExp or Array
 }
-fun.dt(objetc);
+fn.dt(objetc);
 舉例
 用於刪除元素的字串
 {
@@ -480,15 +480,15 @@ fun.dt(objetc);
 <pre>
 //取得非外部引入的script的字串
 //searchValue，關鍵字串或正則表達式
-fun.gst(searchValue);
-fun.gst(searchValue, doc = document);
-fun.gst(String or RegExp, HTMLDocument or HTMLElement);
+fn.gst(searchValue);
+fn.gst(searchValue, doc = document);
+fn.gst(String or RegExp, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //取得元素屬性的值
-fun.attr("selector","屬性");
-fun.attr("selector","屬性", doc = document);
-fun.attr(String, String, HTMLDocument or HTMLElement);
+fn.attr("selector","屬性");
+fn.attr("selector","屬性", doc = document);
+fn.attr(String, String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //創建一個DIV用來放圖片，返回DIV
@@ -497,26 +497,26 @@ fun.attr(String, String, HTMLDocument or HTMLElement);
 //pos 1，插入在指定的元素之前
 //pos 2，插入在指定的元素之後
 //width，指定最大寬度px
-fun.createImgBox("selector");
-fun.createImgBox("selector", pos = 0, width = null);
-fun.createImgBox(String, Number, Number);
+fn.createImgBox("selector");
+fn.createImgBox("selector", pos = 0, width = null);
+fn.createImgBox(String, Number, Number);
 </pre>
 <pre>
 //指定元素選擇器或元素陣列，返回過濾出圖片網址的陣列。
 //IMG、DIV、A、LINK、SPAN、LI、FIGURE，支持dataset和backgroundImage
 //不判斷srcset是因為不是所有網站都遵循srcset屬性的格式
-fun.getImgSrcArr("selector");
-fun.getImgSrcArr("selector", doc = document);
-fun.getImgSrcArr(String, HTMLDocument or HTMLElement);
-fun.getImgSrcArr(Array [HTMLElement]);
+fn.getImgSrcArr("selector");
+fn.getImgSrcArr("selector", doc = document);
+fn.getImgSrcArr(String, HTMLDocument or HTMLElement);
+fn.getImgSrcArr(Array [HTMLElement]);
 </pre>
 <pre>
 //指定圖片選擇器或圖片元素陣列，返回過濾出圖片網址的陣列。
 //主要用於提取IMG的srcset屬性，也支持dataset和backgroundImage
-fun.getImgSrcset("img selector");
-fun.getImgSrcset("img selector", doc = document);
-fun.getImgSrcset(String, HTMLDocument);
-fun.getImgSrcset(Array [HTMLImageElement]);
+fn.getImgSrcset("img selector");
+fn.getImgSrcset("img selector", doc = document);
+fn.getImgSrcset(String, HTMLDocument);
+fn.getImgSrcset(Array [HTMLImageElement]);
 </pre>
 <pre>
 //對document.title的字串修改
@@ -525,95 +525,97 @@ fun.getImgSrcset(Array [HTMLImageElement]);
 //1返回【字串切割取[0]去前後空白】
 //2返回【字串切割[0] + "字串" + 字串切割[1]】
 //3返回【字串切割[1] + "字串" + 字串切割[0]】
-fun.title("字串");
-fun.title("字串", mode, doc = document);
-fun.title(String or RegExp, Number, HTMLDocument);
+fn.title("字串");
+fn.title("字串", mode, doc = document);
+fn.title(String or RegExp, Number, HTMLDocument);
 </pre>
 <pre>
 //觀察元素變化執行callback
-fun.addMutationObserver(callback, config = MutationObserverConfig, node = document.body);
-fun.addMutationObserver(Function or AsyncFunction, Object, HTMLElement);
+fn.addMutationObserver(callback, config = MutationObserverConfig, node = document.body);
+fn.addMutationObserver(Function or AsyncFunction, Object, HTMLElement);
 </pre>
 <pre>
 //將字串解析成document物件
 //搭配fetch(url).then(res => res.text())返回的原始碼使用
-fun.doc("字串");
-fun.doc(String);
+fn.doc("字串");
+fn.doc(String);
 fetch(url).then(res => res.text()).then(text => {
-    let doc = fun.doc(text);
-    let ele = fun.ge("selector", doc);
+    let doc = fn.doc(text);
+    let ele = fn.ge("selector", doc);
     return ele;
 })
 </pre>
 <pre>
 //將字串解析成xml物件
-fun.xml("字串");
-fun.xml(String);
+fn.xml("字串");
+fn.xml(String);
 </pre>
 <pre>
 //顯示簡短訊息
 //time ms，0持續顯示
-fun.showMsg("字串", time = 1000);
-fun.showMsg(String, Number);
+fn.showMsg("字串", time = 1000);
+fn.showMsg(String, Number);
 </pre>
 <pre>
 //隱藏簡短訊息
-fun.hideMsg();
+fn.hideMsg();
 </pre>
 <pre>
 //延遲運行async/await
 //time ms
 //msg，0不顯示訊息
-await fun.delay(time, msg = 1);
-fun.delay(Number, Number);
+await fn.delay(time, msg = 1);
+fn.delay(Number, Number);
 </pre>
 <pre>
 //等待元素async/await
-//間隔100毫秒判斷一次，有元素返回元素超過循環次數返回null。
+//間隔100毫秒判斷一次
+//有元素返回元素，選擇器為陣列返回元素陣列，超過循環次數返回null。
 //max，循環的次數
-await fun.waitEle("selector");
-await fun.waitEle("selector", max = 200, doc = document);
-fun.waitEle(String, Number, HTMLDocument or HTMLElement);
+await fn.waitEle("selector");
+await fn.waitEle("selector", max = 200, doc = document);
+fn.waitEle(String or Array, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//等待window物件屬性環境變量
+//等待window環境變數
 //max，循環的次數
-await fun.waitVar("declares");
-await fun.waitVar("declares", max = 200);
-fun.waitVar(String, Number);
+await fn.waitVar("variable");
+await fn.waitVar("variable", max = 200);
+fn.waitVar(String or Array, Number);
 </pre>
 <pre>
 //等待函式寫法，預設最大循環300次100ms，30秒。
 //callback返回真假值或物件，undefined、null、NaN識別為false。
+//callback參數(document, window)
 let callback = (dom, win) => {
     return dom.querySelector("img") && ("jQuery" in win);
 };
-await fun.wait(callback, dom = document, win = window, num = 300);
-fun.wait(Function or AsyncFunction, HTMLDocument or null, Window or null, Number);
+await fn.wait(callback, num = 300);
+fn.wait(Function or AsyncFunction, Number);
 </pre>
 <pre>
 //功能基本等同eval()
-fun.run("code");
-fun.run(String);
+fn.run("code");
+fn.run(String);
 </pre>
 <pre>
 //創建空陣列，取代[] for push()的寫法
 //num陣列的長度
-fun.arr(num);
-fun.arr(num, (_, i) => (i + 1));
-fun.arr(Number, Function);
+fn.arr(num);
+fn.arr(num, (_, i) => (i + 1));
+fn.arr(Number, Function);
 </pre>
 <pre>
 //移除元素
 //time ms，延遲的時間
 //Promise可以用await
-fun.remove("selector");
-fun.remove("selector", time = 0);
+fn.remove("selector");
+fn.remove("selector", time = 0);
 
 //如果需要多個選擇器並且CSS/Xpath混寫可寫成數組
 let selectors = ["cssSelector" , "XpathSelector"]
-fun.remove(selectors, time = 0);
-fun.remove(String or Array, Number);
+fn.remove(selectors, time = 0);
+fn.remove(String or Array, Number);
 </pre>
 <pre>
 //清除所有setTimeout和setInterval定時器
@@ -622,13 +624,13 @@ fun.remove(String or Array, Number);
 //mode1，Function.prototype.constructor = () => {};
 //mode2，只清setTimeout;
 //mode3，只清setInterval;
-fun.clearAllTimer(mode = 0);
-fun.clearAllTimer(Number);
+fn.clearAllTimer(mode = 0);
+fn.clearAllTimer(Number);
 </pre>
 <pre>
 //插入樣式，需要先用JS判斷的情況用這個
-fun.css("css");
-fun.css(String);
+fn.css("css");
+fn.css(String);
 </pre>
 <pre>
 //插入A元素;
@@ -640,43 +642,43 @@ fun.css(String);
 //2在元素裡面，最後一個子元素之後
 //3在元素裡面，第一個子元素之前。
 //text 字串
-fun.addUrlHtml("url", "selector", pos = 0, "text");
-fun.addUrlHtml(String, String, Number, String);
+fn.addUrlHtml("url", "selector", pos = 0, "text");
+fn.addUrlHtml(String, String, Number, String);
 </pre>
 <pre>
 //創建script元素
-fun.script(string, number= 0, number = 0, doc = document);
+fn.script(string, number= 0, number = 0, doc = document);
 //返回script
-fun.script("code");
+fn.script("code");
 //插入到document.body
-fun.script("code", 0, 1);
+fn.script("code", 0, 1);
 //src插入到document.body
-fun.script("srcUrl", 1, 1);
+fn.script("srcUrl", 1, 1);
 </pre>
 <pre>
 //依序自動滾動元素
 //selector 元素選擇器
 //ms 滾動的間隔時間
 //top 1滾動完後返回頂部0部返回
-fun.scrollEles("selector", ms = 100, top = 1);
-fun.scrollEles(String, Number);
+fn.scrollEles("selector", ms = 100, top = 1);
+fn.scrollEles(String, Number);
 
 //依序自動滾動元素EX
 //selector 元素選擇器
 //callback判斷
 //time判斷逾時的時間
 //top 1滾動完後返回頂部0部返回
-fun.aotoScrollEles("selector", callback, time = 5000, top = 1);
-fun.aotoScrollEles(String, Function or AsyncFunction, Number);
+fn.aotoScrollEles("selector", callback, time = 5000, top = 1);
+fn.aotoScrollEles(String, Function or AsyncFunction, Number);
 //callback例子
 //ele參數為滾動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
-let callback = (ele) => fun.ge("img[src]", ele);
+let callback = (ele) => fn.ge("img[src]", ele);
 //此例為判斷元素的src屬性是否已經轉為BlobURL
 let callback = (img) => /^blob/.test(img.src);
 
 //也可以用於動態捕獲，有些網站會動態創建元素，進入可視範圍才創建新元素，並且可能也會刪除之前創建的元素。
 let arr = [];
-await fun.aotoScrollEles("img.gallery-item", (ele) => {
+await fn.aotoScrollEles("img.gallery-item", (ele) => {
     if (/\/media\//.test(ele.src)) {
         arr.push(ele.src);
         return true;
@@ -692,8 +694,8 @@ return [...new Set(arr)];
     ok: Boolean, //成功true失敗false
     src: src //成功返回圖片網址
 }
-fun.checkImgSrc(HTMLElement);
-//可以使用封裝好的fun.getImgSrcArr();
+fn.checkImgSrc(HTMLElement);
+//可以使用封裝好的fn.getImgSrcArr();
 </pre>
 <pre>
 //確認元素有沒有把圖片原始網址放在src以外的屬性
@@ -701,8 +703,8 @@ fun.checkImgSrc(HTMLElement);
     ok: Boolean, //成功true失敗false
     src: src //成功返回圖片網址
 }
-fun.checkDataset(HTMLElement);
-//可以使用封裝好的fun.getImgSrcArr();
+fn.checkDataset(HTMLElement);
+//可以使用封裝好的fn.getImgSrcArr();
 </pre>
 <pre>
 //確認圖片狀態屬性 返回一個obj
@@ -711,14 +713,14 @@ fun.checkDataset(HTMLElement);
     width: width, //成功返回圖片寬屬性
     height: height //成功返回圖片高屬性
 }
-await fun.checkImgStatus(src);
-fun.checkImgStatus(String);
+await fn.checkImgStatus(src);
+fn.checkImgStatus(String);
 </pre>
 <pre>
 //確認加了CDN的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址				
 <p>//wsrv.nl，i0.wp.com</p>
-await fun.checkImageCDN([圖片網址陣列]);
-fun.checkImageCDN(Array);			
+await fn.checkImageCDN([圖片網址陣列]);
+fn.checkImageCDN(Array);			
 </pre>
 <pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得，無法繪製跨域的圖片，會出現跨域汙染的錯誤。
@@ -726,23 +728,23 @@ fun.checkImageCDN(Array);
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
 //quality 壓縮比率 0 ~ 1
 //返回BlobURL
-fun.imgToBlobURL("selector", type = "image/jpeg", quality = 1);
-fun.imgToBlobURL(String, String, Number);
+fn.imgToBlobURL("selector", type = "image/jpeg", quality = 1);
+fn.imgToBlobURL(String, String, Number);
 //例子
-[...fun.gae(".mh_comicpic img[src^=blob]")].map(e => fun.imgToBlobURL(e));
+[...fn.gae(".mh_comicpic img[src^=blob]")].map(e => fn.imgToBlobURL(e));
 </pre>
 <pre>
-//封裝fun.imgToBlobURL函式。
+//封裝fn.imgToBlobURL函式。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
 //quality 壓縮比率 0 ~ 1
 //返回BlobURL陣列
-fun.imgBlobUrlArr("selector", type = "image/jpeg", quality = 1);
-fun.imgBlobUrlArr(String, String, Number);
+fn.imgBlobUrlArr("selector", type = "image/jpeg", quality = 1);
+fn.imgBlobUrlArr(String, String, Number);
 //例子1
-fun.imgBlobUrlArr(".mh_comicpic img[src^=blob]");
+fn.imgBlobUrlArr(".mh_comicpic img[src^=blob]");
 //例子2
-fun.imgBlobUrlArr(".image>img");
+fn.imgBlobUrlArr(".image>img");
 </pre>
 <pre>
 //取得代碼並創建script注入到當前頁面
@@ -751,76 +753,76 @@ let obj = {
     mode: "dom", //模式，要遍歷script搜索關鍵字用"dom"
     key: "str" //搜索的關鍵字串或正則
 };
-fun.getCode("url", obj);
+fn.getCode("url", obj);
 //例子1，同網域的鏈結找含有"Image_List"的script
-fun.getCode("url", {
+fn.getCode("url", {
     mode: "dom",
     key: "Image_List"
 });
 //例子2，注入jQuery依賴庫
-fun.getCode("https://code.jquery.com/jquery-3.7.1.min.js", {
+fn.getCode("https://code.jquery.com/jquery-3.7.1.min.js", {
     cors: true
 });
 </pre>
 <pre>
 //使用Promise封裝GM_xmlhttpRequest
 //只取得回應標頭，不接收完整資料，快速確認鏈結的存活狀態。
-fun.xhrHEAD("url");
-let status = await fun.xhrHEAD("url").then(res => res.status);
-let res = await fun.xhrHEAD("url");
+fn.xhrHEAD("url");
+let status = await fn.xhrHEAD("url").then(res => res.status);
+let res = await fn.xhrHEAD("url");
 let status = res.status;
 if (status == 200) {
     code
 } else if (status == 404) {
     code
 }
-fun.xhrHEAD(String);
+fn.xhrHEAD(String);
 </pre>
 <pre>
 //使用Promise封裝GM_xmlhttpRequest
 //傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址的陣列
 //imx.to、imagebam、postimg...等等
-fun.getImageHost([links]);
-fun.getImageHost(Array);
+fn.getImageHost([links]);
+fn.getImageHost(Array);
 </pre>
 <pre>
 //使用Promise封裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
-fun.xhr("url", details = {});
-fun.xhr("url", {
+fn.xhr("url", details = {});
+fn.xhr("url", {
     responseType: "json"
 }).then(json => {
     console.log("測試json", json);
 })
-fun.xhr("url", {
+fn.xhr("url", {
     responseType: "blob"
 }).then(blob => {
     console.log("測試blob", blob);
 })
-fun.xhr(String, Object);
+fn.xhr(String, Object);
 </pre>
 <pre>
 //使用Promise封裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
-fun.xhrDoc("url", details = {})
-fun.xhrDoc("url", {
+fn.xhrDoc("url", details = {})
+fn.xhrDoc("url", {
     headers: {
         "Referer": location.href,
          "User-Agent": navigator.userAgent
     }
 })
-fun.xhrDoc("url").then(doc => {
+fn.xhrDoc("url").then(doc => {
     console.log("測試doc", doc);
 })
-fun.xhrDoc(String, Object);
+fn.xhrDoc(String, Object);
 </pre>
 <pre>
 //使用Fetch API，返回經過文字編碼的document，避免字元亂碼。
 //無法修改User-Agent
-fun.fetchDoc("url", details = {});
-fun.fetchDoc("url").then(doc => {
+fn.fetchDoc("url", details = {});
+fn.fetchDoc("url").then(doc => {
     console.log("測試doc", doc);
 })
-fun.fetchDoc(String, Object);
+fn.fetchDoc(String, Object);
 </pre>
 <pre>
 //必須同源不能跨域
@@ -830,8 +832,8 @@ fun.fetchDoc(String, Object);
 let callback = (dom, frame) => { //參數dom為iframe的document，參數frame為iframe的contentWindow
     自由發揮
 }
-await fun.iframeDoc("url", "selector", time = 5000, callback);
-fun.iframeDoc(String, String, Number, Function or AsyncFunction);
+await fn.iframeDoc("url", "selector", time = 5000, callback);
+fn.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
 //必須同源不能跨域
@@ -842,14 +844,14 @@ fun.iframeDoc(String, String, Number, Function or AsyncFunction);
 let callback = (dom, frame) => { //參數dom為iframe的document，參數frame為iframe的contentWindow
     自由發揮
 }
-await fun.iframeSrcDoc("url", "selector", time = 5000, callback);
-fun.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
+await fn.iframeSrcDoc("url", "selector", time = 5000, callback);
+fn.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
 //必須同源不能跨域
 //使用Promise封裝iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
-let iframe = await fun.iframeVar("url", "declares", time = 1000);
-fun.iframeVar(String, String, Number);
+let iframe = await fn.iframeVar("url", "declares", time = 1000);
+fn.iframeVar(String, String, Number);
 </pre>
 <pre>
 //必須同源不能跨域
@@ -864,7 +866,7 @@ const details = {
         //同源可以先行對iframe創建script注入代碼，修改contentWindow屬性環境變量，修改document文檔
     }
 }
-const iframe = await fun.iframe("url", details);
+const iframe = await fn.iframe("url", details);
 const {
     dom, //iframe的document
     frame //iframe的contentWindow
@@ -872,7 +874,7 @@ const {
 const srcs = frame.newImgs;
 console.log(srcs);
 
-fun.iframe("url", details).then(object => {
+fn.iframe("url", details).then(object => {
     const {
         dom,
         frame
@@ -881,7 +883,7 @@ fun.iframe("url", details).then(object => {
     console.log(frame);
 });
 
-fun.iframe(String, Object);
+fn.iframe(String, Object);
 </pre>
 <pre>
 //xhr獲取元素，不局限於圖片
@@ -891,11 +893,11 @@ fun.iframe(String, Object);
 //"targetEle"目標元素選擇器清空此元素放入allEle
 //["targetEle", pos] targetEle目標元素選擇器，pos放在此元素的位置，0裡面1之前2之後
 //time請求發送的間隔毫秒
-await fun.getEle([links], "selector", targetEle = null, removeEle = null, time = 100);
-fun.getEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
+await fn.getEle([links], "selector", targetEle = null, removeEle = null, time = 100);
+fn.getEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
 //跨域
-await fun.getCorsEle([links], "selector", targetEle = null, removeEle = null, time = 100);
-fun.getCorsEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
+await fn.getCorsEle([links], "selector", targetEle = null, removeEle = null, time = 100);
+fn.getCorsEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
 </pre>
 <pre>
 //使用iframe單一線程獲取元素，不局限於圖片，返回元素陣列
@@ -903,12 +905,12 @@ fun.getCorsEle(String or Array, String, null or String or Array [String, Number]
 //selector要獲取的元素選擇器
 //["targetEle", pos] targetEle目標元素選擇器，pos放在此元素的位置，0裡面1之前2之後，類翻頁模式。
 //time請求發送的間隔毫秒
-await fun.getEleF([links], "selector", targetEle = null);
-fun.getEleF(String or Array, String, null or Array [String, Number]);
+await fn.getEleF([links], "selector", targetEle = null);
+fn.getEleF(String or Array, String, null or Array [String, Number]);
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
-//max填入用fun.gt()取得最大頁數的數字，或想辦法算出最大頁數的數字。
+//max填入用fn.gt()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 //mode網址頁碼數字遞增模式
 //第一頁 ==> 第二頁
 //mode1(預設)
@@ -963,26 +965,26 @@ fun.getEleF(String or Array, String, null or Array [String, Number]);
 //mode20
  ==> -p-2
 //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
-fun.getImg("元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
-fun.getImg("selector", max, mode = 1, rText = [null, null], time = 100);
-fun.getImg(String, Number, Number, Array [String or RegExp, String] or null, Number);
+fn.getImg("元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
+fn.getImg("selector", max, mode = 1, rText = [null, null], time = 100);
+fn.getImg(String, Number, Number, Array [String or RegExp, String] or null, Number);
 
 //獨立出來的可調用函式，返回修改後的鏈結
-fun.getModeUrl("url", mode, num);
+fn.getModeUrl("url", mode, num);
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
-//fun.getImgO基本同fun.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
+//fn.getImgO基本同fn.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
 //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
-fun.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
-fun.getImgO("selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
-fun.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
+fn.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
+fn.getImgO("selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
+fn.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
 </pre>
 <pre>
-//fun.getImgIframe基本同fun.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
-fun.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
-fun.getImgIframe("img selector", max, mode, paginationEle = null, time = 1000, showMsg = 1)
-fun.getImgIframe(String, Number, Number, String or  null, Number, Number)
+//fn.getImgIframe基本同fn.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
+fn.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
+fn.getImgIframe("img selector", max, mode, paginationEle = null, time = 1000, showMsg = 1)
+fn.getImgIframe(String, Number, Number, String or  null, Number, Number)
 </pre>
 <pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
@@ -994,47 +996,47 @@ fun.getImgIframe(String, Number, Number, String or  null, Number, Number)
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
 //A元素參數可以傳入自己創建的網址陣列
 //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
-fun.getImgA("元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
-fun.getImgA("selector", "a selector", mode = 0, rText = [null, null], showMsg = 1);
-fun.getImgA("元素選擇器", "A元素選擇器");
-fun.getImgA("元素選擇器", [網址陣列]);
-fun.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
+fn.getImgA("元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
+fn.getImgA("selector", "a selector", mode = 0, rText = [null, null], showMsg = 1);
+fn.getImgA("元素選擇器", "A元素選擇器");
+fn.getImgA("元素選擇器", [網址陣列]);
+fn.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
 </pre>
 <pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址的陣列
 //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
-fun.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
-fun.getImgCorsA("元素選擇器", [網址陣列], time = 100);
-fun.getImgCorsA(String, String or Array, Number);
+fn.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
+fn.getImgCorsA("元素選擇器", [網址陣列], time = 100);
+fn.getImgCorsA(String, String or Array, Number);
 </pre>
 <pre>
-//翻頁模式聚集圖片或是含A元素的預覽縮圖然後fun.getImgA()
-fun.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器或函式", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
+//翻頁模式聚集圖片或是含A元素的預覽縮圖然後fn.getImgA()
+fn.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器或函式", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
 //判斷為最後一頁的函式舉例
 //參數doc是下一頁的document
 const last = doc => {
-    let ele = fun.ge("#showmore", doc);
+    let ele = fn.ge("#showmore", doc);
     return ele.dataset.page >= ele.dataset.max;
 }
 const last = doc => {
-    let currentPage = fun.ge("#pagenum", doc).innerText.match(/\d+/)[0]; //下一頁的當前頁數
-    let totalPage = fun.ge("#pagenum", doc).innerText.match(/\/(\d+)/)[1]; //下一頁的最大頁數
+    let currentPage = fn.ge("#pagenum", doc).innerText.match(/\d+/)[0]; //下一頁的當前頁數
+    let totalPage = fn.ge("#pagenum", doc).innerText.match(/\/(\d+)/)[1]; //下一頁的最大頁數
     return currentPage >= totalPage ? true : false; //當前頁數大於等於最大頁數是最後一頁
 }
-await fun.getNP("selector", "nextLinkEle", lastEle, "paginationEle", time, dataset, msg);
-await fun.getNP("selector", "nextLinkEle");
-fun.getNP(String, String, String or Function or AsyncFunction, String or null, Number, String, Number);
+await fn.getNP("selector", "nextLinkEle", lastEle, "paginationEle", time, dataset, msg);
+await fn.getNP("selector", "nextLinkEle");
+fn.getNP(String, String, String or Function or AsyncFunction, String or null, Number, String, Number);
 //用在規則imgs
 //應用在包子漫畫的用法
 imgs: async () => {
-    await fun.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter");
-    let arr = [...fun.gae(".comic-contain amp-img")].map(e => e.getAttribute("src"));
+    await fn.getNP(".comic-contain>div:not(.mobadsq)", "//a[contains(text(),'下一頁') or contains(text(),'下一页')]", null, ".comic-chapter>.next_chapter");
+    let arr = [...fn.gae(".comic-contain amp-img")].map(e => e.getAttribute("src"));
     return [...new Set(arr)]
 }
 //應用在小黃書的用法
 imgs: async () => {
-    await fun.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager");
-    return [...fun.gae(".cr_only")].map(e => e.src.replace("_600x0", ""));
+    await fn.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager");
+    return [...fn.gae(".cr_only")].map(e => e.src.replace("_600x0", ""));
 }
 </pre>
 </details>
@@ -1628,6 +1630,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://www.t66y.com/">草榴</a>
                 </td>
                 <td>貼圖區</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://2048.cc/2048/">我为人人</a>
+                </td>
+                <td>貼圖區，<a href="https://2048.info/">地址发布页</a></td>
             </tr>
             <tr>
                 <td>
@@ -3571,6 +3579,12 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
             <tr>
                 <td>
                     <a href="https://girls.ucrazy.org/">uCrazy</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dzen.ru/w_t_s_c">Дзен</a>
                 </td>
                 <td></td>
             </tr>
