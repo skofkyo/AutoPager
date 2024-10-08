@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.5.13
+// @version            2.5.14
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -291,9 +291,8 @@
         width: 300px;
         height: auto;
         position: fixed;
-        top: 20%;
-        left: 50%;
-        margin-left: -150px;
+        top: calc((100% - 340px) / 2);
+        left: calc((100% - 302px) / 2);
         border: 1px solid #a0a0a0;
         border-radius: 3px;
         box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
@@ -351,7 +350,7 @@
     }
 </style>
 <div id="happymhConfigElement">
-    <div class="title" style="width: 100%;">
+    <div class="title" style="width: calc(100% - 8px);">
         ${i18n.config.title}
     </div>
     <div class="item">
@@ -410,47 +409,47 @@
 </div>
         `;
 
-        ge("#arrowKeyInput", shadow).checked = configs.arrowKey == 1 ? true : false;
-        ge("#doubleClickInput", shadow).checked = configs.doubleClick == 1 ? true : false;
-        ge("#preloadInput", shadow).checked = configs.preload == 1 ? true : false;
-        ge("#autoReloadInput", shadow).checked = configs.autoReload == 1 ? true : false;
-        ge("#autoNextInput", shadow).checked = configs.autoNext == 1 ? true : false;
-        ge("#autoNextSec", shadow).value = configs.autoNextSec;
-        ge("#autoShowAllInput", shadow).checked = configs.autoShowAll == 1 ? true : false;
-        ge("#openInNewTabInput", shadow).checked = configs.openInNewTab == 1 ? true : false;
-        ge("#removeAdInput", shadow).checked = configs.removeAd == 1 ? true : false;
-        ge("#infiniteScrollInput", shadow).checked = configs.infiniteScroll == 1 ? true : false;
-        ge("#highQualityInput", shadow).checked = configs.highQuality == 1 ? true : false;
-        ge("#historyInput", shadow).checked = configs.history == 1 ? true : false;
-        ge("#cancelBtn", shadow).addEventListener("click", event => {
+        const main = ge("#happymhConfigElement", shadow);
+        ge("#arrowKeyInput", main).checked = configs.arrowKey == 1 ? true : false;
+        ge("#doubleClickInput", main).checked = configs.doubleClick == 1 ? true : false;
+        ge("#preloadInput", main).checked = configs.preload == 1 ? true : false;
+        ge("#autoReloadInput", main).checked = configs.autoReload == 1 ? true : false;
+        ge("#autoNextInput", main).checked = configs.autoNext == 1 ? true : false;
+        ge("#autoNextSec", main).value = configs.autoNextSec;
+        ge("#autoShowAllInput", main).checked = configs.autoShowAll == 1 ? true : false;
+        ge("#openInNewTabInput", main).checked = configs.openInNewTab == 1 ? true : false;
+        ge("#removeAdInput", main).checked = configs.removeAd == 1 ? true : false;
+        ge("#infiniteScrollInput", main).checked = configs.infiniteScroll == 1 ? true : false;
+        ge("#highQualityInput", main).checked = configs.highQuality == 1 ? true : false;
+        ge("#historyInput", main).checked = configs.history == 1 ? true : false;
+        ge("#cancelBtn", main).addEventListener("click", event => {
             event.preventDefault();
             mainElement.remove();
         });
-        ge("#resetBtn", shadow).addEventListener("click", event => {
+        ge("#resetBtn", main).addEventListener("click", event => {
             event.preventDefault();
             mainElement.remove();
             GM_deleteValue("configs");
             _unsafeWindow.location.reload();
         });
-        ge("#saveBtn", shadow).addEventListener("click", event => {
+        ge("#saveBtn", main).addEventListener("click", event => {
             event.preventDefault();
-            configs.arrowKey = ge("#arrowKeyInput", shadow).checked == true ? 1 : 0;
-            configs.doubleClick = ge("#doubleClickInput", shadow).checked == true ? 1 : 0;
-            configs.preload = ge("#preloadInput", shadow).checked == true ? 1 : 0;
-            configs.autoReload = ge("#autoReloadInput", shadow).checked == true ? 1 : 0;
-            configs.autoNext = ge("#autoNextInput", shadow).checked == true ? 1 : 0;
-            configs.autoNextSec = ge("#autoNextSec", shadow).value;
-            configs.autoShowAll = ge("#autoShowAllInput", shadow).checked == true ? 1 : 0;
-            configs.openInNewTab = ge("#openInNewTabInput", shadow).checked == true ? 1 : 0;
-            configs.removeAd = ge("#removeAdInput", shadow).checked == true ? 1 : 0;
-            configs.infiniteScroll = ge("#infiniteScrollInput", shadow).checked == true ? 1 : 0;
-            configs.highQuality = ge("#highQualityInput", shadow).checked == true ? 1 : 0;
-            configs.history = ge("#historyInput", shadow).checked == true ? 1 : 0;
+            configs.arrowKey = ge("#arrowKeyInput", main).checked == true ? 1 : 0;
+            configs.doubleClick = ge("#doubleClickInput", main).checked == true ? 1 : 0;
+            configs.preload = ge("#preloadInput", main).checked == true ? 1 : 0;
+            configs.autoReload = ge("#autoReloadInput", main).checked == true ? 1 : 0;
+            configs.autoNext = ge("#autoNextInput", main).checked == true ? 1 : 0;
+            configs.autoNextSec = ge("#autoNextSec", main).value;
+            configs.autoShowAll = ge("#autoShowAllInput", main).checked == true ? 1 : 0;
+            configs.openInNewTab = ge("#openInNewTabInput", main).checked == true ? 1 : 0;
+            configs.removeAd = ge("#removeAdInput", main).checked == true ? 1 : 0;
+            configs.infiniteScroll = ge("#infiniteScrollInput", main).checked == true ? 1 : 0;
+            configs.highQuality = ge("#highQualityInput", main).checked == true ? 1 : 0;
+            configs.history = ge("#historyInput", main).checked == true ? 1 : 0;
             mainElement.remove();
             GM_setValue("configs", configs);
             _unsafeWindow.location.reload();
         });
-
         document.body.append(mainElement);
     };
 
@@ -817,11 +816,7 @@ footer {
                         }
                     };
                 }
-                if (i === 0 || i === 1) {
-                    img.src = src;
-                } else {
-                    img.src = img_loading_bak;
-                }
+                img.src = img_loading_bak;
                 img.dataset.src = src;
                 imagesObserver.observe(img);
                 return img;
