@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.31
+// @version            2.8.32
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -8583,7 +8583,6 @@ a:has(>div>div>img),
             let url = new URL(document.URL);
             return url.pathname.startsWith("/a/") && url.search === "";
         },
-        button: [4],
         customTitle: async () => {
             await fn.delay(1000, 0);
             return fn.dt({
@@ -8591,6 +8590,26 @@ a:has(>div>div>img),
             });
         },
         observerURL: true,
+        category: "nsfw2"
+    }, {
+        name: "NUDE_ART_EROTIC",
+        reg: () => fn.checkUrl({
+            h: "nude-art-erotic.livejournal.com",
+            p: /^\/\d+\.html$/
+        }),
+        imgs: ".entry-content img:not([src$='19736856'])",
+        customTitle: ".entry-title",
+        setFancybox: true,
+        category: "nsfw2"
+    }, {
+        name: "Развлекательно-эротический блог",
+        reg: () => fn.checkUrl({
+            h: "tettie.net",
+            s: "p="
+        }),
+        imgs: ".postContent img",
+        customTitle: ".postTitle",
+        setFancybox: true,
         category: "nsfw2"
     }, {
         name: "URLGalleries",
@@ -21574,6 +21593,7 @@ if ("xx" in window) {
                 str_149: "已取消下載！！！",
                 str_150: "JK滾動",
                 str_151: "JK平滑滾動",
+                str_152: "視口高",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21759,6 +21779,7 @@ if ("xx" in window) {
                 str_149: "已取消下载！！！",
                 str_150: "JK滚动",
                 str_151: "JK平滑滚动",
+                str_152: "视口高",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
@@ -21941,8 +21962,9 @@ if ("xx" in window) {
                 str_147: "Gallery (0、1、3) Wheel：",
                 str_148: "Fancybox5 Slideshow Transition：",
                 str_149: "Download Canceled！！！",
-                str_150: "JK Scroll",
+                str_150: "JK Scroll ",
                 str_151: "JK Smooth Scroll",
+                str_152: "Viewport",
                 galleryMenu: {
                     webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
@@ -25062,11 +25084,7 @@ if ("xx" in window) {
             return srcs.map((src, i) => {
                 let img = new Image();
                 img.className = "FullPictureLoadImage lazyload";
-                if (i === 0 || i === 1) {
-                    img.src = src;
-                } else {
-                    img.src = loading_bak;
-                }
+                img.src = loading_bak;
                 img.dataset.src = src;
                 return img;
             });
@@ -27734,7 +27752,12 @@ if (config.ViewMode == 1) {
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
-                let num = mainElement.scrollTop + Number(config.jumpNum);
+                let num;
+                if (config.jumpNum == 0) {
+                    num = mainElement.scrollTop + _unsafeWindow.innerHeight;
+                } else {
+                    num = mainElement.scrollTop + Number(config.jumpNum);
+                }
                 let lastTop = mainElement.scrollHeight - _unsafeWindow.innerHeight;
                 if (num >= lastTop) {
                     num = lastTop;
@@ -27745,7 +27768,12 @@ if (config.ViewMode == 1) {
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
-                let num = mainElement.scrollTop - Number(config.jumpNum);
+                let num;
+                if (config.jumpNum == 0) {
+                    num = mainElement.scrollTop - _unsafeWindow.innerHeight;
+                } else {
+                    num = mainElement.scrollTop - Number(config.jumpNum);
+                }
                 if (num <= 0) {
                     num = 0;
                 }
@@ -28199,10 +28227,15 @@ img.small {
             menuObj.forEach(obj => createMenu(obj));
 
             let jumpSelect = document.createElement("select");
-            for (let i = 1; i <= 100; i++) {
+            for (let i = 0; i <= 100; i++) {
                 let option = document.createElement("option");
-                option.value = i * 100;
-                option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                if (i === 0) {
+                    option.value = i;
+                    option.innerText = `${displayLanguage.str_150}${displayLanguage.str_152}`;
+                } else {
+                    option.value = i * 100;
+                    option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                }
                 jumpSelect.append(option);
             }
             ge("#MenuJumpItem", menuDiv).append(jumpSelect);
@@ -28527,8 +28560,13 @@ img.small {
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
-                let num = mainElement.scrollTop + Number(config.jumpNum);
-                let lastTop = mainElement.scrollHeight - _unsafeWindow.innerHeight;
+                let num;
+                if (config.jumpNum == 0) {
+                    num = mainElement.scrollTop + win.innerHeight;
+                } else {
+                    num = mainElement.scrollTop + Number(config.jumpNum);
+                }
+                let lastTop = mainElement.scrollHeight - win.innerHeight;
                 if (num >= lastTop) {
                     num = lastTop;
                 }
@@ -28538,7 +28576,12 @@ img.small {
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
-                let num = mainElement.scrollTop - Number(config.jumpNum);
+                let num;
+                if (config.jumpNum == 0) {
+                    num = mainElement.scrollTop - win.innerHeight;
+                } else {
+                    num = mainElement.scrollTop - Number(config.jumpNum);
+                }
                 if (num <= 0) {
                     num = 0;
                 }
@@ -28740,13 +28783,13 @@ img.small {
 #FixedMenu select option {
     text-align: center;
 }
-#behaviorInput {
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    margin-top: ${isFirefox ? "2px" : "0px"};
-}
-        `
+                #behaviorInput {
+                    vertical-align: middle;
+                    width: 16px;
+                    height: 16px;
+                    margin-top: ${isFirefox ? "2px" : "0px"};
+                }
+                `
         });
         if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
             _GM_addElement(dom.head, "style", {
@@ -29011,10 +29054,15 @@ img.small {
             menuObj.forEach(obj => createMenu(obj));
 
             let jumpSelect = document.createElement("select");
-            for (let i = 1; i <= 100; i++) {
+            for (let i = 0; i <= 100; i++) {
                 let option = document.createElement("option");
-                option.value = i * 100;
-                option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                if (i === 0) {
+                    option.value = i;
+                    option.innerText = `${displayLanguage.str_150}${displayLanguage.str_152}`;
+                } else {
+                    option.value = i * 100;
+                    option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                }
                 jumpSelect.append(option);
             }
             ge("#MenuJumpItem", menuDiv).append(jumpSelect);
@@ -29491,6 +29539,8 @@ img.small {
     //列出未分類
     const noneData = customData.filter(item => item.category === "none");
 
+    let topDistance = () => {};
+
     //創建腳本選項元素
     const createPictureLoadOptionsShadowElement = () => {
 
@@ -29513,8 +29563,7 @@ img.small {
     height: auto;
     position: fixed;
     top: 10%;
-    left: 50%;
-    margin-left: -180px;
+    left: calc((100% - 362px) / 2);
     border: 1px solid #a0a0a0;
     border-radius: 3px;
     box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
@@ -29585,6 +29634,7 @@ img.small {
 }
 
 #FullPictureLoadOptions p {
+    width: calc(100% - 16px);
     text-align: center;
     margin-block-start: 0px;
     margin-block-end: 0px;
@@ -29598,7 +29648,7 @@ img.small {
         main.id = "FullPictureLoadOptions";
         const FullPictureLoadOptionsMainHtmlStr = `
 <div style="width: 100%;">
-    <p>${displayLanguage.str_68}</p>
+    <p id="title">${displayLanguage.str_68}</p>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="icon" type="checkbox" style="width: 14px; margin: 0 6px;">
@@ -29782,6 +29832,15 @@ img.small {
             ExtensionSelect.append(option);
         });
 
+        topDistance = () => {
+            if (main.offsetHeight < _unsafeWindow.innerHeight) {
+                let num = (_unsafeWindow.innerHeight - main.offsetHeight) / 2;
+                main.style.top = num + "px";
+            } else {
+                main.style.top = "10px";
+            }
+        };
+
         ge("#icon", main).checked = options.icon == 1 ? true : false;
         ge("#AutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
         ge("#ShowFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
@@ -29855,6 +29914,7 @@ img.small {
         }
         ge("#CancelBtn", main).addEventListener("click", () => {
             mainElement.remove();
+            _unsafeWindow.removeEventListener("resize", topDistance);
             setTimeout(() => (isOpenOptionsUI = false), 200);
         });
         ge("#ResetBtn", main).addEventListener("click", event => {
@@ -29898,6 +29958,8 @@ img.small {
             location.reload();
         });
         shadow.appendChild(main);
+        topDistance();
+        _unsafeWindow.addEventListener("resize", topDistance);
     };
 
     //腳本的CSS樣式
@@ -30602,6 +30664,7 @@ a[data-fancybox]:hover {
             let UI = ge("#FullPictureLoadOptionsShadowElement");
             if (UI) {
                 UI.remove();
+                _unsafeWindow.removeEventListener("resize", topDistance);
                 setTimeout(() => (isOpenOptionsUI = false), 200);
             }
             return;
