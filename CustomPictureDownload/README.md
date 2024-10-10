@@ -3,18 +3,18 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/09/28
+2024/10/10
 PC
-Chrome 129.0.6668.71 + Tampermonkey 5.3.0 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
-Edge 129.0.2792.65 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
-Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
-FireFox 130.0.1 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+Chrome 129.0.6668.101 + Tampermonkey 5.3.0 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Edge 129.0.2792.79 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+FireFox 131.0.2 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
 Android
-Edge Canary 131.0.2861.0 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
-Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
-Firefox for Android 130.0.1 + Tampermonkey 5.1.1 or Violentmonkey 2.25.0 or ScriptCat 0.16.5
+Edge Canary 131.0.2882.0 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Firefox for Android 131.0.2 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
 XBrowser 4.8.2
-ViaBrowser 5.9.0
+ViaBrowser 5.9.5
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>提醒：</h1>
@@ -1123,7 +1123,7 @@ imgs: async () => {
 <p>Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將調用使用iframe構建的畫廊。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/10/05 00:45</p>
+<p>2024/10/10 16:23</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
