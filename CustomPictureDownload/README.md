@@ -155,7 +155,7 @@ XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次�
     topButton: true, //添加返回頂部按鈕
     threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
     fetch: 1, //使用Fetch API下載圖片，需要圖片下載請求的伺服器有開放CORS。
-    referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
+    referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前域名，"url"參照頁為當前文檔網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
     infiniteScroll: true, //漫畫分類標記有無限滾動模式
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
@@ -5308,15 +5308,14 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                     <a href="https://godamh.com/">GODA漫畫</a>
                 </td>
                 <td>
-                    <a href="https://nav.telltome.net/">发布页</a> ，閱讀頁域名為n.cocolamanhua.com，有無限滾動模式加預讀，擋廣告套件規則AdGuard Chinese、EasyList China可能會封鎖API請求，導致無法取得圖片資料，如有此情況需uBlock加信任名單。
-                    <pre>https://n.cocolamanhua.com/*/</pre>腳本自帶去廣告，還你乾淨的閱讀感受。
+                    <a href="https://nav.telltome.net/">发布页</a> ，有無限滾動模式加預讀
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://m.baozimh.one/">包子漫畫</a>
                 </td>
-                <td>閱讀頁域名為baozimh.one，有無限滾動模式加預讀。</td>
+                <td>有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
@@ -5595,7 +5594,7 @@ XO福利圖,https://www.xofulitu521.xyz/xoxo
                 <td>
                     <a href="https://komiic.com/">Komiic</a>
                 </td>
-                <td>SPA網頁，預設關閉，網站每天有瀏覽限制，網站改版難以應對，下載圖片需先按6自動滾動讓圖片全部載入。</td>
+                <td>SPA網頁，預設關閉，網站每天有圖片瀏覽張數限制。</td>
             </tr>
             <tr>
                 <td>
