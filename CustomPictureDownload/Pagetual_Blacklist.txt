@@ -1,4 +1,4 @@
-2024/10/05 00:45
+2024/10/10 16:23
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -1634,13 +1634,24 @@ http://*.wuqimh.net/*/*.html
 *://www.shilunart.com/comic/*/read-*.html
 
 GODA漫画閱讀
-*://n.cocolamanhua.com/chapter/*.html
-*://m.godamh.com/chapter/*.html
+*://www.cocolamanhua.com/manga/*/*
+*://n.cocolamanhua.com/manga/*/*
+*://godamh.com/manga/*/*
+*://m.godamh.com/manga/*/*
+*://g-mh.org/manga/*/*
+*://m.g-mh.org/manga/*/*
+*://manhuafree.com/manga/*/*
 
 包子漫畫閱讀
-*://baozimh.one/chapter/*.html
+*://baozimh.org/manga/*/*
+*://m.baozimh.org/manga/*/*
+*://baozimh.one/manga/*/*
+*://m.baozimh.one/manga/*/*
+*://bzmh.org/manga/*/*
+*://m.bzmh.org/manga/*/*
 
 GodaComic 英文漫画
+*://godamh.org/chapter/*.html
 *://manhuascans.org/manga/*/*
 
 漫畫屋閱讀
