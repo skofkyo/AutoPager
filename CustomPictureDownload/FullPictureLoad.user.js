@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.32
+// @version            2.8.33
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -82,12 +82,12 @@
 
     const _unsafeWindow = unsafeWindow ?? window;
     const language = _unsafeWindow.navigator.language;
-    let siteUrl = _unsafeWindow.location.href.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "");
+    let siteUrl = _unsafeWindow.location.href.replace(_unsafeWindow.location.hash, "");
     let frameWindow = _unsafeWindow;
     let siteData = {};
     let _this = {};
     let tempData = {};
-    let siteJson = null;
+    let siteJson = {};
     let displayLanguage = {};
     let globalImgArray = [];
     let captureSrcArray = [];
@@ -15945,11 +15945,11 @@ if ("xx" in window) {
         return src;
     };
     const html = decodeURIComponent(xx);
-    const codes = html.matchAll(/ s="([^"]+)"/g);
+    const codes = html.matchAll(/\\ss="([^"]+)"/g);
     const srcs = [...codes].map(([, code]) => {
         if (code.startsWith("//")) {
             return window.location.protocol + code;
-        } else if (code.replace(/\\d+$/, "").length === 15) {
+        } else if (code.length >= 16 && code.length <= 18 && /\\d{1,3}/.test(code.substring(15))) {
             return getSrc(code);
         } else {
             return null;
@@ -16020,11 +16020,11 @@ if ("xx" in window) {
         return src;
     };
     const html = decodeURIComponent(xx);
-    const codes = html.matchAll(/ s="([^"]+)"/g);
+    const codes = html.matchAll(/\\ss="([^"]+)"/g);
     const srcs = [...codes].map(([, code]) => {
         if (code.startsWith("//")) {
             return window.location.protocol + code;
-        } else if (code.replace(/\\d+$/, "").length === 15) {
+        } else if (code.length >= 16 && code.length <= 18 && /\\d{1,3}/.test(code.substring(15))) {
             return getSrc(code);
         } else {
             return null;
@@ -17096,10 +17096,8 @@ if ("xx" in window) {
         enable: 0,
         reg: /^https?:\/\/komiic\.com\//,
         init: async () => await fn.waitEle(".v-breadcrumbs"),
-        imgs: "[data-kid]>img",
-        scrollEle: () => fn.aotoScrollEles("[data-kid]", (ele) => isEle(fn.ge("img", ele)), 10000),
-        capture: async (url = document.URL) => {
-            if (!url.includes("/chapter/")) return [];
+        imgs: async (url = document.URL) => {
+            if (!_this.SPA()) return [];
             fn.showMsg(displayLanguage.str_05, 0);
             let chapterId = url.match(/chapter\/(\d+)\/images/)[1];
             let body = {
@@ -17119,9 +17117,10 @@ if ("xx" in window) {
             debug("\nimages JSON\n", json);
             return json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid);
         },
+        capture: () => _this.imgs(),
         SPA: () => document.URL.includes("/chapter/"),
         next: async (url = document.URL) => {
-            if (!url.includes("/chapter/")) return null;
+            if (!_this.SPA()) return null;
             let mhId = url.match(/comic\/(\d+)/)[1];
             let body = {
                 operationName: "chapterByComicId",
@@ -17161,6 +17160,7 @@ if ("xx" in window) {
             return textArr[1] + " - " + textArr[2];
         },
         fetch: 1,
+        referer: "url",
         category: "comic"
     }, {
         name: "LINE WEBTOON / 咚漫",
@@ -19004,17 +19004,129 @@ if ("xx" in window) {
         enable: 1,
         reg: () => fn.checkUrl({
             h: [
-                "godamanga.art",
-                "godamh.org",
+                "godamh.org"
+            ],
+            p: /^\/chapter\/\d+\.html$/i
+        }) && comicInfiniteScrollMode != 1,
+        init: async () => {
+            await fn.waitEle(".touch-manipulation img");
+            let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
+            let {
+                host,
+                ms,
+                cs
+            } = setdata;
+            let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+            await fn.fetchDoc(api, {
+                cache: "no-cache"
+            }).then(dom => {
+                let obj = {
+                    ...fn.ge("#c-imagelist", dom).dataset,
+                    ...setdata
+                };
+                siteJson = obj;
+            });
+        },
+        imgs: () => fn.gae(".touch-manipulation img"),
+        button: [4],
+        insertImg: [".touch-manipulation", 2],
+        autoDownload: [0],
+        next: "#nextChapterLink",
+        prev: "#preChapterLink",
+        customTitle: () => siteJson.title + " - " + siteJson.ctitle,
+        preloadNext: (dom) => {
+            if ("next" in siteJson) {
+                //let api = `${siteJson.host}/chapter/getcontent?m=${siteJson.ms}&c=${siteJson.next}`;
+                let api = `${siteJson.host}/chapter/getinfo?m=${siteJson.ms}&c=${siteJson.next}`;
+                fn.fetchDoc(api, {
+                    cache: "no-cache"
+                }).then(nextDom => {
+                    let srcs = fn.getImgSrcArr(".touch-manipulation img", nextDom);
+                    fn.picPreload(srcs, siteJson.nextt, "next");
+                });
+            }
+        },
+        infiniteScroll: true,
+        category: "comic"
+    }, {
+        name: "Godamanga.ART 自動翻頁",
+        enable: 1,
+        reg: () => fn.checkUrl({
+            h: [
+                "godamh.org"
+            ],
+            p: /^\/chapter\/\d+\.html$/i
+        }) && comicInfiniteScrollMode == 1,
+        getData: () => {
+            let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
+            let {
+                host,
+                ms,
+                cs
+            } = setdata;
+            let api;
+            if ("next" in siteJson) {
+                api = `${host}/chapter/getinfo?m=${ms}&c=${siteJson.next}`;
+            } else {
+                api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+            }
+            return fn.fetchDoc(api, {
+                cache: "no-cache"
+            }).then(dom => {
+                let dataset = {
+                    ...fn.ge("#c-imagelist", dom).dataset
+                };
+                siteJson = dataset;
+                globalImgArray = fn.getImgSrcArr(".touch-manipulation img", dom);
+                customTitle = dataset.title + " - " + dataset.ctitle;
+                if ("next" in dataset) {
+                    tempNextLink = `${host}/chapter/getinfo?m=${ms}&c=${dataset.next}`;
+                    fn.fetchDoc(tempNextLink, {
+                        cache: "no-cache"
+                    }).then(nextDom => {
+                        let srcs = fn.getImgSrcArr(".touch-manipulation img", nextDom);
+                        fn.picPreload(srcs, dataset.nextt, "next");
+                    });
+                } else {
+                    tempNextLink = null;
+                }
+            });
+        },
+        init: async () => {
+            await _this.getData();
+            let imgs = fn.createImgArray(globalImgArray);
+            await fn.waitEle(".touch-manipulation img");
+            let tE = fn.createImgBox(".touch-manipulation", 2);
+            await fn.remove(".touch-manipulation");
+            tE.append(...imgs);
+            await fn.lazyload();
+        },
+        autoPager: {
+            ele: () => fn.createImgArray(globalImgArray),
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            observer: "#FullPictureLoadMainImgBox>img",
+            next: () => tempNextLink,
+            wait: () => _this.getData(),
+            title: () => customTitle,
+            hide: "div.justify-center:has(>.w-full),.pb-14",
+            history: 0
+        },
+        category: "comic autoPager"
+    }, {
+        name: "Godamanga.ART 英文漫画",
+        enable: 1,
+        reg: () => fn.checkUrl({
+            h: [
                 "manhuascans.org"
             ],
-            p: /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/[\w-]+$/i
+            p: /^\/manga\/[\w-]+\/[\w-]+$/i,
+            e: "#chapterContent"
         }) && comicInfiniteScrollMode != 1,
         xhrOptions: {
             cache: "no-cache"
         },
         init: async () => await fn.waitEle(".touch-manipulation img"),
-        imgs: ".touch-manipulation img",
+        imgs: () => fn.gae(".touch-manipulation img"),
         button: [4],
         insertImg: [".touch-manipulation", 2],
         autoDownload: [0],
@@ -19040,11 +19152,10 @@ if ("xx" in window) {
         enable: 1,
         reg: () => fn.checkUrl({
             h: [
-                "godamanga.art",
-                "godamh.org",
                 "manhuascans.org"
             ],
-            p: /^\/chapter\/\d+\.html$|^\/manga\/[\w-]+\/[\w-]+$/i
+            p: /^\/manga\/[\w-]+\/[\w-]+$/i,
+            e: "#chapterContent"
         }) && comicInfiniteScrollMode == 1,
         xhrOptions: {
             cache: "no-cache"
@@ -19086,45 +19197,56 @@ if ("xx" in window) {
         enable: 1,
         reg: () => fn.checkUrl({
             h: [
+                "www.cocolamanhua.com",
                 "n.cocolamanhua.com",
+                "godamh.com",
+                "m.godamh.com",
+                "g-mh.org",
+                "m.g-mh.org",
+                "baozimh.org",
+                "m.baozimh.org",
                 "baozimh.one",
-                "m.godamh.com"
+                "m.baozimh.one",
+                "bzmh.org",
+                "m.bzmh.org",
+                "manhuafree.com"
             ],
-            p: /^\/[\w-]+\/$|^\/[\w-]+\/$|^\/chapter\/\d+\.html$/i,
-            e: "h2#title"
+            p: /^\/manga\/[\w-]+\/[\w-]+$/i,
+            e: "#chapterContent"
         }) && comicInfiniteScrollMode != 1,
         init: async () => {
             fn.addMutationObserver(() => fn.remove("iframe,.bannersUite"));
             await fn.waitEle(".touch-manipulation img");
-            fn.remove("//div[ins[@class='adsbygoogle']]");
-            let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-            let {
-                host,
-                ms,
-                cs
-            } = setdata;
-            let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+            fn.remove(["#noad-button,.absolute,.adshow", "//div[ins[@class='adsbygoogle']]"]);
+            let chapterDataE = fn.ge("#chapterContent");
+            let ms = chapterDataE.dataset.ms
+            let cs = chapterDataE.dataset.cs
+            let api = `https://api-get-v2.mgsearcher.com/api/chapter/getinfo?m=${ms}&c=${cs}`;
             let fetchJson = await fetch(api, {
                 cache: "no-cache"
             }).then(res => res.json());
             siteJson = fetchJson;
         },
-        imgs: (json = siteJson) => json.data.info.images.map(e => e.url),
+        imgs: (json = siteJson) => {
+            let {
+                line,
+                images
+            } = json.data.info.images;
+            let host = line === 2 ? "https://f40-1-4.g-mh.online" : "https://t40-1-4.g-mh.online";
+            return images.map(e => host + e.url);
+        },
         button: [4],
         insertImg: [".touch-manipulation", 2],
         autoDownload: [0],
-        next: "#nextChapterLink",
-        prev: "#preChapterLink",
+        next: "#nextchaptera[href*='/manga/']",
+        prev: "#prevchaptera[href*='/manga/']",
         customTitle: (json = siteJson) => json.data.info.mangatitle + " - " + json.data.info.title,
         preloadNext: () => {
             let next = siteJson.data.info?.next;
             if (!!next) {
-                let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-                let {
-                    host,
-                    ms,
-                } = setdata;
-                let api = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
+                let chapterDataE = fn.ge("#chapterContent");
+                let ms = chapterDataE.dataset.ms;
+                let api = `https://api-get-v2.mgsearcher.com/api/chapter/getinfo?m=${ms}&c=${next}`;
                 fetch(api, {
                     cache: "no-cache"
                 }).then(res => res.json()).then(json => {
@@ -19134,7 +19256,7 @@ if ("xx" in window) {
                 });
             }
         },
-        css: "iframe,.bannersUite,.w-full:has(>amp-ad){display:none!important;}",
+        css: "iframe,.bannersUite,.w-full:has(>amp-ad),#noad-button,.absolute,.adshow{display:none!important;}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -19142,14 +19264,41 @@ if ("xx" in window) {
         enable: 1,
         reg: () => fn.checkUrl({
             h: [
+                "www.cocolamanhua.com",
                 "n.cocolamanhua.com",
+                "godamh.com",
+                "m.godamh.com",
+                "g-mh.org",
+                "m.g-mh.org",
+                "baozimh.org",
+                "m.baozimh.org",
                 "baozimh.one",
-                "m.godamh.com"
+                "m.baozimh.one",
+                "bzmh.org",
+                "m.bzmh.org",
+                "manhuafree.com"
             ],
-            p: /^\/[\w-]+\/$|^\/[\w-]+\/$|^\/chapter\/\d+\.html$/i,
-            e: "h2#title"
+            p: /^\/manga\/[\w-]+\/[\w-]+$/i,
+            e: "#chapterContent"
         }) && comicInfiniteScrollMode == 1,
-        getSrcs: (json = siteJson) => json.data.info.images.map(e => e.url),
+        getApi: (mode = "current") => {
+            let chapterDataE = fn.ge("#chapterContent");
+            let ms = chapterDataE.dataset.ms
+            let cs = chapterDataE.dataset.cs
+            if (mode === "next") {
+                return `https://api-get-v2.mgsearcher.com/api/chapter/getinfo?m=${ms}&c=${siteJson.data.info.next}`;
+            } else {
+                return `https://api-get-v2.mgsearcher.com/api/chapter/getinfo?m=${ms}&c=${cs}`;
+            }
+        },
+        getSrcs: (json = siteJson) => {
+            let {
+                line,
+                images
+            } = json.data.info.images;
+            let host = line === 2 ? "https://f40-1-4.g-mh.online" : "https://t40-1-4.g-mh.online";
+            return images.map(e => host + e.url);
+        },
         getImgs: () => {
             let srcs = _this.getSrcs();
             return fn.createImgArray(srcs);
@@ -19157,20 +19306,14 @@ if ("xx" in window) {
         init: async () => {
             fn.addMutationObserver(() => fn.remove("iframe,.bannersUite,.w-full:has(>amp-ad)"));
             await fn.waitEle(".touch-manipulation img");
-            let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-            let {
-                host,
-                ms,
-                cs
-            } = setdata;
-            let api = `${host}/chapter/getinfo?m=${ms}&c=${cs}`;
+            let api = _this.getApi();
             let fetchJson = await fetch(api, {
                 cache: "no-cache"
             }).then(res => res.json());
             siteJson = fetchJson;
             let imgs = _this.getImgs();
             let tE = fn.createImgBox(".touch-manipulation", 2);
-            fn.remove("//div[ins[@class='adsbygoogle']]");
+            fn.remove(["#noad-button,.absolute,.adshow", "//div[ins[@class='adsbygoogle']]"]);
             await fn.remove(".touch-manipulation");
             tE.append(...imgs);
             await fn.lazyload();
@@ -19183,12 +19326,7 @@ if ("xx" in window) {
             next: async () => {
                 let next = siteJson?.data?.info?.next;
                 if (!!next) {
-                    let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-                    let {
-                        host,
-                        ms
-                    } = setdata;
-                    return `${host}/chapter/getinfo?m=${ms}&c=${next}`;
+                    return _this.getApi("next");
                 } else {
                     return null;
                 }
@@ -19196,16 +19334,10 @@ if ("xx" in window) {
             title: (json = siteJson) => json.data.info.title,
             history: 0,
             hide: ".justify-center:has(>.border-t),div:has(>.banners),div:has(>div>.cardlist)",
-            aF: () => fn.gae("#title,#htitle,#bcrctitle").forEach(e => (e.innerText = siteJson.data.info.title)),
             preloadNextPage: () => {
                 let next = siteJson.data.info?.next;
                 if (next) {
-                    let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
-                    let {
-                        host,
-                        ms,
-                    } = setdata;
-                    let api = `${host}/chapter/getinfo?m=${ms}&c=${next}`;
+                    let api = _this.getApi("next");
                     fetch(api, {
                         cache: "no-cache"
                     }).then(res => res.json()).then(json => {
@@ -19216,7 +19348,7 @@ if ("xx" in window) {
                 }
             }
         },
-        css: "iframe,.bannersUite,.w-full:has(>amp-ad){display:none!important;}",
+        css: "iframe,.bannersUite,.w-full:has(>amp-ad),#noad-button,.absolute,.adshow{display:none!important;}",
         category: "comic autoPager"
     }, {
         name: "漫画時間 日文漫画",
@@ -23369,10 +23501,14 @@ if ("xx" in window) {
         titleUrlEle: (url, title) => {
             let div = document.createElement("div");
             autoPagerSwitch ? div.className = "autoPagerTitle" : div.className = "autoPagerTitle off";
-            let a = document.createElement("a");
-            a.href = url;
-            a.innerText = title;
-            div.append(a);
+            if (siteData?.autoPager?.mode === "json") {
+                div.innerText = title;
+            } else {
+                let a = document.createElement("a");
+                a.href = url;
+                a.innerText = title;
+                div.append(a);
+            }
             div.addEventListener("click", event => fn.toggleAutoPager());
             return div;
         },
@@ -25477,7 +25613,9 @@ if ("xx" in window) {
     //取得參照頁
     const getReferer = (srcUrl) => {
         let referer;
-        if (/vipr\.im|imagetwist\.com|imgspice\.com/.test(srcUrl) || siteData.referer == "src") {
+        if (isString(siteData.referer) && siteData.referer == "url") {
+            referer = document.URL;
+        } else if (/vipr\.im|imagetwist\.com|imgspice\.com/.test(srcUrl) || siteData.referer == "src") {
             referer = srcUrl;
         } else if (/imgtaxi\.com/.test(srcUrl)) {
             referer = "https://imgtaxi.com/";
@@ -31024,7 +31162,7 @@ a[data-fancybox]:hover {
                 }
                 if (isFetching || isDownloading) return;
                 await toggleUI();
-                if (siteUrl !== _unsafeWindow.document.URL.replace(/#FullPictureLoad.+$|#gallery.+$|#lightbox.+$/i, "")) {
+                if (siteUrl !== _unsafeWindow.document.URL.replace(_unsafeWindow.location.hash, "")) {
                     siteUrl = _unsafeWindow.document.URL;
                     const newCustomTitle = await getTitle(siteData.customTitle);
                     if ("capture" in siteData && !newCustomTitle) {
