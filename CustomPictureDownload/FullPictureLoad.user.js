@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.33
+// @version            2.8.34
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1052,9 +1052,9 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "秀人网图集",
-        host: ["www.aixiurenji.com", "www.aixiurentuji.com", "www.aixiurenwang.com"],
+        host: ["xiurentu.com", "www.aixiurenmn.com", "www.aixiurenji.com", "www.aixiurentuji.com", "www.aixiurenwang.com"],
         reg: () => fn.checkUrl({
-            e: ".logo-wrapper img.logo[alt='秀人网图集'],.logo-wrapper img.logo[alt='秀人网美女图集']",
+            e: ".site .logo-wrapper img.logo.tap-logo[alt^='秀人']",
             p: /^\/\d+\.html/
         }),
         exclude: "//button[contains(text(),'登录购买')]",
@@ -1070,13 +1070,15 @@ a:has(>div>div>img),
             css: false
         },
         observerClick: [".swal2-close", ".ht-n-close-toggle"],
+        css: ".navbar .nav-list>.menu-item>a{line-height:20px;margin:0 6px}",
         category: "nsfw1"
     }, {
         name: "秀人网图集",
         reg: () => fn.checkUrl({
-            e: ".logo-wrapper img.logo[alt='秀人网图集'],.logo-wrapper img.logo[alt='秀人网美女图集']",
+            e: ".site .logo-wrapper img.logo.tap-logo[alt^='秀人']",
         }),
         observerClick: [".swal2-close", ".ht-n-close-toggle"],
+        css: ".navbar .nav-list>.menu-item>a{line-height:20px;margin:0 6px}",
         category: "ad"
     }, {
         name: "足控资源网",
@@ -9437,8 +9439,8 @@ a:has(>div>div>img),
                         let original = a.href;
                         let thumb = fn.attr("img", "src", a);
                         return {
-                            original: original,
-                            thumb: thumb
+                            original,
+                            thumb
                         }
                     });
                 });
@@ -18597,7 +18599,7 @@ if ("xx" in window) {
         init: async () => {
             fn.remove("//center[iframe] | //a[img] | //ul[center[li[@class='txtA']]]");
             fn.showMsg(displayLanguage.str_135, 0);
-            await fn.getKukudmSrc(siteUrl, document, 0).then(urls => fn.createImgArray(urls)).then(async imgs => {
+            await fn.getKukudmSrc(siteUrl, document, 0).then(srcs => fn.createImgArray(srcs)).then(async imgs => {
                 let tE = fn.ge(".imgBox");
                 tE.innerHTML = "";
                 tE.append(...imgs);
@@ -18615,7 +18617,7 @@ if ("xx" in window) {
             document.head.append(meta);
         },
         autoPager: {
-            ele: (dom) => fn.getKukudmSrc(nextLink, dom, 0).then(urls => fn.createImgArray(urls)),
+            ele: (dom) => fn.getKukudmSrc(nextLink, dom, 0).then(srcs => fn.createImgArray(srcs)),
             pos: [".imgBox", 0],
             observer: ".imgBox>img",
             next: () => {
@@ -18627,7 +18629,14 @@ if ("xx" in window) {
                     return next ? next.href : null;
                 })
             },
-            title: (dom) => dom.title.replace(/在线漫画.+$/, ""),
+            title: (dom) => {
+                let text = dom.title.replace(/在线漫画.+$/, "");
+                if (hasTouchEvents) {
+                    return text.split(" ")[1];
+                } else {
+                    return text;
+                }
+            },
             preloadNextPage: async (dom) => {
                 let next = await _this.autoPager.next();
                 if (!!next) {
@@ -21379,7 +21388,7 @@ if ("xx" in window) {
         console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
     }
 
-    const hasTouchEvents = (() => ("ontouchstart" in _unsafeWindow) || (_unsafeWindow.navigator.maxTouchPoints > 0) || (_unsafeWindow.navigator.msMaxTouchPoints > 0))();
+    const hasTouchEvents = ("ontouchstart" in _unsafeWindow);
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
@@ -21746,7 +21755,8 @@ if ("xx" in window) {
                 },
                 ShadowGalleryWheel: {
                     d: "畫廊滾動",
-                    t: "圖片切換"
+                    t: "圖片切換",
+                    s: "圖列切換"
                 }
             };
             break;
@@ -21932,7 +21942,8 @@ if ("xx" in window) {
                 },
                 ShadowGalleryWheel: {
                     d: "画廊滚动",
-                    t: "图片切换"
+                    t: "图片切换",
+                    s: "图列切换"
                 }
             };
             break;
@@ -22117,7 +22128,8 @@ if ("xx" in window) {
                 },
                 ShadowGalleryWheel: {
                     d: "Scroll",
-                    t: "Toggle Image"
+                    t: "Toggle Image",
+                    s: "Toggle Row"
                 }
             };
             break;
@@ -23041,7 +23053,7 @@ if ("xx" in window) {
             }
         },
         //無限滾動自動翻頁函式
-        autoPager: async () => {
+        infiniteScroll: async () => {
             fn.addLoading();
             let hide = siteData.autoPager?.hide;
             let url;
@@ -23082,8 +23094,8 @@ if ("xx" in window) {
                     doc = await fn.xhrDoc(url);
                 }
             }
-            //debug(`\nfn.autoPager()\n${url}\n`, doc);
-            debug(`\nfn.autoPager()\n${url}`);
+            //debug(`\nfn.infiniteScroll()\n${url}\n`, doc);
+            debug(`\nfn.infiniteScroll()\n${url}`);
             let stop = siteData.autoPager?.stop;
             if (isFn(stop) || isString(eleSelector)) {
                 let stopCheck;
@@ -23184,7 +23196,7 @@ if ("xx" in window) {
                         titleText = `Page ${await num(doc)}`;
                     } else if (isFn(title)) {
                         try {
-                            titleText = await title(siteJson || doc, frameWindow);
+                            titleText = await title(mode == "json" ? siteJson : doc, frameWindow);
                             if (isObject(titleText)) {
                                 titleText.ok ? titleText = titleText.text : add = false;
                             }
@@ -23238,7 +23250,7 @@ if ("xx" in window) {
             if (isString(observer)) {
                 await fn.delay(siteData.autoPager?.sleep ?? 1000, 0);
                 let ele = fn.gae(observer).at(-1);
-                fn.autoPagerNextObserver.observe(ele);
+                fn.nextObserver.observe(ele);
             }
             let preloadNextPage = siteData.autoPager?.preloadNextPage;
             if (!!preloadNextPage) {
@@ -23464,11 +23476,11 @@ if ("xx" in window) {
             });
         },
         //無限滾動函式用來觀察元素觸發自動翻頁
-        autoPagerNextObserver: new IntersectionObserver((entries, observer) => {
+        nextObserver: new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && autoPagerSwitch) {
                     observer.unobserve(entry.target);
-                    fn.autoPager();
+                    fn.infiniteScroll();
                 }
             });
         }),
@@ -23561,6 +23573,7 @@ if ("xx" in window) {
         },
         //修改A元素以新分頁的方式開啟鏈結
         openInNewTab: selector => fn.gae(selector).forEach(a => a.setAttribute("target", "_blank")),
+        //傳入鏈結陣列使用iframe框架加載取得元素插入到當前頁面指定的位置或返回元素
         getEleF: async (links, elements, targetEle = null) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
@@ -23597,7 +23610,7 @@ if ("xx" in window) {
             fn.hideMsg();
             return Promise.all(resArr).then(arr => arr.flat());
         },
-        //傳入鏈結陣列並行請求取得元素插入到指定的位置
+        //傳入鏈結陣列並行請求取得元素插入到當前頁面指定的位置或返回元素
         getEle: async (links, elements, targetEle = null, removeEles = null, time = 100) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
@@ -25215,7 +25228,7 @@ if ("xx" in window) {
                 debug("網站元素事件已清除");
             });
         },
-        //創建元素陣列
+        //創建IMG元素陣列
         createImgArray: (srcs) => {
             return srcs.map((src, i) => {
                 let img = new Image();
@@ -25225,6 +25238,7 @@ if ("xx" in window) {
                 return img;
             });
         },
+        //傳入選擇器參數為頁面圖片添加Fancybox5功能
         setFancybox: (selector) => {
             fn.showMsg(displayLanguage.str_137);
             const loadSrcs = (srcArr) => {
@@ -26701,7 +26715,7 @@ img.default {
 img.single {
     width: auto;
     height: auto;
-    max-width: 99%;
+    max-width: ${isFirefox ? "calc(100% - 6px)" : "calc(100% - 4px)"};
     max-height: 99vh;
     display: block;
     margin: 0 auto;
@@ -27701,7 +27715,9 @@ if (config.ViewMode == 1) {
 
         const config = getConfig();
         let webtoonWidth = config.webtoonWidth;
+        let totalNumberOfElements = 0;
         let imgViewIndex = -1;
+        let currentReferenceElement;
         let nextButtonIsShown = false;
         let dNum = 0;
 
@@ -27772,13 +27788,49 @@ if (config.ViewMode == 1) {
             passive: false
         });
 
+        const getNextRowElement = () => {
+            const eles = gae("img,#next", shadow);
+            const index = Number(currentReferenceElement.dataset.index);
+            if (index >= eles.length - 1) {
+                imgViewIndex = index;
+                return eles.at(-1);
+            }
+            for (let i = index + 1; i < eles.length; i++) {
+                if (eles[i].offsetTop > currentReferenceElement.offsetTop) {
+                    currentReferenceElement = eles[i];
+                    imgViewIndex = i;
+                    return eles[i];
+                }
+            }
+            imgViewIndex = eles.length - 1;
+            return eles.at(-1);
+        };
+
+        const getPrevRowElement = () => {
+            const eles = gae("img,#next", shadow);
+            const index = Number(currentReferenceElement.dataset.index);
+            if (index <= 0) {
+                imgViewIndex = 0;
+                return eles.at(0);
+            }
+            for (let i = index - 1; i >= 0; i--) {
+                if (eles[i].offsetTop < currentReferenceElement.offsetTop) {
+                    currentReferenceElement = eles[i];
+                    imgViewIndex = i;
+                    return eles[i];
+                }
+            }
+            imgViewIndex = 0;
+            return eles.at(0);
+        };
+
         const toggleImage = (event) => {
-            if (!isOpenFancybox && config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
-                if (!event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    const imgs = gae("img", shadow);
-                    const next = ge("#next", shadow);
+            if (!isOpenFancybox && [0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+                event.preventDefault();
+                event.stopPropagation();
+                const imgs = gae("img", shadow);
+                const next = ge("#next", shadow);
+                if (config.shadowGalleryWheel == 1) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -27820,6 +27872,19 @@ if (config.ViewMode == 1) {
                         imgViewIndex = -1;
                     }
                 }
+                if (config.shadowGalleryWheel == 2) {
+                    if (event.deltaY < 0) {
+                        nextButtonIsShown = false;
+                        if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
+                        imgs.forEach(e => (e.style.border = ""));
+                        getPrevRowElement().scrollIntoView(instantScrollIntoView);
+                    }
+                    if (event.deltaY > 0) {
+                        if (Number(currentReferenceElement?.dataset?.index) >= totalNumberOfElements - 1) return;
+                        imgs.forEach(e => (e.style.border = ""));
+                        getNextRowElement().scrollIntoView(instantScrollIntoView);
+                    }
+                }
             }
         };
 
@@ -27837,9 +27902,9 @@ if (config.ViewMode == 1) {
                     img.style.minWidth = "96vw";
                     img.style.minHeight = "";
                 } else if (img.className === "default") {
-                    img.style.maxHeight = "99vh";
+                    img.style.maxHeight = "calc(100vh - 6px)";
                     img.style.maxWidth = "100%";
-                    img.style.minHeight = "99vh";
+                    img.style.minHeight = "calc(100vh - 6px)";
                     img.style.minWidth = "";
                 }
             });
@@ -27870,11 +27935,13 @@ if (config.ViewMode == 1) {
                 } else {
                     imgViewIndex = imgs.length - 1;
                 }
+                const img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    img.style.border = "solid #32a1ce";
                 }
-                return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                currentReferenceElement = img;
+                return img.scrollIntoView(instantScrollIntoView);
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
@@ -27892,7 +27959,11 @@ if (config.ViewMode == 1) {
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
                 let num;
                 if (config.jumpNum == 0) {
-                    num = mainElement.scrollTop + _unsafeWindow.innerHeight;
+                    if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                        num = mainElement.scrollTop + imgs[0].offsetHeight;
+                    } else {
+                        num = mainElement.scrollTop + _unsafeWindow.innerHeight;
+                    }
                 } else {
                     num = mainElement.scrollTop + Number(config.jumpNum);
                 }
@@ -27908,7 +27979,11 @@ if (config.ViewMode == 1) {
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
                 let num;
                 if (config.jumpNum == 0) {
-                    num = mainElement.scrollTop - _unsafeWindow.innerHeight;
+                    if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                        num = mainElement.scrollTop - imgs[0].offsetHeight;
+                    } else {
+                        num = mainElement.scrollTop - _unsafeWindow.innerHeight;
+                    }
                 } else {
                     num = mainElement.scrollTop - Number(config.jumpNum);
                 }
@@ -27938,26 +28013,31 @@ if (config.ViewMode == 1) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
+                const img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    img.style.border = "solid #32a1ce";
                 }
-                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                currentReferenceElement = img;
+                img.scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex--;
-                if (imgs[imgViewIndex] === undefined) {
+                let img = imgs[imgViewIndex];
+                if (img === undefined) {
                     imgViewIndex = imgs.length - 1;
+                    img = imgs[imgViewIndex];
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    if (imgs[imgViewIndex] !== undefined) {
-                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (img !== undefined) {
+                        img.style.border = "solid #32a1ce";
                     }
                 }
-                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                currentReferenceElement = img;
+                img.scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
@@ -27967,20 +28047,24 @@ if (config.ViewMode == 1) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 event.preventDefault();
                 imgViewIndex++;
-                if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
-                    next.style.border = "solid #32a1ce";
-                    next.scrollIntoView(instantScrollIntoView);
-                    nextButtonIsShown = true;
-                } else if (imgs[imgViewIndex] === undefined) {
-                    imgViewIndex = 0;
-                }
+                let img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    if (imgs[imgViewIndex] !== undefined) {
-                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (img !== undefined) {
+                        img.style.border = "solid #32a1ce";
                     }
                 }
-                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                if (img === undefined && next && !nextButtonIsShown) {
+                    next.style.border = "solid #32a1ce";
+                    nextButtonIsShown = true;
+                    currentReferenceElement = next;
+                    return next.scrollIntoView(instantScrollIntoView);
+                } else if (img === undefined) {
+                    imgViewIndex = 0;
+                    img = imgs[imgViewIndex];
+                }
+                currentReferenceElement = img;
+                img.scrollIntoView(instantScrollIntoView);
             } else if ((event.code === "Delete" || event.key === "Delete")) {
                 const hideE = gae("img", shadow)[imgViewIndex];
                 if (hideE !== undefined) {
@@ -28066,8 +28150,8 @@ img.default {
 img.single {
     width: auto;
     height: auto;
-    max-width: 99%;
-    max-height: 99vh;
+    max-width: calc(100% - 6px);
+    max-height: calc(100vh - 6px);
     display: block;
     margin: 0 auto;
     border: solid #fff;
@@ -28185,13 +28269,21 @@ img.small {
                 p.style.direction = "rtl";
             }
             if (siteData.category.includes("comic") && config.ViewMode != 4) {
-                p.style.padding = "0 6%";
+                if (_unsafeWindow.devicePixelRatio > 1) {
+                    p.style.padding = "2px 6% 0";
+                } else {
+                    p.style.padding = "0 6%";
+                }
                 p.style.margin = "0 auto";
+            } else if (_unsafeWindow.devicePixelRatio > 1) {
+                p.style.paddingTop = "1px";
             }
             p.append(...imgElements);
             mainElement.append(p);
             loadImgs();
             aspectRatio();
+            currentReferenceElement = imgElements.at(0);
+            totalNumberOfElements = imgElements.length;
             fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
@@ -28202,9 +28294,14 @@ img.small {
                 imgElements.forEach(img => {
                     img.onclick = (event) => {
                         imgViewIndex = Number(img.dataset.index);
+                        currentReferenceElement = event.target;
                         if (config.ViewMode != 4) {
-                            imgElements.forEach(e => (e.style.border = ""));
-                            event.target.style.border = "solid #32a1ce";
+                            if (event?.target?.style?.border === "") {
+                                imgElements.forEach(e => (e.style.border = ""));
+                                event.target.style.border = "solid #32a1ce";
+                            } else {
+                                imgElements.forEach(e => (e.style.border = ""));
+                            }
                         }
                     }
                 });
@@ -28270,9 +28367,12 @@ img.small {
                 });
             }
             if (isString(nextLink)) {
-                let html = `<div id="next">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</div>`;
-                mainElement.insertAdjacentHTML("beforeend", html);
-                const next = ge("#next", mainElement);
+                totalNumberOfElements = totalNumberOfElements + 1;
+                const next = document.createElement("div");
+                next.id = "next";
+                next.dataset.index = imgElements.length;
+                next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）`;
+                mainElement.append(next);
                 next.addEventListener("click", () => {
                     next.style.backgroundColor = "gray";
                     return setTimeout(() => (location.href = nextLink), 200);
@@ -28476,7 +28576,9 @@ img.small {
 
         const config = getConfig();
         let webtoonWidth = config.webtoonWidth;
+        let totalNumberOfElements = 0;
         let imgViewIndex = -1;
+        let currentReferenceElement;
         let nextButtonIsShown = false;
         let dNum = 0;
 
@@ -28580,13 +28682,49 @@ img.small {
             passive: false
         });
 
+        const getNextRowElement = () => {
+            const eles = gae("img,#next", mainElement);
+            const index = Number(currentReferenceElement.dataset.index);
+            if (index >= eles.length - 1) {
+                imgViewIndex = index;
+                return eles.at(-1);
+            }
+            for (let i = index + 1; i < eles.length; i++) {
+                if (eles[i].offsetTop > currentReferenceElement.offsetTop) {
+                    currentReferenceElement = eles[i];
+                    imgViewIndex = i;
+                    return eles[i];
+                }
+            }
+            imgViewIndex = eles.length - 1;
+            return eles.at(-1);
+        };
+
+        const getPrevRowElement = () => {
+            const eles = gae("img,#next", mainElement);
+            const index = Number(currentReferenceElement.dataset.index);
+            if (index <= 0) {
+                imgViewIndex = 0;
+                return eles.at(0);
+            }
+            for (let i = index - 1; i >= 0; i--) {
+                if (eles[i].offsetTop < currentReferenceElement.offsetTop) {
+                    currentReferenceElement = eles[i];
+                    imgViewIndex = i;
+                    return eles[i];
+                }
+            }
+            imgViewIndex = 0;
+            return eles.at(0);
+        };
+
         const toggleImage = (event) => {
-            if (!isOpenFancybox && config.shadowGalleryWheel == 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
-                if (!event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    const imgs = gae("img", mainElement);
-                    const next = ge("#next", mainElement);
+            if (!isOpenFancybox && [0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+                event.preventDefault();
+                event.stopPropagation();
+                const imgs = gae("img", mainElement);
+                const next = ge("#next", mainElement);
+                if (config.shadowGalleryWheel == 1) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -28628,6 +28766,19 @@ img.small {
                         imgViewIndex = -1;
                     }
                 }
+                if (config.shadowGalleryWheel == 2) {
+                    if (event.deltaY < 0) {
+                        nextButtonIsShown = false;
+                        if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
+                        imgs.forEach(e => (e.style.border = ""));
+                        getPrevRowElement().scrollIntoView(instantScrollIntoView);
+                    }
+                    if (event.deltaY > 0) {
+                        if (Number(currentReferenceElement?.dataset?.index) >= totalNumberOfElements - 1) return;
+                        imgs.forEach(e => (e.style.border = ""));
+                        getNextRowElement().scrollIntoView(instantScrollIntoView);
+                    }
+                }
             }
         };
 
@@ -28645,9 +28796,9 @@ img.small {
                     img.style.minWidth = "96vw";
                     img.style.minHeight = "";
                 } else if (img.className === "default") {
-                    img.style.maxHeight = "99vh";
+                    img.style.maxHeight = "calc(100vh - 6px)";
                     img.style.maxWidth = "100%";
-                    img.style.minHeight = "99vh";
+                    img.style.minHeight = "calc(100vh - 6px)";
                     img.style.minWidth = "";
                 }
             });
@@ -28678,11 +28829,13 @@ img.small {
                 } else {
                     imgViewIndex = imgs.length - 1;
                 }
+                const img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    img.style.border = "solid #32a1ce";
                 }
-                return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                currentReferenceElement = img;
+                return img.scrollIntoView(instantScrollIntoView);
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
@@ -28700,7 +28853,11 @@ img.small {
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
                 let num;
                 if (config.jumpNum == 0) {
-                    num = mainElement.scrollTop + win.innerHeight;
+                    if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                        num = mainElement.scrollTop + imgs[0].offsetHeight;
+                    } else {
+                        num = mainElement.scrollTop + win.innerHeight;
+                    }
                 } else {
                     num = mainElement.scrollTop + Number(config.jumpNum);
                 }
@@ -28716,7 +28873,11 @@ img.small {
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
                 let num;
                 if (config.jumpNum == 0) {
-                    num = mainElement.scrollTop - win.innerHeight;
+                    if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
+                        num = mainElement.scrollTop - imgs[0].offsetHeight;
+                    } else {
+                        num = mainElement.scrollTop - win.innerHeight;
+                    }
                 } else {
                     num = mainElement.scrollTop - Number(config.jumpNum);
                 }
@@ -28746,26 +28907,31 @@ img.small {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex = imgs.length - 1;
+                const img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    img.style.border = "solid #32a1ce";
                 }
-                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                currentReferenceElement = img;
+                img.scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
                 imgViewIndex--;
-                if (imgs[imgViewIndex] === undefined) {
+                let img = imgs[imgViewIndex];
+                if (img === undefined) {
                     imgViewIndex = imgs.length - 1;
+                    img = imgs[imgViewIndex];
                 }
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    if (imgs[imgViewIndex] !== undefined) {
-                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (img !== undefined) {
+                        img.style.border = "solid #32a1ce";
                     }
                 }
-                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                currentReferenceElement = img;
+                img.scrollIntoView(instantScrollIntoView);
                 nextButtonIsShown = false;
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
@@ -28775,20 +28941,24 @@ img.small {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 event.preventDefault();
                 imgViewIndex++;
-                if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
-                    next.style.border = "solid #32a1ce";
-                    next.scrollIntoView(instantScrollIntoView);
-                    nextButtonIsShown = true;
-                } else if (imgs[imgViewIndex] === undefined) {
-                    imgViewIndex = 0;
-                }
+                let img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
-                    if (imgs[imgViewIndex] !== undefined) {
-                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    if (img !== undefined) {
+                        img.style.border = "solid #32a1ce";
                     }
                 }
-                imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                if (img === undefined && next && !nextButtonIsShown) {
+                    next.style.border = "solid #32a1ce";
+                    nextButtonIsShown = true;
+                    currentReferenceElement = next;
+                    return next.scrollIntoView(instantScrollIntoView);
+                } else if (img === undefined) {
+                    imgViewIndex = 0;
+                    img = imgs[imgViewIndex];
+                }
+                currentReferenceElement = img;
+                img.scrollIntoView(instantScrollIntoView);
             } else if ((event.code === "Delete" || event.key === "Delete")) {
                 const hideE = gae("img", mainElement)[imgViewIndex];
                 if (hideE !== undefined) {
@@ -28874,8 +29044,8 @@ img.default {
 img.single {
     width: auto;
     height: auto;
-    max-width: 99%;
-    max-height: 99vh;
+    max-width: calc(100% - 6px);
+    max-height: calc(100vh - 6px);
     display: block;
     margin: 0 auto;
     border: solid #fff;
@@ -28921,12 +29091,12 @@ img.small {
 #FixedMenu select option {
     text-align: center;
 }
-                #behaviorInput {
-                    vertical-align: middle;
-                    width: 16px;
-                    height: 16px;
-                    margin-top: ${isFirefox ? "2px" : "0px"};
-                }
+#behaviorInput {
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    margin-top: ${isFirefox ? "2px" : "0px"};
+}
                 `
         });
         if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
@@ -29002,13 +29172,21 @@ img.small {
                 p.style.direction = "rtl";
             }
             if (siteData.category.includes("comic") && config.ViewMode != 4) {
-                p.style.padding = "0 6%";
+                if (_unsafeWindow.devicePixelRatio > 1) {
+                    p.style.padding = "2px 6% 0";
+                } else {
+                    p.style.padding = "0 6%";
+                }
                 p.style.margin = "0 auto";
+            } else if (_unsafeWindow.devicePixelRatio > 1) {
+                p.style.paddingTop = "1px";
             }
             p.append(...imgElements);
             mainElement.append(p);
             loadImgs();
             aspectRatio();
+            currentReferenceElement = imgElements.at(0);
+            totalNumberOfElements = imgElements.length;
             fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
@@ -29019,9 +29197,14 @@ img.small {
                 imgElements.forEach(img => {
                     img.onclick = (event) => {
                         imgViewIndex = Number(img.dataset.index);
+                        currentReferenceElement = event.target;
                         if (config.ViewMode != 4) {
-                            imgElements.forEach(e => (e.style.border = ""));
-                            event.target.style.border = "solid #32a1ce";
+                            if (event?.target?.style?.border === "") {
+                                imgElements.forEach(e => (e.style.border = ""));
+                                event.target.style.border = "solid #32a1ce";
+                            } else {
+                                imgElements.forEach(e => (e.style.border = ""));
+                            }
                         }
                     }
                 });
@@ -29097,9 +29280,12 @@ img.small {
                 });
             }
             if (isString(nextLink)) {
-                let html = `<div id="next">${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）</div>`;
-                mainElement.insertAdjacentHTML("beforeend", html);
-                const next = ge("#next", mainElement);
+                totalNumberOfElements = totalNumberOfElements + 1;
+                const next = document.createElement("div");
+                next.id = "next";
+                next.dataset.index = imgElements.length;
+                next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）`;
+                mainElement.append(next);
                 next.addEventListener("click", () => {
                     next.style.backgroundColor = "gray";
                     return setTimeout(() => (location.href = nextLink), 200);
@@ -29712,7 +29898,7 @@ img.small {
 #FullPictureLoadOptions label,
 #FullPictureLoadOptions select {
     margin: 0px;
-    padding: 0px;
+    padding: ${isFirefox ? "0px 0px 0px 4px" : "0px"};
 }
 
 #FullPictureLoadOptions select {
@@ -31316,13 +31502,13 @@ a[data-fancybox]:hover {
             const observer = siteData.autoPager?.observer;
             if (isString(observer)) {
                 let ele = fn.gae(observer).at(-1);
-                if (ele) fn.autoPagerNextObserver.observe(ele);
+                if (ele) fn.nextObserver.observe(ele);
             } else {
                 const callback = async () => {
                     if (_unsafeWindow.innerHeight + _unsafeWindow.pageYOffset >= document.body.offsetHeight - (siteData.autoPager?.bottom ?? screen.height)) {
                         if (!autoPagerSwitch) return;
                         document.removeEventListener("scroll", callback);
-                        await fn.autoPager();
+                        await fn.infiniteScroll();
                         await fn.delay(siteData.autoPager?.sleep || 1000, 0);
                         document.addEventListener("scroll", callback);
                     }
