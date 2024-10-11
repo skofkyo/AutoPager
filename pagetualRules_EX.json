@@ -8,35 +8,10 @@
         "pageAction": "document.querySelectorAll('a.cover').forEach(a=>{a.style.backgroundImage=`url('${a.querySelector('img').src}')`})"
     },
     {
-        "name": "圖片全載Sexyxbody格式排除1 ",
+        "name": "排除圖片全載",
         "enable": 0,
-        "url": "^https?://\\w{2}\\.(bunnyxgirl|letsgirlz|bestxleg|xbeautyzone)\\.com/",
-        "include": ".separator>a"
-    },
-    {
-        "name": "圖片全載Sexyxbody格式排除2 ",
-        "enable": 0,
-        "url": "^https?://\\w{2}\\.(kawaiix|kawaiixgirl|kawaiixpic|kinkygirlz|kawaiimetas|eroticxgirl|sexyxpic|hottyxpic|thongxxx|juicexgirl|eroticxpic|bustyxgirl|beautyxgirl|bellexpic|pantyxpic|peachgirlz|pantyxart|beautyxpic|cutemetas|cutexpic|perfectxbody|sexyqgirl|bestxhips|bestxass|assgirlz|bestxbum|eroticxpic|xxxthong|thongxgirl|bestxlingerie|sexyxart|hotxhips|hotbeautypic|greatxgirl|asianxpic|bootyxgirl|tokyohotgirl)\\.com/[^/]+/\\w+",
-        "include": "//a[@data-title and picture/source]"
-    },
-    {
-        "name": "圖片全載RedBust格式排除 ",
-        "enable": 0,
-        "url": "^https?://redbust\\.com/[a-z0-9-]+/",
-        "include": ".entry-inner img"
-    },
-    {
-        "name": "圖片全載心动美图格式排除 ",
-        "enable": 0,
-        "url": "^https://www\\.wai7\\d\\.com/[^/]+/",
-        "pinUrl": true,
-        "include": ".entry-content"
-    },
-    {
-        "name": "圖片全載秀人格式排除 ",
-        "enable": 0,
-        "url": "^https?://[^/]+/\\w+/\\d+\\.html|^https?://[^/]+/\\w+/\\d+/\\d+\\.html|^https?://[^/]+/\\w+/\\w+\\.html",
-        "include": "//div[@class='item_info']//a[text()='秀人集']|//div[@class='single-cat']/a[text()='秀人美女网']|//div[@class='toptip']/a[text()='极品性感美女']"
+        "url": "^http",
+        "include": "#FullPictureLoadMainStyle"
     },
     {
         "name": "ICONFINDER ",
@@ -344,6 +319,32 @@
         "css": ".pagetual_pageBar{margin-top:-10px!important}"
     },
     {
+        "name": "如漫画 - 閱讀",
+        "author": "skofkyo",
+        "example": "https://www.rumanhua.com/OjQQcRi/IKdIXgq.html",
+        "url": "^https?://www\\.rumanhua\\.com/",
+        "action": 1,
+        "waitElement": ".main_img img[data-src]",
+        "history": 2,
+        "nextLink": "a:has(img[alt='下一章'])",
+        "pageElement": ".main_img",
+        "replaceElement": ".chaphead,.main_control,.footer-right>a",
+        "pageBarText": "let t=doc.querySelector('.headwrap h1');if(t)return t.innerText"
+    },
+    {
+        "name": "如漫画M - 閱讀",
+        "author": "skofkyo",
+        "example": "https://m.rumanhua.com/OjQQcRi/IKdIXgq.html",
+        "url": "^https?://m\\.rumanhua\\.com/",
+        "action": 1,
+        "waitElement": ".main_img img[data-src]",
+        "history": 2,
+        "nextLink": "a:has(img[alt='下一话'])",
+        "pageElement": ".main_img",
+        "replaceElement": ".chaphead-name,.chap-footer",
+        "pageBarText": "let t=doc.querySelector('.chaphead-name h1');if(t)return t.innerText"
+    },
+    {
         "name": "漫畫屋 - 閱讀",
         "author": "skofkyo",
         "example": "https://mh5.tw/series-wunalfy-484928-1-%E4%B8%8D%E5%B9%B8%E8%81%B7%E6%A5%AD%E7%9A%84%E5%B9%B8%E9%81%8B?",
@@ -538,103 +539,56 @@
         "replaceElement": ".page-pagination"
     },
     {
-        "name": "無限動漫手機版 - 漫畫閱讀",
-        "author": "skofkyo",
-        "example": "https://8.twobili.com/comic/insurance_15059.html?ch=1",
-        "url": "^https?://8\\.twobili\\.com/comic/insurance",
-        "action": 1,
-        "wait": "if(!!doc.querySelector('#TheImg')){let frameCode=`let imgs=[];for(let i=1;i<=ps;i++){let src='https://img'+ss(c,4,2)+'.8comic.com/'+ss(c,6,1)+'/'+ti+'/'+ss(c,0,4)+'/'+nn([i])+'_'+ss(c,mm([i])+10,3,f)+'.jpg';let img=new Image();img.id='TheImg';img.src=src;imgs.push(img)}window.newImgs=imgs;`;let s=doc.createElement('script');s.textContent=frameCode;doc.body.appendChild(s);return true}else{return false}",
-        "init": "let _ge=e=>document.querySelector(e);let textNode=_ge('.book_inc_title')?.nextSibling;if(textNode?.nodeName=='#text'&&textNode?.textContent?.indexOf('alert')>-1){textNode.remove()}_ge('#pageindex').parentNode.appendChild(_ge('#prevvol').cloneNode(true));_ge('#pageindex').parentNode.appendChild(_ge('#nextvol').cloneNode(true));let ul=_ge('#TheTable>ul');let v1=_ge('.view_tmenu').cloneNode(true);let v2=[...document.querySelectorAll('.view_menut')][1];ul.appendChild(v2);ul.appendChild(v1);let b1=_ge('.book_inc_title');let b2=_ge('.book_link_item');ul.appendChild(b1);if(b2)ul.appendChild(b2);let E=_ge('#TheImg').parentNode;E.innerHTML='';E.append(...newImgs);",
-        "nextLinkByJs": "let next=doc.querySelector('#nextvol:not([style])');if(!!next){let{replaceurl,ni}=doc.defaultView;return replaceurl('ch',ni)}else{return null}",
-        "pageElement": "//script[contains(text(),'userAgent')]",
-        "insert": "//li[img[@id='TheImg']]",
-        "insertPos": "in",
-        "pageAction": "let E=document.querySelector('#TheImg').parentNode;E.append(...doc.defaultView.newImgs);ch=doc.defaultView.ch;",
-        "css": ".pinch-zoom-container{height:auto !important;display:contents !important}.view_tmenu+div[style],#pagenum,[onclick^='j'],#pageindex,ico+a+.material-icons.right-logo,.cd-popup,.ls-link-div{display:none !important}.view_menut a{width:33.3% !important;max-width:33.3% !important}"
-    },
-    {
-        "name": "無限動漫手機版 - 分類",
-        "author": "skofkyo",
-        "example": "https://m.comicbus.com/category/update_comic-1.html",
-        "url": "^https?://m\\.comicbus\\.com/category/",
-        "nextLink": "//a[span/@class='mdi mdi-skip-next mdi-next-btn']",
-        "pageElement": "#list_dl",
-        "replaceElement": ".pager",
-        "css": ".pagetual_pageBar{margin-top:-1px!important;margin-bottom:5px!important}"
-    },
-    {
-        "name": "無限動漫 - 漫畫閱讀",
-        "author": "skofkyo",
-        "example": "https://www.comicabc.com/online/new-18722.html?ch=26",
-        "url": "^https?://(a|www)\\.(comicabc|twobili)\\.com/(ReadComic|online)",
-        "pinUrl": true,
-        "action": 1,
-        "wait": "if(!![...doc.scripts].find(s=>s.textContent.includes('ge(e)'))){let frameCode=`let code=[...document.scripts].find(s=>s.innerHTML.includes('ge(e)')).innerHTML;let[,keyCode]=code.match(/ge\\\\([^.]+\\\\.src\\\\s?=\\\\s?([^;]+)/);let imgs=[];for(let i=1;i<=ps;i++){let code=keyCode.replace(/\\\\(pp?\\\\)/g,'('+i+')');let src=eval(code);let img=new Image();img.id='TheImg';img.src=src;imgs.push(img)}window.newImgs=imgs;`;let s=doc.createElement('script');s.textContent=frameCode;doc.body.appendChild(s);return true}else{return false}",
-        "init": "let E=document.querySelector('#TheImg').parentNode;E.innerHTML='';E.append(...newImgs);",
-        "nextLinkByJs": "let{rp,ni,fz,reurl}=doc.defaultView;let next=doc.querySelector('#nextvol:not([style])');if(next&&/ReadComic/.test(location.pathname)){return rp+ni+'/'+ni+(fz+fz).substr((3*ni)%fz.length,10)+'.html'}else if(next){return reurl('ch',ni)}else{return null}",
-        "pageElement": "//script[contains(text(),'ge(e)')]",
-        "insert": "//td[img[@id='TheImg']]",
-        "insertPos": "in",
-        "pageAction": "let E=document.querySelector('#TheImg').parentNode;E.append(...doc.defaultView.newImgs);",
-        "css": "#TheImg{max-width: 100% !important;display: block !important;margin: 0 auto !important;}#TheTable td:nth-child(1),#TheTable td:nth-child(3),.comment_block,#prevnext2,#prev,#next{display:none!important}"
-    },
-    {
         "name": "無限動漫 - 動漫大全",
         "author": "skofkyo",
-        "example": "https://www.comicabc.com/list/all_all_all/",
-        "url": "^https?://www\\.comicabc\\.com/list/",
+        "example": "https://www.8comic.com/list/all_all_all/",
+        "url": "^https?://www\\.8comic\\.com/list/",
         "nextLink": "//a[span/@class='mdi mdi-skip-next']",
-        "pageElement": ".default_row_width .row>.p-0",
-        "replaceElement": ".pager",
-        "css": ".pagetual_pageBar{margin-top:-14px!important}"
+        "pageElement": "a.comicpic_col6",
+        "replaceElement": ".pager"
     },
     {
         "name": "無限動漫 - 分類",
         "author": "skofkyo",
-        "example": "https://www.comicabc.com/comic/6-1.html",
-        "url": "^https?://www\\.comicabc\\.com/comic/[a-z0-9-]+\\.html",
+        "example": "https://www.8comic.com/comic/u-1.html",
+        "url": "^https?://www\\.8comic\\.com/comic/[a-z0-9-]+\\.html",
         "nextLink": "//a[span/@class='mdi mdi-skip-next']",
-        "pageElement": ".default_row_width>.p-0",
+        "pageElement": ".row>div:has(>div.cat2_list)",
         "replaceElement": ".pager",
         "css": ".pagetual_pageBar{margin-top:-14px!important}"
     },
     {
         "name": "無限動漫 - 圖庫原圖瀏覽",
         "author": "skofkyo",
-        "example": "https://www.comicabc.com/photo/p6038.html?n=1",
-        "url": "^https?://www\\.comicabc\\.com/photo/p\\d+\\.html\\?n=\\d+$",
-        "nextLinkByUrl": [
-            "(\\?n=(\\d+))$",
-            "?n={$2+1}",
-            "#next:not([style])"
-        ],
-        "pageElement": "img[name='TheImg']",
-        "replaceElement": ".photo_main_div > div:nth-child(1)",
-        "pageBar": 0,
-        "css": "img[name='TheImg'] {max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
+        "example": "https://www.8comic.com/photo/p6041.html?n=1",
+        "url": "^https?://www\\.8comic\\.com/photo/p[0-9-]+\\.html\\?n=\\d+$",
+        "init": "let total=document.querySelectorAll('#pageindex option').length;let imgSrc=new URL(document.querySelector('#TheImg').src).pathname;let html='';for(let i=1;i<=total;i++){let num=String(i).padStart(3,'0');let src=imgSrc.replace(/(\\d+)(\\.\\w)$/,`${num}$2`);html+=`<img name='TheImg'hspace='4'vspace='4'border='0'id='TheImg'src='${src}'>`}document.querySelector('.photo_main_div').innerHTML=html;",
+        "css": "#TheImg{margin:2px auto;display:block}",
+        "pinUrl": true
     },
     {
         "name": "無限動漫 - 圖庫清單載入大圖",
         "author": "skofkyo",
-        "example": "https://www.comicabc.com/photo/6041.html",
-        "url": "^https?://www\\.comicabc\\.com/photo/\\d+\\.html$",
+        "example": "https://www.8comic.com/photo/6041.html",
+        "url": "^https?://www\\.8comic\\.com/photo/\\d+\\.html$",
         "init": "document.querySelectorAll('#dl img').forEach(img=>{let f=img.src.replace('.jpe','.jpg');img.src=f})",
         "pinUrl": true
     },
     {
-        "name": "無限動漫 - 圖庫",
+        "name": "無限動漫 - 圖庫分類",
         "author": "skofkyo",
-        "example": "https://www.comicabc.com/photo/1-1.html",
-        "url": "^https?://www\\.comicabc\\.com/photo/[0-9-]+\\.html$",
-        "nextLink": "//a[span/@class='mdi mdi-skip-next']",
-        "pageElement": ".photo_main_div .row",
+        "example": "https://www.8comic.com/photo/3-1.html",
+        "url": "^https?://www\\.8comic\\.com/photo/[0-9-]+\\.html$",
+        "nextLink": "a:has(>.mdi-skip-next)",
+        "pageElement": ".row:has(>div>.cat2_list)",
         "replaceElement": ".pager"
     },
     {
         "name": "無限動漫 - 類別停止自動匹配",
         "author": "skofkyo",
-        "example": "https://www.comicabc.com/html/1/",
-        "url": "^https?://www\\.comicabc\\.com/html/\\d+/$"
+        "example": "https://www.8comic.com/html/1/",
+        "url": "^https?://www\\.8comic\\.com/html/\\d+/$",
+        "enable": 0
     },
     {
         "name": "砂之船动漫家 - 手機版閱讀",
@@ -2795,6 +2749,17 @@
         "css": ".pagetual_pageBar{margin-top:10px!important}.pagetual_pageBar+div{margin-top:-6px!important}"
     },
     {
+        "name": "Danryoku",
+        "author": "skofkyo",
+        "example": "https://danryoku.com/",
+        "action": 1,
+        "waitElement": "!.are-images-unloaded",
+        "url": "^https?://danryoku\\.com/",
+        "nextLink": ".nav-links>.current+a",
+        "pageElement": ".generate-columns-container[style]",
+        "replaceElement": ".nav-links"
+    },
+    {
         "name": "Buon Dua - 看圖",
         "author": "skofkyo",
         "example": "https://buondua.com/saint-photolife-%E2%80%93-zzyuri-%EC%AE%B8%EB%A6%AC-blueming-part-2-57-photos-27769",
@@ -3241,10 +3206,11 @@
         "url": "^https?://(jable\\.tv|fs1\\.app)/",
         "action": 0,
         "refreshByClick": "[data-action='ajax']",
-        "nextLinkByJs": "let next=doc.querySelector('.container li.active>a,.container li:has(>.active)+li>a');if(!!next){let blockId=next.dataset.blockId;let parameters=next.dataset.parameters;let[sortBy,from]=parameters.split(';');sortBy=sortBy.replace('sort_by:','');from=from.replace('from:','');let searchParams=new URLSearchParams({mode:'async',function:'get_block',block_id:blockId,sort_by:sortBy,from:from});return'?'+searchParams}else{return null}",
+        "nextLinkByJs": "let next=doc.querySelector('.container li.active>a,.container li:has(>.active)+li>a');if(next){let blockId=next.dataset.blockId;let parameters=decodeURIComponent(next.dataset.parameters);let dataArr=parameters.split(';').filter(e=>e).map(e=>e.split(':'));let dataObj={mode:'async',function:'get_block',block_id:blockId,...Object.fromEntries(dataArr)};return`?${new URLSearchParams(dataObj)}`}else{return null}",
         "pageElement": "section>.row",
         "replaceElement": ".pagination",
         "pageAction": "let ps=[...document.querySelectorAll('section>.row')];let last=ps.at(-1);last.querySelectorAll('.img-box>a').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');let img=a.querySelector('img');let src=img.dataset.preview;$(v).attr({loop:'',autoplay:'',src:src});$(v).css({position:'absolute',left:'0',top:'0',width:img.offsetWidth+'px',height:img.offsetHeight+'px',background:'#000000',visibility:'visible'});a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})",
+        "sleep": 2000,
         "css": ".pagetual_pageBar{margin-top:0px!important;margin-bottom:20px!important}"
     },
     {
@@ -3644,8 +3610,9 @@
         "name": "Xiutaku - 分類",
         "author": "skofkyo",
         "example": "https://xiutaku.com/brand/1",
-        "url": "^https?://(xiutaku\\.com|kiutaku\\.com)/(\\w+/\\d+|\\w+)?$",
+        "url": "^https?://(xiutaku\\.com|kiutaku\\.com)/(\\w+/\\d+|\\w+|\\?start.+)?$",
         "init": "document.querySelectorAll('.search-form~*,.blog~*:not([class]),.pagination~*').forEach(e=>{e.remove()});",
+        "nextLink": ".pagination-next",
         "pageElement": ".columns",
         "replaceElement": ".pagination"
     },
@@ -5394,8 +5361,9 @@
         "example": "https://czbooks.net/c/xuanhuan",
         "url": "^https?://czbooks\\.net/c/\\w+",
         "nextLink": ".nav.paginate>li.active+li>a",
-        "pageElement": ".novel-list>.novel-item-wrapper",
-        "replaceElement": ".nav.paginate"
+        "pageElement": ".novel-list",
+        "replaceElement": ".nav.paginate",
+        "pageInit": "[...doc.querySelectorAll('img[data-cfsrc]:not([src])')].forEach(img=>{img.src=img.dataset.cfsrc;img.removeAttribute('style')})"
     },
     {
         "name": "無限小說 - 閱讀",
