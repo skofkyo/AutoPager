@@ -18,8 +18,7 @@ ViaBrowser 5.9.5
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>提醒：</h1>
-<p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時</p>
-<p>請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com</p>
+<p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時，請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com，或自行尋找可替代的依賴庫CDN。</p>
 <details>
     <summary>
         <kbd>
@@ -53,15 +52,11 @@ unpkg.com
 </pre>
 </details>
 <br>
-<p>紳士漫畫wnacg，由於新增的Fancybox功能的緣故，新的元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
+<p>紳士漫畫wnacg，由於Fancybox功能的緣故，元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
 <pre>
 https://*wnacg.com/photos-index-aid-*.html
 https://*wnacg.com/photos-slide-aid-*.html
 https://*wnacg.com/photos-slist-aid-*.html
-</pre>
-<p>Fancybox功能在少部份網站上無效或與網站自身的LIGHTBOX插件衝突或顯示有問題，有列了是不使用Fancybox的網站，如下。</p>
-<pre>
-XLUST.ORG、ACGN小鎮、最新韩漫网M、拷貝漫畫M、野蛮漫画、次元漫画、漫神
 </pre>
 <h1>簡介：</h1>
 <p>寫這個腳本的緣由是，想讓下載、複製鏈結不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
@@ -383,6 +378,28 @@ fn.gae(selector, doc)
     </summary>
     <br>
 <pre>
+//判斷當前是否為觸控裝置
+hasTouchEvents
+//判斷是否為字串返回布林值
+isString(obj);
+//判斷是否為數字返回布林值
+isNumber(obj);
+//判斷是否為布林值返回布林值
+isBoolean(obj);
+//判斷是否為正則表達式返回布林值
+isRegExp(obj);
+//判斷是否為物件返回布林值
+isObject(obj);
+//判斷是否為陣列返回布林值
+isArray(obj);
+//判斷是否為Promise返回布林值
+isPromise(obj);
+//判斷是否為函式返回布林值
+isFn(obj);
+//判斷是否為DOM元素返回布林值
+isEle(obj);
+</pre>
+<pre>
 //匹配網址和頁面元素，用於規則reg是函式的寫法
 //h = hosts 匹配網站的域名，格式可為字串、正則、字串或正則的陣列
 //p = pathname 匹配網址的路徑，格式可為字串或正則
@@ -458,7 +475,7 @@ d = delete 要刪除的字串，格式可以是字串、正則 、字串或正�
 const objetc = {
     s: String,
     t: String,
-    d: String or RegExp or Array
+    d: String or RegExp or Array [String or RegExp]
 }
 fn.dt(objetc);
 舉例
@@ -581,7 +598,7 @@ fn.waitEle(String or Array, Number, HTMLDocument or HTMLElement);
 //max，循環的次數
 await fn.waitVar("variable");
 await fn.waitVar("variable", max = 200);
-fn.waitVar(String or Array, Number);
+fn.waitVar(String or Array [String], Number);
 </pre>
 <pre>
 //等待函式寫法，預設最大循環300次100ms，30秒。
@@ -615,7 +632,7 @@ fn.remove("selector", time = 0);
 //如果需要多個選擇器並且CSS/Xpath混寫可寫成數組
 let selectors = ["cssSelector" , "XpathSelector"]
 fn.remove(selectors, time = 0);
-fn.remove(String or Array, Number);
+fn.remove(String or Array [String], Number);
 </pre>
 <pre>
 //清除所有setTimeout和setInterval定時器
@@ -667,9 +684,9 @@ fn.scrollEles(String, Number);
 //selector 元素選擇器
 //callback判斷
 //time判斷逾時的時間
-//top 1滾動完後返回頂部0部返回
+//top 1滾動完後返回頂部0不返回
 fn.aotoScrollEles("selector", callback, time = 5000, top = 1);
-fn.aotoScrollEles(String, Function or AsyncFunction, Number);
+fn.aotoScrollEles(String, Function or AsyncFunction, Number, Number);
 //callback例子
 //ele參數為滾動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
 let callback = (ele) => fn.ge("img[src]", ele);
@@ -689,7 +706,7 @@ await fn.aotoScrollEles("img.gallery-item", (ele) => {
 return [...new Set(arr)];
 </pre>
 <pre>
-//確認元素和圖片網址，嘗試取得網址和補全網址 返回一個obj。
+//確認元素和圖片網址，嘗試取得網址和補全網址，返回一個object。
 {
     ok: Boolean, //成功true失敗false
     src: src //成功返回圖片網址
@@ -698,7 +715,7 @@ fn.checkImgSrc(HTMLElement);
 //可以使用封裝好的fn.getImgSrcArr();
 </pre>
 <pre>
-//確認元素有沒有把圖片原始網址放在src以外的屬性
+//確認元素有沒有把圖片原始網址放在src以外的屬性，返回一個object。
 {
     ok: Boolean, //成功true失敗false
     src: src //成功返回圖片網址
@@ -707,7 +724,7 @@ fn.checkDataset(HTMLElement);
 //可以使用封裝好的fn.getImgSrcArr();
 </pre>
 <pre>
-//確認圖片狀態屬性 返回一個obj
+//確認圖片狀態屬性 返回一個object
 {
     ok: Boolean, //成功讀取true失敗false
     width: width, //成功返回圖片寬屬性
@@ -717,8 +734,7 @@ await fn.checkImgStatus(src);
 fn.checkImgStatus(String);
 </pre>
 <pre>
-//確認加了CDN的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址				
-<p>//wsrv.nl，i0.wp.com</p>
+//確認加了CDN[wsrv.nl || wp.com]的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址
 await fn.checkImageCDN([圖片網址陣列]);
 fn.checkImageCDN(Array);			
 </pre>
@@ -807,7 +823,7 @@ fn.xhrDoc("url", details = {})
 fn.xhrDoc("url", {
     headers: {
         "Referer": location.href,
-         "User-Agent": navigator.userAgent
+        "User-Agent": navigator.userAgent
     }
 })
 fn.xhrDoc("url").then(doc => {
@@ -829,9 +845,10 @@ fn.fetchDoc(String, Object);
 //使用Promise封裝iframe框架，返回iframe框架的document。
 //selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
-let callback = (dom, frame) => { //參數dom為iframe的document，參數frame為iframe的contentWindow
+//參數dom為iframe的document，參數frame為iframe的contentWindow
+let callback = (dom, frame) => {
     自由發揮
-}
+};
 await fn.iframeDoc("url", "selector", time = 5000, callback);
 fn.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
@@ -841,7 +858,8 @@ fn.iframeDoc(String, String, Number, Function or AsyncFunction);
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
 //selector元素選擇器指定等待到元素出現(必須)
 //time框架載入逾時的時間
-let callback = (dom, frame) => { //參數dom為iframe的document，參數frame為iframe的contentWindow
+//參數dom為iframe的document，參數frame為iframe的contentWindow
+let callback = (dom, frame) => {
     自由發揮
 }
 await fn.iframeSrcDoc("url", "selector", time = 5000, callback);
@@ -1117,7 +1135,7 @@ imgs: async () => {
 <p>Esc鍵 離開畫廊</p>
 <p>J、K鍵 畫廊滾動自定義滾動距離</p>
 <p>N鍵 前往下一話或下一篇，如果有的話。</p>
-<p>空白鍵、PageDown鍵 如果有NEXT按鈕並且NEXT按鈕元素9成範圍進入視口時，繼續按空白鍵超過2次NEXT按鈕變灰前往NEXT。</p>
+<p>空白鍵、PageDown鍵 如果有NEXT按鈕並且NEXT按鈕元素9成範圍進入視口時，繼續按空白鍵、PageDown鍵超過2次NEXT按鈕變灰前往NEXT。</p>
 <p>畫廊 (0、1、3) 滾輪操作設定為切換圖片並且有NEXT按鈕時，當滾動到最後一張圖繼續往下滾會標記NEXT按鈕，再繼續往下滾NEXT按鈕變灰前往NEXT。</p>
 <p>畫廊滾輪操作非切換圖片並且有NEXT按鈕，當滾動到NEXT按鈕元素9成範圍進入視口時，再繼續往下滾2次以上NEXT按鈕變灰前往NEXT，往上滾則下滾次數歸零。</p>
 <p>Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將調用使用iframe構建的畫廊。</p>
@@ -1178,15 +1196,15 @@ background-color,#DD7CE8
 丝袜客,https://siwake.cc/
 萌图社,http://www.446m.com/
 图宅网,https://www.tuzac.com/
-Models Vibe,https://www.modelsvibe.com/
+美女图册,https://www.mntuce.com/
 background-color,#BDE87C
 AVJB,https://avjb.com/albums/
-HotAsiaGirl,https://hotgirl.asia/
-HotGirl World,https://www.hotgirl2024.com/
-MIC MIC IDOL,https://www.micmicidol.club/
-background-color,#7C87E8
 Xasiat,https://www.xasiat.com/albums/
-XO福利圖,https://www.xofulitu521.xyz/xoxo
+HotAsiaGirl,https://hotgirl.asia/
+JJGirls,https://jjgirls.com/
+background-color,#7C87E8
+六色美图,https://www.06se.com/
+XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
 色图,https://setu.lol/
 紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html
 </pre>
