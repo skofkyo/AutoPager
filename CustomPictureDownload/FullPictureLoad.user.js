@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.35
+// @version            2.8.36
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -343,7 +343,7 @@ a:has(>div>div>img),
     }, {
         name: "雅拉伊", //免VIP僅支援PC版和圖片命名是簡單數字遞增的。
         host: ["www.yalayi.com"],
-        reg: /https?:\/\/www\.yalayi\.com\/gallery\/\d+\.html/i,
+        reg: /^https?:\/\/www\.yalayi\.com\/gallery\/\d+\.html/i,
         imgs: async () => {
             await fn.waitEle(".bigimg>img");
             let max = fn.ge(".tishiwenzi-box").innerText.match(/\d+/)[0];
@@ -380,18 +380,24 @@ a:has(>div>div>img),
     }, {
         name: "JKF",
         host: ["www.jkforum.net"],
-        reg: /www\.jkforum\.net\/(p\/)?thread/,
+        reg: /^https?:\/\/www\.jkforum\.net\/(p\/)?thread/,
         init: async () => await fn.waitEle("img[id^=aimg]"),
         imgs: () => hasTouchEvents ? fn.gae("img[id^=aimg]:not([style])") : fn.gae("img[id^=aimg][zoomfile]"),
         capture: () => _this.imgs(),
         customTitle: ".title-hd h1,.post-title",
         category: "nsfw2"
     }, {
-        name: "草榴",
+        name: "草榴社區",
         host: ["www.t66y.com", "cl.6962x.xyz"],
-        reg: /\/htm_data\/\d+\/\d+\/\d+\.html$/,
-        include: "img[ess-data]",
-        imgs: "img[ess-data]",
+        reg: () => fn.checkUrl({
+            e: [
+                "//div[@id='header']//b[text()='草榴社區' or text()='草榴社区']",
+                "img[ess-data]"
+            ],
+            p: /^\/htm_data\/\d+\/\d+\/\d+\.html$/
+        }),
+        imgs: () => fn.fetchDoc(fn.url).then(dom => fn.gae("img[ess-data]", dom)),
+        capture: () => _this.imgs(),
         customTitle: "h4.f16",
         category: "nsfw2"
     }, {
@@ -2116,13 +2122,41 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "美女图册",
-        host: "www.mntuce.com",
+        host: ["www.mntuce.top", "www.mntuce.com"],
         reg: /^https?:\/\/www\.mntuce\.com\/\d+\/\.html$/,
+        init: () => {
+            _unsafeWindow.onload = null;
+            _unsafeWindow.onresize = null;
+            if ("showWarning" in _unsafeWindow) {
+                _unsafeWindow.showWarning = null;
+            }
+            if ("detectDevTools" in _unsafeWindow) {
+                _unsafeWindow.detectDevTools = null;
+            }
+            fn.clearAllTimer();
+        },
         imgs: () => fn.getImgA(".article-content img", ".post-nav-links a"),
         button: [4],
         insertImg: [".article-content", 2],
         customTitle: ".article-title",
         category: "nsfw1"
+    }, {
+        name: "美女图册",
+        reg: () => fn.checkUrl({
+            h: "www.mntuce.com"
+        }),
+        init: () => {
+            _unsafeWindow.onload = null;
+            _unsafeWindow.onresize = null;
+            if ("showWarning" in _unsafeWindow) {
+                _unsafeWindow.showWarning = null;
+            }
+            if ("detectDevTools" in _unsafeWindow) {
+                _unsafeWindow.detectDevTools = null;
+            }
+            fn.clearAllTimer();
+        },
+        category: "ad"
     }, {
         name: "扮之狐狸",
         host: "www.costhisfox.com",
@@ -9038,8 +9072,11 @@ a:has(>div>div>img),
         name: "xHamster gallery",
         host: ["xhamster.com"],
         link: "https://zh.xhamster.com/users/eros721_official/photos",
-        reg: /xhamster\.com\/photos\/gallery\/[^/]+$/,
-        include: ".gallery-section",
+        reg: () => fn.checkUrl({
+            h: "xhamster.com",
+            p: /^\/photos\/gallery\/[^/]+$/,
+            e: ".gallery-section"
+        }),
         imgs: async () => {
             await fn.getNP("#initials-script", "//div[@class='gallery-section']//li[a[contains(@class,'active')]]/following-sibling::li[1]/a", null, ".gallery-section .pager-section");
             let photos = fn.gae("#initials-script").map(script => {
@@ -9059,8 +9096,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "xHamsterM gallery M",
-        host: ["xhamster.com"],
-        reg: /xhamster\.com\/photos\/gallery\/[^/]+$/,
+        reg: () => fn.checkUrl({
+            h: "xhamster.com",
+            p: /^\/photos\/gallery\/[^/]+$/
+        }) && hasTouchEvents,
         imgs: async () => {
             await fn.getNP(".items[data-role='gallery-photos']>.item-container", "//ol[@class='page-list']/li[@class='page-button' and a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a", null, "//ol[@class='page-list']");
             return fn.getImgA("#photoCurr", "a.item.slided", 1, null, 0);
@@ -9068,14 +9107,17 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".items[data-role=gallery-photos]", 1],
         customTitle: "h1.page-title",
-        css: ".items[data-role=gallery-photos]>.item-container{width:100%!important}aside[data-role=yld-mdtop],.yld-md--bottom,.yld-pc--bottom,aside[data-role=yld-pctop],div[data-role=promo-messages-wrapper]{display:none!important}",
+        css: ".items[data-role=gallery-photos]>.item-container{width:100%!important}.page-title-controls,aside[data-role=yld-mdtop],.yld-md--bottom,.yld-pc--bottom,aside[data-role=yld-pctop],div[data-role=promo-messages-wrapper]{display:none!important}",
         category: "nsfw2"
     }, {
         name: "PornHub photo", //很容易會被短暫封IP
         host: ["pornhub.com"],
         link: "https://pornhub.com/albums",
         enable: 1,
-        reg: /pornhub\.com\/album\/\d+$/,
+        reg: () => fn.checkUrl({
+            h: "pornhub.com",
+            p: /^\/album\/\d+$/
+        }),
         imgs: () => fn.getImgA("#photoImageSection img", ".js_lazy_bkg a", 200),
         button: [4],
         insertImg: [
@@ -10337,6 +10379,15 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
+        category: "nsfw2"
+    }, {
+        name: "エロ画像 オナップル",
+        reg: () => fn.checkUrl({
+            h: "onapple.jp",
+            p: "/archives/"
+        }),
+        imgs: ".permanent_text img",
+        customTitle: ".permanent_title",
         category: "nsfw2"
     }, {
         name: "JavTube/PureJapanese/ThumbNow/69DV/JapaneseThumbs/AsiaUncensored",
@@ -22596,7 +22647,7 @@ if ("xx" in window) {
                             console.error("\nfn.getImgA() 單線程模式出錯", imgs[p]);
                             continue;
                         }
-                        imgHtml += `<img class="FullPictureLoadImage" src="${imgSrc}">`;
+                        imgHtml += `<img src="${imgSrc}" style="width: auto; height: auto; max-width: 100%; max-height: unset; display:block; float: unset; opacity: 1; border: none; border-radius: unset; padding: 0; margin: 0 auto; transition: unset; transform: unset;">`;
                     }
                     linkEles[i].outerHTML = imgHtml;
                 } else if (mode == 2) {
@@ -31508,7 +31559,7 @@ a[data-fancybox]:hover {
         }
     }
 
-    const defaultFavor = "text-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\nModels Vibe,https://www.modelsvibe.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nHotGirl World,https://www.hotgirl2024.com/\nMIC MIC IDOL,https://www.micmicidol.club/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/%E5%84%BF%E6%AD%8C%E4%B8%89%E7%99%BE%E9%A6%96/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
+    const defaultFavor = "text-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n美女图册,https://www.mntuce.com/\n六色美图,https://www.06se.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nJJGirls,https://jjgirls.com/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
 
     let FavorOpenInNewTab = _GM_getValue("FavorOpenInNewTab", 0);
 
