@@ -1081,7 +1081,7 @@ imgs: async () => {
 <p>數字鍵 6 有自動滾動元素規則時調用</p>
 <p>數字鍵 7 匯出網址MediaURLs.txt文件</p>
 <p>數字鍵 8 開啟新空白頁載入圖集圖片</p>
-<p>數字鍵 9 打開/關閉自訂網站收藏集</p>
+<p>數字鍵 9 打開自訂網站收藏集</p>
 <p>數字鍵 - 減鍵圖片以10%為單位比例縮小，會記憶縮放比例</p>
 <p>數字鍵 + 加鍵圖片以10%為單位比例放大，會記憶縮放比例</p>
 <p>數字鍵 . 點鍵取消縮放恢復為自動</p>
@@ -3226,6 +3226,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="http://rikitake.com/">Rikitake.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xher.net//">xHer</a>
                 </td>
                 <td></td>
             </tr>
