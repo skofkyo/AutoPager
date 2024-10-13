@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.37
+// @version            2.8.38
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -14012,18 +14012,20 @@ a:has(>div>div>img),
         getHeaders: () => {
             let touristId = document.cookie.match(/tourist-id=([^;]+)/)[1];
             return {
+                "accept": "application/json, text/plain, */*",
+                "api-version": "2",
                 "n-application-type": "web",
-                "tourist-id": touristId
+                "n-security-certifications": "yyIH3QFABB1j+YuFnkP34bEyAIv2dNyfXKSTkKzhtQCaF9RXm7A+cWIn4VnyJh6c+OlarMBee6N3t6e0poVDkdbQykuIDQsjg9lBlhaey3mfQ7qpQz91esWds9cbObbsK9/Ey+4RZ9wSR95MFuM="
             }
         },
         imgs: (msg = 1) => {
-            if (/\/ComicDetailed\//.test(document.URL)) {
+            if (_this.SPA()) {
                 fn.createImgBox("#recommend-info-body", 1);
                 if (msg === 1) fn.showMsg(displayLanguage.str_05, 0);
                 let formData = new FormData();
                 formData.append("comicUid", _this.comicUid());
                 formData.append("sort", "0");
-                formData.append("dateKey", "iK+V3tWQvj/c6glSy76DKhDvuXwvRFf+ZtclSbNc+Dg=");
+                formData.append("dateKey", "gz4yeSq4Z8hx8RiKgsMtobSLt8DvhSAP8GDdlhlLd5M=");
                 return fetch("/api/ComicOrder/getComicOrder", {
                     "headers": _this.getHeaders(),
                     "body": formData,
@@ -14033,12 +14035,12 @@ a:has(>div>div>img),
                 return [];
             }
         },
-        SPA: () => document.URL.includes("/ComicDetailed/"),
+        SPA: () => document.URL.includes("/comic/info/"),
         capture: () => _this.imgs(0),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         customTitle: () => {
-            if (/\/ComicDetailed\//.test(document.URL)) {
+            if (_this.SPA()) {
                 let formData = new FormData();
                 formData.append("uid", _this.comicUid());
                 return fetch("/api/ComicInfo/info", {
