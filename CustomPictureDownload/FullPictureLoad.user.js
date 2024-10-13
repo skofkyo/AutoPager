@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.36
+// @version            2.8.37
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -10338,6 +10338,35 @@ a:has(>div>div>img),
         prev: "//span[contains(text(),'下一篇')]/a",
         category: "nsfw1"
     }, {
+        name: "xHer",
+        reg: () => fn.checkUrl({
+            h: "xher.net",
+            s: "/category/"
+        }),
+        init: () => fn.createImgBox("#thumbnails", 1),
+        imgs: () => {
+            let url = fn.gu("a[rel=last]");
+            let [max] = /\d+$/.exec(url);
+            url = url.replace(/\d+$/, "");
+            max = Number(max);
+            let pages = [fn.url];
+            for (let i = 15; i <= max; i += 15) {
+                pages.push(url + i);
+            }
+            return fn.getEle(pages, "#thumbnails>li").then(eles => {
+                thumbnailSrcArray = eles.map(li => fn.ge("img", li)?.src);
+                let links = eles.map(li => fn.ge("a", li)?.href);
+                return fn.getImgA("#downloadSwitchLink", links);
+            });
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#thumbnails"], 2
+        ],
+        customTitle: ".titrePage>h2>a+a",
+        fetch: 1,
+        category: "nsfw2"
+    }, {
         name: "JJGirls",
         reg: () => fn.checkUrl({
             h: "jjgirls.com",
@@ -12303,14 +12332,14 @@ a:has(>div>div>img),
             let g_id = fn.ge("#load_id").value;
             let img_dir = fn.ge("#load_dir").value;
             let total_pages = fn.ge("#load_pages").value;
-            thumbnailSrcArray = await fetch("/includes/thumbs_loader.php", {
+            thumbnailSrcArray = await fn.fetchDoc("/includes/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let [max] = fn.gt(".pages").match(/\d+/);
             let img = fn.ge(".gallery_thumb img");
             let src = img.dataset.src ?? img.src;
@@ -12343,7 +12372,7 @@ a:has(>div>div>img),
         name: "HentaiZap圖片清單頁",
         host: ["hentaizap.com"],
         reg: /^https?:\/\/hentaizap\.com\/gallery\/\d+\/$/,
-        inti: async () => await fn.wait((_, win) => !!ge(".gp_th img") && ("g_th" in win)),
+        init: async () => await fn.wait((_, win) => !!ge(".gp_th img") && ("g_th" in win)),
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let _token = fn.attr('meta[name="csrf-token"]', "content");
@@ -12352,14 +12381,14 @@ a:has(>div>div>img),
             let g_id = fn.ge("#load_id").value;
             let img_dir = fn.ge("#load_dir").value;
             let total_pages = fn.ge("#load_pages").value;
-            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fn.fetchDoc("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `_token=${_token}&server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             fn.createImgBox("#comments_div");
             let max = fn.gt(".info_pg").match(/\d+/)[0];
             let img = fn.ge(".gp_th img");
@@ -12418,14 +12447,14 @@ a:has(>div>div>img),
             let g_id = fn.ge("#load_id").value;
             let img_dir = fn.ge("#load_dir").value;
             let total_pages = fn.ge("#load_pages").value;
-            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fn.fetchDoc("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let [max] = fn.gt(".pages").match(/\d+/);
             let img = fn.ge(".gthumb img");
             let src = img.dataset.src ?? img.src;
@@ -12471,14 +12500,14 @@ a:has(>div>div>img),
             let g_id = fn.ge("#load_id").value;
             let img_dir = fn.ge("#load_dir").value;
             let total_pages = fn.ge("#load_pages").value;
-            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fn.fetchDoc("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `_token=${_token}&server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let [max] = fn.gt("//ul[span[text()='Pages:']]").match(/\d+/);
             let img = fn.ge(".th_gp img");
             let src = img.dataset.src ?? img.src;
@@ -12928,19 +12957,23 @@ a:has(>div>div>img),
         reg: /^https?:\/\/asmhentai\.com\/g\/\d+\/$/,
         init: () => fn.createImgBox(".gallery"),
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
-            let _token = fn.attr('meta[name="csrf-token"]', "content");
-            let id = fn.ge("#load_id").value;
-            let dir = fn.ge("#load_dir").value;
-            let t_pages = fn.ge("#t_pages").value;
-            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
-                "headers": {
-                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-                    "x-requested-with": "XMLHttpRequest"
-                },
-                "body": `_token=${_token}&id=${id}&dir=${dir}&visible_pages=0&t_pages=${t_pages}&type=2`,
-                "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            if (fn.ge("#load_id")) {
+                fn.showMsg(displayLanguage.str_05, 0);
+                let _token = fn.attr('meta[name="csrf-token"]', "content");
+                let id = fn.ge("#load_id").value;
+                let dir = fn.ge("#load_dir").value;
+                let t_pages = fn.ge("#t_pages").value;
+                thumbnailSrcArray = await fn.fetchDoc("/inc/thumbs_loader.php", {
+                    "headers": {
+                        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "x-requested-with": "XMLHttpRequest"
+                    },
+                    "body": `_token=${_token}&id=${id}&dir=${dir}&visible_pages=0&t_pages=${t_pages}&type=2`,
+                    "method": "POST"
+                }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            } else {
+                thumbnailSrcArray = fn.getImgSrcArr("#append_thumbs img");
+            }
             return thumbnailSrcArray.map(e => e.replace("t.", "."));
         },
         button: [4],
@@ -12959,14 +12992,14 @@ a:has(>div>div>img),
             let id = fn.ge("#gallery_id").value;
             let dir = fn.ge("#image_dir").value;
             let t_pages = fn.ge("#pages").value;
-            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fn.fetchDoc("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `_token=${_token}&id=${id}&dir=${dir}&visible_pages=0&t_pages=${t_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             return thumbnailSrcArray.map(e => e.replace("t.", "."));
         },
         button: [4],
@@ -13340,14 +13373,14 @@ a:has(>div>div>img),
             let g_id = fn.ge("#load_id").value;
             let img_dir = fn.ge("#load_dir").value;
             let total_pages = fn.ge("#load_pages").value;
-            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fn.fetchDoc("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             return fn.getImhentaiSrc();
         },
         button: [4],
@@ -13385,14 +13418,14 @@ a:has(>div>div>img),
             let g_id = fn.ge("#load_id").value;
             let img_dir = fn.ge("#load_dir").value;
             let total_pages = fn.ge("#load_pages").value;
-            thumbnailSrcArray = await fetch("/inc/thumbs_loader.php", {
+            thumbnailSrcArray = await fn.fetchDoc("/inc/thumbs_loader.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `server=${server}&u_id=${u_id}&g_id=${g_id}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
                 "method": "POST"
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             let max = fn.ge("#load_pages").value;
             let img = fn.ge(".gthumb img");
             let src = img.dataset.src ?? img.src;
@@ -24898,7 +24931,8 @@ if ("xx" in window) {
                 if (cId > 632481 && cId <= 816010) return "m5.imhentai.xxx";
                 if (cId > 816010 && cId <= 970098) return "m6.imhentai.xxx";
                 if (cId > 970098 && cId <= 1121113) return "m7.imhentai.xxx";
-                return "m8.imhentai.xxx";
+                if (cId > 1121113 && cId <= 1259410) return "m8.imhentai.xxx";
+                return "m9.imhentai.xxx";
             };
             const galleryId = fn.ge(".gview>#gallery_id,#load_id").value;
             const imageDir = fn.ge("#image_dir,#load_dir").value;
@@ -31559,7 +31593,7 @@ a[data-fancybox]:hover {
         }
     }
 
-    const defaultFavor = "text-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n美女图册,https://www.mntuce.com/\n六色美图,https://www.06se.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nJJGirls,https://jjgirls.com/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
+    const defaultFavor = "text-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n美女图册,https://www.mntuce.com/\n六色美图,https://www.06se.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nエロ画像まとめ,https://geinou-nude.com/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
 
     let FavorOpenInNewTab = _GM_getValue("FavorOpenInNewTab", 0);
 
