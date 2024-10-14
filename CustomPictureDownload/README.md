@@ -152,6 +152,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     fetch: 1, //使用Fetch API下載圖片，需要圖片下載請求的伺服器有開放CORS。
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前域名，"url"參照頁為當前文檔網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
     infiniteScroll: true, //漫畫分類標記有無限滾動模式
+    gallery: 1, //影子畫廊調用Iframe畫廊
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
@@ -230,6 +231,8 @@ https://*wnacg.com/photos-slist-aid-*.html
     threading: 1,
     fetch: 1,
     referer: "src",
+    infiniteScroll: true,
+    gallery: 1,
     category: ""
 }, {
     name: "規則3",
@@ -2431,19 +2434,25 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://shiki17chen.imgbb.com/albums">ImgBB</a>
                 </td>
-                <td>作用在上傳者的相簿</td>
+                <td>作用在上傳者的相簿，手動插入圖片</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://jpg5.su/tatsuya_shiba/albums">JPG5</a>
                 </td>
-                <td>作用在上傳者的相簿</td>
+                <td>作用在上傳者的相簿，手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://img.kiwi/36_chambers/albums">IMG.Kiwi</a>
+                </td>
+                <td>作用在上傳者的相簿，手動插入圖片</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.putmega.com/explore/recent/?list=albums&sort=date_desc&page=1">PutMega</a>
                 </td>
-                <td></td>
+                <td>手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -3232,7 +3241,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://xher.net//">xHer</a>
+                    <a href="https://xher.net/">xHer</a>
                 </td>
                 <td></td>
             </tr>
@@ -3428,10 +3437,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://hentai-img.com/">Hentai Image</a>
+                     <a href="https://porn-image.com/">Asian Porn Image</a>
                 </td>
                 <td>
-                    <a href="https://hentai-cosplays.com/">hentai-cosplays.com</a>， <a href="https://porn-images-xxx.com/">porn-images-xxx.com</a>， <a href="https://porn-gravure-idol.com/">porn-gravure-idol.com</a>
+                    <a href="https://hentai-cosplay-xxx.com/">Hentai Cosplay</a>，<a href="https://hentai-img-xxx.com/">Hentai Image</a>
                 </td>
             </tr>
             <tr>
@@ -3496,7 +3505,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://urlgalleries.net/">URLGalleries</a>
                 </td>
-                <td></td>
+                <td>手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -3678,9 +3687,11 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.wikifeet.com/">wikiFeet</a>
+                    <a href="https://www.wikifeetx.com/celebs">wikiFeetX</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://www.wikifeet.com/celebs">wikiFeet</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5345,32 +5356,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://manhuascans.org/">GodaComic 英文漫畫</a>
-                </td>
-                <td>有無限滾動模式加預讀</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://manhuascan.us/">Manhuascan 英文漫畫</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.mangago.me/">Mangago 英文漫畫</a>
-                </td>
-                <td>
-                    <a href="https://www.mangago.zone/">mangago.zone</a>，<a href="https://www.youhim.me/">youhim.me</a>，只支持PC版。
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.mangajikan.com/">漫画時間 日文漫畫</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.dm5.com/">DM5</a>
                 </td>
                 <td>
@@ -5828,6 +5813,114 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.kanman.com/">看漫画</a>
                 </td>
                 <td>預設關閉</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangajikan.com/">漫画時間 日文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhuascans.org/">GodaComic 英文漫畫</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhuascan.us/">Manhuascan 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangago.me/">Mangago 英文漫畫</a>
+                </td>
+                <td>
+                    <a href="https://www.mangago.zone/">mangago.zone</a>，<a href="https://www.youhim.me/">youhim.me</a>，只支持PC版。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangadex.org/">MangaDex 英文漫畫</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://namicomi.com/en">NamiComi 英文漫畫</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangasee123.com/">MangaSee 英文漫畫</a>
+                </td>
+                <td>
+                    <a href="https://manga4life.com/">MangaLife 英文漫畫</a>，SPA網頁
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bato.to/">BATOTO 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dynasty-scans.com/">Dynasty Reader 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hiperdex.com/">Hiperdex 英文漫畫</a>
+                </td>
+                <td>
+                    <a href="https://www.mangaread.org/">MangaRead 英文漫畫</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangapark.net/">MangaPark 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ww8.mangakakalot.tv/">Mangakakalot 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangahere.cc/">MangaHere 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://komikcast.cz/">Komikcast 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://raw.senmanga.com/">Sen Manga 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://readcomiconline.li/">ReadComicOnline 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tcbscans.me/">TCB Scans 英文漫畫</a>
+                </td>
+                <td></td>
             </tr>
         </tbody>
     </table>
