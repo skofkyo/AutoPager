@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.38
+// @version            2.8.39
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2295,7 +2295,7 @@ a:has(>div>div>img),
             return thumbnailSrcArray.map(e => e.replace(".md.", "."));
         },
         button: [4],
-        insertImg: ["#list-most-recent", 2],
+        insertImg: ["#list-most-recent", 3],
         customTitle: () => fn.title(" - PutMega"),
         category: "nsfw1"
     }, {
@@ -2319,7 +2319,7 @@ a:has(>div>div>img),
             return fn.getImgA("link[rel=image_src]", ".list-item-image a").then(arr => arr.reverse());
         },
         button: [4],
-        insertImg: ["#content-listing-tabs", 2],
+        insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
             d: [
                 "— ImgBB",
@@ -2338,7 +2338,7 @@ a:has(>div>div>img),
             return thumbnailSrcArray.map(e => e.replace(".md.", ".")).reverse();
         },
         button: [4],
-        insertImg: ["#content-listing-tabs", 2],
+        insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
             d: [
                 "— JPG5",
@@ -2346,6 +2346,25 @@ a:has(>div>div>img),
             ]
         }),
         category: "nsfw1"
+    }, {
+        name: "IMG.Kiwi",
+        host: ["img.kiwi"],
+        reg: /^https?:\/\/img\.kiwi\/album\//,
+        link: "https://img.kiwi/album/whores-on-wheels.cIr6",
+        imgs: async () => {
+            await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
+            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
+            return thumbnailSrcArray.map(e => e.replace(".md.", ".")).reverse();
+        },
+        button: [4],
+        insertImg: ["#content-listing-tabs", 3],
+        customTitle: () => fn.dt({
+            d: [
+                " - IMG.Kiwi",
+                /^[\d\s-]+/
+            ]
+        }),
+        category: "nsfw2"
     }, {
         name: "Luscious",
         reg: () => fn.checkUrl({
@@ -8651,23 +8670,43 @@ a:has(>div>div>img),
         name: "URLGalleries",
         host: ["urlgalleries.net"],
         reg: /^https?:\/\/[^\.]+\.urlgalleries\.net\/porn-gallery-\d+\//,
-        imgs: async () => {
-            let links = fn.gau(".gallerybody a[href*='?p=']");
-            links = [...new Set(links)];
-            await fn.getEle(links, "#wtf>a", ["#wtf", 0]);
-            thumbnailSrcArray = fn.gae("#wtf>a>img").map(img => img.src);
-            return fn.getImgCorsA("img.pic", "#wtf>a");
+        imgs: () => {
+            fn.showMsg(displayLanguage.str_16, 0);
+            let fetchNum = 0;
+            let pages = [fn.url];
+            if (fn.ge(".gallerybody a[href*='?p=']")) {
+                pages = [...new Set(pages.concat(fn.gau(".gallerybody a[href*='?p=']")))];
+            }
+            let resEleArr = pages.map(url => fetch(url).then(res => res.text()).then(text => {
+                fn.showMsg(`${displayLanguage.str_17}${fetchNum+=1}/${pages.length}`, 0);
+                let dom = fn.doc(text);
+                return fn.gae("#wtf>a", dom);
+            }));
+            return Promise.all(resEleArr).then(arr => arr.flat()).then(aArr => {
+                thumbnailSrcArray = aArr.map(a => fn.ge("img", a)?.src);
+                let links = aArr.map(a => a.href);
+                fn.showMsg(displayLanguage.str_05, 0);
+                fetchNum = 0;
+                let imageHostLinks = links.map(url => fetch(url).then(res => res.text()).then(text => {
+                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                    let dom = fn.doc(text);
+                    let code = fn.gst("window.location.href", dom);
+                    let [, link] = code.match(/window\.location\.href[\s\='"]+([^'";]+)/);
+                    return link;
+                }));
+                return Promise.all(imageHostLinks).then(urls => fn.getImageHost(urls));
+            });
         },
         button: [4],
         insertImg: [
-            ["#wtf", 2, "#wtf"], 2
+            ["#wtf", 2, "#wtf"], 3
         ],
         customTitle: ".galleryhead>h3>a",
         category: "nsfw2"
     }, {
-        name: "wikiFeet",
-        host: ["www.wikifeet.com"],
-        reg: /^https?:\/\/www\.wikifeet\.com\/[^\/]+$/,
+        name: "wikiFeetX / wikiFeet",
+        host: ["www.wikifeet.com", "www.wikifeetx.com"],
+        reg: /^https?:\/\/www\.wikifeetx?\.com\/[^\/]+$/,
         imgs: async () => {
             await fn.waitEle(".pic>a");
             const {
@@ -8680,7 +8719,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#thepics", 2],
         customTitle: "#content h1",
-        category: "nsfw1"
+        category: "nsfw2"
     }, {
         name: "VK",
         host: ["vk.com"],
@@ -9632,8 +9671,8 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Hentai Image 單張",
-        host: ["hentai-img.com", "hentai-cosplays.com", "porn-images-xxx.com", "porn-gravure-idol.com"],
-        reg: /(hentai-img|hentai-cosplays|porn-images-xxx|porn-gravure-idol)\.com\/image\/[^/]+\//,
+        host: ["hentai-img.com", "hentai-img-xxx.com", "hentai-cosplays.com", "hentai-cosplay-xxx.com", "porn-image.com", "porn-images-xxx.com"],
+        reg: /(hentai-img|hentai-img-xxx|hentai-cosplays|hentai-cosplay-xxx|porn-image|porn-images-xxx)\.com\/image\/[^/]+\//,
         include: "//a[text()='DETAIL PAGE' or text()='DETAIL HALAMAN' or text()='詳細へ' or text()='详细信息页面' or text()='Страница сведений' or text()='상세 페이지' or text()='página de detalles' or text()='หน้ารายละเอียด' or text()='TRANG CHI TIẾT']",
         imgs: async () => {
             let [max] = document.title.split("/").at(-1).match(/\d+/);
@@ -9657,8 +9696,8 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Hentai Image",
-        host: ["hentai-img.com", "hentai-cosplays.com", "porn-images-xxx.com", "porn-gravure-idol.com"],
-        reg: /(hentai-img|hentai-cosplays|porn-images-xxx|porn-gravure-idol)\.com\/image\/[^/]+\/(page\/\d+\/)?$/,
+        host: ["hentai-img.com", "hentai-img-xxx.com", "hentai-cosplays.com", "hentai-cosplay-xxx.com", "porn-image.com", "porn-images-xxx.com"],
+        reg: /(hentai-img|hentai-img-xxx|hentai-cosplays|hentai-cosplay-xxx|porn-image|porn-images-xxx)\.com\/image\/[^/]+\/(page\/\d+\/)?$/,
         init: () => {
             let ele = fn.ge("//div[span[a]]");
             if (ele) {
@@ -12649,12 +12688,22 @@ a:has(>div>div>img),
             thumbnailSrcArray = fn.getImgSrcArr(".card-image img");
             fn.showMsg(displayLanguage.str_05, 0);
             let url = fn.gu("//a[div[@class='card']]");
-            let iframe = await fn.iframeVar(url, "pageData");
-            let CDN_Srcs = iframe.pageData.map(e => e.image);
-            let siteSrcs = CDN_Srcs.map(e => e.replace(/i\d\.wp\.com\/|\?filter=null/g, ""));
-            fn.showMsg(displayLanguage.str_56, 0);
-            let status = await fn.xhrHEAD(siteSrcs[0]).then(res => res.status);
-            return status === 200 ? siteSrcs : CDN_Srcs;
+            return fn.iframe(url, {
+                waitVar: "pageData",
+                cb: async (_, frame) => {
+                    await fn.wait(() => isArray(frame.pageData));
+                }
+            }).then(async (object) => {
+                const {
+                    frame
+                } = object;
+                let CDN_Srcs = frame.pageData.map(e => e.image);
+                let siteSrcs = CDN_Srcs.map(e => e.replace(/i\d\.wp\.com\/|\?filter=null/g, ""));
+                fn.showMsg(displayLanguage.str_56, 0);
+                let status = await fn.xhrHEAD(siteSrcs[0]).then(res => res.status);
+                fn.hideMsg();
+                return status === 200 ? siteSrcs : CDN_Srcs;
+            });
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -15904,6 +15953,284 @@ a:has(>div>div>img),
             let textArr = text.split(" - ");
             return textArr[1] + " - " + textArr[0];
         },
+        category: "comic"
+    }, {
+        name: "BATOTO",
+        host: ["bato.to"],
+        reg: /^https?:\/\/bato\.to\/chapter\//,
+        imgs: () => {
+            let code = fn.gst("imgHttps");
+            let [, text] = code.match(/imgHttps[\s\=]+([^;]+)/);
+            return JSON.parse(text);
+        },
+        button: [4],
+        insertImg: ["#viewer", 2],
+        autoDownload: [0],
+        next: "//a[span[contains(text(),'Next Chapter')]]",
+        prev: 1,
+        customTitle: async () => {
+            let id = fn.lp.split("/").at(-1);
+            let chapters = fn.gae("optgroup[label=Chapters] option");
+            let chapterName = chapters.find(e => e.value == id).innerText;
+            let magaName = fn.gt(".nav-title>a");
+            return magaName + " - " + chapterName.replaceAll("\n", "").replace(/\s{2,10}/, "");
+        },
+        category: "comic"
+    }, {
+        name: "Dynasty Reader",
+        host: ["dynasty-scans.com"],
+        reg: /^https?:\/\/dynasty-scans\.com\/chapters\//,
+        init: () => {
+            let a = fn.ge("#next_link");
+            if (a) {
+                tempEles.push(a.cloneNode(true));
+            }
+        },
+        imgs: () => _unsafeWindow.pages.map(e => fn.lo + e.image),
+        button: [4],
+        insertImg: ["#reader", 2],
+        insertImgAF: () => {
+            if (tempEles.length > 0) {
+                let x = fn.ge("#FullPictureLoadEnd");
+                for (let e of tempEles) {
+                    insertBefore(x, e);
+                }
+            }
+        },
+        autoDownload: [0],
+        next: "#next_link",
+        prev: 1,
+        customTitle: () => fn.title("Dynasty Reader » "),
+        css: "#reader>#next_link{font-size:20px;border-top:1px solid #555555;text-decoration:none;padding:3px 6px;color:#333333;display:block;word-break:break-all;height:30px;line-height:30px}",
+        category: "comic"
+    }, {
+        name: "Hiperdex/MangaRead",
+        reg: () => fn.checkUrl({
+            h: [
+                "hiperdex.com",
+                "www.mangaread.org"
+            ],
+            p: /^\/manga\/[\w-]+\/chapter/
+        }),
+        imgs: ".wp-manga-chapter-img",
+        button: [4],
+        insertImg: [".reading-content", 2],
+        autoDownload: [0],
+        next: "a.next_page",
+        prev: "a.prev_page",
+        customTitle: "#chapter-heading",
+        category: "comic"
+    }, {
+        name: "MangaSee/MangaLife",
+        reg: () => fn.checkUrl({
+            h: [
+                "mangasee123.com",
+                "manga4life.com"
+            ],
+            p: "/read-online/"
+        }),
+        init: async () => fn.waitEle("#TopPage img[ng-src^=http]"),
+        imgs: () => {
+            let srcArr = [];
+            let ngSrc = fn.attr("#TopPage img", "ng-src");
+            let ps = fn.gae("#TopPage div[ng-repeat]").length;
+            return fn.arr(ps, (v, i) => ngSrc.replace(/^(.+\/\d+-)(\d+)(\.\w+)$/, `$1${String(i + 1).padStart(3, "0")}$3`));
+        },
+        autoDownload: [0],
+        next: () => {
+            let chapters = fn.gae("#ChapterModal [ng-repeat]").length;
+            let [, cNum] = fn.lp.match(/-chapter-(\d+)/);
+            cNum = Number(cNum);
+            if (cNum < chapters) {
+                return fn.lp.replace(/(-chapter-)(\d+)/, `$1${cNum + 1}`);
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
+        customTitle: () => fn.title(" Page 1"),
+        category: "comic"
+    }, {
+        name: "MangaPark",
+        host: ["mangapark.net"],
+        reg: /^https?:\/\/mangapark\.net\/title\//,
+        init: async () => fn.waitEle(["[data-name='image-item'] img", "//script[contains(text(),'pageName') and contains(text(),'image_server')]"]),
+        imgs: () => {
+            return JSON.parse(fn.gst("image_server")).objs.filter(e => {
+                try {
+                    return e.startsWith("http") && e.endsWith("webp");
+                } catch {
+                    return false;
+                }
+            });
+        },
+        button: [4],
+        insertImg: [".items-center:has(>div[data-name='image-item'])", 2],
+        autoDownload: [0],
+        next: "//a[span[text()='Next Chapter']]",
+        prev: "//a[span[text()='Prev Chapter']]",
+        customTitle: () => fn.title(" - Share Any Manga on MangaPark"),
+        category: "comic"
+    }, {
+        name: "Mangakakalot",
+        host: ["ww8.mangakakalot.tv"],
+        reg: /^https?:\/\/ww8\.mangakakalot\.tv\/chapter\//,
+        imgs: "#vungdoc img",
+        button: [4],
+        insertImg: ["#vungdoc", 2],
+        autoDownload: [0],
+        next: "//a[starts-with(text(),'NEXT')]",
+        prev: "//a[starts-with(text(),'PREV')]",
+        customTitle: ".info-top-chapter>h2",
+        category: "comic"
+    }, {
+        name: "MangaHere 分頁模式",
+        host: ["www.mangahere.cc"],
+        reg: /^https?:\/\/www\.mangahere\.cc\/manga\//,
+        include: ".cp-pager-list span",
+        imgs: () => {
+            const {
+                imagecount,
+                croot,
+                chapterid
+            } = _unsafeWindow;
+            let fetchNum = 0;
+            let keyE = fn.ge("#dm5_key");
+            let key = keyE.value;
+            let resArr = fn.arr(imagecount, (v, i) => {
+                let searchParams = new URLSearchParams({
+                    cid: chapterid,
+                    page: i + 1,
+                    key: key
+                });
+                let api = `${croot}chapterfun.ashx?${searchParams}`;
+                return fetch(api).then(res => res.text()).then(res => {
+                    fn.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${imagecount})`, 0);
+                    let text = fn.run(res.slice(4));
+                    let [, pix] = text.match(/pix="([^"]+)/);
+                    let [, pvalue] = text.match(/pvalue=([^;]+)/);
+                    pvalue = JSON.parse(pvalue);
+                    return pix + pvalue[0];
+                });
+            });
+            return Promise.all(resArr).then(arr => {
+                fn.hideMsg();
+                return arr;
+            });
+        },
+        button: [4],
+        insertImg: [".reader-main", 2],
+        autoDownload: [0],
+        next: "//a[text()='Next Chapter']",
+        prev: "//a[text()='Pre chapter']",
+        customTitle: () => fn.ge("meta[name='og:title']")?.content?.split(" - ")[1]?.replace(/Read | Online/g, ""),
+        css: ".ad-reader{display:none!important;}",
+        category: "comic"
+    }, {
+        name: "MangaHere 條漫模式",
+        host: ["www.mangahere.cc"],
+        reg: /^https?:\/\/www\.mangahere\.cc\/manga\//,
+        imgs: ".reader-main img",
+        button: [4],
+        insertImg: [".reader-main", 2],
+        autoDownload: [0],
+        next: "//a[text()='Next Chapter']",
+        prev: "//a[text()='Pre chapter']",
+        customTitle: () => fn.ge("meta[name='og:title']")?.content?.split(" - ")[1]?.replace(/Read | Online/g, ""),
+        css: ".ad-reader{display:none!important;}",
+        category: "comic"
+    }, {
+        name: "Komikcast",
+        host: ["komikcast.cz"],
+        reg: /^https?:\/\/komikcast\.cz\/chapter\//,
+        imgs: ".main-reading-area img",
+        button: [4],
+        insertImg: [".main-reading-area", 2],
+        autoDownload: [0],
+        next: ".nextprev>a[rel=next]",
+        prev: ".nextprev>a[rel=prev]",
+        customTitle: ".chapter_headpost>h1",
+        css: "center:has(>div):has(a){display:none!important;}",
+        category: "comic"
+    }, {
+        name: "Sen Manga",
+        host: ["raw.senmanga.com"],
+        reg: /^https?:\/\/raw\.senmanga\.com\/[\w-]+\/\d+$/,
+        imgs: () => {
+            let links = [fn.url];
+            let pl = fn.gae(".page-list")[0];
+            let ps = fn.gae(".page-list option", pl).length;
+            if (ps > 1) {
+                for (let i = 2; i <= ps; i++) {
+                    links.push(fn.url + "/" + i);
+                }
+            }
+            return fn.getImgA(".picture", links);
+        },
+        button: [4],
+        insertImg: [".reader", 2],
+        autoDownload: [0],
+        next: () => {
+            let next = fn.ge(".custom-select option[selected]")?.previousElementSibling;
+            if (next) {
+                return fn.url.replace(/\d+$/, next.value);
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
+        customTitle: () => fn.title(" - Page 1 / Raw | Sen Manga"),
+        category: "comic"
+    }, {
+        name: "ReadComicOnline",
+        host: ["readcomiconline.li"],
+        reg: /^https?:\/\/readcomiconline\.li\/Comic\/[\w-]+\/Issue/i,
+        init: async () => {
+            await fn.waitEle(["//script[contains(text(),'SetImage')]", "#divImage img"]);
+            fn.clearAllTimer();
+            fn.createImgBox("#divImage", 1);
+        },
+        imgs: () => {
+            let code = fn.gat("SetImage");
+            let keyText = code.match(/\w+\(_\w+\[currImage\]\)/i)[0];
+            let fnKey = keyText.match(/^\w+/i)[0];
+            let arrKey = keyText.match(/\((\w+)/i)[1];
+            let srcArr = _unsafeWindow[arrKey].map(e => _unsafeWindow[fnKey](e));
+            return srcArr;
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        autoDownload: [0],
+        next: () => {
+            let id = new URLSearchParams(document.location.search).get("id");
+            let cOption = fn.gae("#selectEpisode>option").find(e => e.value.endsWith(id));
+            let next = cOption?.nextElementSibling;
+            if (next) {
+                let arr = fn.url.split("/");
+                arr[arr.length - 1] = next.value;
+                return arr.join("/");
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
+        customTitle: () => fn.title(/ - Read.+$/),
+        fancybox: {
+            blacklist: 1
+        },
+        gallery: 1,
+        category: "comic"
+    }, {
+        name: "TCB Scans",
+        host: ["tcbscans.me"],
+        reg: /^https?:\/\/tcbscans\.me\/chapters\/\d+\//,
+        imgs: ".items-center>picture>img",
+        button: [4],
+        insertImg: [".items-center:has(>picture)", 2],
+        autoDownload: [0],
+        next: "//a[contains(text(),'Next')]",
+        prev: "//a[contains(text(),'Prev')]",
+        customTitle: ".container h1",
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -22395,11 +22722,11 @@ if ("xx" in window) {
             if (mode === 20) return url.replace(/-p-\d+$/, "") + "-p-" + i;
         },
         //重新發送請求
-        retryUrl: async (url, res, fn, retryCount = 10) => {
+        retryUrl: async (url, res, func, retryCount = 10) => {
             debug(`\n${fn}連線錯誤碼：${res.status}\n`, url);
             let retryNum = 1;
             let obj = {
-                fn: fn,
+                fn: func,
                 url: url,
                 status: res.status
             };
@@ -22415,7 +22742,7 @@ if ("xx" in window) {
                         });
                         break;
                     } else {
-                        debug(`\n${fn}連線錯誤碼：${checkRes.status}重試第${retryNum += 1}次\n`, url);
+                        debug(`\n${func}連線錯誤碼：${checkRes.status}重試第${retryNum += 1}次\n`, url);
                         await fn.delay(3000, 0);
                     }
                     if (check >= retryCount) {
@@ -22800,6 +23127,7 @@ if ("xx" in window) {
                     "data-high-res-src",
                     "data-full-path",
                     "data-thumb",
+                    "ng-src",
                     "bigimg",
                     "lg-data-src",
                     "org_img_url",
@@ -23079,7 +23407,7 @@ if ("xx" in window) {
         getImageHost: async (links = captureLinksArray) => {
             let imgsSrcArr = [];
             if (links.length > 0) {
-                if (/\.\w+$/.test(links[0]) && !/\.html$/.test(links[0]) && !/pixhost\.to\/show\//.test(links[0]) && !/^https?:\/\/imagetwist\.com\//.test(links[0])) return links;
+                if (/\.\w+$/.test(links[0]) && !/\.html$/.test(links[0]) && !/\/fappic\.com\//.test(links[0]) && !/pixhost\.to\/show\//.test(links[0]) && !/^https?:\/\/imagetwist\.com\//.test(links[0])) return links;
                 fn.showMsg(displayLanguage.str_01, 0);
                 let xhrNum = 0;
                 let resArr = links.map(async (url, i, arr) => {
@@ -23109,7 +23437,7 @@ if ("xx" in window) {
                             responseType: "document"
                         }).then(dom => {
                             fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
-                            let img = fn.ge("#imgpreview,#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid", dom);
+                            let img = fn.ge("#imgpreview,#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid,img.pic[alt][title]", dom);
                             return img ? img.src : null;
                         });
                     }
@@ -24637,7 +24965,8 @@ if ("xx" in window) {
                         check = isEle(ele);
                     } else if (isArray(selector)) {
                         check = selector.every(s => isEle(fn.ge(s, dom, dom)));
-                        ele = fn.gae(selector, dom, dom);
+                        ele = selector.map(s => fn.gae(s, dom, dom));
+                        ele = ele.flat();
                     }
                     if (check) {
                         clearInterval(loop);
@@ -28095,7 +28424,7 @@ img.small {
                     }
                 });
             }
-            if (options.fancybox == 1) {
+            if (options.fancybox == 1 && isFn(_unsafeWindow.Fancybox)) {
                 _unsafeWindow.Fancybox.bind(mainElement, "[data-fancybox]", {
                     Hash: false,
                     idle: false,
@@ -30968,7 +31297,7 @@ a[data-fancybox]:hover {
         //_unsafeWindow.FullPictureLoadCustomData = customData;
         //debug("\n圖片全載開啟了GM選單?\n", showOptions);
         _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
-        if (!ge("#FullPictureLoadMainStyle") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+        if (!ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
     }
@@ -30979,7 +31308,7 @@ a[data-fancybox]:hover {
     }
 
     try {
-        if (!ge("#FullPictureLoadMainStyle") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+        if (!ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
         if ("init" in siteData) {
@@ -30990,7 +31319,7 @@ a[data-fancybox]:hover {
                 await init_code();
             }
         }
-        if (!ge("#FullPictureLoadMainStyle") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+        if (!ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
         if ("css" in siteData && isString(siteData.css)) {
@@ -31472,7 +31801,7 @@ a[data-fancybox]:hover {
                 if (e.target.tagName === "A" && e.target?.previousElementSibling?.nodeName === "IMG") {
                     return true;
                 }
-                if (["IMG", "CANVAS"].some(t => t === e.target.tagName) && e.target.id != "FullPictureLoad") {
+                if (["IMG", "CANVAS"].some(t => t === e.target.tagName) && !e.target?.id?.startsWith("Full")) {
                     return true;
                 }
                 if (["A", "FIGURE", "SPAN"].some(t => t === e.target.tagName)) {
