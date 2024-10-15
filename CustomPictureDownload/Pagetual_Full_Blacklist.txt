@@ -700,6 +700,7 @@ https://cosermm.blog.2nt.com/*
 *://yinaw.com/*.html
 *://www.55comics.com/chapter/*.html
 *://www.55manshu.com/chapter/*.html
+*://www.55manshu.com/d/*.html
 *://hinhanhgai.com/image/*
 *://yazhouseba.com/meinv/img-*.html
 *://m.xtushe.com/photo/*.html
@@ -712,7 +713,7 @@ https://cosermm.blog.2nt.com/*
 *://*zyktu.top/index.php/archives/*/
 *://instagirl.net/post/*
 *://*erohere.online/erohere*/
-*://www.beautycosalbum.com/album/*.shtml
+*://www.sexyasianmodelpics.com/album/*.shtml
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
