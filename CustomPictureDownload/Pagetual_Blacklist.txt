@@ -1,4 +1,4 @@
-2024/10/10 16:23
+2024/10/15 23:23
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -894,8 +894,8 @@ Love Asian Babes
 Byoru
 *://byoru.net/*/
 
-GR Beauty COS Album
-*://www.beautycosalbum.com/album/*.shtml
+Sexy Asian Model Pics
+*://www.sexyasianmodelpics.com/album/*.shtml
 
 Erohere
 *://*erohere.online/erohere*/
@@ -1308,6 +1308,7 @@ ACG漫画网
 污污漫畫
 *://www.55comics.com/chapter/*.html
 *://www.55manshu.com/chapter/*.html
+*://www.55manshu.com/d/*.html
 
 紳士漫畫
 /^https?:\/\/((www\.)?wnacg\.com|(www\.)hm\d{1,2}\.lol|(www\.)wn\d{1,2}\.cc|(www\.)?hentaicomic\.ru)\/photos-index-aid-/
