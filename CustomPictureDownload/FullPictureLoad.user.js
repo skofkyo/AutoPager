@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.40
+// @version            2.8.41
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -382,7 +382,7 @@ a:has(>div>div>img),
         host: ["www.jkforum.net"],
         reg: /^https?:\/\/www\.jkforum\.net\/(p\/)?thread/,
         init: async () => await fn.waitEle("img[id^=aimg]"),
-        imgs: () => hasTouchEvents ? fn.gae("img[id^=aimg]:not([style])") : fn.gae("img[id^=aimg][zoomfile]"),
+        imgs: () => hasTouchEvent ? fn.gae("img[id^=aimg]:not([style])") : fn.gae("img[id^=aimg][zoomfile]"),
         capture: () => _this.imgs(),
         customTitle: ".title-hd h1,.post-title",
         category: "nsfw2"
@@ -469,7 +469,6 @@ a:has(>div>div>img),
             fn.run("jQuery(document).off();jQuery('body').off();");
             fn.createImgBox(".contentme,.contentme2", 2);
             fn.remove(".mobiletop");
-            fn.css("#FullPictureLoadEnd{color:rgb(255, 255, 255)}");
         },
         imgs: async () => {
             let max;
@@ -484,6 +483,7 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".contentme,.contentme2"], 2
         ],
+        endColor: "white",
         customTitle: () => fn.dt({
             t: document.title.split("|")[0],
             d: [
@@ -1963,11 +1963,12 @@ a:has(>div>div>img),
         thums: ".swiper-slide>a>img",
         button: [4],
         insertImg: ["#showimg", 1],
+        endColor: "white",
         autoDownload: [0],
         next: "a.next[href$=html]",
         prev: "a.pver[href$=html]",
         customTitle: "h2.title,.titlew>h2",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.showcontw #showimg{height:auto!important}[class^=ad_id]{display:none!important}",
+        css: ".showcontw #showimg{height:auto!important}[class^=ad_id]{display:none!important}",
         category: "nsfw1"
     }, {
         name: "亿图全景图库",
@@ -3140,7 +3141,7 @@ a:has(>div>div>img),
                 try {
                     let checkLocalStorage = ["flutter.password", "flutter.account", "flutter.HistoryImage"].every(k => k in localStorage);
                     let checkHistory = JSON.parse(JSON.parse(localStorage["flutter.HistoryImage"]))?.length > 0;
-                    return checkLocalStorage && checkHistory && hasTouchEvents;
+                    return checkLocalStorage && checkHistory && hasTouchEvent;
                 } catch {
                     return false;
                 }
@@ -3707,6 +3708,7 @@ a:has(>div>div>img),
         imgs: ".Content>a",
         button: [4],
         insertImg: [".Content", 2],
+        endColor: "white",
         insertImgAF: () => {
             if (tempEles.length > 0) {
                 let x = fn.ge(".Content").firstChild;
@@ -3719,7 +3721,7 @@ a:has(>div>div>img),
         next: "a.fas",
         prev: "a.next.fas",
         customTitle: ".title",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}@media only screen and (max-width:480px){#wrapper  .single{padding:0!important}}",
+        css: "@media only screen and (max-width:480px){#wrapper  .single{padding:0!important}}",
         category: "nsfw1"
     }, {
         name: "丝袜客 分類自動翻頁",
@@ -5528,8 +5530,8 @@ a:has(>div>div>img),
         imgs: "figure.gallery-item a",
         button: [4],
         insertImg: [".gallery", 2],
+        endColor: "white",
         customTitle: "h1.entry-title",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
         name: "Cosplay18",
@@ -5542,8 +5544,8 @@ a:has(>div>div>img),
         insertImg: [
             [".single-page", 0, ".single-page>ul"], 2
         ],
+        endColor: "white",
         customTitle: "h1.entry-title",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
         name: "GR Beauty COS Album",
@@ -6424,13 +6426,13 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".content-img", 2],
+        endColor: "white",
         insertImgAF: () => {
             let loop = setInterval(() => !fn.ge(".FullPictureLoadImage") ? fn.immediateInsertImg() : null, 500);
             setTimeout(() => clearInterval(loop), 10000);
         },
         customTitle: () => siteJson?.props?.pageProps?.post?.title,
         observerURL: true,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
         name: "jangjoo",
@@ -7279,10 +7281,10 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".picture_content", 2],
+        endColor: "white",
         next: "//li[contains(text(),'上一篇')]/a",
         prev: "//li[contains(text(),'下一篇')]/a",
         customTitle: "h1.diy-h1",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw1"
     }, {
         name: "七仙子图片M",
@@ -7836,7 +7838,7 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Nude Models",
-        reg: () => !hasTouchEvents && fn.lh === "blognudemodels.blogspot.com",
+        reg: () => !hasTouchEvent && fn.lh === "blognudemodels.blogspot.com",
         init: async () => await fn.waitEle("#gadget-dock"),
         imgs: ".separator>a",
         capture: ".separator>a",
@@ -8353,8 +8355,8 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".grid"], 2
         ],
+        endColor: "white",
         customTitle: ".gall_title",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
         name: "ЯУстал",
@@ -9003,8 +9005,8 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 2, ".photosgrid"], 2
         ],
+        endColor: "white",
         customTitle: "#galleryheader>h1",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
         name: "Asian Porn",
@@ -9046,8 +9048,9 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".images"], 2
         ],
+        endColor: "white",
         customTitle: ".headline>h1",
-        css: "#FullPictureLoadEnd{color:rgb(255,255,255)}.block-album{display:block !important}.block-album>.table,.top,.footer~*:not([id^='pv-'],[class^='pv-'],#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]){display:none !important}",
+        css: ".block-album{display:block !important}.block-album>.table,.top,.footer~*:not([id^='pv-'],[class^='pv-'],#comicRead,#fab,#FullPictureLoadOptions,#FullPictureLoadFixedMenu,.FullPictureLoadFixedBtn,.FullPictureLoadMsg,*[class^=fancybox]){display:none !important}",
         category: "nsfw2"
     }, {
         name: "Xasiat 自動翻頁",
@@ -9138,7 +9141,7 @@ a:has(>div>div>img),
         reg: () => fn.checkUrl({
             h: "xhamster.com",
             p: /^\/photos\/gallery\/[^/]+$/
-        }) && hasTouchEvents,
+        }) && hasTouchEvent,
         imgs: async () => {
             await fn.getNP(".items[data-role='gallery-photos']>.item-container", "//ol[@class='page-list']/li[@class='page-button' and a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a", null, "//ol[@class='page-list']");
             return fn.getImgA("#photoCurr", "a.item.slided", 1, null, 0);
@@ -9282,7 +9285,7 @@ a:has(>div>div>img),
         }),
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
-            return hasTouchEvents ? fn.gae(".img>img[data-src]") : fn.gae("div.img[data-src]");
+            return hasTouchEvent ? fn.gae(".img>img[data-src]") : fn.gae("div.img[data-src]");
         },
         button: [4],
         insertImg: ["div[id^='album'].page-content", 2],
@@ -9297,7 +9300,7 @@ a:has(>div>div>img),
         }),
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
-            return hasTouchEvents ? fn.gae(".img>img[data-src]").map(e => e.currentSrc) : fn.gae("div.img[data-src]");
+            return hasTouchEvent ? fn.gae(".img>img[data-src]").map(e => e.currentSrc) : fn.gae("div.img[data-src]");
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -9309,7 +9312,7 @@ a:has(>div>div>img),
         reg: () => fn.checkUrl({
             h: "luxurybeachresorts.net",
             e: "#gallery .media-group"
-        }) && !hasTouchEvents,
+        }) && !hasTouchEvent,
         init: () => fn.createImgBox(".media-group", 1),
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
@@ -9344,9 +9347,9 @@ a:has(>div>div>img),
         insertImg: [
             [".tags", 2], 2
         ],
+        endColor: "white",
         go: 1,
         customTitle: () => fn.title(" - Best adult videos and photos"),
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
         name: "ThotHub Leaks",
@@ -9919,7 +9922,7 @@ a:has(>div>div>img),
         name: "ViperGirls/PornCoven/ErotiCity",
         link: "https://viper.to/threads/10623260-Coser-UmekoJ-NieR-2B",
         host: ["vipergirls.to", "viper.to", "viperohilia.art", "vipervault.link", "viperbb.rocks", "viperkats.eu", "planetviper.club", "porncoven.com", "eroticity.net"],
-        reg: () => !hasTouchEvents && /^https?:\/\/(vipergirls\.to|viper\.to|viper\w+\.\w+|planetviper\.club|porncoven\.com|eroticity\.net)\/threads\//i.test(fn.url),
+        reg: () => !hasTouchEvent && /^https?:\/\/(vipergirls\.to|viper\.to|viper\w+\.\w+|planetviper\.club|porncoven\.com|eroticity\.net)\/threads\//i.test(fn.url),
         include: ".postdetails",
         init: () => {
             document.addEventListener("click", event => {
@@ -9954,7 +9957,7 @@ a:has(>div>div>img),
     }, {
         name: "Kitty Kats Forum",
         host: ["kitty-kats.net"],
-        reg: () => !hasTouchEvents && /^https?:\/\/kitty-kats\.net\/threads\//i.test(fn.url),
+        reg: () => !hasTouchEvent && /^https?:\/\/kitty-kats\.net\/threads\//i.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
                 if (event.target.className === "message-cell message-cell--user") {
@@ -9989,7 +9992,7 @@ a:has(>div>div>img),
         name: "Teen Photos",
         host: ["teenphotos.forumes.ru"],
         link: "https://teenphotos.forumes.ru/viewtopic.php?id=324",
-        reg: () => !hasTouchEvents && /^https?:\/\/teenphotos\.forumes\.ru\/viewtopic\.php\?id=\d+/.test(fn.url),
+        reg: () => !hasTouchEvent && /^https?:\/\/teenphotos\.forumes\.ru\/viewtopic\.php\?id=\d+/.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
                 if (event.target.className === "container") {
@@ -10019,7 +10022,7 @@ a:has(>div>div>img),
         name: "XONLY",
         host: ["xonly8.com"],
         link: "https://xonly8.com/index.php?topic=229069.0",
-        reg: () => !hasTouchEvents && /^https?:\/\/xonly\d?\.com\/index\.php\?topic=/.test(fn.url),
+        reg: () => !hasTouchEvent && /^https?:\/\/xonly\d?\.com\/index\.php\?topic=/.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
                 if (event.target.className === "post_wrapper") {
@@ -10278,7 +10281,7 @@ a:has(>div>div>img),
                 ".fed-nav-logo,.navbar-brand",
                 "//div[@class='fed-nav-left']/a[text()='美女美图' or text()='美图区'] | //div[@class='m-footer']"
             ]
-        }) && hasTouchEvents,
+        }) && hasTouchEvent,
         css: "div:has(>img[src^='/template/']),div:has(>img[src*='/HtmlS/']){display:none!important;}",
         category: "ad"
     }, {
@@ -10441,7 +10444,7 @@ a:has(>div>div>img),
         name: "JJGirls M",
         reg: () => fn.checkUrl({
             h: "jjgirls.com"
-        }) && hasTouchEvents,
+        }) && hasTouchEvent,
         init: () => fn.createImgBox("div.p222308", 2),
         imgs: "div.p222308>a:has(>img:not([src^='/temp'])):has(>img:not([src^='/thumbs']))",
         button: [4],
@@ -11109,6 +11112,7 @@ a:has(>div>div>img),
         insertImg: [
             [".gallery", 2, ".gallery"], 2
         ],
+        endColor: "white",
         autoDownload: [0],
         next: ".article-nav-prev>a",
         prev: ".article-nav-next>a",
@@ -11117,7 +11121,6 @@ a:has(>div>div>img),
             v: 3,
             css: false
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw2"
     }, {
         name: "色色图库",
@@ -11291,8 +11294,8 @@ a:has(>div>div>img),
         insertImg: [
             ["//p[img]", 2, "//p[img]"], 2
         ],
+        endColor: "white",
         customTitle: () => fn.gt(".entry-header").replaceAll("|", "-"),
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw1"
     }, {
         name: "Kungfutv/Series Donghua",
@@ -11306,8 +11309,8 @@ a:has(>div>div>img),
         insertImg: [
             ["#readerarea img", 1, ".ts-main-image"], 2
         ],
+        endColor: "white",
         customTitle: ".entry-title",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "nsfw1"
     }, {
         name: "18Kami.com",
@@ -11316,9 +11319,9 @@ a:has(>div>div>img),
         imgs: ".thumb-overlay-albums img",
         button: [4],
         insertImg: [".thumb-overlay-albums", 2],
+        endColor: "white",
         customTitle: ".panel-heading>.pull-left",
         fetch: 1,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         observerClick: "#chk_cover",
         category: "hcomic"
     }, {
@@ -11352,7 +11355,7 @@ a:has(>div>div>img),
         host: ["www.comic18h.com"],
         reg: /^https:\/\/www\.comic18h\.com\/chapter\/\d+\.html$/,
         imgs: async () => {
-            if (hasTouchEvents) {
+            if (hasTouchEvent) {
                 await fn.getNP("#readerarea>div", "//ul[@class='pagination']//a[text()='Next»']");
             } else {
                 await fn.getNP("#readerarea>div", ".pagination li.active+li>a:not(.prevnext)");
@@ -11441,6 +11444,7 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".comicContent-list"], 2
         ],
+        endColor: "white",
         next: "//a[text()='下一話'][starts-with(@href,'/')]",
         prev: "//a[text()='上一話'][starts-with(@href,'/')]",
         customTitle: (dom = document) => fn.dt({
@@ -11448,7 +11452,6 @@ a:has(>div>div>img),
             d: / - 熱辣漫畫.+$/
         }),
         preloadNext: true,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -12898,13 +12901,13 @@ a:has(>div>div>img),
         insertImg: [
             [".gallery-preview", 2], 2
         ],
+        endColor: "white",
         go: 1,
         insertImgAF: () => {
             if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
-            if (!hasTouchEvents && ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
+            if (!hasTouchEvent && ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
         },
         customTitle: () => fn.ge("[placeholder=Japanese]")?.value || fn.ge("[placeholder='Alternative names']")?.value,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "none"
     }, {
         name: "Pururin閱讀頁",
@@ -12922,8 +12925,9 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".img-viewer", 2],
+        endColor: "white",
         customTitle: () => fn.ge("[placeholder=Japanese]")?.value || fn.ge("[placeholder='Alternative names']")?.value,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.box.img-reader .img-viewer{position:unset!important;white-space:unset!important}",
+        css: ".box.img-reader .img-viewer{position:unset!important;white-space:unset!important}",
         category: "hcomic"
     }, {
         name: "9hentai圖片清單頁",
@@ -12951,9 +12955,9 @@ a:has(>div>div>img),
         insertImg: [
             [".pt-0 .card-body", 2], 2
         ],
+        endColor: "white",
         go: 1,
         customTitle: () => siteJson.results.alt_title ?? siteJson.results.title,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "9hentai閱讀頁",
@@ -12979,8 +12983,8 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".image-viewer", 2],
+        endColor: "white",
         customTitle: () => siteJson.results.alt_title ?? siteJson.results.title,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "Manga Mischief圖片清單頁",
@@ -12997,8 +13001,8 @@ a:has(>div>div>img),
         imgs: () => siteJson.data.map(e => e.url),
         button: [4],
         insertImg: ["div:has(>.max-w-gallery)", 2],
+        endColor: "white",
         customTitle: "h1.text-lg",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "AsmHentai圖片清單頁",
@@ -13027,9 +13031,9 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
+        endColor: "white",
         go: 1,
         customTitle: () => fn.getText([".info>h2", ".info>h1"]),
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "AsmHentai閱讀頁",
@@ -13053,8 +13057,9 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".rd_fimg", 2],
+        endColor: "white",
         customTitle: () => fn.title(" Page", 1),
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.preloader{text-indent:unset !important}",
+        css: ".preloader{text-indent:unset !important}",
         category: "hcomic"
     }, {
         name: "MultPorn閱讀頁",
@@ -13076,12 +13081,12 @@ a:has(>div>div>img),
         insertImg: [
             [".juicebox-parent", 2], 2
         ],
+        endColor: "white",
         go: 1,
         autoDownload: [0],
         next: "//a[text()='Next Part']",
         prev: "//a[text()='Previous Part']",
         customTitle: "#page-title",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "KingComiX閱讀頁",
@@ -13116,8 +13121,8 @@ a:has(>div>div>img),
         imgs: "#manga-content img",
         button: [4],
         insertImg: ["#manga-content", 2],
+        endColor: "white",
         customTitle: () => fn.title(/ - Neko Hentai.*$/),
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "Super Hentai閱讀頁",
@@ -13127,8 +13132,8 @@ a:has(>div>div>img),
         imgs: ".gallery img",
         button: [4],
         insertImg: [".gallery", 2],
+        endColor: "white",
         customTitle: "#single h1",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "HENTAICELEB.COM閱讀頁",
@@ -13137,8 +13142,8 @@ a:has(>div>div>img),
         imgs: ".gallery-thumbs a[data-src]",
         button: [4],
         insertImg: [".media-bg", 2],
+        endColor: "white",
         customTitle: ".full-main-col h1",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "HENTAIVSMANGA.COM圖片清單頁",
@@ -13347,10 +13352,10 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".comics-thumbnail-wrapper", 2],
+        endColor: "white",
         go: 1,
         customTitle: "h4.title",
         referer: "src",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "Hanime1閱讀頁",
@@ -13369,12 +13374,12 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#comic-content-wrapper", 2],
+        endColor: "white",
         customTitle: () => fn.dt({
             t: fn.ge("//meta[@property='og:title']").content,
             d: /第\d+頁 - /
         }),
         referer: "src",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "My Hentai Gallery圖片清單頁",
@@ -13388,9 +13393,9 @@ a:has(>div>div>img),
         insertImg: [
             ["//div[@class='comic-listing'][center[center[ul[@class='comics-grid clear']]]]", 0], 2
         ],
+        endColor: "white",
         go: 1,
         customTitle: ".comic-description>h1",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "XYZ PORN COMICS圖片清單頁",
@@ -13403,9 +13408,9 @@ a:has(>div>div>img),
         insertImg: [
             [".entry-content", 0], 2
         ],
+        endColor: "white",
         go: 1,
         customTitle: ".entry-title",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "IMHentai圖片清單頁",
@@ -13733,8 +13738,8 @@ a:has(>div>div>img),
         insertImg: [
             [".gallery", 2], 1
         ],
+        endColor: "white",
         go: 1,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "Manga18.club/hanman18.com/18PornComic/Doujin18.net/CNdoujin.net",
@@ -13785,11 +13790,11 @@ a:has(>div>div>img),
         imgs: ".reading-content img",
         button: [4],
         insertImg: [".reading-content", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "a.next_page",
         prev: "a.prev_page",
         customTitle: "#chapter-heading",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "AllPornComic",
@@ -13799,11 +13804,11 @@ a:has(>div>div>img),
         imgs: ".wp-manga-chapter-img",
         button: [4],
         insertImg: [".read-container", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "a.next_page",
         prev: "a.prev_page",
         customTitle: "#chapter-heading",
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "hcomic"
     }, {
         name: "Hachirumi.com",
@@ -14461,7 +14466,7 @@ a:has(>div>div>img),
                 "www.itsacg.com"
             ],
             s: "=read",
-        }) && !hasTouchEvents,
+        }) && !hasTouchEvent,
         imgs: ".uk-zjimg img",
         button: [4],
         insertImg: [".uk-zjimg", 2],
@@ -14492,7 +14497,7 @@ a:has(>div>div>img),
                 "www.itsacg.com"
             ],
             s: "=read",
-        }) && hasTouchEvents,
+        }) && hasTouchEvent,
         imgs: ".zjimg>img",
         button: [4],
         insertImg: [
@@ -14848,8 +14853,9 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#comicImages", 2],
+        endColor: "white",
         customTitle: () => fn.title("|", 1),
-        css: "body{overflow:unset!important}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        css: "body{overflow:unset!important}",
         category: "hcomic"
     }, {
         name: "HO5HO",
@@ -15492,12 +15498,13 @@ a:has(>div>div>img),
         insertImg: [
             [".content", 0, ".article-content>a"], 2
         ],
+        endColor: "white",
         go: 1,
         customTitle: () => fn.gt(".article-content>h3").split("｜")[1],
         fancybox: {
             blacklist: 1
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.sidebar,.modown-ad{display:none!important;}.single .content{margin-right:0px!important;}",
+        css: ".sidebar,.modown-ad{display:none!important;}.single .content{margin-right:0px!important;}",
         category: "hcomic"
     }, {
         name: "18H汉化漫画 閱讀頁",
@@ -15521,11 +15528,12 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#imgs", 2],
+        endColor: "white",
         customTitle: ".article-content>h3",
         fancybox: {
             blacklist: 1
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.sidebar,.modown-ad{display:none!important;}.single .content{margin-right:0px!important;}",
+        css: ".sidebar,.modown-ad{display:none!important;}.single .content{margin-right:0px!important;}",
         category: "hcomic"
     }, {
         name: "hanime1",
@@ -15795,7 +15803,7 @@ a:has(>div>div>img),
             h: /mangago|youhim/,
             p: /^\/read-manga\/|^\/chapter\//,
             e: "#pic_container"
-        }) && !hasTouchEvents,
+        }) && !hasTouchEvent,
         init: async () => {
             fn.clearAllTimer();
             fn.createImgBox("#pic_container", 1, 1000);
@@ -15805,6 +15813,7 @@ a:has(>div>div>img),
         imgs: () => fn.gae("#FullPictureLoadMainImgBox img"),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 0],
+        endColor: "white",
         next: () => {
             if (fn.lp.includes("/chapter/")) {
                 let cid = fn.lp.split("/").at(-2);
@@ -15819,14 +15828,14 @@ a:has(>div>div>img),
             let url = fn.gu(".widepage a");
             return fn.fetchDoc(url).then(dom => fn.ge(".rating_wrap a", dom)?.title.replace("Peole who read ", "") + " - " + fn.gt("#dropdown-chapter-page"));
         },
-        css: "div:has(>img[onclick]){display:none!important;}#FullPictureLoadMainImgBox img[id^=page]{width:auto;height:auto;max-width:100%}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        css: "div:has(>img[onclick]){display:none!important;}#FullPictureLoadMainImgBox img[id^=page]{width:auto;height:auto;max-width:100%}",
         category: "comic"
     }, {
         name: "MangaDex",
         reg: () => fn.checkUrl({
             h: "mangadex.org",
             e: "link[title=MangaDex]"
-        }) && !hasTouchEvents,
+        }) && !hasTouchEvent,
         init: async () => await fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
         SPA: () => new URL(document.URL).pathname.startsWith("/chapter/"),
         observerURL: true,
@@ -15889,7 +15898,7 @@ a:has(>div>div>img),
         reg: () => fn.checkUrl({
             h: "namicomi.com",
             e: "meta[content=NamiComi]"
-        }) && !hasTouchEvents,
+        }) && !hasTouchEvent,
         SPA: () => new URL(document.URL).pathname.includes("/chapter/"),
         observerURL: true,
         imgs: () => {
@@ -15965,6 +15974,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#viewer", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[span[contains(text(),'Next Chapter')]]",
         prev: 1,
@@ -15980,28 +15990,18 @@ a:has(>div>div>img),
         name: "Dynasty Reader",
         host: ["dynasty-scans.com"],
         reg: /^https?:\/\/dynasty-scans\.com\/chapters\//,
-        init: () => {
-            let a = fn.ge("#next_link");
-            if (a) {
-                tempEles.push(a.cloneNode(true));
-            }
-        },
         imgs: () => _unsafeWindow.pages.map(e => fn.lo + e.image),
         button: [4],
         insertImg: ["#reader", 2],
         insertImgAF: () => {
-            if (tempEles.length > 0) {
-                let x = fn.ge("#FullPictureLoadEnd");
-                for (let e of tempEles) {
-                    insertBefore(x, e);
-                }
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, "#reader", 1, displayLanguage.str_143, 4);
             }
         },
         autoDownload: [0],
         next: "#next_link",
         prev: 1,
         customTitle: () => fn.title("Dynasty Reader » "),
-        css: "#reader>#next_link{font-size:20px;border-top:1px solid #555555;text-decoration:none;padding:3px 6px;color:#333333;display:block;word-break:break-all;height:30px;line-height:30px}",
         category: "comic"
     }, {
         name: "Hiperdex/MangaRead",
@@ -16029,16 +16029,40 @@ a:has(>div>div>img),
             ],
             p: "/read-online/"
         }),
-        init: async () => fn.waitEle("#TopPage img[ng-src^=http]"),
+        init: async () => {
+            await fn.waitEle("#TopPage img[ng-src^=http]");
+            fn.createImgBox("#TopPage", 1);
+        },
         imgs: () => {
             let srcArr = [];
             let ngSrc = fn.attr("#TopPage img", "ng-src");
             let ps = fn.gae("#TopPage div[ng-repeat]").length;
             return fn.arr(ps, (v, i) => ngSrc.replace(/^(.+\/\d+-)(\d+)(\.\w+)$/, `$1${String(i + 1).padStart(3, "0")}$3`));
         },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#TopPage"], 2
+        ],
+        endColor: "white",
+        insertImgAF: () => {
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, "#FullPictureLoadMainImgBox", 1, displayLanguage.str_143, 3);
+            }
+        },
         autoDownload: [0],
         next: () => {
-            let chapters = fn.gae("#ChapterModal [ng-repeat]").length;
+            let buttons = fn.gae("#ChapterModal [ng-repeat]>button");
+            let chapters = buttons.length;
+            if (fn.lp.includes("-index-")) {
+                let [, s] = location.pathname.match(/-index-(\d)/);
+                chapters = buttons.filter(e => e.innerText.startsWith("S" + s)).length;
+            }
+            if (buttons.some(e => e.innerText.startsWith("S1 ")) && !fn.lp.includes("-index-")) {
+                chapters = buttons.filter(e => e.innerText.startsWith("S1 ")).length;
+            }
+            if (buttons.some(e => e.innerText.endsWith("Chapter 0"))) {
+                chapters = chapters - 1;
+            }
             let [, cNum] = fn.lp.match(/-chapter-(\d+)/);
             cNum = Number(cNum);
             if (cNum < chapters) {
@@ -16055,15 +16079,13 @@ a:has(>div>div>img),
         host: ["mangapark.net"],
         reg: /^https?:\/\/mangapark\.net\/title\//,
         init: async () => fn.waitEle(["[data-name='image-item'] img", "//script[contains(text(),'pageName') and contains(text(),'image_server')]"]),
-        imgs: () => {
-            return JSON.parse(fn.gst("image_server")).objs.filter(e => {
-                try {
-                    return e.startsWith("http") && e.endsWith("webp");
-                } catch {
-                    return false;
-                }
-            });
-        },
+        imgs: () => JSON.parse(fn.gst("image_server")).objs.filter(e => {
+            try {
+                return e.startsWith("http") && /\.(jpe?g|png|webp|gif)$/i.test(e) && !e.includes("/thumb/") && !e.includes("/media/mpim/");
+            } catch {
+                return false;
+            }
+        }),
         button: [4],
         insertImg: [".items-center:has(>div[data-name='image-item'])", 2],
         autoDownload: [0],
@@ -16120,6 +16142,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".reader-main", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[text()='Next Chapter']",
         prev: "//a[text()='Pre chapter']",
@@ -16130,14 +16153,57 @@ a:has(>div>div>img),
         name: "MangaHere 條漫模式",
         host: ["www.mangahere.cc"],
         reg: /^https?:\/\/www\.mangahere\.cc\/manga\//,
+        include: ".cp-pager-list",
         imgs: ".reader-main img",
         button: [4],
         insertImg: [".reader-main", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[text()='Next Chapter']",
         prev: "//a[text()='Pre chapter']",
         customTitle: () => fn.ge("meta[name='og:title']")?.content?.split(" - ")[1]?.replace(/Read | Online/g, ""),
         css: ".ad-reader{display:none!important;}",
+        category: "comic"
+    }, {
+        name: "MangaHere M",
+        host: ["m.mangahere.cc"],
+        reg: /^https?:\/\/m\.mangahere\.cc\/(manga|roll_manga)\//,
+        init: async () => {
+            let url = fn.url.replace("/manga/", "/roll_manga/");
+            return fn.fetchDoc(url).then(dom => {
+                siteJson = {
+                    srcs: fn.getImgSrcArr("#viewer img", dom)
+                };
+                let btn = fn.ge(".roll-pagebtn", dom);
+                if (btn) {
+                    tempEles.push(btn);
+                    let next = fn.ge("//a[text()='Next Chapter']", btn);
+                    if (next) {
+                        tempNextLink = next.href;
+                    }
+                }
+            });
+        },
+        imgs: () => siteJson.srcs,
+        button: [4, "24%", 1],
+        insertImg: ["#viewer", 2],
+        endColor: "white",
+        insertImgAF: () => {
+            if (tempEles.length > 0 && !fn.ge(".roll-pagebtn")) {
+                let x = fn.ge("#viewer");
+                for (let e of tempEles) {
+                    insertAfter(x, e);
+                }
+            }
+            fn.remove(".pager,.mangaread-page");
+        },
+        next: () => tempNextLink,
+        prev: 1,
+        customTitle: () => {
+            let obj = JSON.parse([...document.scripts].find(s => s.textContent.includes("addHistory")).textContent.match(/{"href[^}]+}/)[0]);
+            let ch = fn.gt(".return-title");
+            return obj.name + " - " + ch;
+        },
         category: "comic"
     }, {
         name: "Komikcast",
@@ -16146,6 +16212,7 @@ a:has(>div>div>img),
         imgs: ".main-reading-area img",
         button: [4],
         insertImg: [".main-reading-area", 2],
+        endColor: "white",
         autoDownload: [0],
         next: ".nextprev>a[rel=next]",
         prev: ".nextprev>a[rel=prev]",
@@ -16169,6 +16236,12 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [".reader", 2],
+        insertImgAF: () => {
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, ".reader", 1, displayLanguage.str_143, 4);
+            }
+            fn.remove(".pager>.viewer,.nav-page");
+        },
         autoDownload: [0],
         next: () => {
             let next = fn.ge(".custom-select option[selected]")?.previousElementSibling;
@@ -16180,26 +16253,38 @@ a:has(>div>div>img),
         },
         prev: 1,
         customTitle: () => fn.title(" - Page 1 / Raw | Sen Manga"),
+        css: "h2:has(>br){display:none!important;}",
         category: "comic"
     }, {
         name: "ReadComicOnline",
         host: ["readcomiconline.li"],
-        reg: /^https?:\/\/readcomiconline\.li\/Comic\/[\w-]+\/(Issue|Full)/i,
+        reg: () => fn.checkUrl({
+            h: "readcomiconline.li",
+            p: /^\/Comic\/[\w-]+\/(Issue|Full|Vol)/i
+        }) && !hasTouchEvent,
         init: async () => {
             await fn.waitEle(["//script[contains(text(),'SetImage')]", "#divImage img"]);
             fn.clearAllTimer();
             fn.createImgBox("#divImage", 1);
         },
         imgs: () => {
-            let code = fn.gst("SetImage");
-            let keyText = code.match(/\w+\(_\w+\[currImage\]\)/i)[0];
-            let fnKey = keyText.match(/^\w+/i)[0];
-            let arrKey = keyText.match(/\((\w+)/i)[1];
+            let code = fn.gst("currImage");
+            let [keyText] = code.match(/\w+\(_\w+\[currImage\]\)/i);
+            let [fnKey] = keyText.match(/^\w+/i);
+            let [, arrKey] = keyText.match(/\((\w+)/i);
             let srcArr = _unsafeWindow[arrKey].map(e => _unsafeWindow[fnKey](e));
             return srcArr;
         },
         button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#divImage,#divMsg,div:has(>div>iframe)"], 2
+        ],
+        endColor: "white",
+        insertImgAF: () => {
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, "#FullPictureLoadMainImgBox", 1, displayLanguage.str_143, 1);
+            }
+        },
         autoDownload: [0],
         next: () => {
             let id = new URLSearchParams(document.location.search).get("id");
@@ -16221,12 +16306,59 @@ a:has(>div>div>img),
         gallery: 1,
         category: "comic"
     }, {
+        name: "ReadComicOnline M",
+        host: ["readcomiconline.li"],
+        reg: () => fn.checkUrl({
+            h: "readcomiconline.li",
+            p: /^\/Comic\/[\w-]+\/(Issue|Full|Vol)/i
+        }) && hasTouchEvent,
+        init: async () => {
+            await fn.waitEle("#divImage img");
+            fn.clearAllTimer();
+            fn.createImgBox("#divImage", 1);
+        },
+        imgs: () => {
+            let code = fn.gst("currImage");
+            let [, arrKey] = code.match(/(\w+)\[currImage\]/);
+            return _unsafeWindow[arrKey];
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#divImage,#imgLoader"], 2
+        ],
+        endColor: "white",
+        insertImgAF: () => {
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, "#FullPictureLoadMainImgBox", 1, displayLanguage.str_143, 1);
+            }
+        },
+        autoDownload: [0],
+        next: () => {
+            let id = new URLSearchParams(document.location.search).get("id");
+            let cOption = fn.gae(".selectEpisode>option").find(e => e.value.endsWith(id));
+            let next = cOption?.nextElementSibling;
+            if (next) {
+                let arr = fn.url.split("/");
+                arr[arr.length - 1] = next.value;
+                return arr.join("/");
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
+        customTitle: () => fn.title(/ - Read.+$/),
+        fancybox: {
+            blacklist: 1
+        },
+        category: "comic"
+    }, {
         name: "TCB Scans",
         host: ["tcbscans.me"],
         reg: /^https?:\/\/tcbscans\.me\/chapters\/\d+\//,
         imgs: ".items-center>picture>img",
         button: [4],
         insertImg: [".items-center:has(>picture)", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[contains(text(),'Next')]",
         prev: "//a[contains(text(),'Prev')]",
@@ -16473,7 +16605,7 @@ if ("xx" in window) {
             observer: "#FullPictureLoadMainImgBox>img",
             next: () => frameWindow.nextLink,
             title: (dom, frame) => {
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     return "第" + frame.ch + "集";
                 } else {
                     return fn.dt({
@@ -16537,6 +16669,7 @@ if ("xx" in window) {
         },
         button: [4],
         insertImg: ["#cp_img", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[img[contains(@src,'xiayizhang')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'shangyizhang')]][starts-with(@href,'/m')]",
@@ -16546,7 +16679,7 @@ if ("xx" in window) {
             fn.script(code, 0, 1);
             fn.picPreload(await obj.imgs(0), obj.customTitle(nextDoc), "next");
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}a[href^='j']{display:none !important}body{overflow:unset!important}",
+        css: "a[href^='j']{display:none !important}body{overflow:unset!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -16652,6 +16785,7 @@ if ("xx" in window) {
         },
         button: [4],
         insertImg: ["#cp_img", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[img[contains(@src,'reader-bottom-right-2')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'reader-bottom-right-1')]][starts-with(@href,'/m')]",
@@ -16661,7 +16795,7 @@ if ("xx" in window) {
             fn.script(code, 0, 1);
             fn.picPreload(await obj.imgs(0), obj.customTitle(nextDoc), "next");
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
+        css: ".relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -16931,6 +17065,7 @@ if ("xx" in window) {
         },
         button: [4],
         insertImg: ["#cp_img", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[img[contains(@src,'reader-bottom-right-2')]][starts-with(@href,'/m')]",
         prev: "//a[img[contains(@src,'reader-bottom-right-1')]][starts-with(@href,'/m')]",
@@ -16940,7 +17075,7 @@ if ("xx" in window) {
             fn.script(code, 0, 1);
             fn.picPreload(await obj.imgs(0), obj.customTitle(nextDoc), "next");
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
+        css: ".relative>a{display:none!important}.reader-img-con{padding:64px 0 50px !important;}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -18203,6 +18338,7 @@ if ("xx" in window) {
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, "#pic-list"], 2
         ],
+        endColor: "white",
         autoDownload: [0],
         next: () => {
             const {
@@ -18217,7 +18353,7 @@ if ("xx" in window) {
             fn.script(code, 0, 1);
             fn.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}#loading,#pre-loading,.img_info,.blank20,#udbsdk_login{display:none!important}",
+        css: "#loading,#pre-loading,.img_info,.blank20,#udbsdk_login{display:none!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -18487,6 +18623,7 @@ if ("xx" in window) {
         imgs: (dom = document) => fn.getImgSrcArr("img[data-original]:not([data-original*='/template/pc/default/']),.lazy-read:not([data-original*='/template/pc/default/']),img[data-src]", dom),
         button: [4],
         insertImg: [".rd-article-wr", 2],
+        endColor: "white",
         autoDownload: [0],
         //next: ".btn--next-chapter,.rd-aside a.j-rd-next",
         next: () => {
@@ -18514,7 +18651,6 @@ if ("xx" in window) {
             }
         },
         preloadNext: true,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "漫画屋M格式",
@@ -18601,6 +18737,7 @@ if ("xx" in window) {
         imgs: () => _unsafeWindow.newImgs.map(e => e.url),
         button: [4, "24%", 1],
         insertImg: [".main-scroll_mode", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "a.J_next_eposide_btn[href*=chapter]",
         prev: "a.J_prev_eposide_btn[href*=chapter]",
@@ -18612,7 +18749,7 @@ if ("xx" in window) {
             });
         },
         infiniteScroll: true,
-        css: "a:has(>img[alt*='APP']){display:none!important;}#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
+        css: "a:has(>img[alt*='APP']){display:none!important;}",
         category: "comic"
     }, {
         name: "爱国漫 自動翻頁",
@@ -19044,7 +19181,7 @@ if ("xx" in window) {
             },
             title: (dom) => {
                 let text = dom.title.replace(/在线漫画.+$/, "");
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     return text.split(" ")[1];
                 } else {
                     return text;
@@ -19238,7 +19375,7 @@ if ("xx" in window) {
                 }
             },
             title: (dom) => {
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     return fn.gt(".setnmh-bookname h2", 1, dom);
                 } else {
                     return fn.gt(".setnmh-bookname h1", 1, dom) + " - " + fn.gt(".setnmh-bookname h2", 1, dom);
@@ -19887,7 +20024,7 @@ if ("xx" in window) {
                     d: " - 如漫画"
                 });
                 let textArr = text.split("_");
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     return textArr[0];
                 } else {
                     return textArr[1] + " - " + textArr[0];
@@ -19973,7 +20110,7 @@ if ("xx" in window) {
                     t: dom.title,
                     d: "在线阅读-漫画网"
                 });
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     return text.split("_")[1];
                 } else {
                     return text.replace("_", " - ");
@@ -20070,7 +20207,7 @@ if ("xx" in window) {
                     qTcms_S_m_name,
                     qTcms_S_m_playm
                 } = frame;
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     return qTcms_S_m_playm;
                 } else {
                     return qTcms_S_m_name + " - " + qTcms_S_m_playm;
@@ -20253,7 +20390,7 @@ if ("xx" in window) {
         name: "次元/夜神",
         host: ["cymh.info", "ysmh.info"],
         enable: 0,
-        reg: () => !hasTouchEvents && /^https?:\/\/(cymh|ysmh)\.info\/\w+\/\d+\/\d+\.html$/i.test(fn.url),
+        reg: () => !hasTouchEvent && /^https?:\/\/(cymh|ysmh)\.info\/\w+\/\d+\/\d+\.html$/i.test(fn.url),
         init: async () => fn.getNP("#cp_img img", "//a[text()='下一页']", null, ".fanye"),
         imgs: "#cp_img img",
         button: [4],
@@ -20267,7 +20404,7 @@ if ("xx" in window) {
         name: "次元M/夜神M",
         host: ["cymh.info", "ysmh.info"],
         enable: 0,
-        reg: () => hasTouchEvents && /^https?:\/\/(cymh|ysmh)\.info\/\w+\/\d+\/\d+\.html$/i.test(fn.url),
+        reg: () => hasTouchEvent && /^https?:\/\/(cymh|ysmh)\.info\/\w+\/\d+\/\d+\.html$/i.test(fn.url),
         init: async () => fn.getNP("#cp_img>*", "//a[text()='下一页']", null, ".page"),
         imgs: "#cp_img img",
         button: [4],
@@ -20303,7 +20440,7 @@ if ("xx" in window) {
         name: "爱看漫M",
         host: ["ikmmh.com"],
         enable: 0,
-        reg: () => hasTouchEvents && /^https?:\/\/ikmmh\.com\/\w+\/\d+\/\d+\.html$/.test(fn.url),
+        reg: () => hasTouchEvent && /^https?:\/\/ikmmh\.com\/\w+\/\d+\/\d+\.html$/.test(fn.url),
         imgs: ".episode-detail img",
         button: [4],
         insertImg: [".episode-detail", 2],
@@ -20355,6 +20492,7 @@ if ("xx" in window) {
         },
         button: [4],
         insertImg: [".comicContent-list", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[text()='下一話'][starts-with(@href,'/comic/')]",
         prev: "//a[text()='上一話'][starts-with(@href,'/comic/')]",
@@ -20367,7 +20505,7 @@ if ("xx" in window) {
             });
         },
         topButton: true,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}.header+div[style],.comicContainerAds{display:none!important}",
+        css: ".header+div[style],.comicContainerAds{display:none!important}",
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -20467,7 +20605,7 @@ if ("xx" in window) {
         category: "none"
     }, {
         name: "拷貝漫畫 清除不給開啟開發人員工具",
-        reg: () => !hasTouchEvents && /^(www\.)?(copymanga\.site|copymanga\.tv|mangacopy\.com)$/.test(fn.lh) && !fn.ge("//title[text()='漫畫觀看']"),
+        reg: () => !hasTouchEvent && /^(www\.)?(copymanga\.site|copymanga\.tv|mangacopy\.com)$/.test(fn.lh) && !fn.ge("//title[text()='漫畫觀看']"),
         delay: 300,
         init: () => {
             fn.clearAllTimer(3);
@@ -20747,7 +20885,7 @@ if ("xx" in window) {
             title: (dom) => {
                 let m = fn.gt("h1.h2>a", 1, dom);
                 let c = fn.gt("h2.h4", 1, dom).replace(/\[|\]/g, "");
-                return hasTouchEvents ? c : m + " - " + c;
+                return hasTouchEvent ? c : m + " - " + c;
             },
             hide: ".comic-viewer-toc",
             preloadNextPage: 1
@@ -20778,11 +20916,11 @@ if ("xx" in window) {
         },
         button: [4],
         insertImg: ["#all", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "//a[text()='下一章' and not(starts-with(@href,'javascript'))]",
         prev: "//a[text()='上一章' and not(starts-with(@href,'javascript'))]",
         customTitle: () => fn.gt("h2.h2>a") + " - " + fn.gt("span.h4:nth-child(5)"),
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "樱花漫画",
@@ -20813,6 +20951,7 @@ if ("xx" in window) {
         },
         button: [4],
         insertImg: ["#all", 2],
+        endColor: "white",
         autoDownload: [0],
         next: "a.next_part:not([href^=java])",
         prev: ".paginationContent>a:first-child:not([href^=java])",
@@ -20836,7 +20975,6 @@ if ("xx" in window) {
                 fn.picPreload(srcs, text, "next");
             });
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "哔哩哔哩漫画",
@@ -20865,13 +21003,13 @@ if ("xx" in window) {
             }).then(res => res.json()).then(json => json.data.map(e => `${e.url}?token=${e.token}`));
         },
         insertImg: [".image-list", 2],
+        endColor: "white",
         next: ".load-next-btn",
         prev: 1,
         customTitle: async () => {
             await fn.delay(1500, 0);
             return fn.gt(".manga-title") + " - " + fn.gt(".episode");
         },
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "看漫画",
@@ -20998,8 +21136,8 @@ if ("xx" in window) {
             return fn.gae("img[data-src].lazy:not(.demo-lazy)");
         },
         insertImg: ["div[class^=pictures]", 3],
+        endColor: "white",
         fetch: 1,
-        css: "#FullPictureLoadEnd{color:rgb(255, 255, 255)}",
         category: "comic"
     }, {
         name: "開車漫画",
@@ -21184,7 +21322,7 @@ if ("xx" in window) {
         reg: () => fn.checkUrl({
             h: "medibang.com",
             p: "/book/"
-        }) && !hasTouchEvents,
+        }) && !hasTouchEvent,
         init: () => fn.createImgBox("#contentsDetailShow"),
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
@@ -21227,7 +21365,7 @@ if ("xx" in window) {
         reg: () => fn.checkUrl({
             h: "medibang.com",
             p: "/viewer/"
-        }) && !hasTouchEvents,
+        }) && !hasTouchEvent,
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let id = fn.lp.split("/").at(-2);
@@ -21264,7 +21402,7 @@ if ("xx" in window) {
             if (["www.magayuan.com", "m.magayuan.com"].some(h => h === fn.lh)) {
                 fn.css(".Introduct_Sub{background:url(https://m.idmzj.com/images/int_bg.png)!important;background-size:100% 100%!important}");
             }
-            if (hasTouchEvents) {
+            if (hasTouchEvent) {
                 if (["xmanhua", "yymanhua"].some(h => fn.lh.includes(h)) && fn.ge("//a[text()='章節']")) {
                     EClick("//a[text()='章節']");
                 }
@@ -21744,7 +21882,7 @@ if ("xx" in window) {
         console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
     }
 
-    const hasTouchEvents = ("ontouchstart" in _unsafeWindow);
+    const hasTouchEvent = ("ontouchstart" in _unsafeWindow);
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
@@ -21829,7 +21967,7 @@ if ("xx" in window) {
     let FancyboxOptions;
     let slideIndex = null;
 
-    if (hasTouchEvents) {
+    if (hasTouchEvent) {
         FancyboxOptions = {
             Hash: false,
             idle: false,
@@ -22014,13 +22152,13 @@ if ("xx" in window) {
                 str_79: "頁面容器圖片縮放比例：",
                 str_80: "頁面容器圖片並排數量：",
                 str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
-                str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
+                str_82: hasTouchEvent ? "取消" : "取消 (Esc)",
                 str_83: "重置設定",
                 str_84: "保存設定",
-                str_85: hasTouchEvents ? "腳本選項" : "腳本選項(*)",
-                str_86: hasTouchEvents ? "切換模式" : "切換模式(5)",
-                str_87: hasTouchEvents ? "比例縮放" : "比例縮放(-+)",
-                str_88: hasTouchEvents ? "取消縮放" : "取消縮放(.)",
+                str_85: hasTouchEvent ? "腳本選項" : "腳本選項(*)",
+                str_86: hasTouchEvent ? "切換模式" : "切換模式(5)",
+                str_87: hasTouchEvent ? "比例縮放" : "比例縮放(-+)",
+                str_88: hasTouchEvent ? "取消縮放" : "取消縮放(.)",
                 str_89: "暫停自動翻頁",
                 str_90: "啟用自動翻頁",
                 str_91: "初始化設定",
@@ -22036,10 +22174,10 @@ if ("xx" in window) {
                 str_101: "網址.txt已匯出",
                 str_102: "格式轉換中...",
                 str_103: "頁面容器預設使用並排模式",
-                str_104: hasTouchEvents ? "匯出圖址" : "匯出圖址(7)",
-                str_105: hasTouchEvents ? "複製圖址" : "複製圖址(1)",
-                str_106: hasTouchEvents ? "分頁畫廊" : "分頁畫廊(8)",
-                str_107: hasTouchEvents ? "一鍵下載" : "一鍵下載(3)",
+                str_104: hasTouchEvent ? "匯出圖址" : "匯出圖址(7)",
+                str_105: hasTouchEvent ? "複製圖址" : "複製圖址(1)",
+                str_106: hasTouchEvent ? "分頁畫廊" : "分頁畫廊(8)",
+                str_107: hasTouchEvent ? "一鍵下載" : "一鍵下載(3)",
                 str_108: "※訊息提示顯示的位置：",
                 str_109: {
                     c: "置中",
@@ -22066,7 +22204,7 @@ if ("xx" in window) {
                 str_125: "🧹 重置此網站儲存的所有腳本設定",
                 str_126: "🧹 重置腳本儲存的所有全局設定",
                 str_127: "右鍵：匯出圖址(7)",
-                str_128: hasTouchEvents ? "打開收藏" : "打開收藏(9)",
+                str_128: hasTouchEvent ? "打開收藏" : "打開收藏(9)",
                 str_129: "關閉收藏",
                 str_130: "編輯收藏",
                 str_131: "保存",
@@ -22079,7 +22217,7 @@ if ("xx" in window) {
                 str_138: "此網站禁用",
                 str_139: "自動聚圖至頁面容器",
                 str_140: "自動進入影子畫廊",
-                str_141: hasTouchEvents ? "影子畫廊" : "影子畫廊(G)",
+                str_141: hasTouchEvent ? "影子畫廊" : "影子畫廊(G)",
                 str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
                 str_144: "下一篇",
@@ -22092,11 +22230,11 @@ if ("xx" in window) {
                 str_151: "JK平滑滾動",
                 str_152: "視口高",
                 galleryMenu: {
-                    webtoon: hasTouchEvents ? "條漫模式" : "條漫模式 (4,+,-)",
-                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
-                    small: hasTouchEvents ? "小圖像模式" : "小圖像模式 (2,R)",
-                    single: hasTouchEvents ? "單圖像模式" : "單圖像模式 (1)",
-                    default: hasTouchEvents ? "預設模式" : "預設模式 (0,R)",
+                    webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
+                    rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
+                    small: hasTouchEvent ? "小圖像模式" : "小圖像模式 (2,R)",
+                    single: hasTouchEvent ? "單圖像模式" : "單圖像模式 (1)",
+                    default: hasTouchEvent ? "預設模式" : "預設模式 (0,R)",
                 },
                 FancyboxWheel: {
                     z: "圖片縮放",
@@ -22201,13 +22339,13 @@ if ("xx" in window) {
                 str_79: "页面容器图片缩放比例：",
                 str_80: "页面容器图片并排数量：",
                 str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
-                str_82: hasTouchEvents ? "取消" : "取消 (Esc)",
+                str_82: hasTouchEvent ? "取消" : "取消 (Esc)",
                 str_83: "重置设置",
                 str_84: "保存设置",
-                str_85: hasTouchEvents ? "脚本设置" : "脚本设置(*)",
-                str_86: hasTouchEvents ? "切换模式" : "切换模式(5)",
-                str_87: hasTouchEvents ? "比例缩放" : "比例缩放(-+)",
-                str_88: hasTouchEvents ? "取消缩放" : "取消缩放(.)",
+                str_85: hasTouchEvent ? "脚本设置" : "脚本设置(*)",
+                str_86: hasTouchEvent ? "切换模式" : "切换模式(5)",
+                str_87: hasTouchEvent ? "比例缩放" : "比例缩放(-+)",
+                str_88: hasTouchEvent ? "取消缩放" : "取消缩放(.)",
                 str_89: "暂停自动翻页",
                 str_90: "启用自动翻页",
                 str_91: "初始化设置",
@@ -22223,10 +22361,10 @@ if ("xx" in window) {
                 str_101: "网址.txt已导出",
                 str_102: "格式转换中...",
                 str_103: "页面容器默认使用并排模式",
-                str_104: hasTouchEvents ? "导出图址" : "导出图址(7)",
-                str_105: hasTouchEvents ? "拷贝图址" : "拷贝图址(1)",
-                str_106: hasTouchEvents ? "标签画廊" : "标签画廊(8)",
-                str_107: hasTouchEvents ? "一键下载" : "一键下载(3)",
+                str_104: hasTouchEvent ? "导出图址" : "导出图址(7)",
+                str_105: hasTouchEvent ? "拷贝图址" : "拷贝图址(1)",
+                str_106: hasTouchEvent ? "标签画廊" : "标签画廊(8)",
+                str_107: hasTouchEvent ? "一键下载" : "一键下载(3)",
                 str_108: "※讯息提示显示的位置：",
                 str_109: {
                     c: "置中",
@@ -22253,7 +22391,7 @@ if ("xx" in window) {
                 str_125: "🧹 重置此网站存储的所有脚本设置",
                 str_126: "🧹 重置脚本存储的所有全局设置",
                 str_127: "右键：导出图址(7)",
-                str_128: hasTouchEvents ? "打开收藏" : "打开收藏(9)",
+                str_128: hasTouchEvent ? "打开收藏" : "打开收藏(9)",
                 str_129: "关闭收藏",
                 str_130: "编辑收藏",
                 str_131: "保存",
@@ -22266,7 +22404,7 @@ if ("xx" in window) {
                 str_138: "此网站禁用",
                 str_139: "自动聚图至页面容器",
                 str_140: "自動進入影子畫廊",
-                str_141: hasTouchEvents ? "影子画廊" : "影子画廊(G)",
+                str_141: hasTouchEvent ? "影子画廊" : "影子画廊(G)",
                 str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
                 str_144: "下一篇",
@@ -22279,11 +22417,11 @@ if ("xx" in window) {
                 str_151: "JK平滑滚动",
                 str_152: "视口高",
                 galleryMenu: {
-                    webtoon: hasTouchEvents ? "条漫模式" : "条漫模式 (4,+,-)",
-                    rtl: hasTouchEvents ? "右至左模式" : "右至左模式 (3,R)",
-                    small: hasTouchEvents ? "小图像模式" : "小图像模式 (2,R)",
-                    single: hasTouchEvents ? "单图像模式" : "单图像模式 (1)",
-                    default: hasTouchEvents ? "默认模式" : "默认模式 (0,R)",
+                    webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
+                    rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
+                    small: hasTouchEvent ? "小图像模式" : "小图像模式 (2,R)",
+                    single: hasTouchEvent ? "单图像模式" : "单图像模式 (1)",
+                    default: hasTouchEvent ? "默认模式" : "默认模式 (0,R)",
                 },
                 FancyboxWheel: {
                     z: "图片缩放",
@@ -22386,13 +22524,13 @@ if ("xx" in window) {
                 str_79: "Image Zoom Ratio：",
                 str_80: "Number Of Images Side By Side：",
                 str_81: "Comic Category Fixed To 2",
-                str_82: hasTouchEvents ? "Cancel" : "Cancel (Esc)",
+                str_82: hasTouchEvent ? "Cancel" : "Cancel (Esc)",
                 str_83: "Reset",
                 str_84: "Save",
-                str_85: hasTouchEvents ? "Settings" : "Settings(*)",
-                str_86: hasTouchEvents ? "Toggle" : "ToggleMode(5)",
-                str_87: hasTouchEvents ? "Zoom" : "ToggleZoom(-+)",
-                str_88: hasTouchEvents ? "Cancel" : "CancelZoom(.)",
+                str_85: hasTouchEvent ? "Settings" : "Settings(*)",
+                str_86: hasTouchEvent ? "Toggle" : "ToggleMode(5)",
+                str_87: hasTouchEvent ? "Zoom" : "ToggleZoom(-+)",
+                str_88: hasTouchEvent ? "Cancel" : "CancelZoom(.)",
                 str_89: "Pause Automatic Page Turning",
                 str_90: "Enable Automatic Page Turning",
                 str_91: "Initialization Settings",
@@ -22408,10 +22546,10 @@ if ("xx" in window) {
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
-                str_104: hasTouchEvents ? "Export" : "ExportURLs(7)",
-                str_105: hasTouchEvents ? "Copy" : "CopyURLs(1)",
-                str_106: hasTouchEvents ? "TabView" : "NewTabView(8)",
-                str_107: hasTouchEvents ? "Download" : "FastDownload(3)",
+                str_104: hasTouchEvent ? "Export" : "ExportURLs(7)",
+                str_105: hasTouchEvent ? "Copy" : "CopyURLs(1)",
+                str_106: hasTouchEvent ? "TabView" : "NewTabView(8)",
+                str_107: hasTouchEvent ? "Download" : "FastDownload(3)",
                 str_108: "※Where the message appears：",
                 str_109: {
                     c: "Center",
@@ -22438,7 +22576,7 @@ if ("xx" in window) {
                 str_125: "🧹 Reset all script settings stored on this site",
                 str_126: "🧹 Reset all saved global settings",
                 str_127: "Right Click：Export URLs(7)",
-                str_128: hasTouchEvents ? "OpenFavor" : "OpenFavor(9)",
+                str_128: hasTouchEvent ? "OpenFavor" : "OpenFavor(9)",
                 str_129: "Close Favor",
                 str_130: "Edit Favor",
                 str_131: "save",
@@ -22452,7 +22590,7 @@ if ("xx" in window) {
                 str_139: "Page Content Auto Insert Images",
                 str_140: "Enable Shadow Gallery",
                 str_141: "Shadow Gallery",
-                str_141: hasTouchEvents ? "Shadow Gallery" : "Shadow Gallery(G)",
+                str_141: hasTouchEvent ? "Shadow Gallery" : "Shadow Gallery(G)",
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
@@ -22465,11 +22603,11 @@ if ("xx" in window) {
                 str_151: "JK Smooth Scroll",
                 str_152: "Viewport",
                 galleryMenu: {
-                    webtoon: hasTouchEvents ? "Webtoon" : "Webtoon (4,+,-)",
-                    rtl: hasTouchEvents ? "Right To Left" : "Right To Left (3,R)",
-                    small: hasTouchEvents ? "Small Image" : "Small Image (2,R)",
-                    single: hasTouchEvents ? "Single Image" : "Single Image (1)",
-                    default: hasTouchEvents ? "Default" : "Default (0,R)",
+                    webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
+                    rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
+                    small: hasTouchEvent ? "Small Image" : "Small Image (2,R)",
+                    single: hasTouchEvent ? "Single Image" : "Single Image (1)",
+                    default: hasTouchEvent ? "Default" : "Default (0,R)",
                 },
                 FancyboxWheel: {
                     z: "zoom",
@@ -24278,7 +24416,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: hasTouchEvents ? displayLanguage.str_107 : displayLanguage.str_107 + ` | [ ${noVideoNum}P ]`,
+                    text: hasTouchEvent ? displayLanguage.str_107 : displayLanguage.str_107 + ` | [ ${noVideoNum}P ]`,
                     cfn: event => {
                         event.preventDefault();
                         fastDownload = true;
@@ -24335,7 +24473,7 @@ if ("xx" in window) {
                     }
                 }];
 
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     buttonObj[1] = {
                         id: "FullPictureLoadCopyURLBtn",
                         className: "FullPictureLoadPageButtonTop",
@@ -24427,7 +24565,7 @@ if ("xx" in window) {
             }
             if (videoSrcArray.length > 0) {
                 debug("\nfn.insertImg()插入圖片最後確認 videoSrcArray", videoSrcArray);
-                if (!hasTouchEvents && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1) {
+                if (!hasTouchEvent && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1) {
                     let dbtn = fragment.querySelector("#FullPictureLoadFastDownloadBtn");
                     dbtn.innerText = dbtn.innerText.replace("P", `P + ${videoSrcArray.length}V`);
                 }
@@ -24448,6 +24586,9 @@ if ("xx" in window) {
             }
             let end = document.createElement("p");
             end.id = "FullPictureLoadEnd";
+            if ("endColor" in siteData) {
+                end.style.color = siteData.endColor;
+            }
             end.innerText = `${displayLanguage.str_52}：${noVideoNum}P`;
             fragment.append(end);
             if (srcArr.length > 0 || (srcArr.length >= 0 && videoSrcArray.length > 0)) {
@@ -25278,7 +25419,7 @@ if ("xx" in window) {
             }
         },
         //創建A元素
-        addUrlHtml: (url, selector, pos = 0, text = "點選進入下一話") => {
+        addUrlHtml: (url, selector, pos = 0, text = "點選進入下一話", css = 0) => {
             let _pos;
             switch (pos) {
                 case 0:
@@ -25294,8 +25435,22 @@ if ("xx" in window) {
                     _pos = "afterbegin"; //在元素裡面，第一個子元素之前。
                     break;
             }
-            let html = `<div style="padding: 20px 0; text-align: center;"><a href="${url}"style="font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
+            let html = `<div class="addUrl" style="padding: 20px 0; text-align: center;"><a href="${url}"style="font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
             fn.ge(selector).insertAdjacentHTML(_pos, html);
+            switch (css) {
+                case 1:
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:rgb(137 5 188);border:solid #bbb;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
+                    break;
+                case 2:
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(50 50 50);background-color:rgb(200 200 200);border-radius:0.25rem;padding:.5rem 2rem}");
+                    break;
+                case 3:
+                    fn.css(".addUrl>a{text-decoration:none;color:#6c757d;background-color:#fff;border:solid #6c757d;border-radius:0.25rem;padding:.5rem 2rem;transition:background-color .2s,color .2s;&:hover{color:#fff;background-color:#6c757d}}");
+                    break;
+                case 4:
+                    fn.css(".addUrl>a{text-decoration:none;color:#003366;background-color:#fff;border:solid #6c757d;border-radius:0.25rem;padding:.5rem 2rem}");
+                    break;
+            }
         },
         dataURLtoBlobURL: dataurl => {
             let arr = dataurl.split(","),
@@ -25640,7 +25795,7 @@ if ("xx" in window) {
             }
             let gallery = fn.gae("[data-fancybox]");
             let FancyboxOptions;
-            if (hasTouchEvents) {
+            if (hasTouchEvent) {
                 FancyboxOptions = {
                     Hash: false,
                     idle: false,
@@ -26088,7 +26243,7 @@ if ("xx" in window) {
                     let blob = data.response;
                     //debug("GM blob", blob);
                     //XBrowser Blob的type是""
-                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024 || hasTouchEvents && blob.type == "" && blob.size > 1024) {
+                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024 || hasTouchEvent && blob.type == "" && blob.size > 1024) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
@@ -26332,7 +26487,7 @@ if ("xx" in window) {
                     promiseBlobArray.push(promiseBlob);
                 }
             }
-            if (videoSrcArray.length > 0 && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1 && !hasTouchEvents) {
+            if (videoSrcArray.length > 0 && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1 && !hasTouchEvent) {
                 const padStart = String(videosNum).length;
                 loopMsg = setInterval(() => {
                     fn.showMsg("Video Downloading...", 0);
@@ -26386,7 +26541,7 @@ if ("xx" in window) {
                         let blobData = blobDataArray[i].blob;
                         let type = blobData.type;
                         try {
-                            if (/octet-stream/.test(type) || hasTouchEvents && type === "") {
+                            if (/octet-stream/.test(type) || hasTouchEvent && type === "") {
                                 let url = URL.createObjectURL(blobData);
                                 let check = await fn.checkImgStatus(url, 0);
                                 URL.revokeObjectURL(url);
@@ -26705,7 +26860,7 @@ if ("xx" in window) {
                 column = 6;
             } else {
                 column = 4;
-                hasTouchEvents ? width = "24%" : width = "24.4%";
+                hasTouchEvent ? width = "24%" : width = "24.4%";
             }
             let imgBox = document.createElement("div");
             imgBox.id = "FullPictureLoadImgBox";
@@ -27004,7 +27159,7 @@ if ("xx" in window) {
             `);
 
             newWindow.fn = fn;
-            newWindow.hasTouchEvents = hasTouchEvents;
+            newWindow.hasTouchEvent = hasTouchEvent;
             newWindow.config = config;
             newWindow.lightGallery = newTabViewLightGallery
             newWindow.totalNumberOfElements = 0;
@@ -27031,11 +27186,11 @@ body {
     font-family: Arial, sans-serif;
     font-size: 14px;
     color: #000000;
-    width: ${hasTouchEvents ? "102px" : "132px"};
+    width: ${hasTouchEvent ? "102px" : "132px"};
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: ${hasTouchEvents ? "0px" : "-138px"};
+    left: ${hasTouchEvent ? "0px" : "-138px"};
     bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -27046,7 +27201,7 @@ body {
     }
 }
 .FixedMenuitem {
-    width: ${hasTouchEvents ? "90px" : "120px"};
+    width: ${hasTouchEvent ? "90px" : "120px"};
     height: 24px;
     line-height: 24px;
     overflow: hidden;
@@ -27133,7 +27288,7 @@ img.small {
                 textContent: JqueryJS + FancyboxV5JS + `
 var FancyboxOptions = {};
 
-if (hasTouchEvents) {
+if (hasTouchEvent) {
     FancyboxOptions = {
         Hash: false,
         idle: false,
@@ -27339,7 +27494,7 @@ function addFixedMenu() {
 }
 addFixedMenu();
 
-if (hasTouchEvents) {
+if (hasTouchEvent) {
     let menu = document.querySelector("#FixedMenu");
     menu.style.display = "none";
     let lastScrollTop = 0;
@@ -27559,14 +27714,14 @@ function aspectRatio() {
             img.style.maxWidth = "98vw";
         }
     });
-    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvents) {
+    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvent) {
         imgs.forEach(e => (e.style.border = ""));
         imgs[imgViewIndex].style.border = "solid #32a1ce";
         setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
     }
 }
 
-if (hasTouchEvents) {
+if (hasTouchEvent) {
     window.addEventListener("deviceorientation", () => {
         aspectRatio();
     });
@@ -27757,7 +27912,7 @@ if (config.ViewMode == 1) {
             return createIframeGallery();
         }
 
-        if (hasTouchEvents || isOpenGallery || isOpenOptionsUI) return;
+        if (hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -28624,7 +28779,7 @@ img.small {
     //創建框架畫廊
     const createIframeGallery = async () => {
 
-        if (hasTouchEvents || isOpenGallery || isOpenOptionsUI) return;
+        if (hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -29664,7 +29819,7 @@ img.small {
             eventMenu.style.right = "64px";
         };
 
-        if (hasTouchEvents) {
+        if (hasTouchEvent) {
             img.addEventListener("touchstart", downEvent, {
                 passive: false,
                 capture: true
@@ -30267,7 +30422,7 @@ img.small {
             ge("#viewModeDIV", main).style.display = "none";
             ge("#ColumnDIV", main).style.display = "none";
         }
-        if (hasTouchEvents) {
+        if (hasTouchEvent) {
             ge("#ShowFixedMenuDIV", main).style.display = "none";
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
@@ -30298,14 +30453,14 @@ img.small {
             ge("#ComicDIV", main).style.display = "flex";
         }
         let autoDownload = siteData.autoDownload;
-        if (hasTouchEvents && showOptions || !autoDownload && showOptions) {
+        if (hasTouchEvent && showOptions || !autoDownload && showOptions) {
             fn.gae("#AutoDownloadDIV,#CountdownDIV", main).forEach(e => (e.style.display = "none"));
         }
-        if (!hasTouchEvents && showOptions || (hasTouchEvents && showOptions && !siteData.next)) {
+        if (!hasTouchEvent && showOptions || (hasTouchEvent && showOptions && !siteData.next)) {
             ge("#DoubleDIV", main).style.display = "none";
         }
         let downloadVideo = siteData.downloadVideo;
-        if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
+        if (!!downloadVideo && downloadVideo === true && !hasTouchEvent) {
             ge("#CustomDownloadVideoDIV", main).style.display = "flex";
             ge("#CustomDownloadVideo", main).checked = FullPictureLoadCustomDownloadVideo == 1 ? true : false;
         }
@@ -30347,7 +30502,7 @@ img.small {
             if (siteData.category != "lazyLoad" && ("capture" in siteData) || isString(siteData.imgs) && !isArray(siteData.insertImg)) {
                 ge("#ShowEye", main).checked == true ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
             }
-            if (!!downloadVideo && downloadVideo === true && !hasTouchEvents) {
+            if (!!downloadVideo && downloadVideo === true && !hasTouchEvent) {
                 ge("#CustomDownloadVideo", main).checked == true ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
             }
             let jsonStr = JSON.stringify(options);
@@ -31471,7 +31626,7 @@ a[data-fancybox]:hover {
                     }
                 }
             };
-            if (hasTouchEvents && !!siteData.next && options.doubleTouchNext == 1) {
+            if (hasTouchEvent && !!siteData.next && options.doubleTouchNext == 1) {
                 document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
@@ -31673,7 +31828,7 @@ a[data-fancybox]:hover {
         debug("\n列出未分類規則", noneData);
     }
 
-    if (!hasTouchEvents && showOptions && isArray(siteData.insertImg)) {
+    if (!hasTouchEvent && showOptions && isArray(siteData.insertImg)) {
         _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + displayLanguage.str_121 : "✔️ " + displayLanguage.str_121, () => {
             TurnOffImageNavigationShortcutKeys == 0 ? _GM_setValue("TurnOffImageNavigationShortcutKeys", 1) : _GM_setValue("TurnOffImageNavigationShortcutKeys", 0);
             location.reload();
@@ -31735,7 +31890,7 @@ a[data-fancybox]:hover {
         });
     }
 
-    if (hasTouchEvents && "insertImg" in siteData) {
+    if (hasTouchEvent && "insertImg" in siteData) {
         let timeId;
         const touchstartCB = event => {
             //console.log(event);
@@ -31992,7 +32147,7 @@ html,body {
             let ul = ge("#FavorUl", shadow);
             if (ul) {
                 ul.style.gridTemplateColumns = `${fn.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
-                if (hasTouchEvents) {
+                if (hasTouchEvent) {
                     if (verticalScreen) {
                         ul.style.width = "calc(100% - 5px)";
                     } else {
@@ -32001,7 +32156,7 @@ html,body {
                 }
             }
             let edit = ge("#editFavorDiv", shadow);
-            if (edit && hasTouchEvents) {
+            if (edit && hasTouchEvent) {
                 if (verticalScreen) {
                     edit.style.width = "calc(100% - 18px)";
                 } else {
@@ -32020,7 +32175,7 @@ html,body {
             let favorData = _GM_getValue("favorData", defaultFavor);
             let editFavorDiv = document.createElement("div");
             editFavorDiv.id = "editFavorDiv";
-            if (hasTouchEvents) {
+            if (hasTouchEvent) {
                 const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
                 if (verticalScreen) {
                     editFavorDiv.style.width = "calc(100% - 18px)";
@@ -32070,7 +32225,7 @@ html,body {
             let FavorUl = document.createElement("ul");
             FavorUl.id = "FavorUl";
             FavorUl.style.gridTemplateColumns = `${fn.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
-            if (hasTouchEvents) {
+            if (hasTouchEvent) {
                 const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
                 if (verticalScreen) {
                     FavorUl.style.width = "calc(100% - 5px)";
@@ -32139,7 +32294,7 @@ html,body {
 
     if (!siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
         if (siteData.key != 0) {
-            if (!hasTouchEvents) {
+            if (!hasTouchEvent) {
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
             }
             document.addEventListener("keydown", addKeyEvent);
