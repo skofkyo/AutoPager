@@ -121,6 +121,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
     ],
+    endColor: "white",//更改頁面容器底部統計圖片數量文字顏色
     insertImgAF: () => {
         //插入圖片後要執行的代碼
         code;
@@ -200,6 +201,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     insertImg: [
         ["", 1, ""], 2, time
     ],
+    endColor: "white",
     insertImgAF: () => {
         code
     },
@@ -382,7 +384,7 @@ fn.gae(selector, doc)
     <br>
 <pre>
 //判斷當前是否為觸控裝置
-hasTouchEvents
+hasTouchEvent
 //判斷是否為字串返回布林值
 isString(obj);
 //判斷是否為數字返回布林值
