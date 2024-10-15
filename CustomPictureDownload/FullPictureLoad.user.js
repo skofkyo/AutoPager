@@ -5460,8 +5460,8 @@ a:has(>div>div>img),
             let ps = fn.gae("#showtext-hspecial>p");
             if (ps.length > 0) {
                 ps.forEach(p => {
-                    let a = fn.ge("img", p);
-                    if (!a) {
+                    let img = fn.ge("img", p);
+                    if (!img) {
                         tempEles.push(p.cloneNode(true));
                     }
                 });
