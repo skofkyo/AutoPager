@@ -141,7 +141,8 @@ https://*wnacg.com/photos-slist-aid-*.html
     },
     observerURL: true, //觀察URL變化重新取得標題字串和nextLink，用於SPA網頁
     prev: "//a[text()='上一章']", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
-    css: "css", //插入自訂樣式，基本上就是用來隱藏廣告用的。
+    css: "css", //自訂樣式。
+    hide: "selector", //用CSS隱藏元素
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
     autoClick: ["元素", 1000], //元素,延遲毫秒時間(預設1000)
     observerClick: "元素", //使用Intersection Observer API，元素進入可視範圍內才點擊
@@ -172,6 +173,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         return false;
     },
     reg: () => fn.checkUrl({
+        t: "",
         h: "",
         p: "",
         s: "",
@@ -223,6 +225,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     prev: "",
     observerURL: true,
     css: "",
+    hide: "",
     autoClick: "",
     autoClick: ["", time],
     observerClick: "",
@@ -406,12 +409,18 @@ isEle(obj);
 </pre>
 <pre>
 //匹配網址和頁面元素，用於規則reg是函式的寫法
+//t = document.title 匹配標題部分字串，格式可為字串或字串的陣列
 //h = hosts 匹配網站的域名，格式可為字串、正則、字串或正則的陣列
 //p = pathname 匹配網址的路徑，格式可為字串或正則
 //s = search 匹配網址的搜尋，格式可為字串或正則
 //e = elements 匹配網頁的元素選擇器，格式可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
 //規則屬性imgs和customTitle如為字串，會自動判斷頁面元素
 const object = {
+    //String or Array [String]
+    t: [
+        "4KHD",
+        "包子"
+    ],
     //String or RegExp or Array [String or RegExp]
     h: [
         "example.com",
@@ -1148,7 +1157,7 @@ imgs: async () => {
 <p>PS：當看日系漫畫使用右至左雙頁模式，有時會遇到雙頁跨頁大圖沒有剛好左右並成一張，可透過WASD方向鍵或者點擊圖片(可以關閉Fancybox)，將導覽索引(藍色邊框)移至之前的圖片後按Delete鍵隱藏已經看過的頁數，這樣後面的圖片會往前移一個位置，達到手動調整使雙頁跨頁大圖看起來剛好並成一張。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/10/10 16:23</p>
+<p>2024/10/15 23:23</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
@@ -2586,18 +2595,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.sankakucomplex.com/">Sankaku Complex</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://influencersgonewild.com/">Influencers GoneWild</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://tuyetnhan.com/">Ảnh đẹp</a>
                 </td>
                 <td></td>
@@ -2631,14 +2628,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://tangmoc.com/blog/topic/164AF033943823F/hotgirl-model">TangMoc</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://gaitrung.lovestoblog.com/">Girls Collection 18+!</a>
-                </td>
-                <td>
-                    <a href="https://aigirl.lovestoblog.com/">aigirl.lovestoblog.com</a>， <a href="https://gainhat.lovestoblog.com/">gainhat.lovestoblog.com</a>， <a href="https://hotpic.lovestoblog.com/">hotpic.lovestoblog.com</a>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -2796,24 +2785,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://findhername.net/">Find Her Name</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://thotbook.co/">ThotBook</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.famousinternetgirls.com/">Famous Internet Girls</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.tnapics.com/">TNApics</a>
                 </td>
                 <td></td>
@@ -2853,12 +2824,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://fapopedia.net/updates/">Fapopedia</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://fapfappy.com/">fapfappy</a>
                 </td>
                 <td></td>
             </tr>
@@ -2932,31 +2897,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.beautycosalbum.com/">GR Beauty COS Album</a>
+                    <a href="https://www.sexyasianmodelpics.com/">Sexy Asian Model Pics</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.jimmysonline.com/">JimmysOnline.com</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://quatvn.men/phim-sex-anh-sex">Quatvn</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://quatvn.baby/">Quatvn2</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://eroxxx.co/">EroXXX</a>
                 </td>
                 <td></td>
             </tr>
@@ -3951,14 +3898,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://www.ikmt.net/">爱看美图网</a>
-                </td>
-                <td>
-                    <a href="http://m.ikmt.net/">m.ikmt.net</a>，很久沒新圖了
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.taotucd.com/">Taotuxp.com</a>
                 </td>
                 <td>很久沒新圖了</td>
@@ -4174,12 +4113,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.top888.com/">粉色家园</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://ios.zzgo810.top/">哔咔庇护所v2</a>
                 </td>
                 <td></td>
@@ -4214,22 +4147,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>坏哥哥</td>
                 <td>
                     <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/yjdm.txt">239個域名</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.momotk.com/">MOMO图库</a>
-                </td>
-                <td>
-                    <a href="https://www.rb1.es/momotk/">跳轉頁</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.wc1.es/">魅影画廊</a>
-                </td>
-                <td>
-                    <a href="https://wc2.es/myhl">跳轉頁</a>
                 </td>
             </tr>
             <tr>
@@ -5200,14 +5117,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.okcomic.net/">ok漫画網</a>
-                </td>
-                <td>
-                    <a href="https://m.okcomic.net/">m.okcomic.net</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://toptoon04.com/">顶通漫画</a>
                 </td>
                 <td>
@@ -5223,12 +5132,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://semanji.com/">色漫集</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://155comic.com/">155漫画</a>
                 </td>
                 <td></td>
             </tr>
@@ -5263,12 +5166,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.55comic.com/">污污漫畫</a>
                 </td>
                 <td>需要自動滾動元素，動態捕獲canvas轉為BlobURL。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://tranh18.com/">Tranh 18</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
