@@ -155,6 +155,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前域名，"url"參照頁為當前文檔網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
     infiniteScroll: true, //漫畫分類標記有無限滾動模式
     gallery: 1, //影子畫廊調用Iframe畫廊
+    downloadVideo: true, //下載變量videoSrcArray裡的影片直連網址
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
@@ -238,6 +239,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     referer: "src",
     infiniteScroll: true,
     gallery: 1,
+    downloadVideo: true,
     category: ""
 }, {
     name: "規則3",
@@ -1216,7 +1218,7 @@ background-color,#BDE87C
 AVJB,https://avjb.com/albums/
 Xasiat,https://www.xasiat.com/albums/
 HotAsiaGirl,https://hotgirl.asia/
-JJGirls,https://jjgirls.com/
+エロ画像まとめ,https://geinou-nude.com/
 background-color,#7C87E8
 六色美图,https://www.06se.com/
 XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
@@ -3699,6 +3701,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://javcup.com/">JavCup</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://jjgirls.com/">JJGirls</a>
                 </td>
                 <td></td>
@@ -5541,12 +5549,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.k886.net/">看漫畫</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.2nunu.com/">奴奴漫畫</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
