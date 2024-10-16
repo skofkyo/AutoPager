@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.44
+// @version            2.8.45
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -7073,14 +7073,17 @@ a:has(>div>div>img),
         host: ["www.wai76.com", "www.wai77.com"],
         reg: /^https?:\/\/www\.wai\d{2}\.com\/[^\/]+\//,
         include: ".entry-content div[data-src]",
-        imgs: async () => {
-            let divDataSrcs = await fn.getImgA(".entry-content div[data-src]", ".page-links a");
-            thumbnailSrcArray = divDataSrcs.map(src => {
-                let arr = src.split("/");
-                arr[arr.length - 1] = "thumbnail/s" + arr[arr.length - 1];
-                return arr.join("/");
+        imgs: () => {
+            let links = [fn.url];
+            if (fn.ge(".page-links a")) {
+                links = fn.gau(".page-links a");
+                links.unshift(fn.url);
+                links = [...new Set(links)];
+            }
+            return fn.getEle(links, ".entry-content div[data-src]").then(divs => {
+                thumbnailSrcArray = divs.map(e => fn.ge("img", e)?.src);
+                return divs;
             });
-            return divDataSrcs;
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -10289,9 +10292,7 @@ a:has(>div>div>img),
                 ".movies-images li"
             ]
         }),
-        init: () => {
-            fn.createImgBox("#play-card", 2);
-        },
+        init: () => fn.createImgBox("#play-card", 2),
         imgs: () => {
             let videoSrc = fn.ge("#video>source")?.src;
             videoSrcArray[0] = videoSrc;
@@ -10323,6 +10324,48 @@ a:has(>div>div>img),
         },
         customTitle: "h1.title",
         downloadVideo: true,
+        category: "nsfw2"
+    }, {
+        name: "JavCup",
+        reg: () => fn.checkUrl({
+            h: "javcup.com",
+            p: "/photo/"
+        }),
+        init: () => fn.createImgBox(".content>.body", 2),
+        imgs: "#photos>li",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: "h1.title",
+        category: "nsfw2"
+    }, {
+        name: "JavCup",
+        reg: () => fn.checkUrl({
+            h: "javcup.com",
+            p: "/model/"
+        }),
+        init: () => fn.createImgBox(".content>.body", 2),
+        imgs: () => {
+            let links = [...new Set(fn.gau("a[href*='type=photos']"))];
+            let url = links.at(0);
+            let max = 1;
+            if (links.length > 0) {
+                [max] = links.at(-1).match(/\d+$/);
+                links = fn.arr(max, (v, i) => url + "&page=" + (i + 1));
+                return fn.getEle(links, "#photos>ul").then(uls => {
+                    let links = uls.map(ul => fn.gau(".photo-grid-item a", ul));
+                    links = links.flat();
+                    return fn.getImgA("#photos>li", links, 1);
+                });
+            } else {
+                links = fn.gau("#photos .photo-grid-item a");
+                return fn.getImgA("#photos>li", links, 1);
+            }
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: "h1 span",
         category: "nsfw2"
     }, {
         name: "JJGirls",
@@ -21698,6 +21741,14 @@ if ("xx" in window) {
     const isFn = fn => ["[object Function]", "[object AsyncFunction]"].some(e => e === Object.prototype.toString.call(fn));
     const isPromise = p => Object.prototype.toString.call(p) === "[object Promise]";
     const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e)) || Object.prototype.toString.call(e) === "[object DocumentFragment]";
+    const isURL = (url) => {
+        try {
+            new URL(url);
+            return true;
+        } catch {
+            return false;
+        }
+    };
     const _GM_xmlhttpRequest = (() => isFn(GM_xmlhttpRequest) ? GM_xmlhttpRequest : GM.xmlHttpRequest)();
     const _GM_openInTab = (() => isFn(GM_openInTab) ? GM_openInTab : GM.openInTab)();
     const _GM_getValue = (() => isFn(GM_getValue) ? GM_getValue : GM.getValue)();
@@ -22884,26 +22935,28 @@ if ("xx" in window) {
                 } else if (mode == 1) {
                     let res = await html(links[i]);
                     resArr.push(res);
-                    let dom = fn.doc(res);
-                    debug(`\nfn.getImgA()單線程模式 DOM\n${links[i].href}`, dom);
-                    let imgs = fn.gae(elementSelector, dom, dom);
-                    let imgHtml = "";
-                    for (let p = 0; p < imgs.length; p++) {
-                        let imgSrc;
-                        let check = fn.checkImgSrc(imgs[p], rText);
-                        if (check.ok) {
-                            imgSrc = check.src;
-                            //let blob = await GM_XHR_Download(imgSrc);
-                            //let objectURL = await URL.createObjectURL(blob.blob);
-                            //imgSrc = objectURL;
-                            debug("\nfn.getImgA() 單線程模式imgSrc", imgSrc);
-                        } else {
-                            console.error("\nfn.getImgA() 單線程模式出錯", imgs[p]);
-                            continue;
+                    if (isString(link)) {
+                        let dom = fn.doc(res);
+                        debug(`\nfn.getImgA()單線程模式 DOM\n${links[i].href}`, dom);
+                        let imgs = fn.gae(elementSelector, dom, dom);
+                        let imgHtml = "";
+                        for (let p = 0; p < imgs.length; p++) {
+                            let imgSrc;
+                            let check = fn.checkImgSrc(imgs[p], rText);
+                            if (check.ok) {
+                                imgSrc = check.src;
+                                //let blob = await GM_XHR_Download(imgSrc);
+                                //let objectURL = await URL.createObjectURL(blob.blob);
+                                //imgSrc = objectURL;
+                                debug("\nfn.getImgA() 單線程模式imgSrc", imgSrc);
+                            } else {
+                                console.error("\nfn.getImgA() 單線程模式出錯", imgs[p]);
+                                continue;
+                            }
+                            imgHtml += `<img src="${imgSrc}" style="width: auto; height: auto; max-width: 100%; max-height: unset; display:block; float: unset; opacity: 1; border: none; border-radius: unset; padding: 0; margin: 0 auto; transition: unset; transform: unset;">`;
                         }
-                        imgHtml += `<img src="${imgSrc}" style="width: auto; height: auto; max-width: 100%; max-height: unset; display:block; float: unset; opacity: 1; border: none; border-radius: unset; padding: 0; margin: 0 auto; transition: unset; transform: unset;">`;
+                        linkEles[i].outerHTML = imgHtml;
                     }
-                    linkEles[i].outerHTML = imgHtml;
                 } else if (mode == 2) {
                     let res = await html(links[i]);
                     await fn.delay(200, 0);
@@ -22956,44 +23009,54 @@ if ("xx" in window) {
         checkImgSrc: (ele, rText = null) => {
             let imgSrc;
             let check = fn.checkDataset(ele);
+            //補全網址
+            const complement = (src) => {
+                if (src.startsWith("//")) {
+                    src = location.protocol + src;
+                }
+                if (src.startsWith("data:")) {
+                    src = fn.dataURLtoBlobURL(src);
+                }
+                if (/^\/[^\/]+/.test(src)) {
+                    src = location.origin + src;
+                }
+                if (!/^(https?:|blob:|data:)/.test(src) && /^\w+/i.test(src)) {
+                    src = location.origin + "/" + src;
+                }
+                if (isArray(rText) && rText.length == 2) {
+                    src = src.replace(rText[0], rText[1]);
+                }
+                return src;
+            };
             if (isEle(ele) && ["IMG", "DIV", "A", "SPAN", "LI", "FIGURE"].some(n => n === ele.tagName) && check.ok) {
-                imgSrc = check.src;
-                if (/^\/\//.test(imgSrc)) imgSrc = location.protocol + imgSrc;
-                if (/^\/\w+/.test(imgSrc)) imgSrc = location.origin + imgSrc;
-                if (!/^(http|blob)/.test(imgSrc) && !/^data/.test(imgSrc) && /^\w+/.test(imgSrc)) imgSrc = location.origin + "/" + imgSrc;
-                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
-                return {
-                    ok: true,
-                    src: imgSrc
-                };
+                imgSrc = complement(check.src);
             } else if (isEle(ele) && ["IMG", "AMP-IMG"].some(n => n === ele.tagName)) {
-                if (ele.tagName == "IMG") imgSrc = ele.src;
-                if (ele.tagName == "AMP-IMG") imgSrc = ele.getAttribute("src");
-                if (/^\/\//.test(imgSrc)) imgSrc = location.protocol + imgSrc;
-                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
-                return {
-                    ok: true,
-                    src: imgSrc
-                };
+                if (ele.tagName == "IMG") {
+                    imgSrc = ele.src;
+                }
+                if (ele.tagName == "AMP-IMG") {
+                    imgSrc = ele.getAttribute("src");
+                }
+                imgSrc = complement(imgSrc);
             } else if (["A", "LINK"].some(n => n === ele.tagName)) {
                 imgSrc = ele.href;
-                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
-                return {
-                    ok: true,
-                    src: imgSrc
-                };
-            } else if (isString(ele) && /^(http|blob|\/\/)/.test(ele)) {
+                if (isArray(rText) && rText.length == 2) {
+                    imgSrc = imgSrc.replace(rText[0], rText[1]);
+                }
+            } else if (isString(ele) && /^(https?:|blob:|data:|\/|\w+)/i.test(ele)) {
                 imgSrc = ele;
-                if (/^\/\//.test(ele)) imgSrc = location.protocol + imgSrc;
-                if (isArray(rText) && rText.length == 2) imgSrc = imgSrc.replace(rText[0], rText[1]);
+                imgSrc = complement(imgSrc);
+            }
+            if (isURL(imgSrc)) {
                 return {
                     ok: true,
                     src: imgSrc
-                };
+                }
+            } else {
+                return {
+                    ok: false
+                }
             }
-            return {
-                ok: false
-            };
         },
         //確認元素有沒有把圖片原始網址放在src以外的屬性
         checkDataset: ele => {
@@ -23043,15 +23106,17 @@ if ("xx" in window) {
                 if (backgroundImage !== "") {
                     let [, imgSrc] = backgroundImage.split('"');
                     imgSrc = imgSrc?.trim();
-                    return {
-                        ok: true,
-                        src: imgSrc
+                    if (!!imgSrc) {
+                        return {
+                            ok: true,
+                            src: imgSrc
+                        }
                     }
                 }
             }
             return {
                 ok: false
-            };
+            }
         },
         //確認加了CDN的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址
         checkImageCDN: srcArr => {
@@ -26237,18 +26302,10 @@ if ("xx" in window) {
     };
 
     const checkURL = (obj) => {
-        const check = (url) => {
-            try {
-                new URL(url);
-                return true;
-            } catch {
-                return false;
-            }
-        };
         if (isArray(obj)) {
-            return obj.filter(url => check(url));
+            return obj.filter(url => isURL(url));
         } else if (isString(obj)) {
-            if (check(obj)) {
+            if (isURL(obj)) {
                 return obj;
             }
         }
@@ -26294,7 +26351,6 @@ if ("xx" in window) {
         }
         isDownloading = true;
         let imgsSrcArr = await getImgs(selector);
-        imgsSrcArr = checkURL(imgsSrcArr);
         videoSrcArray = checkURL(videoSrcArray);
         if (imgsSrcArr.length > 0 && titleText != null && titleText != "" || videoSrcArray.length > 0) {
             fn.showMsg(displayLanguage.str_55, 0);
