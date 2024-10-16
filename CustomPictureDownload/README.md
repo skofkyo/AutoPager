@@ -408,6 +408,8 @@ isPromise(obj);
 isFn(obj);
 //判斷是否為DOM元素返回布林值
 isEle(obj);
+//判斷字串是否為完整的網址
+isURL(obj);
 </pre>
 <pre>
 //匹配網址和頁面元素，用於規則reg是函式的寫法
@@ -1024,7 +1026,7 @@ fn.getImgIframe(String, Number, Number, String or  null, Number, Number)
 //xhr抓取圖片元素，返回圖片網址的陣列
 //mode
 //0多線程(預設)
-//1單線程
+//1單線程，選擇器是字串會把當前頁面的A元素替換成IMG
 //2單線程，類翻頁模式
 //數字大於等於100，請求間隔模式單位毫秒。
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
