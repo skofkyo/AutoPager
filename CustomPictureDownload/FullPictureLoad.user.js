@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.42
+// @version            2.8.43
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3944,6 +3944,7 @@ a:has(>div>div>img),
         insertImg: ["//li[img[@id='bigImg']]", 2],
         customTitle: "h1",
         css: ".workShow li img{max-width:100%!important}",
+        referer: "url",
         category: "nsfw1"
     }, {
         name: "秀色女神M",
@@ -3960,6 +3961,7 @@ a:has(>div>div>img),
         ],
         customTitle: "h1>a",
         css: "#arcbox img{max-width:100%!important;margin:0px!important;min-height:50px!important;min-width:50px!important}",
+        referer: "url",
         category: "nsfw1"
     }, {
         name: "秀色女神news",
@@ -3972,6 +3974,7 @@ a:has(>div>div>img),
         ],
         customTitle: "h1",
         css: "#arcbox img{max-width:100%!important;margin:auto!important;min-height:50px!important;min-width:50px!important}",
+        referer: "url",
         category: "nsfw1"
     }, {
         name: "优图坊",
@@ -10277,6 +10280,51 @@ a:has(>div>div>img),
         fetch: 1,
         category: "nsfw2"
     }, {
+        name: "JavCup",
+        reg: () => fn.checkUrl({
+            h: "javcup.com",
+            p: "/movie/",
+            e: [
+                "#video[poster]",
+                ".movies-images li"
+            ]
+        }),
+        init: () => {
+            fn.createImgBox("#play-card", 2);
+        },
+        imgs: () => {
+            let videoSrc = fn.attr("#video>source", "src");
+            videoSrcArray[0] = videoSrc;
+            let poster = fn.attr("#video[poster]", "poster");
+            let srcs = fn.getImgSrcArr(".movies-images li");
+            srcs.unshift(poster);
+            return srcs;
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: "h1.title",
+        downloadVideo: true,
+        category: "nsfw2"
+    }, {
+        name: "JavCup",
+        reg: () => fn.checkUrl({
+            h: "javcup.com",
+            p: "/video/",
+            e: [
+                "#video[poster]"
+            ]
+        }),
+        imgs: () => {
+            let videoSrc = fn.attr("#video>source", "src");
+            videoSrcArray[0] = videoSrc;
+            let poster = fn.attr("#video[poster]", "poster");
+            return [poster];
+        },
+        customTitle: "h1.title",
+        downloadVideo: true,
+        category: "nsfw2"
+    }, {
         name: "JJGirls",
         reg: () => fn.checkUrl({
             h: "jjgirls.com",
@@ -11579,7 +11627,7 @@ a:has(>div>div>img),
             });
         },
         fetch: 1,
-        hide: ".hidden-lg:not(.panel)[style*='z-index']",
+        hide: ".hidden-lg:not(.panel)[style*='z-index'],div:has(>.photo_center_div)",
         observerClick: ["#chk_cover", "#chk_guide"],
         category: "hcomic"
     }, {
@@ -14190,11 +14238,10 @@ a:has(>div>div>img),
                 }
             };
             let counter = 0;
-            let max = Image_List.length;
             let srcArr = [];
-            for (let i = 0; i < max; i++) {
-                let ext = getExtension(Image_List[i].extension.toLowerCase());
-                let src = IMAGE_SERVER[image_server_id][counter] + IMAGE_FOLDER + Image_List[i].sort + "." + ext;
+            for (let Image of Image_List) {
+                let ext = getExtension(Image.extension.toLowerCase());
+                let src = IMAGE_SERVER[image_server_id][counter] + IMAGE_FOLDER + Image.sort + "." + ext;
                 srcArr.push(src);
                 counter += 1;
                 if (counter >= Object.keys(IMAGE_SERVER[image_server_id]).length) {
@@ -14257,11 +14304,10 @@ a:has(>div>div>img),
                 }
             };
             let counter = 0;
-            let max = Image_List.length;
             let srcArr = [];
-            for (let i = 0; i < max; i++) {
-                let ext = getExtension(Image_List[i].extension.toLowerCase());
-                let src = IMAGE_SERVER[image_server_id][counter] + IMAGE_FOLDER + Image_List[i].sort + "." + ext;
+            for (let Image of Image_List) {
+                let ext = getExtension(Image.extension.toLowerCase());
+                let src = IMAGE_SERVER[image_server_id][counter] + IMAGE_FOLDER + Image.sort + "." + ext;
                 srcArr.push(src);
                 counter += 1;
                 if (counter >= Object.keys(IMAGE_SERVER[image_server_id]).length) {
@@ -15835,25 +15881,30 @@ a:has(>div>div>img),
         },
         autoDownload: [0],
         next: () => {
+            let nextIndex = null;
             let buttons = fn.gae("#ChapterModal [ng-repeat]>button");
-            let chapters = buttons.length;
             if (fn.lp.includes("-index-")) {
-                let [, s] = location.pathname.match(/-index-(\d)/);
-                chapters = buttons.filter(e => e.innerText.startsWith("S" + s)).length;
+                let [, s] = fn.lp.match(/-index-(\d)/);
+                buttons = buttons.filter(e => e.innerText.startsWith("S" + s));
             }
             if (buttons.some(e => e.innerText.startsWith("S1 ")) && !fn.lp.includes("-index-")) {
-                chapters = buttons.filter(e => e.innerText.startsWith("S1 ")).length;
+                buttons = buttons.filter(e => e.innerText.startsWith("S1 "));
             }
-            if (buttons.some(e => e.innerText.endsWith("Chapter 0"))) {
-                chapters = chapters - 1;
-            }
+            let buttonTexts = buttons.map(b => b.innerText);
+            let chapterIndexs = buttonTexts.map(t => t.match(/[\d\.]+$/)[0]).reverse();
             let [, cNum] = fn.lp.match(/-chapter-(\d+)/);
-            cNum = Number(cNum);
-            if (cNum < chapters) {
-                return fn.lp.replace(/(-chapter-)(\d+)/, `$1${cNum + 1}`);
-            } else {
-                return null;
+            for (let [i, v] of chapterIndexs.entries()) {
+                if (cNum == v) {
+                    if (chapterIndexs[i + 1] !== undefined) {
+                        nextIndex = chapterIndexs[i + 1];
+                    }
+                    break;
+                }
             }
+            if (nextIndex !== null) {
+                return fn.lp.replace(/(-chapter-)(\d+)/, `$1${nextIndex}`);
+            }
+            return nextIndex;
         },
         prev: 1,
         customTitle: () => fn.title(" Page 1"),
@@ -17489,12 +17540,12 @@ if ("xx" in window) {
             let chapterId = url.match(/chapter\/(\d+)\/images/)[1];
             let chapters = json.data.chaptersByComicId;
             let nextUrl;
-            for (let i = 0; i < chapters.length; i++) {
-                if (new RegExp(chapterId).test(chapters[i].id)) {
-                    try {
+            for (let [i, chapter] of chapters.entries()) {
+                if (new RegExp(chapterId).test(chapter.id)) {
+                    if (chapters[i + 1] !== undefined) {
                         let nextId = chapters[i + 1].id;
                         nextUrl = siteUrl.replace(new RegExp(`/${chapterId}/`), `/${nextId}/`).replace(/\?page=\d+/, "");
-                    } catch {
+                    } else {
                         nextUrl = null;
                     }
                     break;
@@ -20118,14 +20169,13 @@ if ("xx" in window) {
         preloadNext: true,
         category: "comic"
     }, {
-        name: "艾米漫画/聚合漫画屋/酷看漫画/皮皮漫画",
-        host: ["www.aimimh.com", "www.52hah.com", "www.kukanmanhua.com", "www.pipiman.com"],
+        name: "聚合漫画屋/酷看漫画/去去漫画",
+        host: ["www.52hah.com", "www.kukanmanhua.com", "www.ququmh.com", "www.mh369.com"],
         enable: 0,
         reg: [
-            /^https?:\/\/www\.aimimh\.com\/chapter\/[\d-]+/,
             /^https?:\/\/www\.52hah\.com\/chapter\/\d+/,
             /^https?:\/\/www\.kukanmanhua\.com\/chapter\/\d+/,
-            /^https?:\/\/www\.pipiman\.com\/chapter\/\d+/
+            /^https?:\/\/www\.(ququmh|mh369)\.com\/chapter\/\d+/
         ],
         include: ".comiclist",
         imgs: ".comiclist img",
@@ -20138,16 +20188,15 @@ if ("xx" in window) {
         preloadNext: (nextDoc, obj) => fn.iframeDoc(nextLink, ".comiclist img:not([src*=loading])", 30000).then(nextIframeDoc => fn.picPreload(fn.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
-        name: "艾米漫画M/聚合漫画屋M/酷看漫画M/皮皮漫画M",
-        host: ["www.aimimh.com", "www.52hah.com", "www.kukanmanhua.com", "www.mh369.com"],
+        name: "聚合漫画屋M/酷看漫画M/皮皮漫画M",
+        host: ["www.52hah.com", "www.kukanmanhua.com", "www.ququmh.com", "www.mh369.com"],
         enable: 0,
         reg: [
-            /^https?:\/\/www\.aimimh\.com\/chapter\/[\d-]+/,
             /^https?:\/\/www\.52hah\.com\/chapter\/\d+/,
             /^https?:\/\/www\.kukanmanhua\.com\/chapter\/\d+/,
-            /^https?:\/\/www\.mh369\.com\/chapter\/\d+/
+            /^https?:\/\/www\.(ququmh|mh369)\.com\/chapter\/\d+/
         ],
-        imgs: "#cp_img>img[data-original]",
+        imgs: "#cp_img>img",
         button: [4],
         insertImg: ["#cp_img", 2],
         autoDownload: [0],
@@ -20184,42 +20233,10 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
-        name: "次元/夜神",
-        host: ["cymh.info", "ysmh.info"],
+        name: "最次元/野蛮/优乐漫画",
+        host: ["zcymh.com", "yemancomic.com", "www.beston-test.com"],
         enable: 0,
-        reg: () => !hasTouchEvent && /^https?:\/\/(cymh|ysmh)\.info\/\w+\/\d+\/\d+\.html$/i.test(fn.url),
-        init: async () => fn.getNP("#cp_img img", "//a[text()='下一页']", null, ".fanye"),
-        imgs: "#cp_img img",
-        button: [4],
-        insertImg: ["#cp_img", 2],
-        autoDownload: [0],
-        next: "//li[a[@class='active']]/following-sibling::li[1]/a",
-        prev: "//li[a[@class='active']]/preceding-sibling::li[1]/a",
-        customTitle: () => fn.gt("h1.title") + " - " + fn.gt("a.active"),
-        category: "comic"
-    }, {
-        name: "次元M/夜神M",
-        host: ["cymh.info", "ysmh.info"],
-        enable: 0,
-        reg: () => hasTouchEvent && /^https?:\/\/(cymh|ysmh)\.info\/\w+\/\d+\/\d+\.html$/i.test(fn.url),
-        init: async () => fn.getNP("#cp_img>*", "//a[text()='下一页']", null, ".page"),
-        imgs: "#cp_img img",
-        button: [4],
-        insertImg: ["#cp_img", 2],
-        autoDownload: [0],
-        next: "//a[text()='下一章']",
-        prev: 1,
-        customTitle: async () => {
-            let url = fn.gu(".back>a");
-            let comicName = await fn.fetchDoc(url).then(dom => fn.ge("#bookcase", dom).dataset.name);
-            return comicName + " - " + fn.gt(".h1");
-        },
-        category: "comic"
-    }, {
-        name: "最次元/野蛮/考拉漫画/优乐漫画",
-        host: ["zcymh.com", "yemancomic.com", "cn.colacomic.com", "www.beston-test.com"],
-        enable: 0,
-        reg: /^https?:\/\/(zcymh\.com|yemancomic\.com|cn\.colacomic\.com|www\.beston-test\.com)\/\w+\/\d+\/\d+\.html$/,
+        reg: /^https?:\/\/(zcymh\.com|yemancomic\.com|www\.beston-test\.com)\/\w+\/\d+\/\d+\.html$/,
         imgs: "#img-box img,#imgsec img",
         button: [4],
         insertImg: ["#img-box,#imgsec", 2],
@@ -20574,25 +20591,6 @@ if ("xx" in window) {
         preloadNext: async (nextDoc, obj) => fn.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         css: "#ComicPic{display:block!important;margin: 0 auto !important;}",
         hide: ".c>*:not(.n.zhangjie):not(.p.zhangjie)",
-        category: "comic"
-    }, {
-        name: "奴奴漫畫",
-        host: ["www.2nunu.com"],
-        enable: 0,
-        reg: /^https?:\/\/www\.2nunu\.com\/look-.+\.html/,
-        init: "$(document).unbind();document.onkeydown=null;",
-        imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => {
-            let max = fn.ge("#total", dom).value;
-            let links = fn.arr(max, (v, i) => url.replace(/\d+\.html$/, "") + (i + 1) + ".html");
-            return fn.getImgA("#cpimg", links, 100, null, msg, request);
-        },
-        button: [4],
-        insertImg: ["#showimage", 2],
-        autoDownload: [0],
-        next: "//a[text()='下一章']",
-        prev: "//a[text()='上一章']",
-        customTitle: (dom = document) => dom.title.replace(/（\d+P）.+/i, "").replace("第", " - 第"),
-        preloadNext: async (nextDoc, obj) => fn.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
         category: "comic"
     }, {
         name: "漫画DB",
@@ -20975,8 +20973,8 @@ if ("xx" in window) {
             let testArr = hostArr.map(e => e + firstPic);
             let ok = false;
             let host;
-            for (let i = 0; i < testArr.length; i++) {
-                let obj = await fn.checkImgStatus(testArr[i], msg);
+            for (let [i, test] of testArr.entries()) {
+                let obj = await fn.checkImgStatus(test, msg);
                 console.log(`確認圖片[${i}]`, obj);
                 if (obj.ok) {
                     ok = true;
@@ -21060,28 +21058,6 @@ if ("xx" in window) {
         },
         openInNewTab: ".mdui-col-lg-2>a",
         category: "autoPager"
-    }, {
-        name: "风车漫画",
-        host: ["www.qyy158.com", "m.qyy158.com"],
-        enable: 1,
-        reg: /^https?:\/\/(www|m)\.qyy158\.com\/info\/\d+\/\d+\.html/,
-        imgs: ".chapter-content img,.hide-scrollbars img",
-        button: [4],
-        insertImg: [".chapter-content,.hide-scrollbars", 2],
-        autoDownload: [0],
-        next: "//a[span[text()='下一话']] | //a[p[text()='下一话']]",
-        prev: "//a[span[text()='上一话']] | //a[p[text()='上一话']]",
-        customTitle: () => {
-            if (fn.lh == "www.qyy158.com") {
-                let s = fn.gt(".header-center").split(" > ");
-                return s[1] + " - " + s[2];
-            } else {
-                let data = JSON.parse(localStorage[localStorage.read_book]);
-                return data.articlename + " - " + data.chaptername_read;
-            }
-        },
-        preloadNext: (nextDoc, obj) => fn.picPreload(fn.getImgSrcArr(obj.imgs, nextDoc), nextDoc.title, "next"),
-        category: "comic"
     }, {
         name: "轻之国度",
         host: ["www.lightnovel.us"],
@@ -21283,13 +21259,38 @@ if ("xx" in window) {
         name: "m.4khd.com 自動跳轉",
         host: ["m.4khd.com"],
         reg: /^https?:\/\/m\.4khd\.com\//,
+        reg: () => fn.checkUrl({
+            h: "m.4khd.com",
+            p: /^\/\w+$|^\/link\//i
+        }),
         init: () => {
             if (isFn(_unsafeWindow.redirect)) {
                 _unsafeWindow.redirect = null;
             }
-            fn.css("#divExoLayerWrapper,.exo-ipp,.exo_wrapper,div:has(>.centered-contai),.center-container{display:none!important;}");
-            location.href = fn.gu("//a[text()='GET LINK']|//a[span[text()='GET LINK']]");
+            let get = async (url) => {
+                let res = await fn.xhrHEAD(url);
+                debug(url, res);
+                if (res.status == 200 && res.finalUrl.includes("terabox.com")) {
+                    debug(res.finalUrl);
+                    location.href = res.finalUrl;
+                }
+                if (url == res.finalUrl && res.status == 200) {
+                    fn.xhrDoc(url).then(dom => {
+                        //console.log(dom);
+                        let linkE = fn.ge("//a[text()='GET LINK']|//a[span[text()='GET LINK']]", dom);
+                        if (linkE) {
+                            url = linkE.href;
+                            let host = new URL(url).host;
+                            url = url.replace(host, "m.4khd.com");
+                            get(url);
+                        }
+                    });
+                }
+            };
+            let url = fn.gu("//a[text()='GET LINK']|//a[span[text()='GET LINK']]");
+            get(url);
         },
+        hide: "#divExoLayerWrapper,.exo-ipp,.exo_wrapper,div:has(>.centered-contai),.center-container,.centered-contai",
         category: "none"
     }, {
         name: "4kup.net 自動跳轉",
@@ -24376,8 +24377,10 @@ if ("xx" in window) {
             if (videoSrcArray.length > 0) {
                 debug("\nfn.insertImg()插入圖片最後確認 videoSrcArray", videoSrcArray);
                 if (!hasTouchEvent && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1) {
-                    let dbtn = fragment.querySelector("#FullPictureLoadFastDownloadBtn");
-                    dbtn.innerText = dbtn.innerText.replace("P", `P + ${videoSrcArray.length}V`);
+                    let dbtn = fn.ge("#FullPictureLoadFastDownloadBtn", fragment);
+                    if (dbtn) {
+                        dbtn.innerText = dbtn.innerText.replace("P", `P + ${videoSrcArray.length}V`);
+                    }
                 }
                 for (let i = 0; i < videoSrcArray.length; i++) {
                     let video = document.createElement("video");
@@ -26288,12 +26291,12 @@ if ("xx" in window) {
             }
             if (imgsSrcArr.length > 0) {
                 const padStart = String(imgsSrcArr.length).length;
-                for (let i = 0; i < imgsSrcArr.length; i++) {
+                for (let [i, src] of imgsSrcArr.entries()) {
                     let picNum = getNum(i, padStart);
                     let promiseBlob;
                     await fn.checkDownloadThread();
                     if (isStopDownload) return (promiseBlobArray = []);
-                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(imgsSrcArr[i], picNum, imgsNum) : promiseBlob = GM_XHR_Download(imgsSrcArr[i], picNum, imgsNum);
+                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(src, picNum, imgsNum) : promiseBlob = GM_XHR_Download(src, picNum, imgsNum);
                     promiseBlobArray.push(promiseBlob);
                 }
             }
@@ -26302,7 +26305,7 @@ if ("xx" in window) {
                 loopMsg = setInterval(() => {
                     fn.showMsg("Video Downloading...", 0);
                 }, 2000);
-                for (let i = 0; i < videoSrcArray.length; i++) {
+                for (let [i, src] of videoSrcArray.entries()) {
                     let videoNum = getNum(i, padStart);
                     let promiseBlob;
                     await fn.checkDownloadThread();
@@ -26311,7 +26314,7 @@ if ("xx" in window) {
                         promiseBlobArray = [];
                         return;
                     }
-                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(videoSrcArray[i], videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_Download(videoSrcArray[i], videoNum, imgsNum + videosNum);
+                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(src, videoNum, imgsNum + videosNum) : promiseBlob = GM_XHR_Download(src, videoNum, imgsNum + videosNum);
                     promiseBlobArray.push(promiseBlob);
                 }
             }
@@ -26346,9 +26349,10 @@ if ("xx" in window) {
                     }
                 }
                 if (blobDataArray.length > 0) {
-                    for (let i = 0; i < blobDataArray.length; i++) {
+                    let total = blobDataArray.length;
+                    for (let [i, data] of blobDataArray.entries()) {
                         let ex;
-                        let blobData = blobDataArray[i].blob;
+                        let blobData = data.blob;
                         let type = blobData.type;
                         try {
                             if (/octet-stream/.test(type) || hasTouchEvent && type === "") {
@@ -26356,7 +26360,7 @@ if ("xx" in window) {
                                 let check = await fn.checkImgStatus(url, 0);
                                 URL.revokeObjectURL(url);
                                 if (check.ok) {
-                                    if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
+                                    if (/\.webp/i.test(data.src) && convertWebpToJpg != 1) {
                                         blobData = await fn.convertImage(blobData, "image/webp");
                                         ex = "webp";
                                     } else {
@@ -26364,19 +26368,19 @@ if ("xx" in window) {
                                         ex = "jpg";
                                     }
                                     if (type === "") {
-                                        fn.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                        fn.showMsg(`unknown type to ${ex} ${(i+ 1)}/${total}`, 0);
                                     } else {
-                                        fn.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                        fn.showMsg(`octet-stream to ${ex} ${(i+ 1)}/${total}`, 0);
                                     }
                                 } else {
-                                    console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", blobDataArray[i]);
+                                    console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", data);
                                     fn.showMsg(displayLanguage.str_30, 0);
                                     return;
                                 }
-                            } else if ((/webp/i.test(type) || /\.webp/i.test(blobDataArray[i].finalUrl)) && !type.includes("image/jpeg") && convertWebpToJpg == 1) {
+                            } else if ((/webp/i.test(type) || /\.webp/i.test(data.finalUrl)) && !type.includes("image/jpeg") && convertWebpToJpg == 1) {
                                 blobData = await fn.convertImage(blobData);
                                 ex = "jpg";
-                                fn.showMsg(`${displayLanguage.str_102} to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                fn.showMsg(`${displayLanguage.str_102} to ${ex} ${(i+ 1)}/${total}`, 0);
                             } else if (/^text\/base64\.jpg/.test(type)) {
                                 ex = "jpg";
                             } else {
@@ -26390,37 +26394,37 @@ if ("xx" in window) {
                                 let check = await fn.checkImgStatus(url, 0);
                                 URL.revokeObjectURL(url);
                                 if (check.ok) {
-                                    if (/\.webp/i.test(blobDataArray[i].src) && convertWebpToJpg != 1) {
+                                    if (/\.webp/i.test(data.src) && convertWebpToJpg != 1) {
                                         ex = "webp";
-                                        fn.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                        fn.showMsg(`unknown type to ${ex} ${(i+ 1)}/${total}`, 0);
                                         blobData = await fn.convertImage(blobData, "image/webp");
                                     } else {
                                         ex = "jpg";
-                                        fn.showMsg(`unknown type to ${ex} ${(i+ 1)}/${blobDataArray.length}`, 0);
+                                        fn.showMsg(`unknown type to ${ex} ${(i+ 1)}/${total}`, 0);
                                         blobData = await fn.convertImage(blobData);
                                     }
                                 } else {
-                                    console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", blobDataArray[i]);
+                                    console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", data);
                                     fn.showMsg(displayLanguage.str_30, 0);
                                     return;
                                 }
                             } else {
-                                console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", blobDataArray[i]);
+                                console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", data);
                                 fn.showMsg(displayLanguage.str_30, 0);
                                 return;
                             }
                         }
                         let fileName;
-                        ["mp4", "webm", "mov"].includes(ex) ? fileName = `${blobDataArray[i].picNum}V.${(ex)}` : fileName = `${blobDataArray[i].picNum}P.${(siteData.ex || ex)}`;
+                        ["mp4", "webm", "mov"].includes(ex) ? fileName = `${data.picNum}V.${(ex)}` : fileName = `${data.picNum}P.${(siteData.ex || ex)}`;
                         if (options.zip == 1) {
-                            //console.log(`第${n}/${blobDataArray.length}張，檔案名：${fileName}，大小：${parseInt(blobDataArray[i].blob.size / 1024, 10)} Kb`);
+                            //console.log(`第${n}/${total}張，檔案名：${fileName}，大小：${parseInt(data.blob.size / 1024, 10)} Kb`);
                             zipFolder.file(fileName, blobData, {
                                 binary: true
                             });
                         } else {
                             saveData(blobData, title + "_" + fileName);
                             await fn.delay(200, 0);
-                            if (i === blobDataArray.length - 1) {
+                            if (i === total - 1) {
                                 promiseBlobArray = [];
                                 downloadNum = 0;
                                 isDownloading = false;
