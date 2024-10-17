@@ -1161,17 +1161,17 @@ imgs: async () => {
 <p>PS：當看日系漫畫使用右至左雙頁模式，有時會遇到雙頁跨頁大圖沒有剛好左右並成一張，可透過WASD方向鍵或者點擊圖片(可以關閉Fancybox)，將導覽索引(藍色邊框)移至之前的圖片後按Delete鍵隱藏已經看過的頁數，這樣後面的圖片會往前移一個位置，達到手動調整使雙頁跨頁大圖看起來剛好並成一張。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
-<p>2024/10/15 23:23</p>
+<p>2024/10/17 21:47</p>
 <p>https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/Pagetual_Blacklist.txt</p>
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
-<img src="https://i.imgur.com/xZN2uj7.jpg">
+<img src="https://i.imgur.com/vtwqkOX.jpeg">
 <img src="https://i.imgur.com/J0Sz9ri.jpg">
-<img src="https://i.imgur.com/VuSRtJ8.jpeg">
-<img src="https://i.imgur.com/N4gngcW.jpeg">
+<img src="https://i.imgur.com/kE3XYlH.jpeg">
+<img src="https://i.imgur.com/R363fgV.jpeg">
 <img src="https://i.imgur.com/OibRD2N.jpg">
 <h2>自定義編輯網站收藏說明</h2>
 <details>
