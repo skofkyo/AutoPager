@@ -714,10 +714,12 @@ https://cosermm.blog.2nt.com/*
 *://instagirl.net/post/*
 *://*erohere.online/erohere*/
 *://www.sexyasianmodelpics.com/album/*.shtml
+*://8ezy.com/uncategorized/*
+*://8ezy.com/tag/*
+*://8ezy.com/*?s=*
 /^https?:\/\/(acghtang|acgntoon|acgtoon)\.com\/\w+\/\w+\.html$/
 /^https?:\/\/rokuhentai\.com\/\w+$/
 /^https?:\/\/happy\.5ge\.net\/archives\/\d+\.html$/
-/^https?:\/\/8ezy\.com\/[\w-]+\/$/
 /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/
 /^https?:\/\/(www\.kongquehai\.net|www\.lolili\.net)\/\w+\/\w+\/\w+\.html\?btwaf=\d+$/
 /^https?:\/\/(www\.)?ladymao\.net\/[a-z]{2,3}\/\w+(\?btwaf=\d+)?$/
