@@ -77,8 +77,8 @@ https://*wnacg.com/photos-slist-aid-*.html
     enable: 0, //填0禁用此規則
     icon: 0, //填0不顯示左下圖示
     key: 0, //填0不綁定快捷鍵
-    reg: /www\.xxxxx\.com/, //正則表達式匹配網址
-    reg: [ //匹配正則表達式數組
+    reg: /www\.xxxxx\.com/, //正規表達式匹配網址
+    reg: [ //匹配正規表達式陣列
         /RegExp/,
         /RegExp/
     ],
@@ -93,9 +93,9 @@ https://*wnacg.com/photos-slist-aid-*.html
     },
     delay: 300, //延遲載入規則
     include: "元素選擇器", //網頁必須包含的元素
-    include: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁必須包含數組裡的所有元素
+    include: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁必須包含陣列裡的所有元素
     exclude: "元素", //網頁要排除的元素
-    exclude: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁要排除數組裡其中的元素
+    exclude: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁要排除陣列裡其中的元素
     init: "code", //載入頁面後要優先執行的代碼
     init: () => {
         code;
@@ -106,7 +106,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
     //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
-    imgs: () => { //也可自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變量或透過api取得的json。
+    imgs: () => { //也可自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變數或透過api取得的json。
         code;
         return Array;
     },
@@ -155,7 +155,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前域名，"url"參照頁為當前文檔網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
     infiniteScroll: true, //漫畫分類標記有無限滾動模式
     gallery: 1, //影子畫廊調用Iframe畫廊
-    downloadVideo: true, //下載變量videoSrcArray裡的影片直連網址
+    downloadVideo: true, //下載變數videoSrcArray裡的影片直連網址
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
@@ -275,7 +275,7 @@ fancybox: {
     <p>點擊標題分隔條和雙擊頁面空白處，暫停或啟用自動翻頁。</p>
     <p>需要更高級的自動翻頁功能請使用東方永頁機。</p>
 <pre>
-變量doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
+變數doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
 舉例選取元素
 doc.querySelector(selector)
 [...doc.querySelectorAll(selector)]
@@ -307,12 +307,12 @@ fn.gae(selector, doc)
     enable: 1,
     reg: /^https:\/\/.+/,
     autoPager: {
-        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁，"json"請求的資料格式是JSON會存為變量siteJson。
+        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁，"json"請求的資料格式是JSON會存為變數siteJson。
         waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
         loadTime: 200, //mode為1時給iframe框架讀取的時間，預設200可省略。
         frameCode: `
             //mode為1時要注入到iframe裡運行的代碼，由於是字串特殊字元需要轉譯，例如\要表達為\\
-            //會改變腳本的frameWindow變量從當前window變為iframe的window
+            //會改變腳本的frameWindow變數從當前window變為iframe的window
             //可參照8Comic無限動漫自動翻頁規則的用法
         `,
         ele: "selector", //下一頁主體元素選擇器
@@ -331,7 +331,7 @@ fn.gae(selector, doc)
         },
         wait: async () => { 
             //請求完下一頁後要優先執行的代碼
-            //用於改變腳本變量globalImgArray、tempNextLink、customTitle，方便後續調用
+            //用於改變腳本變數globalImgArray、tempNextLink、customTitle，方便後續調用
             //可參照拷貝漫畫M自動翻頁規則的用法
             code;
             return Promise;
@@ -367,7 +367,7 @@ fn.gae(selector, doc)
         history: 1, //1翻頁後添加瀏覽器歷史紀錄，0不添加，預設1可省略。
         loading: "msg", //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息
         lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
-        script: "//script[contains(text(),'eval')]", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變量，不需要則省略。
+        script: "//script[contains(text(),'eval')]", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變數，不需要則省略。
         bF: (dom) => {
             //插入下一頁元素之前要執行的代碼，不需要則省略
         },
@@ -396,7 +396,7 @@ isString(obj);
 isNumber(obj);
 //判斷是否為布林值返回布林值
 isBoolean(obj);
-//判斷是否為正則表達式返回布林值
+//判斷是否為正規表達式返回布林值
 isRegExp(obj);
 //判斷是否為物件返回布林值
 isObject(obj);
@@ -414,9 +414,9 @@ isURL(obj);
 <pre>
 //匹配網址和頁面元素，用於規則reg是函式的寫法
 //t = document.title 匹配標題部分字串，格式可為字串或字串的陣列
-//h = hosts 匹配網站的域名，格式可為字串、正則、字串或正則的陣列
-//p = pathname 匹配網址的路徑，格式可為字串或正則
-//s = search 匹配網址的搜尋，格式可為字串或正則
+//h = hosts 匹配網站的域名，格式可為字串、正規表達式、字串或正規表達式的陣列
+//p = pathname 匹配網址的路徑，格式可為字串或正規表達式
+//s = search 匹配網址的搜尋，格式可為字串或正規表達式
 //e = elements 匹配網頁的元素選擇器，格式可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
 //規則屬性imgs和customTitle如為字串，會自動判斷頁面元素
 const object = {
@@ -442,27 +442,27 @@ const object = {
 fn.checkUrl(object);
 </pre>
 <pre>
-//返回一個指定元素，支持CSS/Xpath選擇器
+//返回選擇器的首個元素，支持CSS/Xpath選擇器
 fn.ge("selector");
 fn.ge("selector", doc = document);
 fn.ge("selector", node);
 fn.ge(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//返回指定的所有元素的陣列，支持CSS/Xpath選擇器
+//返回選擇器的所有元素的陣列，支持CSS/Xpath選擇器
 fn.gae("selector");
 fn.gae("selector", doc = document);
 fn.gae("selector", node);
 fn.gae(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//取得指定的A元素的href
+//返回A選擇器的首個A元素的href
 fn.gu("selector");
 fn.gu("selector", doc = document);
 fn.gu(String, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//取得指定的所有A元素的hre的陣列
+//返回A選擇器的所有A元素的href的陣列並且去除重複
 fn.gau("selector");
 fn.gau("selector", doc = document);
 fn.gau(String, HTMLDocument or HTMLElement);
@@ -489,7 +489,7 @@ fn.getText(String or Array, HTMLDocument or HTMLElement);
 //刪除指定字串返回字串
 s = selector 元素選擇器
 t = text 文字字串
-d = delete 要刪除的字串，格式可以是字串、正則 、字串或正則的陣列
+d = delete 要刪除的字串，格式可以是字串、正規表達式 、字串或正規表達式的陣列
 const objetc = {
     s: String,
     t: String,
@@ -514,7 +514,7 @@ fn.dt(objetc);
 </pre>
 <pre>
 //取得非外部引入的script的字串
-//searchValue，關鍵字串或正則表達式
+//searchValue，關鍵字串或正規表達式
 fn.gst(searchValue);
 fn.gst(searchValue, doc = document);
 fn.gst(String or RegExp, HTMLDocument or HTMLElement);
@@ -537,7 +537,7 @@ fn.createImgBox("selector", pos = 0, width = null);
 fn.createImgBox(String, Number, Number);
 </pre>
 <pre>
-//指定元素選擇器或元素陣列，返回過濾出圖片網址的陣列。
+//指定元素選擇器或元素陣列，返回提取出的圖片網址陣列。
 //IMG、DIV、A、LINK、SPAN、LI、FIGURE，支持dataset和backgroundImage
 //不判斷srcset是因為不是所有網站都遵循srcset屬性的格式
 fn.getImgSrcArr("selector");
@@ -546,7 +546,7 @@ fn.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fn.getImgSrcArr(Array [HTMLElement]);
 </pre>
 <pre>
-//指定圖片選擇器或圖片元素陣列，返回過濾出圖片網址的陣列。
+//指定圖片選擇器或圖片元素陣列，返回提取出的圖片網址陣列。
 //主要用於提取IMG的srcset屬性，也支持dataset和backgroundImage
 fn.getImgSrcset("img selector");
 fn.getImgSrcset("img selector", doc = document);
@@ -647,7 +647,7 @@ fn.arr(Number, Function);
 fn.remove("selector");
 fn.remove("selector", time = 0);
 
-//如果需要多個選擇器並且CSS/Xpath混寫可寫成數組
+//如果需要多個選擇器並且CSS/Xpath混寫可寫成陣列
 let selectors = ["cssSelector" , "XpathSelector"]
 fn.remove(selectors, time = 0);
 fn.remove(String or Array [String], Number);
@@ -785,7 +785,7 @@ fn.imgBlobUrlArr(".image>img");
 let obj = {
     cors: true, //跨域
     mode: "dom", //模式，要遍歷script搜索關鍵字用"dom"
-    key: "str" //搜索的關鍵字串或正則
+    key: "str" //搜索的關鍵字串或正規表達式
 };
 fn.getCode("url", obj);
 //例子1，同網域的鏈結找含有"Image_List"的script
@@ -885,7 +885,7 @@ fn.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
 <pre>
 //必須同源不能跨域
-//使用Promise封裝iframe框架，等待至指定的環境變量出現，返回iframe框架的contentWindow。
+//使用Promise封裝iframe框架，等待至指定的環境變數出現，返回iframe框架的contentWindow。
 let iframe = await fn.iframeVar("url", "declares", time = 1000);
 fn.iframeVar(String, String, Number);
 </pre>
@@ -895,11 +895,11 @@ fn.iframeVar(String, String, Number);
 const details = {
     loadTime: 1000, //框架的讀取時間
     waitEle: "img", //指定等待框架直至出現該元素的選擇器
-    waitVar: "newImgs", //指定等待框架直至出現該環境變量
+    waitVar: "newImgs", //指定等待框架直至出現該環境變數
     cb: async (dom, frame) => {
         console.log(dom); //iframe的document
         console.log(frame); //iframe的contentWindow
-        //同源可以先行對iframe創建script注入代碼，修改contentWindow屬性環境變量，修改document文檔
+        //同源可以先行對iframe創建script注入代碼，修改contentWindow屬性環境變數，修改document文檔
     }
 }
 const iframe = await fn.iframe("url", details);
@@ -1124,7 +1124,7 @@ imgs: async () => {
 <h3>2.圖片並排模式</h3>
 <p>上方向鍵滾動到目前的上一排圖、下方向鍵滾動到目前的下一排圖</p>
 <p>漫畫分類當滾動至最後一排後，繼續按下方向鍵會嘗試前往下一集。</p>
-<p>所謂的目前是變量記憶的位置，並非當前瀏覽範圍的位置，滑鼠滾動變換位置不會改變變量。</p>
+<p>所謂的目前是變數記憶的位置，並非當前瀏覽範圍的位置，滑鼠滾動變換位置不會改變變數。</p>
 <p>按了上方向鍵和下方向鍵以外的鍵後會再從頭開始滾動。</p>
 <br>
 <p>如果漫畫站的圖片並排後，圖片高度小於大於瀏覽範圍的高度，需要手動調整瀏覽器的縮放來適配達到最佳的觀看效果。</p>
@@ -1348,7 +1348,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://meirentu.cc/">美人图</a>
                 </td>
                 <td>
-                    <a href="https://meirentu.top/">meirentu.top</a>
+                    <a href="https://meirentu.org/">meirentu.org</a>，<a href="https://meirentu.top/">meirentu.top</a>，<a href="https://meirentu.me/">meirentu.me</a>，<a href="https://meirentu.icu/">meirentu.icu</a>，
                 </td>
             </tr>
             <tr>
@@ -1770,9 +1770,11 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://8ezy.com/">8E资源站</a>
+                    <a href="https://8ezy.com/uncategorized/">8E资源站</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://8ezy.com/tag/%e7%be%8e%e5%9b%be/">美图</a>，<a href="https://8ezy.com/tag/%E8%8A%B1%E7%B5%AE/">花絮</a>，歸檔頁添加了自動翻頁
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2550,6 +2552,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://fapullo.com/">Fapullo</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://fapachi.com/">Fapachi</a>
                 </td>
                 <td>手動插入圖片</td>
@@ -2570,6 +2578,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://thefappeningblog.com/">TheFappening</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fap.thefappening.one/">#TheFappening</a>
                 </td>
                 <td></td>
             </tr>
