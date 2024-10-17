@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.47
+// @version            2.8.48
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1207,14 +1207,39 @@ a:has(>div>div>img),
                     img.classList.add("loaded");
                 });
             },
+            openInNewTab: ".post-list-item a:not([target=_blank])",
             pageNum: () => currentPageNum
+        },
+        category: "autoPager"
+    }, {
+        name: "8E资源站 自動翻頁",
+        host: ["8ezy.com"],
+        reg: () => fn.checkUrl({
+            h: "8ezy.com",
+            s: "?s="
+        }),
+        autoPager: {
+            ele: ".archive-row",
+            observer: ".archive-row .post-list-item",
+            next: ".post-nav>a.selected+a[href^=http]",
+            bF: (dom) => {
+                [...dom.querySelectorAll(".post-list-item .picture")].forEach(e => {
+                    fn.ge("source", e)?.remove();
+                    let img = fn.ge("img", e);
+                    img.src = img.dataset.src;
+                    img.classList.add("loaded");
+                });
+            },
+            re: ".post-nav",
+            openInNewTab: ".post-list-item a:not([target=_blank])",
+            pageNum: ".post-nav>a.selected"
         },
         category: "autoPager"
     }, {
         name: "丝袜室",
         host: ["www.siwashi.xyz"],
         reg: /^https?:\/\/www\.siwashi\.xyz\/\w+\/\d+\.html$/,
-        imgs: async () => {
+        imgs: () => {
             if (fn.ge("//div[contains(text(),'分页阅读')]")) {
                 fn.showMsg(displayLanguage.str_05, 0);
                 let links = fn.gau("//div[contains(text(),'分页阅读')]/a");
@@ -4462,7 +4487,7 @@ a:has(>div>div>img),
             }
         },
         imgs: () => {
-            thumbnailSrcArray = fn.getImgSrcArr(tempEles).sort();;
+            thumbnailSrcArray = fn.getImgSrcArr(tempEles).sort();
             return thumbnailSrcArray.map(e => e.replace("_400px", ""));
         },
         capture: () => _this.imgs(),
@@ -19840,7 +19865,7 @@ if ("xx" in window) {
             p: /^\/[\d-]+\.html$/
         }) && comicInfiniteScrollMode != 1,
         init: () => fn.createImgBox("#pics", 1),
-        imgs: (frame = _unsafeWindow) => frame.params.images.map(e => e.url),
+        imgs: (frame = _unsafeWindow) => frame.params.images,
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, "#pics"], 2
@@ -19867,7 +19892,7 @@ if ("xx" in window) {
             e: ["div.logo>a[title=漫画网]>img[alt=漫画网]", "#pics"],
             p: /^\/[\d-]+\.html$/
         }) && comicInfiniteScrollMode == 1,
-        getSrcs: () => frameWindow.params.images.map(e => e.url),
+        getSrcs: () => frameWindow.params.images,
         getImgs: () => fn.createImgArray(_this.getSrcs()),
         init: async () => {
             let imgs = _this.getImgs();
