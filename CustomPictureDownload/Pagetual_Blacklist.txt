@@ -1,4 +1,4 @@
-2024/10/15 23:23
+2024/10/17 21:47
 
 有些用黑名單通配符排除範圍過大，需要用正則排除。
 
@@ -359,7 +359,9 @@ MEITU131
 *://*zyktu.top/index.php/archives/*/
 
 8E资源站
-/^https?:\/\/8ezy\.com\/[\w-]+\/$/
+*://8ezy.com/uncategorized/*
+*://8ezy.com/tag/*
+*://8ezy.com/*?s=*
 
 丝袜室
 *://www.siwashi.xyz/*/*.html
@@ -1751,9 +1753,6 @@ http://www.17fuman.com/*/*/*.html
 看漫畫
 *://www.k886.net/index-look-name-*
 
-奴奴漫畫
-*://www.2nunu.com/look-*
-
 酷漫屋閱讀
 *://*.kumw*.com/*/*.html
 
@@ -1792,6 +1791,3 @@ manhuab.com/manhua/*/*.html
 
 漫神
 *://m.mhkami.com/chapter/*/*.html
-
-风车漫画
-*://*.qyy158.com/info/*/*.html
