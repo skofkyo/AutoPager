@@ -28,6 +28,7 @@ ViaBrowser 5.9.5
 <br>
 <pre>
 cdn.jsdelivr.net
+// @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min
@@ -40,6 +41,7 @@ cdn.jsdelivr.net
 </pre>
 <pre>
 unpkg.com
+// @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
@@ -101,7 +103,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         code;
     },
     init: async () => await fn.waitEle("元素選擇器"), //等待直至元素出現
-    init: async () => await fn.waitVar("屬性名"), //等待直至window物件的屬性出現
+    init: async () => await fn.waitVar("變數名"), //等待直至window的變數出現
     init: () => fn.addMutationObserver(() => fn.remove("div[class][style*='z-index']")), //動態刪除元素
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
@@ -319,7 +321,7 @@ fn.gae(selector, doc)
         ele: (dom) => { 
             //2種寫法
             //1.創建元素和插入元素皆由此函式完成
-            //2.創建元素陣列返回元素陣列，搭配pos決定元素插入位置
+            //2.創建元素陣列返回元素陣列，搭配pos決定元素插入的位置
             code;
             return [...elements];
         },
