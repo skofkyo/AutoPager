@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.8.48
+// @version            2.9.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -40,7 +40,10 @@
 // @grant              GM_addElement
 // @grant              GM.addElement
 // @grant              unsafeWindow
+// @grant              window.close
+// @run-at             document-start
 // @noframes
+// @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
@@ -52,8 +55,10 @@
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 // ==/UserScript==
 
-(async (JSZip, $) => {
+(async (JSZip, $, ajaxHooker) => {
     "use strict";
+
+    await new Promise(ready => $(document).ready(ready));
 
     if ((ge("body.no-js:not(.has-preloader,.single-post)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
         debug("Cloudflare驗證中不運行腳本。");
@@ -1141,10 +1146,14 @@ a:has(>div>div>img),
         host: ["niuc.net"],
         reg: /^https?:\/\/niuc\.net\/\d+\.html$/,
         include: "//i[@class='czs-folder-l']/following-sibling::a[1][text()='美女写真' or text()='Cosplay' or text()='JAV.PHOTO']",
-        imgs: ".content-warp img:not([src$='e4l35o.gif'])",
+        imgs: ".content-warp img[src*='/wp-content/']",
         button: [4],
         insertImg: [".content-warp", 2],
         customTitle: ".post-title",
+        fancybox: {
+            v: 3,
+            css: false
+        },
         category: "nsfw2"
     }, {
         name: "8E资源站",
@@ -1207,9 +1216,9 @@ a:has(>div>div>img),
                     img.classList.add("loaded");
                 });
             },
-            openInNewTab: ".post-list-item a:not([target=_blank])",
             pageNum: () => currentPageNum
         },
+        openInNewTab: ".post-list-item a:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "8E资源站 自動翻頁",
@@ -1231,9 +1240,9 @@ a:has(>div>div>img),
                 });
             },
             re: ".post-nav",
-            openInNewTab: ".post-list-item a:not([target=_blank])",
             pageNum: ".post-nav>a.selected"
         },
+        openInNewTab: ".post-list-item a:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "丝袜室",
@@ -3178,77 +3187,60 @@ a:has(>div>div>img),
         host: ["m2ph.xyz", "www.m2ph.xyz"],
         reg: () => {
             if (fn.lh.includes("m2ph.xyz")) {
-                try {
-                    let checkLocalStorage = ["flutter.password", "flutter.account", "flutter.HistoryImage"].every(k => k in localStorage);
-                    let checkHistory = JSON.parse(JSON.parse(localStorage["flutter.HistoryImage"]))?.length > 0;
-                    return checkLocalStorage && checkHistory && hasTouchEvent;
-                } catch {
-                    return false;
-                }
+                return ["flutter.password", "flutter.account"].every(k => k in localStorage) && hasTouchEvent;
             } else {
                 return false;
             }
         },
-        getFirstHistory: () => JSON.parse(JSON.parse(localStorage["flutter.HistoryImage"]))[0],
-        getImg: () => document.querySelector("flt-glass-pane")?.shadowRoot?.querySelector("img"),
-        getImgSrc: () => _this.getImg()?.src,
-        getBase: () => {
-            let base;
-            if (_this.getImgSrc()?.includes("/cover")) {
-                [base] = _this.getImgSrc()?.split("/cover");
-            } else {
-                base = _this.getImgSrc()?.replace(/(\/image)(\/image)?\/.+$/, "$1");
+        init: () => {
+            if ("gallery_json" in localStorage) {
+                siteJson = JSON.parse(localStorage.getItem("gallery_json"));
             }
-            return base;
-        },
-        getHost: () => new URL(_this.getBase()).hostname,
-        init: async () => {
-            await fn.wait(() => !!_this.getImg());
-            let firstImageId = _this.getFirstHistory().imageId;
-            document.addEventListener("click", (event) => {
-                if (event.target.nodeName === "FLUTTER-VIEW") {
-                    setTimeout(async () => {
-                        await fn.wait(() => !!_this.getImg());
-                        let id = _this.getFirstHistory().imageId;
-                        if (firstImageId != id) {
-                            firstImageId = id;
-                            await captureSrcB();
-                            debug(`\n自定義標題：${customTitle}`);
-                            debug("\n此頁JSON資料\n", siteJson);
-                        }
-                    }, 1000);
+            _unsafeWindow.addEventListener("message", async event => {
+                if (["response", "change"].some(m => event.data === m)) {
+                    await captureSrcB();
+                    //debug(`\n自定義標題：${customTitle}`);
+                    //debug("\n此圖集JSON資料\n", siteJson);
                 }
-            }, true);
+            });
+            ajaxHooker.filter([{
+                method: "POST",
+                type: "xhr",
+                url: /\/ServerConfig$|\/Image\/ImageUrl$/,
+            }]);
+            ajaxHooker.hook(request => {
+                //debug("API請求", request);
+                request.response = res => {
+                    if (request.url.includes("/ServerConfig")) {
+                        //debug("ServerConfig_API回應", res);
+                        let text = new TextDecoder().decode(res.response);
+                        let json = JSON.parse(text);
+                        siteJson.big_image_base_url = Object.values(Object.fromEntries(Object.entries(json.data.ipv4).filter(([k, v]) => k.startsWith("big_image_base_url") && !!v)))[0];
+                    }
+                    if (request.url.includes("/Image/ImageUrl")) {
+                        //debug("ImageUrl_API回應", res);
+                        let text = new TextDecoder().decode(res.response);
+                        siteJson = Object.assign(siteJson, JSON.parse(text));
+                        siteJson.title = fn.dt({
+                            t: siteJson.title
+                        });
+                        customTitle = siteJson.title;
+                        localStorage.setItem("gallery_json", JSON.stringify(siteJson));
+                        _unsafeWindow.postMessage("response", fn.lo);
+                    }
+                };
+            });
         },
         imgs: () => {
-            let {
-                type,
-                imageId
-            } = _this.getFirstHistory();
-            fn.showMsg(displayLanguage.str_05, 0);
-            return fetch(`http://${_this.getHost()}:39002/Image/ImageUrl`, {
-                "headers": {
-                    "content-type": "application/json; charset=utf-8"
-                },
-                "body": `{\"type\":${type},\"imageId\":${imageId},\"fromMem\":true}`,
-                "method": "POST"
-            }).then(res => res.json()).then(json => {
-                fn.hideMsg();
-                siteJson = json;
-                customTitle = fn.dt({
-                    t: json.title
-                });
-                let paths = JSON.parse(json.data);
-                let base = _this.getBase();
-                let srcs = paths.map(p => base + p);
-                return srcs;
-            });
+            if (!siteJson?.big_image_base_url && !siteJson?.data) return [];
+            let paths = JSON.parse(siteJson.data);
+            let base = siteJson.big_image_base_url;
+            let srcs = paths.map(p => base + p);
+            return srcs;
         },
         capture: () => _this.imgs(),
         SPA: true,
-        customTitle: () => customTitle ?? fn.dt({
-            t: _this.getFirstHistory().title
-        }),
+        customTitle: () => siteJson?.title,
         category: "nsfw1"
     }, {
         name: "孔雀海/洛丽网/ladymao图库/懒人看图",
@@ -21220,34 +21212,22 @@ if ("xx" in window) {
         reg: /^https?:\/\/m\.4khd\.com\//,
         reg: () => fn.checkUrl({
             h: "m.4khd.com",
-            p: /^\/\w+$|^\/link\//i
+            p: /^\/\w+$|^\/link\/|^\/vip\//i
         }),
         init: () => {
-            if (isFn(_unsafeWindow.redirect)) {
-                _unsafeWindow.redirect = null;
+            if (fn.lp.includes("/vip/")) {
+                fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
+                fn.showMsg("系統錯誤，1秒後關閉。");
+                return setTimeout(() => window.close(), 1000);
             }
-            let get = async (url) => {
-                let res = await fn.xhrHEAD(url);
-                debug(url, res);
-                if (res.status == 200 && res.finalUrl.includes("terabox.com")) {
-                    debug(res.finalUrl);
-                    location.href = res.finalUrl;
-                }
-                if (url == res.finalUrl && res.status == 200) {
-                    fn.xhrDoc(url).then(dom => {
-                        //console.log(dom);
-                        let linkE = fn.ge("//a[text()='GET LINK']|//a[span[text()='GET LINK']]", dom);
-                        if (linkE) {
-                            url = linkE.href;
-                            let host = new URL(url).host;
-                            url = url.replace(host, "m.4khd.com");
-                            get(url);
-                        }
-                    });
-                }
-            };
-            let url = fn.gu("//a[text()='GET LINK']|//a[span[text()='GET LINK']]");
-            get(url);
+            const selector = "//a[text()='GET LINK']|//a[span[text()='GET LINK']]";
+            if (fn.ge(selector)) {
+                let url = fn.gu(selector);
+                EClick(selector);
+                ge("#cz").innerHTML = "&#9650";
+                ge("#zc_tiaozhuan").style.display = "block";
+                fn.clearAllTimer(3);
+            }
         },
         hide: "#divExoLayerWrapper,.exo-ipp,.exo_wrapper,div:has(>.centered-contai),.center-container,.centered-contai",
         category: "none"
@@ -21330,8 +21310,11 @@ if ("xx" in window) {
         category: "none"
     }, {
         name: "google search 新分頁開啟",
-        reg: /^https?:\/\/(?:www\.)?google\..*\/search/,
-        openInNewTab: "//div[@id='center_col']//a[@ping][not(@target)]",
+        reg: () => fn.checkUrl({
+            h: "google.",
+            p: "/search"
+        }),
+        openInNewTab: "#center_col a:not([target])",
         category: "none"
     }, {
         name: "CivitAi Auto Show NSFW",
@@ -21675,14 +21658,6 @@ if ("xx" in window) {
     const _GM_unregisterMenuCommand = (() => isFn(GM_unregisterMenuCommand) ? GM_unregisterMenuCommand : GM.unregisterMenuCommand)();
     const _GM_getResourceText = (() => isFn(GM_getResourceText) ? GM_getResourceText : GM.getResourceText)();
     const _GM_addElement = (() => isFn(GM_addElement) ? GM_addElement : GM.addElement)();
-
-    if (isXBrowser) {
-        debug("\n當前使用的是X瀏覽器");
-    }
-
-    if (isVia) {
-        debug("\n當前使用的是VIA瀏覽器");
-    }
 
     const JqueryJS = _GM_getResourceText("JqueryJS");
     const FancyboxV5JS = _GM_getResourceText("FancyboxV5JS");
@@ -24876,6 +24851,18 @@ if ("xx" in window) {
                         resolve(false);
                     }
                 }, 100);
+            });
+        },
+        //攔截創建IMG元素時的src
+        HTMLImageElementSrcHook: callback => {
+            const originalSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, "src");
+            Object.defineProperty(HTMLImageElement.prototype, "src", {
+                set: function(value) {
+                    if (isFn(callback)) {
+                        callback(value);
+                    }
+                    originalSrcDescriptor.set.call(this, value);
+                }
             });
         },
         //確認圖片狀態返回圖片寬高
@@ -31744,11 +31731,6 @@ a[data-fancybox]:hover {
         let preloadNext = siteData.preloadNext;
         try {
             if (!!nextLink && !!preloadNext && !isDownloading) {
-                _unsafeWindow.addEventListener("message", event => {
-                    if (!!event.data?.iframePicArr) {
-                        fn.picPreload(event.data.iframePicArr, event.data?.title, "next");
-                    }
-                }, false);
                 fn.xhrDoc(nextLink).then(async nextDoc => {
                     //debug("\nnextDoc", nextDoc);
                     if (isBoolean(preloadNext) && preloadNext === true && isFn(siteData.imgs) && isFn(siteData.customTitle)) {
@@ -31803,7 +31785,9 @@ a[data-fancybox]:hover {
             ge("#FullPictureLoadCaptureNum").innerText = 0;
             return;
         }
-        await fn.delay(1000, 0);
+        if (!fn.lh.includes("m2ph.xyz")) {
+            await fn.delay(1000, 0);
+        }
         let captureSrcArray = await getImgs(siteData.capture ?? siteData.imgs);
         let num = captureSrcArray.length;
         if (ge("#FullPictureLoadCaptureNum")) {
@@ -32130,7 +32114,7 @@ html,body {
                 "FullPictureLoadShowEye"
             ];
             for (const key of keys) {
-                if (!!localStorage.getItem(key)) {
+                if (key in localStorage) {
                     localStorage.removeItem(key);
                 }
             }
@@ -32145,4 +32129,4 @@ html,body {
         });
     }
 
-})(JSZip, jQuery);
+})(JSZip, jQuery, ajaxHooker);
