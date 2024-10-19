@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.9.1
+// @version            2.9.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -58,7 +58,23 @@
 (async (JSZip, $, ajaxHooker) => {
     "use strict";
 
-    await new Promise(ready => $(document).ready(ready));
+    const specialSites = [
+        location.host === "reprint-kh.com" && /^\/archives\/\d+$/.test(location.pathname)
+    ];
+    if (specialSites.some(s => typeof s === "string" ? location.host === s : s)) {
+        let num = 0;
+        let stop = false;
+        await wait(() => {
+            num++;
+            if (num > 9 && !stop) {
+                stop = true;
+                window.stop();
+            }
+            return document.readyState === "complete";
+        });
+    } else {
+        await new Promise(ready => $(document).ready(ready));
+    }
 
     if ((ge("body.no-js:not(.has-preloader,.single-post)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
         debug("Cloudflare驗證中不運行腳本。");
@@ -177,13 +193,7 @@
                 if (mode === 2) {
                     suffix = "_600x0.webp";
                 }
-                const srcs = [];
-                for (let i = 1; i <= total; i++) {
-                    let num = String(i).padStart(4, "0");
-                    let src = photoUrl + album_id + "/" + num + suffix;
-                    srcs.push(src);
-                }
-                return srcs;
+                return fn.arr(total, (v, i) => photoUrl + album_id + "/" + String(i + 1).padStart(4, "0") + suffix);
             };
             if (!!thumb) {
                 const thumb_src = thumb.src;
@@ -350,14 +360,14 @@ a:has(>div>div>img),
         reg: /^https?:\/\/www\.yalayi\.com\/gallery\/\d+\.html/i,
         imgs: async () => {
             await fn.waitEle(".bigimg>img");
-            let max = fn.ge(".tishiwenzi-box").innerText.match(/\d+/)[0];
+            let [max] = fn.ge(".tishiwenzi-box").innerText.match(/\d+/);
             let firstImg = fn.ge(".bigimg>img");
-            let path = firstImg.dataset.original.match(/.+\//)[0];
+            let [path] = firstImg.dataset.original.match(/.+\//);
             let testArr = [path + "1.jpg", path + "01.jpg", path + "001.jpg", path + "0001.jpg"];
             let ok = false;
             let pad = 1;
-            for (let i = 0; i < testArr.length; i++) {
-                let obj = await fn.checkImgStatus(testArr[i]);
+            for (let [i, test] of testArr.entries()) {
+                let obj = await fn.checkImgStatus(test);
                 console.log(`確認圖片[${i}]`, obj);
                 if (obj.ok) {
                     ok = true;
@@ -365,16 +375,10 @@ a:has(>div>div>img),
                     break;
                 }
             }
-            let arr = [];
             if (ok) {
-                arr.push(firstImg.src);
-                for (let i = 1; i <= max; i++) {
-                    let src = path + String(i).padStart(pad, "0") + ".jpg";
-                    arr.push(src);
-                }
-                return arr;
+                return [firstImg.src, ...fn.arr(max, (v, i) => path + String(i + 1).padStart(pad, "0") + ".jpg")];
             } else {
-                return arr;
+                return [];
             }
         },
         button: [4, "24%", 4],
@@ -1524,7 +1528,7 @@ a:has(>div>div>img),
         imgs: () => {
             let max;
             try {
-                max = fn.gu(".page_navi a:last-child").split("_")[1].match(/\d+/)[0];
+                [max] = fn.gu(".page_navi a:last-child").split("_")[1].match(/\d+/);
             } catch {
                 max = 1;
             }
@@ -1566,8 +1570,8 @@ a:has(>div>div>img),
             let vip = false;
             let fetchNum = 0;
             fn.showMsg(displayLanguage.str_01, 0);
-            for (let page = 0; page < links.length; page++) {
-                await fetch(links[page]).then(res => {
+            for (let [page, link] of links.entries()) {
+                await fetch(link).then(res => {
                     if (res.status == 403) status = 403;
                     fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
                     return res.arrayBuffer();
@@ -1575,11 +1579,11 @@ a:has(>div>div>img),
                     const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                     const htmlText = decoder.decode(buffer);
                     const dom = fn.doc(htmlText);
-                    debug(`\n${links[page]}\n`, dom);
+                    debug(`\n${link}\n`, dom);
                     let vipEle = fn.ge(".lead", dom);
                     if (vipEle) vip = true;
                     let imgs = fn.gae(".album-photo img[alt]", dom);
-                    imgs.length == 0 ? debug(`\n${links[page]}\n沒有任何圖片`) : debug(`\n${links[page]}\n此頁圖片`, imgs);
+                    imgs.length == 0 ? debug(`\n${link}\n沒有任何圖片`) : debug(`\n${link}\n此頁圖片`, imgs);
                     let tE = fn.gae("div.album-photo").at(-1);
                     imgs.forEach(img => {
                         img.dataset.src ? srcArr.push(img.dataset.src) : srcArr.push(img.src);
@@ -1876,10 +1880,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/m\.mm5mm5\.com\/mm\/\d+/,
         imgs: () => {
             let [, max] = fn.gt(".contentpage>span>i").match(/\/(\d+)/);
-            let links = [siteUrl];
-            for (let i = 1; i < max; i++) {
-                links.push(siteUrl + "/" + i);
-            }
+            let links = fn.arr((max), (v, i) => i == 0 ? siteUrl : siteUrl + "/" + (i + 1));
             return fn.getImgA("div>a>img", links, 2);
         },
         button: [4],
@@ -2031,11 +2032,7 @@ a:has(>div>div>img),
         },
         imgs: () => {
             let [, max] = fn.gt(".imageset-sum,span.num").match(/\/\s?(\d+)/);
-            let links = [siteUrl];
-            let url = siteUrl.replace(".html", "");
-            for (let i = 2; i <= max; i++) {
-                links.push(url + "_" + i + ".html");
-            }
+            let links = fn.arr((max), (v, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
             return fn.getImgA(".img_box img[alt],.gallery-item img[alt],.article-show img", links, 2);
         },
         button: [4],
@@ -2087,7 +2084,7 @@ a:has(>div>div>img),
         link: "https://www.meitu131.com/nvshen/，https://www.meitu131.com/jigou/",
         reg: /^https?:\/\/(www|m)\.meitu131\.(com|net)\/(\w+\/)?meinv\/\d+\//,
         imgs: () => {
-            let max = fn.gt("a[title],.uk-page>span").match(/\/(\d+)/)[1];
+            let [, max] = fn.gt("a[title],.uk-page>span").match(/\/(\d+)/);
             return fn.getImgO(".work-content img,.uk-article-bd img", max, 15);
         },
         button: [4],
@@ -2757,7 +2754,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/aiavr\.uk\/detail\?aid=\d+/,
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            let id = fn.url.match(/\?aid=(\d+)/)[1];
+            let [, id] = fn.url.match(/\?aid=(\d+)/);
             let total = await fetch(`/api/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `/api/image/list?aid=${id}&pageNum=${i + 1}`);
@@ -2768,7 +2765,7 @@ a:has(>div>div>img),
         //button: [4],
         //insertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let id = fn.url.match(/\?aid=(\d+)/)[1];
+            let [, id] = fn.url.match(/\?aid=(\d+)/);
             //return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
             return fn.xhr(`https://admin.aiavr.uk/album/info?id=${id}`, {
                 responseType: "json"
@@ -2781,7 +2778,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/(user|m)\.aiavr\.uk\/detail\?aid=\d+/,
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            let id = fn.url.match(/\?aid=(\d+)/)[1];
+            let [, id] = fn.url.match(/\?aid=(\d+)/);
             let total = await fetch(`https://admin.aiavr.uk/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `https://admin.aiavr.uk/image/list?aid=${id}&pageNum=${i + 1}`);
@@ -2792,7 +2789,7 @@ a:has(>div>div>img),
         //button: [4],
         //sertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let id = fn.url.match(/\?aid=(\d+)/)[1];
+            let [, id] = fn.url.match(/\?aid=(\d+)/);
             return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
         },
         category: "nsfw1"
@@ -2802,7 +2799,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/(user|m)\.aiavr\.uk\/userAlbumDetail\?aid=\d+/,
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            let id = fn.url.match(/\?aid=(\d+)/)[1];
+            let [, id] = fn.url.match(/\?aid=(\d+)/);
             let vip = await fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.isSee);
             if (vip == false) {
                 setTimeout(() => {
@@ -2820,7 +2817,7 @@ a:has(>div>div>img),
         //tton: [4],
         //sertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let id = fn.url.match(/\?aid=(\d+)/)[1];
+            let [, id] = fn.url.match(/\?aid=(\d+)/);
             return fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.title);
         },
         category: "nsfw1"
@@ -2940,7 +2937,7 @@ a:has(>div>div>img),
             bF: (dom) => {
                 fn.gae(".mixs-card-img:not(.lock)", dom).forEach(e => {
                     let url = e.attributes[1].value.replaceAll("'", "");
-                    e.outerHTML = `<div class="mixs-card-img" data-src="${url}" lazy="loaded" style="background-image: url(&quot;${url}&quot;);"></div>`;
+                    e.outerHTML = `<div class="mixs-card-img" data-src="${url}" lazy="loaded" style="background-image: url('${url}');"></div>`;
                 });
                 fn.gae(".thumbnail .img-circle[v-lazy]", dom).forEach(e => {
                     let url = e.getAttribute("v-lazy").replaceAll("'", "");
@@ -3418,187 +3415,12 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "原创妹子图/尤物私房图/极品美女图/免费私房图/私房网红图/尤物妹妹图",
+        //所有域名在環境變數urltz
         host: ["www.ycmzt.com", "www.ywsft.com", "www.jpmnt.com", "www.mfsft.com", "www.sfwht.com", "www.ywmmt.com"],
-        reg: () => {
-            let [a, b, c] = fn.lh.split(".");
-            let checkA = (a === "www");
-            let checkC = (c === "com");
-            let checkP = /^\/[a-z]+\/[a-z]+\/\d+\/\d+\.html$/.test(fn.lp);
-            if (!checkA || !checkC || !checkP) return false;
-            let hosts = [
-                "aimzt",
-                "akxzt",
-                "akywt",
-                "axmeinv",
-                "axtaotu",
-                "brtaotu",
-                "ddtaotu",
-                "flmeitu",
-                "flsft",
-                "fltuku",
-                "flwht",
-                "flxzw",
-                "ftmeinv",
-                "gcmeinv",
-                "gcxzt",
-                "gqnmt",
-                "gqsft",
-                "gqtaot",
-                "gqwht",
-                "gqxzt",
-                "hjtaotu",
-                "hytaotu",
-                "jcmeinv",
-                "jctuk",
-                "jcwht",
-                "jdmnt",
-                "jdtaotu",
-                "jdwht",
-                "jdxzt",
-                "jjmeinv",
-                "jjtaotu",
-                "jpflt",
-                "jpmnt",
-                "jpmzt",
-                "jpmzw",
-                "jpnst",
-                "jpsft",
-                "jpxzt",
-                "jpyouwu",
-                "jpywt",
-                "jrmeinv",
-                "jrmnt",
-                "jrmzt",
-                "jstaotu",
-                "mfmzt",
-                "mfnmt",
-                "mfsft",
-                "mfxzt",
-                "mgmeinv",
-                "mgtaotu",
-                "mnwht",
-                "msmeinv",
-                "mstaotu",
-                "mtflt",
-                "mtgqt",
-                "mtmeinv",
-                "mtmnt",
-                "mtmnw",
-                "mtmzt",
-                "mtsyt",
-                "mttaotu",
-                "mttuku",
-                "mtwht",
-                "mtxzt",
-                "mtywt",
-                "mzmeitu",
-                "mztuk",
-                "nmtaotu",
-                "nsmeitu",
-                "nstaotu",
-                "nsxiez",
-                "nsxzt",
-                "nsxzw",
-                "plmeitu",
-                "plmzt",
-                "plwht",
-                "plxzw",
-                "pmtaotu",
-                "prmeinv",
-                "prmzt",
-                "qjtaotu",
-                "qjtuku",
-                "qpmzt",
-                "qtmzt",
-                "sfmnt",
-                "sfmtw",
-                "sfmzt",
-                "sfnmt",
-                "sfsnt",
-                "sftaotu",
-                "sftuku",
-                "sfwht",
-                "sfxzt",
-                "sfywt",
-                "smtaotu",
-                "snmzt",
-                "spmeitu",
-                "sptaotu",
-                "spxzt",
-                "spyouwu",
-                "swmzt",
-                "swtaotu",
-                "symzt",
-                "sytaotu",
-                "sytuk",
-                "thmzt",
-                "threnti",
-                "tptaotu",
-                "tsmnt",
-                "tstaotu",
-                "tsxzt",
-                "ugmeinv",
-                "ugtaotu",
-                "whtaotu",
-                "wkmzt",
-                "wkrenti",
-                "wsgmzt",
-                "wsgtu",
-                "xgmeitu",
-                "xgtuk",
-                "xgyouwu",
-                "xgywt",
-                "xhtaotu",
-                "xhtuku",
-                "xjjmzt",
-                "xjjtaotu",
-                "xrmeinv",
-                "xrtaotu",
-                "xsmeinv",
-                "xsmzt",
-                "xstuk",
-                "xztuk",
-                "ycmeinv",
-                "ycmeitu",
-                "ycmzt",
-                "yctaotu",
-                "yctuk",
-                "ycwht",
-                "yhflt",
-                "yhmeinv",
-                "yhmeitu",
-                "yhmnt",
-                "yhmnw",
-                "yhsft",
-                "yhtaotu",
-                "yhtuku",
-                "yhxzt",
-                "ykmeinv",
-                "ywmeitu",
-                "ywmmt",
-                "ywmtw",
-                "ywmzt",
-                "ywnmt",
-                "ywsft",
-                "ywtaotu",
-                "ywtuk",
-                "ywxzt",
-                "yzrenti",
-                "yztaotu",
-                "zbmzt",
-                "zbtaotu",
-                "zfmeinv",
-                "zftaotu",
-                "zpmzt",
-                "ztmeinv",
-                "zttaotu"
-            ];
-            return hosts.some(e => {
-                let checkB = (e === b);
-                return checkA && checkB && checkC;
-            }) && checkP;
-        },
-        include: "#picg",
+        reg: () => fn.checkUrl({
+            e: ["//div[@class='b' and contains(text(),'当前') or contains(text(),'图集')]", "#picg"],
+            p: /^\/[a-z]+\/[a-z]+\/\d+\/\d+\.html$/
+        }),
         init: () => {
             fn.gae(".b a").forEach(a => a.removeAttribute("target"));
             fn.gae("#picg a").forEach(a => (a.outerHTML = a.innerHTML));
@@ -3606,15 +3428,13 @@ a:has(>div>div>img),
         },
         imgs: async () => {
             let max = fn.gt(".pagelist font~*:last-child", 2);
-            let links = [siteUrl.replace(/(_\d+)?\.html$/, "") + ".html"];
+            let url = siteUrl.replace(/(_\d+)?\.html$/, "");
+            let links = fn.arr(max, (v, i) => i == 0 ? url + ".html" : url + `_${i + 1}.html`);
             let imgsArr = [];
-            for (let i = 2; i <= max; i++) {
-                links.push(siteUrl.replace(/(_\d+)?\.html$/, "") + `_${i}.html`);
-            }
-            for (let i = 0; i < links.length; i++) {
+            for (let [page, link] of links.entries()) {
                 let dom = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
-                        let res = await fetch(links[i]);
+                        let res = await fetch(link);
                         if (res.status == 304 || res.status == 200) {
                             let buffer = await res.arrayBuffer();
                             let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
@@ -3623,7 +3443,7 @@ a:has(>div>div>img),
                             resolve(dom);
                             break;
                         } else {
-                            fn.showMsg(`第${i + 1}頁${res.status}重試第${check}次`, 2900);
+                            fn.showMsg(`第${page + 1}頁${res.status}重試第${check}次`, 2900);
                             await fn.delay(3000, 0);
                         }
                     }
@@ -3632,9 +3452,9 @@ a:has(>div>div>img),
                 let te = fn.gae("#picg img[alt]").at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
-                    if (i != 0) insertAfter(te, e.cloneNode(true));
+                    if (page != 0) insertAfter(te, e.cloneNode(true));
                 });
-                if (i != 0) {
+                if (page != 0) {
                     let ce = fn.gae("h1,.page .pagelist");
                     let re = fn.gae("h1,.page .pagelist", dom);
                     if (ce.length == re.length) {
@@ -3688,7 +3508,7 @@ a:has(>div>div>img),
             fn.gae("#picg a").forEach(a => (a.outerHTML = a.innerHTML));
         },
         imgs: () => {
-            let max = fn.gt(".pagelist span,.pagelist a[title=Page]").match(/\/(\d+)/)[1];
+            let [, max] = fn.gt(".pagelist span,.pagelist a[title=Page]").match(/\/(\d+)/);
             return fn.getImgO("#picg img", max, 9, null, 200, ".page .pagelist", siteUrl, 0);
         },
         button: [4],
@@ -3937,12 +3757,8 @@ a:has(>div>div>img),
             if (a) a.outerHTML = a.innerHTML;
         },
         imgs: () => {
-            let links = [siteUrl];
-            let url = siteUrl.replace(".html", "");
-            let max = fn.gt(".suoyou").match(/\d+\/(\d+)/)[1];
-            for (let i = 2; i <= max; i++) {
-                links.push(url + "/page/" + i + ".html");
-            }
+            let [, max] = fn.gt(".suoyou").match(/\d+\/(\d+)/);
+            let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "/page/" + (i + 1) + ".html")
             return fn.getImgA("#showimg img,.img-box img", links, 2);
         },
         button: [4],
@@ -4130,12 +3946,8 @@ a:has(>div>div>img),
         host: ["m.beautyleg6.com"],
         reg: /^https?:\/\/m\.beautyleg6\.com\/view\.php\?aid=\d+/,
         imgs: async () => {
-            let links = [siteUrl];
-            for (let i = 2; i <= _unsafeWindow.totalpage; i++) {
-                links.push(siteUrl + "&pageno=" + i);
-            }
-            await fn.getEle(links, "#bigImg", ".show-simg", ".show-pages");
-            return fn.gae("#bigImg");
+            let links = fn.arr(_unsafeWindow.totalpage, (v, i) => i == 0 ? siteUrl : siteUrl + "&pageno=" + (i + 1));
+            return fn.getImgA("#bigImg", links);
         },
         button: [4],
         insertImg: [".show-simg", 2],
@@ -4290,10 +4102,7 @@ a:has(>div>div>img),
             if (fn.ge("#showmore")) {
                 let ele = fn.ge("#showmore");
                 let max = ele.dataset.max;
-                let links = [siteUrl];
-                for (let i = 2; i <= max; i++) {
-                    links.push(siteUrl + `page-${i}/`);
-                }
+                let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl + `page-${i + 1}/`);
                 tempEles = await fn.getEle(links, "#content>div");
             } else {
                 tempEles = fn.gae("#content>div");
@@ -4444,10 +4253,7 @@ a:has(>div>div>img),
             if (fn.ge("#showmore")) {
                 let ele = fn.ge("#showmore");
                 let max = ele.dataset.max;
-                let links = [siteUrl];
-                for (let i = 2; i <= max; i++) {
-                    links.push(siteUrl + `page-${i}/`);
-                }
+                let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl + `page-${i + 1}/`);
                 tempEles = await fn.getEle(links, ".photo-item>img");
             } else {
                 tempEles = fn.gae(".photo-item>img");
@@ -4471,10 +4277,7 @@ a:has(>div>div>img),
             if (fn.ge("#load_more")) {
                 let ele = fn.ge("#load_more");
                 let max = ele.dataset.max;
-                let links = [siteUrl];
-                for (let i = 2; i <= max; i++) {
-                    links.push(siteUrl + `page-${i}/`);
-                }
+                let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl + `page-${i + 1}/`);
                 tempEles = await fn.getEle(links, ".thumb_img");
             } else {
                 tempEles = fn.gae(".thumb_img");
@@ -5543,11 +5346,7 @@ a:has(>div>div>img),
             let pages = fn.ge(".pagelist");
             if (pages) {
                 let max = fn.gt(".pagelist .next", 2);
-                let url = fn.lp;
-                let pagelinks = [url];
-                for (let i = 2; i <= max; i++) {
-                    pagelinks.push(url + i);
-                }
+                let pagelinks = fn.arr(max, (v, i) => i == 0 ? fn.lp : fn.lp + (i + 1));
                 let albumE = await fn.getEle(pagelinks, "#album_masonry");
                 thumbnailSrcArray = albumE.map(e => fn.getImgSrcArr("img", e))?.flat();
                 piclinks = albumE.map(e => fn.gau("a", e))?.flat();
@@ -5563,6 +5362,7 @@ a:has(>div>div>img),
             ["#FullPictureLoadMainImgBox", 0, "#album_masonry,.pagelist-container"], 2
         ],
         customTitle: ".album_head>h1",
+        hide: ".download-container",
         category: "nsfw1"
     }, {
         name: "yoel.uno",
@@ -6732,6 +6532,7 @@ a:has(>div>div>img),
         name: "復刻書林",
         host: ["reprint-kh.com"],
         reg: /^https?:\/\/reprint-kh\.com\/archives\/\d+$/,
+        init: async () => await fn.clearElementEvent(),
         imgs: async () => {
             if (fn.ge(".gallery-row")) {
                 await fn.getNP(".gallery-row", "//a[span[text()='次のページ']]");
@@ -6746,6 +6547,15 @@ a:has(>div>div>img),
         insertImg: [
             [".single-post-main>.share,.single-post-main .content", 2], 2
         ],
+        insertImgAF: () => {
+            let nodes = [...fn.ge("#FullPictureLoadOptionsButtonParentDiv").parentElement.childNodes];
+            for (let node of nodes) {
+                if (node.id === "FullPictureLoadOptionsButtonParentDiv") {
+                    break;
+                }
+                nodes.remove();
+            }
+        },
         go: 1,
         autoDownload: [0],
         next: ".previous_post>a",
@@ -7054,10 +6864,10 @@ a:has(>div>div>img),
             let max = fn.gt("#pages>*:last-child", 2) || 1;
             let url = siteUrl.replace(/(-\d+)?\.html$/, "");
             let links = fn.arr(max, (v, i) => url + "-" + (i + 1) + ".html");
-            for (let i = 0; i < links.length; i++) {
+            for (let [page, link] of links.entries()) {
                 let dom = await new Promise(async resolve => {
                     for (let check = 1; check <= 100; check++) {
-                        let res = await fetch(links[i]);
+                        let res = await fetch(link);
                         if (res.status == 304 || res.status == 200) {
                             let buffer = await res.arrayBuffer();
                             let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
@@ -7066,7 +6876,7 @@ a:has(>div>div>img),
                             resolve(dom);
                             break;
                         } else {
-                            fn.showMsg(`第${i + 1}頁${res.status}重試第${check}次`, 2900);
+                            fn.showMsg(`第${page + 1}頁${res.status}重試第${check}次`, 2900);
                             await fn.delay(3000, 0);
                         }
                     }
@@ -7075,9 +6885,9 @@ a:has(>div>div>img),
                 let te = fn.gae(".pictures img").at(-1);
                 imgs.forEach(e => {
                     imgsArr.push(e.cloneNode(true));
-                    if (i != 0) insertAfter(te, e.cloneNode(true));
+                    if (page != 0) insertAfter(te, e.cloneNode(true));
                 });
-                if (i != 0) {
+                if (page != 0) {
                     let ce = fn.gae("#pages");
                     let re = fn.gae("#pages", dom);
                     if (ce.length == re.length) {
@@ -8383,11 +8193,7 @@ a:has(>div>div>img),
                 let last = fn.ge(".navigation>a:last-child");
                 let max = last.innerText;
                 let url = last.pathname;
-                let links = [fn.url];
-                for (let i = 2; i <= max; i++) {
-                    let link = url.replace(/(\/page\,)(\d+\,)/, `$1${i + ","}`);
-                    links.push(link);
-                }
+                let links = fn.arr(max, (v, i) => i == 0 ? fn.url : url.replace(/(\/page\,)(\d+\,)/, `$1${(i + 1) + ","}`));
                 srcs = await fn.getImgA("a.highslide,.full-text img", links);
             } else {
                 srcs = fn.getImgSrcArr("a.highslide,.full-text img");
@@ -8414,11 +8220,7 @@ a:has(>div>div>img),
                 let last = fn.ge(".navigation>a:last-child");
                 let max = last.innerText;
                 let url = last.pathname;
-                let links = [fn.url];
-                for (let i = 2; i <= max; i++) {
-                    let link = url.replace(/(\/page\,)(\d+\,)/, `$1${i + ","}`);
-                    links.push(link);
-                }
+                let links = fn.arr(max, (v, i) => i == 0 ? fn.url : url.replace(/(\/page\,)(\d+\,)/, `$1${(i + 1) + ","}`));
                 srcs = await fn.getImgA("a.highslide,.full-text img", links);
             } else {
                 srcs = fn.getImgSrcArr("a.highslide,.full-text img");
@@ -8435,7 +8237,7 @@ a:has(>div>div>img),
             h: "dtf.ru"
         }),
         imgs: () => {
-            let post = fn.gae(".content__blocks")[0];
+            let [post] = fn.gae(".content__blocks");
             if (post) {
                 fn.createImgBox(".content", 1);
                 //let medias = Object.values(JSON.parse(_unsafeWindow.__INITIAL_STATE__)).find(obj => !!obj.blocks)?.blocks.filter(item => item.type === "media");
@@ -8594,7 +8396,7 @@ a:has(>div>div>img),
             const {
                 messanger
             } = _unsafeWindow;
-            let imgDir = fn.gu(".pic>a").match(/[^\d]+/)[0];
+            let [imgDir] = fn.gu(".pic>a").match(/[^\d]+/);
             thumbnailSrcArray = messanger.gdata.map(e => "https://thumbs.wikifeet.com/" + e.pid + ".jpg");
             return messanger.gdata.map(e => imgDir + e.pid + ".jpg");
         },
@@ -8609,7 +8411,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/vk\.com\/album-[\d_]+$/,
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            let list = window.location.pathname.split("/")[1];
+            let [, list] = window.location.pathname.split("/");
             let picsNum = document.querySelector(".ui_crumb_count").innerText;
             let max = Math.ceil(picsNum / 10);
             let fetchNum = 0;
@@ -8810,21 +8612,25 @@ a:has(>div>div>img),
         },
         imgs: async () => {
             let max;
+            let links;
             try {
                 [, max] = fn.gu(".imgpagebar>a:last-child").match(/page-(\d+)/);
             } catch {
                 max = 1;
             }
             if (max > 1) {
-                let links = [];
-                let url = siteUrl.replace("index.html", "");
-                for (let i = 2; i <= max; i++) {
-                    links.push(url + "page-" + i + ".html");
-                }
-                await fn.getEle(links, "//div[div[@class='picbox']]", ["//div[div[div[@class='picbox']]]", 0]);
+                let pages = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace("index.html", "") + "page-" + (i + 1) + ".html");
+                return fn.getEle(pages, "//div[div[@class='picbox']]").then(picboxs => {
+                    let te = fn.ge("//div[@class='row'][div[div[@class='picbox']]]");
+                    te.innerHTML = "";
+                    te.append(...picboxs);
+                    thumbnailSrcArray = picboxs.map(b => fn.ge("img", b).src);
+                    links = picboxs.map(b => fn.ge("a", b).href);
+                    return fn.getImgA("//main//a[img]", links, 100);
+                });
             }
-            thumbnailSrcArray = fn.gae(".picbox img").map(img => img.src);
-            let links = fn.gau(".picbox>a");
+            thumbnailSrcArray = fn.getImgSrcArr(".picbox img");
+            links = fn.gau(".picbox>a");
             return fn.getImgA("//main//a[img]", links, 100);
         },
         button: [4],
@@ -9085,16 +8891,12 @@ a:has(>div>div>img),
             }
             const max = _unsafeWindow.adConstants.pagesAmount;
             if (max > 1) {
-                let links = [siteUrl];
-                for (let i = 2; i <= max; i++) {
-                    links.push(siteUrl + `${i}/`);
-                }
-                let fetchNum = 0;
+                let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl + `${i + 1}/`);
                 let resArr = [];
-                for (let i = 0; i < max; i++) {
-                    let res = await fn.fetchDoc(links[i]).then(dom => {
-                        fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
-                        return getUrls(dom, links[i]);
+                for (let [i, url] of links.entries()) {
+                    let res = await fn.fetchDoc(url).then(dom => {
+                        fn.showMsg(`${displayLanguage.str_06}${i + 1}/${max}`, 0);
+                        return getUrls(dom, url);
                     });
                     resArr.push(res);
                 }
@@ -11046,7 +10848,7 @@ a:has(>div>div>img),
             if (fn.ge(".comic-name")) {
                 return fn.gt(".comic-name");
             } else {
-                let text = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/)[1];
+                let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
                 let bookInfo = fn.run(text);
                 return bookInfo.book_name;
             }
@@ -11640,10 +11442,10 @@ a:has(>div>div>img),
                 let comicName = fn.gt(".panel-heading h1", 1, albumDoc).replaceAll("/", "").replace(/\s?\[禁漫漢化組\]/, "");
                 let episode = fn.ge(".episode", albumDoc);
                 if (episode) {
-                    let id = fn.lp.match(/\d+/)[0];
+                    let [id] = fn.lp.match(/\d+/);
                     let selector = `.episode a[data-album="${id}"]`;
                     let text = fn.gt(selector, 1, albumDoc);
-                    let chapterName = text.split("\n").filter(item => item)[0];
+                    let [chapterName] = text.split("\n").filter(item => item);
                     return comicName + " - " + chapterName.replace(/\[\d+[\w\s\.\+-]+\]/i, "").trim();
                 } else {
                     return comicName.replace(/\[\d+[\w\s\.\+-]+\]/i, "").trim();
@@ -12185,7 +11987,7 @@ a:has(>div>div>img),
             let url = fn.gu(".single-thumb>a");
             let json = await fn.fetchDoc(url).then(dom => {
                 let code = fn.gst("readerPages", dom);
-                let jsonCode = code.match(/JSON[^;]+/)[0];
+                let [jsonCode] = code.match(/JSON[^;]+/);
                 return fn.run(jsonCode);
             });
             let max = json.lastPage;
@@ -12306,10 +12108,10 @@ a:has(>div>div>img),
                 "method": "POST"
             }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
             fn.createImgBox("#comments_div");
-            let max = fn.gt(".info_pg").match(/\d+/)[0];
+            let [max] = fn.gt(".info_pg").match(/\d+/);
             let img = fn.ge(".gp_th img");
             let src = img.dataset.src ?? img.src;
-            let imgDir = src.match(/.+\//)[0];
+            let [imgDir] = src.match(/.+\//);
             return fn.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fn.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
@@ -12328,7 +12130,7 @@ a:has(>div>div>img),
             let max = fn.ge("#pages").value;
             let img = fn.ge("#fimg");
             let src = img.dataset.src ?? img.src;
-            let imgDir = src.match(/.+\//)[0];
+            let [imgDir] = src.match(/.+\//);
             return fn.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fn.ex(_unsafeWindow.g_th[(i + 1)][0])}`);
         },
         button: [4],
@@ -12687,7 +12489,7 @@ a:has(>div>div>img),
         imgs: async () => {
             await fn.waitEle("div[style*='background']");
             let div = fn.ge("div[style*='background']");
-            let src = div.style.background.split('"')[1];
+            let [, src] = div.style.background.split('"');
             let [imgDir] = src.match(/.+\//);
             let max = fn.gae("div[style*='background']").length;
             return fn.arr(max, (v, i) => imgDir + String(i).padStart(3, "0") + ".webp");
@@ -13454,7 +13256,7 @@ a:has(>div>div>img),
         init: async () => {
             let comic = fn.lp.split("/").at(3);
             let csrfToken = fn.ge("meta[name='csrf-token']").content;
-            let xsrfToken = document.cookie.match(/XSRF-TOKEN=(\w+)/)[1];
+            let [, xsrfToken] = document.cookie.match(/XSRF-TOKEN=(\w+)/);
             let json = await fetch(`/api/comics/${comic}/images`, {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
@@ -13485,7 +13287,7 @@ a:has(>div>div>img),
         init: async () => {
             let comic = fn.lp.split("/").at(3);
             let csrfToken = fn.ge("meta[name='csrf-token']").content;
-            let xsrfToken = document.cookie.match(/XSRF-TOKEN=(\w+)/)[1];
+            let [, xsrfToken] = document.cookie.match(/XSRF-TOKEN=(\w+)/);
             let json = await fetch(`/api/comics/${comic}/images`, {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
@@ -13949,14 +13751,26 @@ a:has(>div>div>img),
         host: "web.nicecat.cc",
         reg: /^https?:\/\/web\.nicecat\.cc\//,
         comicUid: () => document.URL.match(/\/id\.(.+)$/)[1],
-        getHeaders: () => {
-            let touristId = document.cookie.match(/tourist-id=([^;]+)/)[1];
-            return {
-                "accept": "application/json, text/plain, */*",
-                "api-version": "2",
-                "n-application-type": "web",
-                "n-security-certifications": "yyIH3QFABB1j+YuFnkP34bEyAIv2dNyfXKSTkKzhtQCaF9RXm7A+cWIn4VnyJh6c+OlarMBee6N3t6e0poVDkdbQykuIDQsjg9lBlhaey3mfQ7qpQz91esWds9cbObbsK9/Ey+4RZ9wSR95MFuM="
-            }
+        getHeaders: () => JSON.parse(localStorage.getItem("headers")),
+        init: () => {
+            ajaxHooker.filter([{
+                url: "/api/ComicInfo/info"
+            }, {
+                url: "/api/ComicOrder/getComicOrder"
+            }]);
+            ajaxHooker.hook(request => {
+                if (localStorage.getItem("headers") !== JSON.stringify(request.headers)) {
+                    localStorage.setItem("headers", JSON.stringify(request.headers));
+                }
+                if (Object.prototype.toString.call(request.data) === "[object FormData]") {
+                    let object = Object.fromEntries([...request.data.entries()]);
+                    if ("dateKey" in object) {
+                        if (localStorage.getItem("dateKey") !== object.dateKey) {
+                            localStorage.setItem("dateKey", object.dateKey);
+                        }
+                    }
+                }
+            });
         },
         imgs: (msg = 1) => {
             if (_this.SPA()) {
@@ -13965,7 +13779,7 @@ a:has(>div>div>img),
                 let formData = new FormData();
                 formData.append("comicUid", _this.comicUid());
                 formData.append("sort", "0");
-                formData.append("dateKey", "gz4yeSq4Z8hx8RiKgsMtobSLt8DvhSAP8GDdlhlLd5M=");
+                formData.append("dateKey", ("dateKey" in localStorage) ? localStorage.getItem("dateKey") : "SA4J0Br8W5fFPNb+Uhi0ugL0JXkOvcEw1BGid0UiosA=");
                 return fetch("/api/ComicOrder/getComicOrder", {
                     "headers": _this.getHeaders(),
                     "body": formData,
@@ -13975,7 +13789,7 @@ a:has(>div>div>img),
                 return [];
             }
         },
-        SPA: () => document.URL.includes("/comic/info/"),
+        SPA: () => document.URL.includes("/comic/info/") && ("headers" in localStorage),
         capture: () => _this.imgs(0),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
@@ -14068,7 +13882,7 @@ a:has(>div>div>img),
         customTitle: () => fn.dt({
             t: siteJson?.name
         }),
-        hide: "body>ins",
+        hide: "body>ins,div:not([id],[class]):has(div.items-center)",
         category: "hcomic"
     }, {
         name: "Comics",
@@ -15340,11 +15154,11 @@ a:has(>div>div>img),
             if (next) {
                 let last = fn.ge("//a[contains(text(),'最大頁') or contains(text(),'最大页')]");
                 let lastDoc = await fn.fetchDoc(last.href);
-                let lastFn = fn.gst("decodeBinaryString", lastDoc).match(/decodeBinaryString\('[^;]+/g)[0];
+                let [lastFn] = fn.gst("decodeBinaryString", lastDoc).match(/decodeBinaryString\('[^;]+/g);
                 let html = fn.run(lastFn);
                 let tempDoc = fn.doc(html);
                 let lastA = fn.gae("a", tempDoc).at(-1);
-                let max = lastA.href.match(/(\d+)\.\w+$/)[1];
+                let [, max] = lastA.href.match(/(\d+)\.\w+$/);
                 let [, imgDir, , ex] = fn.gu("#imgs>a").match(/^(.+\/)(\d+)(\.\w+)$/);
                 return fn.arr(max, (v, i) => imgDir + (i + 1) + ex);
             } else {
@@ -15406,7 +15220,7 @@ a:has(>div>div>img),
             if (fn.ge(".comic-name")) {
                 return fn.gt(".comic-name");
             } else {
-                let text = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/)[1];
+                let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
                 let bookInfo = fn.run(text);
                 return bookInfo.book_name;
             }
@@ -15429,7 +15243,7 @@ a:has(>div>div>img),
             if (fn.ge(".title")) {
                 return fn.gt(".title");
             } else {
-                let text = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/)[1];
+                let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
                 let bookInfo = fn.run(text);
                 return bookInfo.book_name + " - " + bookInfo.chapter_name;
             }
@@ -15584,7 +15398,7 @@ a:has(>div>div>img),
         init: async () => {
             await fn.waitEle(".charpetBox img");
             let code = fn.gt("//script[contains(text(),'$(document).ready')]");
-            let objStr = code.match(/window\.\w+\s?=\s?([^;]+)/)[1];;
+            let objStr = code.match(/window\.\w+\s?=\s?([^;]+)/)[1];
             let json = JSON.parse(objStr);
             debug("\n此頁JSON資料\n", json);
             siteJson = json;
@@ -16045,12 +15859,10 @@ a:has(>div>div>img),
         reg: /^https?:\/\/raw\.senmanga\.com\/[\w-]+\/\d+$/,
         imgs: () => {
             let links = [fn.url];
-            let pl = fn.gae(".page-list")[0];
+            let [pl] = fn.gae(".page-list");
             let ps = fn.gae(".page-list option", pl).length;
             if (ps > 1) {
-                for (let i = 2; i <= ps; i++) {
-                    links.push(fn.url + "/" + i);
-                }
+                links = fn.arr(ps, (v, i) => i == 0 ? fn.url : fn.url + "/" + (i + 1));
             }
             return fn.getImgA(".picture", links);
         },
@@ -16509,12 +16321,12 @@ if ("xx" in window) {
         include: ".container",
         getSrcs: (dom) => {
             let code = fn.gst("MANGABZ_IMAGE_COUNT", dom);
-            let imagesNum = code.match(/MANGABZ_IMAGE_COUNT[\s\=]+(\d+)/)[1];
-            let chapterURL = code.match(/MANGABZ_CURL[\s\="]+([^"]+)/)[1];
-            let cid = code.match(/MANGABZ_CID[\s\=]+(\d+)/)[1];
-            let mid = code.match(/MANGABZ_MID[\s\=]+(\d+)/)[1];
+            let [, imagesNum] = code.match(/MANGABZ_IMAGE_COUNT[\s\=]+(\d+)/);
+            let [, chapterURL] = code.match(/MANGABZ_CURL[\s\="]+([^"]+)/);
+            let [, cid] = code.match(/MANGABZ_CID[\s\=]+(\d+)/);
+            let [, mid] = code.match(/MANGABZ_MID[\s\=]+(\d+)/);
             let dt = encodeURIComponent(code.match(/MANGABZ_VIEWSIGN_DT[\s\="]+([^"]+)/)[1]);
-            let sing = code.match(/MANGABZ_VIEWSIGN[\s\="]+([^"]+)/)[1];
+            let [, sing] = code.match(/MANGABZ_VIEWSIGN[\s\="]+([^"]+)/);
             let resArr = [];
             for (let i = 1; i <= imagesNum; i++) {
                 let searchParams = new URLSearchParams({
@@ -16558,7 +16370,7 @@ if ("xx" in window) {
             re: ".container",
             title: (dom) => {
                 let code = fn.gst("MANGABZ_CTITLE", dom);
-                let title = code.match(/MANGABZ_CTITLE[\s\="]+([^"]+)/)[1];
+                let [, title] = code.match(/MANGABZ_CTITLE[\s\="]+([^"]+)/);
                 return title;
             },
             preloadNextPage: 1
@@ -16627,12 +16439,12 @@ if ("xx" in window) {
         include: ".reader-bottom-page-list",
         getSrcs: (dom) => {
             let code = fn.gst("XMANHUA_IMAGE_COUNT", dom);
-            let imagesNum = code.match(/XMANHUA_IMAGE_COUNT[\s\=]+(\d+)/)[1];
-            let chapterURL = code.match(/XMANHUA_CURL[\s\="]+([^"]+)/)[1];
-            let cid = code.match(/XMANHUA_CID[\s\=]+(\d+)/)[1];
-            let mid = code.match(/XMANHUA_MID[\s\=]+(\d+)/)[1];
+            let [, imagesNum] = code.match(/XMANHUA_IMAGE_COUNT[\s\=]+(\d+)/);
+            let [, chapterURL] = code.match(/XMANHUA_CURL[\s\="]+([^"]+)/);
+            let [, cid] = code.match(/XMANHUA_CID[\s\=]+(\d+)/);
+            let [, mid] = code.match(/XMANHUA_MID[\s\=]+(\d+)/);
             let dt = encodeURIComponent(code.match(/XMANHUA_VIEWSIGN_DT[\s\="]+([^"]+)/)[1]);
-            let sing = code.match(/XMANHUA_VIEWSIGN[\s\="]+([^"]+)/)[1];
+            let [, sing] = code.match(/XMANHUA_VIEWSIGN[\s\="]+([^"]+)/);
             let resArr = [];
             for (let i = 1; i <= imagesNum; i++) {
                 let searchParams = new URLSearchParams({
@@ -16676,7 +16488,7 @@ if ("xx" in window) {
             re: ".container",
             title: (dom) => {
                 let code = fn.gst("XMANHUA_CTITLE", dom);
-                let title = code.match(/XMANHUA_CTITLE[\s\="]+([^"]+)/)[1];
+                let [, title] = code.match(/XMANHUA_CTITLE[\s\="]+([^"]+)/);
                 return title;
             },
             preloadNextPage: 1
@@ -16715,7 +16527,7 @@ if ("xx" in window) {
                     _dt: DM5_VIEWSIGN_DT,
                     _sign: DM5_VIEWSIGN
                 });
-                let api = `${DM5_CURL}chapterfn.ashx?${searchParams}`;
+                let api = `${DM5_CURL}chapterfun.ashx?${searchParams}`;
                 return fetch(api).then(res => res.text()).then(res => {
                     if (msg == 1) fn.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${DM5_IMAGE_COUNT})`, 0);
                     return fn.run(res)[0];
@@ -16748,12 +16560,12 @@ if ("xx" in window) {
         include: "#chapterpager",
         getSrcs: (dom) => {
             let code = fn.gst("DM5_IMAGE_COUNT", dom);
-            let imagesNum = code.match(/DM5_IMAGE_COUNT[\s\=]+(\d+)/)[1];
-            let chapterURL = code.match(/DM5_CURL[\s\="]+([^"]+)/)[1];
-            let cid = code.match(/DM5_CID[\s\=]+(\d+)/)[1];
-            let mid = code.match(/DM5_MID[\s\=]+(\d+)/)[1];
-            let dt = code.match(/DM5_VIEWSIGN_DT[\s\="]+([^"]+)/)[1];
-            let sing = code.match(/DM5_VIEWSIGN[\s\="]+([^"]+)/)[1];
+            let [, imagesNum] = code.match(/DM5_IMAGE_COUNT[\s\=]+(\d+)/);
+            let [, chapterURL] = code.match(/DM5_CURL[\s\="]+([^"]+)/);
+            let [, cid] = code.match(/DM5_CID[\s\=]+(\d+)/);
+            let [, mid] = code.match(/DM5_MID[\s\=]+(\d+)/);
+            let [, dt] = code.match(/DM5_VIEWSIGN_DT[\s\="]+([^"]+)/);
+            let [, sing] = code.match(/DM5_VIEWSIGN[\s\="]+([^"]+)/);
             let keyE = fn.ge("#dm5_key");
             let key = keyE.value;
             let resArr = [];
@@ -16769,7 +16581,7 @@ if ("xx" in window) {
                     _dt: dt,
                     _sign: sing
                 });
-                let api = `${chapterURL}chapterfn.ashx?${searchParams}`;
+                let api = `${chapterURL}chapterfun.ashx?${searchParams}`;
                 let res = fetch(api).then(res => res.text()).then(text => {
                     let srcArr = fn.run(text);
                     return srcArr[0];
@@ -16911,12 +16723,12 @@ if ("xx" in window) {
         include: ".reader-bottom-page-list",
         getSrcs: (dom) => {
             let code = fn.gst("YYMANHUA_IMAGE_COUNT", dom);
-            let imagesNum = code.match(/YYMANHUA_IMAGE_COUNT[\s\=]+(\d+)/)[1];
-            let chapterURL = code.match(/YYMANHUA_CURL[\s\="]+([^"]+)/)[1];
-            let cid = code.match(/YYMANHUA_CID[\s\=]+(\d+)/)[1];
-            let mid = code.match(/YYMANHUA_MID[\s\=]+(\d+)/)[1];
+            let [, imagesNum] = code.match(/YYMANHUA_IMAGE_COUNT[\s\=]+(\d+)/);
+            let [, chapterURL] = code.match(/YYMANHUA_CURL[\s\="]+([^"]+)/);
+            let [, cid] = code.match(/YYMANHUA_CID[\s\=]+(\d+)/);
+            let [, mid] = code.match(/YYMANHUA_MID[\s\=]+(\d+)/);
             let dt = encodeURIComponent(code.match(/YYMANHUA_VIEWSIGN_DT[\s\="]+([^"]+)/)[1]);
-            let sing = code.match(/YYMANHUA_VIEWSIGN[\s\="]+([^"]+)/)[1];
+            let [, sing] = code.match(/YYMANHUA_VIEWSIGN[\s\="]+([^"]+)/);
             let resArr = [];
             for (let i = 1; i <= imagesNum; i++) {
                 let searchParams = new URLSearchParams({
@@ -16960,7 +16772,7 @@ if ("xx" in window) {
             re: ".container",
             title: (dom) => {
                 let code = fn.gst("YYMANHUA_CTITLE", dom);
-                let title = code.match(/YYMANHUA_CTITLE[\s\="]+([^"]+)/)[1];
+                let [, title] = code.match(/YYMANHUA_CTITLE[\s\="]+([^"]+)/);
                 return title;
             },
             preloadNextPage: 1
@@ -17133,8 +16945,8 @@ if ("xx" in window) {
                 let code = fn.gst("comic_id", dom).replaceAll('\"', '');
                 let next_chap = code.search(/next_chap/);
                 if (next_chap > -1) {
-                    let cm = code.match(/comic_id:(\d+)/)[1];
-                    let nm = code.match(/next_chap_id:(\d+)/)[1];
+                    let [, cm] = code.match(/comic_id:(\d+)/);
+                    let [, nm] = code.match(/next_chap_id:(\d+)/);
                     return fn.lo + "/view/" + cm + "/" + nm + ".html";
                 } else {
                     return null;
@@ -17156,7 +16968,7 @@ if ("xx" in window) {
             title: (dom) => fn.gt(".BarTit", 1, dom),
             aF: (dom) => {
                 let code = [...dom.scripts].find(s => s.innerHTML.includes("initData")).innerHTML;
-                code = code.match(/mReader[^;]+;/)[0];
+                [code] = code.match(/mReader[^;]+;/);
                 fn.script(code, 0, 1);
             }
         },
@@ -17483,7 +17295,7 @@ if ("xx" in window) {
         imgs: async (url = document.URL) => {
             if (!_this.SPA()) return [];
             fn.showMsg(displayLanguage.str_05, 0);
-            let chapterId = url.match(/chapter\/(\d+)\/images/)[1];
+            let [, chapterId] = url.match(/chapter\/(\d+)\/images/);
             let body = {
                 operationName: "imagesByChapterId",
                 variables: {
@@ -17505,7 +17317,7 @@ if ("xx" in window) {
         SPA: () => document.URL.includes("/chapter/"),
         next: async (url = document.URL) => {
             if (!_this.SPA()) return null;
-            let mhId = url.match(/comic\/(\d+)/)[1];
+            let [, mhId] = url.match(/comic\/(\d+)/);
             let body = {
                 operationName: "chapterByComicId",
                 variables: {
@@ -17521,7 +17333,7 @@ if ("xx" in window) {
                 "method": "POST"
             }).then(res => res.json());
             debug("\nchapter JSON\n", json);
-            let chapterId = url.match(/chapter\/(\d+)\/images/)[1];
+            let [, chapterId] = url.match(/chapter\/(\d+)\/images/);
             let chapters = json.data.chaptersByComicId;
             let nextUrl;
             for (let [i, chapter] of chapters.entries()) {
@@ -17574,7 +17386,7 @@ if ("xx" in window) {
         exclude: "#info table[align]",
         init: () => fn.cartoonmadUI(),
         imgs: (dom = document) => {
-            let imgDir = fn.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//)[0];
+            let [imgDir] = fn.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//);
             let max = fn.ge(".onpage", dom).parentNode.lastElementChild.previousElementSibling.innerText;
             fn.remove("//tr[td[a[@class='onpage']]]");
             return fn.arr(max, (v, i) => imgDir + String((i + 1)).padStart(3, "0") + ".jpg");
@@ -17617,7 +17429,7 @@ if ("xx" in window) {
         reg: () => /^https?:\/\/www\.cartoonmad\.com\/comic\/\d+\.html|^https?:\/\/cc\.fun8\.us\/post\/\d+\.html/.test(fn.url) && comicInfiniteScrollMode == 1,
         exclude: "#info table[align]",
         getSrcs: (dom) => {
-            let imgDir = fn.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//)[0];
+            let [imgDir] = fn.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//);
             let max = fn.ge(".onpage", dom).parentNode.lastElementChild.previousElementSibling.innerText;
             let srcs = fn.arr(max, (v, i) => imgDir + String((i + 1)).padStart(3, "0") + ".jpg");
             return srcs;
@@ -17836,10 +17648,10 @@ if ("xx" in window) {
         reg: () => /^https?:\/\/(www|m)\.gufengmh\d?\.com\/manhua\/\w+\/\d+\.html/.test(fn.url) && comicInfiniteScrollMode == 1,
         getSrcs: (dom) => {
             let code = fn.gst("chapterImages", dom);
-            let imagesArrText = code.match(/chapterImages[\s=]+([^;]+)/)[1];
+            let [, imagesArrText] = code.match(/chapterImages[\s=]+([^;]+)/);
             let cImages = fn.run(imagesArrText);
-            let cPath = code.match(/chapterPath[\s="]+([^"]+)/)[1];
-            let domain = code.match(/pageImage[\s="]+(https?:\/\/\w+\.\w+\.\w+\/)/)[1];
+            let [, cPath] = code.match(/chapterPath[\s="]+([^"]+)/);
+            let [, domain] = code.match(/pageImage[\s="]+(https?:\/\/\w+\.\w+\.\w+\/)/);
             let srcs = cImages.map(e => domain + cPath + e);
             return srcs;
         },
@@ -17863,8 +17675,8 @@ if ("xx" in window) {
             observer: "#FullPictureLoadMainImgBox>img",
             next: (dom, r = 1) => {
                 let code = fn.gst("nextChapterData", dom);
-                let nextText = code.match(/nextChapterData[\s=]+([^;]+)/)[1];
-                let cUrlText = code.match(/comicUrl[\s="]+([^"]+)/)[1];
+                let [, nextText] = code.match(/nextChapterData[\s=]+([^;]+)/);
+                let [, cUrlText] = code.match(/comicUrl[\s="]+([^"]+)/);
                 let nextrData = JSON.parse(nextText);
                 if (nextrData?.id > 0) {
                     return cUrlText + nextrData.id + ".html";
@@ -18027,7 +17839,7 @@ if ("xx" in window) {
                 let s = fn.gst("initChapter", dom).match(/SinTheme\.initChapter\(([^\)]+)\);/)[1].replaceAll('"', "").split(",");
                 return s[3] + " - " + s[1];
             } else {
-                let data = JSON.parse(localStorage.history)[0];
+                let [data] = JSON.parse(localStorage.history);
                 return data.comic_name + " - " + data.read_chapter;
             }
         },
@@ -18063,7 +17875,7 @@ if ("xx" in window) {
         },
         prev: 1,
         customTitle: () => {
-            let data = JSON.parse(localStorage.history)[0];
+            let [data] = JSON.parse(localStorage.history);
             return data.comic_name + " - " + data.read_chapter;
         },
         preloadNext: (nextDoc, obj) => {
@@ -18078,7 +17890,7 @@ if ("xx" in window) {
         enable: 0,
         reg: /^https?:\/\/m\.92mh\.com\/manhua\/\d+\/\d+\.html/i,
         imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => {
-            let max = fn.gt(".image-content p", 1, dom).match(/\/(\d+)/)[1];
+            let [, max] = fn.gt(".image-content p", 1, dom).match(/\/(\d+)/);
             return fn.getImg("#manga-image", max, 5, null, 20, url, msg, request);
         },
         button: [4],
@@ -18230,9 +18042,9 @@ if ("xx" in window) {
             next: (dom) => {
                 let code = fn.gst("nextUrlid", dom);
                 let comicURL = fn.gu("#position a");
-                let cidText = code.match(/nextUrlid[\s\=]+([^,;]+)/)[1];
+                let [, cidText] = code.match(/nextUrlid[\s\=]+([^,;]+)/);
                 if (/\d+/.test(cidText)) {
-                    let cid = cidText.match(/\d+/)[0];
+                    let [cid] = cidText.match(/\d+/);
                     return comicURL + cid + ".html";
                 } else {
                     return null;
@@ -18283,7 +18095,7 @@ if ("xx" in window) {
         reg: () => /^https?:\/\/(m\.laimanhua\d?\.com|m\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fn.url) && comicInfiniteScrollMode == 1,
         json: (dom) => {
             let code = fn.gst("mhInfo", dom);
-            let objText = code.match(/mhInfo[\s=]+([^;]+)/)[1];
+            let [, objText] = code.match(/mhInfo[\s=]+([^;]+)/);
             let json = JSON.parse(objText);
             return json;
         },
@@ -18338,7 +18150,7 @@ if ("xx" in window) {
         fetchJson: async (lp = new URL(siteUrl).pathname) => {
             let lps = lp.split("/");
             let comic_id = lps[1];
-            let chapter_id = lps[2].match(/\d+/)[0];
+            let [chapter_id] = lps[2].match(/\d+/);
             let apiUrl = `https://comic.mkzcdn.com/chapter/content/v1/?chapter_id=${chapter_id}&comic_id=${comic_id}&format=1&quality=1&type=1`;
             return fetch(apiUrl).then(res => res.json());
         },
@@ -20156,7 +19968,7 @@ if ("xx" in window) {
         prev: "//a[text()='上一章']",
         customTitle: () => {
             if (/www\.52hah\.com|www\.kukanmanhua\.com|www\.mh369\.com/.test(fn.lh)) {
-                let text = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/)[1];
+                let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
                 let bookInfo = fn.run(text);
                 return bookInfo.book_name.replace(/_\d+$/, "") + " - " + bookInfo.chapter_name;
             } else {
@@ -20197,7 +20009,7 @@ if ("xx" in window) {
         prev: "#js_pagePrevBtn>a,a#prev",
         customTitle: () => {
             let code = fn.gst("read");
-            let objText = code.match(/read[\s=]+([^;]+)/)[1];
+            let [, objText] = code.match(/read[\s=]+([^;]+)/);
             let json = fn.run(objText);
             return json.articlename + " - " + json.chaptername;
         },
@@ -20215,7 +20027,7 @@ if ("xx" in window) {
         prev: "a#prev",
         customTitle: () => {
             let code = fn.gst("read");
-            let objText = code.match(/read[\s=]+([^;]+)/)[1];
+            let [, objText] = code.match(/read[\s=]+([^;]+)/);
             let json = fn.run(objText);
             return json.articlename + " - " + json.chaptername;
         },
@@ -20734,7 +20546,7 @@ if ("xx" in window) {
         reg: /^https?:\/\/manga\.bilibili\.com\/mc\d+\/\d+\?from=manga_detail/,
         init: () => setTimeout(() => fn.ge(".load-next-btn").addEventListener("click", () => setTimeout(() => location.reload(), 500)), 1000),
         imgs: async () => {
-            let ep_id = siteUrl.split("/").at(-1).match(/\d+/)[0];
+            let [ep_id] = siteUrl.split("/").at(-1).match(/\d+/);
             let headers = {
                 "content-type": "application/json;charset=UTF-8"
             };
@@ -20787,7 +20599,7 @@ if ("xx" in window) {
         include: "//script[contains(text(),'listimg')]",
         imgs: () => {
             let code = fn.gst("listimg");
-            let arrText = code.match(/listimg[\s=]+([^;]+)/)[1];
+            let [arrText] = code.match(/listimg[\s=]+([^;]+)/);
             let dataArr = fn.run(arrText);
             return dataArr.map(e => e.file);
         },
@@ -20921,7 +20733,7 @@ if ("xx" in window) {
         },
         imgs: async (json = siteJson, msg = null) => {
             let hostArr = fn.gau("link[rel='dns-prefetch']");
-            let firstPic = json.cont[0];
+            let [firstPic] = json.cont;
             let testArr = hostArr.map(e => e + firstPic);
             let ok = false;
             let host;
@@ -21327,7 +21139,7 @@ if ("xx" in window) {
             const unBlur = async () => {
                 if (/\/posts\/|\/models\//.test(fn.lp)) {
                     try {
-                        let ele = [...document.querySelectorAll(".mantine-1t4bhd4")][0];
+                        let [ele] = [...document.querySelectorAll(".mantine-1t4bhd4")];
                         let elePath = ele.querySelector("span>svg>path");
                         if (elePath) {
                             let d = elePath.getAttribute("d");
@@ -21355,7 +21167,7 @@ if ("xx" in window) {
                             item.dataset.thumb = thumbnail;
                             item.dataset.url = thumbnail.replace(/width=[\d+\.]\//, ""); //Original Image URL to replace when an error occurs
                             let original = thumbnail.replace(/width=[\d\.]+\//, "original=true/");
-                            let imgDir = original.match(/.+\//)[0];
+                            let [imgDir] = original.match(/.+\//);
                             if (item.alt != "" && /\.\w+$/.test(item.alt)) original = imgDir + item.alt.trim();
                             item.dataset.src = original;
                             item.src = loading_bak;
@@ -21514,7 +21326,7 @@ if ("xx" in window) {
                         let id = a.href.split("/")[4];
                         let api = `https://saas.neural.love/api/ai-photostock/orders/${id}?id=${id}`;
                         fetch(api).then(res => res.json()).then(json => {
-                            let data = json.output[0];
+                            let [data] = json.output;
                             let original = data.full ?? data.fullWebp;
                             a.dataset.src = original;
                             a.style.backgroundImage = `url("${original}")`;
@@ -22434,14 +22246,15 @@ if ("xx" in window) {
                 } else if (isString(hosts)) {
                     checkH = fn.lh.includes(hosts);
                 }
+                if (!checkH) return false;
             }
-            if (!checkH) return false;
             if ("t" in obj) {
                 if (isArray(title)) {
                     checkT = title.some(e => document.title.includes(e))
                 } else if (isString(title)) {
                     checkT = document.title.includes(title);
                 }
+                if (!checkT) return false;
             }
             if ("p" in obj) {
                 if (isRegExp(pathname)) {
@@ -22449,6 +22262,7 @@ if ("xx" in window) {
                 } else if (isString(pathname)) {
                     checkP = fn.lp.includes(pathname);
                 }
+                if (!checkP) return false;
             }
             if ("s" in obj) {
                 if (isRegExp(search)) {
@@ -22456,6 +22270,7 @@ if ("xx" in window) {
                 } else if (isString(search)) {
                     checkS = fn.ls.includes(search);
                 }
+                if (!checkS) return false;
             }
             if ("e" in obj) {
                 if (isArray(elements)) {
@@ -22463,6 +22278,7 @@ if ("xx" in window) {
                 } else if (isString(elements)) {
                     checkE = !!fn.ge(elements);
                 }
+                if (!checkE) return false;
             }
             if ("imgs" in tempData && isString(imgSelector) && !("SPA" in tempData)) {
                 checkI = !!fn.ge(imgSelector);
@@ -23078,7 +22894,7 @@ if ("xx" in window) {
                 if (srcset) {
                     let splitArr = srcset.split(",");
                     splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)(w|x)/)[1] - b.match(/\s(\d+)(w|x)/)[1]);
-                    let src = splitArr.at(-1).trim().split(" ")[0];
+                    let [src] = splitArr.at(-1).trim().split(" ");
                     if (/^https:\/\/i\d\.wp\.com/.test(src)) {
                         src = src.replace(/\?.+$/, "?ssl=1");
                     }
@@ -25860,6 +25676,28 @@ if ("xx" in window) {
         return (node || document).querySelector(selector);
     }
 
+    //延遲
+    function delay(time = 1000) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    //等待直至回調函式返回有效物件
+    function wait(callback) {
+        return new Promise(ending => {
+            const loopFn = async () => {
+                const check = await callback();
+                if (!!check) {
+                    ending();
+                    return;
+                } else {
+                    await delay(100);
+                    return loopFn();
+                }
+            };
+            loopFn();
+        });
+    }
+
     //CSS取得所有元素返回元素陣列
     const gae = (selector, node = null) => [...(node || document).querySelectorAll(selector)];
     //Xpath取得元素返回元素
@@ -26361,7 +26199,7 @@ if ("xx" in window) {
                             } else if (/^text\/base64\.jpg/.test(type)) {
                                 ex = "jpg";
                             } else {
-                                ex = type.split("/")[1].match(/\w+/)[0];
+                                [ex] = type.split("/")[1].match(/\w+/);
                             }
                         } catch {
                             if (/^image/.test(type)) {
@@ -31107,12 +30945,12 @@ a[data-fancybox]:hover {
                 check = await data.reg();
             }
             if (check) {
-                let category = data.category;
+                const category = data.category;
                 if (category == "comic" && data.enable == 0) {
                     showOptions = true;
                     comicSwitch = true;
                 }
-                let delay = data.delay;
+                const delay = data.delay;
                 if (isNumber(delay)) await fn.delay(delay, 0);
                 checkOptionsData();
                 if (data.enable == 0) {
@@ -31128,27 +30966,27 @@ a[data-fancybox]:hover {
                     }
                 }
                 //if (data.enable != 0) checkOptionsData();
-                let include = data.include;
+                const include = data.include;
                 if (isString(include)) {
                     if (!fn.ge(include)) {
                         debug("\n頁面沒有包含必須的元素", data);
                         continue;
                     }
                 } else if (isArray(include)) {
-                    let checkEles = include.every(e => !!fn.ge(e));
+                    const checkEles = include.every(e => !!fn.ge(e));
                     if (!checkEles) {
                         debug("\n頁面沒有包含必須的所有元素", data);
                         continue;
                     }
                 }
-                let exclude = data.exclude;
+                const exclude = data.exclude;
                 if (isString(exclude)) {
                     if (!!fn.ge(exclude)) {
                         debug("\n頁面包含必須排除的元素", data);
                         continue;
                     }
                 } else if (isArray(exclude)) {
-                    let checkEles = exclude.some(s => !!fn.ge(s));
+                    const checkEles = exclude.some(s => !!fn.ge(s));
                     if (checkEles) {
                         debug("\n頁面包含陣列選擇器中必須排除的元素", data);
                         continue;
