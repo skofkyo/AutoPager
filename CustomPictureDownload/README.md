@@ -114,17 +114,17 @@ https://*wnacg.com/photos-slist-aid-*.html
     },
     repeat: 1, //重複取得圖片元素，用於SPA網頁
     thums: ".thums", //Fancybox要用的縮略圖網址選擇器
-    scrollEle: ["元素", time],//[自動滾動元素, 滾動的間隔], 綁定快捷鍵數字鍵6
+    scrollEle: ["元素", time], //[自動滾動元素, 滾動的間隔], 綁定快捷鍵數字鍵6
     scrollEle: async () => {
         …code;
     },
-    button: [4, "24%", 1],//[無作用, "寬度%", 在按鈕之前添加多少空行]，有此屬性才會添加功能按鈕
+    button: [4, "24%", 1] , //[無作用, "寬度%", 在按鈕之前添加多少空行]，有此屬性才會添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
     ],
-    endColor: "white",//更改頁面容器底部統計圖片數量文字顏色
-    insertImgAF: () => {
+    endColor: "white", //更改頁面容器底部統計圖片數量文字顏色
+    insertImgAF: (parent) => { //參數parent是插入的圖片的父元素
         //插入圖片後要執行的代碼
         code;
     },
@@ -207,7 +207,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         ["", 1, ""], 2, time
     ],
     endColor: "white",
-    insertImgAF: () => {
+    insertImgAF: (parent) => {
         code
     },
     go: 1,
@@ -415,14 +415,14 @@ isURL(obj);
 </pre>
 <pre>
 //匹配網址和頁面元素，用於規則reg是函式的寫法
-//t = document.title 匹配標題部分字串，格式可為字串或字串的陣列
-//h = hosts 匹配網站的域名，格式可為字串、正規表達式、字串或正規表達式的陣列
-//p = pathname 匹配網址的路徑，格式可為字串或正規表達式
-//s = search 匹配網址的搜尋，格式可為字串或正規表達式
-//e = elements 匹配網頁的元素選擇器，格式可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
+//t = document.title 匹配標題部分字串，類型可為字串、正規表達式、字串或正規表達式的陣列
+//h = hosts 匹配網站的域名，類型可為字串、正規表達式、字串或正規表達式的陣列
+//p = pathname 匹配網址的路徑，類型可為字串、正規表達式、字串或正規表達式的陣列
+//s = search 匹配網址的搜尋，類型可為字串或正規表達式
+//e = elements 匹配網頁的元素選擇器，類型可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
 //規則屬性imgs和customTitle如為字串，會自動判斷頁面元素
 const object = {
-    //String or Array [String]
+    //String or RegExp or Array [String or RegExp]
     t: [
         "4KHD",
         "包子"
@@ -491,7 +491,7 @@ fn.getText(String or Array, HTMLDocument or HTMLElement);
 //刪除指定字串返回字串
 s = selector 元素選擇器
 t = text 文字字串
-d = delete 要刪除的字串，格式可以是字串、正規表達式 、字串或正規表達式的陣列
+d = delete 要刪除的字串，類型可以是字串、正規表達式 、字串或正規表達式的陣列
 const objetc = {
     s: String,
     t: String,
@@ -1350,7 +1350,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://meirentu.cc/">美人图</a>
                 </td>
                 <td>
-                    <a href="https://meirentu.org/">meirentu.org</a>，<a href="https://meirentu.top/">meirentu.top</a>，<a href="https://meirentu.me/">meirentu.me</a>，<a href="https://meirentu.icu/">meirentu.icu</a>，
+                    <a href="https://meirentu.org/">meirentu.org</a>，<a href="https://meirentu.top/">meirentu.top</a>，<a href="https://meirentu.me/">meirentu.me</a>，<a href="https://meirentu.icu/">meirentu.icu</a>
                 </td>
             </tr>
             <tr>
@@ -3265,7 +3265,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://niwatori.my.id/2023/">niwatori.my.id</a>
+                    <a href="https://quenbox.top/?cat=1">quenbox.top</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://niwatori.my.id/category/uncategorized/">niwatori.my.id</a>
                 </td>
                 <td></td>
             </tr>
@@ -4079,7 +4085,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.crtys.net/">人体艺术</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">同系列網站8個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/gogort.txt">同系列網站9個</a>
                 </td>
             </tr>
             <tr>
