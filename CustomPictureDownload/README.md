@@ -3,16 +3,16 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/10/10
+2024/10/22
 PC
-Chrome 129.0.6668.101 + Tampermonkey 5.3.0 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
-Edge 129.0.2792.79 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Chrome 130.0.6723.59 + Tampermonkey 5.3.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Edge 130.0.2849.46 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
 Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
-FireFox 131.0.2 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+FireFox 131.0.3 + Tampermonkey 5.3.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
 Android
-Edge Canary 131.0.2882.0 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Edge Canary 132.0.2908.0 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
 Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
-Firefox for Android 131.0.2 + Tampermonkey 5.1.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+Firefox for Android 131.0.3 + Tampermonkey 5.3.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
 XBrowser 4.8.2
 ViaBrowser 5.9.5
 </pre>
