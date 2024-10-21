@@ -30,7 +30,6 @@ ViaBrowser 5.9.5
 cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
-// @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
@@ -43,7 +42,6 @@ cdn.jsdelivr.net
 unpkg.com
 // @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
-// @require            https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
@@ -79,6 +77,16 @@ https://*wnacg.com/photos-slist-aid-*.html
     enable: 0, //填0禁用此規則
     icon: 0, //填0不顯示左下圖示
     key: 0, //填0不綁定快捷鍵
+    url: { //將URL拆分判斷，格式詳見內置函式fn.checkUrl(object);
+        t: "",
+        h: "",
+        p: "",
+        s: "",
+        e: "",
+        d: ""
+    },
+    url: () => boolean,
+    //reg和url擇其一作為規則匹配的方式
     reg: /www\.xxxxx\.com/, //正規表達式匹配網址
     reg: [ //匹配正規表達式陣列
         /RegExp/,
@@ -123,7 +131,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
     ],
-    endColor: "white", //更改頁面容器底部統計圖片數量文字顏色
+    endColor: "white", //更改頁面容器底部統計圖片數量的文字顏色
     insertImgAF: (parent) => { //參數parent是插入的圖片的父元素
         //插入圖片後要執行的代碼
         code;
@@ -158,30 +166,30 @@ https://*wnacg.com/photos-slist-aid-*.html
     infiniteScroll: true, //漫畫分類標記有無限滾動模式
     gallery: 1, //影子畫廊調用Iframe畫廊
     downloadVideo: true, //下載變數videoSrcArray裡的影片直連網址
+    focus: "selector", //離開影子畫廊後要滾動到此元素的位置，類型可以是字串"selector"、"last:selector"或函式返回DOM元素
+    focus: () => HTMLElement,
+    closeAF: () =>, //離開影子畫廊後要運行的函式
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
     enable: 0,
     icon: 0,
     key: 0,
-    reg: /www\.xxxxx\.com/,
-    reg: [
-        //,
-        //
-    ],
-    reg: () => {
-        if (code) {
-            return true;
-        }
-        return false;
-    },
-    reg: () => fn.checkUrl({
+    url: {
         t: "",
         h: "",
         p: "",
         s: "",
         e: "",
-    }),
+        d: ""
+    },
+    url: () =>,
+    reg: /www\.xxxxx\.com/,
+    reg: [
+        //,
+        //
+    ],
+    reg: () => ,
     delay: 300,
     include: "",
     include: [""],
@@ -242,6 +250,9 @@ https://*wnacg.com/photos-slist-aid-*.html
     infiniteScroll: true,
     gallery: 1,
     downloadVideo: true,
+    focus: "",
+    focus: () =>,
+    closeAF: () =>,
     category: ""
 }, {
     name: "規則3",
@@ -404,6 +415,8 @@ isRegExp(obj);
 isObject(obj);
 //判斷是否為陣列返回布林值
 isArray(obj);
+//判斷是否為集合new Set()返回布林值
+isSet(obj);
 //判斷是否為Promise返回布林值
 isPromise(obj);
 //判斷是否為函式返回布林值
@@ -414,13 +427,14 @@ isEle(obj);
 isURL(obj);
 </pre>
 <pre>
-//匹配網址和頁面元素，用於規則reg是函式的寫法
+//匹配網址和頁面元素，用於規則屬性url和reg是函式的寫法
 //t = document.title 匹配標題部分字串，類型可為字串、正規表達式、字串或正規表達式的陣列
 //h = hosts 匹配網站的域名，類型可為字串、正規表達式、字串或正規表達式的陣列
 //p = pathname 匹配網址的路徑，類型可為字串、正規表達式、字串或正規表達式的陣列
 //s = search 匹配網址的搜尋，類型可為字串或正規表達式
 //e = elements 匹配網頁的元素選擇器，類型可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
-//規則屬性imgs和customTitle如為字串，會自動判斷頁面元素
+//d = device "m"此規則只適用觸控裝置，"pc"此規則只適用電腦
+//規則屬性imgs和customTitle如為字串，會自動判斷頁面是否有符合的元素
 const object = {
     //String or RegExp or Array [String or RegExp]
     t: [
@@ -439,7 +453,8 @@ const object = {
     //String or Array [String]
     e: [
         "selector"
-    ]
+    ],
+    d: "m"
 }
 fn.checkUrl(object);
 </pre>
@@ -489,9 +504,9 @@ fn.getText(String or Array, HTMLDocument or HTMLElement);
 </pre>
 <pre>
 //刪除指定字串返回字串
-s = selector 元素選擇器
-t = text 文字字串
-d = delete 要刪除的字串，類型可以是字串、正規表達式 、字串或正規表達式的陣列
+//s = selector 元素選擇器
+//t = text 文字字串
+//d = delete 要刪除的字串，類型可以是字串、正規表達式 、字串或正規表達式的陣列
 const objetc = {
     s: String,
     t: String,
@@ -672,7 +687,7 @@ fn.css(String);
 <pre>
 //插入A元素;
 //url 網址
-//selector 元素選擇器
+//selector 元素選擇器或DOM元素
 //pos
 //0在元素之前
 //1在元素之後
@@ -680,7 +695,7 @@ fn.css(String);
 //3在元素裡面，第一個子元素之前。
 //text 字串
 fn.addUrlHtml("url", "selector", pos = 0, "text");
-fn.addUrlHtml(String, String, Number, String);
+fn.addUrlHtml(String, String or HTMLElement, Number, String);
 </pre>
 <pre>
 //創建script元素
@@ -3593,6 +3608,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://bdsmlr.com/">bdsmlr</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://dzen.ru/w_t_s_c">Дзен</a>
                 </td>
                 <td></td>
@@ -4536,7 +4557,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hitomi.la/">Hitomi.la</a>
                 </td>
-                <td>作用在閱讀頁</td>
+                <td>SPA網頁，作用在閱讀頁</td>
             </tr>
             <tr>
                 <td>
@@ -5449,6 +5470,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://manhua.zaimanhua.com/">再漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://dogemanga.com/">漫畫狗</a>
                 </td>
                 <td></td>
@@ -5527,7 +5554,19 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://m.dmzj.com/">动漫之家M</a>
+                    <a href="https://www.idmzj.com/">再漫画</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.idmzj.com/">动漫之家</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m.idmzj.com/">动漫之家M</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
