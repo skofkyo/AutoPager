@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.9.5
+// @version            2.10.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -45,7 +45,6 @@
 // @noframes
 // @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
-// @require            https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
@@ -55,29 +54,18 @@
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 // ==/UserScript==
 
-(async (JSZip, $, ajaxHooker) => {
+(async (JSZip, ajaxHooker) => {
     "use strict";
 
-    const specialSites = [
-        location.host === "reprint-kh.com" && /^\/archives\/\d+$/.test(location.pathname)
-    ];
-    if (specialSites.some(s => typeof s === "string" ? location.host === s : s)) {
-        let num = 0;
-        let stop = false;
-        await wait(() => {
-            num++;
-            if (num > 9 && !stop) {
-                stop = true;
-                window.stop();
-            }
-            return document.readyState === "complete";
-        });
-    } else {
-        await new Promise(ready => $(document).ready(ready));
-    }
+    await wait(() => !!document.body && document.readyState !== "loading");
 
     if ((ge("body.no-js:not(.has-preloader,.single-post)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
         debug("Cloudflare驗證中不運行腳本。");
+        return;
+    }
+
+    if (document.title.startsWith("DDoS-Guard")) {
+        debug("DDoS-Guard驗證中不運行腳本。");
         return;
     }
 
@@ -105,6 +93,7 @@
     const language = _unsafeWindow.navigator.language;
     let siteUrl = _unsafeWindow.location.href.replace(_unsafeWindow.location.hash, "");
     let frameWindow = _unsafeWindow;
+    let $;
     let siteData = {};
     let _this = {};
     let tempData = {};
@@ -116,6 +105,8 @@
     let videoSrcArray = [];
     let promiseBlobArray = [];
     let captureLinksArray = [];
+    let setArray = new Set();
+    let setVideoArray = new Set();
     let customTitle = null;
     let isEsc = false;
     let isDownloading = false;
@@ -163,14 +154,14 @@
     //自定義站點規則
     const customData = [{
         name: "小黃書/8色人體攝影",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^([a-z]{2}\.)?xchina\.(co|biz)$/,
                 /^(tw\.)?8se\.me$/
             ],
             p: /^\/(photo|amateur)\/id-\w+\.html$/,
             e: ".tab-content div:has(>.fa-picture-o)"
-        }),
+        },
         init: () => {
             fn.run("$(document).off('keydown');");
             fn.remove("//div[@id='tab_1']/div[contains(text(),'推')] | //div[@class='rules']/ul/li[contains(text(),'推')]");
@@ -287,12 +278,12 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "小黃書/8色人體攝影 AD",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^([a-z]{2}\.)?xchina\.(co|biz|life|fun)$/,
                 /^(tw\.)?8se\.me$/
             ]
-        }),
+        },
         init: () => fn.addMutationObserver(() => fn.remove("[class*='exoclick']")),
         css: `
 body {
@@ -397,10 +388,10 @@ a:has(>div>div>img),
     }, {
         name: "草榴社區",
         host: ["www.t66y.com", "cl.6962x.xyz"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ["//div[@id='header']//b[text()='草榴社區' or text()='草榴社区']", "img[ess-data]"],
             p: /^\/htm_data\/\d+\/\d+\/\d+\.html$/
-        }),
+        },
         imgs: () => fn.fetchDoc(fn.url).then(dom => fn.gae("img[ess-data]", dom)),
         capture: () => _this.imgs(),
         customTitle: "h4.f16",
@@ -521,7 +512,7 @@ a:has(>div>div>img),
         name: "新闻吧/新闻屋/新娱乐在线/新娱乐网/福建热线/山东热线/广西热线/武汉热线/天津热线/云南热线/甘肃热线",
         link: "https://www.xinwenba.net/web/meinv/",
         init: () => fn.createImgBox(".main", 1),
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "www.xinwenba.net",
                 /\.xwbar\.com$/,
@@ -538,7 +529,7 @@ a:has(>div>div>img),
             ],
             p: /^\/plus\/view-\d+-\d+\.html$/,
             e: ".main img"
-        }),
+        },
         imgs: () => {
             let max;
             try {
@@ -567,7 +558,7 @@ a:has(>div>div>img),
     }, {
         name: "四海资讯/娱乐吧/娱乐屋/娱乐宝/美女图片库",
         link: "https://www.shzx.org/b/12-0.html",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /\.shzx\.org$/,
                 "www.yuleba.org",
@@ -578,7 +569,7 @@ a:has(>div>div>img),
             ],
             p: /\/a\/[\d-]+\.html$/,
             e: ".main img"
-        }),
+        },
         imgs: () => {
             let max;
             try {
@@ -619,21 +610,21 @@ a:has(>div>div>img),
     }, {
         name: "我为人人",
         host: ["2048.info", "2048.cc"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "link[rel][title$='人人']",
             p: "/2048/read",
             s: "tid=",
-        }),
+        },
         imgs: "#read_tpc .preview-img",
         customTitle: "#subject_tpc",
         category: "nsfw2"
     }, {
         name: "秀人集",
         host: ["www.xiuren51.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@class='item_info']//a[text()='秀人集']",
             p: /\/\w+\/\d+\.html$/
-        }),
+        },
         init: () => {
             let pag = fn.gae(".page");
             if (pag.length > 0) pag[0].remove();
@@ -650,10 +641,10 @@ a:has(>div>div>img),
     }, {
         name: "秀人美女網",
         host: ["www.xiu01.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@class='single-cat']/a[text()='秀人美女网']",
             p: /\/\w+\/\d+\/\d+\.html$/
-        }),
+        },
         imgs: () => fn.getImg(".content p img[alt]", fn.gt(".page a:last-child", 2), 3, null, 100),
         button: [4],
         insertImg: ["//div[p[img[@alt]]]", 2],
@@ -666,10 +657,10 @@ a:has(>div>div>img),
     }, {
         name: "极品性感美女",
         host: ["www.xinggan5.top", "尤物网.Com"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@class='toptip']/a[text()='极品性感美女']",
             p: /\/\w+\/\w+\.html$/
-        }),
+        },
         init: () => {
             let pag = fn.gae(".pagination");
             if (pag.length > 0) pag[0].remove();
@@ -708,10 +699,10 @@ a:has(>div>div>img),
     }, {
         name: "爱看美女网",
         host: ["www.ik009.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ["//i[@class='iconfont icon-shouye']/following-sibling::a[text()='爱看美女网']", ".info-pagebar>a"],
             p: /^\/\w+\/\d+\.html$/
-        }),
+        },
         init: () => {
             let pag = fn.gae(".pagebar");
             if (pag.length > 0) pag[0].remove();
@@ -726,11 +717,11 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "美人图",
-        reg: () => fn.checkUrl({
+        url: {
             t: "美人图",
             h: "meirentu",
             p: /\/pic\/\d+\.html$/
-        }),
+        },
         imgs: () => fn.getImg(".content_left img[alt]", fn.gt(".page a:last-child", 2), 5),
         button: [4],
         insertImg: [".content_left", 2],
@@ -742,10 +733,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "卡卡美女网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "kaka234",
             p: /^\/HTM\/\w+\/(\w+\/)?\d+\/\d+\/\d+\.html$/
-        }),
+        },
         init: () => {
             let ele = fn.ge(".PsBox");
             if (ele) {
@@ -848,7 +839,7 @@ a:has(>div>div>img),
     }, {
         name: "ROSI美女写真",
         host: ["www.rosixz.cc", "www.rosixiezhen.cc", "rosixiezhen.cc", "www.rosi985.com", "www.rosi365.cc", "www.rosi360.cc", "www.2meinv.cc", "www.silk-necktie.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?rosixz\.\w+$/,
                 /^(www\.)?rosixiezhen\.\w+$/,
@@ -857,7 +848,7 @@ a:has(>div>div>img),
                 /^www\.silk-necktie\.com$/
             ],
             p: /^\/\w+\/\w+\.html$/
-        }),
+        },
         exclude: "//span/a[text()='ROSI视频']",
         init: () => {
             let pag = fn.gae(".pagination2");
@@ -1040,10 +1031,10 @@ a:has(>div>div>img),
     }, {
         name: "秀人网图集",
         host: ["xiurentu.com", "www.aixiurenmn.com", "www.aixiurenji.com", "www.aixiurentuji.com", "www.aixiurenwang.com"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ".site .logo-wrapper img.logo.tap-logo[alt^='秀人']",
             p: /^\/\d+\.html/
-        }),
+        },
         exclude: "//button[contains(text(),'登录购买')]",
         imgs: () => fn.getImgA("a[data-fancybox],.entry-content img", ".fenye a"),
         button: [4],
@@ -1061,19 +1052,19 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "秀人网图集",
-        reg: () => fn.checkUrl({
+        url: {
             e: ".site .logo-wrapper img.logo.tap-logo[alt^='秀人']",
-        }),
+        },
         observerClick: [".swal2-close", ".ht-n-close-toggle"],
         css: ".navbar .nav-list>.menu-item>a{line-height:20px;margin:0 6px}",
         category: "ad"
     }, {
         name: "足控资源网",
         host: ["www.zukong8.com", "www.yuzu8.com", "aisituba.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.yuzu8.com",
             p: "archives"
-        }),
+        },
         exclude: ".content-hide-tips",
         imgs: "a[data-fancybox]",
         button: [4],
@@ -1112,10 +1103,10 @@ a:has(>div>div>img),
     }, {
         name: "资源库图站",
         host: ["www.zyktu.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "a[title^=资源库图站]>img[alt^=资源库图站]",
             p: /^\/index\.php\/archives\/\d+\/$/
-        }),
+        },
         imgs: "span[data-fancybox]>img",
         button: [4],
         insertImg: [
@@ -1132,11 +1123,11 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "牛叉资源网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "niuc.net",
             p: /^\/\d+\.html$/,
             e: "//i[@class='czs-folder-l']/following-sibling::a[1][text()='美女写真' or text()='Cosplay' or text()='JAV.PHOTO']"
-        }),
+        },
         imgs: () => fn.gae(".content-warp img").filter(img => !img?.parentElement?.href?.endsWith("app.html")),
         button: [4],
         insertImg: [".content-warp", 2],
@@ -1181,10 +1172,10 @@ a:has(>div>div>img),
     }, {
         name: "8E资源站 自動翻頁",
         host: ["8ezy.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "8ezy.com",
             p: /^\/(uncategorized|tag)\//
-        }),
+        },
         init: () => (currentPageNum = Number(fn.gt("button.selected"))),
         autoPager: {
             ele: ".archive-row",
@@ -1214,10 +1205,10 @@ a:has(>div>div>img),
     }, {
         name: "8E资源站 自動翻頁",
         host: ["8ezy.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "8ezy.com",
             s: "?s="
-        }),
+        },
         autoPager: {
             ele: ".archive-row",
             observer: ".archive-row .post-list-item",
@@ -1284,10 +1275,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "微密猫",
-        reg: () => fn.checkUrl({
+        url: {
             e: ".logo>a[title=微密猫]",
             p: /^\/archives\/\d+/
-        }),
+        },
         imgs: "figure.wp-block-image a[data-fancybox]",
         button: [4],
         insertImg: [
@@ -1317,10 +1308,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Xiutaku/Kiutaku",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["xiutaku.com", "kiutaku.com"],
             p: /^\/\d+$/
-        }),
+        },
         init: () => fn.remove(".search-form~*,.blog~*:not([class]),.pagination~*:not([class]):not(hr),.article.content~*:not([class]):not(hr),.bottom-articles~*"),
         imgs: () => fn.getImg(".article-fulltext img", fn.gt(".pagination-list>span:last-child")),
         button: [4],
@@ -1454,13 +1445,13 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "美图社/花瓣美女",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?928r\.com$/,
                 /^(www\.)?060k\.com$/,
             ],
             p: /^\/post\/\d+\.html$/i
-        }),
+        },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let url = fn.gu("//a[text()='显示全文']");
@@ -1475,13 +1466,13 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "找套图/Xiuno BBS",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?zhaotaotu\.cc$/,
                 /^(www\.)?kantaotu\.cc$/
             ],
             p: /^\/\??thread-\d+\.htm$/
-        }),
+        },
         imgs: ".message>img:not(:first-of-type)",
         button: [4],
         insertImg: [".message", 2],
@@ -1527,9 +1518,9 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Xiuren 秀人网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.xiuren.org"
-        }),
+        },
         imgs: "a[rel='gallery']:not([href*='html']",
         button: [4],
         insertImg: [
@@ -1540,7 +1531,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "微圖坊",
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             h: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru", "www.v2ph.ovh"],
             p: "/album/",
             e: ".photos-list"
@@ -1926,10 +1917,10 @@ a:has(>div>div>img),
     }, {
         name: "TWOIMG",
         link: "https://www.twoimg.com/people",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.twoimg.com",
             p: /^\/\d+\.html$/
-        }),
+        },
         imgs: ".gallery a",
         thums: ".gallery img",
         button: [4],
@@ -2176,9 +2167,9 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "美女图册",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.mntuce.com"
-        }),
+        },
         init: () => {
             _unsafeWindow.onload = null;
             _unsafeWindow.onresize = null;
@@ -2401,9 +2392,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Luscious",
-        reg: () => fn.checkUrl({
+        url: {
             h: "luscious.net"
-        }),
+        },
         imgs: async () => {
             if (!document.URL.includes("/albums/")) return [];
             fn.showMsg(displayLanguage.str_05, 0);
@@ -2809,11 +2800,11 @@ a:has(>div>div>img),
     }, {
         name: "爱死美女图片站",
         host: ["www.24tupian.org"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "24tupian.org",
             p: /^\/\w+\/\d+\/\d+\/\d+\.html$/,
             e: "img[data-original*='imgs.diercun.com']"
-        }),
+        },
         imgs: async () => {
             let pid = fn.gt("#pid");
             let num = Number(fn.gt(".mores>a").match(/\d+/)[0]);
@@ -3154,9 +3145,9 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Zusi足丝",
-        reg: () => fn.checkUrl({
+        url: {
             h: "zusi.net"
-        }),
+        },
         init: () => [...document.getElementsByTagName("style")]?.find(s => s.textContent.includes("yuanshen.svg"))?.remove(),
         imgs: ".masonry-list a.glightbox",
         button: [4],
@@ -3299,14 +3290,14 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "洛秀网/维秘秀",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.|m\.)?loxiu\.com$/,
                 /^(www\.|m\.|c\.)?counv\.com$/,
                 /^(www\.|m\.)?ligui\.org$/
             ],
             p: /^\/post\/\d+\.html$/
-        }),
+        },
         imgs: () => fn.getImg(".info-imtg-box>img[alt]", fn.gt(".pagebar>*:last-child", 3)),
         button: [4],
         insertImg: ["div:has(>.info-imtg-box)", 2],
@@ -3318,10 +3309,10 @@ a:has(>div>div>img),
     }, {
         name: "第一美女套图网",
         host: ["meitu.sbs"],
-        reg: () => fn.checkUrl({
+        url: {
             t: "第一美女套图网",
             p: /^\/artdetail\w+\.html$/
-        }),
+        },
         imgs: ".ttnr img",
         button: [4],
         insertImg: [".ttnr", 2],
@@ -3330,7 +3321,7 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "遛无写真格式",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "www.096d.com",
                 "www.0niz.com",
@@ -3364,7 +3355,7 @@ a:has(>div>div>img),
             ],
             p: /^\/\d+\.html$/,
             e: "#post_content img,.article-content img,.entry-content img"
-        }),
+        },
         exclude: "//a[@rel='category tag'][contains(text(),'人物简历') or contains(text(),'宅男科技') or contains(text(),'时尚玩酷') or contains(text(),'身边事') or contains(text(),'追星一族') or contains(text(),'网红头条') or contains(text(),'大众娱乐') or contains(text(),'生活热点') or contains(text(),'影评剧透') or contains(text(),'娱乐时尚') or contains(text(),'吃喝玩乐') or contains(text(),'体育') or contains(text(),'亲子宠物') or contains(text(),'番号大全') or contains(text(),'番号推荐') or contains(text(),'最新番号') or contains(text(),'素人番号')]",
         imgs: () => fn.getImgA("#post_content img,.article-content img,.entry-content img", ".pagelist a,.pagination a,.article-paging a"),
         button: [4],
@@ -3401,10 +3392,10 @@ a:has(>div>div>img),
         name: "原创妹子图/尤物私房图/极品美女图/免费私房图/私房网红图/尤物妹妹图",
         //所有域名在環境變數urltz
         host: ["www.ycmzt.com", "www.ywsft.com", "www.jpmnt.com", "www.mfsft.com", "www.sfwht.com", "www.ywmmt.com"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ["//div[@class='b' and contains(text(),'当前') or contains(text(),'图集')]", "#picg"],
             p: /^\/[a-z]+\/[a-z]+\/\d+\/\d+\.html$/
-        }),
+        },
         init: () => {
             fn.gae(".b a").forEach(a => a.removeAttribute("target"));
             fn.gae("#picg a").forEach(a => (a.outerHTML = a.innerHTML));
@@ -3471,7 +3462,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "魅狸图片网/美女私房照/看妹图",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /rosi8\.com$/,
                 /sfjpg\.(com|net)$/,
@@ -3480,7 +3471,7 @@ a:has(>div>div>img),
             ],
             p: /^\/\w+\/\d+\.html$/,
             e: "#picg img"
-        }),
+        },
         init: () => {
             fn.gae(".b a").forEach(a => a.removeAttribute("target"));
             fn.gae("#picg a").forEach(a => (a.outerHTML = a.innerHTML));
@@ -3520,9 +3511,9 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "女神部落",
-        reg: () => fn.checkUrl({
+        url: {
             h: "girlsteam.club"
-        }),
+        },
         imgs: "#content img",
         button: [4],
         insertImg: ["#content", 2],
@@ -3569,11 +3560,11 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "爱妹子",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["xx.knit.bid", "mm.187187.xyz", "999888.best"],
             p: /^\/([\w-]+\/)?article\/\d+\//i,
             e: ".item-image img,#img-box img"
-        }),
+        },
         init: () => fn.clearAllTimer(2),
         imgs: async () => {
             await fn.getNP(".item-image", ".next-page>a", null, ".pagination");
@@ -3588,19 +3579,19 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "爱妹子 反反廣告提示",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["xx.knit.bid", "mm.187187.xyz", "999888.best"]
-        }),
+        },
         init: () => fn.clearAllTimer(2),
         openInNewTab: ".excerpts-wrapper a:not([target=_blank])",
         category: "ad"
     }, {
         name: "美女写真",
-        reg: () => fn.checkUrl({
+        url: {
             h: "portrait.knit.bid",
             p: /^\/\w+\/\d+$/,
             e: ".container>.container>img"
-        }),
+        },
         imgs: async () => {
             let max = fn.gt("//li[a[text()='下页']]", 2);
             let links = fn.arr(max, (v, i) => siteUrl + "?page=" + (i + 1));
@@ -3614,11 +3605,11 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "美图网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "meitu.knit.bid",
             p: /^\/(beauty|handsome)\/[^\/]+$/,
             e: ".details_item>img"
-        }),
+        },
         imgs: async () => {
             let [max] = fn.gau("a[href*=gotoPage]").at(-2).match(/\d+/);
             let links = fn.arr(max, (v, i) => siteUrl + "?page=" + (i + 1));
@@ -3630,10 +3621,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "美图网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "meitu.knit.bid",
             p: /^\/(news|street)\/\d+$/
-        }),
+        },
         imgs: ".news-body img",
         customTitle: () => fn.gt(".text-center>h1").replace("|", "-"),
         category: "nsfw1"
@@ -3682,6 +3673,7 @@ a:has(>div>div>img),
             css: false
         },
         css: "#masonry{position:unset!important;height:unset!important}",
+        referer: "src",
         category: "nsfw1"
     }, {
         name: "日式JK新版",
@@ -3695,6 +3687,7 @@ a:has(>div>div>img),
         ],
         customTitle: () => fn.title(" – 日式JK"),
         css: "#masonry{position:unset!important;height:unset!important}",
+        referer: "src",
         category: "nsfw1"
     }, {
         name: "妹妹美",
@@ -3808,10 +3801,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "HotAsiaGirl分頁模式",
-        reg: () => fn.checkUrl({
+        url: {
             h: "hotgirl.asia",
             e: [".galeria_img", ".pagination"]
-        }),
+        },
         imgs: () => fn.getImgA(".galeria_img>img", ".pagination a[href]"),
         button: [4],
         insertImg: [".mx-auto", 1],
@@ -3820,9 +3813,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "HotAsiaGirl幻燈片模式",
-        reg: () => fn.checkUrl({
+        url: {
             h: "hotgirl.asia"
-        }),
+        },
         imgs: "#carouselImageIndicators img",
         button: [4],
         insertImg: [".mx-auto", 2],
@@ -3865,11 +3858,11 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "MaoJiuJiu/SkyBird/TightImg/SexCity",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.maojiujiu.com", "www.skybirdx.com", "www.tightimg.com", "www.sexscity.com"],
             p: "/album/",
             e: "#item_list img"
-        }),
+        },
         imgs: () => fn.getImgA("#item_list img", ".pager>a:not(.current)"),
         capture: () => _this.imgs(),
         customTitle: "h1.title",
@@ -3877,10 +3870,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Photos XTAPO",
-        reg: () => fn.checkUrl({
+        url: {
             h: "photos.xtapo.org",
             p: /^\/[^\/]+\/$/
-        }),
+        },
         init: () => fn.createImgBox(".dynamic-entry-content .code-block", 1),
         imgs: ".dynamic-entry-content img",
         button: [4],
@@ -3989,10 +3982,10 @@ a:has(>div>div>img),
     }, {
         name: "Chinese Beauties",
         host: ["sxchinesegirlz.one"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//p[@class='gridlane-site-title']/a[text()='Chinese Beauties']",
             p: /^\/[^\/]+\/$/
-        }),
+        },
         imgs: () => fn.getImgA(".wp-block-image img", ".page-links>a"),
         button: [4],
         insertImg: [".entry-content", 2],
@@ -4019,9 +4012,9 @@ a:has(>div>div>img),
     }, {
         name: "Jablehk",
         host: ["jablehk.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "jablehk.com"
-        }),
+        },
         imgs: ".gallery-strips-lightbox-link>img[data-src]",
         thums: "figure.gallery-strips-item",
         button: [4],
@@ -4275,11 +4268,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "#TheFappening",
-        reg: () => fn.checkUrl({
+        url: {
             h: "fap.thefappening.one",
             p: /^\/[^\/]+\/$/,
             e: ".entry-title"
-        }),
+        },
         imgs: ".gallery-item a[target]",
         customTitle: () => fn.gt(".entry-title").replaceAll("/", "-"),
         category: "nsfw2"
@@ -4458,10 +4451,10 @@ a:has(>div>div>img),
     }, {
         name: "自拍图库",
         host: ["自拍图库.com", "zipaipic.com"],
-        reg: () => fn.checkUrl({
+        url: {
             t: "自拍图库",
             p: /\/content_\d+\.html$/
-        }),
+        },
         init: () => fn.clearAllTimer(),
         imgs: ".showimg",
         button: [4],
@@ -4480,10 +4473,10 @@ a:has(>div>div>img),
     }, {
         name: "美拍 - 我自拍",
         host: ["5zipai.com", "7aipai.com", "9zipai.net", "global.3zipai.net"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "zipai",
             p: /^\/selfies\/\d+\/\d+\.html$/
-        }),
+        },
         init: () => fn.clearAllTimer(),
         imgs: async () => {
             await fn.waitEle("#showCon img");
@@ -4505,11 +4498,10 @@ a:has(>div>div>img),
     }, {
         name: "52自拍",
         host: ["shaonvtu.xyz"],
-        reg: /^https?:\/\/shaonvtu\.xyz\/\?d-\d+\.html$/i,
-        reg: () => fn.checkUrl({
+        url: {
             h: "shaonvtu.xyz",
             s: "albums"
-        }),
+        },
         imgs: ".images img",
         button: [4],
         insertImg: [".images", 2],
@@ -4615,10 +4607,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "18AV",
-        reg: () => fn.checkUrl({
+        url: {
             h: "18av.mm-cg.com",
             e: ["//script[contains(text(),'Large_cgurl')]", ".sel_enlarge_page,.sel_enlarge"]
-        }),
+        },
         imgs: () => _unsafeWindow.Large_cgurl,
         button: [4],
         insertImg: ["#show_cg_html,#showcg_container", 2],
@@ -4646,7 +4638,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图/秀人图/UGIRLS/mm131美女图片/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^youwu\./,
                 /^hotasianx\./,
@@ -4665,7 +4657,7 @@ a:has(>div>div>img),
                 /ahottie/
             ],
             e: ["img.block", "//div[img[@title]]", "#main>h1,header>h1"]
-        }),
+        },
         imgs: () => fn.getImg("img.block", fn.gt("a[rel=next]", 2) || 1),
         button: [4],
         insertImg: ["//div[img[@title]]", 2],
@@ -4731,11 +4723,11 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "VVCON美瞳网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.vvcon.cn",
             p: /^\/\d+\.html$/,
             e: "//a[@class='post-list-cat-item b2-radius'][contains(text(),'Cosplay图集')]"
-        }),
+        },
         imgs: ".talk_pic img",
         button: [4],
         insertImg: [".talk_pic", 2],
@@ -4743,11 +4735,11 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "VVCON美瞳网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.vvcon.cn",
             p: /^\/\d+\.html$/,
             e: "//a[@class='post-list-cat-item b2-radius'][contains(text(),'Cosplay图集')]"
-        }),
+        },
         imgs: ".entry-content p:has(>img)>img",
         button: [4],
         insertImg: [
@@ -4757,10 +4749,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "HoeHot",
-        reg: () => fn.checkUrl({
+        url: {
             h: "hoehot.com",
             p: "/gallery/"
-        }),
+        },
         imgs: async () => {
             fn.createImgBox(".infinite-scroll-component__outerdiv", 1);
             if (captureSrcArray.length > 0) {
@@ -4802,9 +4794,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "HoeHot 清除無用請求",
-        reg: () => fn.checkUrl({
+        url: {
             h: "hoehot.com"
-        }),
+        },
         init: () => fn.addMutationObserver(() => setTimeout(() => fn.clearAllTimer(), 2000)),
         openInNewTab: ".infinite-scroll-component a:not([target=_blank])",
         hide: "main a[rel]",
@@ -4823,7 +4815,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY/WEB CHARMING/COSPLAY KITTYS/TITSPIE/COSPLAY SOSEDKI",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "cosplayasian.com",
                 "cosplaythots.com",
@@ -4845,7 +4837,7 @@ a:has(>div>div>img),
                 "cosplaysosedki.com"
             ],
             p: ["/gallery/", "/photos/", "/picture/", "/album/", "/post/", "/image/", "/img/", /\/pics?\//, "/p/", "/g/"]
-        }),
+        },
         init: () => fn.createImgBox(".grid,div.row:has(>.bg-dark)", 2),
         imgs: "a[data-fancybox],.grid-item>img,.grid-item->img",
         button: [4],
@@ -4912,11 +4904,11 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "NudoStar",
-        reg: () => fn.checkUrl({
+        url: {
             h: "nudostar.com",
             p: /^\/[^\/]+\//,
             e: [".pagination-single", "//p/a[img]"]
-        }),
+        },
         init: () => fn.createImgBox(".pagination-single", 1),
         imgs: () => {
             videoSrcArray = fn.gae("video.wp-video-shortcode>source").map(e => e.src);
@@ -4968,11 +4960,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Fapopedia",
-        reg: () => fn.checkUrl({
+        url: {
             h: "fapopedia.net",
             p: /^\/[^\/]+\/$/,
             e: "a[name='photos']"
-        }),
+        },
         init: () => fn.createImgBox(".shrt-blk", 2),
         imgs: async () => {
             await fn.getNP("//h2[i]/following-sibling::div[1][@class='shrt-blk']/div", "//a[text()='Next ']", null, ".nv-blk");
@@ -5015,10 +5007,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Nude Cosplay Albums",
-        reg: () => fn.checkUrl({
+        url: {
             h: "nudecosplaygirls.com",
             p: /^\/[^\/]+\/$/
-        }),
+        },
         imgs: ".entry-content img.msacwl-img,#post img,.gallery-item img,figure.wp-block-image img",
         button: [4],
         insertImg: [".entry-content,#post", 2],
@@ -5027,11 +5019,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Jizz to Nude Girls",
-        reg: () => fn.checkUrl({
+        url: {
             h: "jizzy.org",
             p: /^\/[^\/]+\/$/,
             e: ".entry-content img"
-        }),
+        },
         imgs: () => fn.getImgSrcArr(".entry-content img").filter(src => !src.includes("18xmob")),
         button: [4],
         insertImg: [".entry-content", 2],
@@ -5089,11 +5081,11 @@ a:has(>div>div>img),
     }, {
         name: "The Hentai World",
         link: "https://thehentaiworld.com/hentai-cosplay-images/",
-        reg: () => fn.checkUrl({
+        url: {
             h: "thehentaiworld.com",
             p: /^\/[^\/]+\/[^\/]+\/$/,
             e: "#miniThumbContainer"
-        }),
+        },
         init: () => fn.createImgBox("#miniThumbContainer", 2),
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr("#miniThumbContainer img[itemprop='thumbnail']");
@@ -5214,11 +5206,11 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "Nude Bird/Nude Cosplay",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["nudebird.biz", "nudecosplay.biz"],
             p: /^\/[^\/]+\/$/,
             e: "//p[a[img]]",
-        }),
+        },
         init: () => {
             let video = fn.ge(".online-video");
             if (video) {
@@ -5236,10 +5228,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Cosplaytele",
-        reg: () => fn.checkUrl({
+        url: {
             h: "cosplaytele.com",
             p: /^\/[^/]+\/$/,
-        }),
+        },
         imgs: "figure.gallery-item a",
         button: [4],
         insertImg: [".gallery", 2],
@@ -5248,10 +5240,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Cosplay18",
-        reg: () => fn.checkUrl({
+        url: {
             h: "cosplay18.pics",
             p: /^\/[^/]+\/$/,
-        }),
+        },
         imgs: ".single-page img",
         button: [4],
         insertImg: [
@@ -5262,10 +5254,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Sexy Asian Model Pics",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.sexyasianmodelpics.com",
             p: "/album/",
-        }),
+        },
         init: () => {
             let ps = fn.gae(".entry-content>p");
             if (ps.length > 0) {
@@ -5294,10 +5286,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Erohere",
-        reg: () => fn.checkUrl({
+        url: {
             h: "erohere.online",
             p: /^\/erohere\d+\/$/,
-        }),
+        },
         init: () => fn.createImgBox("#album_masonry", 2),
         imgs: async () => {
             const getImgSrcs = imgArr => imgArr.map(img => fn.lo + img.getAttribute("srcset").split(",")[0].replace(/\s{1,2}\d+w$/, ""));
@@ -5375,11 +5367,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Game-happy-life",
-        reg: () => fn.checkUrl({
+        url: {
             h: "gamehappylife.top",
             p: /^\/[^\/]+\/$/,
             e: "figure.wp-block-image"
-        }),
+        },
         imgs: () => fn.getImgA("figure.wp-block-image>a,figure.wp-block-image>img", ".page-links>a"),
         button: [4],
         insertImg: ["figure.wp-block-image", 2],
@@ -5390,10 +5382,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "XikXak",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.xikxak.com",
             p: /^\/\d+$/
-        }),
+        },
         imgs: ".entry-content img",
         button: [4],
         insertImg: [".entry-content", 2],
@@ -5404,10 +5396,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Xiunice.com",
-        reg: () => fn.checkUrl({
+        url: {
             h: "xiunice",
             p: /^\/[^\/]+$/
-        }),
+        },
         init: () => fn.createImgBox(".wp-block-gallery", 1),
         imgs: ".wp-block-gallery a",
         button: [4],
@@ -5419,7 +5411,7 @@ a:has(>div>div>img),
     }, {
         name: "Cosplay69",
         host: ["www.cosplay69.net", "cosplay69.net"],
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             h: "cosplay69.net",
             p: /^\/[^\/]+\/$/,
             e: "//a[@rel='category tag'][text()='Album']"
@@ -5577,10 +5569,10 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "Mitaku",
-        reg: () => fn.checkUrl({
+        url: {
             h: "mitaku.net",
             e: "a.msacwl-img-link[data-mfp-src]"
-        }),
+        },
         imgs: () => fn.ge("a.msacwl-img-link[data-mfp-src]") ? fn.gae("a.msacwl-img-link[data-mfp-src]").map(a => a.dataset.mfpSrc).slice(1, -1) : fn.gae(".msacwl-img").slice(1, -1),
         button: [4],
         insertImg: [
@@ -5597,10 +5589,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "EroAsian",
-        reg: () => fn.checkUrl({
+        url: {
             h: "eroasian.net",
             p: /^\/photo-set\//
-        }),
+        },
         init: () => {
             let info = fn.ge(".wp-block-group");
             if (info) {
@@ -5619,11 +5611,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "EroAsian",
-        reg: () => fn.checkUrl({
+        url: {
             h: "eroasian.net",
             p: "/photo-set/",
             e: "a.msacwl-img-link"
-        }),
+        },
         init: () => {
             let info = fn.ge(".wp-block-group");
             if (info) {
@@ -5700,9 +5692,9 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Hình ảnh gái",
-        reg: () => fn.checkUrl({
+        url: {
             h: "hinhanhgai.com"
-        }),
+        },
         imgs: () => {
             if (document.URL.includes("/image/")) {
                 let id = document.URL.split("/").at(-1);
@@ -5744,20 +5736,21 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Ảnh đẹp",
-        reg: () => fn.checkUrl({
+        url: {
             h: "tuyetnhan.com",
             p: /^\/[^\/]+\/$/
-        }),
+        },
         imgs: ".entry-content img",
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: ".card_title",
+        hide: "#cboxOverlay,#cboxWrapper",
         category: "nsfw1"
     }, {
         name: "Gai.vn",
-        reg: () => fn.checkUrl({
+        url: {
             h: "gai.vn"
-        }),
+        },
         imgs: async () => {
             if (!["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fn.ge(s))) return [];
             await fn.getNP(".gai-thumb", "li.page-item.active+li:not(.disabled)>a");
@@ -5801,10 +5794,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Cosymodel",
-        reg: () => fn.checkUrl({
+        url: {
             h: "cosymodel.com",
             p: /^\/[^\/]+\/$/
-        }),
+        },
         imgs: ".tdb_single_content .tdb-block-inner img",
         button: [4],
         insertImg: [".tdb_single_content .tdb-block-inner", 2],
@@ -5828,10 +5821,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Asigirl.com",
-        reg: () => fn.checkUrl({
+        url: {
             h: "asigirl.com",
             p: /^\/[^\/]+\/$/
-        }),
+        },
         init: () => fn.createImgBox("#asigirl-gallery", 1),
         imgs: "#asigirl-gallery a",
         thums: "#asigirl-gallery a>img",
@@ -5871,10 +5864,10 @@ a:has(>div>div>img),
     }, {
         name: "4KHD",
         host: ["www.4khd.com", "cfntz.xxtt.info", "ckdfv.xxtt.info", "svqds.xxtt.info"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//a[@rel='home'][text()='4KHD']",
             p: /^\/content\/\d+\/[^\.\/]+\.html$/
-        }),
+        },
         imgs: async () => {
             thumbnailSrcArray = await fn.getImgA("figure.wp-block-image>a>img,#basicExample>a>img,.entry-content>p>a>img", ".page-link-box a").then(arr => arr.map(e => e.replace(/\?w=\d+$/, "?w=100")));
             let bigSrcArray = thumbnailSrcArray.map(e => e.replace(/\/w\d+-rw\//, "/w7680-rw/").replace("?w=100", ""));
@@ -5900,9 +5893,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "4KHD AAD",
-        reg: () => fn.checkUrl({
+        url: {
             e: "//a[@rel='home'][text()='4KHD']"
-        }),
+        },
         hide: ".centbtd,.popup,.wp-container-13",
         category: "ad"
     }, {
@@ -5920,10 +5913,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Buon Dua/MISS BABY",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["buondua.com", "buondua.us", "missbaby.top"],
             e: ".article-fulltext img[alt]"
-        }),
+        },
         init: () => {
             fn.remove("//div[text()='Sponsored ads']");
             fn.remove(".search-form~*");
@@ -5946,10 +5939,10 @@ a:has(>div>div>img),
         name: "blog.baobua.net",
         host: ["blog.baobua.net"],
         link: "https://blog.baobua.net/mlem",
-        reg: () => fn.checkUrl({
+        url: {
             h: "baobua.net",
             e: ".article-body"
-        }),
+        },
         imgs: "a.fancybox",
         button: [4],
         insertImg: [".article-body", 2],
@@ -6082,9 +6075,9 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Erogirl",
-        reg: () => fn.checkUrl({
+        url: {
             h: "erogirl.net"
-        }),
+        },
         SPA: () => {
             if (document.URL.includes("/p/") && !fn.ge(".FullPictureLoadImage")) {
                 isFetching = true;
@@ -6158,9 +6151,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Everia club",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.everiaclub.com"
-        }),
+        },
         imgs: ".mainleft img",
         button: [4],
         insertImg: [".mainleft", 2],
@@ -6808,7 +6801,7 @@ a:has(>div>div>img),
     }, {
         name: "俊美图",
         host: ["www.meijuntu.com", "www.junmeitu.com", "www.jeya.de", "www.jeya.jp"],
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?meijuntu\.com$/,
                 /^(www\.)?junmeitu\.com$/,
@@ -6816,7 +6809,7 @@ a:has(>div>div>img),
             ],
             p: /\/([a-z]{2}\/)?\w+\/\w+\.html$/i,
             e: ".pictures img"
-        }),
+        },
         imgs: async () => {
             let imgsArr = [];
             let max = fn.gt("#pages>*:last-child", 2) || 1;
@@ -6925,10 +6918,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "图宅网/咔咔西三/YouFreeX",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.tuzac.com", "www.kkc3.com", "www.youfreex.com"],
             p: "/file/"
-        }),
+        },
         imgs: async () => {
             let a = fn.ge("#the-photo-link");
             if (a) a.outerHTML = a.innerHTML;
@@ -6952,9 +6945,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "图宅网/咔咔西三/YouFreeX",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.tuzac.com", "www.kkc3.com", "www.youfreex.com"]
-        }),
+        },
         hide: ".ad-container",
         category: "ad"
     }, {
@@ -7048,10 +7041,10 @@ a:has(>div>div>img),
     }, {
         name: "性趣套图",
         host: ["tt.539765.xyz", "tt.xqtt.de"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ["//div[@class='logo']/a[text()='性趣套图']", ".entry img"],
             p: "/e/action/ShowInfo.php"
-        }),
+        },
         imgs: async () => {
             if (fn.ge("embed[src*='sendvid']")) {
                 let links = fn.gae("embed").map(e => e.src);
@@ -7072,10 +7065,10 @@ a:has(>div>div>img),
     }, {
         name: "苍井优图",
         host: ["34.28tyu.com", "w33.28rty.com", "33.28ery.com", "www.28wer.com", "www.028kkp.com", "sldlxz.com", "34.yuxiangcao.com", "282471.xyz", "284019.xyz"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@class='logo']/a[text()='苍井优图']",
             p: "/e/action/ShowInfo.php"
-        }),
+        },
         imgs: "img[id^='aimg'],.entry img",
         button: [4],
         insertImg: [".entry", 2],
@@ -7257,7 +7250,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Goddess247/BestPrettyGirl/Girl Sweetie/Girl Dreamy/BestGirlSexy",
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             h: ["goddess247.com", "bestprettygirl.com", "girlsweetie.com", "girldreamy.com", "bestgirlsexy.com"]
         }) && !/^\/tag\/|^\/category\//.test(fn.lp),
         init: () => fn.createImgBox("//p[img] | //img[@class='aligncenter size-full']", 1),
@@ -7277,9 +7270,9 @@ a:has(>div>div>img),
         name: "niwatori.my.id/quenbox.top",
         link1: "https://niwatori.my.id/category/uncategorized/",
         link2: "https://quenbox.top/?cat=1",
-        reg: () => fn.checkUrl({
+        url: {
             e: [".entry-content", ".wp-block-gallery img", ".post-navigation .nav-links"]
-        }),
+        },
         imgs: () => fn.getImgSrcset(".wp-block-gallery img"),
         button: [4],
         insertImg: [".entry-content", 2],
@@ -7290,11 +7283,11 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Sexy Girl Pictures",
-        reg: () => fn.checkUrl({
+        url: {
             h: "beautypics.org",
             p: /^\/archives\/\d+$/,
             e: ".page-content img"
-        }),
+        },
         imgs: () => {
             if (fn.ge(".page-content img[srcset]")) {
                 return fn.getImgSrcset(".page-content img[srcset]");
@@ -7409,11 +7402,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "HayVn.Net",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.hayvn.net",
             p: /^\/\d+\/\d+\/[^\.]+\.html$/,
             e: ".separator>a"
-        }),
+        },
         imgs: () => fn.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/")),
         button: [4],
         insertImg: [
@@ -7423,9 +7416,9 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "HayVn.Net",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.hayvn.net"
-        }),
+        },
         imgs: ".entry-content img",
         customTitle: ".entry-title",
         setFancybox: true,
@@ -7606,9 +7599,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "BingMM",
-        reg: () => fn.checkUrl({
+        url: {
             h: "bingmm.com"
-        }),
+        },
         imgs: async () => {
             fn.createImgBox(".entry-content p:has(>img)", 1);
             return fn.gae(".entry-content img");
@@ -7699,10 +7692,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Space of Miss Beautiful",
-        reg: () => fn.checkUrl({
+        url: {
             h: "spacemiss.com",
             e: [".td-post-content .tdb-block-inner.td-fix-index", ".tdb-title-text"]
-        }),
+        },
         init: async () => {
             let img = await fn.waitEle(".td-post-content .tdb-block-inner.td-fix-index img");
             let video = fn.ge(".td-post-content .tdb-block-inner.td-fix-index>center:has(>iframe)");
@@ -7818,10 +7811,10 @@ a:has(>div>div>img),
     }, {
         name: "淫淫小说写真馆",
         host: ["books.xxgirls.vip"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "xxgirls",
             p: "artdetail"
-        }),
+        },
         imgs: "#read_tpc img,.hl-article-content img",
         button: [4],
         insertImg: ["#read_tpc,.hl-article-content", 2],
@@ -7959,7 +7952,7 @@ a:has(>div>div>img),
         host: ["www.redpics.top"],
         reg: /^https?:\/\/www\.redpics\.top\/(japanese|korean|chinese|hardcore|softcore|lesbian)\/[\w-]+$/,
         imgs: () => {
-            let aEles = fn.gae(".post-content a");
+            let aEles = fn.gae("#extra-content>a,.post-content a");
             thumbnailSrcArray = aEles.map(a => fn.ge("img", a).src);
             let URLs = aEles.map(a => a.href);
             return fn.getImageHost(URLs);
@@ -8017,7 +8010,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "ЯУстал",
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             h: "yaustal.com"
         }) && fn.lp !== "/",
         exclude: "#bottom-nav",
@@ -8027,19 +8020,19 @@ a:has(>div>div>img),
     }, {
         name: "МЕДИА ТРЕНД",
         link: "https://jb5.ru/shoubiz/onlyfans-sliv/",
-        reg: () => fn.checkUrl({
+        url: {
             h: "jb5.ru",
             e: ".entry-content img[srcset]"
-        }),
+        },
         imgs: () => fn.getImgSrcset(".gallery-item a,span[itemprop=image]>img,.entry-content img[srcset]"),
         capture: () => _this.imgs(),
         customTitle: ".entry-title>h1",
         category: "nsfw2"
     }, {
         name: "alt Goddess",
-        reg: () => fn.checkUrl({
+        url: {
             h: "altgoddess.com"
-        }),
+        },
         init: () => {
             if ("adde_modal_detector" in _unsafeWindow) {
                 _unsafeWindow.adde_modal_detector(false);
@@ -8054,9 +8047,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "alt Goddess",
-        reg: () => fn.checkUrl({
+        url: {
             h: "altgoddess.com"
-        }),
+        },
         init: () => {
             if ("adde_modal_detector" in _unsafeWindow) {
                 _unsafeWindow.adde_modal_detector(false);
@@ -8066,10 +8059,10 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "Фото идеи и картинки",
-        reg: () => fn.checkUrl({
+        url: {
             h: "fotoslava.ru",
             e: ".entry-title"
-        }),
+        },
         imgs: ".gallery-item img",
         customTitle: () => fn.dt({
             s: ".entry-title",
@@ -8078,10 +8071,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Картинки и фото",
-        reg: () => fn.checkUrl({
+        url: {
             h: "cojo.ru",
             e: ".entry-title"
-        }),
+        },
         imgs: ".wp-block-image img",
         customTitle: () => fn.dt({
             s: ".entry-title",
@@ -8091,10 +8084,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "geekfan.site",
-        reg: () => fn.checkUrl({
+        url: {
             h: "geekfan.site",
             e: [".sgb-data,.entry-content img", ".entry-title"]
-        }),
+        },
         imgs: () => {
             let data = fn.ge(".sgb-data");
             if (data) {
@@ -8115,19 +8108,19 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "TIỆM TẠP HÓA KỲ DIỆU",
-        reg: () => fn.checkUrl({
+        url: {
             h: "clannadhouse.com",
             p: /^\/[^\/]+\/$/
-        }),
+        },
         imgs: "a.fox-lightbox-gallery-item",
         customTitle: ".post-title",
         category: "nsfw1"
     }, {
         name: "Sex Pics Space",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.sex-pics.xyz",
             p: "/view/"
-        }),
+        },
         init: () => fn.remove("div:has(>.sticky-top)"),
         imgs: "#photos img",
         button: [4],
@@ -8138,10 +8131,10 @@ a:has(>div>div>img),
     }, {
         name: "Nevsepic",
         host: ["nevsepic.com.ua"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "nevsepic",
             e: ["//div[@class='full-comms']/a[text()='18+']", ".full-text img,a.highslide", ".share_widget"]
-        }),
+        },
         init: () => fn.createImgBox(".share_widget", 1),
         imgs: async () => {
             let srcs;
@@ -8166,10 +8159,10 @@ a:has(>div>div>img),
     }, {
         name: "Nevsepic",
         host: ["nevsepic.com.ua"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "nevsepic",
             e: [".full-text img,a.highslide", ".share_widget"]
-        }),
+        },
         imgs: async () => {
             let srcs;
             let pages = fn.ge(".bottom-nav");
@@ -8190,9 +8183,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "DTF",
-        reg: () => fn.checkUrl({
+        url: {
             h: "dtf.ru"
-        }),
+        },
         imgs: () => {
             let [post] = fn.gae(".content__blocks");
             if (post) {
@@ -8222,9 +8215,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "uCrazy",
-        reg: () => fn.checkUrl({
+        url: {
             h: "ucrazy.org"
-        }),
+        },
         init: () => fn.addMutationObserver(() => fn.remove(".banner:has(>#advideo_adv_container)")),
         imgs: ".news__content_wrapper img:not(.news__tags-more-icon)",
         capture: () => fn.gae(".news__content_wrapper img:not(.news__tags-more-icon)"),
@@ -8242,10 +8235,46 @@ a:has(>div>div>img),
         observerURL: true,
         category: "nsfw2"
     }, {
-        name: "Дзен",
-        reg: () => fn.checkUrl({
-            h: "dzen.ru"
+        name: "bdsmlr",
+        link: "https://chasti-wabbit.bdsmlr.com/post/265859932",
+        url: {
+            h: ".bdsmlr.com",
+            e: ".image_container img",
+            d: "pc"
+        },
+        SPA: true,
+        init: () => fn.addMutationObserver(() => {
+            if (isOpenOptionsUI || isOpenFancybox || isDownloading) return;
+            let imgs = fn.gae(".image_container img:not(.get)").map(img => {
+                img.classList.add("get");
+                return img;
+            });
+            fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
+            fn.gae("video.vjs-tech[value][poster]:not(.get)").forEach(video => {
+                video.classList.add("get");
+                let src = video.getAttribute("value");
+                setVideoArray.add(src);
+                setArray.add(video.poster);
+            });
+            videoSrcArray = [...setVideoArray];
+            customTitle = document.title;
         }),
+        imgs: () => setArray,
+        hide: ".reblogcontainerouter",
+        downloadVideo: true,
+        focus: "last:.image_container",
+        closeAF: () => {
+            let ask = fn.ge(".askholder");
+            if (ask) {
+                EClick(".cancelbutton");
+            }
+        },
+        category: "nsfw2"
+    }, {
+        name: "Дзен",
+        url: {
+            h: "dzen.ru"
+        },
         imgs: () => {
             //帖子的數據
             //JSON.parse([...document.scripts].find(s => s.textContent.includes("__APP_STATE__")).textContent.match(/\{"data":\{"__APP_STATE__":.+\)\)/)[0].slice(0, -2));
@@ -8289,20 +8318,20 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "NUDE_ART_EROTIC",
-        reg: () => fn.checkUrl({
+        url: {
             h: "nude-art-erotic.livejournal.com",
             p: /^\/\d+\.html$/
-        }),
+        },
         imgs: ".entry-content img:not([src$='19736856'])",
         customTitle: ".entry-title",
         setFancybox: true,
         category: "nsfw2"
     }, {
         name: "Развлекательно-эротический блог",
-        reg: () => fn.checkUrl({
+        url: {
             h: "tettie.net",
             s: "p="
-        }),
+        },
         imgs: ".postContent img",
         customTitle: ".postTitle",
         setFancybox: true,
@@ -8455,11 +8484,11 @@ a:has(>div>div>img),
     }, {
         name: "Bunkr bunkr.si",
         link: "https://bunkr-albums.io/",
-        reg: () => fn.checkUrl({
+        url: {
             h: "bunkr",
             p: /^\/a\/[\w#]+$/i,
             e: ".grid-images"
-        }),
+        },
         init: () => fn.createImgBox(".grid-images", 2),
         imgs: async () => {
             fn.showMsg(displayLanguage.str_01, 0);
@@ -8673,14 +8702,14 @@ a:has(>div>div>img),
         name: "Xasiat",
         host: ["www.xasiat.com", "areegator.net", "snapmoms.com"],
         link: "https://www.xasiat.com/albums/",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^www\.xasiat\.com$/,
                 /^(www\.)?areegator\.net$/,
                 /^(www\.)?snapmoms\.com$/
             ],
             p: /^\/([\w]{2}\/)?albums\/\d+\/[\w-]+\/$/
-        }),
+        },
         init: () => {
             fn.gae("img.thumb[data-original]").forEach(img => (img.src = img.dataset.original));
             fn.remove(".sponsor,.footer-margin");
@@ -8698,14 +8727,14 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Xasiat 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^www\.xasiat\.com$/,
                 /^(www\.)?areegator\.net$/,
                 /^(www\.)?snapmoms\.com$/
             ],
             p: /^\/([\w]{2}\/)?albums\/(\d+\/)?/
-        }),
+        },
         init: () => {
             setInterval(() => {
                 fn.remove("//div[iframe] | //iframe");
@@ -8758,11 +8787,11 @@ a:has(>div>div>img),
         name: "xHamster gallery",
         host: ["xhamster.com"],
         link: "https://zh.xhamster.com/users/eros721_official/photos",
-        reg: () => fn.checkUrl({
+        url: {
             h: "xhamster.com",
             p: /^\/photos\/gallery\/[^/]+$/,
             e: ".gallery-section"
-        }),
+        },
         imgs: async () => {
             await fn.getNP("#initials-script", "//div[@class='gallery-section']//li[a[contains(@class,'active')]]/following-sibling::li[1]/a", null, ".gallery-section .pager-section");
             let photos = fn.gae("#initials-script").map(script => {
@@ -8782,10 +8811,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "xHamsterM gallery M",
-        reg: () => fn.checkUrl({
+        url: {
             h: "xhamster.com",
-            p: /^\/photos\/gallery\/[^/]+$/
-        }) && hasTouchEvent,
+            p: /^\/photos\/gallery\/[^/]+$/,
+            d: "m"
+        },
         imgs: async () => {
             await fn.getNP(".items[data-role='gallery-photos']>.item-container", "//ol[@class='page-list']/li[@class='page-button' and a[@class='page-button-link page-button-link--active']]/following-sibling::li[1]/a", null, "//ol[@class='page-list']");
             return fn.getImgA("#photoCurr", "a.item.slided", 1, null, 0);
@@ -8801,10 +8831,10 @@ a:has(>div>div>img),
         host: ["pornhub.com"],
         link: "https://pornhub.com/albums",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: "pornhub.com",
             p: /^\/album\/\d+$/
-        }),
+        },
         imgs: () => fn.getImgA("#photoImageSection img", ".js_lazy_bkg a", 200),
         button: [4],
         insertImg: [
@@ -8908,9 +8938,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "jimpicotphotography.com",
-        reg: () => fn.checkUrl({
+        url: {
             h: "jimpicotphotography.com"
-        }),
+        },
         imgs: ".con>img,#post-navigation img",
         customTitle: () => fn.dt({
             d: " - jimpicotphotography.com"
@@ -8919,11 +8949,11 @@ a:has(>div>div>img),
     }, {
         name: "EroMe",
         host: ["www.erome.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "erome.com",
             p: "/a/",
             e: "div[id^='album'].page-content"
-        }),
+        },
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
             return hasTouchEvent ? fn.gae(".img>img[data-src]") : fn.gae("div.img[data-src]");
@@ -8934,11 +8964,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "EroMe",
-        reg: () => fn.checkUrl({
+        url: {
             h: "erome.fan",
             p: "/a/",
             e: ".entry-content"
-        }),
+        },
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
             return hasTouchEvent ? fn.gae(".img>img[data-src]").map(e => e.currentSrc) : fn.gae("div.img[data-src]");
@@ -8950,10 +8980,11 @@ a:has(>div>div>img),
     }, {
         name: "luxurybeachresorts.net",
         host: ["www.luxurybeachresorts.net"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "luxurybeachresorts.net",
-            e: "#gallery .media-group"
-        }) && !hasTouchEvent,
+            e: "#gallery .media-group",
+            d: "pc"
+        },
         init: () => fn.createImgBox(".media-group", 1),
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
@@ -9004,10 +9035,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "ThotHub Leaks",
-        reg: () => fn.checkUrl({
+        url: {
             h: "thothub.vip",
             e: ".entry-title"
-        }),
+        },
         imgs: ".entry-content img",
         customTitle: () => fn.dt({
             s: ".entry-title",
@@ -9228,11 +9259,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "JavBangers",
-        reg: () => fn.checkUrl({
+        url: {
             h: "javbangers.com",
             p: "/albums/",
             e: ".album-info"
-        }),
+        },
         imgs: ".images a",
         thums: ".images img",
         button: [4],
@@ -9255,10 +9286,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "色情圖片網",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.photos18.com",
             p: "/v/"
-        }),
+        },
         imgs: ".imgHolder a[data-fancybox]",
         button: [4],
         insertImg: ["#content", 2],
@@ -9288,10 +9319,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "久久热/GavPorn",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.99re.com", "cav103.com"],
             p: "/albums/"
-        }),
+        },
         imgs: "a[data-fancybox-type]",
         button: [4],
         insertImg: [".sponsor,.images", 2],
@@ -9300,11 +9331,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "X1HUB",
-        reg: () => fn.checkUrl({
+        url: {
             h: "x1hub.com",
             p: "/albums/",
             e: ".album-info"
-        }),
+        },
         imgs: ".images a",
         thums: ".images img",
         button: [4],
@@ -9466,10 +9497,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Girlsreleased",
-        reg: () => fn.checkUrl({
+        url: {
             h: "girlsreleased.com",
             p: "/set/"
-        }),
+        },
         init: async () => {
             await fn.waitEle(".images .imageContainer .image img");
             fn.createImgBox(".images", 2);
@@ -9510,9 +9541,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "Girlsreleased 載入更多",
-        reg: () => fn.checkUrl({
+        url: {
             h: "girlsreleased.com"
-        }),
+        },
         observerClick: "//button[text()='more']",
         openInNewTab: ".content .main a",
         category: "autoPager"
@@ -9801,13 +9832,13 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "仿紳士漫畫UI寫真圖庫 簡介頁",
-        reg: () => fn.checkUrl({
+        url: {
             e: [
                 "//ul[@id='album_tabs']/li/a[@title='寫真圖庫'][text()='寫真圖庫']",
                 ".png.bread a[title='寫真圖庫']",
                 "//a[@class='btn'][text()='開始閱讀']"
             ]
-        }),
+        },
         init: () => {
             fn.clearAllTimer();
             fn.createImgBox("#bodywrap", 2);
@@ -9824,13 +9855,13 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "仿紳士漫畫UI寫真圖庫 閱讀頁",
-        reg: () => fn.checkUrl({
+        url: {
             p: "/read/id/",
             e: [
                 "//ul[@id='album_tabs']/li/a[@title='寫真圖庫'][text()='寫真圖庫']",
                 ".png.bread a[title='寫真圖庫']"
             ]
-        }),
+        },
         imgs: "#photo_body img",
         button: [4],
         insertImg: ["#photo_body", 2],
@@ -9839,7 +9870,7 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "坏哥哥旧站",
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             e: ["#content_news img", "#page"]
         }) && !fn.lp.includes("/index"),
         init: () => fn.setStyleSheet(),
@@ -9855,10 +9886,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "坏哥哥旧站M",
-        reg: () => fn.checkUrl({
+        url: {
             p: /\.html$/,
             e: [".fed-arti-content img", "//a[text()='尾页']"]
-        }),
+        },
         init: () => fn.setStyleSheet(),
         imgs: () => {
             let [, max] = fn.gu("//a[text()='尾页']").match(/-(\d+)\.html$/);
@@ -9873,7 +9904,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "坏哥哥旧站M",
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             e: [".fed-arti-content img", ".fed-page-info"]
         }) && !fn.lp.includes("/index"),
         init: () => fn.setStyleSheet(),
@@ -9889,9 +9920,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "坏哥哥新站",
-        reg: () => fn.checkUrl({
+        url: {
             e: [".single-video-info-content img", ".pagination"]
-        }),
+        },
         imgs: async () => {
             await fn.getNP(".single-video-info-content>*", ".pagination li.active+li>a:not([title='下一页'])", null, ".pagination");
             return fn.gae(".single-video-info-content img");
@@ -9903,21 +9934,22 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "坏哥哥M_AD",
-        reg: () => fn.checkUrl({
+        url: {
             e: [
                 ".fed-nav-logo,.navbar-brand",
                 "//div[@class='fed-nav-left']/a[text()='美女美图' or text()='美图区'] | //div[@class='m-footer']"
-            ]
-        }) && hasTouchEvent,
+            ],
+            d: "m"
+        },
         hide: "div:has(>img[src^='/template/']),div:has(>img[src*='/HtmlS/'])",
         category: "ad"
     }, {
         name: "万德美图屋/蚂蚁图库",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.wind5.com", "www.mayihz.com"],
             p: /^\/tu\d+\.html$/,
             e: "#portfolio img"
-        }),
+        },
         imgs: () => {
             let max;
             try {
@@ -10005,10 +10037,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "xHer",
-        reg: () => fn.checkUrl({
+        url: {
             h: "xher.net",
             s: "/category/"
-        }),
+        },
         init: () => fn.createImgBox("#thumbnails", 1),
         imgs: () => {
             let url = fn.gu("a[rel=last]");
@@ -10034,11 +10066,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "JavCup",
-        reg: () => fn.checkUrl({
+        url: {
             h: "javcup.com",
             p: "/movie/",
             e: ["#video[poster]", ".movies-images li"]
-        }),
+        },
         init: () => fn.createImgBox("#play-card", 2),
         imgs: () => {
             let videoSrc = fn.ge("#video>source")?.src;
@@ -10056,11 +10088,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "JavCup",
-        reg: () => fn.checkUrl({
+        url: {
             h: "javcup.com",
             p: "/video/",
             e: "#video[poster]"
-        }),
+        },
         imgs: () => {
             let videoSrc = fn.ge("#video>source")?.src;
             videoSrcArray[0] = videoSrc;
@@ -10072,10 +10104,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "JavCup",
-        reg: () => fn.checkUrl({
+        url: {
             h: "javcup.com",
             p: "/photo/"
-        }),
+        },
         init: () => fn.createImgBox(".content>.body", 2),
         imgs: "#photos>li",
         button: [4],
@@ -10085,10 +10117,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "JavCup",
-        reg: () => fn.checkUrl({
+        url: {
             h: "javcup.com",
             p: "/model/"
-        }),
+        },
         init: () => {
             fn.createImgBox(".content>.body", 2);
             fn.gae("section img[data-src]").forEach(e => (e.src = e.dataset.src));
@@ -10116,13 +10148,13 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "JJGirls",
-        reg: () => fn.checkUrl({
+        url: {
             h: "jjgirls.com",
             e: [
                 ".L664 a:has(>img:not([src^='/thumbs/']))",
                 ".L664 a>img:not([src^='/thumbs/'])"
             ]
-        }),
+        },
         init: () => fn.createImgBox(".L664"),
         imgs: () => {
             let pagesE = fn.ge(".matchlinks");
@@ -10148,9 +10180,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "JJGirls M",
-        reg: () => fn.checkUrl({
-            h: "jjgirls.com"
-        }) && hasTouchEvent,
+        url: {
+            h: "jjgirls.com",
+            d: "m"
+        },
         init: () => fn.createImgBox("div.p222308", 2),
         imgs: "div.p222308>a:has(>img:not([src^='/temp'])):has(>img:not([src^='/thumbs']))",
         button: [4],
@@ -10159,16 +10192,16 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "エロ画像 オナップル",
-        reg: () => fn.checkUrl({
+        url: {
             h: "onapple.jp",
             p: "/archives/"
-        }),
+        },
         imgs: ".permanent_text img",
         customTitle: ".permanent_title",
         category: "nsfw2"
     }, {
         name: "JavTube/PureJapanese/ThumbNow/69DV/JapaneseThumbs/AsiaUncensored",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "javtube.com",
                 "purejapanese.com",
@@ -10181,7 +10214,7 @@ a:has(>div>div>img),
                 ".L664 a:has(>img:not([src^='/thumbs/']))",
                 ".L664 a>img:not([src^='/thumbs/'])"
             ]
-        }),
+        },
         init: () => fn.createImgBox(".L664"),
         imgs: () => {
             let pagesE = fn.ge(".matchlinks");
@@ -10208,12 +10241,12 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "一千美女",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /yqmn\.live$/
             ],
             s: "action-imagelist-uid-"
-        }),
+        },
         imgs: async () => {
             await fn.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
             return fn.getImgA(".bigimg img,#articlebody img,.content_pic img,#big-pic img", ".imglist a,.m_aana a,.main_column_pic a,.pic-list a");
@@ -10239,10 +10272,10 @@ a:has(>div>div>img),
     }, {
         name: "人体艺术",
         link: "https://dsqs8.com/",
-        reg: () => fn.checkUrl({
+        url: {
             e: ".umBody",
             p: /^\/post\/\d+/
-        }),
+        },
         init: () => {
             fn.clearAllTimer();
             fn.createImgBox(".viewall_plugin", 2);
@@ -10259,13 +10292,13 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "上流时尚人体艺术/美女坊",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /6643\.live$/,
                 /mnrt\.xyz$/
             ],
             p: /^\/html\/\d+\/n-\d+\.html$/
-        }),
+        },
         imgs: () => {
             let [max] = fn.gt("a.next", 2).match(/\d+$/);
             let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url.replace(".html", "") + `-${i + 1}.html`);
@@ -10297,14 +10330,14 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "QGirlz/CuteLadyPic",
-        reg: () => fn.checkUrl({
+        url: {
             e: [
                 ".main-image",
                 "//a[@data-title and picture/source]",
                 ".next",
                 ".main-title"
             ]
-        }),
+        },
         imgs: () => fn.getImg("//a[@data-title and picture/source]", (fn.gt(".next", 2) || 1), 16),
         button: [4],
         insertImg: [".main-image", 2],
@@ -10312,7 +10345,7 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "QGirlz/CuteLadyPic M",
-        reg: () => fn.checkUrl({
+        url: {
             p: "/m/",
             e: [
                 ".place-padding+.place-padding",
@@ -10321,7 +10354,7 @@ a:has(>div>div>img),
                 ".blog-title",
                 "#post-tag"
             ]
-        }),
+        },
         init: () => fn.createImgBox("#post-tag", 1),
         imgs: () => {
             let [, max] = fn.gt(".prev-next-page").match(/\d+/g);
@@ -10343,14 +10376,14 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 一 分頁",
-        reg: () => fn.checkUrl({
+        url: {
             p: /^\/[^/]+\/\w+/,
             e: [
                 ".separator>a[href]",
                 ".album-post-body .clear,.album-post-share-wrap",
                 ".nav-links"
             ]
-        }),
+        },
         imgs: () => fn.getImg(".separator>a[href]", (fn.gt(".nav-links>*:last-child", 2) || 1), 16),
         button: [4],
         insertImg: [
@@ -10361,9 +10394,9 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 一",
-        reg: () => fn.checkUrl({
+        url: {
             e: ".album-post-inner,.album-postmeta-primarypix"
-        }),
+        },
         imgs: ".separator>a[href]",
         button: [4],
         insertImg: [
@@ -10374,14 +10407,14 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 二 分頁",
-        reg: () => fn.checkUrl({
+        url: {
             e: [
                 "//a[@data-title and picture/source]",
                 ".hero+.hero,.entry-content,.d-flex>.col-24,.album-post",
                 ".entry-title,.album-title,.album-post-title,.col-12>h1,.album-h1",
                 ".nav-links"
             ]
-        }),
+        },
         imgs: () => {
             let max;
             fn.ge(".current-page") ? max = fn.gt(".current-page").match(/\d+$/)[0] : max = fn.gt(".nav-links>*:last-child", 2) || 1;
@@ -10395,13 +10428,13 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "KawaiiX系列 二",
-        reg: () => fn.checkUrl({
+        url: {
             e: [
                 ".hero+.hero,.entry-content,.d-flex>.col-24,.album-post",
                 ".entry-title,.album-title,.album-post-title,.col-12>h1,.album-h1",
                 "//a[@data-title and picture/source]"
             ]
-        }),
+        },
         imgs: "//a[@data-title and picture/source]",
         button: [4],
         insertImg: [".hero+.hero,.entry-content,.d-flex>.col-24,.album-post,.album-h1", 2],
@@ -10448,9 +10481,9 @@ a:has(>div>div>img),
         name: "D哥新聞",
         host: ["dbro.news"],
         link: "https://dbro.news/category/p0-%e5%a5%97%e5%9c%96%e7%b3%bb%e5%88%97",
-        reg: () => fn.checkUrl({
+        url: {
             h: "dbro.news"
-        }),
+        },
         imgs: ".pic_center>img,.content_left img,.container img.mt-1,.wp-block-gallery img,a.jig-link,.pages img,.post-content img",
         customTitle: ".post-title",
         category: "nsfw2"
@@ -10583,10 +10616,10 @@ a:has(>div>div>img),
     }, {
         name: "好视角",
         host: ["shijiao.meinvnews.com"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ".logo img[alt=好视角]",
             p: /^\/\w+\.html$/
-        }),
+        },
         imgs: ".tit+.text img:not([onerror]),.tit+.pic img:not([onerror])",
         button: [4],
         insertImg: [".tit+.text,.tit+.pic", 2],
@@ -10601,10 +10634,10 @@ a:has(>div>div>img),
     }, {
         name: "哔咔庇护所v2",
         host: ["ios.zzgo810.top"],
-        reg: () => fn.checkUrl({
+        url: {
             t: "哔咔庇护所",
             s: "&catid="
-        }),
+        },
         exclude: "#dplayer.dplayer",
         init: async () => {
             fn.remove("//div[@class='row'][div/a/img]");
@@ -10617,11 +10650,11 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "G-AVSTAR",
-        reg: () => fn.checkUrl({
+        url: {
             h: "g-avstar.com",
             p: /^\/\d+\/\d+\/\d+\/[^\/]+\/$/,
             e: "//p[contains(text(),'更多美图')]"
-        }),
+        },
         init: () => fn.createImgBox(".ngg-galleryoverview", 1),
         imgs: async () => {
             await fn.getNP(".ngg-gallery-thumbnail-box", ".ngg-navigation>span.current+a:not(.prev)", null, ".ngg-navigation");
@@ -10636,10 +10669,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "瓜老師の鉴赏课",
-        reg: () => fn.checkUrl({
+        url: {
             h: "photo.lovegua.com",
             p: /^\/\d+\.html$/
-        }),
+        },
         init: () => fn.createImgBox("p:has(>img)", 1),
         imgs: "p:has(>img)>img",
         button: [4],
@@ -10660,12 +10693,12 @@ a:has(>div>div>img),
             "https://diedk1123-ake33i.xofulitu2za222.sbs/xoxo",
             "https://ponds-attract-ducks.xofulitu1qqq111.xyz/xoxo"
         ],
-        reg: () => fn.checkUrl({
+        url: {
             t: "XO福利圖",
             h: "xofulitu",
             e: ".picture-wrap img",
             p: /\/art\/pic\/id\/\d+\/$/i
-        }),
+        },
         imgs: () => fn.getImgSrcArr(".picture-wrap img").filter(src => !src.includes("loading")),
         button: [4],
         insertImg: [".container.clearfix", 2],
@@ -10682,11 +10715,11 @@ a:has(>div>div>img),
     }, {
         name: "XO福利圖 分類自動翻頁",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: "xofulitu",
             t: "XO福利圖",
             p: /^\/arttype\//i
-        }),
+        },
         autoPager: {
             ele: ".container.clearfix",
             observer: ".container.clearfix .album",
@@ -10700,10 +10733,10 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "XO福利圖AD",
-        reg: () => fn.checkUrl({
+        url: {
             h: "xofulitu",
             t: "XO福利圖"
-        }),
+        },
         hide: ".custom_link-wrapper,div:has(>#floating-ad)",
         category: "ad"
     }, {
@@ -10735,10 +10768,10 @@ a:has(>div>div>img),
     }, {
         name: "性福里",
         host: ["sexfull.av9238.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "sexfull",
             p: /^\/img\/detail_\d+\.html$|^\/manhua\/chapter_[\d_]+\.html$/
-        }),
+        },
         imgs: ".left .image img",
         button: [4],
         insertImg: [".image", 2],
@@ -10750,10 +10783,10 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "性福里 AD",
-        reg: () => fn.checkUrl({
+        url: {
             h: "sexfull",
             e: "#advlist"
-        }),
+        },
         hide: ".container:has(>#advlist)",
         category: "ad"
     }, {
@@ -10828,10 +10861,10 @@ a:has(>div>div>img),
     }, {
         name: "中国街拍",
         host: ["jiepai.sifang.app"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "meta[content=中国街拍]",
             p: /^\/\d+\/[\w-]+\.html$/
-        }),
+        },
         imgs: "a[data-fancybox]",
         button: [4],
         insertImg: [
@@ -10966,10 +10999,10 @@ a:has(>div>div>img),
     }, {
         name: "逆次元逆ACG",
         host: ["www.nicohentai.com", "www.freeacg.org", "www.freeacg2.org", "acg.taipei", "nico.yt"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "#Comic_Top_Nav img[alt=logo][src$='_nico.png']",
             p: /^\/(moeupup-\d-\d+\.html|showinfo-\d+-\d+-\d\.html)$/
-        }),
+        },
         init: async () => await fn.getNP(".row.thumb-overlay-albums img", ".pagination li.active+li>a:not(.prevnext)"),
         imgs: ".row.thumb-overlay-albums img",
         button: [4],
@@ -11011,10 +11044,10 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "Doujindesu.XXX",
-        reg: () => fn.checkUrl({
+        url: {
             h: "doujindesu.tv",
             e: "#reader>.main"
-        }),
+        },
         init: async () => {
             await fn.waitEle("#reader>.main img");
             for (const sheet of document.styleSheets) {
@@ -11037,9 +11070,9 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "Doujindesu",
-        reg: () => fn.checkUrl({
+        url: {
             h: "doujindesu.click"
-        }),
+        },
         imgs: "#readerarea img",
         button: [4],
         insertImg: ["#readerarea", 2],
@@ -11050,7 +11083,7 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "熱辣漫畫",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?relamanhua\.org$/,
                 "www.2024manga.com"
@@ -11058,8 +11091,9 @@ a:has(>div>div>img),
             e: [
                 ".disData[contentKey]",
                 ".comicContent-list"
-            ]
-        }) && comicInfiniteScrollMode != 1,
+            ],
+            i: 0
+        },
         init: async () => {
             await fn.waitVar("webpackJsonp");
             fn.copymangaUI();
@@ -11091,7 +11125,7 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "熱辣漫畫 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?relamanhua\.org$/,
                 "www.2024manga.com"
@@ -11099,8 +11133,9 @@ a:has(>div>div>img),
             e: [
                 ".disData[contentKey]",
                 ".comicContent-list"
-            ]
-        }) && comicInfiniteScrollMode == 1,
+            ],
+            i: 1
+        },
         setReadHistory: () => {
             let readHistoryData = localStorage.getItem("readHistory");
             let [, , word, , id] = new URL(document.URL).pathname.split("/");
@@ -11142,13 +11177,13 @@ a:has(>div>div>img),
         category: "comic autoPager"
     }, {
         name: "熱辣漫畫 目錄頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?relamanhua\.org$/,
                 "www.2024manga.com"
             ],
             p: /^\/comic\/\w+$/
-        }),
+        },
         init: async () => {
             await fn.waitEle(".tab-pane.show.active a");
             const updateLastChapter = () => {
@@ -11194,10 +11229,11 @@ a:has(>div>div>img),
         category: "none"
     }, {
         name: "熱辣漫畫M",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["m.relamanhua.org", "m.2024manga.com"],
-            p: "/v2h5/comicContent/"
-        }) && comicInfiniteScrollMode != 1,
+            p: "/v2h5/comicContent/",
+            i: 0
+        },
         xhrJson: (url = siteUrl) => {
             let split = url.split("/");
             let word = split.at(-2);
@@ -11246,10 +11282,11 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "熱辣漫畫M 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["m.relamanhua.org", "m.2024manga.com"],
-            p: "/v2h5/comicContent/"
-        }) && comicInfiniteScrollMode == 1,
+            p: "/v2h5/comicContent/",
+            i: 1
+        },
         getData: () => {
             let split = document.URL.split("/");
             let word = split.at(-2);
@@ -11301,12 +11338,12 @@ a:has(>div>div>img),
         category: "comic autoPager"
     }, {
         name: "熱辣漫畫 清除不給開啟開發人員工具",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.|m.)?relamanhua\.org$/,
                 /^(www\.|m.)?2024manga.com$/
             ],
-        }),
+        },
         init: () => {
             if ("aboutBlank" in _unsafeWindow) _unsafeWindow.aboutBlank = null;
             setTimeout(() => fn.clearAllTimer(3), 1000);
@@ -11314,18 +11351,10 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "禁漫天堂",
-        reg: () => fn.checkUrl({
-            h: [
-                "18comic.vip",
-                "18comic.org",
-                "jmcomic.me",
-                "jmcomic1.me",
-                "18comic-c104.xyz",
-                "18comic-zzz.xyz",
-                "18comic-c104.vip"
-            ],
+        url: {
+            e: "meta[property='og:site_name'][content=禁漫天堂]",
             p: /^\/photo\/\d+/
-        }),
+        },
         imgs: async () => {
             await fn.getNP(".scramble-page", ".pagination li.active+li>a:not(.prevnext)");
             fn.showMsg(displayLanguage.str_01, 0);
@@ -11410,25 +11439,17 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "禁漫天堂",
-        reg: () => fn.checkUrl({
-            h: [
-                "18comic.vip",
-                "18comic.org",
-                "jmcomic.me",
-                "jmcomic1.me",
-                "18comic-c104.xyz",
-                "18comic-zzz.xyz",
-                "18comic-c104.vip"
-            ]
-        }),
+        url: {
+            e: "meta[property='og:site_name'][content=禁漫天堂]",
+        },
         observerClick: ["#chk_cover", "#chk_guide"],
         category: "ad"
     }, {
         name: "E-Hentai圖片清單頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["e-hentai.org", "exhentai.org"],
             p: /^\/g\/\d+\/\w+\/$/
-        }),
+        },
         exclude: "//h1[text()='Content Warning']",
         imgs: async () => {
             await fn.getNP(".gdtm,.gdtl", ".ptds+td>a", null, "//tr[td[@class='ptds']]");
@@ -11531,7 +11552,7 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "nhentai圖片清單頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "nhentai.net",
                 "nyahentai.red",
@@ -11542,7 +11563,7 @@ a:has(>div>div>img),
                 "simplyhentai.org"
             ],
             p: /^\/g\/\d+\/?$/
-        }),
+        },
         imgs: async () => {
             thumbnailSrcArray = fn.getImgSrcArr("a.gallerythumb>img");
             if (fn.lh === "nhentai.net") {
@@ -11854,9 +11875,9 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "AnimeH",
-        reg: () => fn.checkUrl({
+        url: {
             h: "animeh.to"
-        }),
+        },
         imgs: () => {
             if (!fn.ge("//div[span[text()='Page:']]")) {
                 return [];
@@ -11881,7 +11902,7 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/圖片清單頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "cathentai.net",
                 "hentaibeeg.com",
@@ -11889,7 +11910,7 @@ a:has(>div>div>img),
                 "nyahentai.info"
             ],
             p: /^\/[^/]+\/(#collapse)?$/
-        }),
+        },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let url = fn.gu("//a[span[text()='List Read']]");
@@ -11904,7 +11925,7 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/List Read頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "cathentai.net",
                 "hentaibeeg.com",
@@ -11912,7 +11933,7 @@ a:has(>div>div>img),
                 "nyahentai.info"
             ],
             p: /^\/read\/\d+\.html$/
-        }),
+        },
         imgs: () => fn.run(fn.gt("#listImgH")),
         button: [4],
         insertImg: ["#image-container", 2],
@@ -12249,10 +12270,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "Fhentai圖片清單頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: "fhentai.net",
             p: "/f/"
-        }),
+        },
         imgs: async () => {
             thumbnailSrcArray = fn.getImgSrcArr(".rounded-md:has(>.grid) img");
             return thumbnailSrcArray.map(e => e.replace("/thumb/", "/raw/"));
@@ -12264,10 +12285,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "Fhentai閱讀頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: "fhentai.net",
             p: "/read/"
-        }),
+        },
         imgs: "main .rounded-md img",
         button: [4],
         insertImg: ["main .rounded-md", 2],
@@ -12461,11 +12482,11 @@ a:has(>div>div>img),
     }, {
         name: "Download Doujin",
         host: ["cin.cx", "cin.mom"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "cin",
             p: /^\/v\/\d+$/,
             e: "#doujin-page"
-        }),
+        },
         checkStatus: async (src) => {
             let host = new URL(src).host;
             let hosts = ["a", "b", "c", "d", "e", "f", "g"].map(e => host.replace(/^[a-g]/i, e));
@@ -12694,10 +12715,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "MultPorn閱讀頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: "multporn.net",
             e: "//script[contains(text(),'configUrl')]"
-        }),
+        },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let url = fn.gst("configUrl").match(/configUrl":"[^,]+/g)[0].slice(12, -1).replaceAll("\\", "");
@@ -12837,10 +12858,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "HentaiPaw圖片清單頁/Hentai-One圖片清單頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["hentaipaw.com", "ch.hentai-one.com"],
             p: "/articles/"
-        }),
+        },
         init: async () => await fn.waitEle(["next-route-announcer", ".grid .group>img"]),
         imgs: async () => {
             fn.createImgBox(".container:has(>.grid)");
@@ -13376,7 +13397,7 @@ a:has(>div>div>img),
             await fn.waitVar("jQuery");
             fn.run("jQuery(document).off();");
         },
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "manga18.club",
                 "hanman18.com",
@@ -13385,7 +13406,7 @@ a:has(>div>div>img),
                 "cndoujin.net"
             ],
             e: "//script[contains(text(),'slides_p_path')]"
-        }),
+        },
         imgs: () => _unsafeWindow.slides_p_path.map(e => atob(e)),
         capture: () => _this.imgs(),
         autoDownload: [0],
@@ -13453,11 +13474,11 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "7mmtvH漫畫貼圖",
-        reg: () => fn.checkUrl({
+        url: {
             h: "7mmtv.sx",
             p: "hcomic",
             e: "//script[contains(text(),'Large_cgurl')]"
-        }),
+        },
         imgs: () => {
             const {
                 Large_cgurl
@@ -13587,7 +13608,7 @@ a:has(>div>div>img),
     }, {
         name: "漫小肆",
         host: ["www.mxsweb.cc"],
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "www.jjmhw.cc",
                 "www.ikanmh.xyz",
@@ -13596,7 +13617,7 @@ a:has(>div>div>img),
                 /^www\.mxs\d{1,2}\.cc$/
             ],
             p: "chapter"
-        }),
+        },
         init: () => fn.remove("//body/div[div[@id][@style][a]]|//body/div[div[@id][@style]][a[@id][@style]]"),
         imgs: "img[data-original]",
         button: [4],
@@ -13633,7 +13654,7 @@ a:has(>div>div>img),
     }, {
         name: "ACG漫画网",
         host: ["acgmhx.com", "acgxmh.com", "acgsmh.com", "h-mangas.com", "porn-comic.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 /^(www\.)?acg[a-z]mh\.com$/,
                 /^(www\.)?acgmh[a-z]\.com$/,
@@ -13641,7 +13662,7 @@ a:has(>div>div>img),
                 /^(www\.)?porn-comic\.com$/
             ],
             p: /^\/([\w-]+\/)?(h|hentai|cos|webtoon|western)\/\d+\.html$/
-        }),
+        },
         //imgs: () => fn.getImg(".manga-page img,.main-picture img", fn.gt("#pages>*:last-child", 2), 5),
         imgs: async () => {
             await fn.getNP(".manga-page img,.main-picture img", "#pages span+a:not(.a1)", null, "#pages", 200);
@@ -13755,10 +13776,10 @@ a:has(>div>div>img),
         //第3方API直接取得"寫真 & Cosplay"分類一整頁的畫廊資料
         //https://meoden.net/gallery?page=1&site=WN&siteTag=
         //https://meoden.net/api/gallery/wnacg?page=1
-        reg: () => fn.checkUrl({
+        url: {
             t: "紳士漫畫",
             p: "/photos-index-aid-"
-        }),
+        },
         init: async () => {
             fn.remove(".dlh,iframe:not(#FullPictureLoadIframe)");
             fn.remove("//body/div[a[img]] | //div[@class='Introduct']/a[div[img]] | //div[a[img[@alt='Game Tip']]]");
@@ -13780,10 +13801,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "紳士漫畫 下拉閱讀頁",
-        reg: () => fn.checkUrl({
+        url: {
             t: "紳士漫畫",
             p: /^\/photos-(slide|slidelow|list|slist)-aid-\d+\.html$/
-        }),
+        },
         imgs: () => _unsafeWindow.imglist.map(e => e.url),
         button: [4],
         insertImg: ["#img_list", 2],
@@ -13794,10 +13815,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "紳夜漫畫",
-        reg: () => fn.checkUrl({
+        url: {
             h: "syacomic",
             t: "紳夜漫畫"
-        }),
+        },
         SPA: () => {
             if (document.URL.includes("/detail/")) {
                 isFetching = true;
@@ -13839,10 +13860,10 @@ a:has(>div>div>img),
         name: "头牌漫画网/顶点漫画/第一漫画网",
         link: "https://xs8.me/，https://mh8.in/",
         host: ["dmmtu.com", "dmmpic.com", "dymmt.com", "kkmnt.com", "mmxzt.com"],
-        reg: () => fn.checkUrl({
+        url: {
             t: ["头牌漫画网", "顶点漫画", "顶点韩漫", "第一漫画网"],
             p: /^\/chapter\/\d+\.html$/
-        }),
+        },
         init: async () => {
             await fn.getNP(".mip-box-body img", "//a[text()='下一页']", null, ".info");
             fn.createImgBox(".info", 2);
@@ -13912,10 +13933,10 @@ a:has(>div>div>img),
     }, {
         name: "松鼠症倉庫 閱讀頁",
         host: ["ahri8.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
             p: "readOnline"
-        }),
+        },
         imgs: () => {
             const {
                 Original_Image_List,
@@ -13934,11 +13955,11 @@ a:has(>div>div>img),
     }, {
         name: "松鼠症倉庫 詳情頁",
         host: ["ahri8.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
             p: "/post",
             s: "ID="
-        }),
+        },
         init: () => {
             let e = fn.ge("//a[text()='預覽圖片']");
             e.innerText = "圖片";
@@ -13962,7 +13983,7 @@ a:has(>div>div>img),
     }, {
         name: "Caitlin.top/Ahri Gallery分機 閱讀頁",
         host: ["caitlin.top", "ahri-gallery-xfjd-2024-04-25.top"],
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             h: "caitlin.top",
             p: "index",
             s: "readOnline"
@@ -14009,7 +14030,7 @@ a:has(>div>div>img),
     }, {
         name: "Caitlin.top/Ahri Gallery分機 詳情頁",
         host: ["caitlin.top", "ahri-gallery-xfjd-2024-04-25.top"],
-        reg: () => fn.checkUrl({
+        url: () => fn.checkUrl({
             h: "caitlin.top",
             p: "index",
             s: "article"
@@ -14076,10 +14097,11 @@ a:has(>div>div>img),
     }, {
         name: "蚂蚁搬运网/紳士泛漫畫",
         link: "https://hacg.antbyw.com/plugin.php?id=jameson_manhua",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.antbyw.com", "www.itsacg.com"],
             s: "=read",
-        }) && !hasTouchEvent,
+            d: "pc"
+        },
         imgs: ".uk-zjimg img",
         button: [4],
         insertImg: [".uk-zjimg", 2],
@@ -14103,10 +14125,11 @@ a:has(>div>div>img),
     }, {
         name: "蚂蚁搬运网M/紳士泛漫畫M",
         link: "https://hacg.antbyw.com/plugin.php?id=jameson_manhua",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.antbyw.com", "www.itsacg.com"],
             s: "=read",
-        }) && hasTouchEvent,
+            d: "m"
+        },
         imgs: ".zjimg>img",
         button: [4],
         insertImg: [
@@ -14123,10 +14146,10 @@ a:has(>div>div>img),
     }, {
         name: "ACG糖",
         host: ["acgotang.com"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@class='content']//a[text()='ACG糖']",
             p: /^\/\w+\/\w+\.html$/
-        }),
+        },
         imgs: () => {
             let max = fn.gt("//a[text()='下一页']", 2);
             return fn.getImg(".manga-picture img", max, 5);
@@ -14169,10 +14192,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "177 漫画/XXIAV寫真館",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.177pica.com", "www.177picyy.com", "www.xxiav.com"],
             p: /^\/html\/\d+\/\d+\/\d+\.html$/
-        }),
+        },
         imgs: () => fn.getImg(".single-content img[data-lazy-src]", (fn.gt(".page-links>*:last-child", 2) || 1), 10),
         button: [4],
         insertImg: [".single-content", 2],
@@ -14203,11 +14226,11 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "色漫网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.cartoon18.com",
             p: "/v/",
             e: ".title+div>a.btn-info"
-        }),
+        },
         init: () => fn.createImgBox(".row.mb-4", 2),
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
@@ -14224,11 +14247,11 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "色漫网",
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.cartoon18.com",
             p: "/v/",
             e: ".title+div>a>i.fa-play"
-        }),
+        },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let url = fn.gu(".title+div>a");
@@ -14265,14 +14288,14 @@ a:has(>div>div>img),
     }, {
         name: "凹凸漫/X漫/肉漫天堂 閱讀頁",
         host: ["atm333.com", "xman5.com", "rmtt6.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: /atm|xman|rmtt/,
             p: "read/",
             e: [
                 "center>h1",
                 "center>h2"
             ]
-        }),
+        },
         init: () => fn.clearAllTimer(),
         imgs: "img.lazyload[data-original]",
         button: [4],
@@ -14285,14 +14308,14 @@ a:has(>div>div>img),
     }, {
         name: "凹凸漫/X漫/肉漫天堂 目錄頁",
         host: ["atm333.com", "xman5.com", "rmtt6.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: /atm|xman|rmtt/,
             p: "detail/",
             e: [
                 ".hot_banner",
                 ".playlist_full"
             ]
-        }),
+        },
         init: () => {
             fn.clearAllTimer();
             if ("showlist" in _unsafeWindow) {
@@ -14310,9 +14333,9 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "韓漫射/绅士同人H漫",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["h-webtoon.com", "h-doujinshi.xyz"]
-        }),
+        },
         init: "setTimeout(()=>{fn.gae('.g1-nav-single a').forEach(e=>{e.removeAttribute('target')})},2000)",
         imgs: ".g1-content-narrow p img",
         button: [4],
@@ -14339,10 +14362,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "18H漫画",
-        reg: () => fn.checkUrl({
+        url: {
             h: "18hmanga",
             e: "//a[contains(text(),'Read More')]"
-        }),
+        },
         init: () => fn.remove("body>div[id][class][style]"),
         imgs: () => {
             fn.showMsg(displayLanguage.str_01, 0);
@@ -14365,10 +14388,10 @@ a:has(>div>div>img),
     }, {
         name: "老司機禁漫 目錄頁",
         host: ["laosiji6.com", "laosiji52.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "laosiji",
             p: /^\/comic\/\d+$/i
-        }),
+        },
         init: () => fn.createImgBox(".detail", 2),
         imgs: () => {
             let links = fn.gau(".vol-item a").reverse();
@@ -14383,10 +14406,10 @@ a:has(>div>div>img),
     }, {
         name: "老司機禁漫 閱讀頁",
         host: ["laosiji6.com", "laosiji52.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "laosiji",
             p: /^\/comic\/\d+\/\w+$/i
-        }),
+        },
         init: () => fn.createImgBox("img.lazy", 1),
         imgs: "img.lazy",
         button: [4],
@@ -14433,9 +14456,14 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "Hitomi.la",
-        host: ["hitomi.la"],
-        reg: /^https?:\/\/hitomi\.la\/reader\/\d+\.html/,
-        init: "setTimeout(()=>{$(document).unbind('keydown');$(document).unbind('click')},1000)",
+        url: {
+            h: "hitomi.la",
+            p: "/reader/"
+        },
+        init: async () => {
+            await fn.wait(() => document.title !== "| Hitomi.la");
+            fn.run("setTimeout(()=>{$(document).unbind('keydown');$(document).unbind('click')},1000)");
+        },
         imgs: async () => {
             await fn.waitEle("#mobileImages .lillie", 11);
             const {
@@ -14497,10 +14525,10 @@ a:has(>div>div>img),
     }, {
         name: "H漫画",
         host: ["a.123548.xyz"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//div[@class='logo']/a[text()='H漫画']",
             p: "/e/action/ShowInfo.php"
-        }),
+        },
         imgs: ".entry img",
         button: [4],
         insertImg: [".entry", 1],
@@ -14535,7 +14563,7 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "一之涩漫画/哈塔兹漫画/布罗塔漫画/物二漫画",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "1zse.com",
                 "hatazi.com",
@@ -14543,7 +14571,7 @@ a:has(>div>div>img),
                 /52216\d\.xyz$/
             ],
             p: /^\/index\.php\/\d+\.html/
-        }),
+        },
         init: () => {
             fn.addMutationObserver(() => fn.remove("#eruda,.__chobitsu-hide__,#lightboxOverlay,#lightbox"));
             fn.clearAllTimer();
@@ -14619,10 +14647,10 @@ a:has(>div>div>img),
     }, {
         name: "九妖漫画",
         host: ["lifantt.com", "9yaomh.cc"],
-        reg: () => fn.checkUrl({
+        url: {
             t: "九妖漫画网",
             p: "/chapter/"
-        }),
+        },
         imgs: ".rd-article-wr img,.comic-list img",
         button: [4],
         insertImg: [".rd-article-wr,.comic-list", 2],
@@ -14831,11 +14859,11 @@ a:has(>div>div>img),
     }, {
         name: "鸟鸟韩漫 閱讀頁",
         host: ["nnhanman6.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "nnhanman",
             p: "chapter",
             e: ".BarTit>h1"
-        }),
+        },
         imgs: "img[data-original]",
         button: [4],
         insertImg: ["//td[img] | //div[@class='view-imgBox']", 2],
@@ -14847,11 +14875,11 @@ a:has(>div>div>img),
     }, {
         name: "鸟鸟韩漫 目錄頁",
         host: ["nnhanman6.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "nnhanman",
             p: "/comic/",
             e: ".Introduct_Sub"
-        }),
+        },
         init: () => fn.createImgBox(".txtDesc", 2),
         imgs: () => {
             let links = fn.gau("#list a").reverse();
@@ -14864,10 +14892,10 @@ a:has(>div>div>img),
     }, {
         name: "松鼠韓漫 閱讀頁",
         host: ["www.songshuhanman.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "songshuhanman",
             p: "/ch/"
-        }),
+        },
         imgs: ".more-box img",
         button: [4],
         insertImg: [".more-box", 2],
@@ -14879,10 +14907,10 @@ a:has(>div>div>img),
     }, {
         name: "松鼠韓漫 目錄頁",
         host: ["www.songshuhanman.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "songshuhanman",
             p: "/com/"
-        }),
+        },
         init: () => fn.createImgBox(".contpost2.gap", 2),
         imgs: () => {
             let links = fn.gau(".playlist a");
@@ -14894,10 +14922,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "野貓韓漫 閱讀頁",
-        reg: () => fn.checkUrl({
+        url: {
             e: ".logo img[alt^=野貓韓漫]",
             p: "/read/"
-        }),
+        },
         imgs: ".module img",
         button: [4],
         insertImg: [".module", 2],
@@ -14913,10 +14941,10 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "野貓韓漫 目錄頁",
-        reg: () => fn.checkUrl({
+        url: {
             e: ".logo img[alt^=野貓韓漫]",
             p: "/m/"
-        }),
+        },
         init: () => fn.createImgBox(".module-info", 2),
         imgs: () => {
             let links = fn.gau(".module-play-list a");
@@ -14943,10 +14971,10 @@ a:has(>div>div>img),
     }, {
         name: "漫香阁",
         host: ["xn--wgv69rba1382b.com", "韩漫日漫.com"],
-        reg: () => fn.checkUrl({
+        url: {
             t: "漫香阁",
             p: /^\/content-[\w-]+\.html$/
-        }),
+        },
         imgs: "#contentimg img",
         button: [4],
         insertImg: ["#contentimg", 2],
@@ -15000,11 +15028,11 @@ a:has(>div>div>img),
     }, {
         name: "顶通漫画",
         link: "https://喜悅.toptooncn.club/學習.html",
-        reg: () => fn.checkUrl({
+        url: {
             h: "toptoon",
             p: /^\/\w+\/\d+\.html$/,
             e: ".place"
-        }),
+        },
         imgs: "#txtbox img",
         button: [4],
         insertImg: ["#txtbox", 2],
@@ -15046,11 +15074,11 @@ a:has(>div>div>img),
     }, {
         name: "18H汉化漫画 介紹頁",
         host: ["manhua.sexbook.top", "18manga.top", "mt91.top", "kk4.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//ul[@class='nav-main']//a[text()='18H汉化漫画']",
             p: "/cont.php",
             s: "?id="
-        }),
+        },
         imgs: async () => {
             let max = fn.gt("#td-Act+#td-Series").match(/\d+/)[0];
             let [, imgDir, , ex] = fn.gu(".article-content a").match(/^(.+\/)(\d+)(\.\w+)$/);
@@ -15072,11 +15100,11 @@ a:has(>div>div>img),
     }, {
         name: "18H汉化漫画 閱讀頁",
         host: ["manhua.sexbook.top", "18manga.top", "mt91.top", "kk4.top"],
-        reg: () => fn.checkUrl({
+        url: {
             e: "//ul[@class='nav-main']//a[text()='18H汉化漫画']",
             p: "/imgs.php",
             s: "?id="
-        }),
+        },
         imgs: async () => {
             let next = fn.ge("li.active+li");
             if (next) {
@@ -15106,10 +15134,10 @@ a:has(>div>div>img),
     }, {
         name: "hanime1",
         host: ["hanime1.biz", "ani02.xyz", "anime01.xyz"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ["//a[contains(text(),'anime1')][@href='/home']", ".blog"],
             p: /^\/book\/\d+$/
-        }),
+        },
         init: async () => {
             fn.ge(".blog").scrollIntoView({
                 block: "end"
@@ -15268,10 +15296,10 @@ a:has(>div>div>img),
     }, {
         name: "污漫天堂",
         host: ["wumtt.com"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ".logo>a[title='污漫天堂']",
             p: "/mangaread/"
-        }),
+        },
         imgs: ".content>center>div>img",
         button: [4],
         insertImg: [".content>center>div:has(>img)", 2],
@@ -15288,11 +15316,11 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "污污漫书/55漫書",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.55comics.com", "www.55manshu.com"],
             p: /\/\d+\.html$/,
             e: ".scramble-page img"
-        }),
+        },
         imgs: async () => {
             let max = fn.gt("//li[a[text()='下一页»' or text()='下一頁»']]", 2);
             let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url + "?p=" + (i + 1));
@@ -15319,10 +15347,10 @@ a:has(>div>div>img),
     }, {
         name: "日韩漫画/歪歪漫画",
         host: ["www.diyihm.com", "www.lltoon.com", "www.rrtoon.com", "wwtoon.com", "www.zztoon.com", "www.vvtoon.com"],
-        reg: () => fn.checkUrl({
+        url: {
             t: ["第一漫画", "歪歪漫画", "第一韩漫"],
             p: /^\/view\/\d+\/\d+$/
-        }),
+        },
         init: async () => {
             await fn.waitEle(".charpetBox img");
             let code = fn.gt("//script[contains(text(),'$(document).ready')]");
@@ -15360,11 +15388,12 @@ a:has(>div>div>img),
     }, {
         name: "Mangago",
         host: ["mangago.me", "mangago.zone", "youhim.me"],
-        reg: () => fn.checkUrl({
+        url: {
             h: /mangago|youhim/,
             p: /^\/read-manga\/|^\/chapter\//,
-            e: "#pic_container"
-        }) && !hasTouchEvent,
+            e: "#pic_container",
+            d: "pc"
+        },
         init: async () => {
             fn.clearAllTimer();
             fn.createImgBox("#pic_container", 1, 1000);
@@ -15394,10 +15423,11 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "MangaDex",
-        reg: () => fn.checkUrl({
+        url: {
             h: "mangadex.org",
-            e: "link[title=MangaDex]"
-        }) && !hasTouchEvent,
+            e: "link[title=MangaDex]",
+            d: "m"
+        },
         init: async () => await fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
         SPA: () => new URL(document.URL).pathname.startsWith("/chapter/"),
         observerURL: true,
@@ -15457,10 +15487,11 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "NamiComi",
-        reg: () => fn.checkUrl({
+        url: {
             h: "namicomi.com",
-            e: "meta[content=NamiComi]"
-        }) && !hasTouchEvent,
+            e: "meta[content=NamiComi]",
+            d: "pc"
+        },
         SPA: () => new URL(document.URL).pathname.includes("/chapter/"),
         observerURL: true,
         imgs: () => {
@@ -15567,10 +15598,10 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "Hiperdex/MangaRead",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["hiperdex.com", "www.mangaread.org"],
             p: /^\/manga\/[\w-]+\/chapter/
-        }),
+        },
         imgs: ".wp-manga-chapter-img",
         button: [4],
         insertImg: [".reading-content", 2],
@@ -15581,10 +15612,10 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "MangaSee/MangaLife",
-        reg: () => fn.checkUrl({
+        url: {
             h: ["mangasee123.com", "manga4life.com"],
             p: "/read-online/"
-        }),
+        },
         init: async () => {
             await fn.waitEle("#TopPage img[ng-src^=http]");
             fn.createImgBox("#TopPage", 1);
@@ -15724,11 +15755,11 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "MangaHere M",
-        reg: () => fn.checkUrl({
+        url: {
             h: "newm.mangahere.cc",
             p: "/manga/",
             e: ".read-bottom-bar"
-        }),
+        },
         imgs: () => {
             if (fn.ge(".read-bottom-bar-block.control-right")) {
                 const {
@@ -15817,10 +15848,11 @@ a:has(>div>div>img),
     }, {
         name: "ReadComicOnline",
         host: ["readcomiconline.li"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "readcomiconline.li",
-            p: /^\/Comic\/[\w-]+\/(Issue|Full|Vol)/i
-        }) && !hasTouchEvent,
+            p: /^\/Comic\/[\w-]+\/(Issue|Full|Vol)/i,
+            d: "pc"
+        },
         init: async () => {
             await fn.waitEle(["//script[contains(text(),'SetImage')]", "#divImage img"]);
             fn.clearAllTimer();
@@ -15867,10 +15899,11 @@ a:has(>div>div>img),
     }, {
         name: "ReadComicOnline M",
         host: ["readcomiconline.li"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "readcomiconline.li",
-            p: /^\/Comic\/[\w-]+\/(Issue|Full|Vol)/i
-        }) && hasTouchEvent,
+            p: /^\/Comic\/[\w-]+\/(Issue|Full|Vol)/i,
+            d: "m"
+        },
         init: async () => {
             await fn.waitEle("#divImage img");
             fn.clearAllTimer();
@@ -15926,10 +15959,10 @@ a:has(>div>div>img),
     }, {
         name: "嗨皮漫畫閱讀",
         enable: 0,
-        reg: () => fn.checkUrl({
+        url: {
             h: "m.happymh.com",
             p: "/reads/"
-        }),
+        },
         exclude: ".captcha-area",
         fetchJson: (url = siteUrl) => {
             let [, , mangaCode, id] = new URL(url).pathname.split("/");
@@ -16029,10 +16062,11 @@ a:has(>div>div>img),
         name: "8Comic無限動漫",
         host: ["www.8comic.com"],
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             t: "無限動漫",
-            p: "/online/"
-        }) && comicInfiniteScrollMode != 1,
+            p: "/online/",
+            i: 0
+        },
         frameCode: `
 if ("xx" in window) {
     const {
@@ -16104,10 +16138,11 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "8Comic無限動漫 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             t: "無限動漫",
-            p: "/online/"
-        }) && comicInfiniteScrollMode == 1,
+            p: "/online/",
+            i: 1
+        },
         frameCode: `
 if ("xx" in window) {
     const {
@@ -16820,6 +16855,104 @@ if ("xx" in window) {
         },
         category: "comic autoPager"
     }, {
+        name: "再漫画",
+        url: {
+            h: "manhua.zaimanhua.com"
+        },
+        SPA: () => document.URL.includes("/view/"),
+        observerURL: true,
+        getData: async () => {
+            await fn.wait((dom, win) => win?.__NUXT__?.data?.getChapters && win?.__NUXT__?.data?.getCationDetails);
+            let {
+                chapter_order,
+                title: chapterName,
+                page_url: srcs
+            } = _unsafeWindow.__NUXT__.data.getChapters.data.chapterInfo;
+            let {
+                title: comicName,
+                chapterList
+            } = _unsafeWindow.__NUXT__.data.getCationDetails.data.comicInfo;
+            siteJson = {
+                srcs,
+                chapter_order,
+                comicName,
+                chapterName,
+                chapterList: chapterList[0].data.sort((a, b) => a.chapter_order - b.chapter_order)
+            }
+            debug("\n此頁JSON資料\n", siteJson);
+        },
+        init: async () => {
+            if (_this.SPA()) await _this.getData();
+            fn.addMutationObserver(() => {
+                if (!_this.SPA() || isDownloading) return;
+                setTimeout(async () => {
+                    await _this.getData();
+                    nextLink = _this.next();
+                    customTitle = siteJson.comicName + " - " + siteJson.chapterName;
+                }, 200);
+            });
+        },
+        imgs: () => siteJson.srcs,
+        autoDownload: [0],
+        next: () => {
+            if (!_this.SPA()) return null;
+            let next = null;
+            siteJson.chapterList.some((c, i, a) => {
+                if (c.chapter_order == siteJson.chapter_order) {
+                    if (a[i + 1] !== undefined) {
+                        next = document.URL.replace(/\d+$/, "") + a[i + 1].chapter_id;
+                    }
+                    return true;
+                }
+            });
+            return next;
+        },
+        prev: 1,
+        customTitle: () => siteJson.comicName + " - " + siteJson.chapterName,
+        category: "comic"
+    }, {
+        name: "动漫之家",
+        url: {
+            h: "www.idmzj.com"
+        },
+        SPA: () => document.URL.includes("/view/"),
+        observerURL: true,
+        getData: async () => {
+            await fn.wait((dom, win) => win?.__NUXT__?.data?.getchapters && win?.__NUXT__?.data?.getcationDeatils);
+            let {
+                chapter_order,
+                title: chapterName,
+                page_url: srcs
+            } = _unsafeWindow.__NUXT__.data.getchapters.data.chapterInfo;
+            let {
+                title: comicName,
+                chapterList
+            } = _unsafeWindow.__NUXT__.data.getcationDeatils.comicInfo;
+            siteJson = {
+                srcs,
+                chapter_order,
+                comicName,
+                chapterName,
+                chapterList: chapterList[0].data.sort((a, b) => a.chapter_order - b.chapter_order)
+            }
+            debug("\n此頁JSON資料\n", siteJson);
+        },
+        init: async () => {
+            if (_this.SPA()) await _this.getData();
+            fn.addMutationObserver(() => {
+                if (!_this.SPA() || isDownloading) return;
+                setTimeout(async () => {
+                    await _this.getData();
+                    customTitle = siteJson.comicName + " - " + siteJson.chapterName;
+                }, 200);
+            });
+        },
+        imgs: () => siteJson.srcs,
+        customTitle: () => siteJson.comicName + " - " + siteJson.chapterName,
+        observerClick: [".login_tip", "#floatCode>.close_code"],
+        focus: ".btmBtnBox",
+        category: "comic"
+    }, {
         name: "动漫之家M",
         host: ["m.idmzj.com"],
         enable: 0,
@@ -17116,10 +17249,11 @@ if ("xx" in window) {
         name: "包子漫画 閱讀",
         host: ["cn.baozimh.com", "cn.webmota.com", "tw.baozimh.com", "tw.webmota.com", "www.baozimh.com", "www.webmota.com", "cn.kukuc.co", "tw.kukuc.co", "www.kukuc.co", "tw.czmanga.com", "cn.czmanga.com", "www.czmanga.com", "tw.dzmanga.com", "cn.dzmanga.com", "www.dzmanga.com", "tw.dociy.net", "cn.dociy.net", "www.dociy.net", "tw.twmanga.com", "cn.twmanga.com", "www.twmanga.com"],
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             t: "包子",
-            p: /^\/comic\/chapter\/[^/]+\/\w+\.html/i
-        }) && comicInfiniteScrollMode != 1,
+            p: /^\/comic\/chapter\/[^/]+\/\w+\.html/i,
+            i: 0
+        },
         init: async () => {
             fn.addMutationObserver(() => fn.remove("div[id*='ads'],div[id='interstitial_fade'],iframe"));
             fn.run("document['onkeydown']=null;");
@@ -17138,10 +17272,11 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "包子漫画 閱讀 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             t: "包子",
-            p: /^\/comic\/chapter\/[^/]+\/\w+\.html/i
-        }) && comicInfiniteScrollMode == 1,
+            p: /^\/comic\/chapter\/[^/]+\/\w+\.html/i,
+            i: 1
+        },
         getSrcs: (dom) => fn.gae(".comic-contain amp-img", dom).map(e => e.dataset.src ?? e.getAttribute("src")),
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -17189,20 +17324,20 @@ if ("xx" in window) {
         name: "包子漫画 展開目錄",
         icon: 0,
         key: 0,
-        reg: () => fn.checkUrl({
+        url: {
             t: "包子",
             p: /^\/comic\/[-\w]+$/i
-        }),
+        },
         autoClick: ["#button_show_all_chatper", 1000],
         category: "comic"
     }, {
         name: "包子漫画，鏈接新分頁打開",
         icon: 0,
         key: 0,
-        reg: () => fn.checkUrl({
+        url: {
             t: "包子",
             e: ".comics-card,.bookshelf-items"
-        }),
+        },
         openInNewTab: ".comics-card a:not([target=_blank]),.bookshelf-items a:not(.remove-img):not([target=_blank])",
         category: "comic"
     }, {
@@ -18476,7 +18611,7 @@ if ("xx" in window) {
     }, {
         name: "漫漫聚/KuKu动漫",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "www.manmanju.cc",
                 "a.manmanju.cc",
@@ -18485,8 +18620,9 @@ if ("xx" in window) {
                 "a.ikukudm.cc",
                 "b.ikukudm.cc"
             ],
-            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/
-        }) && comicInfiniteScrollMode != 1,
+            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/,
+            i: 0
+        },
         include: "td img",
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         imgs: () => fn.getKukudmSrc(),
@@ -18526,7 +18662,7 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫漫聚/KuKu动漫 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "www.manmanju.cc",
                 "a.manmanju.cc",
@@ -18535,8 +18671,9 @@ if ("xx" in window) {
                 "a.ikukudm.cc",
                 "b.ikukudm.cc"
             ],
-            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/
-        }) && comicInfiniteScrollMode == 1,
+            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/,
+            i: 1
+        },
         include: "td img",
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         init: async () => {
@@ -18587,7 +18724,7 @@ if ("xx" in window) {
     }, {
         name: "漫漫聚M/KuKu动漫M",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "m.manmanju.cc",
                 "s1.m.manmanju.cc",
@@ -18599,8 +18736,9 @@ if ("xx" in window) {
                 "s2.wap.ikukudm.cc",
                 "s3.wap.ikukudm.cc"
             ],
-            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/
-        }) && comicInfiniteScrollMode != 1,
+            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/,
+            i: 0
+        },
         include: ".classBox img,.imgBox",
         init: () => fn.remove("//center[iframe]"),
         imgs: () => {
@@ -18641,7 +18779,7 @@ if ("xx" in window) {
     }, {
         name: "漫漫聚/KuKu动漫M 404",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "m.manmanju.cc",
                 "s1.m.manmanju.cc",
@@ -18657,8 +18795,9 @@ if ("xx" in window) {
             e: [
                 "td img",
                 "iframe[src='/top.htm']"
-            ]
-        }) && comicInfiniteScrollMode != 1,
+            ],
+            i: 0
+        },
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         imgs: () => fn.getKukudmSrc(),
         button: [4],
@@ -18691,7 +18830,7 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫漫聚M/KuKu动漫M 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "m.manmanju.cc",
                 "s1.m.manmanju.cc",
@@ -18703,8 +18842,9 @@ if ("xx" in window) {
                 "s2.wap.ikukudm.cc",
                 "s3.wap.ikukudm.cc"
             ],
-            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/
-        }) && comicInfiniteScrollMode == 1,
+            p: /^\/comiclist\/\d+\/\d+\/1\.htm$/,
+            i: 1
+        },
         include: ".classBox img,.imgBox",
         init: async () => {
             fn.remove("//center[iframe] | //a[img] | //ul[center[li[@class='txtA']]]");
@@ -18870,10 +19010,11 @@ if ("xx" in window) {
     }, {
         name: "大树漫画/世伦漫画",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.dashumanhua.com", "www.shilunart.com"],
-            p: /^\/comic\/\w+\/.+\.html/i
-        }) && comicInfiniteScrollMode != 1,
+            p: /^\/comic\/\w+\/.+\.html/i,
+            i: 0
+        },
         imgs: (dom = document) => {
             let code = fn.gst("picTree", dom);
             let m = code.match(/eval.+\)\)/)[0].slice(4);
@@ -18891,10 +19032,11 @@ if ("xx" in window) {
     }, {
         name: "大树漫画/世伦漫画 自動翻頁",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.dashumanhua.com", "www.shilunart.com"],
-            p: /^\/comic\/\w+\/.+\.html/i
-        }) && comicInfiniteScrollMode == 1,
+            p: /^\/comic\/\w+\/.+\.html/i,
+            i: 1
+        },
         getSrcs: (dom) => {
             let code = fn.gst("picTree", dom);
             let m = code.match(/eval.+\)\)/)[0].slice(4);
@@ -18942,11 +19084,12 @@ if ("xx" in window) {
     }, {
         name: "韩漫天堂",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.hmttmh.com", "w226.npdn.top"],
             p: "/chapter/",
-            e: "#comicContain"
-        }) && comicInfiniteScrollMode != 1,
+            e: "#comicContain",
+            i: 0
+        },
         init: async () => {
             await fn.waitVar("newImgs");
             _unsafeWindow.newImgs = [];
@@ -18974,11 +19117,12 @@ if ("xx" in window) {
     }, {
         name: "韩漫天堂 自動翻頁",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.hmttmh.com", "w226.npdn.top"],
             p: "/chapter/",
-            e: "#comicContain"
-        }) && comicInfiniteScrollMode == 1,
+            e: "#comicContain",
+            i: 1
+        },
         getSrcs: (dom) => {
             let newImgsCode = fn.gst("newImgs", dom);
             newImgsCode = fn.run(newImgsCode.replace("\n", "").trim().slice(4));
@@ -19020,11 +19164,12 @@ if ("xx" in window) {
     }, {
         name: "韩漫天堂M",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.hmttmh.com", "w226.npdn.top"],
             p: "/chapter/",
-            e: "#mainView_img"
-        }) && comicInfiniteScrollMode != 1,
+            e: "#mainView_img",
+            i: 0
+        },
         init: () => fn.createImgBox("#mainView_img", 2),
         imgs: (dom = document) => {
             let imgsCode = fn.gst("original", dom);
@@ -19055,11 +19200,12 @@ if ("xx" in window) {
     }, {
         name: "韩漫天堂M 自動翻頁",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["www.hmttmh.com", "w226.npdn.top"],
             p: "/chapter/",
-            e: "#mainView_img"
-        }) && comicInfiniteScrollMode == 1,
+            e: "#mainView_img",
+            i: 1
+        },
         getSrcs: (dom) => {
             let imgsCode = fn.gst("original", dom);
             imgsCode = imgsCode.replace("\n", "").trim().slice(4);
@@ -19103,10 +19249,11 @@ if ("xx" in window) {
     }, {
         name: "Godamanga.ART 英文漫画",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["godamh.org"],
-            p: /^\/chapter\/\d+\.html$/i
-        }) && comicInfiniteScrollMode != 1,
+            p: /^\/chapter\/\d+\.html$/i,
+            i: 0
+        },
         init: async () => {
             await fn.waitEle(".touch-manipulation img");
             let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
@@ -19150,10 +19297,11 @@ if ("xx" in window) {
     }, {
         name: "Godamanga.ART 自動翻頁",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["godamh.org"],
-            p: /^\/chapter\/\d+\.html$/i
-        }) && comicInfiniteScrollMode == 1,
+            p: /^\/chapter\/\d+\.html$/i,
+            i: 1
+        },
         getData: () => {
             let setdata = JSON.parse(document.cookie.match(/setdata[\s=]+([^;]+)/)[1]);
             let {
@@ -19212,11 +19360,12 @@ if ("xx" in window) {
     }, {
         name: "Godamanga.ART 英文漫画",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["manhuascans.org"],
             p: /^\/manga\/[\w-]+\/[\w-]+$/i,
-            e: "#chapterContent"
-        }) && comicInfiniteScrollMode != 1,
+            e: "#chapterContent",
+            i: 0
+        },
         xhrOptions: {
             cache: "no-cache"
         },
@@ -19245,11 +19394,12 @@ if ("xx" in window) {
     }, {
         name: "Godamanga.ART 英文漫画 自動翻頁",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: ["manhuascans.org"],
             p: /^\/manga\/[\w-]+\/[\w-]+$/i,
-            e: "#chapterContent"
-        }) && comicInfiniteScrollMode == 1,
+            e: "#chapterContent",
+            i: 1
+        },
         xhrOptions: {
             cache: "no-cache"
         },
@@ -19288,7 +19438,7 @@ if ("xx" in window) {
     }, {
         name: "GODA漫畫/包子漫畫",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "www.cocolamanhua.com",
                 "n.cocolamanhua.com",
@@ -19305,8 +19455,9 @@ if ("xx" in window) {
                 "manhuafree.com"
             ],
             p: /^\/manga\/[\w-]+\/[\w-]+$/i,
-            e: "#chapterContent"
-        }) && comicInfiniteScrollMode != 1,
+            e: "#chapterContent",
+            i: 0
+        },
         init: async () => {
             fn.addMutationObserver(() => fn.remove("iframe,.bannersUite"));
             await fn.waitEle(".touch-manipulation img");
@@ -19355,7 +19506,7 @@ if ("xx" in window) {
     }, {
         name: "GODA漫畫/包子漫畫 自動翻頁",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: [
                 "www.cocolamanhua.com",
                 "n.cocolamanhua.com",
@@ -19372,8 +19523,9 @@ if ("xx" in window) {
                 "manhuafree.com"
             ],
             p: /^\/manga\/[\w-]+\/[\w-]+$/i,
-            e: "#chapterContent"
-        }) && comicInfiniteScrollMode == 1,
+            e: "#chapterContent",
+            i: 1
+        },
         getApi: (mode = "current") => {
             let chapterDataE = fn.ge("#chapterContent");
             let ms = chapterDataE.dataset.ms
@@ -19446,10 +19598,10 @@ if ("xx" in window) {
     }, {
         name: "漫画時間 日文漫画",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: "www.mangajikan.com",
             p: "chapter-"
-        }),
+        },
         imgs: ".more-box img",
         button: [4],
         insertImg: [".more-box", 2],
@@ -19499,10 +19651,11 @@ if ("xx" in window) {
     }, {
         name: "如漫画",
         host: ["www.rumanhua.com", "rumanhua.com", "m.rumanhua.com"],
-        reg: () => fn.checkUrl({
+        url: {
             h: "rumanhua.com",
-            p: /^\/\w+\/\w+.html$/i
-        }) && comicInfiniteScrollMode != 1,
+            p: /^\/\w+\/\w+.html$/i,
+            i: 0
+        },
         imgs: ".main_img img",
         button: [4],
         insertImg: [".main_img", 2],
@@ -19531,10 +19684,11 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "如漫画 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             h: "rumanhua.com",
-            p: /^\/\w+\/\w+.html$/i
-        }) && comicInfiniteScrollMode == 1,
+            p: /^\/\w+\/\w+.html$/i,
+            i: 1
+        },
         getSrcs: (dom) => fn.getImgSrcArr(".main_img img", dom),
         getImgs: (dom = document) => fn.createImgArray(_this.getSrcs(dom)),
         init: async () => {
@@ -19584,10 +19738,11 @@ if ("xx" in window) {
     }, {
         name: "漫画网",
         host: ["www.manhua3.com", "manhuami.cc"],
-        reg: () => fn.checkUrl({
+        url: {
             e: ["div.logo>a[title=漫画网]>img[alt=漫画网]", "#pics"],
-            p: /^\/[\d-]+\.html$/
-        }) && comicInfiniteScrollMode != 1,
+            p: /^\/[\d-]+\.html$/,
+            i: 0
+        },
         init: () => fn.createImgBox("#pics", 1),
         imgs: (frame = _unsafeWindow) => frame.params.images,
         button: [4],
@@ -19612,10 +19767,11 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫画网 自動翻頁",
-        reg: () => fn.checkUrl({
+        url: {
             e: ["div.logo>a[title=漫画网]>img[alt=漫画网]", "#pics"],
-            p: /^\/[\d-]+\.html$/
-        }) && comicInfiniteScrollMode == 1,
+            p: /^\/[\d-]+\.html$/,
+            i: 1
+        },
         getSrcs: () => frameWindow.params.images,
         getImgs: () => fn.createImgArray(_this.getSrcs()),
         init: async () => {
@@ -20551,10 +20707,10 @@ if ("xx" in window) {
         host: ["manwa.me"],
         link: "https://fuw11.cc/maKapG",
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: "manwa",
             p: /^\/chapter\/\d+(\?img_host=\d)?$/
-        }),
+        },
         init: async () => {
             _unsafeWindow.Function.prototype.constructor = () => {};
             //await fn.scrollEles(".img-content img", 200);
@@ -20587,18 +20743,18 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫蛙選目錄展開全部章節",
-        reg: () => fn.checkUrl({
+        url: {
             h: "manwa",
             p: /^\/book\/\d+$/
-        }),
+        },
         init: "Function.prototype.constructor=()=>{};titleSelect(this,'#chapter_indexes');charpterMore(this);",
         category: "none"
     }, {
         name: "漫蛙自動載入更多",
-        reg: () => fn.checkUrl({
+        url: {
             h: "manwa",
             p: /^\/update$/
-        }),
+        },
         init: "Function.prototype.constructor=()=>{};",
         observerClick: "#loadMore",
         category: "autoPager"
@@ -20780,10 +20936,11 @@ if ("xx" in window) {
         name: "微漫画 目錄頁",
         host: ["medibang.com"],
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: "medibang.com",
-            p: "/book/"
-        }) && !hasTouchEvent,
+            p: "/book/",
+            d: "pc"
+        },
         init: () => fn.createImgBox("#contentsDetailShow"),
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
@@ -20823,10 +20980,11 @@ if ("xx" in window) {
         name: "微漫画 閱讀頁",
         host: ["medibang.com"],
         enable: 1,
-        reg: () => fn.checkUrl({
+        url: {
             h: "medibang.com",
-            p: "/viewer/"
-        }) && !hasTouchEvent,
+            p: "/viewer/",
+            d: "pc"
+        },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let id = fn.lp.split("/").at(-2);
@@ -20941,11 +21099,10 @@ if ("xx" in window) {
     }, {
         name: "m.4khd.com 自動跳轉",
         host: ["m.4khd.com"],
-        reg: /^https?:\/\/m\.4khd\.com\//,
-        reg: () => fn.checkUrl({
+        url: {
             h: "m.4khd.com",
             p: /^\/\w+$|^\/link\/|^\/vip\//i
-        }),
+        },
         init: () => {
             if (fn.lp.includes("/vip/")) {
                 fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
@@ -21042,10 +21199,10 @@ if ("xx" in window) {
         category: "none"
     }, {
         name: "google search 新分頁開啟",
-        reg: () => fn.checkUrl({
+        url: {
             h: "google.",
             p: "/search"
-        }),
+        },
         openInNewTab: "#center_col a:not([target])",
         category: "none"
     }, {
@@ -21369,10 +21526,14 @@ if ("xx" in window) {
     const isRegExp = reg => Object.prototype.toString.call(reg) === "[object RegExp]";
     const isObject = obj => Object.prototype.toString.call(obj) === "[object Object]";
     const isArray = arr => Object.prototype.toString.call(arr) === "[object Array]";
+    const isSet = set => Object.prototype.toString.call(set) === "[object Set]";
     const isFn = fn => ["[object Function]", "[object AsyncFunction]"].some(e => e === Object.prototype.toString.call(fn));
     const isPromise = p => Object.prototype.toString.call(p) === "[object Promise]";
     const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e)) || Object.prototype.toString.call(e) === "[object DocumentFragment]";
     const isURL = (url) => {
+        if ("canParse" in URL) {
+            return URL.canParse(url);
+        }
         try {
             new URL(url);
             return true;
@@ -21402,13 +21563,15 @@ if ("xx" in window) {
     const addLibrarysV3 = async () => {
         try {
             const jsArr = [JqueryJS, FancyboxV3JS];
-            for (let code of jsArr) {
+            for (let [i, code] of jsArr.entries()) {
+                if (i == 0 && ("jQuery" in _unsafeWindow)) continue;
                 if (siteData.fancybox && siteData.fancybox.js === false) continue;
                 fn.script(code, 0, 1);
             }
             if (siteData.fancybox && siteData.fancybox.css !== false) {
                 fn.css(FancyboxV3Css);
             }
+            $ = _unsafeWindow.jQuery;
         } catch (error) {
             console.error("\naddLibrarysV3() 注入函式庫失敗", error);
         }
@@ -21417,13 +21580,15 @@ if ("xx" in window) {
     const addLibrarysV5 = () => {
         try {
             const jsArr = [JqueryJS, FancyboxV5JS];
-            for (let code of jsArr) {
+            for (let [i, code] of jsArr.entries()) {
                 //fn.script(code, 0, 1);
+                if (i == 0 && ("jQuery" in _unsafeWindow)) continue;
                 _GM_addElement(document.body, "script", {
                     textContent: code
                 });
             }
             fn.css(FancyboxV5Css);
+            $ = _unsafeWindow.jQuery;
         } catch (error) {
             console.error("\naddLibrarysV5() 注入函式庫失敗", error);
         }
@@ -21700,7 +21865,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻燈片播放時間間隔：",
                 str_146: "Fancybox5滾輪操作：",
-                str_147: "畫廊 (0、1、3) 滾輪操作：",
+                str_147: "畫廊 ( 0、1、3 ) 滾輪操作：",
                 str_148: "Fancybox5幻燈片過場效果：",
                 str_149: "已取消下載！！！",
                 str_150: "JK滾動",
@@ -21887,7 +22052,7 @@ if ("xx" in window) {
                 str_144: "下一篇",
                 str_145: "Fancybox5幻灯片播放时间间隔：",
                 str_146: "Fancybox5滚轮操作：",
-                str_147: "画廊 (0、1、3) 滚轮操作：",
+                str_147: "画廊 ( 0、1、3 ) 滚轮操作：",
                 str_148: "Fancybox5幻灯片过场效果：",
                 str_149: "已取消下载！！！",
                 str_150: "JK滚动",
@@ -22137,7 +22302,9 @@ if ("xx" in window) {
                 p: pathname,
                 s: search,
                 e: elements,
-                t: title
+                t: title,
+                d: device,
+                i: comicInfiniteScroll
             } = obj;
             const {
                 imgs: imgSelector,
@@ -22149,6 +22316,19 @@ if ("xx" in window) {
             let checkE = true;
             let checkI = true;
             let checkT = true;
+            let checkD = true;
+            if ("i" in obj) {
+                checkI = comicInfiniteScroll === 0 ? comicInfiniteScrollMode != 1 : comicInfiniteScrollMode == 1;
+                if (!checkI) return false;
+            }
+            if ("d" in obj) {
+                if (device === "pc") {
+                    checkD = !hasTouchEvent;
+                } else if (device === "m") {
+                    checkD = hasTouchEvent;
+                }
+                if (!checkD) return false;
+            }
             if ("h" in obj) {
                 if (isArray(hosts)) {
                     checkH = hosts.some(h => {
@@ -22665,7 +22845,7 @@ if ("xx" in window) {
         checkImgSrc: (ele, rText = null) => {
             let imgSrc;
             let check = fn.checkDataset(ele);
-            if (isEle(ele) && ["IMG", "DIV", "A", "SPAN", "LI", "FIGURE"].some(n => n === ele.tagName) && check.ok) {
+            if (isEle(ele) && ["IMG", "DIV", "A", "SPAN", "LI", "FIGURE", "VIDEO"].some(n => n === ele.tagName) && check.ok) {
                 imgSrc = fn.complementSrc(check.src, rText);
             } else if (isEle(ele) && ["IMG", "AMP-IMG"].some(n => n === ele.tagName)) {
                 if (ele.tagName == "IMG") {
@@ -22697,7 +22877,12 @@ if ("xx" in window) {
         },
         //確認元素有沒有把圖片原始網址放在src以外的屬性
         checkDataset: ele => {
-            if (["IMG", "DIV", "A", "SPAN", "LI", "FIGURE"].some(n => n === ele.tagName)) {
+            if (!isEle(ele)) {
+                return {
+                    ok: false
+                }
+            }
+            if (["IMG", "DIV", "A", "SPAN", "LI", "FIGURE", "VIDEO"].some(n => n === ele.tagName)) {
                 const datasetArr = [
                     "data-loadsrc",
                     "data-orig-file",
@@ -22728,7 +22913,8 @@ if ("xx" in window) {
                     "zoomfile",
                     "original",
                     "mydatasrc",
-                    "ess-data"
+                    "ess-data",
+                    "poster"
                 ];
                 for (let p of datasetArr) {
                     let imgSrc = ele.getAttribute(p)?.trim();
@@ -25893,9 +26079,14 @@ if ("xx" in window) {
             imgs = gae(".FullPictureLoadImage:not(.small)");
         } else if (isFn(selector)) {
             imgs = await selector();
+            if (isSet(imgs)) {
+                imgs = [...imgs];
+            }
             if (getImgFn == "" && !getImgFn.includes("專用Fn")) {
                 getImgFn += " > " + siteData.name + "專用Fn";
             }
+        } else if (isSet(selector)) {
+            imgs = [...selector];
         } else if (!selector || selector === "") {
             showMsg(displayLanguage.str_41);
             return;
@@ -27559,6 +27750,25 @@ if (config.ViewMode == 1) {
             fn.remove("#overflowYHidden");
             FullPictureLoadShadowGallery?.remove();
             isOpenGallery = false;
+            if ("focus" in siteData) {
+                let selector = siteData.focus;
+                let ele;
+                if (isString(selector)) {
+                    if (selector.startsWith("last:")) {
+                        selector = selector.slice(5);
+                        ele = fn.gae(selector).at(-1);
+                    } else {
+                        ele = ge(selector);
+                    }
+                } else if (isFn(selector)) {
+                    ele = selector();
+                }
+                if (!isEle(ele)) return;
+                setTimeout(() => ele.scrollIntoView(instantScrollIntoView), 100);
+            }
+            if (("closeAF" in siteData) && isFn(siteData.closeAF)) {
+                siteData.closeAF();
+            }
         };
 
         const toggleWidthEvent = (event) => {
@@ -28467,6 +28677,25 @@ img.small {
             fn.remove("#overflowYHidden");
             iframe.remove();
             isOpenGallery = false;
+            if ("focus" in siteData) {
+                let selector = siteData.focus;
+                let ele;
+                if (isString(selector)) {
+                    if (selector.startsWith("last:")) {
+                        selector = selector.slice(5);
+                        ele = fn.gae(selector).at(-1);
+                    } else {
+                        ele = ge(selector);
+                    }
+                } else if (isFn(selector)) {
+                    ele = selector();
+                }
+                if (!isEle(ele)) return;
+                setTimeout(() => ele.scrollIntoView(instantScrollIntoView), 100);
+            }
+            if (("closeAF" in siteData) && isFn(siteData.closeAF)) {
+                siteData.closeAF();
+            }
         };
 
         const toggleWidthEvent = (event) => {
@@ -30890,12 +31119,23 @@ a[data-fancybox]:hover {
         tempData = data;
         let check = false;
         try {
-            if (isRegExp(data.reg)) {
-                check = data.reg.test(siteUrl);
-            } else if (isArray(data.reg)) {
-                check = data.reg.some(r => r.test(siteUrl));
-            } else if (isFn(data.reg)) {
-                check = await data.reg();
+            if ("url" in data) {
+                const url = data.url;
+                if (isObject(url)) {
+                    check = fn.checkUrl(url);
+                } else if (isFn(url)) {
+                    check = await url();
+                }
+            }
+            if ("reg" in data) {
+                const reg = data.reg;
+                if (isRegExp(reg)) {
+                    check = reg.test(siteUrl);
+                } else if (isArray(reg)) {
+                    check = reg.some(r => r.test(siteUrl));
+                } else if (isFn(reg)) {
+                    check = await reg();
+                }
             }
             if (check) {
                 const category = data.category;
@@ -30991,6 +31231,15 @@ a[data-fancybox]:hover {
         if (!ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
+        if (options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
+            addLibrarysV3();
+            Fancyboxi18nV3();
+            FancyboxOptionsV3();
+        } else if (options.fancybox == 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+            addLibrarysV5();
+            Fancyboxl10nV5();
+            fn.css(FancyboxV5Css);
+        }
         if ("init" in siteData) {
             const init_code = siteData.init;
             if (isString(init_code)) {
@@ -31015,15 +31264,6 @@ a[data-fancybox]:hover {
         }
         if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
             fn.css(".fancybox__container .to-next>.fancybox__content,.fancybox__container .to-prev>.fancybox__content{display:none!important}");
-        }
-        if (options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
-            addLibrarysV3();
-            Fancyboxi18nV3();
-            FancyboxOptionsV3();
-        } else if (options.fancybox == 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
-            addLibrarysV5();
-            Fancyboxl10nV5();
-            fn.css(FancyboxV5Css);
         }
         if ("imgs" in siteData) {
             debug("\nCSS/Xpath/JS選擇器：" + siteData.imgs);
@@ -31405,7 +31645,7 @@ a[data-fancybox]:hover {
         return;
     }
 
-    if ("reg" in siteData) {
+    if (("reg" in siteData) || "url" in siteData) {
         debug("\n列出此站資料", siteData);
         debug(`\n列出規則總數(${customData.length})`);
         debug("\n列出NSFW規則", nsfw1Data);
@@ -31921,4 +32161,4 @@ html,body {
         });
     }
 
-})(JSZip, jQuery, ajaxHooker);
+})(JSZip, ajaxHooker);
