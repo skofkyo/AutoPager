@@ -31645,7 +31645,7 @@ a[data-fancybox]:hover {
         return;
     }
 
-    if (("reg" in siteData) || "url" in siteData) {
+    if (("reg" in siteData) || ("url" in siteData)) {
         debug("\n列出此站資料", siteData);
         debug(`\n列出規則總數(${customData.length})`);
         debug("\n列出NSFW規則", nsfw1Data);
