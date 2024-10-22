@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.10.0
+// @version            2.10.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -101,6 +101,7 @@
     let displayLanguage = {};
     let globalImgArray = [];
     let captureSrcArray = [];
+    let captureTotal = 0;
     let thumbnailSrcArray = [];
     let videoSrcArray = [];
     let promiseBlobArray = [];
@@ -117,9 +118,10 @@
     let isValidPage = true;
     let isAddFullPictureLoadButton = false;
     let isAddFullPictureLoadFixedMenu = false;
-    let isAddnewTabViewButton = false;
+    let isAddNewTabViewButton = false;
     let isOpenOptionsUI = false;
     let isOpenGallery = false;
+    let isChangeNum = false;
     let fetchErrorArray = [];
     let fastDownload = false;
     let currentDownloadThread = 0;
@@ -1132,10 +1134,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".content-warp", 2],
         customTitle: ".post-title",
-        fancybox: {
-            v: 3,
-            css: false
-        },
         category: "nsfw2"
     }, {
         name: "8E资源站",
@@ -1294,6 +1292,7 @@ a:has(>div>div>img),
             css: false
         },
         hide: ".code-block",
+        observerClick: "a.close",
         category: "nsfw1"
     }, {
         name: "优美图录",
@@ -1579,7 +1578,7 @@ a:has(>div>div>img),
                     }, 1200);
                     return srcArr;
                 }
-                await fn.delay(600, 0);
+                await delay(600);
             }
             if (picTotalNum != srcArr.length && !vip) {
                 setTimeout(() => {
@@ -2396,7 +2395,7 @@ a:has(>div>div>img),
             h: "luscious.net"
         },
         imgs: async () => {
-            if (!document.URL.includes("/albums/")) return [];
+            if (!_this.SPA()) return [];
             fn.showMsg(displayLanguage.str_05, 0);
             await fn.waitEle("a[href*='/read/'],.album-heading a");
             const getApiUrl = (id, page) => {
@@ -2435,13 +2434,9 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["article.o-padding-top-bottom,.picture-frame-wrapper", 3],
         downloadVideo: true,
-        customTitle: async () => {
-            await fn.delay(500, 0);
-            if (document.URL.includes("/albums/")) {
-                return fn.gt(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a");
-            } else {
-                return null;
-            }
+        customTitle: () => {
+            if (!_this.SPA()) return null;
+            return fn.waitEle(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a").then(e => e.innerText);
         },
         observerURL: true,
         css: "body.o-modal-no-scroll{overflow:unset!important}",
@@ -2561,7 +2556,7 @@ a:has(>div>div>img),
         SPA: true,
         capture: () => _this.imgs(0),
         customTitle: async () => {
-            await fn.delay(500, 0);
+            await delay(500);
             return fn.gt(".z-breadcrumbs")?.replace(/\n/g, " - ").replace(/首页 - |Cosersets - /, "");
         },
         observerURL: true,
@@ -2579,7 +2574,7 @@ a:has(>div>div>img),
         SPA: true,
         capture: () => _this.imgs(),
         customTitle: async () => {
-            await fn.delay(500, 0);
+            await delay(500);
             return fn.gt("#crumbbar")?.replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)")
         },
         observerURL: true,
@@ -2887,7 +2882,7 @@ a:has(>div>div>img),
             let bigImgsArr = [];
             for (let id of IDs) {
                 bigImgsArr.push(await resBlobUrl(id, IDs.length));
-                //await fn.delay(1500, 0);
+                //await delay(1500);
             }
             return bigImgsArr;
         },
@@ -3129,7 +3124,7 @@ a:has(>div>div>img),
             fn.showMsg("fn.xhrHEA(check)...", 0);
             let xhrNum = 0;
             return fn.gau("a.glightbox").map(u => u.replace("-scaled", "")).map(async (src, i, arr) => {
-                await fn.delay(100 * i, 0);
+                await delay(100 * i);
                 let res = await fn.xhrHEAD(src);
                 fn.showMsg(`fn.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
                 let status = res.status;
@@ -3419,7 +3414,7 @@ a:has(>div>div>img),
                             break;
                         } else {
                             fn.showMsg(`第${page + 1}頁${res.status}重試第${check}次`, 2900);
-                            await fn.delay(3000, 0);
+                            await delay(3000);
                         }
                     }
                 });
@@ -3436,7 +3431,7 @@ a:has(>div>div>img),
                         ce.forEach((e, i) => (e.outerHTML = re[i].outerHTML));
                     }
                 }
-                await fn.delay(200, 0);
+                await delay(200);
             }
             return imgsArr;
         },
@@ -4132,7 +4127,7 @@ a:has(>div>div>img),
             let tempDom1;
             let picNum;
             await Promise.all(resArr).then(async arr => {
-                await fn.delay(1000, 0);
+                await delay(1000);
                 fn.hideMsg();
                 ajaxNum = 0;
                 let html = "";
@@ -4158,7 +4153,7 @@ a:has(>div>div>img),
             }));
             let tempDom2;
             await Promise.all(resArr2).then(async arr => {
-                await fn.delay(1000, 0);
+                await delay(1000);
                 fn.hideMsg();
                 ajaxNum = 0;
                 let html = "";
@@ -4174,7 +4169,7 @@ a:has(>div>div>img),
                     });
                 });
                 await Promise.all(getVideoUrlsArr).then(async mp4Arr => {
-                    await fn.delay(1000, 0);
+                    await delay(1000);
                     mp4Arr = mp4Arr.filter(item => item);
                     fn.hideMsg();
                     console.log("MP4地址", mp4Arr);
@@ -6828,7 +6823,7 @@ a:has(>div>div>img),
                             break;
                         } else {
                             fn.showMsg(`第${page + 1}頁${res.status}重試第${check}次`, 2900);
-                            await fn.delay(3000, 0);
+                            await delay(3000);
                         }
                     }
                 });
@@ -6845,7 +6840,7 @@ a:has(>div>div>img),
                         ce.forEach((e, i) => (e.outerHTML = re[i].outerHTML));
                     }
                 }
-                await fn.delay(1000, 0);
+                await delay(1000);
             }
             return imgsArr;
         },
@@ -7898,9 +7893,9 @@ a:has(>div>div>img),
                 if (/imx\.to/.test(src)) {
                     return src.replace("/t/", "/i/");
                 } else {
-                    await fn.delay(100 * i, 0);
+                    await delay(100 * i);
                     return fetch(a.href).then(res => res.text()).then(async text => {
-                        await fn.delay(200 * i, 0);
+                        await delay(200 * i);
                         let id = a.href.split("/").at(-1);
                         let spirit = fn.run(text.match(/var\sspirit\s?=\s?([^;]+);/)[1]);
                         let api = `/backend.php?&spirit=${spirit}&photo=${id}`;
@@ -8206,7 +8201,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         customTitle: async () => {
-            await fn.delay(1000, 0);
+            await delay(1000);
             return fn.dt({
                 d: " — О, порно на DTF"
             });
@@ -8224,7 +8219,7 @@ a:has(>div>div>img),
         SPA: () => !!fn.ge("#addcomment"),
         button: [4],
         customTitle: async () => {
-            await fn.delay(1000, 0);
+            await delay(1000);
             return fn.dt({
                 d: [
                     " | uCrazy.org",
@@ -8243,23 +8238,41 @@ a:has(>div>div>img),
             d: "pc"
         },
         SPA: true,
-        init: () => fn.addMutationObserver(() => {
-            if (isOpenOptionsUI || isOpenFancybox || isDownloading) return;
-            let imgs = fn.gae(".image_container img:not(.get)").map(img => {
-                img.classList.add("get");
-                return img;
+        init: async () => {
+            addNewTabViewButton();
+            const get = async () => {
+                let imgs = fn.gae(".image_container img:not(.get)");
+                if (imgs.length > 0) {
+                    imgs.map(img => {
+                        img.classList.add("get");
+                        return img;
+                    });
+                    fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
+                }
+                let videos = fn.gae("video.vjs-tech[value][poster]:not(.get)");
+                if (videos.length > 0) {
+                    videos.forEach(video => {
+                        video.classList.add("get");
+                        let src = video.getAttribute("value");
+                        setVideoArray.add(src);
+                        setArray.add(video.poster);
+                    });
+                    videoSrcArray = [...setVideoArray];
+                }
+                if (captureTotal != setArray.size) {
+                    captureTotal = setArray.size;
+                    await captureSrcB();
+                }
+                customTitle = document.title;
+            };
+            await get();
+            fn.addMutationObserver(async () => {
+                if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isDownloading) return;
+                await get();
             });
-            fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
-            fn.gae("video.vjs-tech[value][poster]:not(.get)").forEach(video => {
-                video.classList.add("get");
-                let src = video.getAttribute("value");
-                setVideoArray.add(src);
-                setArray.add(video.poster);
-            });
-            videoSrcArray = [...setVideoArray];
-            customTitle = document.title;
-        }),
+        },
         imgs: () => setArray,
+        capture: () => _this.imgs(),
         hide: ".reblogcontainerouter",
         downloadVideo: true,
         focus: "last:.image_container",
@@ -8269,6 +8282,7 @@ a:has(>div>div>img),
                 EClick(".cancelbutton");
             }
         },
+        aeg: 0,
         category: "nsfw2"
     }, {
         name: "Дзен",
@@ -8309,7 +8323,7 @@ a:has(>div>div>img),
             return url.pathname.startsWith("/a/") && url.search === "";
         },
         customTitle: async () => {
-            await fn.delay(1000, 0);
+            await delay(1000);
             return fn.dt({
                 d: /\|.+$/
             });
@@ -9202,7 +9216,7 @@ a:has(>div>div>img),
                     });
                 });
                 resArr.push(res);
-                await fn.delay(1000, 0);
+                await delay(1000);
             }
             return Promise.all(resArr).then(data => data.flat()).then(arr => {
                 let thumbs = arr.map(e => e.thumb);
@@ -9422,7 +9436,7 @@ a:has(>div>div>img),
         name: "SMUTPOND",
         host: ["www.smutpond.com"],
         reg: /^https?:\/\/www\.smutpond\.com\/gallery-pics\/\?uid=/i,
-        init: async () => await fn.delay(2000, 0),
+        init: async () => await delay(2000),
         imgs: () => {
             thumbnailSrcArray = fn.gae(".viewerPreview img").slice(5).map(e => e.dataset.lazy ?? e.src);
             thumbnailSrcArray = [...new Set(thumbnailSrcArray)];
@@ -10323,10 +10337,7 @@ a:has(>div>div>img),
             return next ? next.href : null;
         },
         prev: "a[rel=prev]",
-        customTitle: async () => {
-            await fn.waitEle(".figure-link");
-            return fn.gt(".entry-title a").split(" No.")[0].trim();
-        },
+        customTitle: () => fn.waitEle(".figure-link").then(() => fn.gt(".entry-title a").split(" No.")[0].trim()),
         category: "nsfw1"
     }, {
         name: "QGirlz/CuteLadyPic",
@@ -11009,14 +11020,17 @@ a:has(>div>div>img),
         insertImg: [".row.thumb-overlay-albums", 2],
         next: "//a[span[text()='下一页']][@href]",
         prev: 1,
-        customTitle: async () => {
-            let text = await fn.fetchDoc(fn.gu("//a[span[text()='漫畫簡介']]")).then(albumDoc => {
-                let comicName = fn.gt(".panel-heading h1", 1, albumDoc);
-                let episode = fn.ge(".episode", albumDoc);
-                return episode ? comicName + " - " + fn.gt(".panel-heading>.pull-left") : comicName;
-            });
-            return text.replace(/\(\d+[\w\s\.\+-]+\)/i, "").replace(/［\d+[\w\s\.\+-]+］/i, "").trim();
-        },
+        customTitle: () => fn.fetchDoc(fn.gu("//a[span[text()='漫畫簡介']]")).then(albumDoc => {
+            let comicName = fn.gt(".panel-heading h1", 1, albumDoc);
+            let episode = fn.ge(".episode", albumDoc);
+            return episode ? comicName + " - " + fn.gt(".panel-heading>.pull-left") : comicName;
+        }).then(text => fn.dt({
+            t: text,
+            d: [
+                /\(\d+[\w\s\.\+-]+\)/i,
+                /［\d+[\w\s\.\+-]+］/i
+            ]
+        })),
         category: "hcomic"
     }, {
         name: "Comic18H",
@@ -11410,7 +11424,7 @@ a:has(>div>div>img),
                     }
                 });
                 arr.push(getRedraw);
-                await fn.delay(100, 0);
+                await delay(100);
             }
             return arr;
         },
@@ -11503,7 +11517,7 @@ a:has(>div>div>img),
                 fn.showMsg(displayLanguage.str_01, 0);
                 let fetchNum = 0;
                 return fn.gae(".gdtm a,.gdtl a").map(async (a, i, arr) => {
-                    await fn.delay(100 * i, 0);
+                    await delay(100 * i);
                     return fn.fetchDoc(a.href).then(async (dom) => {
                         fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${arr.length}`, 0);
                         let fullimg = fn.ge("a[href*=fullimg]", dom);
@@ -11850,7 +11864,7 @@ a:has(>div>div>img),
                     debug("\ndataJson\n", dataJson);
                     let xhrNum = 0;
                     const srcs = entries.map(async (e, i, arr) => {
-                        await fn.delay(i * 500, 0);
+                        await delay(i * 500);
                         return new Promise(resolve => {
                             const xhr = new XMLHttpRequest;
                             xhr.responseType = "blob";
@@ -11878,10 +11892,10 @@ a:has(>div>div>img),
         url: {
             h: "animeh.to"
         },
+        SPA: () => document.URL.includes("/hchapter/") && !!fn.ge("//div[span[text()='Page:']]"),
+        observerURL: true,
         imgs: () => {
-            if (!fn.ge("//div[span[text()='Page:']]")) {
-                return [];
-            }
+            if (!_this.SPA()) return [];
             let url = fn.ge("link[data-hid]").href + "?tab=reading";
             let [max] = fn.gt("//div[span[text()='Page:']]").match(/\d+/);
             return fn.fetchDoc(url).then(dom => {
@@ -11889,16 +11903,14 @@ a:has(>div>div>img),
                 return fn.arr(max, (v, i) => imgDir + (i + 1) + ex);
             });
         },
-        SPA: () => !!fn.ge("//div[span[text()='Page:']]"),
         capture: () => _this.imgs(),
-        customTitle: async () => {
-            await fn.delay(1000, 0);
-            return fn.dt({
-                s: "main h1",
+        customTitle: () => {
+            if (!_this.SPA()) return null;
+            return fn.waitEle("main h1").then(e => fn.dt({
+                t: e.innerText,
                 d: "Hentai Manga"
-            });
+            }));
         },
-        observerURL: true,
         category: "hcomic"
     }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/圖片清單頁",
@@ -12510,7 +12522,7 @@ a:has(>div>div>img),
             let srcs = _unsafeWindow.__NEXT_DATA__.props.pageProps.data.images.pages.map(e => e.t);
             let fetchNum = 0;
             return srcs.map(async (src, i, arr) => {
-                await fn.delay(i * 500, 0);
+                await delay(i * 500);
                 src = await _this.checkStatus(src);
                 return fetch(src).then(res => res.blob()).then(blob => {
                     fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
@@ -13089,10 +13101,10 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
-        customTitle: async () => {
+        customTitle: () => fn.waitEle(".subtitle").then(() => {
             let t = fn.gt(".subtitle");
             return t.length > 0 ? t : fn.gt("h1").replace(/\||\+/g, "");
-        },
+        }),
         go: 1,
         topButton: true,
         category: "hcomic"
@@ -15546,7 +15558,7 @@ a:has(>div>div>img),
             }
 
         },
-        customTitle: async () => {
+        customTitle: () => {
             let text = fn.dt({
                 d: [
                     / - NamiComi.+$/
@@ -15571,7 +15583,7 @@ a:has(>div>div>img),
         autoDownload: [0],
         next: "//a[span[contains(text(),'Next Chapter')]]",
         prev: 1,
-        customTitle: async () => {
+        customTitle: () => {
             let id = fn.lp.split("/").at(-1);
             let chapters = fn.gae("optgroup[label=Chapters] option");
             let chapterName = chapters.find(e => e.value == id).innerText;
@@ -15752,6 +15764,48 @@ a:has(>div>div>img),
         prev: "//a[text()='Pre chapter']",
         customTitle: () => fn.ge("meta[name='og:title']")?.content?.split(" - ")[1]?.replace(/Read | Online/g, ""),
         hide: ".ad-reader",
+        category: "comic"
+    }, {
+        name: "MangaHere M",
+        url: {
+            h: "m.mangahere.cc",
+            p: ["/manga/", "/roll_manga/"],
+            e: "#viewer"
+        },
+        init: () => {
+            let url = fn.url.replace("/manga/", "/roll_manga/");
+            return fn.fetchDoc(url).then(dom => {
+                siteJson.srcs = fn.getImgSrcArr("#viewer img", dom);
+                let btn = fn.ge(".roll-pagebtn", dom);
+                if (btn) {
+                    tempEles.push(btn);
+                    let next = fn.ge("//a[text()='Next Chapter']", btn);
+                    if (next) {
+                        tempNextLink = next.href;
+                    }
+                }
+            });
+        },
+        imgs: () => siteJson.srcs,
+        button: [4, "24%", 1],
+        insertImg: ["#viewer", 2],
+        endColor: "white",
+        insertImgAF: (parent) => {
+            if (tempEles.length > 0 && !fn.ge(".roll-pagebtn")) {
+                for (let e of tempEles) {
+                    insertAfter(parent, e);
+                }
+            }
+            fn.remove(".pager,.mangaread-page");
+        },
+        next: () => tempNextLink,
+        prev: 1,
+        customTitle: () => {
+            let [text] = fn.gst("addHistory").match(/{"href[^}]+}/);
+            let obj = JSON.parse(text);
+            let ch = fn.gt(".return-title");
+            return obj.name + " - " + ch;
+        },
         category: "comic"
     }, {
         name: "MangaHere M",
@@ -16021,7 +16075,7 @@ a:has(>div>div>img),
         key: 0,
         init: () => {
             window.addEventListener("load", async () => {
-                await fn.delay(1000, 0);
+                await delay(1000);
                 if (fn.ge("//div[contains(text(),'给本王显示全部章节')]")) {
                     EClick("#expandButton");
                 }
@@ -17053,8 +17107,13 @@ if ("xx" in window) {
         name: "明日方舟泰拉记事社",
         host: ["terra-historicus.hypergryph.com"],
         enable: 1,
-        reg: /^https?:\/\/terra-historicus\.hypergryph\.com\/comic\/\d+\/episode\/\d+/,
+        url: {
+            h: "terra-historicus.hypergryph.com"
+        },
+        SPA: () => document.URL.includes("/episode/"),
+        observerURL: true,
         imgs: () => {
+            if (!_this.SPA()) return [];
             let max = fn.gt(".HG_COMIC_READER_indicator>div:last-child");
             let fetchNum = 0;
             return fn.arr(max, (v, i) => fetch(`/api${fn.lp}/page?pageNum=${(i + 1)}`).then(res => res.json()).then(json => {
@@ -17065,13 +17124,13 @@ if ("xx" in window) {
         capture: () => _this.imgs(),
         autoDownload: [0],
         next: () => {
-            let next = fn.ge("//a[text()='下一话']") || fn.ge("//a[text()='下一张']");
-            return next ? next.href : null;
+            if (!_this.SPA()) return null;
+            return fn.waitEle("//a[text()='下一话'] | //a[text()='下一张']").then(next => next ? next.href : null);
         },
         prev: 1,
-        customTitle: async () => {
-            await fn.waitEle(".HG_COMIC_READER_episodeTitle");
-            return fn.gt(".HG_COMIC_READER_comicTitle") + " - " + fn.gt(".HG_COMIC_READER_episodeTitle");
+        customTitle: () => {
+            if (!_this.SPA()) return null;
+            return fn.waitEle(".HG_COMIC_READER_episodeTitle").then(e => fn.gt(".HG_COMIC_READER_comicTitle") + " - " + e.innerText);
         },
         category: "comic"
     }, {
@@ -20618,53 +20677,105 @@ if ("xx" in window) {
         name: "哔哩哔哩漫画",
         host: ["manga.bilibili.com"],
         enable: 0,
-        reg: /^https?:\/\/manga\.bilibili\.com\/mc\d+\/\d+\?from=manga_detail/,
-        init: () => setTimeout(() => fn.ge(".load-next-btn").addEventListener("click", () => setTimeout(() => location.reload(), 500)), 1000),
-        imgs: async () => {
-            let [ep_id] = siteUrl.split("/").at(-1).match(/\d+/);
-            let headers = {
+        url: {
+            h: "manga.bilibili.com",
+            p: "/mc",
+            s: "manga_detail",
+            d: "pc"
+        },
+        getHeaders: () => {
+            return {
+                "accept": "application/json, text/plain, */*",
                 "content-type": "application/json;charset=UTF-8"
+            }
+        },
+        init: () => {
+            let [, comic_id, ep_id] = location.pathname.match(/\/mc(\d+)\/(\d+)/);
+            siteJson = {
+                comic_id,
+                ep_id
             };
-            let imgsRes = await fetch("/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web", {
-                "headers": headers,
-                "body": JSON.stringify({
-                    ep_id: `${ep_id}`
-                }),
-                "method": "POST"
-            }).then(res => res.json()).then(json => json.data.images.map(e => e.path));
-            return fetch("/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
-                "headers": headers,
-                "body": JSON.stringify({
-                    urls: JSON.stringify(imgsRes)
-                }),
-                "method": "POST"
-            }).then(res => res.json()).then(json => json.data.map(e => `${e.url}?token=${e.token}`));
         },
-        insertImg: [".image-list", 2],
+        imgs: () => fetch("/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web", {
+            "headers": _this.getHeaders(),
+            "body": JSON.stringify({
+                ep_id: siteJson.ep_id
+            }),
+            "method": "POST"
+        }).then(res => res.json()).then(json => json.data.images.map(e => e.path)).then(imgsRes => fetch("/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
+            "headers": _this.getHeaders(),
+            "body": JSON.stringify({
+                urls: JSON.stringify(imgsRes)
+            }),
+            "method": "POST"
+        }).then(res => res.json()).then(json => json.data.map(e => `${e.url}?token=${e.token}`))),
+        insertImg: [".image-list", 3],
         endColor: "white",
-        next: ".load-next-btn",
+        next: () => fetch("/twirp/comic.v1.Comic/ComicDetail?device=pc&platform=web", {
+            "headers": _this.getHeaders(),
+            "body": JSON.stringify({
+                comic_id: siteJson.comic_id
+            }),
+            "method": "POST"
+        }).then(res => res.json()).then(json => json.data.ep_list.sort((a, b) => a.ord - b.ord)).then(ep_list => {
+            let next = null;
+            ep_list.some((e, i, a) => {
+                if (siteJson.ep_id == e.id) {
+                    if (a[i + 1] !== undefined) {
+                        //next = a[i + 1];
+                        next = location.href.replace(siteJson.ep_id, a[i + 1].id);
+                    }
+                    return true;
+                }
+            });
+            return next;
+        }),
         prev: 1,
-        customTitle: async () => {
-            await fn.delay(1500, 0);
-            return fn.gt(".manga-title") + " - " + fn.gt(".episode");
-        },
+        customTitle: () => fetch("/twirp/comic.v1.Comic/GetEpisode?device=pc&platform=web", {
+            "headers": _this.getHeaders(),
+            "body": JSON.stringify({
+                id: siteJson.ep_id
+            }),
+            "method": "POST"
+        }).then(res => res.json()).then(json => {
+            let {
+                comic_title,
+                short_title,
+                title
+            } = json.data;
+            return comic_title + ` - 第 ${short_title} 话 ` + title;
+        }),
         category: "comic"
     }, {
         name: "看漫画",
         host: ["www.kanman.com"],
         enable: 0,
-        reg: /^https?:\/\/www\.kanman\.com\/\d+\/[\w-]+\.html/,
-        imgs: () => {
-            let s = fn.lp.split("/");
-            let comic_id = s[1];
-            let chapter_newid = s[2].replace(".html", "");
-            let api = `/api/getchapterinfov2?product_id=1&productname=kmh&platformname=pc&comic_id=${comic_id}&chapter_newid=${chapter_newid}&isWebp=1&quality=middle`;
-            return fetch(api).then(res => res.json()).then(json => json.data.current_chapter.chapter_img_list);
+        url: {
+            h: "www.kanman.com",
+            p: /^\/\d+\/[\w-]+\.html$/,
+            d: "pc"
         },
-        customTitle: async () => {
-            await fn.delay(1500, 0);
-            return fn.gt("#crumbComicLink") + " - " + fn.gt(".chapter-title").trim();
+        init: async () => {
+            let [, comic_id, id] = fn.lp.split("/");
+            id = id.replace(".html", "");
+            let api = `/api/getchapterinfov2?product_id=1&productname=kmh&platformname=pc&comic_id=${comic_id}&chapter_newid=${id}&isWebp=1&quality=middle`;
+            await fetch(api).then(res => res.json()).then(json => (siteJson = json));
+            debug("\n此頁JSON資料\n", siteJson);
         },
+        imgs: () => siteJson.data.current_chapter.chapter_img_list,
+        next: () => {
+            let {
+                comic_id,
+                next_chapter
+            } = siteJson.data;
+            if (next_chapter) {
+                return "/" + comic_id + "/" + next_chapter.chapter_newid + ".html";
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
+        customTitle: () => siteJson.data.comic_name + " - " + siteJson.data.current_chapter.chapter_name,
         category: "comic"
     }, {
         name: "zero搬运网",
@@ -20768,7 +20879,7 @@ if ("xx" in window) {
             if (fn.lh != "18p.fun") {
 
                 location.replace("https://18p.fun/ForInject/Chapter/?id=" + _unsafeWindow.$_curChap.id);
-                await fn.delay(3000, 0);
+                await delay(3000);
             }
             await fn.getNP("img[data-src].lazy:not(.demo-lazy)", "//a[@data-url and contains(text(),'下一頁')] | //a[@data-url and contains(text(),'下一章')]", null, "div[class^=picnext]");
             return fn.gae("img[data-src].lazy:not(.demo-lazy)");
@@ -21129,7 +21240,7 @@ if ("xx" in window) {
             for (let selector of selectorArr) {
                 await fn.waitEle(selector);
                 EClick(selector);
-                await fn.delay(200);
+                await delay(200);
             }
         },
         category: "none"
@@ -21220,7 +21331,7 @@ if ("xx" in window) {
                         if (elePath) {
                             let d = elePath.getAttribute("d");
                             if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") EClick(ele);
-                            await fn.delay(1000, 0);
+                            await delay(1000);
                         }
                     } catch {}
                 }
@@ -21565,13 +21676,17 @@ if ("xx" in window) {
             const jsArr = [JqueryJS, FancyboxV3JS];
             for (let [i, code] of jsArr.entries()) {
                 if (i == 0 && ("jQuery" in _unsafeWindow)) continue;
-                if (siteData.fancybox && siteData.fancybox.js === false) continue;
-                fn.script(code, 0, 1);
+                //fn.script(code, 0, 1);
+                _GM_addElement(document.body, "script", {
+                    textContent: code
+                });
             }
             if (siteData.fancybox && siteData.fancybox.css !== false) {
                 fn.css(FancyboxV3Css);
             }
-            $ = _unsafeWindow.jQuery;
+            if ("jQuery" in _unsafeWindow) {
+                $ = _unsafeWindow.jQuery;
+            }
         } catch (error) {
             console.error("\naddLibrarysV3() 注入函式庫失敗", error);
         }
@@ -21581,14 +21696,16 @@ if ("xx" in window) {
         try {
             const jsArr = [JqueryJS, FancyboxV5JS];
             for (let [i, code] of jsArr.entries()) {
-                //fn.script(code, 0, 1);
                 if (i == 0 && ("jQuery" in _unsafeWindow)) continue;
+                //fn.script(code, 0, 1);
                 _GM_addElement(document.body, "script", {
                     textContent: code
                 });
             }
             fn.css(FancyboxV5Css);
-            $ = _unsafeWindow.jQuery;
+            if ("jQuery" in _unsafeWindow) {
+                $ = _unsafeWindow.jQuery;
+            }
         } catch (error) {
             console.error("\naddLibrarysV5() 注入函式庫失敗", error);
         }
@@ -22363,6 +22480,14 @@ if ("xx" in window) {
                 }
                 if (!checkT) return false;
             }
+            if ("e" in obj) {
+                if (isArray(elements)) {
+                    checkE = elements.every(selector => !!fn.ge(selector));
+                } else if (isString(elements)) {
+                    checkE = !!fn.ge(elements);
+                }
+                if (!checkE) return false;
+            }
             if ("p" in obj) {
                 if (isArray(pathname)) {
                     checkH = pathname.some(p => {
@@ -22387,14 +22512,6 @@ if ("xx" in window) {
                     checkS = fn.ls.includes(search);
                 }
                 if (!checkS) return false;
-            }
-            if ("e" in obj) {
-                if (isArray(elements)) {
-                    checkE = elements.every(selector => !!fn.ge(selector));
-                } else if (isString(elements)) {
-                    checkE = !!fn.ge(elements);
-                }
-                if (!checkE) return false;
             }
             if ("imgs" in tempData && isString(imgSelector) && !("SPA" in tempData)) {
                 checkI = !!fn.ge(imgSelector);
@@ -22503,7 +22620,7 @@ if ("xx" in window) {
                         break;
                     } else {
                         debug(`\n${func}連線錯誤碼：${checkRes.status}重試第${retryNum += 1}次\n`, url);
-                        await fn.delay(3000, 0);
+                        await delay(3000);
                     }
                     if (check >= retryCount) {
                         resolve({
@@ -22553,7 +22670,7 @@ if ("xx" in window) {
             if (Number(maxPage, 10) > 1) {
                 for (let i = 2; i <= Number(maxPage); i++) {
                     resArr.push(html(fn.getModeUrl(url, mode, i)));
-                    await fn.delay(time, 0);
+                    await delay(time);
                 }
             }
             await Promise.all(resArr).then(htmls => {
@@ -22581,7 +22698,7 @@ if ("xx" in window) {
             let imgsArray = [];
             let fetchNum = 0;
             const html = async (_url, id = 1) => {
-                await fn.delay(time, 0);
+                await delay(time);
                 return fetch(_url).then(async res => {
                     debug(`\nfn.getImgO() URL`, _url);
                     if (res.status >= 400) {
@@ -22654,7 +22771,7 @@ if ("xx" in window) {
                 load.className = "FullPictureLoadLoading";
                 load.innerText = "Loading...";
                 insertAfter(targetEle, load);
-                await fn.delay(time, 0);
+                await delay(time);
                 let dom = null;
                 for (let i = 1; i < 20; i++) {
                     dom = await fn.iframeSrcDoc(url, img);
@@ -22747,7 +22864,7 @@ if ("xx" in window) {
                 if (mode == 0) {
                     resArr.push(html(links[i]));
                 } else if (mode >= 100) {
-                    await fn.delay(mode, 0);
+                    await delay(mode);
                     resArr.push(html(links[i]));
                 } else if (mode == 1) {
                     let res = await html(links[i]);
@@ -22776,7 +22893,7 @@ if ("xx" in window) {
                     }
                 } else if (mode == 2) {
                     let res = await html(links[i]);
-                    await fn.delay(200, 0);
+                    await delay(200);
                     resArr.push(res);
                     if (i !== 0) {
                         let dom = fn.doc(res);
@@ -22810,7 +22927,7 @@ if ("xx" in window) {
             let links;
             isString(aSelector) ? links = fn.gau(aSelector) : links = aSelector;
             let resArr = links.map(async (url, i, arr) => {
-                await fn.delay(time * i, 0);
+                await delay(time * i);
                 return fn.xhrDoc(url).then(dom => {
                     fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
                     return fn.gae(imgSelector, dom, dom);
@@ -22946,7 +23063,7 @@ if ("xx" in window) {
             fn.showMsg("fn.xhrHEA(check)...", 0);
             let xhrNum = 0;
             return srcArr.map(async (src, i, arr) => {
-                await fn.delay(25 * i, 0);
+                await delay(25 * i);
                 let res = await fn.xhrHEAD(src);
                 fn.showMsg(`fn.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
                 let status = res.status;
@@ -23166,7 +23283,7 @@ if ("xx" in window) {
                     }
                     nextlink = await getNextLink(url, dom);
                     if (nextlink) {
-                        await fn.delay(time, 0);
+                        await delay(time);
                         await getNextPageEles(nextlink);
                     } else {
                         isFetching = false;
@@ -23177,7 +23294,7 @@ if ("xx" in window) {
             };
             nextlink = await getNextLink();
             if (nextlink) {
-                await fn.delay(time, 0);
+                await delay(time);
                 await getNextPageEles(nextlink);
             } else {
                 isFetching = false;
@@ -23193,7 +23310,7 @@ if ("xx" in window) {
                 fn.showMsg(displayLanguage.str_01, 0);
                 let xhrNum = 0;
                 let resArr = links.map(async (url, i, arr) => {
-                    await fn.delay(100 * i, 0);
+                    await delay(100 * i);
                     if (/imx\.to/.test(url)) {
                         return fn.imxXHR(url).then(dom => {
                             fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
@@ -23445,7 +23562,7 @@ if ("xx" in window) {
             }
             let observer = siteData.autoPager?.observer;
             if (isString(observer)) {
-                await fn.delay(siteData.autoPager?.sleep ?? 1000, 0);
+                await delay(siteData.autoPager?.sleep ?? 1000);
                 let ele = fn.gae(observer).at(-1);
                 fn.nextObserver.observe(ele);
             }
@@ -23512,9 +23629,9 @@ if ("xx" in window) {
                     dom.body.scrollTop = 9999999;
                     dom.documentElement.scrollTop = 9999999;
                     try {
-                        await fn.delay(siteData.autoPager?.loadTime || 200, 0);
+                        await delay(siteData.autoPager?.loadTime || 200);
                     } catch {
-                        await fn.delay(200, 0);
+                        await delay(200);
                     }
                     if (selector !== null) {
                         await fn.waitEle(selector, 600, dom);
@@ -23565,9 +23682,9 @@ if ("xx" in window) {
                     dom.body.scrollTop = 9999999;
                     dom.documentElement.scrollTop = 9999999;
                     try {
-                        await fn.delay(siteData.autoPager?.loadTime || 200, 0);
+                        await delay(siteData.autoPager?.loadTime || 200);
                     } catch {
-                        await fn.delay(200, 0);
+                        await delay(200);
                     }
                     if (selector !== null) {
                         await fn.waitEle(selector, 600, dom);
@@ -23596,7 +23713,7 @@ if ("xx" in window) {
             iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
             iframe.src = url;
             document.body.append(iframe);
-            await fn.delay(time, 0);
+            await delay(time);
             await new Promise(resolve => {
                 let loop = setInterval(() => {
                     let check;
@@ -23629,9 +23746,9 @@ if ("xx" in window) {
                         cb
                     } = details;
                     if (!!loadTime && isNumber(loadTime)) {
-                        await fn.delay(loadTime, 0);
+                        await delay(loadTime);
                     } else {
-                        await fn.delay(1000, 0);
+                        await delay(1000);
                     }
                     const dom = iframe.contentDocument || iframe.contentWindow.document;
                     if (!!waitEle && (isString(waitEle) || isArray(waitEle))) {
@@ -23827,7 +23944,7 @@ if ("xx" in window) {
                     return fn.gae(elements, dom, dom);
                 });
                 resArr.push(res);
-                await fn.delay(time, 0);
+                await delay(time);
             }
             return Promise.all(resArr).then(arr => arr.flat()).then(eles => {
                 isFetching = false;
@@ -23873,7 +23990,7 @@ if ("xx" in window) {
                     return fn.gae(elements, dom, dom);
                 });
                 resArr.push(res);
-                await fn.delay(time, 0);
+                await delay(time);
             }
             return Promise.all(resArr).then(arr => arr.flat()).then(eles => {
                 isFetching = false;
@@ -24735,7 +24852,7 @@ if ("xx" in window) {
                     }
                     if (!check) {
                         loopNum += 1;
-                        await fn.delay(100, 0);
+                        await delay(100);
                         return loopFn();
                     }
                 };
@@ -25127,12 +25244,12 @@ if ("xx" in window) {
         //移除元素
         remove: async (obj, time = 0) => {
             if (isString(obj)) {
-                await fn.delay(time, 0);
+                await delay(time);
                 let selector = obj;
                 fn.gae(selector).forEach(e => e.remove());
             } else if (isArray(obj)) {
                 let selectors = obj;
-                await fn.delay(time, 0);
+                await delay(time);
                 selectors.forEach(selector => fn.gae(selector).forEach(e => e.remove()));
             }
         },
@@ -25244,7 +25361,7 @@ if ("xx" in window) {
         },
         imgBlobUrlArr: async (selector, type = "image/jpeg", quality = 1) => {
             fn.showMsg(displayLanguage.str_53, 0);
-            await fn.delay(200, 0);
+            await delay(200);
             let num = 0;
             let imgs = await fn.gae(selector).map(async (img, index, arr) => {
                 let blobUrl = await fn.imgToBlobURL(img, type, quality);
@@ -25295,7 +25412,7 @@ if ("xx" in window) {
                     behavior: "smooth",
                     block: "end"
                 });
-                await fn.delay(time, 0);
+                await delay(time);
             }
             if (top === 1) {
                 _unsafeWindow.scrollTo({
@@ -25621,10 +25738,10 @@ if ("xx" in window) {
                     let evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
                     fn.singleThreadLoadImgs(oddNumberImgs);
                     fn.singleThreadLoadImgs(evenNumberImgs);
-                    await fn.delay(1000, 0);
+                    await delay(1000);
                     imgs.forEach(img => fn.imagesObserver.observe(img));
                 } else {
-                    await fn.delay(1000, 0);
+                    await delay(1000);
                     imgs.forEach((img, i) => {
                         setTimeout(() => {
                             img.src = img.dataset.src;
@@ -26153,11 +26270,11 @@ if ("xx" in window) {
             let countdownNum = Number(max);
             fn.showMsg(`${displayLanguage.str_32}${max}${displayLanguage.str_33}`, 0);
             for (let i = 1; i <= Number(max); i++) {
-                await fn.delay(1000, 0);
+                await delay(1000);
                 if (isStopDownload) return;
                 fn.showMsg(`${displayLanguage.str_32}${countdownNum-=1}${displayLanguage.str_33}`, 0);
             }
-            await fn.delay(500, 0);
+            await delay(500);
             if (isStopDownload) return;
             if (isFn(next) && isString(ele)) {
                 fn.showMsg(displayLanguage.str_34);
@@ -26373,7 +26490,7 @@ if ("xx" in window) {
                             });
                         } else {
                             saveData(blobData, title + "_" + fileName);
-                            await fn.delay(200, 0);
+                            await delay(200);
                             if (i === total - 1) {
                                 promiseBlobArray = [];
                                 downloadNum = 0;
@@ -26748,7 +26865,7 @@ if ("xx" in window) {
                     let num = (imgDivs[0].offsetHeight - img.height) / 2;
                     img.style.marginTop = `${num}px`;
                 }
-                await fn.delay(1200, 0);
+                await delay(1200);
                 imgDivs[0].scrollIntoView(instantScrollIntoView);
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
@@ -26781,7 +26898,7 @@ if ("xx" in window) {
                                     await fn.checkImgStatus(imgDivs[imgsNum].dataset.src, "Wait Loading...");
                                 }
                                 imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
-                                await fn.delay(200);
+                                await delay(200);
                                 imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
                             } catch {
                                 if (siteData.category === "comic" && siteData.next && siteData.insertImg) {
@@ -29513,9 +29630,9 @@ img.small {
     let isAddDraggEvent = false;
     let startX, startY, startLeft, startTop;
     let eventImg, eventMenu;
-    const addnewTabViewButton = () => {
+    const addNewTabViewButton = () => {
         if (ge("#FullPictureLoadEye")) return;
-        isAddnewTabViewButton = true;
+        isAddNewTabViewButton = true;
         let img = new Image();
         img.id = "FullPictureLoadEye";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
@@ -30243,6 +30360,9 @@ img.small {
         if (isBoolean(siteData.SPA)) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
+        }
+        if (siteData.aeg == 0) {
+            ge("#ShadowGalleryModeDIV", main).style.display = "none";
         }
         if (fancyboxBlackList()) {
             //ge("#Fancybox", main).checked = false;
@@ -31048,7 +31168,7 @@ a[data-fancybox]:hover {
             isValidPage = true;
             if (isAddFullPictureLoadButton) addFullPictureLoadButton();
             if (isAddFullPictureLoadFixedMenu) addFullPictureLoadFixedMenu();
-            if (isAddnewTabViewButton) addnewTabViewButton();
+            if (isAddNewTabViewButton) addNewTabViewButton();
             document.addEventListener("keydown", addKeyEvent);
             if (isPromise(validPage)) {
                 await validPage;
@@ -31059,7 +31179,7 @@ a[data-fancybox]:hover {
                     if (options.autoInsert == 1) {
                         await fn.immediateInsertImg();
                     }
-                    if (options.shadowGallery == 1) {
+                    if (options.shadowGallery == 1 && siteData.aeg != 0) {
                         await createShadowGallery();
                     }
                 }
@@ -31069,7 +31189,7 @@ a[data-fancybox]:hover {
             document.removeEventListener("keydown", addKeyEvent);
             isValidPage = false;
         }
-        await fn.delay(200, 0);
+        await delay(200);
     };
 
     const getNextLink = async (next, text = "\n圖片全載NEXT：") => {
@@ -31144,7 +31264,7 @@ a[data-fancybox]:hover {
                     comicSwitch = true;
                 }
                 const delay = data.delay;
-                if (isNumber(delay)) await fn.delay(delay, 0);
+                if (isNumber(delay)) await delay(delay);
                 checkOptionsData();
                 if (data.enable == 0) {
                     //checkOptionsData();
@@ -31567,7 +31687,7 @@ a[data-fancybox]:hover {
                         if (!autoPagerSwitch) return;
                         document.removeEventListener("scroll", callback);
                         await fn.infiniteScroll();
-                        await fn.delay(siteData.autoPager?.sleep || 1000, 0);
+                        await delay(siteData.autoPager?.sleep || 1000);
                         document.addEventListener("scroll", callback);
                     }
                 };
@@ -31596,7 +31716,7 @@ a[data-fancybox]:hover {
                 const [, insertMode] = insertImg;
                 if (insertMode == 1 && !autoStart || insertMode == 2 && !autoStart) {
                     if (options.autoInsert == 1) {
-                        if (options.shadowGallery == 1) {
+                        if (options.shadowGallery == 1 && siteData.aeg != 0) {
                             await fn.immediateInsertImg();
                         } else {
                             fn.immediateInsertImg();
@@ -31614,7 +31734,7 @@ a[data-fancybox]:hover {
                 }
             }
         }
-        if (options.shadowGallery == 1 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
+        if (options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 if (await siteData.SPA()) {
                     setTimeout(() => createShadowGallery(), 200);
@@ -31781,8 +31901,8 @@ a[data-fancybox]:hover {
     }, 1000);
 
     //捕獲圖片網址
-    const captureSrc = async (mutationList) => {
-        if (isDownloading || isFetching) return;
+    async function captureSrc(mutationList) {
+        if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isDownloading || isFetching) return;
         if (mutationList) {
             for (const mutation of mutationList) {
                 if (mutation.type === "childList" && mutation?.target?.id === "FullPictureLoadCaptureNum") {
@@ -31791,7 +31911,6 @@ a[data-fancybox]:hover {
             }
             //console.log(mutationList);
         }
-        let num = captureSrcArray.length;
         let imgSrcs = await getImgs(siteData.capture ?? siteData.imgs);
         let imagePreloadArray = [];
         imgSrcs.forEach(src => {
@@ -31800,47 +31919,57 @@ a[data-fancybox]:hover {
                 imagePreloadArray.push(src);
             }
         });
-        if (ge("#FullPictureLoadCaptureNum") && num < captureSrcArray.length) {
+        if (ge("#FullPictureLoadCaptureNum") && captureTotal != captureSrcArray.length) {
+            isChangeNum = true;
+            captureTotal = captureSrcArray.length;
             ge("#FullPictureLoadCaptureNum").innerText = captureSrcArray.length;
-            if (options.shadowGallery == 1) {
+            await delay(100);
+            isChangeNum = false;
+            if (options.shadowGallery == 1 && siteData.aeg != 0) {
                 setTimeout(() => createShadowGallery(), 200);
             }
         }
         if (lazyLoadPreloadImages == 1) {
             fn.picPreload(imagePreloadArray, "Lazy Load Mode");
         }
-    };
+    }
 
-    const captureSrcB = async (invalidPage = 0) => {
-        if (isDownloading || isFetching) return;
+    async function captureSrcB(invalidPage = 0) {
+        if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isDownloading || isFetching) return;
         if (invalidPage === 1 && !!ge("#FullPictureLoadCaptureNum") && ge("#FullPictureLoadCaptureNum")?.innerText != 0) {
+            isChangeNum = true;
             ge("#FullPictureLoadCaptureNum").innerText = 0;
+            await delay(100);
+            isChangeNum = false;
             return;
         }
-        if (!fn.lh.includes("m2ph.xyz")) {
-            await fn.delay(1000, 0);
+        if (!["m2ph.xyz", "bdsmlr.com"].some(h => fn.lh.includes(h))) {
+            await delay(900);
         }
         let captureSrcArray = await getImgs(siteData.capture ?? siteData.imgs);
         let num = captureSrcArray.length;
         if (ge("#FullPictureLoadCaptureNum")) {
+            isChangeNum = true;
             ge("#FullPictureLoadCaptureNum").innerText = num;
-            if (options.shadowGallery == 1) {
+            await delay(100);
+            isChangeNum = false;
+            if (options.shadowGallery == 1 && siteData.aeg != 0) {
                 setTimeout(() => createShadowGallery(), 200);
             }
         }
-    };
+    }
 
     //動態捕獲圖片網址
     if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && !!siteData.capture || isString(siteData.imgs) && !isArray(siteData.insertImg) || isFn(siteData.capture) && siteData.category != "lazyLoad") {
         if (isFn(siteData.capture) && siteData.category != "lazyLoad" || isString(siteData.capture) && siteData.category != "lazyLoad" || isString(siteData.imgs) && siteData.category != "lazyLoad") {
             if (FullPictureLoadShowEye == 1 && siteData.eye != 0) {
-                await fn.delay(1000, 0);
-                addnewTabViewButton();
+                await delay(1000);
+                addNewTabViewButton();
                 captureSrc();
             }
         }
         if (siteData.category === "lazyLoad" && siteData.eye != 0) {
-            addnewTabViewButton();
+            addNewTabViewButton();
             fn.addMutationObserver(captureSrc, document.body, {
                 childList: true,
                 subtree: true,
