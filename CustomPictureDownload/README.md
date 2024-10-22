@@ -77,7 +77,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     enable: 0, //填0禁用此規則
     icon: 0, //填0不顯示左下圖示
     key: 0, //填0不綁定快捷鍵
-    url: { //將URL拆分判斷，格式詳見內置函式fn.checkUrl(object);
+    url: { //將URL拆分判斷，格式類型詳見內置函式的fn.checkUrl(object);
         t: "",
         h: "",
         p: "",
@@ -85,7 +85,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         e: "",
         d: ""
     },
-    url: () => boolean,
+    url: () => Boolean,
     //reg和url擇其一作為規則匹配的方式
     reg: /www\.xxxxx\.com/, //正規表達式匹配網址
     reg: [ //匹配正規表達式陣列
@@ -93,7 +93,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         /RegExp/
     ],
     reg: () => {
-         //函式寫法返回布林值boolean
+         //函式寫法返回布林值Boolean
         if (/^https?:\/\/www\.everiaclub\.com\/.+/.test(siteUrl)) {
             if(!siteUrl.includes(".html")) {
                 return true;
@@ -101,6 +101,12 @@ https://*wnacg.com/photos-slist-aid-*.html
         }
         return false;
     },
+    //SPA網頁URL只匹配域名，SPA函式用於判斷頁面域名以外的元素返回Boolean或Promise(例如需要API請求)，切換腳本UI事件添加移除
+    SPA: () => document.URL.includes("/albums/"),
+    //不切換
+    SPA: true,
+    //與SPA屬性搭配使用，觀察URL變化，用於SPA網頁並且URL是會變換的，更替腳本變數諸如globalImgArray、nextLink、customTitle
+    observerURL: true,
     delay: 300, //延遲載入規則
     include: "元素選擇器", //網頁必須包含的元素
     include: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁必須包含陣列裡的所有元素
@@ -120,8 +126,11 @@ https://*wnacg.com/photos-slist-aid-*.html
         code;
         return Array;
     },
-    repeat: 1, //重複取得圖片元素，用於SPA網頁
+    repeat: 1, //重複取得圖片元素，特殊情況會用到例如ViperGirls網站
     thums: ".thums", //Fancybox要用的縮略圖網址選擇器
+    //頁面不適合直接修改插入腳本用的圖片，在頁面右下創建一個浮動可拖動的捕獲之眼，這樣行動裝置才能使用到分頁畫廊。
+    capture:  "selector",
+    capture: () => _this.imgs(),
     scrollEle: ["元素", time], //[自動滾動元素, 滾動的間隔], 綁定快捷鍵數字鍵6
     scrollEle: async () => {
         …code;
@@ -149,7 +158,6 @@ https://*wnacg.com/photos-slist-aid-*.html
         code;
         return link;
     },
-    observerURL: true, //觀察URL變化重新取得標題字串和nextLink，用於SPA網頁
     prev: "//a[text()='上一章']", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //自訂樣式。
     hide: "selector", //用CSS隱藏元素
@@ -169,6 +177,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     focus: "selector", //離開影子畫廊後要滾動到此元素的位置，類型可以是字串"selector"、"last:selector"或函式返回DOM元素
     focus: () => HTMLElement,
     closeAF: () =>, //離開影子畫廊後要運行的函式
+    aeg: 0, //0不能自動進入影子畫廊
     category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
@@ -189,7 +198,10 @@ https://*wnacg.com/photos-slist-aid-*.html
         //,
         //
     ],
-    reg: () => ,
+    reg: () =>,
+    SPA: () =>,
+    SPA: true,
+    observerURL: true,
     delay: 300,
     include: "",
     include: [""],
@@ -204,7 +216,9 @@ https://*wnacg.com/photos-slist-aid-*.html
         code
     },
     repeat: 1,
-    thums: ".thums",
+    thums: "",
+    capture:  "",
+    capture: () => _this.imgs(),
     scrollEle: ["", 500],
     scrollEle: async () => {
         …code;
@@ -234,7 +248,6 @@ https://*wnacg.com/photos-slist-aid-*.html
         code
     },
     prev: "",
-    observerURL: true,
     css: "",
     hide: "",
     autoClick: "",
@@ -253,6 +266,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     focus: "",
     focus: () =>,
     closeAF: () =>,
+    aeg: 0,
     category: ""
 }, {
     name: "規則3",
@@ -265,7 +279,7 @@ fancybox: {
     v: 3,
     css: false
 },
-// 使用Fancybox3.5.7
+// 頁面容器使用Fancybox3.5.7
 fancybox: {
     v: 3,
     insertLibrarys: 1
@@ -423,7 +437,7 @@ isPromise(obj);
 isFn(obj);
 //判斷是否為DOM元素返回布林值
 isEle(obj);
-//判斷字串是否為完整的網址
+//判斷字串是否為完整的網址返回布林值
 isURL(obj);
 </pre>
 <pre>
@@ -431,10 +445,10 @@ isURL(obj);
 //t = document.title 匹配標題部分字串，類型可為字串、正規表達式、字串或正規表達式的陣列
 //h = hosts 匹配網站的域名，類型可為字串、正規表達式、字串或正規表達式的陣列
 //p = pathname 匹配網址的路徑，類型可為字串、正規表達式、字串或正規表達式的陣列
-//s = search 匹配網址的搜尋，類型可為字串或正規表達式
-//e = elements 匹配網頁的元素選擇器，類型可為字串或陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
+//s = search 匹配網址的搜尋參數，類型可為字串或正規表達式
+//e = elements 匹配網頁的元素選擇器，類型可為字串或字串的陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
 //d = device "m"此規則只適用觸控裝置，"pc"此規則只適用電腦
-//規則屬性imgs和customTitle如為字串，會自動判斷頁面是否有符合的元素
+//規則屬性imgs和customTitle如果是選擇器字串，會自動判斷頁面是否有符合的元素
 const object = {
     //String or RegExp or Array [String or RegExp]
     t: [
@@ -446,7 +460,7 @@ const object = {
         "example.com",
         /^example\.com$/
     ],
-    //String or RegExp
+    //String or RegExp or Array [String or RegExp]
     p: "",
     //String or RegExp
     s: "",
@@ -618,6 +632,8 @@ fn.hideMsg();
 //msg，0不顯示訊息
 await fn.delay(time, msg = 1);
 fn.delay(Number, Number);
+也能用
+delay(Number);
 </pre>
 <pre>
 //等待元素async/await
