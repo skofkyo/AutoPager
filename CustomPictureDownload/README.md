@@ -418,7 +418,7 @@ fn.gae(selector, doc)
     <br>
 <pre>
 //取得任意物件的類型
-console.log(getType([]);) //'Array'
+console.log(getType([])); //'Array'
 console.log(getType({})); //'Object'
 getType(obj);
 </pre>
