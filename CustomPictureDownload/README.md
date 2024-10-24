@@ -174,11 +174,13 @@ https://*wnacg.com/photos-slist-aid-*.html
     infiniteScroll: true, //漫畫分類標記有無限滾動模式
     gallery: 1, //影子畫廊調用Iframe畫廊
     downloadVideo: true, //下載變數videoSrcArray裡的影片直連網址
-    focus: "selector", //離開影子畫廊後要滾動到此元素的位置，類型可以是字串"selector"、"last:selector"或函式返回DOM元素
+    //離開影子畫廊後要滾動到此元素的位置，寫成"last:selector"則取多個元素的最後一個。
+    focus: "selector",
+    //不是簡單的首尾元素就寫成用函式判斷返回DOM元素
     focus: () => HTMLElement,
     closeAF: () =>, //離開影子畫廊後要運行的函式
     aeg: 0, //0不能自動進入影子畫廊
-    category: "comic" //類別nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
+    category: "comic" //類別photo、nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
 }, {
     name: "規則2",
     enable: 0,
@@ -415,6 +417,12 @@ fn.gae(selector, doc)
     </summary>
     <br>
 <pre>
+//取得任意物件的類型
+console.log(getType([]);) //'Array'
+console.log(getType({})); //'Object'
+getType(obj);
+</pre>
+<pre>
 //判斷當前是否為觸控裝置
 hasTouchEvent
 //判斷是否為字串返回布林值
@@ -527,18 +535,18 @@ const objetc = {
     d: String or RegExp or Array [String or RegExp]
 }
 fn.dt(objetc);
-舉例
-用於刪除元素的字串
+//舉例
+//用於刪除元素的字串
 {
     s: "h1",
     d: /\(\d+P\)/
 }
-用於刪除字串
+//用於刪除字串
 {
     t: "aaabbb",
     d: "bbb"
 }
-用於刪除網頁標題的字串
+//用於刪除網頁標題的字串
 {
     d: "example.com"
 }
@@ -2845,14 +2853,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://cyberdrop.me/">CyberDrop</a>
                 </td>
                 <td>手動插入圖片，需要知道檔案鏈結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，<a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://bunkr-albums.io/">Bunkr</a>
-                </td>
-                <td>手動插入圖片，影片可匯出網址後用Motrix下載，
-                    <pre>Referer：https://bunkr.fi/</pre>，如果無法下載就需透過瀏覽器來下載，分類頁添加了自動翻頁
-                </td>
             </tr>
             <tr>
                 <td>
