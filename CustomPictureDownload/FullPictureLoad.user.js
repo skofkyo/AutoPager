@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.10.1
+// @version            2.10.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -143,12 +143,12 @@
         childList: true,
         subtree: true
     };
-    const smoothScrollIntoView = {
+    const smoothOptions = {
         behavior: "smooth",
         block: "center",
         inline: "center"
     };
-    const instantScrollIntoView = {
+    const instantOptions = {
         behavior: "instant",
         block: "center",
         inline: "center"
@@ -2394,6 +2394,8 @@ a:has(>div>div>img),
         url: {
             h: "luscious.net"
         },
+        SPA: () => document.URL.includes("/albums/"),
+        observerURL: true,
         imgs: async () => {
             if (!_this.SPA()) return [];
             fn.showMsg(displayLanguage.str_05, 0);
@@ -2429,7 +2431,6 @@ a:has(>div>div>img),
                 return data.flat().filter(item => item.original).map(e => e.original);
             });
         },
-        SPA: () => document.URL.includes("/albums/"),
         capture: () => _this.imgs(),
         button: [4],
         insertImg: ["article.o-padding-top-bottom,.picture-frame-wrapper", 3],
@@ -2438,7 +2439,6 @@ a:has(>div>div>img),
             if (!_this.SPA()) return null;
             return fn.waitEle(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a").then(e => e.innerText);
         },
-        observerURL: true,
         css: "body.o-modal-no-scroll{overflow:unset!important}",
         hide: "#modal-root",
         category: "hcomic"
@@ -2533,6 +2533,8 @@ a:has(>div>div>img),
         host: ["www.cosersets.com"],
         link: "https://www.cosersets.com/1",
         reg: /^https?:\/\/www\.cosersets\.com/,
+        SPA: true,
+        observerURL: true,
         init: async () => await fn.waitEle(".z-breadcrumbs .z-breadcrumbs__item"),
         imgs: async (msg = 1) => {
             if (msg === 1) fn.showMsg(displayLanguage.str_05, 0);
@@ -2553,31 +2555,29 @@ a:has(>div>div>img),
             }).then(res => res.json());
             return fetchJson.data.files.map(file => file.url);
         },
-        SPA: true,
         capture: () => _this.imgs(0),
         customTitle: async () => {
             await delay(500);
             return fn.gt(".z-breadcrumbs")?.replace(/\n/g, " - ").replace(/首页 - |Cosersets - /, "");
         },
-        observerURL: true,
         category: "nsfw1"
     }, {
         name: "小丁 (Fantasy Factory) Patreon Cosplay Leaks",
         host: ["www.fantasyfactory.xyz"],
         reg: /^https?:\/\/www\.fantasyfactory\.xyz\//,
+        SPA: true,
+        observerURL: true,
         init: async () => await fn.waitEle("#crumbbar"),
         imgs: () => {
             let urls = fn.gau(".item.file>a");
             videoSrcArray = urls.filter(url => url.includes(".mp4"));
             return urls.filter(url => !/\.md$|\.mp4$/.test(url));
         },
-        SPA: true,
         capture: () => _this.imgs(),
         customTitle: async () => {
             await delay(500);
             return fn.gt("#crumbbar")?.replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)")
         },
-        observerURL: true,
         category: "nsfw1"
     }, {
         name: "Tokar浵卡 Cosplay",
@@ -2725,12 +2725,26 @@ a:has(>div>div>img),
         reg: /^https?:\/\/aiavr\.uk\/detail\?aid=\d+/,
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            let [, id] = fn.url.match(/\?aid=(\d+)/);
+            let id = new URLSearchParams(fn.ls).get("aid");
             let total = await fetch(`/api/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `/api/image/list?aid=${id}&pageNum=${i + 1}`);
-            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
-            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.sourceUrl == null ? e.sourceWeb + e.url : e.sourceWeb + e.sourceUrl));
+            let fetchNum = 0;
+            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => {
+                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                return json.data;
+            }));
+            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => {
+                if (e.sourceUrl?.startsWith("http")) {
+                    return e.sourceUrl;
+                } else if (e.sourceWeb?.startsWith("http") && e.sourceUrl?.startsWith("/")) {
+                    return e.sourceWeb + e.sourceUrl;
+                } else if (e.url?.startsWith("http")) {
+                    return e.url;
+                } else {
+                    return null;
+                }
+            }));
         },
         capture: () => _this.imgs(),
         //button: [4],
@@ -2745,16 +2759,33 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "图集网",
-        host: ["user.aiavr.uk", "m.aiavr.uk"],
-        reg: /^https?:\/\/(user|m)\.aiavr\.uk\/detail\?aid=\d+/,
+        url: {
+            h: ["user.aiavr.uk", "m.aiavr.uk"],
+            p: "systemAlbum",
+            s: "aid="
+        },
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            let [, id] = fn.url.match(/\?aid=(\d+)/);
+            let id = new URLSearchParams(fn.ls).get("aid");
             let total = await fetch(`https://admin.aiavr.uk/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `https://admin.aiavr.uk/image/list?aid=${id}&pageNum=${i + 1}`);
-            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
-            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.sourceUrl == null ? e.sourceWeb + e.url : e.sourceWeb + e.sourceUrl));
+            let fetchNum = 0;
+            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => {
+                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                return json.data;
+            }));
+            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => {
+                if (e.sourceUrl?.startsWith("http")) {
+                    return e.sourceUrl;
+                } else if (e.sourceWeb?.startsWith("http") && e.sourceUrl?.startsWith("/")) {
+                    return e.sourceWeb + e.sourceUrl;
+                } else if (e.url?.startsWith("http")) {
+                    return e.url;
+                } else {
+                    return null;
+                }
+            }));
         },
         capture: () => _this.imgs(),
         //button: [4],
@@ -2766,11 +2797,15 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "图集网",
-        host: ["user.aiavr.uk", "m.aiavr.uk"],
-        reg: /^https?:\/\/(user|m)\.aiavr\.uk\/userAlbumDetail\?aid=\d+/,
+        link: "https://user.aiavr.uk/users",
+        url: {
+            h: ["user.aiavr.uk", "m.aiavr.uk"],
+            p: "userAlbum",
+            s: "aid="
+        },
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            let [, id] = fn.url.match(/\?aid=(\d+)/);
+            let id = new URLSearchParams(fn.ls).get("aid");
             let vip = await fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.isSee);
             if (vip == false) {
                 setTimeout(() => {
@@ -2781,8 +2816,12 @@ a:has(>div>div>img),
             let total = await fetch(`https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=${i + 1}`);
-            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => json.data));
-            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.imgUrl == null ? null : "https://image.51x.uk/xinshijie" + e.imgUrl).filter(item => item));
+            let fetchNum = 0;
+            let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => {
+                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                return json.data;
+            }));
+            return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.imgUrl == null ? null : "https://image.aiavr.uk/xinshijie" + e.imgUrl).filter(item => item));
         },
         capture: () => _this.imgs(),
         //tton: [4],
@@ -5690,6 +5729,8 @@ a:has(>div>div>img),
         url: {
             h: "hinhanhgai.com"
         },
+        SPA: () => ["/image/", "/article/"].some(p => document.URL.includes(p)),
+        observerURL: true,
         imgs: () => {
             if (document.URL.includes("/image/")) {
                 let id = document.URL.split("/").at(-1);
@@ -5705,7 +5746,6 @@ a:has(>div>div>img),
             }
         },
         capture: () => _this.imgs(),
-        SPA: () => ["/image/", "/article/"].some(p => document.URL.includes(p)),
         autoDownload: [0],
         next: () => {
             let next = fn.ge("a.next[href^='/image/']");
@@ -5726,7 +5766,6 @@ a:has(>div>div>img),
                 return null;
             }
         },
-        observerURL: true,
         hide: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float",
         category: "nsfw1"
     }, {
@@ -5746,20 +5785,21 @@ a:has(>div>div>img),
         url: {
             h: "gai.vn"
         },
+        SPA: () => ["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fn.ge(s)) || !!fn.ge(".FullPictureLoadImage"),
+        observerURL: true,
         imgs: async () => {
             if (!["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fn.ge(s))) return [];
             await fn.getNP(".gai-thumb", "li.page-item.active+li:not(.disabled)>a");
             fn.remove("//div[nav[@aria-label='Page navigation']]");
             return fn.gae("a[data-fancybox='slide']");
         },
-        SPA: () => ["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fn.ge(s)) || !!fn.ge(".FullPictureLoadImage"),
+
         button: [4],
         insertImg: ["#content", 2],
         customTitle: ".nav-breadcrumb>.nav-breadcrumb-item:last-child",
         fancybox: {
             blacklist: 1
         },
-        observerURL: true,
         category: "nsfw1"
     }, {
         name: "imgcup.com",
@@ -6090,6 +6130,7 @@ a:has(>div>div>img),
                 return false;
             }
         },
+        observerURL: true,
         imgs: () => {
             thumbnailSrcArray = siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.thumbnail.url);
             return siteJson.props.pageProps.post.content.data.map(e => e.attributes.formats.serving_2560.url);
@@ -6102,7 +6143,6 @@ a:has(>div>div>img),
             setTimeout(() => clearInterval(loop), 10000);
         },
         customTitle: () => siteJson?.props?.pageProps?.post?.title,
-        observerURL: true,
         category: "nsfw2"
     }, {
         name: "jangjoo",
@@ -7597,12 +7637,12 @@ a:has(>div>div>img),
         url: {
             h: "bingmm.com"
         },
+        SPA: () => document.URL.includes(".html"),
+        observerURL: true,
         imgs: async () => {
             fn.createImgBox(".entry-content p:has(>img)", 1);
             return fn.gae(".entry-content img");
         },
-        SPA: () => document.URL.includes(".html"),
-        observerURL: true,
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".entry-content p:has(>img)"], 2
@@ -8181,6 +8221,8 @@ a:has(>div>div>img),
         url: {
             h: "dtf.ru"
         },
+        observerURL: true,
+        SPA: () => !!fn.ge(".comments"),
         imgs: () => {
             let [post] = fn.gae(".content__blocks");
             if (post) {
@@ -8197,7 +8239,6 @@ a:has(>div>div>img),
             }
         },
         capture: () => _this.imgs(),
-        SPA: () => !!fn.ge(".comments"),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         customTitle: async () => {
@@ -8206,17 +8247,17 @@ a:has(>div>div>img),
                 d: " — О, порно на DTF"
             });
         },
-        observerURL: true,
         category: "nsfw2"
     }, {
         name: "uCrazy",
         url: {
             h: "ucrazy.org"
         },
+        SPA: () => !!fn.ge("#addcomment"),
+        observerURL: true,
         init: () => fn.addMutationObserver(() => fn.remove(".banner:has(>#advideo_adv_container)")),
         imgs: ".news__content_wrapper img:not(.news__tags-more-icon)",
         capture: () => fn.gae(".news__content_wrapper img:not(.news__tags-more-icon)"),
-        SPA: () => !!fn.ge("#addcomment"),
         button: [4],
         customTitle: async () => {
             await delay(1000);
@@ -8227,7 +8268,6 @@ a:has(>div>div>img),
                 ]
             });
         },
-        observerURL: true,
         category: "nsfw2"
     }, {
         name: "bdsmlr",
@@ -8243,10 +8283,7 @@ a:has(>div>div>img),
             const get = async () => {
                 let imgs = fn.gae(".image_container img:not(.get)");
                 if (imgs.length > 0) {
-                    imgs.map(img => {
-                        img.classList.add("get");
-                        return img;
-                    });
+                    imgs.forEach(img => img.classList.add("get"));
                     fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
                 }
                 let videos = fn.gae("video.vjs-tech[value][poster]:not(.get)");
@@ -8289,6 +8326,11 @@ a:has(>div>div>img),
         url: {
             h: "dzen.ru"
         },
+        SPA: () => {
+            let url = new URL(document.URL);
+            return url.pathname.startsWith("/a/") && url.search === "";
+        },
+        observerURL: true,
         imgs: () => {
             //帖子的數據
             //JSON.parse([...document.scripts].find(s => s.textContent.includes("__APP_STATE__")).textContent.match(/\{"data":\{"__APP_STATE__":.+\)\)/)[0].slice(0, -2));
@@ -8318,17 +8360,12 @@ a:has(>div>div>img),
             }
         },
         capture: () => _this.imgs(),
-        SPA: () => {
-            let url = new URL(document.URL);
-            return url.pathname.startsWith("/a/") && url.search === "";
-        },
         customTitle: async () => {
             await delay(1000);
             return fn.dt({
                 d: /\|.+$/
             });
         },
-        observerURL: true,
         category: "nsfw2"
     }, {
         name: "NUDE_ART_EROTIC",
@@ -8494,78 +8531,6 @@ a:has(>div>div>img),
         go: 1,
         customTitle: "#title",
         downloadVideo: true,
-        category: "nsfw2"
-    }, {
-        name: "Bunkr bunkr.si",
-        link: "https://bunkr-albums.io/",
-        url: {
-            h: "bunkr",
-            p: /^\/a\/[\w#]+$/i,
-            e: ".grid-images"
-        },
-        init: () => fn.createImgBox(".grid-images", 2),
-        imgs: async () => {
-            fn.showMsg(displayLanguage.str_01, 0);
-            let xhrNum = 0;
-            let links = fn.gau(".grid-images_box a[href*='/i/']");
-            let resArr = [];
-            for (let url of links) {
-                let res = fn.xhrDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${links.length}`, 0);
-                    let img = fn.ge(".lightgallery>img", dom);
-                    return img ? img.src : null;
-                });
-                resArr.push(res);
-            }
-            let videoLinks = fn.gau(".grid-images_box a[href*='/v/']");
-            let videoResArr = [];
-            for (let url of videoLinks) {
-                let res = fn.xhrDoc(url).then(dom => {
-                    let video = fn.ge("#player>source", dom);
-                    return video ? video.src : null;
-                });
-                videoResArr.push(res);
-            }
-            videoSrcArray = await Promise.all(videoResArr).then(data => data.filter(item => item));
-            return Promise.all(resArr);
-        },
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 3],
-        go: 1,
-        customTitle: "h1.text-dark",
-        referer: "https://bunkr.si/",
-        category: "nsfw2"
-    }, {
-        name: "Bunkr 列表自動翻頁",
-        host: ["bunkr-albums.io"],
-        reg: /^https?:\/\/bunkr-albums\.io\//,
-        autoPager: {
-            ele: "main .grid:has(>[data-repeat])",
-            next: "nav a.btn-main+a",
-            re: "main nav",
-            observer: "main .grid:has(>[data-repeat])",
-            pageNum: "main nav a.btn-main"
-        },
-        openInNewTab: "main .grid:has(>[data-repeat]) a:not([target=_blank])",
-        category: "autoPager"
-    }, {
-        name: "Good Sex Porn",
-        host: ["goodsexporn.org"],
-        reg: /^https?:\/\/goodsexporn\.org\/galleries\/\d+\.html$/,
-        init: () => {
-            fn.gae("#gallery>*:not(#galleryImages)").forEach(e => {
-                let x = e.parentNode.parentNode.parentNode.nextElementSibling;
-                insertBefore(x, e);
-            });
-        },
-        imgs: () => {
-            thumbnailSrcArray = [...fn.gae("#galleryImages>.blockItem img")].map(e => e.dataset.src ?? e.src).sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
-            return thumbnailSrcArray.map(e => e.replace("thumbs/", ""));
-        },
-        button: [4],
-        insertImg: [".content", 2],
-        customTitle: ".player-title",
-        css: "@media only screen and (max-width:450px){.related-block .block .blockItem.blockItemBox{width:120px !important}.block .blockItem{display:inline-block !important}}",
         category: "nsfw2"
     }, {
         name: "FitNakedGirls",
@@ -11449,14 +11414,14 @@ a:has(>div>div>img),
         },
         fetch: 1,
         hide: ".hidden-lg:not(.panel)[style*='z-index'],div:has(>.photo_center_div)",
-        observerClick: ["#chk_cover", "#chk_guide"],
+        observerClick: ["#chk_cover", "#chk_guide", "div[class^='btn_hide']"],
         category: "hcomic"
     }, {
         name: "禁漫天堂",
         url: {
             e: "meta[property='og:site_name'][content=禁漫天堂]",
         },
-        observerClick: ["#chk_cover", "#chk_guide"],
+        observerClick: ["#chk_cover", "#chk_guide", "div[class^='btn_hide']"],
         category: "ad"
     }, {
         name: "E-Hentai圖片清單頁",
@@ -11832,6 +11797,8 @@ a:has(>div>div>img),
         host: ["koharu.to"],
         enable: 1,
         reg: /^https?:\/\/koharu\.to\//i,
+        SPA: () => document.URL.includes("/g/"),
+        observerURL: true,
         imgs: () => {
             const [, , g_id, g_key] = location.pathname.split("/");
             const detailApi = `https://api.koharu.to/books/detail/${g_id}/${g_key}`;
@@ -11883,8 +11850,6 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#previews,main>.group", 0],
         customTitle: () => fn.getText(["#title>h2", "#title>h1"]),
-        SPA: () => document.URL.includes("/g/"),
-        observerURL: true,
         fetch: 1,
         category: "hcomic"
     }, {
@@ -13724,6 +13689,8 @@ a:has(>div>div>img),
         name: "NiceCat",
         host: "web.nicecat.cc",
         reg: /^https?:\/\/web\.nicecat\.cc\//,
+        SPA: () => document.URL.includes("/comic/info/") && ("headers" in localStorage),
+        observerURL: true,
         comicUid: () => document.URL.match(/\/id\.(.+)$/)[1],
         getHeaders: () => JSON.parse(localStorage.getItem("headers")),
         init: () => {
@@ -13736,7 +13703,7 @@ a:has(>div>div>img),
                 if (localStorage.getItem("headers") !== JSON.stringify(request.headers)) {
                     localStorage.setItem("headers", JSON.stringify(request.headers));
                 }
-                if (Object.prototype.toString.call(request.data) === "[object FormData]") {
+                if (getType(request.data) === "FormData") {
                     let object = Object.fromEntries([...request.data.entries()]);
                     if ("dateKey" in object) {
                         if (localStorage.getItem("dateKey") !== object.dateKey) {
@@ -13763,7 +13730,6 @@ a:has(>div>div>img),
                 return [];
             }
         },
-        SPA: () => document.URL.includes("/comic/info/") && ("headers" in localStorage),
         capture: () => _this.imgs(0),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
@@ -13780,7 +13746,6 @@ a:has(>div>div>img),
                 return null;
             }
         },
-        observerURL: true,
         category: "hcomic"
     }, {
         name: "紳士漫畫 圖片清單頁",
@@ -13862,9 +13827,9 @@ a:has(>div>div>img),
         name: "Comics",
         host: ["pixiv.app"],
         reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
-        init: async () => await fn.waitEle("footer[class]"),
         SPA: () => document.URL.includes("/comics/"),
         observerURL: true,
+        init: async () => await fn.waitEle("footer[class]"),
         imgs: ".bg-slate-100 img,.shadow-md img",
         customTitle: "h1",
         category: "hcomic"
@@ -15440,9 +15405,9 @@ a:has(>div>div>img),
             e: "link[title=MangaDex]",
             d: "m"
         },
-        init: async () => await fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
         SPA: () => new URL(document.URL).pathname.startsWith("/chapter/"),
         observerURL: true,
+        init: async () => await fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
         imgs: () => {
             if (_this.SPA()) {
                 fn.showMsg(displayLanguage.str_05, 0);
@@ -17404,7 +17369,8 @@ if ("xx" in window) {
         host: ["komiic.com"],
         enable: 0,
         reg: /^https?:\/\/komiic\.com\//,
-        init: async () => await fn.waitEle(".v-breadcrumbs"),
+        SPA: () => document.URL.includes("/chapter/"),
+        observerURL: true,
         imgs: async (url = document.URL) => {
             if (!_this.SPA()) return [];
             fn.showMsg(displayLanguage.str_05, 0);
@@ -17427,7 +17393,6 @@ if ("xx" in window) {
             return json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid);
         },
         capture: () => _this.imgs(),
-        SPA: () => document.URL.includes("/chapter/"),
         next: async (url = document.URL) => {
             if (!_this.SPA()) return null;
             let [, mhId] = url.match(/comic\/(\d+)/);
@@ -17462,9 +17427,10 @@ if ("xx" in window) {
             }
             return nextUrl;
         },
-        observerURL: true,
         prev: 1,
-        customTitle: () => {
+        customTitle: async () => {
+            if (!_this.SPA()) return null;
+            await fn.waitEle(".v-breadcrumbs");
             let textArr = fn.gt(".v-breadcrumbs").split("\n");
             return textArr[1] + " - " + textArr[2];
         },
@@ -17702,7 +17668,7 @@ if ("xx" in window) {
             preloadNextPage: 1
         },
         css: ".action-list li{width:50%!important}",
-        hide: "#imgLoading,#manga,.action,#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo,.FullPictureLoadMsg),footer~*:not(.FullPictureLoadMsg),#prev,#pageSelect,#next,#pager>*:not([onclick]),#pager>*[onclick*='next()'],.backToTop~div[style*='overflow']",
+        hide: "#imgLoading,#manga,.action,#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo,#FullPictureLoadMsg),footer~*:not(#FullPictureLoadMsg),#prev,#pageSelect,#next,#pager>*:not([onclick]),#pager>*[onclick*='next()'],.backToTop~div[style*='overflow']",
         category: "comic autoPager"
     }, {
         name: "古风漫画网",
@@ -20917,7 +20883,7 @@ if ("xx" in window) {
             debug("\n此頁JSON資料\n", json);
             siteJson = json;
         },
-        imgs: async (json = siteJson, msg = null) => {
+        imgs: async (json = siteJson, msg = 1) => {
             let hostArr = fn.gau("link[rel='dns-prefetch']");
             let [firstPic] = json.cont;
             let testArr = hostArr.map(e => e + firstPic);
@@ -20943,7 +20909,6 @@ if ("xx" in window) {
                 fn.ge("#mh").insertAdjacentHTML("afterend", text);
                 fn.ge("#mh+div").addEventListener("click", () => setTimeout(() => location.reload(), 200));
             }
-
         },
         next: () => {
             let comicListUrl = decodeURIComponent(siteUrl.replace(/[^\/]+\/$/i, ""));
@@ -21627,20 +21592,24 @@ if ("xx" in window) {
         console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
     }
 
+    function getType(object) {
+        return Object.prototype.toString.call(object).replace("[object ", "").replace("]", "");
+    }
+
     const hasTouchEvent = ("ontouchstart" in _unsafeWindow);
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
-    const isString = str => Object.prototype.toString.call(str) === "[object String]";
-    const isNumber = num => Object.prototype.toString.call(num) === "[object Number]";
-    const isBoolean = b => Object.prototype.toString.call(b) === "[object Boolean]";
-    const isRegExp = reg => Object.prototype.toString.call(reg) === "[object RegExp]";
-    const isObject = obj => Object.prototype.toString.call(obj) === "[object Object]";
-    const isArray = arr => Object.prototype.toString.call(arr) === "[object Array]";
-    const isSet = set => Object.prototype.toString.call(set) === "[object Set]";
-    const isFn = fn => ["[object Function]", "[object AsyncFunction]"].some(e => e === Object.prototype.toString.call(fn));
-    const isPromise = p => Object.prototype.toString.call(p) === "[object Promise]";
-    const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e)) || Object.prototype.toString.call(e) === "[object DocumentFragment]";
+    const isString = str => getType(str) === "String";
+    const isNumber = num => getType(num) === "Number";
+    const isBoolean = b => getType(b) === "Boolean";
+    const isRegExp = reg => getType(reg) === "RegExp";
+    const isObject = obj => getType(obj) === "Object";
+    const isArray = arr => getType(arr) === "Array";
+    const isSet = set => getType(set) === "Set";
+    const isFn = fn => getType(fn).endsWith("Function");
+    const isPromise = p => getType(p) === "Promise";
+    const isEle = e => (getType(e).startsWith("HTML") && getType(e).endsWith("Element")) || getType(e) === "DocumentFragment";
     const isURL = (url) => {
         if ("canParse" in URL) {
             return URL.canParse(url);
@@ -22202,8 +22171,8 @@ if ("xx" in window) {
             break;
         default:
             displayLanguage = {
-                str_01: "Get Element...",
-                str_02: "Get Element ",
+                str_01: "Get Images...",
+                str_02: "Get Images ",
                 str_03: "Get timed out",
                 str_04: "Wait Element...",
                 str_05: "Get Data...",
@@ -24648,20 +24617,21 @@ if ("xx" in window) {
         },
         //顯示簡短的訊息
         showMsg: (text, time = 1000) => {
-            if (!fn.ge("body>.FullPictureLoadMsg")) fn.addFullPictureLoadMsg();
-            let msg = fn.ge(".FullPictureLoadMsg");
-            if (fn.ge(".FullPictureLoadMsg[style]")) msg.removeAttribute("style");
-            msg.innerText = text;
-            if (time > 0) setTimeout(() => fn.hideMsg(), time);
+            let msgE = fn.ge("#FullPictureLoadMsg");
+            if (!msgE) {
+                msgE = document.createElement("div");
+                msgE.id = "FullPictureLoadMsg";
+                document.body.append(msgE);
+            }
+            msgE.innerText = text;
+            if (!!time && isNumber(time)) {
+                setTimeout(() => fn.hideMsg(), time);
+            }
         },
         //隱藏訊息
         hideMsg: () => {
-            if (!fn.ge("body>.FullPictureLoadMsg")) return;
-            if (!fn.ge(".FullPictureLoadMsg[style]")) {
-                let msg = fn.ge(".FullPictureLoadMsg");
-                msg.innerText = "none";
-                msg.style.display = "none";
-            }
+            const msgE = fn.ge("#FullPictureLoadMsg");
+            msgE?.remove();
         },
         //圖片元素觀察者，圖片進入可視範圍時把data-src屬性寫入src
         imagesObserver: new IntersectionObserver((entries, observer) => {
@@ -24782,14 +24752,6 @@ if ("xx" in window) {
                 }
             });
         }),
-        //創建顯示訊息的元素
-        addFullPictureLoadMsg: () => {
-            let div = document.createElement("div");
-            div.className = "FullPictureLoadMsg";
-            div.style.display = "none";
-            div.innerText = "none";
-            document.body.append(div);
-        },
         //創建style元素
         css: (css, id = null) => {
             let style = document.createElement("style");
@@ -24924,12 +24886,16 @@ if ("xx" in window) {
             });
         },
         //確認圖片狀態返回圖片寬高
-        checkImgStatus: (src, msg = null) => {
-            if (msg != 0) fn.showMsg(msg || displayLanguage.str_56, 0);
+        checkImgStatus: (src, msg = 1) => {
+            if (isString(msg)) {
+                fn.showMsg(msg, 0);
+            } else if (msg === 1) {
+                fn.showMsg(displayLanguage.str_56, 0);
+            }
             return new Promise(resolve => {
                 const temp = new Image();
                 temp.onload = () => {
-                    fn.hideMsg();
+                    if (isString(msg)) fn.hideMsg();
                     resolve({
                         ok: true,
                         src: src,
@@ -24938,7 +24904,7 @@ if ("xx" in window) {
                     });
                 };
                 temp.onerror = () => {
-                    fn.hideMsg();
+                    if (isString(msg)) fn.hideMsg();
                     resolve({
                         ok: false,
                         src: src
@@ -25123,8 +25089,11 @@ if ("xx" in window) {
                         "User-Agent": _unsafeWindow.navigator.userAgent
                     },
                     onload: data => {
+                        let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
+                        let htmlText = decoder.decode(data.response);
+                        let dom = fn.doc(htmlText);
                         if (data.status >= 400) {
-                            debug(`\nfn.xhrDoc()連線錯誤碼：${data.status}\n`, url);
+                            console.error(`\nfn.xhrDoc()連線錯誤碼：${data.status}\n`, url, data, dom);
                             let obj = {
                                 fn: "fn.xhrDoc()",
                                 url: url,
@@ -25132,9 +25101,6 @@ if ("xx" in window) {
                             };
                             fetchErrorArray.push(obj);
                         }
-                        let decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
-                        let htmlText = decoder.decode(data.response);
-                        let dom = fn.doc(htmlText);
                         resolve(dom);
                     },
                     onerror: error => {
@@ -25523,11 +25489,11 @@ if ("xx" in window) {
             if (!!elementById) {
                 elementById.scrollIntoView();
             } else if (fn.ge(".swiper-slide.swiper-slide-active") && fn.ge(sa)) {
-                fn.gae(sa)[slideIndex].scrollIntoView(smoothScrollIntoView);
+                smoothScrollIntoView(fn.gae(sa)[slideIndex]);
             } else if (fn.ge(sb)) {
-                fn.gae(sb)[slideIndex].scrollIntoView(smoothScrollIntoView);
+                smoothScrollIntoView(fn.gae(sb)[slideIndex]);
             } else if (fn.ge(sc)) {
-                fn.gae(sc)[slideIndex].scrollIntoView(smoothScrollIntoView);
+                smoothScrollIntoView(fn.gae(sc)[slideIndex]);
             } else {
                 console.error(" # ", "未定位id！");
             }
@@ -25668,9 +25634,9 @@ if ("xx" in window) {
                         done: (fancybox, slide) => {
                             isOpenFancybox = true;
                             if (fancybox.isCurrentSlide(slide)) {
-                                gallery[slide.index].scrollIntoView(smoothScrollIntoView);
+                                smoothScrollIntoView(gallery[slide.index]);
                             } else {
-                                gallery[fancybox.getSlide().index].scrollIntoView(smoothScrollIntoView);
+                                smoothScrollIntoView(gallery[fancybox.getSlide().index]);
                             }
                         },
                         close: () => {
@@ -25713,9 +25679,9 @@ if ("xx" in window) {
                         done: (fancybox, slide) => {
                             isOpenFancybox = true;
                             if (fancybox.isCurrentSlide(slide)) {
-                                gallery[slide.index].scrollIntoView(smoothScrollIntoView);
+                                smoothScrollIntoView(gallery[slide.index]);
                             } else {
-                                gallery[fancybox.getSlide().index].scrollIntoView(smoothScrollIntoView);
+                                smoothScrollIntoView(gallery[fancybox.getSlide().index]);
                             }
                         }
                     },
@@ -25960,22 +25926,25 @@ if ("xx" in window) {
         return nodes;
     };
 
+    //元素插入在節點之前
     const insertBefore = (targetNode, newNode) => {
         if ([targetNode, newNode].every(e => isEle(e))) {
             targetNode.parentNode.insertBefore(newNode, targetNode);
         } else {
-            console.error("insertBefore參數錯誤\n", targetNode, Object.prototype.toString.call(targetNode), newNode, Object.prototype.toString.call(newNode));
+            console.error("insertBefore參數錯誤\n", targetNode, getType(targetNode), newNode, getType(newNode));
         }
     };
 
+    //元素插入在節點之後
     const insertAfter = (targetNode, newNode) => {
         if ([targetNode, newNode].every(e => isEle(e))) {
             targetNode.parentNode.insertBefore(newNode, targetNode.nextSibling);
         } else {
-            console.error("insertAfter參數錯誤\n", targetNode, Object.prototype.toString.call(targetNode), newNode, Object.prototype.toString.call(newNode));
+            console.error("insertAfter參數錯誤\n", targetNode, getType(targetNode), newNode, getType(newNode));
         }
     };
 
+    //創建Style
     const createStyle = css => {
         const style = document.createElement("style");
         style.type = "text/css";
@@ -25983,18 +25952,18 @@ if ("xx" in window) {
         return style;
     };
 
+    //平滑滾動至元素位置
+    function smoothScrollIntoView(element) {
+        element.scrollIntoView(smoothOptions);
+    }
+
+    //立即滾動至元素位置
+    function instantScrollIntoView(element) {
+        element.scrollIntoView(instantOptions);
+    }
+
     //數字字串補0
     const getNum = (i, pad = 4) => String(i + 1).padStart(pad, "0");
-
-    const showMsg = (text, time = 1000) => {
-        if (!ge("body>.FullPictureLoadMsg")) fn.addFullPictureLoadMsg();
-        ge(".FullPictureLoadMsg").removeAttribute("style");
-        ge(".FullPictureLoadMsg").innerText = text;
-        setTimeout(() => {
-            ge(".FullPictureLoadMsg").innerText = "none";
-            ge(".FullPictureLoadMsg").style.display = "none";
-        }, time);
-    };
 
     const getDataMsg = (text, picNum, imgsNum) => {
         if (isStopDownload) return;
@@ -26205,10 +26174,10 @@ if ("xx" in window) {
         } else if (isSet(selector)) {
             imgs = [...selector];
         } else if (!selector || selector === "") {
-            showMsg(displayLanguage.str_41);
+            fn.showMsg(displayLanguage.str_41);
             return;
         } else if (selector.length < 3) {
-            showMsg(displayLanguage.str_42);
+            fn.showMsg(displayLanguage.str_42);
             return;
         } else if (/^\//.test(selector)) {
             imgs = gax(selector);
@@ -26326,7 +26295,7 @@ if ("xx" in window) {
                 selector = siteData.imgs;
                 titleText = await prompt(displayLanguage.str_51, (customTitle || titleReplace));
                 if (titleText === null) {
-                    showMsg(displayLanguage.str_41);
+                    fn.showMsg(displayLanguage.str_41);
                     return;
                 }
             } else if (!!autoDownload) {
@@ -26401,13 +26370,13 @@ if ("xx" in window) {
                 debug("\nNewDataArray：", blobDataArray);
                 debug("\nErrorDataArray：", errorDataArray);
                 if (errorDataArray.length > 0) {
+                    fn.hideMsg();
                     options.autoDownload = 0;
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
                     downloadNum = 0;
                     isDownloading = false;
                     let yes = await confirm(`${displayLanguage.str_27}${errorDataArray.length}${displayLanguage.str_28}${displayLanguage.str_29}`);
-                    fn.hideMsg();
                     if (!yes) {
                         promiseBlobArray = [];
                         blobDataArray = null;
@@ -26492,10 +26461,10 @@ if ("xx" in window) {
                             saveData(blobData, title + "_" + fileName);
                             await delay(200);
                             if (i === total - 1) {
+                                fn.hideMsg();
                                 promiseBlobArray = [];
                                 downloadNum = 0;
                                 isDownloading = false;
-                                fn.hideMsg();
                                 startAutoDownload();
                             }
                         }
@@ -26506,6 +26475,7 @@ if ("xx" in window) {
                         }, (metadata) => {
                             fn.showMsg(displayLanguage.str_31 + metadata.percent.toFixed(2) + " %", 0);
                         }).then(async data => {
+                            fn.hideMsg();
                             debug("\nZIP壓縮檔數據：", data);
                             let fileName;
                             if (videoSrcArray.length > 0 && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
@@ -26517,7 +26487,6 @@ if ("xx" in window) {
                             promiseBlobArray = [];
                             downloadNum = 0;
                             isDownloading = false;
-                            fn.hideMsg();
                             startAutoDownload();
                         });
                     }
@@ -26525,13 +26494,13 @@ if ("xx" in window) {
                     promiseBlobArray = [];
                     downloadNum = 0;
                     isDownloading = false;
-                    showMsg(displayLanguage.str_43);
+                    fn.showMsg(displayLanguage.str_43);
                     return;
                 }
             });
         } else {
             isDownloading = false;
-            showMsg(displayLanguage.str_41);
+            fn.showMsg(displayLanguage.str_41);
             return;
         }
     };
@@ -26541,7 +26510,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
-        if (srcArr.length == 0 && videoSrcArray.length == 0) return showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0 && videoSrcArray.length == 0) return fn.showMsg(displayLanguage.str_44);
         let picNum = srcArr.length;
         let titleText = (customTitle || document.title);
         let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
@@ -26555,7 +26524,7 @@ if ("xx" in window) {
             endings: "native"
         });
         saveData(blob, fileName);
-        showMsg(`${displayLanguage.str_101}`);
+        fn.showMsg(`${displayLanguage.str_101}`);
     };
 
     //複製網址或手動模式的插入圖片
@@ -26564,7 +26533,7 @@ if ("xx" in window) {
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         siteData.insertImg ? debug("手動插入圖片") : debug("複製網址");
-        if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
         if ((!fn.ge(".FullPictureLoadImage") && !!siteData.insertImg) || siteData.repeat == 1 && !!siteData.insertImg) {
             const [insertTargetEle, insertMode] = siteData.insertImg;
             return fn.insertImg(srcArr, insertTargetEle, insertMode);
@@ -26574,7 +26543,7 @@ if ("xx" in window) {
         let str = textArr.join("\n");
         console.log(str);
         copyToClipboard(str);
-        showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
+        fn.showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
     };
 
     //複製網址
@@ -26582,13 +26551,13 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
-        if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
         if (videoSrcArray.length > 0) srcArr = srcArr.concat(videoSrcArray);
         let textArr = [customTitle || document.title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
         copyToClipboard(str);
-        showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
+        fn.showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
     };
 
     const copyToClipboard = text => {
@@ -26616,7 +26585,7 @@ if ("xx" in window) {
         let ele;
         ge("#FullPictureLoadImgBox:not([style*=none])") ? ele = ge(".FullPictureLoadImage.small") : ele = ge(".FullPictureLoadImage");
         if (ele) {
-            if (time != 0) showMsg(displayLanguage.str_46);
+            if (time != 0) fn.showMsg(displayLanguage.str_46);
             setTimeout(() => {
                 ele.scrollIntoView({
                     behavior: "smooth"
@@ -26866,7 +26835,7 @@ if ("xx" in window) {
                     img.style.marginTop = `${num}px`;
                 }
                 await delay(1200);
-                imgDivs[0].scrollIntoView(instantScrollIntoView);
+                instantScrollIntoView(imgDivs[0]);
             }
             if (TurnOffImageNavigationShortcutKeys != 1) {
                 document.addEventListener("keydown", async event => {
@@ -26875,7 +26844,7 @@ if ("xx" in window) {
                         event.preventDefault();
                         if (imgsNum > 0 && viewMode == 1) {
                             imgsNum -= column;
-                            imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
+                            instantScrollIntoView(imgDivs[imgsNum]);
                         }
                     } else if (event.code === "ArrowDown" || event.key === "ArrowDown") {
                         event.preventDefault();
@@ -26897,9 +26866,9 @@ if ("xx" in window) {
                                     imgDivs[imgsNum].src = imgDivs[imgsNum].dataset.src;
                                     await fn.checkImgStatus(imgDivs[imgsNum].dataset.src, "Wait Loading...");
                                 }
-                                imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
+                                instantScrollIntoView(imgDivs[imgsNum]);
                                 await delay(200);
-                                imgDivs[imgsNum].scrollIntoView(instantScrollIntoView);
+                                instantScrollIntoView(imgDivs[imgsNum]);
                             } catch {
                                 if (siteData.category === "comic" && siteData.next && siteData.insertImg) {
                                     if (isString(siteData.next)) {
@@ -26923,7 +26892,7 @@ if ("xx" in window) {
                                     }
                                 } else {
                                     imgsNum = 0;
-                                    imgDivs[0].scrollIntoView(instantScrollIntoView);
+                                    instantScrollIntoView(imgDivs[0]);
                                     fn.showMsg(displayLanguage.str_94);
                                 }
                             }
@@ -27045,8 +27014,6 @@ if ("xx" in window) {
             newWindow.totalNumberOfElements = 0;
             newWindow.currentReferenceElement = null;
             newWindow.imgViewIndex = -1;
-            newWindow.smoothScrollIntoView = smoothScrollIntoView;
-            newWindow.instantScrollIntoView = instantScrollIntoView;
             newWindow.webtoonWidth = config.webtoonWidth;
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
@@ -27054,6 +27021,10 @@ if ("xx" in window) {
             newWindow.menuLanguage = displayLanguage.galleryMenu;
             newWindow.isOpenFancybox = false;
             newWindow.l10n = Fancyboxl10nV5();
+            newWindow.smoothOptions = smoothOptions;
+            newWindow.instantOptions = instantOptions;
+            newWindow.smoothScrollIntoView = smoothScrollIntoView;
+            newWindow.instantScrollIntoView = instantScrollIntoView;
 
             let newWindowStyleCss = `
 body {
@@ -27209,13 +27180,13 @@ if (hasTouchEvent) {
                     if (config.ViewMode != 4) {
                         imgs[slideIndex].style.border = "solid #32a1ce";
                     }
-                    imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
+                    smoothScrollIntoView(imgs[slideIndex]);
                 } else {
                     imgViewIndex = fancybox.getSlide().index;
                     if (config.ViewMode != 4) {
                         imgs[slideIndex].style.border = "solid #32a1ce";
                     }
-                    imgs[fancybox.getSlide().index].scrollIntoView(smoothScrollIntoView);
+                    smoothScrollIntoView(imgs[fancybox.getSlide().index]);
                 }
             },
             close: fancybox => {
@@ -27227,7 +27198,7 @@ if (hasTouchEvent) {
                     imgs.forEach(e => (e.style.border = ""));
                     imgs[slideIndex].style.border = "solid #32a1ce";
                 }
-                imgs[slideIndex].scrollIntoView(smoothScrollIntoView);
+                smoothScrollIntoView(imgs[slideIndex]);
                 setTimeout(() => {
                     isOpenFancybox = false;
                 }, 200);
@@ -27274,13 +27245,13 @@ if (hasTouchEvent) {
                     let img = imgs[imgViewIndex];
                     currentReferenceElement = img;
                     img.style.border = "solid #32a1ce";
-                    img.scrollIntoView(smoothScrollIntoView);
+                    smoothScrollIntoView(img);
                 } else {
                     imgViewIndex = fancybox.getSlide().index;
                     let img = imgs[imgViewIndex];
                     currentReferenceElement = img;
                     img.style.border = "solid #32a1ce";
-                    img.scrollIntoView(smoothScrollIntoView);
+                    smoothScrollIntoView(img);
                 }
             },
             close: fancybox => {
@@ -27292,7 +27263,7 @@ if (hasTouchEvent) {
                 let img = imgs[imgViewIndex];
                 currentReferenceElement = img;
                 img.style.border = "solid #32a1ce";
-                img.scrollIntoView(smoothScrollIntoView);
+                smoothScrollIntoView(img);
                 setTimeout(() => {
                     isOpenFancybox = false;
                 }, 200);
@@ -27328,7 +27299,7 @@ if (lightGallery == 1) {
             imgs.forEach(e => (e.style.border = ""));
             img.style.border = "solid #32a1ce";
         }
-        img.scrollIntoView(smoothScrollIntoView);
+        smoothScrollIntoView(img);
     });
 }
 
@@ -27424,7 +27395,7 @@ document.addEventListener("keydown", event => {
             img.style.border = "solid #32a1ce";
         }
         currentReferenceElement = img;
-        return img.scrollIntoView(instantScrollIntoView);
+        return instantScrollIntoView(img);
     }
     if (config.ViewMode == 4 && (["NumpadAdd", "Equal"].some(k => event.code === k) || ["+", "="].some(k => event.code === k))) {
         return increaseWidth();
@@ -27450,7 +27421,7 @@ document.addEventListener("keydown", event => {
             img.style.border = "solid #32a1ce";
         }
         currentReferenceElement = img;
-        return img.scrollIntoView(instantScrollIntoView);
+        return instantScrollIntoView(img);
     } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
         if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
         event.preventDefault();
@@ -27467,7 +27438,7 @@ document.addEventListener("keydown", event => {
             }
         }
         currentReferenceElement = img;
-        return img.scrollIntoView(instantScrollIntoView);
+        return instantScrollIntoView(img);
     } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
         if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
         event.preventDefault();
@@ -27489,7 +27460,7 @@ document.addEventListener("keydown", event => {
             img = imgs[imgViewIndex];
         }
         currentReferenceElement = img;
-        return img.scrollIntoView(instantScrollIntoView);
+        return instantScrollIntoView(img);
     } else if ((event.code === "Delete" || event.key === "Delete")) {
         const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
         if (hideE !== undefined) {
@@ -27526,7 +27497,7 @@ document.addEventListener("wheel", (event) => {
             if (event.deltaY < 0 && imgViewIndex < 0) {
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
-                return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(imgs[imgViewIndex]);
             } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                 imgViewIndex--;
                 if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
@@ -27536,7 +27507,7 @@ document.addEventListener("wheel", (event) => {
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
                     }
                 }
-                return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(imgs[imgViewIndex]);
             } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                 imgViewIndex++;
                 if (imgs[imgViewIndex] === undefined) {
@@ -27548,7 +27519,7 @@ document.addEventListener("wheel", (event) => {
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
                     }
                 }
-                return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(imgs[imgViewIndex]);
             } else {
                 imgViewIndex = -1;
             }
@@ -27557,12 +27528,12 @@ document.addEventListener("wheel", (event) => {
             if (event.deltaY < 0) {
                 if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
                 imgs.forEach(e => (e.style.border = ""));
-                return getPrevRowElement().scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(getPrevRowElement());
             }
             if (event.deltaY > 0) {
                 if (Number(currentReferenceElement?.dataset?.index) >= totalNumberOfElements - 1) return;
                 imgs.forEach(e => (e.style.border = ""));
-                return getNextRowElement().scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(getNextRowElement());
             }
         }
     }
@@ -27597,7 +27568,7 @@ function aspectRatio() {
     if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvent) {
         imgs.forEach(e => (e.style.border = ""));
         imgs[imgViewIndex].style.border = "solid #32a1ce";
-        setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
+        setTimeout(() => instantScrollIntoView(imgs[imgViewIndex]), 100);
     }
 }
 
@@ -27881,7 +27852,7 @@ if (config.ViewMode == 1) {
                     ele = selector();
                 }
                 if (!isEle(ele)) return;
-                setTimeout(() => ele.scrollIntoView(instantScrollIntoView), 100);
+                setTimeout(() => instantScrollIntoView(ele), 100);
             }
             if (("closeAF" in siteData) && isFn(siteData.closeAF)) {
                 siteData.closeAF();
@@ -27952,7 +27923,7 @@ if (config.ViewMode == 1) {
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
-                        return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(imgs[imgViewIndex]);
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
                         imgViewIndex--;
@@ -27963,7 +27934,7 @@ if (config.ViewMode == 1) {
                                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                             }
                         }
-                        return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(imgs[imgViewIndex]);
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
                         next.style.backgroundColor = "gray";
                         return setTimeout(() => (location.href = nextLink), 500);
@@ -27972,7 +27943,7 @@ if (config.ViewMode == 1) {
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                             nextButtonIsShown = true;
                             next.style.border = "solid #32a1ce";
-                            return next.scrollIntoView(instantScrollIntoView);
+                            return instantScrollIntoView(next);
                         } else if (imgs[imgViewIndex] === undefined) {
                             imgViewIndex = 0;
                         }
@@ -27983,7 +27954,7 @@ if (config.ViewMode == 1) {
                             }
                         }
                         if (imgs[imgViewIndex] !== undefined) {
-                            return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                            return instantScrollIntoView(imgs[imgViewIndex]);
                         }
                     } else {
                         imgViewIndex = -1;
@@ -27994,12 +27965,12 @@ if (config.ViewMode == 1) {
                         nextButtonIsShown = false;
                         if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
                         imgs.forEach(e => (e.style.border = ""));
-                        return getPrevRowElement().scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(getPrevRowElement());
                     }
                     if (event.deltaY > 0) {
                         if (Number(currentReferenceElement?.dataset?.index) >= totalNumberOfElements - 1) return;
                         imgs.forEach(e => (e.style.border = ""));
-                        return getNextRowElement().scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(getNextRowElement());
                     }
                 }
             }
@@ -28028,7 +27999,7 @@ if (config.ViewMode == 1) {
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
                 imgs.forEach(e => (e.style.border = ""));
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
-                setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
+                setTimeout(() => instantScrollIntoView(imgs[imgViewIndex]), 100);
             }
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
@@ -28058,7 +28029,7 @@ if (config.ViewMode == 1) {
                     img.style.border = "solid #32a1ce";
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
@@ -28137,7 +28108,7 @@ if (config.ViewMode == 1) {
                     img.style.border = "solid #32a1ce";
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
@@ -28155,7 +28126,7 @@ if (config.ViewMode == 1) {
                     }
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 next.style.backgroundColor = "gray";
@@ -28175,13 +28146,13 @@ if (config.ViewMode == 1) {
                     nextButtonIsShown = true;
                     next.style.border = "solid #32a1ce";
                     currentReferenceElement = next;
-                    return next.scrollIntoView(instantScrollIntoView);
+                    return instantScrollIntoView(next);
                 } else if (img === undefined) {
                     imgViewIndex = 0;
                     img = imgs[imgViewIndex];
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             } else if ((event.code === "Delete" || event.key === "Delete")) {
                 const hideE = gae("img", shadow)[imgViewIndex];
                 if (hideE !== undefined) {
@@ -28194,15 +28165,13 @@ if (config.ViewMode == 1) {
             }
         };
         _unsafeWindow.addEventListener("keydown", kEvent);
-        /*
-        選單淡入淡出
-            transform: translate(0);
-            transition: all .8s ease-in-out;
-            &:hover {
-                transform: translate(138px);
-                transition: all .2s ease-in-out;
-            }
-        */
+        //選單淡入淡出
+        //transform: translate(0);
+        //transition: all .8s ease-in-out;
+        //    &:hover {
+        //        transform: translate(138px);
+        //        transition: all .2s ease-in-out;
+        //    }
         fn.css(`
 html,body {
     overflow-y: hidden !important;
@@ -28468,13 +28437,13 @@ img.small {
                                 let img = imgs[slideIndex];
                                 currentReferenceElement = img;
                                 img.style.border = "solid #32a1ce";
-                                img.scrollIntoView(instantScrollIntoView);
+                                instantScrollIntoView(img);
                             } else {
                                 imgViewIndex = fancybox.getSlide().index;
                                 let img = imgs[imgViewIndex];
                                 currentReferenceElement = img;
                                 img.style.border = "solid #32a1ce";
-                                img.scrollIntoView(instantScrollIntoView);
+                                instantScrollIntoView(img);
                             }
                         },
                         close: fancybox => {
@@ -28486,7 +28455,7 @@ img.small {
                             let img = imgs[imgViewIndex];
                             currentReferenceElement = img;
                             img.style.border = "solid #32a1ce";
-                            img.scrollIntoView(instantScrollIntoView);
+                            instantScrollIntoView(img);
                             setTimeout(() => {
                                 isOpenFancybox = false;
                             }, 100);
@@ -28808,7 +28777,7 @@ img.small {
                     ele = selector();
                 }
                 if (!isEle(ele)) return;
-                setTimeout(() => ele.scrollIntoView(instantScrollIntoView), 100);
+                setTimeout(() => instantScrollIntoView(ele), 100);
             }
             if (("closeAF" in siteData) && isFn(siteData.closeAF)) {
                 siteData.closeAF();
@@ -28879,7 +28848,7 @@ img.small {
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
-                        return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(imgs[imgViewIndex]);
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
                         imgViewIndex--;
@@ -28890,7 +28859,7 @@ img.small {
                                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                             }
                         }
-                        return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(imgs[imgViewIndex]);
                     } else if (event.deltaY > 0 && nextButtonIsShown) {
                         next.style.backgroundColor = "gray";
                         return setTimeout(() => (location.href = nextLink), 500);
@@ -28899,7 +28868,7 @@ img.small {
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                             nextButtonIsShown = true;
                             next.style.border = "solid #32a1ce";
-                            return next.scrollIntoView(instantScrollIntoView);
+                            return instantScrollIntoView(next);
                         } else if (imgs[imgViewIndex] === undefined) {
                             imgViewIndex = 0;
                         }
@@ -28910,7 +28879,7 @@ img.small {
                             }
                         }
                         if (imgs[imgViewIndex] !== undefined) {
-                            return imgs[imgViewIndex].scrollIntoView(instantScrollIntoView);
+                            return instantScrollIntoView(imgs[imgViewIndex]);
                         }
                     } else {
                         imgViewIndex = -1;
@@ -28921,12 +28890,12 @@ img.small {
                         nextButtonIsShown = false;
                         if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
                         imgs.forEach(e => (e.style.border = ""));
-                        return getPrevRowElement().scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(getPrevRowElement());
                     }
                     if (event.deltaY > 0) {
                         if (Number(currentReferenceElement?.dataset?.index) >= totalNumberOfElements - 1) return;
                         imgs.forEach(e => (e.style.border = ""));
-                        return getNextRowElement().scrollIntoView(instantScrollIntoView);
+                        return instantScrollIntoView(getNextRowElement());
                     }
                 }
             }
@@ -28955,7 +28924,7 @@ img.small {
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
                 imgs.forEach(e => (e.style.border = ""));
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
-                setTimeout(() => imgs[imgViewIndex].scrollIntoView(instantScrollIntoView), 100);
+                setTimeout(() => instantScrollIntoView(imgs[imgViewIndex]), 100);
             }
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
@@ -28985,7 +28954,7 @@ img.small {
                     img.style.border = "solid #32a1ce";
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (next) {
@@ -29064,7 +29033,7 @@ img.small {
                     img.style.border = "solid #32a1ce";
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 event.preventDefault();
@@ -29082,7 +29051,7 @@ img.small {
                     }
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 next.style.backgroundColor = "gray";
@@ -29102,13 +29071,13 @@ img.small {
                     nextButtonIsShown = true;
                     next.style.border = "solid #32a1ce";
                     currentReferenceElement = next;
-                    return next.scrollIntoView(instantScrollIntoView);
+                    return instantScrollIntoView(next);
                 } else if (img === undefined) {
                     imgViewIndex = 0;
                     img = imgs[imgViewIndex];
                 }
                 currentReferenceElement = img;
-                return img.scrollIntoView(instantScrollIntoView);
+                return instantScrollIntoView(img);
             } else if ((event.code === "Delete" || event.key === "Delete")) {
                 const hideE = gae("img", mainElement)[imgViewIndex];
                 if (hideE !== undefined) {
@@ -29409,13 +29378,13 @@ img.small {
                                         let img = imgs[imgViewIndex];
                                         currentReferenceElement = img;
                                         img.style.border = "solid #32a1ce";
-                                        img.scrollIntoView(instantScrollIntoView);
+                                        instantScrollIntoView(img);
                                     } else {
                                         imgViewIndex = fancybox.getSlide().index;
                                         let img = imgs[imgViewIndex];
                                         currentReferenceElement = img;
                                         img.style.border = "solid #32a1ce";
-                                        img.scrollIntoView(instantScrollIntoView);
+                                        instantScrollIntoView(img);
                                     }
                                 },
                                 close: fancybox => {
@@ -29426,7 +29395,7 @@ img.small {
                                     let img = imgs[imgViewIndex];
                                     currentReferenceElement = img;
                                     img.style.border = "solid #32a1ce";
-                                    img.scrollIntoView(instantScrollIntoView);
+                                    instantScrollIntoView(img);
                                     setTimeout(() => {
                                         isOpenFancybox = false;
                                     }, 100);
@@ -29631,7 +29600,7 @@ img.small {
     let startX, startY, startLeft, startTop;
     let eventImg, eventMenu;
     const addNewTabViewButton = () => {
-        if (ge("#FullPictureLoadEye")) return;
+        if (ge("#FullPictureLoadEye") || FullPictureLoadShowEye == 0) return;
         isAddNewTabViewButton = true;
         let img = new Image();
         img.id = "FullPictureLoadEye";
@@ -29657,7 +29626,7 @@ img.small {
                     let selector = siteData.capture ?? siteData.imgs;
                     srcArr = await getImgs(selector);
                 }
-                if (srcArr.length == 0) return showMsg(displayLanguage.str_44);
+                if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
                 let titleText = customTitle ?? document.title;
                 let picNum = srcArr.length;
                 let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
@@ -29671,7 +29640,7 @@ img.small {
                     endings: "native"
                 });
                 saveData(blob, fileName);
-                showMsg(`${displayLanguage.str_101}`);
+                fn.showMsg(`${displayLanguage.str_101}`);
             }
         }];
         const createMenu = obj => {
@@ -30003,6 +29972,8 @@ img.small {
         document.body.append(a);
     };
 
+    //列出一般圖片站
+    const photoData = customData.filter(item => item.category === "photo");
     //列出寫真站
     const nsfw1Data = customData.filter(item => item.category === "nsfw1");
     //列出老司機站
@@ -30609,7 +30580,7 @@ img.small {
     letter-spacing: unset !important;
 }
 
-.FullPictureLoadMsg {
+#FullPictureLoadMsg {
     font-family: Arial, sans-serif !important;
     font-size: 24px;
     font-weight: bold;
@@ -31768,6 +31739,7 @@ a[data-fancybox]:hover {
     if (("reg" in siteData) || ("url" in siteData)) {
         debug("\n列出此站資料", siteData);
         debug(`\n列出規則總數(${customData.length})`);
+        debug("\n列出PHOTO規則", photoData);
         debug("\n列出NSFW規則", nsfw1Data);
         debug("\n列出NSFW+規則", nsfw2Data);
         debug("\n列出COMIC規則", comicData);
@@ -31902,7 +31874,7 @@ a[data-fancybox]:hover {
 
     //捕獲圖片網址
     async function captureSrc(mutationList) {
-        if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isDownloading || isFetching) return;
+        if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isDownloading || isFetching || FullPictureLoadShowEye == 0) return;
         if (mutationList) {
             for (const mutation of mutationList) {
                 if (mutation.type === "childList" && mutation?.target?.id === "FullPictureLoadCaptureNum") {
@@ -31935,7 +31907,7 @@ a[data-fancybox]:hover {
     }
 
     async function captureSrcB(invalidPage = 0) {
-        if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isDownloading || isFetching) return;
+        if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isDownloading || isFetching || FullPictureLoadShowEye == 0) return;
         if (invalidPage === 1 && !!ge("#FullPictureLoadCaptureNum") && ge("#FullPictureLoadCaptureNum")?.innerText != 0) {
             isChangeNum = true;
             ge("#FullPictureLoadCaptureNum").innerText = 0;
