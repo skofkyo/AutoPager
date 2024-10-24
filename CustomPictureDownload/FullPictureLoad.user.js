@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.10.2
+// @version            2.10.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -116,10 +116,12 @@
     let isFetching = false;
     let isAutoScrolling = false;
     let isValidPage = true;
+    let isAddKeyEvent = false;
     let isAddFullPictureLoadButton = false;
     let isAddFullPictureLoadFixedMenu = false;
     let isAddNewTabViewButton = false;
     let isOpenOptionsUI = false;
+    let isOpenMenu = false;
     let isOpenGallery = false;
     let isChangeNum = false;
     let fetchErrorArray = [];
@@ -3200,6 +3202,7 @@ a:has(>div>div>img),
                 return false;
             }
         },
+        SPA: true,
         init: () => {
             if ("gallery_json" in localStorage) {
                 siteJson = JSON.parse(localStorage.getItem("gallery_json"));
@@ -3247,7 +3250,6 @@ a:has(>div>div>img),
             return srcs;
         },
         capture: () => _this.imgs(),
-        SPA: true,
         customTitle: () => siteJson?.title,
         category: "nsfw1"
     }, {
@@ -6115,13 +6117,11 @@ a:has(>div>div>img),
         },
         SPA: () => {
             if (document.URL.includes("/p/") && !fn.ge(".FullPictureLoadImage")) {
-                isFetching = true;
                 return fn.fetchDoc(document.URL).then(dom => {
                     let data = fn.gt("#__NEXT_DATA__", 1, dom);
                     let json = JSON.parse(data);
                     siteJson = json;
                     debug("\n此頁JSON資料\n", siteJson);
-                    isFetching = false;
                     return json;
                 });
             } else if (fn.ge(".FullPictureLoadImage")) {
@@ -13798,14 +13798,12 @@ a:has(>div>div>img),
         },
         SPA: () => {
             if (document.URL.includes("/detail/")) {
-                isFetching = true;
                 let [id] = new URL(document.URL).pathname.match(/\d+/);
                 return fetch(`https://api.nftbaoyi.com/comic/${id}`).then(res => res.json()).then(async json => {
                     siteJson = json;
                     debug("\n此頁JSON資料\n", siteJson);
                     await fn.waitEle(".grid img");
                     fn.createImgBox(".grid", 1);
-                    isFetching = false;
                     return json;
                 });
             } else {
@@ -29920,6 +29918,7 @@ img.small {
         [...menuObj].forEach(obj => createMenu(obj));
         document.body.append(menuDiv);
         menuDiv.onmouseenter = () => {
+            isOpenMenu = true;
             fn.gae(".itemNoShow", menuDiv).forEach(e => {
                 e.classList.remove("itemNoShow");
                 e.classList.add("itemShow");
@@ -29938,6 +29937,7 @@ img.small {
             menuDiv.style.width = "46px";
             menuDiv.lastChild.width = "36px";
             menuDiv.lastChild.innerText = displayLanguage.str_133;
+            setTimeout(() => (isOpenMenu = false), 200);
         }
     };
 
@@ -31133,16 +31133,21 @@ a[data-fancybox]:hover {
     };
 
     const toggleUI = async () => {
-        if (!"SPA" in siteData || !isFn(siteData.SPA) || !!ge(".FullPictureLoadImage") || isFetching) return;
+        if (!"SPA" in siteData || !isFn(siteData.SPA) || !!ge(".FullPictureLoadImage") || isOpenMenu || isFetching) return;
         const validPage = siteData.SPA();
         if (validPage === true || isPromise(validPage)) {
             isValidPage = true;
             if (isAddFullPictureLoadButton) addFullPictureLoadButton();
             if (isAddFullPictureLoadFixedMenu) addFullPictureLoadFixedMenu();
             if (isAddNewTabViewButton) addNewTabViewButton();
-            document.addEventListener("keydown", addKeyEvent);
             if (isPromise(validPage)) {
+                isFetching = true;
                 await validPage;
+                isFetching = false;
+            }
+            if (!isAddKeyEvent) {
+                document.addEventListener("keydown", addKeyEvent);
+                isAddKeyEvent = true;
             }
             if ("insertImg" in siteData) {
                 let [, insertMode, ] = siteData.insertImg;
@@ -31158,6 +31163,7 @@ a[data-fancybox]:hover {
         } else {
             fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadEye,#FullPictureLoadFixedMenu,#FullPictureLoadFixedMenuB");
             document.removeEventListener("keydown", addKeyEvent);
+            isAddKeyEvent = false;
             isValidPage = false;
         }
         await delay(200);
@@ -31458,7 +31464,7 @@ a[data-fancybox]:hover {
                     setTimeout(async () => {
                         const body = await fn.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
-                        if (!isOpenGallery) {
+                        if (!isOpenGallery && !(siteUrl === _unsafeWindow.document.URL)) {
                             await toggleUI();
                         }
                         if ("customTitle" in siteData && !("capture" in siteData)) {
@@ -31496,9 +31502,9 @@ a[data-fancybox]:hover {
                     } catch {}
                 }
                 if (isFetching || isDownloading) return;
-                await toggleUI();
                 if (siteUrl !== _unsafeWindow.document.URL.replace(_unsafeWindow.location.hash, "")) {
                     siteUrl = _unsafeWindow.document.URL;
+                    await toggleUI();
                     const newCustomTitle = await getTitle(siteData.customTitle);
                     if ("capture" in siteData && !newCustomTitle) {
                         await captureSrcB(1);
@@ -32225,7 +32231,10 @@ html,body {
             if (!hasTouchEvent) {
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
             }
-            document.addEventListener("keydown", addKeyEvent);
+            if (!isAddKeyEvent) {
+                document.addEventListener("keydown", addKeyEvent);
+                isAddKeyEvent = true;
+            }
         }
 
         if (siteData.icon == 0) {
@@ -32233,7 +32242,7 @@ html,body {
         } else if (options.icon == 1 || siteData.icon == 1) {
             addFullPictureLoadButton();
         }
-        toggleUI();
+        setTimeout(() => toggleUI(), 500);
     }
 
     if ("category" in siteData) {
