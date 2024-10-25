@@ -573,7 +573,7 @@ fn.attr(String, String, HTMLDocument or HTMLElement);
 //width，指定最大寬度px
 fn.createImgBox("selector");
 fn.createImgBox("selector", pos = 0, width = null);
-fn.createImgBox(String, Number, Number);
+fn.createImgBox(String or HTMLElement, Number, Number);
 </pre>
 <pre>
 //指定元素選擇器或元素陣列，返回提取出的圖片網址陣列。
@@ -1117,21 +1117,19 @@ imgs: async () => {
 }
 </pre>
 </details>
-<h1>腳本的操作步驟方式：</h1>
-<p>點擊左下圖示、確定，2步開始下載</p>
+<h1>圖介：</h1>
+<p>在頁面左下添加了一個圖片下載按鈕</p>
+<img src="https://i.imgur.com/TxnEvTk.png">
+<p>點擊後會彈出篩選UI</p>
+<img src="https://i.imgur.com/OzZGSY7.jpeg">
+<p>點下載按鈕後就會開始下載壓縮打包圖片</p>
+<img src="https://i.imgur.com/m6ewqQd.png">
 <p>右鍵點擊圖示複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
 <p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
 <p>中鍵點擊圖示匯出網址MediaURLs.txt文件</p>
 <p>觸控裝置，長按頁面圖片元素500毫秒，規則insertImg設置為手動則插入圖片或複製圖片網址。</p>
-<h1>圖介：</h1>
-<p>在頁面左下添加了一個圖片下載按鈕</p>
-<img src="https://i.imgur.com/TxnEvTk.png">
-<p>點擊後會彈出輸入資料夾名稱確認窗</p>
-<img src="https://i.imgur.com/M0IMf5G.png">
-<p>確認後就會開始下載壓縮打包圖片</p>
-<img src="https://i.imgur.com/m6ewqQd.png">
 <h1>腳本有綁定按鍵</h1>
-<p>數字鍵 0 下載壓縮</p>
+<p>數字鍵 0 僅彈出標題輸入框，輸入或修改後開始下載</p>
 <p>數字鍵 1 複製圖片網址或手動模式的插入圖片</p>
 <p>數字鍵 2 滾動至第一張大圖</p>
 <p>數字鍵 3 一鍵下載</p>
@@ -1146,6 +1144,7 @@ imgs: async () => {
 <p>數字鍵 . 點鍵取消縮放恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
+<p>F鍵 打開篩選下載UI。</p>
 <p>G鍵 打開Shadow DOM畫廊，Fancybox5與網站燈箱插件衝突時調用Iframe畫廊。</p>
 <p>I鍵 打開Iframe畫廊。</p>
 <p>Esc鍵 可中途取消當前的圖片下載。</p>
@@ -1153,7 +1152,6 @@ imgs: async () => {
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
 <p>組合鍵 Ctrl + Alt + T 頁面選取文字後，按此快捷鍵可以快速設定為腳本用的圖集標題，沒有選取文字也會彈出輸入框能手動輸入自訂標題。</p>
 <br>
-<p>按0、Enter，2步驟開始下載。</p>
 <p>按1，複製圖片網址，如果設置了insertImg為手動，按1、Enter是插入圖片，第二次按是複製圖片網址。</p>
 <p>按2，滾動至腳本插入的第一張大圖</p>
 <p>按3，一鍵下載，跳過自定義標題的步驟。</p>
@@ -1207,6 +1205,8 @@ imgs: async () => {
 <p>除了東方永頁機禁用規則外的完整東方永頁機黑名單，複製貼上即完事。
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
+<p>陽春簡易的圖片篩選下載功能。</p>
+<img src="https://i.imgur.com/fewZ1Ag.jpeg">
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
 <img src="https://i.imgur.com/vtwqkOX.jpeg">
@@ -1277,6 +1277,35 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
 </details>
 <h2>規則支持列表備註</h2>
 <p>如果有備註為SPA網頁，腳本如果沒有生效的話請重新載入頁面，或是先以新分頁的方式開啟鏈結。</p>
+<h2>一般圖片分類內置規則支持列表</h2>
+<details>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <strong>網站</strong>
+                </th>
+                <th>
+                    <strong>備註</strong>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="https://www.pexels.com/">免費圖庫相片</a>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</details>
 <h2>老司機分類內置規則支持列表</h2>
 <details>
     <summary>
@@ -4152,6 +4181,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.sexphotos.cc/">18成人貼圖</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://nick20.com/pic/index.html">尼克成人網</a>
                 </td>
                 <td></td>
@@ -4988,6 +5023,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.91jinman.com/">91禁漫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.comic18.cc/">COMIC18</a>
                 </td>
                 <td></td>
             </tr>
