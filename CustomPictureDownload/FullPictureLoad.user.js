@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.0
+// @version            2.11.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -70,6 +70,8 @@
         return;
     }
 
+    await delay(1000);
+
     const defaultOptions = {
         icon: 1, //是否顯示左下圖示，1：顯示、0：不顯示
         threading: 8, //最大下載線程數
@@ -103,6 +105,7 @@
     let globalImgArray = [];
     let captureSrcArray = [];
     let captureTotal = 0;
+    let isCaptureMode = false;
     let thumbnailSrcArray = [];
     let videoSrcArray = [];
     let promiseBlobArray = [];
@@ -429,7 +432,7 @@ a:has(>div>div>img),
         name: "JKF",
         host: ["www.jkforum.net"],
         reg: /^https?:\/\/www\.jkforum\.net\/(p\/)?thread/,
-        init: async () => await fn.waitEle("img[id^=aimg]"),
+        init: () => fn.waitEle("img[id^=aimg]"),
         imgs: () => hasTouchEvent ? fn.gae("img[id^=aimg]:not([style])") : fn.gae("img[id^=aimg][zoomfile]"),
         capture: () => _this.imgs(),
         customTitle: ".title-hd h1,.post-title",
@@ -468,7 +471,7 @@ a:has(>div>div>img),
             /^https?:\/\/hitxhot\.com\/blog\/\w+\.html(\?m=1)?$/i,
             /^https?:\/\/www\.dongojyousan\.com\/articles\/\w+\.html/i
         ],
-        init: async () => await fn.clearElementEvent(),
+        init: () => fn.clearElementEvent(),
         imgs: async () => {
             let max;
             try {
@@ -2119,7 +2122,7 @@ a:has(>div>div>img),
         name: "和邪社",
         host: ["www.hexieshe.cn", "hexieshe.cn"],
         reg: /^https?:\/\/(www\.)?hexieshe\.cn\/\d+\/$/i,
-        init: async () => await fn.getNP("#content-innerText>p", "span.current+a", null, ".post-links"),
+        init: () => fn.getNP("#content-innerText>p", "span.current+a", null, ".post-links"),
         imgs: "#content-innerText img",
         customTitle: () => fn.dt({
             s: ".entry-title",
@@ -2582,7 +2585,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/www\.cosersets\.com/,
         SPA: true,
         observerURL: true,
-        init: async () => await fn.waitEle(".z-breadcrumbs .z-breadcrumbs__item"),
+        init: () => fn.waitEle(".z-breadcrumbs .z-breadcrumbs__item"),
         imgs: async (msg = 1) => {
             if (msg === 1) fn.showMsg(displayLanguage.str_05, 0);
             let body = {
@@ -2614,7 +2617,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/www\.fantasyfactory\.xyz\//,
         SPA: true,
         observerURL: true,
-        init: async () => await fn.waitEle("#crumbbar"),
+        init: () => fn.waitEle("#crumbbar"),
         imgs: () => {
             let urls = fn.gau(".item.file>a");
             videoSrcArray = urls.filter(url => url.includes(".mp4"));
@@ -2671,7 +2674,7 @@ a:has(>div>div>img),
         host: ["nshens.com", "inewgirl.com", "lovens.shop"],
         reg: /^https?:\/\/((www\.)?nshens\.com|(www\.)?inewgirl\.com)\/(web\/)?\d+\/\d+\/\d+\/[^/]+$/,
         exclude: ".justify-center>button>.v-btn__content",
-        init: async () => await fn.waitEle("h3"),
+        init: () => fn.waitEle("h3"),
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let [max] = fn.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
@@ -2697,7 +2700,7 @@ a:has(>div>div>img),
         host: ["chottie.com", "chinesehottie.com"],
         reg: /^https?:\/\/((www\.)?chottie\.com|(www\.)?chinesehottie\.com)\/blog\/(\w{2}\/)?archives\/\d+$/,
         exclude: ".justify-center>button>.v-btn__content",
-        init: async () => await fn.waitEle("h3"),
+        init: () => fn.waitEle("h3"),
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let [max] = fn.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
@@ -5556,7 +5559,7 @@ a:has(>div>div>img),
         host: ["www.erocosplay.org"],
         reg: /^https?:\/\/www\.erocosplay\.org\/[^\/]+\/$/,
         include: "#reader",
-        init: async () => await fn.waitEle("#reader img"),
+        init: () => fn.waitEle("#reader img"),
         imgs: () => {
             let textCode = fn.gst("pages").match(/pages[\s=]+([^;]+)/)[1].replaceAll("\n", "");
             return fn.run(textCode);
@@ -6564,7 +6567,7 @@ a:has(>div>div>img),
         name: "復刻書林",
         host: ["reprint-kh.com"],
         reg: /^https?:\/\/reprint-kh\.com\/archives\/\d+$/,
-        init: async () => await fn.clearElementEvent(),
+        //init: async () => await fn.clearElementEvent(),
         imgs: async () => {
             if (fn.ge(".gallery-row")) {
                 await fn.getNP(".gallery-row", "//a[span[text()='次のページ']]");
@@ -7079,7 +7082,7 @@ a:has(>div>div>img),
             /^https?:\/\/heysexgirl\.com\/(page\/\d+)?$/,
             /^https?:\/\/heysexgirl\.com\/archives\/category\/\w+(\/page\/\d+)?$/
         ],
-        init: async () => await fn.waitEle(".blog-posts-wrapper[style]"),
+        init: () => fn.waitEle(".blog-posts-wrapper[style]"),
         autoPager: {
             mode: 1,
             waitEle: ".blog-posts-wrapper[style]",
@@ -7571,7 +7574,7 @@ a:has(>div>div>img),
     }, {
         name: "Nude Models",
         reg: () => !hasTouchEvent && fn.lh === "blognudemodels.blogspot.com",
-        init: async () => await fn.waitEle("#gadget-dock"),
+        init: () => fn.waitEle("#gadget-dock"),
         imgs: ".separator>a",
         capture: ".separator>a",
         SPA: () => document.URL.includes(".html"),
@@ -7581,7 +7584,7 @@ a:has(>div>div>img),
     }, {
         name: "Nude Models",
         reg: /^https?:\/\/blognudemodels\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html\?m=1$/,
-        init: async () => await fn.waitEle(".separator img"),
+        init: () => fn.waitEle(".separator img"),
         imgs: ".separator>a",
         button: [4],
         insertImg: [
@@ -8021,7 +8024,7 @@ a:has(>div>div>img),
         name: "Pics-X",
         host: ["pics-x.com"],
         reg: /^https?:\/\/pics-x\.com\/gallery\/\d+\//i,
-        init: async () => await fn.waitEle("#images-container img"),
+        init: () => fn.waitEle("#images-container img"),
         imgs: "#images-container img",
         button: [4],
         insertImg: ["#images-container", 2],
@@ -9446,7 +9449,7 @@ a:has(>div>div>img),
         name: "SMUTPOND",
         host: ["www.smutpond.com"],
         reg: /^https?:\/\/www\.smutpond\.com\/gallery-pics\/\?uid=/i,
-        init: async () => await delay(2000),
+        init: () => delay(2000),
         imgs: () => {
             thumbnailSrcArray = fn.gae(".viewerPreview img").slice(5).map(e => e.dataset.lazy ?? e.src);
             thumbnailSrcArray = [...new Set(thumbnailSrcArray)];
@@ -10534,6 +10537,7 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "18成人貼圖",
+        host: ["www.sexphotos.cc"],
         reg: /^https?:\/\/www\.sexphotos\.cc\/\w+\/\d+\.html$/,
         init: () => fn.waitEle(".article-body>img").then(e => fn.createImgBox(e, 1)),
         imgs: ".article-body>img",
@@ -11038,7 +11042,7 @@ a:has(>div>div>img),
             e: "#Comic_Top_Nav img[alt=logo][src$='_nico.png']",
             p: /^\/(moeupup-\d-\d+\.html|showinfo-\d+-\d+-\d\.html)$/
         },
-        init: async () => await fn.getNP(".row.thumb-overlay-albums img", ".pagination li.active+li>a:not(.prevnext)"),
+        init: () => fn.getNP(".row.thumb-overlay-albums img", ".pagination li.active+li>a:not(.prevnext)"),
         imgs: ".row.thumb-overlay-albums img",
         button: [4],
         insertImg: [".row.thumb-overlay-albums", 2],
@@ -11809,7 +11813,7 @@ a:has(>div>div>img),
     }, {
         name: "akuma.moe",
         reg: /^https?:\/\/akuma\.moe\/g\/\w+$/i,
-        init: async () => await fn.waitEle("#pages"),
+        init: () => fn.waitEle("#pages"),
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
             const {
@@ -12091,7 +12095,7 @@ a:has(>div>div>img),
         name: "HentaiZap圖片清單頁",
         host: ["hentaizap.com"],
         reg: /^https?:\/\/hentaizap\.com\/gallery\/\d+\/$/,
-        init: async () => await fn.wait((_, win) => !!ge(".gp_th img") && ("g_th" in win)),
+        init: () => fn.wait((_, win) => !!ge(".gp_th img") && ("g_th" in win)),
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let _token = fn.attr('meta[name="csrf-token"]', "content");
@@ -12126,7 +12130,7 @@ a:has(>div>div>img),
         name: "HentaiZap閱讀頁",
         host: ["hentaizap.com"],
         reg: /^https?:\/\/hentaizap\.com\/g\/\d+\/\d+\/$/,
-        init: async () => await fn.waitVar("g_th"),
+        init: () => fn.waitVar("g_th"),
         imgs: async () => {
             let max = fn.ge("#pages").value;
             let img = fn.ge("#fimg");
@@ -12466,7 +12470,7 @@ a:has(>div>div>img),
         name: "nhentai.to/nhentai.website閱讀頁",
         host: ["nhentai.to", "nhentai.website"],
         reg: /^https?:\/\/nhentai\.(to|website)\/g\/\d+\/\d+$/,
-        init: async () => await fn.waitVar("reader"),
+        init: () => fn.waitVar("reader"),
         imgs: () => {
             const {
                 reader
@@ -12901,7 +12905,7 @@ a:has(>div>div>img),
             h: ["hentaipaw.com", "ch.hentai-one.com"],
             p: "/articles/"
         },
-        init: async () => await fn.waitEle(["next-route-announcer", ".grid .group>img"]),
+        init: () => fn.waitEle(["next-route-announcer", ".grid .group>img"]),
         imgs: async () => {
             fn.createImgBox(".container:has(>.grid)");
             fn.showMsg("獲取數據中...", 0);
@@ -12984,7 +12988,7 @@ a:has(>div>div>img),
         host: ["doujins.com"],
         reg: /^https?:\/\/doujins\.com\/.+\/.+/i,
         include: "#thumbnails",
-        init: async () => await fn.waitEle(".doujin"),
+        init: () => fn.waitEle(".doujin"),
         imgs: () => {
             thumbnailSrcArray = fn.gae("div[data-hash]").map(e => "https://static.doujins.com/t-" + e.dataset.hash + ".jpg");
             return fn.gae(".doujin[data-file]").map(e => e.dataset.file);
@@ -13503,7 +13507,7 @@ a:has(>div>div>img),
         name: "Hachirumi.com",
         host: ["hachirumi.com"],
         reg: /^https?:\/\/hachirumi.com\/read\/manga\/[^\/]+\/.+/,
-        init: async () => await fn.waitVar("Reader"),
+        init: () => fn.waitVar("Reader"),
         imgs: () => {
             const chapters = Object.values(_unsafeWindow.Reader.current.chapters);
             return chapters.map(e => Object.values(e.images)[0]).flat().map(url => fn.lo + url);
@@ -13889,7 +13893,7 @@ a:has(>div>div>img),
         reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
         SPA: () => document.URL.includes("/comics/"),
         observerURL: true,
-        init: async () => await fn.waitEle("footer[class]"),
+        init: () => fn.waitEle("footer[class]"),
         imgs: ".bg-slate-100 img,.shadow-md img",
         customTitle: "h1",
         category: "hcomic"
@@ -15477,11 +15481,11 @@ a:has(>div>div>img),
         url: {
             h: "mangadex.org",
             e: "link[title=MangaDex]",
-            d: "m"
+            d: "pc"
         },
         SPA: () => new URL(document.URL).pathname.startsWith("/chapter/"),
         observerURL: true,
-        init: async () => await fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
+        init: () => fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
         imgs: () => {
             if (_this.SPA()) {
                 fn.showMsg(displayLanguage.str_05, 0);
@@ -15721,7 +15725,7 @@ a:has(>div>div>img),
         name: "MangaPark",
         host: ["mangapark.net"],
         reg: /^https?:\/\/mangapark\.net\/title\//,
-        init: async () => fn.waitEle(["[data-name='image-item'] img", "//script[contains(text(),'pageName') and contains(text(),'image_server')]"]),
+        init: () => fn.waitEle(["[data-name='image-item'] img", "//script[contains(text(),'pageName') and contains(text(),'image_server')]"]),
         imgs: () => JSON.parse(fn.gst("image_server")).objs.filter(e => {
             try {
                 return e.startsWith("http") && /\.(jpe?g|png|webp|gif)$/i.test(e) && !e.includes("/thumb/") && !e.includes("/media/mpim/");
@@ -27384,20 +27388,19 @@ if (l10n !== "EN") {
             const newWindowScriptCode = `
 if (lightGallery == 1) {
     var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
+        viewed: event => {
+            let slideIndex = event.detail.index;
+            let imgs = [...document.images];
+            imgViewIndex = slideIndex;
+            let img = event.detail.originalImage;
+            currentReferenceElement = img;
+            if (config.ViewMode != 4) {
+                imgs.forEach(e => (e.style.border = ""));
+                img.style.border = "solid #32a1ce";
+            }
+            smoothScrollIntoView(img);
+        },
         url: "data-src"
-    });
-
-    document.addEventListener("viewed", event => {
-        let slideIndex = event.detail.index;
-        let imgs = [...document.images];
-        imgViewIndex = slideIndex;
-        let img = imgs[imgViewIndex];
-        currentReferenceElement = img;
-        if (config.ViewMode != 4) {
-            imgs.forEach(e => (e.style.border = ""));
-            img.style.border = "solid #32a1ce";
-        }
-        smoothScrollIntoView(img);
     });
 }
 
@@ -27936,6 +27939,9 @@ if (config.ViewMode == 1) {
             fn.remove("#overflowYHidden");
             FullPictureLoadShadowGallery?.remove();
             isOpenGallery = false;
+            if (isCaptureMode && ge("#FullPictureLoadCaptureNum")?.innerText == 0) {
+                ge("#FullPictureLoadCaptureNum").innerText = srcs.length;
+            }
             if ("focus" in siteData) {
                 let selector = siteData.focus;
                 let ele;
@@ -28861,6 +28867,9 @@ img.small {
             fn.remove("#overflowYHidden");
             iframe.remove();
             isOpenGallery = false;
+            if (isCaptureMode && ge("#FullPictureLoadCaptureNum")?.innerText == 0) {
+                ge("#FullPictureLoadCaptureNum").innerText = srcs.length;
+            }
             if ("focus" in siteData) {
                 let selector = siteData.focus;
                 let ele;
@@ -29941,6 +29950,7 @@ input.check {
             Viewer = _unsafeWindow.Viewer;
             ViewerJsInstance = new Viewer(imageList, {
                 navbar: false,
+                viewed: (event) => instantScrollIntoView(event.detail.originalImage),
                 url: "data-src"
             });
         }
@@ -30861,7 +30871,7 @@ input.check {
 }
 
 .viewer-backdrop {
-    background-color: rgba(0, 0, 0, .98) !important;
+    background-color: rgba(0, 0, 0, .96) !important;
 }
 
 .FullPictureLoadImageReturnTop {
@@ -32350,11 +32360,13 @@ a[data-fancybox]:hover {
         if (isFn(siteData.capture) && siteData.category != "lazyLoad" || isString(siteData.capture) && siteData.category != "lazyLoad" || isString(siteData.imgs) && siteData.category != "lazyLoad") {
             if (FullPictureLoadShowEye == 1 && siteData.eye != 0) {
                 await delay(1000);
+                isCaptureMode = true;
                 addNewTabViewButton();
                 captureSrc();
             }
         }
         if (siteData.category === "lazyLoad" && siteData.eye != 0) {
+            isCaptureMode = true;
             addNewTabViewButton();
             fn.addMutationObserver(captureSrc, document.body, {
                 childList: true,
