@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.1
+// @version            2.11.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2314,7 +2314,7 @@ a:has(>div>div>img),
         customTitle: "h1.post-title",
         category: "nsfw2"
     }, {
-        name: "PixiBB 新分頁開啟鏈結",
+        name: "PixiBB 新分頁開啟連結",
         host: ["www.pixibb.com"],
         reg: [
             /^https?:\/\/www\.pixibb\.com\/$/,
@@ -6792,6 +6792,77 @@ a:has(>div>div>img),
     }, {
         name: "Kemono/Coomer",
         host: ["kemono.su", "coomer.su"],
+        url: {
+            h: ["kemono.su", "coomer.su"],
+            p: "/user/",
+            e: ["span[itemprop=name]", ".site-section", ".card-list"]
+        },
+        fn: () => {
+            let url = location.href.replace(location.search, "");
+            console.log(url); //列出發表者網址
+            let small = fn.gt(".paginator small");
+            console.log(small); //列出頁數詳情
+            let postsTotal = small.match(/\d+/g).at(-1);
+            console.log(postsTotal); //列出文章總數
+            let pagesTotal = Math.ceil(Number(postsTotal) / 50);
+            console.log(pagesTotal); //列出文章總頁數
+            let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? url : url + `?o=${i * 50}`);
+            console.log(pageLinks); //列出所有文章分頁連結
+            fn.getEle(pageLinks, ".card-list__items a", null, null, 0).then(eles => {
+                let postLinks = eles.map(a => a.href);
+                console.log(postLinks); //列出所有文章連結
+                fn.getEle(postLinks, "a.fileThumb,video>source", null, null, 0).then(files => {
+                    console.log(files); //列出所有檔案元素
+                    let thums = [];
+                    let images = [];
+                    let videos = [];
+                    files.forEach(e => {
+                        if (e.tagName === "A") {
+                            let img = fn.ge("img", e);
+                            let src = img.dataset.src ?? img.src;
+                            thums.push(src);
+                            images.push(e.href);
+                        } else if (e.tagName === "SOURCE") {
+                            videos.push(e.src);
+                        }
+                    });
+                    console.log(thums); //列出所有預覽縮圖連結
+                    console.log(images); //列出所有圖片連結
+                    console.log(videos); //列出所有影片連結
+                    thumbnailSrcArray = thums;
+                    globalImgArray = images;
+                    videoSrcArray = videos;
+                });
+            });
+        },
+        init: () => fn.createImgBox(".site-section", 2),
+        imgs: () => {
+            let links = fn.gau(".card-list__items a");
+            return fn.getEle(links, "a.fileThumb,video>source").then(eles => {
+                let images = [];
+                eles.forEach(e => {
+                    if (e.tagName === "A") {
+                        let img = fn.ge("img", e);
+                        let src = img.dataset.src ?? img.src;
+                        thumbnailSrcArray.push(src);
+                        images.push(e.href);
+                    } else if (e.tagName === "SOURCE") {
+                        videoSrcArray.push(e.src);
+                    }
+                });
+                return images;
+            });
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: "span[itemprop=name]",
+        downloadVideo: true,
+        fetch: 1,
+        category: "nsfw2"
+    }, {
+        name: "Kemono/Coomer",
+        host: ["kemono.su", "coomer.su"],
         link: "https://kemono.su/fantia/user/17148/post/1633768",
         reg: /^https?:\/\/(kemono\.su|coomer\.su)\/.+\/post/,
         delay: 1000,
@@ -6799,13 +6870,7 @@ a:has(>div>div>img),
         init: () => fn.createImgBox(".post__body", 2),
         imgs: () => {
             videoSrcArray = fn.gae("video>source").map(e => e.src);
-            thumbnailSrcArray = fn.gae("a.fileThumb.image-link>img").map(e => {
-                if (e.dataset.src) {
-                    return /^\/\//.test(e.dataset.src) ? location.protocol + e.dataset.src : e.dataset.src;
-                } else {
-                    return e.src;
-                }
-            });
+            thumbnailSrcArray = fn.gae("a.fileThumb.image-link>img").map(e => e.dataset.src ?? e.src);
             return fn.gae("a.fileThumb.image-link");
         },
         button: [4],
@@ -16126,7 +16191,7 @@ a:has(>div>div>img),
         },
         category: "comic"
     }, {
-        name: "嗨皮漫畫，鏈接新分頁打開",
+        name: "嗨皮漫畫，連結新分頁開啟",
         reg: /^https?:\/\/m\.happymh\.com\//,
         enable: 0,
         icon: 0,
@@ -16151,7 +16216,7 @@ a:has(>div>div>img),
         css: ".mh_wrap{width:100%!important;min-width:100%!important}",
         category: "comic"
     }, {
-        name: "COLAMANHUA 目錄鏈結新分頁開啟",
+        name: "COLAMANHUA 目錄連結新分頁開啟",
         reg: /^https?:\/\/www\.colamanga\.com\/manga-\w+\/$/,
         openInNewTab: ".all_data_list a:not([target=_blank])",
         category: "none"
@@ -17103,7 +17168,7 @@ if ("xx" in window) {
             },
             stop: async (dom) => {
                 if (!fn.ge("//script[contains(text(),'page_url')]", dom)) {
-                    let yes = await confirm(`Full Picture Load\n可能遇到 "请登录后观看！" 的情況。\n下一頁鏈結：\n${nextLink}\n是否前往下一頁？`);
+                    let yes = await confirm(`Full Picture Load\n可能遇到 "请登录后观看！" 的情況。\n下一頁連結：\n${nextLink}\n是否前往下一頁？`);
                     if (yes) {
                         setTimeout(() => {
                             location.href = nextLink;
@@ -17433,7 +17498,7 @@ if ("xx" in window) {
         autoClick: ["#button_show_all_chatper", 1000],
         category: "comic"
     }, {
-        name: "包子漫画，鏈接新分頁打開",
+        name: "包子漫画，連結新分頁開啟",
         icon: 0,
         key: 0,
         url: {
@@ -21886,9 +21951,9 @@ if ("xx" in window) {
                 str_07: "確認登錄狀態中...",
                 str_08: "獲取預覽圖中...",
                 str_09: "獲取最後一張圖...",
-                str_10: "是否複製鏈接至剪貼簿？",
-                str_11: "已複製鏈接至剪貼簿",
-                str_12: "只有複製鏈接功能",
+                str_10: "是否複製連結至剪貼簿？",
+                str_11: "已複製連結至剪貼簿",
+                str_12: "只有複製連結功能",
                 str_13: "請輸入圖片抓取最大次數",
                 str_14: "獲取下一頁中...",
                 str_15: "獲取下一頁結束",
@@ -21996,7 +22061,7 @@ if ("xx" in window) {
                 str_111: "惰性載入大圖",
                 str_112: "惰性載入單欄布局",
                 str_113: "惰性載入預讀大圖",
-                str_114: "E/EX-HENTAI 載入原始圖片鏈結",
+                str_114: "E/EX-HENTAI 載入原始圖片連結",
                 str_115: "關閉自動滾動至首張圖片",
                 str_116: "自動滾動所有惰性載入的圖片元素",
                 str_117: "顯示浮動選單",
@@ -22010,7 +22075,7 @@ if ("xx" in window) {
                 str_125: "🧹 重置此網站儲存的所有腳本設定",
                 str_126: "🧹 重置腳本儲存的所有全局設定",
                 str_127: "右鍵：匯出圖址(7)",
-                str_128: hasTouchEvent ? "打開收藏" : "打開收藏(9)",
+                str_128: hasTouchEvent ? "開啟收藏" : "開啟收藏(9)",
                 str_129: "關閉收藏",
                 str_130: "編輯收藏",
                 str_131: "保存",
@@ -22041,6 +22106,7 @@ if ("xx" in window) {
                 str_156: "重新載入",
                 str_157: "下載",
                 str_158: hasTouchEvent ? "篩選下載" : "篩選下載(F)",
+                str_159: hasTouchEvent ? "自訂函式" : "自訂函式(6)",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22189,7 +22255,7 @@ if ("xx" in window) {
                 str_111: "懒加载大图",
                 str_112: "懒加载单栏布局",
                 str_113: "懒加载预读大图",
-                str_114: "E/EX-HENTAI 加载原始图片链结",
+                str_114: "E/EX-HENTAI 加载原始图片链接",
                 str_115: "关闭自动滚动至首张图片",
                 str_116: "自动滚动所有懒加载的图片元素",
                 str_117: "显示浮动菜单",
@@ -22234,6 +22300,7 @@ if ("xx" in window) {
                 str_156: "重新加载",
                 str_157: "下载",
                 str_158: hasTouchEvent ? "筛选下载" : "筛选下载(F)",
+                str_159: hasTouchEvent ? "定义函式" : "定义函式(6)",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22426,6 +22493,7 @@ if ("xx" in window) {
                 str_156: "Reload",
                 str_157: "Download",
                 str_158: hasTouchEvent ? "Filter Download" : "Filter Download(F)",
+                str_159: hasTouchEvent ? "Function" : "Function(6)",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -22665,14 +22733,14 @@ if ("xx" in window) {
         },
         //重新發送請求
         retryUrl: async (url, res, func, retryCount = 10) => {
-            debug(`\n${fn}連線錯誤碼：${res.status}\n`, url);
+            debug(`\n${func}連線錯誤碼：${res.status}\n`, url);
             let retryNum = 1;
             let obj = {
                 fn: func,
                 url: url,
                 status: res.status
             };
-            debug(`\n${fn}連線錯誤碼：${res.status}重試第${retryNum}次\n`, url);
+            debug(`\n${func}連線錯誤碼：${res.status}重試第${retryNum}次\n`, url);
             let retry = await new Promise(async resolve => {
                 for (let check = 1; check <= retryCount; check++) {
                     let checkRes = await fetch(url);
@@ -22884,7 +22952,7 @@ if ("xx" in window) {
             fn.fetchErrorMsg();
             return imgsArray;
         },
-        //從指定的所有鏈接取得圖片網址，有並行請求、單線程、翻頁模式，返回圖片網址。
+        //從指定的所有連結取得圖片網址，有並行請求、單線程、翻頁模式，返回圖片網址。
         getImgA: async (elementSelector, link, mode = 0, rText = null, showMsg = 1, request = 0) => {
             if (fn.ge(".FullPictureLoadImage") && request == 0) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
@@ -22984,7 +23052,7 @@ if ("xx" in window) {
             fn.fetchErrorMsg();
             return imgsArray;
         },
-        //跨域從指定的所有鏈接取得圖片網址，並行請求有請求間隔參數，返回圖片網址。
+        //跨域從指定的所有連結取得圖片網址，並行請求有請求間隔參數，返回圖片網址。
         getImgCorsA: (imgSelector, aSelector, time = 100) => {
             isFetching = true;
             fn.showMsg(displayLanguage.str_01, 0);
@@ -23367,7 +23435,7 @@ if ("xx" in window) {
                 return;
             }
         },
-        //傳入免費圖片空間的鏈結陣列，提取圖片網址
+        //傳入免費圖片空間的連結陣列，提取圖片網址
         getImageHost: async (links = captureLinksArray) => {
             let imgsSrcArr = [];
             if (links.length > 0) {
@@ -23449,7 +23517,7 @@ if ("xx" in window) {
                     return;
                 }
             } catch (error) {
-                console.error("\n取得下一頁鏈結出錯\n", error);
+                console.error("\n取得下一頁連結出錯\n", error);
                 fn.removeLoading();
                 if (isString(hide)) {
                     let eles = fn.gae(hide);
@@ -23864,7 +23932,7 @@ if ("xx" in window) {
                 }
             });
         }),
-        //無限滾動取得下一頁鏈結函式
+        //無限滾動取得下一頁連結函式
         getNextLink: async (dom) => {
             let nextSelector = siteData.autoPager.next;
             if (isFn(nextSelector)) {
@@ -23951,9 +24019,9 @@ if ("xx" in window) {
             history.pushState(null, title, url);
             document.title = title;
         },
-        //修改A元素以新分頁的方式開啟鏈結
+        //修改A元素以新分頁的方式開啟連結
         openInNewTab: selector => fn.gae(selector).forEach(a => a.setAttribute("target", "_blank")),
-        //傳入鏈結陣列使用iframe框架加載取得元素插入到當前頁面指定的位置或返回元素
+        //傳入連結陣列使用iframe框架加載取得元素插入到當前頁面指定的位置或返回元素
         getEleF: async (links, elements, targetEle = null) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
@@ -23990,7 +24058,7 @@ if ("xx" in window) {
             fn.hideMsg();
             return Promise.all(resArr).then(arr => arr.flat());
         },
-        //傳入鏈結陣列並行請求取得元素插入到當前頁面指定的位置或返回元素
+        //傳入連結陣列並行請求取得元素插入到當前頁面指定的位置或返回元素
         getEle: async (links, elements, targetEle = null, removeEles = null, time = 100) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
@@ -24002,14 +24070,24 @@ if ("xx" in window) {
                 links = fn.gau(links);
             }
             for (let i = 0; i < links.length; i++) {
-                let res = fn.fetchDoc(links[i]).then(dom => {
-                    debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
-                    fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
-                    //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
-                    return fn.gae(elements, dom, dom);
-                });
+                let res;
+                if (time === 0) {
+                    res = await fn.fetchDoc(links[i]).then(dom => {
+                        debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
+                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
+                        return fn.gae(elements, dom, dom);
+                    });
+                } else {
+                    res = fn.fetchDoc(links[i]).then(dom => {
+                        debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
+                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
+                        return fn.gae(elements, dom, dom);
+                    });
+                }
                 resArr.push(res);
-                await delay(time);
+                if (time !== 0 && isNumber(time)) await delay(time);
             }
             return Promise.all(resArr).then(arr => arr.flat()).then(eles => {
                 isFetching = false;
@@ -24036,7 +24114,7 @@ if ("xx" in window) {
                 fn.fetchErrorMsg();
             });
         },
-        //跨域，傳入鏈結陣列並行請求取得元素插入到指定的位置
+        //跨域，傳入連結陣列並行請求取得元素插入到指定的位置
         getCorsEle: async (links, elements, targetEle = null, removeEles = null, time = 100) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
@@ -24048,14 +24126,24 @@ if ("xx" in window) {
                 links = fn.gau(links);
             }
             for (let i = 0; i < links.length; i++) {
-                let res = fn.xhrDoc(links[i]).then(dom => {
-                    debug(`\nfn.getCorsEle() URL`, decodeURIComponent(links[i]));
-                    fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
-                    //debug(`fn.getCorsEle()\n${decodeURIComponent(links[i])}\n`, dom);
-                    return fn.gae(elements, dom, dom);
-                });
+                let res;
+                if (time === 0) {
+                    res = await fn.xhrDoc(links[i]).then(dom => {
+                        debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
+                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
+                        return fn.gae(elements, dom, dom);
+                    });
+                } else {
+                    res = fn.xhrDoc(links[i]).then(dom => {
+                        debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
+                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
+                        return fn.gae(elements, dom, dom);
+                    });
+                }
                 resArr.push(res);
-                await delay(time);
+                if (time !== 0 && isNumber(time)) await delay(time);
             }
             return Promise.all(resArr).then(arr => arr.flat()).then(eles => {
                 isFetching = false;
@@ -25213,7 +25301,7 @@ if ("xx" in window) {
             });
         },
         //用Fetc API，返回經過文字編碼的document物件
-        fetchDoc: (url, details = {}, retry = 10) => {
+        fetchDoc: (url, details = {}, retry = 40) => {
             if ("xhrOptions" in siteData) {
                 details = siteData.xhrOptions
             }
@@ -29752,18 +29840,18 @@ html,body {
     background-color: rgb(240, 240, 240);
     overflow: hidden auto;
 }
-div.row {
+.row {
     display: block;
     margin: 5px;
     padding: 0 0 0 5px;
     border: #000 1px solid;
     border-radius: 5px;
 }
-#title.item {
+#title {
     display: block;
     margin: 4px auto 0 auto;
 }
-#buttons.item {
+#buttons {
     display: block;
     margin: 0 auto 4px auto;
 }
@@ -29771,7 +29859,7 @@ div.row {
 #close {
     width: 48px;
 }
-#close {
+.close {
     margin: 0 5px;
 }
 #inputTitle {
@@ -29886,12 +29974,12 @@ input.check {
 
         main.innerHTML = `
 <div class="row">
-    <div id="title" class="item">
+    <div id="title">
         <label id="label-title">${displayLanguage.str_153}</label>
         <input type="text" id="inputTitle">
-        <button id="close">${displayLanguage.str_132}</button>
+        <button id="close" class="close">${displayLanguage.str_132}</button>
     </div>
-    <div id="buttons" class="item">
+    <div id="buttons">
         <button id="settings">${displayLanguage.str_85.replace(/\(.\)/, "")}</button>
         <button id="gallery">${displayLanguage.str_106.replace(/\(.\)/, "")}</button>
         <button id="favor">${displayLanguage.str_128.replace(/\(.\)/, "")}</button>
@@ -29906,42 +29994,64 @@ input.check {
 <div id="imgBox" class="row">
     <ul id="image-list"></ul>
 </div>
+<div class="row">
+    <div id="buttons">
+        <button id="settings">${displayLanguage.str_85.replace(/\(.\)/, "")}</button>
+        <button id="gallery">${displayLanguage.str_106.replace(/\(.\)/, "")}</button>
+        <button id="favor">${displayLanguage.str_128.replace(/\(.\)/, "")}</button>
+        <button id="copy">${displayLanguage.str_105.replace(/\(.\)/, "")}</button>
+        <button id="export">${displayLanguage.str_104.replace(/\(.\)/, "")}</button>
+        <button id="select-all">${displayLanguage.str_154}</button>
+        <button id="unselect-all">${displayLanguage.str_155}</button>
+        <button id="reload">${displayLanguage.str_156}</button>
+        <button id="download">${displayLanguage.str_157}</button>
+        <button id="close">${displayLanguage.str_132}</button>
+    </div>
+</div>
         `;
         let titleReplace = fn.dt({
             s: "title"
         });
         ge("#inputTitle", main).value = (customTitle || titleReplace);
-        ge("#close", main).addEventListener("click", () => {
-            fn.remove("#overflowYHidden");
-            shadowElement.remove();
-            isOpenFilter = false;
-        });
-        ge("#settings", main).addEventListener("click", () => createPictureLoadOptionsShadowElement());
-        ge("#gallery", main).addEventListener("click", () => newTabView());
-        ge("#favor", main).addEventListener("click", () => createFavorShadowElement());
-        ge("#copy", main).addEventListener("click", () => copyImgSrcTextB());
-        ge("#export", main).addEventListener("click", () => exportImgSrcText());
-        ge("#select-all", main).addEventListener("click", () => {
-            gae("input.check", main).forEach(input => {
-                input.checked = true;
-                input.classList.add("select");
+        gae("#close", main).forEach(button => {
+            button.addEventListener("click", () => {
+                fn.remove("#overflowYHidden");
+                shadowElement.remove();
+                isOpenFilter = false;
             });
         });
-        ge("#unselect-all", main).addEventListener("click", () => {
-            gae("input.check", main).forEach(input => {
-                input.checked = false;
-                input.classList.remove("select");
+        gae("#settings", main).forEach(button => button.addEventListener("click", () => createPictureLoadOptionsShadowElement()));
+        gae("#gallery", main).forEach(button => button.addEventListener("click", () => newTabView()));
+        gae("#favor", main).forEach(button => button.addEventListener("click", () => createFavorShadowElement()));
+        gae("#copy", main).forEach(button => button.addEventListener("click", () => copyImgSrcTextB()));
+        gae("#export", main).forEach(button => button.addEventListener("click", () => exportImgSrcText()));
+        gae("#select-all", main).forEach(button => {
+            button.addEventListener("click", () => {
+                gae("input.check", main).forEach(input => {
+                    input.checked = true;
+                    input.classList.add("select");
+                });
             });
         });
-        ge("#reload", main).addEventListener("click", () => addLis());
-        ge("#download", main).addEventListener("click", () => {
-            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
-            if (srcs.length == 0) return;
-            const text = ge("#inputTitle", main).value;
-            fn.remove("#overflowYHidden");
-            shadowElement.remove();
-            isOpenFilter = false;
-            DownloadFn(srcs, text);
+        gae("#unselect-all", main).forEach(button => {
+            button.addEventListener("click", () => {
+                gae("input.check", main).forEach(input => {
+                    input.checked = false;
+                    input.classList.remove("select");
+                });
+            });
+        });
+        gae("#reload", main).forEach(button => button.addEventListener("click", () => addLis()));
+        gae("#download", main).forEach(button => {
+            button.addEventListener("click", () => {
+                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+                if (srcs.length == 0) return;
+                const text = ge("#inputTitle", main).value;
+                fn.remove("#overflowYHidden");
+                shadowElement.remove();
+                isOpenFilter = false;
+                DownloadFn(srcs, text);
+            });
         });
         const imageList = ge("#image-list", main);
         let Viewer;
@@ -30272,6 +30382,14 @@ input.check {
                 copyImgSrcTextB();
             }
         }, {
+            name: "fn",
+            text: displayLanguage.str_159,
+            show: 0,
+            cfn: event => {
+                event.preventDefault();
+                siteData.fn();
+            }
+        }, {
             name: "zoom",
             text: displayLanguage.str_88,
             show: 0,
@@ -30315,7 +30433,7 @@ input.check {
             show: 1
         }];
         const createMenu = obj => {
-            if (!siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) || "newTabView" === obj.name && siteData.eye === 0) return;
+            if (!("fn" in siteData) && obj.name === "fn" || !siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) || "newTabView" === obj.name && siteData.eye === 0) return;
             let item = document.createElement("div");
             item.innerText = obj.text;
             if (obj.show === 0) item.classList.add("itemNoShow");
@@ -31066,6 +31184,14 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     padding: 0 !important;
     margin: 0 auto !important;
     display: block !important;
+    color: unset !important;
+    --local-colour1-primary: unset !important;
+    --local-colour1-secondary: unset !important;
+    --local-colour2-primary: unset !important;
+    --local-colour2-secondary: unset !important;
+    transition-property: unset !important;
+    transition-duration: unset !important;
+    transition-duration: unset !important;
 }
 
 #FullPictureLoadEnd {
@@ -31300,7 +31426,7 @@ a[data-fancybox]:hover {
     let setYinawSinaOriginalURL = _GM_getValue("setYinawSinaOriginalURL", 0);
 
     if (/^https?:\/\/yinaw\.com\/\d+\.html$/.test(fn.url)) {
-        _GM_registerMenuCommand(setYinawSinaOriginalURL == 0 ? "❌ 壹纳网使用原始新浪图床链结" : "✔️ 壹纳网使用原始新浪图床链结", () => {
+        _GM_registerMenuCommand(setYinawSinaOriginalURL == 0 ? "❌ 壹纳网使用原始新浪图床链接" : "✔️ 壹纳网使用原始新浪图床链接", () => {
             setYinawSinaOriginalURL == 0 ? _GM_setValue("setYinawSinaOriginalURL", 1) : _GM_setValue("setYinawSinaOriginalURL", 0);
             location.reload();
         });
@@ -31500,7 +31626,13 @@ a[data-fancybox]:hover {
         }
         if (event.code === "Numpad4" || event.key === "4") return goToImg("last"); //數字鍵4
         if (event.code === "Numpad5" || event.key === "5") return toggleImgMode(); //數字鍵5
-        if (event.code === "Numpad6" || event.key === "6") return autoScrollEles(); //數字鍵6
+        if (event.code === "Numpad6" || event.key === "6") { //數字鍵6
+            if ("fn" in siteData && isFn(siteData.fn)) {
+                return siteData.fn();
+            } else {
+                return autoScrollEles();
+            }
+        }
         if (event.code === "Numpad7" || event.key === "7") return exportImgSrcText(); //數字鍵7
         if (event.code === "Numpad8" || event.key === "8") return newTabView(); //數字鍵8
         if (event.code === "Numpad9" || event.key === "9") return createFavorShadowElement(); //數字鍵9
@@ -31658,8 +31790,8 @@ a[data-fancybox]:hover {
                     showOptions = true;
                     comicSwitch = true;
                 }
-                const delay = data.delay;
-                if (isNumber(delay)) await delay(delay);
+                const delayTime = data.delay;
+                if (isNumber(delayTime)) await delay(delayTime);
                 checkOptionsData();
                 if (data.enable == 0) {
                     //checkOptionsData();
