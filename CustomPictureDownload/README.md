@@ -59,7 +59,7 @@ https://*wnacg.com/photos-slide-aid-*.html
 https://*wnacg.com/photos-slist-aid-*.html
 </pre>
 <h1>簡介：</h1>
-<p>寫這個腳本的緣由是，想讓下載、複製鏈結不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
+<p>寫這個腳本的緣由是，想讓下載、複製連結不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
 <p>聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支持自定義規則方便重複使用，後續擴充規則更容易。</p>
 <p>用戶寫的規則請自行另外備份，規則只會寫死在腳本裡不會線上規則化，腳本更新就會覆蓋規則。</p>
 <p>如有需要支持的站點可反饋，有空的話會嘗試幫寫規則加進腳本內置的規則庫裡，能力有限不保証一定寫的出來。</p>
@@ -131,6 +131,10 @@ https://*wnacg.com/photos-slist-aid-*.html
     //頁面不適合直接修改插入腳本用的圖片，在頁面右下創建一個浮動可拖動的捕獲之眼，這樣行動裝置才能使用到分頁畫廊。
     capture:  "selector",
     capture: () => _this.imgs(),
+    fn: () => { //手動調用自訂函式, 綁定快捷鍵數字鍵6，浮動選單增加自訂函式選單項
+        …code;
+    },
+    //scrollEle當規則有fn屬性時無法調用
     scrollEle: ["元素", time], //[自動滾動元素, 滾動的間隔], 綁定快捷鍵數字鍵6
     scrollEle: async () => {
         …code;
@@ -221,6 +225,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     thums: "",
     capture:  "",
     capture: () => _this.imgs(),
+    fn: () =>,
     scrollEle: ["", 500],
     scrollEle: async () => {
         …code;
@@ -829,7 +834,7 @@ let obj = {
     key: "str" //搜索的關鍵字串或正規表達式
 };
 fn.getCode("url", obj);
-//例子1，同網域的鏈結找含有"Image_List"的script
+//例子1，同網域的連結找含有"Image_List"的script
 fn.getCode("url", {
     mode: "dom",
     key: "Image_List"
@@ -841,7 +846,7 @@ fn.getCode("https://code.jquery.com/jquery-3.7.1.min.js", {
 </pre>
 <pre>
 //使用Promise封裝GM_xmlhttpRequest
-//只取得回應標頭，不接收完整資料，快速確認鏈結的存活狀態。
+//只取得回應標頭，不接收完整資料，快速確認連結的存活狀態。
 fn.xhrHEAD("url");
 let status = await fn.xhrHEAD("url").then(res => res.status);
 let res = await fn.xhrHEAD("url");
@@ -855,7 +860,7 @@ fn.xhrHEAD(String);
 </pre>
 <pre>
 //使用Promise封裝GM_xmlhttpRequest
-//傳入鏈結陣列抓取免空圖床的圖片，返回圖片網址的陣列
+//傳入連結陣列抓取免空圖床的圖片，返回圖片網址的陣列
 //imx.to、imagebam、postimg...等等
 fn.getImageHost([links]);
 fn.getImageHost(Array);
@@ -969,7 +974,8 @@ fn.iframe(String, Object);
 //targetEle = null，返回元素陣列
 //"targetEle"目標元素選擇器清空此元素放入allEle
 //["targetEle", pos] targetEle目標元素選擇器，pos放在此元素的位置，0裡面1之前2之後
-//time請求發送的間隔毫秒
+//removeEle完成所有請求後要移除頁面元素的選擇器
+//time請求發送的間隔毫秒，設置為0則單線程請求
 await fn.getEle([links], "selector", targetEle = null, removeEle = null, time = 100);
 fn.getEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
 //跨域
@@ -1046,7 +1052,7 @@ fn.getImg("元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖
 fn.getImg("selector", max, mode = 1, rText = [null, null], time = 100);
 fn.getImg(String, Number, Number, Array [String or RegExp, String] or null, Number);
 
-//獨立出來的可調用函式，返回修改後的鏈結
+//獨立出來的可調用函式，返回修改後的連結
 fn.getModeUrl("url", mode, num);
 </pre>
 <pre>
@@ -1070,7 +1076,7 @@ fn.getImgIframe(String, Number, Number, String or  null, Number, Number)
 //1單線程，選擇器是字串會把當前頁面的A元素替換成IMG
 //2單線程，類翻頁模式
 //數字大於等於100，請求間隔模式單位毫秒。
-//A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http鏈接。
+//A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http連結。
 //A元素參數可以傳入自己創建的網址陣列
 //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fn.getImgA("元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
@@ -1135,18 +1141,18 @@ imgs: async () => {
 <p>數字鍵 3 一鍵下載</p>
 <p>數字鍵 4 滾動至最後一張大圖</p>
 <p>數字鍵 5 切換圖片顯示模式，原始模式和並排模式</p>
-<p>數字鍵 6 有自動滾動元素規則時調用</p>
+<p>數字鍵 6 有自訂函式或自動滾動元素規則時調用</p>
 <p>數字鍵 7 匯出網址MediaURLs.txt文件</p>
 <p>數字鍵 8 開啟新空白頁載入圖集圖片</p>
-<p>數字鍵 9 打開自訂網站收藏集</p>
+<p>數字鍵 9 開啟自訂網站收藏集</p>
 <p>數字鍵 - 減鍵圖片以10%為單位比例縮小，會記憶縮放比例</p>
 <p>數字鍵 + 加鍵圖片以10%為單位比例放大，會記憶縮放比例</p>
 <p>數字鍵 . 點鍵取消縮放恢復為自動</p>
 <p>數字鍵 * 乘鍵顯示選項設定。</p>
 <p>數字鍵 / 除鍵初始化當前網站的設定。</p>
-<p>F鍵 打開篩選下載UI。</p>
-<p>G鍵 打開Shadow DOM畫廊，Fancybox5與網站燈箱插件衝突時調用Iframe畫廊。</p>
-<p>I鍵 打開Iframe畫廊。</p>
+<p>F鍵 開啟篩選下載UI。</p>
+<p>G鍵 開啟Shadow DOM畫廊，Fancybox5與網站燈箱插件衝突時調用Iframe畫廊。</p>
+<p>I鍵 開啟Iframe畫廊。</p>
 <p>Esc鍵 可中途取消當前的圖片下載。</p>
 <p>Delete鍵 並排模式下當為漫畫分類和並排數為2的H漫分類，用於切換隱藏顯示第一張圖片，當沒有剛好並成雙頁跨頁大圖時使用。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
@@ -1186,7 +1192,7 @@ imgs: async () => {
 <p>Enter鍵 用於取消所有用Delete鍵隱藏的圖片。</p>
 <p>畫廊為條漫模式時，上下方向鍵為預設行為，不會滾動圖片。</p>
 <p>畫廊為條漫模式時+、-鍵和修飾鍵Ctrl、Alt、ShiftKey + 滾輪 可增加減少圖片的寬度。</p>
-<p>PS：當瀏覽器封鎖彈出型視窗或uBlock Origin為了阻擋點擊鏈結觸發廣告把window.open修改成Proxy時，將無法使用分頁畫廊功能。</p>
+<p>PS：當瀏覽器封鎖彈出型視窗或uBlock Origin為了阻擋點擊連結觸發廣告把window.open修改成Proxy時，將無法使用分頁畫廊功能。</p>
 <h3>5.影子畫廊模式(限定PC使用)</h3>
 <p>快捷鍵基本同分頁畫廊模式</p>
 <p>Esc鍵 離開畫廊</p>
@@ -1206,7 +1212,7 @@ imgs: async () => {
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片篩選下載功能。</p>
-<img src="https://i.imgur.com/fewZ1Ag.jpeg">
+<img src="https://i.imgur.com/DwtSjHS.jpeg">
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
 <img src="https://i.imgur.com/vtwqkOX.jpeg">
@@ -1276,7 +1282,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
     <a href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>
 </details>
 <h2>規則支持列表備註</h2>
-<p>如果有備註為SPA網頁，腳本如果沒有生效的話請重新載入頁面，或是先以新分頁的方式開啟鏈結。</p>
+<p>如果有備註為SPA網頁，腳本如果沒有生效的話請重新載入頁面，或是先以新分頁的方式開啟連結。</p>
 <h2>一般圖片分類內置規則支持列表</h2>
 <details>
     <summary>
@@ -2470,7 +2476,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://spacemiss.com/">Space of Miss Beautiful</a>
                 </td>
-                <td>影片鏈結可以用貓抓擷取，可用Motrix下載<pre>Referer: https://d000d.com/</pre></td>
+                <td>影片連結可以用貓抓擷取，可用Motrix下載<pre>Referer: https://d000d.com/</pre></td>
             </tr>
             <tr>
                 <td>
@@ -2881,7 +2887,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://cyberdrop.me/">CyberDrop</a>
                 </td>
-                <td>手動插入圖片，需要知道檔案鏈結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，<a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
+                <td>手動插入圖片，需要知道檔案連結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，<a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
             </tr>
             <tr>
                 <td>
@@ -3679,13 +3685,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://eropics.to/">Eropics</a>
                 </td>
-                <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個鏈結點擊Continue to your image後XHR才能抓到圖片。</td>
+                <td>手動插入圖片，有少數日、韓系套圖，vipr.im,Imagetwist.com圖床大多無法外連，但應該可以透過腳本下載，imagebam圖床需要先點開一個連結點擊Continue to your image後XHR才能抓到圖片。</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://vipergirls.to/">ViperGirls</a>
                 </td>
-                <td>只適用PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床鏈結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
+                <td>只適用PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床連結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
             </tr>
             <tr>
                 <td>
@@ -4342,7 +4348,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://e-hentai.org/">E-Hentai</a>
                 </td>
-                <td>作用在圖片清單頁，手動插入大圖減少消耗GP配額，可透過腳本管理器選單選擇是否載入原圖鏈結， <a href="https://exhentai.org/">exhentai.org</a>， <a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。 </td>
+                <td>作用在圖片清單頁，手動插入大圖減少消耗GP配額，可透過腳本管理器選單選擇是否載入原圖連結， <a href="https://exhentai.org/">exhentai.org</a>， <a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。 </td>
             </tr>
             <tr>
                 <td>
@@ -4798,7 +4804,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://koharu.to/">Koharu</a>
                 </td>
-                <td>SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片鏈結轉為BlobURL，取得全部圖片需要等待一段時間。</td>
+                <td>SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片連結轉為BlobURL，取得全部圖片需要等待一段時間。</td>
             </tr>
             <tr>
                 <td>
@@ -5421,7 +5427,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="http://www.manmanju.cc/">漫漫聚</a>
                 </td>
                 <td>
-                    <a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
+                    <a href="http://m.manmanju.cc/">m.manmanju.cc</a>，閱讀頁添加了下一話連接，有無限滾動模式加預讀
                 </td>
             </tr>
             <tr>
@@ -5429,7 +5435,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="http://manhua.dididm.cc/">KuKu动漫</a>
                 </td>
                 <td>
-                    <a href="http://m.dididm.cc/">m.dididm.cc</a>，閱讀頁添加了下一話鏈接，有無限滾動模式加預讀
+                    <a href="http://m.dididm.cc/">m.dididm.cc</a>，閱讀頁添加了下一話連接，有無限滾動模式加預讀
                 </td>
             <tr>
                 <td>
@@ -5541,7 +5547,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.fffdm.com/manhua/">风之动漫</a>
                 </td>
-                <td>SPA網頁，閱讀頁添加了下一話鏈接，並排模式無法顯示</td>
+                <td>SPA網頁，閱讀頁添加了下一話連接，並排模式無法顯示</td>
             </tr>
             <tr>
                 <td>
@@ -5591,11 +5597,11 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>微信公众号</td>
-                <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組的公眾號發布的漫畫鏈結。</td>
+                <td>樱花漫画、快岸漫画的漫畫目錄連結，有的是導向漢化組的公眾號發布的漫畫連結。</td>
             </tr>
             <tr>
                 <td>虎扑社区</td>
-                <td>樱花漫画、快岸漫画的漫畫目錄鏈結，有的是導向漢化組在虎扑社区發布的帖子鏈結。</td>
+                <td>樱花漫画、快岸漫画的漫畫目錄連結，有的是導向漢化組在虎扑社区發布的帖子連結。</td>
             </tr>
             <tr>
                 <td>
@@ -5607,7 +5613,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://m.happymh.com/">嗨皮漫畫</a>
                 </td>
-                <td>圖片手動插入、閱讀、展開目錄、漫畫鏈接新分頁打開，預設關閉，需要無限滾動閱讀的話移步專用腳本<a href="https://greasyfork.org/scripts/459843">https://greasyfork.org/scripts/459843</a></td>
+                <td>圖片手動插入、閱讀、展開目錄、漫畫連結新分頁開啟，預設關閉，需要無限滾動閱讀的話移步專用腳本<a href="https://greasyfork.org/scripts/459843">https://greasyfork.org/scripts/459843</a></td>
             </tr>
             <tr>
                 <td>
