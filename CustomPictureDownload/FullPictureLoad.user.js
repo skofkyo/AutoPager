@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.2
+// @version            2.11.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -70,7 +70,7 @@
         return;
     }
 
-    await delay(1000);
+    await delay(600);
 
     const defaultOptions = {
         icon: 1, //是否顯示左下圖示，1：顯示、0：不顯示
@@ -108,6 +108,7 @@
     let isCaptureMode = false;
     let thumbnailSrcArray = [];
     let videoSrcArray = [];
+    let fileUrlArray = [];
     let promiseBlobArray = [];
     let captureLinksArray = [];
     let setArray = new Set();
@@ -3477,7 +3478,7 @@ a:has(>div>div>img),
         //所有域名在環境變數urltz
         host: ["www.ycmzt.com", "www.ywsft.com", "www.jpmnt.com", "www.mfsft.com", "www.sfwht.com", "www.ywmmt.com"],
         url: {
-            e: ["//div[@class='b' and contains(text(),'当前') or contains(text(),'图集')]", "#picg"],
+            e: [".b", "#picg", ".pagelist"],
             p: /^\/[a-z]+\/[a-z]+\/\d+\/\d+\.html$/
         },
         init: () => {
@@ -4603,7 +4604,7 @@ a:has(>div>div>img),
         customTitle: ".article-title>a",
         setFancybox: ".article-content img",
         downloadVideo: true,
-        hide: ".m-navbar~*:not([id^=Full],[class^='fancybox'])",
+        hide: ".m-navbar~*:not([id^=Full],[class^='fancybox'],.viewer-container)",
         category: "nsfw2"
     }, {
         name: "套圖TAOTU.ORG",
@@ -6791,54 +6792,47 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "Kemono/Coomer",
-        host: ["kemono.su", "coomer.su"],
+        links: [
+            "https://kemono.su/artists",
+            "https://coomer.su/artists",
+            "https://kemono.su/fantia/user/17148",
+            "https://coomer.su/fansly/user/365239425979916288"
+        ],
         url: {
             h: ["kemono.su", "coomer.su"],
             p: "/user/",
-            e: ["span[itemprop=name]", ".site-section", ".card-list"]
+            e: [".site-section", ".card-list"]
         },
         fn: () => {
+            isFetching = true;
             let url = location.href.replace(location.search, "");
-            console.log(url); //列出發表者網址
             let small = fn.gt(".paginator small");
-            console.log(small); //列出頁數詳情
             let postsTotal = small.match(/\d+/g).at(-1);
-            console.log(postsTotal); //列出文章總數
             let pagesTotal = Math.ceil(Number(postsTotal) / 50);
-            console.log(pagesTotal); //列出文章總頁數
             let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? url : url + `?o=${i * 50}`);
-            console.log(pageLinks); //列出所有文章分頁連結
             fn.getEle(pageLinks, ".card-list__items a", null, null, 0).then(eles => {
                 let postLinks = eles.map(a => a.href);
-                console.log(postLinks); //列出所有文章連結
                 fn.getEle(postLinks, "a.fileThumb,video>source", null, null, 0).then(files => {
-                    console.log(files); //列出所有檔案元素
-                    let thums = [];
                     let images = [];
-                    let videos = [];
                     files.forEach(e => {
                         if (e.tagName === "A") {
                             let img = fn.ge("img", e);
                             let src = img.dataset.src ?? img.src;
-                            thums.push(src);
+                            thumbnailSrcArray.push(src);
                             images.push(e.href);
                         } else if (e.tagName === "SOURCE") {
-                            videos.push(e.src);
+                            videoSrcArray.push(e.src);
                         }
                     });
-                    console.log(thums); //列出所有預覽縮圖連結
-                    console.log(images); //列出所有圖片連結
-                    console.log(videos); //列出所有影片連結
-                    thumbnailSrcArray = thums;
                     globalImgArray = images;
-                    videoSrcArray = videos;
+                    isFetching = false;
                 });
             });
         },
         init: () => fn.createImgBox(".site-section", 2),
         imgs: () => {
             let links = fn.gau(".card-list__items a");
-            return fn.getEle(links, "a.fileThumb,video>source").then(eles => {
+            return fn.getEle(links, "a.fileThumb,video>source", null, null, 0).then(eles => {
                 let images = [];
                 eles.forEach(e => {
                     if (e.tagName === "A") {
@@ -6859,19 +6853,22 @@ a:has(>div>div>img),
         customTitle: "span[itemprop=name]",
         downloadVideo: true,
         fetch: 1,
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw2"
     }, {
         name: "Kemono/Coomer",
-        host: ["kemono.su", "coomer.su"],
-        link: "https://kemono.su/fantia/user/17148/post/1633768",
-        reg: /^https?:\/\/(kemono\.su|coomer\.su)\/.+\/post/,
-        delay: 1000,
-        include: "a.fileThumb.image-link",
+        url: {
+            h: ["kemono.su", "coomer.su"],
+            p: "/post/",
+            e: "a.fileThumb"
+        },
         init: () => fn.createImgBox(".post__body", 2),
         imgs: () => {
             videoSrcArray = fn.gae("video>source").map(e => e.src);
-            thumbnailSrcArray = fn.gae("a.fileThumb.image-link>img").map(e => e.dataset.src ?? e.src);
-            return fn.gae("a.fileThumb.image-link");
+            thumbnailSrcArray = fn.gae("a.fileThumb>img").map(e => e.dataset.src ?? e.src);
+            return fn.gae("a.fileThumb");
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
@@ -6881,31 +6878,108 @@ a:has(>div>div>img),
         prev: "a.prev",
         customTitle: ".post__title",
         downloadVideo: true,
-        topButton: true,
+        fetch: 1,
+        fancybox: {
+            blacklist: 1
+        },
+        category: "nsfw2"
+    }, {
+        name: "Nekohouse",
+        links: [
+            "https://nekohouse.su/artists",
+            "https://nekohouse.su/fantia/user/18"
+        ],
+        url: {
+            h: "nekohouse.su",
+            p: "/user/",
+            e: [".site-section", ".card-list"]
+        },
+        fn: () => {
+            isFetching = true;
+            let url = location.href.replace(location.search, "");
+            let small = fn.gt(".paginator small");
+            let postsTotal = small.match(/\d+/g).at(-1);
+            let pagesTotal = Math.ceil(Number(postsTotal) / 50);
+            let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? url : url + `?o=${i * 50}`);
+            fn.getEle(pageLinks, ".card-list__items a").then(eles => {
+                let postLinks = eles.map(a => a.href);
+                fn.getEle(postLinks, "div.fileThumb[href],a[download]").then(files => {
+                    let images = [];
+                    files.forEach(e => {
+                        if (e.tagName === "DIV") {
+                            let img = fn.ge("img", e);
+                            let src = img.dataset.src ?? img.src;
+                            thumbnailSrcArray.push(src);
+                            images.push(fn.lo + e.getAttribute("href"));
+                        } else if (e.tagName === "A") {
+                            let url = e.href;
+                            if (/\.(mp4|mov)/i.test(url)) {
+                                videoSrcArray.push(url);
+                            } else if (/\.(rar|zip|7z|cbz)/i.test(url)) {
+                                fileUrlArray.push(url);
+                            }
+                        }
+                    });
+                    globalImgArray = images;
+                    isFetching = false;
+                });
+            });
+        },
+        init: () => fn.createImgBox("#main", 2),
+        imgs: () => {
+            let links = fn.gau(".card-list__items a");
+            return fn.getEle(links, "div.fileThumb[href],a[download]").then(eles => {
+                let images = [];
+                eles.forEach(e => {
+                    if (e.tagName === "DIV") {
+                        let img = fn.ge("img", e);
+                        let src = img.dataset.src ?? img.src;
+                        thumbnailSrcArray.push(src);
+                        images.push(fn.lo + e.getAttribute("href"));
+                    } else if (e.tagName === "A") {
+                        let url = e.href;
+                        if (/\.(mp4|mov)/i.test(url)) {
+                            videoSrcArray.push(url);
+                        } else if (/\.(rar|zip|7z|cbz)/i.test(url)) {
+                            fileUrlArray.push(url);
+                        }
+                    }
+                });
+                return images;
+            });
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: "span[itemprop=name]",
         fetch: 1,
         category: "nsfw2"
     }, {
         name: "Nekohouse",
-        host: ["nekohouse.su"],
-        reg: /^https?:\/\/nekohouse\.su\/.+\/post\/\d+/,
-        delay: 1000,
-        include: "div.fileThumb[href]",
+        url: {
+            h: "nekohouse.su",
+            p: "/post/",
+            e: "div.fileThumb[href]"
+        },
         init: () => fn.createImgBox(".scrape__body", 2),
         imgs: () => {
-            thumbnailSrcArray = fn.gae("div.fileThumb>img").map(e => {
-                if (e.dataset.src) {
-                    return /^\/\//.test(e.dataset.src) ? location.protocol + e.dataset.src : e.dataset.src;
-                } else {
-                    return e.src;
-                }
-            });
+            let urls = fn.gau("a[download]");
+            if (urls.length > 0) {
+                urls.forEach(url => {
+                    if (/\.(mp4|mov)/i.test(url)) {
+                        videoSrcArray.push(url);
+                    } else if (/\.(rar|zip|7z|cbz)/i.test(url)) {
+                        fileUrlArray.push(url);
+                    }
+                });
+            }
+            thumbnailSrcArray = fn.gae("div.fileThumb>img").map(e => e.dataset.src ?? e.src);
             return fn.gae("div.fileThumb[href]").map(e => fn.lo + e.getAttribute("href"));
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
         customTitle: ".scrape__title",
-        topButton: true,
         fetch: 1,
         category: "nsfw2"
     }, {
@@ -14543,6 +14617,7 @@ a:has(>div>div>img),
         category: "hcomic"
     }, {
         name: "COMIC18",
+        host: ["www.comic18.cc"],
         reg: /^https?:\/\/www\.comic18\.cc\/\w+\/\d+\.html$/,
         init: () => fn.waitEle(".article-body>img").then(e => fn.createImgBox(e, 1)),
         imgs: ".article-body>img",
@@ -22101,12 +22176,14 @@ if ("xx" in window) {
                 str_151: "JK平滑滾動",
                 str_152: "視口高",
                 str_153: "標題：",
-                str_154: "全選",
+                str_154: "全部選取",
                 str_155: "取消全選",
                 str_156: "重新載入",
-                str_157: "下載",
+                str_157: "開始下載",
                 str_158: hasTouchEvent ? "篩選下載" : "篩選下載(F)",
                 str_159: hasTouchEvent ? "自訂函式" : "自訂函式(6)",
+                str_160: hasTouchEvent ? "插入圖片" : "插入圖片(1)",
+                str_161: "同時載入的圖片數量：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22295,12 +22372,14 @@ if ("xx" in window) {
                 str_151: "JK平滑滚动",
                 str_152: "视口高",
                 str_153: "标题：",
-                str_154: "全选",
+                str_154: "全部选取",
                 str_155: "取消全选",
                 str_156: "重新加载",
-                str_157: "下载",
+                str_157: "开始下载",
                 str_158: hasTouchEvent ? "筛选下载" : "筛选下载(F)",
                 str_159: hasTouchEvent ? "定义函式" : "定义函式(6)",
+                str_160: hasTouchEvent ? "插入图片" : "插入图片(1)",
+                str_161: "同时加载的图片数量：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22340,14 +22419,14 @@ if ("xx" in window) {
                 str_10: "Whether To Copy Link To Clipboard?",
                 str_11: "Copied",
                 str_12: "Only Link Can Be Copied",
-                str_13: "Please Enter The Number Of Pictures",
+                str_13: "Please Enter The Number Of Images",
                 str_14: "Get Next Page...",
                 str_15: "Get Next Page End",
                 str_16: "Get Element...",
                 str_17: "Get Element ",
-                str_18: "All Pictures Gathered",
+                str_18: "All Images Gathered",
                 str_19: "Element Does Not Exist",
-                str_20: "No Pictures",
+                str_20: "No Images",
                 str_21: "Delay",
                 str_22: "ms",
                 str_23: "No. ",
@@ -22356,7 +22435,7 @@ if ("xx" in window) {
                 str_26: "Error",
                 str_27: "Download Failed",
                 str_28: "P",
-                str_29: "\nDo you want to save only the pictures that have been successfully downloaded so far?\nAs long as the image is not 100% dead, you can reduce the number of download threads or reload the web page and try downloading again.",
+                str_29: "\nDo you want to save only the Images that have been successfully downloaded so far?\nAs long as the image is not 100% dead, you can reduce the number of download threads or reload the web page and try downloading again.",
                 str_30: "Image Extension Error",
                 str_31: "Compression Progress: ",
                 str_32: "Countdown ",
@@ -22379,7 +22458,7 @@ if ("xx" in window) {
                 str_49: "Get Pictureing Please Try Again Later!",
                 str_50: "Favored Website URL Open in New Tab",
                 str_51: "Please Enter A Custom zip File Folder Name",
-                str_52: "Number Of Pictures",
+                str_52: "Number Of Images",
                 str_53: "Picture Drawing...",
                 str_54: "403，Not Logged In To Website?",
                 str_55: "Download Loading...",
@@ -22494,6 +22573,8 @@ if ("xx" in window) {
                 str_157: "Download",
                 str_158: hasTouchEvent ? "Filter Download" : "Filter Download(F)",
                 str_159: hasTouchEvent ? "Function" : "Function(6)",
+                str_160: hasTouchEvent ? "Insert Images" : "Insert Images(1)",
+                str_161: "The Number Of Images Loaded At The Same Time：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -24607,6 +24688,7 @@ if ("xx" in window) {
                     }
                     let insertImgAF = siteData.insertImgAF;
                     if (isFn(insertImgAF)) insertImgAF(targetEle);
+                    fn.ge("#insertImgMenu")?.remove();
                 } catch (error) {
                     fn.showMsg(displayLanguage.str_19, 3000);
                     console.error("\nfn.insertImg() ele參數錯誤，或用來定位插入的元素不存在。", error);
@@ -24653,7 +24735,7 @@ if ("xx" in window) {
                     fn.comicNextObserver.observe(lastImg);
                 }
                 fn.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = "unset"));
-                if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
+                if (options.fancybox == 1 && !("fancybox" in siteData) && ("Fancybox" in _unsafeWindow)) {
                     _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                 }
                 if (!/tupianwu\.com/.test(fn.lh) && !fn.ge(".umRelevant.umBox") && !fn.ge(".videoPlayerWrap")) {
@@ -24665,13 +24747,13 @@ if ("xx" in window) {
                 fn.showMsg(displayLanguage.str_20);
             }
         },
-        immediateInsertImg: async () => {
+        immediateInsertImg: async (manual = "no") => {
             if (ge(".FullPictureLoadImage") || isFetching || isDownloading) return;
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 let validPage = await siteData.SPA();
                 if (!validPage) return;
             }
-            if (options.autoInsert == 1) {
+            if (options.autoInsert == 1 && manual === "no" || options.autoInsert == 0 && manual === "yes") {
                 let [insertSelector, insertMode, delayTime] = siteData.insertImg;
                 await fn.delay(delayTime || 0);
                 let selector = siteData.imgs;
@@ -26071,6 +26153,67 @@ if ("xx" in window) {
         }
     };
 
+    function simpleLoadImg(img) {
+        return new Promise((resolve) => {
+            if (!img) {
+                resolve();
+            }
+            let loadSrc = img.dataset.src;
+            let temp = new Image();
+            if ("referrerpolicy" in siteData) {
+                temp.setAttribute("referrerpolicy", siteData.referrerpolicy);
+            }
+            temp.onload = () => {
+                img.src = loadSrc;
+                resolve();
+            };
+            temp.onerror = () => {
+                img.src = loadSrc;
+                resolve();
+            };
+            temp.src = loadSrc;
+        });
+    }
+
+    //用JS实现多个任务并行执行的队列
+    //https://juejin.cn/post/6844903961728647181
+    class Queue {
+        constructor(workerLen) {
+            this.workerLen = workerLen ?? 4;
+            this.list = [];
+            this.worker = new Array(this.workerLen);
+        }
+
+        * executionFunc(index, func, ...args) {
+            const _this = this;
+            yield func.call(...args).then(() => {
+                _this.worker[index] = undefined;
+                _this.run();
+            });
+        }
+
+        addList(list) {
+            for (const item of list) {
+                this.list.unshift(item);
+            }
+        }
+
+        run() {
+            const runIndex = [];
+            for (let i = 0; i < this.workerLen; i++) {
+                const len = this.list.length;
+                if (!this.worker[i] && len > 0) {
+                    this.worker[i] = this.executionFunc(i, ...this.list[len - 1]);
+                    runIndex.push(i);
+                    this.list.pop();
+                }
+            }
+            for (const index of runIndex) {
+                this.worker[index].next();
+            }
+        }
+    }
+
     //CSS取得元素返回元素
     //const ge = (selector) => document.querySelector(selector);
 
@@ -26696,10 +26839,10 @@ if ("xx" in window) {
     };
 
     //匯出網址
-    const exportImgSrcText = async () => {
+    const exportImgSrcText = async (array) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
-        let srcArr = await getImgs(selector);
+        let srcArr = isArray(array) ? array : await getImgs(selector);
         if (srcArr.length == 0 && videoSrcArray.length == 0) return fn.showMsg(displayLanguage.str_44);
         let picNum = srcArr.length;
         let titleText = (customTitle || document.title);
@@ -26707,6 +26850,14 @@ if ("xx" in window) {
         if (videoSrcArray.length > 0) {
             srcArr = srcArr.concat(videoSrcArray);
             fileName = `${titleText}[${picNum}P + ${videoSrcArray.length}V]_MediaURLs.txt`;
+        }
+        if (fileUrlArray.length > 0) {
+            srcArr = srcArr.concat(fileUrlArray);
+            fileName = `${titleText}[${picNum}P`;
+            if (videoSrcArray.length > 0) {
+                fileName += ` + ${videoSrcArray.length}V`;
+            }
+            fileName += ` + ${fileUrlArray.length} Files]_MediaURLs.txt`;
         }
         let str = srcArr.join("\n");
         let blob = new Blob([str], {
@@ -26729,6 +26880,7 @@ if ("xx" in window) {
             return fn.insertImg(srcArr, insertTargetEle, insertMode);
         }
         if (videoSrcArray.length > 0) srcArr = srcArr.concat(videoSrcArray);
+        if (fileUrlArray.length > 0) srcArr = srcArr.concat(fileUrlArray);
         let textArr = [customTitle || document.title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
@@ -26737,12 +26889,13 @@ if ("xx" in window) {
     };
 
     //複製網址
-    const copyImgSrcTextB = async () => {
+    const copyImgSrcTextB = async (array) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
-        let srcArr = await getImgs(selector);
+        let srcArr = isArray(array) ? array : await getImgs(selector);
         if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
         if (videoSrcArray.length > 0) srcArr = srcArr.concat(videoSrcArray);
+        if (fileUrlArray.length > 0) srcArr = srcArr.concat(fileUrlArray);
         let textArr = [customTitle || document.title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
@@ -26990,7 +27143,7 @@ if ("xx" in window) {
             if (ge(".FullPictureLoadVideo")) {
                 gae(".FullPictureLoadVideo").forEach(e => insertBefore(tE, e));
             }
-            if (options.fancybox == 1 && !blackList && !isObject(siteData.fancybox)) {
+            if (options.fancybox == 1 && !("fancybox" in siteData) && ("Fancybox" in _unsafeWindow)) {
                 _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageSmall']", FancyboxOptions);
             }
             //tE.parentNode.style.textAlign = "center";
@@ -27117,7 +27270,8 @@ if ("xx" in window) {
             webtoonWidth: 800,
             shadowGalleryWheel: 0,
             jumpNum: 100,
-            behavior: "instant"
+            behavior: "instant",
+            threading: 2
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -28521,7 +28675,7 @@ img.small {
             fn.singleThreadLoadImgs(evenNumberImgs);
         }
 
-        function createGalleryElement(mode) {
+        async function createGalleryElement(mode) {
             mainElement.scrollTo({
                 top: 0
             });
@@ -28567,7 +28721,7 @@ img.small {
             aspectRatio();
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
-            fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
+            await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
                     gae("img", shadow).forEach(img => fn.imagesObserver.observe(img));
@@ -28701,11 +28855,9 @@ img.small {
                     }, {
                         threshold: 0.9,
                     });
-                    fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
-                        setTimeout(() => {
-                            nextObserver.observe(next);
-                        }, 1000);
-                    });
+                    setTimeout(() => {
+                        nextObserver.observe(next);
+                    }, 1000);
                 }
             }
         }
@@ -29456,7 +29608,7 @@ img.small {
             fn.singleThreadLoadImgs(evenNumberImgs);
         }
 
-        function createGalleryElement(mode) {
+        async function createGalleryElement(mode) {
             mainElement.scrollTo({
                 top: 0
             });
@@ -29502,7 +29654,7 @@ img.small {
             aspectRatio();
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
-            fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
+            await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
                     gae("img", mainElement).forEach(img => fn.imagesObserver.observe(img));
@@ -29646,11 +29798,9 @@ img.small {
                     }, {
                         threshold: 0.9,
                     });
-                    fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
-                        setTimeout(() => {
-                            nextObserver.observe(next);
-                        }, 1000);
-                    });
+                    setTimeout(() => {
+                        nextObserver.observe(next);
+                    }, 1000);
                 }
             }
         }
@@ -29806,6 +29956,9 @@ img.small {
         }
         if (srcs.length < 1) return (isOpenFilter = false);
 
+        const config = getConfig();
+        let threading = Number(config.threading);
+
         if (!("Viewer" in _unsafeWindow)) {
             _GM_addElement(document.head, "style", {
                 textContent: ViewerJsCss
@@ -29829,6 +29982,7 @@ html,body {
         const style = createStyle(`
 #main {
     font-ize: "16px";
+    color: black;
     inset: 0px;
     width: 100%;
     height: 100%;
@@ -29857,7 +30011,12 @@ html,body {
 }
 #label-title,
 #close {
+    display: inline-block;
     width: 48px;
+}
+#label-threading {
+    display: inline-block;
+    margin-top: 4px;
 }
 .close {
     margin: 0 5px;
@@ -29989,6 +30148,8 @@ input.check {
         <button id="unselect-all">${displayLanguage.str_155}</button>
         <button id="reload">${displayLanguage.str_156}</button>
         <button id="download">${displayLanguage.str_157}</button>
+        <label id="label-threading">${displayLanguage.str_161}</label>
+        <select id="threading"></select>
     </div>
 </div>
 <div id="imgBox" class="row">
@@ -30009,6 +30170,21 @@ input.check {
     </div>
 </div>
         `;
+
+        let select = ge("#threading", main);
+        for (let i = 1; i <= 32; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.innerText = i;
+            select.append(option);
+        }
+        select.value = config.threading;
+        select.addEventListener("change", () => {
+            config.threading = Number(select.value);
+            saveConfig(config);
+            addLis();
+        });
+
         let titleReplace = fn.dt({
             s: "title"
         });
@@ -30023,8 +30199,20 @@ input.check {
         gae("#settings", main).forEach(button => button.addEventListener("click", () => createPictureLoadOptionsShadowElement()));
         gae("#gallery", main).forEach(button => button.addEventListener("click", () => newTabView()));
         gae("#favor", main).forEach(button => button.addEventListener("click", () => createFavorShadowElement()));
-        gae("#copy", main).forEach(button => button.addEventListener("click", () => copyImgSrcTextB()));
-        gae("#export", main).forEach(button => button.addEventListener("click", () => exportImgSrcText()));
+        gae("#copy", main).forEach(button => {
+            button.addEventListener("click", () => {
+                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+                if (srcs.length == 0) return;
+                copyImgSrcTextB(srcs);
+            });
+        });
+        gae("#export", main).forEach(button => {
+            button.addEventListener("click", () => {
+                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+                if (srcs.length == 0) return;
+                exportImgSrcText(srcs);
+            });
+        });
         gae("#select-all", main).forEach(button => {
             button.addEventListener("click", () => {
                 gae("input.check", main).forEach(input => {
@@ -30091,12 +30279,11 @@ input.check {
             if (Viewer && ViewerJsInstance) {
                 ViewerJsInstance.update();
             }
-            const imgs = gae("img", main);
             setTimeout(() => {
-                const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
-                const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
-                fn.singleThreadLoadImgs(oddNumberImgs);
-                fn.singleThreadLoadImgs(evenNumberImgs);
+                const loadImgList = gae("img", main).map(img => [simpleLoadImg, undefined, img]);
+                const queue = new Queue(Number(config.threading));
+                queue.addList(loadImgList);
+                queue.run();
             }, 1000);
         };
         addLis();
@@ -30422,6 +30609,15 @@ input.check {
                 toggleImgMode();
             }
         }, {
+            name: "insert",
+            id: "insertImgMenu",
+            text: displayLanguage.str_160,
+            show: 0,
+            cfn: event => {
+                event.preventDefault();
+                fn.immediateInsertImg("yes");
+            }
+        }, {
             text: displayLanguage.str_85,
             show: 0,
             cfn: event => {
@@ -30433,9 +30629,10 @@ input.check {
             show: 1
         }];
         const createMenu = obj => {
-            if (!("fn" in siteData) && obj.name === "fn" || !siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) || "newTabView" === obj.name && siteData.eye === 0) return;
+            if (!("insertImg" in siteData) && obj.name === "insert" || !("fn" in siteData) && obj.name === "fn" || !siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) || "newTabView" === obj.name && siteData.eye === 0) return;
             let item = document.createElement("div");
             item.innerText = obj.text;
+            if (!!obj.id) item.id = obj.id;
             if (obj.show === 0) item.classList.add("itemNoShow");
             item.oncontextmenu = () => false;
             if (!!obj.cfn) item.addEventListener("click", obj.cfn);
@@ -31185,6 +31382,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     margin: 0 auto !important;
     display: block !important;
     color: unset !important;
+    border: unset !important;
     --local-colour1-primary: unset !important;
     --local-colour1-secondary: unset !important;
     --local-colour2-primary: unset !important;
