@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.4
+// @version            2.11.5
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -6804,6 +6804,7 @@ a:has(>div>div>img),
             e: [".site-section", ".card-list"]
         },
         fn: () => {
+            if (checkGeting()) return;
             isFetching = true;
             let url = location.href.replace(location.search, "");
             let small = fn.gt(".paginator small");
@@ -6895,6 +6896,7 @@ a:has(>div>div>img),
             e: [".site-section", ".card-list"]
         },
         fn: () => {
+            if (checkGeting()) return;
             isFetching = true;
             let url = location.href.replace(location.search, "");
             let small = fn.gt(".paginator small");
@@ -24748,7 +24750,7 @@ if ("xx" in window) {
             }
         },
         immediateInsertImg: async (manual = "no") => {
-            if (ge(".FullPictureLoadImage") || isFetching || isDownloading) return;
+            if (checkGeting() || ge(".FullPictureLoadImage")) return;
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 let validPage = await siteData.SPA();
                 if (!validPage) return;
@@ -26159,7 +26161,7 @@ if ("xx" in window) {
                 resolve();
             }
             let loadSrc = img.dataset.src;
-            let temp = new Image();
+            const temp = new Image();
             if ("referrerpolicy" in siteData) {
                 temp.setAttribute("referrerpolicy", siteData.referrerpolicy);
             }
@@ -26167,9 +26169,23 @@ if ("xx" in window) {
                 img.src = loadSrc;
                 resolve();
             };
-            temp.onerror = () => {
-                img.src = loadSrc;
-                resolve();
+            temp.onerror = async () => {
+                if (loadSrc.includes("https://wsrv.nl/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                    loadSrc = loadSrc.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
+                    await fn.checkImgStatus(loadSrc, 0);
+                    img.dataset.src = loadSrc;
+                    img.src = loadSrc;
+                    resolve();
+                } else if (loadSrc.includes(".wp.com/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                    loadSrc = loadSrc.replace(/i\d\.wp\.com\/|\?.+$/g, ""); //WordPressCDN
+                    await fn.checkImgStatus(loadSrc, 0);
+                    img.dataset.src = loadSrc;
+                    img.src = loadSrc;
+                    resolve();
+                } else {
+                    img.src = loadSrc;
+                    resolve();
+                }
             };
             temp.src = loadSrc;
         });
@@ -26839,7 +26855,7 @@ if ("xx" in window) {
     };
 
     //匯出網址
-    const exportImgSrcText = async (array) => {
+    const exportImgSrcText = async (array = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
@@ -26889,7 +26905,7 @@ if ("xx" in window) {
     };
 
     //複製網址
-    const copyImgSrcTextB = async (array) => {
+    const copyImgSrcTextB = async (array = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
@@ -27314,7 +27330,7 @@ if ("xx" in window) {
     //新分頁空白頁檢視圖片
     const newTabView = async () => {
 
-        if (isDragging || isFetching || "eye" in siteData && siteData.eye === 0) return;
+        if (checkGeting() || isDragging || "eye" in siteData && siteData.eye === 0) return;
 
         const config = getConfig();
 
@@ -28108,7 +28124,7 @@ if (config.ViewMode == 1) {
             return createIframeGallery();
         }
 
-        if (hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -28998,7 +29014,7 @@ img.small {
     //創建框架畫廊
     const createIframeGallery = async () => {
 
-        if (hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -29941,7 +29957,7 @@ img.small {
     //創建篩選下載
     const createFilterDownload = async () => {
 
-        if (isOpenFilter || isFetching || isDownloading) return;
+        if (checkGeting() || isOpenFilter) return;
 
         isOpenFilter = true;
 
