@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.6
+// @version            2.11.7
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -121,6 +121,7 @@
     let isFetching = false;
     let isAutoScrolling = false;
     let isValidPage = true;
+    let isSimpleMode = false;
     let isAddKeyEvent = false;
     let isAddFullPictureLoadButton = false;
     let isAddFullPictureLoadFixedMenu = false;
@@ -163,6 +164,11 @@
     };
     //自定義站點規則
     const customData = [{
+        name: "交通部觀光署 桌布下載",
+        reg: /^https?:\/\/www\.taiwan\.net\.tw\/m1\.aspx\?sNo=0012076$/,
+        imgs: ".media-download>a:last-child",
+        category: "photo"
+    }, {
         name: "免費圖庫相片",
         url: {
             h: "www.pexels.com"
@@ -197,13 +203,48 @@
             };
             await get();
             fn.addMutationObserver(async () => {
-                if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading) return;
+                if (captureExclude()) return;
                 await get();
             });
         },
         imgs: () => setArray,
         capture: () => _this.imgs(),
         downloadVideo: true,
+        category: "photo"
+    }, {
+        name: "wallhaven",
+        url: {
+            h: "wallhaven.cc",
+            e: "figure[data-wallpaper-id]"
+        },
+        SPA: true,
+        init: async () => {
+            addNewTabViewButton();
+            const get = async () => {
+                let figures = fn.gae("figure[data-wallpaper-id]:not(.get)");
+                if (figures.length > 0) {
+                    figures.forEach(figure => {
+                        figure.classList.add("get");
+                        const id = figure.dataset.wallpaperId;
+                        const isPng = !!fn.ge(".thumb-info .png", figure);
+                        const ex = isPng ? "png" : "jpg";
+                        const src = `https://w.wallhaven.cc/full/${id.substring(0, 2)}/wallhaven-${id}.${ex}`;
+                        setArray.add(src);
+                    });
+                }
+                if (captureTotal != setArray.size) {
+                    captureTotal = setArray.size;
+                    await captureSrcB();
+                }
+            };
+            await get();
+            fn.addMutationObserver(async () => {
+                if (captureExclude()) return;
+                await get();
+            });
+        },
+        imgs: () => setArray,
+        capture: () => _this.imgs(),
         category: "photo"
     }, {
         name: "小黃書/8色人體攝影",
@@ -8493,7 +8534,7 @@ a:has(>div>div>img),
             };
             await get();
             fn.addMutationObserver(async () => {
-                if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading) return;
+                if (captureExclude()) return;
                 await get();
             });
         },
@@ -16030,6 +16071,7 @@ a:has(>div>div>img),
         },
         button: [4, "24%"],
         insertImg: [".read-img-bar", 2],
+        insertImgAF: () => fn.run("jQuery('.read-img-bar').off();"),
         next: "//a[div[p[text()='Next Chapter']]][not(starts-with(@href,'java'))]",
         prev: "//a[div[p[text()='Last Chapter' or text()='Prev Chapter']]][not(starts-with(@href,'java'))]",
         customTitle: () => fn.ge("meta[name='og:title']")?.content?.split(" - ")[1]?.replace(/Read | Online/g, ""),
@@ -17416,7 +17458,7 @@ if ("xx" in window) {
         name: "Manhuagui看漫画",
         host: ["www.manhuagui.com", "tw.manhuagui.com", "www.mhgui.com"],
         enable: 1,
-        reg: () => /^https?:\/\/((www|tw)\.manhuagui\.com)|www\.mhgui\.com\/comic\/\d+\/\d+.html/.test(fn.url) && comicInfiniteScrollMode != 1,
+        reg: () => /^https?:\/\/((www|tw)\.manhuagui\.com|www\.mhgui\.com)\/comic\/\d+\/\d+.html/.test(fn.url) && comicInfiniteScrollMode != 1,
         init: "$(document).unbind('keydown');",
         imgs: (dom = document) => {
             let code = fn.gst("x6c", dom).slice(26, -1);
@@ -17442,7 +17484,7 @@ if ("xx" in window) {
     }, {
         name: "Manhuagui看漫画 自動翻頁",
         host: ["www.manhuagui.com", "tw.manhuagui.com", "www.mhgui.com"],
-        reg: () => /^https?:\/\/((www|tw)\.manhuagui\.com)|www\.mhgui\.com\/comic\/\d+\/\d+.html/.test(fn.url) && comicInfiniteScrollMode == 1,
+        reg: () => /^https?:\/\/((www|tw)\.manhuagui\.com|www\.mhgui\.com)\/comic\/\d+\/\d+.html/.test(fn.url) && comicInfiniteScrollMode == 1,
         json: (dom = document) => {
             let code = fn.gst("x6c", dom).slice(26, -1);
             let json = fn.run(fn.run(code).slice(11, -11));
@@ -22186,6 +22228,10 @@ if ("xx" in window) {
                 str_159: hasTouchEvent ? "自訂函式" : "自訂函式(6)",
                 str_160: hasTouchEvent ? "插入圖片" : "插入圖片(1)",
                 str_161: "同時載入的圖片數量：",
+                str_162: "圖片預載數：",
+                str_163: "👻 開啟簡易模式",
+                str_164: "👻 關閉簡易模式",
+                str_165: "圖片總數：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22382,6 +22428,10 @@ if ("xx" in window) {
                 str_159: hasTouchEvent ? "定义函式" : "定义函式(6)",
                 str_160: hasTouchEvent ? "插入图片" : "插入图片(1)",
                 str_161: "同时加载的图片数量：",
+                str_162: "图片预载数：",
+                str_163: "👻 开启简易模式",
+                str_164: "👻 关闭简易模式",
+                str_165: "图片总数：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22577,6 +22627,10 @@ if ("xx" in window) {
                 str_159: hasTouchEvent ? "Function" : "Function(6)",
                 str_160: hasTouchEvent ? "Insert Images" : "Insert Images(1)",
                 str_161: "The Number Of Images Loaded At The Same Time：",
+                str_162: "Preload：",
+                str_163: "👻 Enable Simple Mode",
+                str_164: "👻 Turn Off Simple Mode",
+                str_165: "Total Number Of Images：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -22607,7 +22661,8 @@ if ("xx" in window) {
     const FullPictureLoadBlacklist = localStorage.getItem("FullPictureLoadBlacklist") ?? 0;
     _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
     _GM_registerMenuCommand("📓 Github README.md", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/README.md"));
-    const FullPictureLoadBlacklist_menu_command_id = _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + displayLanguage.str_138 : "✔️  " + displayLanguage.str_138, () => {
+    /*const FullPictureLoadBlacklist_menu_command_id = */
+    _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + displayLanguage.str_138 : "✔️  " + displayLanguage.str_138, () => {
         FullPictureLoadBlacklist == 0 ? localStorage.setItem("FullPictureLoadBlacklist", 1) : localStorage.setItem("FullPictureLoadBlacklist", 0);
         location.reload();
     });
@@ -23221,6 +23276,7 @@ if ("xx" in window) {
                     "data-orig-file",
                     "data-src",
                     "data-original",
+                    "data-original-url",
                     "data-url",
                     "data-echo",
                     "data-ecp",
@@ -23346,15 +23402,16 @@ if ("xx" in window) {
             isString(img) ? imgs = fn.gae(img, dom, dom) : imgs = img;
             let srcs = imgs.map(ele => {
                 let srcset = ele.getAttribute("srcset");
-                if (srcset) {
-                    let splitArr = srcset.split(",");
-                    splitArr = splitArr.sort((a, b) => a.match(/\s(\d+)(w|x)/)[1] - b.match(/\s(\d+)(w|x)/)[1]);
+                if (srcset && /[xw],/.test(srcset)) {
+                    let splitArr = srcset.split(",").map(src => src.trim());
+                    splitArr = splitArr.sort((a, b) => a.match(/\s([\d\.]+)(w|x)$/)[1] - b.match(/\s([\d\.]+)(w|x)$/)[1]);
                     let [src] = splitArr.at(-1).trim().split(" ");
                     if (/^https:\/\/i\d\.wp\.com/.test(src)) {
                         src = src.replace(/\?.+$/, "?ssl=1");
                     }
                     return decodeURIComponent(src);
                 } else {
+                    if (ele?.parentElement?.id === "pagetual-preload") return null;
                     let check = fn.checkImgSrc(ele);
                     if (check.ok) {
                         let src = check.src;
@@ -26489,6 +26546,8 @@ if ("xx" in window) {
         setTimeout(() => URL.revokeObjectURL(objURL), 1000);
     };
 
+    const captureExclude = () => (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isFetching || isDownloading);
+
     const checkGeting = () => {
         if (isDownloading) {
             alert(displayLanguage.str_48);
@@ -28661,7 +28720,7 @@ img.small {
 
         const mainElement = document.createElement("div");
         mainElement.id = "shadowGallery";
-        mainElement.tabIndex = "0";
+        mainElement.tabIndex = "-1";
 
         Object.assign(mainElement.style, {
             left: "0",
@@ -28679,16 +28738,16 @@ img.small {
             color: "#222",
             fontSize: "14px",
             overflowY: "scroll",
+            overflowX: "hidden",
             textAlign: "center"
         });
         shadow.appendChild(mainElement);
 
         function loadImgs() {
-            const imgs = gae("img", shadow);
-            const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
-            const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
-            fn.singleThreadLoadImgs(oddNumberImgs);
-            fn.singleThreadLoadImgs(evenNumberImgs);
+            const loadImgList = gae("img", shadow).map(img => [simpleLoadImg, null, img]);
+            const queue = new Queue(Number(config.threading));
+            queue.addList(loadImgList);
+            queue.run();
         }
 
         async function createGalleryElement(mode) {
@@ -28886,6 +28945,8 @@ img.small {
                 text: displayLanguage.str_142,
                 cfn: () => closeGallery()
             }, {
+                id: "MenuThreadingItem"
+            }, {
                 id: "MenuBehaviorItem"
             }, {
                 id: "MenuJumpItem",
@@ -28921,6 +28982,15 @@ img.small {
             };
             menuObj.forEach(obj => createMenu(obj));
 
+            let threadingSelect = document.createElement("select");
+            for (let i = 1; i <= 32; i++) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.innerText = displayLanguage.str_162 + i;
+                threadingSelect.append(option);
+            }
+            ge("#MenuThreadingItem", menuDiv).append(threadingSelect);
+
             let jumpSelect = document.createElement("select");
             for (let i = 0; i <= 100; i++) {
                 let option = document.createElement("option");
@@ -28946,6 +29016,12 @@ img.small {
 
             shadow.append(menuDiv);
 
+            threadingSelect.value = config.threading;
+            threadingSelect.addEventListener("change", () => {
+                config.threading = Number(threadingSelect.value);
+                saveConfig(config);
+                mainElement.focus();
+            });
             jumpSelect.value = config.jumpNum;
             jumpSelect.addEventListener("change", () => {
                 config.jumpNum = jumpSelect.value;
@@ -29594,7 +29670,7 @@ img.small {
         }
         const mainElement = dom.createElement("div");
         mainElement.id = "iframeGallery";
-        mainElement.tabIndex = "0";
+        mainElement.tabIndex = "-1";
 
         Object.assign(mainElement.style, {
             left: "0",
@@ -29612,16 +29688,16 @@ img.small {
             color: "#222",
             fontSize: "14px",
             overflowY: "scroll",
+            overflowX: "hidden",
             textAlign: "center"
         });
         dom.body.appendChild(mainElement);
 
         function loadImgs() {
-            const imgs = gae("img", mainElement);
-            const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
-            const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
-            fn.singleThreadLoadImgs(oddNumberImgs);
-            fn.singleThreadLoadImgs(evenNumberImgs);
+            const loadImgList = gae("img", mainElement).map(img => [simpleLoadImg, null, img]);
+            const queue = new Queue(Number(config.threading));
+            queue.addList(loadImgList);
+            queue.run();
         }
 
         async function createGalleryElement(mode) {
@@ -29829,6 +29905,8 @@ img.small {
                 text: displayLanguage.str_142,
                 cfn: () => closeGallery()
             }, {
+                id: "MenuThreadingItem"
+            }, {
                 id: "MenuBehaviorItem"
             }, {
                 id: "MenuJumpItem",
@@ -29864,6 +29942,15 @@ img.small {
             };
             menuObj.forEach(obj => createMenu(obj));
 
+            let threadingSelect = document.createElement("select");
+            for (let i = 1; i <= 32; i++) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.innerText = displayLanguage.str_162 + i;
+                threadingSelect.append(option);
+            }
+            ge("#MenuThreadingItem", menuDiv).append(threadingSelect);
+
             let jumpSelect = document.createElement("select");
             for (let i = 0; i <= 100; i++) {
                 let option = document.createElement("option");
@@ -29889,6 +29976,12 @@ img.small {
 
             dom.body.append(menuDiv);
 
+            threadingSelect.value = config.threading;
+            threadingSelect.addEventListener("change", () => {
+                config.threading = Number(threadingSelect.value);
+                saveConfig(config);
+                mainElement.focus();
+            });
             jumpSelect.value = config.jumpNum;
             jumpSelect.addEventListener("change", () => {
                 config.jumpNum = jumpSelect.value;
@@ -29998,6 +30091,8 @@ html,body {
         const style = createStyle(`
 #main {
     font-size: 14px;
+    font-family: Arial, sans-serif;
+    text-align: left;
     color: black;
     inset: 0px;
     width: 100%;
@@ -30030,9 +30125,11 @@ html,body {
     display: inline-block;
     width: 48px;
 }
-#label-threading {
+.number {
     display: inline-block;
     margin-top: 4px;
+    padding: 0 0 0 2px;
+    border-left: #000 1px solid;
 }
 .close {
     margin: 0 5px;
@@ -30043,10 +30140,13 @@ html,body {
 #buttons button {
     margin-top: 4px;
 }
+#imgBox {
+    text-align: center;
+}
 ul#image-list {
     display: block;
     max-width: 100%;
-    margin: 0px;
+    margin: ${hasTouchEvent ? "0 0 0 -1px" : "0 0 0 -2px"};
     padding: 4px 0 0 0;
 }
 li.image-item {
@@ -30145,6 +30245,7 @@ input.check {
         shadow.append(style);
         const main = document.createElement("div");
         main.id = "main";
+        main.tabIndex = "-1";
         shadow.append(main);
 
         main.innerHTML = `
@@ -30164,8 +30265,9 @@ input.check {
         <button id="unselect-all">${displayLanguage.str_155}</button>
         <button id="reload">${displayLanguage.str_156}</button>
         <button id="download">${displayLanguage.str_157}</button>
-        <label id="label-threading">${displayLanguage.str_161}</label>
+        <label id="label-threading" class="number">${displayLanguage.str_161}</label>
         <select id="threading"></select>
+        <label class="number">${displayLanguage.str_165 + srcs.length}</label>
     </div>
 </div>
 <div id="imgBox" class="row">
@@ -30199,6 +30301,7 @@ input.check {
             config.threading = Number(select.value);
             saveConfig(config);
             addLis();
+            main.focus();
         });
 
         let titleReplace = fn.dt({
@@ -30295,8 +30398,9 @@ input.check {
             if (Viewer && ViewerJsInstance) {
                 ViewerJsInstance.update();
             }
+            main.focus();
             setTimeout(() => {
-                const loadImgList = gae("img", main).map(img => [simpleLoadImg, undefined, img]);
+                const loadImgList = gae("img", main).map(img => [simpleLoadImg, null, img]);
                 const queue = new Queue(Number(config.threading));
                 queue.addList(loadImgList);
                 queue.run();
@@ -30842,7 +30946,7 @@ input.check {
 <div style="width: 100%;">
     <p id="title">${displayLanguage.str_68}</p>
 </div>
-<div style="width: 348px; display: flex;">
+<div id="iconDIV" style="width: 348px; display: flex;">
     <input id="icon" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_69}</label>
 </div>
@@ -31072,8 +31176,13 @@ input.check {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
         }
-        if (siteData.aeg == 0) {
+        if (isSimpleMode || siteData.aeg == 0) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
+        }
+        if (isSimpleMode) {
+            ge("#iconDIV", main).style.display = "none";
+            ge("#AutoDownloadDIV", main).style.display = "none";
+            ge("#CountdownDIV", main).style.display = "none";
         }
         if (fancyboxBlackList()) {
             //ge("#Fancybox", main).checked = false;
@@ -31099,7 +31208,7 @@ input.check {
         if (hasTouchEvent && showOptions || !autoDownload && showOptions) {
             fn.gae("#AutoDownloadDIV,#CountdownDIV", main).forEach(e => (e.style.display = "none"));
         }
-        if (!hasTouchEvent && showOptions || (hasTouchEvent && showOptions && !siteData.next)) {
+        if (isSimpleMode || !hasTouchEvent && showOptions || (hasTouchEvent && showOptions && !siteData.next)) {
             ge("#DoubleDIV", main).style.display = "none";
         }
         let downloadVideo = siteData.downloadVideo;
@@ -32083,20 +32192,20 @@ a[data-fancybox]:hover {
         }
     }
 
-    if (!("category" in siteData)) {
-        _GM_unregisterMenuCommand(FullPictureLoadBlacklist_menu_command_id);
-        return;
-    }
+    //if (!("category" in siteData)) {
+    //_GM_unregisterMenuCommand(FullPictureLoadBlacklist_menu_command_id);
+    //return;
+    //}
 
     try {
-        if (!ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
+        if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
-        if (options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
+        if (("category" in siteData) && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
             addLibrarysV3();
             Fancyboxi18nV3();
             FancyboxOptionsV3();
-        } else if (options.fancybox == 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+        } else if (("category" in siteData) && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
             addLibrarysV5();
             Fancyboxl10nV5();
             fn.css(FancyboxV5Css, "FancyboxV5Css");
@@ -32109,12 +32218,12 @@ a[data-fancybox]:hover {
                 await init_code();
             }
         }
-        if (!ge("#addLibrarysV3") && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
+        if (("category" in siteData) && !ge("#addLibrarysV3") && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
             fn.css(FancyboxV3Css, "FancyboxV3Css");
-        } else if (!ge("#FancyboxV5Css") && options.fancybox == 1 && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+        } else if (("category" in siteData) && !ge("#FancyboxV5Css") && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
             fn.css(FancyboxV5Css, "FancyboxV5Css");
         }
-        if (!ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
+        if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
         if ("css" in siteData && isString(siteData.css)) {
@@ -32560,6 +32669,54 @@ a[data-fancybox]:hover {
         });
     }
 
+    //簡易模式規則
+    if (!("category" in siteData)) {
+        isSimpleMode = true;
+        let menu_command_id_1;
+        let menu_command_id_2;
+        let menu_command_id_3;
+        const registerA = () => {
+            menu_command_id_2 = _GM_registerMenuCommand(displayLanguage.str_163, () => {
+                menu_command_id_1 = _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
+                checkOptionsData();
+                siteData = {
+                    imgs: () => fn.getImgSrcset("div,span,li,figure,img:not(.FullPictureLoadFixedBtn)"),
+                    repeat: 1,
+                    SPA: true,
+                    category: "photo"
+                };
+                addFullPictureLoadButton();
+                if (!hasTouchEvent) {
+                    addFullPictureLoadFixedMenu();
+                    document.addEventListener("keydown", addKeyEvent);
+                }
+                if (!ge("#FullPictureLoadMainStyle")) {
+                    fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
+                }
+                if (!("Fancybox" in _unsafeWindow)) {
+                    addLibrarysV5();
+                    Fancyboxl10nV5();
+                    fn.css(FancyboxV5Css, "FancyboxV5Css");
+                }
+                _GM_unregisterMenuCommand(menu_command_id_2);
+                registerB();
+            });
+        };
+        const registerB = () => {
+            menu_command_id_3 = _GM_registerMenuCommand(displayLanguage.str_164, () => {
+                _GM_unregisterMenuCommand(menu_command_id_1);
+                siteData = {};
+                fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadFixedMenu");
+                if (!hasTouchEvent) {
+                    document.removeEventListener("keydown", addKeyEvent);
+                }
+                _GM_unregisterMenuCommand(menu_command_id_3);
+                registerA();
+            });
+        };
+        registerA();
+    }
+
     let autoDownload = siteData.autoDownload;
 
     if (!!autoDownload) {
@@ -32997,7 +33154,7 @@ html,body {
 
     };
 
-    if (!siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+    if (!isSimpleMode && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
         if (siteData.key != 0) {
             if (!hasTouchEvent) {
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
@@ -33016,7 +33173,7 @@ html,body {
         setTimeout(() => toggleUI(), 500);
     }
 
-    if ("category" in siteData) {
+    if (isSimpleMode || "category" in siteData) {
         _GM_registerMenuCommand(displayLanguage.str_125, () => {
             const keys = [
                 "newTabViewLightGallery",
@@ -33024,7 +33181,8 @@ html,body {
                 "FullPictureLoadComicInfiniteScrollMode",
                 "FullPictureLoadOptions",
                 "FullPictureLoadCustomDownloadVideo",
-                "FullPictureLoadShowEye"
+                "FullPictureLoadShowEye",
+                "FullPictureLoadBlacklist"
             ];
             for (const key of keys) {
                 if (key in localStorage) {
