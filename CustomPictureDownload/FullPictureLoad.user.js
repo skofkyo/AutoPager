@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.7
+// @version            2.11.8
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -22232,6 +22232,10 @@ if ("xx" in window) {
                 str_163: "👻 開啟簡易模式",
                 str_164: "👻 關閉簡易模式",
                 str_165: "圖片總數：",
+                str_166: "篩選數量：",
+                str_167: "篩選寬：",
+                str_168: "篩選高：",
+                str_169: "背景顏色：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22254,6 +22258,10 @@ if ("xx" in window) {
                     d: "畫廊滾動",
                     t: "圖片切換",
                     s: "圖列切換"
+                },
+                backgroundColor: {
+                    l: "亮",
+                    d: "暗"
                 }
             };
             break;
@@ -22432,6 +22440,10 @@ if ("xx" in window) {
                 str_163: "👻 开启简易模式",
                 str_164: "👻 关闭简易模式",
                 str_165: "图片总数：",
+                str_166: "筛选数量：",
+                str_167: "筛选宽：",
+                str_168: "筛选高：",
+                str_169: "背景颜色：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22454,6 +22466,10 @@ if ("xx" in window) {
                     d: "画廊滚动",
                     t: "图片切换",
                     s: "图列切换"
+                },
+                backgroundColor: {
+                    l: "亮",
+                    d: "暗"
                 }
             };
             break;
@@ -22631,6 +22647,10 @@ if ("xx" in window) {
                 str_163: "👻 Enable Simple Mode",
                 str_164: "👻 Turn Off Simple Mode",
                 str_165: "Total Number Of Images：",
+                str_166: "Number Of Filters：",
+                str_167: "Filter Width：",
+                str_168: "Filter Height：",
+                str_169: "Background Color：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -22653,6 +22673,10 @@ if ("xx" in window) {
                     d: "Scroll",
                     t: "Toggle Image",
                     s: "Toggle Row"
+                },
+                backgroundColor: {
+                    l: "Light",
+                    d: "Dark"
                 }
             };
             break;
@@ -23233,7 +23257,7 @@ if ("xx" in window) {
         checkImgSrc: (ele, rText = null) => {
             let imgSrc;
             let check = fn.checkDataset(ele);
-            if (isEle(ele) && ["IMG", "DIV", "A", "SPAN", "LI", "FIGURE", "VIDEO"].some(n => n === ele.tagName) && check.ok) {
+            if (isEle(ele) && ["IMG", "DIV", "A", "SPAN", "LI", "FIGURE", "ARTICLE", "P", "VIDEO"].some(n => n === ele.tagName) && check.ok) {
                 imgSrc = fn.complementSrc(check.src, rText);
             } else if (isEle(ele) && ["IMG", "AMP-IMG"].some(n => n === ele.tagName)) {
                 if (ele.tagName == "IMG") {
@@ -23253,6 +23277,11 @@ if ("xx" in window) {
                 imgSrc = fn.complementSrc(imgSrc, rText);
             }
             if (isURL(imgSrc)) {
+                if (imgSrc === location.href) {
+                    return {
+                        ok: false
+                    }
+                }
                 return {
                     ok: true,
                     src: imgSrc
@@ -23270,7 +23299,7 @@ if ("xx" in window) {
                     ok: false
                 }
             }
-            if (["IMG", "DIV", "A", "SPAN", "LI", "FIGURE", "VIDEO"].some(n => n === ele.tagName)) {
+            if (["IMG", "DIV", "A", "SPAN", "LI", "FIGURE", "P", "ARTICLE", "VIDEO"].some(n => n === ele.tagName)) {
                 const datasetArr = [
                     "data-loadsrc",
                     "data-orig-file",
@@ -23293,6 +23322,7 @@ if ("xx" in window) {
                     "data-high-res-src",
                     "data-full-path",
                     "data-thumb",
+                    "data-bgset",
                     "ng-src",
                     "bigimg",
                     "lg-data-src",
@@ -23387,9 +23417,9 @@ if ("xx" in window) {
             }).filter(item => item));
         },
         //指定元素選擇器或元素陣列，返回提取出的圖片網址陣列。
-        getImgSrcArr: (img, dom = document) => {
+        getImgSrcArr: (selector, dom = document) => {
             let imgs;
-            isString(img) ? imgs = fn.gae(img, dom, dom) : imgs = img;
+            isString(selector) ? imgs = fn.gae(selector, dom, dom) : imgs = selector;
             let srcs = imgs.map(ele => {
                 let check = fn.checkImgSrc(ele);
                 return check.ok ? check.src : null;
@@ -23397,9 +23427,9 @@ if ("xx" in window) {
             return [...new Set(srcs)];
         },
         //指定圖片元素選擇器或圖片元素陣列，返回提取出的圖片網址陣列。
-        getImgSrcset: (img, dom = document) => {
+        getImgSrcset: (selector, dom = document) => {
             let imgs;
-            isString(img) ? imgs = fn.gae(img, dom, dom) : imgs = img;
+            isString(selector) ? imgs = fn.gae(selector, dom, dom) : imgs = selector;
             let srcs = imgs.map(ele => {
                 let srcset = ele.getAttribute("srcset");
                 if (srcset && /[xw],/.test(srcset)) {
@@ -23409,9 +23439,23 @@ if ("xx" in window) {
                     if (/^https:\/\/i\d\.wp\.com/.test(src)) {
                         src = src.replace(/\?.+$/, "?ssl=1");
                     }
+                    //if (decodeURIComponent(src).includes("/none")) console.log(ele);
                     return decodeURIComponent(src);
                 } else {
                     if (ele?.parentElement?.id === "pagetual-preload") return null;
+                    if (ele?.tagName === "A") {
+                        let check = fn.checkDataset(ele);
+                        if (check.ok) {
+                            //if (decodeURIComponent(check.src).includes("/none")) console.log(ele);
+                            if (!/\.(jpe?g|png|webp|gif|bmp)$/i.test(check.src)) {
+                                console.log("\n可能不是含圖片網址的A元素\n", ele);
+                                return null;
+                            }
+                            return decodeURIComponent(check.src);
+                        } else {
+                            return null;
+                        }
+                    }
                     let check = fn.checkImgSrc(ele);
                     if (check.ok) {
                         let src = check.src;
@@ -23420,6 +23464,7 @@ if ("xx" in window) {
                         } else {
                             src = src.replace(/-\d+x\d+\./, ".");
                         }
+                        //if (decodeURIComponent(src).includes("/none")) console.log(ele);
                         return decodeURIComponent(src);
                     } else {
                         return null;
@@ -27346,7 +27391,8 @@ if ("xx" in window) {
             shadowGalleryWheel: 0,
             jumpNum: 100,
             behavior: "instant",
-            threading: 2
+            threading: 2,
+            backgroundColor: "l"
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -30050,7 +30096,7 @@ img.small {
     //創建篩選下載
     const createFilterDownload = async () => {
 
-        if (checkGeting() || isOpenFilter) return;
+        if (checkGeting() || isDragging || isOpenFilter) return;
 
         isOpenFilter = true;
 
@@ -30067,6 +30113,7 @@ img.small {
 
         const config = getConfig();
         let threading = Number(config.threading);
+        let backgroundColor = config.backgroundColor;
 
         if (!("Viewer" in _unsafeWindow)) {
             _GM_addElement(document.head, "style", {
@@ -30159,7 +30206,6 @@ li.image-item {
     padding: 0px;
     border: #000 1px solid;
     border-radius: 2px;
-    background-color: #fff;
 }
 @media (max-width: 820px) {
     li.image-item {
@@ -30265,9 +30311,12 @@ input.check {
         <button id="unselect-all">${displayLanguage.str_155}</button>
         <button id="reload">${displayLanguage.str_156}</button>
         <button id="download">${displayLanguage.str_157}</button>
-        <label id="label-threading" class="number">${displayLanguage.str_161}</label>
-        <select id="threading"></select>
+        <label class="number">${displayLanguage.str_169}<select id="backgroundColor"></select></label>
+        <label id="label-threading" class="number">${displayLanguage.str_161}<select id="threading"></select></label>
+        <label class="number">${displayLanguage.str_167}<select id="width"></select></label>
+        <label class="number">${displayLanguage.str_168}<select id="height"></select></label>
         <label class="number">${displayLanguage.str_165 + srcs.length}</label>
+        <label id="filterNumber" class="number">${displayLanguage.str_166 + srcs.length}</label>
     </div>
 </div>
 <div id="imgBox" class="row">
@@ -30288,17 +30337,86 @@ input.check {
     </div>
 </div>
         `;
-
-        let select = ge("#threading", main);
+        let backgroundSelect = ge("#backgroundColor", main);
+        Object.keys(displayLanguage.backgroundColor).forEach((k, i) => {
+            const option = document.createElement("option");
+            option.value = k;
+            option.innerText = displayLanguage.backgroundColor[k];
+            backgroundSelect.append(option);
+        });
+        backgroundSelect.value = config.backgroundColor;
+        backgroundSelect.addEventListener("change", () => {
+            config.backgroundColor = backgroundSelect.value;
+            saveConfig(config);
+            backgroundColor = config.backgroundColor;
+            gae("li", main).forEach(li => {
+                if (backgroundColor === "l") {
+                    li.style.backgroundColor = "#fff";
+                } else {
+                    li.style.backgroundColor = "#333";
+                }
+            });
+            main.focus();
+        });
+        let widthNum = 0;
+        let heightNum = 0;
+        const changeList = () => {
+            gae("img", main).forEach(img => {
+                if (!/^(blob|data)/.test(img.src)) {
+                    const input = img.previousElementSibling;
+                    const parent = img.parentElement;
+                    let cw = img.naturalWidth >= widthNum;
+                    let ch = img.naturalHeight >= heightNum;
+                    if (cw && ch) {
+                        input.checked = true;
+                        input.classList.add("select");
+                        parent.style.display = "";
+                    } else {
+                        input.checked = false;
+                        input.classList.remove("select");
+                        parent.style.display = "none";
+                    }
+                }
+            });
+        };
+        let widthSelect = ge("#width", main);
+        for (let i = 0; i <= 40; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.innerText = i == 0 ? "ALL" : i * 100;
+            widthSelect.append(option);
+        }
+        widthSelect.addEventListener("change", () => {
+            widthNum = Number(widthSelect.value) * 100;
+            changeList();
+            const selects = gae(".select+.image", main);
+            ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+            main.focus();
+        });
+        let heightSelect = ge("#height", main);
+        for (let i = 0; i <= 40; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.innerText = i == 0 ? "ALL" : i * 100;
+            heightSelect.append(option);
+        }
+        heightSelect.addEventListener("change", () => {
+            heightNum = Number(heightSelect.value) * 100;
+            changeList();
+            const selects = gae(".select+.image", main);
+            ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+            main.focus();
+        });
+        let threadingSelect = ge("#threading", main);
         for (let i = 1; i <= 32; i++) {
             let option = document.createElement("option");
             option.value = i;
             option.innerText = i;
-            select.append(option);
+            threadingSelect.append(option);
         }
-        select.value = config.threading;
-        select.addEventListener("change", () => {
-            config.threading = Number(select.value);
+        threadingSelect.value = config.threading;
+        threadingSelect.addEventListener("change", () => {
+            config.threading = Number(threadingSelect.value);
             saveConfig(config);
             addLis();
             main.focus();
@@ -30337,6 +30455,7 @@ input.check {
                 gae("input.check", main).forEach(input => {
                     input.checked = true;
                     input.classList.add("select");
+                    ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
                 });
             });
         });
@@ -30345,10 +30464,16 @@ input.check {
                 gae("input.check", main).forEach(input => {
                     input.checked = false;
                     input.classList.remove("select");
+                    ge("#filterNumber", main).innerText = displayLanguage.str_166 + "0";
                 });
             });
         });
-        gae("#reload", main).forEach(button => button.addEventListener("click", () => addLis()));
+        gae("#reload", main).forEach(button => button.addEventListener("click", () => {
+            widthSelect.value = 0;
+            heightSelect.value = 0;
+            ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+            addLis();
+        }));
         gae("#download", main).forEach(button => {
             button.addEventListener("click", () => {
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
@@ -30384,6 +30509,8 @@ input.check {
                     } else {
                         input.classList.remove("select");
                     }
+                    const selects = gae(".select+.image", main);
+                    ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
                 };
                 const img = new Image();
                 img.className = "image";
@@ -30391,6 +30518,11 @@ input.check {
                 img.dataset.src = src;
                 const li = document.createElement("li");
                 li.className = "image-item";
+                if (backgroundColor === "l") {
+                    li.style.backgroundColor = "#fff";
+                } else {
+                    li.style.backgroundColor = "#333";
+                }
                 li.append(input);
                 li.append(img);
                 imageList.append(li);
@@ -30409,12 +30541,27 @@ input.check {
         addLis();
     };
 
+    const getXY = (event) => {
+        let x, y;
+        if (event.type.includes("mouse")) {
+            x = event.clientX;
+            y = event.clientY;
+        } else {
+            x = event.changedTouches[0].clientX;
+            y = event.changedTouches[0].clientY;
+        }
+        return {
+            x: x,
+            y: y
+        }
+    };
+
     //創建新分頁檢視眼睛圖示按鈕和圖片數量元素
-    let imgDown = false;
+    let viewImgDown = false;
     let isDragging = false;
-    let isAddDraggEvent = false;
+    let isAddViewImgDraggEvent = false;
     let startX, startY, startLeft, startTop;
-    let eventImg, eventMenu;
+    let eventViewImg, eventMenu;
     const addNewTabViewButton = () => {
         if (ge("#FullPictureLoadEye") || FullPictureLoadShowEye == 0) return;
         isAddNewTabViewButton = true;
@@ -30426,7 +30573,7 @@ input.check {
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => newTabView());
         document.body.append(img);
-        eventImg = img;
+        eventViewImg = img;
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenuB";
         menuDiv.style.bottom = "22px";
@@ -30472,61 +30619,46 @@ input.check {
         document.body.append(menuDiv);
         eventMenu = menuDiv;
 
-        const getXY = (event) => {
-            let x, y;
-            if (event.type.includes("mouse")) {
-                x = event.clientX;
-                y = event.clientY;
-            } else {
-                x = event.changedTouches[0].clientX;
-                y = event.changedTouches[0].clientY;
-            }
-            return {
-                x: x,
-                y: y
-            }
-        };
-
         const downEvent = (event) => {
             const obj = getXY(event);
-            imgDown = true;
+            viewImgDown = true;
             startX = obj.x;
             startY = obj.y;
-            startLeft = eventImg.offsetLeft;
-            startTop = eventImg.offsetTop;
+            startLeft = eventViewImg.offsetLeft;
+            startTop = eventViewImg.offsetTop;
         };
 
         const moveEvent = (event) => {
-            if (!imgDown) return;
+            if (!viewImgDown) return;
             event.preventDefault();
             const obj = getXY(event);
             isDragging = true;
             const dx = obj.x - startX;
             const dy = obj.y - startY;
-            eventImg.style.top = startTop + dy + "px";
-            eventImg.style.bottom = "auto";
-            eventImg.style.left = startLeft + dx + "px";
-            eventImg.style.right = "auto";
+            eventViewImg.style.top = startTop + dy + "px";
+            eventViewImg.style.bottom = "auto";
+            eventViewImg.style.left = startLeft + dx + "px";
+            eventViewImg.style.right = "auto";
             eventMenu.style.opacity = "0";
-            eventMenu.style.top = (eventImg.offsetTop - ((eventMenu.offsetHeight - 32) / 2)) + "px";
+            eventMenu.style.top = (eventViewImg.offsetTop - ((eventMenu.offsetHeight - 32) / 2)) + "px";
             eventMenu.style.bottom = "auto";
-            eventMenu.style.left = (eventImg.offsetLeft - (eventMenu.offsetWidth + 10)) + "px";
+            eventMenu.style.left = (eventViewImg.offsetLeft - (eventMenu.offsetWidth + 10)) + "px";
             eventMenu.style.right = "auto";
         };
 
         const upEvent = (event) => {
             eventMenu.style.opacity = "1";
-            imgDown = false;
+            viewImgDown = false;
             setTimeout(() => {
                 isDragging = false;
             }, 100);
         };
 
         const resizeEvent = () => {
-            eventImg.style.top = "auto";
-            eventImg.style.bottom = "24px";
-            eventImg.style.left = "auto";
-            eventImg.style.right = "24px";
+            eventViewImg.style.top = "auto";
+            eventViewImg.style.bottom = "24px";
+            eventViewImg.style.left = "auto";
+            eventViewImg.style.right = "24px";
             eventMenu.style.top = "auto";
             eventMenu.style.bottom = "22px";
             eventMenu.style.left = "auto";
@@ -30538,8 +30670,8 @@ input.check {
                 passive: false,
                 capture: true
             });
-            if (!isAddDraggEvent) {
-                isAddDraggEvent = true;
+            if (!isAddViewImgDraggEvent) {
+                isAddViewImgDraggEvent = true;
                 document.addEventListener("touchmove", moveEvent, {
                     passive: false,
                     capture: true
@@ -30549,8 +30681,8 @@ input.check {
             }
         } else {
             img.addEventListener("mousedown", downEvent);
-            if (!isAddDraggEvent) {
-                isAddDraggEvent = true;
+            if (!isAddViewImgDraggEvent) {
+                isAddViewImgDraggEvent = true;
                 document.addEventListener("mousemove", moveEvent);
                 document.addEventListener("mouseup", upEvent);
                 _unsafeWindow.addEventListener("resize", resizeEvent);
@@ -30578,6 +30710,9 @@ input.check {
     };
 
     //創建腳本在頁面左下的功能按鈕
+    let imgDown = false;
+    let isAddDraggEvent = false;
+    let eventImg;
     const addFullPictureLoadButton = () => {
         if (ge("#FullPictureLoad")) return;
         isAddFullPictureLoadButton = true;
@@ -30585,6 +30720,8 @@ input.check {
         img.id = "FullPictureLoad";
         img.className = "FullPictureLoadFixedBtn";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACFlBMVEVEREAAAABEREBEREBUXnFTXXBTXG5VXXJUXHFUW28grV0grV0hrl4hrV0hq10iql0oomAhrV2BiZiAiJd/h5V+h5Uiq16OlaKNlKGMk5+Mkp+KkZ89p28nq2Hp9+/n9u3t8PHs7/Dg9Ojp7O3d8+bo7O3o6+zn6+3m6uzl6evX8OLV8OHi5ujh5efO7dze4uTe4ePb3+LY3eDX29/W2t7T19u35Mu25Mr01lqw4sbz1Vmv4sXA1NWs4cPw0lnv0lmp4MCk3r3ozVuh3buu0M6vz83kylugysefycadx8OexsOdxsOF0qZ6zp5pyJK1p2S0pmOsoGRWv4SLlKEmuZpBsnc5t3AmuJmQi2ont5kmtpcptJiOiWg0tWwytGorr5Yqr5YsrpUws2kqrJRNmpMusmcsqpIuqJMssWkqsWQqsGUnsGUzoI8lsGGAf2wkr2Ekr2BzfI0irl8hrl5ye4x9fGogrWAhrV03mIwgrF9xeoshq10gql8dp2ccp2cdpmkcnIUanIYcm4QRoIUTnoURn4QdmYM/h4QcmIMSnYMXmoMWmoIbloIclYJDgYIYl4EaloAek4IfkYFqbm0jjoBqbW0ni4ApiX9Hd35kanBjaXBhaG9MbnpOanhOaXhPaHdDbXZHanZGanRLZnZJZ3RSYnVMZXRPY3ROY3VSYXRQYnRTYHRVX3NUX3RSYHNUXnNTXXJTXXFME6frAAAAHnRSTlMAAAUGZ2dqeHh7lrzNzc7O3O/09PT19fn5+fn5/f4hZOrvAAAB1UlEQVR42oWTzYoTQRSFv6q6RqOoqBicTTCKK1cOURBGBV9AXCgu9Vl8FF/ApcshI4qKgrtBByZK0HSGmMxkMrF/qq6LTjptErGX5zu3uu65dY3TYCh9ag2UNPsfjnmpZW4MgBbaIy/6PCnxvL7gEQhJ7AruAqifcZ96EHDX67ngKgCJn/k3B6AC1O9Cj9ri/2mBsZIf9iLi0rMFDhhjbO6NsL9er+CQG3pYMT+XuGVmuH9SzPF7S/UONDfUHl44/6A24wfdpMgsSO6tP52ffxjF6cUT056MBdxf/cVRzP6PiQG8KhZMJedhewik0QT43RsBQUEwLufZx53Td85p7wCwEu+Fs6qAGBsA1aO3XUZbG/EAsAJJlM/MGgOoDltdYNTam3JIOlVmOaj2N/sAjHf9lGdBqwACmmi0FU/TOWxfEY483o/9tcuvJBXU+90PaZHf5NtVFzTL+N7bqD4GS9DRmzl3btJWk2WFIKradqX8LfudU3VKBuKd0vwc+HCjNDJhkJXfB6jq+wZJBSAT5MmKN1/la7sJ+jmsiyQrdkZo9N819FNnXcSZFTt1rGnXhl/G6a26IP/YOXczi5prQmFY3snbkzNSXGyBV+28p+nNF+vn2h97PvHD5SOHkgAAAABJRU5ErkJggg==";
+        img.style.bottom = "24px";
+        img.style.left = "24px";
         img.setAttribute("title", displayLanguage.str_47);
         img.oncontextmenu = () => false;
         img.addEventListener("click", () => {
@@ -30603,6 +30740,7 @@ input.check {
             }
         });
         document.body.append(img);
+        eventImg = img;
         if ("insertImg" in siteData) {
             let img2 = new Image();
             img2.id = "FullPictureLoadGoToFirstImage";
@@ -30627,6 +30765,67 @@ input.check {
             });
             document.body.append(img3);
         }
+
+        const downEvent = (event) => {
+            const obj = getXY(event);
+            imgDown = true;
+            startX = obj.x;
+            startY = obj.y;
+            startLeft = eventImg.offsetLeft;
+            startTop = eventImg.offsetTop;
+        };
+
+        const moveEvent = (event) => {
+            if (!imgDown) return;
+            event.preventDefault();
+            const obj = getXY(event);
+            isDragging = true;
+            const dx = obj.x - startX;
+            const dy = obj.y - startY;
+            eventImg.style.top = startTop + dy + "px";
+            eventImg.style.bottom = "auto";
+            eventImg.style.left = startLeft + dx + "px";
+            eventImg.style.right = "auto";
+        };
+
+        const upEvent = (event) => {
+            imgDown = false;
+            setTimeout(() => {
+                isDragging = false;
+            }, 100);
+        };
+
+        const resizeEvent = () => {
+            eventImg.style.top = "auto";
+            eventImg.style.bottom = "24px";
+            eventImg.style.left = "24px";
+            eventImg.style.right = "auto";
+        };
+
+        if (hasTouchEvent) {
+            img.addEventListener("touchstart", downEvent, {
+                passive: false,
+                capture: true
+            });
+            if (!isAddDraggEvent) {
+                isAddDraggEvent = true;
+                document.addEventListener("touchmove", moveEvent, {
+                    passive: false,
+                    capture: true
+                });
+                document.addEventListener("touchend", upEvent);
+                _unsafeWindow.addEventListener("resize", resizeEvent);
+            }
+        } else {
+            img.addEventListener("mousedown", downEvent);
+            if (!isAddDraggEvent) {
+                isAddDraggEvent = true;
+                document.addEventListener("mousemove", moveEvent);
+                document.addEventListener("mouseup", upEvent);
+                _unsafeWindow.addEventListener("resize", resizeEvent);
+            }
+        }
+
     };
 
     //創建浮動選單
@@ -31326,7 +31525,6 @@ input.check {
 }
 
 #FullPictureLoad {
-    bottom: 24px !important;
     display: block !important;
 }
 
@@ -31340,7 +31538,7 @@ input.check {
 
 .FullPictureLoadFixedBtn {
     position: fixed !important;
-    left: 24px !important;
+    left: 24px;
     width: 32px !important;
     height: 32px !important;
     border: unset !important;
@@ -32680,7 +32878,7 @@ a[data-fancybox]:hover {
                 menu_command_id_1 = _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
                 checkOptionsData();
                 siteData = {
-                    imgs: () => fn.getImgSrcset("div,span,li,figure,img:not(.FullPictureLoadFixedBtn)"),
+                    imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)"),
                     repeat: 1,
                     SPA: true,
                     category: "photo"
