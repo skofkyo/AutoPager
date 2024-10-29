@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.9
+// @version            2.11.10
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -11680,48 +11680,52 @@ a:has(>div>div>img),
             await fn.getNP("#gdt>*", ".ptds+td>a", null, "//tr[td[@class='ptds']]");
             if (options.fancybox == 1 && !isDownloading) {
                 //預覽縮圖網址需要裁剪難弄...
-                if (fn.ge(".gdtm img[style],.gdtl img[style]")) {
-                    let thumbnailsHeightData = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => Number(e.style.height.match(/\d+/)[0]));
-                    let thumbnailUrls = [...document.querySelectorAll(".gdtm>div,.gdtl>div")].map(div => div.getAttribute("style").split("url(")[1].split(")")[0]);
+                if (fn.ge(".gdtm img[style],.gdtl img[style],#gdt>a>div[style*='url(']")) {
+                    let num_a;
+                    let num_b;
+                    let thumbnailsHeightData = [...document.querySelectorAll(".gdtm img,.gdtl img,#gdt>a>div[style*='url(']")].map(e => Number(e.style.height.match(/\d+/)[0]));
+                    let thumbnailUrls = [...document.querySelectorAll(".gdtm>div,.gdtl>div,#gdt>a>div[style*='url(']")].map(div => div.getAttribute("style").split("url(")[1].split(")")[0]);
+                    num_a = thumbnailUrls.length;
                     thumbnailUrls = [...new Set(thumbnailUrls)];
-                    let getThumbnai = 0;
-                    fn.showMsg("Get Thumbnailsing...", 0);
-                    let blobs = thumbnailUrls.map((url, i, arr) => {
-                        return fn.xhr(url, {
+                    num_b = thumbnailUrls.length;
+                    if (num_a === num_b) {
+                        thumbnailSrcArray = thumbnailUrls;
+                    } else {
+                        let getThumbnai = 0;
+                        fn.showMsg("Get Thumbnailsing...", 0);
+                        let blobs = thumbnailUrls.map((url, i, arr) => fn.xhr(url, {
                             responseType: "blob"
                         }).then(blob => {
                             fn.showMsg(`Get Thumbnails ${getThumbnai += 1}/${arr.length}`, 0);
                             return blob;
-                        });
-                    });
-                    let heightIndex = 0;
-                    let crop = 0;
-                    await Promise.all(blobs).then(async blobArr => {
-                        fn.hideMsg();
-                        for (let blob of blobArr) {
-                            fn.showMsg(`Thumbnails Crop ${crop += 1}/${blobArr.length}`, 0);
-                            //console.log(`預覽縮圖裁切第${crop}張`);
-                            let img = new Image();
-                            await new Promise((resolve, reject) => {
-                                img.onload = resolve;
-                                img.onerror = reject;
-                                img.src = URL.createObjectURL(blob);
-                            });
-                            for (let w = 0; w < img.width; w += 100) {
-                                let canvas = document.createElement("canvas");
-                                canvas.height = thumbnailsHeightData[heightIndex];
-                                canvas.width = 100;
-                                canvas.getContext("2d").drawImage(img, -Math.abs(w), 0);
-                                let dataURL = canvas.toDataURL("image/webp", 0.5);
-                                let thumbnailBlobURL = fn.dataURLtoBlobURL(dataURL);
-                                thumbnailSrcArray.push(thumbnailBlobURL);
-                                //console.log(thumbnailBlobURL);
-                                heightIndex++;
+                        }));
+                        let heightIndex = 0;
+                        let crop = 0;
+                        await Promise.all(blobs).then(async blobArr => {
+                            fn.hideMsg();
+                            for (let blob of blobArr) {
+                                fn.showMsg(`Thumbnails Crop ${crop += 1}/${blobArr.length}`, 0);
+                                //console.log(`預覽縮圖裁切第${crop}張`);
+                                let img = new Image();
+                                await new Promise((resolve, reject) => {
+                                    img.onload = resolve;
+                                    img.onerror = reject;
+                                    img.src = URL.createObjectURL(blob);
+                                });
+                                for (let w = 0; w < img.width; w += 100) {
+                                    let canvas = document.createElement("canvas");
+                                    canvas.height = thumbnailsHeightData[heightIndex];
+                                    canvas.width = 100;
+                                    canvas.getContext("2d").drawImage(img, -Math.abs(w), 0);
+                                    let dataURL = canvas.toDataURL("image/webp", 0.5);
+                                    let thumbnailBlobURL = fn.dataURLtoBlobURL(dataURL);
+                                    thumbnailSrcArray.push(thumbnailBlobURL);
+                                    //console.log(thumbnailBlobURL);
+                                    heightIndex++;
+                                }
                             }
-                        }
-                    });
-                } else if (fn.ge("#gdt>a[href*=exhentai]>div[style*='url(']")) {
-                    thumbnailSrcArray = fn.getImgSrcArr("#gdt>a[href*=exhentai]>div[style*='url(']");
+                        });
+                    }
                 } else {
                     thumbnailSrcArray = [...document.querySelectorAll(".gdtm img,.gdtl img")].map(e => e.src);
                 }
@@ -11729,14 +11733,14 @@ a:has(>div>div>img),
             if (E_HENTAI_LoadOriginalImage == 1) {
                 fn.showMsg(displayLanguage.str_01, 0);
                 let fetchNum = 0;
-                return fn.gae(".gdtm a,.gdtl a,#gdt a").map(async (a, i, arr) => {
+                return fn.gau(".gdtm a,.gdtl a,#gdt a").map(async (url, i, arr) => {
                     await delay(100 * i);
-                    return fn.fetchDoc(a.href).then(async (dom) => {
+                    return fn.fetchDoc(url).then(async (dom) => {
                         fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${arr.length}`, 0);
                         let fullimg = fn.ge("a[href*=fullimg]", dom);
                         let img = fn.ge("#img", dom);
                         if (fullimg) {
-                            let url = fullimg.href;
+                            url = fullimg.href;
                             let res = await fn.xhrHEAD(url);
                             let finalUrl = res.finalUrl;
                             return /login\.php/.test(finalUrl) ? img.src : url;
@@ -22191,8 +22195,8 @@ if ("xx" in window) {
                 str_122: "此漫畫站使用無限滾動閱讀模式",
                 str_123: "顯示右下捕獲之眼圖示",
                 str_124: "此網站下載影片",
-                str_125: "🧹 重置此網站儲存的所有腳本設定",
-                str_126: "🧹 重置腳本儲存的所有全局設定",
+                str_125: "🔄 重置此網站儲存的所有腳本設定",
+                str_126: "🔄 重置腳本儲存的所有全局設定",
                 str_127: "右鍵：匯出圖址(7)",
                 str_128: hasTouchEvent ? "開啟收藏" : "開啟收藏(9)",
                 str_129: "關閉收藏",
@@ -22229,8 +22233,8 @@ if ("xx" in window) {
                 str_160: hasTouchEvent ? "插入圖片" : "插入圖片(1)",
                 str_161: "同時載入的圖片數量：",
                 str_162: "圖片預載數：",
-                str_163: "👻 開啟簡易模式",
-                str_164: "👻 關閉簡易模式",
+                str_163: "📖 開啟簡易模式",
+                str_164: "📖 關閉簡易模式",
                 str_165: "圖片總數：",
                 str_166: "篩選數量：",
                 str_167: "篩選寬：",
@@ -22399,8 +22403,8 @@ if ("xx" in window) {
                 str_122: "此漫画站使用无限滚动阅读模式",
                 str_123: "显示右下捕获之眼图标",
                 str_124: "此网站下载视频",
-                str_125: "🧹 重置此网站存储的所有脚本设置",
-                str_126: "🧹 重置脚本存储的所有全局设置",
+                str_125: "🔄 重置此网站存储的所有脚本设置",
+                str_126: "🔄 重置脚本存储的所有全局设置",
                 str_127: "右键：导出图址(7)",
                 str_128: hasTouchEvent ? "打开收藏" : "打开收藏(9)",
                 str_129: "关闭收藏",
@@ -22437,8 +22441,8 @@ if ("xx" in window) {
                 str_160: hasTouchEvent ? "插入图片" : "插入图片(1)",
                 str_161: "同时加载的图片数量：",
                 str_162: "图片预载数：",
-                str_163: "👻 开启简易模式",
-                str_164: "👻 关闭简易模式",
+                str_163: "📖 开启简易模式",
+                str_164: "📖 关闭简易模式",
                 str_165: "图片总数：",
                 str_166: "筛选数量：",
                 str_167: "筛选宽：",
@@ -22605,8 +22609,8 @@ if ("xx" in window) {
                 str_122: "This website uses Infinite Scroll Read Mode",
                 str_123: "Show Capture Eye Icon",
                 str_124: "This website downloads videos",
-                str_125: "🧹 Reset all script settings stored on this site",
-                str_126: "🧹 Reset all saved global settings",
+                str_125: "🔄 Reset all script settings stored on this site",
+                str_126: "🔄 Reset all saved global settings",
                 str_127: "Right Click：Export URLs(7)",
                 str_128: hasTouchEvent ? "OpenFavor" : "OpenFavor(9)",
                 str_129: "Close Favor",
@@ -22644,8 +22648,8 @@ if ("xx" in window) {
                 str_160: hasTouchEvent ? "Insert Images" : "Insert Images(1)",
                 str_161: "The Number Of Images Loaded At The Same Time：",
                 str_162: "Preload：",
-                str_163: "👻 Enable Simple Mode",
-                str_164: "👻 Turn Off Simple Mode",
+                str_163: "📖 Enable Simple Mode",
+                str_164: "📖 Turn Off Simple Mode",
                 str_165: "Total Number Of Images：",
                 str_166: "Number Of Filters：",
                 str_167: "Filter Width：",
@@ -32867,54 +32871,6 @@ a[data-fancybox]:hover {
         });
     }
 
-    //簡易模式規則
-    if (!("category" in siteData)) {
-        isSimpleMode = true;
-        let menu_command_id_1;
-        let menu_command_id_2;
-        let menu_command_id_3;
-        const registerA = () => {
-            menu_command_id_2 = _GM_registerMenuCommand(displayLanguage.str_163, () => {
-                menu_command_id_1 = _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
-                checkOptionsData();
-                siteData = {
-                    imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)"),
-                    repeat: 1,
-                    SPA: true,
-                    category: "photo"
-                };
-                addFullPictureLoadButton();
-                if (!hasTouchEvent) {
-                    addFullPictureLoadFixedMenu();
-                    document.addEventListener("keydown", addKeyEvent);
-                }
-                if (!ge("#FullPictureLoadMainStyle")) {
-                    fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
-                }
-                if (!("Fancybox" in _unsafeWindow)) {
-                    addLibrarysV5();
-                    Fancyboxl10nV5();
-                    fn.css(FancyboxV5Css, "FancyboxV5Css");
-                }
-                _GM_unregisterMenuCommand(menu_command_id_2);
-                registerB();
-            });
-        };
-        const registerB = () => {
-            menu_command_id_3 = _GM_registerMenuCommand(displayLanguage.str_164, () => {
-                _GM_unregisterMenuCommand(menu_command_id_1);
-                siteData = {};
-                fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadFixedMenu");
-                if (!hasTouchEvent) {
-                    document.removeEventListener("keydown", addKeyEvent);
-                }
-                _GM_unregisterMenuCommand(menu_command_id_3);
-                registerA();
-            });
-        };
-        registerA();
-    }
-
     let autoDownload = siteData.autoDownload;
 
     if (!!autoDownload) {
@@ -33356,6 +33312,79 @@ html,body {
 
     };
 
+    _GM_registerMenuCommand(displayLanguage.str_125, () => {
+        const keys = [
+            "newTabViewLightGallery",
+            "newWindowData",
+            "FullPictureLoadComicInfiniteScrollMode",
+            "FullPictureLoadOptions",
+            "FullPictureLoadCustomDownloadVideo",
+            "FullPictureLoadShowEye",
+            "FullPictureLoadBlacklist"
+        ];
+        for (const key of keys) {
+            if (key in localStorage) {
+                localStorage.removeItem(key);
+            }
+        }
+        location.reload();
+    });
+    _GM_registerMenuCommand(displayLanguage.str_126, () => {
+        const GM_keys = _GM_listValues();
+        if (GM_keys.length > 0) {
+            GM_keys.forEach(key => _GM_deleteValue(key));
+        }
+        location.reload();
+    });
+
+    //簡易模式規則
+    if (!("category" in siteData)) {
+        isSimpleMode = true;
+        let menu_command_id_1;
+        let menu_command_id_2;
+        let menu_command_id_3;
+        const registerA = () => {
+            menu_command_id_2 = _GM_registerMenuCommand(displayLanguage.str_163, () => {
+                menu_command_id_1 = _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
+                checkOptionsData();
+                siteData = {
+                    imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)"),
+                    repeat: 1,
+                    SPA: true,
+                    category: "photo"
+                };
+                addFullPictureLoadButton();
+                if (!hasTouchEvent) {
+                    addFullPictureLoadFixedMenu();
+                    document.addEventListener("keydown", addKeyEvent);
+                }
+                if (!ge("#FullPictureLoadMainStyle")) {
+                    fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
+                }
+                if (!("Fancybox" in _unsafeWindow)) {
+                    addLibrarysV5();
+                    Fancyboxl10nV5();
+                    fn.css(FancyboxV5Css, "FancyboxV5Css");
+                }
+                _GM_unregisterMenuCommand(menu_command_id_2);
+                registerB();
+            });
+        };
+        const registerB = () => {
+            menu_command_id_3 = _GM_registerMenuCommand(displayLanguage.str_164, () => {
+                _GM_unregisterMenuCommand(menu_command_id_1);
+                siteData = {};
+                fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadFixedMenu");
+                if (!hasTouchEvent) {
+                    document.removeEventListener("keydown", addKeyEvent);
+                }
+                _GM_unregisterMenuCommand(menu_command_id_3);
+                registerA();
+            });
+        };
+        registerA();
+    }
+
     if (!isSimpleMode && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
         if (siteData.key != 0) {
             if (!hasTouchEvent) {
@@ -33373,33 +33402,6 @@ html,body {
             addFullPictureLoadButton();
         }
         setTimeout(() => toggleUI(), 500);
-    }
-
-    if (isSimpleMode || "category" in siteData) {
-        _GM_registerMenuCommand(displayLanguage.str_125, () => {
-            const keys = [
-                "newTabViewLightGallery",
-                "newWindowData",
-                "FullPictureLoadComicInfiniteScrollMode",
-                "FullPictureLoadOptions",
-                "FullPictureLoadCustomDownloadVideo",
-                "FullPictureLoadShowEye",
-                "FullPictureLoadBlacklist"
-            ];
-            for (const key of keys) {
-                if (key in localStorage) {
-                    localStorage.removeItem(key);
-                }
-            }
-            location.reload();
-        });
-        _GM_registerMenuCommand(displayLanguage.str_126, () => {
-            const GM_keys = _GM_listValues();
-            if (GM_keys.length > 0) {
-                GM_keys.forEach(key => _GM_deleteValue(key));
-            }
-            location.reload();
-        });
     }
 
 })(JSZip, ajaxHooker);
