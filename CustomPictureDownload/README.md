@@ -121,7 +121,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     init: () => fn.addMutationObserver(() => fn.remove("div[class][style*='z-index']")), //動態刪除元素
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
-    //IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
+    //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
     imgs: () => { //也可自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變數或透過api取得的json。
         code;
         return Array;
@@ -1047,7 +1047,7 @@ fn.getEleF(String or Array, String, null or Array [String, Number]);
 -1 ==> -2
 //mode20
  ==> -p-2
-//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
+//IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fn.getImg("元素選擇器",max ,mode ,["圖片網址用來替換的字串","圖片網址要被替換的字串"], 請求發送的間隔毫秒)
 fn.getImg("selector", max, mode = 1, rText = [null, null], time = 100);
 fn.getImg(String, Number, Number, Array [String or RegExp, String] or null, Number);
@@ -1058,7 +1058,7 @@ fn.getModeUrl("url", mode, num);
 <pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
 //fn.getImgO基本同fn.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
-//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
+//IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fn.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "圖片網址要被替換的字串"], time(延遲請求下一頁的時間預設200毫秒), "替換頁碼條元素", 0(不顯示獲取訊息))
 fn.getImgO("selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 fn.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
@@ -1078,7 +1078,7 @@ fn.getImgIframe(String, Number, Number, String or  null, Number, Number)
 //數字大於等於100，請求間隔模式單位毫秒。
 //A元素選擇器的href屬性不能是#和javascript或onclick監聽點擊事件，必須是一般的http連結。
 //A元素參數可以傳入自己創建的網址陣列
-//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
+//IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fn.getImgA("元素選擇器", "A元素選擇器", mode, ["圖片網址要替換的字串", "圖片網址要被替換的字串"], 0 不顯示獲取訊息)
 fn.getImgA("selector", "a selector", mode = 0, rText = [null, null], showMsg = 1);
 fn.getImgA("元素選擇器", "A元素選擇器");
@@ -1087,7 +1087,7 @@ fn.getImgA(String, String or Array, Number, , Array [String or RegExp, String] o
 </pre>
 <pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址的陣列
-//IMG、DIV、A、LINK、SPAN、LI、FIGURE，7種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
+//IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fn.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
 fn.getImgCorsA("元素選擇器", [網址陣列], time = 100);
 fn.getImgCorsA(String, String or Array, Number);
@@ -1127,7 +1127,7 @@ imgs: async () => {
 <p>在頁面左下添加了一個圖片下載按鈕</p>
 <img src="https://i.imgur.com/TxnEvTk.png">
 <p>點擊後會彈出篩選UI</p>
-<img src="https://i.imgur.com/OzZGSY7.jpeg">
+<img src="https://i.imgur.com/YaLJdfh.jpeg">
 <p>點下載按鈕後就會開始下載壓縮打包圖片</p>
 <img src="https://i.imgur.com/m6ewqQd.png">
 <p>右鍵點擊圖示複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
@@ -1212,13 +1212,13 @@ imgs: async () => {
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片篩選下載功能。</p>
-<img src="https://i.imgur.com/DwtSjHS.jpeg">
+<img src="https://i.imgur.com/h64MC4A.jpeg">
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
 <img src="https://i.imgur.com/vtwqkOX.jpeg">
 <img src="https://i.imgur.com/J0Sz9ri.jpg">
 <img src="https://i.imgur.com/kE3XYlH.jpeg">
-<img src="https://i.imgur.com/R363fgV.jpeg">
+<img src="https://i.imgur.com/TgxYlL6.jpeg">
 <img src="https://i.imgur.com/OibRD2N.jpg">
 <h2>自定義編輯網站收藏說明</h2>
 <details>
@@ -1309,6 +1309,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td></td>
             </tr>
+            <tr>
+                <td>
+                    <a href="https://wallhaven.cc/latest">wallhaven</a>
+                </td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </details>
@@ -1392,7 +1398,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xinggan5.top/">极品性感美女</a>
                 </td>
                 <td>
-                    <a href="https://www.plmn5.com/">网址发布页</a>，永久域名：尤物网.Com
+                    <a href="http://www.plmn5.com/">网址发布页1</a>，<a href="http://xgyw.org/">网址发布页2</a>，永久域名：尤物网.Com
                 </td>
             </tr>
             <tr>
@@ -1405,7 +1411,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.xiuren51.top/">秀人集</a>
                 </td>
-                <td>永久域名Xiurenba.Com及(秀人集.com)</td>
+                <td>永久域名Xiurenba.Com及(秀人集.com)，<a href="http://a.2xiu.vip/">导航页</a></td>
             </tr>
             <tr>
                 <td>
