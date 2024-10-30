@@ -1148,7 +1148,7 @@ imgs: async () => {
 <p>當頁面不適合插入圖片時為此模式，只能透過各個功能入口進入看圖模式</p>
 <strong>PC：</strong>
 <p>特徵是頁面有左下圖示、浮動選單、右下捕獲之眼圖示</p>
-<p>開啟篩選UI：點擊左下圖示或浮動選單或快捷鍵F</p>
+<p>開啟篩選UI：點擊左下圖示或浮動選單篩選下載或快捷鍵F</p>
 <p>開啟影子畫廊：浮動選單影子畫廊或快捷鍵G</p>
 <p>開啟分頁畫廊：點擊右下眼睛圖示或浮動選單分頁畫廊或快捷鍵8</p>
 <strong>Mobile：</strong>
@@ -3687,6 +3687,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://bdsmlr.com/">bdsmlr</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://joyreactor.cc/">JoyReactor</a>
                 </td>
                 <td></td>
             </tr>
