@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.13
+// @version            2.11.14
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -25181,6 +25181,9 @@ if ("xx" in window) {
         }),
         //創建style元素
         css: (css, id = null) => {
+            if (isString(id)) {
+                if (document.getElementById(id)) return;
+            }
             let style = document.createElement("style");
             style.type = "text/css";
             if (isString(id)) style.id = id;
@@ -30216,7 +30219,7 @@ html,body {
     border-radius: 5px;
 }
 .row.dark {
-    border: #fff 1px solid;
+    border: rgb(0, 204, 255) 1px solid;
 }
 #title {
     display: block;
@@ -30238,7 +30241,7 @@ html,body {
     border-left: #000 1px solid;
 }
 .number.dark{
-    border-left: #fff 1px solid;
+    border-left: rgb(0, 204, 255) 1px solid;
 }
 .close {
     margin: 0 5px;
@@ -30279,7 +30282,7 @@ li.image-item {
 }
 li.dark {
     background-color: #333;
-    border: #fff 1px solid;
+    border: rgb(0, 204, 255) 1px solid;
 }
 @media (max-width: 820px) {
     li.image-item {
@@ -32977,7 +32980,7 @@ a[data-fancybox]:hover {
                 if (e.target.tagName === "A" && e.target?.previousElementSibling?.nodeName === "IMG") {
                     return true;
                 }
-                if (["IMG", "CANVAS"].some(t => t === e.target.tagName) && !e.target?.id?.startsWith("Full")) {
+                if (["IMG", "CANVAS"].some(t => t === e.target.tagName) && !["Full"].some(id => e.target?.id?.startsWith(id)) && !["fancybox", "viewer-move"].some(className => e.target?.className?.startsWith(className))) {
                     return true;
                 }
                 if (["A", "FIGURE", "SPAN"].some(t => t === e.target.tagName)) {
@@ -33124,7 +33127,6 @@ a[data-fancybox]:hover {
         const shadow = FavorSitesShadowElement.attachShadow({
             mode: "closed"
         });
-
         fn.css(`
 html,body {
     overflow: hidden !important;
@@ -33227,7 +33229,8 @@ html,body {
             backgroundColor: "#fafafa",
             color: "#222",
             fontSize: "14px",
-            overflow: "scroll"
+            overflowY: "auto",
+            overflowX: "hidden"
         });
         shadow.append(FavorSitesElement);
 
@@ -33361,7 +33364,9 @@ html,body {
             }, {
                 text: displayLanguage.str_129,
                 cfn: () => {
-                    fn.remove("#overflowYHidden");
+                    if (!isOpenFilter) {
+                        fn.remove("#overflowYHidden");
+                    }
                     FavorSitesShadowElement.remove();
                     _unsafeWindow.removeEventListener("resize", reSize_cb);
                 }
