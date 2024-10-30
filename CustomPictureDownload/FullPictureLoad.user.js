@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.10
+// @version            2.11.11
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -23447,7 +23447,7 @@ if ("xx" in window) {
                     return decodeURIComponent(src);
                 } else {
                     if (ele?.parentElement?.id === "pagetual-preload") return null;
-                    if (ele?.tagName === "A") {
+                    if (isSimpleMode && ele?.tagName === "A") {
                         let check = fn.checkDataset(ele);
                         if (check.ok) {
                             //if (decodeURIComponent(check.src).includes("/none")) console.log(ele);
@@ -24861,7 +24861,7 @@ if ("xx" in window) {
                 let validPage = await siteData.SPA();
                 if (!validPage) return;
             }
-            if (options.autoInsert == 1 && manual === "no" || options.autoInsert == 0 && manual === "yes") {
+            if (options.autoInsert == 1 && manual === "no" || options.autoInsert == 0 && manual === "yes" || manual === "yes") {
                 let [insertSelector, insertMode, delayTime] = siteData.insertImg;
                 await fn.delay(delayTime || 0);
                 let selector = siteData.imgs;
