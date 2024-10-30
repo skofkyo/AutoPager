@@ -582,7 +582,7 @@ fn.createImgBox(String or HTMLElement, Number, Number);
 </pre>
 <pre>
 //指定元素選擇器或元素陣列，返回提取出的圖片網址陣列。
-//IMG、DIV、A、LINK、SPAN、LI、FIGURE，支持dataset和backgroundImage
+//IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，支持dataset和backgroundImage
 //不判斷srcset是因為不是所有網站都遵循srcset屬性的格式
 fn.getImgSrcArr("selector");
 fn.getImgSrcArr("selector", doc = document);
@@ -590,8 +590,8 @@ fn.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fn.getImgSrcArr(Array [HTMLElement]);
 </pre>
 <pre>
-//指定圖片選擇器或圖片元素陣列，返回提取出的圖片網址陣列。
-//主要用於提取IMG的srcset屬性，也支持dataset和backgroundImage
+//比fn.getImgSrcArr()多了判斷srcset屬性
+//主要用於提取IMG的srcset屬性
 fn.getImgSrcset("img selector");
 fn.getImgSrcset("img selector", doc = document);
 fn.getImgSrcset(String, HTMLDocument);
@@ -1130,10 +1130,31 @@ imgs: async () => {
 <img src="https://i.imgur.com/YaLJdfh.jpeg">
 <p>點下載按鈕後就會開始下載壓縮打包圖片</p>
 <img src="https://i.imgur.com/m6ewqQd.png">
-<p>右鍵點擊圖示複製圖片網址，如果規則設置了insertImg，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
-<p>PS：需重複獲取原始圖片元素的規則，無法複製圖片網址，例如Civitai。</p>
+<p>右鍵點擊圖示複製圖片網址，如果規則insertImg為手動模式，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
 <p>中鍵點擊圖示匯出網址MediaURLs.txt文件</p>
-<p>觸控裝置，長按頁面圖片元素500毫秒，規則insertImg設置為手動則插入圖片或複製圖片網址。</p>
+<h1>手動模式說明：</h1>
+<p>部分規則因種種原因寫成了手動規則</p>
+<h3>手動操作頁面聚圖：</h3>
+<strong>PC：</strong>
+<p>特徵是頁面有左下圖示和浮動選單</p>
+<p>1.對頁面左下圖示按滑鼠右鍵</p>
+<p>2.鍵盤快捷鍵按1</p>
+<p>3.浮動選單按鈕的插入圖片，插入圖片後該選單項會移除。</p>
+<strong>Mobile：</strong>
+<p>特徵是頁面只有左下圖示</p>
+<p>按住頁面的其中一張圖片超過500毫秒</p>
+<h3>捕獲模式：</h3>
+<img src="https://i.imgur.com/UwFakon.jpeg">
+<p>當頁面不適合插入圖片時為此模式，只能透過各個功能入口進入看圖模式</p>
+<strong>PC：</strong>
+<p>特徵是頁面有左下圖示、浮動選單、右下捕獲之眼圖示</p>
+<p>開啟篩選UI：點擊左下圖示或浮動選單或快捷鍵F</p>
+<p>開啟影子畫廊：浮動選單影子畫廊或快捷鍵G</p>
+<p>開啟分頁畫廊：點擊右下眼睛圖示或浮動選單分頁畫廊或快捷鍵8</p>
+<strong>Mobile：</strong>
+<p>特徵是頁面有左下圖示、右下捕獲之眼圖示</p>
+<p>開啟篩選UI：點擊左下圖示</p>
+<p>開啟分頁畫廊：點擊右下眼睛圖示或先開啟篩選UI點擊上面的分頁畫廊按紐。</p>
 <h1>腳本有綁定按鍵</h1>
 <p>數字鍵 0 僅彈出標題輸入框，輸入或修改後開始下載</p>
 <p>數字鍵 1 複製圖片網址或手動模式的插入圖片</p>
@@ -1162,7 +1183,7 @@ imgs: async () => {
 <p>按2，滾動至腳本插入的第一張大圖</p>
 <p>按3，一鍵下載，跳過自定義標題的步驟。</p>
 <br>
-<p>PS：需重複獲取原始圖片元素的規則，按1無法複製圖片網址，需點擊頁面功能按鈕或浮動選單按鈕的複製圖址。</p>
+<p>PS：需重複獲取圖片的規則，按1無法複製圖片網址，需點擊頁面功能按鈕或浮動選單按鈕的複製圖址。</p>
 <h1>圖片檢視模式</h1>
 <h3>1.圖片置中模式</h3>
 <p>上方向鍵滾動到目前的上一張圖、下方向鍵滾動到目前的下一張圖</p>
