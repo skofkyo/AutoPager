@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.12
+// @version            2.11.13
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -22287,7 +22287,7 @@ if ("xx" in window) {
                 str_166: "篩選數量：",
                 str_167: "篩選寬：",
                 str_168: "篩選高：",
-                str_169: "圖框背景：",
+                str_169: "佈景主題：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22312,8 +22312,8 @@ if ("xx" in window) {
                     s: "圖列切換"
                 },
                 backgroundColor: {
-                    l: "亮",
-                    d: "暗"
+                    l: "亮色",
+                    d: "暗色"
                 }
             };
             break;
@@ -22495,7 +22495,7 @@ if ("xx" in window) {
                 str_166: "筛选数量：",
                 str_167: "筛选宽：",
                 str_168: "筛选高：",
-                str_169: "图框背景：",
+                str_169: "布景主题：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22520,8 +22520,8 @@ if ("xx" in window) {
                     s: "图列切换"
                 },
                 backgroundColor: {
-                    l: "亮",
-                    d: "暗"
+                    l: "亮色",
+                    d: "暗色"
                 }
             };
             break;
@@ -22702,7 +22702,7 @@ if ("xx" in window) {
                 str_166: "Number Of Filters：",
                 str_167: "Filter Width：",
                 str_168: "Filter Height：",
-                str_169: "Background Color：",
+                str_169: "Setting Theme：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -30204,12 +30204,19 @@ html,body {
     background-color: rgb(240, 240, 240);
     overflow: hidden auto;
 }
+#main.dark {
+    color: white;
+    background-color: #333;
+}
 .row {
     display: block;
     margin: 5px;
     padding: 0 0 0 5px;
     border: #000 1px solid;
     border-radius: 5px;
+}
+.row.dark {
+    border: #fff 1px solid;
 }
 #title {
     display: block;
@@ -30230,6 +30237,9 @@ html,body {
     padding: 0 0 0 2px;
     border-left: #000 1px solid;
 }
+.number.dark{
+    border-left: #fff 1px solid;
+}
 .close {
     margin: 0 5px;
 }
@@ -30238,6 +30248,13 @@ html,body {
 }
 #buttons button {
     margin-top: 4px;
+}
+button.dark {
+    color: #fff;
+    border-color: rgb(81 91 105);
+    border-style: solid;
+    background-color: rgb(81 91 105);
+    border-radius: .5rem;
 }
 #imgBox {
     text-align: center;
@@ -30256,8 +30273,13 @@ li.image-item {
     height: 200px;
     margin: 0 4px 4px 0;
     padding: 0px;
+    background-color: #fff;
     border: #000 1px solid;
     border-radius: 2px;
+}
+li.dark {
+    background-color: #333;
+    border: #fff 1px solid;
 }
 @media (max-width: 820px) {
     li.image-item {
@@ -30389,6 +30411,9 @@ input.check {
     </div>
 </div>
         `;
+        if (backgroundColor === "d") {
+            gae("#main,.row,.number,li,button", shadow).forEach(e => e.classList.add("dark"));
+        }
         let backgroundSelect = ge("#backgroundColor", main);
         Object.keys(displayLanguage.backgroundColor).forEach((k, i) => {
             const option = document.createElement("option");
@@ -30401,13 +30426,11 @@ input.check {
             config.backgroundColor = backgroundSelect.value;
             saveConfig(config);
             backgroundColor = config.backgroundColor;
-            gae("li", main).forEach(li => {
-                if (backgroundColor === "l") {
-                    li.style.backgroundColor = "#fff";
-                } else {
-                    li.style.backgroundColor = "#333";
-                }
-            });
+            if (backgroundColor === "d") {
+                gae("#main,.row,.number,li,button", shadow).forEach(e => e.classList.add("dark"));
+            } else {
+                gae("#main,.row,.number,li,button", shadow).forEach(e => e.classList.remove("dark"));
+            }
             main.focus();
         });
         let widthNum = 0;
@@ -30435,7 +30458,7 @@ input.check {
         for (let i = 0; i <= 40; i++) {
             let option = document.createElement("option");
             option.value = i;
-            option.innerText = i == 0 ? "ALL" : i * 100;
+            option.innerText = i == 0 ? "All" : i * 100;
             widthSelect.append(option);
         }
         widthSelect.addEventListener("change", () => {
@@ -30449,7 +30472,7 @@ input.check {
         for (let i = 0; i <= 40; i++) {
             let option = document.createElement("option");
             option.value = i;
-            option.innerText = i == 0 ? "ALL" : i * 100;
+            option.innerText = i == 0 ? "All" : i * 100;
             heightSelect.append(option);
         }
         heightSelect.addEventListener("change", () => {
@@ -30570,10 +30593,8 @@ input.check {
                 img.dataset.src = src;
                 const li = document.createElement("li");
                 li.className = "image-item";
-                if (backgroundColor === "l") {
-                    li.style.backgroundColor = "#fff";
-                } else {
-                    li.style.backgroundColor = "#333";
+                if (backgroundColor === "d") {
+                    li.classList.add("dark");
                 }
                 li.append(input);
                 li.append(img);
