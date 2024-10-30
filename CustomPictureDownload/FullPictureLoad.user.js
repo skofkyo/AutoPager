@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.11
+// @version            2.11.12
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -591,9 +591,10 @@ a:has(>div>div>img),
         name: "Telegram Web",
         host: ["telegra.ph"],
         reg: /^https?:\/\/telegra\.ph\/.+/,
-        imgs: ".figure_wrapper img",
+        imgs: () => fn.fetchDoc(fn.url).then(dom => fn.gae(".tl_article img", dom)),
+        capture: () => _this.imgs(),
         customTitle: "h1",
-        setFancybox: true,
+        //setFancybox: true,
         category: "nsfw2"
     }, {
         name: "Rentry.co",
@@ -5624,8 +5625,15 @@ a:has(>div>div>img),
         },
         prev: 1,
         customTitle: ".entry-title",
-        hide: "#reader{width:auto!important;height:auto!important}#mode,#botmenureader",
+        css: "#reader{width:auto!important;height:auto!important}",
+        hide: "#mode,#botmenureader,.popSc",
         category: "nsfw1"
+    }, {
+        name: "Ero Cosplay AAD",
+        host: ["www.erocosplay.org"],
+        reg: /^https?:\/\/www\.erocosplay\.org\//,
+        hide: ".popSc",
+        category: "ad"
     }, {
         name: "CG Cosplay",
         host: ["cgcosplay.org"],
@@ -8498,6 +8506,48 @@ a:has(>div>div>img),
                 ]
             });
         },
+        category: "nsfw2"
+    }, {
+        name: "JoyReactor",
+        url: {
+            h: "joyreactor.cc",
+            p: "/post/"
+        },
+        SPA: true,
+        init: async () => {
+            addNewTabViewButton();
+            const get = async () => {
+                let imgs = fn.gae(".image>img:not(.get)");
+                if (imgs.length > 0) {
+                    imgs.forEach(img => img.classList.add("get"));
+                    fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
+                }
+                let videos = fn.gae("video[poster]:not(.get)");
+                if (videos.length > 0) {
+                    videos.forEach(video => {
+                        let src = fn.ge("source[type='video/mp4']", video)?.src;
+                        if (src) {
+                            video.classList.add("get");
+                            setVideoArray.add(src);
+                            setArray.add(video.poster);
+                        }
+                    });
+                    videoSrcArray = [...setVideoArray];
+                }
+                if (captureTotal != setArray.size) {
+                    captureTotal = setArray.size;
+                    await captureSrcB();
+                }
+            };
+            await get();
+            fn.addMutationObserver(async () => {
+                if (captureExclude()) return;
+                await get();
+            });
+        },
+        imgs: () => setArray,
+        capture: () => _this.imgs(),
+        downloadVideo: true,
         category: "nsfw2"
     }, {
         name: "bdsmlr",
@@ -11769,8 +11819,8 @@ a:has(>div>div>img),
         link: "https://e-hentai.org/lofi/",
         reg: /^https?:\/\/e-hentai\.org\/lofi\/g\/\w+\/\w+\//,
         imgs: async () => {
-            await fn.getNP(".gi", "//a[text()='Next Page >' or text()='下一页 >']", null, "#ia");
-            let links = fn.gau(".gi>a");
+            await fn.getNP(".gi,#gh>a", "//a[text()='Next Page >' or text()='下一页 >']", null, "#ia");
+            let links = fn.gau(".gi>a,#gh>a");
             return fn.getImgA("#sm", links, 100);
         },
         button: [4],
@@ -14905,12 +14955,10 @@ a:has(>div>div>img),
     }, {
         name: "韩漫库/欲漫涩/腐漫屋/快看禁漫",
         host: ["se8.us", "yumanse.com", "fumanwu.org", "kkcomic.vip"],
-        reg: [
-            /^https?:\/\/se8\.us\/index\.php\/chapter\/\d+/,
-            /^https?:\/\/(www\.)?yumanse\.com\/chapter\/\d+/,
-            /^https?:\/\/(www\.)?fumanwu\.org\/chapter\/\d+/,
-            /^https?:\/\/(www\.)?kkcomic\.vip\/chapter\/\d+/
-        ],
+        url: {
+            t: ["韩漫库", "欲漫涩", "腐漫屋", "快看禁漫"],
+            p: "/chapter/"
+        },
         imgs: ".rd-article-wr img,.comic-list img,.episode-detail img",
         button: [4],
         insertImg: [".rd-article-wr,.comic-list,.episode-detail", 1],
@@ -22239,7 +22287,7 @@ if ("xx" in window) {
                 str_166: "篩選數量：",
                 str_167: "篩選寬：",
                 str_168: "篩選高：",
-                str_169: "背景顏色：",
+                str_169: "圖框背景：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22447,7 +22495,7 @@ if ("xx" in window) {
                 str_166: "筛选数量：",
                 str_167: "筛选宽：",
                 str_168: "筛选高：",
-                str_169: "背景颜色：",
+                str_169: "图框背景：",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22766,8 +22814,8 @@ if ("xx" in window) {
                 if (isArray(title)) {
                     checkT = title.some(t => {
                         if (isString(t)) {
-                            return document.title.includes(title);
-                        } else if (isRegExp(title)) {
+                            return document.title.includes(t);
+                        } else if (isRegExp(t)) {
                             return t.test(document.title);
                         }
                         return false;
@@ -32876,7 +32924,7 @@ a[data-fancybox]:hover {
     if (!!autoDownload) {
         //自動下載快捷鍵
         document.addEventListener("keydown", event => {
-            if (isOpenOptionsUI || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
+            if (captureExclude() || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fn.showMsg(displayLanguage.str_64, 0);
