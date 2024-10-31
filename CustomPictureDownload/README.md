@@ -126,6 +126,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         code;
         return Array;
     },
+    referrerpolicy: "no-referrer", //https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/referrerPolicy
     repeat: 1, //重複取得圖片元素，特殊情況會用到例如ViperGirls網站
     thums: ".thums", //Fancybox要用的縮略圖網址選擇器
     //頁面不適合直接修改插入腳本用的圖片，在頁面右下創建一個浮動可拖動的捕獲之眼，這樣行動裝置才能使用到分頁畫廊。
@@ -221,6 +222,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     imgs: () => {
         code
     },
+    referrerpolicy: "no-referrer",
     repeat: 1,
     thums: "",
     capture:  "",
@@ -1920,7 +1922,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://girl18.net/">Girl 18+</a>
                 </td>
                 <td>
-                    <a href="http://bikiniz.net/">Bikini Girl</a>
+                    <a href="https://jvid.girl18.net/">JVID</a>，<a href="https://xiuren.girl18.net/">XIUREN</a>，<a href="https://bobosocks.girl18.net/">BOBOSOCKS</a>，<a href="https://imiss.girl18.net/">IMISS</a>，<a href="https://cosplay.girl18.net/">COSPLAY</a>，<a href="http://bikiniz.net/">Bikini Girl</a>
                 </td>
             </tr>
             <tr>
@@ -2770,6 +2772,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://cosergirl.neocities.org/">CoserGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://youwu.lol/">尤物丧志</a>
                 </td>
                 <td></td>
@@ -2865,6 +2873,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.vvcon.cn/cosplay">VVCON美瞳网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.nncos.com/">奈奈COS</a>
                 </td>
                 <td></td>
             </tr>
@@ -3151,6 +3165,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://erogirl.net/">Erogirl</a>
                 </td>
                 <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplaydb.blogspot.com/">Cosplay DB</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4300,6 +4320,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.wholsp.com/">wholsp</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.112ze.com/">美女写真图集</a>
                 </td>
                 <td></td>
@@ -4871,6 +4897,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.manhuache.com/">漫畫車</a>
+                </td>
+                <td>目錄頁，寫真自動插入圖片其他手動插入所有章節圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://nnhanman8.com/">鸟鸟韩漫</a>
                 </td>
                 <td>目錄頁手動插入圖片</td>
@@ -4880,7 +4912,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://laosiji52.com/">老司機禁漫</a>
                 </td>
                 <td>
-                    <a href="https://laosiji6.com/">Laosiji6.com</a>，目錄頁手動插入圖片
+                    <a href="https://laosiji6.com/">Laosiji6.com</a>，目錄頁手動插入所有章節圖片
                 </td>
             </tr>
             <tr>
@@ -4888,20 +4920,20 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://atm333.com/">凹凸漫</a>
                 </td>
                 <td>
-                    <a href="https://xman5.com/">X漫</a>，<a href="https://rmtt6.com/">肉漫天堂</a>，目錄頁手動插入圖片
+                    <a href="https://xman5.com/">X漫</a>，<a href="https://rmtt6.com/">肉漫天堂</a>，目錄頁手動插入所有章節圖片
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.songshuhanman.com/">松鼠韓漫</a>
                 </td>
-                <td>目錄頁手動插入圖片</td>
+                <td>目錄頁手動插入所有章節圖片</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.yemaohanman.com/">野貓韓漫</a>
                 </td>
-                <td>目錄頁手動插入圖片</td>
+                <td>目錄頁手動插入所有章節圖片</td>
             </tr>
             <tr>
                 <td>
@@ -4992,12 +5024,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.comicun.com/">漫畫聯合國</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://www.manhuache.com/">漫畫車</a>
                 </td>
                 <td></td>
             </tr>
@@ -5094,6 +5120,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.sesemanhua.com/">色色漫画</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hanguoaman.com/">韩国a漫</a>
+                </td>
+                <td>目錄頁手動插入所有章節圖片</td>
             </tr>
             <tr>
                 <td>
@@ -5359,10 +5391,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.copymanga.site/">拷貝漫畫</a>
+                    <a href="https://www.copymanga.tv/">拷貝漫畫</a>
                 </td>
                 <td>
-                    <a href="https://copymanga.site/">copymanga.site</a>， <a href="https://www.copymanga.tv/">www.copymanga.tv</a>， <a href="https://copymanga.tv/">copymanga.tv</a>， <a href="https://www.mangacopy.com/">www.mangacopy.com</a>， <a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
+                    <a href="https://copymanga.tv/">copymanga.tv</a>， <a href="https://www.mangacopy.com/">www.mangacopy.com</a>， <a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
                 </td>
             </tr>
             <tr>
