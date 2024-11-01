@@ -1129,7 +1129,7 @@ imgs: async () => {
 <p>在頁面左下添加了一個圖片下載按鈕</p>
 <img src="https://i.imgur.com/TxnEvTk.png">
 <p>點擊後會彈出篩選UI</p>
-<img src="https://i.imgur.com/YaLJdfh.jpeg">
+<img src="https://i.imgur.com/pbTtes5.jpeg">
 <p>點下載按鈕後就會開始下載壓縮打包圖片</p>
 <img src="https://i.imgur.com/m6ewqQd.png">
 <p>右鍵點擊圖示複製圖片網址，如果規則insertImg為手動模式，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
@@ -1235,7 +1235,7 @@ imgs: async () => {
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片篩選下載功能。</p>
-<img src="https://i.imgur.com/h64MC4A.jpeg">
+<img src="https://i.imgur.com/NSjxkRx.jpeg">
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
 <img src="https://i.imgur.com/vtwqkOX.jpeg">
@@ -2713,6 +2713,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://hentaidude.tv/category/cosplay/">HentaiDude TV</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://luv.vn/">LUV.VN</a>
                 </td>
                 <td></td>
             </tr>
@@ -4282,6 +4288,26 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="http://www.papatutu.com/">啪啪凸凸</a>
+                </td>
+                <td>
+                    <a href="http://pdcbot.com/">导航页</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://ktacf.click/g/list/7.html">秘秘秘</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.boboge.lat/img002/">播播阁</a>
+                </td>
+                <td><a href="https://www.boboge.com/">www.boboge.com</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://g-avstar.com/meitushe/">G-AVSTAR</a>
                 </td>
                 <td></td>
@@ -4969,14 +4995,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.55comics.com/">污污漫书</a>
-                </td>
-                <td>
-                    <a href="https://www.55manshu.com/">55漫書</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://wumtt.com/">污漫天堂</a>
                 </td>
                 <td></td>
@@ -5206,6 +5224,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://aicomic.org/">爱漫画</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.55comics.com/">污污漫书</a>
+                </td>
+                <td>
+                    <a href="https://www.55manshu.com/">55漫書</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6010,6 +6036,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://tcbscans.me/">TCB Scans 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.niadd.com/">NiAdd 英文漫畫</a>
                 </td>
                 <td></td>
             </tr>
