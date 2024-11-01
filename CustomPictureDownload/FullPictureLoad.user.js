@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.15
+// @version            2.11.16
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -494,12 +494,17 @@ a:has(>div>div>img),
         name: "24FA",
         host: ["www.24fa.com"],
         link: "https://www.24fa.com/c49.aspx",
-        reg: /^https?:\/\/(www\.)?\d{2,3}(m|w|fa\w?|aa|xx)?\.[a-z]{2,4}\/m?n\w+\.aspx/,
-        include: "#content img",
+        //reg: /^https?:\/\/(www\.)?\d{2,3}(m|w|fa\w?|aa|xx)?\.[a-z]{2,4}\/m?n\w+\.aspx/,
+        //include: "#content img",
+        url: {
+            t: "24FA",
+            p: ".aspx",
+            e: ["#content img", ".pager"]
+        },
         init: "document.onkeydown=null",
         imgs: () => fn.getImgA("#content img", ".pager a:not([title])"),
         button: [4],
-        insertImg: ["#content", 1],
+        insertImg: ["#content", 2],
         autoDownload: [0],
         next: ".prevNews>a",
         prev: ".nextNews>a",
@@ -3241,7 +3246,7 @@ a:has(>div>div>img),
         category: "autoPager"
     }, {
         name: "COSPLAY Girl 18+",
-        host: ["cosplay.girl18.net"],
+        host: ["cosplay.girl18.net", "xiuren.girl18.net", "bobosocks.girl18.net", "imiss.girl18.net", "cosplay.girl18.net"],
         url: {
             h: ".girl18.net"
         },
@@ -5898,15 +5903,27 @@ a:has(>div>div>img),
         hide: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float",
         category: "nsfw1"
     }, {
+        name: "LUV.VN",
+        url: {
+            h: "luv.vn",
+            p: /^\/[^\/]+\/$/
+        },
+        imgs: () => fn.getImgSrcset(".wp-block-image img"),
+        capture: () => _this.imgs(),
+        customTitle: ".jeg_post_title",
+        category: "nsfw1"
+    }, {
         name: "Ảnh đẹp",
         url: {
             h: "tuyetnhan.com",
             p: /^\/[^\/]+\/$/
         },
-        imgs: ".entry-content img",
-        button: [4],
-        insertImg: [".entry-content", 2],
-        customTitle: ".card_title",
+        imgs: () => fn.getImgSrcset(".entry-content img:not([src*='/logo'])"),
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "a[rel=prev]",
+        prev: "a[rel=next]",
+        customTitle: ".entry-title,.card_title",
         hide: "#cboxOverlay,#cboxWrapper",
         category: "nsfw1"
     }, {
@@ -10946,6 +10963,65 @@ a:has(>div>div>img),
         gallery: 1,
         category: "nsfw2"
     }, {
+        name: "秘秘秘/美鲍儿",
+        host: ["ktacf.click", "lingleis.info"],
+        url: {
+            e: "#menu_top_gg+.table,#content_top_gg"
+        },
+        imgs: "#content_top_gg+.titletablerow img",
+        button: [4],
+        insertImg: ["#content_top_gg+.titletablerow", 2],
+        autoDownload: [0],
+        next: "//div[text()='下篇']/preceding-sibling::div[1]/a",
+        prev: "//div[text()='上篇']/following-sibling::div[1]/a",
+        customTitle: ".cell3.clmtop3",
+        hide: "#header,#sidebar_left,#sidebar_right,.logo_top_gg,#menu_top_gg,#menu_bottom_gg,#content_top_gg,#content_bottom_gg,#page_bottom_top_gg,#page_bottom_bottom_gg,div:has(>#page_bottom_link_gg)",
+        category: "nsfw2"
+    }, {
+        name: "秘秘秘/美鲍儿 AD",
+        url: {
+            e: ".topbody .logo+.table,#menu_top_gg+.table"
+        },
+        hide: "#tnoticegg,.topnotice,#header,#sidebar_left,#sidebar_right,.logo_top_gg,#menu_top_gg,#menu_bottom_gg,#page_bottom_top_gg,#page_bottom_bottom_gg,div:has(>#page_bottom_link_gg),.titletablerow:has(>.titletablecell>a:not([href$=html]))",
+        category: "ad"
+    }, {
+        name: "啪啪凸凸",
+        host: ["papatutu.com"],
+        url: {
+            e: "#content.card-body",
+            p: "/a/show/"
+        },
+        imgs: "div.lightbox",
+        button: [4],
+        insertImg: ["#content", 2],
+        autoDownload: [0],
+        next: "a:has(.fa-arrow-right)",
+        prev: "a:has(.fa-arrow-left)",
+        customTitle: ".container>h4",
+        hide: "#span_h4",
+        category: "nsfw2"
+    }, {
+        name: "播播阁",
+        link: "https://www.boboge.lat/index",
+        url: {
+            h: "boboge",
+            p: /^\/img\d+\//
+        },
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: ".entry-title",
+        hide: "div[id^=ads]",
+        category: "nsfw2"
+    }, {
+        name: "播播阁AD",
+        url: {
+            h: "boboge",
+            e: "div[id^=ads]"
+        },
+        hide: "div[id^=ads]",
+        category: "ad"
+    }, {
         name: "哔咔庇护所v2",
         host: ["ios.zzgo810.top"],
         url: {
@@ -11368,12 +11444,13 @@ a:has(>div>div>img),
         next: "//a[text()='Next Article»'][contains(@href,'.html')]",
         prev: "//a[text()='«Previous Chapter'][contains(@href,'.html')]",
         customTitle: ".entry-title",
-        hide: ".hidden-xs:has(>.pagination)",
+        hide: ".code-block:has(>.ads),.hidden-xs:has(>.pagination)",
         observerClick: "#chk_cover",
         category: "hcomic"
     }, {
         reg: /^https?:\/\/www\.comic18h\.com\//,
         observerClick: "#chk_cover",
+        hide: ".code-block:has(>.ads)",
         category: "ad"
     }, {
         name: "Doujindesu.XXX",
@@ -15736,9 +15813,14 @@ a:has(>div>div>img),
             e: ".scramble-page img"
         },
         imgs: async () => {
-            let max = fn.gt("//li[a[text()='下一页»' or text()='下一頁»']]", 2);
-            let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url + "?p=" + (i + 1));
-            return fn.getImgA(".scramble-page img", links);
+            if (fn.ge(".pagination li.active")) {
+                let max = fn.gt("//li[a[text()='下一页»' or text()='下一頁»' or text()='Next»']]", 2);
+                let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url + "?p=" + (i + 1));
+                return fn.getImgA(".scramble-page img", links);
+            } else {
+                await fn.getNP(".scramble-page", "//li/a[text()='下一页»' or text()='下一頁»' or text()='Next»']", null, ".pagination");
+                return fn.gae(".scramble-page img");
+            }
         },
         button: [4],
         insertImg: [
@@ -15757,10 +15839,20 @@ a:has(>div>div>img),
             strArr = strArr.map(str => str.trim());
             return strArr[2] + " - " + strArr[3];
         },
+        observerClick: "#chk_cover",
+        hide: ".row:has(>.ads)",
         category: "hcomic"
     }, {
+        name: "污污漫书/55漫書",
+        url: {
+            h: ["www.55comics.com", "www.55manshu.com"]
+        },
+        observerClick: "#chk_cover",
+        hide: ".row:has(>.ads)",
+        category: "ad"
+    }, {
         name: "日韩漫画/歪歪漫画",
-        host: ["www.diyihm.com", "www.lltoon.com", "www.rrtoon.com", "wwtoon.com", "www.zztoon.com", "www.vvtoon.com"],
+        host: ["www.diyihm.com", "www.lltoon.com", "www.rrtoon.com", "wwtoon.com", "www.zztoon.com", "www.vvtoon.com", "www.fftoon.com", "www.wwtoon.com"],
         url: {
             t: ["第一漫画", "歪歪漫画", "第一韩漫"],
             p: /^\/view\/\d+\/\d+$/
@@ -15786,7 +15878,7 @@ a:has(>div>div>img),
         next: "#loadNextChapter",
         prev: "#loadPrevChapter",
         customTitle: () => siteJson.comic.title + " - " + siteJson.volume.title,
-        hide: ".letchepter[style*='20px']",
+        hide: "body>div[class][style]:first-of-type,.letchepter[style*='20px'],#FullPictureLoadGoToLastImage~*",
         category: "hcomic"
     }, {
         name: "Manhuascan.us",
@@ -16412,6 +16504,84 @@ a:has(>div>div>img),
         next: "//a[contains(text(),'Next')]",
         prev: "//a[contains(text(),'Prev')]",
         customTitle: ".container h1",
+        category: "comic"
+    }, {
+        name: "NiAdd",
+        url: {
+            e: ["//script[contains(text(),'NiaddChpPageCtrl')]"],
+            p: "/statuses/"
+        },
+        imgs: () => _unsafeWindow.NiaddChpPageCtrl.options.all_imgs_url,
+        button: [4],
+        insertImg: ["#viewer", 2],
+        endColor: "white",
+        insertImgAF: (parent) => {
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 5);
+            }
+        },
+        autoDownload: [0],
+        next: () => {
+            let url = _unsafeWindow.NiaddChpPageCtrl.options.next_chp_url;
+            if (url === "https://www.niadd.com/") {
+                return null;
+            } else {
+                return url;
+            }
+        },
+        prev: 1,
+        customTitle: () => fn.gt(".title>a:last-child") + " - " + fn.gt(".title>a"),
+        hide: ".ads_margin,center:has(>script),.mangaread-pagenav>select~*,.site-content>footer",
+        category: "comic"
+    }, {
+        name: "NiAdd",
+        link: "https://niadd.com/original/10070490/chapters.html",
+        url: {
+            h: "niadd.com",
+            p: "/chapter/",
+            e: ["#viewer", ".pic_box", ".tool", "img[id^='manga_pic']", ".manga-name"]
+        },
+        imgs: () => {
+            let max = fn.gt(".tool>a").match(/\d+/g).at(-1);
+            let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url.replace(/\/$/, "") + `-${i + 1}.html`);
+            return fn.getImgA("img[id^='manga_pic']", links);
+        },
+        button: [4],
+        insertImg: [".pic_box", 2],
+        insertImgAF: (parent) => {
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 5);
+            }
+        },
+        endColor: "white",
+        autoDownload: [0],
+        next: () => {
+            let select = document.querySelector(".mangaread-pagenav>select");
+            let chapters = [...select.querySelectorAll("option")];
+            let nextUrl = null;
+            chapters.some((e, i, a) => {
+                if (e.value == fn.url) {
+                    if (a[i - 1] === undefined) {
+                        nextUrl = null;
+                    } else {
+                        nextUrl = a[i - 1].value;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            return nextUrl;
+        },
+        prev: 1,
+        customTitle: () => fn.dt({
+            s: ".manga-name",
+            d: [
+                /[\s\/]$/,
+                "(mitaku.net) "
+            ]
+        }),
+        hide: ".option-item~*",
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -25814,6 +25984,9 @@ if ("xx" in window) {
                 case 4:
                     fn.css(".addUrl>a{text-decoration:none;color:#003366;background-color:#fff;border:solid #6c757d;border-radius:0.25rem;padding:.5rem 2rem}");
                     break;
+                case 5:
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:rgb(77 147 255);border:solid #bbb;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
+                    break;
             }
         },
         dataURLtoBlobURL: dataurl => {
@@ -30422,72 +30595,6 @@ li.dark {
     background-color: #333;
     border: rgb(0, 204, 255) 1px solid;
 }
-@media (max-width: 820px) {
-    li.image-item {
-        width: 194px;
-        height: 194px;
-    }
-}
-@media (max-width: 768px) {
-    li.image-item {
-        width: 181px;
-        height: 181px;
-    }
-}
-@media (max-width: 712px) {
-    li.image-item {
-        width: 167px;
-        height: 167px;
-    }
-}
-@media (max-width: 414px) {
-    li.image-item {
-        width: 192px;
-        height: 192px;
-    }
-}
-@media (max-width: 412px) {
-    li.image-item {
-        width: 191px;
-        height: 191px;
-    }
-}
-@media (max-width: 400px) {
-    li.image-item {
-        width: 182px;
-        height: 182px;
-    }
-}
-@media (max-width: 393px) {
-    li.image-item {
-        width: 182px;
-        height: 182px;
-    }
-}
-@media (max-width: 390px) {
-    li.image-item {
-        width: 180px;
-        height: 180px;
-    }
-}
-@media (max-width: 375px) {
-    li.image-item {
-        width: 173px;
-        height: 173px;
-    }
-}
-@media (max-width: 360px) {
-    li.image-item {
-        width: 165px;
-        height: 165px;
-    }
-}
-@media (max-width: 320px) {
-    li.image-item {
-        width: 145px;
-        height: 145px;
-    }
-}
 img.image {
     display: block;
     width: auto;
@@ -30501,6 +30608,119 @@ input.check {
     position: absolute;
     top: 2px;
     left: 2px;
+}
+li p {
+    position: absolute;
+    font-size: 12px;
+    line-height: 14px;
+    width: 100%;
+    height: 14px;
+    top: 186px;
+    margin: 0px;
+    padding: 0px;
+    background-color: rgba(163, 194, 194, 0.8);
+}
+li p.dark {
+    background-color: rgba(82, 82, 122, 0.8);
+}
+@media (max-width: 820px) {
+    li.image-item {
+        width: 194px;
+        height: 194px;
+    }
+    li p {
+        top: 180px;
+    }
+}
+@media (max-width: 768px) {
+    li.image-item {
+        width: 181px;
+        height: 181px;
+    }
+    li p {
+        top: 167px;
+    }
+}
+@media (max-width: 712px) {
+    li.image-item {
+        width: 167px;
+        height: 167px;
+    }
+    li p {
+        top: 153px;
+    }
+}
+@media (max-width: 414px) {
+    li.image-item {
+        width: 192px;
+        height: 192px;
+    }
+    li p {
+        top: 178px;
+    }
+}
+@media (max-width: 412px) {
+    li.image-item {
+        width: 191px;
+        height: 191px;
+    }
+    li p {
+        top: 177px;
+    }
+}
+@media (max-width: 400px) {
+    li.image-item {
+        width: 182px;
+        height: 182px;
+    }
+    li p {
+        top: 168px;
+    }
+}
+@media (max-width: 393px) {
+    li.image-item {
+        width: 182px;
+        height: 182px;
+    }
+    li p {
+        top: 168px;
+    }
+}
+@media (max-width: 390px) {
+    li.image-item {
+        width: 180px;
+        height: 180px;
+    }
+    li p {
+        top: 166px;
+    }
+}
+@media (max-width: 375px) {
+    li.image-item {
+        width: 173px;
+        height: 173px;
+    }
+    li p {
+        top: 159px;
+    }
+}
+@media (max-width: 360px) {
+    li.image-item {
+        width: 165px;
+        height: 165px;
+    }
+    li p {
+        top: 151px;
+    }
+}
+@media (max-width: 320px) {
+    li.image-item {
+        width: 145px;
+        height: 145px;
+    }
+    li p {
+        top: 131px;
+    }
 }
         `);
         shadow.append(style);
@@ -30555,7 +30775,7 @@ input.check {
 </div>
         `;
         if (backgroundColor === "d") {
-            gae("#main,.row,.number,li,button", shadow).forEach(e => e.classList.add("dark"));
+            gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
         }
         let backgroundSelect = ge("#backgroundColor", main);
         Object.keys(displayLanguage.backgroundColor).forEach((k, i) => {
@@ -30570,9 +30790,9 @@ input.check {
             saveConfig(config);
             backgroundColor = config.backgroundColor;
             if (backgroundColor === "d") {
-                gae("#main,.row,.number,li,button", shadow).forEach(e => e.classList.add("dark"));
+                gae("#main,.row,.number,li,li p,button", shadow).forEach(e => e.classList.add("dark"));
             } else {
-                gae("#main,.row,.number,li,button", shadow).forEach(e => e.classList.remove("dark"));
+                gae("#main,.row,.number,li,li p,button", shadow).forEach(e => e.classList.remove("dark"));
             }
             main.focus();
         });
@@ -30752,13 +30972,22 @@ input.check {
                 }
                 img.src = loading_bak;
                 img.dataset.src = src;
+                img.onload = () => {
+                    if (img.src === img.dataset.src) {
+                        img.nextElementSibling.innerText = img.naturalWidth + " x " + img.naturalHeight;
+                    }
+                };
+                const p = document.createElement("p");
+                p.innerText = "? x ?";
                 const li = document.createElement("li");
                 li.className = "image-item";
                 if (backgroundColor === "d") {
+                    p.classList.add("dark");
                     li.classList.add("dark");
                 }
                 li.append(input);
                 li.append(img);
+                li.append(p);
                 imageList.append(li);
             }
             if (Viewer && ViewerJsInstance) {
