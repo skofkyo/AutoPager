@@ -3,17 +3,17 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/10/28
+2024/11/02
 PC
-Chrome 130.0.6723.70 + Tampermonkey 5.3.1 or Violentmonkey 2.27.0 or ScriptCat 0.16.6
-Edge 130.0.2849.56 + Tampermonkey 5.1.1 or Violentmonkey 2.27.0 or ScriptCat 0.16.5
+Chrome 130.0.6723.92 + Tampermonkey 5.3.2 or Violentmonkey 2.27.0 or ScriptCat 0.16.6
+Edge 130.0.2849.68 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
 Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.27.0 or ScriptCat 0.16.6
-FireFox 131.0.3 + Tampermonkey 5.3.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
+FireFox 132.0 + Tampermonkey 5.3.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
 Android
-Edge Canary 132.0.2916.0 + Tampermonkey 5.1.1 or Violentmonkey 2.27.0 or ScriptCat 0.16.5
+Edge Canary 132.0.2930.0 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
 Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.27.0 or ScriptCat 0.16.6
-Firefox for Android 131.0.3 + Tampermonkey 5.3.1 or Violentmonkey 2.26.0 or ScriptCat 0.16.5
-XBrowser 4.8.2
+Firefox for Android 132.0 + Tampermonkey 5.3.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
+XBrowser 5.0.0
 ViaBrowser 5.9.5
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
@@ -1659,7 +1659,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.cup2d.com/">Cup2D</a>
                 </td>
-                <td></td>
+                <td>4K~8K高解析</td>
             </tr>
             <tr>
                 <td>
@@ -2992,7 +2992,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://thothd.com/zh/albums/">ThotHD Albums</a>
+                    <a href="https://thothd.com/albums/">ThotHD Albums</a>
                 </td>
                 <td></td>
             </tr>
