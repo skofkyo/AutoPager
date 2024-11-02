@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.16
+// @version            2.11.17
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -67,6 +67,11 @@
 
     if (document.title.startsWith("DDoS-Guard")) {
         debug("DDoS-Guard驗證中不運行腳本。");
+        return;
+    }
+
+    //火狐Firefox使用open("about:blank", "_blank")打開空白頁，空白頁的location.href會變成父視窗的location.href，導致載入腳本，必須排除。
+    if (["分頁畫廊：", "标签画廊：", "TabView："].some(t => document.title.startsWith(t))) {
         return;
     }
 
@@ -3270,7 +3275,7 @@ a:has(>div>div>img),
         name: "Coser Lab",
         host: ["coserlab.io"],
         reg: /^https?:\/\/coserlab\.io\/archives\/\d+$/,
-        exclude: ".card-body .error-empty",
+        exclude: ".card-body .error-empty,.post-hide-content",
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr("a.glightbox img");
             fn.showMsg("fn.xhrHEA(check)...", 0);
@@ -3288,8 +3293,8 @@ a:has(>div>div>img),
         insertImg: [
             [".masonry-list", 2, ".masonry-list"], 2
         ],
-        customTitle: "span.current",
-        category: "nsfw1"
+        customTitle: "span.current,.card-body h1",
+        category: "nsfw2"
     }, {
         name: "Zusi足丝",
         url: {
@@ -22557,7 +22562,7 @@ if ("xx" in window) {
                 str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
                 str_144: "下一篇",
-                str_145: "Fancybox5幻燈片播放時間間隔：",
+                str_145: "Fancybox5&ViewerJs 幻燈片播放間隔：",
                 str_146: "Fancybox5滾輪操作：",
                 str_147: "畫廊 ( 0、1、3 ) 滾輪操作：",
                 str_148: "Fancybox5幻燈片過場效果：",
@@ -22583,6 +22588,7 @@ if ("xx" in window) {
                 str_168: "篩選高度：",
                 str_169: "佈景主題：",
                 str_170: "反向選取",
+                str_171: "顯示檔案大小",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22766,7 +22772,7 @@ if ("xx" in window) {
                 str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
                 str_144: "下一篇",
-                str_145: "Fancybox5幻灯片播放时间间隔：",
+                str_145: "Fancybox5&ViewerJs 幻灯片播放间隔：",
                 str_146: "Fancybox5滚轮操作：",
                 str_147: "画廊 ( 0、1、3 ) 滚轮操作：",
                 str_148: "Fancybox5幻灯片过场效果：",
@@ -22792,6 +22798,7 @@ if ("xx" in window) {
                 str_168: "筛选高度：",
                 str_169: "布景主题：",
                 str_170: "反向选取",
+                str_171: "显示文件大小",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22974,7 +22981,7 @@ if ("xx" in window) {
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
-                str_145: "Fancybox5 Slideshow Play Delay：",
+                str_145: "Fancybox5&ViewerJs Play Delay：",
                 str_146: "Fancybox5 Wheel：",
                 str_147: "Gallery (0、1、3) Wheel：",
                 str_148: "Fancybox5 Slideshow Transition：",
@@ -23000,6 +23007,7 @@ if ("xx" in window) {
                 str_168: "Filter Height：",
                 str_169: "Setting Theme：",
                 str_170: "Reverse Selection",
+                str_171: "Show File Size",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -24721,14 +24729,14 @@ if ("xx" in window) {
                         resolve();
                     };
                     temp.onerror = () => {
-                        if (loadSrc.includes("https://wsrv.nl/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                        if (loadSrc.includes("https://wsrv.nl/")) {
                             loadSrc = loadSrc.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
                             imgArr[i].dataset.src = loadSrc;
                             if (!!parent && parent?.nodeName === "A" && !!parent?.getAttribute("data-fancybox")) {
                                 parent.href = loadSrc;
                                 parent.dataset.thumb = loadSrc;
                             }
-                        } else if (loadSrc.includes(".wp.com/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                        } else if (loadSrc.includes(".wp.com/") && !document.title.endsWith("4KHD")) {
                             loadSrc = loadSrc.replace(/i\d\.wp\.com\/|\?.+$/g, ""); //WordPressCDN
                             imgArr[i].dataset.src = loadSrc;
                             if (!!parent && parent?.nodeName === "A" && !!parent?.getAttribute("data-fancybox")) {
@@ -24773,9 +24781,9 @@ if ("xx" in window) {
                         if (!isValidPage) return;
                         const errorNum = errorNumArr[index] + 1;
                         errorNumArr[index] = errorNum;
-                        if (src.includes("https://wsrv.nl/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                        if (src.includes("https://wsrv.nl/")) {
                             src = src.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
-                        } else if (src.includes(".wp.com/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                        } else if (src.includes(".wp.com/") && !document.title.endsWith("4KHD")) {
                             src = src.replace(/i\d\.wp\.com\/|\?.+$/g, ""); //WordPressCDN
                         }
                         if (/e-hentai\.org|exhentai\.org/.test(fn.lh)) {
@@ -25379,14 +25387,14 @@ if ("xx" in window) {
                             }
                         };
                         entry.target.onerror = async (error) => {
-                            if (realSrc.includes("wsrv.nl/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                            if (realSrc.includes("wsrv.nl/")) {
                                 let newSrc = realSrc.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
                                 entry.target.dataset.src = newSrc;
                                 if (!!fancyboxA) {
                                     fancyboxA.href = newSrc;
                                     fancyboxA.dataset.thumb = newSrc;
                                 }
-                            } else if (realSrc.includes(".wp.com/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                            } else if (realSrc.includes(".wp.com/") && !document.title.endsWith("4KHD")) {
                                 let newSrc = realSrc.replace(/i\d\.wp\.com\/|\?.+$/g, ""); //WordPressCDN
                                 entry.target.dataset.src = newSrc;
                                 if (!!fancyboxA) {
@@ -26623,23 +26631,29 @@ if ("xx" in window) {
                 temp.setAttribute("referrerpolicy", siteData.referrerpolicy);
             }
             temp.onload = () => {
+                img.dataset.width = temp.naturalWidth;
+                img.dataset.height = temp.naturalHeight;
+                img.classList.add("loaded");
                 img.src = loadSrc;
                 resolve();
             };
             temp.onerror = async () => {
-                if (loadSrc.includes("https://wsrv.nl/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                if (loadSrc.includes("https://wsrv.nl/")) {
                     loadSrc = loadSrc.replace("https://wsrv.nl/?url=", ""); //wsrv.nl_CDN
-                    await fn.checkImgStatus(loadSrc, 0);
-                    img.dataset.src = loadSrc;
-                    img.src = loadSrc;
-                    resolve();
-                } else if (loadSrc.includes(".wp.com/") && !fn.ge("//a[@rel='home'][text()='4KHD']")) {
+                } else if (loadSrc.includes(".wp.com/") && !document.title.endsWith("4KHD")) {
                     loadSrc = loadSrc.replace(/i\d\.wp\.com\/|\?.+$/g, ""); //WordPressCDN
-                    await fn.checkImgStatus(loadSrc, 0);
+                }
+                let check = await fn.checkImgStatus(loadSrc, 0);
+                if (check.ok) {
+                    img.dataset.width = check.width;
+                    img.dataset.height = check.height;
+                    img.classList.add("loaded");
                     img.dataset.src = loadSrc;
                     img.src = loadSrc;
                     resolve();
                 } else {
+                    img.classList.add("loadError");
+                    img.dataset.src = loadSrc;
                     img.src = loadSrc;
                     resolve();
                 }
@@ -26672,17 +26686,19 @@ if ("xx" in window) {
         }
 
         run() {
-            const runIndex = [];
-            for (let i = 0; i < this.workerLen; i++) {
-                const len = this.list.length;
-                if (!this.worker[i] && len > 0) {
-                    this.worker[i] = this.executionFunc(i, ...this.list[len - 1]);
-                    runIndex.push(i);
-                    this.list.pop();
+            if (isOpenGallery || isOpenFilter) {
+                const runIndex = [];
+                for (let i = 0; i < this.workerLen; i++) {
+                    const len = this.list.length;
+                    if (!this.worker[i] && len > 0) {
+                        this.worker[i] = this.executionFunc(i, ...this.list[len - 1]);
+                        runIndex.push(i);
+                        this.list.pop();
+                    }
                 }
-            }
-            for (const index of runIndex) {
-                this.worker[index].next();
+                for (const index of runIndex) {
+                    this.worker[index].next();
+                }
             }
         }
     }
@@ -27749,7 +27765,8 @@ if ("xx" in window) {
             jumpNum: 100,
             behavior: "instant",
             threading: 2,
-            backgroundColor: "l"
+            backgroundColor: "l",
+            showSize: 0
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -27821,7 +27838,7 @@ if ("xx" in window) {
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no">
-        <title>${customTitle ?? document.title}</title>
+        <title>${displayLanguage.str_106.replace(/\(.\)/, "")}：${customTitle ?? document.title}</title>
     </head>
     <body style="text-align: center;">
         <div id="imgBox"></div>
@@ -28108,6 +28125,11 @@ if (l10n !== "EN") {
             const newWindowScriptCode = `
 if (lightGallery == 1) {
     var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
+        navbar: false,
+        title: false,
+        initialCoverage: 0.99,
+        interval: ${FancyboxSlideshowTimeoutNum},
+        url: "data-src",
         viewed: event => {
             let slideIndex = event.detail.index;
             let imgs = [...document.images];
@@ -28119,8 +28141,7 @@ if (lightGallery == 1) {
                 img.style.border = "solid #32a1ce";
             }
             smoothScrollIntoView(img);
-        },
-        url: "data-src"
+        }
     });
 }
 
@@ -29149,8 +29170,8 @@ img.small {
         });
         shadow.appendChild(mainElement);
 
-        function loadImgs() {
-            const loadImgList = gae("img", shadow).map(img => [simpleLoadImg, null, img]);
+        function loadImgs(imgs) {
+            const loadImgList = imgs.map(img => [simpleLoadImg, null, img]);
             const queue = new Queue(Number(config.threading));
             queue.addList(loadImgList);
             queue.run();
@@ -29201,7 +29222,7 @@ img.small {
             }
             p.append(...imgElements);
             mainElement.append(p);
-            loadImgs();
+            loadImgs(imgElements);
             aspectRatio();
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
@@ -30102,8 +30123,8 @@ img.small {
         });
         dom.body.appendChild(mainElement);
 
-        function loadImgs() {
-            const loadImgList = gae("img", mainElement).map(img => [simpleLoadImg, null, img]);
+        function loadImgs(imgs) {
+            const loadImgList = imgs.map(img => [simpleLoadImg, null, img]);
             const queue = new Queue(Number(config.threading));
             queue.addList(loadImgList);
             queue.run();
@@ -30154,7 +30175,7 @@ img.small {
             }
             p.append(...imgElements);
             mainElement.append(p);
-            loadImgs();
+            loadImgs(imgElements);
             aspectRatio();
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
@@ -30459,6 +30480,37 @@ img.small {
 
     };
 
+    const getFileSize = (src, element = null) => {
+        return fn.xhrHEAD(src, {
+            headers: {
+                referer: getReferer(src)
+            }
+        }).then(res => {
+            //console.log(res);
+            if (src != res.finalUrl) {
+                return getFileSize(res.finalUrl, element);
+            }
+            const contentLength = res?.responseHeaders?.split("\r\n")?.find(s => s.startsWith("content-length:"));
+            //console.log(contentLength);
+            if (contentLength) {
+                let [num] = contentLength.match(/\d+/);
+                if (num.length > 6) {
+                    num = (num / 1000000).toFixed(1);
+                    if (element) {
+                        element.innerText = element.innerText + " | Size: " + num + " MB";
+                    }
+                    return num + " MB";
+                } else {
+                    num = Math.floor(num / 1000);
+                    if (element) {
+                        element.innerText = element.innerText + " | Size: " + num + " kB";
+                    }
+                    return num + " kB";
+                }
+            }
+        });
+    };
+
     //創建篩選下載
     const createFilterDownload = async () => {
 
@@ -30480,6 +30532,7 @@ img.small {
         const config = getConfig();
         let threading = Number(config.threading);
         let backgroundColor = config.backgroundColor;
+        let showSize = config.showSize;
 
         if (!("Viewer" in _unsafeWindow)) {
             _GM_addElement(document.head, "style", {
@@ -30623,6 +30676,12 @@ li p {
 li p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
+#size {
+    width: 16px;
+    height: 16px;
+    vertical-align: text-top;
+    margin: 0 4px;
+}
 @media (max-width: 820px) {
     li.image-item {
         width: 194px;
@@ -30753,6 +30812,7 @@ li p.dark {
         <label class="number">${displayLanguage.str_168}<select id="height"></select></label>
         <label class="number">${displayLanguage.str_165 + srcs.length}</label>
         <label id="filterNumber" class="number">${displayLanguage.str_166 + srcs.length}</label>
+        <label class="number"><input id="size" type="checkbox"></input>${displayLanguage.str_171}</label>
     </div>
 </div>
 <div id="imgBox" class="row">
@@ -30938,6 +30998,18 @@ li p.dark {
                 DownloadFn(srcs, text);
             });
         });
+        let inputSize = ge("#size", main);;
+        inputSize.checked = showSize == 0 ? false : true;
+        inputSize.addEventListener("change", () => {
+            showSize = inputSize.checked ? 1 : 0;
+            config.showSize = showSize;
+            saveConfig(config);
+            widthSelect.value = 0;
+            heightSelect.value = 0;
+            ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+            addLis();
+            main.focus();
+        });
         const imageList = ge("#image-list", main);
         let Viewer;
         let ViewerJsInstance;
@@ -30945,12 +31017,17 @@ li p.dark {
             Viewer = _unsafeWindow.Viewer;
             ViewerJsInstance = new Viewer(imageList, {
                 navbar: false,
-                viewed: (event) => instantScrollIntoView(event.detail.originalImage),
-                url: "data-src"
+                title: false,
+                initialCoverage: 0.99,
+                interval: FancyboxSlideshowTimeoutNum,
+                url: "data-src",
+                viewed: (event) => instantScrollIntoView(event.detail.originalImage)
             });
         }
+
         const addLis = () => {
             imageList.innerHTML = "";
+            const loadImgList = [];
             for (const src of srcs) {
                 const input = document.createElement("input");
                 input.className = "check select";
@@ -30973,10 +31050,15 @@ li p.dark {
                 img.src = loading_bak;
                 img.dataset.src = src;
                 img.onload = () => {
-                    if (img.src === img.dataset.src) {
-                        img.nextElementSibling.innerText = img.naturalWidth + " x " + img.naturalHeight;
+                    if (img.classList.contains("loaded")) {
+                        p.innerText = img.dataset.width + " x " + img.dataset.height;
+                        img.onload = null;
+                        if (showSize != 0) {
+                            getFileSize(img.src, p);
+                        }
                     }
                 };
+                loadImgList.push([simpleLoadImg, null, img]);
                 const p = document.createElement("p");
                 p.innerText = "? x ?";
                 const li = document.createElement("li");
@@ -30995,7 +31077,6 @@ li p.dark {
             }
             main.focus();
             setTimeout(() => {
-                const loadImgList = gae("img", main).map(img => [simpleLoadImg, null, img]);
                 const queue = new Queue(Number(config.threading));
                 queue.addList(loadImgList);
                 queue.run();
