@@ -1963,6 +1963,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.aituitu.com/">爱推图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="http://www.m2ph.xyz/">美图坊</a>
                 </td>
                 <td>Mobile限定，需註冊登錄，並至少點開過一部寫真後，刷新頁面才能正常使用。</td>
@@ -2080,12 +2086,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://taotu.org/m/">taotu.org/m/</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://fulituku.neocities.org/">福利图库</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2820,10 +2820,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://sstk.neocities.org/">涩涩图库</a>
+                    <a href="https://dongti.netlify.app/">胴体的秘密</a>
                 </td>
                 <td>
-                    <a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>
+                    <a href="https://cosplayer.neocities.org/">CosPlayer</a>，<a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://guomo.neocities.org/">国模人体写真图片</a>
                 </td>
             </tr>
             <tr>
@@ -2940,7 +2940,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://vk.com/">VK</a>
                 </td>
-                <td>作用在相簿頁，只支持PC版，例如：<a href="https://vk.com/album-213073007_283330987">https://vk.com/album-213073007_283330987</a>，<a href="https://vk.com/album-200938487_302684407">https://vk.com/album-200938487_302684407</a></td>
+                <td>作用在相簿頁，只支持PC版，例如：<a href="https://vk.com/album-213073007_283330987">Coser@桜井宁宁 Vol.036 宁宁喵</a>，<a href="https://vk.com/album-200938487_302684407">Coser@けん研 (けんけん) 2023.10 写真合集</a>，<a href="https://vk.com/album-206951480_284035019">六味帝皇醬 - 廢墟JK</a></td>
             </tr>
             <tr>
                 <td>
@@ -3991,6 +3991,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://pibys.win/">Pibys</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.1y.is/">1Y Beauties</a>
                 </td>
                 <td></td>
@@ -4247,6 +4253,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.sexphotos.cc/">18成人貼圖</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://prettysix.com/">正妹六区</a>
                 </td>
                 <td></td>
             </tr>
@@ -6013,7 +6025,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mangahere.cc/">MangaHere 英文漫畫</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://fanfox.net/">Manga Fox 英文漫畫</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6044,6 +6058,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.niadd.com/">NiAdd 英文漫畫</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangahasu.me/">MangaHasu 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangafire.to/home">MangaFire 英文漫畫</a>
+                </td>
+                <td>SPA網頁</td>
             </tr>
         </tbody>
     </table>
