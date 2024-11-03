@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.17
+// @version            2.11.18
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -514,6 +514,7 @@ a:has(>div>div>img),
         next: ".prevNews>a",
         prev: ".nextNews>a",
         customTitle: "h1",
+        hide: "body>ins",
         category: "nsfw2"
     }, {
         name: "Hit-x-Hot格式",
@@ -1862,18 +1863,6 @@ a:has(>div>div>img),
         customTitle: ".content>h5,.mm-title",
         hide: "union",
         category: "nsfw1"
-    }, {
-        name: "浪女吧",
-        host: ["langnv.neocities.org"],
-        reg: /^https?:\/\/langnv\.neocities\.org\/posts\/\d+\/$/,
-        imgs: "#images img",
-        button: [4],
-        insertImg: ["#images", 2],
-        autoDownload: [0],
-        next: "#prevpost>a",
-        prev: "#nextpost>a",
-        customTitle: ".title",
-        category: "nsfw2"
     }, {
         name: "656G精品套图",
         host: ["www.656g.com", "m.656g.com"],
@@ -3296,6 +3285,19 @@ a:has(>div>div>img),
         customTitle: "span.current,.card-body h1",
         category: "nsfw2"
     }, {
+        name: "爱推图",
+        url: {
+            h: "www.aituitu.com",
+            p: ".html",
+            e: ".reading-open"
+        },
+        imgs: ".single-content img",
+        customTitle: () => fn.dt({
+            s: ".entry-title",
+            d: "写真"
+        }),
+        category: "nsfw1"
+    }, {
         name: "Zusi足丝",
         url: {
             h: "zusi.net"
@@ -4035,6 +4037,19 @@ a:has(>div>div>img),
         customTitle: "article h2",
         category: "nsfw1"
     }, {
+        name: "Pibys",
+        url: {
+            h: "pibys.win",
+            e: ".page-links"
+        },
+        init: () => fn.createImgBox(".entry-content img", 1),
+        imgs: () => fn.getImgA(".entry-content img", ".page-links a"),
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#FullPictureLoadMainImgBox~*"], 2
+        ],
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
         name: "1Y Beauties",
         host: ["www.1y.is"],
         reg: /^https?:\/\/www\.1y\.is\/[\w-]+\/[^\.]+\.html$/,
@@ -4692,18 +4707,6 @@ a:has(>div>div>img),
         hide: "#right-bottom,#ad,.ad",
         category: "nsfw2"
     }, {
-        name: "福利图库",
-        host: ["fulituku.neocities.org"],
-        reg: /^https?:\/\/fulituku\.neocities\.org\/posts\/\w+$/,
-        imgs: "#gallery img",
-        button: [4],
-        insertImg: ["#gallery", 2],
-        autoDownload: [0],
-        next: "#sibling-posts>:first-child>a",
-        prev: "#sibling-posts>:last-child>a",
-        customTitle: "h1",
-        category: "nsfw2"
-    }, {
         name: "福利乐园",
         host: ["www.fulily.com"],
         reg: /^https?:\/\/www\.fulily\.com\/\d+\/\d+\/\d+\/[^\/]+\/$/,
@@ -4828,6 +4831,33 @@ a:has(>div>div>img),
         hide: "div.flex.m-1:has(>a[style]),.my-2:has(>a[target][referrerpolicy][style]),iframe[id][class][width][height][style]",
         category: "nsfw2"
     }, {
+        name: "胴体的秘密/CosPlayer/AsianSexyBody/国模人体写真图片/福利图库",
+        host: ["dongti.netlify.app", "cosplayer.neocities.org", "asiansexybody.netlify.app", "guomo.neocities.org", "fulituku.neocities.org"],
+        url: {
+            h: /netlify\.app|neocities\.org/,
+            p: "/posts/"
+        },
+        imgs: "#gallery img",
+        button: [4],
+        insertImg: ["#gallery", 2],
+        autoDownload: [0],
+        next: "//span[text()='Prev:']/following-sibling::a[1]",
+        prev: "//span[text()='Next:']/following-sibling::a[1]",
+        customTitle: "h1",
+        category: "nsfw2"
+    }, {
+        name: "浪女吧",
+        host: ["langnv.neocities.org"],
+        reg: /^https?:\/\/langnv\.neocities\.org\/posts\/\d+\/$/,
+        imgs: "#images img",
+        button: [4],
+        insertImg: ["#images", 2],
+        autoDownload: [0],
+        next: "#prevpost>a",
+        prev: "#nextpost>a",
+        customTitle: ".title",
+        category: "nsfw2"
+    }, {
         name: "色图喵",
         host: ["setumeow.com"],
         reg: /^https?:\/\/setumeow\.com\/p\//,
@@ -4846,21 +4876,6 @@ a:has(>div>div>img),
         customTitle: () => fn.lh === "www.lspimg.com" ? fn.title(" - 美图鉴赏") : null,
         css: "#masonry{position:unset!important;height:unset!important}",
         hide: "#popup",
-        category: "nsfw2"
-    }, {
-        name: "涩涩图库/AsianSexyBody",
-        host: ["sstk.neocities.org", "asiansexybody.netlify.app"],
-        reg: [
-            /^https?:\/\/sstk\.neocities\.org\/posts\/\w+\/$/,
-            /^https?:\/\/asiansexybody\.netlify\.app\/posts\/\w+\/$/
-        ],
-        imgs: "#gallery img",
-        button: [4],
-        insertImg: ["#gallery", 2],
-        autoDownload: [0],
-        next: "//span[text()='Prev:']/following-sibling::a[1]",
-        prev: "//span[text()='Next:']/following-sibling::a[1]",
-        customTitle: "h1",
         category: "nsfw2"
     }, {
         name: "秀人图吧",
@@ -10833,6 +10848,15 @@ a:has(>div>div>img),
         }),
         category: "nsfw2"
     }, {
+        name: "正妹六区",
+        url: {
+            h: "prettysix.com",
+            p: "/thread"
+        },
+        imgs: "img[id^=aimg][zoomfile]",
+        customTitle: "#thread_subject",
+        category: "nsfw2"
+    }, {
         name: "18成人貼圖",
         host: ["www.sexphotos.cc"],
         reg: /^https?:\/\/www\.sexphotos\.cc\/\w+\/\d+\.html$/,
@@ -14642,6 +14666,7 @@ a:has(>div>div>img),
         imgs: ".site-reader__image",
         button: [4],
         insertImg: [".site-reader", 2],
+        customTitle: () => fn.title(" - Roku Hentai"),
         css: ".site-reader--right-to-left,.site-reader--left-to-right{overflow-x:auto!important;overflow-y:auto!important}.site-reader{padding-bottom:0px!important}.site-reader{display:block!important;}.site-bottom-ad-slot{display:none!important}",
         fetch: 1,
         category: "hcomic"
@@ -15857,22 +15882,49 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "日韩漫画/歪歪漫画",
-        host: ["www.diyihm.com", "www.lltoon.com", "www.rrtoon.com", "wwtoon.com", "www.zztoon.com", "www.vvtoon.com", "www.fftoon.com", "www.wwtoon.com"],
+        host: ["www.diyihm.com", "www.lltoon.com", "www.rrtoon.com", "wwtoon.com", "www.zztoon.com", "www.vvtoon.com", "www.fftoon.com", "www.wwtoon.com", "www.niumh.com"],
+        link: "https://www.niumh.com/view/9922/524220",
         url: {
-            t: ["第一漫画", "歪歪漫画", "第一韩漫"],
-            p: /^\/view\/\d+\/\d+$/
+            t: ["第一漫画", "歪歪漫画", "第一韩漫", "太极漫画网"],
+            p: /^\/view\/\d+\/\d+$/,
+            e: "//script[contains(text(),'$(document).ready')]",
+            d: "m"
         },
-        init: async () => {
-            await fn.waitEle(".charpetBox img");
-            let code = fn.gt("//script[contains(text(),'$(document).ready')]");
-            let objStr = code.match(/window\.\w+\s?=\s?([^;]+)/)[1];
-            let json = JSON.parse(objStr);
-            debug("\n此頁JSON資料\n", json);
-            siteJson = json;
+        init: () => {
+            try {
+                let code = fn.gt("//script[contains(text(),'$(document).ready')]");
+                let objStr = code.match(/window\.\w+\s?=\s?([^;]+)/)[1];
+                let json = JSON.parse(objStr);
+                debug("\n此頁JSON資料\n", json);
+                siteJson = json;
+            } catch {}
         },
-        imgs: () => {
+        imgs: async () => {
             if (isArray(siteJson?.volume?.pages) && siteJson?.volume?.pages?.length > 0) {
                 return siteJson.volume.pages;
+            } else if (fn.ge("//a[text()='本章已分页']")) {
+                fn.showMsg(displayLanguage.str_01, 0);
+                let arr = [];
+                let src;
+                let page = 1;
+                let loop = true;
+                const getData = () => fn.fetchDoc(location.href + "/" + page).then(dom => {
+                    fn.showMsg(`${displayLanguage.str_02}${page}/???`, 0);
+                    const srcs = fn.getImgSrcArr(".charpetBox img", dom);
+                    for (src of srcs) {
+                        if (arr.includes(src)) {
+                            loop = false;
+                            return;
+                        } else {
+                            arr.push(src);
+                        }
+                    }
+                });
+                while (loop) {
+                    await getData();
+                    page++;
+                }
+                return arr;
             } else {
                 return fn.gae(".charpetBox img");
             }
@@ -15882,8 +15934,14 @@ a:has(>div>div>img),
         autoDownload: [0],
         next: "#loadNextChapter",
         prev: "#loadPrevChapter",
-        customTitle: () => siteJson.comic.title + " - " + siteJson.volume.title,
-        hide: "body>div[class][style]:first-of-type,.letchepter[style*='20px'],#FullPictureLoadGoToLastImage~*",
+        customTitle: () => {
+            if (siteJson?.volume?.title) {
+                return siteJson.comic.title + " - " + siteJson.volume.title;
+            } else {
+                return fn.gt(".BarTit");
+            }
+        },
+        hide: "body>div[class][style]:first-of-type,.letchepter[style*='20px'],#FullPictureLoadGoToLastImage~*:not([id^='Full'],[class^='Full'],[id^='pv-'],[class^='pv-'],#comicRead,#fab,*[class^=fancybox])",
         category: "hcomic"
     }, {
         name: "Manhuascan.us",
@@ -16209,10 +16267,12 @@ a:has(>div>div>img),
         customTitle: ".info-top-chapter>h2",
         category: "comic"
     }, {
-        name: "MangaHere 分頁模式",
-        host: ["www.mangahere.cc"],
-        reg: /^https?:\/\/www\.mangahere\.cc\/manga\//,
-        include: ".cp-pager-list span",
+        name: "MangaHere/Manga Fox 分頁模式",
+        url: {
+            h: ["www.mangahere.cc", "fanfox.net"],
+            p: "/manga/",
+            e: ".cp-pager-list span",
+        },
         imgs: () => {
             const {
                 imagecount,
@@ -16250,10 +16310,12 @@ a:has(>div>div>img),
         hide: ".ad-reader,.pager-list-left>span",
         category: "comic"
     }, {
-        name: "MangaHere 條漫模式",
-        host: ["www.mangahere.cc"],
-        reg: /^https?:\/\/www\.mangahere\.cc\/manga\//,
-        include: ".cp-pager-list",
+        name: "MangaHere/Manga Fox 條漫模式",
+        url: {
+            h: ["www.mangahere.cc", "fanfox.net"],
+            p: "/manga/",
+            e: ".cp-pager-list",
+        },
         imgs: ".reader-main img",
         button: [4],
         insertImg: [".reader-main", 2],
@@ -16265,9 +16327,9 @@ a:has(>div>div>img),
         hide: ".ad-reader",
         category: "comic"
     }, {
-        name: "MangaHere M",
+        name: "MangaHere/Manga Fox M",
         url: {
-            h: "m.mangahere.cc",
+            h: ["m.mangahere.cc", "m.fanfox.net"],
             p: ["/manga/", "/roll_manga/"],
             e: "#viewer"
         },
@@ -16300,16 +16362,20 @@ a:has(>div>div>img),
         next: () => tempNextLink,
         prev: 1,
         customTitle: () => {
-            let [text] = fn.gst("addHistory").match(/{"href[^}]+}/);
-            let obj = JSON.parse(text);
-            let ch = fn.gt(".return-title");
-            return obj.name + " - " + ch;
+            if (fn.lh.includes("fanfox")) {
+                return document.title + fn.gt(".mangaread-title");
+            } else {
+                let [text] = fn.gst("addHistory").match(/{"href[^}]+}/);
+                let obj = JSON.parse(text);
+                let ch = fn.gt(".return-title");
+                return obj.name + " - " + ch;
+            }
         },
         category: "comic"
     }, {
-        name: "MangaHere M",
+        name: "MangaHere/Manga Fox M",
         url: {
-            h: "newm.mangahere.cc",
+            h: ["newm.mangahere.cc", "newm.fanfox.net"],
             p: "/manga/",
             e: ".read-bottom-bar"
         },
@@ -16344,7 +16410,12 @@ a:has(>div>div>img),
         },
         button: [4, "24%"],
         insertImg: [".read-img-bar", 2],
-        insertImgAF: () => fn.run("jQuery('.read-img-bar').off();"),
+        insertImgAF: (parent) => {
+            fn.run("jQuery('.read-img-bar').off();")
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 5);
+            }
+        },
         next: "//a[div[p[text()='Next Chapter']]][not(starts-with(@href,'java'))]",
         prev: "//a[div[p[text()='Last Chapter' or text()='Prev Chapter']]][not(starts-with(@href,'java'))]",
         customTitle: () => fn.ge("meta[name='og:title']")?.content?.split(" - ")[1]?.replace(/Read | Online/g, ""),
@@ -16587,6 +16658,50 @@ a:has(>div>div>img),
             ]
         }),
         hide: ".option-item~*",
+        category: "comic"
+    }, {
+        name: "MangaHasu",
+        url: {
+            h: "mangahasu.me",
+            p: "/chapter"
+        },
+        imgs: ".pagenum+img",
+        button: [4],
+        insertImg: ["#loadchapter", 2],
+        endColor: "white",
+        autoDownload: [0],
+        next: "//a[text()='Next']",
+        prev: "//a[text()='Prev']",
+        customTitle: ".container h1",
+        category: "comic"
+    }, {
+        name: "MangaFire",
+        url: {
+            h: "mangafire.to",
+            p: "/read/",
+            d: "pc"
+        },
+        init: () => (siteJson = JSON.parse(document.querySelector('#syncData').innerText)),
+        imgs: () => {
+            let [, comic_id, chapter_number] = new URL(document.URL).pathname.match(/(\w+)\/\w+\/chapter-(.+)$/i);
+            let headers = new Headers({
+                "Accept": "application/json, text/javascript, */*; q=0.01",
+                "X-Requested-With": "XMLHttpRequest",
+            });
+            return fetch(`/ajax/read/${comic_id}/chapter/en`, {
+                headers
+            }).then(res => res.json()).then(json => {
+                let tempDom = new DOMParser().parseFromString(json.result.html, "text/html");
+                let chapter_id = [...tempDom.querySelectorAll("li a")].find(a => a.dataset.number == chapter_number).dataset.id;
+                return fetch(`/ajax/read/chapter/${chapter_id}`, {
+                    headers
+                }).then(res => res.json()).then(json => json.result.images.map(arr => arr.find(e => e.startsWith("http"))));
+            });
+        },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => !!siteJson.next_chapter_url ? new URL(siteJson.next_chapter_url).pathname : null,
+        customTitle: () => fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g),
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -25209,7 +25324,7 @@ if ("xx" in window) {
             }
         },
         immediateInsertImg: async (manual = "no") => {
-            if (checkGeting() || ge(".FullPictureLoadImage")) return;
+            if (captureExclude() || ge(".FullPictureLoadImage")) return;
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 let validPage = await siteData.SPA();
                 if (!validPage) return;
