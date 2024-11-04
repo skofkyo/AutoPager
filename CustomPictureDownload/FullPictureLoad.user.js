@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.18
+// @version            2.11.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -22704,6 +22704,14 @@ if ("xx" in window) {
                 str_169: "佈景主題：",
                 str_170: "反向選取",
                 str_171: "顯示檔案大小",
+                str_172: "拖動排序",
+                str_173: "可拖動圖片來改變圖片順序。",
+                str_174: "匯出JSON格式",
+                str_175: "已匯出JSON格式",
+                str_176: "匯出為MD格式",
+                str_177: "已匯出Markdown格式",
+                str_178: "複製為MD格式",
+                str_179: "複製為Markdown格式",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -22914,6 +22922,14 @@ if ("xx" in window) {
                 str_169: "布景主题：",
                 str_170: "反向选取",
                 str_171: "显示文件大小",
+                str_172: "拖动排序",
+                str_173: "可拖动图片来改变图片顺序。",
+                str_174: "导出JSON格式",
+                str_175: "已导出JSON格式",
+                str_176: "导出为MD格式",
+                str_177: "已导出Markdown格式",
+                str_178: "拷贝为MD格式",
+                str_179: "拷贝为Markdown格式",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -23092,7 +23108,7 @@ if ("xx" in window) {
                 str_139: "Page Content Auto Insert Images",
                 str_140: "Enable Shadow Gallery",
                 str_141: "Shadow Gallery",
-                str_141: hasTouchEvent ? "Shadow Gallery" : "Shadow Gallery(G)",
+                str_141: hasTouchEvent ? "ShadowGallery" : "ShadowGallery(G)",
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
@@ -23109,7 +23125,7 @@ if ("xx" in window) {
                 str_155: "Unselect All",
                 str_156: "Reload",
                 str_157: "Download",
-                str_158: hasTouchEvent ? "Filter Download" : "Filter Download(F)",
+                str_158: hasTouchEvent ? "FilterDownload" : "FilterDownload(F)",
                 str_159: hasTouchEvent ? "Function" : "Function(6)",
                 str_160: hasTouchEvent ? "Insert Images" : "Insert Images(1)",
                 str_161: "The Number Of Images Loaded At The Same Time：",
@@ -23123,6 +23139,14 @@ if ("xx" in window) {
                 str_169: "Setting Theme：",
                 str_170: "Reverse Selection",
                 str_171: "Show File Size",
+                str_172: "Drag Sort",
+                str_173: "Drag the image to change the order of images",
+                str_174: "Export JSON",
+                str_175: "Exported JSON",
+                str_176: "Export Markdown",
+                str_177: "Exported Markdown",
+                str_178: "Copy Markdown",
+                str_179: "Copied to Markdown format",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -27511,6 +27535,78 @@ if ("xx" in window) {
         fn.showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
     };
 
+    //匯出為JSON格式
+    const exportJsonFormat = async (array = null) => {
+        if (checkGeting() || isOpenOptionsUI) return;
+        let selector = siteData.imgs;
+        let srcArr = isArray(array) ? array : await getImgs(selector);
+        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        let object = {
+            url: siteUrl,
+            title: (customTitle || document.title),
+            images: srcArr,
+        }
+        if (videoSrcArray.length > 0) {
+            Reflect.set(object, "videos", videoSrcArray);
+        };
+        let fileName = (customTitle || document.title) + ".json";
+        let blob = new Blob([JSON.stringify(object, null, 4)], {
+            type: "application/json"
+        });
+        saveData(blob, fileName);
+        fn.showMsg(displayLanguage.str_175);
+    };
+
+    //匯出為Markdown格式
+    const exportMarkdownFormat = async (array = null) => {
+        if (checkGeting() || isOpenOptionsUI) return;
+        let selector = siteData.imgs;
+        let srcArr = isArray(array) ? array : await getImgs(selector);
+        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        let title = "## " + (customTitle || document.title);
+        let post = `Post Link：[${siteUrl}](${siteUrl})`;
+        let imagesTitle = "## Images";
+        let images = srcArr.map((src, i) => `![${(customTitle || document.title)}${(i + 1)}P](${src})`)
+        let textArr = [title, post, imagesTitle].concat(images);
+        if (videoSrcArray.length > 0) {
+            let videosTitle = "## Videos";
+            textArr.push(videosTitle);
+            let videos = videoSrcArray.map(src => "    " + src);
+            textArr = textArr.concat(videos);
+        };
+        let str = textArr.join("\n");
+        let fileName = (customTitle || document.title) + ".md";
+        let blob = new Blob([str], {
+            type: "text/markdown",
+            endings: "native"
+        });
+        saveData(blob, fileName);
+        fn.showMsg(displayLanguage.str_177);
+    };
+
+    //複製為Markdown格式
+    const copyMarkdownFormat = async (array = null) => {
+        if (checkGeting() || isOpenOptionsUI) return;
+        let selector = siteData.imgs;
+        let srcArr = isArray(array) ? array : await getImgs(selector);
+        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        let title = "## " + (customTitle || document.title);
+        let post = `Post Link：[${siteUrl}](${siteUrl})`;
+        let imagesTitle = "## Images";
+        let images = srcArr.map((src, i) => `![${(customTitle || document.title)}${(i + 1)}P](${src})`)
+        let textArr = [title, post, imagesTitle].concat(images);
+        if (videoSrcArray.length > 0) {
+            let videosTitle = "## Videos";
+            textArr.push(videosTitle);
+            let videos = videoSrcArray.map(src => "    " + src);
+            textArr = textArr.concat(videos);
+        };
+        let str = textArr.join("\n");
+        console.log(str);
+        copyToClipboard(str);
+        fn.showMsg(displayLanguage.str_179);
+    };
+
     const copyToClipboard = text => {
         if (!!_unsafeWindow.navigator.clipboard && _unsafeWindow.isSecureContext) {
             return _unsafeWindow.navigator.clipboard.writeText(text);
@@ -27881,7 +27977,8 @@ if ("xx" in window) {
             behavior: "instant",
             threading: 2,
             backgroundColor: "l",
-            showSize: 0
+            showSize: 0,
+            move: 0
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -30644,10 +30741,53 @@ img.small {
         }
         if (srcs.length < 1) return (isOpenFilter = false);
 
+        //https://syj0905.github.io/drag-drop-demo/
+        function cancelDefault(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function drag_sort_Start(e) {
+            if (e.target.tagName === "LI") {
+                let index = $(e.target).index();
+                e.dataTransfer.setData('text/plain', index);
+            } else if (e.target.tagName === "IMG") {
+                let index = $(e.target.parentElement).index();
+                e.dataTransfer.setData('text/plain', index);
+            }
+        }
+
+        function drop_sort(e) {
+            if (e.target.tagName === "LI") {
+                let oldIndex = e.dataTransfer.getData('text/plain');
+                let newIndex = $(e.target).index();
+                let dropped = $(e.target).parent().children().eq(oldIndex);
+                if (newIndex < oldIndex) {
+                    dropped.remove();
+                    $(e.target).before(dropped);
+                } else if (newIndex > oldIndex) {
+                    dropped.remove();
+                    $(e.target).after(dropped);
+                }
+            } else if (e.target.tagName === "IMG") {
+                let oldIndex = e.dataTransfer.getData('text/plain');
+                let newIndex = $(e.target.parentElement).index();
+                let dropped = $(e.target.parentElement).parent().children().eq(oldIndex);
+                if (newIndex < oldIndex) {
+                    dropped.remove();
+                    $(e.target.parentElement).before(dropped);
+                } else if (newIndex > oldIndex) {
+                    dropped.remove();
+                    $(e.target.parentElement).after(dropped);
+                }
+            }
+        }
+
         const config = getConfig();
         let threading = Number(config.threading);
         let backgroundColor = config.backgroundColor;
         let showSize = config.showSize;
+        let move = config.move;
 
         if (!("Viewer" in _unsafeWindow)) {
             _GM_addElement(document.head, "style", {
@@ -30791,7 +30931,7 @@ li p {
 li p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
-#size {
+#size,#move {
     width: 16px;
     height: 16px;
     vertical-align: text-top;
@@ -30927,6 +31067,7 @@ li p.dark {
         <label class="number">${displayLanguage.str_168}<select id="height"></select></label>
         <label class="number">${displayLanguage.str_165 + srcs.length}</label>
         <label id="filterNumber" class="number">${displayLanguage.str_166 + srcs.length}</label>
+        <label class="number" title="${displayLanguage.str_173}"><input id="move" type="checkbox"></input>${displayLanguage.str_172}</label>
         <label class="number"><input id="size" type="checkbox"></input>${displayLanguage.str_171}</label>
     </div>
 </div>
@@ -30949,6 +31090,9 @@ li p.dark {
     </div>
 </div>
         `;
+        if (!("jQuery" in _unsafeWindow) || hasTouchEvent) {
+            ge("label:has(>#move)", main).remove();
+        }
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
         }
@@ -31125,6 +31269,20 @@ li p.dark {
             addLis();
             main.focus();
         });
+        let inputMove = ge("#move", main);
+        if (inputMove) {
+            inputMove.checked = move == 0 ? false : true;
+            inputMove.addEventListener("change", () => {
+                move = inputMove.checked ? 1 : 0;
+                config.move = move;
+                saveConfig(config);
+                widthSelect.value = 0;
+                heightSelect.value = 0;
+                ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+                addLis();
+                main.focus();
+            });
+        }
         const imageList = ge("#image-list", main);
         let Viewer;
         let ViewerJsInstance;
@@ -31143,7 +31301,7 @@ li p.dark {
         const addLis = () => {
             imageList.innerHTML = "";
             const loadImgList = [];
-            for (const src of srcs) {
+            for (const [index, src] of srcs.entries()) {
                 const input = document.createElement("input");
                 input.className = "check select";
                 input.setAttribute("type", "checkbox");
@@ -31166,7 +31324,11 @@ li p.dark {
                 img.dataset.src = src;
                 img.onload = () => {
                     if (img.classList.contains("loaded")) {
-                        p.innerText = img.dataset.width + " x " + img.dataset.height;
+                        if (move == 0 || hasTouchEvent) {
+                            p.innerText = img.dataset.width + " x " + img.dataset.height;
+                        } else {
+                            p.innerText = (index + 1) + "P | " + img.dataset.width + " x " + img.dataset.height;
+                        }
                         img.onload = null;
                         if (showSize != 0) {
                             getFileSize(img.src, p);
@@ -31175,7 +31337,11 @@ li p.dark {
                 };
                 loadImgList.push([simpleLoadImg, null, img]);
                 const p = document.createElement("p");
-                p.innerText = "? x ?";
+                if (move == 0 || hasTouchEvent) {
+                    p.innerText = "? x ?";
+                } else {
+                    p.innerText = (index + 1) + "P | ? x ?";
+                }
                 const li = document.createElement("li");
                 li.className = "image-item";
                 if (backgroundColor === "d") {
@@ -31185,6 +31351,13 @@ li p.dark {
                 li.append(input);
                 li.append(img);
                 li.append(p);
+                if (move != 0 && !hasTouchEvent) {
+                    li.setAttribute("draggable", true);
+                    li.addEventListener("dragstart", drag_sort_Start);
+                    li.addEventListener("drop", drop_sort);
+                    li.addEventListener("dragenter", cancelDefault);
+                    li.addEventListener("dragover", cancelDefault);
+                }
                 imageList.append(li);
             }
             if (Viewer && ViewerJsInstance) {
@@ -31533,6 +31706,27 @@ li p.dark {
                 DownloadFn();
             }
         }, {
+            text: displayLanguage.str_174,
+            show: 0,
+            cfn: event => {
+                event.preventDefault();
+                exportJsonFormat();
+            }
+        }, {
+            text: displayLanguage.str_176,
+            show: 0,
+            cfn: event => {
+                event.preventDefault();
+                exportMarkdownFormat();
+            }
+        }, {
+            text: displayLanguage.str_178,
+            show: 0,
+            cfn: event => {
+                event.preventDefault();
+                copyMarkdownFormat();
+            }
+        }, {
             text: displayLanguage.str_104,
             show: 0,
             cfn: event => {
@@ -31624,20 +31818,20 @@ li p.dark {
             fn.gae(".itemNoShow", menuDiv).forEach(e => {
                 e.classList.remove("itemNoShow");
                 e.classList.add("itemShow");
-                e.width = "112px";
+                e.width = "116px";
             });
-            menuDiv.style.width = "124px";
-            menuDiv.lastChild.width = "112px";
+            menuDiv.style.width = "128px";
+            menuDiv.lastChild.width = "116px";
             menuDiv.lastChild.innerText = displayLanguage.str_134;
         }
         menuDiv.onmouseleave = () => {
             fn.gae(".itemShow", menuDiv).forEach(e => {
                 e.classList.remove("itemShow");
                 e.classList.add("itemNoShow");
-                e.width = "36px";
+                e.width = "38px";
             });
-            menuDiv.style.width = "46px";
-            menuDiv.lastChild.width = "36px";
+            menuDiv.style.width = "48px";
+            menuDiv.lastChild.width = "38px";
             menuDiv.lastChild.innerText = displayLanguage.str_133;
             setTimeout(() => (isOpenMenu = false), 200);
         }
