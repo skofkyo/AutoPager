@@ -1176,7 +1176,7 @@ imgs: async () => {
 <p>F鍵 開啟篩選下載UI。</p>
 <p>G鍵 開啟Shadow DOM畫廊，Fancybox5與網站燈箱插件衝突時調用Iframe畫廊。</p>
 <p>I鍵 開啟Iframe畫廊。</p>
-<p>Esc鍵 可中途取消當前的圖片下載。</p>
+<p>Esc鍵 可中途取消當前的圖片下載和終止6的自動滾動元素。</p>
 <p>Delete鍵 並排模式下當為漫畫分類和並排數為2的H漫分類，用於切換隱藏顯示第一張圖片，當沒有剛好並成雙頁跨頁大圖時使用。</p>
 <p>組合鍵 Ctrl + . 開始或取消自動下載，網站需有必要的相關規則。</p>
 <p>組合鍵 Ctrl + Alt + T 頁面選取文字後，按此快捷鍵可以快速設定為腳本用的圖集標題，沒有選取文字也會彈出輸入框能手動輸入自訂標題。</p>
@@ -1435,6 +1435,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xiuren51.top/">秀人集</a>
                 </td>
                 <td>永久域名Xiurenba.Com及(秀人集.com)，<a href="http://a.2xiu.vip/">导航页</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.20mn.top/">爱美女网</a>
+                </td>
+                <td>导航网址：20mn.top 或 imn5.cc 目前可用 imn05.top (从05到09)</td>
             </tr>
             <tr>
                 <td>
@@ -1815,6 +1821,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.tumeitu.com/">图美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.xsnvshen.co/">秀色女神</a>
                 </td>
                 <td></td>
@@ -1978,7 +1990,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.loxiu.com/">洛秀网</a>
                 </td>
                 <td>
-                    <a href="https://www.counv.com/">维秘秀</a>
+                    <a href="https://www.xiunvw.com/">维秘秀</a>
                 </td>
             </tr>
             <tr>
@@ -3390,6 +3402,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.koipb.com/">Girl Atlas</a>
+                </td>
+                <td>圖片預覽不全</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://niwatori.my.id/category/uncategorized/">niwatori.my.id</a>
                 </td>
                 <td></td>
@@ -3522,11 +3540,22 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://kemono.su/fantia/user/17148">Kemono</a>
+                    <a href="https://kemono.su/">Kemono</a>
                 </td>
+                <td>手動插入圖片，SPA網頁，在作者文章列表可取得50個Post的資料，使用浮動選單自訂函式可取得所有Post的資料，Post頁面只能取得當前的Post資料。</td>
+            </tr>
+            <tr>
                 <td>
-                    <a href="https://coomer.su/">Coomer</a>， <a href="https://nekohouse.su/">Nekohouse</a>
+                    <a href="https://coomer.su/">Coomer</a>
                 </td>
+                <td>手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post，發送80個請求後會被封禁IP一分半鐘，需耐心等待全部爬完。</td>
+            </tr>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nekohouse.su/">Nekohouse</a>
+                </td>
+                <td>手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post。</td>
             </tr>
             <tr>
                 <td>
@@ -3991,9 +4020,11 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://pibys.win/">Pibys</a>
+                    <a href="https://pibys.com/">Pibys</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://pibys.win/">pibys.win</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4289,6 +4320,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://shinv.pics/">湿女吧</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xiu07.com/">超级资源分享</a>
                 </td>
                 <td></td>
             </tr>
@@ -5550,10 +5587,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.laimanhua8.com/">来漫画</a>
+                    <a href="https://www.laimanhua88.com/">来漫画</a>
                 </td>
                 <td>
-                    <a href="https://m.laimanhua8.com/">m.laimanhua8.com</a>，有無限滾動模式加預讀
+                    <a href="https://m.laimanhua88.com/">m.laimanhua88.com</a>，<a href="https://www.comemh8.com/">www.comemh8.com</a>，<a href="https://m.comemh8.com/">m.comemh8.com</a>，有無限滾動模式加預讀
                 </td>
             </tr>
             <tr>
