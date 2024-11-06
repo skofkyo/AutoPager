@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.5.14
+// @version            2.5.15
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -173,7 +173,6 @@
     let nextChapterUrl = null;
     let prevChapterUrl = null;
 
-    const hasTouchEvents = (() => ("ontouchstart" in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))();
     const openInNewTab = () => gae(".home-banner a:not([target=_blank]),.manga-rank a:not([target=_blank]),.manga-cover a:not([target=_blank])").forEach(a => a.setAttribute("target", "_blank"));
     const delay = time => new Promise(resolve => setTimeout(resolve, time));
     const isString = str => Object.prototype.toString.call(str) === "[object String]";
@@ -366,7 +365,7 @@
         <label>${i18n.config.autoNext}</label>
     </div>
     <div class="item">
-        <label class="select">自動下一話延遲(秒)</label>
+        <label class="select">${i18n.config.autoNextSec}</label>
         <select id="autoNextSec">
             ${new Array(10).fill().map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join("")}
         </select>
