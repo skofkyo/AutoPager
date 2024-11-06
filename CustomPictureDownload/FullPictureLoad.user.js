@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.20
+// @version            2.11.21
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -41,9 +41,8 @@
 // @grant              GM.addElement
 // @grant              unsafeWindow
 // @grant              window.close
-// @run-at             document-start
+// @run-at             document-end
 // @noframes
-// @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
@@ -54,11 +53,11 @@
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 // ==/UserScript==
 
-(async (JSZip, ajaxHooker) => {
+(async (JSZip) => {
     "use strict";
 
     //await wait(() => !!document.body && document.readyState !== "loading");
-    await wait(() => !!document.body && document?.body?.childNodes?.length > 0);
+    //await wait(() => !!document.body && document?.body?.childNodes?.length > 0);
 
     if ((ge("body.no-js:not(.has-preloader,.single-post)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
         debug("Cloudflare驗證中不運行腳本。");
@@ -75,7 +74,7 @@
         return;
     }
 
-    await delay(600);
+    //await delay(600);
 
     const defaultOptions = {
         icon: 1, //是否顯示左下圖示，1：顯示、0：不顯示
@@ -101,7 +100,6 @@
     const language = _unsafeWindow.navigator.language;
     let siteUrl = _unsafeWindow.location.href.replace(_unsafeWindow.location.hash, "");
     let frameWindow = _unsafeWindow;
-    let $;
     let siteData = {};
     let _this = {};
     let tempData = {};
@@ -124,6 +122,7 @@
     let isStopDownload = false;
     let isCountdowning = false;
     let isFetching = false;
+    let isGotAll = false;
     let isAutoScrolling = false;
     let isValidPage = true;
     let isSimpleMode = false;
@@ -790,6 +789,22 @@ a:has(>div>div>img),
         prev: ".article-nav-prev>a[href$=html]",
         customTitle: ".article-title",
         hide: ".article-header>div[id],.article-header>a,.article-content br,img[src*='zz1.gif'],.bottom_fixed,.article-content~a,#bottom-banner,.content>div[id]",
+        category: "nsfw1"
+    }, {
+        name: "爱美女网",
+        host: ["www.20mn.top"],
+        url: {
+            e: "//section[@class='container']//a[text()='爱美女网']",
+            p: /\/\w+\/\w+\.html$/
+        },
+        imgs: () => fn.getImg(".imgwebp p img[alt]", fn.gt(".page a:last-child", 2), 3, null, 100),
+        button: [4],
+        insertImg: ["//div[p[img[@alt]]]", 2],
+        autoDownload: [0],
+        next: "//span/b[contains(text(),'下一篇')]/a[contains(@href,'html')]",
+        prev: "//span/b[contains(text(),'上一篇')]/a[contains(@href,'html')]",
+        customTitle: ".focusbox h1+div",
+        css: ".imgwebp br,img[src*='zz2.gif']{display:none!important}",
         category: "nsfw1"
     }, {
         name: "漂亮美女网",
@@ -3122,6 +3137,25 @@ a:has(>div>div>img),
         css: "@media only screen and (max-width:3840px){.content img{max-width:100%!important}}",
         category: "nsfw1"
     }, {
+        name: "图美图",
+        url: {
+            h: "www.tumeitu.com",
+            p: "/a/",
+            e: [".content img", ".weizhi"]
+        },
+        imgs: () => {
+            let [, max] = fn.gu("//a[text()='尾页']").match(/(\d+)\.html$/);
+            return fn.getImg(".content img", max, 9);
+        },
+        button: [4],
+        insertImg: [".content", 2],
+        customTitle: () => fn.dt({
+            s: ".weizhi h1",
+            d: /\/.+$/
+        }),
+        css: "@media only screen and (max-width:3840px){.content img{max-width:100%!important}}",
+        category: "nsfw1"
+    }, {
         name: "妹妹图",
         host: ["mm.tvv.tw"],
         reg: /^https?:\/\/mm\.tvv\.tw\/archives\/\d+\.html$/,
@@ -3321,7 +3355,7 @@ a:has(>div>div>img),
             }
         },
         SPA: true,
-        init: () => {
+        init: async () => {
             if ("gallery_json" in localStorage) {
                 siteJson = JSON.parse(localStorage.getItem("gallery_json"));
             }
@@ -3332,6 +3366,10 @@ a:has(>div>div>img),
                     //debug("\n此圖集JSON資料\n", siteJson);
                 }
             });
+            if (!("ajaxHooker" in _unsafeWindow)) {
+                await fn.getCode("https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js");
+            }
+            const ajaxHooker = _unsafeWindow.ajaxHooker;
             ajaxHooker.filter([{
                 method: "POST",
                 type: "xhr",
@@ -3444,13 +3482,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "洛秀网/维秘秀",
+        host: ["www.loxiu.com", "www.xiunvw.com"],
         url: {
-            h: [
-                /^(www\.|m\.)?loxiu\.com$/,
-                /^(www\.|m\.|c\.)?counv\.com$/,
-                /^(www\.|m\.)?ligui\.org$/
-            ],
-            p: /^\/post\/\d+\.html$/
+            t: ["洛秀网", "维秘秀"],
+            p: "/post/"
         },
         imgs: () => fn.getImg(".info-imtg-box>img[alt]", fn.gt(".pagebar>*:last-child", 3)),
         button: [4],
@@ -4044,10 +4079,25 @@ a:has(>div>div>img),
         },
         init: () => fn.createImgBox(".entry-content img", 1),
         imgs: () => fn.getImgA(".entry-content img", ".page-links a"),
+        button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, "#FullPictureLoadMainImgBox~*"], 2
         ],
         customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
+        name: "Pibys",
+        url: {
+            h: "pibys.com",
+            p: "/threads/"
+        },
+        init: () => fn.createImgBox(".btnSummary", 1),
+        imgs: ".divSummary img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".btnSummary,.divSummary,.w3-row-padding:has(>div>.w3-margin-bottom),.w3-container:has(>.pagination)"], 2
+        ],
+        customTitle: "#posttitle",
         category: "nsfw1"
     }, {
         name: "1Y Beauties",
@@ -4279,6 +4329,7 @@ a:has(>div>div>img),
         host: ["fapello.su"],
         reg: /^https?:\/\/fapello\.su\/[^\/]+\/$/,
         init: async () => {
+            const $ = _unsafeWindow.jQuery;
             let total = Number(fn.gt("//div[strong[text()='Media']]").match(/\d+/)[0]); //媒體總數
             console.log("媒體總數", total);
             const model_bid = fn.lp.replaceAll("/", "");
@@ -6915,6 +6966,115 @@ a:has(>div>div>img),
         openInNewTab: ".date-outer a[href]:not([target=_blank])",
         category: "autoPager"
     }, {
+        //TMD寫好不到一天就取消SPA
+        name: "Kemono SPA",
+        enable: 0,
+        links: [
+            "https://kemono.su/artists",
+            "https://kemono.su/fantia/user/17148"
+        ],
+        url: {
+            h: ["kemono.su"]
+        },
+        init: () => fn.waitEle("#main"),
+        SPA: () => document.URL.includes("/user/") && !!fn.ge(".card-list") || document.URL.includes("/post/"),
+        observerURL: true,
+        getPostJson: (url) => {
+            return fetch("https://kemono.su/api/v1" + new URL(url).pathname).then(res => res.json()).then(json => {
+                let {
+                    previews,
+                    videos
+                } = json;
+                let thums = previews.map(e => "//img.kemono.su/thumbnail/data" + e.path);
+                let images = previews.map(e => e.server + "/data" + e.path + "?f=" + e.name);
+                videos = videos.map(e => e.server + "/data" + e.path + "?f=" + e.name);
+                return {
+                    thums,
+                    images,
+                    videos
+                }
+            });
+        },
+        fn: async () => {
+            if (checkGeting() && !!fn.ge(".card-list")) return;
+            isFetching = true;
+            isGotAll = false;
+            let url = location.href.replace(location.search, "");
+            let small = fn.gt(".paginator small");
+            let postsTotal = small.match(/\d+/g).at(-1);
+            let pagesTotal = Math.ceil(Number(postsTotal) / 50);
+            let api = "https://kemono.su/api/v1" + new URL(document.URL).pathname + "/posts-legacy";
+            let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? api : api + `?o=${i * 50}`);
+            fn.showMsg(displayLanguage.str_05, 0);
+            let fetchNum = 0;
+            let resArr = [];
+            for (let [i, url] of pageLinks.entries()) {
+                let res = await fetch(url).then(res => res.json()).then(json => {
+                    fn.showMsg(`${displayLanguage.str_06}${i + 1}/${pageLinks.length}`, 0);
+                    return json.results.map(e => document.URL + "/post/" + e.id);
+                });
+                resArr.push(res);
+            }
+            Promise.all(resArr).then(async arr => {
+                let postUrls = arr.flat();
+                resArr = [];
+                fn.showMsg(displayLanguage.str_05, 0);
+                for (let [i, url] of postUrls.entries()) {
+                    let res = await _this.getPostJson(url);
+                    resArr.push(res);
+                    fn.showMsg(`${displayLanguage.str_06}${i + 1}/${postUrls.length}`, 0);
+                }
+                Promise.all(resArr).then(arr => {
+                    thumbnailSrcArray = arr.map(obj => obj.thums).flat();
+                    videoSrcArray = arr.map(obj => obj.videos).flat();
+                    globalImgArray = arr.map(obj => obj.images).flat();
+                    debug("thumbnailSrcArray", thumbnailSrcArray);
+                    debug("videoSrcArray", videoSrcArray);
+                    debug("globalImgArray", globalImgArray);
+                    fn.hideMsg();
+                    isGotAll = true;
+                    isFetching = false;
+                });
+            });
+        },
+        imgs: async () => {
+            if (isGotAll) return globalImgArray;
+            if (fn.ge(".card-list")) {
+                fn.createImgBox(".site-section", 2);
+                let links = fn.gau(".card-list__items a");
+                let resArr = [];
+                fn.showMsg(displayLanguage.str_05, 0);
+                for (let [i, url] of links.entries()) {
+                    let res = await _this.getPostJson(url);
+                    resArr.push(res);
+                    fn.showMsg(`${displayLanguage.str_06}${i + 1}/${links.length}`, 0);
+                }
+                return Promise.all(resArr).then(arr => {
+                    thumbnailSrcArray = arr.map(obj => obj.thums).flat();
+                    videoSrcArray = arr.map(obj => obj.videos).flat();
+                    return arr.map(obj => obj.images).flat();
+                });
+            } else if (document.URL.includes("/post/")) {
+                fn.createImgBox(".post__body", 2);
+                fn.showMsg(displayLanguage.str_05, 0);
+                return _this.getPostJson(document.URL).then(obj => {
+                    thumbnailSrcArray = obj.thums;
+                    videoSrcArray = obj.videos;
+                    return obj.images;
+                });
+            }
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: "span[itemprop=name],.post__title",
+        downloadVideo: true,
+        fetch: 1,
+        fancybox: {
+            blacklist: 1
+        },
+        category: "nsfw2"
+    }, {
         name: "Kemono/Coomer",
         links: [
             "https://kemono.su/artists",
@@ -7655,6 +7815,21 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: ".s-title",
+        category: "nsfw1"
+    }, {
+        name: "Girl Atlas",
+        host: ["www.koipb.com", "koipb.com"],
+        url: {
+            h: "koipb.com",
+            p: "/album"
+        },
+        init: () => fn.createImgBox(".gallery", 1),
+        imgs: ".gallery a[data-fancybox]",
+        thums: ".gallery img",
+        customTitle: ".header-title",
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw1"
     }, {
         name: "Danryoku",
@@ -10079,16 +10254,18 @@ a:has(>div>div>img),
         host: ["yazhouseba.com"],
         reg: /^https?:\/\/yazhouseba\.com\/meinv\/img-\d+\.html/,
         include: "#next-url",
-        imgs: async () => {
+        imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let pid = fn.ge("#next-url").rel;
-            let json = await new Promise(resolve => {
-                $.post("ajax.php", {
-                    "action": "src",
-                    "pid": pid
-                }, data => resolve(data), "json");
-            });
-            return json.error_code == "0" ? json.urls.map(e => _unsafeWindow.img_dir + e) : [];
+            return fetch("/meinv/ajax.php", {
+                "headers": {
+                    "accept": "application/json, text/javascript, */*; q=0.01",
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "body": `action=src&pid=${pid}`,
+                "method": "POST"
+            }).then(res => res.json()).then(json => json.urls.map(e => _unsafeWindow.img_dir + e));
         },
         button: [4],
         insertImg: [".content>.image", 2],
@@ -11051,6 +11228,18 @@ a:has(>div>div>img),
         hide: "div[id^=ads]",
         category: "ad"
     }, {
+        name: "超级资源分享",
+        host: ["www.xiu07.com", "m.xiu07.com"],
+        url: {
+            t: "超级资源分享",
+            p: "/detailimg/"
+        },
+        imgs: ".images img",
+        button: [4],
+        insertImg: [".images", 2],
+        customTitle: ".srt h5",
+        category: "nsfw2"
+    }, {
         name: "哔咔庇护所v2",
         host: ["ios.zzgo810.top"],
         url: {
@@ -11899,7 +12088,7 @@ a:has(>div>div>img),
                     let num_a;
                     let num_b;
                     let thumbnailsHeightData = [...document.querySelectorAll(".gdtm img,.gdtl img,#gdt>a>div[style*='url(']")].map(e => Number(e.style.height.match(/\d+/)[0]));
-                    let thumbnailUrls = [...document.querySelectorAll(".gdtm>div,.gdtl>div,#gdt>a>div[style*='url(']")].map(div => div.getAttribute("style").split("url(")[1].split(")")[0]);
+                    let thumbnailUrls = [...document.querySelectorAll(".gdtm>div,.gdtl>div,#gdt>a>div[style*='url(']")].map(div => getComputedStyle(div).getPropertyValue("background-image").slice(5, -2));
                     num_a = thumbnailUrls.length;
                     thumbnailUrls = [...new Set(thumbnailUrls)];
                     num_b = thumbnailUrls.length;
@@ -11933,10 +12122,12 @@ a:has(>div>div>img),
                                     canvas.width = 100;
                                     canvas.getContext("2d").drawImage(img, -Math.abs(w), 0);
                                     let dataURL = canvas.toDataURL("image/webp", 0.5);
-                                    let thumbnailBlobURL = fn.dataURLtoBlobURL(dataURL);
-                                    thumbnailSrcArray.push(thumbnailBlobURL);
-                                    //console.log(thumbnailBlobURL);
-                                    heightIndex++;
+                                    if (dataURL.startsWith("data:image/webp;")) {
+                                        let thumbnailBlobURL = fn.dataURLtoBlobURL(dataURL);
+                                        thumbnailSrcArray.push(thumbnailBlobURL);
+                                        //console.log(thumbnailBlobURL);
+                                        heightIndex++;
+                                    }
                                 }
                             }
                         });
@@ -14197,7 +14388,11 @@ a:has(>div>div>img),
         observerURL: true,
         comicUid: () => document.URL.match(/\/id\.(.+)$/)[1],
         getHeaders: () => JSON.parse(localStorage.getItem("headers")),
-        init: () => {
+        init: async () => {
+            if (!("ajaxHooker" in _unsafeWindow)) {
+                await fn.getCode("https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js");
+            }
+            const ajaxHooker = _unsafeWindow.ajaxHooker;
             ajaxHooker.filter([{
                 url: "/api/ComicInfo/info"
             }, {
@@ -17492,6 +17687,14 @@ if ("xx" in window) {
             if (fn.gae(".view-bottom-bar>li").length == 4) {
                 fn.css(".view-bottom-bar>li:nth-child(n+2):nth-child(-n+3){display:none!important}.view-bottom-bar li{width:50%!important}");
             }
+            let b = fn.ge("body.viewbody");
+            if (fn.lh.includes("mangabz") && b) {
+                b.innerHTML = b.innerHTML.replace("<!--", "").replace("-->", "");
+                fn.ge(".top-bar-tool").removeAttribute("style");
+                fn.ge(".bottom-bar").removeAttribute("style");
+                const showtoolbar = () => document.body.classList.toggle("toolbar");
+                document.addEventListener('click', showtoolbar);
+            }
         },
         imgs: () => _unsafeWindow.newImgs,
         button: [4],
@@ -17553,16 +17756,9 @@ if ("xx" in window) {
             let b = fn.ge("body.viewbody");
             if (fn.lh.includes("mangabz") && b) {
                 b.innerHTML = b.innerHTML.replace("<!--", "").replace("-->", "");
-                $(".top-bar-tool").removeAttr("style");
-                $(".bottom-bar").removeAttr("style");
-                const showtoolbar = () => {
-                    let t = fn.ge("body.toolbar");
-                    if (t) {
-                        $("body").removeClass("toolbar");
-                    } else {
-                        $('body').addClass("toolbar");
-                    }
-                };
+                fn.ge(".top-bar-tool").removeAttribute("style");
+                fn.ge(".bottom-bar").removeAttribute("style");
+                const showtoolbar = () => document.body.classList.toggle("toolbar");
                 document.addEventListener('click', showtoolbar);
             }
         },
@@ -18779,9 +18975,9 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "来漫画",
-        host: ["www.laimanhua8.com", "www.comemh.com"],
+        host: ["www.laimanhua8.com", "www.laimanhua88.com", "www.comemh.com", "www.comemh8.com"],
         enable: 1,
-        reg: () => /^https?:\/\/(www\.laimanhua\d?\.com|www\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fn.url) && comicInfiniteScrollMode != 1,
+        reg: () => /^https?:\/\/(www\.laimanhua(\d+)?\.com|www\.comemh(\d+)?\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fn.url) && comicInfiniteScrollMode != 1,
         init: () => {
             fn.clearAllTimer();
             fn.createImgBox("#pic-list", 2);
@@ -18818,7 +19014,7 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "来漫画 自動翻頁",
-        reg: () => /^https?:\/\/(www\.laimanhua\d?\.com|www\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fn.url) && comicInfiniteScrollMode == 1,
+        reg: () => /^https?:\/\/(www\.laimanhua(\d+)?\.com|www\.comemh(\d+)?\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fn.url) && comicInfiniteScrollMode == 1,
         getSrcs: (dom) => {
             const {
                 base64_decode,
@@ -18866,9 +19062,9 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "来漫画M",
-        host: ["m.laimanhua8.com", "m.comemh.com"],
+        host: ["m.laimanhua8.com", "m.laimanhua88.com", "m.comemh.com", "m.comemh8.com"],
         enable: 1,
-        reg: () => /^https?:\/\/(m\.laimanhua\d?\.com|m\.comemh\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fn.url) && comicInfiniteScrollMode != 1,
+        reg: () => /^https?:\/\/(m\.laimanhua(\d+)?\.com|m\.comemh(\d+)?\.com)\/kanmanhua\/\w+\/\d+\.html/i.test(fn.url) && comicInfiniteScrollMode != 1,
         init: () => fn.clearAllTimer(),
         imgs: () => {
             const {
@@ -19140,39 +19336,6 @@ if ("xx" in window) {
         },
         preloadNext: (nextDoc, obj) => fn.iframeDoc(nextLink, ".comic-page img,img[data-src],img[data-original],canvas[data-src]", 30000).then(nextIframeDoc => fn.picPreload(obj.imgs(nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         hide: "body>ins,#mainView>.read,.chapter-end .read,#chapter1,#chapter3,.cnt-4,.comic-list a,.chapter-end>a,div[style^=height]",
-        category: "comic"
-    }, {
-        name: "漫百库M",
-        host: ["www.manhuabaiku.com"],
-        enable: 0,
-        reg: /^https?:\/\/www\.manhuabaiku\.com\/chapter\/\w+\.html/i,
-        init: () => {
-            $("body").on("click", ".FullPictureLoadImage", () => {
-                if ($(".top-tool-bar").css("top") == "0px") {
-                    $(".top-tool-bar").animate({
-                        top: "-100px"
-                    }, 500);
-                    $(".bottom-tool-bar").animate({
-                        bottom: "-100px"
-                    }, 500);
-                } else {
-                    $(".top-tool-bar").animate({
-                        top: "0px"
-                    }, 500);
-                    $(".bottom-tool-bar").animate({
-                        bottom: "0px"
-                    }, 500);
-                }
-            });
-        },
-        imgs: (dom = document) => fn.gae(".readForm canvas", dom).map(e => atob(e.dataset.sc)),
-        button: [4],
-        insertImg: [".readForm", 2],
-        autoDownload: [0],
-        next: "//a[text()='下一章'][contains(@href,'html')]",
-        prev: "//a[text()='上一章'][contains(@href,'html')]",
-        customTitle: (dom = document) => dom.title.split("漫画章节")[0] + " - " + fn.gt(".comic-name", 1, dom),
-        preloadNext: true,
         category: "comic"
     }, {
         name: "爱国漫",
@@ -19935,6 +20098,7 @@ if ("xx" in window) {
             ["#FullPictureLoadMainImgBox", 0, "#mainView_img"], 2
         ],
         insertImgAF: () => {
+            const $ = _unsafeWindow.jQuery;
             $("#FullPictureLoadMainImgBox").click(() => {
                 $(".reader-footer").fadeToggle(300);
                 $(".van-nav-bar").fadeToggle(300);
@@ -19971,6 +20135,7 @@ if ("xx" in window) {
             return fn.createImgArray(srcs);
         },
         init: async () => {
+            const $ = _unsafeWindow.jQuery;
             let tE = fn.createImgBox("#mainView_img", 2);
             fn.remove("#mainView_img");
             let imgs = _this.getImgs();
@@ -21516,6 +21681,7 @@ if ("xx" in window) {
             h: "manwa",
             p: /^\/chapter\/\d+(\?img_host=\d)?$/
         },
+        //delay: 1000,
         init: async () => {
             _unsafeWindow.Function.prototype.constructor = () => {};
             //await fn.scrollEles(".img-content img", 200);
@@ -21523,6 +21689,7 @@ if ("xx" in window) {
             fn.remove(".ad-area,body>div[id]:not([id^='pv-'],[class^='pv-'],[id^='pagetual'],[class^='pagetual'],#comicRead,#fab,[id^='FullPictureLoad'],[class^='FullPictureLoad'],[class^=fancybox])", 5000);
             let lastScrollTop = 0;
             document.addEventListener("scroll", event => {
+                const $ = _unsafeWindow.jQuery;
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
                     $(".view-fix-top-bar").attr("style", "top: -60px;");
@@ -22381,9 +22548,6 @@ if ("xx" in window) {
             if (siteData.fancybox && siteData.fancybox.css !== false) {
                 fn.css(FancyboxV3Css, "FancyboxV3Css");
             }
-            if ("jQuery" in _unsafeWindow) {
-                $ = _unsafeWindow.jQuery;
-            }
         } catch (error) {
             console.error("\naddLibrarysV3() 注入函式庫失敗", error);
         }
@@ -22400,9 +22564,6 @@ if ("xx" in window) {
                 });
             }
             fn.css(FancyboxV5Css);
-            if ("jQuery" in _unsafeWindow) {
-                $ = _unsafeWindow.jQuery;
-            }
         } catch (error) {
             console.error("\naddLibrarysV5() 注入函式庫失敗", error);
         }
@@ -23840,10 +24001,9 @@ if ("xx" in window) {
                         }
                     }
                 }
-                let backgroundImage = ele.style.backgroundImage;
-                if (backgroundImage !== "") {
-                    let [, imgSrc] = backgroundImage.split('"');
-                    imgSrc = imgSrc?.trim();
+                let backgroundImage = getComputedStyle(ele).getPropertyValue("background-image");
+                if (!!backgroundImage && backgroundImage?.startsWith("url")) {
+                    let imgSrc = backgroundImage.slice(5, -2).trim();
                     if (!!imgSrc) {
                         return {
                             ok: true,
@@ -23974,10 +24134,9 @@ if ("xx" in window) {
             let eles;
             isString(selector) ? eles = fn.gae(selector, dom, dom) : eles = selector;
             let srcs = eles.map(ele => {
-                let backgroundImage = ele?.style?.backgroundImage;
-                if (!!backgroundImage) {
-                    let [, imgSrc] = backgroundImage.split('"');
-                    imgSrc = imgSrc?.trim();
+                let backgroundImage = getComputedStyle(ele).getPropertyValue("background-image");
+                if (!!backgroundImage && backgroundImage?.startsWith("url")) {
+                    let imgSrc = backgroundImage.slice(5, -2).trim();
                     return imgSrc;
                 } else {
                     return null;
@@ -24282,7 +24441,7 @@ if ("xx" in window) {
                         if (eles[i].tagName === "IMG") {
                             eles[i].src = check.src;
                         } else if (["DIV", "A", "SPAN", "LI", "FIGURE"].some(n => n === eles[i].tagName)) {
-                            eles[i].style.backgroundImage = `url('${check.src}')`;
+                            eles[i].style.backgroundImage = `url("${check.src}")`;
                         }
                     }
                 }
@@ -26149,6 +26308,7 @@ if ("xx" in window) {
                 type: mime
             }));
         },
+        blobURLtoDataURL: bloburl => fetch(bloburl).then(res => res.blob()).then(blob => fn.blobToDataURL(blob)),
         imgSrcToDataURL: (src, type = "image/jpeg", cros = 0) => {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -26613,12 +26773,12 @@ if ("xx" in window) {
             document.addEventListener("scroll", event => {
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
-                    $("h4.header").attr("style", "top: -30px;");
-                    $("div.footer").attr("style", "bottom: -41px;");
+                    fn.ge("h4.header").setAttribute("style", "top: -30px;");
+                    fn.ge("div.footer").setAttribute("style", "bottom: -41px;");
                     lastScrollTop = st;
                 } else if (st < lastScrollTop - 20) {
-                    $("h4.header").removeAttr("style");
-                    $("div.footer").removeAttr("style");
+                    fn.ge("h4.header").removeAttribute("style");
+                    fn.ge("div.footer").removeAttribute("style");
                     lastScrollTop = st;
                 }
             });
@@ -26662,10 +26822,10 @@ if ("xx" in window) {
             document.addEventListener("scroll", event => {
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
-                    $(".top-bar").attr("style", "top: -74px;");
+                    fn.ge(".top-bar").setAttribute("style", "top: -74px;");
                     lastScrollTop = st;
                 } else if (st < lastScrollTop - 20) {
-                    $(".top-bar").removeAttr("style");
+                    fn.ge(".top-bar").removeAttribute("style");
                     lastScrollTop = st;
                 }
             });
@@ -26673,21 +26833,23 @@ if ("xx" in window) {
         XmanhuaUI: () => {
             const clickToggleToolbar = () => {
                 if (isOpenGallery) return;
-                let t = fn.ge(".header.toolbar");
-                if (t) {
-                    $(".header").removeClass("toolbar");
-                    $(".header").removeAttr("style");
+                let ht = fn.ge(".header.toolbar");
+                let h = fn.ge(".header");
+                if (ht) {
+                    h.classList.remove("toolbar");
+                    h.removeAttribute("style");
                 } else {
-                    $(".header").addClass("toolbar");
-                    $(".header").attr("style", "top: -64px;")
+                    h.classList.add("toolbar");
+                    h.setAttribute("style", "top: -64px;")
                 }
-                let b = fn.ge(".reader-bottom.toolbar");
-                if (b) {
-                    $(".reader-bottom").removeClass("toolbar");
-                    $(".reader-bottom").removeAttr("style");
+                let bt = fn.ge(".reader-bottom.toolbar");
+                let b = fn.ge(".reader-bottom");
+                if (bt) {
+                    b.classList.remove("toolbar");
+                    b.removeAttribute("style");
                 } else {
-                    $(".reader-bottom").addClass("toolbar");
-                    $(".reader-bottom").attr("style", "bottom: -50px;");
+                    b.classList.add("toolbar");
+                    b.setAttribute("style", "bottom: -50px;");
                 }
             };
             document.addEventListener("click", clickToggleToolbar);
@@ -26695,16 +26857,16 @@ if ("xx" in window) {
             document.addEventListener("scroll", event => {
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
-                    $(".header").addClass("toolbar");
-                    $(".header").attr("style", "top: -64px;");
-                    $(".reader-bottom").addClass("toolbar");
-                    $(".reader-bottom").attr("style", "bottom: -50px;");
+                    fn.ge(".header").classList.add("toolbar");
+                    fn.ge(".header").setAttribute("style", "top: -64px;");
+                    fn.ge(".reader-bottom").classList.add("toolbar");
+                    fn.ge(".reader-bottom").setAttribute("style", "bottom: -50px;");
                     lastScrollTop = st;
                 } else if (st < lastScrollTop - 20) {
-                    $(".header").removeClass("toolbar");
-                    $(".header").removeAttr("style");
-                    $(".reader-bottom").removeClass("toolbar");
-                    $(".reader-bottom").removeAttr("style");
+                    fn.ge(".header").classList.remove("toolbar");
+                    fn.ge(".header").removeAttribute("style");
+                    fn.ge(".reader-bottom").classList.remove("toolbar");
+                    fn.ge(".reader-bottom").removeAttribute("style");
                     lastScrollTop = st;
                 }
             });
@@ -27566,7 +27728,13 @@ if ("xx" in window) {
         let title = "## " + (customTitle || document.title);
         let post = `Post Link：[${siteUrl}](${siteUrl})`;
         let imagesTitle = "## Images";
-        let images = srcArr.map((src, i) => `![${(customTitle || document.title)}${(i + 1)}P](${src})`)
+        let images = srcArr.map(async (src, i) => {
+            if (src.startsWith("blob")) {
+                src = await fn.blobURLtoDataURL(src);
+            }
+            return `![${(customTitle || document.title)}${(i + 1)}P](${src})`;
+        });
+        images = await Promise.all(images);
         let textArr = [title, post, imagesTitle].concat(images);
         if (videoSrcArray.length > 0) {
             let videosTitle = "## Videos";
@@ -27593,7 +27761,13 @@ if ("xx" in window) {
         let title = "## " + (customTitle || document.title);
         let post = `Post Link：[${siteUrl}](${siteUrl})`;
         let imagesTitle = "## Images";
-        let images = srcArr.map((src, i) => `![${(customTitle || document.title)}${(i + 1)}P](${src})`)
+        let images = srcArr.map(async (src, i) => {
+            if (src.startsWith("blob")) {
+                src = await fn.blobURLtoDataURL(src);
+            }
+            return `![${(customTitle || document.title)}${(i + 1)}P](${src})`;
+        });
+        images = await Promise.all(images);
         let textArr = [title, post, imagesTitle].concat(images);
         if (videoSrcArray.length > 0) {
             let videosTitle = "## Videos";
@@ -30741,49 +30915,6 @@ img.small {
         }
         if (srcs.length < 1) return (isOpenFilter = false);
 
-        const $ = _unsafeWindow.jQuery;
-        //https://syj0905.github.io/drag-drop-demo/
-        function cancelDefault(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        function drag_sort_Start(e) {
-            if (e.target.tagName === "LI") {
-                let index = $(e.target).index();
-                e.dataTransfer.setData('text/plain', index);
-            } else if (e.target.tagName === "IMG") {
-                let index = $(e.target.parentElement).index();
-                e.dataTransfer.setData('text/plain', index);
-            }
-        }
-
-        function drop_sort(e) {
-            if (e.target.tagName === "LI") {
-                let oldIndex = e.dataTransfer.getData('text/plain');
-                let newIndex = $(e.target).index();
-                let dropped = $(e.target).parent().children().eq(oldIndex);
-                if (newIndex < oldIndex) {
-                    dropped.remove();
-                    $(e.target).before(dropped);
-                } else if (newIndex > oldIndex) {
-                    dropped.remove();
-                    $(e.target).after(dropped);
-                }
-            } else if (e.target.tagName === "IMG") {
-                let oldIndex = e.dataTransfer.getData('text/plain');
-                let newIndex = $(e.target.parentElement).index();
-                let dropped = $(e.target.parentElement).parent().children().eq(oldIndex);
-                if (newIndex < oldIndex) {
-                    dropped.remove();
-                    $(e.target.parentElement).before(dropped);
-                } else if (newIndex > oldIndex) {
-                    dropped.remove();
-                    $(e.target.parentElement).after(dropped);
-                }
-            }
-        }
-
         const config = getConfig();
         let threading = Number(config.threading);
         let backgroundColor = config.backgroundColor;
@@ -31091,7 +31222,35 @@ li p.dark {
     </div>
 </div>
         `;
-        if (!("jQuery" in _unsafeWindow) || hasTouchEvent) {
+
+        //參考https://syj0905.github.io/drag-drop-demo/
+        //還原成原生JavaScript寫法
+        const cancelDefault = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+
+        const drag_sort_Start = (event) => {
+            const dragEle = ["INPUT", "IMG", "P"].some(t => event.target.tagName === t) ? event.target.parentNode : event.target;
+            const index = [...dragEle.parentNode.childNodes].indexOf(dragEle);
+            event.dataTransfer.setData("text/plain", index);
+        };
+
+        const drop_sort = (event) => {
+            const oldIndex = event.dataTransfer.getData("text/plain");
+            const dropEle = ["INPUT", "IMG", "P"].some(t => event.target.tagName === t) ? event.target.parentNode : event.target;
+            const list = dropEle.parentNode;
+            const nodes = [...list.childNodes];
+            const newIndex = nodes.indexOf(dropEle);
+            const dragEle = nodes.at(oldIndex);
+            if (newIndex < oldIndex) {
+                list.insertBefore(dragEle, dropEle);
+            } else if (newIndex > oldIndex) {
+                list.insertBefore(dragEle, dropEle.nextSibling);
+            }
+        };
+
+        if (hasTouchEvent) {
             ge("label:has(>#move)", main).remove();
         }
         if (backgroundColor === "d") {
@@ -33434,6 +33593,7 @@ a[data-fancybox]:hover {
                 if (isFetching || isDownloading) return;
                 if (siteUrl !== _unsafeWindow.document.URL.replace(_unsafeWindow.location.hash, "")) {
                     siteUrl = _unsafeWindow.document.URL;
+                    isGotAll = false;
                     await toggleUI();
                     const newCustomTitle = await getTitle(siteData.customTitle);
                     if ("capture" in siteData && !newCustomTitle) {
@@ -33764,7 +33924,7 @@ a[data-fancybox]:hover {
                 if (["A", "FIGURE", "SPAN"].some(t => t === e.target.tagName)) {
                     return !!e.target.querySelector("img,canvas");
                 }
-                if (e.target.tagName === "DIV" && e.target?.style?.backgroundImage != "") {
+                if (e.target.tagName === "DIV" && getComputedStyle(e.target).getPropertyValue("background-image") != "") {
                     return true;
                 }
                 return false;
@@ -34256,4 +34416,4 @@ html,body {
         setTimeout(() => toggleUI(), 500);
     }
 
-})(JSZip, ajaxHooker);
+})(JSZip);
