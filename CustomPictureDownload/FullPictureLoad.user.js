@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.21
+// @version            2.11.22
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -44,6 +44,7 @@
 // @run-at             document-end
 // @noframes
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
+// @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
@@ -2832,7 +2833,11 @@ a:has(>div>div>img),
     }, {
         name: "图集网",
         host: ["aiavr.uk"],
-        reg: /^https?:\/\/aiavr\.uk\/detail\?aid=\d+/,
+        url: {
+            h: /^aiavr\.uk$/,
+            p: "/detail",
+            s: "aid="
+        },
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let id = new URLSearchParams(fn.ls).get("aid");
@@ -2860,18 +2865,20 @@ a:has(>div>div>img),
         //button: [4],
         //insertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let [, id] = fn.url.match(/\?aid=(\d+)/);
+            let id = new URLSearchParams(fn.ls).get("aid");
             //return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
             return fn.xhr(`https://admin.aiavr.uk/album/info?id=${id}`, {
                 responseType: "json"
-            }).then(json => json.data.title);
+            }).then(json => fn.dt({
+                t: json.data.title
+            }));
         },
         category: "nsfw1"
     }, {
         name: "图集网",
         url: {
             h: ["user.aiavr.uk", "m.aiavr.uk"],
-            p: "systemAlbum",
+            p: ["systemAlbum", "/detail"],
             s: "aid="
         },
         imgs: async () => {
@@ -2901,8 +2908,10 @@ a:has(>div>div>img),
         //button: [4],
         //sertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let [, id] = fn.url.match(/\?aid=(\d+)/);
-            return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
+            let id = new URLSearchParams(fn.ls).get("aid");
+            return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => fn.dt({
+                t: json.data.title
+            }));
         },
         category: "nsfw1"
     }, {
@@ -2937,8 +2946,10 @@ a:has(>div>div>img),
         //tton: [4],
         //sertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let [, id] = fn.url.match(/\?aid=(\d+)/);
-            return fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.title);
+            let id = new URLSearchParams(fn.ls).get("aid");
+            return fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => fn.dt({
+                t: json.data.title
+            }));
         },
         category: "nsfw1"
     }, {
@@ -3138,13 +3149,19 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "图美图",
+        host: ["www.tumeitu.com", "m.tumeitu.com"],
         url: {
-            h: "www.tumeitu.com",
+            h: ".tumeitu.com",
             p: "/a/",
             e: [".content img", ".weizhi"]
         },
         imgs: () => {
-            let [, max] = fn.gu("//a[text()='尾页']").match(/(\d+)\.html$/);
+            let max;
+            if (fn.lh.startsWith("m.")) {
+                max = fn.gt(".allpage").match(/\d+/g).at(-1);
+            } else {
+                [, max] = fn.gu("//a[text()='尾页']").match(/(\d+)\.html$/);
+            }
             return fn.getImg(".content img", max, 9);
         },
         button: [4],
@@ -3153,7 +3170,7 @@ a:has(>div>div>img),
             s: ".weizhi h1",
             d: /\/.+$/
         }),
-        css: "@media only screen and (max-width:3840px){.content img{max-width:100%!important}}",
+        hide: ".shuoming,.bk20,center:has(>#pages)",
         category: "nsfw1"
     }, {
         name: "妹妹图",
@@ -3346,16 +3363,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "美图坊",
-        host: ["m2ph.xyz", "www.m2ph.xyz"],
-        reg: () => {
-            if (fn.lh.includes("m2ph.xyz")) {
-                return ["flutter.password", "flutter.account"].every(k => k in localStorage) && hasTouchEvent;
-            } else {
-                return false;
-            }
-        },
+        host: ["www.yalatu.com", "m2ph.xyz", "www.m2ph.xyz", "110.40.75.172:39000"],
+        url: () => ["flutter.password", "flutter.account"].every(k => k in localStorage) && hasTouchEvent,
         SPA: true,
-        init: async () => {
+        init: () => {
             if ("gallery_json" in localStorage) {
                 siteJson = JSON.parse(localStorage.getItem("gallery_json"));
             }
@@ -3366,28 +3377,43 @@ a:has(>div>div>img),
                     //debug("\n此圖集JSON資料\n", siteJson);
                 }
             });
-            if (!("ajaxHooker" in _unsafeWindow)) {
-                await fn.getCode("https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js");
-            }
-            const ajaxHooker = _unsafeWindow.ajaxHooker;
+            const ajaxHooker = addAjaxHookerLibrary();
             ajaxHooker.filter([{
                 method: "POST",
                 type: "xhr",
-                url: /\/ServerConfig$|\/Image\/ImageUrl$/,
+                url: "/ServerInfo",
+            }, {
+                method: "POST",
+                type: "xhr",
+                url: "/ServerConfig",
+            }, {
+                method: "POST",
+                type: "xhr",
+                url: "/Image/ImageUrl",
             }]);
             ajaxHooker.hook(request => {
                 //debug("API請求", request);
                 request.response = res => {
-                    if (request.url.includes("/ServerConfig")) {
-                        //debug("ServerConfig_API回應", res);
+                    if (request.url.includes("/ServerConfig") || request.url.includes("/ServerInfo")) {
+                        //debug("(ServerConfig_API || ServerInfo_API) 回應", res);
                         let text = new TextDecoder().decode(res.response);
                         let json = JSON.parse(text);
-                        siteJson.big_image_base_url = Object.values(Object.fromEntries(Object.entries(json.data.ipv4).filter(([k, v]) => k.startsWith("big_image_base_url") && !!v)))[0];
+                        //debug("(ServerConfig_API || ServerInfo_API) 回應JSON", json);
+                        if ("ipv4" in json.data) {
+                            siteJson.big_image_base_url = Object.values(Object.fromEntries(Object.entries(json.data.ipv4).filter(([k, v]) => k.startsWith("big_image_base_url") && !!v)))[0];
+                        } else if ("image_server_list" in json.data) {
+                            siteJson.big_image_base_url = json.data.image_server_list[Math.round(Math.random())].image_big_base;
+                        } else {
+                            Reflect.deleteProperty(siteJson, "big_image_base_url");
+                        }
+                        //debug("big_image_base_url", siteJson.big_image_base_url);
                     }
                     if (request.url.includes("/Image/ImageUrl")) {
                         //debug("ImageUrl_API回應", res);
                         let text = new TextDecoder().decode(res.response);
-                        siteJson = Object.assign(siteJson, JSON.parse(text));
+                        let json = JSON.parse(text);
+                        //debug("ImageUrl_API回應JSON", json);
+                        siteJson = Object.assign(siteJson, json);
                         siteJson.title = fn.dt({
                             t: siteJson.title
                         });
@@ -5345,7 +5371,7 @@ a:has(>div>div>img),
     }, {
         name: "Gallery Epic",
         host: ["galleryepic.com"],
-        reg: /^https?:\/\/galleryepic\.com\/(zh|en)\/cosplay\/\d+$/,
+        reg: /^https?:\/\/galleryepic\.com\/(zh|en)\/(cosplay|album)\/\d+$/,
         init: async () => {
             await fn.waitEle("img[variant='thumbnail']");
             await fn.wait(() => {
@@ -7080,7 +7106,8 @@ a:has(>div>div>img),
             "https://kemono.su/artists",
             "https://coomer.su/artists",
             "https://kemono.su/fantia/user/17148",
-            "https://coomer.su/fansly/user/365239425979916288"
+            "https://coomer.su/fansly/user/365239425979916288",
+            "https://coomer.su/onlyfans/user/arty42575619"
         ],
         url: {
             h: ["kemono.su", "coomer.su"],
@@ -9006,6 +9033,27 @@ a:has(>div>div>img),
         },
         capture: () => _this.imgs(),
         customTitle: ".photos_album_intro>h1",
+        category: "nsfw2"
+    }, {
+        name: "VK",
+        host: ["m.vk.com"],
+        link: "https://m.vk.com/album-200938487_302565215",
+        url: {
+            h: "m.vk.com",
+            p: "/album"
+        },
+        imgs: () => {
+            let total = Number(document.title.match(/–[\s\d]+.+\s\|\sVK$/)[0].match(/\d+/)[0]);
+            if (total > 36) {
+                let pages = Math.ceil(total / 36);
+                let links = fn.arr(pages, (v, i) => i == 0 ? fn.lp : fn.lp + "?offset=" + (i * 36));
+                return fn.getImgA("div[data-src_big]", links).then(srcs => srcs.map(src => src.replace(/(=album)(.+$)/, "$1")));
+            } else {
+                return [...document.querySelector("div[data-src_big]")].map(e => e.dataset.src_big.replace(/(=album)(.+$)/, "$1"));
+            }
+        },
+        capture: () => _this.imgs(),
+        customTitle: ".AlbumPage__title",
         category: "nsfw2"
     }, {
         name: "CyberDrop",
@@ -14388,11 +14436,8 @@ a:has(>div>div>img),
         observerURL: true,
         comicUid: () => document.URL.match(/\/id\.(.+)$/)[1],
         getHeaders: () => JSON.parse(localStorage.getItem("headers")),
-        init: async () => {
-            if (!("ajaxHooker" in _unsafeWindow)) {
-                await fn.getCode("https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js");
-            }
-            const ajaxHooker = _unsafeWindow.ajaxHooker;
+        init: () => {
+            const ajaxHooker = addAjaxHookerLibrary();
             ajaxHooker.filter([{
                 url: "/api/ComicInfo/info"
             }, {
@@ -22527,6 +22572,7 @@ if ("xx" in window) {
     const _GM_getResourceText = (() => isFn(GM_getResourceText) ? GM_getResourceText : GM.getResourceText)();
     const _GM_addElement = (() => isFn(GM_addElement) ? GM_addElement : GM.addElement)();
 
+    const ajaxHookerJS = _GM_getResourceText("ajaxHookerJS");
     const JqueryJS = _GM_getResourceText("JqueryJS");
     const FancyboxV5JS = _GM_getResourceText("FancyboxV5JS");
     const FancyboxV5Css = _GM_getResourceText("FancyboxV5Css");
@@ -22534,6 +22580,15 @@ if ("xx" in window) {
     const FancyboxV3Css = _GM_getResourceText("FancyboxV3Css");
     const ViewerJs = _GM_getResourceText("ViewerJs");
     const ViewerJsCss = _GM_getResourceText("ViewerJsCss");
+
+    const addAjaxHookerLibrary = () => {
+        if (!("ajaxHooker" in _unsafeWindow)) {
+            _GM_addElement(document.body, "script", {
+                textContent: ajaxHookerJS
+            });
+        }
+        return _unsafeWindow.ajaxHooker;
+    };
 
     const addLibrarysV3 = async () => {
         try {
@@ -23980,6 +24035,7 @@ if ("xx" in window) {
                     "data-full-path",
                     "data-thumb",
                     "data-bgset",
+                    "data-src_big",
                     "ng-src",
                     "bigimg",
                     "lg-data-src",
@@ -25832,16 +25888,18 @@ if ("xx" in window) {
         //等待函式寫法
         wait: (callback, num = 300) => {
             if (!isFn(callback)) return;
+            debug("fn.wait()等待中...");
             let loopNum = 0;
             return new Promise(resolve => {
                 const loopFn = async () => {
                     let check = await callback(document, _unsafeWindow);
                     if (!!check) {
+                        debug("fn.wait()等待結束。");
                         resolve(true);
                         return;
                     }
                     if (loopNum >= num) {
-                        debug(`fn.wait()達循環上限。`);
+                        debug("fn.wait()達循環上限。");
                         resolve(false);
                         return;
                     }
@@ -25857,6 +25915,7 @@ if ("xx" in window) {
         //等待元素
         waitEle: (selector, max = 200, dom = document) => {
             let loopNum = 0;
+            debug("fn.waitEle()等待中...");
             return new Promise(resolve => {
                 let loop = setInterval(() => {
                     loopNum += 1;
@@ -25871,6 +25930,7 @@ if ("xx" in window) {
                         ele = ele.flat();
                     }
                     if (check) {
+                        debug("fn.waitEle()等待結束。");
                         clearInterval(loop);
                         resolve(ele);
                     }
@@ -25885,6 +25945,7 @@ if ("xx" in window) {
         //等待window環境變數
         waitVar: (key, max = 200) => {
             let loopNum = 0;
+            debug("fn.waitVar()等待中...");
             return new Promise(resolve => {
                 let loop = setInterval(() => {
                     loopNum += 1;
@@ -25895,6 +25956,7 @@ if ("xx" in window) {
                         check = key.every(k => (k in _unsafeWindow));
                     }
                     if (check) {
+                        debug("fn.waitVar()等待結束。");
                         clearInterval(loop);
                         resolve(true);
                     }
@@ -28152,6 +28214,7 @@ if ("xx" in window) {
             threading: 2,
             backgroundColor: "l",
             showSize: 0,
+            noSize: 0,
             move: 0
         };
         let newWindowData = localStorage.getItem("newWindowData");
@@ -30866,7 +30929,8 @@ img.small {
 
     };
 
-    const getFileSize = (src, element = null) => {
+    const getFileSize = (src, element = null, label = null) => {
+        const config = getConfig();
         return fn.xhrHEAD(src, {
             headers: {
                 referer: getReferer(src)
@@ -30877,21 +30941,27 @@ img.small {
                 return getFileSize(res.finalUrl, element);
             }
             const contentLength = res?.responseHeaders?.split("\r\n")?.find(s => s.startsWith("content-length:"));
-            //console.log(contentLength);
+            console.log(contentLength);
             if (contentLength) {
                 let [num] = contentLength.match(/\d+/);
                 if (num.length > 6) {
                     num = (num / 1000000).toFixed(1);
-                    if (element) {
+                    if (isEle(element)) {
                         element.innerText = element.innerText + " | Size: " + num + " MB";
                     }
                     return num + " MB";
                 } else {
                     num = Math.floor(num / 1000);
-                    if (element) {
+                    if (isEle(element)) {
                         element.innerText = element.innerText + " | Size: " + num + " kB";
                     }
                     return num + " kB";
+                }
+            } else {
+                config.noSize = 1;
+                saveConfig(config);
+                if (isEle(label)) {
+                    label.classList.add("line-through");
                 }
             }
         });
@@ -31068,6 +31138,9 @@ li p.dark {
     height: 16px;
     vertical-align: text-top;
     margin: 0 4px;
+}
+label.line-through:has(>#size) {
+    text-decoration: line-through;
 }
 @media (max-width: 820px) {
     li.image-item {
@@ -31417,7 +31490,10 @@ li p.dark {
                 DownloadFn(srcs, text);
             });
         });
-        let inputSize = ge("#size", main);;
+        let inputSize = ge("#size", main);
+        if (config.noSize == 1) {
+            inputSize.parentNode.classList.add("line-through");
+        }
         inputSize.checked = showSize == 0 ? false : true;
         inputSize.addEventListener("change", () => {
             showSize = inputSize.checked ? 1 : 0;
@@ -31491,7 +31567,7 @@ li p.dark {
                         }
                         img.onload = null;
                         if (showSize != 0) {
-                            getFileSize(img.src, p);
+                            getFileSize(img.src, p, inputSize.parentNode);
                         }
                     }
                 };
