@@ -3,16 +3,16 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/11/02
+2024/11/07
 PC
-Chrome 130.0.6723.92 + Tampermonkey 5.3.2 or Violentmonkey 2.27.0 or ScriptCat 0.16.6
+Chrome 130.0.6723.117 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
 Edge 130.0.2849.68 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.27.0 or ScriptCat 0.16.6
-FireFox 132.0 + Tampermonkey 5.3.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
+Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+FireFox 132.0.1 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
 Android
-Edge Canary 132.0.2930.0 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.27.0 or ScriptCat 0.16.6
-Firefox for Android 132.0 + Tampermonkey 5.3.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
+Edge Canary 132.0.2942.0 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Firefox for Android 132.0.1 + Tampermonkey 5.3.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
 XBrowser 5.0.0
 ViaBrowser 5.9.5
 </pre>
@@ -28,8 +28,8 @@ ViaBrowser 5.9.5
 <br>
 <pre>
 cdn.jsdelivr.net
-// @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
+// @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min
 // @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
@@ -40,8 +40,8 @@ cdn.jsdelivr.net
 </pre>
 <pre>
 unpkg.com
-// @require            https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
+// @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
 // @resource JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
 // @resource FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
 // @resource FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
@@ -3542,13 +3542,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://kemono.su/">Kemono</a>
                 </td>
-                <td>手動插入圖片，SPA網頁，在作者文章列表可取得50個Post的資料，使用浮動選單自訂函式可取得所有Post的資料，Post頁面只能取得當前的Post資料。</td>
+                <td>手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post，發送80個請求後會被封禁IP一分半鐘，需耐心等待全部爬完。</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://coomer.su/">Coomer</a>
                 </td>
-                <td>手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post，發送80個請求後會被封禁IP一分半鐘，需耐心等待全部爬完。</td>
+                <td>同上</td>
             </tr>
             </tr>
             <tr>
