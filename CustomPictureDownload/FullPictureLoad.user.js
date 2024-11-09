@@ -21203,11 +21203,17 @@ if ("xx" in window) {
             p: /^\/\w+\/\d+\/\d+\.html$/,
             d: "pc"
         },
-        imgs: () => fn.xhrDoc(siteUrl, {
-            headers: {
-                "User-Agent": Mobile_UA
-            }
-        }).then(dom => fn.gae(".episode-detail img", dom)),
+        imgs: () => {
+            fn.showMsg(displayLanguage.str_05, 0);
+            return fn.xhrDoc(siteUrl, {
+                headers: {
+                    "User-Agent": Mobile_UA
+                }
+            }).then(dom => {
+                fn.hideMsg();
+                return fn.gae(".episode-detail img", dom);
+            });
+        },
         button: [4],
         insertImg: ["#img-box", 2],
         autoDownload: [0],
@@ -21219,6 +21225,7 @@ if ("xx" in window) {
             let json = fn.run(objText);
             return json.articlename + " - " + json.chaptername;
         },
+        css: "#img-box{max-width:800px;margin:0 auto}",
         category: "comic"
     }, {
         name: "爱看漫M",
@@ -33079,7 +33086,6 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     --local-colour2-secondary: unset !important;
     transition-property: unset !important;
     transition-duration: unset !important;
-    transition-duration: unset !important;
 }
 
 #FullPictureLoadEnd {
@@ -33913,9 +33919,6 @@ a[data-fancybox]:hover {
                         const body = await fn.waitEle("body");
                         observer.observe(body, MutationObserverConfig);
                         if (!isOpenGallery && siteUrl !== _unsafeWindow.document.URL) {
-                            console.log(siteUrl);
-                            console.log(_unsafeWindow.document.URL);
-                            console.log(siteUrl === _unsafeWindow.document.URL);
                             await toggleUI();
                         }
                         if ("customTitle" in siteData && !("capture" in siteData)) {
@@ -34614,6 +34617,7 @@ html,body {
 
         const createFavor = () => {
             let favorData = _GM_getValue("favorData", defaultFavor);
+            FavorSitesElement.style.backgroundColor = "#fafafa";
             let FavorUl = document.createElement("ul");
             FavorUl.id = "FavorUl";
             FavorUl.style.gridTemplateColumns = `${fn.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
