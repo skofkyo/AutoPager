@@ -1253,9 +1253,11 @@ imgs: async () => {
     <br>
     <p>基本格式</p>
     <p>name,value</p>
-    <p>文字顏色</p>
+    <p>主要的背景顏色</p>
+    <p>main-background-color,#fafafa</p>
+    <p>每個收藏的文字顏色</p>
     <pre>text-color,#000</pre>
-    <p>背景顏色</p>
+    <p>每個收藏的背景顏色</p>
     <pre>background-color,#15d3bf</pre>
     <p>網站名稱,網址</p>
     <pre>小黃書,https://xchina.biz/</pre>
@@ -5366,6 +5368,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.kanman.buzz/">漫画大全网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://h-webtoon.com/">韓漫射</a>
                 </td>
                 <td>同格式， <a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>， <a href="https://18hmanga.com/">18hmanga.com</a>
@@ -5623,17 +5631,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.guoman.net/">爱国漫</a>
-                </td>
-                <td>
-                    <a href="https://m.guoman.net/">m.guoman.net</a>，章節混亂重複都不整理，有無限滾動模式加預讀
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.haoguoman.net/">好国漫</a>
                 </td>
-                <td>有無限滾動模式加預讀</td>
+                <td><a href="https://m.haoguoman.net/">m.haoguoman.net</a>，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
@@ -5670,12 +5670,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.hmttmh.com/">韩漫天堂</a>
                 </td>
                 <td>有無限滾動模式加預讀</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://manhua.zaimanhua.com/">再漫画</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -5757,7 +5751,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.idmzj.com/">再漫画</a>
+                    <a href="https://manhua.zaimanhua.com/">再漫画</a>
                 </td>
                 <td>SPA網頁</td>
             </tr>
@@ -5795,7 +5789,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://www.zerobyw8.com/">zero搬运网</a>
+                    <a href="http://www.zerobywz.com/">zero搬运网</a>
                 </td>
                 <td>預設關閉， <a href="https://zerobyw.github.io/">域名</a>
                 </td>
@@ -5816,13 +5810,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.k886.net/">看漫畫</a>
                 </td>
-                <td>預設關閉</td>
+                <td><a href="https://m.k886.net/">m.k886.net</a>，預設關閉</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.dongman.la/">動漫啦</a>
                 </td>
-                <td>預設關閉</td>
+                <td><a href="https://m.dongman.la/">m.dongman.la</a>，預設關閉</td>
             </tr>
             <tr>
                 <td>
@@ -5862,10 +5856,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://www.ykmh.com/">优酷漫画</a>
+                    <a href="http://www.ykmh.net/">优酷漫画</a>
                 </td>
                 <td>
-                    <a href="http://h5.ykmh.com/">h5.ykmh.com</a>，預設關閉
+                    <a href="http://m.ykmh.net/">m.ykmh.net</a>，預設關閉
                 </td>
             </tr>
             <tr>
@@ -5891,12 +5885,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.umh5.com/">有漫画屋</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://797mh.com/">漫画网</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
@@ -5946,7 +5934,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.kukanmanhua.com/">酷看漫画</a>
+                    <a href="https://www.kukanmanhua.org/">酷看漫画</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
