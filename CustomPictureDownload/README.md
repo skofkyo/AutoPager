@@ -1254,7 +1254,7 @@ imgs: async () => {
     <p>基本格式</p>
     <p>name,value</p>
     <p>主要的背景顏色</p>
-    <p>main-background-color,#fafafa</p>
+    <pre>main-background-color,#fafafa</pre>
     <p>每個收藏的文字顏色</p>
     <pre>text-color,#000</pre>
     <p>每個收藏的背景顏色</p>
@@ -2523,6 +2523,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://xiunice.com/">Xiunice.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://photos.xtapo.org/">Photos XTAPO</a>
                 </td>
                 <td></td>
@@ -2632,12 +2638,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.modelsvibe.com/">Models Vibe</a>
                 </td>
                 <td>分類頁添加了自動翻頁功能</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.beatifulleg.com/">Beautiful Leg</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2922,18 +2922,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://packsparapobres.com/">Packs para pobres</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://packdechicas.net/">Pack de chicas</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://nudostar.com/">NudoStar</a>
                 </td>
                 <td></td>
@@ -3069,12 +3057,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.xikxak.com/">XikXak</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://xiunice.com/">Xiunice.com</a>
                 </td>
                 <td></td>
             </tr>
@@ -5717,10 +5699,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://manwa.me/">漫蛙</a>
+                    <a href="https://manwa.fun/">漫蛙</a>
                 </td>
                 <td>uBlock加信任名單
-                    <pre>https://manwa.me/chapter/*</pre> ，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
+                    <pre>https://manwa.fun/chapter/*</pre> ，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
                 </td>
             </tr>
             <tr>
