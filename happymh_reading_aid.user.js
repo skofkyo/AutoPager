@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.1
+// @version            2.6.2
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -101,7 +101,7 @@
                     settings: "設定"
                 },
                 buttom: {
-                    openComments: "打開評論",
+                    openComments: "開啟評論",
                     closeComments: "關閉評論"
                 }
             };
@@ -686,6 +686,7 @@ footer {
 
         const mangaCode = lp.split("/").at(-2);
         let currentChapterId = lp.split("/").at(-1);
+        let currentViewChapterId = currentChapterId;
         let allChapterListData;
         let currentChapterIndex = 0;
         let lastChapterIndex;
@@ -693,16 +694,30 @@ footer {
         let isOpenComments = false;
         const hiddenElementArray = [];
 
+        const titleObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    currentViewChapterId = entry.target.dataset.chapterId;
+                    //console.log("當前檢視章節ID:", currentViewChapterId);
+                }
+            });
+        });
+
         const imagesObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    observer.unobserve(entry.target);
-                    const realSrc = entry.target.dataset.src;
-                    const nextElement = entry.target.nextElementSibling;
-                    entry.target.src = realSrc;
-                    if (nextElement?.tagName == 'IMG' && nextElement?.dataset?.src) {
-                        nextElement.src = nextElement.dataset.src;
+                    //observer.unobserve(entry.target);
+                    if (!entry.target.classList.contains("loaded")) {
+                        entry.target.classList.add("loaded");
+                        const realSrc = entry.target.dataset.src;
+                        const nextElement = entry.target.nextElementSibling;
+                        entry.target.src = realSrc;
+                        if (nextElement?.tagName == 'IMG' && nextElement?.dataset?.src) {
+                            nextElement.src = nextElement.dataset.src;
+                        }
                     }
+                    currentViewChapterId = entry.target.dataset.chapterId;
+                    //console.log("當前檢視章節ID:", currentViewChapterId);
                 }
             });
         });
@@ -749,7 +764,7 @@ footer {
                     }
                     currentChapterIndex += 1;
                     loading?.remove();
-                    currentChapterId = cid;
+                    //currentViewChapterId = cid;
                 }
                 return readJson.data;
             } catch (error) {
@@ -798,7 +813,8 @@ footer {
         const createComments = async () => {
             isOpenComments = true;
 
-            let div = document.createElement("div");
+            const div = document.createElement("div");
+            div.id = "current-comments";
             Object.assign(div.style, {
                 left: "0",
                 right: "0",
@@ -809,7 +825,6 @@ footer {
                 margin: "0 auto",
                 padding: "0px",
                 position: "fixed",
-                opacity: "1",
                 zIndex: "10000",
                 backgroundColor: "#fff",
                 fontSize: "14px",
@@ -818,7 +833,8 @@ footer {
             });
             document.body.append(div);
 
-            let button1 = document.createElement("button");
+            const button1 = document.createElement("button");
+            button1.className = "close-comments";
             button1.innerText = i18n.buttom.closeComments;
             button1.style.marginTop = "10px";
             button1.style.marginLeft = "10px";
@@ -828,22 +844,21 @@ footer {
             });
 
             div.insertAdjacentElement("beforeend", button1);
-            div.insertAdjacentHTML("beforeend", '<ul class="MuiList-root MuiList-padding"></ul>');
+            div.insertAdjacentHTML("beforeend", '<ul class="MuiList-root MuiList-padding" style="padding-left: 10px;"></ul>');
 
-            let ul = div.querySelector("ul");
-            ul.style.paddingLeft = "10px";
+            const ul = ge("ul", div);
 
             let loop = true;
             let pn = 1;
 
             const getComments = () => {
-                return fetch(`/v2.0/apis/comment?code=${mangaCode}&ch_id=${currentChapterId}&pn=${pn}&order=time&from=read`, getHeaders()).then(res => res.json()).then(json => {
+                return fetch(`/v2.0/apis/comment?code=${mangaCode}&ch_id=${currentViewChapterId}&pn=${pn}&order=time&from=read`, getHeaders()).then(res => res.json()).then(json => {
                     if (!isOpenComments) {
                         loop = false;
                         return;
                     }
 
-                    let {
+                    const {
                         isEnd,
                         items
                     } = json.data;
@@ -851,6 +866,8 @@ footer {
                     if (isEnd === true) {
                         loop = false;
                     }
+
+                    let ulHtml = "";
 
                     items.forEach(e => {
                         let sub = "";
@@ -868,7 +885,7 @@ footer {
                             `;
                         }
 
-                        let li = `
+                        ulHtml += `
 <li class="MuiListItem-root jss99 MuiListItem-gutters MuiListItem-alignItemsFlexStart" style="padding-top: 0px; padding-bottom: 0px;">
     <div class="MuiListItemText-root jss100 MuiListItemText-multiline">
         <span class="MuiTypography-root jss100 MuiTypography-body1 MuiTypography-displayBlock">${e.user.username}</span>
@@ -888,9 +905,9 @@ footer {
     </div>
 </li>
                         `;
-                        ul.insertAdjacentHTML("beforeend", li);
-
                     });
+
+                    ul.insertAdjacentHTML("beforeend", ulHtml);
                 });
             };
 
@@ -899,7 +916,8 @@ footer {
                 pn++;
             }
 
-            let button2 = document.createElement("button");
+            const button2 = document.createElement("button");
+            button2.className = "close-comments";
             button2.innerText = i18n.buttom.closeComments;
             button2.style.marginBottom = "100px";
             button2.style.marginLeft = "10px";
@@ -923,6 +941,7 @@ footer {
                 const title = document.createElement("div");
                 title.className = "chapterTitle";
                 title.innerText = data.chapter_name; // 設置章節名稱
+                title.dataset.chapterId = data.id;
 
                 // 使用正規表達式過濾，僅保留中英數文字符
                 let filteredTitle = title.innerText.replace(/[^0-9A-Za-z\u4E00-\u9FFF\s]+/g, "");
@@ -945,15 +964,16 @@ footer {
                     }
 
                     // 只移除匹配的部分
-                    filteredTitle = filteredTitle.replace(keywordRegex, ''); // 移除關鍵字
+                    filteredTitle = filteredTitle.replace(keywordRegex, ""); // 移除關鍵字
                 });
 
                 // 去除多餘的空格
-                filteredTitle = filteredTitle.replace(/\s+/g, ' ').trim(); // 將多餘空格替換為單個空格並去掉首尾空格
+                filteredTitle = filteredTitle.replace(/\s+/g, " ").trim(); // 將多餘空格替換為單個空格並去掉首尾空格
 
                 console.log("最終過濾後的標題:", filteredTitle); // 打印最終顯示的標題
 
                 title.innerText = filteredTitle;
+                titleObserver.observe(title);
                 fragment.append(title); // 將標題添加到文檔片段中
             }
             let srcs = data.scans.map(obj => {
@@ -990,6 +1010,7 @@ footer {
                 }
                 img.src = img_loading_bak;
                 img.dataset.src = src;
+                img.dataset.chapterId = data.id;
                 imagesObserver.observe(img);
                 return img;
             });
@@ -1138,7 +1159,8 @@ footer {
                 preloadNext(mangaCode, nextChapterData.id);
             }
 
-            let button = document.createElement("button");
+            const button = document.createElement("button");
+            button.className = "open-comments";
             button.innerText = i18n.buttom.openComments;
             Object.assign(button.style, {
                 fontSize: "1rem",
@@ -1150,7 +1172,7 @@ footer {
                 left: "24px",
                 right: "auto",
                 top: "auto",
-                bottom: "32px",
+                bottom: "36px",
                 position: "fixed",
                 zIndex: "9999",
                 display: "none"
