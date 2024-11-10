@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.2
+// @version            2.6.3
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -100,7 +100,7 @@
                 commandMenu: {
                     settings: "設定"
                 },
-                buttom: {
+                button: {
                     openComments: "開啟評論",
                     closeComments: "關閉評論"
                 }
@@ -135,7 +135,7 @@
                 commandMenu: {
                     settings: "设置"
                 },
-                buttom: {
+                button: {
                     openComments: "打开评论",
                     closeComments: "关闭评论"
                 }
@@ -170,7 +170,7 @@
                 commandMenu: {
                     settings: "settings"
                 },
-                buttom: {
+                button: {
                     openComments: "Open Comments",
                     closeComments: "Close Comments"
                 }
@@ -835,7 +835,7 @@ footer {
 
             const button1 = document.createElement("button");
             button1.className = "close-comments";
-            button1.innerText = i18n.buttom.closeComments;
+            button1.innerText = i18n.button.closeComments;
             button1.style.marginTop = "10px";
             button1.style.marginLeft = "10px";
             button1.addEventListener("click", () => {
@@ -918,7 +918,7 @@ footer {
 
             const button2 = document.createElement("button");
             button2.className = "close-comments";
-            button2.innerText = i18n.buttom.closeComments;
+            button2.innerText = i18n.button.closeComments;
             button2.style.marginBottom = "100px";
             button2.style.marginLeft = "10px";
             button2.addEventListener("click", () => {
@@ -1160,8 +1160,8 @@ footer {
             }
 
             const button = document.createElement("button");
-            button.className = "open-comments";
-            button.innerText = i18n.buttom.openComments;
+            button.id = "open-comments";
+            button.innerText = i18n.button.openComments;
             Object.assign(button.style, {
                 fontSize: "1rem",
                 color: "#fff",
