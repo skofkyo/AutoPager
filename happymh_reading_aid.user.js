@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.5
+// @version            2.6.6
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -873,7 +873,6 @@ footer {
                         if (h6) {
                             h6.innerText = "数据请求错误。";
                         }
-                        ul.remove();
                         return;
                     }
 
@@ -886,10 +885,12 @@ footer {
                         loop = false;
                     }
 
-                    if (items.length === 0) {
+                    if (!isArray(items) || items.length === 0) {
+                        loop = false;
                         const h6 = ge("h6", div);
-                        h6.innerText = "还没有吐槽";
-                        ul.remove();
+                        if (h6) {
+                            h6.innerText = "还没有吐槽";
+                        }
                         return;
                     } else {
                         ge("#message", div)?.remove();
@@ -900,36 +901,34 @@ footer {
                     items.forEach(item => {
                         let subHtml = "";
 
-                        if ("sub_comments" in item) {
+                        if ("sub_comments" in item && isArray(item?.sub_comments) && item?.sub_comments?.length > 0) {
 
                             const subHtmls = item.sub_comments.map(sub => {
                                 return `
-                    <div class="MuiTypography-root jss130 MuiTypography-body2 MuiTypography-colorTextSecondary">
-                        <span class="jss129">${sub.user.username}</span>: ${sub.content}
+                    <div class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary" style="word-break: break-all;">
+                        <span style="color: #673ab7;">${sub.user.username}</span>: ${sub.content}
                     </div>`;
                             }).join("");
 
                             subHtml = `
-            <div class="MuiBox-root jss359">
-                <div class="MuiBox-root jss360 jss128">
-                    ${subHtmls}
-                </div>
+            <div style="margin-top: 0.5rem; padding-top: 0.1rem; padding-left: 0.2rem; background-color: #f5f5f5;">
+                ${subHtmls}
             </div>`;
                         }
 
                         liHtmls += `
-<li class="MuiListItem-root jss99 MuiListItem-gutters MuiListItem-alignItemsFlexStart" style="padding-top: 0px; padding-bottom: 0px; padding-right: 10px;">
-    <div class="MuiListItemText-root jss100 MuiListItemText-multiline">
-        <span class="MuiTypography-root jss100 MuiTypography-body1 MuiTypography-displayBlock">${item.user.username}</span>
+<li class="MuiListItem-root MuiListItem-alignItemsFlexStart" style="padding: 0 10px 0 0;">
+    <div class="MuiListItemText-root MuiListItemText-multiline">
+        <span class="MuiTypography-root MuiTypography-body1 MuiTypography-displayBlock" style="color: rgba(0, 0, 0, 0.87); font-weight: bolder;">${item.user.username}</span>
         <div class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">
-            <div class="MuiBox-root jss355">
-                <div class="MuiBox-root jss356">
+            <div class="MuiBox-root">
+                <div class="MuiBox-root">
                     <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary MuiTypography-noWrap">章节: ${item.ch_name}</span>
                     <br>
                     <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary">${item.create_time}</span>
                 </div>
-                <div class="MuiBox-root jss357">
-                    <p class="MuiTypography-root jss103  MuiTypography-body1"> ${item.content}</p>
+                <div class="MuiBox-root">
+                    <p class="MuiTypography-root MuiTypography-body1" style="color: rgba(0, 0, 0, 0.87); word-break: break-all;">${item.content}</p>
                 </div>
             </div>
             ${subHtml}
@@ -975,39 +974,50 @@ footer {
             if (isFirst === 0) {
                 const title = document.createElement("div");
                 title.className = "chapterTitle";
-                title.innerText = data.chapter_name; // 設置章節名稱
+                title.innerText = data.chapter_name;
                 title.dataset.chapterId = data.id;
 
-                // 使用正規表達式過濾，僅保留中英數文字符
-                let filteredTitle = title.innerText.replace(/[^0-9A-Za-z\u4E00-\u9FFF\s]+/g, "");
-                console.log("過濾非中英數文字符後的標題:", filteredTitle); // 打印過濾後的標題
+                let filteredTitle = title.innerText;
 
-                // 定義關鍵字列表含通配符
-                const keywordsToExclude = textExcludeRegExp.split("\n").filter(item => item);
+                //自定義標題關鍵字排除列表
+                const keywordsToExcludes = textExcludeRegExp.split("\n").filter(item => item);
 
-                console.log("關鍵字列表:", keywordsToExclude); // 打印關鍵字列表含通配符
+                if (keywordsToExcludes.length) {
 
-                // 循環檢查並移除關鍵字
-                keywordsToExclude.forEach(keyword => {
-                    // 創建正規表達式
-                    const keywordRegex = new RegExp(keyword, "g");
+                    //打印關鍵字排除列表
+                    console.log("標題關鍵字排除列表:", keywordsToExcludes);
 
-                    // 檢查並打印匹配結果
-                    const matches = filteredTitle.match(keywordRegex);
-                    if (matches) {
-                        console.log(`移除關鍵字 "${keyword}" 前的標題:`, filteredTitle); // 打印移除前的標題
+                    const keywordRegExps = keywordsToExcludes.map(key => new RegExp(key, "g"));
+                    //打印標題關鍵字正規表達式排除列表
+                    console.log("標題關鍵字正規表達式排除列表:", keywordRegExps);
+
+                    let modify = false;
+
+                    //循環檢查並移除關鍵字
+                    keywordRegExps.forEach(reg_exp => {
+                        //檢查並打印匹配結果
+                        const matches = filteredTitle.match(reg_exp);
+                        if (matches) {
+                            modify = true;
+                            //打印移除前的標題
+                            console.log(`移除關鍵字 "${reg_exp}" 前的標題:`, filteredTitle);
+                            //只移除匹配的部分
+                            filteredTitle = filteredTitle.replace(reg_exp, "");
+                        }
+                    });
+
+                    if (modify) {
+                        //去除多餘的空格
+                        filteredTitle = filteredTitle.replace(/\s+/g, " ").trim();
+
+                        //打印最終顯示的標題
+                        console.log("最終過濾後的標題:", filteredTitle);
+
+                        title.innerText = filteredTitle;
                     }
 
-                    // 只移除匹配的部分
-                    filteredTitle = filteredTitle.replace(keywordRegex, ""); // 移除關鍵字
-                });
+                }
 
-                // 去除多餘的空格
-                filteredTitle = filteredTitle.replace(/\s+/g, " ").trim(); // 將多餘空格替換為單個空格並去掉首尾空格
-
-                console.log("最終過濾後的標題:", filteredTitle); // 打印最終顯示的標題
-
-                title.innerText = filteredTitle;
                 titleObserver.observe(title);
                 fragment.append(title); // 將標題添加到文檔片段中
             }
