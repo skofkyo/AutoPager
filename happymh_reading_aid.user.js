@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.4
+// @version            2.6.5
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -87,7 +87,7 @@
                     history: "無限滾動添加瀏覽器歷史紀錄",
                     highQuality: "無限滾動載入最高品質圖片",
                     removeAd: "移除無用元素",
-                    exclude: "無限滾動標題正規表達式排除",
+                    exclude: "無限滾動標題文字正規表達式排除",
                     cancel: "取消",
                     reset: "重置設定",
                     save: "保存設定"
@@ -122,7 +122,7 @@
                     highQuality: "无限滚动加载最高品质图片",
                     history: "无限滚动添加浏览器历史纪录",
                     removeAd: "移除无用元素",
-                    exclude: "无限滚动标题正则表达式排除",
+                    exclude: "无限滚动标题文字正则表达式排除",
                     cancel: "取消",
                     reset: "重置设置",
                     save: "保存设置"
@@ -289,7 +289,7 @@
         }).catch(error => console.error(error));
     };
 
-    const exclude = GM_getValue("exclude", "");
+    const textExcludeRegExp = GM_getValue("exclude", "");
 
     const createConfigElement = () => {
 
@@ -424,7 +424,7 @@
         <input id="historyInput" type="checkbox">
         <label>${i18n.config.history}</label>
     </div>
-    <label>${i18n.config.exclude}<textarea id="exclude"></textarea></label>
+    <label>${i18n.config.exclude}<textarea id="exclude" placeholder="第.*话\n第.*章"></textarea></label>
     <button id="cancelBtn">${i18n.config.cancel}</button>
     <button id="resetBtn">${i18n.config.reset}</button>
     <button id="saveBtn">${i18n.config.save}</button>
@@ -444,7 +444,7 @@
         ge("#infiniteScrollInput", main).checked = configs.infiniteScroll == 1 ? true : false;
         ge("#highQualityInput", main).checked = configs.highQuality == 1 ? true : false;
         ge("#historyInput", main).checked = configs.history == 1 ? true : false;
-        ge("#exclude", main).value = exclude;
+        ge("#exclude", main).value = textExcludeRegExp;
         ge("#cancelBtn", main).addEventListener("click", event => {
             event.preventDefault();
             mainElement.remove();
@@ -453,6 +453,7 @@
             event.preventDefault();
             mainElement.remove();
             GM_deleteValue("configs");
+            GM_deleteValue("exclude");
             _unsafeWindow.location.reload();
         });
         ge("#saveBtn", main).addEventListener("click", event => {
@@ -866,6 +867,16 @@ footer {
                         return;
                     }
 
+                    if (json?.msg !== "success") {
+                        loop = false;
+                        const h6 = ge("h6", div);
+                        if (h6) {
+                            h6.innerText = "数据请求错误。";
+                        }
+                        ul.remove();
+                        return;
+                    }
+
                     const {
                         isEnd,
                         items
@@ -884,53 +895,60 @@ footer {
                         ge("#message", div)?.remove();
                     }
 
-                    let ulHtml = "";
+                    let liHtmls = "";
 
-                    items.forEach(e => {
-                        let sub = "";
+                    items.forEach(item => {
+                        let subHtml = "";
 
-                        if ("sub_comments" in e) {
-                            sub = `
-                <div class="MuiBox-root jss359">
-                    <div class="MuiBox-root jss360 jss128">
-                        ${e.sub_comments.map(s => {
-                                return `<a class="MuiTypography-root jss130 MuiTypography-body2 MuiTypography-colorTextSecondary">
-                            <span class="jss129">${s.user.username}</span>: ${s.content} </a>`
-                        }).join("")}
-                    </div>
+                        if ("sub_comments" in item) {
+
+                            const subHtmls = item.sub_comments.map(sub => {
+                                return `
+                    <div class="MuiTypography-root jss130 MuiTypography-body2 MuiTypography-colorTextSecondary">
+                        <span class="jss129">${sub.user.username}</span>: ${sub.content}
+                    </div>`;
+                            }).join("");
+
+                            subHtml = `
+            <div class="MuiBox-root jss359">
+                <div class="MuiBox-root jss360 jss128">
+                    ${subHtmls}
                 </div>
-                            `;
+            </div>`;
                         }
 
-                        ulHtml += `
-<li class="MuiListItem-root jss99 MuiListItem-gutters MuiListItem-alignItemsFlexStart" style="padding-top: 0px; padding-bottom: 0px;">
+                        liHtmls += `
+<li class="MuiListItem-root jss99 MuiListItem-gutters MuiListItem-alignItemsFlexStart" style="padding-top: 0px; padding-bottom: 0px; padding-right: 10px;">
     <div class="MuiListItemText-root jss100 MuiListItemText-multiline">
-        <span class="MuiTypography-root jss100 MuiTypography-body1 MuiTypography-displayBlock">${e.user.username}</span>
+        <span class="MuiTypography-root jss100 MuiTypography-body1 MuiTypography-displayBlock">${item.user.username}</span>
         <div class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">
             <div class="MuiBox-root jss355">
                 <div class="MuiBox-root jss356">
-                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary MuiTypography-noWrap">章节: ${e.ch_name}</span>
+                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary MuiTypography-noWrap">章节: ${item.ch_name}</span>
                     <br>
-                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary">${e.create_time}</span>
+                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary">${item.create_time}</span>
                 </div>
                 <div class="MuiBox-root jss357">
-                    <p class="MuiTypography-root jss103  MuiTypography-body1"> ${e.content}</p>
+                    <p class="MuiTypography-root jss103  MuiTypography-body1"> ${item.content}</p>
                 </div>
             </div>
-            ${sub}
+            ${subHtml}
         </div>
     </div>
-</li>
-                        `;
+</li>`;
                     });
 
-                    ul.insertAdjacentHTML("beforeend", ulHtml);
+                    ul.insertAdjacentHTML("beforeend", liHtmls);
                 });
             };
 
             while (loop) {
                 await getComments();
                 pn++;
+            }
+
+            if (!isOpenComments) {
+                return;
             }
 
             const button2 = document.createElement("button");
@@ -962,10 +980,10 @@ footer {
 
                 // 使用正規表達式過濾，僅保留中英數文字符
                 let filteredTitle = title.innerText.replace(/[^0-9A-Za-z\u4E00-\u9FFF\s]+/g, "");
-                console.log("過濾非中英文字符後的標題:", filteredTitle); // 打印過濾後的標題
+                console.log("過濾非中英數文字符後的標題:", filteredTitle); // 打印過濾後的標題
 
                 // 定義關鍵字列表含通配符
-                const keywordsToExclude = exclude.split("\n").filter(item => item); // 在這裡添加想要排除的關鍵字
+                const keywordsToExclude = textExcludeRegExp.split("\n").filter(item => item);
 
                 console.log("關鍵字列表:", keywordsToExclude); // 打印關鍵字列表含通配符
 
