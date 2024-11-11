@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.3
+// @version            2.6.4
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -844,6 +844,14 @@ footer {
             });
 
             div.insertAdjacentElement("beforeend", button1);
+            const messageHtml = `
+<div id="message" class="MuiCardContent-root jss38">
+  <svg class="MuiSvgIcon-root MuiSvgIcon-colorAction" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M21.99 2H2v16h16l4 4-.01-20zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"></path>
+  </svg>
+  <h6 class="MuiTypography-root MuiTypography-h6">数据请求中...</h6>
+</div>`;
+            div.insertAdjacentHTML("beforeend", messageHtml);
             div.insertAdjacentHTML("beforeend", '<ul class="MuiList-root MuiList-padding" style="padding-left: 10px;"></ul>');
 
             const ul = ge("ul", div);
@@ -865,6 +873,15 @@ footer {
 
                     if (isEnd === true) {
                         loop = false;
+                    }
+
+                    if (items.length === 0) {
+                        const h6 = ge("h6", div);
+                        h6.innerText = "还没有吐槽";
+                        ul.remove();
+                        return;
+                    } else {
+                        ge("#message", div)?.remove();
                     }
 
                     let ulHtml = "";
@@ -1187,10 +1204,12 @@ footer {
                     button.style.display = "none";
                     lastScrollTop = st;
                 } else if (st < lastScrollTop - 40) {
+                    button.style.left = (ge(".MuiContainer-root").offsetLeft + 24) + "px";
                     button.style.display = "";
                     lastScrollTop = st;
                 }
             });
+
         }
     }
 
