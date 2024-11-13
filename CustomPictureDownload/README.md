@@ -3,20 +3,63 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/11/07
+2024/11/13
 PC
 Chrome 130.0.6723.117 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Edge 130.0.2849.68 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Edge 130.0.2849.80 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
 Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
 FireFox 132.0.1 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
 Android
-Edge Canary 132.0.2942.0 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Firefox for Android 132.0.1 + Tampermonkey 5.3.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
-XBrowser 5.0.0
-ViaBrowser 5.9.5
+☆Edge Canary 132.0.2950.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.0.035 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Edge 130.0.2849.68 + Tampermonkey 5.3.2
+Firefox for Android 132.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Mises Browser 424110108 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Yandex Browser 24.10.3.111 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Mask Browser 1.7.3.4 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+XBrowser 5.0.1
+ViaBrowser 6.0.0
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
+<h1>Extensions：</h1>
+<ul>
+    <li> Chrome <ul>
+            <li>
+                <a href="https://chromewebstore.google.com/detail/lcmhijbkigalmkeommnijlpobloojgfn">Tampermonkey 5.1.1</a>
+            </li>
+            <li>
+                <a href="https://chromewebstore.google.com/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo">Tampermonkey 5.3.2</a>
+            </li>
+            <li>
+                <a href="https://chromewebstore.google.com/detail/jinjaccalgkegednnccohejagnlnfdag">Violentmonkey</a>
+            </li>
+            <li>
+                <a href="https://chromewebstore.google.com/detail/ndcooeababalnlpkfedmmbbbgkljhpjf">ScriptCat</a>
+            </li>
+        </ul>
+    </li>
+    <li> Edge <ul>
+            <li>
+                <a href="https://microsoftedge.microsoft.com/addons/detail/iikmkjmpaadaobahmlepeloendndfphd">Tampermonkey</a>
+            </li>
+            <li>
+                <a href="https://microsoftedge.microsoft.com/addons/detail/eeagobfjdenkkddmbclomhiblgggliao">Violentmonkey</a>
+            </li>
+            <li>
+                <a href="https://microsoftedge.microsoft.com/addons/detail/liilgpjgabokdklappibcjfablkpcekh">ScriptCat</a>
+            </li>
+        </ul>
+    </li>
+    <li>Edge Canary Extension install by id
+        <pre>Tampermonkey
+iikmkjmpaadaobahmlepeloendndfphd
+Violentmonkey
+eeagobfjdenkkddmbclomhiblgggliao
+ScriptCat
+liilgpjgabokdklappibcjfablkpcekh</pre>
+    </li>
+</ul>
 <h1>提醒：</h1>
 <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時，請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com，或自行尋找可替代的依賴庫CDN。</p>
 <details>
@@ -1527,7 +1570,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.24tupian.org/">爱死美女图片站</a>
                 </td>
-                <td>需註冊登入才能看大圖和下載</td>
+                <td>需註冊登入才能看大圖和下載，<a href="https://www.aisimm.com/">鏡像站？</a>，與主站帳號通用，圖片伺服器不同。</td>
             </tr>
             <tr>
                 <td>
@@ -1978,6 +2021,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.aituitu.com/">爱推图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.tujilao.com/">图集佬</a>
                 </td>
                 <td></td>
             </tr>
@@ -2524,6 +2573,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://xiunice.com/">Xiunice.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://4kero.com/">4kero</a>
                 </td>
                 <td></td>
             </tr>
@@ -5593,9 +5648,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mh160.cc/">漫画160</a>
                 </td>
+                <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
                 <td>
-                    <a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限滾動模式加預讀
+                    <a href="http://www.zerobywz.com/">zero搬运网</a>
                 </td>
+                <td>手動插入圖片，<a href="https://zerobyw.github.io/">域名</a></td>
             </tr>
             <tr>
                 <td>
@@ -5607,9 +5666,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="http://www.guoman8.cc/">国漫吧</a>
                 </td>
-                <td>
-                    <a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限滾動模式加預讀
-                </td>
+                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
@@ -5767,13 +5824,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td>
                     <a href="https://m.77mh.xyz/">m.77mh.xyz</a>，預設關閉
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://www.zerobywz.com/">zero搬运网</a>
-                </td>
-                <td>預設關閉， <a href="https://zerobyw.github.io/">域名</a>
                 </td>
             </tr>
             <tr>
