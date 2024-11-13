@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.25
+// @version            2.11.26
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2453,7 +2453,8 @@ a:has(>div>div>img),
         reg: /^https?:\/\/ibb\.co\/album\//,
         links: [
             "https://shiki17chen.imgbb.com/albums",
-            "https://2920215920.imgbb.com/albums"
+            "https://2920215920.imgbb.com/albums",
+            "https://ozpin.imgbb.com/albums"
         ],
         imgs: async () => {
             await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
@@ -2986,6 +2987,38 @@ a:has(>div>div>img),
         hide: "body>.mask",
         category: "nsfw1"
     }, {
+        name: "爱死美女图片鏡像站？",
+        url: {
+            h: "www.aisimm.com",
+            p: ".html",
+            e: [".gtps", "#hgg3"]
+        },
+        imgs: async () => {
+            let imgs = fn.gae(".gtps img");
+            if (fn.ge("//a[text()='尾页']")) {
+                let [, max] = fn.gu("//a[text()='尾页']").match(/_(\d+)\.html$/);
+                max = Number(max) + 1;
+                let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url.replace(".html", "") + `_${i}.html`);
+                imgs = await fn.getEle(links, ".gtps img");
+            }
+            thumbnailSrcArray = fn.getImgSrcArr(imgs);
+            return thumbnailSrcArray.map(url => {
+                let i = url.lastIndexOf("/");
+                let murl = url.substring(i + 1);
+                url = url.replace(murl, murl.substring(1));
+                url = url.replace("img.", "big.");
+                return url;
+            });
+        },
+        button: [4],
+        insertImg: [
+            ["#hgg3", 1], 2
+        ],
+        go: 1,
+        topButton: true,
+        customTitle: ".gtitle1>h1",
+        category: "nsfw1"
+    }, {
         name: "爱死cos美女图片站",
         host: ["www.24cos.org", "www.lovecos.net"],
         reg: /^https?:\/\/(www\.24cos\.org|www\.lovecos\.net)\/\w+\/\d+\.html$/,
@@ -3506,6 +3539,20 @@ a:has(>div>div>img),
         }),
         category: "nsfw1"
     }, {
+        name: "图集佬",
+        url: {
+            h: "www.tujilao.com",
+            p: ".html"
+        },
+        imgs: ".wp-posts-content img",
+        button: [4],
+        insertImg: [".wp-posts-content", 2],
+        autoDownload: [0],
+        next: "//a[p[text()='上一篇']][not(starts-with(@href,'javascript'))]",
+        prev: "//a[p[text()='下一篇']][not(starts-with(@href,'javascript'))]",
+        customTitle: ".article-title",
+        category: "nsfw1"
+    }, {
         name: "比思在線圖庫",
         host: ["bisipic.xyz", "bisipic.online"],
         reg: /^https?:\/\/bisipic\.(xyz|online)\/thread[\d-]+\.html$/,
@@ -3689,6 +3736,7 @@ a:has(>div>div>img),
             h: [
                 /rosi8\.com$/,
                 /sfjpg\.(com|net)$/,
+                /sfmm\.cc$/,
                 /kanmeitu\.net$/,
                 /kanmeitu1\.cc$/
             ],
@@ -5606,10 +5654,9 @@ a:has(>div>div>img),
         customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
-        name: "Xiunice.com",
+        name: "Xiunice.com/4kero",
         url: {
-            h: "xiunice",
-            p: /^\/[^\/]+$/
+            h: ["xiunice.com", "4kero.com"]
         },
         init: () => fn.createImgBox(".wp-block-gallery", 1),
         imgs: ".wp-block-gallery img",
@@ -5617,7 +5664,10 @@ a:has(>div>div>img),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".wp-block-gallery"], 2
         ],
-        customTitle: () => fn.title(" - Xiunice.com"),
+        autoDownload: [0],
+        next: ".nav-previous .prev>a",
+        prev: ".nav-previous .next>a",
+        customTitle: "h1.tdb-title-text,h1.entry-title",
         category: "nsfw2"
     }, {
         name: "Cosplay69",
@@ -21861,7 +21911,7 @@ if ("xx" in window) {
     }, {
         name: "zero搬运网",
         host: ["www.zerobywz.com"],
-        enable: 0,
+        enable: 1,
         url: {
             h: "www.zero",
             p: "/plugin",
@@ -21883,7 +21933,7 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "zero搬运网M",
-        enable: 0,
+        enable: 1,
         url: {
             h: "www.zero",
             p: "/plugin",
@@ -23111,8 +23161,8 @@ if ("xx" in window) {
                 str_160: hasTouchEvent ? "插入圖片" : "插入圖片(1)",
                 str_161: "同時載入的圖片數量：",
                 str_162: "圖片預載數：",
-                str_163: "📖 開啟簡易模式",
-                str_164: "📖 關閉簡易模式",
+                str_163: "🖼️ 開啟簡易模式",
+                str_164: "🖼️ 關閉簡易模式",
                 str_165: "圖片總數：",
                 str_166: "篩選數量：",
                 str_167: "篩選寬度：",
@@ -23329,8 +23379,8 @@ if ("xx" in window) {
                 str_160: hasTouchEvent ? "插入图片" : "插入图片(1)",
                 str_161: "同时加载的图片数量：",
                 str_162: "图片预载数：",
-                str_163: "📖 开启简易模式",
-                str_164: "📖 关闭简易模式",
+                str_163: "🖼️ 开启简易模式",
+                str_164: "🖼️ 关闭简易模式",
                 str_165: "图片总数：",
                 str_166: "筛选数量：",
                 str_167: "筛选宽度：",
@@ -23546,8 +23596,8 @@ if ("xx" in window) {
                 str_160: hasTouchEvent ? "Insert Images" : "Insert Images(1)",
                 str_161: "The Number Of Images Loaded At The Same Time：",
                 str_162: "Preload：",
-                str_163: "📖 Enable Simple Mode",
-                str_164: "📖 Turn Off Simple Mode",
+                str_163: "🖼️ Enable Simple Mode",
+                str_164: "🖼️ Turn Off Simple Mode",
                 str_165: "Total Number Of Images：",
                 str_166: "Number Of Filters：",
                 str_167: "Filter Width：",
