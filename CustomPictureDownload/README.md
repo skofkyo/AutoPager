@@ -51,7 +51,7 @@ ViaBrowser 6.0.0
             </li>
         </ul>
     </li>
-    <li>Edge Canary Extension install by id
+    <li><a href="https://www.windowslatest.com/2024/04/02/you-can-now-install-any-extension-in-microsoft-edge-canary-for-android/">Edge Canary Extension install by id</a>
         <pre>Tampermonkey
 iikmkjmpaadaobahmlepeloendndfphd
 Violentmonkey
