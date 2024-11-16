@@ -9764,7 +9764,7 @@ a:has(>div>div>img),
         name: "ImageFap 圖片清單頁",
         url: {
             h: "www.imagefap.com",
-            p: "/pictures/",
+            p: ["/gallery/", "/pictures/"],
             d: "pc"
         },
         init: () => fn.createImgBox("#gallery", 2),
@@ -9773,15 +9773,15 @@ a:has(>div>div>img),
             let gowner = new URL(fn.gu("a[href*=usergallery]")).searchParams.get("userid");
             let pics = Number(fn.ge("img._lazy").alt.match(/\d+/g).at(-1));
             let max = Math.ceil(pics / 60);
-            let pages = [`https://beta.imagefap.com/ajax/actions.php?gid=${gid}&page=0&action=getGallery&ownerid=${gowner}`];
+            let pages = [`/ajax/actions.php?gid=${gid}&page=0&action=getGallery&ownerid=${gowner}`];
             if (max > 1) {
-                pages = fn.arr(max, (v, i) => `https://beta.imagefap.com/ajax/actions.php?gid=${gid}&page=${i}&action=getGallery&ownerid=${gowner}`);
+                pages = fn.arr(max, (v, i) => `/ajax/actions.php?gid=${gid}&page=${i}&action=getGallery&ownerid=${gowner}`);
             }
             let resArr = [];
             let fetchNum = 0;
             fn.showMsg(displayLanguage.str_05, 0);
             for (let url of pages) {
-                let res = await fn.xhrDoc(url).then(dom => {
+                let res = await fn.fetchDoc(url).then(dom => {
                     fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
                     return [...dom.images].map(img => {
                         let original = img.dataset.full;
@@ -9905,7 +9905,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: ["#gallery", 2],
-        customTitle: ".nMobHeader>h1",
+        customTitle: ".nMobHeader>h1,.userPageInfoGal strong",
         hide: ".ad_placeholder",
         category: "nsfw2"
     }, {
