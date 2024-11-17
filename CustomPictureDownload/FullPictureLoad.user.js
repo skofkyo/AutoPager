@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.28
+// @version            2.11.29
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -519,12 +519,23 @@ a:has(>div>div>img),
         hide: "body>ins",
         category: "nsfw2"
     }, {
+        name: "pic.yailay.com格式",
+        url: {
+            h: ["pic.yailay.com", "www.dongojyousan.com"],
+            p: ["/articles/"]
+        },
+        init: () => fn.clearElementEvent(),
+        imgs: () => fn.getImgA("article img", "div[id^=post] a"),
+        button: [4],
+        insertImg: ["article", 2],
+        customTitle: () => fn.title(/^[a-z-\s\.I]+:/i).split("|")[0].trim(),
+        category: "nsfw2"
+    }, {
         name: "Hit-x-Hot格式",
-        host: ["www.hitxhot.org", "hitxhot.com", "www.dongojyousan.com"],
+        host: ["www.hitxhot.org", "hitxhot.com"],
         reg: [
             /^https?:\/\/www\.hitxhot\.org\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html(\?m=1)?$/i,
-            /^https?:\/\/hitxhot\.com\/blog\/\w+\.html(\?m=1)?$/i,
-            /^https?:\/\/www\.dongojyousan\.com\/articles\/\w+\.html/i
+            /^https?:\/\/hitxhot\.com\/blog\/\w+\.html(\?m=1)?$/i
         ],
         init: () => fn.clearElementEvent(),
         imgs: async () => {
@@ -544,27 +555,21 @@ a:has(>div>div>img),
         name: "Depvailon格式",
         host: [
             "www.depvailon.com",
-            "crimejunkiespodcast.com",
-            "pic.yailay.com",
             "nungvl.net",
             "www.kaizty.com",
             "lootiu.com",
             "thismore.fun",
             "cosxuxi.club",
-            "baobua.com",
-            "cn.looives.com",
-            "redseats.org"
+            "baobua.com"
         ],
         reg: [
-            /^https?:\/\/(www\.depvailon\.com|crimejunkiespodcast\.com)\/(?!\?page=|\?m=).+\.html/i,
-            /^https?:\/\/(pic\.yailay\.com|www\.kaizty\.com)\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html/i,
-            /^https?:\/\/nungvl\.net\/gallerys\/\d+\.cg/i,
-            /^https?:\/\/lootiu\.com\/gallery\/.+\.cfg/i,
-            /^https?:\/\/thismore\.fun\/view\/[^\.]+\.php/i,
+            /^https?:\/\/www\.depvailon\.com\/(?!\?page=|\?m=).+\.html/i,
+            /^https?:\/\/www\.kaizty\.com\/photos\//i,
+            /^https?:\/\/nungvl\.net\/gallerys\//i,
+            /^https?:\/\/lootiu\.com\/gallery\//i,
+            /^https?:\/\/thismore\.fun\/view\//i,
             /^https?:\/\/cosxuxi\.club\/[^\.]+\.html/i,
-            /^https?:\/\/baobua\.com\/post\/[^\.]+\.html/i,
-            /^https?:\/\/cn\.looives\.com\/view\/[^\.]+\.cfg/i,
-            /^https?:\/\/redseats\.org\/gallery\/[^\.]+\.cfg/i
+            /^https?:\/\/baobua\.com\/post\//i
         ],
         init: async () => {
             await fn.clearElementEvent();
@@ -1862,8 +1867,11 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Elysium",
-        host: ["www.elysium.pro"],
-        reg: /^https?:\/\/www\.elysium\.pro\/(Photobooks|Cosplay)\/Album\/\d+$/i,
+        url: {
+            h: "www.elysium.pro",
+            p: "/albums/",
+            e: "a[data-thumbnail]:not([data-video])"
+        },
         init: () => fn.createImgBox("div[data-lg-thumb=data-thumbnail]", 2),
         imgs: async () => {
             let pages = fn.ge("li.page-item.active+li>a:not([aria-label=Next])");
@@ -2499,10 +2507,35 @@ a:has(>div>div>img),
         }),
         category: "nsfw1"
     }, {
+        name: "anh.im",
+        links: ["https://anh.im/bigradish/albums"],
+        url: {
+            h: "anh.im",
+            p: "/album/",
+            e: "#content-listing-tabs"
+        },
+        imgs: async () => {
+            await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
+            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
+            return thumbnailSrcArray.map(e => e.replace(".md.", ".")).reverse();
+        },
+        button: [4],
+        insertImg: ["#content-listing-tabs", 3],
+        customTitle: () => fn.dt({
+            d: [
+                "— anh.im",
+                /^[\d\s-]+/
+            ]
+        }),
+        category: "nsfw1"
+    }, {
         name: "JPG5",
         host: ["jpg5.su"],
         reg: /^https?:\/\/jpg5\.su\/a\//,
-        links: "https://jpg5.su/a/blackql-cosplay.EzJa9",
+        links: [
+            "https://jpg5.su/xelszy/albums",
+            "https://jpg5.su/rainbowsmile/albums"
+        ],
         imgs: async () => {
             await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
             thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
@@ -6041,9 +6074,9 @@ a:has(>div>div>img),
         customTitle: ".jeg_post_title",
         category: "nsfw1"
     }, {
-        name: "Ảnh đẹp",
+        name: "✫ Ảnh đẹp ✫/Ảnh đẹp",
         url: {
-            h: "tuyetnhan.com",
+            h: ["tuyetnhan.com", "tuyetnhan.co"],
             p: /^\/[^\/]+\/$/
         },
         imgs: () => fn.getImgSrcset(".entry-content img:not([src*='/logo'])"),
@@ -17064,16 +17097,16 @@ a:has(>div>div>img),
         name: "MangaHasu",
         url: {
             h: "mangahasu.me",
-            p: "/chapter"
+            e: "#loadchapter"
         },
-        imgs: ".pagenum+img",
+        imgs: ".img-chapter .img img",
         button: [4],
-        insertImg: ["#loadchapter", 2],
+        insertImg: [".img-chapter .img", 2],
         endColor: "white",
         autoDownload: [0],
         next: "//a[text()='Next']",
-        prev: "//a[text()='Prev']",
-        customTitle: ".container h1",
+        prec: "//a[text()='Prev']",
+        customTitle: ".div-title-chapter h1",
         category: "comic"
     }, {
         name: "MangaFire",
@@ -24228,7 +24261,7 @@ if ("xx" in window) {
                 links = [...new Set(linkEles.map(a => a.href))];
                 linksNum = links.length + 1;
             } else {
-                console.error("\nfn.getImgA() link參數錯誤");
+                console.error("\nfn.getImgA() link參數錯誤", link);
                 return;
             }
             debug("\nfn.getImgA() links", links);
