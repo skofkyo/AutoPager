@@ -1458,7 +1458,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
-                <td>同格式， <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>， <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://redseats.org/">RedSeats.Org</a>
+                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>
                 </td>
             </tr>
             <tr>
@@ -2793,9 +2793,11 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://tuyetnhan.com/">Ảnh đẹp</a>
+                    <a href="https://tuyetnhan.com/">✫ Ảnh đẹp ✫</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://tuyetnhan.co/">Ảnh đẹp</a>
+                </td>
             </tr>
             <tr>
                 <td>
