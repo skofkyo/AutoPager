@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.7
+// @version            2.6.8
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -178,7 +178,7 @@
     }
 
     const lp = _unsafeWindow.location.pathname;
-    const isReadPage = /^\/reads\/\w+\/\d+$/.test(lp);
+    const isReadPage = /^\/mangaread\/\w+\/\d+$/.test(lp);
     const isUpdatePage = /^\/latest$/.test(lp);
     const isListPage = /^\/manga\/\w+$/.test(lp);
     const isBookcasePage = /^\/bookcase$/.test(lp);
@@ -266,7 +266,7 @@
             document.body.append(preloadDiv);
         }
         const [, , mangaCode, id] = pn.split("/");
-        const apiUrl = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v3.1302723`;
+        const apiUrl = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v3.1302723`;
         fetch(apiUrl, getHeaders()).then(res => res.json()).then(async jsonData => {
             try {
                 if (jsonData.status == 0) {
@@ -527,7 +527,7 @@
         document.addEventListener("keydown", event => {
             if (ge("#mainHappymhConfigShadowElement")) return;
             if (event.code === "ArrowRight" || event.key === "ArrowRight") {
-                const nextE = ge("//a[span[text()='下一话' or text()='下一話'] and starts-with(@href,'/reads/')]");
+                const nextE = ge("//a[span[text()='下一话' or text()='下一話'] and starts-with(@href,'/mangaread/')]");
                 if (isString(nextChapterUrl)) {
                     _unsafeWindow.location.href = nextChapterUrl;
                 } else if (nextE) {
@@ -537,7 +537,7 @@
                 }
             }
             if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
-                const prevE = ge("//a[span[text()='上一话' or text()='上一話'] and starts-with(@href,'/reads/')]");
+                const prevE = ge("//a[span[text()='上一话' or text()='上一話'] and starts-with(@href,'/mangaread/')]");
                 if (isString(prevChapterUrl)) {
                     _unsafeWindow.location.href = prevChapterUrl;
                 } else if (prevE) {
@@ -562,7 +562,7 @@
         console.log("嗨皮漫畫預讀全部圖片");
         preload(lp, "嗨皮漫畫本話數據\n");
         setTimeout(() => {
-            const nextE = ge("//span[@id and text()='下一话' or text()='下一話']/following-sibling::a[1][starts-with(@href,'/reads/')]");
+            const nextE = ge("//span[@id and text()='下一话' or text()='下一話']/following-sibling::a[1][starts-with(@href,'/mangaread/')]");
             if (nextE) {
                 preload(nextE.pathname, "嗨皮漫畫下一話數據\n");
             }
@@ -585,7 +585,7 @@
                 const [nextDiv, , prevDiv] = gae("footer div");
                 const nextA = ge("a", nextDiv);
                 const prevA = ge("a", prevDiv);
-                if (prevA?.href?.includes("/reads/")) {
+                if (prevA?.href?.includes("/mangaread/")) {
                     prevA.classList.add("MuiButton-containedPrimary");
                 }
                 if (nextA?.href?.includes("/readMore/")) {
@@ -602,7 +602,7 @@
         new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
                 timeId = setTimeout(() => {
-                    let nextE = ge("//a[span[text()='下一话' or text()='下一話'] and starts-with(@href,'/reads/')]");
+                    let nextE = ge("//a[span[text()='下一话' or text()='下一話'] and starts-with(@href,'/mangaread/')]");
                     if (nextE) {
                         _unsafeWindow.location.href = nextE.href;
                     }
@@ -938,6 +938,13 @@ footer {
                     });
 
                     ul.insertAdjacentHTML("beforeend", liHtmls);
+                }).catch(error => {
+                    loop = false;
+                    const h6 = ge("h6", div);
+                    if (h6) {
+                        h6.innerText = "数据请求错误，需要再次人机验证。";
+                    }
+                    console.error("請求錯誤", error);
                 });
             };
 
@@ -1119,7 +1126,7 @@ footer {
                             nextA.href = nextUrl;
                         }
                     } else {
-                        const nextUrl = "/reads/" + mangaCode + "/" + nextChapterData.id;
+                        const nextUrl = "/mangaread/" + mangaCode + "/" + nextChapterData.id;
                         nextChapterUrl = nextUrl;
                         if (isEle(nextA)) {
                             nextA.href = nextUrl;
@@ -1129,7 +1136,7 @@ footer {
                         }
                     }
                     const prevChapterData = allChapterListData[currentChapterIndex - 1];
-                    const prevUrl = "/reads/" + mangaCode + "/" + prevChapterData.id;
+                    const prevUrl = "/mangaread/" + mangaCode + "/" + prevChapterData.id;
                     prevChapterUrl = prevUrl;
                     if (isEle(prevA)) {
                         prevA.href = prevUrl;
