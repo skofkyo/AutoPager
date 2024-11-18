@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.29
+// @version            2.11.30
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1329,20 +1329,23 @@ a:has(>div>div>img),
         host: ["8ezy.com"],
         url: {
             h: "8ezy.com",
-            p: /^\/(uncategorized|tag)\//
+            e: [".post-list-item", ".post-nav[data-max]"]
         },
         init: async () => {
-            await fn.waitEle("button.selected");
-            currentPageNum = Number(fn.gt("button.selected"));
+            await fn.waitEle("button.selected,a.button.selected[href^=http]");
+            currentPageNum = Number(fn.gt("button.selected,a.button.selected[href^=http]"));
         },
         autoPager: {
             ele: ".archive-row",
             observer: ".archive-row .post-list-item",
             next: () => {
-                let lastNum = [...document.querySelectorAll(".btn-group>button")].at(-1).innerText;
+                let lastNum = fn.ge(".post-nav[data-max]").dataset.max;
                 lastNum = Number(lastNum);
                 if (currentPageNum < lastNum) {
-                    let url = document.location.pathname.replace(/page\/\d+$/, "");
+                    let url = document.location.pathname.replace(/page\/\d+\/?/, "");
+                    if (document.location.search !== "") {
+                        return url + "page/" + (currentPageNum += 1) + "/" + document.location.search;
+                    }
                     return url + "page/" + (currentPageNum += 1);
                 } else {
                     return null;
@@ -1357,30 +1360,6 @@ a:has(>div>div>img),
                 });
             },
             pageNum: () => currentPageNum
-        },
-        openInNewTab: ".post-list-item a:not([target=_blank])",
-        category: "autoPager"
-    }, {
-        name: "8E资源站 自動翻頁",
-        host: ["8ezy.com"],
-        url: {
-            h: "8ezy.com",
-            s: "?s="
-        },
-        autoPager: {
-            ele: ".archive-row",
-            observer: ".archive-row .post-list-item",
-            next: ".post-nav>a.selected+a[href^=http]",
-            bF: (dom) => {
-                [...dom.querySelectorAll(".post-list-item .picture")].forEach(e => {
-                    fn.ge("source", e)?.remove();
-                    let img = fn.ge("img", e);
-                    img.src = img.dataset.src;
-                    img.classList.add("loaded");
-                });
-            },
-            re: ".post-nav",
-            pageNum: ".post-nav>a.selected"
         },
         openInNewTab: ".post-list-item a:not([target=_blank])",
         category: "autoPager"
@@ -8487,6 +8466,16 @@ a:has(>div>div>img),
         insertImg: ["#lucrezia", 2],
         customTitle: "h1",
         css: "#lucrezia{height:auto!important}",
+        category: "nsfw2"
+    }, {
+        name: "Wb-express porno",
+        url: {
+            h: "wb-express.ru"
+        },
+        imgs: ".pw-description img",
+        button: [4],
+        insertImg: [".pw-description", 2],
+        customTitle: ".page-wrap h1",
         category: "nsfw2"
     }, {
         name: "NSFWalbum",
@@ -16420,7 +16409,7 @@ a:has(>div>div>img),
         imgs: () => {
             if (_this.SPA()) {
                 fn.showMsg(displayLanguage.str_05, 0);
-                const chapter_id = new URL(document.URL).pathname.split("/").at(-1);
+                const chapter_id = new URL(document.URL).pathname.split("/").at(2);
                 return fetch(`https://api.mangadex.org/at-home/server/${chapter_id}?forcePort443=false`).then(res => res.json()).then(json => {
                     fn.hideMsg();
                     const {
@@ -16483,7 +16472,7 @@ a:has(>div>div>img),
         imgs: () => {
             if (_this.SPA()) {
                 fn.showMsg(displayLanguage.str_05, 0);
-                const chapter_id = new URL(document.URL).pathname.split("/").at(-1);
+                const chapter_id = new URL(document.URL).pathname.split("/").at(3);
                 return fetch(`https://api.namicomi.com/images/chapter/${chapter_id}?newQualities=true`).then(res => res.json()).then(json => {
                     fn.hideMsg();
                     const {
@@ -17142,12 +17131,12 @@ a:has(>div>div>img),
         enable: 0,
         url: {
             h: "m.happymh.com",
-            p: "/reads/"
+            p: "/mangaread/"
         },
         exclude: ".captcha-area",
         fetchJson: (url = siteUrl) => {
             let [, , mangaCode, id] = new URL(url).pathname.split("/");
-            let api = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v2.13`;
+            let api = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v3.1302723`;
             return fetch(api, {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
@@ -17168,7 +17157,7 @@ a:has(>div>div>img),
                         let f = ge("footer>article");
                         let item = ge("footer>article>div:nth-child(2)");
                         item.querySelectorAll("a").forEach(a => a.classList.add("MuiButton-containedPrimary"));
-                        let p = gx("//a[span[text()='上一话' or text()='上一話'] and contains(@href,'/reads/')]");
+                        let p = gx("//a[span[text()='上一话' or text()='上一話'] and contains(@href,'/mangaread/')]");
                         if (p) p.classList.add("MuiButton-containedPrimary");
                         let n = gx("//a[span[text()='下一话' or text()='下一話'] and contains(@href,'/readMore/')]");
                         if (n) {
@@ -17178,14 +17167,14 @@ a:has(>div>div>img),
                     }
                 }).observe(ge('#page-area'));
             }
-            await fn.waitEle("footer a[href^='/reads/'],footer a[href^='/readMore/']");
+            await fn.waitEle("footer a[href^='/mangaread/'],footer a[href^='/readMore/']");
         },
         imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url) : [],
         referrerpolicy: "origin",
         button: [4],
         insertImg: ["//article[div[contains(@id,'imageLoader')]]", 3],
         autoDownload: [0],
-        next: "//a[span[text()='下一話' or text()='下一话']][contains(@href,'/reads/')]",
+        next: "//a[span[text()='下一話' or text()='下一话']][contains(@href,'/mangaread/')]",
         prev: "//a[span[text()='上一話' or text()='上一话']]",
         customTitle: () => siteJson.data.manga_name + " - " + siteJson.data.chapter_name,
         preloadNext: async (nextDoc, obj) => {
