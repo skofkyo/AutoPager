@@ -342,15 +342,61 @@
             ["//div[div[@class='photos']]/*[last()]", 2, ".pager,.photos"], 2
         ],
         customTitle: () => {
-            let s = document.title.split("-");
-            let title = "";
-            if (/未分|xChina/.test(s[1])) {
-                title += s[0].trim()
-            } else {
-                title += s[1].trim() + " - ";
-                title += s[0].trim()
+            try {
+                let text = "";
+                let texts = [];
+                [
+                    "div:has(>.fa-video-camera) a",
+                    "div:has(>.fa-video-camera) .joiner+a",
+                    "div:has(>.fa-calendar)",
+                    "div:has(>.fa-file-o)",
+                    ".models div",
+                    "div:has(>.fa-address-card-o)"
+                ].forEach((s, i, a) => {
+                    let t = document.querySelector(s)?.innerText;
+                    texts.push(t);
+                    if (a.length - 1 == i && !!texts[4]) {
+                        if (t.includes(texts[4])) {
+                            text = text.replace(texts[4], "");
+                        }
+                    }
+                    if (!!t && t?.length > 0) {
+                        text += " " + t;
+                    }
+                    if (i == 0 && !!t) {
+                        text += " -";
+                    }
+                });
+                if (location.pathname.includes("/amateur/")) {
+                    text = document.querySelector(".fa-angle-double-right+a").innerText + " -" + text;
+                }
+                if (text.includes("秀人")) {
+                    text = text.replace("Vol. ", "NO.");
+                } else {
+                    text = text.replace("Vol. ", "Vol.");
+                }
+                text = text.replace(/(\d+)-(\d+)-(\d+)/, "$1.$2.$3");
+                text = text.replace(" 秀人网 ", " [Xiuren秀人网] ").replace(" 秀人網 ", " [Xiuren秀人網] ")
+                    .replace("各国其他套图 -", "").replace("各國其他套圖 -", "")
+                    .replace("其他地区套图", "").replace("其他地區套圖", "")
+                    .replace("其他套图 -", "").replace("其他套圖 -", "")
+                    .trim();
+                if (text.includes("其他中国工作室") || text.includes("其他中國工作室")) {
+                    let t = document.querySelector("div:has(>.fa-tags)+div:has(>.fa-tags)")?.innerText;
+                    if (!!t && t?.length > 0) {
+                        text = text.replace(/其他中国工作室|其他中國工作室/, t);
+                    }
+                }
+                if (text.includes("Graphis")) {
+                    let t = document.querySelector("div:has(>.fa-tags)+div:has(>.fa-tags)")?.innerText;
+                    if (!!t && t?.length > 0) {
+                        text = text.replace("Graphis", "Graphis " + t);
+                    }
+                }
+                return text;
+            } catch {
+                return document.title;
             }
-            return title;
         },
         css: `
 body {
@@ -3164,21 +3210,32 @@ a:has(>div>div>img),
         openInNewTab: ".mixs-card-content>a:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "云边网盘",
-        host: ["qinzhi.top"],
-        reg: /^https?:\/\/qinzhi\.top\/[^\/]+\/[^\/]+\/.+/,
-        init: async () => {
-            await fn.waitEle("div.list");
-            fn.createImgBox(".body");
+        name: "次元LSP/猫猫网盘/云边网盘",
+        url: {
+            h: ["cylsp.org", "pan.catcat.blog", "qinzhi.top"]
         },
+        SPA: true,
+        observerURL: true,
         imgs: () => fn.getAList(),
-        repeat: 1,
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 3],
-        go: 1,
-        observerTitle: true,
+        customTitle: () => fn.dt({
+            d: [" | 次元LSP", " | 猫猫网盘", " | 云边网盘"]
+        }),
         downloadVideo: true,
-        customTitle: () => fn.title(" | 云边网盘").replace(/\s?\d+p\s?|\[\d+[\w\s\.\+-]+\]/i, ""),
+        category: "nsfw1"
+    }, {
+        name: "J M G T的AList",
+        url: {
+            h: "alist.qiuyeshudian.com"
+        },
+        SPA: true,
+        observerURL: true,
+        imgs: () => fn.getAList(),
+        customTitle: () => fn.dt({
+            d: [
+                " | AList",
+                /（\d+Photos）\s|\（\d+Photos\)\s|\d+Photos\s|\d+\spics|\(选登\)|（选登\d+P）/
+            ]
+        }),
         category: "nsfw1"
     }, {
         name: "新美图录/臺灣美腿女郎",
@@ -5177,7 +5234,7 @@ a:has(>div>div>img),
                 "titspie.com",
                 "cosplaysosedki.com"
             ],
-            p: ["/gallery/", "/photos/", "/picture/", "/album/", "/post/", "/image/", "/img/", /\/pics?\//, "/p/", "/g/"]
+            p: ["/gallery/", /\/photos?\//, "/picture/", "/album/", "/post/", "/image/", "/img/", /\/pics?\//, "/p/", "/g/"]
         },
         init: () => fn.createImgBox(".grid,div.row:has(>.bg-dark)", 2),
         imgs: "a[data-fancybox],.grid-item>img,.grid-item->img",
@@ -6626,28 +6683,6 @@ a:has(>div>div>img),
         customTitle: () => fn.dt({
             s: "article h1",
             d: /（\d+Photos）\s|\（\d+Photos\)\s|\d+Photos\s|\d+\spics|\(选登\)|（选登\d+P）/
-        }),
-        category: "nsfw1"
-    }, {
-        name: "J M G T的AList",
-        host: ["alist.qiuyeshudian.com"],
-        reg: /^https?:\/\/alist\.qiuyeshudian\.com\/[^\/]+\/[^\/]+\/.+/,
-        init: async () => {
-            await fn.waitEle("div.list");
-            fn.createImgBox(".body");
-        },
-        imgs: () => fn.getAList(),
-        repeat: 1,
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 3],
-        go: 1,
-        observerTitle: true,
-        downloadVideo: true,
-        customTitle: () => fn.dt({
-            d: [
-                " | AList",
-                /（\d+Photos）\s|\（\d+Photos\)\s|\d+Photos\s|\d+\spics|\(选登\)|（选登\d+P）/
-            ]
         }),
         category: "nsfw1"
     }, {
@@ -12637,15 +12672,15 @@ a:has(>div>div>img),
         customTitle: () => fn.ge(".entry-header>span") ? fn.gt(".entry-header>span") : fn.gt(".entry-title"),
         category: "hcomic"
     }, {
-        name: "Koharu",
-        host: ["koharu.to"],
-        enable: 1,
-        reg: /^https?:\/\/koharu\.to\//i,
+        name: "SchaleNetwork",
+        url: {
+            h: ["shupogaki.moe", "hoshino.one", "niyaniya.moe"]
+        },
         SPA: () => document.URL.includes("/g/"),
         observerURL: true,
         imgs: () => {
             const [, , g_id, g_key] = location.pathname.split("/");
-            const detailApi = `https://api.koharu.to/books/detail/${g_id}/${g_key}`;
+            const detailApi = `https://api.schale.network/books/detail/${g_id}/${g_key}`;
             fn.showMsg(displayLanguage.str_05, 0);
             return fetch(detailApi).then(res => res.json()).then(detailJson => {
                 debug("\ndetailJson\n", detailJson);
@@ -12666,7 +12701,7 @@ a:has(>div>div>img),
                     id,
                     public_key
                 } = data[maxKey];
-                const dataApi = `https://api.koharu.to/books/data/${g_id}/${g_key}/${id}/${public_key}?v=${updated_at ?? created_at}&w=${maxKey}`;
+                const dataApi = `https://api.schale.network/books/data/${g_id}/${g_key}/${id}/${public_key}?v=${updated_at ?? created_at}&w=${maxKey}`;
                 return fetch(dataApi).then(res => res.json()).then(dataJson => {
                     const {
                         base,
@@ -13264,6 +13299,22 @@ a:has(>div>div>img),
             } = _unsafeWindow;
             return reader.gallery.title.japanese ?? reader.gallery.title.english;
         },
+        category: "hcomic"
+    }, {
+        name: "MangaHen圖片清單頁",
+        host: ["manga-hen.com"],
+        reg: /^https?:\/\/manga-hen\.com\/manga\/[\w-]+\/$/,
+        init: () => fn.createImgBox(".rounded-lg", 2),
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr(".img-thumb img,.lazy-img-thumb img");
+            return fn.xhrDoc(fn.gu(".img-thumb>a"), {
+                cookie: "reader_mode=1"
+            }).then(dom => fn.gae(".justify-between~img[data-src]", dom));
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: () => fn.getText(["h2[class^=text]", "h1[class^=text]"]),
         category: "hcomic"
     }, {
         name: "TMOHentai圖片清單頁",
@@ -14722,7 +14773,8 @@ a:has(>div>div>img),
             p: /^\/chapter\/\d+\.html$/
         },
         init: async () => {
-            await fn.getNP(".mip-box-body img", "//a[text()='下一页']", null, ".info");
+            const last = doc => !fn.ge(".mip-box-body img", doc);
+            await fn.getNP(".mip-box-body img", "//a[text()='下一页']", last, ".info");
             fn.createImgBox(".info", 2);
         },
         imgs: ".mip-box-body img",
@@ -15142,6 +15194,39 @@ a:has(>div>div>img),
             v: 3,
             css: false
         },
+        category: "hcomic"
+    }, {
+        name: "开心看漫画 閱讀頁",
+        host: ["kxmanhua.com"],
+        url: {
+            t: "开心看漫画",
+            p: "/detail/"
+        },
+        imgs: ".blog__details__content img",
+        button: [4],
+        insertImg: [".blog__details__content", 2],
+        endColor: "white",
+        autoDownload: [0],
+        next: "//a[text()='下一话'][@href]",
+        prev: "//a[text()='上一话'][@href]",
+        customTitle: () => fn.ge("meta[name='manga-name']").content + " - " + fn.ge("meta[name='chap-title']").content,
+        hide: ".fixed-ads,.ad-banner,.blog__details__content~*",
+        category: "hcomic"
+    }, {
+        name: "凹凸漫/X漫/肉漫天堂 目錄頁",
+        url: {
+            t: "开心看漫画",
+            p: "/manga/"
+        },
+        init: () => fn.createImgBox(".anime__details__episodes", 2),
+        imgs: () => {
+            let links = fn.gau(".chapter_list a").reverse();
+            return fn.getImgA(".blog__details__content img", links);
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        customTitle: ".anime__details__title>h3",
+        hide: ".ad-banner",
         category: "hcomic"
     }, {
         name: "凹凸漫/X漫/肉漫天堂 閱讀頁",
@@ -16648,9 +16733,10 @@ a:has(>div>div>img),
         category: "comic"
     }, {
         name: "MangaPark",
+        host: ["mangapark.net", "mangapark.com", "mangapark.to", "parkmanga.com"],
         url: {
-            h: "mangapark.net",
-            p: "chapter"
+            t: "Share Any Manga on MangaPark",
+            p: ["chapter", "/title/"]
         },
         init: () => fn.waitEle(["[data-name='image-item'] img", "//script[contains(text(),'pageName') and contains(text(),'image_server')]"]),
         imgs: () => JSON.parse(fn.gst("image_server")).objs.filter(e => {
@@ -24442,6 +24528,7 @@ if ("xx" in window) {
                     "data-thumb",
                     "data-bgset",
                     "data-src_big",
+                    "z-image-loader-url",
                     "ng-src",
                     "bigimg",
                     "lg-data-src",
@@ -24509,13 +24596,23 @@ if ("xx" in window) {
             let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURIComponent(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$|\.gif$|\.mp4$|\.mov$|\.ts$/i.test(href) ? href : null).filter(item => item);
             fn.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
+            let password;
+            if ("browser-password" in localStorage) {
+                password = localStorage.getItem("browser-password");
+            } else {
+                password = "";
+            }
             let resArr = paths.map((path, i, arr) => {
+                const body = {
+                    path,
+                    password
+                };
                 return fetch("/api/fs/get", {
                     "headers": {
                         "accept": "application/json, text/plain, */*",
                         "content-type": "application/json;charset=UTF-8"
                     },
-                    "body": `{\"path\":\"${path}\",\"password\":\"\"}`,
+                    "body": JSON.stringify(body),
                     "method": "POST"
                 }).then(res => res.json()).then(json => {
                     fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
@@ -25965,7 +26062,7 @@ if ("xx" in window) {
                 if (options.fancybox == 1 && !("fancybox" in siteData) && ("Fancybox" in _unsafeWindow)) {
                     _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                 }
-                if (!/tupianwu\.com/.test(fn.lh) && !fn.ge(".umRelevant.umBox") && !fn.ge(".videoPlayerWrap")) {
+                if (!/tupianwu\.com/.test(fn.lh) && !fn.ge(".umRelevant.umBox") && !fn.ge(".videoPlayerWrap") && !fn.ge("#xqbj-main")) {
                     fn.MutationObserver_aff();
                 }
                 if (options.viewMode == 1 || siteData.viewMode == 1) toggleImgMode();
@@ -26078,19 +26175,16 @@ if ("xx" in window) {
                 dt.forEach(r => (str = str?.replace(r, "")));
             }
             str = str?.replace(/[\/\s]?[\(\[［（【“]\d+[\w\s\\\/\.\+-／]+[\)\]］）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "")
-                //.replace(/\//g, "")
-                .replace(/\s|/, "")
-                .replace(/\s|/, "")
+                .replace(/\s\|/g, "")
                 .replace(/\:/g, "：")
                 .replace(/\*/g, "＊")
                 .replace(/\?/g, "？")
                 .replace(/\"/g, "“")
                 .replace(/\</g, "《")
-                .replace(/\>/, "》")
+                .replace(/\>/g, "》")
                 .replace(/\|/g, "｜")
                 .replace(/\//g, "／")
-                .replace(/\\/, "＼")
-                //.replace(/[\/\?<>\\:\*\|":]/g, " ")
+                .replace(/\\/g, "＼")
                 .replace(/\s{2,3}/g, " ")
                 .trim();
             return str;
@@ -27624,6 +27718,16 @@ if ("xx" in window) {
         return referer;
     };
 
+    let v2ph_cookie = _GM_getValue("v2ph_cookie", "");
+
+    //取得cookie
+    const getCookie = () => {
+        if (fn.lh.includes(".v2ph.")) {
+            return v2ph_cookie;
+        }
+        return "";
+    };
+
     //Fetch API下載圖片
     const Fetch_API_Download = (srcUrl, picNum = "none", imgsNum = "none") => {
         currentDownloadThread++;
@@ -27699,6 +27803,7 @@ if ("xx" in window) {
                     accept: "*/*",
                     "upgrade-insecure-requests": "1"
                 },
+                cookie: getCookie(),
                 onload: async data => {
                     currentDownloadThread--;
                     if (isStopDownload) {
@@ -27906,9 +28011,30 @@ if ("xx" in window) {
         return null;
     };
 
+    const checkDownloadCondition = () => {
+        if (fn.lh.includes(".v2ph.")) {
+            const cookie = v2ph_cookie;
+            if (!!cookie) {
+                return true;
+            } else {
+                alert("微圖坊下載需先填入cookie。");
+                v2ph_cookie = prompt("Set Cookie", v2ph_cookie || "");
+                if (!!v2ph_cookie) {
+                    _GM_setValue("v2ph_cookie", v2ph_cookie);
+                }
+                return false;
+            }
+        }
+        return true;
+    };
+
     //圖片影片下載函式
     const DownloadFn = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
+
+        const checkDC = checkDownloadCondition();
+        if (!checkDC) return;
+
         isStopDownload = false;
         currentDownloadThread = 0;
         downloadNum = 0;
@@ -34367,7 +34493,7 @@ a[data-fancybox]:hover {
                 setTimeout(() => createShadowGallery(), 200);
             }
         }
-        if (options.autoExport == 1) {
+        if (options.autoExport == 1 && options.autoDownload != 1) {
             exportImgSrcText();
         }
         if ("openInNewTab" in siteData && isString(siteData.openInNewTab)) {
@@ -34978,6 +35104,15 @@ html,body {
             addFullPictureLoadButton();
         }
         setTimeout(() => toggleUI(), 500);
+    }
+
+    if (fn.lh.includes(".v2ph.")) {
+        _GM_registerMenuCommand("🍪 Set V2PH Cookie", () => {
+            v2ph_cookie = prompt("Set Cookie", v2ph_cookie || "");
+            if (!!v2ph_cookie) {
+                _GM_setValue("v2ph_cookie", v2ph_cookie);
+            }
+        });
     }
 
 })(JSZip);
