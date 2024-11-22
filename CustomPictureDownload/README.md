@@ -4074,6 +4074,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td></td>
             </tr>
             <tr>
+                <td>AList</td>
+                <td>
+                    <a href="https://cylsp.org/">次元LSP</a>， <a href="https://pan.catcat.blog/">猫猫网盘</a>， <a href="https://qinzhi.top/">云边网盘</a>， <a href="https://alist.qiuyeshudian.com/">J M G T</a>，
+                </td>
+            </tr>
+            <tr>
                 <td>
                     <a href="https://qqdk2019.net/">悄悄的看2019</a>
                 </td>
@@ -4733,6 +4739,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://manga-hen.com/">MangaHen</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://multporn.net/">MultPorn</a>
                 </td>
                 <td>作用在圖片清單頁</td>
@@ -4977,9 +4989,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://koharu.to/">Koharu</a>
+                    <a href="https://niyaniya.moe/">SchaleNetwork</a>
                 </td>
-                <td>SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片連結轉為BlobURL，取得全部圖片需要等待一段時間。</td>
+                <td><a href="https://shupogaki.moe/">shupogaki.moe</a>，<a href="https://hoshino.one/">hoshino.one</a>，SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片連結轉為BlobURL，取得全部圖片需要等待一段時間。</td>
             </tr>
             <tr>
                 <td>
@@ -5038,6 +5050,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://xman5.com/">X漫</a>，<a href="https://rmtt6.com/">肉漫天堂</a>，目錄頁手動插入所有章節圖片
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kxmanhua.com/">开心看漫画</a>
+                </td>
+                <td>目錄頁手動插入所有章節圖片</td>
             </tr>
             <tr>
                 <td>
