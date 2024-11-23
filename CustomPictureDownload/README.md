@@ -5737,7 +5737,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.rumanhua.com/">如漫画</a>
                 </td>
-                <td><a href="https://www.rumanhua.com/">读漫屋</a>，有無限滾動模式加預讀</td>
+                <td><a href="https://www.dumanwu.com/">读漫屋</a>，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
