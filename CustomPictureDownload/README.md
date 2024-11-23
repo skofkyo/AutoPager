@@ -183,7 +183,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     scrollEle: async () => {
         …code;
     },
-    button: [4, "24%", 1] , //[無作用, "寬度%", 在按鈕之前添加多少空行]，有此屬性才會添加功能按鈕
+    button: [4, "24%", 1] , //[無作用, "寬度%", 增加上邊界]，有此屬性才會添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
@@ -1351,6 +1351,27 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
 </details>
 <h2>規則支持列表備註</h2>
 <p>如果有備註為SPA網頁，腳本如果沒有生效的話請重新載入頁面，或是先以新分頁的方式開啟連結。</p>
+<h2>V2PH取得Cookie說明</h2>
+<details>
+    <summary>
+        <kbd>
+            <strong>「 點擊展開查看 」</strong>
+        </kbd>
+    </summary>
+    <br>
+    <p>取得Cookie步驟</p>
+    <p>1.任意一張圖片在新分頁開啟圖片</p>
+    <p>2.F12開啟開發者工具</p>
+    <p>3.選擇開發者工具的網路分頁</p>
+    <p>4.重新載入網頁</p>
+    <p>5.選擇圖片</p>
+    <p>6.查找右側標頭的請求標頭的Cookie</p>
+    <img src="https://i.imgur.com/dLw9miV.jpeg">
+    <p>7.選取並複製Cookie</p>
+    <p>8.使用腳本管理器選單的Set V2PH Cookie彈出輸入框</p>
+    <p>9.在輸入框貼上剛剛複製好的Cookie後確定</p>
+    <img src="https://i.imgur.com/q1xTZLn.jpeg">
+</details>
 <h2>一般圖片分類內置規則支持列表</h2>
 <details>
     <summary>
@@ -1511,7 +1532,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.taotu8.cc/">秀套图吧</a>
                 </td>
-                <td></td>
+                <td><a href="https://www.913wen.com/">91性感美女</a></td>
             </tr>
             <tr>
                 <td>
@@ -1657,6 +1678,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.06se.com/">六色美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.okxx.de/">秀图湾</a>
                 </td>
                 <td></td>
             </tr>
@@ -1861,7 +1888,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xiuwo.net/">秀窝</a>
                 </td>
                 <td>
-                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://wap.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>
+                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>
                 </td>
             </tr>
             <tr>
@@ -2170,6 +2197,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.aitaotu.cc/">爱套图</a>
+                </td>
+                <td><a href="https://www.2taotu.cc/">www.2taotu.cc</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.hexieshe.cn/">和邪社</a>
                 </td>
                 <td></td>
@@ -2240,7 +2273,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.656g.com/">656G精品套图</a>
                 </td>
-                <td></td>
+                <td><a href="http://www.mmww.cc/">秀人妹子图</a></td>
             </tr>
             <tr>
                 <td>
@@ -4799,6 +4832,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://myreadingmanga.info/">MyReadingManga</a>
+                </td>
+                <td>作用在閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://hitomi.la/">Hitomi.la</a>
                 </td>
                 <td>SPA網頁，作用在閱讀頁</td>
@@ -4885,7 +4924,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://mangadistrict.com/">MANGA DISTRICT</a>
                 </td>
-                <td></td>
+                <td><a href="https://apcomics.org/">apcomics</a></td>
             </tr>
             <tr>
                 <td>
@@ -5698,7 +5737,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.rumanhua.com/">如漫画</a>
                 </td>
-                <td><a href="https://m.rumanhua.com/">m.rumanhua.com</a>，有無限滾動模式加預讀</td>
+                <td><a href="https://www.rumanhua.com/">读漫屋</a>，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
@@ -5732,6 +5771,44 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.36mh.org/">36漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manhuapi.cc/">漫画皮</a>
+                </td>
+                <td>
+                    <a href="https://m.manhuapi.cc/">m.manhuapi.cc</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manhua55.com/">漫画屋</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ikmmh.com/">爱看漫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.greyhoundsoul.com/">灰狗漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.greyhoundsoul.com/">聚合漫画屋</a>
+                </td>
+                <td><a href="https://www.kukanmanhua.org/">酷看漫画</a>，<a href="http://www.ququmh.com/">去去漫画</a>，<a href="http://www.pipiman.com/">皮皮漫画</a>，<a href="https://www.cicoo.cc/">六漫画</a>，<a href="https://www.ypdsm.com/">有品漫画</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://dogemanga.com/">漫畫狗</a>
                 </td>
                 <td></td>
@@ -5741,14 +5818,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.fffdm.com/manhua/">风之动漫</a>
                 </td>
                 <td>SPA網頁，閱讀頁添加了下一話連接，並排模式無法顯示</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.manhuapi.cc/">漫画皮</a>
-                </td>
-                <td>
-                    <a href="https://m.manhuapi.cc/">m.manhuapi.cc</a>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -6147,6 +6216,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://mangafire.to/home">MangaFire 英文漫畫</a>
                 </td>
                 <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhuatop.org/">Top Manhua 英文漫畫</a>
+                </td>
+                <td><a href="https://topmanhua.fan/">topmanhua.fan</a></td>
             </tr>
         </tbody>
     </table>
