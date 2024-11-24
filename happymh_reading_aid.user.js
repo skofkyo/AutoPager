@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.7
+// @version            2.6.9
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -637,6 +637,8 @@
         //https://m.happymh.com/v2.0/apis/uu/readLog?cid=章節ID&code=漫畫代碼
         //章節閱讀資料API
         //https://m.happymh.com/v2.0/apis/manga/reading?code=漫畫代碼&cid=章節ID&v=v3.1613134
+        //章節評論API
+        //https://m.happymh.com/v2.0/apis/comment?code=漫畫代碼&ch_id=章節ID&pn=頁數&order=time&from=read
         const infiniteScrollCss = `
 footer {
     margin: 0px !important;
