@@ -3,14 +3,14 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.8
+// @version            2.6.7
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
 // @description:zh-TW  無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @author             tony0809
 // @match              *://m.happymh.com/*
-// @icon               https://m.happymh.com/favicon.ico
+// @icon               data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/gCOMP4AjkD+AI5A/gCOQP4AjkD+AI4w/gCOIP4AjkD+AI5A/gCOQP4AjkD+AI5A/gCOEAAAAAAAAAAAAAAAAP4AjlD+AI6v/gCO//4Ajv/+AI7P/gCOUP4AjjD+AI6P/gCO//4Ajv/+AI7v/gCOgP4AjhAAAAAAAAAAAAAAAAAAAAAA/gCOQP4Ajv/+AI7//gCOgAAAAAAAAAAAAAAAAP4Ajv/+AI7//gCOvwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4AjkD+AI7//gCO//4AjoAAAAAAAAAAAAAAAAD+AI7//gCO//4Ajr8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI5A/gCO//4Ajv/+AI6AAAAAAAAAAAAAAAAA/gCO//4Ajv/+AI6/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/gCOQP4Ajv/+AI7//gCOgAAAAAAAAAAAAAAAAP4Ajv/+AI7//gCOvwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4AjkD+AI7//gCO//4Ajt/+AI6//gCOv/4Ajr/+AI7//gCO//4Ajr8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI5A/gCO//4Ajv/+AI6AAAAAAAAAAAAAAAAA/gCO//4Ajv/+AI6/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/gCOQP4Ajv/+AI7//gCOgAAAAAAAAAAAAAAAAP4Ajv/+AI7//gCOvwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4AjkD+AI7//gCO//4AjoAAAAAAAAAAAAAAAAD+AI7//gCO//4Ajr8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI5Q/gCO//4Ajv/+AI6PAAAAAAAAAAD+AI4Q/gCO//4Ajv/+AI7PAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI6A/gCOv/4Ajr/+AI6//gCOv/4AjoD+AI5Q/gCOv/4Ajr/+AI6//gCOv/4Ajr/+AI4gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAP//AADAAQAAwAEAAOHHAADhxwAA4ccAAOHHAADgBwAA4ccAAOHHAADhxwAA4YcAAMABAAD//wAA//8AAA==
 // @grant              unsafeWindow
 // @grant              GM_registerMenuCommand
 // @grant              GM_getValue
@@ -266,7 +266,7 @@
             document.body.append(preloadDiv);
         }
         const [, , mangaCode, id] = pn.split("/");
-        const apiUrl = `/v2.0/apis/manga/read?code=${mangaCode}&cid=${id}&v=v3.1302723`;
+        const apiUrl = `/v2.0/apis/manga/reading?code=${mangaCode}&cid=${id}&v=v3.1613134`;
         fetch(apiUrl, getHeaders()).then(res => res.json()).then(async jsonData => {
             try {
                 if (jsonData.status == 0) {
@@ -636,7 +636,7 @@
         //推送章節閱讀歷史紀錄API
         //https://m.happymh.com/v2.0/apis/uu/readLog?cid=章節ID&code=漫畫代碼
         //章節閱讀資料API
-        //https://m.happymh.com/v2.0/apis/manga/read?code=漫畫代碼&cid=章節ID&v=v3.1302723
+        //https://m.happymh.com/v2.0/apis/manga/reading?code=漫畫代碼&cid=章節ID&v=v3.1613134
         const infiniteScrollCss = `
 footer {
     margin: 0px !important;
@@ -752,7 +752,7 @@ footer {
                 loading = createLoadingElement();
             }
             try {
-                const res = await fetch(`/v2.0/apis/manga/read?code=${mid}&cid=${cid}&v=v3.1302723`, getHeaders());
+                const res = await fetch(`/v2.0/apis/manga/reading?code=${mid}&cid=${cid}&v=v3.1613134`, getHeaders());
                 const readJson = await res.json();
                 if (readJson?.msg !== "success") {
                     loading?.remove();
