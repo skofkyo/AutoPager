@@ -1479,7 +1479,22 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
-                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">www.kaizty.com</a>， <a href="https://www.depvailon.com/">www.depvailon.com</a>， <a href="https://pic.yailay.com/">pic.yailay.com</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>
+                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.depvailon.com/">Depvailon.Com</a>
+                </td>
+                <td>
+                    <a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">Kaizty Photos</a>，<a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pic.yailay.com/">Pic Yailay</a>
+                </td>
+                <td>
+                    <a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://redseats.org/">RedSeats.Org</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>
                 </td>
             </tr>
             <tr>
@@ -2185,6 +2200,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.meituhai.com/">美图海</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meinvtui.com/">美推网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://m.tuiimg.com/meinv/">推图网</a>
                 </td>
                 <td></td>
@@ -2644,6 +2671,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.fantasyfactory.xyz/">小丁 (Fantasy Factory) Patreon Cosplay Leaks</a>
                 </td>
                 <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.1ymt.com/discover?t=fresh">咿呀美图</a>
+                </td>
+                <td>SPA網頁，當前網址為圖集/work/時才可用</td>
             </tr>
             <tr>
                 <td>
@@ -3681,7 +3714,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.imagefap.com/">ImageFap</a>
                 </td>
-                <td>只適用PC版，大圖需在photo頁</td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4109,7 +4142,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>AList</td>
                 <td>
-                    <a href="https://cylsp.org/">次元LSP</a>， <a href="https://pan.catcat.blog/">猫猫网盘</a>， <a href="https://qinzhi.top/">云边网盘</a>， <a href="https://alist.qiuyeshudian.com/">J M G T</a>，
+                    <a href="https://cylsp.org/">次元LSP</a>， <a href="https://pan.catcat.blog/">猫猫网盘</a>， <a href="https://qinzhi.top/">云边网盘</a>， <a href="https://alist.qiuyeshudian.com/">J M G T</a>，圖片列表跑出來後記得按一下名稱排序，原圖一張幾十MB的建議複製圖址後用Motrix下載。
                 </td>
             </tr>
             <tr>
@@ -5247,6 +5280,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://yousemanhua.com/">有色漫画网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eromangabigdata.com/">漫画御殿</a>
                 </td>
                 <td></td>
             </tr>
