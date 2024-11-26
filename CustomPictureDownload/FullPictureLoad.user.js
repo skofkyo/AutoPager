@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.34
+// @version            2.11.35
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -565,23 +565,11 @@ a:has(>div>div>img),
         hide: "body>ins",
         category: "nsfw2"
     }, {
-        name: "pic.yailay.com格式",
-        url: {
-            h: ["pic.yailay.com", "www.dongojyousan.com"],
-            p: ["/articles/"]
-        },
-        init: () => fn.clearElementEvent(),
-        imgs: () => fn.getImgA("article img", "div[id^=post] a"),
-        button: [4],
-        insertImg: ["article", 2],
-        customTitle: () => fn.title(/^[a-z-\s\.I]+:/i).split("|")[0].trim(),
-        category: "nsfw2"
-    }, {
         name: "Hit-x-Hot格式",
         host: ["www.hitxhot.org", "hitxhot.com"],
         reg: [
-            /^https?:\/\/www\.hitxhot\.org\/(gallerys|articles|photos)\/(?!\?page=|\?m=|hot|top|tag)\w+\.html(\?m=1)?$/i,
-            /^https?:\/\/hitxhot\.com\/blog\/\w+\.html(\?m=1)?$/i
+            /^https?:\/\/www\.hitxhot\.org\/gallerys\/\w+\.html/i,
+            /^https?:\/\/hitxhot\.com\/blog\/\w+\.html/i
         ],
         init: () => fn.clearElementEvent(),
         imgs: async () => {
@@ -609,13 +597,13 @@ a:has(>div>div>img),
             "baobua.com"
         ],
         reg: [
-            /^https?:\/\/www\.depvailon\.com\/(?!\?page=|\?m=).+\.html/i,
-            /^https?:\/\/www\.kaizty\.com\/photos\//i,
-            /^https?:\/\/nungvl\.net\/gallerys\//i,
-            /^https?:\/\/lootiu\.com\/gallery\//i,
-            /^https?:\/\/thismore\.fun\/view\//i,
-            /^https?:\/\/cosxuxi\.club\/[^\.]+\.html/i,
-            /^https?:\/\/baobua\.com\/post\//i
+            /^https?:\/\/www\.depvailon\.com\/[^\.]+\.html/,
+            /^https?:\/\/cosxuxi\.club\/[^\.]+\.html/,
+            /^https?:\/\/www\.kaizty\.com\/photos\//,
+            /^https?:\/\/nungvl\.net\/gallerys\//,
+            /^https?:\/\/lootiu\.com\/gallery\//,
+            /^https?:\/\/thismore\.fun\/view\//,
+            /^https?:\/\/baobua\.com\/post\//
         ],
         init: async () => {
             await fn.clearElementEvent();
@@ -644,6 +632,56 @@ a:has(>div>div>img),
                 /^[a-z-\s\.]+:/i,
                 "NứngVL.net:"
             ]
+        }),
+        category: "nsfw2"
+    }, {
+        name: "pic.yailay.com格式",
+        url: {
+            h: ["pic.yailay.com", "www.dongojyousan.com"],
+            p: ["/articles/"]
+        },
+        init: () => fn.clearElementEvent(),
+        imgs: () => fn.getImgA(".VKSUBTSWA img", "div[id^=post] a"),
+        button: [4],
+        insertImg: [".VKSUBTSWA", 2],
+        insertImgAF: () => fn.remove(".pagination,h3+.HCRIN"),
+        customTitle: () => fn.title(/^[a-z-\s\.I]+:/i).split("|")[0].trim(),
+        category: "nsfw2"
+    }, {
+        name: "RedSeats.Org格式",
+        url: {
+            h: ["redseats.org", "cn.looives.com"],
+            p: ["/gallery/", "/view/"]
+        },
+        imgs: async () => {
+            let links = fn.gau("div[id^=post] a");
+            links.unshift(fn.url);
+            fn.showMsg(displayLanguage.str_14, 0);
+            let loop = true;
+            let pn = 13;
+            let fetchNum = 1;
+            const getNext = () => {
+                return fn.fetchDoc(fn.lp + "?page=" + pn).then(dom => {
+                    fn.showMsg(`${displayLanguage.str_14} (Page${fetchNum += 1})`, 0);
+                    if (fn.ge("div[id^=post]", dom)) {
+                        links = [...links, ...fn.gau("div[id^=post] a", dom)];
+                    } else {
+                        loop = false;
+                    }
+                });
+            };
+            while (loop) {
+                await getNext();
+                pn += 12;
+            }
+            return fn.getImgA(".VKSUBTSWA img", links);
+        },
+        button: [4],
+        insertImg: [".VKSUBTSWA", 2],
+        insertImgAF: () => fn.remove("h3+.HCRIN"),
+        customTitle: () => fn.dt({
+            t: fn.title(/^[a-z-\s\.I]+:/i).split("|")[0].trim(),
+            d: " - 1.jpg"
         }),
         category: "nsfw2"
     }, {
@@ -680,7 +718,7 @@ a:has(>div>div>img),
                 /\.xwbar\.com$/,
                 /\.dv67\.com$/,
                 /\.xinent\.net$/,
-                /\.fjrx\\.org$/,
+                /\.fjrx\.org$/,
                 /\.sdrx\.org$/,
                 /\.gxrx\.org$/,
                 /\.whrx\.org$/,
@@ -1333,7 +1371,7 @@ a:has(>div>div>img),
             p: /^\/\d+\.html$/,
             e: "//i[@class='czs-folder-l']/following-sibling::a[1][text()='美女写真' or text()='Cosplay' or text()='JAV.PHOTO']"
         },
-        imgs: () => fn.gae(".content-warp img").filter(img => !img?.parentElement?.href?.endsWith("app.html")),
+        imgs: ".content-warp img[title][alt]",
         button: [4],
         insertImg: [".content-warp", 2],
         customTitle: ".post-title",
@@ -2755,6 +2793,26 @@ a:has(>div>div>img),
         reg: /^https?:\/\/cosplayporn\.online\//,
         observerClick: "#wpdp-close",
         category: "ad"
+    }, {
+        name: "咿呀美图",
+        url: {
+            h: "www.1ymt.com",
+            d: "pc"
+        },
+        SPA: true,
+        imgs: () => {
+            if (document.location.pathname.startsWith("/work/")) {
+                return fn.fetchDoc(document.location.pathname, {
+                    "headers": {
+                        "accept": "text/html, */*; q=0.01",
+                        "x-requested-with": "XMLHttpRequest"
+                    }
+                }).then(dom => fn.gae(".photo-thumbs li", dom));
+            } else {
+                return [];
+            }
+        },
+        category: "nsfw1"
     }, {
         name: "Cosersets",
         host: ["www.cosersets.com"],
@@ -5000,6 +5058,37 @@ a:has(>div>div>img),
         customTitle: "h1",
         category: "nsfw1"
     }, {
+        name: "美图海",
+        url: {
+            h: "www.meituhai.com",
+            p: "/album/"
+        },
+        exclude: ".vip-tip",
+        imgs: "#gallery img",
+        button: [4],
+        insertImg: ["#gallery", 2],
+        customTitle: ".home_title",
+        category: "nsfw1"
+    }, {
+        name: "美推网",
+        url: {
+            h: [/meinvtui\.com$/, "bbs.2tu.me"],
+            p: ".html",
+            e: ".pp.hh,.contimglist"
+        },
+        imgs: () => {
+            let max = fn.gt(".pages>a,.page a").match(/\d+/g).at(-1);
+            max = Number(max);
+            return fn.getImg(".pp.hh img[alt],.contimglist img[alt]", max, 9);
+        },
+        button: [4],
+        insertImg: [".pp.hh,.contimglist", 2],
+        autoDownload: [0],
+        next: "//b[text()='上一篇：']/following-sibling::a | //a[@class='f-l l2'][@href]",
+        prev: "//b[text()='下一篇：']/following-sibling::a | //a[@class='f-l l3'][@href]",
+        customTitle: ".des>h1,.contmbx-title",
+        category: "nsfw1"
+    }, {
         name: "推图网",
         reg: /^https?:\/\/(www|m)\.tuiimg\.com\/meinv\/\d+\//,
         link: "https://m.tuiimg.com/meinv/",
@@ -6419,8 +6508,11 @@ a:has(>div>div>img),
         category: "ad"
     }, {
         name: "FoamGirl",
-        host: ["foamgirl.net"],
-        reg: /^https?:\/\/foamgirl\.net\/\d+\.html/,
+        url: {
+            h: "foamgirl.net",
+            p: ".html",
+            e: "a.imageclick-imgbox"
+        },
         imgs: () => {
             let max;
             try {
@@ -7911,9 +8003,12 @@ a:has(>div>div>img),
         },
         category: "nsfw1"
     }, {
-        name: "niwatori.my.id/quenbox.top",
-        link1: "https://niwatori.my.id/category/uncategorized/",
-        link2: "https://quenbox.top/?cat=1",
+        name: "WordPress樣板",
+        links: [
+            "https://niwatori.my.id/category/uncategorized/",
+            "https://quenbox.top/?cat=1",
+            "https://nekobox.top/index.php/category/blog/"
+        ],
         url: {
             e: [".entry-content", ".wp-block-gallery img", ".post-navigation .nav-links"]
         },
@@ -9861,47 +9956,48 @@ a:has(>div>div>img),
         url: {
             h: "www.imagefap.com",
             p: ["/gallery/", "/pictures/"],
-            d: "pc"
+            e: "#gallery table a"
         },
         init: () => fn.createImgBox("#gallery", 2),
         imgs: async () => {
-            let gid = fn.ge("#galleryid_input").value;
-            let gowner = new URL(fn.gu("a[href*=usergallery]")).searchParams.get("userid");
-            let pics = Number(fn.ge("img._lazy").alt.match(/\d+/g).at(-1));
-            let max = Math.ceil(pics / 60);
-            let pages = [`/ajax/actions.php?gid=${gid}&page=0&action=getGallery&ownerid=${gowner}`];
-            if (max > 1) {
-                pages = fn.arr(max, (v, i) => `/ajax/actions.php?gid=${gid}&page=${i}&action=getGallery&ownerid=${gowner}`);
-            }
-            let resArr = [];
-            let fetchNum = 0;
+            let temps = [];
+            let originals = [];
+            let thumbs = [];
+            let gid = new URL(fn.gu("a[href*='&gid']")).searchParams.get("gid");
+            let loop = true;
+            let pn = 0;
             fn.showMsg(displayLanguage.str_05, 0);
-            for (let url of pages) {
-                let res = await fn.fetchDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
-                    return [...dom.images].map(img => {
-                        let original = img.dataset.full;
-                        let thumb = img.dataset.original;
-                        return {
-                            original,
-                            thumb
+            const get = () => {
+                return fn.fetchDoc(`/ajax/actions.php?gid=${gid}&page=${pn}&action=getGallery`).then(dom => {
+                    fn.showMsg(`${displayLanguage.str_05} (Page${pn + 1})`, 0);
+                    if (!fn.ge("#hgallery", dom)) {
+                        loop = false;
+                        return;
+                    }
+                    for (let img of [...dom.images]) {
+                        let noParams = new URL(img.dataset.full).pathname;
+                        if (temps.includes(noParams)) {
+                            loop = false;
+                            return;
+                        } else {
+                            temps.push(noParams);
+                            originals.push(img.dataset.full);
+                            thumbs.push(img.dataset.original);
                         }
-                    });
+                    }
                 });
-                resArr.push(res);
-                await delay(1000);
+            };
+            while (loop) {
+                await get();
+                pn++;
             }
-            return Promise.all(resArr).then(data => data.flat()).then(arr => {
-                let thumbs = arr.map(e => e.thumb);
-                thumbnailSrcArray = thumbs;
-                let originals = arr.map(e => e.original);
-                return originals;
-            });
+            thumbnailSrcArray = thumbs;
+            return originals;
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
-        customTitle: "#menubar font",
+        customTitle: "#menubar font,h1 b",
         category: "nsfw2"
     }, {
         name: "ImageFap",
@@ -9958,21 +10054,20 @@ a:has(>div>div>img),
         name: "ImageFapM",
         url: {
             h: "beta.imagefap.com",
-            p: "/pictures/",
+            p: ["/gallery/", "/pictures/"],
             d: "m"
         },
         imgs: async () => {
             let gid = fn.ge("#gid").value;
-            let gowner = fn.ge("#gowner").value;
             let max;
             if (fn.ge(".newNav")) {
                 max = Number(fn.gt(".newNav b").match(/\d+/g).at(-1));
             } else {
                 max = 1;
             }
-            let pages = [`/ajax/actions.php?gid=${gid}&page=0&action=getGallery&ownerid=${gowner}`];
+            let pages = [`/ajax/actions.php?gid=${gid}&page=0&action=getGallery`];
             if (max > 1) {
-                pages = fn.arr(max, (v, i) => `/ajax/actions.php?gid=${gid}&page=${i}&action=getGallery&ownerid=${gowner}`);
+                pages = fn.arr(max, (v, i) => `/ajax/actions.php?gid=${gid}&page=${i}&action=getGallery`);
             }
             let resArr = [];
             let fetchNum = 0;
@@ -9990,7 +10085,7 @@ a:has(>div>div>img),
                     });
                 });
                 resArr.push(res);
-                await delay(1000);
+                //await delay(1000);
             }
             return Promise.all(resArr).then(data => data.flat()).then(arr => {
                 let thumbs = arr.map(e => e.thumb);
@@ -14481,11 +14576,11 @@ a:has(>div>div>img),
         url: {
             h: "manhuache",
             p: "/book/",
-            e: ["#chapterGroupListJsonAsc", "//li/a[contains(text(),'成人寫真')][not(@class)]"]
+            e: ["#chapterGroupListJsonAsc,#chapterGroupListAsc", "//li/a[contains(text(),'成人寫真')][not(@class)]"]
         },
         init: () => fn.createImgBox("#chapterContentContainer~.module-title", 1),
         imgs: () => {
-            let links = JSON.parse(document.querySelector("#chapterGroupListJsonAsc").value).flat().map(e => "/chapter/" + e.id);
+            let links = JSON.parse(document.querySelector("#chapterGroupListJsonAsc,#chapterGroupListAsc").value).flat().map(e => "/chapter/" + e.id);
             return fn.getImgA("picture img", links, 0, [".thumb.jpg", ""]);
         },
         button: [4],
@@ -14499,11 +14594,11 @@ a:has(>div>div>img),
         url: {
             h: "manhuache",
             p: "/book/",
-            e: "#chapterGroupListJsonAsc"
+            e: "#chapterGroupListJsonAsc,#chapterGroupListAsc"
         },
         init: () => fn.createImgBox("#chapterContentContainer~.module-title", 1),
         imgs: () => {
-            let links = JSON.parse(document.querySelector("#chapterGroupListJsonAsc").value).flat().map(e => "/chapter/" + e.id);
+            let links = JSON.parse(document.querySelector("#chapterGroupListJsonAsc,#chapterGroupListAsc").value).flat().map(e => "/chapter/" + e.id);
             return fn.getImgA("picture img", links, 0, [".thumb.jpg", ""]);
         },
         button: [4],
@@ -15058,7 +15153,7 @@ a:has(>div>div>img),
         name: "蚂蚁搬运网/紳士泛漫畫",
         link: "https://hacg.antbyw.com/plugin.php?id=jameson_manhua",
         url: {
-            h: ["www.antbyw.com", "www.itsacg.com"],
+            h: ["www.antbyw.com", /\.itsacg\.com$/],
             s: "=read",
             d: "pc"
         },
@@ -16286,6 +16381,17 @@ a:has(>div>div>img),
                 return fn.title(" - 有色漫画", 0, dom) + " - " + fn.title(" - 有色漫画");
             }
         },
+        category: "hcomic"
+    }, {
+        name: "漫画御殿",
+        host: ["eromangabigdata.com"],
+        reg: /^https?:\/\/eromangabigdata\.com\/\w+\/\d+\/\w\/[\w-_]+$/i,
+        imgs: () => fn.gae("#imgwrap img").map(e => e.dataset.width ?? e.src),
+        button: [4],
+        insertImg: ["#imgwrap", 2],
+        go: 1,
+        customTitle: "#pan span.pan",
+        hide: "#chip",
         category: "hcomic"
     }, {
         name: "LXMANGA",
@@ -24749,6 +24855,7 @@ if ("xx" in window) {
                     "data-thumb",
                     "data-bgset",
                     "data-src_big",
+                    "data-bigsrc",
                     "z-image-loader-url",
                     "ng-src",
                     "bigimg",
@@ -34820,16 +34927,16 @@ a[data-fancybox]:hover {
             //console.log(event);
             if (isFetching || isDownloading || isOpenFilter || isOpenFancybox || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
             const check = (e) => {
-                if (e.target.tagName === "A" && e.target?.previousElementSibling?.nodeName === "IMG") {
-                    return true;
-                }
-                if (["IMG", "CANVAS"].some(t => t === e.target.tagName) && !["Full"].some(id => e.target?.id?.startsWith(id)) && !["fancybox", "viewer-move"].some(className => e.target?.className?.startsWith(className))) {
+                if (["DIV", "A"].some(t => t === e.target.tagName) && getComputedStyle(e.target).getPropertyValue("background-image") != "none") {
                     return true;
                 }
                 if (["A", "FIGURE", "SPAN"].some(t => t === e.target.tagName)) {
                     return !!e.target.querySelector("img,canvas");
                 }
-                if (e.target.tagName === "DIV" && getComputedStyle(e.target).getPropertyValue("background-image") != "none") {
+                if (e.target.tagName === "A" && e.target?.previousElementSibling?.nodeName === "IMG") {
+                    return true;
+                }
+                if (["IMG", "CANVAS"].some(t => t === e.target.tagName) && !["Full"].some(id => e.target?.id?.startsWith(id)) && !["fancybox", "viewer-move"].some(className => e.target?.className?.startsWith(className))) {
                     return true;
                 }
                 return false;
