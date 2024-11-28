@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.35
+// @version            2.11.36
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -817,6 +817,16 @@ a:has(>div>div>img),
         },
         imgs: "#read_tpc img",
         customTitle: "#subject_tpc",
+        category: "nsfw2"
+    }, {
+        name: "4096社区",
+        host: ["www.4096bbs.com", "4096bbs.com"],
+        url: {
+            e: ".wp a[title^='4096社区'],meta[content*='4096社区']",
+            p: "/thread"
+        },
+        imgs: "td[id^='postmessage'] img,.view_tit+div[id^=pid] img",
+        customTitle: "#thread_subject,.view_tit",
         category: "nsfw2"
     }, {
         name: "秀人集",
@@ -4030,14 +4040,21 @@ a:has(>div>div>img),
             p: /^\/([\w-]+\/)?article\/\d+\//i,
             e: ".item-image img,#img-box img"
         },
-        init: () => fn.clearAllTimer(2),
-        imgs: async () => {
-            await fn.getNP(".item-image", ".next-page>a", null, ".pagination");
-            return fn.gae(".item-image img,#img-box img");
+        init: () => {
+            fn.clearAllTimer(2);
+            fn.createImgBox("#img-box");
+        },
+        imgs: () => {
+            if (fn.ge(".pagination-multi")) {
+                let max = fn.gau(".pagination-multi a")?.at(-1)?.match(/\d+$/)?.at(0) || 1;
+                return fn.getImg(".item-image img,#img-box img", max);
+            } else {
+                return fn.gae(".item-image img,#img-box img");
+            }
         },
         button: [4],
         insertImg: [
-            [".item-image,#img-box", 2, ".item-image,#img-box"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".item-image,#img-box p:has(>img),.pagination-multi"], 2
         ],
         customTitle: ".focusbox-title",
         css: "a{white-space:unset!important}",
@@ -5166,6 +5183,7 @@ a:has(>div>div>img),
                 "stuba.netlify.app",
                 "setushe.pics",
                 "meiru.neocities.org",
+                "meitu.neocities.org",
                 "sanshang.neocities.org",
                 "cosergirl.neocities.org",
                 /ahottie/
@@ -6256,7 +6274,7 @@ a:has(>div>div>img),
         url: {
             h: "gai.vn"
         },
-        SPA: () => ["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fn.ge(s)) || !!fn.ge(".FullPictureLoadImage"),
+        SPA: () => ["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']", ".nav-breadcrumb-item:nth-child(3)"].every(s => !!fn.ge(s)) || !!fn.ge(".FullPictureLoadImage"),
         observerURL: true,
         imgs: async () => {
             if (!["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fn.ge(s))) return [];
@@ -6264,7 +6282,6 @@ a:has(>div>div>img),
             fn.remove("//div[nav[@aria-label='Page navigation']]");
             return fn.gae("a[data-fancybox='slide']");
         },
-
         button: [4],
         insertImg: ["#content", 2],
         customTitle: ".nav-breadcrumb>.nav-breadcrumb-item:last-child",
@@ -7203,30 +7220,29 @@ a:has(>div>div>img),
         openInNewTab: ".date-outer a[href]:not([target=_blank])",
         category: "autoPager"
     }, {
-        //TMD寫好不到一天就取消SPA
-        name: "Kemono SPA",
-        enable: 0,
+        name: "Kemono/Coomer SPA",
         links: [
             "https://kemono.su/artists",
-            "https://kemono.su/fantia/user/17148"
+            "https://coomer.su/artists",
+            "https://kemono.su/fantia/user/17148",
+            "https://coomer.su/fansly/user/365239425979916288",
+            "https://coomer.su/onlyfans/user/arty42575619"
         ],
         url: {
-            h: ["kemono.su"]
+            h: ["kemono.su", "coomer.su"]
         },
         init: () => fn.waitEle("#main"),
         SPA: () => document.URL.includes("/user/") && !!fn.ge(".card-list") || document.URL.includes("/post/"),
         observerURL: true,
         getPostJson: (url) => {
-            return fetch("https://kemono.su/api/v1" + new URL(url).pathname).then(res => res.json()).then(json => {
+            return fetch("/api/v1" + new URL(url).pathname).then(res => res.json()).then(json => {
                 let {
                     previews,
                     videos
                 } = json;
-                let thums = previews.map(e => "//img.kemono.su/thumbnail/data" + e.path);
                 let images = previews.map(e => e.server + "/data" + e.path + "?f=" + e.name);
                 videos = videos.map(e => e.server + "/data" + e.path + "?f=" + e.name);
                 return {
-                    thums,
                     images,
                     videos
                 }
@@ -7240,7 +7256,7 @@ a:has(>div>div>img),
             let small = fn.gt(".paginator small");
             let postsTotal = small.match(/\d+/g).at(-1);
             let pagesTotal = Math.ceil(Number(postsTotal) / 50);
-            let api = "https://kemono.su/api/v1" + new URL(document.URL).pathname + "/posts-legacy";
+            let api = "/api/v1" + new URL(document.URL).pathname + "/posts-legacy";
             let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? api : api + `?o=${i * 50}`);
             fn.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
@@ -7262,10 +7278,8 @@ a:has(>div>div>img),
                     fn.showMsg(`${displayLanguage.str_06}${i + 1}/${postUrls.length}`, 0);
                 }
                 Promise.all(resArr).then(arr => {
-                    thumbnailSrcArray = arr.map(obj => obj.thums).flat();
                     videoSrcArray = arr.map(obj => obj.videos).flat();
                     globalImgArray = arr.map(obj => obj.images).flat();
-                    debug("thumbnailSrcArray", thumbnailSrcArray);
                     debug("videoSrcArray", videoSrcArray);
                     debug("globalImgArray", globalImgArray);
                     fn.hideMsg();
@@ -7287,7 +7301,6 @@ a:has(>div>div>img),
                     fn.showMsg(`${displayLanguage.str_06}${i + 1}/${links.length}`, 0);
                 }
                 return Promise.all(resArr).then(arr => {
-                    thumbnailSrcArray = arr.map(obj => obj.thums).flat();
                     videoSrcArray = arr.map(obj => obj.videos).flat();
                     return arr.map(obj => obj.images).flat();
                 });
@@ -7295,7 +7308,6 @@ a:has(>div>div>img),
                 fn.createImgBox(".post__body", 2);
                 fn.showMsg(displayLanguage.str_05, 0);
                 return _this.getPostJson(document.URL).then(obj => {
-                    thumbnailSrcArray = obj.thums;
                     videoSrcArray = obj.videos;
                     return obj.images;
                 });
@@ -7305,101 +7317,6 @@ a:has(>div>div>img),
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         go: 1,
         customTitle: "span[itemprop=name],.post__title",
-        downloadVideo: true,
-        fetch: 1,
-        fancybox: {
-            blacklist: 1
-        },
-        category: "nsfw2"
-    }, {
-        name: "Kemono/Coomer",
-        links: [
-            "https://kemono.su/artists",
-            "https://coomer.su/artists",
-            "https://kemono.su/fantia/user/17148",
-            "https://coomer.su/fansly/user/365239425979916288",
-            "https://coomer.su/onlyfans/user/arty42575619"
-        ],
-        url: {
-            h: ["kemono.su", "coomer.su"],
-            p: "/user/",
-            e: [".site-section", ".card-list"]
-        },
-        fn: () => {
-            if (checkGeting()) return;
-            isFetching = true;
-            let url = location.href.replace(location.search, "");
-            let small = fn.gt(".paginator small");
-            let postsTotal = small.match(/\d+/g).at(-1);
-            let pagesTotal = Math.ceil(Number(postsTotal) / 50);
-            let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? url : url + `?o=${i * 50}`);
-            fn.getEle(pageLinks, ".card-list__items a", null, null, 0).then(eles => {
-                let postLinks = eles.map(a => a.href);
-                fn.getEle(postLinks, "a.fileThumb,video>source", null, null, 0).then(files => {
-                    let images = [];
-                    files.forEach(e => {
-                        if (e.tagName === "A") {
-                            let img = fn.ge("img", e);
-                            let src = img.dataset.src ?? img.src;
-                            thumbnailSrcArray.push(src);
-                            images.push(e.href);
-                        } else if (e.tagName === "SOURCE") {
-                            videoSrcArray.push(e.src);
-                        }
-                    });
-                    globalImgArray = images;
-                    isFetching = false;
-                });
-            });
-        },
-        init: () => fn.createImgBox(".site-section", 2),
-        imgs: () => {
-            let links = fn.gau(".card-list__items a");
-            return fn.getEle(links, "a.fileThumb,video>source", null, null, 0).then(eles => {
-                let images = [];
-                eles.forEach(e => {
-                    if (e.tagName === "A") {
-                        let img = fn.ge("img", e);
-                        let src = img.dataset.src ?? img.src;
-                        thumbnailSrcArray.push(src);
-                        images.push(e.href);
-                    } else if (e.tagName === "SOURCE") {
-                        videoSrcArray.push(e.src);
-                    }
-                });
-                return images;
-            });
-        },
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 3],
-        go: 1,
-        customTitle: "span[itemprop=name]",
-        downloadVideo: true,
-        fetch: 1,
-        fancybox: {
-            blacklist: 1
-        },
-        category: "nsfw2"
-    }, {
-        name: "Kemono/Coomer",
-        url: {
-            h: ["kemono.su", "coomer.su"],
-            p: "/post/",
-            e: "a.fileThumb"
-        },
-        init: () => fn.createImgBox(".post__body", 2),
-        imgs: () => {
-            videoSrcArray = fn.gae("video>source").map(e => e.src);
-            thumbnailSrcArray = fn.gae("a.fileThumb>img").map(e => e.dataset.src ?? e.src);
-            return fn.gae("a.fileThumb");
-        },
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 2],
-        go: 1,
-        autoDownload: [0],
-        next: "a.next",
-        prev: "a.prev",
-        customTitle: ".post__title",
         downloadVideo: true,
         fetch: 1,
         fancybox: {
@@ -9363,25 +9280,37 @@ a:has(>div>div>img),
         category: "nsfw2"
     }, {
         name: "ZzUp.Com",
-        host: ["www.zzup.com", "zzup.com"],
+        host: ["www.zzup.com", "zzup.com", "w.zzup.com"],
         link: "https://zzup.com/user-album/3338/petmer/index.html",
-        reg: /^https?:\/\/(www\.)?zzup\.com\/content\/.+index\.html/i,
+        url: {
+            h: "zzup.com",
+            p: "/content/"
+        },
         init: () => {
             fn.remove("//iframe|//div[div[center[script[contains(text(),'juicy')]]]][@class='container']|//font[b[contains(text(),'ads')]]");
-            fn.createImgBox("//div[div[div[@class='picbox']]]", 2);
+            fn.createImgBox("//div[div[div[@class='picbox']]] | //div[@id='content'][div[@class='picbox']]", 2);
         },
         imgs: async () => {
             let max;
             let links;
             try {
-                [, max] = fn.gu(".imgpagebar>a:last-child").match(/page-(\d+)/);
+                max = fn.gt(".imgpagebar h2").match(/\d+/g).at(-1);
             } catch {
                 max = 1;
             }
             if (max > 1) {
-                let pages = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace("index.html", "") + "page-" + (i + 1) + ".html");
-                return fn.getEle(pages, "//div[div[@class='picbox']]").then(picboxs => {
-                    let te = fn.ge("//div[@class='row'][div[div[@class='picbox']]]");
+                let arr = fn.lp.split("/");
+                arr[arr.length - 1] = "";
+                let url = arr.join("/");
+                let pages = fn.arr(max, (v, i) => url + "page-" + (i + 1) + ".html");
+                let picboxSelector;
+                if (fn.ge("//div[@id='content'][div[@class='picbox']]")) {
+                    picboxSelector = "#content>.picbox";
+                } else {
+                    picboxSelector = "//div[div[@class='picbox']]"
+                }
+                return fn.getEle(pages, picboxSelector).then(picboxs => {
+                    let te = fn.ge("//div[@class='row'][div[div[@class='picbox']]] | //div[@id='content'][div[@class='picbox']]");
                     te.innerHTML = "";
                     te.append(...picboxs);
                     thumbnailSrcArray = picboxs.map(b => fn.ge("img", b).src);
@@ -9395,7 +9324,7 @@ a:has(>div>div>img),
         },
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "//div[div[div[@class='picbox']]]"], 2
+            ["#FullPictureLoadMainImgBox", 0, "//div[div[div[@class='picbox']]] | //div[@id='content'][div[@class='picbox']] | //div[@class='container text-center']"], 2
         ],
         customTitle: () => fn.dt({
             d: " - ZzUp.Com"
@@ -9413,6 +9342,26 @@ a:has(>div>div>img),
             re: "//div[div[@class='imgpagebar']]",
             pageNum: () => nextLink.match(/page-(\d+)/)[1]
         },
+        category: "autoPager"
+    }, {
+        name: "ZzUp.Com 分類自動翻頁",
+        enable: 1,
+        reg: /^https?:\/\/w\.zzup\.com\//,
+        init: () => {
+            if (fn.gae(".imgpagebar").length > 1) {
+                fn.ge("main:has(.imgpagebar)")?.remove();
+            }
+            fn.remove("iframe[src*='ad']");
+        },
+        autoPager: {
+            mode: 1,
+            ele: "#content,#content2",
+            observer: ".picbox",
+            next: "//a[h3[span[@class='glyphicon glyphicon-arrow-right']]]",
+            re: "//div[div[@class='imgpagebar']]",
+            pageNum: () => nextLink.match(/page-(\d+)/)[1]
+        },
+        css: ".autoPagerTitle{width:99%!important}",
         category: "autoPager"
     }, {
         name: "FreeXcafe",
@@ -9997,7 +9946,13 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
-        customTitle: "#menubar font,h1 b",
+        customTitle: () => {
+            if (fn.ge("#menubar font,h1 b")) {
+                return fn.gt("#menubar font,h1 b");
+            } else {
+                return document.title;
+            }
+        },
         category: "nsfw2"
     }, {
         name: "ImageFap",
@@ -11251,7 +11206,15 @@ a:has(>div>div>img),
                 ".nav-links"
             ]
         },
-        imgs: () => fn.getImg(".separator>a[href]", (fn.gt(".nav-links>*:last-child", 2) || 1), 16),
+        imgs: () => {
+            let max;
+            if (hasTouchEvent && fn.ge(".current-page")) {
+                max = fn.gt(".current-page").match(/\d+/g).at(-1);
+            } else {
+                max = fn.gt(".nav-links>*:last-child", 2) || 1
+            }
+            return fn.getImg(".separator>a[href]", max, 16);
+        },
         button: [4],
         insertImg: [
             [".album-post-body .clear,.album-post-share-wrap", 1, "div[itemprop='description articleBody'],.album-post-body>*:not(.album-post-inner):not(.album-post-share-wrap):not(#FullPictureLoadOptionsButtonParentDiv,.FullPictureLoadImage,a[data-fancybox]):not(#FullPictureLoadEnd)"], 2
@@ -11284,7 +11247,11 @@ a:has(>div>div>img),
         },
         imgs: () => {
             let max;
-            fn.ge(".current-page") ? max = fn.gt(".current-page").match(/\d+$/)[0] : max = fn.gt(".nav-links>*:last-child", 2) || 1;
+            if (hasTouchEvent && fn.ge(".current-page")) {
+                max = fn.gt(".current-page").match(/\d+/g).at(-1);
+            } else {
+                max = fn.gt(".nav-links>*:last-child", 2) || 1
+            }
             return fn.getImg("//a[@data-title and picture/source]", max, 16);
         },
         button: [4],
@@ -13759,11 +13726,20 @@ a:has(>div>div>img),
         name: "MyReadingManga",
         url: {
             h: "myreadingmanga.info",
-            e: ".entry-content img"
+            p: /^\/[^\/]+\/$/,
+            e: [".entry-content img,video[poster]", ".entry-meta"]
         },
-        imgs: () => fn.getImgA(".entry-content img", ".entry-pagination a"),
+        imgs: async () => {
+            if (fn.ge("video[poster]")) {
+                await fn.waitEle("#MRM_video_html5_api");
+                videoSrcArray = [fn.ge("video[poster] source").src];
+                return [fn.ge("video[poster]").poster];
+            }
+            return fn.getImgA(".entry-content img", ".entry-pagination a");
+        },
         button: [4],
         insertImg: [".entry-content", 2],
+        endColor: "white",
         customTitle: ".entry-title",
         category: "hcomic"
     }, {
@@ -21417,6 +21393,27 @@ if ("xx" in window) {
             t: dom.title,
             d: [",_在线漫画阅读_漫画屋", "漫画"]
         }).replace("_", " - "),
+        category: "comic"
+    }, {
+        name: "爱淘漫画",
+        host: ["www.aitaocomic.com", "aitaocomic.com"],
+        url: {
+            t: "爱淘漫画",
+            p: "/detail/"
+        },
+        init: async () => {
+            await fn.waitEle(".mx-auto.flex.flex-col.items-center img[data-src]");
+            fn.createImgBox(".mx-auto.flex.flex-col.items-center", 1);
+        },
+        imgs: ".mx-auto.flex.flex-col.items-center img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".mx-auto.flex.flex-col.items-center"], 3
+        ],
+        autoDownload: [0],
+        next: "a:has(>img[alt=下一話圖示])",
+        prev: "a:has(>img[alt=上一話圖示])",
+        customTitle: () => fn.title("- 爱淘漫画 - 免费线上看"),
         category: "comic"
     }, {
         name: "漫画160/非常爱漫新站",
