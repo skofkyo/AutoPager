@@ -2330,10 +2330,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://xx.knit.bid/">爱妹子</a>
+                    <a href="https://xx.knit.bid/sort/new/">爱妹子</a>
                 </td>
                 <td>
-                    <a href="https://mm.187187.xyz/">mm.187187.xyz</a>， <a href="https://999888.best/">999888.best</a>
+                    <a href="https://mm.187187.xyz/sort/new/">mm.187187.xyz</a>， <a href="https://999888.best/sort/new/">999888.best</a>
                 </td>
             </tr>
             <tr>
@@ -3649,20 +3649,20 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://kemono.su/">Kemono</a>
                 </td>
-                <td>手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post，發送80個請求後會被封禁IP一分半鐘，需耐心等待全部爬完。</td>
+                <td>SPA網頁，手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post。</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://coomer.su/">Coomer</a>
                 </td>
-                <td>同上</td>
+                <td>SPA網頁，同上</td>
             </tr>
             </tr>
             <tr>
                 <td>
                     <a href="https://nekohouse.su/">Nekohouse</a>
                 </td>
-                <td>手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post。</td>
+                <td>同上</td>
             </tr>
             <tr>
                 <td>
@@ -5810,6 +5810,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.aitaocomic.com/">爱淘漫画</a>
+                </td>
+                <td>SPA網頁，手動插入圖片</td>
+            </tr>
+           <tr>
+                <td>
+                    <a href="https://www.manhua55.com/">漫画屋</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.36mh.org/">36漫画</a>
                 </td>
                 <td></td>
@@ -5821,12 +5833,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://m.manhuapi.cc/">m.manhuapi.cc</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.manhua55.com/">漫画屋</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
