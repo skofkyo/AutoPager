@@ -2927,6 +2927,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://meizi.pics/">高清妹子图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gaoqing1.neocities.org/">高清美女图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://hotasianx.com/">HotAsianX</a>
                 </td>
                 <td></td>
@@ -3509,7 +3521,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.koipb.com/">Girl Atlas</a>
+                    <a href="https://www.girl-atlas.com/">Girl Atlas</a>
                 </td>
                 <td>圖片預覽不全</td>
             </tr>
