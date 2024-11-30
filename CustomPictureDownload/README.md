@@ -51,6 +51,18 @@ ViaBrowser 6.0.0
             </li>
         </ul>
     </li>
+    <li> Firefox <ul>
+            <li>
+                <a href="https://addons.mozilla.org/firefox/addon/tampermonkey/">Tampermonkey</a>
+            </li>
+            <li>
+                <a href="https://addons.mozilla.org/firefox/addon/violentmonkey/">Violentmonkey</a>
+            </li>
+            <li>
+                <a href="https://addons.mozilla.org/firefox/addon/scriptcat/">ScriptCat</a>
+            </li>
+        </ul>
+    </li>
     <li><a href="https://www.windowslatest.com/2024/04/02/you-can-now-install-any-extension-in-microsoft-edge-canary-for-android/">Edge Canary Extension install by id</a>
         <pre>Tampermonkey
 iikmkjmpaadaobahmlepeloendndfphd
