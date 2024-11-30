@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.36
+// @version            2.11.37
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -139,6 +139,7 @@
     let isChangeNum = false;
     let fetchErrorArray = [];
     let fastDownload = false;
+    let combineDownload = false;
     let currentDownloadThread = 0;
     let downloadNum = 0;
     let getImgFn = "";
@@ -812,7 +813,7 @@ a:has(>div>div>img),
         host: ["2048.info", "2048.cc"],
         url: {
             e: "link[rel][title$='人人']",
-            p: "/2048/read",
+            p: "/read.php",
             s: "tid=",
         },
         imgs: "#read_tpc img",
@@ -4393,6 +4394,15 @@ a:has(>div>div>img),
         customTitle: "#posttitle",
         category: "nsfw1"
     }, {
+        name: "LUVBP",
+        url: {
+            h: "luvbp.com"
+        },
+        exclude: ".c-post-upgrade-cta",
+        imgs: ".kg-image-card img",
+        customTitle: ".c-post-hero__title",
+        category: "nsfw2"
+    }, {
         name: "1Y Beauties",
         host: ["www.1y.is"],
         reg: /^https?:\/\/www\.1y\.is\/[\w-]+\/[^\.]+\.html$/,
@@ -5167,7 +5177,7 @@ a:has(>div>div>img),
         customTitle: "header>h2",
         category: "nsfw2"
     }, {
-        name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图/秀人图/UGIRLS/mm131美女图片/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/CoserGirl",
+        name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图/秀人图/UGIRLS/mm131美女图片/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/CoserGirl/高清妹子图",
         url: {
             h: [
                 /^youwu\./,
@@ -5182,6 +5192,7 @@ a:has(>div>div>img),
                 "jipin.pics",
                 "stuba.netlify.app",
                 "setushe.pics",
+                "meizi.pics",
                 "meiru.neocities.org",
                 "meitu.neocities.org",
                 "sanshang.neocities.org",
@@ -7927,6 +7938,7 @@ a:has(>div>div>img),
             "https://nekobox.top/index.php/category/blog/"
         ],
         url: {
+            h: ["niwatori.my.id", "quenbox.top", "nekobox.top"],
             e: [".entry-content", ".wp-block-gallery img", ".post-navigation .nav-links"]
         },
         imgs: () => fn.getImgSrcset(".wp-block-gallery img"),
@@ -7966,10 +7978,10 @@ a:has(>div>div>img),
         category: "nsfw1"
     }, {
         name: "Girl Atlas",
-        host: ["www.koipb.com", "koipb.com"],
         url: {
-            h: "koipb.com",
-            p: "/album"
+            h: ["www.girl-atlas.com", "girl-atlas.com", "www.girl-atlas.net", "girl-atlas.net", "www.koipb.com", "koipb.com"],
+            p: "/album",
+            s: "id="
         },
         init: () => fn.createImgBox(".gallery", 1),
         imgs: ".gallery a[data-fancybox]",
@@ -23740,6 +23752,7 @@ if ("xx" in window) {
                 str_178: "複製為MD格式",
                 str_179: "複製為Markdown格式",
                 str_180: "自動匯出URLs.txt",
+                str_181: "拼接下載",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -23961,6 +23974,7 @@ if ("xx" in window) {
                 str_178: "拷贝为MD格式",
                 str_179: "拷贝为Markdown格式",
                 str_180: "自动导出URLs.txt",
+                str_181: "拼接下载",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
@@ -24179,6 +24193,7 @@ if ("xx" in window) {
                 str_178: "Copy Markdown",
                 str_179: "Copied to Markdown format",
                 str_180: "Auto Export URLs.txt",
+                str_181: "Combine Download",
                 galleryMenu: {
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
@@ -28350,6 +28365,47 @@ if ("xx" in window) {
         return true;
     };
 
+    const combineDownloadImages = async (data, name) => {
+        const blobs = data.map(e => e.blob);
+
+        const srcs = blobs.map(blob => URL.createObjectURL(blob));
+
+        const loadImage = (src) => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        };
+
+        const combineImages = async () => {
+            const images = await Promise.all(srcs.map(loadImage));
+            const totalHeight = images.reduce((sum, img) => sum + img.height, 0);
+            const canvas = new OffscreenCanvas(images[0].width, totalHeight);
+            const ctx = canvas.getContext("2d");
+            let currentY = 0;
+            images.forEach(img => {
+                ctx.drawImage(img, 0, currentY);
+                currentY += img.height;
+            });
+            return canvas;
+        };
+
+        const canvas = await combineImages();
+        canvas.convertToBlob({
+            type: "image/jpeg",
+            quality: 0.9
+        }).then(blob => {
+            saveData(blob, name + ".jpg");
+        });
+        fn.hideMsg();
+        promiseBlobArray = [];
+        downloadNum = 0;
+        isDownloading = false;
+        combineDownload = false;
+    };
+
     //圖片影片下載函式
     const DownloadFn = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
@@ -28467,6 +28523,9 @@ if ("xx" in window) {
                         errorDataArray = null;
                         return;
                     }
+                }
+                if (combineDownload && blobDataArray.length > 0) {
+                    return combineDownloadImages(blobDataArray, text);
                 }
                 if (blobDataArray.length > 0) {
                     let total = blobDataArray.length;
@@ -32167,6 +32226,7 @@ label.line-through:has(>#size) {
         <button id="unselect-all">${displayLanguage.str_155}</button>
         <button id="reverse-selection">${displayLanguage.str_170}</button>
         <button id="reload">${displayLanguage.str_156}</button>
+        <button id="combineDownload">${displayLanguage.str_181}</button>
         <button id="download">${displayLanguage.str_157}</button>
         <label class="number">${displayLanguage.str_169}<select id="backgroundColor"></select></label>
         <label id="label-threading" class="number">${displayLanguage.str_161}<select id="threading"></select></label>
@@ -32227,6 +32287,7 @@ label.line-through:has(>#size) {
 
         if (hasTouchEvent) {
             ge("label:has(>#move)", main).remove();
+            ge("#combineDownload", main).remove();
         }
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
@@ -32385,6 +32446,19 @@ label.line-through:has(>#size) {
             ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
             addLis();
         }));
+        let combineDownloadButton = ge("#combineDownload", main);
+        if (combineDownloadButton) {
+            combineDownloadButton.addEventListener("click", () => {
+                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+                if (srcs.length == 0) return;
+                combineDownload = true;
+                const text = ge("#inputTitle", main).value;
+                fn.remove("#overflowYHidden");
+                shadowElement.remove();
+                isOpenFilter = false;
+                DownloadFn(srcs, text);
+            });
+        }
         gae("#download", main).forEach(button => {
             button.addEventListener("click", () => {
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
