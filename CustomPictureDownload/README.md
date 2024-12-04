@@ -1852,18 +1852,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.xwbar.com/web/meinv/">新闻吧</a>
+                    <a href="https://meinv.xwbar.com/">新闻吧</a>
                 </td>
                 <td>
-                    <a href="https://www.xwwu.net/web/meinv/">新闻屋</a>， <a href="https://www.dv67.com/web/meinv/">新娱乐在线</a>， <a href="https://www.fjrx.org/web/meinv/">福建热线</a>， <a href="https://www.sdrx.org/web/meinv/">山东热线</a>， <a href="https://www.gxrx.org/web/meinv/">广西热线</a>， <a href="https://www.whrx.org/web/meinv/">武汉热线</a>， <a href="http://www.tjrx.org/web/meinv/">天津热线</a>， <a href="https://www.ynrx.org/web/meinv/">云南热线</a>， <a href="https://www.gsrx.org/web/meinv/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
+                    <a href="https://meinv.xwwu.net/">新闻屋</a>， <a href="https://meinv.dv67.com/">新娱乐在线</a>， <a href="https://meinv.fjrx.org/">福建热线</a>， <a href="https://meinv.sdrx.org/">山东热线</a>， <a href="https://meinv.gxrx.org/">广西热线</a>， <a href="https://meinv.whrx.org/">武汉热线</a>， <a href="https://meinv.tjrx.org/">天津热线</a>， <a href="https://meinv.ynrx.org/">云南热线</a>， <a href="https://meinv.gsrx.org/">甘肃热线</a>，封鎖部分地區，需要VPN才看的到圖片
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.shzx.org/b/12-0.html">四海资讯</a>
+                    <a href="https://meinv.shzx.org/">四海资讯</a>
                 </td>
                 <td>
-                    <a href="https://www.entbao.com/b/23-0.html">娱乐宝</a>， <a href="https://www.yuleba.org/b/10-0.html">娱乐吧</a>， <a href="https://www.entwu.com/b/10-0.html">娱乐屋</a>， <a href="https://www.xwbzx.com/b/10-0.html">美女图片库</a>，封鎖部分地區，需要VPN
+                    <a href="https://meinv.entbao.com/">娱乐宝</a>， <a href="https://meinv.yuleba.org/">娱乐吧</a>， <a href="https://meinv.entwu.com/">娱乐屋</a>， <a href="https://meinv.xwbzx.com/">新闻宝</a>，封鎖部分地區，需要VPN
                 </td>
             </tr>
             <tr>
@@ -3673,7 +3673,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://kemono.su/">Kemono</a>
                 </td>
-                <td>SPA網頁，手動插入圖片，在作者文章列表可爬取50個Post，使用浮動選單自訂函式可爬取所有Post。</td>
+                <td>SPA網頁，停留在Post頁面只取得單一Post資料，停留在作者文章列表可爬取50個Post，使用浮動選單自訂函式(6)可爬取所有Post，短時間請求過多可能會導致503錯誤，需等待一段時間才會恢復正常，在頁面聚圖會導致原網頁無法正常使用所以沒有在頁面插入圖片的功能，需使用F、G、I、8看圖。</td>
             </tr>
             <tr>
                 <td>
@@ -4842,6 +4842,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.hentaicredo.com/">HENTAICREDO.COM</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hentairules.net/">Hentairules</a>
                 </td>
                 <td>作用在圖片清單頁</td>
             </tr>
