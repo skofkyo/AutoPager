@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.42
+// @version            2.11.43
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -10030,6 +10030,7 @@ a:has(>div>div>img),
             fn.ge("//table[@width='750']").width = "1000";
         },
         imgs: async () => {
+            /*
             let max = Number(fn.attr("div[data-total]", "data-total"));
             let pages = Math.ceil(max / 24);
             let pid = fn.ge("#imageid_input").value;
@@ -10063,6 +10064,40 @@ a:has(>div>div>img),
                 let originals = arr.map(e => e.original);
                 return originals;
             });
+            */
+            let temps = [];
+            let originals = [];
+            let thumbs = [];
+            let gid = fn.ge("#galleryid_input").value;
+            let loop = true;
+            let pn = 0;
+            fn.showMsg(displayLanguage.str_05, 0);
+            const get = () => {
+                return fn.fetchDoc(`/ajax/actions.php?gid=${gid}&page=${pn}&action=getGallery`).then(dom => {
+                    fn.showMsg(`${displayLanguage.str_05} (Page${pn + 1})`, 0);
+                    if (!fn.ge("#hgallery", dom)) {
+                        loop = false;
+                        return;
+                    }
+                    for (let img of [...dom.images]) {
+                        let noParams = new URL(img.dataset.full).pathname;
+                        if (temps.includes(noParams)) {
+                            loop = false;
+                            return;
+                        } else {
+                            temps.push(noParams);
+                            originals.push(img.dataset.full);
+                            thumbs.push(img.dataset.original);
+                        }
+                    }
+                });
+            };
+            while (loop) {
+                await get();
+                pn++;
+            }
+            thumbnailSrcArray = thumbs;
+            return originals;
         },
         button: [4],
         insertImg: ["//td[div[@id='slideshow']]", 2],
@@ -34838,7 +34873,7 @@ a[data-fancybox]:hover {
                 document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
-                if (isOpenOptionsUI || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
+                if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowRight" || event.key === "ArrowRight") callback(event);
             });
         }
