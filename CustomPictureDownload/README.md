@@ -3,22 +3,23 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/11/13
+2024/12/06
 PC
-Chrome 130.0.6723.117 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Edge 130.0.2849.80 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Cent Browser  5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-FireFox 132.0.1 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.5
+Chrome 131.0.6778.109 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 131.0.6778.109 + Tampermonkey 5.3.2 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Cent Browser 5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Vivaldi 7.0.3495.23 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 133.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 132.0.2950.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.0.035 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Edge 130.0.2849.68 + Tampermonkey 5.3.2
-Firefox for Android 132.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Mises Browser 424110108 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Yandex Browser 24.10.3.111 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Mask Browser 1.7.3.4 + Tampermonkey 5.1.1 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-XBrowser 5.0.1
+☆Edge Canary 133.0.2997.0 + Tampermonkey 5.3.2 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.0.035 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 131.0.2903.77 + Tampermonkey 5.3.2
+Firefox for Android 133.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Mises Browser 424110108 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Yandex Browser 24.12.0.279 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Mask Browser 1.7.3.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+XBrowser 5.0.2
 ViaBrowser 6.0.0
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
@@ -29,7 +30,7 @@ ViaBrowser 6.0.0
                 <a href="https://chromewebstore.google.com/detail/lcmhijbkigalmkeommnijlpobloojgfn">Tampermonkey 5.1.1</a>
             </li>
             <li>
-                <a href="https://chromewebstore.google.com/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo">Tampermonkey 5.3.2</a>
+                <a href="https://chromewebstore.google.com/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo">Tampermonkey 5.3.3</a>
             </li>
             <li>
                 <a href="https://chromewebstore.google.com/detail/jinjaccalgkegednnccohejagnlnfdag">Violentmonkey</a>
@@ -4979,6 +4980,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://hentaifr.net/">Hentai FR</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://prismblush.com/">Prismblush</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://allporncomic.com/porncomic/">AllPornComic</a>
                 </td>
                 <td></td>
@@ -6297,6 +6310,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://manhuatop.org/">Top Manhua 英文漫畫</a>
                 </td>
                 <td><a href="https://topmanhua.fan/">topmanhua.fan</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://toonily.com/">Toonily 英文漫畫</a>
+                </td>
+                <td></td>
             </tr>
         </tbody>
     </table>
