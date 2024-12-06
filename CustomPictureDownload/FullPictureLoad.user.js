@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.43
+// @version            2.11.44
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5795,6 +5795,7 @@ a:has(>div>div>img),
         url: {
             h: "erohere.online",
             p: /^\/erohere\d+\/$/,
+            e: "#album_masonry img"
         },
         init: () => fn.createImgBox("#album_masonry", 2),
         imgs: async () => {
@@ -6088,17 +6089,17 @@ a:has(>div>div>img),
             h: "mitaku.net",
             e: "a.msacwl-img-link[data-mfp-src]"
         },
-        imgs: () => fn.ge("a.msacwl-img-link[data-mfp-src]") ? fn.gae("a.msacwl-img-link[data-mfp-src]").map(a => a.dataset.mfpSrc).slice(1, -1) : fn.gae(".msacwl-img").slice(1, -1),
+        imgs: () => fn.gae("a.msacwl-img-link[data-mfp-src]").map(a => a.dataset.mfpSrc).slice(1, -1),
         button: [4],
         insertImg: [
-            [".article-content", 2], 2
+            [".cm-post-content", 2], 2
         ],
         go: 1,
         autoDownload: [0],
         next: ".previous>a",
         prev: ".next>a",
         customTitle: () => fn.dt({
-            s: "h1.entry-title",
+            s: "h1.cm-entry-title",
             d: /.[\smitaku]{6,7}\.net./
         }),
         category: "nsfw2"
@@ -11674,6 +11675,7 @@ a:has(>div>div>img),
         button: [4],
         insertImg: ["//div[div[@id='lightbox']]", 2],
         customTitle: "#comic-view-main .text-center",
+        hide: "div:has(>.nav-pills)",
         category: "nsfw2"
     }, {
         name: "G-AVSTAR",
@@ -12023,6 +12025,30 @@ a:has(>div>div>img),
         endColor: "white",
         customTitle: ".entry-title",
         category: "nsfw1"
+    }, {
+        name: "Hentai FR",
+        url: {
+            h: "hentaifr.net"
+        },
+        imgs: ".rl-gallery-container img",
+        customTitle: ".entry-title",
+        category: "hcomic"
+    }, {
+        name: "Prismblush",
+        url: {
+            h: "prismblush.com",
+            p: "/comic/"
+        },
+        imgs: () => {
+            let jump = fn.gae(".comic-nav-jumptocomic").at(0);
+            let links = fn.gae(".level-0", jump).map(e => e.value);
+            return fn.getImgA("#comic img", links);
+        },
+        button: [4],
+        insertImg: ["#comic", 2],
+        endColor: "white",
+        customTitle: "h1.elementor-heading-title",
+        category: "hcomic"
     }, {
         name: "18Kami.com",
         host: ["18kami.com", "www.18kami.com"],
@@ -17200,8 +17226,8 @@ a:has(>div>div>img),
     }, {
         name: "Sen Manga",
         url: {
-            h: "raw.senmanga.com",
-            p: /^\/[\w-]+\/\d+$/
+            h: ["raw.senmanga.com", "ero.senmanga.com"],
+            p: /^\/[^\/]+\/\d+$/
         },
         imgs: () => {
             let links = [fn.url];
@@ -17469,9 +17495,9 @@ a:has(>div>div>img),
         customTitle: () => fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g),
         category: "comic"
     }, {
-        name: "Top Manhua",
+        name: "Top Manhua/Toonily",
         url: {
-            h: ["manhuatop.org", "topmanhua.fan"],
+            h: ["manhuatop.org", "topmanhua.fan", "toonily.com"],
             p: "/chapter"
         },
         imgs: ".reading-content img",
@@ -23888,8 +23914,8 @@ if ("xx" in window) {
                     s: "圖列切換"
                 },
                 backgroundColor: {
-                    l: "亮色",
-                    d: "暗色"
+                    l: "淺色",
+                    d: "深色"
                 }
             };
             break;
@@ -24110,8 +24136,8 @@ if ("xx" in window) {
                     s: "图列切换"
                 },
                 backgroundColor: {
-                    l: "亮色",
-                    d: "暗色"
+                    l: "浅色",
+                    d: "深色"
                 }
             };
             break;
@@ -32087,6 +32113,7 @@ html,body {
         const style = createStyle(`
 #main {
     font-size: 14px;
+    line-height: 20px;
     font-family: Arial, sans-serif;
     text-align: left;
     color: black;
@@ -34880,7 +34907,7 @@ a[data-fancybox]:hover {
         if ("prev" in siteData) {
             const prev = siteData.prev;
             document.addEventListener("keydown", event => {
-                if (isOpenOptionsUI || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
+                if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                 if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
