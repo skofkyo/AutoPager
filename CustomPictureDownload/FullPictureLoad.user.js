@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.45
+// @version            2.11.46
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5632,7 +5632,7 @@ a:has(>div>div>img),
         },
         imgs: "img[variant='thumbnail']",
         button: [4],
-        insertImg: ["//div[@class='flex flex-col items-center'][div[div[a[img]]]] | //div[@class='flex flex-col items-center'][div[div[img]]]", 2],
+        insertImg: [".flex.flex-col.items-center:has(>.grid)", 2],
         customTitle: ".justify-between h2",
         category: "nsfw1"
     }, {
@@ -8963,6 +8963,17 @@ a:has(>div>div>img),
                 d: " — О, порно на DTF"
             });
         },
+        category: "nsfw2"
+    }, {
+        name: "Reddit",
+        url: {
+            h: "www.reddit.com"
+        },
+        SPA: () => document.URL.includes("/comments/"),
+        observerURL: true,
+        imgs: () => fn.getImgSrcset("gallery-carousel li>img"),
+        button: [4],
+        customTitle: "h1[id^='post-title']",
         category: "nsfw2"
     }, {
         name: "uCrazy",
@@ -13867,6 +13878,7 @@ a:has(>div>div>img),
         insertImg: [".entry-content", 2],
         endColor: "white",
         customTitle: ".entry-title",
+        hide: "div[class^=root][style]:has(video)",
         category: "hcomic"
     }, {
         name: "HENTAISET.COM閱讀頁 / HENTAIVID.NET閱讀頁",
@@ -14676,6 +14688,44 @@ a:has(>div>div>img),
         button: [4],
         insertImg: [".left>.image", 2],
         customTitle: ".box>h1",
+        category: "hcomic"
+    }, {
+        name: "爱漫画网 閱讀頁",
+        url: {
+            h: ["www.iimhw.com", "iimhw.com"],
+            p: "/chapter"
+        },
+        imgs: ".chapter-content img",
+        button: [4],
+        insertImg: [".chapter-content", 2],
+        next: "a#next_chap[href$=html]",
+        prev: "a#prev_chap[href$=html]",
+        customTitle: () => {
+            let tt = fn.gt(".truyen-title");
+            let ct = fn.gt(".chapter-title");
+            if (tt.toLowerCase() == ct.toLowerCase()) {
+                return ct;
+            } else {
+                return tt + " - " + ct;
+            }
+        },
+        category: "hcomic"
+    }, {
+        name: "爱漫画网 目錄頁",
+        url: {
+            h: ["www.iimhw.com", "iimhw.com"],
+            p: "/novel",
+            e: "#list-chapter"
+        },
+        init: () => fn.createImgBox("#list-chapter", 2),
+        imgs: () => {
+            let links = fn.gau("#list-chapter a");
+            return fn.getImgA(".chapter-content img", links);
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: "h1>a[title]>span",
         category: "hcomic"
     }, {
         name: "漫畫車 閱讀頁",
@@ -25125,7 +25175,7 @@ if ("xx" in window) {
             let imgs;
             isString(selector) ? imgs = fn.gae(selector, dom, dom) : imgs = selector;
             let srcs = imgs.map(ele => {
-                let srcset = ele.getAttribute("srcset");
+                let srcset = ele.getAttribute("srcset") || ele.getAttribute("data-lazy-srcset");
                 if (srcset && /[xw],/.test(srcset)) {
                     let splitArr = srcset.split(",").map(src => src.trim());
                     splitArr = splitArr.sort((a, b) => a.match(/\s([\d\.]+)(w|x)$/)[1] - b.match(/\s([\d\.]+)(w|x)$/)[1]);
@@ -28195,11 +28245,15 @@ if ("xx" in window) {
     };
 
     let v2ph_cookie = _GM_getValue("v2ph_cookie", "");
+    let myreadingmanga_cookie = _GM_getValue("myreadingmanga_cookie", "");
 
     //取得cookie
     const getCookie = () => {
         if (fn.lh.includes(".v2ph.")) {
             return v2ph_cookie;
+        }
+        if (fn.lh.includes("myreadingmanga")) {
+            return myreadingmanga_cookie;
         }
         return "";
     };
@@ -28498,6 +28552,19 @@ if ("xx" in window) {
                 v2ph_cookie = prompt("Set Cookie", v2ph_cookie || "");
                 if (!!v2ph_cookie) {
                     _GM_setValue("v2ph_cookie", v2ph_cookie);
+                }
+                return false;
+            }
+        }
+        if (fn.lh.includes("myreadingmanga")) {
+            const cookie = myreadingmanga_cookie;
+            if (!!cookie) {
+                return true;
+            } else {
+                alert("MyReadingManga download requires filling in cookie。");
+                myreadingmanga_cookie = prompt("Set Cookie", myreadingmanga_cookie || "");
+                if (!!myreadingmanga_cookie) {
+                    _GM_setValue("myreadingmanga_cookie", myreadingmanga_cookie);
                 }
                 return false;
             }
@@ -32439,6 +32506,9 @@ label.line-through:has(>#size) {
             ge("label:has(>#move)", main).remove();
             ge("#combineDownload", main).remove();
         }
+        if (!siteData.category?.includes("comic")) {
+            ge("#combineDownload", main)?.remove();
+        }
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
         }
@@ -35683,6 +35753,15 @@ html,body {
             v2ph_cookie = prompt("Set Cookie", v2ph_cookie || "");
             if (!!v2ph_cookie) {
                 _GM_setValue("v2ph_cookie", v2ph_cookie);
+            }
+        });
+    }
+
+    if (fn.lh.includes("myreadingmanga")) {
+        _GM_registerMenuCommand("🍪 Set MyReadingManga Cookie", () => {
+            myreadingmanga_cookie = prompt("Set Cookie", myreadingmanga_cookie || "");
+            if (!!myreadingmanga_cookie) {
+                _GM_setValue("myreadingmanga_cookie", myreadingmanga_cookie);
             }
         });
     }
