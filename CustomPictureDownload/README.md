@@ -5160,6 +5160,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://iimhw.com/">爱漫画网</a>
+                </td>
+                <td>
+                   目錄頁手動插入所有章節圖片
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://atm333.com/">凹凸漫</a>
                 </td>
                 <td>
