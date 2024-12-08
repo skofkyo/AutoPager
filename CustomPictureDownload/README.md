@@ -6325,6 +6325,24 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td></td>
             </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangapill.com/">Mangapill 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangatown.com/">MangaTown 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangahome.com/">MangaHome 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </details>
