@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.10
+// @version            2.6.11
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -490,8 +490,7 @@
                 "#root>div>div:has(>a)",
                 "//div[text()='Done']",
                 "#notice-react",
-                "#alert-confirm-react",
-                "#root~div[class]:not(.MuiDrawer-root)"
+                "#alert-confirm-react"
             ];
             remove(removeSelectors);
             document.body.style.filter = "";
@@ -528,7 +527,7 @@
         document.addEventListener("keydown", event => {
             if (ge("#mainHappymhConfigShadowElement")) return;
             if (event.code === "ArrowRight" || event.key === "ArrowRight") {
-                const nextE = ge("//a[span[text()='下一话' or text()='下一話'] and starts-with(@href,'/mangaread/')]");
+                const nextE = ge("//a[text()='下一话' or text()='下一話' and starts-with(@href,'/mangaread/')]");
                 if (isString(nextChapterUrl)) {
                     _unsafeWindow.location.href = nextChapterUrl;
                 } else if (nextE) {
@@ -538,7 +537,7 @@
                 }
             }
             if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
-                const prevE = ge("//a[span[text()='上一话' or text()='上一話'] and starts-with(@href,'/mangaread/')]");
+                const prevE = ge("//a[text()='上一话' or text()='上一話' and starts-with(@href,'/mangaread/')]");
                 if (isString(prevChapterUrl)) {
                     _unsafeWindow.location.href = prevChapterUrl;
                 } else if (prevE) {
@@ -553,8 +552,10 @@
     if (configs.doubleClick == 1 && isReadPage) {
         document.addEventListener("dblclick", () => {
             if (ge("#mainHappymhConfigShadowElement")) return;
-            const nextE = ge("footer a");
-            _unsafeWindow.location.href = nextE.href;
+            const nextE = ge("//a[text()='下一话' or text()='下一話' and starts-with(@href,'/mangaread/')]");
+            if (nextE) {
+                _unsafeWindow.location.href = nextE.href;
+            }
         });
     }
 
@@ -563,47 +564,20 @@
         console.log("嗨皮漫畫預讀全部圖片");
         preload(lp, "嗨皮漫畫本話數據\n");
         setTimeout(() => {
-            const nextE = ge("//span[@id and text()='下一话' or text()='下一話']/following-sibling::a[1][starts-with(@href,'/mangaread/')]");
+            const nextE = ge("//a[text()='下一话' or text()='下一話' and starts-with(@href,'/mangaread/')]");
             if (nextE) {
                 preload(nextE.pathname, "嗨皮漫畫下一話數據\n");
             }
         }, 3000);
     }
 
-    if (isReadPage) {
-        let selector;
-        if (configs.infiniteScroll == 1) {
-            selector = "footer";
-        } else {
-            selector = "#page-area";
-        }
-        await waitEle(selector);
-        new IntersectionObserver((entries, observer) => {
-            if (entries[0].isIntersecting) {
-                //observer.unobserve(entries[0].target);
-                const item = ge("footer>article>div:nth-child(2)");
-                gae("a", item).forEach(a => a.classList.add("MuiButton-containedPrimary"));
-                const [nextDiv, , prevDiv] = gae("footer div");
-                const nextA = ge("a", nextDiv);
-                const prevA = ge("a", prevDiv);
-                if (prevA?.href?.includes("/mangaread/")) {
-                    prevA.classList.add("MuiButton-containedPrimary");
-                }
-                if (nextA?.href?.includes("/readMore/")) {
-                    nextA.classList.remove("MuiButton-containedPrimary");
-                    nextA.firstChild.innerText = "^_^感谢您的阅读~已经没有下一话了哦~";
-                }
-            }
-        }).observe(ge(selector));
-    }
-
     if (configs.autoNext == 1 && isReadPage) {
-        await waitEle("//a[span[text()='下一话' or text()='下一話']]");
+        await waitEle("//a[text()='下一话' or text()='下一話']");
         let timeId;
         new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
                 timeId = setTimeout(() => {
-                    let nextE = ge("//a[span[text()='下一话' or text()='下一話'] and starts-with(@href,'/mangaread/')]");
+                    let nextE = ge("//a[text()='下一话' or text()='下一話' and starts-with(@href,'/mangaread/')]");
                     if (nextE) {
                         _unsafeWindow.location.href = nextE.href;
                     }
@@ -1118,9 +1092,8 @@ footer {
                     if (isEle(h6)) {
                         h6.innerText = nextDataJSon.chapter_name;
                     }
-                    const [nextDiv, , prevDiv] = gae("footer div");
-                    const nextA = ge("a", nextDiv);
-                    const prevA = ge("a", prevDiv);
+                    const nextA = ge("//a[text()='下一话' or text()='下一話' and starts-with(@href,'/mangaread/')]");
+                    const prevA = ge("//a[text()='上一话' or text()='上一話' and starts-with(@href,'/mangaread/')]");
                     const nextChapterData = allChapterListData[currentChapterIndex + 1];
                     if (nextChapterData === undefined) {
                         const nextUrl = "/manga/readMore/" + mangaCode;
