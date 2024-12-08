@@ -823,14 +823,14 @@ footer {
 
             div.insertAdjacentElement("beforeend", button1);
             const messageHtml = `
-<div id="message" class="MuiCardContent-root" style="padding: 3rem 16px; display: flex; flex-direction: column; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; text-align: center; min-height: 260px;width: 100%; background-color: rgb(255, 255, 255)">
-  <svg class="MuiSvgIcon-root MuiSvgIcon-colorAction MuiSvgIcon-fontSizeMedium" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="user-select: none; width: 1em;height: 1em; display: inline-block; fill: currentcolor;flex-shrink: 0; font-size: 1.5rem; color: rgba(0, 0, 0, 0.54); transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1)">
+<div id="message" class="MuiCardContent-root" style="padding: 3rem 16px; display: flex; flex-direction: column; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; text-align: center; min-height: 260px;width: 100%; background-color: rgb(255, 255, 255);">
+  <svg class="MuiSvgIcon-root MuiSvgIcon-colorAction MuiSvgIcon-fontSizeMedium" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="user-select: none; width: 1em;height: 1em; display: inline-block; fill: currentcolor;flex-shrink: 0; font-size: 1.5rem; color: rgba(0, 0, 0, 0.54); transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);">
     <path d="M21.99 2H2v16h16l4 4-.01-20zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"></path>
   </svg>
-  <h6 class="MuiTypography-root MuiTypography-h6" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 500; font-size: 1.25rem; line-height: 1.6; letter-spacing: 0.0075em">数据请求中...</h6>
+  <h6 class="MuiTypography-root MuiTypography-h6" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 500; font-size: 1.25rem; line-height: 1.6; letter-spacing: 0.0075em;">数据请求中...</h6>
 </div>`;
             div.insertAdjacentHTML("beforeend", messageHtml);
-            div.insertAdjacentHTML("beforeend", '<ul class="MuiList-root MuiList-padding" style="padding-left: 10px;"></ul>');
+            div.insertAdjacentHTML("beforeend", '<ul class="MuiList-root MuiList-padding" style="display: block; padding-left: 10px;"></ul>');
 
             const ul = ge("ul", div);
 
@@ -882,7 +882,7 @@ footer {
 
                             const subHtmls = item.sub_comments.map(sub => {
                                 return `
-                    <div class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary" style="word-break: break-all;">
+                    <div class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary" style="font-weight: normal; word-break: break-all;">
                         <span style="color: #673ab7;">${sub.user.username}</span>: ${sub.content}
                     </div>`;
                             }).join("");
@@ -894,18 +894,18 @@ footer {
                         }
 
                         liHtmls += `
-<li class="MuiListItem-root MuiListItem-alignItemsFlexStart" style="padding: 0 10px 0 0;">
-    <div class="MuiListItemText-root MuiListItemText-multiline">
-        <span class="MuiTypography-root MuiTypography-body1 MuiTypography-displayBlock" style="color: rgba(0, 0, 0, 0.87); font-weight: bolder;">${item.user.username}</span>
+<li class="MuiListItem-root MuiListItem-alignItemsFlexStart" style="display: block; padding: 0 10px 0 0;">
+    <div class="MuiListItemText-root MuiListItemText-multiline" style="flex: 1 1 auto; min-width: 0px; margin-top: 6px; margin-bottom: 6px; font-weight: bolder; color: rgba(0, 0, 0, 0.87);">
+        <span class="MuiTypography-root MuiTypography-body1 MuiTypography-displayBlock" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 1rem; line-height: 1.5; letter-spacing: 0.00938em; display: block; font-weight: bolder; color: rgba(0, 0, 0, 0.87);">${item.user.username}</span>
         <div class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock">
             <div class="MuiBox-root">
                 <div class="MuiBox-root">
-                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary MuiTypography-noWrap">章节: ${item.ch_name}</span>
+                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary MuiTypography-noWrap" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 400; font-size: 0.75rem; line-height: 1.66; letter-spacing: 0.03333em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgba(0, 0, 0, 0.6);">章节: ${item.ch_name}</span>
                     <br>
-                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary">${item.create_time}</span>
+                    <span class="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 400; font-size: 0.75rem; line-height: 1.66; letter-spacing: 0.03333em; color: rgba(0, 0, 0, 0.6);">${item.create_time}</span>
                 </div>
                 <div class="MuiBox-root">
-                    <p class="MuiTypography-root MuiTypography-body1" style="color: rgba(0, 0, 0, 0.87); word-break: break-all;">${item.content}</p>
+                    <p class="MuiTypography-root MuiTypography-body1" style="margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 400; font-size: 1rem; line-height: 1.5; letter-spacing: 0.00938em; color: rgba(0, 0, 0, 0.87); word-break: break-all;">${item.content}</p>
                 </div>
             </div>
             ${subHtml}
