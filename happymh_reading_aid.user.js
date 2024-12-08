@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.6.15
+// @version            2.6.16
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -576,6 +576,26 @@ div:has(>#page-area) {
                 preload(nextE.pathname, "嗨皮漫畫下一話數據\n");
             }
         }, 3000);
+    }
+
+    if (isReadPage) {
+        const selector = "#root footer";
+        await waitEle(selector);
+        new IntersectionObserver((entries, observer) => {
+            if (entries[0].isIntersecting) {
+                const nextA = ge("//a[text()='下一话' or text()='下一話']");
+                const prevA = ge("//a[text()='上一话' or text()='上一話']");
+                if (prevA?.href?.includes("/mangaread/")) {
+                    prevA.style.color = "rgb(255, 255, 255)";
+                    prevA.style.backgroundColor = "rgb(103, 58, 183)";
+                }
+                if (nextA?.href?.includes("/readMore/")) {
+                    nextA.style.color = "rgb(33, 33, 33)";
+                    nextA.style.backgroundColor = "rgb(245, 245, 245)";
+                    nextA.innerText = "^_^感谢您的阅读~已经没有下一话了哦~";
+                }
+            }
+        }).observe(ge(selector));
     }
 
     if (configs.autoNext == 1 && isReadPage) {
