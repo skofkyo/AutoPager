@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.0
+// @version            2.7.1
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -709,9 +709,6 @@ footer {
         let currentChapterId = localStorageHistory.read_chapter_id;
 
         let currentViewChapterId = currentChapterId;
-        let allChapterListData;
-        let currentChapterIndex = 0;
-        let lastChapterIndex;
         let infiniteScrollSwitch = true;
         let isOpenComments = false;
         const hiddenElementArray = [];
@@ -1064,10 +1061,10 @@ footer {
                 }
                 return src;
             });
-            if (srcs.length == 2 && currentChapterIndex < lastChapterIndex) {
+            if (srcs.length == 2 && ("next_cid" in data)) {
                 srcs = srcs.slice(0, -1);
             }
-            if (srcs.length > 2 && currentChapterIndex < lastChapterIndex) {
+            if (srcs.length > 2 && ("next_cid" in data)) {
                 srcs = srcs.slice(0, -2);
             }
             const imgs = srcs.map((src, i) => {
