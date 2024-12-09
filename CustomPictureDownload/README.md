@@ -1680,7 +1680,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.v2ph.com/">微圖坊</a>
                 </td>
                 <td>
-                    <a href="https://www.v2ph.net/">www.v2ph.net</a>， <a href="https://www.v2ph.ru/">www.v2ph.ru</a>， <a href="https://www.v2ph.ovh/">www.v2ph.ovh</a>，需註冊，大尺度非VIP只能抓到8~10張
+                    <a href="https://www.v2ph.net/">www.v2ph.net</a>， <a href="https://www.v2ph.ru/">www.v2ph.ru</a>， <a href="https://www.v2ph.ovh/">www.v2ph.ovh</a>，需註冊，大尺度非VIP只能抓到8~10張，下載需要填入Cookie，可參照V2PH取得Cookie說明，已填入Cookie卻下載錯誤代表Cookie過期，需要重新取得並再次填入新的Cookie。
                 </td>
             </tr>
             <tr>
@@ -3300,7 +3300,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://photo.camcam.cc/">photo.camcam.cc</a>
+                    <a href="https://xenxen.net/">Sexy Asian Girls Photos</a>
                 </td>
                 <td></td>
             </tr>
@@ -3800,6 +3800,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://sxypix.com/">SXYPIX</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.gayboystube.com/photos/">GayBoysTube</a>
                 </td>
                 <td></td>
             </tr>
@@ -4898,7 +4904,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://myreadingmanga.info/">MyReadingManga</a>
                 </td>
-                <td>作用在閱讀頁</td>
+                <td>作用在閱讀頁，下載需要填入Cookie，可參照V2PH取得Cookie說明，已填入Cookie卻下載錯誤代表Cookie過期，需要重新取得並再次填入新的Cookie。</td>
             </tr>
             <tr>
                 <td>
@@ -6225,10 +6231,16 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://comick.io/">Comick 英文漫畫</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mangasee123.com/">MangaSee 英文漫畫</a>
                 </td>
                 <td>
-                    <a href="https://manga4life.com/">MangaLife 英文漫畫</a>，SPA網頁
+                    <a href="https://manga4life.com/">MangaLife</a>，SPA網頁
                 </td>
             </tr>
             <tr>
@@ -6248,7 +6260,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hiperdex.com/">Hiperdex 英文漫畫</a>
                 </td>
                 <td>
-                    <a href="https://www.mangaread.org/">MangaRead 英文漫畫</a>
+                    <a href="https://www.mangaread.org/">MangaRead</a>，<a href="https://lhtranslation.net/">LHTranslation</a>，<a href="https://manhuaus.com/">MANHUAUS.COM</a>，<a href="https://novelmic.com/">Novelmic.com</a>，<a href="https://setsuscans.com/">Setsu Scans</a>，<a href="https://www.toongod.org/">ToonGod</a>
                 </td>
             </tr>
             <tr>
@@ -6268,7 +6280,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.mangahere.cc/">MangaHere 英文漫畫</a>
                 </td>
                 <td>
-                    <a href="https://fanfox.net/">Manga Fox 英文漫畫</a>
+                    <a href="https://fanfox.net/">Manga Fox</a>
                 </td>
             </tr>
             <tr>
@@ -6340,6 +6352,42 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.mangahome.com/">MangaHome 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.titaniascans.com/reader/">Titania Scanlations 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://assortedscans.com/">Assorted Scans 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://asuracomic.net/">Asura Scans 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://comic.nizamkomputer.com/">ComiCastle 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://disasterscans.com/">Disaster Scans 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhuaplus.org/home">Manhuaplus 英文漫畫</a>
                 </td>
                 <td></td>
             </tr>
