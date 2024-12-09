@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.47
+// @version            2.11.48
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -6574,8 +6574,8 @@ div[class*='backdrop-show'] {
         category: "nsfw2"
     }, {
         name: "photo.camcam.cc",
-        host: ["photo.camcam.cc"],
-        reg: /^https?:\/\/photo\.camcam\.cc\/[^/]+\/$/,
+        host: ["photo.camcam.cc", "xenxen.net"],
+        reg: /^https?:\/\/(photo\.camcam\.cc|xenxen\.net)\/[^/]+\/$/,
         init: () => fn.createImgBox(".entry-content"),
         imgs: "a.rgg-img",
         button: [4],
@@ -8757,6 +8757,21 @@ div[class*='backdrop-show'] {
         ],
         endColor: "white",
         customTitle: ".gall_title",
+        category: "nsfw2"
+    }, {
+        name: "GayBoysTube",
+        url: () => fn.checkUrl({
+            h: "www.gayboystube.com",
+            p: "/galleries/"
+        }),
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr("#tab5 img");
+            return thumbnailSrcArray.map(e => e.replace(/main\/\d+x\d+/, "sources"));
+        },
+        button: [4],
+        insertImg: ["#tab5", 2],
+        customTitle: "h1.title",
+        hide: ".content>.block-album",
         category: "nsfw2"
     }, {
         name: "ЯУстал",
@@ -17011,10 +17026,19 @@ div[class*='backdrop-show'] {
         customTitle: () => fn.title("Dynasty Reader » "),
         category: "comic"
     }, {
-        name: "Hiperdex/MangaRead",
+        name: "Hiperdex/MangaRead/LHTranslation/MANHUAUS.COM/Novelmic.com/Setsu Scans/ToonGod",
         url: {
-            h: ["hiperdex.com", "www.mangaread.org"],
-            p: /^\/manga\/[\w-]+\/chapter/
+            h: [
+                "hiperdex.com",
+                "www.mangaread.org",
+                "www.lhtranslation.net",
+                "lhtranslation.net",
+                "manhuaus.com",
+                "novelmic.com",
+                "setsuscans.com",
+                "www.toongod.org"
+            ],
+            p: /^\/(manga|comic|webtoon)\/[\w-]+\/chapter/
         },
         imgs: ".wp-manga-chapter-img",
         button: [4],
@@ -17023,6 +17047,33 @@ div[class*='backdrop-show'] {
         next: "a.next_page",
         prev: "a.prev_page",
         customTitle: "#chapter-heading",
+        category: "comic"
+    }, {
+        name: "Disaster Scans",
+        url: {
+            h: ["disasterscans.com"],
+            p: "-chapter-"
+        },
+        imgs: () => fn.getImgSrcset("section.container img[srcset]"),
+        autoDownload: [0],
+        next: "a[aria-description='next-button']",
+        prev: "a[aria-description='previous-button']",
+        customTitle: () => fn.title(" - Disaster Scans"),
+        category: "comic"
+    }, {
+        name: "Manhuaplus",
+        url: {
+            h: ["manhuaplus.org"],
+            p: /^\/manga\/[\w-]+\/chapter/
+        },
+        init: () => fn.waitEle("#chapterContent img[src^=http]"),
+        imgs: () => fn.gae("#chapterContent a.readImg"),
+        button: [4],
+        insertImg: ["#chapterContent", 2],
+        autoDownload: [0],
+        next: "a.nextBtn",
+        prev: "a.prevBtn",
+        customTitle: "h1",
         category: "comic"
     }, {
         name: "MangaSee/MangaLife",
@@ -17745,6 +17796,213 @@ div[class*='backdrop-show'] {
         hide: ".mangaread-pagenav",
         category: "comic"
     }, {
+        name: "Titania Scanlations",
+        url: {
+            h: "www.titaniascans.com",
+            p: "/reader/",
+            e: "#theManga"
+        },
+        imgs: () => _unsafeWindow.imageArray,
+        button: [4],
+        insertImg: ["#thePic", 2],
+        insertImgAF: (parent) => {
+            fn.gae("#theManga,#thePic").forEach(e => (e.style.width = ""));
+            fn.run("jQuery(document).unbind()");
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 7);
+            }
+        },
+        autoDownload: [0],
+        next: () => {
+            let [, optionsE] = fn.gae(".apple-selector-title+.options");
+            let chapters = fn.gae("a", optionsE);
+            let nextUrl = null;
+            chapters.some((e, i, a) => {
+                let lp = new URL(e.href).pathname;
+                if (lp == fn.lp) {
+                    if (a[i - 1] === undefined) {
+                        nextUrl = null;
+                    } else {
+                        nextUrl = a[i - 1].href;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            return nextUrl;
+        },
+        prev: 1,
+        customTitle: "#theHead h2",
+        hide: "#loadingbar",
+        category: "comic"
+    }, {
+        name: "Assorted Scans",
+        url: {
+            h: "assortedscans.com",
+            p: "/reader/",
+            e: "#page-image"
+        },
+        init: () => fn.createImgBox("#page-image", 2),
+        imgs: () => {
+            let max = Number(fn.gt(".curr-page").match(/\d+/g).at(-1));
+            if (max > 1) {
+                let url = fn.lp.slice(0, -2)
+                let links = fn.arr(max, (v, i) => url + `${i + 1}/`);
+                return fn.getImgA("#page-image", links);
+            } else {
+                return fn.gae("#page-image");
+            }
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#page-image,#controls,.page-list"], 2
+        ],
+        endColor: "white",
+        insertImgAF: (parent) => {
+            if (nextLink) {
+                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 2);
+            }
+        },
+        autoDownload: [0],
+        next: () => {
+            let chapters = fn.gae("#chapter .chapter-details>a");
+            let nextUrl = null;
+            chapters.some((e, i, a) => {
+                let lp = new URL(e.href).pathname;
+                if (lp == fn.lp.slice(0, -2)) {
+                    if (a[i - 1] === undefined) {
+                        nextUrl = null;
+                    } else {
+                        nextUrl = a[i - 1].href;
+                    }
+                    let text = fn.gt("#content h1 a").trim() + " - " + e.innerText;
+                    customTitle = text;
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            return nextUrl;
+        },
+        prev: 1,
+        category: "comic"
+    }, {
+        name: "Asura Scans",
+        url: {
+            h: ["www.asuracomic.net", "asuracomic.net"],
+            p: "/chapter/"
+        },
+        init: () => fn.waitEle("img[alt*='chapter']"),
+        imgs: () => fn.gae("img[alt*='chapter']"),
+        button: [4],
+        insertImg: ["div:has(>div>div>img[alt*='chapter'])", 2],
+        endColor: "white",
+        autoDownload: [0],
+        next: "//a[div[h2[text()='Next']]]",
+        prev: "//a[div[h2[text()='Prev']]]",
+        customTitle: "h2.text-xl",
+        category: "comic"
+    }, {
+        name: "ComiCastle",
+        url: {
+            h: "comic.nizamkomputer.com",
+            p: "/read/"
+        },
+        init: async () => {
+            await fn.waitEle(".form-control option:nth-child(1)");
+            if (fn.lp.includes("/pbp/")) {
+                fn.createImgBox(".card-content", 2);
+            } else {
+                fn.createImgBox(".swiper-default", 2);
+            }
+        },
+        imgs: () => {
+            if (fn.lp.includes("/swiper/")) {
+                return fn.gae(".swiper-wrapper img");
+            } else if (fn.lp.includes("/pbp/")) {
+                let url = fn.lp.replace("/pbp/", "/swiper/");
+                return fn.fetchDoc(url).then(dom => fn.gae(".swiper-wrapper img", dom));
+            } else {
+                return [];
+            }
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".card-content,.swiper-default"], 2
+        ],
+        autoDownload: [0],
+        next: () => {
+            let [control] = fn.gae(".form-control");
+            let chapters = fn.gae("option", control);
+            let nextUrl = null;
+            chapters.some((e, i, a) => {
+                if (e.value == fn.url) {
+                    if (a[i + 1] === undefined) {
+                        nextUrl = null;
+                    } else {
+                        nextUrl = a[i + 1].value;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            return nextUrl;
+        },
+        prev: 1,
+        customTitle: () => fn.dt({
+            d: [
+                "Comicastle | Read Pbp - ",
+                "Comicastle | Read Swiper - "
+            ]
+        }),
+        category: "comic"
+    }, {
+        name: "Comick",
+        url: {
+            h: /^comick\.io$/
+        },
+        SPA: () => document.URL.includes("-chapter-"),
+        observerURL: true,
+        imgs: () => {
+            if (_this.SPA()) {
+                fn.showMsg(displayLanguage.str_05, 0);
+                const [chapter_id] = document.location.pathname.split("/").at(-1).split("-");
+                return fetch(`https://api.comick.io/chapter/${chapter_id}`).then(res => res.json()).then(json => {
+                    nextLink = json.next?.href;
+                    let textArr = json.seoTitle.split(" - ");
+                    customTitle = textArr[1] + " - " + textArr[0];
+                    return json.chapter.md_images.map(e => `https://meo.comick.pictures/${e.b2key}`);
+                });
+            } else {
+                return [];
+            }
+        },
+        category: "comic"
+    }, {
+        name: "LynxScans",
+        url: {
+            h: ["www.lynxscans.com", "lynxscans.com"]
+        },
+        SPA: () => document.URL.includes("-chapter-"),
+        observerURL: true,
+        imgs: () => {
+            if (_this.SPA()) {
+                fn.showMsg(displayLanguage.str_05, 0);
+                const [chapter_id] = document.location.pathname.split("/").at(-1).split("-");
+                return fetch(`https://api.comick.io/chapter/${chapter_id}`).then(res => res.json()).then(json => {
+                    nextLink = json.next?.href;
+                    let textArr = json.seoTitle.split(" - ");
+                    customTitle = textArr[1] + " - " + textArr[0];
+                    return json.chapter.md_images.map(e => `https://meo.comick.pictures/${e.b2key}`);
+                });
+            } else {
+                return [];
+            }
+        },
+        category: "comic"
+    }, {
         name: "嗨皮漫畫閱讀",
         enable: 0,
         url: {
@@ -17753,8 +18011,8 @@ div[class*='backdrop-show'] {
         },
         exclude: ".captcha-area",
         fetchJson: (url = siteUrl) => {
-            let [, , mangaCode, id] = new URL(url).pathname.split("/");
-            let api = `/v2.0/apis/manga/reading?code=${mangaCode}&cid=${id}&v=v3.1613134`;
+            let mangaCode = new URL(url).pathname.split("/").at(-1);
+            let api = `/v2.0/apis/manga/reading?code=${mangaCode}&v=v3.1818134`;
             return fetch(api, {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
@@ -17768,23 +18026,6 @@ div[class*='backdrop-show'] {
             debug("\n此頁JSON資料\n", json);
             siteJson = json;
             fn.picPreload(json.data.scans.map(e => e.url), json.data.manga_name + " - " + json.data.chapter_name);
-            if (await fn.waitEle("#page-area")) {
-                new IntersectionObserver((entries, observer) => {
-                    if (entries[0].isIntersecting) {
-                        observer.unobserve(entries[0].target);
-                        let f = ge("footer>article");
-                        let item = ge("footer>article>div:nth-child(2)");
-                        item.querySelectorAll("a").forEach(a => a.classList.add("MuiButton-containedPrimary"));
-                        let p = gx("//a[span[text()='上一话' or text()='上一話'] and contains(@href,'/mangaread/')]");
-                        if (p) p.classList.add("MuiButton-containedPrimary");
-                        let n = gx("//a[span[text()='下一话' or text()='下一話'] and contains(@href,'/readMore/')]");
-                        if (n) {
-                            n.classList.remove("MuiButton-containedPrimary");
-                            n.firstChild.innerText = "^_^感谢您的阅读~已经没有下一话了哦~";
-                        }
-                    }
-                }).observe(ge('#page-area'));
-            }
             await fn.waitEle("footer a[href^='/mangaread/'],footer a[href^='/readMore/']");
         },
         imgs: () => siteJson.status == 0 ? siteJson.data.scans.map(e => e.url) : [],
@@ -17799,30 +18040,6 @@ div[class*='backdrop-show'] {
             let json = await obj.fetchJson(nextLink);
             json.status == 0 ? fn.picPreload(json.data.scans.map(e => e.url), json.data.manga_name + " - " + json.data.chapter_name, "next") : debug("預讀下一頁失敗");
         },
-        css: "footer>article>div{padding: 0.5rem 0 !important}",
-        category: "comic"
-    }, {
-        name: "嗨皮漫畫展開目錄",
-        reg: /^https?:\/\/m\.happymh\.com\/manga\//,
-        enable: 0,
-        icon: 0,
-        key: 0,
-        init: () => {
-            window.addEventListener("load", async () => {
-                await delay(1000);
-                if (fn.ge("//div[contains(text(),'给本王显示全部章节')]")) {
-                    EClick("#expandButton");
-                }
-            });
-        },
-        category: "comic"
-    }, {
-        name: "嗨皮漫畫，連結新分頁開啟",
-        reg: /^https?:\/\/m\.happymh\.com\//,
-        enable: 0,
-        icon: 0,
-        key: 0,
-        openInNewTab: ".home-banner a:not([target=_blank]),.manga-rank a:not([target=_blank]),.manga-cover a:not([target=_blank])",
         category: "comic"
     }, {
         name: "COLAMANHUA", //方向鍵上一章下一章、反反偵錯，下載需先手動觸發全部載入圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。
@@ -23119,7 +23336,16 @@ if ("xx" in window) {
             h: "mp.weixin.qq.com",
             p: /^\/[^&]+&mid=\d+/
         },
-        imgs: "img.js_insertlocalimg",
+        imgs: "img.js_insertlocalimg,img.wxw-img",
+        category: "comic"
+    }, {
+        name: "微信公众号",
+        enable: 1,
+        url: {
+            h: "mp.weixin.qq.com",
+            s: "sn="
+        },
+        imgs: "img.js_insertlocalimg,img.wxw-img",
         category: "comic"
     }, {
         name: "虎扑社区",
@@ -27608,6 +27834,9 @@ if ("xx" in window) {
                     break;
                 case 6:
                     fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:#b5d540;border:solid #b5d540;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
+                    break;
+                case 7:
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:#65415f;border:solid #65415f;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
                     break;
             }
         },
