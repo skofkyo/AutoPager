@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.3
+// @version            2.7.4
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -265,8 +265,8 @@
             preloadDiv.style.display = "none";
             document.body.append(preloadDiv);
         }
-        const mangaCode = pn.split("/").at(-1);
-        const apiUrl = `/v2.0/apis/manga/reading?code=${mangaCode}&v=v3.1818134`;
+        const chapterCode = pn.split("/").at(-1);
+        const apiUrl = `/v2.0/apis/manga/reading?code=${chapterCode}&v=v3.1818134`;
         fetch(apiUrl, getHeaders()).then(res => res.json()).then(async jsonData => {
             try {
                 if (jsonData.status == 0) {
@@ -858,17 +858,17 @@ footer {
             });
             document.body.append(div);
 
-            const button1 = document.createElement("button");
-            button1.className = "close-comments";
-            button1.innerText = i18n.button.closeComments;
-            button1.style.marginTop = "10px";
-            button1.style.marginLeft = "10px";
-            button1.addEventListener("click", () => {
+            const topButton = document.createElement("button");
+            topButton.className = "close-comments";
+            topButton.innerText = i18n.button.closeComments;
+            topButton.style.marginTop = "10px";
+            topButton.style.marginLeft = "10px";
+            topButton.addEventListener("click", () => {
                 div.remove();
                 isOpenComments = false;
             });
 
-            div.insertAdjacentElement("beforeend", button1);
+            div.insertAdjacentElement("beforeend", topButton);
             const messageHtml = `
 <div id="message" class="MuiCardContent-root" style="padding: 3rem 16px; display: flex; flex-direction: column; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; text-align: center; min-height: 260px;width: 100%; background-color: rgb(255, 255, 255);">
   <svg class="MuiSvgIcon-root MuiSvgIcon-colorAction MuiSvgIcon-fontSizeMedium" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="user-select: none; width: 1em;height: 1em; display: inline-block; fill: currentcolor;flex-shrink: 0; font-size: 1.5rem; color: rgba(0, 0, 0, 0.54); transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);">
@@ -981,16 +981,16 @@ footer {
                 return;
             }
 
-            const button2 = document.createElement("button");
-            button2.className = "close-comments";
-            button2.innerText = i18n.button.closeComments;
-            button2.style.marginBottom = "100px";
-            button2.style.marginLeft = "10px";
-            button2.addEventListener("click", () => {
+            const bottomButton = document.createElement("button");
+            bottomButton.className = "close-comments";
+            bottomButton.innerText = i18n.button.closeComments;
+            bottomButton.style.marginBottom = "100px";
+            bottomButton.style.marginLeft = "10px";
+            bottomButton.addEventListener("click", () => {
                 div.remove();
                 isOpenComments = false;
             });
-            div.insertAdjacentElement("beforeend", button2);
+            div.insertAdjacentElement("beforeend", bottomButton);
         };
 
         const createPageElement = (data, isFirst = 0) => {
@@ -1140,20 +1140,20 @@ footer {
                     }
                     const nextA = ge("//a[text()='下一话' or text()='下一話'][starts-with(@href,'/mangaread/')]");
                     const prevA = ge("//a[text()='上一话' or text()='上一話'][starts-with(@href,'/mangaread/')]");
-                    if (!("next_cid" in currentData)) {
-                        const nextUrl = "/manga/readMore/" + mangaCode;
-                        nextChapterUrl = null;
-                        if (isEle(nextA)) {
-                            nextA.href = nextUrl;
-                        }
-                    } else {
+                    if ("next_cid" in currentData) {
                         const nextUrl = "/mangaread/" + currentData.next_cid;
                         nextChapterUrl = nextUrl;
                         if (isEle(nextA)) {
                             nextA.href = nextUrl;
                         }
-                        if (configs.preload == 1 && ("next_cid" in currentData)) {
+                        if (configs.preload == 1) {
                             preloadNext(currentData.next_cid);
+                        }
+                    } else {
+                        const nextUrl = "/manga/readMore/" + mangaCode;
+                        nextChapterUrl = null;
+                        if (isEle(nextA)) {
+                            nextA.href = nextUrl;
                         }
                     }
                     if ("pre_cid" in currentData) {
@@ -1202,16 +1202,16 @@ footer {
                 const targetElement = ge("article");
                 targetElement.insertAdjacentElement("beforebegin", firstE.cloneNode(true));
             }
-            createPageElement(readData, 1);
             currentData = readData;
+            createPageElement(currentData, 1);
             if ("next_cid" in currentData) {
                 preloadNext(currentData.next_cid);
             }
 
-            const button = document.createElement("button");
-            button.id = "open-comments";
-            button.innerText = i18n.button.openComments;
-            Object.assign(button.style, {
+            const commentsButton = document.createElement("button");
+            commentsButton.id = "open-comments";
+            commentsButton.innerText = i18n.button.openComments;
+            Object.assign(commentsButton.style, {
                 fontSize: "1rem",
                 color: "#fff",
                 borderStyle: "solid",
@@ -1226,18 +1226,18 @@ footer {
                 zIndex: "9999",
                 display: "none"
             });
-            document.body.append(button);
-            button.addEventListener("click", () => createComments());
+            document.body.append(commentsButton);
+            commentsButton.addEventListener("click", () => createComments());
 
             let lastScrollTop = 0;
             document.addEventListener("scroll", event => {
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
-                    button.style.display = "none";
+                    commentsButton.style.display = "none";
                     lastScrollTop = st;
                 } else if (st < lastScrollTop - 40) {
-                    button.style.left = (ge(".MuiContainer-root").offsetLeft + 24) + "px";
-                    button.style.display = "";
+                    commentsButton.style.left = (ge(".MuiContainer-root").offsetLeft + 24) + "px";
+                    commentsButton.style.display = "";
                     lastScrollTop = st;
                 }
             });
