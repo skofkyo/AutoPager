@@ -6231,7 +6231,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://comick.io/">Comick 英文漫畫</a>
+                    <a href="https://comick.io/home2">Comick 英文漫畫</a>
                 </td>
                 <td>SPA網頁</td>
             </tr>
@@ -6388,6 +6388,74 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://manhuaplus.org/home">Manhuaplus 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://demonicscans.org/">MangaDemon 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangahub.io/">MangaHub 英文漫畫</a>
+                </td>
+                <td>手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://realmoasis.com/">Realm Oasis 英文漫畫</a>
+                </td>
+                <td>
+                    <a href="https://hivetoon.com/">Void Scans</a>，<a href="https://nightsup.net/">Night Scans</a>，<a href="https://tercocomic.xyz/">Terco Scans</a>，<a href="https://luascans.com/">Lua Scans</a>，<a href="https://drakecomic.org/">Drake Scans</a>，<a href="https://rizzfables.com/">Rizz Fables</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangatoon.mobi/">MangaToons 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mgeko.cc/">MangaGeko 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ninemanga.com/">NineManga 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://readcomicsonline.ru/">ReadComicsOnline 英文漫畫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.reaperscans.com/">ReaperScans 英文漫畫</a>
+                </td>
+                <td>SPA網頁，手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.vortexscans.org/">Vortex Scans 英文漫畫</a>
+                </td>
+                <td>SPA網頁，手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://zscans.com/">ZeroScans 英文漫畫</a>
+                </td>
+                <td>SPA網頁，手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.novatoscans.top/">NOVATO SCANS 葡萄牙文</a>
                 </td>
                 <td></td>
             </tr>
