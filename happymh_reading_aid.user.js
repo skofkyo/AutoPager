@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.2
+// @version            2.7.3
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -828,9 +828,9 @@ footer {
             }
         };
 
-        const addBrowsingHistory = data => {
-            const title = data.manga_name + " - " + data.chapter_name + "——嗨皮漫画";
-            const url = document.URL.replace(/\d+$/, data.id);
+        const addBrowsingHistory = (data, id) => {
+            const title = data.manga_name + " - " + data.chapter_name + " - 嗨皮漫画";
+            const url = "https://m.happymh.com/mangaread/" + id;
             history.pushState(null, title, url);
             document.title = title;
         };
@@ -1122,7 +1122,8 @@ footer {
 
         const infiniteScroll = async () => {
             if ("next_cid" in currentData) {
-                const nextDataJSon = await getReadData(currentData.next_cid, 1);
+                const cid = currentData.next_cid;
+                const nextDataJSon = await getReadData(cid, 1);
                 if (nextDataJSon == "ERROR") {
                     alert(i18n.tips.apiError);
                     return;
@@ -1131,7 +1132,7 @@ footer {
                     currentData = nextDataJSon;
                     createPageElement(currentData);
                     if (configs.history == 1) {
-                        addBrowsingHistory(currentData);
+                        addBrowsingHistory(currentData, cid);
                     }
                     const h6 = ge("#root h6");
                     if (isEle(h6)) {
