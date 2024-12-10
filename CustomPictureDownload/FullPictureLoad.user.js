@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.48
+// @version            2.11.49
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2401,10 +2401,11 @@ div[class*='backdrop-show'] {
             }
             fn.clearAllTimer();
         },
-        imgs: () => fn.getImgA(".article-content img", ".post-nav-links a"),
+        imgs: () => fn.getImgA(".article-content img:not(#ad-image,[alt=close])", ".post-nav-links a"),
         button: [4],
         insertImg: [".article-content", 2],
         customTitle: ".article-title",
+        hide: "#ads",
         category: "nsfw1"
     }, {
         name: "美女图册",
@@ -8764,9 +8765,14 @@ div[class*='backdrop-show'] {
             h: "www.gayboystube.com",
             p: "/galleries/"
         }),
+        init: () => {
+            if (hasTouchEvent) {
+                fn.addMutationObserver(() => fn.remove(".after_header"));
+            }
+        },
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr("#tab5 img");
-            return thumbnailSrcArray.map(e => e.replace(/main\/\d+x\d+/, "sources"));
+            return thumbnailSrcArray.map(e => e.replace(/main\/\d+x\d+/, "sources").replace("thumbs/", ""));
         },
         button: [4],
         insertImg: ["#tab5", 2],
@@ -16818,15 +16824,24 @@ div[class*='backdrop-show'] {
             e: "#pic_container",
             d: "pc"
         },
-        init: async () => {
+        init: () => {
             fn.clearAllTimer();
             fn.createImgBox("#pic_container", 1, 1000);
-            fn.remove("#pic_container");
-            await fn.getEleF("#pagenavigation a", "#pic_container img", ["#FullPictureLoadMainImgBox", 0]);
         },
-        imgs: () => fn.gae("#FullPictureLoadMainImgBox img"),
+        imgs: () => {
+            let CryptoJS = _unsafeWindow.CryptoJS;
+            let key = CryptoJS.enc.Hex.parse("e11adc3949ba59abbe56e057f20f883e");
+            let iv = CryptoJS.enc.Hex.parse("1234567890abcdef1234567890abcdef");
+            let opinion = {
+                iv,
+                padding: CryptoJS.pad.ZeroPadding
+            };
+            return CryptoJS.AES.decrypt(_unsafeWindow.imgsrcs, key, opinion).toString(CryptoJS.enc.Utf8).split(",");
+        },
         button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 0],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#pic_container"], 2
+        ],
         endColor: "white",
         next: () => {
             if (fn.lp.includes("/chapter/")) {
@@ -17890,7 +17905,7 @@ div[class*='backdrop-show'] {
     }, {
         name: "Asura Scans",
         url: {
-            h: ["www.asuracomic.net", "asuracomic.net"],
+            h: "asuracomic.net",
             p: "/chapter/"
         },
         init: () => fn.waitEle("img[alt*='chapter']"),
@@ -17907,7 +17922,8 @@ div[class*='backdrop-show'] {
         name: "ComiCastle",
         url: {
             h: "comic.nizamkomputer.com",
-            p: "/read/"
+            p: "/read/",
+            d: "pc"
         },
         init: async () => {
             await fn.waitEle(".form-control option:nth-child(1)");
@@ -17981,26 +17997,217 @@ div[class*='backdrop-show'] {
         },
         category: "comic"
     }, {
-        name: "LynxScans",
+        name: "MangaDemon",
         url: {
-            h: ["www.lynxscans.com", "lynxscans.com"]
+            h: ["www.demonicscans.org", "demonicscans.org"],
+            p: "/chapter/"
         },
-        SPA: () => document.URL.includes("-chapter-"),
-        observerURL: true,
+        init: () => fn.createImgBox(".main-width .chapter-info", 1),
+        imgs: ".imgholder:not([src*='free_ads'])",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".main-width>*:not(#FullPictureLoadMainImgBox,.chapter-info,center)"], 2
+        ],
+        autoDownload: [0],
+        next: "a.nextchap",
+        prev: "a.prevchap",
+        hide: "#teaser3",
+        category: "comic"
+    }, {
+        name: "MangaHub",
+        url: {
+            h: "mangahub.io",
+            p: "/chapter/"
+        },
+        init: () => fn.waitEle("#select-chapter"),
         imgs: () => {
-            if (_this.SPA()) {
-                fn.showMsg(displayLanguage.str_05, 0);
-                const [chapter_id] = document.location.pathname.split("/").at(-1).split("-");
-                return fetch(`https://api.comick.io/chapter/${chapter_id}`).then(res => res.json()).then(json => {
-                    nextLink = json.next?.href;
-                    let textArr = json.seoTitle.split(" - ");
-                    customTitle = textArr[1] + " - " + textArr[0];
-                    return json.chapter.md_images.map(e => `https://meo.comick.pictures/${e.b2key}`);
-                });
-            } else {
-                return [];
+            let cArr = document.cookie.split(";").map(e => e.trim());
+            let cookieObj = {};
+            for (let c of cArr) {
+                let [k, v] = c.split("=");
+                cookieObj[k] = v;
             }
+            let mhub_access = cookieObj.mhub_access;
+            let slug = _unsafeWindow.CURRENT_MANGA_SLUG ?? fn.lp.split("/")[2];
+            let number = fn.lp.split("/")[3].replace("chapter-", "");
+            let data = {
+                query: `{chapter(x:m01,slug:"${slug}",number:${number}){pages}}`,
+            };
+            return fetch("https://api.mghcdn.com/graphql", {
+                "headers": {
+                    "Content-Type": "application/json",
+                    "x-mhub-access": mhub_access ?? ""
+                },
+                "body": JSON.stringify(data),
+                "method": "POST"
+            }).then(res => res.json()).then(json => {
+                let pages = JSON.parse(json.data.chapter.pages);
+                return pages.i.map(i => `https://imgx.mghcdn.com/${pages.p + i}`);
+            });
         },
+        autoDownload: [0],
+        next: ".next a",
+        prev: ".previous a",
+        category: "comic"
+    }, {
+        name: "Realm Oasis/Voids-Scans/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables",
+        url: {
+            h: [
+                "realmoasis.com",
+                "hivetoon.com",
+                "nightsup.net",
+                "tercocomic.xyz",
+                "luascans.com",
+                "drakecomic.org",
+                "rizzfables.com"
+            ]
+        },
+        init: () => fn.addMutationObserver(() => fn.remove("#radio_content,#teaserbottom")),
+        imgs: "#readerarea img[class*='wp-image'],#readerarea .ts-main-image,#readerarea img[loading]",
+        button: [4],
+        insertImg: ["#readerarea", 2],
+        autoDownload: [0],
+        next: "a.ch-next-btn",
+        prev: "a.ch-prev-btn",
+        hide: ".ver-src.chapter,.blox",
+        customTitle: ".entry-title",
+        category: "comic"
+    }, {
+        name: "NOVATO SCANS", //葡萄牙文
+        url: {
+            h: "www.novatoscans.top",
+            p: "capitulo"
+        },
+        imgs: ".check-box img",
+        button: [4],
+        insertImg: [".check-box", 2],
+        autoDownload: [0],
+        next: "//a[span[text()='Next']]",
+        prev: "//a[span[text()='Prev']]",
+        customTitle: "h1",
+        category: "comic"
+    }, {
+        name: "MangaToons",
+        url: {
+            h: "mangatoon.mobi",
+            p: "/watch/",
+            e: ".episode"
+        },
+        init: () => fn.waitEle(".pictures img:not(.cover)"),
+        imgs: ".pictures img:not(.cover)",
+        button: [4],
+        insertImg: [".pictures", 2],
+        autoDownload: [0],
+        next: ".page-icons-next",
+        prev: ".page-icons-prev",
+        customTitle: () => fn.dt({
+            t: fn.gt(".title") + " - " + fn.gt(".episode")
+        }),
+        category: "comic"
+    }, {
+        name: "MangaGeko",
+        url: {
+            h: "www.mgeko.cc",
+            p: "/reader/"
+        },
+        init: () => fn.addMutationObserver(() => fn.remove("#radio_content")),
+        imgs: "#chapter-reader img",
+        button: [4],
+        insertImg: ["#chapter-reader", 2],
+        autoDownload: [0],
+        next: ".chnav.next[href^='/reader/']",
+        prev: ".chnav.prev[href^='/reader/']",
+        customTitle: () => fn.title("Manga: "),
+        hide: "center:has(>#chapter-reader)>*:not(#chapter-reader),.chapternav+div[style]",
+        category: "comic"
+    }, {
+        name: "NineManga",
+        url: {
+            h: "ninemanga.com",
+            p: "/chapter/",
+            d: "pc"
+        },
+        imgs: () => {
+            let page = fn.ge("#page");
+            let links = fn.gae("option", page).map(e => e.value);
+            return fn.getImgA(".manga_pic", links);
+        },
+        button: [4],
+        insertImg: ["center:has(>.viwer)", 2],
+        autoDownload: [0],
+        next: () => {
+            let next = fn.ge("//select[@id='chapter']/option[@selected]/preceding-sibling::option[1]");
+            return next ? next.value : null
+        },
+        prev: "//select[@id='chapter']/option[@selected]/following-sibling::option[1]",
+        customTitle: () => fn.dt({
+            d: /page 1.+$/
+        }),
+        category: "comic"
+    }, {
+        name: "ReadComicsOnline",
+        url: {
+            h: "readcomicsonline.ru",
+            p: "/comic/"
+        },
+        imgs: "#all img",
+        button: [4],
+        insertImg: [".imagecnt", 2],
+        autoDownload: [0],
+        next: () => _unsafeWindow.next_chapter ? _unsafeWindow.next_chapter : null,
+        prev: 1,
+        customTitle: () => fn.dt({
+            d: " - Page 1"
+        }),
+        category: "comic"
+    }, {
+        name: "ReaperScans",
+        url: {
+            h: "reaperscans.com",
+            p: "/chapter"
+        },
+        SPA: true,
+        init: () => fn.waitEle("#content .container img:not(.rounded)"),
+        imgs: () => fn.gae("#content .container img:not(.rounded)"),
+        autoDownload: [0],
+        next: "a:has(>button>.fa-chevron-right)",
+        prev: "a:has(>button>.fa-chevron-left)",
+        customTitle: () => fn.dt({
+            d: " - Reaper Scans"
+        }),
+        category: "comic"
+    }, {
+        name: "Vortex Scans",
+        url: {
+            h: "vortexscans.org",
+            p: "/chapter"
+        },
+        SPA: true,
+        init: () => fn.waitEle("img[alt*='Chapter']"),
+        imgs: () => fn.gae("img[alt*='Chapter']"),
+        autoDownload: [0],
+        next: "//a[button[div[p[text()='Next']]]][starts-with(@href,'/series/')]",
+        prev: "//a[button[div[p[text()='Prev']]]][starts-with(@href,'/series/')]",
+        customTitle: () => fn.dt({
+            d: " - Vortex Scans"
+        }),
+        category: "comic"
+    }, {
+        name: "ZeroScans",
+        url: {
+            h: "zscans.com",
+            p: /^\/comics\/[\w-]+\/\d+$/
+        },
+        SPA: true,
+        init: () => fn.waitVar("__ZEROSCANS__"),
+        imgs: () => _unsafeWindow.__ZEROSCANS__.data.at(0).current_chapter.high_quality,
+        autoDownload: [0],
+        next: "//a[span[div[small[text()='next']]]]",
+        prev: "//a[span[div[small[text()='prev']]]]",
+        customTitle: () => fn.dt({
+            s: ".v-breadcrumbs",
+            d: "Comics"
+        }),
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -27127,6 +27334,7 @@ if ("xx" in window) {
                 dt.forEach(r => (str = str?.replace(r, "")));
             }
             str = str?.replace(/[\/\s]?[\(\[［（【“]\d+[\w\s\\\/\.\+-／]+[\)\]］）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "")
+                .replace(/\n/g, " ")
                 .replace(/\s\|/g, "")
                 .replace(/\:/g, "：")
                 .replace(/\*/g, "＊")
@@ -27137,7 +27345,7 @@ if ("xx" in window) {
                 .replace(/\|/g, "｜")
                 .replace(/\//g, "／")
                 .replace(/\\/g, "＼")
-                .replace(/\s{2,3}/g, " ")
+                .replace(/\s{2,5}/g, " ")
                 .trim();
             return str;
         },
@@ -33035,6 +33243,9 @@ label.line-through:has(>#size) {
             s: "title"
         });
         ge("#inputTitle", main).value = (customTitle || titleReplace);
+        if (("SPA" in siteData) && ("customTitle" in siteData)) {
+            ge("#inputTitle", main).value = await getTitle(siteData.customTitle);
+        }
         gae("#close", main).forEach(button => {
             button.addEventListener("click", () => {
                 fn.remove("#overflowYHidden");
