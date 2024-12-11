@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.4
+// @version            2.7.5
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -34,7 +34,7 @@
         arrowKey: 1, //鍵盤左右方向鍵切換章節。
         doubleClick: 0, //雙擊前往下一話，方便手機使用。
         preload: 1, //閱讀頁預讀全部圖片，並且嘗試預讀下一話圖片。
-        autoReload: 1, //重新載入出錯的圖片
+        autoReload: 1, //重新載入出錯的圖片。
         autoNext: 0, //下一話按鈕完全進入視口可視範圍內後自動下一話。
         autoNextSec: 1, //下一話按鈕完全進入視口可視範圍內後自動下一話的延遲秒數。
         autoShowAll: 0, //目錄頁自動展開全部章節。
@@ -56,13 +56,17 @@
     switch (language) {
         case "zh-TW":
         case "zh-HK":
+        case "zh-MO":
         case "zh-Hant-TW":
         case "zh-Hant-HK":
+        case "zh-Hant-MO":
             scriptLanguage = "TW";
             break;
         case "zh":
         case "zh-CN":
+        case "zh-SG":
         case "zh-Hans-CN":
+        case "zh-Hans-SG":
             scriptLanguage = "CH";
             break;
         default:
@@ -101,6 +105,7 @@
                     settings: "設定"
                 },
                 button: {
+                    nextChapter: "下一話",
                     openComments: "開啟評論",
                     closeComments: "關閉評論"
                 }
@@ -136,6 +141,7 @@
                     settings: "设置"
                 },
                 button: {
+                    nextChapter: "下一话",
                     openComments: "打开评论",
                     closeComments: "关闭评论"
                 }
@@ -171,6 +177,7 @@
                     settings: "settings"
                 },
                 button: {
+                    nextChapter: "Next Chapter",
                     openComments: "Open Comments",
                     closeComments: "Close Comments"
                 }
@@ -1050,7 +1057,7 @@ footer {
                 }
 
                 titleObserver.observe(title);
-                fragment.append(title); // 將標題添加到文檔片段中
+                fragment.append(title);
             }
             let srcs = data.scans.map(obj => {
                 let src;
@@ -1138,11 +1145,16 @@ footer {
                     if (isEle(h6)) {
                         h6.innerText = currentData.chapter_name;
                     }
+                    const menuNextA = ge("//span[text()='下一话' or text()='下一話']/following-sibling::a[1][starts-with(@href,'/mangaread/')]");
+                    const menuPrevA = ge("//span[text()='上一话' or text()='上一話']/following-sibling::a[1][starts-with(@href,'/mangaread/')]");
                     const nextA = ge("//a[text()='下一话' or text()='下一話'][starts-with(@href,'/mangaread/')]");
                     const prevA = ge("//a[text()='上一话' or text()='上一話'][starts-with(@href,'/mangaread/')]");
                     if ("next_cid" in currentData) {
                         const nextUrl = "/mangaread/" + currentData.next_cid;
                         nextChapterUrl = nextUrl;
+                        if (isEle(menuNextA)) {
+                            menuNextA.href = nextUrl;
+                        }
                         if (isEle(nextA)) {
                             nextA.href = nextUrl;
                         }
@@ -1152,6 +1164,9 @@ footer {
                     } else {
                         const nextUrl = "/manga/readMore/" + mangaCode;
                         nextChapterUrl = null;
+                        if (isEle(menuNextA)) {
+                            menuNextA.href = nextUrl;
+                        }
                         if (isEle(nextA)) {
                             nextA.href = nextUrl;
                         }
@@ -1159,6 +1174,9 @@ footer {
                     if ("pre_cid" in currentData) {
                         const prevUrl = "/mangaread/" + currentData.pre_cid;
                         prevChapterUrl = prevUrl;
+                        if (isEle(menuPrevA)) {
+                            menuPrevA.href = prevUrl;
+                        }
                         if (isEle(prevA)) {
                             prevA.href = prevUrl;
                         }
@@ -1193,7 +1211,7 @@ footer {
                     hiddenElementArray.push(e);
                 }
             });
-            gae("#root>div>div").forEach(e => {
+            gae("#root>div>div:not(.MuiBox-root)").forEach(e => {
                 e.style.display = "none";
                 hiddenElementArray.push(e);
             });
@@ -1208,11 +1226,10 @@ footer {
                 preloadNext(currentData.next_cid);
             }
 
-            const commentsButton = document.createElement("button");
-            commentsButton.id = "open-comments";
-            commentsButton.innerText = i18n.button.openComments;
-            Object.assign(commentsButton.style, {
+            const buttonStyle = {
                 fontSize: "1rem",
+                fontFamily: "Microsoft YaHei, Arial, sans-serif",
+                padding: "2px 6px 4px 6px",
                 color: "#fff",
                 borderStyle: "solid",
                 borderColor: "#673ab7",
@@ -1221,22 +1238,53 @@ footer {
                 left: "24px",
                 right: "auto",
                 top: "auto",
-                bottom: "36px",
                 position: "fixed",
                 zIndex: "9999",
                 display: "none"
+            };
+
+            const nextChapterButton = document.createElement("button");
+            nextChapterButton.id = "next-chapter-button";
+            nextChapterButton.innerText = i18n.button.nextChapter;
+            Object.assign(nextChapterButton.style, {
+                ...buttonStyle,
+                bottom: "73px",
+                minWidth: "80px"
+            });
+            document.body.append(nextChapterButton);
+            nextChapterButton.addEventListener("click", () => {
+                const nextE = ge("//a[text()='下一话' or text()='下一話'][starts-with(@href,'/mangaread/')]");
+                if (isString(nextChapterUrl)) {
+                    _unsafeWindow.location.href = nextChapterUrl;
+                } else if (nextE) {
+                    _unsafeWindow.location.href = nextE.href;
+                } else {
+                    alert(i18n.tips.noNext);
+                }
+            });
+
+            const commentsButton = document.createElement("button");
+            commentsButton.id = "open-comments";
+            commentsButton.innerText = i18n.button.openComments;
+            Object.assign(commentsButton.style, {
+                ...buttonStyle,
+                bottom: "36px"
             });
             document.body.append(commentsButton);
             commentsButton.addEventListener("click", () => createComments());
 
             let lastScrollTop = 0;
             document.addEventListener("scroll", event => {
-                let st = event.srcElement.scrollingElement.scrollTop;
+                const st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
+                    nextChapterButton.style.display = "none";
                     commentsButton.style.display = "none";
                     lastScrollTop = st;
                 } else if (st < lastScrollTop - 40) {
-                    commentsButton.style.left = (ge(".MuiContainer-root").offsetLeft + 24) + "px";
+                    const leftNum = (ge(".MuiContainer-root").offsetLeft + 24);
+                    nextChapterButton.style.left = leftNum + "px";
+                    nextChapterButton.style.display = "";
+                    commentsButton.style.left = leftNum + "px";
                     commentsButton.style.display = "";
                     lastScrollTop = st;
                 }
