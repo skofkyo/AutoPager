@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.49
+// @version            2.11.50
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -836,7 +836,7 @@ div[class*='backdrop-show'] {
         },
         imgs: () => fn.getImg(".content>p img[alt]", fn.gt(".page a:last-child", 2), 3, null, 100),
         button: [4],
-        insertImg: ["//div[p[img[@alt and @title]]]", 2],
+        insertImg: ["//div[p[img[@alt]]]", 2],
         autoDownload: [0],
         next: "//span[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span[contains(text(),'上一篇')]/a[contains(@href,'html')]",
@@ -13070,9 +13070,12 @@ div[class*='backdrop-show'] {
         customTitle: () => fn.title(/ - Cathentai| - Hentaicolor| - Hentaibeeg| - Nyahentai.info/, 1),
         category: "hcomic"
     }, {
-        name: "3hentai圖片清單頁",
-        host: ["3hentai.net"],
-        reg: /^https?:\/\/3hentai\.net\/d\/\d+$/,
+        name: "3hentai/HentaiVox圖片清單頁",
+        host: ["3hentai.net", "hentaivox.com"],
+        reg: [
+            /^https?:\/\/3hentai\.net\/d\/\d+$/,
+            /^https?:\/\/hentaivox\.com\/view\/\d+$/
+        ],
         imgs: async () => {
             thumbnailSrcArray = fn.getImgSrcArr(".single-thumb>a>img");
             fn.showMsg(displayLanguage.str_05, 0);
@@ -13088,16 +13091,19 @@ div[class*='backdrop-show'] {
         },
         button: [4],
         insertImg: [
-            ["#thumbnail-gallery", 0], 2
+            ["#thumbnail-gallery,#gallery-pages", 0], 2
         ],
-        customTitle: () => fn.gt("#main-info>h1,#main-info>h2").replace("|", "-"),
+        customTitle: () => fn.getText(["#main-info>h2", "#main-info>h1", "#gallery-main-info>h2", "#gallery-main-info>h1"]),
         go: 1,
         topButton: true,
         category: "hcomic"
     }, {
-        name: "3hentai閱讀頁",
-        host: ["3hentai.net"],
-        reg: /^https?:\/\/3hentai\.net\/d\/\d+\/\d+$/,
+        name: "3hentai/HentaiVox閱讀頁",
+        host: ["3hentai.net", "hentaivox.com"],
+        reg: [
+            /^https?:\/\/3hentai\.net\/d\/\d+\/\d+$/,
+            /^https?:\/\/hentaivox\.com\/view\/\d+\/\d+$/
+        ],
         imgs: () => {
             const {
                 readerPages
@@ -13107,8 +13113,10 @@ div[class*='backdrop-show'] {
             return fn.arr(max, (v, i) => imgDir + readerPages.pages[(i + 1)].f);
         },
         button: [4],
-        insertImg: [".reader-image", 2],
-        customTitle: () => fn.gt(".reader-title").replace("|", "-"),
+        insertImg: [".reader-image,.gallery-reader-img", 2],
+        customTitle: () => fn.dt({
+            d: / - Page.+$/
+        }),
         category: "hcomic"
     }, {
         name: "山寨3hentai圖片清單頁",
@@ -13230,16 +13238,21 @@ div[class*='backdrop-show'] {
         customTitle: () => fn.title(/ - Page \d+ - HentaiZap/).replace("|", "-"),
         category: "hcomic"
     }, {
-        name: "HentaiRead閱讀頁",
-        host: ["hentairead.com"],
-        reg: /^https?:\/\/hentairead\.com\/hentai\/[^\/]+\/english\/p\/\d+\/$/,
-        init: async () => {
-            await fn.waitVar("chapter_preloaded_images");
-            fn.remove(".page-link-hover,.bottom-nav,.ad");
+        name: "HentaiRead圖片清單頁",
+        url: {
+            h: "hentairead.com",
+            p: "/hentai/",
+            e: "//span[text()='Read Now']"
         },
-        imgs: () => _unsafeWindow.chapter_preloaded_images.map(e => e.src.replace(/\?quality=.+$/, "")),
-        insertImg: ["#imagesList", 2],
-        customTitle: () => fn.title(/ Page \d.+$/).trim(),
+        init: () => fn.createImgBox(".main-container:has(.chapter-image-item)", 2),
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr(".chapter-image-item img");
+            return thumbnailSrcArray.map(e => e.replace("hencover.xyz", "henread.xyz").replace("preview/", ""));
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        customTitle: () => fn.getText([".manga-titles h2", ".manga-titles h1"]),
+        go: 1,
         category: "hcomic"
     }, {
         name: "HentaiRox圖片清單頁",
@@ -13681,8 +13694,8 @@ div[class*='backdrop-show'] {
         category: "hcomic"
     }, {
         name: "Pururin圖片清單頁",
-        host: ["pururin.to"],
-        reg: /^https?:\/\/pururin\.to\/gallery\/\d+\/.+/,
+        host: ["pururin.me"],
+        reg: /^https?:\/\/pururin\.me\/gallery\/\d+\/.+/,
         imgs: () => {
             let url = fn.gu(".gallery-preview>a");
             return fn.fetchDoc(url).then(dom => {
@@ -13709,8 +13722,8 @@ div[class*='backdrop-show'] {
         category: "none"
     }, {
         name: "Pururin閱讀頁",
-        host: ["pururin.to"],
-        reg: /^https?:\/\/pururin\.to\/read\/\d+\/\d+\/.+/,
+        host: ["pururin.me"],
+        reg: /^https?:\/\/pururin\.me\/read\/\d+\/\d+\/.+/,
         imgs: () => {
             let ele = fn.ge(".img-viewer");
             let svr = ele.dataset.svr;
@@ -13887,13 +13900,14 @@ div[class*='backdrop-show'] {
         customTitle: "#page-title",
         category: "hcomic"
     }, {
-        name: "KingComiX閱讀頁",
-        host: ["kingcomix.com"],
-        reg: /^https?:\/\/kingcomix\.com\/[^\/]+\/$/,
-        imgs: "figure img, .entry-content img.lazy",
+        name: "KingComiX/Chochox/Comics18",
+        url: {
+            h: ["kingcomix.com", "chochox.com", "comics18.org"]
+        },
+        imgs: "figure img,.entry-content img:not(a img),.wp-content img",
         button: [4],
-        insertImg: [".entry-content", 2],
-        customTitle: () => fn.gt("h1.singleTitle-h1").replace(" – Kingcomix", ""),
+        insertImg: [".entry-content,.wp-content", 2],
+        customTitle: "h1.singleTitle-h1,h1.titl,h1.title",
         category: "hcomic"
     }, {
         name: "MyReadingManga",
@@ -14229,6 +14243,44 @@ div[class*='backdrop-show'] {
         endColor: "white",
         go: 1,
         customTitle: ".entry-title",
+        category: "hcomic"
+    }, {
+        name: "BestPornComix",
+        url: {
+            h: "bestporncomix.com",
+            p: "/gallery/"
+        },
+        imgs: "figure a",
+        button: [4],
+        insertImg: [".dgwt-jg-gallery", 2],
+        customTitle: ".entry-title",
+        category: "hcomic"
+    }, {
+        name: "FSIComics",
+        url: {
+            h: "fsicomics.com"
+        },
+        imgs: ".wp-block-gallery img",
+        button: [4],
+        insertImg: [".wp-block-gallery", 2],
+        customTitle: ".s-title",
+        category: "hcomic"
+    }, {
+        name: "GNTAI.net",
+        url: {
+            h: "www.gntai.net",
+            e: "//script[contains(text(),'pages')]"
+        },
+        imgs: () => {
+            let code = fn.gst("pages");
+            let [, textArr] = code.match(/var pages = ([^;]+)/);
+            let arr = fn.run(textArr);
+            return arr.map(e => e.page_image);
+        },
+        button: [4],
+        insertImg: ["#img-page", 2],
+        customTitle: "#main h1",
+        hide: "#chapter-pages",
         category: "hcomic"
     }, {
         name: "Hentairules",
@@ -14628,7 +14680,7 @@ div[class*='backdrop-show'] {
     }, {
         name: "MANGA DISTRICT/apcomics",
         url: {
-            h: ["mangadistrict.com", "apcomics.org"]
+            h: ["mangadistrict.com", "apcomics.org", "ilikecomix.com"]
         },
         imgs: ".reading-content img",
         button: [4],
@@ -14652,6 +14704,16 @@ div[class*='backdrop-show'] {
         next: "a.next_page",
         prev: "a.prev_page",
         customTitle: "#chapter-heading",
+        category: "hcomic"
+    }, {
+        name: "vermangasporno/vercomicsporno",
+        url: {
+            h: ["vermangasporno.com", "vercomicsporno.com"]
+        },
+        imgs: ".wp-content img",
+        button: [4],
+        insertImg: [".wp-content", 2],
+        customTitle: "h1.titl",
         category: "hcomic"
     }, {
         name: "Hachirumi.com",
@@ -16312,6 +16374,78 @@ div[class*='backdrop-show'] {
         customTitle: () => fn.title("|韩国漫画网"),
         category: "hcomic"
     }, {
+        name: "A漫 閱讀頁",
+        url: {
+            t: "A漫",
+            h: "aman",
+            p: "/manhuaview/"
+        },
+        imgs: ".conch-ctwrap-auto img",
+        button: [4],
+        insertImg: [".conch-ctwrap-auto>center>div[style]", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章']",
+        prev: "//a[text()='上一章']",
+        customTitle: () => fn.gt("h1") + " - " + fn.gt("h2"),
+        category: "hcomic"
+    }, {
+        name: "A漫 目錄頁",
+        url: {
+            t: "A漫",
+            h: "aman",
+            p: "/manhuaview/",
+            e: "#hl-plays-list"
+        },
+        init: () => fn.createImgBox(".hl-list-wrap", 2),
+        imgs: () => {
+            let links = fn.gau("#hl-plays-list a");
+            return fn.getImgA(".conch-ctwrap-auto img", links);
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: ".hl-dc-title",
+        category: "hcomic"
+    }, {
+        name: "韩漫基地",
+        host: ["hmjidi.com"],
+        url: {
+            t: "韩漫基地",
+            p: "/chapter",
+            s: "Id="
+        },
+        init: async () => {
+            await fn.waitVar("getCookie");
+            fn.createImgBox(".showimg");
+        },
+        imgs: ".showimg img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".showimg>img"], 2
+        ],
+        autoDownload: [0],
+        next: "a.next[href*='/chapter']",
+        prev: "a.prev[href*='/chapter']",
+        customTitle: ".showimg h1",
+        category: "hcomic"
+    }, {
+        name: "韩漫基地 目錄頁",
+        url: {
+            t: "韩漫基地",
+            p: "/comic",
+            s: "Id="
+        },
+        init: () => fn.createImgBox(".chapter_list", 2),
+        imgs: () => {
+            let links = fn.gau("#dataList a");
+            return fn.getImgA(".showimg img", links);
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: ".booktitle",
+        category: "hcomic"
+    }, {
         name: "漫香阁",
         host: ["xn--wgv69rba1382b.com", "韩漫日漫.com"],
         url: {
@@ -17051,7 +17185,8 @@ div[class*='backdrop-show'] {
                 "manhuaus.com",
                 "novelmic.com",
                 "setsuscans.com",
-                "www.toongod.org"
+                "www.toongod.org",
+                "manytoon.com"
             ],
             p: /^\/(manga|comic|webtoon)\/[\w-]+\/chapter/
         },
@@ -17069,6 +17204,7 @@ div[class*='backdrop-show'] {
             h: ["disasterscans.com"],
             p: "-chapter-"
         },
+        SPA: true,
         imgs: () => fn.getImgSrcset("section.container img[srcset]"),
         autoDownload: [0],
         next: "a[aria-description='next-button']",
@@ -18119,6 +18255,36 @@ div[class*='backdrop-show'] {
         prev: ".chnav.prev[href^='/reader/']",
         customTitle: () => fn.title("Manga: "),
         hide: "center:has(>#chapter-reader)>*:not(#chapter-reader),.chapternav+div[style]",
+        category: "comic"
+    }, {
+        name: "Flame Comics",
+        url: {
+            h: "flamecomics.xyz",
+            p: /^\/series\/\w+\/\w+/
+        },
+        SPA: true,
+        init: async () => {
+            await fn.waitEle("//span[text()='Chapters']");
+            await fn.wait(() => !!_unsafeWindow?.__NEXT_DATA__?.props?.pageProps);
+            fn.addMutationObserver(() => fn.remove("div[class^='Radio_radio_content']"));
+        },
+        imgs: ".mantine-Container-root .mantine-Stack-root img",
+        autoDownload: [0],
+        next: () => {
+            let {
+                next,
+                chapter: {
+                    series_id
+                }
+            } = _unsafeWindow.__NEXT_DATA__.props.pageProps
+            if (next) {
+                return `/series/${series_id}/${next}`;
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
+        customTitle: () => fn.title(" - Flame Comics"),
         category: "comic"
     }, {
         name: "NineManga",
@@ -25653,6 +25819,7 @@ if ("xx" in window) {
                     "data-original",
                     "data-original-url",
                     "data-url",
+                    "data-full-url",
                     "data-imageurl",
                     "data-img-url",
                     "data-lazy",
@@ -25676,6 +25843,7 @@ if ("xx" in window) {
                     "data-lbwps-srcsmall",
                     "data-loadsrc",
                     "data-orig-file",
+                    "data-large-file",
                     "data-page-image-url",
                     "data-pin-media",
                     "data-placeholder",
@@ -27221,7 +27389,7 @@ if ("xx" in window) {
                 if (options.fancybox == 1 && !("fancybox" in siteData) && ("Fancybox" in _unsafeWindow)) {
                     _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                 }
-                if (!/tupianwu\.com/.test(fn.lh) && !fn.ge(".umRelevant.umBox") && !fn.ge(".videoPlayerWrap") && !fn.ge("#xqbj-main") && !fn.ge(".PcHeader_rightBox") && !fn.ge(".gallery-page #toggle-column")) {
+                if (!/tupianwu\.com/.test(fn.lh) && !/hentairead\.com/.test(fn.lh) && !fn.ge(".umRelevant.umBox") && !fn.ge(".videoPlayerWrap") && !fn.ge("#xqbj-main") && !fn.ge(".PcHeader_rightBox") && !fn.ge(".gallery-page #toggle-column")) {
                     fn.MutationObserver_aff();
                 }
                 if (options.viewMode == 1 || siteData.viewMode == 1) toggleImgMode();
@@ -35886,7 +36054,7 @@ a[data-fancybox]:hover {
             //console.log(event);
             if (isFetching || isDownloading || isOpenFilter || isOpenFancybox || isOpenGallery || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
             const check = (e) => {
-                if (["DIV", "A"].some(t => t === e.target.tagName) && getComputedStyle(e.target).getPropertyValue("background-image") != "none") {
+                if (["SPAN", "DIV", "A"].some(t => t === e.target.tagName) && getComputedStyle(e.target).getPropertyValue("background-image") != "none") {
                     return true;
                 }
                 if (["A", "FIGURE", "SPAN"].some(t => t === e.target.tagName)) {
