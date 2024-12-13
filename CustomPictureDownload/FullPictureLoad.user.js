@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.51
+// @version            2.11.52
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3467,11 +3467,15 @@ div[class*='backdrop-show'] {
         category: "nsfw1"
     }, {
         name: "14MM图片网",
-        host: ["www.14mm.cn"],
-        reg: /^https:\/\/www\.14mm\.\w+\/\d+\.html$/,
+        url: {
+            //h: ["www.14mm.cn", "www.tp8.org"],
+            t: "14MM图片网",
+            p: /^\/\d+\.html$/,
+            e: "#image_div"
+        },
         exclude: "//a[@rel='category tag'][text()='演出视频']",
         imgs: async () => {
-            let max = fn.gt("a[title='最后页']");
+            let max = fn.gt("//a[@class='page-numbers prev'][@title='下一页']//preceding-sibling::a[1]");
             return fn.getImg("#image_div img", max, 9, [/\?x-oss-process.+$/, ""]);
             //return fn.getImg("#image_div img", max, 9);
         },
@@ -11665,10 +11669,10 @@ div[class*='backdrop-show'] {
         hide: "#span_h4",
         category: "nsfw2"
     }, {
-        name: "播播阁",
-        link: "https://www.boboge.lat/index",
+        name: "擦擦阁",
+        link: "https://www.cacage.top/index",
         url: {
-            h: "boboge",
+            h: "cacage",
             p: /^\/img\d+\//
         },
         imgs: ".entry-content img",
@@ -11678,9 +11682,9 @@ div[class*='backdrop-show'] {
         hide: "div[id^=ads]",
         category: "nsfw2"
     }, {
-        name: "播播阁AD",
+        name: "擦擦阁AD",
         url: {
-            h: "boboge",
+            t: "阁",
             e: "div[id^=ads]"
         },
         hide: "div[id^=ads]",
@@ -15460,7 +15464,7 @@ div[class*='backdrop-show'] {
         name: "蚂蚁搬运网M/紳士泛漫畫M",
         link: "https://hacg.antbyw.com/plugin.php?id=jameson_manhua",
         url: {
-            h: ["www.antbyw.com", "www.itsacg.com"],
+            h: ["www.antbyw.com", /\.itsacg\.com$/],
             s: "=read",
             d: "m"
         },
