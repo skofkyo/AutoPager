@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.54
+// @version            2.11.55
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1066,8 +1066,10 @@ div[class*='backdrop-show'] {
         category: "nsfw1"
     }, {
         name: "美眉村",
-        host: ["meimeicun.com"],
-        reg: /^https?:\/\/meimeicun\.com\/articles\/\d+$/,
+        url: {
+            h: "meimeicun",
+            p: "/articles/"
+        },
         imgs: ".images-list img",
         autoDownload: [0],
         next: "//div[contains(text(),'上一篇')]/a",
@@ -3325,6 +3327,20 @@ div[class*='backdrop-show'] {
         }),
         category: "nsfw1"
     }, {
+        name: "img.ecy8.com",
+        url: {
+            h: "img.ecy8.com"
+        },
+        init: () => fn.createImgBox("body"),
+        imgs: "a[href$=jpg],a[href$=jpeg],a[href$=png],a[href$=webp],a[href$=gif],a[href$=bmp],a[href$=mp4]",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: () => fn.dt({
+            t: fn.gt("h1")?.split("/")?.at(-1)
+        }),
+        category: "nsfw1"
+    }, {
         name: "新美图录/臺灣美腿女郎",
         host: ["www.xinmeitulu.com", "www.twlegs.com"],
         reg: /^https?:\/\/(www\.xinmeitulu\.com|www\.twlegs\.com)\/photo\//,
@@ -3343,29 +3359,11 @@ div[class*='backdrop-show'] {
         customTitle: ".top-title",
         category: "nsfw1"
     }, {
-        name: "秀窝/RMM吧/赞MM/恩图集/美Girl图集/狐图网/930圖片網/爱秀美女/四魔写真/JN美眉网",
-        host: [
-            "www.xiuwo.net",
-            "www.rmm8.com",
-            "www.zanmm.com",
-            "www.entuji.com",
-            "www.mhgirl.com",
-            "www.hutu6.com",
-            "www.930tu.com",
-            "www.930tp.com",
-            "wap.kunv.cc",
-            "www.kunv.cc",
-            "www.smkwan.com",
-            "www.jnmmw.com"
-        ],
-        reg: [
-            /^https?:\/\/(www\.xiuwo\.net|www\.rmm8\.com|www\.mhgirl\.com|(www|wap)\.kunv\.cc)\/tu([\w]+)?\/\d+\.html$/,
-            /^https?:\/\/www\.zanmm\.com\/tupian\/\d+\.html$/,
-            /^https?:\/\/(www\.entuji\.com|www\.hutu6\.com)\/\w+\/\d+\.html$/,
-            /^https?:\/\/www\.930t(u|p)\.com\/\w+\/\d+\.html$/,
-            /^https?:\/\/www\.smkwan\.com\/mm\/\d+\.html$/,
-            /^https?:\/\/www\.jnmmw\.com\/meimei\/\d+\.html$/
-        ],
+        name: "赞MM格式",
+        url: {
+            e: ["#showimg img", "//p[contains(text(),'图片数量')]"],
+            p: ".html"
+        },
         init: () => fn.clearAllTimer(),
         imgs: () => fn.getImgO("#showimg img", fn.gt("//p[contains(text(),'图片数量')]").match(/\d+/)[0], 9),
         button: [4],
@@ -5222,8 +5220,8 @@ div[class*='backdrop-show'] {
         hide: "div.flex.m-1:has(>a[style]),.my-2:has(>a[target][referrerpolicy][style]),iframe[id][class][width][height][style]",
         category: "nsfw2"
     }, {
-        name: "胴体的秘密/CosPlayer/AsianSexyBody/国模人体写真图片/福利图库",
-        host: ["dongti.netlify.app", "cosplayer.neocities.org", "asiansexybody.netlify.app", "guomo.neocities.org", "fulituku.neocities.org"],
+        name: "胴体的秘密/CosPlayer/AsianSexyBody/国模人体写真图片/福利图库/BestGirlSexy",
+        host: ["dongti.netlify.app", "cosplayer.neocities.org", "asiansexybody.netlify.app", "guomo.neocities.org", "fulituku.neocities.org", "bestgirlsexy4.neocities.org"],
         url: {
             h: /netlify\.app|neocities\.org/,
             p: "/posts/"
@@ -10761,61 +10759,6 @@ div[class*='backdrop-show'] {
         hide: ".ad,union",
         category: "nsfw1"
     }, {
-        name: "1T图库格式",
-        reg: () => {
-            let hosts1 = [
-                "www.0b23.com",
-                "www.1taz.com",
-                "www.2cra.com",
-                "www.3ktu.com",
-                "www.714g.com",
-                "www.aizibang.com",
-                "www.cdnecs.com",
-                "www.diu5.com",
-                "www.edu-zytc.com",
-                "www.gkiev.com",
-                "www.hsudhf.com",
-                "www.iduobi.com",
-                "www.jnnmm.com",
-                "www.jsjfgkgs.com",
-                "www.mash120.com",
-                "www.mmokok.com",
-                "www.nanitu.com",
-                "www.opks.cc",
-                "www.php-art.com",
-                "www.qo6q.com",
-                "www.qyjafk.com",
-                "www.rodwy.com",
-                "www.rzjyz.com",
-                "www.sqhyyz.com",
-                "www.sy-sme.com",
-                "www.wjjlf.com",
-                "www.woxiutu.com",
-                "www.wt768.com",
-                "www.y521.com"
-            ];
-            let hosts2 = [
-                "www.7tul.com"
-            ];
-            return hosts1.some(h => h === fn.lh) && /\/\w+\/\d+\.html$/.test(fn.lp) || hosts2.some(h => h === fn.lh) && /\/tu\d+\.html$/.test(fn.lp);
-        },
-        include: "#showimg img,.img-box img",
-        imgs: () => {
-            let max;
-            try {
-                [, max] = fn.gu(".endpage").match(/-(\d+)\.html/);
-            } catch {
-                max = 1;
-            }
-            return fn.getImgO("#showimg img,.img-box img", max, 5, null, 0, "#pageNum");
-        },
-        button: [4],
-        insertImg: ["#showimg,.img-box", 2],
-        autoDownload: [0],
-        next: "a[title='上一篇']",
-        prev: "a[title='下一篇']",
-        category: "nsfw1"
-    }, {
         name: "仿紳士漫畫UI寫真圖庫 簡介頁",
         url: {
             e: [
@@ -11672,26 +11615,14 @@ div[class*='backdrop-show'] {
         hide: "#span_h4",
         category: "nsfw2"
     }, {
-        name: "擦擦阁",
-        link: "https://www.cacage.top/index",
         url: {
-            h: "cacage",
-            p: /^\/img\d+\//
+            p: "/show/"
         },
-        imgs: ".entry-content img",
+        imgs: "#content img[loading]",
         button: [4],
-        insertImg: [".entry-content", 2],
-        customTitle: ".entry-title",
-        hide: "div[id^=ads]",
+        insertImg: ["#content", 2],
+        customTitle: ".container .bg-info",
         category: "nsfw2"
-    }, {
-        name: "擦擦阁AD",
-        url: {
-            t: "阁",
-            e: "div[id^=ads]"
-        },
-        hide: "div[id^=ads]",
-        category: "ad"
     }, {
         name: "超级资源分享",
         host: ["www.xiu07.com", "m.xiu07.com"],
@@ -14839,10 +14770,10 @@ div[class*='backdrop-show'] {
         customTitle: "h1>a[title]>span",
         category: "hcomic"
     }, {
-        name: "漫畫車 閱讀頁",
-        host: ["www.manhuache.com", "m.manhuache.com"],
+        name: "H漫車 閱讀頁",
+        host: ["www.hmanche.com"],
         url: {
-            h: "manhuache",
+            h: "hmanche",
             p: "/chapter/"
         },
         init: async () => {
@@ -14859,10 +14790,10 @@ div[class*='backdrop-show'] {
         customTitle: () => fn.title(/\s-\d+/).replace(/\(\d+P\)|第.章/gi, "").replace(/[\s-]+$/, "").trim(),
         category: "hcomic"
     }, {
-        name: "漫畫車 目錄頁",
-        host: ["www.manhuache.com", "m.manhuache.com"],
+        name: "H漫車 目錄頁",
+        host: ["www.hmanche.com"],
         url: {
-            h: "manhuache",
+            h: "hmanche",
             p: "/book/",
             e: ["#chapterGroupListJsonAsc,#chapterGroupListAsc", "//li/a[contains(text(),'成人寫真')][not(@class)]"]
         },
@@ -14875,10 +14806,11 @@ div[class*='backdrop-show'] {
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
         customTitle: ".book-title-name",
+        hide: ".sss-container",
         category: "hcomic"
     }, {
-        name: "漫畫車 目錄頁",
-        host: ["www.manhuache.com", "m.manhuache.com"],
+        name: "H漫車 目錄頁",
+        host: ["www.hmanche.com"],
         url: {
             h: "manhuache",
             p: "/book/",
@@ -14893,6 +14825,7 @@ div[class*='backdrop-show'] {
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         go: 1,
         customTitle: ".book-title-name",
+        hide: ".sss-container",
         category: "hcomic"
     }, {
         name: "漫畫聯合國",
@@ -15439,7 +15372,7 @@ div[class*='backdrop-show'] {
         name: "蚂蚁搬运网/紳士泛漫畫",
         link: "https://hacg.antbyw.com/plugin.php?id=jameson_manhua",
         url: {
-            h: ["www.antbyw.com", /\.itsacg\.com$/],
+            h: ["www.antbyw.com", /\.itsacg\./],
             s: "=read",
             d: "pc"
         },
@@ -15467,7 +15400,7 @@ div[class*='backdrop-show'] {
         name: "蚂蚁搬运网M/紳士泛漫畫M",
         link: "https://hacg.antbyw.com/plugin.php?id=jameson_manhua",
         url: {
-            h: ["www.antbyw.com", /\.itsacg\.com$/],
+            h: ["www.antbyw.com", /\.itsacg\./],
             s: "=read",
             d: "m"
         },
@@ -18273,13 +18206,24 @@ div[class*='backdrop-show'] {
             h: "flamecomics.xyz",
             p: /^\/series\/\w+\/\w+/
         },
-        SPA: true,
         init: async () => {
-            await fn.waitEle("//span[text()='Chapters']");
-            await fn.wait(() => !!_unsafeWindow?.__NEXT_DATA__?.props?.pageProps);
+            let code = fn.gt("#__NEXT_DATA__");
+            let json = JSON.parse(code);
+            siteJson = json.props.pageProps;
             fn.addMutationObserver(() => fn.remove("div[class^='Radio_radio_content']"));
         },
-        imgs: ".mantine-Container-root .mantine-Stack-root img",
+        imgs: () => {
+            let cdn = "https://cdn.flamecomics.xyz/series";
+            let {
+                chapter: {
+                    series_id,
+                    images,
+                    token,
+                    release_date
+                }
+            } = siteJson;
+            return Object.keys(images).map(i => `${cdn}/${series_id}/${token}/${images[i].name}?${release_date}`);
+        },
         autoDownload: [0],
         next: () => {
             let {
@@ -18287,7 +18231,7 @@ div[class*='backdrop-show'] {
                 chapter: {
                     series_id
                 }
-            } = _unsafeWindow.__NEXT_DATA__.props.pageProps
+            } = siteJson
             if (next) {
                 return `/series/${series_id}/${next}`;
             } else {
@@ -31564,6 +31508,7 @@ img.small {
 }
 #FixedMenu select {
     text-align: center;
+    color: #000;
     background-color: #f6f6f6;
     border: none;
     width: 100%;
@@ -32509,6 +32454,7 @@ img.small {
 }
 #FixedMenu select {
     text-align: center;
+    color: #000;
     background-color: #f6f6f6;
     border: none;
     width: 100%;
