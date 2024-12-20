@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.5
+// @version            2.7.6
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -105,6 +105,7 @@
                     settings: "設定"
                 },
                 button: {
+                    prevChapter: "上一話",
                     nextChapter: "下一話",
                     openComments: "開啟評論",
                     closeComments: "關閉評論"
@@ -141,6 +142,7 @@
                     settings: "设置"
                 },
                 button: {
+                    prevChapter: "上一话",
                     nextChapter: "下一话",
                     openComments: "打开评论",
                     closeComments: "关闭评论"
@@ -177,6 +179,7 @@
                     settings: "settings"
                 },
                 button: {
+                    prevChapter: "Prev Chapter",
                     nextChapter: "Next Chapter",
                     openComments: "Open Comments",
                     closeComments: "Close Comments"
@@ -600,7 +603,7 @@ div:has(>#page-area) {
                 if (nextA?.href?.includes("/readMore/")) {
                     nextA.style.color = "rgb(33, 33, 33)";
                     nextA.style.backgroundColor = "rgb(245, 245, 245)";
-                    nextA.innerText = "^_^感谢您的阅读~已经没有下一话了哦~";
+                    nextA.innerText = "（╯﹏╰）已经没有下一话了哦~";
                 }
             }
         }).observe(ge(selector));
@@ -991,7 +994,7 @@ footer {
             const bottomButton = document.createElement("button");
             bottomButton.className = "close-comments";
             bottomButton.innerText = i18n.button.closeComments;
-            bottomButton.style.marginBottom = "100px";
+            bottomButton.style.marginBottom = "110px";
             bottomButton.style.marginLeft = "10px";
             bottomButton.addEventListener("click", () => {
                 div.remove();
@@ -1014,48 +1017,27 @@ footer {
                 title.className = "chapterTitle";
                 title.innerText = data.chapter_name;
                 title.dataset.chapterId = data.id;
-
                 let filteredTitle = title.innerText;
-
-                //自定義標題關鍵字排除列表
                 const keywordsToExcludes = textExcludeRegExp.split("\n").filter(item => item);
-
                 if (keywordsToExcludes.length) {
-
-                    //打印關鍵字排除列表
                     console.log("標題關鍵字排除列表:", keywordsToExcludes);
-
                     const keywordRegExps = keywordsToExcludes.map(key => new RegExp(key, "g"));
-                    //打印標題關鍵字正規表達式排除列表
                     console.log("標題關鍵字正規表達式排除列表:", keywordRegExps);
-
                     let modify = false;
-
-                    //循環檢查並移除關鍵字
                     keywordRegExps.forEach(reg_exp => {
-                        //檢查並打印匹配結果
                         const matches = filteredTitle.match(reg_exp);
                         if (matches) {
                             modify = true;
-                            //打印移除前的標題
                             console.log(`移除關鍵字 "${reg_exp}" 前的標題:`, filteredTitle);
-                            //只移除匹配的部分
                             filteredTitle = filteredTitle.replace(reg_exp, "");
                         }
                     });
-
                     if (modify) {
-                        //去除多餘的空格
                         filteredTitle = filteredTitle.replace(/\s+/g, " ").trim();
-
-                        //打印最終顯示的標題
                         console.log("最終過濾後的標題:", filteredTitle);
-
                         title.innerText = filteredTitle;
                     }
-
                 }
-
                 titleObserver.observe(title);
                 fragment.append(title);
             }
@@ -1182,7 +1164,8 @@ footer {
                         }
                     }
                     const pagerTitles = gae(".chapterTitle");
-                    if (pagerTitles.length > 3) {
+                    const images = gae(".images");
+                    if (pagerTitles.length > 3 && images.length > 30) {
                         const parentE = pagerTitles[0].parentNode;
                         pagerTitles[0].remove();
                         const nodes = [...parentE.childNodes];
@@ -1222,70 +1205,84 @@ footer {
             }
             currentData = readData;
             createPageElement(currentData, 1);
+
             if ("next_cid" in currentData) {
                 preloadNext(currentData.next_cid);
+                const nextUrl = "/mangaread/" + currentData.next_cid;
+                nextChapterUrl = nextUrl;
+            }
+            if ("pre_cid" in currentData) {
+                const prevUrl = "/mangaread/" + currentData.pre_cid;
+                prevChapterUrl = prevUrl;
             }
 
-            const buttonStyle = {
-                fontSize: "1rem",
-                fontFamily: "Microsoft YaHei, Arial, sans-serif",
-                padding: "2px 6px 4px 6px",
-                color: "#fff",
-                borderStyle: "solid",
-                borderColor: "#673ab7",
-                backgroundColor: "#673ab7",
-                borderRadius: ".5rem",
-                left: "24px",
-                right: "auto",
-                top: "auto",
-                position: "fixed",
-                zIndex: "9999",
-                display: "none"
-            };
-
-            const nextChapterButton = document.createElement("button");
-            nextChapterButton.id = "next-chapter-button";
-            nextChapterButton.innerText = i18n.button.nextChapter;
-            Object.assign(nextChapterButton.style, {
-                ...buttonStyle,
-                bottom: "73px",
-                minWidth: "80px"
-            });
-            document.body.append(nextChapterButton);
-            nextChapterButton.addEventListener("click", () => {
-                const nextE = ge("//a[text()='下一话' or text()='下一話'][starts-with(@href,'/mangaread/')]");
-                if (isString(nextChapterUrl)) {
-                    _unsafeWindow.location.href = nextChapterUrl;
-                } else if (nextE) {
-                    _unsafeWindow.location.href = nextE.href;
-                } else {
-                    alert(i18n.tips.noNext);
+            const buttons = [{
+                id: "prev-chapter-button",
+                text: i18n.button.prevChapter,
+                bottom: "118px",
+                cb: () => {
+                    if (isString(prevChapterUrl)) {
+                        _unsafeWindow.location.href = prevChapterUrl;
+                    } else {
+                        alert(i18n.tips.noPrev);
+                    }
                 }
+            }, {
+                id: "next-chapter-button",
+                text: i18n.button.nextChapter,
+                bottom: "79px",
+                cb: () => {
+                    if (isString(nextChapterUrl)) {
+                        _unsafeWindow.location.href = nextChapterUrl;
+                    } else {
+                        alert(i18n.tips.noNext);
+                    }
+                }
+            }, {
+                id: "open-comments",
+                text: i18n.button.openComments,
+                bottom: "40px",
+                cb: () => createComments()
+            }].map(obj => {
+                const button = document.createElement("button");
+                button.id = obj.id;
+                button.innerText = obj.text;
+                Object.assign(button.style, {
+                    fontSize: "1rem",
+                    fontFamily: "Microsoft YaHei, Arial, sans-serif",
+                    padding: "2px 6px 4px 6px",
+                    color: "#fff",
+                    borderStyle: "solid",
+                    borderColor: "#673ab7",
+                    backgroundColor: "#673ab7",
+                    borderRadius: ".5rem",
+                    minWidth: "80px",
+                    left: "24px",
+                    right: "auto",
+                    top: "auto",
+                    position: "fixed",
+                    zIndex: "9999",
+                    display: "none",
+                    bottom: obj.bottom
+                });
+                button.addEventListener("click", obj.cb);
+                return button;
             });
-
-            const commentsButton = document.createElement("button");
-            commentsButton.id = "open-comments";
-            commentsButton.innerText = i18n.button.openComments;
-            Object.assign(commentsButton.style, {
-                ...buttonStyle,
-                bottom: "36px"
-            });
-            document.body.append(commentsButton);
-            commentsButton.addEventListener("click", () => createComments());
+            document.body.append(...buttons);
 
             let lastScrollTop = 0;
             document.addEventListener("scroll", event => {
+                if (isOpenComments) return;
                 const st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
-                    nextChapterButton.style.display = "none";
-                    commentsButton.style.display = "none";
+                    buttons.forEach(e => (e.style.display = "none"));
                     lastScrollTop = st;
-                } else if (st < lastScrollTop - 40) {
+                } else if (st < lastScrollTop - 20) {
                     const leftNum = (ge(".MuiContainer-root").offsetLeft + 24);
-                    nextChapterButton.style.left = leftNum + "px";
-                    nextChapterButton.style.display = "";
-                    commentsButton.style.left = leftNum + "px";
-                    commentsButton.style.display = "";
+                    buttons.forEach(e => {
+                        e.style.left = leftNum + "px";
+                        e.style.display = "";
+                    });
                     lastScrollTop = st;
                 }
             });
