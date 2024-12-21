@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.56
+// @version            2.11.57
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1616,6 +1616,39 @@ div[class*='backdrop-show'] {
         customTitle: () => fn.title(/ - 私图网| - 图库库/),
         hide: "[id].widget_text,.gridmode-post-thumbnail-single,.gridbit-thumbnail-alignwide",
         category: "nsfw1"
+    }, {
+        name: "私图网",
+        url: {
+            h: "taotu.uk",
+            p: ".html"
+        },
+        imgs: ".post_container>article img",
+        button: [4],
+        insertImg: [".post_container>article", 2],
+        customTitle: ".post_container_title h1",
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "nsfw1"
+    }, {
+        name: "私图网",
+        url: {
+            h: "taotu.uk",
+            e: ".post_images"
+        },
+        init: () => {
+            const replaceSrc = () => {
+                [...document.querySelectorAll(".post_images img[src*='timthumb.php?src=']")].forEach(e => {
+                    let src = new URL(e.src).searchParams.get("src");
+                    src = src.replace("https://", "https://i0.wp.com/") + "?w=200";
+                    e.src = src;
+                });
+            };
+            replaceSrc();
+            fn.addMutationObserver(replaceSrc);
+        },
+        category: "none"
     }, {
         name: "Cup2D",
         host: ["www.cup2d.com", "cup2d.com"],
@@ -4036,7 +4069,7 @@ div[class*='backdrop-show'] {
     }, {
         name: "爱妹子",
         url: {
-            h: ["xx.knit.bid", "mm.187187.xyz", "999888.best"],
+            h: ["xx.knit.bid", "mm.187187.xyz", "999888.best", "www.gaik.com", "gaik.com"],
             p: /^\/([\w-]+\/)?article\/\d+\//i,
             e: ".item-image img,#img-box img"
         },
@@ -4463,30 +4496,6 @@ div[class*='backdrop-show'] {
         customTitle: "h1.entry-title",
         css: "@media only screen and (max-width:409px){.entry{width:100%!important}}button.rmp_menu_trigger{z-index:100!important}",
         hide: ".single-box,.entry-img-300",
-        category: "nsfw1"
-    }, {
-        name: "NICEGIRL4U",
-        host: ["nicegirl4u.cyou"],
-        reg: /^https?:\/\/nicegirl4u\.cyou\/[^\/]+\/$/,
-        include: ".wp-block-image>img",
-        init: () => fn.remove(".ads_custom"),
-        imgs: async () => {
-            let pag = fn.ge(".page-links");
-            if (pag) {
-                let max = fn.gt(".page-links>a:last-child");
-                return fn.getImg(".wp-block-image>img", max, 14);
-            } else {
-                return fn.gae(".wp-block-image>img");
-            }
-        },
-        capture: () => _this.imgs(),
-        //button: [4],
-        //insertImg: [
-        //[".responsive-tabs-wrapper,.entry-meta", 2], 2
-        //],
-        //insertImgAF: () => fn.gae("figure.wp-block-image").forEach(e => (e.outerHTML = "")),
-        go: 1,
-        customTitle: ".entry-title",
         category: "nsfw1"
     }, {
         name: "Nudegirls4u",
@@ -6447,6 +6456,17 @@ div[class*='backdrop-show'] {
         name: "4KHD AAD",
         url: {
             e: "//a[@rel='home'][text()='4KHD']"
+        },
+        init: () => {
+            const replaceSrc = () => {
+                [...document.querySelectorAll("img[src*='pic.4khd.com']")].forEach(e => {
+                    let src = e.src;
+                    src = src.replace("pic.4khd.com", "img.4khd.com");
+                    e.src = src;
+                });
+            };
+            replaceSrc();
+            fn.addMutationObserver(replaceSrc);
         },
         hide: ".centbtd,.popup,.wp-container-13",
         category: "ad"
@@ -12629,9 +12649,8 @@ div[class*='backdrop-show'] {
                 let image_domain;
                 let srcs = _unsafeWindow._gallery.images.pages.map((e, i) => `https://image_domain/galleries/${_unsafeWindow._gallery.media_id}/${i + 1}.${fn.ex(e.t)}`);
                 const hostArray = ["i.nhentai.net", "i5.nhentai.net", "i6.nhentai.net", "i7.nhentai.net", "i1.nhentai.net", "i2.nhentai.net", "i3.nhentai.net", "i4.nhentai.net"];
-                //fn.showMsg(displayLanguage.str_56, 0);
                 for (let host of hostArray.reverse()) {
-                    fn.showMsg(displayLanguage.str_56 + "_" + host, 0);
+                    fn.showMsg(displayLanguage.str_56 + "\n" + host, 0);
                     let src = srcs[0].replace("image_domain", host);
                     let status = await fn.xhrHEAD(src).then(res => res.status);
                     if (status == 200) {
@@ -26030,7 +26049,8 @@ if ("xx" in window) {
                     fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     return json.code == 200 ? {
                         name: json.data.name,
-                        url: decodeURIComponent(json.data.raw_url)
+                        //url: decodeURIComponent(json.data.raw_url)
+                        url: json.data.raw_url
                     } : null;
                 });
             });
@@ -33197,7 +33217,7 @@ li p.dark {
 #size,#move {
     width: 16px;
     height: 16px;
-    vertical-align: text-top;
+    vertical-align: ${isFirefox ? "middle" : "sub"};
     margin: 0 4px;
 }
 label.line-through:has(>#size) {
