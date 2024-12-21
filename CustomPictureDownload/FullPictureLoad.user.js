@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.55
+// @version            2.11.56
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -258,7 +258,7 @@
         name: "小黃書/8色人體攝影",
         url: {
             h: [
-                /^([a-z]{2}\.)?xchina\.(co|biz)$/,
+                /xchina\./,
                 /^(tw\.)?8se\.me$/
             ],
             p: /^\/(photo|amateur)\/id-\w+\.html$/,
@@ -429,7 +429,7 @@ div[class*='backdrop-show'] {
         name: "小黃書/8色人體攝影 AD",
         url: {
             h: [
-                /^([a-z]{2}\.)?xchina\.(co|biz|life|fun)$/,
+                /xchina\./,
                 /^(tw\.)?8se\.me$/
             ]
         },
@@ -15120,6 +15120,114 @@ div[class*='backdrop-show'] {
         hide: "body>ins,div:not([id],[class]):has(div.items-center)",
         category: "hcomic"
     }, {
+        name: "嗶咔漫畫PICACG",
+        url: {
+            h: ["manhuabika.com", "manhuapica.com"],
+            p: "/pchapter/",
+            s: "chapter=",
+            d: "pc"
+        },
+        imgs: () => {
+            const {
+                jQuery: $,
+                getTimeOnece,
+                cid,
+                chapter,
+                catMaxPage: max,
+                ProxyBaseUrl,
+                postHeader,
+                getsignature,
+                getS3ProxySet
+            } = _unsafeWindow;
+            fn.showMsg(displayLanguage.str_05, 0);
+            let fetchNum = 0;
+            const get = (page) => new Promise(resolve => {
+                const setTime = getTimeOnece();
+                const mothod = "GET";
+                const pathname = "comics/" + cid + "/order/" + chapter + "/pages?page=" + page;
+                $.ajax({
+                    type: mothod,
+                    contentType: "application/json; charset=UTF-8",
+                    crossBrowser: true,
+                    url: ProxyBaseUrl + pathname,
+                    beforeSend: (request) => {
+                        $.each(postHeader(setTime, pathname, mothod), (idx, obj) => request.setRequestHeader(obj.name, obj.value));
+                        request.setRequestHeader("signature", getsignature(pathname, setTime, mothod));
+                        request.setRequestHeader("image-quality", "original");
+                    },
+                    success: resolve
+                });
+            }).then(json => {
+                const {
+                    ep: {
+                        title
+                    },
+                    pages
+                } = json.data;
+                if (page == 1) {
+                    customTitle += " " + title;
+                    debug(`\n自定義標題：${customTitle}`);
+                }
+                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                const proxy = getS3ProxySet();
+                return pages.docs.map(e => proxy + e.media.path);
+            });
+            let resArr = fn.arr(max, (v, i) => get(i + 1));
+            return Promise.all(resArr).then(data => data.flat());
+        },
+        autoDownload: [0],
+        next: () => {
+            const {
+                chapter,
+                maxchapter
+            } = _unsafeWindow;
+            if (chapter < maxchapter) {
+                let url = new URL(fn.url);
+                url.searchParams.set("chapter", chapter + 1)
+                return url.href;
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
+        customTitle: () => {
+            const {
+                jQuery: $,
+                getTimeOnece,
+                cid,
+                ProxyBaseUrl,
+                postHeader,
+                getsignature
+            } = _unsafeWindow;
+            return new Promise(resolve => {
+                const setTime = getTimeOnece();
+                const mothod = "GET";
+                const pathname = "comics/" + cid;
+                $.ajax({
+                    type: mothod,
+                    contentType: "application/json; charset=UTF-8",
+                    crossBrowser: true,
+                    url: ProxyBaseUrl + pathname,
+                    beforeSend: (request) => {
+                        $.each(postHeader(setTime, pathname, mothod), (idx, obj) => request.setRequestHeader(obj.name, obj.value));
+                        request.setRequestHeader("signature", getsignature(pathname, setTime, mothod));
+                    },
+                    success: resolve
+                });
+            }).then(json => {
+                const {
+                    author,
+                    title
+                } = json.data.comic;
+                if (author) {
+                    return `[${author}] ${title}`;
+                } else {
+                    return title;
+                }
+            });
+        },
+        category: "hcomic"
+    }, {
         name: "Comics",
         host: ["pixiv.app"],
         reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
@@ -18284,27 +18392,42 @@ div[class*='backdrop-show'] {
     }, {
         name: "ReaperScans",
         url: {
-            h: "reaperscans.com",
-            p: "/chapter"
+            h: [/reaperscans\.com$/, /omegascans\.org$/],
+            d: "pc"
         },
-        SPA: true,
-        init: () => fn.waitEle("#content .container img:not(.rounded)"),
+        SPA: () => {
+            if (document.URL.includes("/chapter")) {
+                return fn.waitEle("#content .container img:not(.rounded)").then(() => {
+                    addFullPictureLoadButton();
+                    addFullPictureLoadFixedMenu();
+                });
+            } else {
+                return false;
+            }
+        },
+        observerURL: true,
         imgs: () => fn.gae("#content .container img:not(.rounded)"),
         autoDownload: [0],
         next: "a:has(>button>.fa-chevron-right)",
         prev: "a:has(>button>.fa-chevron-left)",
         customTitle: () => fn.dt({
-            d: " - Reaper Scans"
+            d: [" - Reaper Scans", " - Omega Scans"]
         }),
         category: "comic"
     }, {
         name: "Vortex Scans",
         url: {
             h: "vortexscans.org",
-            p: "/chapter"
+            d: "pc"
         },
-        SPA: true,
-        init: () => fn.waitEle("img[alt*='Chapter']"),
+        SPA: () => {
+            if (document.URL.includes("/chapter")) {
+                return fn.waitEle("img[alt*='Chapter']");
+            } else {
+                return false;
+            }
+        },
+        observerURL: true,
         imgs: () => fn.gae("img[alt*='Chapter']"),
         autoDownload: [0],
         next: "//a[button[div[p[text()='Next']]]][starts-with(@href,'/series/')]",
@@ -18317,7 +18440,8 @@ div[class*='backdrop-show'] {
         name: "ZeroScans",
         url: {
             h: "zscans.com",
-            p: /^\/comics\/[\w-]+\/\d+$/
+            p: /^\/comics\/[\w-]+\/\d+$/,
+            d: "pc"
         },
         SPA: true,
         init: () => fn.waitVar("__ZEROSCANS__"),
@@ -23475,7 +23599,7 @@ if ("xx" in window) {
         next: ".view-fix-bottom-bar-item-menu-next",
         prev: ".view-fix-bottom-bar-item-menu-prev",
         customTitle: () => fn.title("在线阅读", 1),
-        css: "body{padding-bottom:0px!important}",
+        css: "body{padding-bottom:0px!important}div:has(>.view-fix-top-bar){z-index:1000!important}",
         category: "comic"
     }, {
         name: "漫蛙選目錄展開全部章節",
@@ -30250,7 +30374,7 @@ body {
 }
 #FixedMenu {
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: Microsoft YaHei, Arial, sans-serif;
     font-size: 14px;
     color: #000000;
     width: ${hasTouchEvent ? "102px" : "132px"};
@@ -31416,7 +31540,7 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: Microsoft YaHei, Arial, sans-serif;
     font-size: 14px;
     color: #000000;
     width: 132px;
@@ -32362,7 +32486,7 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: Microsoft YaHei, Arial, sans-serif;
     font-size: 14px;
     color: #000000;
     width: 132px;
@@ -32951,7 +33075,7 @@ html,body {
 #main {
     font-size: 14px;
     line-height: 20px;
-    font-family: Arial, sans-serif;
+    font-family: Microsoft YaHei, Arial, sans-serif;
     text-align: left;
     color: black;
     inset: 0px;
@@ -34172,7 +34296,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadOptions * {
     font: unset;
-    font-family: Arial, sans-serif;
+    font-family: Microsoft YaHei, Arial, sans-serif;
     font-size: 14px;
     color: black;
     float: none;
@@ -34667,7 +34791,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenu {
     text-align: center !important;
-    font-family: Arial, sans-serif !important;
+    font-family: Microsoft YaHei, Arial, sans-serif !important;
     font-size: 14px !important;
     color: #000000 !important;
     height: auto !important;
@@ -34716,7 +34840,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenuB {
     text-align: center !important;
-    font-family: Arial, sans-serif !important;
+    font-family: Microsoft YaHei, Arial, sans-serif !important;
     font-size: 14px !important;
     color: #000000 !important;
     width: 112px !important;
@@ -34733,7 +34857,7 @@ label.line-through:has(>#size) {
 }
 
 #FullPictureLoadMsg {
-    font-family: Arial, sans-serif !important;
+    font-family: Microsoft YaHei, Arial, sans-serif !important;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
@@ -34863,7 +34987,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     height: 30px;
     font-size: 18px;
     color: black;
-    font-family: Arial, sans-serif !important;
+    font-family: Microsoft YaHei, Arial, sans-serif !important;
     line-height: 29px;
     text-align: center;
     overflow: hidden;
@@ -34900,7 +35024,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 }
 
 .autoPagerTitle a:-webkit-any-link {
-    font-family: Arial, sans-serif !important;
+    font-family: Microsoft YaHei, Arial, sans-serif !important;
     color: black;
 }
 
@@ -36189,10 +36313,10 @@ html,body {
     max-height: 44px;
     margin: 0px 10px 10px 0px;
     position: unset;
-    line-height: 26px;
+    line-height: 24px !important;
     padding: 3px;
     font: unset;
-    font-family: Arial, sans-serif;
+    font-family: Microsoft YaHei, Arial, sans-serif;
     font-size: 16px;
     text-align: center;
     border-radius: 8px;
@@ -36205,7 +36329,7 @@ html,body {
     text-align: center;
     text-decoration: unset;
     font: unset;
-    font-family: Arial, sans-serif;
+    font-family: Microsoft YaHei, Arial, sans-serif;
     font-size: 16px;
     background-color: unset;
     border-color: unset;
