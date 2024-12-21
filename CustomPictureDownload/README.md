@@ -1787,6 +1787,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://taotu.uk/zh_cn/">私图网taotu.uk</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.umeitu.com/">尤美图库</a>
                 </td>
                 <td>
@@ -1916,7 +1922,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xiuwo.net/">秀窝</a>
                 </td>
                 <td>
-                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站31個</a>
+                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站37個</a>
                 </td>
             </tr>
             <tr>
@@ -2346,7 +2352,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://xx.knit.bid/sort/new/">爱妹子</a>
                 </td>
                 <td>
-                    <a href="https://mm.187187.xyz/sort/new/">mm.187187.xyz</a>， <a href="https://999888.best/sort/new/">999888.best</a>
+                    <a href="https://mm.187187.xyz/sort/new/">mm.187187.xyz</a>， <a href="https://999888.best/sort/new/">999888.best</a>， <a href="https://www.gaik.com/sort/new">www.gaik.com</a>
                 </td>
             </tr>
             <tr>
@@ -4221,12 +4227,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://user.aiavr.uk/">user.aiavr.uk</a>，爬取的圖片資料混雜，不屬於該圖集的圖片卻放在一起，評價不及格的爬蟲。
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://nicegirl4u.cyou/">NICEGIRL4U</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
