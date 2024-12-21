@@ -1451,7 +1451,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://xchina.biz/">小黃書</a>
                 </td>
                 <td>
-                    <a href="https://xchina.co/">xchina.co</a>
+                    <a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.store/">xchina.store</a>，<a href="https://xchina.bond/">xchina.bond</a>，<a href="https://xiaohuangshu.me/">网址发布页</a>
                 </td>
             </tr>
             <tr>
@@ -5106,10 +5106,17 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://manhuabika.com/">嗶咔漫畫</a>
+                </td>
+                <td>
+                    <a href="https://manhuapica.com/">manhuapica.com</a>，需註冊，PC限定，手動模式
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://syacomic.com/">紳夜漫畫</a>
                 </td>
-                <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a>
-                </td>
+                <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a></td>
             </tr>
             <tr>
                 <td>
@@ -6467,7 +6474,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.reaperscans.com/">ReaperScans 英文</a>
                 </td>
-                <td>SPA網頁，手動</td>
+                <td>SPA網頁，手動，<a href="https://www.omegascans.org/">Omega Scans</a></td>
             </tr>
             <tr>
                 <td>
