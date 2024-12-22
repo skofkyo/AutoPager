@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.59
+// @version            2.11.60
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -8536,10 +8536,20 @@ div[class*='backdrop-show'] {
         reg: /^https?:\/\/fliporn\.biz\/videos\//,
         include: "//span[@class='entry-category']/a[text()='亚洲贴图' or text()='写真' or text()='动漫贴图' or text()='性感贴图' or text()='欧美贴图' or text()='网友自拍']",
         init: () => fn.createImgBox("//center[img] | //center[p[img]] | //div[@id='conttpc' and img] | //div[@id='conttpc' and p[img]] | //div[@class='entry-content']//p[img] | //div[figure[div[img]]]", 1),
-        imgs: () => fn.gae(".entry-content img").map(e => e.dataset.src ? e.dataset.src.replace(/\?w=858(&ssl=1)?/, "") : e.src.replace("%3C/center%3E%3C/p%3E%3Cdiv%20class=", "").replace(/\?w=858(&ssl=1)?/, "")),
+        imgs: async () => {
+            let srcs;
+            let pages = fn.ge(".custom-pagination");
+            if (pages) {
+                let max = fn.gt(".next.page-numbers", 2);
+                srcs = await fn.getImg(".entry-content img", max, 7);
+            } else {
+                srcs = fn.getImgSrcArr(".entry-content img");
+            }
+            return srcs.map(e => e.replace("%3C/center%3E%3C/p%3E%3Cdiv%20class=", "").replace(/\?w=858(&ssl=1)?/, ""));
+        },
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "//center[img] | //center[p[img]] | //div[@id='conttpc' and img] | //div[@id='conttpc' and p[img]] | //div[@class='entry-content']//p[img] | //div[figure[div[img]]]"], 2
+            ["#FullPictureLoadMainImgBox", 0, "//br | //div[@class='custom-pagination'] | //center[img] | //center[p[img]] | //div[@id='conttpc' and img] | //div[@id='conttpc' and p[img]] | //div[@class='entry-content']//p[img] | //div[figure[div[img]]]"], 2
         ],
         customTitle: () => fn.dt({
             s: ".entry-title",
@@ -10507,11 +10517,11 @@ div[class*='backdrop-show'] {
             p: "/set/"
         },
         init: async () => {
-            await fn.waitEle(".images .imageContainer .image img");
+            await fn.waitEle("a[target=imageView] img[img-id]");
             fn.createImgBox(".images", 2);
         },
         imgs: async () => {
-            let selector = ".images .imageContainer .image img";
+            let selector = "a[target=imageView] img[img-id]";
             await fn.waitEle(selector);
             thumbnailSrcArray = fn.gae(selector).map(e => e.src);
             let src = fn.attr(selector, "src");
@@ -10546,10 +10556,9 @@ div[class*='backdrop-show'] {
         category: "nsfw2"
     }, {
         name: "Girlsreleased 載入更多",
-        url: {
-            h: "girlsreleased.com"
-        },
-        observerClick: "//button[text()='more']",
+        reg: /^https?:\/\/girlsreleased\.com\/$/,
+        init: () => fn.waitEle("//button[text()='load more sets']"),
+        observerClick: "//button[text()='load more sets']",
         openInNewTab: ".content .main a",
         category: "autoPager"
     }, {
