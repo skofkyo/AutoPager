@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.58
+// @version            2.11.59
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2631,10 +2631,7 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
-            d: [
-                "— ImgBB",
-                /^[\d\s-]+/
-            ]
+            d: "— ImgBB"
         }),
         category: "nsfw1"
     }, {
@@ -2653,10 +2650,7 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
-            d: [
-                "— anh.im",
-                /^[\d\s-]+/
-            ]
+            d: "— anh.im"
         }),
         category: "nsfw1"
     }, {
@@ -2675,10 +2669,7 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
-            d: [
-                "— JPG5",
-                /^[\d\s-]+/
-            ]
+            d: "— JPG5"
         }),
         category: "nsfw1"
     }, {
@@ -2694,10 +2685,7 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
-            d: [
-                " - IMG.Kiwi",
-                /^[\d\s-]+/
-            ]
+            d: " - IMG.Kiwi"
         }),
         category: "nsfw2"
     }, {
@@ -3369,7 +3357,7 @@ div[class*='backdrop-show'] {
             h: "img.ecy8.com"
         },
         init: () => fn.createImgBox("body"),
-        imgs: "a[href$=jpg],a[href$=jpeg],a[href$=png],a[href$=webp],a[href$=gif],a[href$=bmp],a[href$=mp4]",
+        imgs: "a[href$=jpg],a[href$=jpeg],a[href$=png],a[href$=webp],a[href$=gif],a[href$=bmp],a[href$=mp4],a[href$=JPG],a[href$=JPEG],a[href$=PNG],a[href$=WEBP],a[href$=GIF],a[href$=BMP],a[href$=MP4]",
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         go: 1,
@@ -5641,7 +5629,10 @@ div[class*='backdrop-show'] {
     }, {
         name: "Gallery Epic",
         host: ["galleryepic.com"],
-        reg: /^https?:\/\/galleryepic\.com\/(zh|en)\/(cosplay|album)\/\d+$/,
+        url: {
+            h: "galleryepic",
+            p: /^\/(zh|en)\/(cosplay|album)\/\d+$/
+        },
         init: async () => {
             await fn.waitEle("img[variant='thumbnail']");
             await fn.wait(() => {
@@ -5659,7 +5650,10 @@ div[class*='backdrop-show'] {
         category: "nsfw1"
     }, {
         name: "Gallery Epic Cosplays 分類自動翻頁",
-        reg: /^https?:\/\/galleryepic\.com\/(zh|en)\/cosplays\/\d+$/,
+        url: {
+            h: "galleryepic",
+            p: /^\/(zh|en)\/cosplays\/\d+$/
+        },
         autoPager: {
             ele: ".grid:has(>.relative)",
             observer: ".grid>.relative",
@@ -5684,7 +5678,10 @@ div[class*='backdrop-show'] {
         category: "autoPager"
     }, {
         name: "Gallery Epic cosers 分類自動翻頁",
-        reg: /^https?:\/\/galleryepic\.com\/(zh|en)\/cosers\/\d+\??$/,
+        url: {
+            h: "galleryepic",
+            p: /^\/(zh|en)\/cosers\/\d+\??$/
+        },
         autoPager: {
             ele: ".grid:has(>.flex)",
             observer: ".grid>.flex",
@@ -5709,7 +5706,10 @@ div[class*='backdrop-show'] {
         category: "autoPager"
     }, {
         name: "Gallery Epic Coser 分類自動翻頁",
-        reg: /^https?:\/\/galleryepic\.com\/(zh|en)\/coser\/\d+\/\d+\??$/,
+        url: {
+            h: "galleryepic",
+            p: /^\/(zh|en)\/coser\/\d+\/\d+\??$/
+        },
         autoPager: {
             ele: ".grid:has(>.relative)",
             observer: ".grid>.relative",
