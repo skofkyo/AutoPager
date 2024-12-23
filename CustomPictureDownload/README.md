@@ -4190,6 +4190,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.uecoy.com/">聚美星空</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://qqdk2019.net/">悄悄的看2019</a>
                 </td>
                 <td></td>
@@ -4357,6 +4363,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://langnv.neocities.org/">浪女吧</a>
                 </td>
                 <td>很久沒新圖了</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.juemei.com/mm/l.html">绝美网</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4837,6 +4849,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://asmhentai.com/">AsmHentai</a>
                 </td>
                 <td>作用在圖片清單頁/閱讀頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://thehentai.net/">The Hentai</a>
+                </td>
+                <td><a href="https://en.thehentai.net/">en.thehentai.net</a>，作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td>
@@ -6228,6 +6246,30 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.mangasuika.com/">漫画スイカ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.firemanga.com/">Fire Manga</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.rawbig.com/">Big raw</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://klz9.com/">KL</a>
+                </td>
+                <td><a href="https://jestful.net/">JF</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://manhuascans.org/">GodaComic 英文</a>
                 </td>
                 <td>有無限滾動模式加預讀</td>
@@ -6491,6 +6533,30 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.novatoscans.top/">NOVATO SCANS 葡萄牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://inmanga.com/">InManga 西班牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manga-oni.com/">MangaOni 西班牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhwaweb.com/">ManhwaWeb 西班牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://zonatmo.com/">ZonaTMO 西班牙文</a>
                 </td>
                 <td></td>
             </tr>
