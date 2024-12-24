@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.62
+// @version            2.12.0
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1175,6 +1175,29 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#lightgallery", 2],
         customTitle: ".focusbox-title",
+        category: "nsfw1"
+    }, {
+        name: "素拾网",
+        url: {
+            h: "sushixz.net",
+            e: ".m-list-content"
+        },
+        imgs: () => {
+            let pages = fn.ge(".link_pages");
+            if (pages) {
+                let max = fn.gt(".link_pages>a[title=Page]").match(/\d+/g).at(-1);
+                let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url + `_${i + 1}`);
+                return fn.getImgA(".m-list-content img", links);
+            } else {
+                return fn.gae(".m-list-content img");
+            }
+        },
+        button: [4],
+        insertImg: [".m-list-content", 2],
+        autoDownload: [0],
+        next: ".sxpage_l a",
+        prev: ".sxpage_r a",
+        customTitle: ".article h2",
         category: "nsfw1"
     }, {
         name: "悄悄的看2019",
@@ -2873,6 +2896,20 @@ div[class*='backdrop-show'] {
         reg: /^https?:\/\/cosplayporn\.online\//,
         observerClick: "#wpdp-close",
         category: "ad"
+    }, {
+        name: "Cosplay VN",
+        url: {
+            h: "cosplayvn.club",
+            e: ".mace-gallery-teaser[data-g1-gallery]"
+        },
+        imgs: () => {
+            let data = JSON.parse(fn.attr(".mace-gallery-teaser", "data-g1-gallery")).filter(e => e?.type === "image");
+            thumbnailSrcArray = data.map(e => e.thumbnail);
+            return data.map(e => e.full);
+        },
+        capture: () => _this.imgs(),
+        customTitle: ".entry-title",
+        category: "nsfw2"
     }, {
         name: "咿呀美图",
         url: {
@@ -5633,14 +5670,13 @@ div[class*='backdrop-show'] {
         category: "nsfw2"
     }, {
         name: "ThotHD Albums / Thothub Albums",
-        host: ["thothd.com", "thothub.to", "thothub.lol"],
-        reg: [
-            /^https?:\/\/thothd\.com\/([a-z]{2}\/)?albums\/\d+\/[^\/]+\/$/,
-            /^https?:\/\/thothub\.(to|lol)\/albums\/\d+\/[^\/]+\/$/
-        ],
-        include: "a[data-fancybox-type]",
-        imgs: "a[data-fancybox-type]",
-        thums: "a[data-fancybox-type] .thumb",
+        host: ["thothd.com", "thothub.to", "thothub.lol", "thothub.mx"],
+        url: {
+            h: [/thothd/, /thothub/],
+            p: "/albums/"
+        },
+        imgs: ".images a[data-fancybox-type]",
+        thums: ".images a[data-fancybox-type] .thumb",
         button: [4],
         insertImg: [".images", 2],
         customTitle: "h1",
@@ -25154,6 +25190,7 @@ if ("xx" in window) {
                 str_180: "自動匯出URLs.txt",
                 str_181: "拼接下載",
                 galleryMenu: {
+                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvent ? "小圖像模式" : "小圖像模式 (2,R)",
@@ -25376,6 +25413,7 @@ if ("xx" in window) {
                 str_180: "自动导出URLs.txt",
                 str_181: "拼接下载",
                 galleryMenu: {
+                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvent ? "小图像模式" : "小图像模式 (2,R)",
@@ -25595,6 +25633,7 @@ if ("xx" in window) {
                 str_180: "Auto Export URLs.txt",
                 str_181: "Combine Download",
                 galleryMenu: {
+                    horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
                     small: hasTouchEvent ? "Small Image" : "Small Image (2,R)",
@@ -30833,6 +30872,14 @@ img.small {
     max-height: 33vh;
     border: solid #fff;
 }
+img.horizontal {
+    vertical-align: middle;
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    border: solid #fff;
+    background-color: #fff;
+}
 .viewer-backdrop {
     background-color: rgba(0, 0, 0, .94) !important;
 }
@@ -31043,6 +31090,10 @@ function addFixedMenu() {
     let menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
+        id: "MenuHorizontalItem",
+        text: menuLanguage.horizontal,
+        cfn: () => horizontalImageLayout()
+    }, {
         id: "MenuWebtoonItem",
         text: menuLanguage.webtoon,
         cfn: () => webtoonImageLayout()
@@ -31079,6 +31130,7 @@ function addFixedMenu() {
 addFixedMenu();
 
 if (hasTouchEvent) {
+    document.querySelector("#MenuHorizontalItem").remove();
     let menu = document.querySelector("#FixedMenu");
     menu.style.display = "none";
     let lastScrollTop = 0;
@@ -31099,15 +31151,6 @@ if (hasTouchEvent) {
 }
 
 document.addEventListener("keydown", event => {
-    if (isOpenFancybox || document.querySelector(".viewer-container .viewer-canvas>img")) return;
-    if (event.code === "Numpad0" || event.key === "0") return defaultImageLayout();
-    if (event.code === "Numpad1" || event.key === "1") return singleImageLayout();
-    if (event.code === "Numpad2" || event.key === "2") return smallImageLayout();
-    if (event.code === "Numpad3" || event.key === "3") return rtlImageLayout();
-    if (event.code === "Numpad4" || event.key === "4") return webtoonImageLayout();
-});
-
-document.addEventListener("keydown", event => {
     if (isOpenFancybox || document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
     const imgs = [...document.images];
     if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
@@ -31115,6 +31158,7 @@ document.addEventListener("keydown", event => {
     if (event.code === "Numpad2" || event.code === "Digit2" || event.key === "2") return smallImageLayout();
     if (event.code === "Numpad3" || event.code === "Digit3" || event.key === "3") return rtlImageLayout();
     if (event.code === "Numpad4" || event.code === "Digit4" || event.key === "4") return webtoonImageLayout();
+    if (event.code === "Numpad5" || event.code === "Digit5" || event.key === "5") return horizontalImageLayout();
     if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
         event.preventDefault();
         if (event.code === "Home" || event.key === "Home") {
@@ -31136,7 +31180,7 @@ document.addEventListener("keydown", event => {
     if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
         return reduceWidth();
     }
-    if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
+    if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (box.style.direction == "rtl") {
             return (box.style.direction = "ltr");
@@ -31222,11 +31266,11 @@ document.addEventListener("wheel", (event) => {
 });
 
 document.addEventListener("wheel", (event) => {
-    if (!isOpenFancybox && !document.querySelector(".viewer-container .viewer-canvas>img") && [0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+    if (!isOpenFancybox && !document.querySelector(".viewer-container .viewer-canvas>img") && ([0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) || config.ViewMode == 5) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
         event.preventDefault();
         event.stopPropagation();
         const imgs = [...document.images];
-        if (config.shadowGalleryWheel == 1) {
+        if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
             if (event.deltaY < 0 && imgViewIndex < 0) {
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -31256,8 +31300,7 @@ document.addEventListener("wheel", (event) => {
             } else {
                 imgViewIndex = -1;
             }
-        }
-        if (config.shadowGalleryWheel == 2) {
+        } else if (config.shadowGalleryWheel == 2) {
             if (event.deltaY < 0) {
                 if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
                 imgs.forEach(e => (e.style.border = ""));
@@ -31296,6 +31339,9 @@ function aspectRatio() {
             img.style.maxHeight = "calc(100vh - 4px)";
             img.style.minWidth = "";
             img.style.maxWidth = "98vw";
+        }
+        if (config.ViewMode == 5) {
+            img.style.height = (document.body.clientHeight - 6) + "px";
         }
     });
     if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvent) {
@@ -31385,14 +31431,16 @@ function createImgElement(mode) {
     window.scrollTo({
         top: 0
     });
+    const imgBox = document.querySelector("#imgBox");
     if (config.ViewMode == 3) {
-        document.querySelector("#imgBox").style.direction = "rtl";
+        imgBox.style.direction = "rtl";
     } else {
-        document.querySelector("#imgBox").style.direction = "";
+        imgBox.style.direction = "";
     }
     imgViewIndex = -1;
     [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
-    document.querySelector("#imgBox").innerHTML = "";
+    imgBox.innerHTML = "";
+    document.body.style.overflow = "hidden scroll";
     const imgElements = newImgs.map((src, i) => {
         let img = document.createElement("img");
         img.className = mode;
@@ -31414,7 +31462,15 @@ function createImgElement(mode) {
         return img;
     });
     fragment.append(...imgElements);
-    document.querySelector("#imgBox").append(fragment);
+    imgBox.append(fragment);
+    if (config.ViewMode == 5) {
+        document.body.style.overflow = "scroll hidden"
+        imgBox.style.display = "flex";
+        imgBox.style.height = "100vh";
+        imgBox.style.width = "fit-content";
+    } else {
+        imgBox.removeAttribute("style");
+    }
     if (lightGallery == 1) {
         ViewerJsInstance.update();
     } else {
@@ -31427,7 +31483,12 @@ function createImgElement(mode) {
     fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
         setTimeout(() => {
             aspectRatio();
-            [...document.images].forEach(img => fn.imagesObserver.observe(img));
+            [...document.images].forEach(img => {
+                fn.imagesObserver.observe(img);
+                if (mode === "horizontal") {
+                    img.style.height = (document.body.clientHeight - 6) + "px";
+                }
+            });
         }, 1000);
     });
 }
@@ -31471,6 +31532,13 @@ function webtoonImageLayout() {
     document.querySelector("#MenuWebtoonItem").classList.add("active");
 }
 
+function horizontalImageLayout() {
+    config.ViewMode = 5;
+    saveConfig();
+    createImgElement("horizontal");
+    document.querySelector("#MenuHorizontalItem").classList.add("active");
+}
+
 if (config.ViewMode == 1) {
     singleImageLayout();
 } else if (config.ViewMode == 2) {
@@ -31479,6 +31547,8 @@ if (config.ViewMode == 1) {
     rtlImageLayout();
 } else if (config.ViewMode == 4) {
     webtoonImageLayout();
+} else if (config.ViewMode == 5) {
+    horizontalImageLayout();
 } else {
     defaultImageLayout();
 }
@@ -31653,12 +31723,12 @@ if (config.ViewMode == 1) {
         };
 
         const toggleImage = (event) => {
-            if (!isOpenFancybox && [0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+            if (!isOpenFancybox && ([0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) || config.ViewMode == 5) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
                 event.preventDefault();
                 event.stopPropagation();
                 const imgs = gae("img", shadow);
                 const next = ge("#next", shadow);
-                if (config.shadowGalleryWheel == 1) {
+                if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
@@ -31699,8 +31769,7 @@ if (config.ViewMode == 1) {
                     } else {
                         imgViewIndex = -1;
                     }
-                }
-                if (config.shadowGalleryWheel == 2) {
+                } else if (config.shadowGalleryWheel == 2) {
                     if (event.deltaY < 0) {
                         nextButtonIsShown = false;
                         if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
@@ -31735,6 +31804,9 @@ if (config.ViewMode == 1) {
                     img.style.minHeight = "calc(100vh - 6px)";
                     img.style.minWidth = "";
                 }
+                if (config.ViewMode == 5) {
+                    img.style.height = (mainElement.clientHeight - 6) + "px";
+                }
             });
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
                 imgs.forEach(e => (e.style.border = ""));
@@ -31754,6 +31826,7 @@ if (config.ViewMode == 1) {
             if (event.code === "Numpad2" || event.code === "Digit2" || event.key === "2") return smallImageLayout();
             if (event.code === "Numpad3" || event.code === "Digit3" || event.key === "3") return rtlImageLayout();
             if (event.code === "Numpad4" || event.code === "Digit4" || event.key === "4") return webtoonImageLayout();
+            if (event.code === "Numpad5" || event.code === "Digit5" || event.key === "5") return horizontalImageLayout();
             if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
                 event.preventDefault();
                 nextButtonIsShown = false;
@@ -31785,6 +31858,7 @@ if (config.ViewMode == 1) {
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
+                if (config.ViewMode == 5) return;
                 let num;
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
@@ -31805,6 +31879,7 @@ if (config.ViewMode == 1) {
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
+                if (config.ViewMode == 5) return;
                 let num;
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
@@ -31829,7 +31904,7 @@ if (config.ViewMode == 1) {
             if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
                 return reduceWidth();
             }
-            if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
+            if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", shadow);
                 if (box.style.direction == "rtl") {
                     return (box.style.direction = "ltr");
@@ -32004,6 +32079,14 @@ img.small {
     max-height: 33vh;
     border: solid #fff;
 }
+img.horizontal {
+    vertical-align: middle;
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    border: solid #fff;
+    background-color: #fff;
+}
 #next {
     display: block;
     text-align: center;
@@ -32077,6 +32160,7 @@ img.small {
             mainElement.focus();
             imgViewIndex = -1;
             gae(".FixedMenuitem", shadow).forEach(item => item.classList.remove("active"));
+            mainElement.style.overflow = "hidden scroll";
             mainElement.innerHTML = "";
             const imgElements = srcs.map((src, i) => {
                 let img = new Image();
@@ -32103,13 +32187,18 @@ img.small {
             if (config.ViewMode == 3) {
                 p.style.direction = "rtl";
             }
-            if (siteData.category.includes("comic") && config.ViewMode != 4) {
+            if (siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
                 if (_unsafeWindow.devicePixelRatio > 1) {
                     p.style.padding = "2px 6% 0";
                 } else {
                     p.style.padding = "0 6%";
                 }
                 p.style.margin = "0 auto";
+            } else if (config.ViewMode == 5) {
+                p.style.display = "flex";
+                p.style.height = "100vh";
+                p.style.width = "fit-content";
+                mainElement.style.overflow = "scroll hidden";
             } else if (_unsafeWindow.devicePixelRatio > 1) {
                 p.style.paddingTop = "1px";
             }
@@ -32123,7 +32212,12 @@ img.small {
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
-                    gae("img", shadow).forEach(img => fn.imagesObserver.observe(img));
+                    gae("img", shadow).forEach(img => {
+                        fn.imagesObserver.observe(img);
+                        if (mode === "horizontal") {
+                            img.style.height = (mainElement.clientHeight - 6) + "px";
+                        }
+                    });
                 }, 1000);
             });
             if (options.fancybox != 1) {
@@ -32208,7 +32302,7 @@ img.small {
                     }
                 });
             }
-            if (isString(nextLink)) {
+            if (isString(nextLink) && config.ViewMode != 5) {
                 totalNumberOfElements = totalNumberOfElements + 1;
                 const next = document.createElement("div");
                 next.id = "next";
@@ -32274,6 +32368,10 @@ img.small {
                 id: "MenuBehaviorItem"
             }, {
                 id: "MenuJumpItem",
+            }, {
+                id: "MenuHorizontalItem",
+                text: displayLanguage.galleryMenu.horizontal,
+                cfn: () => horizontalImageLayout()
             }, {
                 id: "MenuWebtoonItem",
                 text: displayLanguage.galleryMenu.webtoon,
@@ -32397,6 +32495,13 @@ img.small {
             ge("#MenuWebtoonItem", shadow).classList.add("active");
         }
 
+        function horizontalImageLayout() {
+            config.ViewMode = 5;
+            saveConfig(config);
+            createGalleryElement("horizontal");
+            ge("#MenuHorizontalItem", shadow).classList.add("active");
+        }
+
         if (config.ViewMode == 1) {
             singleImageLayout();
         } else if (config.ViewMode == 2) {
@@ -32405,6 +32510,8 @@ img.small {
             rtlImageLayout();
         } else if (config.ViewMode == 4) {
             webtoonImageLayout();
+        } else if (config.ViewMode == 5) {
+            horizontalImageLayout();
         } else {
             defaultImageLayout();
         }
@@ -32601,12 +32708,12 @@ img.small {
         };
 
         const toggleImage = (event) => {
-            if (!isOpenFancybox && [0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+            if (!isOpenFancybox && ([0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) || config.ViewMode == 5) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
                 event.preventDefault();
                 event.stopPropagation();
                 const imgs = gae("img", mainElement);
                 const next = ge("#next", mainElement);
-                if (config.shadowGalleryWheel == 1) {
+                if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
@@ -32647,8 +32754,7 @@ img.small {
                     } else {
                         imgViewIndex = -1;
                     }
-                }
-                if (config.shadowGalleryWheel == 2) {
+                } else if (config.shadowGalleryWheel == 2) {
                     if (event.deltaY < 0) {
                         nextButtonIsShown = false;
                         if (Number(currentReferenceElement?.dataset?.index) <= 0) return;
@@ -32683,6 +32789,9 @@ img.small {
                     img.style.minHeight = "calc(100vh - 6px)";
                     img.style.minWidth = "";
                 }
+                if (config.ViewMode == 5) {
+                    img.style.height = (mainElement.clientHeight - 6) + "px";
+                }
             });
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
                 imgs.forEach(e => (e.style.border = ""));
@@ -32702,6 +32811,7 @@ img.small {
             if (event.code === "Numpad2" || event.code === "Digit2" || event.key === "2") return smallImageLayout();
             if (event.code === "Numpad3" || event.code === "Digit3" || event.key === "3") return rtlImageLayout();
             if (event.code === "Numpad4" || event.code === "Digit4" || event.key === "4") return webtoonImageLayout();
+            if (event.code === "Numpad5" || event.code === "Digit5" || event.key === "5") return horizontalImageLayout();
             if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
                 event.preventDefault();
                 nextButtonIsShown = false;
@@ -32733,6 +32843,7 @@ img.small {
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
+                if (config.ViewMode == 5) return;
                 let num;
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
@@ -32753,6 +32864,7 @@ img.small {
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
+                if (config.ViewMode == 5) return;
                 let num;
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
@@ -32777,7 +32889,7 @@ img.small {
             if (config.ViewMode == 4 && (["NumpadSubtract", "Minus"].some(k => event.code === k) || ["-", "_"].some(k => event.key === k))) {
                 return reduceWidth();
             }
-            if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3].some(m => config.ViewMode == m)) {
+            if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", mainElement);
                 if (box.style.direction == "rtl") {
                     return (box.style.direction = "ltr");
@@ -32950,6 +33062,14 @@ img.small {
     max-height: 33vh;
     border: solid #fff;
 }
+img.horizontal {
+    vertical-align: middle;
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    border: solid #fff;
+    background-color: #fff;
+}
 #next {
     display: block;
     text-align: center;
@@ -33033,6 +33153,7 @@ img.small {
             imgViewIndex = -1;
             gae(".FixedMenuitem", dom).forEach(item => item.classList.remove("active"));
             mainElement.innerHTML = "";
+            mainElement.style.overflow = "hidden scroll";
             const imgElements = srcs.map((src, i) => {
                 let img = new Image();
                 img.className = mode;
@@ -33058,13 +33179,18 @@ img.small {
             if (config.ViewMode == 3) {
                 p.style.direction = "rtl";
             }
-            if (siteData.category.includes("comic") && config.ViewMode != 4) {
+            if (siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
                 if (_unsafeWindow.devicePixelRatio > 1) {
                     p.style.padding = "2px 6% 0";
                 } else {
                     p.style.padding = "0 6%";
                 }
                 p.style.margin = "0 auto";
+            } else if (config.ViewMode == 5) {
+                p.style.display = "flex";
+                p.style.height = "100vh";
+                p.style.width = "fit-content";
+                mainElement.style.overflow = "scroll hidden";
             } else if (_unsafeWindow.devicePixelRatio > 1) {
                 p.style.paddingTop = "1px";
             }
@@ -33078,7 +33204,12 @@ img.small {
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
-                    gae("img", mainElement).forEach(img => fn.imagesObserver.observe(img));
+                    gae("img", mainElement).forEach(img => {
+                        fn.imagesObserver.observe(img);
+                        if (mode === "horizontal") {
+                            img.style.height = (mainElement.clientHeight - 6) + "px";
+                        }
+                    });
                 }, 1000);
             });
             if (options.fancybox != 1) {
@@ -33173,7 +33304,7 @@ img.small {
                     });
                 });
             }
-            if (isString(nextLink)) {
+            if (isString(nextLink) && config.ViewMode != 5) {
                 totalNumberOfElements = totalNumberOfElements + 1;
                 const next = document.createElement("div");
                 next.id = "next";
@@ -33239,6 +33370,10 @@ img.small {
                 id: "MenuBehaviorItem"
             }, {
                 id: "MenuJumpItem",
+            }, {
+                id: "MenuHorizontalItem",
+                text: displayLanguage.galleryMenu.horizontal,
+                cfn: () => horizontalImageLayout()
             }, {
                 id: "MenuWebtoonItem",
                 text: displayLanguage.galleryMenu.webtoon,
@@ -33362,6 +33497,13 @@ img.small {
             ge("#MenuWebtoonItem", dom).classList.add("active");
         }
 
+        function horizontalImageLayout() {
+            config.ViewMode = 5;
+            saveConfig(config);
+            createGalleryElement("horizontal");
+            ge("#MenuHorizontalItem", mainElement).classList.add("active");
+        }
+
         if (config.ViewMode == 1) {
             singleImageLayout();
         } else if (config.ViewMode == 2) {
@@ -33370,6 +33512,8 @@ img.small {
             rtlImageLayout();
         } else if (config.ViewMode == 4) {
             webtoonImageLayout();
+        } else if (config.ViewMode == 5) {
+            horizontalImageLayout();
         } else {
             defaultImageLayout();
         }
