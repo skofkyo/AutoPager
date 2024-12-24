@@ -1922,7 +1922,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xiuwo.net/">秀窝</a>
                 </td>
                 <td>
-                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站39個</a>
+                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站45個</a>
                 </td>
             </tr>
             <tr>
@@ -2898,6 +2898,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://cosplayvn.club/">Cosplay VN</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://imgcup.com/">imgcup.com</a>
                 </td>
                 <td></td>
@@ -3157,7 +3163,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://thothub.vip/albums/">Thothub Albums</a>
                 </td>
                 <td>
-                    <a href="https://thothub.to/albums/">thothub.to</a>
+                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>，
                 </td>
             </tr>
             <tr>
@@ -4210,6 +4216,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.sushixz.net/">素拾网</a>
+                </td>
+                <td>
+                    <a href="https://sushixz.net/">sushixz.net</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://m.xtushe.com/">新老友图社</a>
                 </td>
                 <td>有瀏覽限制，超過需要註冊會員和充值。</td>
@@ -4500,6 +4514,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="http://ktacf.click/g/list/7.html">秘秘秘</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ilk01.com/index.php/art/type/id/5.html">奶PARTTY</a>
                 </td>
                 <td></td>
             </tr>
