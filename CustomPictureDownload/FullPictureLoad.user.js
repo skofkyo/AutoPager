@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.11.61
+// @version            2.11.62
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2016,6 +2016,10 @@ div[class*='backdrop-show'] {
         prev: "a[rel=next]",
         customTitle: ".entry-title",
         hide: ".page-links",
+        fancybox: {
+            v: 3,
+            css: false
+        },
         category: "nsfw1"
     }, {
         name: "Elysium",
@@ -11694,6 +11698,18 @@ div[class*='backdrop-show'] {
         prev: "a:has(.fa-arrow-left)",
         customTitle: ".container>h4",
         hide: "#span_h4",
+        category: "nsfw2"
+    }, {
+        name: "奶PARTTY",
+        host: ["ilk01.com"],
+        url: {
+            t: "奶PARTTY",
+            p: "/detail/id/"
+        },
+        imgs: "#MyImg img",
+        button: [4],
+        insertImg: ["#MyImg", 2],
+        customTitle: ".content h1",
         category: "nsfw2"
     }, {
         url: {
@@ -30117,13 +30133,31 @@ if ("xx" in window) {
         let srcArr = await getImgs(selector);
         siteData.insertImg ? debug("手動插入圖片") : debug("複製網址");
         if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        let imgsNum = srcArr.length;
+        let videosNum;
         if ((!fn.ge(".FullPictureLoadImage") && !!siteData.insertImg) || siteData.repeat == 1 && !!siteData.insertImg) {
             const [insertTargetEle, insertMode] = siteData.insertImg;
             return fn.insertImg(srcArr, insertTargetEle, insertMode);
         }
-        if (videoSrcArray.length > 0) srcArr = srcArr.concat(videoSrcArray);
+        if (videoSrcArray.length > 0) {
+            videosNum = videoSrcArray.length;
+            srcArr = srcArr.concat(videoSrcArray);
+        }
         if (fileUrlArray.length > 0) srcArr = srcArr.concat(fileUrlArray);
-        let textArr = [customTitle || document.title].concat(srcArr);
+        let title;
+        if (isString(customTitle)) {
+            title = customTitle;
+        } else {
+            title = fn.dt({
+                s: "title"
+            });
+        }
+        if (videoSrcArray.length > 0) {
+            title = `${title} [${imgsNum}P + ${videosNum}V]`;
+        } else {
+            title = `${title} [${imgsNum}P]`;
+        }
+        let textArr = [title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
         copyToClipboard(str);
@@ -30136,9 +30170,27 @@ if ("xx" in window) {
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
         if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
-        if (videoSrcArray.length > 0) srcArr = srcArr.concat(videoSrcArray);
+        let imgsNum = srcArr.length;
+        let videosNum;
+        if (videoSrcArray.length > 0) {
+            videosNum = videoSrcArray.length;
+            srcArr = srcArr.concat(videoSrcArray);
+        }
         if (fileUrlArray.length > 0) srcArr = srcArr.concat(fileUrlArray);
-        let textArr = [customTitle || document.title].concat(srcArr);
+        let title;
+        if (isString(customTitle)) {
+            title = customTitle;
+        } else {
+            title = fn.dt({
+                s: "title"
+            });
+        }
+        if (videoSrcArray.length > 0) {
+            title = `${title} [${imgsNum}P + ${videosNum}V]`;
+        } else {
+            title = `${title} [${imgsNum}P]`;
+        }
+        let textArr = [title].concat(srcArr);
         let str = textArr.join("\n");
         console.log(str);
         copyToClipboard(str);
