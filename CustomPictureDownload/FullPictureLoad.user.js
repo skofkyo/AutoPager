@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.0
+// @version            2.12.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -30800,7 +30800,7 @@ body {
 }
 #FixedMenu {
     text-align: center;
-    font-family: system-ui;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     font-size: 14px;
     color: #000000;
     width: ${hasTouchEvent ? "102px" : "132px"};
@@ -31182,10 +31182,23 @@ document.addEventListener("keydown", event => {
     }
     if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
-        if (box.style.direction == "rtl") {
-            return (box.style.direction = "ltr");
+        if (config.ViewMode == 5) {
+            if (box.style.direction == "rtl") {
+                document.body.style.direction = "ltr";
+                box.style.direction = "ltr";
+            } else {
+                document.body.style.direction = "rtl";
+                box.style.direction = "rtl";
+            }
+            if (imgs[imgViewIndex] !== undefined) {
+                return instantScrollIntoView(imgs[imgViewIndex]);
+            }
         } else {
-            return (box.style.direction = "rtl");
+            if (box.style.direction == "rtl") {
+                return (box.style.direction = "ltr");
+            } else {
+                return (box.style.direction = "rtl");
+            }
         }
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
@@ -31272,11 +31285,16 @@ document.addEventListener("wheel", (event) => {
         const imgs = [...document.images];
         if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
             if (event.deltaY < 0 && imgViewIndex < 0) {
+                if (config.ViewMode == 5) return;
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                 return instantScrollIntoView(imgs[imgViewIndex]);
             } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                 imgViewIndex--;
+                if (imgViewIndex < 0 && config.ViewMode == 5) {
+                    imgViewIndex = 0;
+                    return;
+                }
                 if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
@@ -31287,6 +31305,10 @@ document.addEventListener("wheel", (event) => {
                 return instantScrollIntoView(imgs[imgViewIndex]);
             } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                 imgViewIndex++;
+                if (imgViewIndex > imgs.length - 1 && config.ViewMode == 5) {
+                    imgViewIndex = imgs.length - 1;
+                    return;
+                }
                 if (imgs[imgViewIndex] === undefined) {
                     imgViewIndex = 0;
                 }
@@ -31341,7 +31363,11 @@ function aspectRatio() {
             img.style.maxWidth = "98vw";
         }
         if (config.ViewMode == 5) {
-            img.style.height = (document.body.clientHeight - 6) + "px";
+            let num = 6;
+            if (devicePixelRatio > 1 && !navigator.userAgent.includes("Firefox")) {
+                num = 3;
+            }
+            img.style.height = (document.body.clientHeight - num) + "px";
         }
     });
     if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvent) {
@@ -31464,7 +31490,7 @@ function createImgElement(mode) {
     fragment.append(...imgElements);
     imgBox.append(fragment);
     if (config.ViewMode == 5) {
-        document.body.style.overflow = "scroll hidden"
+        document.body.style.overflow = "scroll hidden";
         imgBox.style.display = "flex";
         imgBox.style.height = "100vh";
         imgBox.style.width = "fit-content";
@@ -31486,7 +31512,11 @@ function createImgElement(mode) {
             [...document.images].forEach(img => {
                 fn.imagesObserver.observe(img);
                 if (mode === "horizontal") {
-                    img.style.height = (document.body.clientHeight - 6) + "px";
+                    let num = 6;
+                    if (devicePixelRatio > 1 && !navigator.userAgent.includes("Firefox")) {
+                        num = 3;
+                    }
+                    img.style.height = (document.body.clientHeight - num) + "px";
                 }
             });
         }, 1000);
@@ -31730,6 +31760,7 @@ if (config.ViewMode == 1) {
                 const next = ge("#next", shadow);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
+                        if (config.ViewMode == 5) return;
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -31737,6 +31768,10 @@ if (config.ViewMode == 1) {
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
                         imgViewIndex--;
+                        if (imgViewIndex < 0 && config.ViewMode == 5) {
+                            imgViewIndex = 0;
+                            return;
+                        }
                         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                         if (config.ViewMode != 4) {
                             imgs.forEach(e => (e.style.border = ""));
@@ -31750,6 +31785,10 @@ if (config.ViewMode == 1) {
                         return setTimeout(() => (location.href = nextLink), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
+                        if (imgViewIndex > imgs.length - 1 && config.ViewMode == 5) {
+                            imgViewIndex = imgs.length - 1;
+                            return;
+                        }
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                             nextButtonIsShown = true;
                             next.style.border = "solid #32a1ce";
@@ -31805,7 +31844,11 @@ if (config.ViewMode == 1) {
                     img.style.minWidth = "";
                 }
                 if (config.ViewMode == 5) {
-                    img.style.height = (mainElement.clientHeight - 6) + "px";
+                    let num = 6;
+                    if (devicePixelRatio > 1 && !isFirefox) {
+                        num = 3;
+                    }
+                    img.style.height = (mainElement.clientHeight - num) + "px";
                 }
             });
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
@@ -31906,10 +31949,23 @@ if (config.ViewMode == 1) {
             }
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", shadow);
-                if (box.style.direction == "rtl") {
-                    return (box.style.direction = "ltr");
+                if (config.ViewMode == 5) {
+                    if (box.style.direction == "rtl") {
+                        mainElement.style.direction = "ltr";
+                        box.style.direction = "ltr";
+                    } else {
+                        mainElement.style.direction = "rtl";
+                        box.style.direction = "rtl";
+                    }
+                    if (isEle(imgs[imgViewIndex])) {
+                        return instantScrollIntoView(imgs[imgViewIndex]);
+                    }
                 } else {
-                    return (box.style.direction = "rtl");
+                    if (box.style.direction == "rtl") {
+                        return (box.style.direction = "ltr");
+                    } else {
+                        return (box.style.direction = "rtl");
+                    }
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
@@ -32002,7 +32058,7 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: system-ui;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     font-size: 14px;
     color: #000000;
     width: 132px;
@@ -32162,6 +32218,7 @@ img.horizontal {
             gae(".FixedMenuitem", shadow).forEach(item => item.classList.remove("active"));
             mainElement.style.overflow = "hidden scroll";
             mainElement.innerHTML = "";
+            menuDiv.style.bottom = "";
             const imgElements = srcs.map((src, i) => {
                 let img = new Image();
                 img.className = mode;
@@ -32199,6 +32256,7 @@ img.horizontal {
                 p.style.height = "100vh";
                 p.style.width = "fit-content";
                 mainElement.style.overflow = "scroll hidden";
+                menuDiv.style.bottom = "20px";
             } else if (_unsafeWindow.devicePixelRatio > 1) {
                 p.style.paddingTop = "1px";
             }
@@ -32215,7 +32273,11 @@ img.horizontal {
                     gae("img", shadow).forEach(img => {
                         fn.imagesObserver.observe(img);
                         if (mode === "horizontal") {
-                            img.style.height = (mainElement.clientHeight - 6) + "px";
+                            let num = 6;
+                            if (devicePixelRatio > 1 && !isFirefox) {
+                                num = 3;
+                            }
+                            img.style.height = (mainElement.clientHeight - num) + "px";
                         }
                     });
                 }, 1000);
@@ -32355,8 +32417,10 @@ img.horizontal {
             }
         }
 
+        let menuDiv;
+
         function addFixedMenu() {
-            let menuDiv = document.createElement("div");
+            menuDiv = document.createElement("div");
             menuDiv.id = "FixedMenu";
             const menuObj = [{
                 id: "MenuCancelItem",
@@ -32715,6 +32779,7 @@ img.horizontal {
                 const next = ge("#next", mainElement);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
+                        if (config.ViewMode == 5) return;
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -32722,6 +32787,10 @@ img.horizontal {
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
                         imgViewIndex--;
+                        if (imgViewIndex < 0 && config.ViewMode == 5) {
+                            imgViewIndex = 0;
+                            return;
+                        }
                         if (imgViewIndex < 0) imgViewIndex = imgs.length - 1;
                         if (config.ViewMode != 4) {
                             imgs.forEach(e => (e.style.border = ""));
@@ -32735,6 +32804,10 @@ img.horizontal {
                         return setTimeout(() => (location.href = nextLink), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
+                        if (imgViewIndex > imgs.length - 1 && config.ViewMode == 5) {
+                            imgViewIndex = imgs.length - 1;
+                            return;
+                        }
                         if (imgs[imgViewIndex] === undefined && next && !nextButtonIsShown) {
                             nextButtonIsShown = true;
                             next.style.border = "solid #32a1ce";
@@ -32790,7 +32863,11 @@ img.horizontal {
                     img.style.minWidth = "";
                 }
                 if (config.ViewMode == 5) {
-                    img.style.height = (mainElement.clientHeight - 6) + "px";
+                    let num = 6;
+                    if (devicePixelRatio > 1 && !isFirefox) {
+                        num = 3;
+                    }
+                    img.style.height = (mainElement.clientHeight - num) + "px";
                 }
             });
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
@@ -32891,10 +32968,23 @@ img.horizontal {
             }
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", mainElement);
-                if (box.style.direction == "rtl") {
-                    return (box.style.direction = "ltr");
+                if (config.ViewMode == 5) {
+                    if (box.style.direction == "rtl") {
+                        mainElement.style.direction = "ltr";
+                        box.style.direction = "ltr";
+                    } else {
+                        mainElement.style.direction = "rtl";
+                        box.style.direction = "rtl";
+                    }
+                    if (isEle(imgs[imgViewIndex])) {
+                        return instantScrollIntoView(imgs[imgViewIndex]);
+                    }
                 } else {
-                    return (box.style.direction = "rtl");
+                    if (box.style.direction == "rtl") {
+                        return (box.style.direction = "ltr");
+                    } else {
+                        return (box.style.direction = "rtl");
+                    }
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
@@ -32985,7 +33075,7 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: system-ui;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     font-size: 14px;
     color: #000000;
     width: 132px;
@@ -33152,8 +33242,9 @@ img.horizontal {
             mainElement.focus();
             imgViewIndex = -1;
             gae(".FixedMenuitem", dom).forEach(item => item.classList.remove("active"));
-            mainElement.innerHTML = "";
             mainElement.style.overflow = "hidden scroll";
+            mainElement.innerHTML = "";
+            menuDiv.style.bottom = "";
             const imgElements = srcs.map((src, i) => {
                 let img = new Image();
                 img.className = mode;
@@ -33191,6 +33282,7 @@ img.horizontal {
                 p.style.height = "100vh";
                 p.style.width = "fit-content";
                 mainElement.style.overflow = "scroll hidden";
+                menuDiv.style.bottom = "20px";
             } else if (_unsafeWindow.devicePixelRatio > 1) {
                 p.style.paddingTop = "1px";
             }
@@ -33207,7 +33299,11 @@ img.horizontal {
                     gae("img", mainElement).forEach(img => {
                         fn.imagesObserver.observe(img);
                         if (mode === "horizontal") {
-                            img.style.height = (mainElement.clientHeight - 6) + "px";
+                            let num = 6;
+                            if (devicePixelRatio > 1 && !isFirefox) {
+                                num = 3;
+                            }
+                            img.style.height = (mainElement.clientHeight - num) + "px";
                         }
                     });
                 }, 1000);
@@ -33357,8 +33453,10 @@ img.horizontal {
             }
         }
 
+        let menuDiv;
+
         function addFixedMenu() {
-            let menuDiv = document.createElement("div");
+            menuDiv = document.createElement("div");
             menuDiv.id = "FixedMenu";
             const menuObj = [{
                 id: "MenuCancelItem",
@@ -33606,7 +33704,7 @@ html,body {
 #main {
     font-size: 14px;
     line-height: 20px;
-    font-family: system-ui;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     text-align: left;
     color: black;
     inset: 0px;
@@ -34827,7 +34925,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadOptions * {
     font: unset;
-    font-family: system-ui;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     font-size: 14px;
     color: black;
     float: none;
@@ -35322,7 +35420,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenu {
     text-align: center !important;
-    font-family: system-ui !important;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
     font-size: 14px !important;
     color: #000000 !important;
     height: auto !important;
@@ -35371,7 +35469,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenuB {
     text-align: center !important;
-    font-family: system-ui !important;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
     font-size: 14px !important;
     color: #000000 !important;
     width: 112px !important;
@@ -35388,7 +35486,7 @@ label.line-through:has(>#size) {
 }
 
 #FullPictureLoadMsg {
-    font-family: system-ui !important;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
@@ -35518,7 +35616,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     height: 30px;
     font-size: 18px;
     color: black;
-    font-family: system-ui !important;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
     line-height: 29px;
     text-align: center;
     overflow: hidden;
@@ -35555,7 +35653,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 }
 
 .autoPagerTitle a:-webkit-any-link {
-    font-family: system-ui !important;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
     color: black;
 }
 
@@ -36847,7 +36945,7 @@ html,body {
     line-height: 24px !important;
     padding: 3px;
     font: unset;
-    font-family: system-ui;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     font-size: 16px;
     text-align: center;
     border-radius: 8px;
@@ -36860,7 +36958,7 @@ html,body {
     text-align: center;
     text-decoration: unset;
     font: unset;
-    font-family: system-ui;
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     font-size: 16px;
     background-color: unset;
     border-color: unset;
