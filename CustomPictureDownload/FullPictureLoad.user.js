@@ -25189,6 +25189,7 @@ if ("xx" in window) {
                 str_179: "複製為Markdown格式",
                 str_180: "自動匯出URLs.txt",
                 str_181: "拼接下載",
+                str_182: "※畫廊圖片循環切換",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -25412,6 +25413,7 @@ if ("xx" in window) {
                 str_179: "拷贝为Markdown格式",
                 str_180: "自动导出URLs.txt",
                 str_181: "拼接下载",
+                str_182: "※画廊图片循环切换",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -25632,6 +25634,7 @@ if ("xx" in window) {
                 str_179: "Copied to Markdown format",
                 str_180: "Auto Export URLs.txt",
                 str_181: "Combine Download",
+                str_182: "※Gallery Image Loop Switching",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
@@ -30791,6 +30794,7 @@ if ("xx" in window) {
             newWindow.instantOptions = instantOptions;
             newWindow.smoothScrollIntoView = smoothScrollIntoView;
             newWindow.instantScrollIntoView = instantScrollIntoView;
+            newWindow.loopView = _GM_getValue("FullPictureLoadLoopView", 1);
 
             let newWindowStyleCss = `
 body {
@@ -31202,7 +31206,7 @@ document.addEventListener("keydown", event => {
         }
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
-        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp") || loopView != 1) return;
         event.preventDefault();
         imgViewIndex = imgs.length - 1;
         const img = imgs[imgViewIndex];
@@ -31216,6 +31220,10 @@ document.addEventListener("keydown", event => {
         if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
         event.preventDefault();
         imgViewIndex--;
+        if (imgViewIndex < 0 && loopView != 1) {
+            imgViewIndex = 0;
+            return;
+        }
         let img = imgs[imgViewIndex];
         if (img === undefined) {
             imgViewIndex = imgs.length - 1;
@@ -31233,6 +31241,10 @@ document.addEventListener("keydown", event => {
         if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
         event.preventDefault();
         imgViewIndex++;
+        if (imgViewIndex > imgs.length - 1 && loopView != 1) {
+            imgViewIndex = imgs.length - 1;
+            return;
+        }
         let img = imgs[imgViewIndex];
         if (imgViewIndex > imgs.length - 1 && category === "comic") {
             return window.close();
@@ -31285,13 +31297,13 @@ document.addEventListener("wheel", (event) => {
         const imgs = [...document.images];
         if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
             if (event.deltaY < 0 && imgViewIndex < 0) {
-                if (config.ViewMode == 5) return;
+                if (loopView != 1) return;
                 imgViewIndex = imgs.length - 1;
                 imgs[imgViewIndex].style.border = "solid #32a1ce";
                 return instantScrollIntoView(imgs[imgViewIndex]);
             } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                 imgViewIndex--;
-                if (imgViewIndex < 0 && config.ViewMode == 5) {
+                if (imgViewIndex < 0 && loopView != 1) {
                     imgViewIndex = 0;
                     return;
                 }
@@ -31305,7 +31317,7 @@ document.addEventListener("wheel", (event) => {
                 return instantScrollIntoView(imgs[imgViewIndex]);
             } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                 imgViewIndex++;
-                if (imgViewIndex > imgs.length - 1 && config.ViewMode == 5) {
+                if (imgViewIndex > imgs.length - 1 && loopView != 1) {
                     imgViewIndex = imgs.length - 1;
                     return;
                 }
@@ -31626,6 +31638,7 @@ if (config.ViewMode == 1) {
         let currentReferenceElement;
         let nextButtonIsShown = false;
         let dNum = 0;
+        let loopView = _GM_getValue("FullPictureLoadLoopView", 1);
 
         const mainHtml = '<div id="FullPictureLoadShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
@@ -31760,7 +31773,7 @@ if (config.ViewMode == 1) {
                 const next = ge("#next", shadow);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
-                        if (config.ViewMode == 5) return;
+                        if (loopView != 1) return;
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -31768,7 +31781,7 @@ if (config.ViewMode == 1) {
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
                         imgViewIndex--;
-                        if (imgViewIndex < 0 && config.ViewMode == 5) {
+                        if (imgViewIndex < 0 && loopView != 1) {
                             imgViewIndex = 0;
                             return;
                         }
@@ -31785,7 +31798,7 @@ if (config.ViewMode == 1) {
                         return setTimeout(() => (location.href = nextLink), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
-                        if (imgViewIndex > imgs.length - 1 && config.ViewMode == 5) {
+                        if (imgViewIndex > imgs.length - 1 && loopView != 1) {
                             imgViewIndex = imgs.length - 1;
                             return;
                         }
@@ -31969,7 +31982,7 @@ if (config.ViewMode == 1) {
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
-                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp") || loopView != 1) return;
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex = imgs.length - 1;
@@ -31985,6 +31998,10 @@ if (config.ViewMode == 1) {
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex--;
+                if (imgViewIndex < 0 && loopView != 1) {
+                    imgViewIndex = 0;
+                    return;
+                }
                 let img = imgs[imgViewIndex];
                 if (img === undefined) {
                     imgViewIndex = imgs.length - 1;
@@ -32006,6 +32023,10 @@ if (config.ViewMode == 1) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 event.preventDefault();
                 imgViewIndex++;
+                if (imgViewIndex > imgs.length - 1 && loopView != 1) {
+                    imgViewIndex = imgs.length - 1;
+                    return;
+                }
                 let img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
@@ -32609,6 +32630,7 @@ img.horizontal {
         let currentReferenceElement;
         let nextButtonIsShown = false;
         let dNum = 0;
+        let loopView = _GM_getValue("FullPictureLoadLoopView", 1);
 
         const iframe = document.createElement("iframe");
         iframe.id = "FullPictureLoadIframeGallery";
@@ -32779,7 +32801,7 @@ img.horizontal {
                 const next = ge("#next", mainElement);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (event.deltaY < 0 && imgViewIndex < 0) {
-                        if (config.ViewMode == 5) return;
+                        if (loopView != 1) return;
                         nextButtonIsShown = false;
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -32787,7 +32809,7 @@ img.horizontal {
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
                         imgViewIndex--;
-                        if (imgViewIndex < 0 && config.ViewMode == 5) {
+                        if (imgViewIndex < 0 && loopView != 1) {
                             imgViewIndex = 0;
                             return;
                         }
@@ -32804,7 +32826,7 @@ img.horizontal {
                         return setTimeout(() => (location.href = nextLink), 500);
                     } else if (event.deltaY > 0 && imgViewIndex <= imgs.length - 1) {
                         imgViewIndex++;
-                        if (imgViewIndex > imgs.length - 1 && config.ViewMode == 5) {
+                        if (imgViewIndex > imgs.length - 1 && loopView != 1) {
                             imgViewIndex = imgs.length - 1;
                             return;
                         }
@@ -32988,7 +33010,7 @@ img.horizontal {
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
-                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp") || loopView != 1) return;
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex = imgs.length - 1;
@@ -33004,6 +33026,10 @@ img.horizontal {
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex--;
+                if (imgViewIndex < 0 && loopView != 1) {
+                    imgViewIndex = 0;
+                    return;
+                }
                 let img = imgs[imgViewIndex];
                 if (img === undefined) {
                     imgViewIndex = imgs.length - 1;
@@ -33025,6 +33051,10 @@ img.horizontal {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
                 event.preventDefault();
                 imgViewIndex++;
+                if (imgViewIndex > imgs.length - 1 && loopView != 1) {
+                    imgViewIndex = imgs.length - 1;
+                    return;
+                }
                 let img = imgs[imgViewIndex];
                 if (config.ViewMode != 4) {
                     imgs.forEach(e => (e.style.border = ""));
@@ -35026,6 +35056,10 @@ label.line-through:has(>#size) {
     <input id="autoExport" type="checkbox" style="width: 14px; margin: 0 6px;">
     <label>${displayLanguage.str_180}</label>
 </div>
+<div id="ShadowGalleryloopViewDIV" style="width: 348px; display: flex;">
+    <input id="loopView" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <label>${displayLanguage.str_182}</label>
+</div>
 <div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_147}</label>
     <select id="ShadowGalleryWheel"></select>
@@ -35190,6 +35224,7 @@ label.line-through:has(>#size) {
         ge("#AutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
         ge("#ShowFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
         ge("#FavorNewTab", main).checked = _GM_getValue("FavorOpenInNewTab", 0) == 1 ? true : false;
+        ge("#loopView", main).checked = _GM_getValue("FullPictureLoadLoopView", 1) == 1 ? true : false;
         ge("#MsgPos", main).value = _GM_getValue("FullPictureLoadMsgPos", 0);
         ge("#Threading", main).value = options.threading;
         ge("#Zip", main).checked = options.zip == 1 ? true : false;
@@ -35220,10 +35255,12 @@ label.line-through:has(>#size) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
+            ge("#ShadowGalleryloopViewDIV", main).style.display = "none";
         }
         if (isBoolean(siteData.SPA)) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
+            ge("#ShadowGalleryloopViewDIV", main).style.display = "none";
         }
         if (isSimpleMode || siteData.aeg == 0) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
@@ -35282,6 +35319,7 @@ label.line-through:has(>#size) {
             options.autoInsert = ge("#AutoInsertImg", main).checked == true ? 1 : 0;
             _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFixedMenu", main).checked == true ? 1 : 0);
             _GM_setValue("FavorOpenInNewTab", ge("#FavorNewTab", main).checked == true ? 1 : 0);
+            _GM_setValue("FullPictureLoadLoopView", ge("#loopView", main).checked == true ? 1 : 0);
             _GM_setValue("FullPictureLoadMsgPos", ge("#MsgPos", main).value);
             options.threading = ge("#Threading", main).value;
             options.zip = ge("#Zip", main).checked == true ? 1 : 0;
