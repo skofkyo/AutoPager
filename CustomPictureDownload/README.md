@@ -1263,6 +1263,7 @@ imgs: async () => {
 <p>數字鍵 2 切換為小尺寸圖片並排模式</p>
 <p>數字鍵 3 切換為圖片高度符合視口高度且順序右至左的模式</p>
 <p>數字鍵 4 切換為條漫模式</p>
+<p>數字鍵 5 切換為水平橫向模式</p>
 <p>W鍵、A鍵、上左方向鍵滾動到目前的上一張圖、S鍵、D鍵、下右方向鍵滾動到目前的下一張圖，當為comic分類且已是最後一張圖繼續按則關閉分頁</p>
 <p>HOME鍵 滾動定位至第一張圖</p>
 <p>END鍵 滾動定位至最後一張圖</p>
@@ -1271,6 +1272,8 @@ imgs: async () => {
 <p>Enter鍵 用於取消所有用Delete鍵隱藏的圖片。</p>
 <p>畫廊為條漫模式時，上下方向鍵為預設行為，不會滾動圖片。</p>
 <p>畫廊為條漫模式時+、-鍵和修飾鍵Ctrl、Alt、ShiftKey + 滾輪 可增加減少圖片的寬度。</p>
+<p>畫廊為水平模式時，左右方向鍵為預設行為，不會切換圖片。</p>
+<p>畫廊為水平模式時ShiftKey + 滾輪可滾動水平滾動條。</p>
 <p>PS：當瀏覽器封鎖彈出型視窗或uBlock Origin為了阻擋點擊連結觸發廣告把window.open修改成Proxy時，將無法使用分頁畫廊功能。</p>
 <h3>5.影子畫廊模式(限定PC使用)</h3>
 <p>快捷鍵基本同分頁畫廊模式</p>
@@ -2997,7 +3000,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://dongti.netlify.app/">胴体的秘密</a>
                 </td>
                 <td>
-                    <a href="https://cosplayer.neocities.org/">CosPlayer</a>，<a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://bestgirlsexy.neocities.org/">BestGirlSexy</a>，<a href="https://bestgirlsexy1.neocities.org/">BestGirlSexy1</a>，<a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>，<a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>，<a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://guomo.neocities.org/">国模人体写真图片</a>
+                    <a href="https://cosplayer.neocities.org/">CosPlayer</a>，<a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://bestgirlsexy.neocities.org/">BestGirlSexy</a>，<a href="https://bestgirlsexy1.neocities.org/">BestGirlSexy1</a>，<a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>，<a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>，<a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://guomo.neocities.org/">国模人体写真图片</a>，<a href="https://theblackalley.neocities.org/">The Black Alley</a>
                 </td>
             </tr>
             <tr>
