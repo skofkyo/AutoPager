@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.1
+// @version            2.12.2
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5181,10 +5181,11 @@ div[class*='backdrop-show'] {
         category: "nsfw1"
     }, {
         name: "美推网",
+        host: ["www.meinvtui.com"],
         url: {
-            h: [/meinvtui\.com$/, "bbs.2tu.me"],
-            p: ".html",
-            e: ".pp.hh,.contimglist"
+            //h: [/meinvtui\.com$/, "bbs.2tu.me"],
+            e: [".logo>a[title=美女图片]>img[alt=美女图片],nav.bg-w a[title=美女图片]", ".pp.hh,.contimglist"],
+            p: ".html"
         },
         imgs: () => {
             let max = fn.gt(".pages>a,.page a").match(/\d+/g).at(-1);
@@ -5322,8 +5323,8 @@ div[class*='backdrop-show'] {
         },
         category: "none"
     }, {
-        name: "胴体的秘密/CosPlayer/AsianSexyBody/国模人体写真图片/福利图库/BestGirlSexy",
-        host: ["dongti.netlify.app", "cosplayer.neocities.org", "asiansexybody.netlify.app", "guomo.neocities.org", "fulituku.neocities.org", "bestgirlsexy4.neocities.org"],
+        name: "胴体的秘密/CosPlayer/AsianSexyBody/国模人体写真图片/福利图库/BestGirlSexy/The Black Alley",
+        host: ["dongti.netlify.app", "cosplayer.neocities.org", "asiansexybody.netlify.app", "guomo.neocities.org", "fulituku.neocities.org", "bestgirlsexy4.neocities.org", "theblackalley.neocities.org"],
         url: {
             h: /netlify\.app|neocities\.org/,
             p: "/posts/"
@@ -15404,8 +15405,16 @@ div[class*='backdrop-show'] {
             ["#FullPictureLoadMainImgBox", 0, ".mip-box-body>img"], 2
         ],
         autoDownload: [0],
-        next: "a[title='下一章']",
-        prev: "a[title='上一章']",
+        next: () => {
+            if ("nextid" in _unsafeWindow && _unsafeWindow.nextid != 0) {
+                let urlArr = fn.url.split("/");
+                urlArr[urlArr.length - 1] = _unsafeWindow.nextid + ".html";
+                return urlArr.join("/");
+            } else {
+                return null;
+            }
+        },
+        prev: 1,
         customTitle: ".mip-box-heading",
         fancybox: {
             blacklist: 1
@@ -30730,6 +30739,7 @@ if ("xx" in window) {
         _GM_setValue("FullPictureLoadMsgPos", 0);
         _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
         _GM_setValue("FavorOpenInNewTab", 0);
+        _GM_setValue("FullPictureLoadLoopView", 1);
         _GM_setValue("convertWebpToJpg", 0);
         _GM_setValue("FancyboxSlideshowTimeout", 3);
         _GM_setValue("FancyboxWheel", 1);
@@ -31206,7 +31216,9 @@ document.addEventListener("keydown", event => {
         }
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
-        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp") || loopView != 1) return;
+        if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+        if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
+        if (loopView != 1) return;
         event.preventDefault();
         imgViewIndex = imgs.length - 1;
         const img = imgs[imgViewIndex];
@@ -31218,6 +31230,7 @@ document.addEventListener("keydown", event => {
         return instantScrollIntoView(img);
     } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
         if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+        if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
         event.preventDefault();
         imgViewIndex--;
         if (imgViewIndex < 0 && loopView != 1) {
@@ -31239,6 +31252,7 @@ document.addEventListener("keydown", event => {
         return instantScrollIntoView(img);
     } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
         if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
+        if (config.ViewMode == 5 && (event.code === "ArrowRight" || event.key === "ArrowRight")) return;
         event.preventDefault();
         imgViewIndex++;
         if (imgViewIndex > imgs.length - 1 && loopView != 1) {
@@ -31875,7 +31889,7 @@ if (config.ViewMode == 1) {
         const kEvent = (event) => {
             if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
             const imgs = gae("img", shadow);
-            const next = ge("#next", shadow);
+            const next = ge("#next,#menuNext", shadow);
             if (event.code === "Escape" || event.key === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.code === "Digit1" || event.key === "1") return singleImageLayout();
@@ -31982,7 +31996,9 @@ if (config.ViewMode == 1) {
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
-                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp") || loopView != 1) return;
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
+                if (loopView != 1) return;
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex = imgs.length - 1;
@@ -31995,6 +32011,7 @@ if (config.ViewMode == 1) {
                 return instantScrollIntoView(img);
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex--;
@@ -32017,10 +32034,12 @@ if (config.ViewMode == 1) {
                 return instantScrollIntoView(img);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowRight" || event.key === "ArrowRight")) return;
                 next.style.backgroundColor = "gray";
                 return setTimeout(() => (location.href = nextLink), 500);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowRight" || event.key === "ArrowRight")) return;
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgViewIndex > imgs.length - 1 && loopView != 1) {
@@ -32384,6 +32403,14 @@ img.horizontal {
                         }
                     }
                 });
+            }
+            if (isString(nextLink) && config.ViewMode == 5) {
+                const next = document.createElement("div");
+                next.id = "menuNext";
+                next.className = "FixedMenuitem";
+                next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144} (N)`;
+                insertBefore(ge("#MenuHorizontalItem", menuDiv), next);
+                next.addEventListener("click", () => setTimeout(() => (location.href = nextLink), 200));
             }
             if (isString(nextLink) && config.ViewMode != 5) {
                 totalNumberOfElements = totalNumberOfElements + 1;
@@ -32903,7 +32930,7 @@ img.horizontal {
         const kEvent = (event) => {
             if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
             const imgs = gae("img", mainElement);
-            const next = ge("#next", mainElement);
+            const next = ge("#next", mainElement) || ge("#menuNext", menuDiv);
             if (event.code === "Escape" || event.key === "Escape") return closeGallery();
             if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
             if (event.code === "Numpad1" || event.code === "Digit1" || event.key === "1") return singleImageLayout();
@@ -33010,7 +33037,9 @@ img.horizontal {
                 }
             }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
-                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp") || loopView != 1) return;
+                if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
+                if (loopView != 1) return;
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex = imgs.length - 1;
@@ -33023,6 +33052,7 @@ img.horizontal {
                 return instantScrollIntoView(img);
             } else if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex >= 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
                 event.preventDefault();
                 nextButtonIsShown = false;
                 imgViewIndex--;
@@ -33045,10 +33075,12 @@ img.horizontal {
                 return instantScrollIntoView(img);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && nextButtonIsShown) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowRight" || event.key === "ArrowRight")) return;
                 next.style.backgroundColor = "gray";
                 return setTimeout(() => (location.href = nextLink), 500);
             } else if ((["KeyS", "KeyD", "ArrowDown", "ArrowRight"].some(k => event.code === k) || ["s", "S", "d", "D", "ArrowDown", "ArrowRight"].some(k => event.key === k)) && imgViewIndex <= imgs.length - 1) {
                 if (config.ViewMode == 4 && (event.code === "ArrowDown" || event.key === "ArrowDown")) return;
+                if (config.ViewMode == 5 && (event.code === "ArrowRight" || event.key === "ArrowRight")) return;
                 event.preventDefault();
                 imgViewIndex++;
                 if (imgViewIndex > imgs.length - 1 && loopView != 1) {
@@ -33429,6 +33461,14 @@ img.horizontal {
                         });
                     });
                 });
+            }
+            if (isString(nextLink) && config.ViewMode == 5) {
+                const next = document.createElement("div");
+                next.id = "menuNext";
+                next.className = "FixedMenuitem";
+                next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144} (N)`;
+                insertBefore(ge("#MenuHorizontalItem", menuDiv), next);
+                next.addEventListener("click", () => setTimeout(() => (location.href = nextLink), 200));
             }
             if (isString(nextLink) && config.ViewMode != 5) {
                 totalNumberOfElements = totalNumberOfElements + 1;
