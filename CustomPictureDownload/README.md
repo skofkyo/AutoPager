@@ -1620,6 +1620,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.cosnyaa.com/">CosNyaa</a>
+                </td>
+                <td>需註冊</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.24tupian.org/">爱死美女图片站</a>
                 </td>
                 <td>需註冊登入才能看大圖和下載，<a href="https://www.aisimm.com/">鏡像站？</a>，與主站帳號通用，圖片伺服器不同。</td>
@@ -1856,6 +1862,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="http://www.xiuren7.com/">秀人集</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.costhisfox.com/cosfulimeitu">扮之狐狸</a>
                 </td>
                 <td></td>
@@ -1927,12 +1939,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站45個</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.tumeitu.com/">图美图</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2075,6 +2081,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://coserlab.io/">Coser Lab</a>
                 </td>
                 <td>4K~8K高解析</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ecy8.com/">Mega Gallery</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2740,7 +2752,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://new.pixibb.com/">NEW PixiBB</a>
+                    <a href="https://sexy.pixibb.com/">NEW PixiBB</a>
                 </td>
                 <td>
                     <a href="https://www.pixibb.com/explore">PixiBB</a>，舊站作用在相簿
@@ -3000,7 +3012,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://dongti.netlify.app/">胴体的秘密</a>
                 </td>
                 <td>
-                    <a href="https://cosplayer.neocities.org/">CosPlayer</a>，<a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://bestgirlsexy.neocities.org/">BestGirlSexy</a>，<a href="https://bestgirlsexy1.neocities.org/">BestGirlSexy1</a>，<a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>，<a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>，<a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://guomo.neocities.org/">国模人体写真图片</a>，<a href="https://theblackalley.neocities.org/">The Black Alley</a>
+                    <a href="https://cosplayer.neocities.org/">CosPlayer</a>，<a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://bestgirlsexy.neocities.org/">BestGirlSexy</a>，<a href="https://bestgirlsexy1.neocities.org/">BestGirlSexy1</a>，<a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>，<a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>，<a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://coser1.neocities.org/">COSER美女图</a>，<a href="https://guomo.neocities.org/">国模人体写真图片</a>，<a href="https://theblackalley.neocities.org/">The Black Alley</a>
                 </td>
             </tr>
             <tr>
@@ -3166,20 +3178,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://thothub.vip/albums/">Thothub Albums</a>
                 </td>
                 <td>
-                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>，
+                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://nudebird.biz/">Nude Bird</a>
                 </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://nudecosplay.biz/">Nude Cosplay</a>
-                </td>
-                <td></td>
+                <td><a href="https://nudecosplay.biz/">Nude Cosplay</a>，<a href="https://pgtv.store/">丽人合集-黄苹果</a></td>
             </tr>
             <tr>
                 <td>
@@ -3369,6 +3375,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://amazon-love.com/">Love Asian Babes</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://idol.gravureprincess.date/">idol.gravureprincess.date</a>
                 </td>
                 <td></td>
@@ -3464,12 +3476,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://lolita.lady.jp/">力武靖写真集</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://amazon-love.com/">Love Asian Babes</a>
                 </td>
                 <td></td>
             </tr>
@@ -4566,6 +4572,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://pgtv.store/index.html">丽人合集-黄苹果</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.wholsp.com/">wholsp</a>
                 </td>
                 <td></td>
@@ -4817,7 +4829,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hentaiera.com/">HentaiEra</a>
                 </td>
-                <td>作用在圖片清單頁/閱讀頁</td>
+                <td><a href="https://comicporn.xxx/">Comic Porn XXX</a>，作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
@@ -4966,6 +4978,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://hentaivid.net/">HENTAIVID.NET</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hentaitop.org/">HENTAITOP.ORG</a>
                 </td>
                 <td></td>
             </tr>
@@ -5910,6 +5928,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://manhuami.cc/">漫画网</a>
                 </td>
                 <td><a href="https://www.manhua3.com/">www.manhua3.com</a>，有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fengchemh.com/">风车漫画</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
