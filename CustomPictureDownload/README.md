@@ -221,6 +221,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     },
     prev: "//a[text()='上一章']", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
     css: "css", //自訂樣式。
+    mcss: "css", //自訂樣式只作用在觸控裝置。
     hide: "selector", //用CSS隱藏元素
     autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
     autoClick: ["元素", 1000], //元素,延遲毫秒時間(預設1000)
@@ -314,6 +315,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     },
     prev: "",
     css: "",
+    mcss: "",
     hide: "",
     autoClick: "",
     autoClick: ["", time],
@@ -1267,7 +1269,8 @@ imgs: async () => {
 <p>W鍵、A鍵、上左方向鍵滾動到目前的上一張圖、S鍵、D鍵、下右方向鍵滾動到目前的下一張圖，當為comic分類且已是最後一張圖繼續按則關閉分頁</p>
 <p>HOME鍵 滾動定位至第一張圖</p>
 <p>END鍵 滾動定位至最後一張圖</p>
-<p>R鍵 模式為0、2、3時用於臨時切換排列方向右至左、左至右。</p>
+<p>R鍵 模式為0、2、3、5時用於臨時切換排列方向右至左、左至右。</p>
+<p>B鍵 模式為水平時用於切換圖片的左右邊框。</p>
 <p>Delete鍵 用於隱藏當前圖片導覽索引的圖片(藍色邊框)，看漫畫時手動調整讓後面的圖片能正常並成雙頁跨頁大圖。</p>
 <p>Enter鍵 用於取消所有用Delete鍵隱藏的圖片。</p>
 <p>畫廊為條漫模式時，上下方向鍵為預設行為，不會滾動圖片。</p>
@@ -1820,19 +1823,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.tuzac.com/">图宅网</a>
                 </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.kkc3.com/">咔咔西三</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.youfreex.com/">YouFreeX</a>
-                </td>
-                <td></td>
+                <td> <a href="https://www.kkc3.com/">咔咔西三</a>，<a href="https://www.youfreex.com/">YouFreeX</a></td>
             </tr>
             <tr>
                 <td>
@@ -3009,14 +3000,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://dongti.netlify.app/">胴体的秘密</a>
-                </td>
-                <td>
-                    <a href="https://cosplayer.neocities.org/">CosPlayer</a>，<a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://bestgirlsexy.neocities.org/">BestGirlSexy</a>，<a href="https://bestgirlsexy1.neocities.org/">BestGirlSexy1</a>，<a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>，<a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>，<a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://coser1.neocities.org/">COSER美女图</a>，<a href="https://guomo.neocities.org/">国模人体写真图片</a>，<a href="https://theblackalley.neocities.org/">The Black Alley</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://fuligirl.top/">福利姬美图</a>
                 </td>
                 <td></td>
@@ -3056,6 +3039,20 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://setumeow.com/">色图喵</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://heisiwu.net/">黑丝屋</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dongti.netlify.app/">胴体的秘密</a>
+                </td>
+                <td>
+                    <a href="https://cosplayer.neocities.org/">CosPlayer</a>，<a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://bestgirlsexy.neocities.org/">BestGirlSexy</a>，<a href="https://bestgirlsexy1.neocities.org/">BestGirlSexy1</a>，<a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>，<a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>，<a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://coser1.neocities.org/">COSER美女图</a>，<a href="https://guomo.neocities.org/">国模人体写真图片</a>，<a href="https://theblackalley.neocities.org/">The Black Alley</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3185,7 +3182,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://nudebird.biz/">Nude Bird</a>
                 </td>
-                <td><a href="https://nudecosplay.biz/">Nude Cosplay</a>，<a href="https://pgtv.store/">丽人合集-黄苹果</a></td>
+                <td><a href="https://nudecosplay.biz/">Nude Cosplay</a></td>
             </tr>
             <tr>
                 <td>
@@ -3457,7 +3454,31 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://ero-sakaba.com/">エロ酒場</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://geinou-nude.com/">エロ画像まとめ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://puni-puni.com/">お宝エロ画像ぷにぷに</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://horeta.net/">惚れた.net</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://megamich.com/">エロ画像女神ちゃんねる</a>
                 </td>
                 <td></td>
             </tr>
@@ -3487,6 +3508,24 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="http://idol-gazoum.net/">アイドル村</a>
+                </td>
+                <td><a href="http://zilli-on.ru/">zilli-on.ru</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://blog.livedoor.jp/idol_gravure_sexy/">アイドル画像魂</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mizugazo.com/">水着画像まとめ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="http://rikitake.com/">Rikitake.com</a>
                 </td>
                 <td></td>
@@ -3501,7 +3540,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://mabui-onna.com/">マブい女画像集</a>
                 </td>
-                <td></td>
+                <td><a href="https://cyoinatu-onna.com/">ちょい懐女画像集</a></td>
             </tr>
             <tr>
                 <td>
@@ -3936,7 +3975,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://vipergirls.to/">ViperGirls</a>
+                    <a href="https://vipergirls.to/forums/302-Softcore-Photo-Sets">ViperGirls</a>
                 </td>
                 <td>只適用PC版，論壇樓層皆可能是一個使用免空圖床的圖集，操作方式，1.選取文字後按或直接按Ctrl + Alt + T設定圖集名稱，2.滑鼠點擊每樓左側作者下方空白的部份捕獲圖床連結，接下來就能使用0、1、3、7、8的功能，一些圖床比較難搞下載容易出錯，可匯出圖片地址再用Aria2或Motrix來下載，如有漏掉的圖床請反饋</td>
             </tr>
