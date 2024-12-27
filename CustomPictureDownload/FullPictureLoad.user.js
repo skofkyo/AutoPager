@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.3
+// @version            2.12.4
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -399,29 +399,8 @@
                 return document.title;
             }
         },
-        css: `
-body {
-    overflow: unset !important;
-}
-.push-slider,
-.article:has(>div>.media),
-div:has(>.links),
-a[clickmode=ad],
-a:has(>div>div>img),
-.photos>div.item,
-.jquery-modal.blocker.current,
-.push-top,
-.push-bottom,
-.slider-ad,
-.article.ad,
-.pager>.tips,
-.photoMask,
-.banner_ad,
-.banner-sexgps,
-div[class*='backdrop-show'] {
-    display: none !important;
-}
-        `,
+        css: "body{overflow:unset!important}",
+        hide: ".push-slider,.article:has(>div>.media),div:has(>.links),a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,.photoMask,.banner_ad,.banner-sexgps,div[class*='backdrop-show']",
         topButton: true,
         downloadVideo: true,
         category: "nsfw2"
@@ -434,32 +413,8 @@ div[class*='backdrop-show'] {
             ]
         },
         init: () => fn.addMutationObserver(() => fn.remove("[class*='exoclick']")),
-        css: `
-body {
-    overflow: unset !important;
-}
-[class*='exoclick'],
-.push-slider,
-.article:has(>div>.media),
-.article:has(>.like-960x80),
-div:has(>.links),
-a[clickmode=ad],
-a:has(>div>div>img),
-.photos>div.item,
-.jquery-modal.blocker.current,
-.push-top-container,
-.push-top,
-.push-bottom,
-.slider-ad,
-.article.ad,
-.pager>.tips,
-.photoMask,
-.banner_ad,
-.banner-sexgps,
-div[class*='backdrop-show'] {
-    display: none !important;
-}
-        `,
+        css: "body{overflow:unset!important}",
+        hide: ".push-slider,.article:has(>div>.media),div:has(>.links),a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,.photoMask,.banner_ad,.banner-sexgps,div[class*='backdrop-show']",
         category: "ad"
     }, {
         name: "紳士会所",
@@ -929,7 +884,7 @@ div[class*='backdrop-show'] {
         next: "//span/b[contains(text(),'下一篇')]/a[contains(@href,'html')]",
         prev: "//span/b[contains(text(),'上一篇')]/a[contains(@href,'html')]",
         customTitle: ".focusbox h1+div",
-        css: ".imgwebp br,img[src*='zz2.gif']{display:none!important}",
+        hide: ".imgwebp br,img[src*='zz2.gif']",
         category: "nsfw1"
     }, {
         name: "漂亮美女网",
@@ -1142,7 +1097,7 @@ div[class*='backdrop-show'] {
         next: ".nav-previous>a",
         prev: ".nav-next>a",
         customTitle: ".entry-title",
-        css: "@media only screen and (max-width:480px){#primary{padding:6px !important}.col-md-12{padding:0px !important}}",
+        mcss: "#primary{padding:6px !important}.col-md-12{padding:0px !important}",
         category: "nsfw1"
     }, {
         name: "新老友图社",
@@ -1294,7 +1249,7 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: [".intro", 2],
         customTitle: "h1",
-        css: "@media only screen and (max-width:640px){.paragraph .intro img{width:100%!important}}",
+        mcss: ".paragraph .intro img{width:100%!important}",
         hide: ".article:has(>div>.media),.banner,.banner_ad,.push-top,.push-bottom,.banner-sexgps",
         category: "nsfw1"
     }, {
@@ -1903,7 +1858,7 @@ div[class*='backdrop-show'] {
         },
         button: [4],
         insertImg: [".single-content", 2],
-        customTitle: "h1.entry-title",
+        //customTitle: "h1.entry-title",
         fancybox: {
             v: 3,
             css: false
@@ -1923,7 +1878,7 @@ div[class*='backdrop-show'] {
         setFancybox: true,
         button: [4],
         insertImg: [".single-content", 0],
-        customTitle: "h1.entry-title",
+        //customTitle: "h1.entry-title",
         fancybox: {
             v: 3,
             css: false
@@ -2169,7 +2124,8 @@ div[class*='backdrop-show'] {
         next: "span.prev>a",
         prev: "span.next>a",
         customTitle: ".entry-title",
-        css: ".code-block{display:none!important;}@media (max-width:768px){.separate-containers .inside-article,.separate-containers .comments-area,.separate-containers .page-header,.separate-containers .paging-navigation,.one-container .site-content,.inside-page-header{padding:2px}.entry-content:not(:first-child),.entry-summary:not(:first-child),.page-content:not(:first-child){margin-top:2px}}",
+        mcss: ".separate-containers .inside-article,.separate-containers .comments-area,.separate-containers .page-header,.separate-containers .paging-navigation,.one-container .site-content,.inside-page-header{padding:2px}.entry-content:not(:first-child),.entry-summary:not(:first-child),.page-content:not(:first-child){margin-top:2px}",
+        hide: ".code-block",
         category: "nsfw2"
     }, {
         name: "MM5MM5美女图片",
@@ -2211,7 +2167,9 @@ div[class*='backdrop-show'] {
         next: ".pre_pageload>a",
         prev: ".next_pageload>a",
         customTitle: "h1",
-        css: ".nr .tupianqu img{margin-top:0px!important}@media only screen and (max-width:480px){.nr .tupianqu,.nr .tupianqu .pannel{padding:0px!important}}union{display:none!important;}",
+        css: ".nr .tupianqu img{margin-top:0px !important}",
+        mcss: ".nr .tupianqu,.nr .tupianqu .pannel{padding:0px !important}",
+        hide: "union",
         category: "nsfw1"
     }, {
         name: "淑女爱",
@@ -3507,7 +3465,7 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#showimg", 2],
         customTitle: ".weizhi h1",
-        css: "@media only screen and (max-width:3840px){.content img{max-width:100%!important}}",
+        mcss: ".content img{max-width:100%!important}",
         category: "nsfw1"
     }, {
         name: "妹妹图",
@@ -3957,7 +3915,8 @@ div[class*='backdrop-show'] {
                 /超高清.+$/,
             ]
         }),
-        css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}@media only screen and (max-width:640px){.container{max-width:100% !important}}",
+        css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}",
+        mcss: ".container{max-width:100% !important}",
         category: "nsfw1"
     }, {
         name: "出物社区写真网",
@@ -3970,7 +3929,8 @@ div[class*='backdrop-show'] {
         next: ".post-previous a",
         prev: ".post-next a",
         customTitle: ".article_container>h1",
-        css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}@media only screen and (max-width:640px){.container{max-width:100% !important}}",
+        css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}",
+        mcss: ".container{max-width:100% !important}",
         category: "nsfw1"
     }, {
         name: "原创妹子图/尤物私房图/极品美女图/免费私房图/私房网红图/尤物妹妹图",
@@ -4042,7 +4002,8 @@ div[class*='backdrop-show'] {
             v: 3,
             insertLibrarys: 1
         },
-        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,#apic,#bzs7,.interestline+center,center+#pic,#qpai,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,#xtjpp,#divftst,.interestline+.nav~span,.interestline+.nav~br{display:none !important}",
+        css: "#imgc img{margin:0px auto !important}#picg{max-width:1110px !important;margin:0 auto}#picg img:hover{transform:none !important}#picg img{filter:blur(0px) !important}",
+        hide: "body>br,#apic,#bzs7,.interestline+center,center+#pic,#qpai,#d4a,#divone,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>.erweima-text,#qrcode2>center,#qrcode2>center+div,#d5tig,#pcapicb,#google_translate_element,#d5a>*:not([id]):not([class]),.slide>a+div,.slide>img+div,#xtjpp,#divftst,.interestline+.nav~span,.interestline+.nav~br",
         category: "nsfw2"
     }, {
         name: "魅狸图片网/美女私房照/看妹图",
@@ -4076,7 +4037,8 @@ div[class*='backdrop-show'] {
             v: 3,
             insertLibrarys: 1
         },
-        css: "#imgc img{margin:0px auto!important}#picg{max-width: 1110px!important;margin: 0 auto;}#picg img:hover{transform:none !important}#picg img{filter:blur(0px)!important}body>br,.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>center,#d5tig,#pcapicb,#pcapic,#google_translate_element,#d5a>*:not([id]):not([class]),union[id]{display:none !important}",
+        css: "#imgc img{margin:0px auto !important}#picg{max-width:1110px !important;margin:0 auto}#picg img:hover{transform:none !important}#picg img{filter:blur(0px) !important}",
+        hide: "body>br,.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divfts,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2>center,#d5tig,#pcapicb,#pcapic,#google_translate_element,#d5a>*:not([id]):not([class]),union[id]",
         category: "nsfw2"
     }, {
         name: "六色美图",
@@ -4155,7 +4117,7 @@ div[class*='backdrop-show'] {
         next: "a.fas",
         prev: "a.next.fas",
         customTitle: ".title",
-        css: "@media only screen and (max-width:480px){#wrapper  .single{padding:0!important}}",
+        mcss: "#wrapper .single{padding:0!important}",
         category: "nsfw1"
     }, {
         name: "丝袜客 分類自動翻頁",
@@ -4597,7 +4559,8 @@ div[class*='backdrop-show'] {
         ],
         go: 1,
         customTitle: "h1.entry-title",
-        css: "@media only screen and (max-width:409px){.entry{width:100%!important}}button.rmp_menu_trigger{z-index:100!important}",
+        css: "button.rmp_menu_trigger{z-index:100 !important}",
+        mcss: ".entry{width:100% !important}",
         hide: ".single-box,.entry-img-300",
         category: "nsfw1"
     }, {
@@ -5289,7 +5252,7 @@ div[class*='backdrop-show'] {
         customTitle: "header>h2",
         category: "nsfw2"
     }, {
-        name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图/秀人图/UGIRLS/mm131美女图片/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/CoserGirl/高清妹子图",
+        name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图/秀人图/UGIRLS/mm131美女图片/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/CoserGirl/高清妹子图/黑丝屋",
         url: {
             h: [
                 /^youwu\./,
@@ -5309,7 +5272,8 @@ div[class*='backdrop-show'] {
                 "meitu.neocities.org",
                 "sanshang.neocities.org",
                 "cosergirl.neocities.org",
-                /ahottie/
+                /ahottie/,
+                "heisiwu.net"
             ],
             e: ["img.block", "//div[img[@title]]", "#main>h1,header>h1"]
         },
@@ -5648,7 +5612,8 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: [".entry-content,#post", 2],
         customTitle: ".entry-title",
-        css: ".entry-content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#secondary{display:none!important}h1.g1-mega{text-align:center}",
+        css: ".entry-content>img{width:auto !important;height:auto !important;max-width:100% !important;display:block !important;margin:0 auto !important}h1.g1-mega{text-align:center}",
+        hide: "#secondary",
         category: "nsfw2"
     }, {
         name: "Jizz to Nude Girls",
@@ -5885,6 +5850,7 @@ div[class*='backdrop-show'] {
         category: "nsfw1"
     }, {
         name: "丽人合集-黄苹果",
+        host: ["pgtv.store"],
         url: {
             h: "pgtv",
             p: "content",
@@ -7168,6 +7134,17 @@ div[class*='backdrop-show'] {
         customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
+        name: "エロ酒場",
+        host: ["ero-sakaba.com"],
+        reg: /^https?:\/\/ero-sakaba\.com\/\?p=\d+$/,
+        imgs: ".post_thum img,#post_body img[data-srcset]",
+        autoDownload: [0],
+        next: "a.nav_link_l",
+        prev: "a.f_row_r",
+        customTitle: "h1.post_title",
+        hide: "#cboxOverlay,#colorbox",
+        category: "nsfw2"
+    }, {
         name: "エロ画像まとめ",
         host: ["geinou-nude.com"],
         reg: /^https?:\/\/geinou-nude\.com\/[^\/]+\/(#.*)?$/,
@@ -7177,6 +7154,39 @@ div[class*='backdrop-show'] {
         prev: "a.f_row_r",
         customTitle: "h1.post_title",
         setFancybox: true,
+        category: "nsfw2"
+    }, {
+        name: "お宝エロ画像ぷにぷに",
+        host: ["puni-puni.com"],
+        reg: /^https?:\/\/puni-puni\.com\/[^\/]+\/$/,
+        imgs: () => fn.getImgSrcset(".p-articleThumb>img,.wp-block-image img"),
+        capture: () => _this.imgs(),
+        customTitle: "h1.c-postTitle__ttl",
+        category: "nsfw2"
+    }, {
+        name: "惚れた.net",
+        host: ["horeta.net"],
+        reg: /^https?:\/\/horeta\.net\/[\w-]+\/$/,
+        imgs: ".gallery-item img",
+        autoDownload: [0],
+        next: ".st-next-link",
+        prev: ".st-prev-link",
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
+        name: "エロ画像女神ちゃんねる",
+        host: ["megamich.com"],
+        reg: /^https?:\/\/megamich\.com\/[^\/]+\/\d+\.html$/,
+        imgs: () => {
+            let pages = fn.ge(".page-numbers");
+            if (pages) {
+                return fn.getImgA("img[id^='entry_image']", ".page-numbers a");
+            } else {
+                return fn.gae("img[id^='entry_image']");
+            }
+        },
+        capture: () => _this.imgs(),
+        customTitle: "#Single_h1",
         category: "nsfw2"
     }, {
         name: "裏ピク",
@@ -7252,9 +7262,11 @@ div[class*='backdrop-show'] {
         downloadVideo: true,
         category: "nsfw2"
     }, {
-        name: "マブい女画像集",
-        host: ["mabui-onna.com"],
-        reg: /^https?:\/\/mabui-onna\.com\/blog-entry-\d+\.html/,
+        name: "マブい女画像集/ちょい懐女画像集",
+        url: {
+            h: ["mabui-onna.com", "cyoinatu-onna.com"],
+            p: "blog-entry-"
+        },
         init: () => {
             let texts = fn.gae("//div[@class='entry_body']//div[not(br)][not(a[img])][not(@class='fc2_footer')][not(@class='topentry_text')][not(@class='fc2button-clap')][not(@class='entry_footer')][not(@class='entry_data')]");
             if (texts.length > 0) {
@@ -7278,7 +7290,36 @@ div[class*='backdrop-show'] {
         autoDownload: [0],
         next: "a.pager_next,.next_entry>a",
         prev: "a.pager_prev,.prev_entry>a",
-        customTitle: () => fn.gt(".topentry_title span,.entry_title h1>strong").replace(/\d+枚/, "").replace(/\s\s/g, " ").trim(),
+        customTitle: () => fn.gt(".topentry_title span,.entry_title h1>strong").replace(/\d+枚/, "").replace(/\s\s/g, " ").replaceAll("　", " ").trim(),
+        category: "nsfw1"
+    }, {
+        name: "アイドル村",
+        host: ["idol-gazoum.net", "zilli-on.ru"],
+        reg: [
+            /^https?:\/\/idol-gazoum\.net\/\d+\.html$/,
+            /^https?:\/\/zilli-on\.ru\/rushporn\/\d+\.html$/
+        ],
+        imgs: async () => {
+            let pages = fn.ge(".pagination");
+            if (pages) {
+                thumbnailSrcArray = await fn.getImgA(".blog-feed-content-image .blog-image img", ".pagination a");
+            } else {
+                thumbnailSrcArray = fn.getImgSrcArr(".blog-feed-content-image .blog-image img");
+            }
+            return thumbnailSrcArray.map(e => e.replace("middle_resize_", ""));
+        },
+        button: [4],
+        insertImg: [".blog-feed-content-image", 2],
+        go: 1,
+        customTitle: "h1.articles_header",
+        category: "nsfw1"
+    }, {
+        name: "アイドル画像魂",
+        host: ["blog.livedoor.jp"],
+        reg: /^https?:\/\/blog\.livedoor\.jp\/idol_gravure_sexy\/archives\/\d+\.html$/,
+        imgs: () => fn.getImgSrcArr(".pict").map(e => e.replace("-s.", ".")),
+        capture: () => _this.imgs(),
+        customTitle: "h1.article-title",
         category: "nsfw1"
     }, {
         name: "美女の集い",
@@ -7289,6 +7330,16 @@ div[class*='backdrop-show'] {
         insertImg: [".kizi-thumb-list", 2],
         customTitle: ".page-title",
         hide: "#pagemap-navi",
+        category: "nsfw1"
+    }, {
+        name: "水着画像まとめ",
+        host: ["mizugazo.com"],
+        reg: /^https?:\/\/mizugazo\.com\/archives\/\d+$/,
+        imgs: ".single_thumbnail>img,.wp-block-gallery img",
+        button: [4],
+        insertImg: [".wp-block-gallery", 2],
+        go: 1,
+        customTitle: ".entry-title",
         category: "nsfw1"
     }, {
         name: "ぷるるんお宝画像庫",
@@ -7999,7 +8050,8 @@ div[class*='backdrop-show'] {
         next: "//li[contains(text(),'上一篇')]/a",
         prev: "//li[contains(text(),'下一篇')]/a",
         customTitle: ".wzy_tit",
-        css: "header{margin-top:0px!important}.wzy_body{text-indent:unset!important}@media (max-width:768px){.wzy_body{margin:0px!important}}@media (max-width:768px){.neiye{margin:0px!important}}",
+        css: "header{margin-top:0px !important}.wzy_body{text-indent:unset !important}",
+        mcss: ".wzy_body{margin:0px !important}.neiye{margin:0px !important}",
         hide: "body>section[id],a[href*=download]",
         category: "nsfw1"
     }, {
@@ -8116,12 +8168,14 @@ div[class*='backdrop-show'] {
             pageNum: () => currentPageNum
         },
         openInNewTab: ".td-cpt-post a:not([target=_blank])",
-        css: ".tdi_60.td-a-rec{display:none!important;}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
+        css: ".tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
+        hide: ".tdi_60.td-a-rec",
         category: "autoPager"
     }, {
         name: "Models Vibe - 修正選單CSS和去廣告",
         reg: /^https?:\/\/www\.modelsvibe\.com\//,
-        css: ".tdi_60.td-a-rec{display:none!important;}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
+        css: ".tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
+        hide: ".tdi_60.td-a-rec",
         category: "ad"
     }, {
         name: "Digital AI Gallery",
@@ -8551,7 +8605,7 @@ div[class*='backdrop-show'] {
                 " |18+ Nude model Amateur"
             ]
         }),
-        css: "@media only screen and (max-width:479px){#outer-wrapper{margin:0px!important;width:100%!important}}",
+        mcss: "#outer-wrapper{margin:0px!important;width:100%!important}",
         category: "nsfw1"
     }, {
         name: "CUTE GIRLS ADDICT",
@@ -9365,6 +9419,7 @@ div[class*='backdrop-show'] {
         category: "nsfw2"
     }, {
         name: "URLGalleries",
+        host: ["urlgalleries.net"],
         url: {
             h: "urlgalleries",
             p: "/porn-gallery-"
@@ -9732,7 +9787,8 @@ div[class*='backdrop-show'] {
         ],
         endColor: "white",
         customTitle: ".headline>h1",
-        css: ".block-album{display:block !important}.block-album>.table,.top,.footer~*:not([id^='Full'],[class^='Full'],[id^='pv-'],[class^='pv-'],#comicRead,#fab,*[class^=fancybox]){display:none !important}",
+        css: ".block-album{display:block !important}",
+        hide: ".block-album>.table,.top,.footer~*:not([id^='Full'],[class^='Full'],[id^='pv-'],[class^='pv-'],#comicRead,#fab,*[class^=fancybox])",
         category: "nsfw2"
     }, {
         name: "Xasiat 自動翻頁",
@@ -10697,7 +10753,7 @@ div[class*='backdrop-show'] {
         ],
         go: 1,
         referer: "src",
-        css: "@media only screen and (max-width:1920px){#FullPictureLoadMainImgBox{width:100%;max-width:1400px;margin:0 auto}}",
+        mcss: "#FullPictureLoadMainImgBox{width:100%;max-width:1400px;margin:0 auto}",
         category: "nsfw2"
     }, {
         name: "Girlsreleased 載入更多",
@@ -12086,7 +12142,7 @@ div[class*='backdrop-show'] {
             v: 3,
             css: false
         },
-        css: "@media only screen and (max-width:480px){article{width:100%!important}}",
+        mcss: "article{width:100%!important}",
         category: "nsfw1"
     }, {
         name: "美图收藏夹",
@@ -12102,7 +12158,7 @@ div[class*='backdrop-show'] {
             v: 3,
             css: false
         },
-        css: "@media only screen and (max-width:480px){article{width:100%!important}}",
+        mcss: "article{width:100%!important}",
         category: "nsfw1"
     }, {
         name: "名腿网",
@@ -15000,18 +15056,13 @@ div[class*='backdrop-show'] {
             h: "hmanche",
             p: "/chapter/"
         },
-        init: async () => {
-            let chapterName = fn.gt(".text-center.mt-3.mb-4");
-            if (!/^第\d+話$/.test(chapterName)) {
-                await fn.getNP("picture img", "//a[span[text()='下一章']][contains(@href,'chapter')]");
-            }
-        },
         imgs: () => fn.getImgSrcArr("picture img").map(src => src.replace(".thumb.jpg", "")),
         button: [4],
         insertImg: ["picture", 2],
+        autoDownload: [0],
         next: "//a[span[text()='下一章']][contains(@href,'chapter')]",
         prev: "//a[span[text()='上一章']]",
-        customTitle: () => fn.title(/\s-\d+/).replace(/\(\d+P\)|第.章/gi, "").replace(/[\s-]+$/, "").trim(),
+        customTitle: () => fn.gae("h2").map(e => e.innerText).join(" "),
         category: "hcomic"
     }, {
         name: "H漫車 目錄頁",
@@ -15029,14 +15080,14 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
-        customTitle: ".book-title-name",
+        customTitle: () => fn.getText([".book-info-value", ".book-title-name"]),
         hide: ".sss-container",
         category: "hcomic"
     }, {
         name: "H漫車 目錄頁",
         host: ["www.hmanche.com"],
         url: {
-            h: "manhuache",
+            h: "hmanche",
             p: "/book/",
             e: "#chapterGroupListJsonAsc,#chapterGroupListAsc"
         },
@@ -15048,7 +15099,7 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         go: 1,
-        customTitle: ".book-title-name",
+        customTitle: () => fn.getText([".book-info-value", ".book-title-name"]),
         hide: ".sss-container",
         category: "hcomic"
     }, {
@@ -15280,9 +15331,9 @@ div[class*='backdrop-show'] {
             p: "/photos-index-aid-"
         },
         init: async () => {
-            fn.remove(".dlh,iframe:not(#FullPictureLoadIframe)");
+            fn.remove(".dlh,iframe:not(#FullPictureLoadIframe,#FullPictureLoadIframeGallery)");
             fn.remove("//body/div[a[img]] | //div[@class='Introduct']/a[div[img]] | //div[a[img[@alt='Game Tip']]]");
-            fn.addMutationObserver(() => fn.remove(".dlh,iframe:not(#FullPictureLoadIframe)"));
+            fn.addMutationObserver(() => fn.remove(".dlh,iframe:not(#FullPictureLoadIframe,#FullPictureLoadIframeGallery)"));
         },
         imgs: async () => {
             fn.showMsg(displayLanguage.str_05, 0);
@@ -15802,7 +15853,8 @@ div[class*='backdrop-show'] {
         button: [4],
         insertImg: [".site-reader", 2],
         customTitle: () => fn.title(" - Roku Hentai"),
-        css: ".site-reader--right-to-left,.site-reader--left-to-right{overflow-x:auto!important;overflow-y:auto!important}.site-reader{padding-bottom:0px!important}.site-reader{display:block!important;}.site-bottom-ad-slot{display:none!important}",
+        css: ".site-reader--right-to-left,.site-reader--left-to-right{overflow-x:auto !important;overflow-y:auto !important}.site-reader{padding-bottom:0px !important}.site-reader{display:block !important}",
+        hide: ".site-bottom-ad-slot",
         fetch: 1,
         category: "hcomic"
     }, {
@@ -22788,7 +22840,7 @@ if ("xx" in window) {
             });
         },
         infiniteScroll: true,
-        css: "@media (max-width:559px){.main{padding:20px 0px 0!important;}}",
+        mcss: ".main{padding:20px 0px 0!important}",
         category: "comic"
     }, {
         name: "漫画网 自動翻頁",
@@ -22828,7 +22880,7 @@ if ("xx" in window) {
             },
             preloadNextPage: 1
         },
-        css: "@media (max-width:559px){.main{padding:20px 0px 0!important;}}",
+        mcss: ".main{padding:20px 0px 0!important}",
         category: "comic autoPager"
     }, {
         name: "36漫画",
@@ -22967,6 +23019,7 @@ if ("xx" in window) {
             });
         },
         infiniteScroll: true,
+        mcss: ".container,.vod-list{padding:0!important;}",
         category: "comic"
     }, {
         name: "风车漫画 自動翻頁",
@@ -23006,6 +23059,7 @@ if ("xx" in window) {
             },
             preloadNextPage: 1
         },
+        mcss: ".container,.vod-list{padding:0!important;}",
         category: "comic autoPager"
     }, {
         name: "漫画160/非常爱漫新站",
@@ -23043,7 +23097,8 @@ if ("xx" in window) {
             fn.picPreload(obj.imgs(), obj.customTitle(), "next");
         },
         infiniteScroll: true,
-        css: ".action-list li{width:50% !important}@media only screen and (max-width:480px){.container,.content-body{padding:0px !important}}",
+        css: ".action-list li{width:50% !important}",
+        mcss: ".container,.content-body{padding:0px !important}",
         hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3)",
         category: "comic"
     }, {
@@ -23126,7 +23181,8 @@ if ("xx" in window) {
                 }
             }
         },
-        css: ".action-list li{width:50% !important}@media only screen and (max-width:480px){.container,.content-body{padding:0px !important}}",
+        css: ".action-list li{width:50% !important}",
+        mcss: ".container,.content-body{padding:0px !important}",
         hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3),li:has(>#prev),li:has(>.curPage),li:has(>#k_next)",
         category: "comic autoPager"
     }, {
@@ -25344,7 +25400,7 @@ if ("xx" in window) {
                 str_181: "拼接下載",
                 str_182: "※畫廊圖片循環切換",
                 galleryMenu: {
-                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,R)",
+                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvent ? "小圖像模式" : "小圖像模式 (2,R)",
@@ -25568,7 +25624,7 @@ if ("xx" in window) {
                 str_181: "拼接下载",
                 str_182: "※画廊图片循环切换",
                 galleryMenu: {
-                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,R)",
+                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
                     rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,R)",
                     small: hasTouchEvent ? "小图像模式" : "小图像模式 (2,R)",
@@ -25789,7 +25845,7 @@ if ("xx" in window) {
                 str_181: "Combine Download",
                 str_182: "※Gallery Image Loop Switching",
                 galleryMenu: {
-                    horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,R)",
+                    horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
                     rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,R)",
                     small: hasTouchEvent ? "Small Image" : "Small Image (2,R)",
@@ -26489,7 +26545,7 @@ if ("xx" in window) {
                     "origin-src",
                     "original",
                     "real_src",
-                    "src2",
+                    //"src2",
                     "z-image-loader-url",
                     "zoomfile",
                     "poster"
@@ -30958,7 +31014,8 @@ body {
 }
 #FixedMenu {
     text-align: center;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-weight: 500;
     font-size: 14px;
     color: #000000;
     width: ${hasTouchEvent ? "102px" : "132px"};
@@ -31037,6 +31094,10 @@ img.horizontal {
     object-fit: contain;
     border: solid #fff;
     background-color: #fff;
+}
+.no_r_l_border {
+    border-right: none !important;
+    border-left: none !important;
 }
 .viewer-backdrop {
     background-color: rgba(0, 0, 0, .94) !important;
@@ -31309,7 +31370,7 @@ if (hasTouchEvent) {
 }
 
 document.addEventListener("keydown", event => {
-    if (isOpenFancybox || document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+    if (isOpenFancybox || document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k || event.key === k) || (config.ViewMode == 5 && event.shiftKey)) return;
     const imgs = [...document.images];
     if (event.code === "Numpad0" || event.code === "Digit0" || event.key === "0") return defaultImageLayout();
     if (event.code === "Numpad1" || event.code === "Digit1" || event.key === "1") return singleImageLayout();
@@ -31358,6 +31419,19 @@ document.addEventListener("keydown", event => {
                 return (box.style.direction = "rtl");
             }
         }
+    }
+    if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && config.ViewMode == 5) {
+        imgs.forEach(img => {
+            if (img.classList.contains("no_r_l_border")) {
+                img.classList.remove("no_r_l_border");
+            } else {
+                img.classList.add("no_r_l_border");
+            }
+        });
+        if (imgs[imgViewIndex] !== undefined) {
+            return instantScrollIntoView(imgs[imgViewIndex]);
+        }
+        return;
     }
     if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
         if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
@@ -32031,7 +32105,7 @@ if (config.ViewMode == 1) {
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
         const kEvent = (event) => {
-            if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+            if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k) || (config.ViewMode == 5 && event.shiftKey)) return;
             const imgs = gae("img", shadow);
             const next = ge("#next,#menuNext", shadow);
             if (event.code === "Escape" || event.key === "Escape") return closeGallery();
@@ -32139,6 +32213,19 @@ if (config.ViewMode == 1) {
                     }
                 }
             }
+            if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && config.ViewMode == 5) {
+                imgs.forEach(img => {
+                    if (img.classList.contains("no_r_l_border")) {
+                        img.classList.remove("no_r_l_border");
+                    } else {
+                        img.classList.add("no_r_l_border");
+                    }
+                });
+                if (isEle(imgs[imgViewIndex])) {
+                    return instantScrollIntoView(imgs[imgViewIndex]);
+                }
+                return;
+            }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
@@ -32242,7 +32329,8 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-weight: 500;
     font-size: 14px;
     color: #000000;
     width: 132px;
@@ -32327,6 +32415,10 @@ img.horizontal {
     border: solid #fff;
     background-color: #fff;
 }
+.no_r_l_border {
+    border-right: none !important;
+    border-left: none !important;
+}
 #next {
     display: block;
     text-align: center;
@@ -32341,6 +32433,7 @@ img.horizontal {
     cursor: pointer;
 }
 #FixedMenu select {
+    font-weight: normal;
     text-align: center;
     color: #000;
     background-color: #f6f6f6;
@@ -33073,7 +33166,7 @@ img.horizontal {
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
         const kEvent = (event) => {
-            if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k)) return;
+            if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k) || (config.ViewMode == 5 && event.shiftKey)) return;
             const imgs = gae("img", mainElement);
             const next = ge("#next", mainElement) || ge("#menuNext", menuDiv);
             if (event.code === "Escape" || event.key === "Escape") return closeGallery();
@@ -33181,6 +33274,19 @@ img.horizontal {
                     }
                 }
             }
+            if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && config.ViewMode == 5) {
+                imgs.forEach(img => {
+                    if (img.classList.contains("no_r_l_border")) {
+                        img.classList.remove("no_r_l_border");
+                    } else {
+                        img.classList.add("no_r_l_border");
+                    }
+                });
+                if (isEle(imgs[imgViewIndex])) {
+                    return instantScrollIntoView(imgs[imgViewIndex]);
+                }
+                return;
+            }
             if ((["KeyW", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.code === k) || ["w", "W", "a", "A", "KeyA", "ArrowUp", "ArrowLeft"].some(k => event.key === k)) && imgViewIndex < 0) {
                 if (config.ViewMode == 4 && (event.code === "ArrowUp" || event.key === "ArrowUp")) return;
                 if (config.ViewMode == 5 && (event.code === "ArrowLeft" || event.key === "ArrowLeft")) return;
@@ -33282,7 +33388,8 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-weight: 500;
     font-size: 14px;
     color: #000000;
     width: 132px;
@@ -33367,6 +33474,10 @@ img.horizontal {
     border: solid #fff;
     background-color: #fff;
 }
+.no_r_l_border {
+    border-right: none !important;
+    border-left: none !important;
+}
 #next {
     display: block;
     text-align: center;
@@ -33381,6 +33492,7 @@ img.horizontal {
     cursor: pointer;
 }
 #FixedMenu select {
+    font-weight: normal;
     text-align: center;
     color: #000;
     background-color: #f6f6f6;
@@ -33918,9 +34030,10 @@ html,body {
         `, "overflowYHidden");
         const style = createStyle(`
 #main {
-    font-size: 14px;
-    line-height: 20px;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    font-size: 14px !important;
+    line-height: 20px !important;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-weight: 500 !important;
     text-align: left;
     color: black;
     inset: 0px;
@@ -34270,7 +34383,7 @@ label.line-through:has(>#size) {
         let heightNum = 0;
         const changeList = () => {
             gae("img", main).forEach(img => {
-                if (!/^(blob|data)/.test(img.src)) {
+                if (!/^(blob|data)/.test(img.src) || img.classList.contains("loaded")) {
                     const input = img.previousElementSibling;
                     const parent = img.parentElement;
                     let cw = img.naturalWidth >= widthNum;
@@ -35141,7 +35254,8 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadOptions * {
     font: unset;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-weight: 500;
     font-size: 14px;
     color: black;
     float: none;
@@ -35644,7 +35758,8 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenu {
     text-align: center !important;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-weight: 500 !important;
     font-size: 14px !important;
     color: #000000 !important;
     height: auto !important;
@@ -35693,7 +35808,8 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenuB {
     text-align: center !important;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-weight: 500 !important;
     font-size: 14px !important;
     color: #000000 !important;
     width: 112px !important;
@@ -35710,7 +35826,7 @@ label.line-through:has(>#size) {
 }
 
 #FullPictureLoadMsg {
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
@@ -35840,7 +35956,8 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     height: 30px;
     font-size: 18px;
     color: black;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-weight: 500 !important;
     line-height: 29px;
     text-align: center;
     overflow: hidden;
@@ -35877,7 +35994,8 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 }
 
 .autoPagerTitle a:-webkit-any-link {
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif !important;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-weight: 500 !important;
     color: black;
 }
 
@@ -35899,6 +36017,8 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 }
 
 #FullPictureLoadOptionsButtonParentDiv {
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-weight: 500 !important;
     max-width: 100% !important;
     height: 80px !important;
 }
@@ -35916,7 +36036,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     word-spacing: normal;
     line-height: normal;
     font-size: 14px !important;
-    font-weight: unset !important;
+    font-weight: 500 !important;
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
@@ -35947,7 +36067,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     word-spacing: normal;
     line-height: normal;
     font-size: 14px !important;
-    font-weight: unset !important;
+    font-weight: 500 !important;
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
@@ -36504,6 +36624,9 @@ a[data-fancybox]:hover {
         }
         if ("css" in siteData && isString(siteData.css)) {
             fn.css(siteData.css);
+        }
+        if ("mcss" in siteData && isString(siteData.mcss) && hasTouchEvent) {
+            fn.css(siteData.mcss);
         }
         if ("hide" in siteData && (isString(siteData.hide) || isArray(siteData.hide))) {
             let text = siteData.hide;
@@ -37169,7 +37292,8 @@ html,body {
     line-height: 24px !important;
     padding: 3px;
     font: unset;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-weight: 500;
     font-size: 16px;
     text-align: center;
     border-radius: 8px;
@@ -37182,7 +37306,8 @@ html,body {
     text-align: center;
     text-decoration: unset;
     font: unset;
-    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    font-family: sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-weight: 500;
     font-size: 16px;
     background-color: unset;
     border-color: unset;
@@ -37437,7 +37562,13 @@ html,body {
                 menu_command_id_1 = _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
                 checkOptionsData();
                 siteData = {
-                    imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)"),
+                    imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)").map(src => {
+                        if (src.includes(".sinaimg.")) {
+                            return src.replace(/\/orj\d+\//, "/large/");
+                        } else {
+                            return src;
+                        }
+                    }),
                     repeat: 1,
                     SPA: true,
                     category: "photo"
