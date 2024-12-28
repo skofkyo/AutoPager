@@ -175,6 +175,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     init: async () => await fn.waitEle("元素選擇器"), //等待直至元素出現
     init: async () => await fn.waitVar("變數名"), //等待直至window的變數出現
     init: () => fn.addMutationObserver(() => fn.remove("div[class][style*='z-index']")), //動態刪除元素
+    box: ["selector", pos, width number], //創建一個圖片容器#FullPictureLoadMainImgBox
     imgs: "#TheImg", //CSS選擇器
     imgs: "//img[@id="TheImg"]", //XPath選擇器
     //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
@@ -275,6 +276,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     init: () => {
         code
     },
+    box: ["selector"], 
     imgs: "",
     imgs: () => {
         code
@@ -1273,7 +1275,7 @@ imgs: async () => {
 <p>B鍵 模式為水平時用於切換圖片的左右邊框。</p>
 <p>Delete鍵 用於隱藏當前圖片導覽索引的圖片(藍色邊框)，看漫畫時手動調整讓後面的圖片能正常並成雙頁跨頁大圖。</p>
 <p>Enter鍵 用於取消所有用Delete鍵隱藏的圖片。</p>
-<p>畫廊為條漫模式時，上下方向鍵為預設行為，不會滾動圖片。</p>
+<p>畫廊為條漫模式時，上下方向鍵為預設行為，不會切換圖片。</p>
 <p>畫廊為條漫模式時+、-鍵和修飾鍵Ctrl、Alt、ShiftKey + 滾輪 可增加減少圖片的寬度。</p>
 <p>畫廊為水平模式時，左右方向鍵為預設行為，不會切換圖片。</p>
 <p>畫廊為水平模式時ShiftKey + 滾輪可滾動水平滾動條。</p>
