@@ -4274,6 +4274,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://hualin.san.tc/">HuaLin</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://m.xtushe.com/">新老友图社</a>
                 </td>
                 <td>有瀏覽限制，超過需要註冊會員和充值。</td>
@@ -4532,6 +4538,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://happy.5ge.net/category/%E5%9B%BE%E5%86%8C/">五歌的开心网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://4kce.com/">4k图</a>
                 </td>
                 <td></td>
             </tr>
