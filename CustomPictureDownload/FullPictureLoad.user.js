@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.5
+// @version            2.12.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -588,7 +588,10 @@
             t: document.title.split("|")[0],
             d: [
                 /^[a-z-\s\.]+:/i,
-                "NứngVL.net:"
+                "NứngVL.net:",
+                /Nude Chinese Model Uncensored Gallery[\s\d–]+/,
+                " – Chinese Beauties",
+                " – DVL"
             ]
         }),
         category: "nsfw2"
@@ -2457,6 +2460,7 @@
             h: "xiuren",
             p: ".html"
         },
+        exclude: "#posts-pay",
         imgs: ".wp-posts-content img",
         button: [4],
         insertImg: [".wp-posts-content", 2],
@@ -2464,6 +2468,32 @@
         next: "//a[p[text()='上一篇']][starts-with(@href,'http')]",
         prev: "//a[p[text()='下一篇']][starts-with(@href,'http')]",
         customTitle: ".wp-posts-content>p",
+        category: "nsfw1"
+    }, {
+        name: "HuaLin",
+        url: {
+            h: "hualin",
+            p: ".html",
+            e: ".single-content"
+        },
+        exclude: "元素",
+        init: () => fn.gae(".abstract,.down-form").forEach(e => tempEles.push(e)),
+        imgs: () => {
+            let pages = fn.ge(".page-links");
+            if (pages) {
+                let max = fn.gt(".page-links a:has(.be-arrowright)", 2);
+                return fn.getImg(".single-content img", max, 7);
+            } else {
+                return fn.gae(".single-content img");
+            }
+        },
+        button: [4],
+        insertImg: [".single-content", 2],
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        autoDownload: [0],
+        next: "a[rel=prev]",
+        prev: "a[rel=next]",
+        customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
         name: "美女图册",
@@ -2484,7 +2514,7 @@
         button: [4],
         insertImg: [".article-content", 2],
         customTitle: ".article-title",
-        hide: "#ads",
+        hide: "#ads,body>*[style^='display: block;'],#lbaeb",
         category: "nsfw1"
     }, {
         name: "美女图册",
@@ -3427,12 +3457,13 @@
         },
         exclude: ".signin-loader",
         imgs: ".wp-posts-content img",
-        button: [4],
-        insertImg: [".wp-posts-content", 2],
         autoDownload: [0],
         next: "//a[p[text()='上一篇']][starts-with(@href,'http')]",
         prev: "//a[p[text()='下一篇']][starts-with(@href,'http')]",
         customTitle: ".article-title",
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw1"
     }, {
         name: "新美图录/臺灣美腿女郎",
@@ -3516,11 +3547,7 @@
         button: [4],
         insertImg: ["#content", 2],
         insertImgAF: (parent) => {
-            if (tempEles.length > 0) {
-                for (let e of tempEles) {
-                    insertBefore(parent.firstChild, e);
-                }
-            }
+            parent.firstChild.before(...tempEles);
             fn.run("$(document).off()");
         },
         customTitle: () => fn.dt({
@@ -4094,23 +4121,12 @@
         name: "丝袜客",
         host: ["siwake.cc"],
         reg: /^https?:\/\/siwake\.cc\/post\//,
-        init: () => {
-            let e = fn.ge(".Content>.newfujian");
-            if (e) {
-                tempEles.push(e);
-            }
-        },
+        init: () => fn.gae(".Content>.newfujian").forEach(e => tempEles.push(e)),
         imgs: ".Content>a",
         button: [4],
         insertImg: [".Content", 2],
         endColor: "white",
-        insertImgAF: (parent) => {
-            if (tempEles.length > 0) {
-                for (let e of tempEles) {
-                    insertBefore(parent.firstChild, e);
-                }
-            }
-        },
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
         autoDownload: [0],
         next: "a.fas",
         prev: "a.next.fas",
@@ -5910,13 +5926,7 @@
         imgs: () => fn.getImgA(".pcontent-imgbox>img", ".post-links>a"),
         button: [4],
         insertImg: [".entry-content", 2],
-        insertImgAF: (parent) => {
-            if (tempEles.length > 0) {
-                for (let e of tempEles) {
-                    insertBefore(parent.firstChild, e);
-                }
-            }
-        },
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
         autoDownload: [0],
         next: ".post-pre a",
         prev: ".post-nextv a",
@@ -6468,13 +6478,7 @@
         imgs: ".tdb_single_content .tdb-block-inner img",
         button: [4],
         insertImg: [".tdb_single_content .tdb-block-inner", 2],
-        insertImgAF: (parent) => {
-            if (tempEles.length > 0) {
-                for (let e of tempEles) {
-                    insertBefore(parent.firstChild, e);
-                }
-            }
-        },
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
         autoDownload: [0],
         next: ".tdb-post-prev a",
         prev: ".tdb-post-next a",
@@ -6667,7 +6671,7 @@
             s: ".post-title",
             d: /\(\d+\s?photos\s?\)|(\s?\(\d+\s?photos?\s?\+\s?\d+\s?videos?\))|\([0-9\s]+ảnh[0-9\s\+]+video\)|\([0-9\s]+ảnh.*\)|\/mitaku\.net\//i
         }),
-        hide: ".boxzilla-container,.boxzilla-overlay,.sharrre-container",
+        hide: "#tpbr_topbar,.boxzilla-container,.boxzilla-overlay,.sharrre-container",
         category: "nsfw1"
     }, {
         name: "HOTGIRLchina 格式 AD",
@@ -8672,13 +8676,7 @@
         },
         button: [4],
         insertImg: [".td-post-content .tdb-block-inner.td-fix-index", 2, 1000],
-        insertImgAF: (parent) => {
-            if (tempEles.length > 0) {
-                for (let e of tempEles) {
-                    insertBefore(parent.firstChild, e);
-                }
-            }
-        },
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
         go: 1,
         customTitle: () => fn.gt(".tdb-title-text").replace(/\d+P[\d\s]+V|\d+P([\d\s\+P]+)?/, "").replaceAll("|", "-").trim(),
         hide: ".td-a-ad",
@@ -11592,11 +11590,11 @@
             let imgs = fn.gae(".article-content img:not([src*='yinaw.png'])");
             imgs.forEach(img => {
                 if (/^https?:\/\/\w+\.sinaimg\.cn\//.test(img.src)) {
-                    img.dataset.src = img.src.replace(/^(https?:\/\/\w+\.sinaimg\.cn\/)/, `${baiduApi}$1`).replace("/mw690/", "/large/");
+                    img.dataset.src = img.src.replace(/^(https?:\/\/\w+\.sinaimg\.cn\/)/, `${baiduApi}$1`).replace(/\/orj\d+\/|\/mw\d+\//, "/large/");
                 } else if (/^https?:\/\/i\d\.wp\.com\//.test(img.src)) {
-                    img.dataset.src = img.src.replace("/mw690/", "/large/").replace(/\?w=.+$/, "").replace(/^https?:\/\/i\d\.wp\.com\//, `${baiduApi}https://`);
+                    img.dataset.src = img.src.replace(/\/orj\d+\/|\/mw\d+\//, "/large/").replace(/\?w=.+$/, "").replace(/^https?:\/\/i\d\.wp\.com\//, `${baiduApi}https://`);
                 } else {
-                    img.dataset.src = img.src.replace("/mw690/", "/large/");
+                    img.dataset.src = img.src.replace(/\/orj\d+\/|\/mw\d+\//, "/large/");
                 }
             });
             if (setYinawSinaOriginalURL == 1) {
@@ -11733,13 +11731,39 @@
         imgs: ".joe_detail__article img",
         button: [4],
         insertImg: [".joe_detail__article", 2],
-        customTitle: ".joe_detail__title",
+        customTitle: () => fn.dt({
+            s: ".joe_detail__title",
+            d: /[-PVGMB\d\.]+$/
+        }),
         fancybox: {
             v: 3,
             css: false
         },
         hide: "div:has(>center>a>img)",
         category: "nsfw2"
+    }, {
+        name: "4k图",
+        url: {
+            h: "4kce.com",
+            e: "h1.entry-title"
+        },
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: "span.prev>a",
+        prev: "span.next>a",
+        customTitle: () => {
+            let text = fn.gt(".entry-title");
+            if (text.includes("：")) {
+                [, text] = text.split("：");
+            }
+            return fn.dt({
+                t: text,
+                d: /[-PVGMB\d\.]+$/
+            });
+        },
+        category: "nsfw1"
     }, {
         name: "漫画精品",
         host: ["xxxxn.click"],
@@ -11781,7 +11805,16 @@
             e: ".logo img[alt=好视角]",
             p: /^\/\w+\.html$/
         },
-        imgs: ".tit+.text img:not([onerror]),.tit+.pic img:not([onerror])",
+        imgs: () => {
+            let pages = fn.ge(".page-normal a");
+            if (pages) {
+                let [, max] = fn.gu("//a[text()='尾页']").match(/_(\d+).html/);
+                max = Number(max) + 1;
+                return fn.getImg(".tit+.text img:not([onerror]),.tit+.pic img:not([onerror])", max, 3);
+            } else {
+                return fn.gae(".tit+.text img:not([onerror]),.tit+.pic img:not([onerror])");
+            }
+        },
         button: [4],
         insertImg: [".tit+.text,.tit+.pic", 2],
         autoDownload: [0],
@@ -11789,7 +11822,8 @@
         prev: "//p[contains(text(),'下一篇')]/a",
         customTitle: ".tit>h1,.grjs h1",
         css: ".tit+.text img{width:100%!important}",
-        hide: ".tit+.pic img{margin:auto!important}.mbx_nav~div:not([class]),body>em",
+        mcss: ".pro_article .tpxq .pic{width: calc(100% - 10px)!important}",
+        hide: ".tit+.pic img{margin:auto!important}.mbx_nav~div:not([class]),body>em,.page-normal",
         gallery: 1,
         category: "nsfw2"
     }, {
@@ -17709,9 +17743,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (tempEles.length > 0 && !fn.ge(".roll-pagebtn")) {
-                for (let e of tempEles) {
-                    insertAfter(parent, e);
-                }
+                parent.after(...tempEles);
             }
             fn.remove(".pager,.mangaread-page");
         },
@@ -22982,7 +23014,7 @@ if ("xx" in window) {
             });
         },
         infiniteScroll: true,
-        mcss: ".container,.vod-list{padding:0!important;}",
+        mcss: ".vod-list{padding:0!important;}",
         category: "comic"
     }, {
         name: "风车漫画 自動翻頁",
@@ -34068,7 +34100,7 @@ html,body {
     margin: 0 5px;
 }
 #inputTitle {
-    width: calc(100% - 124px);
+    width: calc(100% - 126px);
 }
 #buttons button {
     margin-top: 4px;
@@ -37549,7 +37581,7 @@ html,body {
                 siteData = {
                     imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)").map(src => {
                         if (src.includes(".sinaimg.")) {
-                            return src.replace(/\/orj\d+\//, "/large/");
+                            return src.replace(/\/orj\d+\/|\/mw\d+\//, "/large/");
                         } else {
                             return src;
                         }
