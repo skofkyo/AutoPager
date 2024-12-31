@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.8
+// @version            2.12.9
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -8360,10 +8360,11 @@
     }, {
         name: "Poringa!",
         host: ["www.poringa.net", "m.poringa.net"],
-        reg: /^https?:\/\/(www|m)\.poringa\.net\/posts\//i,
+        url: {
+            h: "poringa.net",
+            p: "/posts/"
+        },
         imgs: ".post-content img,.content-post-img>img",
-        button: [4],
-        insertImg: [".post-content,.content.short", 3],
         customTitle: ".post-title,h1.title",
         category: "nsfw2"
     }, {
@@ -9414,33 +9415,20 @@
             h: "urlgalleries",
             p: "/porn-gallery-"
         },
-        imgs: () => {
-            fn.showMsg(displayLanguage.str_16, 0);
+        imgs: () => fn.getEle([fn.url + "&a=10000"], "#wtf>a").then(aArr => {
+            thumbnailSrcArray = aArr.map(a => fn.ge("img", a)?.src);
+            let links = aArr.map(a => a.href);
+            fn.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
-            let pages = [fn.url];
-            if (fn.ge(".gallerybody a[href*='?p=']")) {
-                pages = [fn.url, ...fn.gau(".gallerybody a[href*='?p=']")];
-            }
-            let resEleArr = pages.map(url => fetch(url).then(res => res.text()).then(text => {
-                fn.showMsg(`${displayLanguage.str_17}${fetchNum+=1}/${pages.length}`, 0);
+            let imageHostLinks = links.map(url => fetch(url).then(res => res.text()).then(text => {
+                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
                 let dom = fn.doc(text);
-                return fn.gae("#wtf>a", dom);
+                let code = fn.gst("window.location.href", dom);
+                let [, link] = code.match(/window\.location\.href[\s\='"]+([^'";]+)/);
+                return link;
             }));
-            return Promise.all(resEleArr).then(arr => arr.flat()).then(aArr => {
-                thumbnailSrcArray = aArr.map(a => fn.ge("img", a)?.src);
-                let links = aArr.map(a => a.href);
-                fn.showMsg(displayLanguage.str_05, 0);
-                fetchNum = 0;
-                let imageHostLinks = links.map(url => fetch(url).then(res => res.text()).then(text => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
-                    let dom = fn.doc(text);
-                    let code = fn.gst("window.location.href", dom);
-                    let [, link] = code.match(/window\.location\.href[\s\='"]+([^'";]+)/);
-                    return link;
-                }));
-                return Promise.all(imageHostLinks).then(urls => fn.getImageHost(urls));
-            });
-        },
+            return Promise.all(imageHostLinks).then(urls => fn.getImageHost(urls));
+        }),
         button: [4],
         insertImg: [
             ["#wtf", 2, "#wtf"], 3
@@ -16177,6 +16165,17 @@
         customTitle: () => fn.gt("ol.inline-flex>li:nth-child(2) a").trim() + " - " + fn.gt("ol.inline-flex>li:nth-child(3) a").trim(),
         category: "hcomic"
     }, {
+        name: "热漫画",
+        host: ["rehanman.com"],
+        reg: /^https?:\/\/rehanman\.com\//,
+        SPA: () => document.URL.includes("/webtoon/"),
+        observerURL: true,
+        imgs: () => fetch("/_next/data/U71lM17yp5CavvPM1GmBO/webtoon/" + document.location.pathname.split("/")[2] + ".json").then(res => res.json()).then(json => {
+            customTitle = json.pageProps.entrySSR.title;
+            return json.pageProps.entrySSR.entries_data.chapters.map(e => e.images).flat().map(e => "https://api.rehanman.com/uploads/data/china18sky/" + e);
+        }),
+        category: "nsfw1"
+    }, {
         name: "Hitomi.la",
         url: {
             h: "hitomi.la",
@@ -17469,9 +17468,10 @@
         },
         category: "comic"
     }, {
-        name: "BATOTO",
+        name: "BATOTO V2",
+        link: "https://rentry.co/batoto",
         url: {
-            h: "bato.to",
+            e: "meta[property='og:site_name'][content=Batoto]",
             p: "/chapter/"
         },
         imgs: () => {
@@ -17492,6 +17492,23 @@
             let magaName = fn.gt(".nav-title>a");
             return magaName + " - " + chapterName.replaceAll("\n", "").replace(/\s{2,10}/, "");
         },
+        category: "comic"
+    }, {
+        name: "BATOTO V3",
+        url: {
+            t: "Bato.To",
+            p: "/title/",
+            e: "astro-island[props*=imageFiles]"
+        },
+        init: () => fn.waitEle("div[name='image-item'] img"),
+        imgs: () => JSON.parse(JSON.parse(document.querySelector("astro-island[props*=imageFiles]").getAttribute("props")).imageFiles.find(e => typeof e === "string")).map(([, url]) => url),
+        button: [4],
+        insertImg: ["div[name='image-item']", 2],
+        autoDownload: [0],
+        next: "//a[span[text()='Next Chapter ▶']]",
+        prev: "//a[span[text()='◀ Prev Chapter']]",
+        customTitle: () => fn.title(" - Read Free Manga Online at Bato.To"),
+        hide: ".max-w-screen-2xl:has(button.btn-info)",
         category: "comic"
     }, {
         name: "Dynasty Reader",
@@ -23054,7 +23071,7 @@ if ("xx" in window) {
             },
             preloadNextPage: 1
         },
-        mcss: ".container,.vod-list{padding:0!important;}",
+        mcss: ".vod-list{padding:0!important;}",
         category: "comic autoPager"
     }, {
         name: "漫画160/非常爱漫新站",
@@ -31751,7 +31768,9 @@ function createImgElement(mode) {
             aspectRatio();
             [...document.images].forEach(img => {
                 fn.imagesObserver.observe(img);
-                fn.imagesViewObserver.observe(img);
+                if (config.ViewMode == 5) {
+                    fn.imagesViewObserver.observe(img);
+                }
                 if (mode === "horizontal") {
                     let num = 6;
                     if (devicePixelRatio > 1 && !navigator.userAgent.includes("Firefox")) {
@@ -32557,7 +32576,9 @@ img.horizontal {
                     aspectRatio();
                     gae("img", shadow).forEach(img => {
                         fn.imagesObserver.observe(img);
-                        fn.imagesViewObserver.observe(img);
+                        if (config.ViewMode == 5) {
+                            fn.imagesViewObserver.observe(img);
+                        }
                         if (mode === "horizontal") {
                             let num = 6;
                             if (devicePixelRatio > 1 && !isFirefox) {
@@ -33633,7 +33654,9 @@ img.horizontal {
                     aspectRatio();
                     gae("img", mainElement).forEach(img => {
                         fn.imagesObserver.observe(img);
-                        fn.imagesViewObserver.observe(img);
+                        if (config.ViewMode == 5) {
+                            fn.imagesViewObserver.observe(img);
+                        }
                         if (mode === "horizontal") {
                             let num = 6;
                             if (devicePixelRatio > 1 && !isFirefox) {
