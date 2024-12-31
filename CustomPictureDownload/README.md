@@ -5353,6 +5353,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://rehanman.com/">热漫画</a>
+                </td>
+                <td>SPA網頁，不分章節直接取得所有圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.acgotang.com/">ACG糖</a>
                 </td>
                 <td>
@@ -6418,7 +6424,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://bato.to/">BATOTO 英文</a>
                 </td>
-                <td></td>
+                <td><a href="https://rentry.co/batoto">Mirror Domains</a></td>
             </tr>
             <tr>
                 <td>
