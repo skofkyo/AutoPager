@@ -7,7 +7,7 @@
 PC
 Chrome 131.0.6778.205 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Edge 131.0.2903.112 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 133.0.3 + Tampermonkey 5.3.2 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 133.0.3 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Android
 ☆Edge Canary 133.0.3046.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.019 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
