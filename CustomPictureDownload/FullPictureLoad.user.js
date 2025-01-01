@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.9
+// @version            2.12.10
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3409,15 +3409,15 @@
         openInNewTab: ".mixs-card-content>a:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "次元LSP/猫猫网盘/云边网盘",
+        name: "次元LSP/猫猫网盘/云边网盘/小易の云盘/ooo.pqdh.com",
         url: {
-            h: ["cylsp.org", "pan.catcat.blog", "qinzhi.top"]
+            h: ["cylsp.org", "pan.catcat.blog", "qinzhi.top", "alist.xiaoyiblog.fun", "yun.pqdh.com"]
         },
         SPA: true,
         observerURL: true,
         imgs: () => fn.getAList(),
         customTitle: () => fn.dt({
-            d: [" | 次元LSP", " | 猫猫网盘", " | 云边网盘"]
+            d: [" | 次元LSP", " | 猫猫网盘", " | 云边网盘", " | 小易の云盘", " | ooo.pqdh.com"]
         }),
         downloadVideo: true,
         category: "nsfw1"
@@ -3577,6 +3577,21 @@
         insertImg: ["#content", 2],
         insertImgAF: () => fn.run("$(document).off()"),
         customTitle: () => fn.title(" – 14MM图片网"),
+        category: "nsfw1"
+    }, {
+        name: "美图吧",
+        url: {
+            h: "meituba.cc",
+            p: "/gallery/",
+            e: "#image_div"
+        },
+        imgs: async () => {
+            let max = fn.gt("//a[@class='page-numbers prev'][@title='下一页']//preceding-sibling::a[1]");
+            return fn.getImg("#image_div img", max, "4");
+        },
+        button: [4],
+        insertImg: ["#content", 2],
+        customTitle: ".item_title",
         category: "nsfw1"
     }, {
         name: "最好秀色",
@@ -3956,6 +3971,23 @@
         customTitle: ".article_container>h1",
         css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}",
         mcss: ".container{max-width:100% !important}",
+        category: "nsfw1"
+    }, {
+        name: "依依美女图片网",
+        url: {
+            h: "www.eemm.cc",
+            p: "/a/"
+        },
+        imgs: "#post_content img",
+        button: [4],
+        insertImg: ["#post_content", 2],
+        autoDownload: [0],
+        next: ".post-previous a",
+        prev: ".post-next a",
+        customTitle: ".article_container>h1",
+        css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}",
+        mcss: ".container{max-width:100% !important}",
+        hide: ".code-block,.reply-read",
         category: "nsfw1"
     }, {
         name: "原创妹子图/尤物私房图/极品美女图/免费私房图/私房网红图/尤物妹妹图",
@@ -22809,7 +22841,7 @@ if ("xx" in window) {
                     return textArr[1] + " - " + textArr[0];
                 }
             },
-            hide: ".mults",
+            hide: ".mults,.like-more",
             preloadNextPage: (dom) => {
                 let next = fn.ge(_this.autoPager.next, dom);
                 if (!!next) {
@@ -26618,7 +26650,7 @@ if ("xx" in window) {
         },
         //從用AList架設的雲端硬碟，提取圖片和影片網址
         getAList: () => {
-            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURIComponent(a.getAttribute("href"))).map(href => /\.jpe?g$|\.png$|\.gif$|\.mp4$|\.mov$|\.ts$/i.test(href) ? href : null).filter(item => item);
+            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURIComponent(a.getAttribute("href"))).map(href => /\.jpe?g$|\.webp$|\.png$|\.gif$|\.mp4$|\.mov$|\.ts|\.zip$/i.test(href) ? href : null).filter(item => item);
             fn.showMsg(displayLanguage.str_05, 0);
             let fetchNum = 0;
             let password;
@@ -26648,14 +26680,21 @@ if ("xx" in window) {
                     } : null;
                 });
             });
-            return Promise.all(resArr).then(arr => arr.map(obj => {
-                if (/\.mp4$|\.mov$|\.ts$/i.test(obj.name)) {
-                    videoSrcArray.push(obj.url);
-                    return null;
-                } else {
-                    return obj.url;
-                }
-            }).filter(item => item));
+            return Promise.all(resArr).then(arr => {
+                console.log("AListDataArray", arr);
+                return arr.map(obj => {
+                    if (!obj) return null;
+                    if (/\.mp4$|\.mov$|\.ts$/i.test(obj.name)) {
+                        videoSrcArray.push(obj.url);
+                        return null;
+                    } else if (/\.zip$/i.test(obj.name)) {
+                        fileUrlArray.push(obj.url);
+                        return null;
+                    } else {
+                        return obj.url;
+                    }
+                }).filter(item => item);
+            });
         },
         //指定元素選擇器或元素陣列，返回提取出的圖片網址陣列。
         getImgSrcArr: (selector, dom = document) => {
@@ -30354,7 +30393,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
-        if (srcArr.length == 0 && videoSrcArray.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0 && videoSrcArray.length == 0 && fileUrlArray.length == 0) return fn.showMsg(displayLanguage.str_44);
         let picNum = srcArr.length;
         let titleText = (customTitle || document.title);
         let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
@@ -30422,7 +30461,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
-        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0 && videoSrcArray.length == 0 && fileUrlArray.length == 0) return fn.showMsg(displayLanguage.str_44);
         let imgsNum = srcArr.length;
         let videosNum;
         if (videoSrcArray.length > 0) {
