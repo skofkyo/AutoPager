@@ -3,24 +3,22 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2024/12/06
+2025/01/01
 PC
-Chrome 131.0.6778.109 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 131.0.6778.109 + Tampermonkey 5.3.2 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Cent Browser 5.1.1130.129 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Vivaldi 7.0.3495.23 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 133.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
+Chrome 131.0.6778.205 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 131.0.2903.112 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 133.0.3 + Tampermonkey 5.3.2 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 133.0.2997.0 + Tampermonkey 5.3.2 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.0.035 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 133.0.3046.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.2.019 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 131.0.2903.77 + Tampermonkey 5.3.2
-Firefox for Android 133.0 + Tampermonkey 5.3.2 or Violentmonkey 2.28.0 or ScriptCat 0.16.6
-Mises Browser 424110108 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Yandex Browser 24.12.0.279 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Mask Browser 1.7.3.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-XBrowser 5.0.2
-ViaBrowser 6.0.0
+Edge 131.0.2903.125 + Tampermonkey 5.3.3
+Firefox for Android 133.0.3 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Mises Browser 424122407 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Yandex Browser 24.12.3.110 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+XBrowser 5.0.3
+ViaBrowser 6.1.0
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>Extensions：</h1>
@@ -2060,6 +2058,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.14mm.cn/">14MM图片网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.meituba.cc/">美图吧</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.eemm.cc/">依依美女图片网</a>
                 </td>
                 <td></td>
             </tr>
@@ -4241,7 +4251,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>AList</td>
                 <td>
-                    <a href="https://cylsp.org/">次元LSP</a>， <a href="https://pan.catcat.blog/">猫猫网盘</a>， <a href="https://qinzhi.top/">云边网盘</a>， <a href="https://alist.qiuyeshudian.com/">J M G T</a>，圖片列表跑出來後記得按一下名稱排序，原圖一張幾十MB的建議複製圖址後用Motrix下載。
+                    <a href="https://cylsp.org/">次元LSP</a>， <a href="https://pan.catcat.blog/">猫猫网盘</a>， <a href="https://qinzhi.top/">云边网盘</a>， <a href="https://alist.xiaoyiblog.fun/">小易の云盘</a>， <a href="https://yun.pqdh.com/">ooo.pqdh.com</a>， <a href="https://alist.qiuyeshudian.com/">J M G T</a>，圖片列表跑出來後記得按一下名稱排序，原圖一張幾十MB的建議複製圖址後用Motrix下載，沒有圖片但有影片或壓縮檔建議匯出網址後用Motrix下載。
                 </td>
             </tr>
             <tr>
