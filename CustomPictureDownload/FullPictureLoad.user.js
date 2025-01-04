@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.12
+// @version            2.12.13
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4100,6 +4100,17 @@
         customTitle: ".media-body>h4",
         category: "nsfw1"
     }, {
+        name: "秀臀网",
+        url: {
+            h: "www.xiutun.net",
+            p: ".html"
+        },
+        imgs: ".wp-posts-content img",
+        button: [4],
+        insertImg: [".wp-posts-content", 2],
+        customTitle: ".article-title",
+        category: "nsfw1"
+    }, {
         name: "女神部落",
         url: {
             h: "girlsteam.club"
@@ -7247,8 +7258,8 @@
             h: "gazounabi.com",
             p: "/archives/"
         },
-        imgs: ".article-body-more a[title]",
-        customTitle: ".entry-title",
+        imgs: ".article-body-more a[title],#article-contents a[title]",
+        customTitle: "h2.entry-title,h1.article-title",
         category: "nsfw2"
     }, {
         name: "エロ画像ぱしゃりずむ",
@@ -8564,7 +8575,7 @@
         capture: () => _this.imgs(),
         customTitle: () => fn.dt({
             s: ".entry-title",
-            d: /^Ảnh.+Xinh\s|^Clip.+Em\s/
+            d: /^Ảnh.+Xinh\s|^Ảnh Cosplay 18\+\s|^Clip.+Em\s/
         }),
         downloadVideo: true,
         category: "nsfw2"
@@ -8579,7 +8590,7 @@
         capture: () => _this.imgs(),
         customTitle: () => fn.dt({
             s: ".entry-title",
-            d: /^Ảnh.+Xinh\s|^Clip.+Em\s/
+            d: /^Ảnh.+Xinh\s|^Ảnh Cosplay 18\+\s|^Clip.+Em\s/
         }),
         observerClick: ".catfish-bottom-close",
         category: "nsfw2"
@@ -9167,7 +9178,7 @@
             h: "yaustal.com"
         }) && fn.lp !== "/",
         exclude: "#bottom-nav",
-        imgs: "a.highslide",
+        imgs: ".video-box img[data-src],a.highslide",
         customTitle: ".blog_tit",
         category: "nsfw2"
     }, {
@@ -9341,6 +9352,7 @@
         category: "nsfw2"
     }, {
         name: "ADULT SITE 18+",
+        host: ["go4.kiski.link"],
         url: {
             e: ".header_logo>img[alt=ADULT]",
             p: ".html",
@@ -9619,9 +9631,9 @@
             p: "/psto",
             s: "id="
         },
-        imgs: "a.fullimg",
-        thums: "a.fullimg img",
-        customTitle: ".content-block h1",
+        imgs: "a[id^=pic]",
+        thums: "a[id^=pic] img",
+        customTitle: ".content-block h1,.gallery h1",
         category: "nsfw2"
     }, {
         name: "wikiFeetX / wikiFeet",
@@ -10179,6 +10191,22 @@
             ["#FullPictureLoadMainImgBox", 0, ".album-view"], 2
         ],
         customTitle: ".title",
+        category: "nsfw2"
+    }, {
+        name: "Fapello Leaks",
+        url: {
+            h: "fapello-leaks.com",
+            p: "/album/"
+        },
+        box: [".album-gallery", 2],
+        imgs: () => {
+            videoSrcArray = fn.gae(".album-gallery a.item-album-gallery.has-video").map(e => e.dataset.src);
+            return fn.gae(".album-gallery a.item-album-gallery:not(.has-video)");
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: "h1.heading",
         category: "nsfw2"
     }, {
         name: "jimpicotphotography.com",
@@ -18638,6 +18666,7 @@
         next: "//a[div[h2[text()='Next']]]",
         prev: "//a[div[h2[text()='Prev']]]",
         customTitle: "h2.text-xl",
+        hide: "#header-ads,.bg-gradient-to-br",
         category: "comic"
     }, {
         name: "ComiCastle",
@@ -19230,6 +19259,39 @@
         customTitle: () => fn.dt({
             d: " manhwa - ManhwaWeb"
         }),
+        category: "comic"
+    }, {
+        name: "MangaKatana",
+        url: {
+            h: "mangakatana.com",
+            p: "/manga/"
+        },
+        init: async () => {
+            await fn.waitVar("dimension_imgs");
+            _unsafeWindow.jQuery(document).off();
+        },
+        imgs: "#imgs div[id^=page] img",
+        autoDownload: [0],
+        next: "a.nav_button.next[href^=http]",
+        prev: "a.nav_button.prev[href^=http]",
+        customTitle: () => fn.dt({
+            s: ".uk-breadcrumb",
+            d: "Home"
+        }),
+        category: "comic"
+    }, {
+        name: "ManhuaPlus",
+        url: {
+            h: "manhuaplus.com",
+            p: "/chapter-"
+        },
+        imgs: ".wp-block-gallery img",
+        button: [4],
+        insertImg: [".wp-block-gallery", 2],
+        autoDownload: [0],
+        next: ".nav-next >a",
+        prev: ".nav-previous>a",
+        customTitle: "#chapter-heading",
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -31988,6 +32050,7 @@ function createImgElement(mode) {
     [...document.querySelectorAll(".FixedMenuitem")].forEach(item => item.classList.remove("active"));
     imgBox.innerHTML = "";
     document.body.style.overflow = "hidden scroll";
+    document.body.style.direction = "";
     const imgElements = newImgs.map((src, i) => {
         let img = document.createElement("img");
         img.className = mode;
@@ -32785,6 +32848,7 @@ img.horizontal {
             imgViewIndex = -1;
             gae(".FixedMenuitem", shadow).forEach(item => item.classList.remove("active"));
             mainElement.style.overflow = "hidden scroll";
+            mainElement.style.direction = "";
             mainElement.innerHTML = "";
             menuDiv.style.bottom = "";
             const imgElements = srcs.map((src, i) => {
@@ -33863,6 +33927,7 @@ img.horizontal {
             imgViewIndex = -1;
             gae(".FixedMenuitem", dom).forEach(item => item.classList.remove("active"));
             mainElement.style.overflow = "hidden scroll";
+            mainElement.style.direction = "";
             mainElement.innerHTML = "";
             menuDiv.style.bottom = "";
             const imgElements = srcs.map((src, i) => {
@@ -36049,6 +36114,7 @@ label.line-through:has(>#size) {
     display: block !important;
     width: 32px !important;
     height: 32px !important;
+    margin: 0 !important;
     border-radius: unset !important;
     z-index: 2147483600 !important;
     opacity: 1 !important;
