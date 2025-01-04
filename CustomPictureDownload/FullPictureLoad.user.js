@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.11
+// @version            2.12.12
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2069,32 +2069,6 @@
         customTitle: ".c-tt>h1",
         category: "nsfw1"
     }, {
-        name: "依依图片网",
-        host: ["www.eemm.cc"],
-        reg: /^https?:\/\/www\.eemm\.cc\/pic\/\d+\.html$/,
-        imgs: async () => {
-            await fn.getNP("#content img", "a.on+a:not(.next)", null, ".page", 0, null, 0, 0);
-            return fn.gae("#content img");
-        },
-        button: [4],
-        insertImg: ["#content", 1],
-        customTitle: ".article>h1",
-        css: ".article .content img{max-width:100%!important}",
-        category: "nsfw1"
-    }, {
-        name: "依依图片网M",
-        host: ["m.eemm.cc"],
-        reg: /^https?:\/\/m\.eemm\.cc\/pic\/\d+\.html$/,
-        imgs: () => {
-            let [, max] = fn.gt(".contentpage").match(/\d+\/(\d+)/);
-            return fn.getImgO(".content img", max, 9, null, 200, ".contentpage>span:nth-child(2)");
-        },
-        button: [4],
-        insertImg: [".content", 1],
-        customTitle: ".content>h1",
-        hide: ".topad,.mdiv",
-        category: "nsfw1"
-    }, {
         name: "青年美圖",
         host: ["jrants.com"],
         reg: [
@@ -3959,9 +3933,11 @@
         mcss: ".container{max-width:100% !important}",
         category: "nsfw1"
     }, {
-        name: "出物社区写真网",
-        host: ["www.ywsq.cc"],
-        reg: /^https?:\/\/www\.ywsq\.cc\/[^\/]+\/[^.]+\.html$/,
+        name: "依依美女图片网",
+        url: {
+            h: "www.eemm.cc",
+            p: "/a/"
+        },
         imgs: () => fn.getImgA("#post_content img", ".pagelist a"),
         button: [4],
         insertImg: ["#post_content", 2],
@@ -3970,23 +3946,7 @@
         prev: ".post-next a",
         customTitle: ".article_container>h1",
         css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}",
-        mcss: ".container{max-width:100% !important}",
-        category: "nsfw1"
-    }, {
-        name: "依依美女图片网",
-        url: {
-            h: "www.eemm.cc",
-            p: "/a/"
-        },
-        imgs: "#post_content img",
-        button: [4],
-        insertImg: ["#post_content", 2],
-        autoDownload: [0],
-        next: ".post-previous a",
-        prev: ".post-next a",
-        customTitle: ".article_container>h1",
-        css: ".article_container{padding:10px 0px!important}#post_content{padding:0px!important}",
-        mcss: ".container{max-width:100% !important}",
+        mcss: ".container{max-width:100% !important;margin:0 !important}",
         hide: ".code-block,.reply-read",
         category: "nsfw1"
     }, {
@@ -4929,6 +4889,22 @@
         customTitle: () => fn.gt(".entry-title").replaceAll("/", "-"),
         category: "nsfw2"
     }, {
+        name: "AllPornImages",
+        host: ["allpornimages.com"],
+        reg: /^https?:\/\/allpornimages\.com\/[\w-]+\/$/,
+        imgs: ".entry-content img",
+        customTitle: ".entry-title",
+        category: "nsfw2"
+    }, {
+        name: "30Galleries",
+        url: {
+            h: "30galleries.com"
+        },
+        imgs: ".ngg-gallery-thumbnail>a",
+        thumb: ".ngg-gallery-thumbnail img",
+        customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
         name: "TheFappening",
         host: ["thefappeningblog.com"],
         reg: /^https?:\/\/thefappeningblog\.com\/[^\/]+\/(#more-\d+)?$/,
@@ -4952,6 +4928,32 @@
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: () => fn.gt(".entry-title").replaceAll("/", "-"),
+        category: "nsfw2"
+    }, {
+        name: "The Fappening",
+        url: {
+            h: "fap.thefappeningnew.com"
+        },
+        imgs: ".entry-content img",
+        customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
+        name: "Epic Porn Pics",
+        url: {
+            h: "epicpornpics.com"
+        },
+        imgs: ".masonry-item a[title]:not(.no-lightbox)",
+        thums: ".masonry-item a[title]:not(.no-lightbox) img",
+        customTitle: ".entry-content h1",
+        category: "nsfw2"
+    }, {
+        name: "Desi Porn Photo",
+        url: {
+            h: "desipornphoto.com"
+        },
+        imgs: ".gallery-item a",
+        thums: ".gallery-item img",
+        customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
         name: "Fapomania",
@@ -5965,47 +5967,40 @@
         customTitle: ".entry-header>h1",
         category: "nsfw1"
     }, {
-        name: "Erohere",
+        name: "HOTPIC",
         url: {
-            h: "erohere.online",
-            p: /^\/erohere\d+\/$/,
-            e: "#album_masonry img"
+            h: "hotpic.cc",
+            p: "/album/"
         },
-        box: ["#album_masonry", 2],
-        imgs: async () => {
-            const getImgSrcs = imgArr => imgArr.map(img => fn.lo + img.getAttribute("srcset").split(",")[0].replace(/\s{1,2}\d+w$/, ""));
-            let piclinks;
-            let pages = fn.ge(".pagelist");
-            if (pages) {
-                let max = fn.gt(".pagelist .next", 2);
-                let pagelinks = fn.arr(max, (v, i) => i == 0 ? fn.lp : fn.lp + (i + 1));
-                let albumE = await fn.getEle(pagelinks, "#album_masonry");
-                thumbnailSrcArray = albumE.map(e => fn.getImgSrcArr("img", e))?.flat();
-                piclinks = albumE.map(e => fn.gau("a", e))?.flat();
-            } else {
-                thumbnailSrcArray = fn.getImgSrcArr("#album_masonry img");
-                piclinks = fn.gau("#album_masonry a");
-            }
-            let imgE = await fn.getEle(piclinks, ".img_responsive>img");
-            return getImgSrcs(imgE);
-        },
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "#album_masonry,.pagelist-container"], 2
-        ],
-        customTitle: ".album_head>h1",
-        hide: ".download-container",
-        category: "nsfw1"
-    }, {
-        name: "yoel.uno",
-        reg: /^https?:\/\/yoel\.uno\/[^\/]+\/$/,
-        include: "a[href*='vipr.im']",
         imgs: () => {
-            let links = fn.gau("a[href*='vipr.im']");
-            return fn.getImageHost(links);
+            videoSrcArray = fn.gae("a[data-media=video]").map(e => e.dataset.srcMp4);
+            return fn.gae("a[data-media=image]");
         },
-        eye: 0,
-        customTitle: ".entry-title",
+        capture: () => _this.imgs(),
+        customTitle: ".title",
+        category: "nsfw2"
+    }, {
+        name: "ViPinay",
+        url: {
+            h: "vipinay.com",
+            e: "//script[contains(text(),'mwl_data')]"
+        },
+        init: () => fn.waitEle(".entry-content p>img"),
+        imgs: () => fn.getImgSrcArr(".entry-content p>img"),
+        capture: () => _this.imgs(),
+        customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
+        name: "RussiaSexyGirls/EuroSexyGirls/UsaSexyGirls/AsianSexyGirls/LatinSexyGirls/EbonySexyGirls",
+        url: {
+            h: ["russiasexygirls.com", "eurosexygirls.com", "usasexygirls.com", "asiansexiestgirls.com", "latinsexygirls.com", "ebonysexygirls.com"],
+            p: /^\/\d+\/[\w-]+\/$/
+        },
+        imgs: ".entry-summary img",
+        autoDownload: [0],
+        next: ".prevPost>a",
+        prev: ".nextPost>a",
+        customTitle: "span.entry-title",
         category: "nsfw2"
     }, {
         name: "JimmysOnline.com",
@@ -6424,6 +6419,19 @@
             }
         },
         hide: "#m_website_float,#m_website_center,#m_image_content_title,.aside_right_ad,#p_image_content_title,#p_website_float,#p_website_center,#p_website_right_float",
+        category: "nsfw1"
+    }, {
+        name: "Maulon",
+        host: "1sex.maulon.vip",
+        url: {
+            t: "Maulon",
+            p: ".html"
+        },
+        imgs: ".entry-content .separator>a",
+        thums: ".entry-content .separator>a>img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
         name: "LUV.VN",
@@ -6921,6 +6929,14 @@
         customTitle: ".title-section h1",
         category: "nsfw2"
     }, {
+        name: "NakedPics",
+        host: ["hotnakedwomen.com"],
+        reg: /^https?:\/\/hotnakedwomen\.com\/gals\//,
+        imgs: ".thumb>a",
+        thums: ".thumb img",
+        customTitle: ".long-title",
+        category: "nsfw2"
+    }, {
         name: "HD Porn Pictures",
         host: ["hdpornpictures.net"],
         reg: /^https?:\/\/hdpornpictures\.net\/id\/\d+\//,
@@ -7224,6 +7240,98 @@
         imgs: "//div[@class='entry-body']//a[img[@title]] | //div[@class='entry_body']//a[img[@title]]",
         customTitle: () => fn.gt(".entry-title,.entry_title>h1").replace(/[ｗ]+$/, ""),
         setFancybox: true,
+        category: "nsfw2"
+    }, {
+        name: "画像ナビ!",
+        url: {
+            h: "gazounabi.com",
+            p: "/archives/"
+        },
+        imgs: ".article-body-more a[title]",
+        customTitle: ".entry-title",
+        category: "nsfw2"
+    }, {
+        name: "エロ画像ぱしゃりずむ",
+        url: {
+            h: "pashalism.com"
+        },
+        imgs: ".single-post-main a:has(>img[class*='wp-image'])",
+        customTitle: "h1.single-post-title",
+        category: "nsfw2"
+    }, {
+        name: "肉感美ガール",
+        url: {
+            h: "bi-girl.net",
+            p: /\/[^\/]+$/,
+            e: ".img_wrapper_nontop .img_wrapper"
+        },
+        imgs: () => {
+            let links = [fn.lp];
+            let pages = fn.ge(".pagination_num_wrapper");
+            if (pages) {
+                let max = fn.gt(".pagination_num_wrapper .next", 2);
+                links = fn.arr(max, (v, i) => i == 0 ? fn.lp + "?sort=old" : fn.lp + `/page/${i + 1}?sort=old`);
+            }
+            return fn.getEle(links, ".img_wrapper_nontop .img_wrapper").then(eles => eles.map(e => {
+                let video = fn.ge("div[data-link]:has(.video)", e);
+                if (video) {
+                    videoSrcArray.push(video.dataset.link);
+                }
+                return fn.ge("img", e)?.dataset.src?.replace(":small", "");
+            }));
+        },
+        capture: () => _this.imgs(),
+        customTitle: ".entry-title",
+        category: "nsfw2"
+    }, {
+        name: "アイドルセクシー画像集＆裏",
+        link: "http://intervalues.com/idol.html",
+        url: {
+            h: "intervalues",
+            p: /^\/\w\/\w+\.html$/,
+            e: ".idolname"
+        },
+        imgs: async () => {
+            let eles;
+            let url = fn.gu("a:has(.idolname)");
+            let max = fn.gae("div[class^=Page]>a").length;
+            if (max > 0) {
+                let links = fn.arr(max, (v, i) => i == 0 ? url : url.replace(".html", "") + `${i + 1}.html`);
+                eles = await fn.getEle(links, "a:has(>img)");
+            } else {
+                eles = fn.gae("a:has(>img)");
+            }
+            return eles.map(a => {
+                let src = fn.ge("img", a).src;
+                thumbnailSrcArray.push(src);
+                return a;
+            });
+        },
+        capture: () => _this.imgs(),
+        customTitle: ".idolname",
+        category: "nsfw2"
+    }, {
+        name: "エロ画像-ラブコアラ-",
+        url: {
+            h: "lovekoala.com",
+            p: /^\/[^\/]+\/$/,
+            e: ".gallery"
+        },
+        imgs: async () => {
+            let links = [fn.lp];
+            let pages = fn.ge("p.pmt");
+            if (pages) {
+                let max = fn.gu("//a[text()='最後']").match(/\d+/g).at(-1);
+                links = fn.arr(max, (v, i) => i == 0 ? fn.lp : fn.lp + `${i + 1}/`);
+            }
+            return fn.getEle(links, ".gallery .pbox>a").then(eles => eles.map(a => {
+                let src = fn.ge("img", a).src;
+                thumbnailSrcArray.push(src);
+                return a;
+            }));
+        },
+        capture: () => _this.imgs(),
+        customTitle: "h1.htxt1",
         category: "nsfw2"
     }, {
         name: "復刻書林",
@@ -8461,6 +8569,21 @@
         downloadVideo: true,
         category: "nsfw2"
     }, {
+        name: "Quatvn Club",
+        url: {
+            h: "quatvnclub.com",
+            p: ".html",
+            e: ".wp-block-image"
+        },
+        imgs: () => fn.getImgSrcset(".wp-block-image img"),
+        capture: () => _this.imgs(),
+        customTitle: () => fn.dt({
+            s: ".entry-title",
+            d: /^Ảnh.+Xinh\s|^Clip.+Em\s/
+        }),
+        observerClick: ".catfish-bottom-close",
+        category: "nsfw2"
+    }, {
         name: "sekushipic",
         host: ["sekushipic.blogspot.com"],
         reg: /^https?:\/\/sekushipic\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
@@ -9217,6 +9340,28 @@
         customTitle: ".f-page-title",
         category: "nsfw2"
     }, {
+        name: "ADULT SITE 18+",
+        url: {
+            e: ".header_logo>img[alt=ADULT]",
+            p: ".html",
+            e: ".prev_row_full"
+        },
+        imgs: () => fn.gau(".prev_row_full a"),
+        thums: ".prev_row_full a img",
+        capture: () => _this.imgs(),
+        customTitle: ".head>h1",
+        category: "nsfw2"
+    }, {
+        name: "Ero-Top",
+        url: {
+            h: "ero-top.name",
+            p: ".html"
+        },
+        imgs: "#img-bl a",
+        thums: "#img-bl a img",
+        customTitle: "#dle-content h1",
+        category: "nsfw2"
+    }, {
         name: "DTF",
         url: {
             h: "dtf.ru"
@@ -9255,7 +9400,7 @@
         },
         SPA: () => document.URL.includes("/comments/"),
         observerURL: true,
-        imgs: () => fn.getImgSrcset("gallery-carousel li>img"),
+        imgs: () => fn.getImgSrcset("gallery-carousel li>img,.media-lightbox-img img"),
         button: [4],
         customTitle: "h1[id^='post-title']",
         category: "nsfw2"
@@ -9466,6 +9611,17 @@
             ["#wtf", 2, "#wtf"], 3
         ],
         customTitle: ".galleryhead>h3>a",
+        category: "nsfw2"
+    }, {
+        name: "GirlsTop",
+        url: {
+            h: "girlstop.info",
+            p: "/psto",
+            s: "id="
+        },
+        imgs: "a.fullimg",
+        thums: "a.fullimg img",
+        customTitle: ".content-block h1",
         category: "nsfw2"
     }, {
         name: "wikiFeetX / wikiFeet",
@@ -10958,9 +11114,12 @@
         category: "none"
     }, {
         name: "亚洲色吧",
-        host: ["yazhouseba.com"],
-        reg: /^https?:\/\/yazhouseba\.com\/meinv\/img-\d+\.html/,
-        include: "#next-url",
+        host: ["yazhouseba.com", "yazhouse8.com"],
+        url: {
+            h: "yazhouse",
+            p: "/meinv/img-",
+            e: "#next-url"
+        },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
             let pid = fn.ge("#next-url").rel;
@@ -10972,7 +11131,13 @@
                 },
                 "body": `action=src&pid=${pid}`,
                 "method": "POST"
-            }).then(res => res.json()).then(json => json.urls.map(e => _unsafeWindow.img_dir + e));
+            }).then(async res => {
+                try {
+                    return await res.json();
+                } catch {
+                    return {};
+                }
+            }).then(json => json?.urls?.map(e => _unsafeWindow.img_dir + e) ?? []);
         },
         button: [4],
         insertImg: [".content>.image", 2],
@@ -11884,6 +12049,42 @@
         customTitle: ".container>h4",
         hide: "#span_h4",
         category: "nsfw2"
+    }, {
+        name: "小黄书",
+        host: ["kxhs16.vip"],
+        url: {
+            t: "小黄书",
+            p: "/comic_ls/"
+        },
+        box: [".row-section", 2],
+        imgs: () => {
+            let links = fn.gau("#myList a");
+            return fn.getEle(links, "//script[contains(text(),'decodeURIComponent')]").then(scripts => {
+                return scripts.map(script => {
+                    let text = script.textContent.replace('document.write(decodeURIComponent("', "").slice(0, -3);
+                    let dom = fn.doc(decodeURIComponent(text));
+                    return fn.gae(".card-content img", dom);
+                }).flat();
+            });
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
+        customTitle: () => fn.dt({
+            s: ".detail-box .info p",
+            d: /^[^：]+：/
+        }),
+        observerClick: ["i[id^='cvtop'][id$='close']", "i[id^='cvfooter'][id$='close']", "i[id^='left'][id$='close']"],
+        hide: ".app-abk,.abk-swiper,.fotxt,.footer-container .container",
+        category: "nsfw2"
+    }, {
+        name: "小黄书 AD",
+        url: {
+            t: "小黄书"
+        },
+        observerClick: ["i[id^='cvtop'][id$='close']", "i[id^='cvfooter'][id$='close']", "i[id^='left'][id$='close']"],
+        hide: ".list-grid,.app-abk,.abk-swiper,.fotxt,.footer-container .container",
+        category: "ad"
     }, {
         name: "奶PARTTY",
         host: ["ilk01.com"],
@@ -15887,7 +16088,7 @@
     }, {
         name: "177 漫画/XXIAV寫真館",
         url: {
-            h: ["www.177pica.com", "www.177picyy.com", "www.xxiav.com"],
+            h: [/177pic/, "www.xxiav.com"],
             p: /^\/html\/\d+\/\d+\/\d+\.html$/
         },
         imgs: () => fn.getImg(".single-content img[data-lazy-src]", (fn.gt(".page-links>*:last-child", 2) || 1), 10),
@@ -18891,6 +19092,25 @@
         customTitle: ".chapter-title",
         category: "comic"
     }, {
+        name: "L漫画",
+        url: {
+            h: "www.lmanga.com",
+            p: /^\/comic-\d+\/\d+\.html$/
+        },
+        init: async () => {
+            await fn.waitVar("nextChap");
+            _unsafeWindow.jQuery(document).off();
+        },
+        imgs: ".ImageGallery img",
+        button: [4],
+        insertImg: [".ImageGallery", 2],
+        endColor: "white",
+        autoDownload: [0],
+        next: "#next-chapter[href$=html]",
+        prev: "#prev-chapter[href$=html]",
+        customTitle: () => fn.title(/ - 異世界漫画.+$/),
+        category: "comic"
+    }, {
         name: "Fire Manga",
         url: {
             h: "www.firemanga.com",
@@ -19015,7 +19235,7 @@
         name: "嗨皮漫畫閱讀",
         enable: 0,
         url: {
-            h: "m.happymh.com",
+            h: ["m.happymh.com", "hihimanga.com"],
             p: "/mangaread/"
         },
         exclude: ".captcha-area",
@@ -19058,8 +19278,8 @@
         next: "//a[text()='下一话' or text()='下一話'][starts-with(@href,'/mangaread/')]",
         prev: "//a[text()='上一话' or text()='上一話'][starts-with(@href,'/mangaread/')]",
         customTitle: () => siteJson.data.manga_name + " - " + siteJson.data.chapter_name,
-        preloadNext: async (nextDoc, obj) => {
-            let json = await obj.fetchJson(nextLink);
+        preloadNext: async () => {
+            let json = await _this.fetchJson(nextLink);
             json.status == 0 ? fn.picPreload(json.data.scans.map(e => e.url), json.data.manga_name + " - " + json.data.chapter_name, "next") : debug("預讀下一頁失敗");
         },
         category: "comic"
@@ -25476,8 +25696,10 @@ if ("xx" in window) {
         case "zh":
         case "zh-CN":
         case "zh-SG":
+        case "zh-MY":
         case "zh-Hans-CN":
         case "zh-Hans-SG":
+        case "zh-Hans-MY":
             displayLanguage = {
                 str_01: "获取图片元素中...",
                 str_02: "获取图片中 ",
@@ -29761,6 +29983,8 @@ if ("xx" in window) {
             referer = document.URL;
         } else if (/vipr\.im|imagetwist\.com|imgspice\.com/.test(srcUrl) || siteData.referer == "src") {
             referer = srcUrl;
+        } else if (/\.sinaimg\./.test(srcUrl)) {
+            referer = "https://weibo.com/";
         } else if (/imgtaxi\.com/.test(srcUrl)) {
             referer = "https://imgtaxi.com/";
         } else if (/saint2\.su/.test(srcUrl)) {
@@ -31936,8 +32160,8 @@ if (config.ViewMode == 1) {
             mode: "closed"
         });
 
-        const hideSelector = "body>*:not(script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
-        gae(hideSelector).forEach(e => (e.style.display = "none"));
+        //const hideSelector = "body>*:not(script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        //gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const increaseWidth = () => {
             let imgs = gae("img", shadow);
@@ -31972,7 +32196,7 @@ if (config.ViewMode == 1) {
         const closeGallery = () => {
             _unsafeWindow.removeEventListener("resize", aspectRatio);
             _unsafeWindow.removeEventListener("keydown", kEvent);
-            gae(hideSelector).forEach(e => (e.style.display = ""));
+            //gae(hideSelector).forEach(e => (e.style.display = ""));
             fn.remove("#overflowYHidden");
             FullPictureLoadShadowGallery?.remove();
             isOpenGallery = false;
@@ -33005,8 +33229,8 @@ img.horizontal {
             `
         });
 
-        const hideSelector = "body>*:not(script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
-        gae(hideSelector).forEach(e => (e.style.display = "none"));
+        //const hideSelector = "body>*:not(script,[id^=Full],[class^=Full],#comicRead,#toast,#fab,#ehvp-base,[id^='pagetual'],[class^='pagetual'],[id^='pv-'],[class^='pv-gallery'],[id^=Autopage])";
+        //gae(hideSelector).forEach(e => (e.style.display = "none"));
 
         const increaseWidth = () => {
             let imgs = gae("img", mainElement);
@@ -33043,7 +33267,7 @@ img.horizontal {
                 _unsafeWindow.removeEventListener("keydown", kEvent);
             }
             _unsafeWindow.removeEventListener("resize", aspectRatio);
-            gae(hideSelector).forEach(e => (e.style.display = ""));
+            //gae(hideSelector).forEach(e => (e.style.display = ""));
             fn.remove("#overflowYHidden");
             iframe.remove();
             isOpenGallery = false;
