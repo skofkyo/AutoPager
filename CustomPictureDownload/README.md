@@ -1729,6 +1729,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.xiutun.net/">秀臀网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://girlsteam.club/">女神部落</a>
                 </td>
                 <td></td>
@@ -2447,12 +2453,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://cangcuc.com/">Căng Cực</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://fliporn.biz/sexual-picture">Fliporn</a>
                 </td>
                 <td></td>
@@ -2919,6 +2919,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.gai.vn/">Gai.vn</a>
                 </td>
                 <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cangcuc.com/">Căng Cực</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3908,6 +3914,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://x-video.tube/albums/">X-video albums</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapello-leaks.com/fr/albums/hot">Fapello Leaks</a>
                 </td>
                 <td></td>
             </tr>
@@ -6729,6 +6741,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://zscans.com/">ZeroScans 英文</a>
                 </td>
                 <td>SPA網頁，手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangakatana.com/">MangaKatana 英文</a>
+                </td>
+                <td>手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhuaplus.com/">ManhuaPlus 英文</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
