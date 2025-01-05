@@ -3,16 +3,16 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/01/01
+2025/01/05
 PC
 Chrome 131.0.6778.205 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Edge 131.0.2903.112 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 FireFox 133.0.3 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 133.0.3046.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.2.019 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 133.0.3053.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 131.0.2903.125 + Tampermonkey 5.3.3
+Edge 131.0.2903.125 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Firefox for Android 133.0.3 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mises Browser 424122407 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Yandex Browser 24.12.3.110 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
@@ -195,7 +195,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     scrollEle: async () => {
         …code;
     },
-    button: [4, "24%", 1] , //[無作用, "寬度%", 增加上邊界]，有此屬性才會添加功能按鈕
+    button: [4, "24%", 1], //[無作用, "寬度%", 增加上邊界]，有此屬性才會添加功能按鈕
     insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
     insertImg: [
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
@@ -2904,9 +2904,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://1sex.maulon.vip/">Maulon</a>
+                    <a href="https://maulon.net/">Maulon</a>
                 </td>
-                <td></td>
+                <td><a href="https://1sex.maulon.vip/">1sex.maulon.vip</a></td>
             </tr>
             <tr>
                 <td>
@@ -3974,6 +3974,48 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://clannadhouse.com/">TIỆM TẠP HÓA KỲ DIỆU</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://szexkepek.net/">Szexképek</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bugilonly.com/">BugilOnly</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://terekspos.com/">Terekspos</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.socaseiras.com.br/">SoCaseiras</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ligadasnovinhas.com/">LigaDasNovinhas</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.minhamulher.com/">MinhaMulher</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fotosporno.blog/">Fotos Porno</a>
                 </td>
                 <td></td>
             </tr>
