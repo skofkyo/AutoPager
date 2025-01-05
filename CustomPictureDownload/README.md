@@ -1532,7 +1532,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://b12.876512.xyz/">秀人集</a>
+                    <a href="http://56.xiuren56.top/">秀人集</a>
                 </td>
                 <td>永久域名Xiurenba.Com及(秀人集.com)，<a href="http://a.2xiu.vip/">导航页</a></td>
             </tr>
@@ -1619,7 +1619,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.ku138.cc/">美女写真网</a>
                 </td>
-                <td>China IP限定</td>
+                <td> <a href="https://m.ku138.cc/">m.ku138.cc</a>，China IP限定</td>
             </tr>
             <tr>
                 <td>
@@ -3756,7 +3756,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://500brothersfun.blogspot.com/">500 Brothers</a>
                 </td>
-                <td></td>
+                <td><a href="https://safebooru.blogspot.com/">Safebooru</a></td>
             </tr>
             <tr>
                 <td>
@@ -6306,10 +6306,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.77mh.xyz/">新新漫画</a>
+                    <a href="https://www.77mh.nl/">新新漫画</a>
                 </td>
                 <td>
-                    <a href="https://m.77mh.xyz/">m.77mh.xyz</a>，預設關閉
+                    <a href="https://m.77mh.nl/">m.77mh.nl</a>，預設關閉
                 </td>
             </tr>
             <tr>
