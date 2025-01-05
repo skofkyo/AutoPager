@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.13
+// @version            2.12.14
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4109,6 +4109,9 @@
         button: [4],
         insertImg: [".wp-posts-content", 2],
         customTitle: ".article-title",
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw1"
     }, {
         name: "女神部落",
@@ -9284,6 +9287,98 @@
         imgs: "a.fox-lightbox-gallery-item",
         customTitle: ".post-title",
         category: "nsfw1"
+    }, {
+        name: "Szexképek",
+        url: {
+            h: "szexkepek.net",
+            p: ".html",
+            e: ".row:has(>.col-xs-6>a>img.gallerythumb)"
+        },
+        imgs: () => {
+            let links = fn.gau("a:has(>img.gallerythumb)");
+            return fn.getImgA("img.img-responsive", links);
+        },
+        thums: "img.gallerythumb",
+        button: [4],
+        insertImg: [".row:has(>.col-xs-6)", 2],
+        customTitle: "h1.page-header",
+        category: "nsfw2"
+    }, {
+        name: "BugilOnly",
+        url: {
+            h: "bugilonly.com"
+        },
+        imgs: ".s-post-content img",
+        button: [4],
+        insertImg: [".s-post-content", 2],
+        autoDownload: [0],
+        next: "a.next-page-link",
+        prev: "a.prev-page-link",
+        customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
+        name: "Terekspos",
+        url: {
+            h: "terekspos.com"
+        },
+        imgs: ".post-content>center>a>img,.post-content>p>a>img",
+        button: [4],
+        insertImg: [".post-content>center,.post-content>p", 2],
+        autoDownload: [0],
+        next: "div.next a",
+        prev: "div.previous a",
+        customTitle: "h1.post-title",
+        category: "nsfw2"
+    }, {
+        name: "SoCaseiras",
+        url: {
+            h: "www.socaseiras.com.br",
+            p: "/galeria/"
+        },
+        imgs: ".galeria .fotos img",
+        button: [4],
+        insertImg: [".galeria .fotos", 2],
+        customTitle: ".galeria h1",
+        category: "nsfw2"
+    }, {
+        name: "LigaDasNovinhas",
+        url: {
+            h: "www.ligadasnovinhas.com"
+        },
+        imgs: "#post-info img",
+        button: [4],
+        insertImg: ["#post-info center:has(picture),#post-info p:has(picture)", 2],
+        customTitle: ".post h1",
+        category: "nsfw2"
+    }, {
+        name: "MinhaMulher",
+        url: {
+            h: "www.minhamulher.com"
+        },
+        box: [".conteudo p:has(>img)", 1],
+        imgs: ".conteudo img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".conteudo p:has(>img)"], 2
+        ],
+        customTitle: ".titulo>h1",
+        category: "nsfw2"
+    }, {
+        name: "Fotos Porno",
+        url: {
+            h: "www.fotosporno.blog",
+            e: ".gallery"
+        },
+        imgs: () => {
+            videoSrcArray = fn.gae(".wp-video source").map(e => e.src);
+            return fn.gae(".gallery img");
+        },
+        button: [4],
+        insertImg: [".gallery", 2],
+        go: 1,
+        customTitle: ".cn-article h1",
+        downloadVideo: true,
+        category: "nsfw2"
     }, {
         name: "Sex Pics Space",
         url: {
