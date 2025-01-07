@@ -1271,7 +1271,7 @@ imgs: async () => {
 <p>END鍵 滾動定位至最後一張圖</p>
 <p>R鍵 模式為0、2、3、5時用於臨時切換排列方向右至左、左至右。</p>
 <p>B鍵 模式為0、2、3、5時用於切換圖片的左右邊框。</p>
-<p>Delete鍵 用於隱藏當前圖片導覽索引的圖片(藍色邊框)，看漫畫時手動調整讓後面的圖片能正常並成雙頁跨頁大圖。</p>
+<p>Delete鍵 從第一張開始隱藏圖片，看漫畫時手動調整讓後面的圖片能正常並成雙頁跨頁大圖。</p>
 <p>Enter鍵 用於取消所有用Delete鍵隱藏的圖片。</p>
 <p>畫廊為條漫模式時，上下方向鍵為預設行為，不會切換圖片。</p>
 <p>畫廊為條漫模式時+、-鍵和修飾鍵Ctrl、Alt、ShiftKey + 滾輪 可增加減少圖片的寬度。</p>
@@ -1423,6 +1423,11 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td></td>
             </tr>
+            <tr>
+                <td>豆瓣相册</td>
+                <td>作用在相簿頁，例如：<a href="https://www.douban.com/photos/album/1925659550/">大白桃子 写真集『桃白 vol.1』
+</a></td>
+            </tr>
         </tbody>
     </table>
 </details>
@@ -1496,12 +1501,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
-                </td>
-                <td><a href="https://hitxhot.com/">Hitxhot Album Archive II</a></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.depvailon.com/">Depvailon.Com</a>
                 </td>
                 <td>
@@ -1510,11 +1509,17 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://pic.yailay.com/">Pic Yailay</a>
+                    <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
                 <td>
-                    <a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://redseats.org/">RedSeats.Org</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>
+                    <a href="https://pic.yailay.com/">Pic Yailay</a>，<a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://redseats.org/">RedSeats.Org</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -1854,12 +1859,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.mntuce.com/">美女图册</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://www.xiuren7.com/">秀人集</a>
                 </td>
                 <td></td>
             </tr>
@@ -4229,7 +4228,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://jjgirls.com/">JJGirls</a>
                 </td>
-                <td></td>
+                <td>PC限定</td>
             </tr>
             <tr>
                 <td>
