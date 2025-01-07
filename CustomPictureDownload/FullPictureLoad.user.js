@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.15
+// @version            2.12.16
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -172,6 +172,54 @@
     };
     //自定義站點規則
     const customData = [{
+        name: "豆瓣相册",
+        url: {
+            h: "douban.com",
+            p: "/album/",
+            d: "pc"
+        },
+        imgs: async () => {
+            let links;
+            let pages = fn.ge(".paginator .next");
+            if (pages) {
+                let max = fn.gt(".paginator .next", 2);
+                links = fn.arr(max, (v, i) => i == 0 ? fn.lp : fn.lp + `?m_start=${i * 18}`);
+                await fn.getEle(links, ".photolst a").then(eles => {
+                    //links = eles.map(a => a.href);
+                    thumbnailSrcArray = eles.map(a => fn.ge("img", a)?.src);
+                });
+            } else {
+                //links = fn.gau(".photolst a");
+                thumbnailSrcArray = fn.getImgSrcArr(".photolst a img");
+            }
+            //return fn.getImgA(".image-show img", links);
+            return thumbnailSrcArray.map(e => e.replace("/s/", "/l/"));
+        },
+        category: "photo"
+    }, {
+        name: "豆瓣相册M",
+        url: {
+            h: "douban.com",
+            p: "/album/",
+            d: "m"
+        },
+        init: async () => {
+            await fn.wait(() => {
+                let button = fn.ge(".getmore-btn");
+                if (!!button) {
+                    EClick(button);
+                }
+                return !button;
+            });
+        },
+        imgs: () => {
+            let links = fn.gau("ul.grid a");
+            thumbnailSrcArray = fn.getImgSrcArr("ul.grid a img");
+            return thumbnailSrcArray.map(e => e.replace("/s/", "/l/"));
+        },
+        customTitle: ".photo-info>h1",
+        category: "photo"
+    }, {
         name: "交通部觀光署 桌布下載",
         reg: /^https?:\/\/www\.taiwan\.net\.tw\/m1\.aspx\?sNo=0012076$/,
         imgs: ".media-download>a:last-child",
@@ -524,9 +572,8 @@
         category: "nsfw2"
     }, {
         name: "Hit-x-Hot格式",
-        host: ["www.hitxhot.org", "hitxhot.com"],
+        host: ["hitxhot.com"],
         reg: [
-            /^https?:\/\/www\.hitxhot\.org\/gallerys\/\w+\.html/i,
             /^https?:\/\/hitxhot\.com\/blog\/\w+\.html/i
         ],
         init: () => fn.clearElementEvent(),
@@ -598,8 +645,8 @@
     }, {
         name: "pic.yailay.com格式",
         url: {
-            h: ["pic.yailay.com", "www.dongojyousan.com"],
-            p: ["/articles/"]
+            h: ["www.hitxhot.org", "pic.yailay.com", "www.dongojyousan.com", "www.hitxhot.org"],
+            p: ["/articles/", "/gallerys/"]
         },
         init: () => fn.clearElementEvent(),
         imgs: () => fn.getImgA(".VKSUBTSWA img", "div[id^=post] a"),
@@ -2429,22 +2476,6 @@
         prev: "a.f-l.l2",
         hide: "body>a",
         customTitle: () => fn.title("_", 1),
-        category: "nsfw1"
-    }, {
-        name: "秀人集",
-        host: ["www.xiuren7.com"],
-        url: {
-            h: "xiuren",
-            p: ".html"
-        },
-        exclude: "#posts-pay",
-        imgs: ".wp-posts-content img",
-        button: [4],
-        insertImg: [".wp-posts-content", 2],
-        autoDownload: [0],
-        next: "//a[p[text()='上一篇']][starts-with(@href,'http')]",
-        prev: "//a[p[text()='下一篇']][starts-with(@href,'http')]",
-        customTitle: ".wp-posts-content>p",
         category: "nsfw1"
     }, {
         name: "HuaLin",
@@ -7258,6 +7289,9 @@
             p: "/blog-entry-"
         },
         imgs: "//div[@class='entry-body']//a[img[@title]] | //div[@class='entry_body']//a[img[@title]]",
+        autoDownload: [0],
+        next: "link[rel=prev],.next_entry>a",
+        prev: "link[rel=next],.prev_entry>a",
         customTitle: () => fn.gt(".entry-title,.entry_title>h1").replace(/[ｗ]+$/, ""),
         setFancybox: true,
         category: "nsfw2"
@@ -7268,6 +7302,9 @@
             p: "/archives/"
         },
         imgs: ".article-body-more a[title],#article-contents a[title]",
+        autoDownload: [0],
+        next: ".article-pager>.prev a",
+        prev: ".article-pager>.next a",
         customTitle: "h2.entry-title,h1.article-title",
         category: "nsfw2"
     }, {
@@ -7477,6 +7514,9 @@
         reg: /^https?:\/\/blog\.livedoor\.jp\/idol_gravure_sexy\/archives\/\d+\.html$/,
         imgs: () => fn.getImgSrcArr(".pict").map(e => e.replace("-s.", ".")),
         capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: ".article-pager>.prev a",
+        prev: ".article-pager>.next a",
         customTitle: "h1.article-title",
         category: "nsfw1"
     }, {
@@ -9077,7 +9117,19 @@
         ],
         customTitle: () => fn.dt({
             s: ".gallery_name",
-            d: /\sx\d{1,4}.*|-\sx\d{1,4}.*|-\s\d{1,4}x.*|-[\d\s]+pic.+| - \d{2}.\d{2}.\d{4}.*|\(x\d+\).*|[\d\s]+pics.*|\([\w\s\.\+,]+\)|\|[\s\dx]+\|.*/i
+            d: [
+                /\s-[\s\d]+px[\s\d-]+pictures/i,
+                /\sx\d{1,4}.*/i,
+                /-\sx\d{1,4}.*/i,
+                /-\s\d{1,4}x.*/i,
+                /-[\d\s]+pic.+/i,
+                /-\s\d{2}.\d{2}.\d{4}.*/i,
+                /\(x\d+\).*/i,
+                /[\d\s]+pics.*/i,
+                /\([\w\s\.\+,]+\)/i,
+                /\|[\s\dx]+\|.*/i,
+                /[\s\d-]+x[\s\d\+]+covers/i
+            ]
         }),
         category: "nsfw2"
     }, {
@@ -10553,7 +10605,14 @@
             let temps = [];
             let originals = [];
             let thumbs = [];
-            let gid = new URL(fn.gu("a[href*='&gid']")).searchParams.get("gid");
+            let gid;
+            let gid_url = fn.gu("a[href*='&gid']");
+            if (gid_url) {
+                gid = new URL(gid_url).searchParams.get("gid");
+            } else {
+                [, , gid] = fn.lp.split("/");
+                if (!Number(gid)) return [];
+            }
             let loop = true;
             let pn = 0;
             fn.showMsg(displayLanguage.str_05, 0);
@@ -31449,7 +31508,7 @@ body {
 }
 #FixedMenu {
     text-align: center;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 14px;
     color: #000000;
@@ -31488,6 +31547,9 @@ body {
 .FixedMenuitem.active {
     color: #fff;
     background: #1790E6;
+}
+.hide {
+    display: none !important;
 }
 img.default {
     vertical-align: middle;
@@ -31821,7 +31883,7 @@ document.addEventListener("keydown", event => {
             imgViewIndex = imgs.length - 1;
         }
         const img = imgs[imgViewIndex];
-        if (config.ViewMode != 4) {
+        if (config.ViewMode != 4 && ([0, 1, 3].some(m => config.ViewMode == m) && config.shadowGalleryWheel != 2)) {
             imgs.forEach(e => (e.style.border = ""));
             img.style.border = "solid #32a1ce";
         }
@@ -31931,12 +31993,30 @@ document.addEventListener("keydown", event => {
         currentReferenceElement = img;
         return instantScrollIntoView(img);
     } else if ((event.code === "Delete" || event.key === "Delete")) {
-        const hideE = [...document.querySelectorAll("#imgBox>*")][imgViewIndex];
-        if (hideE !== undefined) {
-            hideE.style.display = "none";
+        for (const img of imgs) {
+            if (!img.classList.contains("hide")) {
+                img.classList.add("hide");
+                break;
+            }
         }
+        if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+            if (config.shadowGalleryWheel != 2) {
+                imgs.forEach(e => (e.style.border = ""));
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+            }
+            instantScrollIntoView(imgs[imgViewIndex]);
+        }
+        return;
     } else if ((event.code === "Enter" || event.key === "Enter")) {
-        [...document.querySelectorAll("#imgBox>*")].forEach(e => (e.style.display = ""));
+        imgs.forEach(e => e.classList.remove("hide"));
+        if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+            if (config.shadowGalleryWheel != 2) {
+                imgs.forEach(e => (e.style.border = ""));
+                imgs[imgViewIndex].style.border = "solid #32a1ce";
+            }
+            instantScrollIntoView(imgs[imgViewIndex]);
+        }
+        return;
     } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
         imgViewIndex = -1;
     }
@@ -32061,8 +32141,10 @@ function aspectRatio() {
         }
     });
     if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvent) {
-        imgs.forEach(e => (e.style.border = ""));
-        imgs[imgViewIndex].style.border = "solid #32a1ce";
+        if (config.shadowGalleryWheel != 2) {
+            imgs.forEach(e => (e.style.border = ""));
+            imgs[imgViewIndex].style.border = "solid #32a1ce";
+        }
         setTimeout(() => instantScrollIntoView(imgs[imgViewIndex]), 100);
     }
 }
@@ -32149,8 +32231,10 @@ function createImgElement(mode) {
     });
     const imgBox = document.querySelector("#imgBox");
     if (config.ViewMode == 3) {
+    console.log("哈囉1");
         imgBox.style.direction = "rtl";
     } else {
+    console.log("哈囉2");
         imgBox.style.direction = "";
     }
     imgViewIndex = -1;
@@ -32186,7 +32270,9 @@ function createImgElement(mode) {
         imgBox.style.height = "100vh";
         imgBox.style.width = "fit-content";
     } else {
-        imgBox.removeAttribute("style");
+        imgBox.style.display = "";
+        imgBox.style.height = "";
+        imgBox.style.width = "";
     }
     if (lightGallery == 1) {
         ViewerJsInstance.update();
@@ -32558,8 +32644,10 @@ if (config.ViewMode == 1) {
                 }
             });
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
-                imgs.forEach(e => (e.style.border = ""));
-                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                if (config.shadowGalleryWheel != 2) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
                 setTimeout(() => instantScrollIntoView(imgs[imgViewIndex]), 100);
             }
         };
@@ -32586,7 +32674,7 @@ if (config.ViewMode == 1) {
                     imgViewIndex = imgs.length - 1;
                 }
                 const img = imgs[imgViewIndex];
-                if (config.ViewMode != 4) {
+                if (config.ViewMode != 4 && ([0, 1, 3].some(m => config.ViewMode == m) && config.shadowGalleryWheel != 2)) {
                     imgs.forEach(e => (e.style.border = ""));
                     img.style.border = "solid #32a1ce";
                 }
@@ -32757,12 +32845,30 @@ if (config.ViewMode == 1) {
                 currentReferenceElement = img;
                 return instantScrollIntoView(img);
             } else if ((event.code === "Delete" || event.key === "Delete")) {
-                const hideE = gae("img", shadow)[imgViewIndex];
-                if (hideE !== undefined) {
-                    hideE.style.display = "none";
+                for (const img of imgs) {
+                    if (!img.classList.contains("hide")) {
+                        img.classList.add("hide");
+                        break;
+                    }
                 }
+                if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+                    if (config.shadowGalleryWheel != 2) {
+                        imgs.forEach(e => (e.style.border = ""));
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
+                    instantScrollIntoView(imgs[imgViewIndex]);
+                }
+                return;
             } else if ((event.code === "Enter" || event.key === "Enter")) {
-                gae("img", shadow).forEach(e => (e.style.display = ""));
+                imgs.forEach(e => e.classList.remove("hide"));
+                if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+                    if (config.shadowGalleryWheel != 2) {
+                        imgs.forEach(e => (e.style.border = ""));
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
+                    instantScrollIntoView(imgs[imgViewIndex]);
+                }
+                return;
             } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
             }
@@ -32790,7 +32896,7 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 14px;
     color: #000000;
@@ -32833,6 +32939,9 @@ p#imgBox {
 .FixedMenuitem.active {
     color: #fff;
     background: #1790e6;
+}
+.hide {
+    display: none !important;
 }
 img.default {
     vertical-align: middle;
@@ -33630,8 +33739,10 @@ img.horizontal {
                 }
             });
             if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
-                imgs.forEach(e => (e.style.border = ""));
-                imgs[imgViewIndex].style.border = "solid #32a1ce";
+                if (config.shadowGalleryWheel != 2) {
+                    imgs.forEach(e => (e.style.border = ""));
+                    imgs[imgViewIndex].style.border = "solid #32a1ce";
+                }
                 setTimeout(() => instantScrollIntoView(imgs[imgViewIndex]), 100);
             }
         };
@@ -33658,7 +33769,7 @@ img.horizontal {
                     imgViewIndex = imgs.length - 1;
                 }
                 const img = imgs[imgViewIndex];
-                if (config.ViewMode != 4) {
+                if (config.ViewMode != 4 && ([0, 1, 3].some(m => config.ViewMode == m) && config.shadowGalleryWheel != 2)) {
                     imgs.forEach(e => (e.style.border = ""));
                     img.style.border = "solid #32a1ce";
                 }
@@ -33829,12 +33940,30 @@ img.horizontal {
                 currentReferenceElement = img;
                 return instantScrollIntoView(img);
             } else if ((event.code === "Delete" || event.key === "Delete")) {
-                const hideE = gae("img", mainElement)[imgViewIndex];
-                if (hideE !== undefined) {
-                    hideE.style.display = "none";
+                for (const img of imgs) {
+                    if (!img.classList.contains("hide")) {
+                        img.classList.add("hide");
+                        break;
+                    }
                 }
+                if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+                    if (config.shadowGalleryWheel != 2) {
+                        imgs.forEach(e => (e.style.border = ""));
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
+                    instantScrollIntoView(imgs[imgViewIndex]);
+                }
+                return;
             } else if ((event.code === "Enter" || event.key === "Enter")) {
-                gae("img", mainElement).forEach(e => (e.style.display = ""));
+                imgs.forEach(e => e.classList.remove("hide"));
+                if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4) {
+                    if (config.shadowGalleryWheel != 2) {
+                        imgs.forEach(e => (e.style.border = ""));
+                        imgs[imgViewIndex].style.border = "solid #32a1ce";
+                    }
+                    instantScrollIntoView(imgs[imgViewIndex]);
+                }
+                return;
             } else if (!["KeyR", "NumpadAdd", "Equal", "NumpadSubtract", "Minus"].some(k => event.code === k) || !["r", "R", "-", "+", "=", "_"].some(k => event.key === k)) {
                 imgViewIndex = -1;
             }
@@ -33860,7 +33989,7 @@ p#imgBox {
 }
 #FixedMenu {
     text-align: center;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 14px;
     color: #000000;
@@ -33903,6 +34032,9 @@ p#imgBox {
 .FixedMenuitem.active {
     color: #fff;
     background: #1790e6;
+}
+.hide {
+    display: none !important;
 }
 img.default {
     vertical-align: middle;
@@ -34504,7 +34636,7 @@ html,body {
 #main {
     font-size: 14px !important;
     line-height: 20px !important;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-weight: 500 !important;
     text-align: left;
     color: black;
@@ -35726,7 +35858,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadOptions * {
     font: unset;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 14px;
     color: black;
@@ -36231,7 +36363,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenu {
     text-align: center !important;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-weight: 500 !important;
     font-size: 14px !important;
     color: #000000 !important;
@@ -36281,7 +36413,7 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadFixedMenuB {
     text-align: center !important;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-weight: 500 !important;
     font-size: 14px !important;
     color: #000000 !important;
@@ -36299,9 +36431,9 @@ label.line-through:has(>#size) {
 }
 
 #FullPictureLoadMsg {
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
     line-height: 50px;
     color: #ffffff;
@@ -36429,7 +36561,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     height: 30px;
     font-size: 18px;
     color: black;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-weight: 500 !important;
     line-height: 29px;
     text-align: center;
@@ -36467,7 +36599,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 }
 
 .autoPagerTitle a:-webkit-any-link {
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-weight: 500 !important;
     color: black;
 }
@@ -36490,7 +36622,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 }
 
 #FullPictureLoadOptionsButtonParentDiv {
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-weight: 500 !important;
     max-width: 100% !important;
     height: 80px !important;
@@ -36921,10 +37053,13 @@ a[data-fancybox]:hover {
                     nextLink = tempLink;
                     return tempLink;
                 }
-                if (isEle(tempLink) && tempLink?.tagName === "A") {
+                if (isEle(tempLink) && ["A", "LINK"].some(t => tempLink?.tagName === t)) {
                     try {
                         if (/^http/.test(tempLink.href)) {
                             nextLink = tempLink.href;
+                            if (tempLink?.tagName === "LINK") {
+                                return nextLink;
+                            }
                             return tempLink;
                         } else {
                             nextElement = tempLink;
@@ -37308,6 +37443,9 @@ a[data-fancybox]:hover {
                     if (isEle(nextE)) {
                         EClick(nextE);
                         fn.showMsg(displayLanguage.str_35);
+                    } else if (isString(nextE)) {
+                        fn.showMsg(displayLanguage.str_34, 0);
+                        location.href = nextE;
                     } else {
                         fn.showMsg(displayLanguage.str_37);
                     }
@@ -37769,7 +37907,7 @@ html,body {
     line-height: 24px !important;
     padding: 3px;
     font: unset;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 16px;
     text-align: center;
@@ -37782,8 +37920,7 @@ html,body {
     display: block;
     text-align: center;
     text-decoration: unset;
-    font: unset;
-    font-family: Microsoft JhengHei, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 16px;
     background-color: unset;
