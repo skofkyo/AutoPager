@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.8
+// @version            2.7.9
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -66,8 +66,10 @@
         case "zh":
         case "zh-CN":
         case "zh-SG":
+        case "zh-MY":
         case "zh-Hans-CN":
         case "zh-Hans-SG":
+        case "zh-Hans-MY":
             scriptLanguage = "CH";
             break;
         default:
@@ -193,6 +195,7 @@
     const isUpdatePage = /^\/latest$/.test(lp);
     const isListPage = /^\/manga\/\w+$/.test(lp);
     const isBookcasePage = /^\/bookcase$/.test(lp);
+    const isSearchPage = /^\/sssearch/.test(lp);
     const isRankPage = /^\/rank/.test(lp);
     const isUserPage = /^\/user/.test(lp);
     const isLogged = _unsafeWindow.location.search.includes("token=") || document.cookie.includes("sf_token");
@@ -794,7 +797,7 @@ footer {
                     if (json?.msg === "success") {
                         chaptersData = chaptersData.concat(json.data.items);
                         const find_current_chapter_data = json.data.items.some(e => e.codes === chapterCode);
-                        if (find_current_chapter_data) {
+                        if (json?.data?.isEnd == 1 || chaptersData.length >= json?.data?.total || find_current_chapter_data) {
                             isObtainedAllChapters = true;
                             console.log("無限滾動需要用到的章節資料", chaptersData);
                         } else {
@@ -838,14 +841,13 @@ footer {
                     }
 
                     const localStorageHistoryArray = JSON.parse(localStorage.getItem("_ht"));
-                    const object = {
-                        ...localStorageHistoryArray[0],
+                    const object = Object.assign(localStorageHistoryArray[0], {
                         read_chapter_id: readJson.data.id,
                         read_chapter_name: readJson.data.chapter_name,
                         read_chapter_codes: cc,
                         add_time: new Date().getTime(),
                         update_time: new Date().getTime()
-                    };
+                    });
                     localStorageHistoryArray[0] = object;
                     localStorage.setItem("_ht", JSON.stringify(localStorageHistoryArray));
 
