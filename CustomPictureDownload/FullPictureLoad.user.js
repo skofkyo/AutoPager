@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.16
+// @version            2.12.17
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2676,7 +2676,7 @@
         reg: /^https?:\/\/(www\.)?putmega\.com\/album\//,
         imgs: async () => {
             await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
-            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
+            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img").reverse();
             return thumbnailSrcArray.map(e => e.replace(".md.", "."));
         },
         button: [4],
@@ -2704,7 +2704,7 @@
         ],
         imgs: async () => {
             await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
-            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
+            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img").reverse();
             return fn.getImgA("link[rel=image_src]", ".list-item-image a").then(arr => arr.reverse());
         },
         button: [4],
@@ -2714,58 +2714,30 @@
         }),
         category: "nsfw1"
     }, {
-        name: "anh.im",
-        links: ["https://anh.im/bigradish/albums"],
+        name: "JPG5/anh.im/IMG.Kiwi/NF Host",
+        links: [
+            "https://jpg5.su/xelszy/albums",
+            "https://jpg5.su/rainbowsmile/albums",
+            "https://anh.im/bigradish/albums",
+            "https://img.kiwi/36_chambers/albums",
+            "https://nfhost.me/insta_girls/albums"
+        ],
         url: {
-            h: "anh.im",
-            p: "/album/",
+            h: ["jpg5.su", "anh.im", "img.kiwi", "nfhost.me"],
+            p: ["/album/", "/a/"],
             e: "#content-listing-tabs"
         },
         imgs: async () => {
             await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
-            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
-            return thumbnailSrcArray.map(e => e.replace(".md.", ".")).reverse();
+            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img").reverse();
+            return thumbnailSrcArray.map(e => e.replace(".md.", "."));
         },
         button: [4],
         insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
-            d: "— anh.im"
+            d: ["— JPG5", "— anh.im", " - IMG.Kiwi", " - NF Host"]
         }),
-        category: "nsfw1"
-    }, {
-        name: "JPG5",
-        host: ["jpg5.su"],
-        reg: /^https?:\/\/jpg5\.su\/a\//,
-        links: [
-            "https://jpg5.su/xelszy/albums",
-            "https://jpg5.su/rainbowsmile/albums"
-        ],
-        imgs: async () => {
-            await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
-            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
-            return thumbnailSrcArray.map(e => e.replace(".md.", ".")).reverse();
-        },
-        button: [4],
-        insertImg: ["#content-listing-tabs", 3],
-        customTitle: () => fn.dt({
-            d: "— JPG5"
-        }),
-        category: "nsfw1"
-    }, {
-        name: "IMG.Kiwi",
-        host: ["img.kiwi"],
-        reg: /^https?:\/\/img\.kiwi\/album\//,
-        link: "https://img.kiwi/album/whores-on-wheels.cIr6",
-        imgs: async () => {
-            await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
-            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img");
-            return thumbnailSrcArray.map(e => e.replace(".md.", ".")).reverse();
-        },
-        button: [4],
-        insertImg: ["#content-listing-tabs", 3],
-        customTitle: () => fn.dt({
-            d: " - IMG.Kiwi"
-        }),
+        hide: ".ad-banner",
         category: "nsfw2"
     }, {
         name: "Luscious",
@@ -5787,6 +5759,32 @@
         customTitle: "h1",
         category: "nsfw2"
     }, {
+        name: "Akai Hentai",
+        link: "https://akaihentai.com/tag/cosplay/",
+        url: {
+            h: "akaihentai.com",
+            p: /^\/[^\/]+\/$/,
+            e: ".comments"
+        },
+        init: () => _unsafeWindow.jQuery("body").off(),
+        box: [".comments", 1],
+        imgs: () => {
+            if (fn.ge(".single-thumbnail-wrap")) {
+                thumbnailSrcArray = fn.getImgSrcArr(".single-thumbnail-wrap img");
+            } else {
+                thumbnailSrcArray = fn.getImgSrcArr(".post-wrap a.image,video[poster]");
+            }
+            videoSrcArray = fn.gae("video[poster]").map(e => e.src);;
+            return thumbnailSrcArray.map(e => e.replace(/-\d+x\d+(\.\w+)/, "$1"));
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".single-thumbnail-wrap,.brxe-shortcode"], 2
+        ],
+        customTitle: ".brxe-post-title",
+        hide: ".brxe-code",
+        category: "nsfw2"
+    }, {
         name: "Cosplayers GoneWild",
         host: ["cosplayersgonewild.net"],
         reg: /^https?:\/\/cosplayersgonewild\.net\/albums\/\d+\/$/,
@@ -7378,7 +7376,7 @@
             let links = [fn.lp];
             let pages = fn.ge("p.pmt");
             if (pages) {
-                let max = fn.gu("//a[text()='最後']").match(/\d+/g).at(-1);
+                let max = fn.gu("//a[text()='最後']")?.match(/\d+/g)?.at(-1) || fn.gu(".pmt a:last-child")?.match(/\d+/g)?.at(-1);
                 links = fn.arr(max, (v, i) => i == 0 ? fn.lp : fn.lp + `${i + 1}/`);
             }
             return fn.getEle(links, ".gallery .pbox>a").then(eles => eles.map(a => {
@@ -27893,7 +27891,11 @@ if ("xx" in window) {
                 a.innerText = title;
                 div.append(a);
             }
-            div.addEventListener("click", event => fn.toggleAutoPager());
+            div.addEventListener("click", event => {
+                if (event.target.tagName === "DIV") {
+                    fn.toggleAutoPager();
+                }
+            });
             return div;
         },
         //無限滾動創建載入中圖示函式
@@ -36433,7 +36435,7 @@ label.line-through:has(>#size) {
 #FullPictureLoadMsg {
     font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 500;
     text-align: center;
     line-height: 50px;
     color: #ffffff;
@@ -37429,6 +37431,10 @@ a[data-fancybox]:hover {
             const callback = (event) => {
                 if (event.type === "dblclick") {
                     if (["is-next", "is-prev", "fancybox-button"].some(n => event?.target?.className?.includes(n))) return;
+                }
+                if ("observerURL" in siteData && isString(nextLink)) {
+                    fn.showMsg(displayLanguage.str_34, 0);
+                    return (location.href = nextLink);
                 }
                 if (isFn(next)) {
                     fn.showMsg(displayLanguage.str_34, 0);
