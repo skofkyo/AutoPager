@@ -3111,6 +3111,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://akaihentai.com/tag/cosplay/">Akai Hentai</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://thehentaiworld.com/hentai-cosplay-images/">The Hentai World</a>
                 </td>
                 <td></td>
