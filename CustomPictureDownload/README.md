@@ -1370,7 +1370,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
 </details>
 <h2>規則支持列表備註</h2>
 <p>如果有備註為SPA網頁，腳本如果沒有生效的話請重新載入頁面，或是先以新分頁的方式開啟連結。</p>
-<h2>V2PH取得Cookie說明</h2>
+<h2>V2PH取得Cloudflare Clearance Cookie說明</h2>
 <details>
     <summary>
         <kbd>
@@ -3204,7 +3204,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://thothub.vip/albums/">Thothub Albums</a>
                 </td>
                 <td>
-                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>
+                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>，<a href="https://thothub.vip/albums/">thothub.vip</a>
                 </td>
             </tr>
             <tr>
@@ -6170,6 +6170,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.aitaocomic.com/">爱淘漫画</a>
                 </td>
                 <td>SPA網頁，手動插入圖片</td>
+            </tr>
+           <tr>
+                <td>
+                    <a href="https://www.everydaymanga.com/">天天漫画</a>
+                </td>
+                <td></td>
             </tr>
            <tr>
                 <td>
