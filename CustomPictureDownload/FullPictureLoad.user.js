@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.18
+// @version            2.12.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3396,9 +3396,6 @@
         SPA: true,
         observerURL: true,
         imgs: () => fn.getAList(),
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 3],
-        go: 1,
         customTitle: () => fn.dt({
             d: [" | 次元LSP", " | 猫猫网盘", " | 云边网盘", " | 小易の云盘", " | ooo.pqdh.com"]
         }),
@@ -25931,6 +25928,7 @@ if ("xx" in window) {
                 str_180: "自動匯出URLs.txt",
                 str_181: "拼接下載",
                 str_182: "※畫廊圖片循環切換",
+                str_183: "排除格式",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -26157,6 +26155,7 @@ if ("xx" in window) {
                 str_180: "自动导出URLs.txt",
                 str_181: "拼接下载",
                 str_182: "※画廊图片循环切换",
+                str_183: "排除格式",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -26378,6 +26377,7 @@ if ("xx" in window) {
                 str_180: "Auto Export URLs.txt",
                 str_181: "Combine Download",
                 str_182: "※Gallery Image Loop Switching",
+                str_183: "Exclude Format",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
@@ -34639,22 +34639,83 @@ img.horizontal {
 
         isOpenFilter = true;
 
-        let srcs;
+        let full_srcs;
         if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
-            srcs = await getImgs(selector);
+            full_srcs = await getImgs(selector);
         } else if (!("capture" in siteData)) {
-            globalImgArray.length > 0 ? srcs = globalImgArray : srcs = await getImgs(siteData.imgs);
+            globalImgArray.length > 0 ? full_srcs = globalImgArray : full_srcs = await getImgs(siteData.imgs);
         } else {
-            captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
+            captureSrcArray.length > 0 ? full_srcs = captureSrcArray : full_srcs = await getImgs(siteData.imgs);
         }
-        if (srcs.length < 1) return (isOpenFilter = false);
-
+        if (full_srcs.length < 1) return (isOpenFilter = false);
+        let srcs;
         const config = getConfig();
+        const exclude_ex_config = _GM_getValue("exclude_ex_config", {
+            jpg: 0,
+            png: 0,
+            gif: 0,
+            webp: 0,
+            bmp: 0,
+            svg: 0,
+            avif: 0,
+            tiff: 0
+        });
         let threading = Number(config.threading);
         let backgroundColor = config.backgroundColor;
         let showSize = config.showSize;
         let move = config.move;
+
+        const exclude_ex_fn = () => {
+            if (Object.values(exclude_ex_config).some(v => v == 1)) {
+                srcs = full_srcs.filter(src => {
+                    if (exclude_ex_config.jpg == 1) {
+                        if (/\.jpe?g/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.png == 1) {
+                        if (/\.png/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.gif == 1) {
+                        if (/\.gif/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.webp == 1) {
+                        if (/\.webp/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.bmp == 1) {
+                        if (/\.bmp/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.svg == 1) {
+                        if (/\.svg/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.avif == 1) {
+                        if (/\.avif/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.tiff == 1) {
+                        if (/\.tiff?/i.test(src)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            } else {
+                srcs = full_srcs;
+            }
+        };
+        exclude_ex_fn();
 
         if (!("Viewer" in _unsafeWindow)) {
             _GM_addElement(document.head, "style", {
@@ -34698,6 +34759,12 @@ html,body {
 #main.dark {
     color: white;
     background-color: #333;
+}
+.show {
+    display: block !important;
+}
+.hide {
+    display: none !important;
 }
 .row {
     display: block;
@@ -34768,7 +34835,7 @@ li.image-item {
     border: #000 1px solid;
     border-radius: 2px;
 }
-li.dark {
+li.image-item.dark {
     background-color: #333;
     border: rgb(0, 204, 255) 1px solid;
 }
@@ -34786,7 +34853,7 @@ input.check {
     top: 2px;
     left: 2px;
 }
-li p {
+li.image-item p {
     position: absolute;
     font-size: 12px;
     line-height: 14px;
@@ -34797,7 +34864,7 @@ li p {
     padding: 0px;
     background-color: rgba(163, 194, 194, 0.8);
 }
-li p.dark {
+li.image-item p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
 #size,#move {
@@ -34809,12 +34876,52 @@ li p.dark {
 label.line-through:has(>#size) {
     text-decoration: line-through;
 }
+#exclude {
+    position: relative;
+}
+#excludeList {
+    display: none;
+    list-style-type: none;
+    top: 28px;
+    left: 8px;
+    width: 60px;
+    text-align: center;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 2147483645;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+.excludeItem {
+    list-style: none;
+    color: black;
+    border: #ccc 1px solid;
+    background-color: #f6f6f6;
+    padding: 2px;
+    margin: 2px;
+}
+.excludeItem.active {
+    color: #fff;
+    background: #1790e6;
+    text-decoration: line-through;
+}
+@media (max-width: 873px) {
+    li.image-item {
+        width: 194px;
+        height: 194px;
+    }
+    li.image-item p {
+        top: 180px;
+    }
+}
 @media (max-width: 820px) {
     li.image-item {
         width: 194px;
         height: 194px;
     }
-    li p {
+    li.image-item p {
         top: 180px;
     }
 }
@@ -34823,7 +34930,7 @@ label.line-through:has(>#size) {
         width: 181px;
         height: 181px;
     }
-    li p {
+    li.image-item p {
         top: 167px;
     }
 }
@@ -34832,7 +34939,7 @@ label.line-through:has(>#size) {
         width: 167px;
         height: 167px;
     }
-    li p {
+    li.image-item p {
         top: 153px;
     }
 }
@@ -34841,7 +34948,7 @@ label.line-through:has(>#size) {
         width: 192px;
         height: 192px;
     }
-    li p {
+    li.image-item p {
         top: 178px;
     }
 }
@@ -34850,7 +34957,7 @@ label.line-through:has(>#size) {
         width: 191px;
         height: 191px;
     }
-    li p {
+    li.image-item p {
         top: 177px;
     }
 }
@@ -34859,7 +34966,7 @@ label.line-through:has(>#size) {
         width: 182px;
         height: 182px;
     }
-    li p {
+    li.image-item p {
         top: 168px;
     }
 }
@@ -34868,7 +34975,7 @@ label.line-through:has(>#size) {
         width: 182px;
         height: 182px;
     }
-    li p {
+    li.image-item p {
         top: 168px;
     }
 }
@@ -34877,7 +34984,7 @@ label.line-through:has(>#size) {
         width: 180px;
         height: 180px;
     }
-    li p {
+    li.image-item p {
         top: 166px;
     }
 }
@@ -34886,7 +34993,7 @@ label.line-through:has(>#size) {
         width: 173px;
         height: 173px;
     }
-    li p {
+    li.image-item p {
         top: 159px;
     }
 }
@@ -34895,7 +35002,7 @@ label.line-through:has(>#size) {
         width: 165px;
         height: 165px;
     }
-    li p {
+    li.image-item p {
         top: 151px;
     }
 }
@@ -34904,7 +35011,7 @@ label.line-through:has(>#size) {
         width: 145px;
         height: 145px;
     }
-    li p {
+    li.image-item p {
         top: 131px;
     }
 }
@@ -34936,10 +35043,11 @@ label.line-through:has(>#size) {
         <button id="download">${displayLanguage.str_157}</button>
         <label class="number">${displayLanguage.str_169}<select id="backgroundColor"></select></label>
         <label id="label-threading" class="number">${displayLanguage.str_161}<select id="threading"></select></label>
+        <label id="exclude" class="number">${displayLanguage.str_183} ▼<ul id="excludeList"></ul></label>
         <label class="number">${displayLanguage.str_167}<select id="width"></select></label>
         <label class="number">${displayLanguage.str_168}<select id="height"></select></label>
-        <label class="number">${displayLanguage.str_165 + srcs.length}</label>
         <label id="filterNumber" class="number">${displayLanguage.str_166 + srcs.length}</label>
+        <label id="total" class="number">${displayLanguage.str_165 + srcs.length}</label>
         <label class="number" title="${displayLanguage.str_173}"><input id="move" type="checkbox"></input>${displayLanguage.str_172}</label>
         <label class="number"><input id="size" type="checkbox"></input>${displayLanguage.str_171}</label>
     </div>
@@ -35007,6 +35115,46 @@ label.line-through:has(>#size) {
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
         }
+        let excludeE = ge("#exclude", main);
+        let excludeList = ge("#excludeList", main);
+        excludeE.addEventListener("click", (event) => {
+            if (event.target.tagName === "LABEL") {
+                if (excludeE.classList.contains("active")) {
+                    excludeE.classList.remove("active");
+                    excludeE.firstChild.textContent = displayLanguage.str_183 + " ▼";
+                    excludeList.classList.remove("show");
+                } else {
+                    excludeE.classList.add("active");
+                    excludeE.firstChild.textContent = displayLanguage.str_183 + " ▲";
+                    excludeList.classList.add("show");
+                }
+            }
+        });
+        Object.entries(exclude_ex_config).forEach(([k, v]) => {
+            const li = document.createElement("li");
+            li.className = "excludeItem";
+            li.innerText = k.toUpperCase();
+            if (v == 1) {
+                li.classList.add("active");
+            }
+            li.addEventListener("click", (event) => {
+                if (li.classList.contains("active")) {
+                    li.classList.remove("active");
+                    Reflect.set(exclude_ex_config, k, 0);
+                } else {
+                    li.classList.add("active");
+                    Reflect.set(exclude_ex_config, k, 1);
+                }
+                _GM_setValue("exclude_ex_config", exclude_ex_config);
+                exclude_ex_fn();
+                addLis();
+                widthSelect.value = 0;
+                heightSelect.value = 0;
+                ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+            });
+            fragment.append(li);
+        });
+        excludeList.append(fragment);
         let backgroundSelect = ge("#backgroundColor", main);
         Object.keys(displayLanguage.backgroundColor).forEach((k, i) => {
             const option = document.createElement("option");
@@ -35039,11 +35187,11 @@ label.line-through:has(>#size) {
                     if (cw && ch) {
                         input.checked = true;
                         input.classList.add("select");
-                        parent.style.display = "";
+                        parent.classList.remove("hide");
                     } else {
                         input.checked = false;
                         input.classList.remove("select");
-                        parent.style.display = "none";
+                        parent.classList.add("hide");
                     }
                 }
             });
@@ -35230,6 +35378,7 @@ label.line-through:has(>#size) {
         }
 
         const addLis = () => {
+            ge("#total", main).innerText = displayLanguage.str_165 + srcs.length;
             imageList.innerHTML = "";
             const loadImgList = [];
             inputs = [];
