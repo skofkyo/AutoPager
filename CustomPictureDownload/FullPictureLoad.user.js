@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.17
+// @version            2.12.18
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -328,7 +328,7 @@
             const [, album_id] = /id-([^.]+)/.exec(fn.lp);
             let [numP] = fn.gt(".tab-content div:has(>.fa-picture-o)").match(/\d+/);
             numP = Number(numP);
-            const thumb = fn.ge("img.cr_only");
+            const thumb = fn.ge("a[href*='/photoShow'] img.cr_only");
             const srcArrFn = (total, photoUrl = "https://img.xchina.store/photos/", mode = 1) => {
                 let suffix = ".jpg";
                 if (mode === 2) {
@@ -356,7 +356,7 @@
                     if (max > 1) {
                         await fn.getNP(".photos>a", ".pager a[current=true]+a:not(.next)", null, ".pager", 1500);
                     }
-                    thumbnailSrcArray = fn.getImgSrcArr("img.cr_only");
+                    thumbnailSrcArray = fn.getImgSrcArr("a[href*='/photoShow'] img.cr_only");
                     if (numP != thumbnailSrcArray.length) {
                         setTimeout(() => {
                             fn.hideMsg();
@@ -3396,6 +3396,9 @@
         SPA: true,
         observerURL: true,
         imgs: () => fn.getAList(),
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        go: 1,
         customTitle: () => fn.dt({
             d: [" | 次元LSP", " | 猫猫网盘", " | 云边网盘", " | 小易の云盘", " | ooo.pqdh.com"]
         }),
@@ -5728,7 +5731,7 @@
         category: "nsfw2"
     }, {
         name: "ThotHD Albums / Thothub Albums",
-        host: ["thothd.com", "thothub.to", "thothub.lol", "thothub.mx"],
+        host: ["thothd.com", "thothub.to", "thothub.lol", "thothub.mx", "thothub.vip"],
         url: {
             h: [/thothd/, /thothub/],
             p: "/albums/"
@@ -23437,6 +23440,39 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
+        name: "天天漫画",
+        url: {
+            h: "www.everydaymanga.com",
+            e: "//script[contains(text(),'newImgs')]"
+        },
+        imgs: (w = _unsafeWindow) => w.newImgs,
+        button: [4],
+        insertImg: ["#ChapterContent,.chapter_content", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章'][starts-with(@href,'/')] | //a[div[span[text()='下一章']]][starts-with(@href,'/')]",
+        prev: "//a[text()='上一章'][starts-with(@href,'/')] | //a[div[span[text()='上一章']]][starts-with(@href,'/')]",
+        customTitle: (dom = document, url = fn.lp) => {
+            if (hasTouchEvent) {
+                let [, , , mid, cid] = url.split("/");
+                return fn.fetchDoc(`/home/details/${mid}`).then(detailsDom => {
+                    let comic_name = fn.gt(".comic_name h1", 1, detailsDom);
+                    let chapters = fn.gae(".catalog_list a", detailsDom);
+                    let chapter = chapters.find(a => a.href.endsWith(cid));
+                    let chapter_name = fn.gt(".chapter_name .name", 1, chapter);
+                    return comic_name + " - " + chapter_name;
+                });
+            } else {
+                return fn.gt(".arthor", 1, dom) + " - " + fn.gt(".title", 1, dom);
+            }
+        },
+        preloadNext: (nextDoc, obj) => {
+            fn.iframeVar(nextLink, "newImgs").then(w => {
+                let srcs = obj.imgs(w);
+                fn.picPreload(srcs, obj.customTitle(nextDoc, new URL(nextLink).pathname), "next");
+            });
+        },
+        category: "hcomic"
+    }, {
         name: "漫画屋",
         host: ["www.manhua55.com"],
         reg: /^https?:\/\/www\.manhua55\.com\/chapter\/[\d-]+\.html$/,
@@ -23462,6 +23498,12 @@ if ("xx" in window) {
             t: dom.title,
             d: [",_在线漫画阅读_漫画屋", "漫画"]
         }).replace("_", " - "),
+        preloadNext: (nextDoc, obj) => {
+            fn.iframeVar(nextLink, "params").then(w => {
+                let srcs = obj.imgs(w);
+                fn.picPreload(srcs, obj.customTitle(nextDoc), "next");
+            });
+        },
         category: "comic"
     }, {
         name: "爱淘漫画",
@@ -30535,7 +30577,7 @@ if ("xx" in window) {
             if (!!cookie) {
                 return true;
             } else {
-                alert("微圖坊下載需先填入cookie。");
+                alert("微圖坊下載需先填入Cloudflare clearance cookie。");
                 v2ph_cookie = prompt("Set Cookie", v2ph_cookie || "");
                 if (!!v2ph_cookie) {
                     _GM_setValue("v2ph_cookie", v2ph_cookie);
@@ -30548,7 +30590,7 @@ if ("xx" in window) {
             if (!!cookie) {
                 return true;
             } else {
-                alert("MyReadingManga download requires filling in cookie。");
+                alert("MyReadingManga download requires filling in Cloudflare clearance cookie。");
                 myreadingmanga_cookie = prompt("Set Cookie", myreadingmanga_cookie || "");
                 if (!!myreadingmanga_cookie) {
                     _GM_setValue("myreadingmanga_cookie", myreadingmanga_cookie);
@@ -38245,7 +38287,7 @@ html,body {
     }
 
     if (fn.lh.includes(".v2ph.")) {
-        _GM_registerMenuCommand("🍪 Set V2PH Cookie", () => {
+        _GM_registerMenuCommand("🍪 Set V2PH CF Cookie", () => {
             v2ph_cookie = prompt("Set Cookie", v2ph_cookie || "");
             if (!!v2ph_cookie) {
                 _GM_setValue("v2ph_cookie", v2ph_cookie);
@@ -38254,7 +38296,7 @@ html,body {
     }
 
     if (fn.lh.includes("myreadingmanga")) {
-        _GM_registerMenuCommand("🍪 Set MyReadingManga Cookie", () => {
+        _GM_registerMenuCommand("🍪 Set MyReadingManga CF Cookie", () => {
             myreadingmanga_cookie = prompt("Set Cookie", myreadingmanga_cookie || "");
             if (!!myreadingmanga_cookie) {
                 _GM_setValue("myreadingmanga_cookie", myreadingmanga_cookie);
