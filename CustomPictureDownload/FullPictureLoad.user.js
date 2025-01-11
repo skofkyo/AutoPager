@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.19
+// @version            2.12.20
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -360,7 +360,7 @@
                     if (numP != thumbnailSrcArray.length) {
                         setTimeout(() => {
                             fn.hideMsg();
-                            fn.showMsg("圖片數量不符合，請反饋", 5000);
+                            fn.showMsg(displayLanguage.xchina_picnum_error, 5000);
                         }, 1500)
                     }
                     if (fn.lp.includes("amateur")) {
@@ -1530,29 +1530,6 @@
             v: 3,
             css: false
         },
-        category: "nsfw1"
-    }, {
-        name: "微密猫",
-        url: {
-            e: ".logo>a[title=微密猫]",
-            p: /^\/archives\/\d+/
-        },
-        imgs: "figure.wp-block-image a[data-fancybox]",
-        button: [4],
-        insertImg: [
-            [".article-content", 0, "figure.wp-block-image,.code-block"], 2
-        ],
-        autoDownload: [0],
-        next: ".article-nav-prev a",
-        prev: ".article-nav-next a",
-        customTitle: ".article-title",
-        go: 1,
-        fancybox: {
-            v: 3,
-            css: false
-        },
-        hide: ".code-block",
-        observerClick: "a.close",
         category: "nsfw1"
     }, {
         name: "优美图录",
@@ -25740,6 +25717,7 @@ if ("xx" in window) {
         case "zh-Hant-HK":
         case "zh-Hant-MO":
             displayLanguage = {
+                xchina_picnum_error: "圖片數量不符，請反饋。",
                 str_01: "獲取圖片元素中...",
                 str_02: "獲取圖片中 ",
                 str_03: "獲取圖片逾時",
@@ -25906,7 +25884,7 @@ if ("xx" in window) {
                 str_158: hasTouchEvent ? "篩選下載" : "篩選下載(F)",
                 str_159: hasTouchEvent ? "自訂函式" : "自訂函式(6)",
                 str_160: hasTouchEvent ? "插入圖片" : "插入圖片(1)",
-                str_161: "同時載入的圖片數量：",
+                str_161: "載入線程：",
                 str_162: "圖片預載數：",
                 str_163: "🖼️ 開啟簡易模式",
                 str_164: "🖼️ 關閉簡易模式",
@@ -25929,6 +25907,9 @@ if ("xx" in window) {
                 str_181: "拼接下載",
                 str_182: "※畫廊圖片循環切換",
                 str_183: "排除格式",
+                str_184: "排除錯誤",
+                str_185: "自動排錯",
+                str_186: "更多選單",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -25967,6 +25948,7 @@ if ("xx" in window) {
         case "zh-Hans-SG":
         case "zh-Hans-MY":
             displayLanguage = {
+                xchina_picnum_error: "图片数量不符，请反馈。",
                 str_01: "获取图片元素中...",
                 str_02: "获取图片中 ",
                 str_03: "获取图片逾时",
@@ -26133,7 +26115,7 @@ if ("xx" in window) {
                 str_158: hasTouchEvent ? "筛选下载" : "筛选下载(F)",
                 str_159: hasTouchEvent ? "定义函式" : "定义函式(6)",
                 str_160: hasTouchEvent ? "插入图片" : "插入图片(1)",
-                str_161: "同时加载的图片数量：",
+                str_161: "加载线程：",
                 str_162: "图片预载数：",
                 str_163: "🖼️ 开启简易模式",
                 str_164: "🖼️ 关闭简易模式",
@@ -26156,6 +26138,9 @@ if ("xx" in window) {
                 str_181: "拼接下载",
                 str_182: "※画廊图片循环切换",
                 str_183: "排除格式",
+                str_184: "排除错误",
+                str_185: "自动排错",
+                str_186: "更多选单",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -26188,6 +26173,7 @@ if ("xx" in window) {
             break;
         default:
             displayLanguage = {
+                xchina_picnum_error: "图片数量不符，请反馈。",
                 str_01: "Get Images...",
                 str_02: "Get Images ",
                 str_03: "Get timed out",
@@ -26355,7 +26341,7 @@ if ("xx" in window) {
                 str_158: hasTouchEvent ? "FilterDownload" : "FilterDownload(F)",
                 str_159: hasTouchEvent ? "Function" : "Function(6)",
                 str_160: hasTouchEvent ? "Insert Images" : "Insert Images(1)",
-                str_161: "The Number Of Images Loaded At The Same Time：",
+                str_161: "Threads：",
                 str_162: "Preload：",
                 str_163: "🖼️ Enable Simple Mode",
                 str_164: "🖼️ Turn Off Simple Mode",
@@ -26378,6 +26364,9 @@ if ("xx" in window) {
                 str_181: "Combine Download",
                 str_182: "※Gallery Image Loop Switching",
                 str_183: "Exclude Format",
+                str_184: "Culling",
+                str_185: "Auto Culling",
+                str_186: "More Menu",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
@@ -30109,7 +30098,7 @@ if ("xx" in window) {
                     img.src = loadSrc;
                     resolve();
                 } else {
-                    img.classList.add("loadError");
+                    img.classList.add("error");
                     img.dataset.src = loadSrc;
                     img.src = loadSrc;
                     resolve();
@@ -31443,7 +31432,8 @@ if ("xx" in window) {
             backgroundColor: "l",
             showSize: 0,
             noSize: 0,
-            move: 0
+            move: 0,
+            aee: 0
         };
         let newWindowData = localStorage.getItem("newWindowData");
         if (newWindowData == null) {
@@ -34792,7 +34782,7 @@ html,body {
 .number {
     display: inline-block;
     margin-top: 4px;
-    padding: 0 0 0 2px;
+    padding: 0 0 0 4px;
     border-left: #000 1px solid;
 }
 .number.dark{
@@ -34859,7 +34849,7 @@ li.image-item p {
     line-height: 14px;
     width: 100%;
     height: 14px;
-    top: 186px;
+    bottom: 0px;
     margin: 0px;
     padding: 0px;
     background-color: rgba(163, 194, 194, 0.8);
@@ -34867,16 +34857,16 @@ li.image-item p {
 li.image-item p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
-#size,#move {
+#size,#move,#auto-exclude-error {
     width: 16px;
     height: 16px;
     vertical-align: ${isFirefox ? "middle" : "sub"};
-    margin: 0 4px;
+    margin: 0 4px 0 2px;
 }
 label.line-through:has(>#size) {
     text-decoration: line-through;
 }
-#exclude {
+#exclude,#more {
     position: relative;
 }
 #excludeList {
@@ -34907,13 +34897,33 @@ label.line-through:has(>#size) {
     background: #1790e6;
     text-decoration: line-through;
 }
+#more-menu {
+    display: none;
+    list-style-type: none;
+    top: 28px;
+    left: -2px;
+    width: 80px;
+    text-align: center;
+    border: #ccc 1px solid;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 2147483645;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+.more-item {
+    list-style: none;
+    color: black;
+    border: #ccc 1px solid;
+    background-color: #f6f6f6;
+    padding: 2px;
+    margin: 4px;
+}
 @media (max-width: 873px) {
     li.image-item {
         width: 194px;
         height: 194px;
-    }
-    li.image-item p {
-        top: 180px;
     }
 }
 @media (max-width: 820px) {
@@ -34921,17 +34931,11 @@ label.line-through:has(>#size) {
         width: 194px;
         height: 194px;
     }
-    li.image-item p {
-        top: 180px;
-    }
 }
 @media (max-width: 768px) {
     li.image-item {
         width: 181px;
         height: 181px;
-    }
-    li.image-item p {
-        top: 167px;
     }
 }
 @media (max-width: 712px) {
@@ -34939,17 +34943,11 @@ label.line-through:has(>#size) {
         width: 167px;
         height: 167px;
     }
-    li.image-item p {
-        top: 153px;
-    }
 }
 @media (max-width: 414px) {
     li.image-item {
         width: 192px;
         height: 192px;
-    }
-    li.image-item p {
-        top: 178px;
     }
 }
 @media (max-width: 412px) {
@@ -34957,17 +34955,11 @@ label.line-through:has(>#size) {
         width: 191px;
         height: 191px;
     }
-    li.image-item p {
-        top: 177px;
-    }
 }
 @media (max-width: 400px) {
     li.image-item {
         width: 182px;
         height: 182px;
-    }
-    li.image-item p {
-        top: 168px;
     }
 }
 @media (max-width: 393px) {
@@ -34975,17 +34967,11 @@ label.line-through:has(>#size) {
         width: 182px;
         height: 182px;
     }
-    li.image-item p {
-        top: 168px;
-    }
 }
 @media (max-width: 390px) {
     li.image-item {
         width: 180px;
         height: 180px;
-    }
-    li.image-item p {
-        top: 166px;
     }
 }
 @media (max-width: 375px) {
@@ -34993,26 +34979,17 @@ label.line-through:has(>#size) {
         width: 173px;
         height: 173px;
     }
-    li.image-item p {
-        top: 159px;
-    }
 }
 @media (max-width: 360px) {
     li.image-item {
         width: 165px;
         height: 165px;
     }
-    li.image-item p {
-        top: 151px;
-    }
 }
 @media (max-width: 320px) {
     li.image-item {
         width: 145px;
         height: 145px;
-    }
-    li.image-item p {
-        top: 131px;
     }
 }
         `);
@@ -35030,14 +35007,12 @@ label.line-through:has(>#size) {
         <button id="close" class="close">${displayLanguage.str_132}</button>
     </div>
     <div id="buttons">
-        <button id="settings">${displayLanguage.str_85.replace(/\(.\)/, "")}</button>
         <button id="gallery">${displayLanguage.str_106.replace(/\(.\)/, "")}</button>
         <button id="favor">${displayLanguage.str_128.replace(/\(.\)/, "")}</button>
-        <button id="copy">${displayLanguage.str_105.replace(/\(.\)/, "")}</button>
-        <button id="export">${displayLanguage.str_104.replace(/\(.\)/, "")}</button>
         <button id="select-all">${displayLanguage.str_154}</button>
         <button id="unselect-all">${displayLanguage.str_155}</button>
         <button id="reverse-selection">${displayLanguage.str_170}</button>
+        <button id="exclude-error">${displayLanguage.str_184}</button>
         <button id="reload">${displayLanguage.str_156}</button>
         <button id="combineDownload">${displayLanguage.str_181}</button>
         <button id="download">${displayLanguage.str_157}</button>
@@ -35048,8 +35023,10 @@ label.line-through:has(>#size) {
         <label class="number">${displayLanguage.str_168}<select id="height"></select></label>
         <label id="filterNumber" class="number">${displayLanguage.str_166 + srcs.length}</label>
         <label id="total" class="number">${displayLanguage.str_165 + srcs.length}</label>
+        <label class="number"><input id="auto-exclude-error" type="checkbox"></input>${displayLanguage.str_185}</label>
         <label class="number" title="${displayLanguage.str_173}"><input id="move" type="checkbox"></input>${displayLanguage.str_172}</label>
         <label class="number"><input id="size" type="checkbox"></input>${displayLanguage.str_171}</label>
+        <label id="more" class="number">${displayLanguage.str_186} ☰<ul id="more-menu"></ul></label>
     </div>
 </div>
 <div id="imgBox" class="row">
@@ -35065,6 +35042,7 @@ label.line-through:has(>#size) {
         <button id="select-all">${displayLanguage.str_154}</button>
         <button id="unselect-all">${displayLanguage.str_155}</button>
         <button id="reverse-selection">${displayLanguage.str_170}</button>
+        <button id="exclude-error">${displayLanguage.str_184}</button>
         <button id="reload">${displayLanguage.str_156}</button>
         <button id="download">${displayLanguage.str_157}</button>
         <button id="close">${displayLanguage.str_132}</button>
@@ -35115,19 +35093,50 @@ label.line-through:has(>#size) {
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
         }
+
+        let moreE = ge("#more", main);
+        let moreMenu = ge("#more-menu", main);
+        moreE.addEventListener("click", (event) => {
+            if (moreE.classList.contains("active")) {
+                moreE.classList.remove("active");
+                moreMenu.classList.remove("show");
+            } else {
+                moreE.classList.add("active");
+                moreMenu.classList.add("show");
+            }
+        });
+        [{
+            id: "settings",
+            text: displayLanguage.str_85.replace(/\(.\)/, "")
+        }, {
+            id: "copy",
+            text: displayLanguage.str_105.replace(/\(.\)/, "")
+        }, {
+            id: "export",
+            text: displayLanguage.str_104.replace(/\(.\)/, "")
+        }].forEach(({
+            id,
+            text
+        }) => {
+            const li = document.createElement("li");
+            li.id = id;
+            li.className = "more-item";
+            li.innerText = text;
+            fragment.append(li);
+        });
+        moreMenu.append(fragment);
+
         let excludeE = ge("#exclude", main);
         let excludeList = ge("#excludeList", main);
         excludeE.addEventListener("click", (event) => {
-            if (event.target.tagName === "LABEL") {
-                if (excludeE.classList.contains("active")) {
-                    excludeE.classList.remove("active");
-                    excludeE.firstChild.textContent = displayLanguage.str_183 + " ▼";
-                    excludeList.classList.remove("show");
-                } else {
-                    excludeE.classList.add("active");
-                    excludeE.firstChild.textContent = displayLanguage.str_183 + " ▲";
-                    excludeList.classList.add("show");
-                }
+            if (excludeE.classList.contains("active")) {
+                excludeE.classList.remove("active");
+                excludeE.firstChild.textContent = displayLanguage.str_183 + " ▼";
+                excludeList.classList.remove("show");
+            } else {
+                excludeE.classList.add("active");
+                excludeE.firstChild.textContent = displayLanguage.str_183 + " ▲";
+                excludeList.classList.add("show");
             }
         });
         Object.entries(exclude_ex_config).forEach(([k, v]) => {
@@ -35138,6 +35147,7 @@ label.line-through:has(>#size) {
                 li.classList.add("active");
             }
             li.addEventListener("click", (event) => {
+                event.stopPropagation();
                 if (li.classList.contains("active")) {
                     li.classList.remove("active");
                     Reflect.set(exclude_ex_config, k, 0);
@@ -35155,6 +35165,7 @@ label.line-through:has(>#size) {
             fragment.append(li);
         });
         excludeList.append(fragment);
+
         let backgroundSelect = ge("#backgroundColor", main);
         Object.keys(displayLanguage.backgroundColor).forEach((k, i) => {
             const option = document.createElement("option");
@@ -35175,6 +35186,7 @@ label.line-through:has(>#size) {
             }
             main.focus();
         });
+
         let widthNum = 0;
         let heightNum = 0;
         const changeList = () => {
@@ -35196,6 +35208,7 @@ label.line-through:has(>#size) {
                 }
             });
         };
+
         let widthSelect = ge("#width", main);
         for (let i = 0; i <= 40; i++) {
             let option = document.createElement("option");
@@ -35211,6 +35224,7 @@ label.line-through:has(>#size) {
             ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
             main.focus();
         });
+
         let heightSelect = ge("#height", main);
         for (let i = 0; i <= 40; i++) {
             let option = document.createElement("option");
@@ -35226,6 +35240,7 @@ label.line-through:has(>#size) {
             ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
             main.focus();
         });
+
         let threadingSelect = ge("#threading", main);
         for (let i = 1; i <= 32; i++) {
             let option = document.createElement("option");
@@ -35306,6 +35321,15 @@ label.line-through:has(>#size) {
                 });
             });
         });
+        gae("#exclude-error", main).forEach(button => button.addEventListener("click", () => {
+            gae("img.error", main).forEach(img => {
+                img.previousElementSibling.checked = false;
+                img.previousElementSibling.classList.remove("select");
+                img.parentElement.classList.add("hide");
+            });
+            const selects = gae(".select+.image", main);
+            ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+        }));
         gae("#reload", main).forEach(button => button.addEventListener("click", () => {
             widthSelect.value = 0;
             heightSelect.value = 0;
@@ -35332,6 +35356,17 @@ label.line-through:has(>#size) {
                 isOpenFilter = false;
                 DownloadFn(srcs, text);
             });
+        });
+        let inputAEE = ge("#auto-exclude-error", main);
+        inputAEE.checked = config.aee == 0 ? false : true;
+        inputAEE.addEventListener("change", () => {
+            config.aee = inputAEE.checked ? 1 : 0;
+            saveConfig(config);
+            widthSelect.value = 0;
+            heightSelect.value = 0;
+            ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+            addLis();
+            main.focus();
         });
         let inputSize = ge("#size", main);
         if (config.noSize == 1) {
@@ -35403,14 +35438,14 @@ label.line-through:has(>#size) {
                         let endNum = Number(event.target.dataset.index);
                         if (startNum < endNum) {
                             for (let i = startNum; i <= endNum; i++) {
-                                if (inputs[i]?.parentElement?.style?.display !== "none") {
+                                if (!inputs[i]?.parentElement?.classList.contains("hide")) {
                                     inputs[i].checked = true;
                                     inputs[i].classList.add("select");
                                 }
                             }
                         } else if (startNum > endNum) {
                             for (let i = startNum; i >= endNum; i--) {
-                                if (inputs[i]?.parentElement?.style?.display !== "none") {
+                                if (!inputs[i]?.parentElement?.classList.contains("hide")) {
                                     inputs[i].checked = true;
                                     inputs[i].classList.add("select");
                                 }
@@ -35442,6 +35477,16 @@ label.line-through:has(>#size) {
                             getFileSize(img.src, p, inputSize.parentNode);
                         }
                     }
+                };
+                img.onerror = () => {
+                    if (config.aee == 1) {
+                        input.checked = false;
+                        input.classList.remove("select");
+                        li.classList.add("hide");
+                        const selects = gae(".select+.image", main);
+                        ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+                    }
+                    img.onerror = null;
                 };
                 loadImgList.push([simpleLoadImg, null, img]);
                 const p = document.createElement("p");
@@ -36029,10 +36074,9 @@ label.line-through:has(>#size) {
     z-index: 2147483647;
 }
 
-#FullPictureLoadOptions label,
-#FullPictureLoadOptions select {
+#FullPictureLoadOptions label {
     margin: 0px;
-    padding: ${isFirefox ? "0px 0px 0px 4px" : "0px"};
+    padding: 0px;
 }
 
 #FullPictureLoadOptions select {
@@ -36047,6 +36091,8 @@ label.line-through:has(>#size) {
     appearance: auto;
     background-image: unset;
     display: inline-block;
+    margin: 0px;
+    padding: ${isFirefox ? "0 0 0 4px" : "0px"};;
 }
 
 #FullPictureLoadOptions * {
@@ -36056,8 +36102,8 @@ label.line-through:has(>#size) {
     font-size: 14px;
     color: black;
     float: none;
-    line-height: 18px;
-    margin-bottom: 4px;
+    line-height: 22px;
+    margin-bottom: 0px;
     padding: 1px 4px;
     width: auto;
 }
@@ -36079,6 +36125,8 @@ label.line-through:has(>#size) {
 }
 
 #FullPictureLoadOptions input {
+    width: 14px;
+    margin: 2px 6px 0 6px;
     position: unset;
     opacity: 1;
     pointer-events: auto;
@@ -36110,15 +36158,15 @@ label.line-through:has(>#size) {
     <p id="title">${displayLanguage.str_68}</p>
 </div>
 <div id="iconDIV" style="width: 348px; display: flex;">
-    <input id="icon" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="icon" type="checkbox">
     <label>${displayLanguage.str_69}</label>
 </div>
 <div id="ShowEyeDIV" style="width: 348px; display: none;">
-    <input id="ShowEye" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="ShowEye" type="checkbox">
     <label>${displayLanguage.str_123}</label>
 </div>
 <div id="ShowFixedMenuDIV" style="width: 348px; display: flex;">
-    <input id="ShowFixedMenu" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="ShowFixedMenu" type="checkbox">
     <label>※${displayLanguage.str_117}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
@@ -36126,11 +36174,11 @@ label.line-through:has(>#size) {
     <select id="MsgPos"></select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="FavorNewTab" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="FavorNewTab" type="checkbox">
     <label>※${displayLanguage.str_50}</label>
 </div>
 <div id="AutoInsertImgDIV" style="width: 348px; display: flex;">
-    <input id="AutoInsertImg" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="AutoInsertImg" type="checkbox">
     <label>${displayLanguage.str_139}</label>
 </div>
 <div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 6px;">
@@ -36138,7 +36186,7 @@ label.line-through:has(>#size) {
     <select id="Zoom"></select>
 </div>
 <div id="viewModeDIV" style="width: 348px; display: flex;">
-    <input id="viewMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="viewMode" type="checkbox">
     <label>${displayLanguage.str_103}</label>
 </div>
 <div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 6px;">
@@ -36146,15 +36194,15 @@ label.line-through:has(>#size) {
     <select id="Column" title="${displayLanguage.str_81}"></select>
 </div>
 <div id="ShadowGalleryModeDIV" style="width: 348px; display: flex;">
-    <input id="ShadowGalleryMode" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="ShadowGalleryMode" type="checkbox">
     <label>${displayLanguage.str_140}</label>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="autoExport" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="autoExport" type="checkbox">
     <label>${displayLanguage.str_180}</label>
 </div>
 <div id="ShadowGalleryloopViewDIV" style="width: 348px; display: flex;">
-    <input id="loopView" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="loopView" type="checkbox">
     <label>${displayLanguage.str_182}</label>
 </div>
 <div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
@@ -36162,7 +36210,7 @@ label.line-through:has(>#size) {
     <select id="ShadowGalleryWheel"></select>
 </div>
 <div id="FancyboxDIV" style="width: 348px; display: flex;">
-    <input id="Fancybox" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="Fancybox" type="checkbox">
     <label>${displayLanguage.str_78}</label>
 </div>
 <div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
@@ -36178,15 +36226,15 @@ label.line-through:has(>#size) {
     <select id="FancyboxTransition"></select>
 </div>
 <div id="ComicDIV" style="width: 348px; display: none;">
-    <input id="Comic" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="Comic" type="checkbox">
     <label>${displayLanguage.str_76}</label>
 </div>
 <div id="DoubleDIV" style="width: 348px; display: flex;">
-    <input id="Double" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="Double" type="checkbox">
     <label>${displayLanguage.str_77}</label>
 </div>
 <div id="AutoDownloadDIV" style="width: 348px; display: flex;">
-    <input id="AutoDownload" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="AutoDownload" type="checkbox">
     <label>${displayLanguage.str_73}${displayLanguage.str_74}</label>
 </div>
 <div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
@@ -36198,7 +36246,7 @@ label.line-through:has(>#size) {
     <select id="Threading"></select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="Zip" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="Zip" type="checkbox">
     <label>${displayLanguage.str_71}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
@@ -36206,11 +36254,11 @@ label.line-through:has(>#size) {
     <select id="Extension"></select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="Convert" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="Convert" type="checkbox">
     <label>${displayLanguage.str_110}</label>
 </div>
 <div id="CustomDownloadVideoDIV" style="width: 348px; display: none;">
-    <input id="CustomDownloadVideo" type="checkbox" style="width: 14px; margin: 0 6px;">
+    <input id="CustomDownloadVideo" type="checkbox">
     <label>${displayLanguage.str_124}</label>
 </div>
 <button id="CancelBtn">${isOpenFilter ? displayLanguage.str_82.replace(" (Esc)", "") : displayLanguage.str_82}</button>
