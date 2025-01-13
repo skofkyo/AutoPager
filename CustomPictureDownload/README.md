@@ -1537,15 +1537,15 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://56.xiuren56.top/">秀人集</a>
+                    <a href="http://03.03xr.vip/">秀人集</a>
                 </td>
                 <td>永久域名Xiurenba.Com及(秀人集.com)，<a href="http://a.2xiu.vip/">导航页</a></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.20mn.vip/">爱美女网</a>
+                    <a href="https://m2.imn2.vip/">爱美女网</a>
                 </td>
-                <td>导航网址：20mn.vip 或 imn5.cc 目前可用 imn06.top (从06到09)</td>
+                <td>导航网址：a.20mm.vip 可从a到z 或 imn5.cc</td>
             </tr>
             <tr>
                 <td>
@@ -1609,22 +1609,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.kaka234.cc/">卡卡美女网</a>
                 </td>
                 <td>
-                    <a href="https://m.kaka234.cc/">m.kaka234.cc</a>，China IP限定
+                    <a href="https://www.pic88.cc/">高清图片吧</a>，<a href="https://www.ku138.cc/">美女写真网</a>，<a href="https://www.tu99663.cc/">美女图片网</a>，<a href="https://www.jutu1232.cc/">聚图美女网</a>，China IP限定
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.pic88.cc/">高清图片吧</a>
-                </td>
-                <td>
-                    <a href="https://m.pic88.cc/">m.pic88.cc</a>，Pic8.cc，China IP限定
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.ku138.cc/">美女写真网</a>
-                </td>
-                <td> <a href="https://m.ku138.cc/">m.ku138.cc</a>，China IP限定</td>
             </tr>
             <tr>
                 <td>
@@ -1657,12 +1643,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://fulitu.me/">福利图</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.wemimao.vip/">微密猫</a>
                 </td>
                 <td></td>
             </tr>
@@ -1730,7 +1710,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.okxx.de/">秀图湾</a>
                 </td>
-                <td></td>
+                <td><a href="https://xiusz.com/">xiusz.com</a></td>
             </tr>
             <tr>
                 <td>
@@ -1741,12 +1721,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://girlsteam.club/">女神部落</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.haotuwu.com/">好圖屋</a>
                 </td>
                 <td></td>
             </tr>
@@ -1933,7 +1907,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xiuwo.net/">秀窝</a>
                 </td>
                 <td>
-                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站45個</a>
+                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站49個</a>
                 </td>
             </tr>
             <tr>
