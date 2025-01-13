@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.20
+// @version            2.12.21
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -830,7 +830,7 @@
         category: "nsfw2"
     }, {
         name: "秀人集",
-        host: ["www.xiuren51.top"],
+        host: ["03.03xr.vip"],
         url: {
             e: "//div[@class='item_info']//a[text()='秀人集']",
             p: /\/\w+\/\d+\.html$/
@@ -922,7 +922,7 @@
         category: "nsfw1"
     }, {
         name: "爱美女网",
-        host: ["www.20mn.top"],
+        host: ["m2.imn2.vip"],
         url: {
             e: "//section[@class='container']//a[text()='爱美女网']",
             p: /\/\w+\/\w+\.html$/
@@ -1032,11 +1032,13 @@
         hide: ".center:has(>.dibu1),.center:has(>.dibu2)",
         category: "nsfw1"
     }, {
-        name: "高清图片吧M/美女写真网M",
-        host: ["m.pic88.cc", "m.ku138.cc"],
+        name: "高清图片吧M/美女写真网M/美女图片网M/聚图美女网M",
+        host: ["m.pic88.cc", "m.ku138.cc", "m.tu99663.cc", "m.jutu1232.cc"],
         reg: [
             /^https?:\/\/m\.pic88\.cc\/\w+\/\d+\/\d+\.html$/,
-            /^https?:\/\/m\.ku138\.cc\/\w+\/\d+\/\d+\.html$/
+            /^https?:\/\/m\.ku138\.cc\/\w+\/\d+\/\d+\.html$/,
+            /^https?:\/\/m\.tu\d+\.cc\/\w+\/\d+\/\d+\.html$/,
+            /^https?:\/\/m\.jutu\d+\.cc\/\w+\/\w+\/\d+\.html$/
         ],
         box: [".PsBox", 2],
         imgs: ".ArticleImageBox>img",
@@ -1056,6 +1058,48 @@
         insertImg: [".content", 2],
         customTitle: () => fn.ge("meta[name=keywords]").content,
         hide: ".center:has(>.dibu1),.center:has(>.dibu2)",
+        category: "nsfw1"
+    }, {
+        name: "美女图片网",
+        host: ["www.tu99663.cc"],
+        url: {
+            t: "tu963.com",
+            p: "/y/"
+        },
+        imgs: () => {
+            let max;
+            try {
+                [max] = fn.gt(".articleV4Page a").match(/\d+/);
+            } catch {
+                max = 1;
+            }
+            return fn.getImg(".content img", max, 9);
+        },
+        button: [4],
+        insertImg: [".content", 2],
+        customTitle: ".articleV4Tit",
+        hide: ".dibu1,.dibu2",
+        category: "nsfw1"
+    }, {
+        name: "聚图美女网",
+        host: ["www.jutu1232.cc"],
+        url: {
+            t: "jutu123.com",
+            p: /^\/huhu\/soso\d+\/\d+\.html$/
+        },
+        imgs: () => {
+            let max;
+            try {
+                [max] = fn.gt(".pages>a").match(/\d+/);
+            } catch {
+                max = 1;
+            }
+            return fn.getImg(".content img", max, 9);
+        },
+        button: [4],
+        insertImg: [".content", 2],
+        customTitle: "//div[@class='content']/preceding-sibling::div[1]/h9",
+        hide: ".link2",
         category: "nsfw1"
     }, {
         name: "美女目录网 列表模式",
@@ -4295,30 +4339,6 @@
         next: "//a[div[@class='pager_entry-box next-justify']]",
         prev: "//a[div[@class='pager_entry-image-prev']]",
         customTitle: "#entry-title",
-        category: "nsfw1"
-    }, {
-        name: "好圖屋",
-        host: ["www.haotuwu.com", "m.haotuwu.com"],
-        reg: /^https?:\/\/(www|m)\.haotuwu\.com\/\w+\/\d+(\/page\/\d+)?(\.html)?$/,
-        include: ".suoyou",
-        init: () => {
-            let url = location.href;
-            if (/\/page\/\d+/.test(url)) location.href = location.href.replace(/\/page\/\d+/, "");
-            let a = fn.ge("#showimg a:has(img),.img-box a:has(img)");
-            if (a) a.outerHTML = a.innerHTML;
-        },
-        imgs: () => {
-            let [, max] = fn.gt(".suoyou").match(/\d+\/(\d+)/);
-            let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "/page/" + (i + 1) + ".html")
-            return fn.getImgA("#showimg img,.img-box img", links, 2);
-        },
-        button: [4],
-        insertImg: ["#showimg,.img-box", 2],
-        autoDownload: [0],
-        next: "//div[contains(text(),'上一篇')]/a | //span[contains(text(),'上一篇')]/following-sibling::a[1]",
-        prev: "//div[contains(text(),'下一篇')]/a | //span[contains(text(),'下一篇')]/following-sibling::a[1]",
-        customTitle: ".showtitle>h2,.imgTitle-name",
-        hide: "#imgshow .flow-box:nth-child(n+1):nth-child(-n+2),union",
         category: "nsfw1"
     }, {
         name: "秀色女神",
@@ -9581,7 +9601,7 @@
         init: async () => {
             addNewTabViewButton();
             const get = async () => {
-                let imgs = fn.gae(".image>img:not(.get)");
+                let imgs = fn.gae(".image img:not(.get)");
                 if (imgs.length > 0) {
                     imgs.forEach(img => img.classList.add("get"));
                     fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
@@ -26956,7 +26976,7 @@ if ("xx" in window) {
             if (src.startsWith("//")) {
                 src = location.protocol + src;
             }
-            if (src.startsWith("data:")) {
+            if (src.startsWith("data:image/svg+xml,<svg") || src.startsWith("data:image/svg+xml;utf8,<svg")) {
                 src = fn.dataURLtoBlobURL(src);
             }
             if (/^\/[^\/]+/.test(src)) {
@@ -29449,7 +29469,7 @@ if ("xx" in window) {
                     try {
                         dataurl = decodeURIComponent(dataurl);
                     } catch {}
-                    let svg = dataurl.split(",")[1].replaceAll("&quot;", '"').replaceAll('\\"', '"');;
+                    let svg = dataurl.split(",")[1].replaceAll("&quot;", '"').replaceAll('\\"', '"');
                     //console.log(svg);
                     return URL.createObjectURL(new Blob([svg], {
                         type: "image/svg+xml"
@@ -34641,16 +34661,19 @@ img.horizontal {
         if (full_srcs.length < 1) return (isOpenFilter = false);
         let srcs;
         const config = getConfig();
-        const exclude_ex_config = _GM_getValue("exclude_ex_config", {
+        const extensions = {
             jpg: 0,
             png: 0,
             gif: 0,
             webp: 0,
             bmp: 0,
             svg: 0,
+            ico: 0,
             avif: 0,
             tiff: 0
-        });
+        };
+        let exclude_ex_config = _GM_getValue("exclude_ex_config", extensions);
+        exclude_ex_config = Object.assign(extensions, exclude_ex_config);
         let threading = Number(config.threading);
         let backgroundColor = config.backgroundColor;
         let showSize = config.showSize;
@@ -34660,42 +34683,47 @@ img.horizontal {
             if (Object.values(exclude_ex_config).some(v => v == 1)) {
                 srcs = full_srcs.filter(src => {
                     if (exclude_ex_config.jpg == 1) {
-                        if (/\.jpe?g/i.test(src)) {
+                        if (/\.jpe?g/i.test(src) || src.startsWith("data:image/jpeg")) {
                             return false;
                         }
                     }
                     if (exclude_ex_config.png == 1) {
-                        if (/\.png/i.test(src)) {
+                        if (/\.png/i.test(src) || src.startsWith("data:image/png")) {
                             return false;
                         }
                     }
                     if (exclude_ex_config.gif == 1) {
-                        if (/\.gif/i.test(src)) {
+                        if (/\.gif/i.test(src) || src.startsWith("data:image/gif")) {
                             return false;
                         }
                     }
                     if (exclude_ex_config.webp == 1) {
-                        if (/\.webp/i.test(src)) {
+                        if (/\.webp/i.test(src) || src.startsWith("data:image/webp")) {
                             return false;
                         }
                     }
                     if (exclude_ex_config.bmp == 1) {
-                        if (/\.bmp/i.test(src)) {
+                        if (/\.bmp/i.test(src) || src.startsWith("data:image/bmp")) {
                             return false;
                         }
                     }
                     if (exclude_ex_config.svg == 1) {
-                        if (/\.svg/i.test(src)) {
+                        if (/\.svg/i.test(src) || src.startsWith("data:image/svg")) {
+                            return false;
+                        }
+                    }
+                    if (exclude_ex_config.ico == 1) {
+                        if (/\.ico/i.test(src) || src.startsWith("data:image/x-icon")) {
                             return false;
                         }
                     }
                     if (exclude_ex_config.avif == 1) {
-                        if (/\.avif/i.test(src)) {
+                        if (/\.avif/i.test(src) || src.startsWith("data:image/avif")) {
                             return false;
                         }
                     }
                     if (exclude_ex_config.tiff == 1) {
-                        if (/\.tiff?/i.test(src)) {
+                        if (/\.tiff?/i.test(src) || src.startsWith("data:image/tiff")) {
                             return false;
                         }
                     }
@@ -38108,7 +38136,7 @@ a[data-fancybox]:hover {
         }
     }
 
-    const defaultFavor = "main-background-color,#fafafa\ntext-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n美女图册,https://www.mntuce.com/\n六色美图,https://www.06se.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nエロ画像まとめ,https://geinou-nude.com/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/\n色图,https://setu.lol/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
+    const defaultFavor = "main-background-color,#fafafa\ntext-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nSpace Miss,https://spacemiss.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n美女图册,https://www.mntuce.com/\n六色美图,https://www.06se.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nエロ画像まとめ,https://geinou-nude.com/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/\n涩图社,https://setushe.pics/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
 
     let FavorOpenInNewTab = _GM_getValue("FavorOpenInNewTab", 0);
 
