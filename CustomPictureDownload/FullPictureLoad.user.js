@@ -2691,20 +2691,6 @@
         }),
         category: "nsfw1"
     }, {
-        name: "PutMega",
-        host: ["www.putmega.com"],
-        link: "https://www.putmega.com/explore/recent/?list=albums&sort=date_desc&page=1",
-        reg: /^https?:\/\/(www\.)?putmega\.com\/album\//,
-        imgs: async () => {
-            await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
-            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img").reverse();
-            return thumbnailSrcArray.map(e => e.replace(".md.", "."));
-        },
-        button: [4],
-        insertImg: ["#list-most-recent", 3],
-        customTitle: () => fn.title(" - PutMega"),
-        category: "nsfw1"
-    }, {
         name: "PutMega 分類自動翻頁",
         reg: /^https?:\/\/(www\.)?putmega\.com\/explore\//,
         autoPager: {
@@ -2715,8 +2701,9 @@
         },
         category: "autoPager"
     }, {
-        name: "ImgBB/IMG.Kiwi/JPG5/NF Host",
+        name: "PutMega/ImgBB/IMG.Kiwi/JPG5/NF Host",
         links: [
+            "https://www.putmega.com/explore/recent/?list=albums&sort=date_desc&page=1",
             "https://shiki17chen.imgbb.com/albums",
             "https://2920215920.imgbb.com/albums",
             "https://ozpin.imgbb.com/albums",
@@ -2726,7 +2713,7 @@
             "https://nfhost.me/insta_girls/albums"
         ],
         url: {
-            h: ["ibb.co", "img.kiwi", "jpg5.su", "nfhost.me"],
+            h: [/putmega\.com$/, "ibb.co", "img.kiwi", "jpg5.su", "nfhost.me"],
             p: ["/album/", "/a/"],
             e: "//script[contains(text(),'PF.obj.config.auth_token')]"
         },
@@ -2735,10 +2722,8 @@
             let id;
             if (fn.lh === "ibb.co") {
                 id = fn.lp.split("/").at(-1);
-            } else if (["img.kiwi", "jpg5.su", "nfhost.me"].some(h => fn.lh === h)) {
-                id = fn.lp.split(".").at(-1);
             } else {
-                return [];
+                id = fn.lp.split(".").at(-1);
             }
             let code = fn.gst("PF.obj.config.auth_token");
             let [, auth_token] = code.match(/PF\.obj\.config\.auth_token[\s="]+(\w+)/);
@@ -2767,7 +2752,7 @@
         },
         button: [4],
         insertImg: ["#content-listing-tabs", 3],
-        category: "nsfw1"
+        category: "nsfw2"
     }, {
         name: "JPG5/anh.im/NF Host",
         links: [
