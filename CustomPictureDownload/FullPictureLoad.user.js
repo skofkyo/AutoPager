@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2.12.21
+// @version            2025.1.14
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2715,37 +2715,67 @@
         },
         category: "autoPager"
     }, {
-        name: "ImgBB",
-        host: ["ibb.co"],
-        reg: /^https?:\/\/ibb\.co\/album\//,
+        name: "ImgBB/IMG.Kiwi/JPG5/NF Host",
         links: [
             "https://shiki17chen.imgbb.com/albums",
             "https://2920215920.imgbb.com/albums",
-            "https://ozpin.imgbb.com/albums"
-        ],
-        imgs: async () => {
-            await fn.getNP("#list-most-recent>.pad-content-listing", ".pagination-next>a[href]");
-            thumbnailSrcArray = fn.getImgSrcArr(".list-item-image img").reverse();
-            return fn.getImgA("link[rel=image_src]", ".list-item-image a").then(arr => arr.reverse());
-        },
-        button: [4],
-        insertImg: ["#content-listing-tabs", 3],
-        customTitle: () => fn.dt({
-            d: "— ImgBB"
-        }),
-        category: "nsfw1"
-    }, {
-        name: "JPG5/anh.im/IMG.Kiwi/NF Host",
-        links: [
+            "https://ozpin.imgbb.com/albums",
+            "https://img.kiwi/36_chambers/albums",
             "https://jpg5.su/xelszy/albums",
             "https://jpg5.su/rainbowsmile/albums",
-            "https://anh.im/bigradish/albums",
-            "https://img.kiwi/36_chambers/albums",
             "https://nfhost.me/insta_girls/albums"
         ],
         url: {
-            h: ["jpg5.su", "anh.im", "img.kiwi", "nfhost.me"],
+            h: ["ibb.co", "img.kiwi", "jpg5.su", "nfhost.me"],
             p: ["/album/", "/a/"],
+            e: "//script[contains(text(),'PF.obj.config.auth_token')]"
+        },
+        imgs: () => {
+            fn.showMsg(displayLanguage.str_05, 0);
+            let id;
+            if (fn.lh === "ibb.co") {
+                id = fn.lp.split("/").at(-1);
+            } else if (["img.kiwi", "jpg5.su", "nfhost.me"].some(h => fn.lh === h)) {
+                id = fn.lp.split(".").at(-1);
+            } else {
+                return [];
+            }
+            let code = fn.gst("PF.obj.config.auth_token");
+            let [, auth_token] = code.match(/PF\.obj\.config\.auth_token[\s="]+(\w+)/);
+            let params = new URLSearchParams({
+                auth_token,
+                pathname: fn.lp,
+                action: "get-album-contents",
+                albumid: id
+            }).toString();
+            return fetch("/json", {
+                "headers": {
+                    "accept": "application/json, text/javascript, */*; q=0.01",
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "body": params,
+                "method": "POST"
+            }).then(res => res.json()).then(json => {
+                fn.hideMsg();
+                customTitle = fn.dt({
+                    t: json.album.name
+                });
+                thumbnailSrcArray = json.contents.map(e => e.thumb.url);
+                return json.contents.map(e => e.url);
+            });
+        },
+        button: [4],
+        insertImg: ["#content-listing-tabs", 3],
+        category: "nsfw1"
+    }, {
+        name: "JPG5/anh.im/NF Host",
+        links: [
+            "https://anh.im/bigradish/albums"
+        ],
+        url: {
+            h: ["anh.im"],
+            p: ["/album/"],
             e: "#content-listing-tabs"
         },
         imgs: async () => {
@@ -2756,7 +2786,7 @@
         button: [4],
         insertImg: ["#content-listing-tabs", 3],
         customTitle: () => fn.dt({
-            d: ["— JPG5", "— anh.im", " - IMG.Kiwi", " - NF Host"]
+            d: ["— anh.im"]
         }),
         hide: ".ad-banner",
         category: "nsfw2"
@@ -9284,6 +9314,14 @@
         observerClick: ".adde_modal_detector-action-btn-close",
         category: "ad"
     }, {
+        name: "GamEYE",
+        url: {
+            h: "gameye.ru"
+        },
+        imgs: ".wp-block-gallery img",
+        customTitle: "section h1",
+        category: "nsfw1"
+    }, {
         name: "Фото идеи и картинки",
         url: {
             h: "fotoslava.ru",
@@ -11162,6 +11200,7 @@
         include: ".postdetails",
         init: () => {
             document.addEventListener("click", event => {
+                cancelDefault(event);
                 if (event.target.className === "postdetails") {
                     let links = [];
                     if (event.target.querySelector("a[href$='.jpg']:not([href^='http://imagetwist.com/'])")) {
@@ -11196,6 +11235,7 @@
         reg: () => !hasTouchEvent && /^https?:\/\/kitty-kats\.net\/threads\//i.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
+                cancelDefault(event);
                 if (event.target.className === "message-cell message-cell--user") {
                     let links = [];
                     if (event.target.parentNode.querySelector("a[href$='.jpg']:not([href^='http://imagetwist.com/'])")) {
@@ -11231,6 +11271,7 @@
         reg: () => !hasTouchEvent && /^https?:\/\/teenphotos\.forumes\.ru\/viewtopic\.php\?id=\d+/.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
+                cancelDefault(event);
                 if (event.target.className === "container") {
                     let links = [...event.target.querySelectorAll(`
                     a[href^='https://imgspice.com/'],
@@ -11261,6 +11302,7 @@
         reg: () => !hasTouchEvent && /^https?:\/\/xonly\d?\.com\/index\.php\?topic=/.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
+                cancelDefault(event);
                 if (event.target.className === "post_wrapper") {
                     let links = [...event.target.querySelectorAll(`
                     a[href^='https://imgspice.com/'],
@@ -16629,6 +16671,34 @@
         endColor: "white",
         customTitle: () => fn.title("|", 1),
         css: "body{overflow:unset!important}",
+        category: "hcomic"
+    }, {
+        name: "Hitomi.la",
+        url: {
+            h: "hitomi.la",
+            e: "#read-online-button"
+        },
+        box: [".content", 2],
+        imgs: () => {
+            fn.showMsg(displayLanguage.str_05, 0);
+            let url = fn.gu("#read-online-button");
+            return fn.iframeVar(url, "galleryinfo").then(w => {
+                fn.hideMsg();
+                const {
+                    galleryinfo,
+                    url_from_url_from_hash,
+                    our_galleryinfo
+                } = w;
+                customTitle = fn.dt({
+                    t: galleryinfo.title
+                });
+                thumbnailSrcArray = fn.gae(".gallery-preview img").map(e => e.dataset.src ?? e.src);
+                return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo.id, our_galleryinfo[i], "webp", undefined, "a"));
+            });
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
         category: "hcomic"
     }, {
         name: "HO5HO",
@@ -25553,6 +25623,10 @@ if ("xx" in window) {
             return false;
         }
     };
+    const cancelDefault = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    };
     const _GM_xmlhttpRequest = (() => isFn(GM_xmlhttpRequest) ? GM_xmlhttpRequest : GM.xmlHttpRequest)();
     const _GM_openInTab = (() => isFn(GM_openInTab) ? GM_openInTab : GM.openInTab)();
     const _GM_getValue = (() => isFn(GM_getValue) ? GM_getValue : GM.getValue)();
@@ -27943,6 +28017,7 @@ if ("xx" in window) {
                 div.append(a);
             }
             div.addEventListener("click", event => {
+                cancelDefault(event);
                 if (event.target.tagName === "DIV") {
                     fn.toggleAutoPager();
                 }
@@ -28350,7 +28425,7 @@ if ("xx" in window) {
                     className: "FullPictureLoadPageButtonTop",
                     text: displayLanguage.str_128,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         createFavorShadowElement();
                     }
                 }, {
@@ -28358,7 +28433,7 @@ if ("xx" in window) {
                     className: "FullPictureLoadPageButtonTop",
                     text: displayLanguage.str_141,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         createShadowGallery();
                     }
                 }, {
@@ -28366,7 +28441,7 @@ if ("xx" in window) {
                     className: "FullPictureLoadPageButtonTop",
                     text: hasTouchEvent ? displayLanguage.str_107 : displayLanguage.str_107 + ` | [ ${noVideoNum}P ]`,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         fastDownloadSwitch = true;
                         DownloadFn();
                     }
@@ -28375,7 +28450,7 @@ if ("xx" in window) {
                     className: "FullPictureLoadPageButtonTop",
                     text: displayLanguage.str_106,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         newTabView();
                     }
                 }, {
@@ -28383,7 +28458,7 @@ if ("xx" in window) {
                     className: "FullPictureLoadPageButtonBottom",
                     text: displayLanguage.str_85,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         createPictureLoadOptionsShadowElement();
                     }
                 }, {
@@ -28391,7 +28466,7 @@ if ("xx" in window) {
                     className: "FullPictureLoadPageButtonBottom",
                     text: displayLanguage.str_86,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         toggleImgMode();
                     }
                 }, {
@@ -28400,13 +28475,13 @@ if ("xx" in window) {
                     text: displayLanguage.str_87,
                     title: displayLanguage.str_136,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         fn.clearAllTimer(2);
                         reduceZoom();
                     },
                     mfn: event => {
                         if (event.button == 2) {
-                            event.preventDefault();
+                            cancelDefault(event);
                             increaseZoom();
                         }
                     }
@@ -28415,7 +28490,7 @@ if ("xx" in window) {
                     className: "FullPictureLoadPageButtonBottom",
                     text: displayLanguage.str_88,
                     cfn: event => {
-                        event.preventDefault();
+                        cancelDefault(event);
                         fn.clearAllTimer(2);
                         cancelZoom();
                     }
@@ -28427,7 +28502,7 @@ if ("xx" in window) {
                         className: "FullPictureLoadPageButtonTop",
                         text: displayLanguage.str_105,
                         cfn: event => {
-                            event.preventDefault();
+                            cancelDefault(event);
                             copyImgSrcTextB();
                         }
                     };
@@ -33189,7 +33264,8 @@ img.horizontal {
             });
             if (options.fancybox != 1) {
                 imgElements.forEach(img => {
-                    img.onclick = (event) => {
+                    img.onclick = event => {
+                        cancelDefault(event);
                         imgViewIndex = Number(img.dataset.index);
                         currentReferenceElement = event.target;
                         if (config.ViewMode != 4) {
@@ -33276,7 +33352,8 @@ img.horizontal {
                 next.dataset.index = imgElements.length;
                 next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）`;
                 mainElement.append(next);
-                next.addEventListener("click", () => {
+                next.addEventListener("click", event => {
+                    cancelDefault(event);
                     next.style.backgroundColor = "gray";
                     return setTimeout(() => (location.href = nextLink), 200);
                 });
@@ -34291,7 +34368,8 @@ img.horizontal {
             });
             if (options.fancybox != 1) {
                 imgElements.forEach(img => {
-                    img.onclick = (event) => {
+                    img.onclick = event => {
+                        cancelDefault(event);
                         imgViewIndex = Number(img.dataset.index);
                         currentReferenceElement = event.target;
                         if (config.ViewMode != 4) {
@@ -34308,6 +34386,7 @@ img.horizontal {
             if (options.fancybox == 1) {
                 gae("img", mainElement).forEach(img => {
                     img.addEventListener("click", (event) => {
+                        cancelDefault(event);
                         const Fancybox = win.Fancybox;
                         if (Fancyboxl10nV5() != "EN") {
                             Fancybox.defaults.l10n = Fancyboxl10nV5();
@@ -34388,7 +34467,8 @@ img.horizontal {
                 next.dataset.index = imgElements.length;
                 next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）`;
                 mainElement.append(next);
-                next.addEventListener("click", () => {
+                next.addEventListener("click", event => {
+                    cancelDefault(event);
                     next.style.backgroundColor = "gray";
                     return setTimeout(() => (location.href = nextLink), 200);
                 });
@@ -35083,10 +35163,6 @@ label.line-through:has(>#size) {
 
         //參考https://syj0905.github.io/drag-drop-demo/
         //還原成原生JavaScript寫法
-        const cancelDefault = (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-        };
 
         const drag_sort_start = (event) => {
             const dragEle = event.target.closest("li");
@@ -35125,6 +35201,7 @@ label.line-through:has(>#size) {
         let moreE = ge("#more", main);
         let moreMenu = ge("#more-menu", main);
         moreE.addEventListener("click", (event) => {
+            cancelDefault(event);
             if (moreE.classList.contains("active")) {
                 moreE.classList.remove("active");
                 moreMenu.classList.remove("show");
@@ -35157,6 +35234,7 @@ label.line-through:has(>#size) {
         let excludeE = ge("#exclude", main);
         let excludeList = ge("#excludeList", main);
         excludeE.addEventListener("click", (event) => {
+            cancelDefault(event);
             if (excludeE.classList.contains("active")) {
                 excludeE.classList.remove("active");
                 excludeE.firstChild.textContent = displayLanguage.str_183 + " ▼";
@@ -35175,7 +35253,7 @@ label.line-through:has(>#size) {
                 li.classList.add("active");
             }
             li.addEventListener("click", (event) => {
-                event.stopPropagation();
+                cancelDefault(event);
                 if (li.classList.contains("active")) {
                     li.classList.remove("active");
                     Reflect.set(exclude_ex_config, k, 0);
@@ -35293,31 +35371,44 @@ label.line-through:has(>#size) {
             ge("#inputTitle", main).value = await getTitle(siteData.customTitle);
         }
         gae("#close", main).forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", event => {
+                cancelDefault(event);
                 fn.remove("#overflowYHidden");
                 shadowElement.remove();
                 isOpenFilter = false;
             });
         });
-        gae("#settings", main).forEach(button => button.addEventListener("click", () => createPictureLoadOptionsShadowElement()));
-        gae("#gallery", main).forEach(button => button.addEventListener("click", () => newTabView()));
-        gae("#favor", main).forEach(button => button.addEventListener("click", () => createFavorShadowElement()));
+        gae("#settings", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            createPictureLoadOptionsShadowElement();
+        }));
+        gae("#gallery", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            newTabView();
+        }));
+        gae("#favor", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            createFavorShadowElement();
+        }));
         gae("#copy", main).forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", event => {
+                cancelDefault(event);
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
                 if (srcs.length == 0) return;
                 copyImgSrcTextB(srcs);
             });
         });
         gae("#export", main).forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", event => {
+                cancelDefault(event);
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
                 if (srcs.length == 0) return;
                 exportImgSrcText(srcs);
             });
         });
         gae("#select-all", main).forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", event => {
+                cancelDefault(event);
                 gae("input.check", main).forEach(input => {
                     input.checked = true;
                     input.classList.add("select");
@@ -35326,7 +35417,8 @@ label.line-through:has(>#size) {
             });
         });
         gae("#unselect-all", main).forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", event => {
+                cancelDefault(event);
                 gae("input.check", main).forEach(input => {
                     input.checked = false;
                     input.classList.remove("select");
@@ -35335,7 +35427,8 @@ label.line-through:has(>#size) {
             });
         });
         gae("#reverse-selection", main).forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", event => {
+                cancelDefault(event);
                 gae("input.check", main).forEach(input => {
                     if (input.checked) {
                         input.checked = false;
@@ -35349,7 +35442,8 @@ label.line-through:has(>#size) {
                 });
             });
         });
-        gae("#exclude-error", main).forEach(button => button.addEventListener("click", () => {
+        gae("#exclude-error", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
             gae("img.error", main).forEach(img => {
                 img.previousElementSibling.checked = false;
                 img.previousElementSibling.classList.remove("select");
@@ -35358,7 +35452,8 @@ label.line-through:has(>#size) {
             const selects = gae(".select+.image", main);
             ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
         }));
-        gae("#reload", main).forEach(button => button.addEventListener("click", () => {
+        gae("#reload", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
             widthSelect.value = 0;
             heightSelect.value = 0;
             ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
@@ -35366,7 +35461,8 @@ label.line-through:has(>#size) {
         }));
         let combineDownloadButton = ge("#combineDownload", main);
         if (combineDownloadButton) {
-            combineDownloadButton.addEventListener("click", () => {
+            combineDownloadButton.addEventListener("click", event => {
+                cancelDefault(event);
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
                 if (srcs.length == 0) return;
                 combineDownloadSwitch = true;
@@ -35375,7 +35471,8 @@ label.line-through:has(>#size) {
             });
         }
         gae("#download", main).forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", event => {
+                cancelDefault(event);
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
                 if (srcs.length == 0) return;
                 const text = ge("#inputTitle", main).value;
@@ -35460,7 +35557,7 @@ label.line-through:has(>#size) {
                     const selects = gae(".select+.image", main);
                     ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
                 };
-                input.onclick = (event) => {
+                input.onclick = event => {
                     if ((event.ctrlKey || event.altKey || event.shiftKey) && isEle(startInput)) {
                         let startNum = Number(startInput.dataset.index);
                         let endNum = Number(event.target.dataset.index);
@@ -35585,7 +35682,10 @@ label.line-through:has(>#size) {
         img.style.bottom = "24px";
         img.style.right = "24px";
         img.oncontextmenu = () => false;
-        img.addEventListener("click", () => newTabView());
+        img.addEventListener("click", event => {
+            cancelDefault(event);
+            newTabView();
+        });
         document.body.append(img);
         eventViewImg = img;
         let menuDiv = document.createElement("div");
@@ -35595,7 +35695,8 @@ label.line-through:has(>#size) {
         const menuObj = [{
             id: "FullPictureLoadCaptureNum",
             text: "0",
-            cfn: async () => {
+            cfn: async event => {
+                cancelDefault(event);
                 let srcArr;
                 if (siteData.category === "lazyLoad") {
                     srcArr = captureSrcArray;
@@ -35634,6 +35735,7 @@ label.line-through:has(>#size) {
         eventMenu = menuDiv;
 
         const downEvent = (event) => {
+            cancelDefault(event);
             const obj = getXY(event);
             viewImgDown = true;
             startX = obj.x;
@@ -35644,7 +35746,7 @@ label.line-through:has(>#size) {
 
         const moveEvent = (event) => {
             if (!viewImgDown) return;
-            event.preventDefault();
+            cancelDefault(event);
             const obj = getXY(event);
             isDragging = true;
             const dx = obj.x - startX;
@@ -35738,18 +35840,19 @@ label.line-through:has(>#size) {
         img.style.left = "24px";
         img.setAttribute("title", displayLanguage.str_47);
         img.oncontextmenu = () => false;
-        img.addEventListener("click", () => {
+        img.addEventListener("click", event => {
+            cancelDefault(event);
             fastDownloadSwitch = false;
             //DownloadFn();
             createFilterDownload();
         });
-        img.addEventListener("mousedown", (event) => {
+        img.addEventListener("mousedown", event => {
             if (event.button == 1) {
-                event.preventDefault();
+                cancelDefault(event);
                 exportImgSrcText();
             }
             if (event.button == 2) {
-                event.preventDefault();
+                cancelDefault(event);
                 copyImgSrcText();
             }
         });
@@ -35762,7 +35865,10 @@ label.line-through:has(>#size) {
             img2.style.display = "none";
             img2.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA7BJREFUWEetl29olVUYwH/n3jvvGpp/WtNlIdoK1MJazBwO0/mlZqFgRCgGfZC7TTbwixqbMnPiHIIwmdd9MYiMhD4o6gqirenGsoF/MLfaahFz3a1Shlv7e9/3yHnnxXvv3vee96574P3wcp4/v/M8z3nOOQK3o67Oj2+0EMlWPKxEkg3Wp0YIQQiTLgQXCWc0UV4+4ca00Ao1HM3G8B0CuROYp5WfFhgGcQ5v+FMCFaFEOs4An1WlM+6vRIq9QIZLx/Fiowh5kvSJaj6uGrezYQ9QX7sEYV4A3pyl43i160jPNvbsG4ifmAlwquZVfDQieV7nfJE/3RJ5MGG7uFh1wT3CFFF24E70RCyAWrnH7NA5V0pH8gooW51r2Tp19wYHO1qROmIFYXryoiPxBEDlfCz9B13YlULd+s0EVq6JcdfQdZvytu/1EHCdp8Y3RmriCUDwWDVSVOgq1s55RMc1hJBHKfmkUulNA1hbzftbomp3Wnk8sEuIUbxGjtqi0wCnjwdBFjut3q3z5CIhzlC6v0Qw3eH+cWoyyTpPAmKYcMazgtM17wCNTk0iUc51Re8iHUWC+pozCAJ2DeL/OHcVCUmDIFjTgmRDPMDB3HzUl4qxq7mR87//MtOU4KpKQTfwUvTsgjl+QrtK8Qr9WeUGsG2gn02Xz9uJ9iiAYWBu9OwbmYtp36YOv9SM/8JTZH1ez5RpxhscsQWYP8fPnzsCZPh8MQph0+THv0MULFlqS9Y60M+6rGx8Hk/M/Nlf71B87Ts7HQtgRgqUZNkruZxYt/Fxp4JJ0+Cj5m/IeXoB1XkFtgCVHa10Dt2ndu0GcuYvtGR+fvAvO5uu0DV03yEFDkWopNVqtix70QrdFz2d9D4cYt+atQkBam//ZEFvXrqMCcPg2sA95zxaReiwDZ203AC4rhxrGyZoRHaGUgoARdpWHA+RQoDHrVh50BxG0RApBAhSeqDU9XEcgUgRwAhpRg67KwaTupAoiD2rX+dk/ibbOtvb3kz93Zv6GhTiECX7jyjBpK9k+Yufo+W9D22dvHXpK9oH/9IAiDYyxwr5oGoyFkD9ubyUfln4Lu+veDnG0de93exouqxz3kdaOE+FPiI4q2u5OqRKVr3G2y8st+x82/cHwc5bGDLRvVj0Ycgtia/lEayUP0xEG2nh7dErd45AZCY1T7MRhKjlmbHjkZzH50h/4M/ucfoQOEeacdhu1dEQeoCItPPzXCVenTj9SNmJ4BLeRS0EAlP6/QiPAMXOipDq4W0VAAAAAElFTkSuQmCC";
             img2.setAttribute("title", displayLanguage.str_62);
-            img2.addEventListener("click", () => goToImg("first"));
+            img2.addEventListener("click", event => {
+                cancelDefault(event);
+                goToImg("first");
+            });
             document.body.append(img2);
             let img3 = new Image();
             img3.id = "FullPictureLoadGoToLastImage";
@@ -35770,10 +35876,13 @@ label.line-through:has(>#size) {
             img3.style.display = "none";
             img3.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA6lJREFUWEfFl21IlWcYx3/3c46vayG1lq5i5FablrQFbon2oiOYzlgfgsY2gvrinCQEwzayklI69SVQPMdDH4KJMkZBoxf6kpkYVjK32FqgtiGbs8xczeF0O5477ucknZfnzaPUDc+n57ru/++67uu6XwROh9+fwNToRiRbECIbWAIsBQQwhGCIILcRfEcgtY3KykknUytn63GibjH/uw4CnwDz7cyf/B8D0YIrcIiyfUNWPuYA39Yk8iBlL1JWAfMcCkebjSPkcZIna9lZM2E0hzGAHrX7NMj8OIWj3a4jta1UVN2N/hEL0ODJwSXOg1xmJu4SgvLst3h/2XLd5OLvv+H75UempDTnFfxBgBJ2f/lTuFEkQCjybitx5dxaVMq2zJURYqd+7eXjtnPWCVMQQS03PBNPAdSaj6S02aU9b/ErXNnykaHQxrPf0HXvT7tVu07KxKbpmngK4Du6HykP2XlXrHqb43mFhmZ7ui7TeOsHuylAyDrKv6pWhiGAUKv1O6n2qjXvUJtbYChS3d3JsZs37AFgHNfU66pFQwBejxcod+I5RwAq9iY+31suqK9Pwj1+H3jx2QIwRiB1kcDrKQYuOBFXNnOXAV2xRNDoaUJQ9lwAJH6Bz3MFyQYzgPXpS0lyubg0OIDaZpxkIHN+Gp+uyCZB0zg/cIdrwybHgaBDLUEvsCIaICttIS1FH7B6wUv6r/5Hf1F1o4PstIWWXdD/90O+LiwmUXPpfgr6i2vtNPzcYxRjnwIYM2q/pvWb2fVGToRTIBjUoylIVydx7Oi8O8i6lzNwa1rEz/FAgFdb/Tz6L+aE/scQQKVueEcFL7gTnJaGrV3emRa+H7kXbacDGC7B5dLt5JtEaqsWZaAOqYxmLw9jM9BnWoTbX3uT5sKSmWoZ2h/u6UJ9MUMvQpM2VFtkff57lGWtmRWE//ZNKq9e0osxZuhtaLERzRbCUjxEU2K7FccL4UD8yVasOLxHfSA/M8v1TCEciIcdRkrVX5fBlH4cp84Wwpl49HGsVH1HapFin1XF2WXCobjBhUSpnqxJ5t/kduDdeCAci4PJlUypNh5LRwt2I/UXj+lQmTicW8DuVWt1m4ZbPezv7jRutfBZLC+l04bqWu7mgh2EMl+QlKx7jU4avjkiA3B0LZ92UZkQwTN2yzGDHWoGD5PpWVVNTCRVI8Ueq+6wgYjzaRY+q96i7gMg1ePU0b0RmIPHaXRooctrEZIP0chCkgH6p0bcz/PHF6yIkDG/FFMAAAAASUVORK5CYII=";
             img3.setAttribute("title", displayLanguage.str_63);
-            img3.addEventListener("click", () => goToImg("last"));
-            img3.addEventListener("mousedown", (event) => {
+            img3.addEventListener("click", event => {
+                cancelDefault(event);
+                goToImg("last");
+            });
+            img3.addEventListener("mousedown", event => {
                 if (event.button == 2) {
-                    event.preventDefault();
+                    cancelDefault(event);
                     exportImgSrcText();
                 }
             });
@@ -35781,6 +35890,7 @@ label.line-through:has(>#size) {
         }
 
         const downEvent = (event) => {
+            cancelDefault(event);
             const obj = getXY(event);
             imgDown = true;
             startX = obj.x;
@@ -35791,7 +35901,7 @@ label.line-through:has(>#size) {
 
         const moveEvent = (event) => {
             if (!imgDown) return;
-            event.preventDefault();
+            cancelDefault(event);
             const obj = getXY(event);
             isDragging = true;
             const dx = obj.x - startX;
@@ -35853,7 +35963,7 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_128,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 createFavorShadowElement();
             }
         }, {
@@ -35861,7 +35971,7 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_141,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 createShadowGallery();
             }
         }, {
@@ -35869,21 +35979,21 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_106,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 newTabView();
             }
         }, {
             text: displayLanguage.str_158,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 createFilterDownload();
             }
         }, {
             text: displayLanguage.str_107,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 fastDownloadSwitch = true;
                 DownloadFn();
             }
@@ -35891,35 +36001,35 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_174,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 exportJsonFormat();
             }
         }, {
             text: displayLanguage.str_176,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 exportMarkdownFormat();
             }
         }, {
             text: displayLanguage.str_178,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 copyMarkdownFormat();
             }
         }, {
             text: displayLanguage.str_104,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 exportImgSrcText();
             }
         }, {
             text: displayLanguage.str_105,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 copyImgSrcTextB();
             }
         }, {
@@ -35927,7 +36037,7 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_159,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 siteData.fn();
             }
         }, {
@@ -35935,7 +36045,7 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_88,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 fn.clearSetTimeout();
                 cancelZoom();
             }
@@ -35944,13 +36054,13 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_87,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 fn.clearSetTimeout();
                 reduceZoom();
             },
             mfn: event => {
                 if (event.button == 2) {
-                    event.preventDefault();
+                    cancelDefault(event);
                     increaseZoom();
                 }
             }
@@ -35959,7 +36069,7 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_86,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 toggleImgMode();
             }
         }, {
@@ -35968,14 +36078,14 @@ label.line-through:has(>#size) {
             text: displayLanguage.str_160,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 fn.immediateInsertImg("yes");
             }
         }, {
             text: displayLanguage.str_85,
             show: 0,
             cfn: event => {
-                event.preventDefault();
+                cancelDefault(event);
                 createPictureLoadOptionsShadowElement();
             }
         }, {
@@ -36476,18 +36586,19 @@ label.line-through:has(>#size) {
             ge("#CustomDownloadVideoDIV", main).style.display = "flex";
             ge("#CustomDownloadVideo", main).checked = FullPictureLoadCustomDownloadVideo == 1 ? true : false;
         }
-        ge("#CancelBtn", main).addEventListener("click", () => {
+        ge("#CancelBtn", main).addEventListener("click", event => {
+            cancelDefault(event);
             mainElement.remove();
             _unsafeWindow.removeEventListener("resize", topDistance);
             setTimeout(() => (isOpenOptionsUI = false), 200);
         });
         ge("#ResetBtn", main).addEventListener("click", event => {
-            event.preventDefault();
+            cancelDefault(event);
             setDefault();
             location.reload();
         });
         ge("#SaveBtn", main).addEventListener("click", event => {
-            event.preventDefault();
+            cancelDefault(event);
             options.icon = ge("#icon", main).checked == true ? 1 : 0;
             options.autoInsert = ge("#AutoInsertImg", main).checked == true ? 1 : 0;
             _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFixedMenu", main).checked == true ? 1 : 0);
@@ -38311,7 +38422,7 @@ html,body {
                 text: displayLanguage.str_132,
                 id: "editFavorCloseBtn",
                 cfn: event => {
-                    event.preventDefault();
+                    cancelDefault(event);
                     editFavorDiv.remove();
                     createFavor();
                 }
@@ -38319,7 +38430,7 @@ html,body {
                 text: displayLanguage.str_131,
                 id: "editFavorSaveBtn",
                 cfn: event => {
-                    event.preventDefault();
+                    cancelDefault(event);
                     _GM_setValue("favorData", textarea.value);
                     editFavorDiv.remove();
                     createFavor();
@@ -38383,13 +38494,15 @@ html,body {
             }
             [{
                 text: displayLanguage.str_130,
-                cfn: () => {
+                cfn: event => {
+                    cancelDefault(event);
                     createFavorTextarea();
                     FavorUl.remove();
                 }
             }, {
                 text: displayLanguage.str_129,
-                cfn: () => {
+                cfn: event => {
+                    cancelDefault(event);
                     if (!isOpenFilter) {
                         fn.remove("#overflowYHidden");
                     }
