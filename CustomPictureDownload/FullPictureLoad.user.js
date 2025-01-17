@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.14.1
+// @version            2025.1.17
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -8960,9 +8960,9 @@
             let pages = fn.ge(".custom-pagination");
             if (pages) {
                 let max = fn.gt(".next.page-numbers", 2);
-                srcs = await fn.getImg(".entry-content img", max, 7);
+                srcs = await fn.getImg("article img", max, 7);
             } else {
-                srcs = fn.getImgSrcArr(".entry-content img");
+                srcs = fn.getImgSrcArr("article img");
             }
             return srcs.map(e => e.replace("%3C/center%3E%3C/p%3E%3Cdiv%20class=", "").replace(/\?w=858(&ssl=1)?/, ""));
         },
@@ -15947,6 +15947,22 @@
         },
         category: "hcomic"
     }, {
+        name: "喜漫漫画",
+        url: {
+            h: "www.favcomic.com",
+            p: "/chapter/"
+        },
+        imgs: "#content img",
+        next: () => {
+            let next = fn.ge("img[alt=下一话][onclick]");
+            return next ? next.getAttribute("onclick").split("'")[1] : null;
+        },
+        prev: "img[alt=上一话][onclick]",
+        customTitle: () => fn.dt({
+            d: "全集"
+        }),
+        category: "hcomic"
+    }, {
         name: "Comics",
         host: ["pixiv.app"],
         reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
@@ -19423,6 +19439,42 @@
         }),
         category: "comic"
     }, {
+        name: "RawOtaku/JManga/Momon-Ga",
+        host: ["rawotaku.org", "jmanga.sh", "momon-ga.org"],
+        url: {
+            h: [/^rawotaku/, /^jmanga/, /^momon-ga/],
+            p: "/read/",
+            e: "#images-content .page-read"
+        },
+        SPA: () => document.URL.includes("/read/"),
+        observerURL: true,
+        init: () => fn.waitEle(".chapter-item.active"),
+        imgs: () => {
+            let id = fn.ge(".chapter-item.active").dataset.id;
+            fn.showMsg(displayLanguage.str_05, 0);
+            return fetch(`/json/chapter?mode=vertical&id=${id}`, {
+                "headers": {
+                    "accept": "application/json, text/javascript, */*; q=0.01",
+                    "x-requested-with": "XMLHttpRequest"
+                }
+            }).then(res => res?.json()).then(json => {
+                fn.hideMsg();
+                if (isObject(json)) {
+                    return [...fn.doc(json.html).images];
+                } else {
+                    return [];
+                }
+            });
+        },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "//li[contains(@class,'chapter-item active')]/preceding-sibling::li[1]/a",
+        prev: ".chapter-item.active+li>a",
+        customTitle: () => fn.dt({
+            t: fn.gt(".manga-name") + " - " + fn.gt("#dropdown-chapters button")
+        }),
+        category: "comic"
+    }, {
         name: "ZonaTMO",
         host: ["zonatmo.com"],
         url: {
@@ -21646,6 +21698,65 @@ if ("xx" in window) {
         hide: "div[style*='text-align: left;'],.UnderPage~*:not([id^='Full'],[class^='Full'],[id^='pv-'],[class^='pv-'],[id^='pagetual'],[class^='pagetual'],#comicRead,#fab,[class^=fancybox]),.action-list>ul>li:nth-child(n+2):nth-child(-n+3)",
         category: "comic"
     }, {
+        name: "31漫画",
+        enable: 0,
+        url: {
+            h: "www.31mh.cc",
+            p: /^\/comic\/\w+\/\d+\.html/
+        },
+        imgs: () => {
+            const {
+                chapterImages,
+                chapterImageHost
+            } = _unsafeWindow;
+            return chapterImages.map(e => /^http/.test(e) ? e : chapterImageHost + e);
+        },
+        button: [4],
+        insertImg: ["#images", 2],
+        autoDownload: [0],
+        next: () => {
+            const {
+                nextChapterData
+            } = _unsafeWindow;
+            return nextChapterData.id > 0 ? nextChapterData.url : null;
+        },
+        prev: 1,
+        customTitle: (dom = document) => {
+            let s = fn.gst("initChapter", dom).match(/SinTheme\.initChapter\(([^\)]+)\);/)[1].replaceAll('"', "").split(",");
+            return s[3] + " - " + s[1];
+        },
+        preloadNext: (nextDoc, obj) => {
+            let code = fn.gst("chapterImages", nextDoc);
+            fn.script(code, 0, 1);
+            fn.picPreload(obj.imgs(), obj.customTitle(nextDoc), "next");
+        },
+        hide: ".img_land_prev,.img_land_next",
+        category: "comic"
+    }, {
+        name: "31漫画M",
+        enable: 0,
+        url: {
+            h: "m.31mh.cc",
+            p: /^\/comic\/\w+\/\d+\.html/
+        },
+        imgs: (url = siteUrl, dom = document, msg = 1, request = 0) => {
+            let [, max] = fn.gt(".image-content p", 1, dom).match(/\/(\d+)/);
+            return fn.getImg("#manga-image", max, 5, null, 20, url, msg, request);
+        },
+        button: [4],
+        insertImg: ["#images", 2],
+        autoDownload: [0],
+        next: () => {
+            let next = fn.ge("//a[text()='下一章'][contains(@href,'html')]");
+            return next ? next.href : null;
+        },
+        prev: 1,
+        customTitle: (dom = document) => fn.title("在线", 1, dom),
+        preloadNext: async (nextDoc, obj) => fn.picPreload(await obj.imgs(nextLink, nextDoc, 0, 1), obj.customTitle(nextDoc), "next"),
+        css: "body{padding:0!important}.action-list li{width:50% !important}",
+        hide: "div[style*='text-align: left;'],.UnderPage~*:not([id^='Full'],[class^='Full'],[id^='pv-'],[class^='pv-'],[id^='pagetual'],[class^='pagetual'],#comicRead,#fab,[class^=fancybox]),.action-list>ul>li:nth-child(n+2):nth-child(-n+3)",
+        category: "comic"
+    }, {
         name: "优酷漫画",
         host: ["www.ykmh.net"],
         enable: 0,
@@ -23228,6 +23339,30 @@ if ("xx" in window) {
         preloadNext: true,
         category: "comic"
     }, {
+        name: "ゼロサムオンライン",
+        enable: 1,
+        url: {
+            h: "zerosumonline.com"
+        },
+        SPA: () => document.URL.includes("/episode/"),
+        observerURL: true,
+        imgs: () => {
+            let [id] = localStorage.getItem("history_chapter_ids").match(/\d+/);
+            fn.showMsg(displayLanguage.str_05, 0);
+            return fetch(`https://api.zerosumonline.com/api/v1/viewer?chapter_id=${id}`, {
+                "body": null,
+                "method": "POST"
+            }).then(res => res.text()).then(text => {
+                fn.hideMsg();
+                return text.match(/https?:\/\/\w+\.\w+\.com\/\w+\/\d+\/\d+\.\w+/gi);
+            });
+        },
+        customTitle: () => {
+            let textArr = document.title.split("|");
+            return textArr[1] + " - " + textArr[0];
+        },
+        category: "comic"
+    }, {
         name: "漫畫屋",
         enable: 0,
         url: {
@@ -23355,6 +23490,77 @@ if ("xx" in window) {
             }
         },
         hide: "a:has(>.end-novel)",
+        category: "comic autoPager"
+    }, {
+        name: "D漫画",
+        url: {
+            h: "www.dmanhua.com",
+            p: "/chapter/",
+            i: 0
+        },
+        imgs: (w = _unsafeWindow) => fn.arr(w.num, (v, i) => w.pasd + (i + 1) + ".webp"),
+        button: [4],
+        insertImg: [".images", 2],
+        autoDownload: [0],
+        next: "#nextChapter[href]",
+        prev: "//a[contains(@class,'nav-button')][contains(text(),'上')]",
+        customTitle: (dom = document) => {
+            let textArr = fn.ge("meta[name=keywords]", dom).content.replaceAll("\n", "").split(",");
+            return textArr[0] + " - " + textArr[1];
+        },
+        preloadNext: () => {
+            fn.iframe(nextLink, {
+                waitVar: "pasd",
+                cb: (dom, frame) => {
+                    let srcs = _this.imgs(frame);
+                    fn.picPreload(srcs, _this.customTitle(dom), "next");
+                }
+            });
+        },
+        infiniteScroll: true,
+        category: "comic"
+    }, {
+        name: "D漫画 自動翻頁",
+        url: {
+            h: "www.dmanhua.com",
+            p: "/chapter/",
+            i: 1
+        },
+        getSrcs: (dom = document) => {
+            let code = fn.gst("pasd", dom);
+            let [num] = code.match(/\d+/);
+            let [, pasd] = code.match(/pasd[\s="]+([^"]+)/);
+            return fn.arr(num, (v, i) => pasd + (i + 1) + ".webp");
+        },
+        getImgs: (dom = document) => {
+            let srcs = _this.getSrcs(dom);
+            return fn.createImgArray(srcs);
+        },
+        init: async () => {
+            let imgs = _this.getImgs();
+            let tE = fn.ge(".images");
+            tE.innerHTML = "";
+            fragment.append(...imgs);
+            tE.append(fragment);
+            await fn.lazyload();
+        },
+        autoPager: {
+            ele: (dom) => _this.getImgs(dom),
+            pos: [".images", 0],
+            observer: ".images>img",
+            next: "#nextChapter[href]",
+            re: "#leftNav,#rightNav,.footer-toolbar",
+            title: (dom) => {
+                let textArr = fn.ge("meta[name=keywords]", dom).content.replaceAll("\n", "").split(",");
+                if (hasTouchEvent) {
+                    return textArr[1];
+                } else {
+                    return textArr[0] + " - " + textArr[1];
+                }
+            },
+            preloadNextPage: 1
+        },
+        css: ".autoPagerTitle{width:100%}",
         category: "comic autoPager"
     }, {
         name: "漫画网",
@@ -23520,7 +23726,28 @@ if ("xx" in window) {
                 fn.picPreload(srcs, obj.customTitle(nextDoc, new URL(nextLink).pathname), "next");
             });
         },
-        category: "hcomic"
+        category: "comic"
+    }, {
+        name: "漫画站",
+        url: {
+            h: "www.manhuazhan.com",
+            p: "/chapter/"
+        },
+        init: () => fn.waitVar("newImgs"),
+        imgs: (w = _unsafeWindow) => w.newImgs.map(e => e.url),
+        button: [4],
+        insertImg: ["#ChapterContent", 2],
+        autoDownload: [0],
+        next: "//a[text()='下一章'][starts-with(@href,'/')]",
+        prev: "//a[text()='上一章'][starts-with(@href,'/')]",
+        customTitle: (dom = document) => fn.gt(".arthor", 1, dom) + " - " + fn.gt(".title", 1, dom),
+        preloadNext: (nextDoc, obj) => {
+            fn.iframeVar(nextLink, "newImgs").then(w => {
+                let srcs = obj.imgs(w);
+                fn.picPreload(srcs, obj.customTitle(nextDoc), "next");
+            });
+        },
+        category: "comic"
     }, {
         name: "漫画屋",
         host: ["www.manhua55.com"],
@@ -23680,7 +23907,7 @@ if ("xx" in window) {
         infiniteScroll: true,
         css: ".action-list li{width:50% !important}",
         mcss: ".container,.content-body{padding:0px !important}",
-        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3)",
+        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3),.visible-xs",
         category: "comic"
     }, {
         name: "漫画160/非常爱漫新站 自動翻頁",
@@ -23764,7 +23991,7 @@ if ("xx" in window) {
         },
         css: ".action-list li{width:50% !important}",
         mcss: ".container,.content-body{padding:0px !important}",
-        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3),li:has(>#prev),li:has(>.curPage),li:has(>#k_next)",
+        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3),li:has(>#prev),li:has(>.curPage),li:has(>#k_next),.visible-xs",
         category: "comic autoPager"
     }, {
         name: "非常爱漫新站 AD",
@@ -23873,7 +24100,7 @@ if ("xx" in window) {
     }, {
         name: "聚合漫画屋/酷看漫画/去去漫画/皮皮漫画/六漫画/有品漫画",
         url: {
-            h: ["www.52hah.com", /^www.kukanmanhua./, "www.ququmh.com", "www.mh369.com", "www.pipiman.com", "www.cicoo.cc", "www.ypdsm.com"],
+            h: ["www.52hah.com", /^www.kukanmanhua./, "www.ququmh.com", "www.mh369.com", "www.pipiman.com", /cicoo\.cc$/, /liumanhua\.cc$/, "www.ypdsm.com"],
             p: ["/chapter/", "/book/"],
             d: "pc"
         },
@@ -23889,7 +24116,7 @@ if ("xx" in window) {
     }, {
         name: "聚合漫画屋M/酷看漫画M/去去漫画M/皮皮漫画M/六漫画M/有品漫画M",
         url: {
-            h: ["www.52hah.com", /^www.kukanmanhua./, "www.ququmh.com", "www.mh369.com", "www.pipiman.com", "www.cicoo.cc", "www.ypdsm.com"],
+            h: ["www.52hah.com", /^www.kukanmanhua./, "www.ququmh.com", "www.mh369.com", "www.pipiman.com", /cicoo\.cc$/, /liumanhua\.cc$/, "www.ypdsm.com"],
             p: ["/chapter/", "/book/"],
             d: "m"
         },
@@ -23899,12 +24126,35 @@ if ("xx" in window) {
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
-        customTitle: () => {
-            let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
+        customTitle: (dom = document) => {
+            let [, text] = fn.gst("bookInfo", dom).match(/bookInfo[\s=]+([^;]+)/);
             let bookInfo = fn.run(text);
             return bookInfo.book_name.replace(/_\d+$/, "") + " - " + bookInfo.chapter_name;
         },
-        preloadNext: (nextDoc, obj) => fn.iframeDoc(nextLink, "#cp_img img[data-original]:not([src*=loading])", 30000).then(nextIframeDoc => fn.picPreload(fn.getImgSrcArr(obj.imgs, nextIframeDoc), nextIframeDoc.title, "next")),
+        preloadNext: (nextDoc, obj) => fn.iframeDoc(nextLink, "#cp_img img[data-original]:not([src*=loading])", 30000).then(nextIframeDoc => fn.picPreload(fn.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
+        category: "comic"
+    }, {
+        url: {
+            e: ["//script[contains(text(),'readData')] | //script[contains(text(),'ReadData')]", "//script[contains(text(),'setComic')]"],
+            p: "/read/"
+        },
+        imgs: ".read-content img,#comicContainer img",
+        autoDownload: [0],
+        next: ".page-next[href^='/read/'],#nextButton[href^='/read/']",
+        prev: ".page-prev[href^='/read/'],#prevButton[href^='/read/']",
+        customTitle: () => {
+            let object = Object.fromEntries(
+                fn.gst(/readdata/i)
+                .replace(/[\w\s]+readdata[\s=]+/i, "")
+                .replace("{", "")
+                .replace("}", "")
+                .replaceAll("\n", "")
+                .replaceAll(" ", "")
+                .replaceAll("'", "")
+                .split(",").map(e => e.split(":"))
+            );
+            return object.comicName + " - " + object.readName;
+        },
         category: "comic"
     }, {
         name: "云端漫画",
@@ -23928,10 +24178,10 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
-        name: "最次元/野蛮/优乐漫画",
+        name: "最次元/野蛮/优乐漫画/次元/脉赛漫画",
         enable: 0,
         url: {
-            h: ["zcymh.com", "yemancomic.com", "www.beston-test.com"],
+            h: ["zcymh.com", "yemancomic.com", "www.beston-test.com", "www.yydskxs.com", "www.myselfcar.com"],
             p: /^\/\w+\/\d+\/\d+\.html$/
         },
         imgs: "#img-box img,#imgsec img",
@@ -34671,6 +34921,7 @@ img.horizontal {
 
     const getFileSize = (src, element = null, label = null) => {
         const config = getConfig();
+        if (config.noSize == 1) return;
         return fn.xhrHEAD(src, {
             headers: {
                 referer: getReferer(src)
@@ -34698,10 +34949,13 @@ img.horizontal {
                     return num + " kB";
                 }
             } else {
-                config.noSize = 1;
-                saveConfig(config);
-                if (isEle(label)) {
-                    label.classList.add("line-through");
+                const config = getConfig();
+                if (config.noSize != 1) {
+                    config.noSize = 1;
+                    saveConfig(config);
+                    if (isEle(label)) {
+                        label.classList.add("line-through");
+                    }
                 }
             }
         });
@@ -34990,6 +35244,22 @@ label.line-through:has(>#size) {
     background: #1790e6;
     text-decoration: line-through;
 }
+#excludeNum {
+    display: none;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    background-color: #1790e6;
+    position: absolute;
+    top: -6px;
+    left: 1px;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+    z-index: 2147483645;
+}
 #more-menu {
     display: none;
     list-style-type: none;
@@ -35111,7 +35381,7 @@ label.line-through:has(>#size) {
         <button id="download">${displayLanguage.str_157}</button>
         <label class="number">${displayLanguage.str_169}<select id="backgroundColor"></select></label>
         <label id="label-threading" class="number">${displayLanguage.str_161}<select id="threading"></select></label>
-        <label id="exclude" class="number">${displayLanguage.str_183} ▼<ul id="excludeList"></ul></label>
+        <label id="exclude" class="number">${displayLanguage.str_183} ▼<p id=excludeNum>0</p><ul id="excludeList"></ul></label>
         <label class="number">${displayLanguage.str_167}<select id="width"></select></label>
         <label class="number">${displayLanguage.str_168}<select id="height"></select></label>
         <label id="filterNumber" class="number">${displayLanguage.str_166 + srcs.length}</label>
@@ -35252,11 +35522,24 @@ label.line-through:has(>#size) {
                 widthSelect.value = 0;
                 heightSelect.value = 0;
                 ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+                let excludeActives = gae(".active", excludeE).length;
+                let p = ge("#excludeNum", main);
+                if (excludeActives > 0) {
+                    p.classList.add("show");
+                    p.innerText = excludeActives;
+                } else {
+                    p.classList.remove("show");
+                }
             });
             fragment.append(li);
         });
         excludeList.append(fragment);
-
+        let excludeActives = gae(".active", excludeE).length;
+        if (excludeActives > 0) {
+            let p = ge("#excludeNum", main);
+            p.classList.add("show");
+            p.innerText = excludeActives;
+        }
         let backgroundSelect = ge("#backgroundColor", main);
         Object.keys(displayLanguage.backgroundColor).forEach((k, i) => {
             const option = document.createElement("option");
@@ -35482,7 +35765,7 @@ label.line-through:has(>#size) {
         if (config.noSize == 1) {
             inputSize.parentNode.classList.add("line-through");
         }
-        inputSize.checked = showSize == 0 ? false : true;
+        inputSize.checked = showSize == 1 ? true : false;
         inputSize.addEventListener("change", () => {
             showSize = inputSize.checked ? 1 : 0;
             config.showSize = showSize;
@@ -35495,7 +35778,7 @@ label.line-through:has(>#size) {
         });
         let inputMove = ge("#move", main);
         if (inputMove) {
-            inputMove.checked = move == 0 ? false : true;
+            inputMove.checked = move == 1 ? true : false;
             inputMove.addEventListener("change", () => {
                 move = inputMove.checked ? 1 : 0;
                 config.move = move;
@@ -35583,7 +35866,7 @@ label.line-through:has(>#size) {
                             p.innerText = (index + 1) + "P | " + img.dataset.width + " x " + img.dataset.height;
                         }
                         img.onload = null;
-                        if (showSize != 0) {
+                        if (config.noSize != 1 && showSize != 0) {
                             getFileSize(img.src, p, inputSize.parentNode);
                         }
                     }
@@ -36231,10 +36514,12 @@ label.line-through:has(>#size) {
 
 #FullPictureLoadOptions button {
     width: auto;
+    height: 26px;
+    line-height: 20px;
     min-width: 102px;
     max-width: 110px;
     min-height: unset;
-    max-height: 24px;
+    max-height: 26px;
     margin-left: 2px;
     margin-right: 2px;
     margin-bottom: 4px;
