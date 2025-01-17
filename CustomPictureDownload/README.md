@@ -5323,6 +5323,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.favcomic.com/picture">喜漫漫画</a>
+                </td>
+                <td>完整H漫需付費會員</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://18comic.vip/">禁漫天堂</a>
                 </td>
                 <td>手動插入圖片，由於需要重新繪製還原被分割的圖片，過程中CPU會全速運轉。 <a href="https://jmcmomic.github.io/">禁漫天堂發布頁</a>， <a href="https://jmcomic-fb.vip/">禁漫天堂發布頁2</a>
@@ -6147,6 +6153,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.dmanhua.com/">D漫画</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.aitaocomic.com/">爱淘漫画</a>
                 </td>
                 <td>SPA網頁，手動插入圖片</td>
@@ -6155,9 +6167,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.everydaymanga.com/">天天漫画</a>
                 </td>
-                <td></td>
+                <td><a href="https://www.manhuazhan.com/">漫画站</a></td>
             </tr>
-           <tr>
+            <tr>
                 <td>
                     <a href="https://www.manhua55.com/">漫画屋</a>
                 </td>
@@ -6193,7 +6205,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.greyhoundsoul.com/">聚合漫画屋</a>
                 </td>
-                <td><a href="https://www.kukanmanhua.org/">酷看漫画</a>，<a href="http://www.ququmh.com/">去去漫画</a>，<a href="http://www.pipiman.com/">皮皮漫画</a>，<a href="https://www.cicoo.cc/">六漫画</a>，<a href="https://www.ypdsm.com/">有品漫画</a></td>
+                <td><a href="https://www.kukanmanhua.org/">酷看漫画</a>，<a href="http://www.ququmh.com/">去去漫画</a>，<a href="http://www.pipiman.com/">皮皮漫画</a>，<a href="https://www.cicoo.cc/">六漫画</a>，<a href="https://www.liumanhua.cc/">六漫画</a>，<a href="https://www.ypdsm.com/">有品漫画</a></td>
             </tr>
             <tr>
                 <td>
@@ -6349,6 +6361,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.31mh.cc/">31漫画</a>
+                </td>
+                <td>
+                    <a href="https://m.31mh.cc/">m.31mh.cc</a>，預設關閉
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.manhua456.com/">漫画456</a>
                 </td>
                 <td>
@@ -6479,6 +6499,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://zerosumonline.com/">ゼロサムオンライン</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.mangajikan.com/">漫画時間 日文漫畫</a>
                 </td>
                 <td></td>
@@ -6512,6 +6538,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://klz9.com/">KL</a>
                 </td>
                 <td><a href="https://jestful.net/">JF</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://jmanga.sh/">JManga</a>
+                </td>
+                <td><a href="https://momon-ga.org/">Momon-Ga</a>，<a href="https://rawotaku.org/">RawOtaku</a></td>
             </tr>
             <tr>
                 <td>
