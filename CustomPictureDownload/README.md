@@ -3,18 +3,18 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/01/05
+2025/01/18
 PC
-Chrome 131.0.6778.205 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 131.0.2903.112 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 133.0.3 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Chrome 132.0.6834.84 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 132.0.2957.115 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 134.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 133.0.3053.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 134.0.3078.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 131.0.2903.125 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Firefox for Android 133.0.3 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Mises Browser 424122407 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 131.0.2903.145 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Firefox for Android 134.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Yandex Browser 24.12.3.110 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 XBrowser 5.0.3
@@ -2158,6 +2158,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://eyecoser.com/">看美女</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.ikanins.com/">爱看 INS</a>
                 </td>
                 <td></td>
@@ -3821,6 +3827,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xasiat.com/albums/">Xasiat</a>
                 </td>
                 <td>圖集分類頁添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kissjav.com/albums/">KISSJAV</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -6500,6 +6512,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://zerosumonline.com/">ゼロサムオンライン</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ganma.jp/web">GANMA!(ガンマ)</a>
                 </td>
                 <td></td>
             </tr>
