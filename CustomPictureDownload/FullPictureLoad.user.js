@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.17
+// @version            2025.1.18
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4624,6 +4624,19 @@
         prev: ".nav-next>a",
         customTitle: "h1.entry-title",
         category: "nsfw2"
+    }, {
+        name: "看美女",
+        url: {
+            h: "eyecoser.com"
+        },
+        imgs: ".entry-content .wp-block-image img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: "a[rel=prev]",
+        prev: "a[rel=next]",
+        customTitle: "h1.entry-title",
+        category: "nsfw1"
     }, {
         name: "爱看 INS",
         host: ["www.ikanins.com"],
@@ -10114,6 +10127,18 @@
             ["#FullPictureLoadMainImgBox", 2, ".photos"], 2
         ],
         customTitle: ".content-title",
+        category: "nsfw2"
+    }, {
+        name: "KISSJAV",
+        url: {
+            h: "kissjav.com",
+            p: "/album/"
+        },
+        imgs: ".images a",
+        thums: ".images img",
+        button: [4],
+        insertImg: [".images", 2],
+        customTitle: "h1.title",
         category: "nsfw2"
     }, {
         name: "Xasiat",
@@ -23363,6 +23388,31 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
+        name: "GANMA!(ガンマ)",
+        enable: 1,
+        stringSlicer: (string, startText, endText) => {
+            const startIndex = string.indexOf(startText) + startText.length;
+            const endIndex = string.indexOf(endText, startIndex);
+            return string.slice(startIndex, endIndex + endText.length);
+        },
+        url: {
+            h: "ganma.jp"
+        },
+        SPA: () => document.URL.includes("/reader/"),
+        observerURL: true,
+        imgs: () => {
+            fn.showMsg(displayLanguage.str_05, 0);
+            return fn.fetchDoc(document.URL).then(dom => {
+                fn.hideMsg();
+                let textArr = dom.title.split(" - ");
+                customTitle = textArr[0] + " - " + fn.gt("h1.text-ellipsis", 1, dom);
+                let text = fn.gst("singleModeDisplayUnits", dom).replaceAll("\\", "");
+                return JSON.parse(_this.stringSlicer(text, '"singleModeDisplayUnits":', "]")).map(e => e.url.replaceAll("u0026", "&"));
+            });
+        },
+        next: "//a[div[span[text()='次話']]]",
+        category: "comic"
+    }, {
         name: "漫畫屋",
         enable: 0,
         url: {
@@ -23730,17 +23780,26 @@ if ("xx" in window) {
     }, {
         name: "漫画站",
         url: {
-            h: "www.manhuazhan.com",
+            h: ["www.manhuazhan.com", "m.manhuazhan.com"],
             p: "/chapter/"
         },
         init: () => fn.waitVar("newImgs"),
         imgs: (w = _unsafeWindow) => w.newImgs.map(e => e.url),
         button: [4],
-        insertImg: ["#ChapterContent", 2],
+        insertImg: ["#ChapterContent,.chapter_content", 2],
         autoDownload: [0],
-        next: "//a[text()='下一章'][starts-with(@href,'/')]",
-        prev: "//a[text()='上一章'][starts-with(@href,'/')]",
-        customTitle: (dom = document) => fn.gt(".arthor", 1, dom) + " - " + fn.gt(".title", 1, dom),
+        next: "//a[text()='下一章'][starts-with(@href,'/')] | //a[div[span[contains(text(),'下一篇')]]][starts-with(@href,'/')]",
+        prev: "//a[text()='上一章'][starts-with(@href,'/')] | //a[div[span[contains(text(),'上一篇')]]][starts-with(@href,'/')]",
+        customTitle: (dom = document) => {
+            if (fn.lh.startsWith("m.")) {
+                return fn.dt({
+                    t: dom.title.replace("_", " - "),
+                    d: ["漫画", "-漫画站"]
+                });
+            } else {
+                return fn.gt(".arthor", 1, dom) + " - " + fn.gt(".title", 1, dom);
+            }
+        },
         preloadNext: (nextDoc, obj) => {
             fn.iframeVar(nextLink, "newImgs").then(w => {
                 let srcs = obj.imgs(w);
@@ -24134,6 +24193,7 @@ if ("xx" in window) {
         preloadNext: (nextDoc, obj) => fn.iframeDoc(nextLink, "#cp_img img[data-original]:not([src*=loading])", 30000).then(nextIframeDoc => fn.picPreload(fn.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
         category: "comic"
     }, {
+        host: ["say-on.com", "www.yanzhibuluo.com", "www.jianyu120.com", "www.jiasenongye.com", "www.one-uplus.com", "www.qize-airline.com"],
         url: {
             e: ["//script[contains(text(),'readData')] | //script[contains(text(),'ReadData')]", "//script[contains(text(),'setComic')]"],
             p: "/read/"
