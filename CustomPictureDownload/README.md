@@ -1288,7 +1288,6 @@ imgs: async () => {
 <p>畫廊滾輪操作非切換圖片並且有NEXT按鈕，當滾動到NEXT按鈕元素9成範圍進入視口時，再繼續往下滾2次以上NEXT按鈕變灰前往NEXT，往上滾則下滾次數歸零。</p>
 <p>PS：Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將調用使用iframe構建的畫廊。</p>
 <p>PS：如果要使用滾動視口的功能，螢幕顯示解析度1920 x 1080建議瀏覽器縮放比例100%，螢幕顯示解析度3840 x 2160建議系統縮放比例200%瀏覽器縮放比例100%，這樣在0、1、3才能剛好滾動一列圖片。</p>
-<p>PS：當看日系漫畫使用右至左雙頁模式，有時會遇到雙頁跨頁大圖沒有剛好左右並成一張，可透過WASD方向鍵或者點擊圖片(可以關閉Fancybox)，將導覽索引(藍色邊框)移至之前的圖片後按Delete鍵隱藏已經看過的頁數，這樣後面的圖片會往前移一個位置，達到手動調整使雙頁跨頁大圖看起來剛好並成一張。</p>
 <h1>腳本共存</h1>
 <p>為了與東方永頁機共存不會造成衝突，也不需要兩邊開開關關的，整理了東方永頁機黑名單。</p>
 <p>2024/10/17 21:47</p>
@@ -1838,6 +1837,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="http://www.xiuren7.com/">秀人集</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.costhisfox.com/cosfulimeitu">扮之狐狸</a>
                 </td>
                 <td></td>
@@ -2010,17 +2015,29 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://girl18.net/">Girl 18+</a>
+                </td>
+                <td>
+                    <a href="https://jvid.girl18.net/">JVID</a>，<a href="https://xiuren.girl18.net/">XIUREN</a>，<a href="https://bobosocks.girl18.net/">BOBOSOCKS</a>，<a href="https://imiss.girl18.net/">IMISS</a>，<a href="https://cosplay.girl18.net/">COSPLAY</a>，<a href="http://bikiniz.net/">Bikini Girl</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://foamgirl.net/">FoamGirl</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://girl18.net/">Girl 18+</a>
+                    <a href="https://www.mei101.com/xingganmeimei/">Mei101</a>
                 </td>
+                <td></td>
+            </tr>
+            <tr>
                 <td>
-                    <a href="https://jvid.girl18.net/">JVID</a>，<a href="https://xiuren.girl18.net/">XIUREN</a>，<a href="https://bobosocks.girl18.net/">BOBOSOCKS</a>，<a href="https://imiss.girl18.net/">IMISS</a>，<a href="https://cosplay.girl18.net/">COSPLAY</a>，<a href="http://bikiniz.net/">Bikini Girl</a>
+                    <a href="https://meitu9.com/">九天美图</a>
                 </td>
+                <td><a href="https://jiutianmeitu.com/">jiutianmeitu.com</a>，<a href="https://2kl.net/">爱看美图</a></td>
             </tr>
             <tr>
                 <td>
@@ -6215,6 +6232,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://zcymh.com/">最次元</a>
+                </td>
+                <td>Mobile限定，<a href="https://www.beston-test.com/">优乐漫画</a>，<a href="https://yemancomic.com/">野蛮</a>，<a href="https://www.yydskxs.com/">次元</a>，<a href="https://www.myselfcar.com/">脉赛漫画</a>，<a href="https://www.briangary.net/">格雷漫</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.greyhoundsoul.com/">聚合漫画屋</a>
                 </td>
                 <td><a href="https://www.kukanmanhua.org/">酷看漫画</a>，<a href="http://www.ququmh.com/">去去漫画</a>，<a href="http://www.pipiman.com/">皮皮漫画</a>，<a href="https://www.cicoo.cc/">六漫画</a>，<a href="https://www.liumanhua.cc/">六漫画</a>，<a href="https://www.ypdsm.com/">有品漫画</a></td>
@@ -6866,6 +6889,19 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://zonatmo.com/">ZonaTMO 西班牙文</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tresdaos.com/">TresDaos 西班牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Ikigai Mangas</td>
+                <td>
+                    <a href="https://visorikigai.eltanews.com/">EltaNews</a>
+                    <a href="https://visorikigai.ajaco.net/">Ajaco</a>
+                </td>
             </tr>
         </tbody>
     </table>
