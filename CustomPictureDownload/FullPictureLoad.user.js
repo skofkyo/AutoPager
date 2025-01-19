@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.18
+// @version            2025.1.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2563,6 +2563,41 @@
         },
         category: "ad"
     }, {
+        name: "秀人集",
+        url: {
+            h: "www.xiuren7.com",
+            p: ".html"
+        },
+        exclude: ".pay-flexbox",
+        init: () => {
+            let ps = fn.gae(".wp-posts-content p");
+            ps.forEach(p => {
+                if (p?.firstChild?.nodeName === "#text") {
+                    tempEles.push(p.firstChild.textContent);
+                }
+            });
+        },
+        imgs: ".wp-posts-content img",
+        button: [4],
+        insertImg: [".wp-posts-content", 2],
+        insertImgAF: (parent) => {
+            tempEles.forEach(t => {
+                let p = document.createElement("p");
+                p.innerText = t;
+                fragment.append(p);
+            });
+            parent.firstChild.before(fragment);
+        },
+        autoDownload: [0],
+        next: "//a[p[text()='上一篇']]",
+        prev: "//a[p[text()='下一篇']]",
+        customTitle: "h1.article-title",
+        fancybox: {
+            blacklist: 1
+        },
+        css: "div[data-nav=posts][style]{max-height:unset!important}",
+        category: "nsfw1"
+    }, {
         name: "扮之狐狸",
         host: "www.costhisfox.com",
         reg: [
@@ -3522,6 +3557,64 @@
         customTitle: ".blog-details-headline",
         category: "nsfw1"
     }, {
+        name: "九天美图",
+        host: ["meitu9.com", "jiutianmeitu.com"],
+        url: {
+            e: [".logo-pc", ".logo-moible"],
+            p: "/meitu/"
+        },
+        init: () => {
+            let ps = fn.gae("#image_div>p");
+            if (ps.length > 0) {
+                ps.forEach(p => {
+                    let a = fn.ge("img", p);
+                    if (!a) {
+                        tempEles.push(p);
+                    }
+                });
+            }
+        },
+        imgs: "#image_div img",
+        button: [4],
+        insertImg: ["//p[img]", 2],
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        customTitle: ".item_title>h1",
+        hide: ".img-box",
+        category: "nsfw1"
+    }, {
+        name: "Mei101",
+        url: {
+            h: ".mei101.com",
+            p: ".html",
+            e: "#image_div"
+        },
+        imgs: () => {
+            let {
+                PID,
+                post_url
+            } = _unsafeWindow.yaomei;
+            let data = new URLSearchParams({
+                action: "mei_imageall",
+                type: "all",
+                lazy: "false",
+                post_id: PID,
+                post_url
+            }).toString();
+            fn.showMsg(displayLanguage.str_05, 0);
+            return fn.fetchDoc("/wp-admin/admin-ajax.php", {
+                "headers": {
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "body": data,
+                "method": "POST"
+            }).then(dom => [...dom.images]);
+        },
+        button: [4],
+        insertImg: ["#content", 2],
+        customTitle: ".item_title>h1",
+        category: "nsfw1"
+    }, {
         name: "小姐姐么/妹妹图集",
         host: ["xiaojiejie.me", "www.mmtuji.com"],
         reg: [
@@ -3550,15 +3643,14 @@
         },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
-            return fetch("/wp-admin/admin-ajax.php", {
+            return fn.fetchDoc("/wp-admin/admin-ajax.php", {
                 "headers": {
-                    "accept": "*/*",
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                     "x-requested-with": "XMLHttpRequest"
                 },
                 "body": `action=chenxing_imageall&type=all&post_id=${_unsafeWindow.chenxing.PID}`,
                 "method": "POST",
-            }).then(res => res.text()).then(text => fn.doc(text)).then(dom => [...dom.images]);
+            }).then(dom => [...dom.images]);
         },
         button: [4],
         insertImg: ["#content", 2],
@@ -4629,7 +4721,7 @@
         url: {
             h: "eyecoser.com"
         },
-        imgs: ".entry-content .wp-block-image img",
+        imgs: ".entry-content img:not([data-src$='1616334013075.jpg'],[data-src$='AD1.jpg'])",
         button: [4],
         insertImg: [".entry-content", 2],
         autoDownload: [0],
@@ -9603,6 +9695,7 @@
         SPA: () => document.URL.includes("/comments/"),
         observerURL: true,
         imgs: () => fn.getImgSrcset("gallery-carousel li>img,.media-lightbox-img img"),
+        capture: () => _this.imgs(),
         button: [4],
         customTitle: "h1[id^='post-title']",
         category: "nsfw2"
@@ -16702,7 +16795,7 @@
         name: "Hitomi.la",
         url: {
             h: "hitomi.la",
-            e: "#read-online-button"
+            e: "#read-online-button:not([style])"
         },
         box: [".content", 2],
         imgs: () => {
@@ -19057,7 +19150,7 @@
         prev: ".previous a",
         category: "comic"
     }, {
-        name: "Realm Oasis/Voids-Scans/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables",
+        name: "Realm Oasis/Voids-Scans/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables/TresDaos",
         url: {
             h: [
                 "realmoasis.com",
@@ -19066,7 +19159,8 @@
                 "tercocomic.xyz",
                 "luascans.com",
                 "drakecomic.org",
-                "rizzfables.com"
+                "rizzfables.com",
+                "tresdaos.com"
             ]
         },
         init: () => fn.addMutationObserver(() => fn.remove("#radio_content,#teaserbottom")),
@@ -19585,6 +19679,25 @@
         next: ".nav-next >a",
         prev: ".nav-previous>a",
         customTitle: "#chapter-heading",
+        category: "comic"
+    }, {
+        name: "Ikigai Mangas - EltaNews/Ikigai Mangas - Ajaco",
+        url: {
+            h: ["visorikigai.eltanews.com", "visorikigai.ajaco.net"],
+            p: "/capitulo/"
+        },
+        init: () => fn.waitEle("img[loading][alt^=Page]"),
+        box: ["div.w-full:has(div>img[loading][alt^=Page])", 1],
+        imgs: () => fn.gae("img[loading][alt^=Page]"),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "div.w-full:has(div>img[loading][alt^=Page])"], 2
+        ],
+        autoDownload: [0],
+        next: "//a[span[text()='Siguiente']]",
+        prev: "//a[span[text()='Anterior']]",
+        customTitle: "ul:has(.line-clamp-1)",
+        hide: "div[id]:has(.adclose)",
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
@@ -24238,10 +24351,9 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
-        name: "最次元/野蛮/优乐漫画/次元/脉赛漫画",
-        enable: 0,
+        name: "最次元/野蛮/优乐漫画/次元/脉赛漫画/格雷漫",
         url: {
-            h: ["zcymh.com", "yemancomic.com", "www.beston-test.com", "www.yydskxs.com", "www.myselfcar.com"],
+            h: ["zcymh.com", "yemancomic.com", "www.beston-test.com", "www.yydskxs.com", "www.myselfcar.com", "www.briangary.net"],
             p: /^\/\w+\/\d+\/\d+\.html$/
         },
         imgs: "#img-box img,#imgsec img",
@@ -24256,6 +24368,8 @@ if ("xx" in window) {
             let json = fn.run(objText);
             return json.articlename + " - " + json.chaptername;
         },
+        css: "#reader-scroll{overflow:hidden}",
+        hide: "div[style*='background-color'],.down-app,div:has(button[onclick*='/buy']),body>div[style^='position:fixed;']",
         category: "comic"
     }, {
         name: "爱看漫",
