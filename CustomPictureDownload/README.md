@@ -6903,6 +6903,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://visorikigai.ajaco.net/">Ajaco</a>
                 </td>
             </tr>
+            <tr>
+                <td><a href="https://www.kumanga.com/">KuManga</a></td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </details>
