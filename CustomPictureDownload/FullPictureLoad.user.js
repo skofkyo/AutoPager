@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.19
+// @version            2025.1.20.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3613,6 +3613,7 @@
         button: [4],
         insertImg: ["#content", 2],
         customTitle: ".item_title>h1",
+        hide: ".single-views,.ad_xiangguan_up,.ad_dixuan",
         category: "nsfw1"
     }, {
         name: "小姐姐么/妹妹图集",
@@ -5914,16 +5915,17 @@
         category: "nsfw1"
     }, {
         name: "奈奈COS",
-        host: ["www.nncos.com"],
-        reg: /^https?:\/\/(www\.)?nncos\.com\/\d+\.html$/,
-        imgs: ".entry-content img",
-        referrerpolicy: "no-referrer",
+        url: {
+            h: "nncos.com",
+            p: ".html"
+        },
+        imgs: ".article-content>p>img",
         button: [4],
-        insertImg: [".entry-content", 2],
-        customTitle: () => fn.dt({
-            s: ".entry-title",
-            d: "Coser："
-        }),
+        insertImg: [".article-content>p", 2],
+        autoDownload: [0],
+        next: ".article-nav-prev a",
+        prev: ".article-nav-next a",
+        customTitle: "h1.article-title",
         category: "nsfw1"
     }, {
         name: "Gallery Epic",
@@ -9694,7 +9696,11 @@
         },
         SPA: () => document.URL.includes("/comments/"),
         observerURL: true,
-        imgs: () => fn.getImgSrcset("gallery-carousel li>img,.media-lightbox-img img"),
+        imgs: () => {
+            let pics = fn.getImgSrcset("gallery-carousel li>img,.media-lightbox-img img");
+            let gifs = fn.gae("shreddit-post[content-href*='.gif']").map(e => e.getAttribute("content-href"));
+            return [...pics, ...gifs];
+        },
         capture: () => _this.imgs(),
         button: [4],
         customTitle: "h1[id^='post-title']",
@@ -19698,6 +19704,40 @@
         prev: "//a[span[text()='Anterior']]",
         customTitle: "ul:has(.line-clamp-1)",
         hide: "div[id]:has(.adclose)",
+        category: "comic"
+    }, {
+        name: "KuManga",
+        url: {
+            h: "www.kumanga.com",
+            p: "/manga/leer/"
+        },
+        init: async () => {
+            await fn.waitEle("#lector img");
+            fn.clearAllTimer(3);
+        },
+        imgs: () => _unsafeWindow.pUrl.map(e => e.imgURL),
+        button: [4],
+        insertImg: ["#lector", 2],
+        autoDownload: [0],
+        next: () => {
+            let next = null;
+            let id = fn.lp.split("/").at(-1);
+            let control = fn.gae("select.form-control").at(1);
+            let chapters = fn.gae("option", control);
+            chapters.some(p => {
+                if (p.value == id) {
+                    if (p.nextElementSibling) {
+                        next = "/manga/leer/" + p.nextElementSibling.value;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            return next;
+        },
+        prev: 1,
+        customTitle: ".container h2",
         category: "comic"
     }, {
         name: "嗨皮漫畫閱讀",
