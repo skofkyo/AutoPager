@@ -1503,7 +1503,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.depvailon.com/">Depvailon.Com</a>
                 </td>
                 <td>
-                    <a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">Kaizty Photos</a>，<a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>
+                    <a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">Kaizty Photos</a>，<a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://t.mmtu.net/">高清美图</a>
                 </td>
             </tr>
             <tr>
@@ -2729,7 +2729,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://jpg5.su/tatsuya_shiba/albums">JPG5</a>
                 </td>
-                <td>作用在上傳者的相簿，手動插入圖片</td>
+                <td><a href="https://jpg5.su/hru_moon/albums">JPG5</a>，作用在上傳者的相簿，手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -3068,6 +3068,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://sexygirl.lol/">SexyGirl.LOL</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://dongti.netlify.app/">胴体的秘密</a>
                 </td>
                 <td>
@@ -3203,6 +3209,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>，<a href="https://thothub.vip/albums/">thothub.vip</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://redthot.com/photos/">Thothub.wtf</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4103,6 +4115,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://anime.reactor.cc/">Аниме</a>
+                </td>
+                <td><a href="https://witcher.reactor.cc/">Ведьмак</a>，<a href="https://gi.reactor.cc/">Геншин Импакт</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://dzen.ru/w_t_s_c">Дзен</a>
                 </td>
                 <td></td>
@@ -4249,7 +4267,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.elitebabes.com/">Elite Babes</a>
                 </td>
-                <td>同格式， <a href="https://pmatehunter.com/">pmatehunter.com</a>， <a href="https://www.jperotica.com/">www.jperotica.com</a>， <a href="https://www.metarthunter.com/">www.metarthunter.com</a>， <a href="https://www.femjoyhunter.com/">www.femjoyhunter.com</a>
+                <td>同格式， <a href="https://pmatehunter.com/">Playmate Hunter</a>， <a href="https://www.jperotica.com/">JP Erotica</a>， <a href="https://www.metarthunter.com/">Metart Hunter</a>， <a href="https://www.femjoyhunter.com/">Femjoy Hunter</a>， <a href="https://nakedporn.pics/">nakedporn.pics</a>
                 </td>
             </tr>
             <tr>
