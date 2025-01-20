@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.20.1
+// @version            2025.1.21
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -599,7 +599,8 @@
             "lootiu.com",
             "thismore.fun",
             "cosxuxi.club",
-            "baobua.com"
+            "baobua.com",
+            "t.mmtu.net"
         ],
         reg: [
             /^https?:\/\/www\.depvailon\.com\/[^\.]+\.html/,
@@ -608,7 +609,8 @@
             /^https?:\/\/nungvl\.net\/gallerys\//,
             /^https?:\/\/lootiu\.com\/gallery\//,
             /^https?:\/\/thismore\.fun\/view\//,
-            /^https?:\/\/baobua\.com\/post\//
+            /^https?:\/\/baobua\.com\/post\//,
+            /^https?:\/\/t\.mmtu\.net\/photos\//
         ],
         init: async () => {
             await fn.clearElementEvent();
@@ -620,7 +622,12 @@
         imgs: async () => {
             let max;
             try {
-                [max] = fn.gt("h1,h2").match(/\d+$/);
+                let text = fn.gt("h1,h2");
+                if (text?.includes("|")) {
+                    [max] = text.match(/\d+$/);
+                } else {
+                    max = 1;
+                }
             } catch {
                 max = 1;
             }
@@ -1788,7 +1795,7 @@
                 /^(www\.)?zhaotaotu\.cc$/,
                 /^(www\.)?kantaotu\.cc$/
             ],
-            p: /^\/\??thread-\d+\.htm$/
+            e: ".card-user-info"
         },
         imgs: ".message>img:not(:first-of-type)",
         button: [4],
@@ -3583,6 +3590,7 @@
         category: "nsfw1"
     }, {
         name: "Mei101",
+        host: ["www.mei101.com", "m.mei101.com"],
         url: {
             h: ".mei101.com",
             p: ".html",
@@ -5434,7 +5442,7 @@
         customTitle: "header>h2",
         category: "nsfw2"
     }, {
-        name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图/秀人图/UGIRLS/mm131美女图片/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/CoserGirl/高清妹子图/黑丝屋",
+        name: "尤物丧志/HotAsianX/色图/亚色图库/福利姬美图/秀人图/UGIRLS/mm131美女图片/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/CoserGirl/高清妹子图/黑丝屋/SexyGirl.LOL",
         url: {
             h: [
                 /^youwu\./,
@@ -5455,7 +5463,8 @@
                 "sanshang.neocities.org",
                 "cosergirl.neocities.org",
                 /ahottie/,
-                "heisiwu.net"
+                "heisiwu.net",
+                "sexygirl.lol"
             ],
             e: ["img.block", "//div[img[@title]]", "#main>h1,header>h1"]
         },
@@ -5846,7 +5855,7 @@
         category: "nsfw2"
     }, {
         name: "ThotHD Albums / Thothub Albums",
-        host: ["thothd.com", "thothub.to", "thothub.lol", "thothub.mx", "thothub.vip"],
+        host: ["thothd.com", "thothub.to", "thothub.lol", "thothub.mx", "thothub.vip", "thethothub.com"],
         url: {
             h: [/thothd/, /thothub/],
             p: "/albums/"
@@ -5856,6 +5865,19 @@
         button: [4],
         insertImg: [".images", 2],
         customTitle: "h1",
+        category: "nsfw2"
+    }, {
+        name: "Thothub.wtf",
+        host: ["redthot.com"],
+        url: {
+            t: "Thothub.wtf",
+            p: "/gallery/"
+        },
+        imgs: ".gallery_grid>a",
+        thums: ".gallery_grid>a>img",
+        button: [4],
+        insertImg: [".gallery_grid", 2],
+        customTitle: () => fn.ge("h1.singletitle")?.textContent,
         category: "nsfw2"
     }, {
         name: "The Hentai World",
@@ -7050,9 +7072,11 @@
         url: {
             h: "www.everiaclub.com"
         },
+        init: () => fn.gae(".mainleft h1").forEach(e => tempEles.push(e)),
         imgs: ".mainleft img",
         button: [4],
         insertImg: [".mainleft", 2],
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
         customTitle: ".mainleft h1",
         category: "nsfw2"
     }, {
@@ -7071,8 +7095,10 @@
         category: "nsfw2"
     }, {
         name: "Căng Cực",
-        host: ["cangcuc.com"],
-        reg: /^https?:\/\/cangcuc\.com\/[^\/]+\/[^\/]+\/$/,
+        url: {
+            h: "cangcuc.com",
+            e: ".post-single"
+        },
         imgs: ".royal_grid a",
         button: [4],
         insertImg: [
@@ -9149,8 +9175,9 @@
         category: "nsfw2"
     }, {
         name: "Elite Babes格式",
-        host: ["www.elitebabes.com", "pmatehunter.com", "www.jperotica.com", "www.metarthunter.com", "www.femjoyhunter.com"],
-        reg: /^https?:\/\/(www\.)?(elitebabes|pmatehunter|jperotica|metarthunter|femjoyhunter)\.com\/.+\//,
+        url: {
+            h: ["www.elitebabes.com", "pmatehunter.com", "www.jperotica.com", "www.metarthunter.com", "www.femjoyhunter.com", "nakedporn.pics"]
+        },
         exclude: "#content video",
         imgs: ".list-gallery a[data-fancybox]",
         thums: ".list-gallery a[data-fancybox]>img",
@@ -9715,7 +9742,6 @@
         init: () => fn.addMutationObserver(() => fn.remove(".banner:has(>#advideo_adv_container)")),
         imgs: ".news__content_wrapper img:not(.news__tags-more-icon)",
         capture: () => fn.gae(".news__content_wrapper img:not(.news__tags-more-icon)"),
-        button: [4],
         customTitle: async () => {
             await delay(1000);
             return fn.dt({
@@ -9727,9 +9753,25 @@
         },
         category: "nsfw2"
     }, {
+        name: "Аниме на JoyReactor/The Witcher(Ведьмак)/Genshin Impact (Геншин Импакт)",
+        url: {
+            h: ["anime.reactor.cc", "witcher.reactor.cc", "gi.reactor.cc"],
+            p: "/post/"
+        },
+        imgs: () => fn.gae(".post_content .image img").map(img => {
+            if (img?.parentElement?.nodeName === "A" && img?.parentElement?.className === "prettyPhotoLink") {
+                return img.parentElement;
+            } else {
+                return img;
+            }
+        }),
+        thums: ".post_content .image img",
+        capture: () => _this.imgs(),
+        category: "nsfw1"
+    }, {
         name: "JoyReactor",
         url: {
-            h: "joyreactor.cc",
+            h: "joyreactor.",
             p: "/post/"
         },
         SPA: true,
@@ -9738,8 +9780,16 @@
             const get = async () => {
                 let imgs = fn.gae(".image img:not(.get)");
                 if (imgs.length > 0) {
-                    imgs.forEach(img => img.classList.add("get"));
-                    fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
+                    imgs.forEach(img => {
+                        img.classList.add("get");
+                        let full = img?.closest(".zoomed-image")?.firstElementChild;
+                        if (full?.nodeName === "A") {
+                            setArray.add(full.href);
+                        } else {
+                            setArray.add(img.src);
+                        }
+                    });
+                    //fn.getImgSrcArr(imgs).forEach(src => setArray.add(src));
                 }
                 let videos = fn.gae("video[poster]:not(.get)");
                 if (videos.length > 0) {
@@ -16097,6 +16147,104 @@
         customTitle: "h1",
         category: "hcomic"
     }, {
+        name: "日韩漫画/歪歪漫画",
+        host: ["www.diyihm.com", "www.lltoon.com", "www.rrtoon.com", "wwtoon.com", "www.zztoon.com", "www.vvtoon.com", "www.fftoon.com", "www.wwtoon.com", "www.niumh.com"],
+        link: "https://hm8.in,hstoon.com",
+        url: {
+            t: ["第一漫画", "歪歪漫画", "第一韩漫", "太极漫画网"],
+            p: /^\/view\/\d+\/\d+$/,
+            e: "//script[contains(text(),'$(document).ready')]",
+            d: "m"
+        },
+        init: () => {
+            try {
+                let code = fn.gt("//script[contains(text(),'$(document).ready')]");
+                let objStr = code.match(/window\.\w+\s?=\s?([^;]+)/)[1];
+                let json = JSON.parse(objStr);
+                debug("\n此頁JSON資料\n", json);
+                siteJson = json;
+            } catch {}
+        },
+        imgs: async () => {
+            if (isArray(siteJson?.volume?.pages) && siteJson?.volume?.pages?.length > 0) {
+                return siteJson.volume.pages;
+            } else if (fn.ge("//a[text()='本章已分页']")) {
+                fn.showMsg(displayLanguage.str_01, 0);
+                let arr = [];
+                let src;
+                let page = 1;
+                let loop = true;
+                const getData = () => fn.fetchDoc(location.href + "/" + page).then(dom => {
+                    fn.showMsg(`${displayLanguage.str_02}${page}/???`, 0);
+                    const srcs = fn.getImgSrcArr(".charpetBox img", dom);
+                    for (src of srcs) {
+                        if (arr.includes(src)) {
+                            loop = false;
+                            return;
+                        } else {
+                            arr.push(src);
+                        }
+                    }
+                });
+                while (loop) {
+                    await getData();
+                    page++;
+                }
+                return arr;
+            } else {
+                return fn.gae(".charpetBox img");
+            }
+        },
+        button: [4, "24%", 3],
+        insertImg: [".charpetBox", 2],
+        autoDownload: [0],
+        next: "#loadNextChapter",
+        prev: "#loadPrevChapter",
+        customTitle: () => {
+            if (siteJson?.volume?.title) {
+                return siteJson.comic.title + " - " + siteJson.volume.title;
+            } else {
+                return fn.gt(".BarTit");
+            }
+        },
+        hide: "body>div[class][style]:first-of-type,body>div[class][style*='display: block; width: 100%; height: 128.75px;'],.letchepter[style*='20px'],#FullPictureLoadGoToLastImage~*:not([id^='Full'],[class^='Full'],[id^='pv-'],[class^='pv-'],#comicRead,#fab,*[class^=fancybox])",
+        category: "hcomic"
+    }, {
+        name: "顶点韩漫/红本子漫画",
+        link: "https://mh4.top，aetoon.com",
+        host: ["mgtoon.com", "hktoon.com", "www.redbz.com"],
+        url: {
+            t: ["顶点韩漫", "红本子漫画"],
+            p: /^\/view\/\d+\/\d+$/,
+            d: "m"
+        },
+        init: async () => {
+            await fn.waitVar("chapter_id");
+            siteJson = Object.entries(_unsafeWindow).filter(([k, v]) => !!v?.comic)[0][1];
+        },
+        imgs: () => siteJson.volume.pages,
+        button: [4, "24%", 3],
+        insertImg: [".charpetBox", 2],
+        autoDownload: [0],
+        next: "#loadNextChapter",
+        prev: "#loadPrevChapter",
+        customTitle: () => {
+            let {
+                comic: {
+                    title: mn
+                },
+                volume: {
+                    title: cn
+                }
+            } = siteJson;
+            return cn.includes(mn) ? cn : mn + " - " + cn;
+        },
+        fancybox: {
+            blacklist: 1
+        },
+        hide: "body>div[class][style]",
+        category: "hcomic"
+    }, {
         name: "头牌漫画网/顶点漫画/第一漫画网",
         link: "https://xs8.me/，https://mh8.in/",
         host: ["dmmtu.com", "dmmpic.com", "dymmt.com", "kkmnt.com", "mmxzt.com"],
@@ -17830,69 +17978,6 @@
         observerClick: "#chk_cover",
         hide: ".row:has(>.ads)",
         category: "ad"
-    }, {
-        name: "日韩漫画/歪歪漫画",
-        host: ["www.diyihm.com", "www.lltoon.com", "www.rrtoon.com", "wwtoon.com", "www.zztoon.com", "www.vvtoon.com", "www.fftoon.com", "www.wwtoon.com", "www.niumh.com"],
-        link: "https://www.niumh.com/view/9922/524220",
-        url: {
-            t: ["第一漫画", "歪歪漫画", "第一韩漫", "太极漫画网"],
-            p: /^\/view\/\d+\/\d+$/,
-            e: "//script[contains(text(),'$(document).ready')]",
-            d: "m"
-        },
-        init: () => {
-            try {
-                let code = fn.gt("//script[contains(text(),'$(document).ready')]");
-                let objStr = code.match(/window\.\w+\s?=\s?([^;]+)/)[1];
-                let json = JSON.parse(objStr);
-                debug("\n此頁JSON資料\n", json);
-                siteJson = json;
-            } catch {}
-        },
-        imgs: async () => {
-            if (isArray(siteJson?.volume?.pages) && siteJson?.volume?.pages?.length > 0) {
-                return siteJson.volume.pages;
-            } else if (fn.ge("//a[text()='本章已分页']")) {
-                fn.showMsg(displayLanguage.str_01, 0);
-                let arr = [];
-                let src;
-                let page = 1;
-                let loop = true;
-                const getData = () => fn.fetchDoc(location.href + "/" + page).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_02}${page}/???`, 0);
-                    const srcs = fn.getImgSrcArr(".charpetBox img", dom);
-                    for (src of srcs) {
-                        if (arr.includes(src)) {
-                            loop = false;
-                            return;
-                        } else {
-                            arr.push(src);
-                        }
-                    }
-                });
-                while (loop) {
-                    await getData();
-                    page++;
-                }
-                return arr;
-            } else {
-                return fn.gae(".charpetBox img");
-            }
-        },
-        button: [4, "24%", 3],
-        insertImg: [".charpetBox", 2],
-        autoDownload: [0],
-        next: "#loadNextChapter",
-        prev: "#loadPrevChapter",
-        customTitle: () => {
-            if (siteJson?.volume?.title) {
-                return siteJson.comic.title + " - " + siteJson.volume.title;
-            } else {
-                return fn.gt(".BarTit");
-            }
-        },
-        hide: "body>div[class][style]:first-of-type,.letchepter[style*='20px'],#FullPictureLoadGoToLastImage~*:not([id^='Full'],[class^='Full'],[id^='pv-'],[class^='pv-'],#comicRead,#fab,*[class^=fancybox])",
-        category: "hcomic"
     }, {
         name: "Manhuascan.us",
         url: {
@@ -32016,6 +32101,7 @@ if ("xx" in window) {
         _GM_setValue("FancyboxSlideshowTimeout", 3);
         _GM_setValue("FancyboxWheel", 1);
         _GM_setValue("FancyboxSlideshowTransition", "fade");
+        _GM_setValue("exclude_ex_config", {});
     };
 
     //新分頁空白頁檢視圖片
