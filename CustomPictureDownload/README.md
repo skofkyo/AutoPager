@@ -3207,7 +3207,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://thothub.vip/albums/">Thothub Albums</a>
                 </td>
                 <td>
-                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>，<a href="https://thothub.vip/albums/">thothub.vip</a>
+                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.su/albums/">thothub.su</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>，<a href="https://thothub.vip/albums/">thothub.vip</a>
                 </td>
             </tr>
             <tr>
@@ -6215,6 +6215,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.everydaymanga.com/">天天漫画</a>
                 </td>
                 <td><a href="https://www.manhuazhan.com/">漫画站</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.miaoqumh.org/">喵趣漫画</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
