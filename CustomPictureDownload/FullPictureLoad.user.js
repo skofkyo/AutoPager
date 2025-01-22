@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.22
+// @version            2025.1.23
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -599,8 +599,7 @@
             "lootiu.com",
             "thismore.fun",
             "cosxuxi.club",
-            "baobua.com",
-            "t.mmtu.net"
+            "baobua.com"
         ],
         reg: [
             /^https?:\/\/www\.depvailon\.com\/[^\.]+\.html/,
@@ -609,8 +608,7 @@
             /^https?:\/\/nungvl\.net\/gallerys\//,
             /^https?:\/\/lootiu\.com\/gallery\//,
             /^https?:\/\/thismore\.fun\/view\//,
-            /^https?:\/\/baobua\.com\/post\//,
-            /^https?:\/\/t\.mmtu\.net\/photos\//
+            /^https?:\/\/baobua\.com\/post\//
         ],
         init: async () => {
             await fn.clearElementEvent();
@@ -1465,6 +1463,39 @@
         customTitle: ".post-title",
         category: "nsfw2"
     }, {
+        name: "牛叉资源网 自動翻頁",
+        url: {
+            h: "niuc.net",
+            e: [".post-list", ".list-footer"]
+        },
+        init: async () => {
+            await fn.waitEle(".el-pager .active");
+            currentPageNum = Number(fn.gt(".el-pager .active"));
+        },
+        autoPager: {
+            ele: ".post-list",
+            observer: ".post-list>.post-item",
+            next: () => {
+                let lastNum = _unsafeWindow.core_next.total_page;
+                lastNum = Number(lastNum);
+                if (currentPageNum < lastNum) {
+                    let url = document.location.pathname.replace(/\/page\/\d+/, "");
+                    if (url === "/") {
+                        url = "";
+                    }
+                    if (document.location.search !== "") {
+                        return url + "/page/" + (currentPageNum += 1) + document.location.search;
+                    }
+                    return url + "/page/" + (currentPageNum += 1);
+                } else {
+                    return null;
+                }
+            },
+            pageNum: () => currentPageNum,
+            lazySrc: "img[data-src]"
+        },
+        category: "autoPager"
+    }, {
         name: "8E资源站",
         host: ["8ezy.com"],
         reg: /^https?:\/\/8ezy\.com\/[^\/]+\/$/,
@@ -1775,6 +1806,32 @@
                 /^(www\.)?060k\.com$/,
             ],
             p: /^\/post\/\d+\.html$/i
+        },
+        imgs: () => {
+            fn.showMsg(displayLanguage.str_05, 0);
+            let url = fn.gu("//a[text()='显示全文']");
+            return fn.fetchDoc(url).then(dom => fn.gae("#lightgallery img", dom));
+        },
+        button: [4],
+        insertImg: ["#lightgallery", 2],
+        autoDownload: [0],
+        next: ".prev>a",
+        prev: ".next>a",
+        customTitle: ".focusbox-title",
+        category: "nsfw1"
+    }, {
+        name: "大美姐",
+        url: {
+            h: "www.dmjie.com",
+            p: "/v/"
+        },
+        init: () => {
+            fn.clearAllTimer(3);
+            if ("detectDevTools" in _unsafeWindow) {
+                _unsafeWindow.showWarning = null;
+                _unsafeWindow.detectDevTools = null;
+                _unsafeWindow.onresize = null;
+            }
         },
         imgs: () => {
             fn.showMsg(displayLanguage.str_05, 0);
@@ -6667,8 +6724,11 @@
         category: "nsfw1"
     }, {
         name: "imgcup.com",
-        host: ["imgcup.com"],
-        reg: /^https?:\/\/imgcup\.com\/[^\.]+\.html$/,
+        url: {
+            h: "imgcup.com",
+            p: ".html",
+            e: ".penci-post-gallery-container"
+        },
         box: [".penci-post-gallery-container", 2],
         imgs: ".item-gallery-masonry>a",
         thums: ".item-gallery-masonry>a img",
@@ -9366,7 +9426,7 @@
     }, {
         name: "GayBoysTube",
         url: () => fn.checkUrl({
-            h: "www.gayboystube.com",
+            h: "www.gayporntube.com",
             p: "/galleries/"
         }),
         init: () => {
@@ -9753,9 +9813,10 @@
         },
         category: "nsfw2"
     }, {
-        name: "Аниме на JoyReactor/The Witcher(Ведьмак)/Genshin Impact (Геншин Импакт)",
+        name: "JoyReactor/Аниме на JoyReactor/The Witcher/Genshin Impact/Warhammer 40000",
+        host: ["reactor.cc", "anime.reactor.cc", "witcher.reactor.cc", "gi.reactor.cc", "wh.reactor.cc"],
         url: {
-            h: ["anime.reactor.cc", "witcher.reactor.cc", "gi.reactor.cc"],
+            h: "reactor.cc",
             p: "/post/"
         },
         imgs: () => fn.gae(".post_content .image img").map(img => {
@@ -17857,6 +17918,21 @@
         next: "//a[button[span[text()='Chương sau']]][not(starts-with(@href,'javascript'))]",
         prev: "//a[button[span[text()='Chương trước']]][not(starts-with(@href,'javascript'))]",
         customTitle: () => fn.title(" - ", 3),
+        category: "hcomic"
+    }, {
+        host: ["www.51comic.org", "18comic.top", "book.51comic.org"],
+        url: {
+            e: [".hl-logo-black", ".hl-logo-white"],
+            p: "/artdetail"
+        },
+        init: () => fn.remove(".container:has(>#homeBannerWrap)"),
+        imgs: ".hl-article-box img",
+        button: [4],
+        insertImg: [".hl-article-box", 2],
+        autoDownload: [0],
+        next: ".hl-next",
+        prev: ".hl-prev",
+        customTitle: ".hl-article-title",
         category: "hcomic"
     }, {
         name: "污污漫畫",
