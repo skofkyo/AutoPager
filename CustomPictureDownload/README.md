@@ -1503,7 +1503,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.depvailon.com/">Depvailon.Com</a>
                 </td>
                 <td>
-                    <a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">Kaizty Photos</a>，<a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>， <a href="https://t.mmtu.net/">高清美图</a>
+                    <a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">Kaizty Photos</a>，<a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>
                 </td>
             </tr>
             <tr>
@@ -1973,7 +1973,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://niuc.net/">牛叉资源网</a>
                 </td>
-                <td></td>
+                <td>分類添加了自動翻頁</td>
             </tr>
             <tr>
                 <td>
@@ -2374,7 +2374,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://928r.com/">美图社</a>
                 </td>
                 <td>
-                    <a href="https://060k.com/">花瓣美女</a>
+                    <a href="https://060k.com/">花瓣美女</a>，<a href="https://www.dmjie.com/show/">大美姐</a>
                 </td>
             </tr>
             <tr>
@@ -3969,7 +3969,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.gayboystube.com/photos/">GayBoysTube</a>
+                    <a href="https://www.gayporntube.com/photos/">GayBoysTube</a>
                 </td>
                 <td></td>
             </tr>
