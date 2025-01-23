@@ -4427,6 +4427,20 @@
         customTitle: () => fn.gt(".text-center>h1").replace("|", "-"),
         category: "nsfw1"
     }, {
+        name: "猎美社",
+        url: {
+            h: "liemeishe.com"
+        },
+        imgs: ".entry-content a[data-fancybox]",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: ".single-article h1",
+        fancybox: {
+            v: 3,
+            insertLibrarys: 1
+        },
+        category: "nsfw1"
+    }, {
         name: "萌图社",
         host: ["www.446m.com", "446m.com"],
         reg: /^https?:\/\/(www\.)?446m\.com\/index\.php\/\w+\/\d+\.html$/,
@@ -6826,6 +6840,7 @@
             re: ".oxy-easy-posts-pages",
             pageNum: "span.current"
         },
+        openInNewTab: ".oxy-posts a:not([target=_blank])",
         category: "autoPager"
     }, {
         name: "4KHD",
@@ -7157,9 +7172,12 @@
         name: "Căng Cực",
         url: {
             h: "cangcuc.com",
-            e: ".post-single"
+            e: [".post-single", ".royal_grid"]
         },
-        imgs: ".royal_grid a",
+        imgs: () => {
+            videoSrcArray = fn.gae(".royal_grid video>source").map(e => e.src);
+            return fn.gae(".royal_grid a");
+        },
         button: [4],
         insertImg: [
             [".royal_grid", 2, ".royal_grid"], 2
@@ -7169,6 +7187,7 @@
         next: ".widget-previous-post a",
         prev: ".widget-next-post a",
         customTitle: "h1.title",
+        downloadVideo: true,
         category: "nsfw1"
     }, {
         name: "Porn Pics",
@@ -9813,10 +9832,10 @@
         },
         category: "nsfw2"
     }, {
-        name: "JoyReactor/Аниме на JoyReactor/The Witcher/Genshin Impact/Warhammer 40000",
+        name: "JoyReactor/Аниме на JoyReactor/The Witcher/Genshin Impact/Warhammer 40000/ThatPervert/PronReactor",
         host: ["reactor.cc", "anime.reactor.cc", "witcher.reactor.cc", "gi.reactor.cc", "wh.reactor.cc"],
         url: {
-            h: "reactor.cc",
+            h: [/reactor\.cc$/, "thatpervert.com", "fapreactor.com"],
             p: "/post/"
         },
         imgs: () => fn.gae(".post_content .image img").map(img => {
@@ -10293,9 +10312,12 @@
         ],
         category: "nsfw2"
     }, {
-        name: "TUPIC.TOP",
-        host: ["www.tupic.top"],
-        reg: /^https?:\/\/www\.tupic\.top\/\w+\/\w+\/\d+\.html$/,
+        url: {
+            name: "TUPIC.TOP",
+            h: "tupic.top",
+            p: ".html",
+            e: "#post_content h1"
+        },
         box: ["#metadata_qrcode", 2],
         imgs: ".gallery_img",
         button: [4],
@@ -12977,7 +12999,7 @@
         category: "ad"
     }, {
         name: "逆次元逆ACG",
-        host: ["www.nicohentai.com", "www.freeacg.org", "www.freeacg2.org", "acg.taipei", "nico.yt"],
+        host: ["www.nicohentai.com", "www.susmeat.com", "www.freeacg.org", "www.freeacg2.org", "acg.taipei", "nico.yt"],
         url: {
             e: "#Comic_Top_Nav img[alt=logo][src$='_nico.png']",
             p: /^\/(moeupup-\d-\d+\.html|showinfo-\d+-\d+-\d\.html)$/
@@ -26640,6 +26662,7 @@ if ("xx" in window) {
                 str_184: "排除錯誤",
                 str_185: "自動排錯",
                 str_186: "更多選單",
+                str_187: "壓縮檔裡創建資料夾",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -26871,6 +26894,7 @@ if ("xx" in window) {
                 str_184: "排除错误",
                 str_185: "自动排错",
                 str_186: "更多选单",
+                str_187: "压缩档里创建资料夹",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -26971,7 +26995,7 @@ if ("xx" in window) {
                 str_65: "Stop AutoDownload!!!",
                 str_66: "💬 Feedback",
                 str_67: "⚙️ Settings",
-                str_68: "Current(※Global) Website Full Picture Load Options",
+                str_68: "Current(※Global) Website Options",
                 str_69: "Show Lower Left Icon Button",
                 str_70: "Max Download Thread：",
                 str_71: "Compressed Packaging",
@@ -27055,10 +27079,10 @@ if ("xx" in window) {
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
-                str_145: "Fancybox5&ViewerJs Play Delay：",
-                str_146: "Fancybox5 Wheel：",
+                str_145: "FB5&ViewerJs Play Delay：",
+                str_146: "FB5 Wheel：",
                 str_147: "Gallery (0、1、3) Wheel：",
-                str_148: "Fancybox5 Slideshow Transition：",
+                str_148: "FB5 Slideshow Transition：",
                 str_149: "Download Canceled！！！",
                 str_150: "JK Scroll ",
                 str_151: "JK Smooth Scroll",
@@ -27097,6 +27121,7 @@ if ("xx" in window) {
                 str_184: "Culling",
                 str_185: "Auto Culling",
                 str_186: "More Menu",
+                str_187: "Create a folder in compressed file",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
@@ -31362,6 +31387,8 @@ if ("xx" in window) {
         srcs.forEach(src => URL.revokeObjectURL(src));
     };
 
+    const zipFolderConfig = _GM_getValue("zipFolderConfig", 1);
+
     //圖片影片下載函式
     const DownloadFn = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
@@ -31417,9 +31444,13 @@ if ("xx" in window) {
             let videosNum;
             if (videoSrcArray.length > 0 && siteData.downloadVideo && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
                 videosNum = videoSrcArray.length;
-                zipFolder = zip.folder(`${title} [${imgsNum}P + ${videosNum}V]`);
+                if (zipFolderConfig == 1) {
+                    zipFolder = zip.folder(`${title} [${imgsNum}P + ${videosNum}V]`);
+                }
             } else {
-                zipFolder = zip.folder(`${title} [${imgsNum}P]`);
+                if (zipFolderConfig == 1) {
+                    zipFolder = zip.folder(`${title} [${imgsNum}P]`);
+                }
             }
             if (imgsSrcArr.length > 0) {
                 const pad = String(imgsSrcArr.length).length;
@@ -31553,9 +31584,15 @@ if ("xx" in window) {
                         ["mp4", "webm", "mov"].includes(ex) ? fileName = `${data.picNum}V.${(ex)}` : fileName = `${data.picNum}P.${(siteData.ex || ex)}`;
                         if (options.zip == 1) {
                             //console.log(`第${n}/${total}張，檔案名：${fileName}，大小：${parseInt(data.blob.size / 1024, 10)} Kb`);
-                            zipFolder.file(fileName, blobData, {
-                                binary: true
-                            });
+                            if (zipFolderConfig == 1) {
+                                zipFolder.file(fileName, blobData, {
+                                    binary: true
+                                });
+                            } else {
+                                zip.file(fileName, blobData, {
+                                    binary: true
+                                });
+                            }
                         } else {
                             saveData(blobData, title + "_" + fileName);
                             await delay(200);
@@ -37057,6 +37094,10 @@ label.line-through:has(>#size) {
     <input id="Zip" type="checkbox">
     <label>${displayLanguage.str_71}</label>
 </div>
+<div style="width: 348px; display: flex;">
+    <input id="zipFolder" type="checkbox">
+    <label>※${displayLanguage.str_187}</label>
+</div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
     <label>${displayLanguage.str_72}</label>
     <select id="Extension"></select>
@@ -37181,6 +37222,7 @@ label.line-through:has(>#size) {
         ge("#MsgPos", main).value = _GM_getValue("FullPictureLoadMsgPos", 0);
         ge("#Threading", main).value = options.threading;
         ge("#Zip", main).checked = options.zip == 1 ? true : false;
+        ge("#zipFolder", main).checked = zipFolderConfig == 1 ? true : false;
         ge("#Extension", main).value = options.file_extension;
         ge("#Convert", main).checked = _GM_getValue("convertWebpToJpg", 1) == 1 ? true : false;
         ge("#AutoDownload", main).checked = options.autoDownload == 1 ? true : false;
@@ -37277,6 +37319,7 @@ label.line-through:has(>#size) {
             _GM_setValue("FullPictureLoadMsgPos", ge("#MsgPos", main).value);
             options.threading = ge("#Threading", main).value;
             options.zip = ge("#Zip", main).checked == true ? 1 : 0;
+            _GM_setValue("zipFolderConfig", ge("#zipFolder", main).checked == true ? 1 : 0);
             options.file_extension = ge("#Extension", main).value;
             _GM_setValue("convertWebpToJpg", ge("#Convert", main).checked == true ? 1 : 0);
             options.comic = ge("#Comic", main).checked == true ? 1 : 0;
