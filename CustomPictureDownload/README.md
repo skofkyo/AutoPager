@@ -1733,6 +1733,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://liemeishe.com/">猎美社</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="http://www.446m.com/">萌图社</a>
                 </td>
                 <td>China IP限定</td>
@@ -5386,7 +5392,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.nicohentai.com/">逆次元逆ACG</a>
                 </td>
                 <td>
-                    <a href="https://www.freeacg.org/">www.freeacg.org</a>， <a href="https://nico.yt/">nico.yt</a>
+                    <a href="https://www.susmeat.com/">www.susmeat.com</a>， <a href="https://www.freeacg.org/">www.freeacg.org</a>， <a href="https://nico.yt/">nico.yt</a>
                 </td>
             </tr>
             <tr>
