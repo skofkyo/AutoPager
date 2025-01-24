@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.23.1
+// @version            2025.1.25
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -106,7 +106,7 @@
     let _this = {};
     let tempData = {};
     let siteJson = {};
-    let displayLanguage = {};
+    let DL = {};
     let globalImgArray = [];
     let captureSrcArray = [];
     let captureTotal = 0;
@@ -360,7 +360,7 @@
                     if (numP != thumbnailSrcArray.length) {
                         setTimeout(() => {
                             fn.hideMsg();
-                            fn.showMsg(displayLanguage.xchina_picnum_error, 5000);
+                            fn.showMsg(DL.xchina_picnum_error, 5000);
                         }, 1500)
                     }
                     if (fn.lp.includes("amateur")) {
@@ -669,13 +669,13 @@
         imgs: async () => {
             let links = fn.gau("div[id^=post] a");
             links.unshift(fn.url);
-            fn.showMsg(displayLanguage.str_14, 0);
+            fn.showMsg(DL.str_14, 0);
             let loop = true;
             let pn = 13;
             let fetchNum = 1;
             const getNext = () => {
                 return fn.fetchDoc(fn.lp + "?page=" + pn).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_14} (Page${fetchNum += 1})`, 0);
+                    fn.showMsg(`${DL.str_14} (Page${fetchNum += 1})`, 0);
                     if (fn.ge("div[id^=post]", dom)) {
                         links = [...links, ...fn.gau("div[id^=post] a", dom)];
                     } else {
@@ -707,7 +707,7 @@
         host: ["telegra.ph"],
         reg: /^https?:\/\/telegra\.ph\/.+/,
         imgs: () => {
-            fn.showMsg(displayLanguage.str_01, 0);
+            fn.showMsg(DL.str_01, 0);
             return fn.fetchDoc(fn.url).then(dom => fn.gae(".tl_article img", dom));
         },
         capture: () => _this.imgs(),
@@ -1572,7 +1572,7 @@
         reg: /^https?:\/\/www\.siwashi\.xyz\/\w+\/\d+\.html$/,
         imgs: () => {
             if (fn.ge("//div[contains(text(),'分页阅读')]")) {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let links = fn.gau("//div[contains(text(),'分页阅读')]/a");
                 links = [fn.url, ...links];
                 return links.flatMap(url => fn.fetchDoc(url).then(dom => fn.gae(".entry-content img", dom).map(e => e.dataset.srcset ?? e.src)));
@@ -1744,7 +1744,7 @@
             p: /^\/[^\/]+\/$/
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fn.fetchDoc(fn.url).then(dom => {
                 thumbnailSrcArray = fn.getImgSrcArr(".entry-content>div:not(.separator,.c)>a img[data-lazy-src]", dom);
                 return fn.gae(".entry-content>div:not(.separator,.c)>a", dom);
@@ -1808,7 +1808,7 @@
             p: /^\/post\/\d+\.html$/i
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("//a[text()='显示全文']");
             return fn.fetchDoc(url).then(dom => fn.gae("#lightgallery img", dom));
         },
@@ -1834,7 +1834,7 @@
             }
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("//a[text()='显示全文']");
             return fn.fetchDoc(url).then(dom => fn.gae("#lightgallery img", dom));
         },
@@ -1928,11 +1928,11 @@
             let status = 200;
             let vip = false;
             let fetchNum = 0;
-            fn.showMsg(displayLanguage.str_01, 0);
+            fn.showMsg(DL.str_01, 0);
             for (let [page, link] of links.entries()) {
                 await fetch(link).then(res => {
                     if (res.status == 403) status = 403;
-                    fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${links.length}`, 0);
+                    fn.showMsg(`${DL.str_02}${fetchNum+=1}/${links.length}`, 0);
                     return res.arrayBuffer();
                 }).then(buffer => {
                     const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
@@ -2817,7 +2817,7 @@
             e: "//script[contains(text(),'PF.obj.config.auth_token')]"
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let id;
             if (fn.lh === "ibb.co") {
                 id = fn.lp.split("/").at(-1);
@@ -2883,7 +2883,7 @@
         observerURL: true,
         imgs: async () => {
             if (!_this.SPA()) return [];
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             await fn.waitEle("a[href*='/read/'],.album-heading a");
             const getApiUrl = (id, page) => {
                 let searchParams = new URLSearchParams({
@@ -2899,7 +2899,7 @@
             let resArr = fn.arr(max, (v, i) => {
                 let url = getApiUrl(id, (i + 1));
                 return fetch(url).then(res => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                     return res.json();
                 }).then(json => json.data.picture.list.items.map(e => {
                     return e.url_to_video ? {
@@ -3056,7 +3056,7 @@
         observerURL: true,
         init: () => fn.waitEle(".z-breadcrumbs .z-breadcrumbs__item"),
         imgs: async (msg = 1) => {
-            if (msg === 1) fn.showMsg(displayLanguage.str_05, 0);
+            if (msg === 1) fn.showMsg(DL.str_05, 0);
             let body = {
                 storageKey: "1",
                 path: decodeURIComponent(window.location.pathname.replace(/^\/1/, "")),
@@ -3105,7 +3105,7 @@
         box: [".container", 2],
         button: [4],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let video = fn.ge("a[href^='/video/']");
             if (video) {
                 let url = fn.gu("a[href^='/video/']");
@@ -3145,13 +3145,13 @@
         exclude: ".justify-center>button>.v-btn__content",
         init: () => fn.waitEle("h3"),
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let [max] = fn.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
             let links = fn.arr(max, (v, i) => siteUrl + "/" + (i + 1));
             let fetchNum = 0;
             let resArr = links.map((url, i, arr) => {
                 return fn.fetchDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     let code = fn.gst("photoList", dom);
                     return fn.run(code.match(/photoList:([^\]]+\])/)[1]);
                 });
@@ -3171,13 +3171,13 @@
         exclude: ".justify-center>button>.v-btn__content",
         init: () => fn.waitEle("h3"),
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let [max] = fn.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
             let links = fn.arr(max, (v, i) => siteUrl + "/" + (i + 1));
             let fetchNum = 0;
             let resArr = links.map((url, i, arr) => {
                 return fn.fetchDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     let code, imgs;
                     try {
                         code = fn.gst("imgList", dom);
@@ -3247,14 +3247,14 @@
             s: "aid="
         },
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let id = new URLSearchParams(fn.ls).get("aid");
             let total = await fetch(`/api/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `/api/image/list?aid=${id}&pageNum=${i + 1}`);
             let fetchNum = 0;
             let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${links.length}`, 0);
                 return json.data;
             }));
             return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => {
@@ -3288,14 +3288,14 @@
             s: "aid="
         },
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let id = new URLSearchParams(fn.ls).get("aid");
             let total = await fetch(`https://admin.aiavr.uk/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `https://admin.aiavr.uk/image/list?aid=${id}&pageNum=${i + 1}`);
             let fetchNum = 0;
             let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${links.length}`, 0);
                 return json.data;
             }));
             return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => {
@@ -3327,7 +3327,7 @@
             s: "aid="
         },
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let id = new URLSearchParams(fn.ls).get("aid");
             let vip = await fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.isSee);
             if (vip == false) {
@@ -3341,7 +3341,7 @@
             let links = fn.arr(pages, (v, i) => `https://admin.aiavr.uk/userImage/list?aid=${id}&pageNum=${i + 1}`);
             let fetchNum = 0;
             let resArr = links.map(url => fetch(url).then(res => res.json()).then(json => {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${links.length}`, 0);
                 return json.data;
             }));
             return Promise.all(resArr).then(data => data.flat()).then(arr => arr.map(e => e.imgUrl == null ? null : "https://image.aiavr.uk/xinshijie" + e.imgUrl).filter(item => item));
@@ -3369,7 +3369,7 @@
             let html = "";
             let fetchNum = 0;
             for (let i = 0; i < num; i += 21) {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                 await fetch(`/ajaxs.aspx?fun=getmore&id=${pid}&p=${i}`).then(res => res.text()).then(text => (html += text));
             }
             let dom = fn.doc(html);
@@ -3461,7 +3461,7 @@
         imgs: async () => {
             thumbnailSrcArray = fn.gae(".images-card img").map(e => e.dataset.src ?? e.src);
             fn.clearAllTimer(2);
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             const resBlobUrl = (id, max) => {
                 return fetch("/normal-download/", {
@@ -3472,7 +3472,7 @@
                     "body": `wallpaperId=${id}`,
                     "method": "POST"
                 }).then(res => res.blob()).then(blob => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                     return URL.createObjectURL(blob);
                 });
             };
@@ -3571,6 +3571,20 @@
             h: "www.cosnyaa.com"
         },
         exclude: ".signin-loader",
+        init: () => {
+            for (const sheet of document.styleSheets) {
+                if (sheet.href == null) {
+                    for (const rule of sheet.rules) {
+                        if (rule.selectorText === "[id*=\"FullPictureLoad\"]") {
+                            rule.style.setProperty("visibility", "");
+                            rule.style.setProperty("opacity", "");
+                            rule.style.setProperty("pointer-events", "");
+                            return;
+                        }
+                    }
+                }
+            }
+        },
         imgs: ".wp-posts-content img",
         autoDownload: [0],
         next: "//a[p[text()='上一篇']][starts-with(@href,'http')]",
@@ -3665,7 +3679,7 @@
                 post_id: PID,
                 post_url
             }).toString();
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fn.fetchDoc("/wp-admin/admin-ajax.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -3708,7 +3722,7 @@
             }
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fn.fetchDoc("/wp-admin/admin-ajax.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -4933,14 +4947,14 @@
             const model_bid = fn.lp.replaceAll("/", "");
             let ele = fn.ge("#showmore");
             let max = ele.dataset.max;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let ajaxNum = 0;
             let resArr = fn.arr(max, (v, i) => new Promise(resolve => {
                 $.ajax({
                     url: `/ajax/model_new/${model_bid}/page-${i + 1}/photos`,
                     dataType: "html",
                     success: (data) => {
-                        fn.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${max}`, 0);
+                        fn.showMsg(`${DL.str_06}${ajaxNum+=1}/${max}`, 0);
                         resolve(data);
                     }
                 });
@@ -4961,13 +4975,13 @@
             });
             let videoNum = total - picNum;
             let videoPages = Math.ceil(videoNum / 16);
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let resArr2 = fn.arr(videoPages, (v, i) => new Promise(resolve => {
                 $.ajax({
                     url: `/ajax/model_new/${model_bid}/page-${i + 1}/videos`,
                     dataType: "html",
                     success: (data) => {
-                        fn.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${videoPages}`, 0);
+                        fn.showMsg(`${DL.str_06}${ajaxNum+=1}/${videoPages}`, 0);
                         resolve(data);
                     }
                 });
@@ -4982,10 +4996,10 @@
                 tempDom2 = fn.doc(html);
                 let videoUrls = fn.gae("iframe.saint-iframe", tempDom2).map(e => e.src);
                 console.log("iframeVideoUrls", videoUrls);
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let getVideoUrlsArr = videoUrls.map((url, i, arr) => {
                     return fn.xhrDoc(url).then(dom => {
-                        fn.showMsg(`${displayLanguage.str_06}${ajaxNum+=1}/${arr.length}`, 0);
+                        fn.showMsg(`${DL.str_06}${ajaxNum+=1}/${arr.length}`, 0);
                         return fn.ge("source[type]", dom)?.src ?? null;
                     });
                 });
@@ -5258,14 +5272,14 @@
             let actorName = siteUrl.split("/")[3];
             let imgsSrcArr = [];
             let fetchNum = 0;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             for (let i = 1; i <= pages; i++) {
                 let json = await fetch(`/${actorName}?page=${i}&type=photos&order=0`, {
                     "headers": {
                         "x-requested-with": "XMLHttpRequest"
                     }
                 }).then(res => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${pages}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${pages}`, 0);
                     return res.json();
                 });
                 if (json.length == 0) break;
@@ -5456,7 +5470,7 @@
         reg: /^https?:\/\/(www|m)\.tuiimg\.com\/meinv\/\d+\//,
         link: "https://m.tuiimg.com/meinv/",
         init: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.url.replace("www.tuiimg.com", "m.tuiimg.com");
             await fn.xhrDoc(url, {
                 headers: {
@@ -5673,7 +5687,7 @@
                 fn.clearAllTimer();
                 return captureSrcArray;
             }
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let srcs = [];
             let [, , galleryId] = fn.lp.split("/");
             let cursorId = "";
@@ -6645,7 +6659,7 @@
         imgs: () => {
             if (document.URL.includes("/image/")) {
                 let id = document.URL.split("/").at(-1);
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 return fetch(`/api/photo/${id}`).then(res => res.json()).then(json => {
                     fn.hideMsg();
                     return json.files.map(e => e.full_url);
@@ -7929,7 +7943,7 @@
             let pagesTotal = Math.ceil(Number(postsTotal) / 50);
             let api = "/api/v1" + new URL(document.URL).pathname + "/posts-legacy";
             let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? api : api + `?o=${i * 50}`);
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             let resArr = [];
             let error = false;
@@ -7944,7 +7958,7 @@
                     json
                 }) => {
                     if (status == 200) {
-                        fn.showMsg(`${displayLanguage.str_06}${i + 1}/${pageLinks.length}`, 0);
+                        fn.showMsg(`${DL.str_06}${i + 1}/${pageLinks.length}`, 0);
                         return json.results.map(e => document.URL + "/post/" + e.id);
                     } else {
                         error = true;
@@ -7961,7 +7975,7 @@
             Promise.all(resArr).then(async arr => {
                 let postUrls = arr.flat();
                 resArr = [];
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 for (let [i, url] of postUrls.entries()) {
                     let res = await _this.getPostJson(url);
                     if (res.status != 200) {
@@ -7971,7 +7985,7 @@
                         return;
                     }
                     resArr.push(res);
-                    fn.showMsg(`${displayLanguage.str_06}${i + 1}/${postUrls.length}`, 0);
+                    fn.showMsg(`${DL.str_06}${i + 1}/${postUrls.length}`, 0);
                 }
                 Promise.all(resArr).then(arr => {
                     videoSrcArray = arr.map(obj => obj.videos).flat();
@@ -7990,7 +8004,7 @@
                 //fn.createImgBox(".site-section", 2);
                 let links = fn.gau(".card-list__items a");
                 let resArr = [];
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 for (let [i, url] of links.entries()) {
                     let res = await _this.getPostJson(url);
                     if (res.status != 200) {
@@ -7999,7 +8013,7 @@
                         return [];
                     }
                     resArr.push(res);
-                    fn.showMsg(`${displayLanguage.str_06}${i + 1}/${links.length}`, 0);
+                    fn.showMsg(`${DL.str_06}${i + 1}/${links.length}`, 0);
                 }
                 return Promise.all(resArr).then(arr => {
                     videoSrcArray = arr.map(obj => obj.videos).flat();
@@ -8007,7 +8021,7 @@
                 });
             } else if (document.URL.includes("/post/")) {
                 //fn.createImgBox(".post__body", 2);
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 return _this.getPostJson(document.URL).then(obj => {
                     if (obj.status == 200) {
                         videoSrcArray = obj.videos;
@@ -8302,10 +8316,10 @@
             if (a) a.outerHTML = a.innerHTML;
             let max = fn.attr("#auto-play", "total");
             let [id] = fn.attr("#auto-play", "data").match(/\d+/);
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             return fn.arr(max, (v, i) => fetch(`/api/?ac=get_album_images&id=${id}&num=${i + 1}`).then(res => res.json()).then(json => {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                 return json.src;
             }));
         },
@@ -9312,7 +9326,7 @@
         box: [".album", 2],
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr(".albumPhoto");
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             return fn.gae(".album .item>a").map(async (a, i, arr) => {
                 let img = fn.ge("img", a);
@@ -9327,7 +9341,7 @@
                         let spirit = fn.run(text.match(/var\sspirit\s?=\s?([^;]+);/)[1]);
                         let api = `/backend.php?&spirit=${spirit}&photo=${id}`;
                         return fetch(api).then(res => res.json()).then(json => {
-                            fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                            fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
                             return json[0];
                         });
                     });
@@ -9404,7 +9418,7 @@
         reg: /^https?:\/\/sxypix\.com\/w\/\w+$/i,
         box: [".gallgrid", 2],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let pid = fn.ge("div.grid-item").dataset.photoid;
             let aid = fn.gu(".gall_info_panel a.tdn").split("/").at(-1);
             let ghash = fn.ge(".gall_cp[data-ghash]").dataset.ghash;
@@ -9968,7 +9982,7 @@
             //sessionStorage.getItem("hermioneStatPixels");
             if (_this.SPA()) {
                 return fn.wait(() => {
-                    fn.showMsg(displayLanguage.str_04, 0);
+                    fn.showMsg(DL.str_04, 0);
                     let imgs = fn.gae("figure img");
                     let loadeds = fn.gae("figure img[srcset*='w, ']");
                     if (imgs.length > 0) {
@@ -10026,10 +10040,10 @@
         imgs: () => fn.getEle([fn.url + "&a=10000"], "#wtf>a").then(aArr => {
             thumbnailSrcArray = aArr.map(a => fn.ge("img", a)?.src);
             let links = aArr.map(a => a.href);
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             let imageHostLinks = links.map(url => fetch(url).then(res => res.text()).then(text => {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${links.length}`, 0);
                 let dom = fn.doc(text);
                 let code = fn.gst("window.location.href", dom);
                 let [, link] = code.match(/window\.location\.href[\s\='"]+([^'";]+)/);
@@ -10042,6 +10056,7 @@
             ["#wtf", 2, "#wtf"], 3
         ],
         customTitle: ".galleryhead>h3>a",
+        hide: ".mobilehide",
         category: "nsfw2"
     }, {
         name: "GirlsTop",
@@ -10079,7 +10094,7 @@
             p: "/album"
         },
         getVK: (list, picNum) => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let max = Math.ceil(Number(picNum) / 10);
             let fetchNum = 0;
             let resArr = [];
@@ -10100,7 +10115,7 @@
                     responseType: "json",
                     method: "POST"
                 }).then(json => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                     return json.payload[1][3].map(e => e.w_src ?? e.z_src ?? e.y_src ?? e.x_src);
                 });
                 resArr.push(res);
@@ -10130,7 +10145,7 @@
         imgs: async () => {
             let srcs = [];
             let fileIds = fn.gau("a.image").map(u => u.split("/").at(-1));
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             let resArr = [];
             for (let id of fileIds) {
@@ -10149,7 +10164,7 @@
                                 "accept": "application/json, text/plain, */*",
                             }
                         }).then(res => res.json()).then(obj => {
-                            fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${fileIds.length}`, 0);
+                            fn.showMsg(`${DL.str_06}${fetchNum+=1}/${fileIds.length}`, 0);
                             if (isV) {
                                 return {
                                     v: obj.url
@@ -10161,7 +10176,7 @@
                             }
                         });
                     } else {
-                        fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${fileIds.length}`, 0);
+                        fn.showMsg(`${DL.str_06}${fetchNum+=1}/${fileIds.length}`, 0);
                         return {
                             n: null
                         }
@@ -10523,17 +10538,13 @@
         host: ["bitchesgirls.com"],
         reg: /^https?:\/\/bitchesgirls\.com\/[^\/]+\/[^\/]+\/[^\/]+\/$/,
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             const getUrls = (dom = document, pageUrl = siteUrl) => {
-                let text = fn.gst("@context", dom);
-                let json = JSON.parse(text.replace(/\n/g, "").replace(/\s+/g, " "));
-                //debug("\n此頁JSON資料\n", {
-                //    url: pageUrl,
-                //    json: json
-                //});
                 let images = [];
                 let thums = [];
                 let videos = [];
+                let code = fn.gst("thumbnailUrl", dom);
+                let json = JSON.parse(code.replace(/\n/g, "").replace(/\s+/g, " "));
                 let {
                     image,
                     video
@@ -10542,12 +10553,17 @@
                 video = video?.filter(e => e["@type"] === "VideoObject");
                 if (video.length > 0) {
                     videos = video.map(e => e.url);
+                } else {
+                    videos = fn.gae(".albumgrid img[type=video]").map(e => e.getAttribute("original"));
                 }
                 if (image.length > 0) {
                     thums = image.map(e => e.thumbnailUrl);
                     images = image.map(e => e.url);
                     thums = thums.filter(e => !e.includes("/logos/"));
                     images = images.filter(e => !e.includes("/logos/"));
+                } else {
+                    thums = fn.gae(".albumgrid img[type=image]").map(e => e.src);
+                    images = fn.gae(".albumgrid img[type=image]").map(e => e.getAttribute("original"));
                 }
                 return {
                     images,
@@ -10557,12 +10573,12 @@
             }
             const max = _unsafeWindow.adConstants.pagesAmount;
             if (max > 1) {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let fetchNum = 0;
                 let resArr = fn.arr(max, (v, i) => {
                     let url = i == 0 ? siteUrl : siteUrl + `${i + 1}/`;
                     return fn.fetchDoc(url).then(dom => {
-                        fn.showMsg(`${displayLanguage.str_06}${fetchNum += 1}/${max}`, 0);
+                        fn.showMsg(`${DL.str_06}${fetchNum += 1}/${max}`, 0);
                         return getUrls(dom, url);
                     });
                 });
@@ -10591,7 +10607,7 @@
         reg: /^https?:\/\/x-video\.tube\/albums\/\d+\//i,
         box: [".album-view", 2],
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let total = Number(fn.gt(".media-data__list-value"));
             let max;
             if (total > 12) {
@@ -10608,7 +10624,7 @@
                         "x-requested-with": "XMLHttpRequest"
                     }
                 }).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                     return {
                         thumbs: fn.getImgSrcArr("a.grid-item img", dom),
                         originals: fn.gae("a.grid-item", dom)
@@ -10761,13 +10777,13 @@
         },
         imgs: () => {
             if (fn.ge("#album_view_album_view_pagination")) {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let max = Number(fn.gt("//li[@class='next action-item']/preceding-sibling::li[@class='page action-item'][1]//span[@class='text']"));
                 let fetchNum = 0;
                 let resArr = fn.arr(max, (v, i) => {
                     let url = siteUrl + "?mode=async&function=get_block&block_id=album_view_album_view&sort_by=&from=" + (i + 1);
                     return fn.fetchDoc(url).then(dom => {
-                        fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                        fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                         return fn.gae("a[data-fancybox-type=image]", dom).map(a => {
                             let img = fn.ge("img", a);
                             return {
@@ -10890,10 +10906,10 @@
             }
             let loop = true;
             let pn = 0;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             const get = () => {
                 return fn.fetchDoc(`/ajax/actions.php?gid=${gid}&page=${pn}&action=getGallery`).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_05} (Page${pn + 1})`, 0);
+                    fn.showMsg(`${DL.str_05} (Page${pn + 1})`, 0);
                     if (!fn.ge("#hgallery", dom)) {
                         loop = false;
                         return;
@@ -10949,11 +10965,11 @@
             let gid = fn.ge("#galleryid_input").value;
             let resArr = [];
             let fetchNum = 0;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             for (let i = 0; i < max; i += 24) {
                 let url = `/photo/${pid}/?gid=${gid}&idx=${i}&partial=true`;
                 let res = await fn.fetchDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${pages}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${pages}`, 0);
                     if (!fn.ge(".thumbs a", dom)) {
                         alert("Encountered human-machine verification");
                         window.location.href = siteUrl;
@@ -10983,10 +10999,10 @@
             let gid = fn.ge("#galleryid_input").value;
             let loop = true;
             let pn = 0;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             const get = () => {
                 return fn.fetchDoc(`/ajax/actions.php?gid=${gid}&page=${pn}&action=getGallery`).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_05} (Page${pn + 1})`, 0);
+                    fn.showMsg(`${DL.str_05} (Page${pn + 1})`, 0);
                     if (!fn.ge("#hgallery", dom)) {
                         loop = false;
                         return;
@@ -11036,10 +11052,10 @@
             }
             let resArr = [];
             let fetchNum = 0;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             for (let url of pages) {
                 let res = await fn.fetchDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                     return [...dom.images].map(img => {
                         let original = img.dataset.full;
                         let thumb = img.dataset.original;
@@ -11069,7 +11085,7 @@
         host: ["fuskator.com"],
         reg: /^https?:\/\/fuskator\.com\/thumbs\/[\w-~]+\/[\w-~]+\.html$/i,
         init: async () => {
-            fn.showMsg(displayLanguage.str_04, 0);
+            fn.showMsg(DL.str_04, 0);
             await fn.waitEle(".pic_pad");
         },
         imgs: "#thumbimages a,.swipebox a",
@@ -11405,7 +11421,7 @@
                     let str = arr.join("\n");
                     console.log(str);
                     copyToClipboard(str);
-                    fn.showMsg(displayLanguage.str_11);
+                    fn.showMsg(DL.str_11);
                 }
             });
         },
@@ -11594,7 +11610,7 @@
             e: "#next-url"
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let pid = fn.ge("#next-url").rel;
             return fetch("/meinv/ajax.php", {
                 "headers": {
@@ -11648,7 +11664,7 @@
         init: () => fn.clearAllTimer(),
         box: ["#bodywrap", 2],
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.ge("//a[@class='btn'][text()='開始閱讀']").href;
             return fn.fetchDoc(url).then(dom => fn.gae("#photo_body img", dom));
         },
@@ -12390,7 +12406,7 @@
         button: [4],
         insertImg: [".joe_detail__article", 2],
         customTitle: () => fn.dt({
-            s: ".joe_detail__title",
+            t: fn.gt(".joe_detail__title").replaceAll("---", " "),
             d: /[-PVGMB\d\.]+$/
         }),
         fancybox: {
@@ -13312,7 +13328,7 @@
             });
         },
         init: async () => {
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await _this.getData();
             let imgs = fn.createImgArray(globalImgArray);
             let tE = fn.ge("#comicContentMain");
@@ -13364,7 +13380,7 @@
         },
         imgs: async () => {
             await fn.getNP(".scramble-page", ".pagination li.active+li>a:not(.prevnext)");
-            fn.showMsg(displayLanguage.str_01, 0);
+            fn.showMsg(DL.str_01, 0);
             const {
                 aid,
                 scramble_id,
@@ -13516,12 +13532,12 @@
                 }
             }
             if (E_HENTAI_LoadOriginalImage == 1) {
-                fn.showMsg(displayLanguage.str_01, 0);
+                fn.showMsg(DL.str_01, 0);
                 let fetchNum = 0;
                 return fn.gau(".gdtm a,.gdtl a,#gdt a").map(async (url, i, arr) => {
                     await delay(100 * i);
                     return fn.fetchDoc(url).then(async (dom) => {
-                        fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${arr.length}`, 0);
+                        fn.showMsg(`${DL.str_02}${fetchNum+=1}/${arr.length}`, 0);
                         let fullimg = fn.ge("a[href*=fullimg]", dom);
                         let img = fn.ge("#img", dom);
                         if (fullimg) {
@@ -13587,7 +13603,7 @@
                 let srcs = _unsafeWindow._gallery.images.pages.map((e, i) => `https://image_domain/galleries/${_unsafeWindow._gallery.media_id}/${i + 1}.${fn.ex(e.t)}`);
                 const hostArray = ["i.nhentai.net", "i5.nhentai.net", "i6.nhentai.net", "i7.nhentai.net", "i1.nhentai.net", "i2.nhentai.net", "i3.nhentai.net", "i4.nhentai.net"];
                 for (let host of hostArray.reverse()) {
-                    fn.showMsg(displayLanguage.str_56 + "\n" + host, 0);
+                    fn.showMsg(DL.str_56 + "\n" + host, 0);
                     let src = srcs[0].replace("image_domain", host);
                     let status = await fn.xhrHEAD(src).then(res => res.status);
                     if (status == 200) {
@@ -13598,12 +13614,12 @@
                 fn.hideMsg();
                 return srcs.map(e => e.replace("image_domain", image_domain));
             } else if (fn.lh === "nyahentai.red") {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let [imgDir] = fn.ge(".gallerythumb>img").src.match(/.+\//);
                 let url = fn.gu("a.gallerythumb");
                 return fn.iframeVar(url, "images_ext").then(w => w.images_ext.map((e, i) => `${imgDir}${(i + 1)}.${fn.ex(e)}`));
             } else if (fn.lh === "nhentai.xxx") {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let [max] = fn.gt(".pages").match(/\d+/);
                 let img = fn.ge(".gallery_thumbs img");
                 let src = img.dataset.src ?? img.src;
@@ -13612,7 +13628,7 @@
                 let iframe = await fn.iframeVar(url, "g_th");
                 return fn.arr(max, (v, i) => `${imgDir}${(i + 1)}.${fn.ex(iframe.g_th.fl[(i + 1)][0])}`);
             } else if (fn.lh === "nhentai.to" || fn.lh === "nhentai.website") {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let url = fn.gu("a.gallerythumb");
                 return fn.iframeVar(url, "reader").then(frame => {
                     const {
@@ -13660,9 +13676,9 @@
             let image_domain;
             let srcs = _unsafeWindow._gallery.images.pages.map((e, i) => `https://image_domain/galleries/${_unsafeWindow._gallery.media_id}/${i + 1}.${fn.ex(e.t)}`);
             const hostArray = ["i.nhentai.net", "i5.nhentai.net", "i6.nhentai.net", "i7.nhentai.net", "i1.nhentai.net", "i2.nhentai.net", "i3.nhentai.net", "i4.nhentai.net"];
-            //fn.showMsg(displayLanguage.str_56, 0);
+            //fn.showMsg(DL.str_56, 0);
             for (let host of hostArray.reverse()) {
-                fn.showMsg(displayLanguage.str_56 + "_" + host, 0);
+                fn.showMsg(DL.str_56 + "_" + host, 0);
                 let src = srcs[0].replace("image_domain", host);
                 let status = await fn.xhrHEAD(src).then(res => res.status);
                 if (status == 200) {
@@ -13723,7 +13739,7 @@
         reg: /^https?:\/\/yabai\.si\/g\/\w+$/i,
         init: async () => {
             await fn.waitEle(".grid img");
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let pageData = JSON.parse(document.querySelector("#app").dataset.page);
             let {
                 version
@@ -13769,7 +13785,7 @@
         reg: /^https?:\/\/sukidesu\.moe\/g\/\d+$/i,
         init: async () => {
             await fn.waitEle(".preview-imgs img");
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let [id] = fn.lp.match(/\d+/);
             let readApi = `https://sukidesu.moe/spa/manga/${id}/read`;
             let fetchJson = await fetch(readApi, {
@@ -13802,7 +13818,7 @@
         reg: /^https?:\/\/akuma\.moe\/g\/\w+$/i,
         init: () => fn.waitEle("#pages"),
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             const {
                 pag,
                 ajx
@@ -13855,7 +13871,7 @@
         imgs: () => {
             const [, , g_id, g_key] = location.pathname.split("/");
             const detailApi = `https://api.schale.network/books/detail/${g_id}/${g_key}`;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fetch(detailApi).then(res => res.json()).then(detailJson => {
                 debug("\ndetailJson\n", detailJson);
                 const {
@@ -13890,7 +13906,7 @@
                             xhr.responseType = "blob";
                             xhr.open("GET", base + e.path + `?w=${maxKey}`);
                             xhr.onload = () => {
-                                fn.showMsg(`${displayLanguage.str_06}${xhrNum+=1}/${arr.length}`, 0);
+                                fn.showMsg(`${DL.str_06}${xhrNum+=1}/${arr.length}`, 0);
                                 resolve(URL.createObjectURL(xhr.response));
                             };
                             xhr.send();
@@ -13942,7 +13958,7 @@
             p: /^\/[^/]+\/(#collapse)?$/
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("//a[span[text()='List Read']]");
             return fn.fetchDoc(url).then(dom => fn.run(fn.gt("#listImgH", 1, dom)));
         },
@@ -13978,7 +13994,7 @@
         ],
         imgs: async () => {
             thumbnailSrcArray = fn.getImgSrcArr(".single-thumb>a>img");
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu(".single-thumb>a");
             let json = await fn.fetchDoc(url).then(dom => {
                 let code = fn.gst("readerPages", dom);
@@ -14041,7 +14057,7 @@
         init: () => fn.wait((_, win) => !!ge(".gallery_thumb img") && ("g_th" in win)),
         box: [".gallery_bottom"],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let u_id = fn.ge("#gallery_id").value;
             let g_id = fn.ge("#load_id").value;
             let img_dir = fn.ge("#load_dir").value;
@@ -14089,7 +14105,7 @@
         init: () => fn.wait((_, win) => !!ge(".gp_th img") && ("g_th" in win)),
         box: ["#comments_div"],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let _token = fn.attr('meta[name="csrf-token"]', "content");
             let server = fn.ge("#load_server").value;
             let u_id = fn.ge("#gallery_id").value;
@@ -14157,10 +14173,10 @@
         include: "#append_thumbs",
         box: ["#comments_div"],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_04, 0);
+            fn.showMsg(DL.str_04, 0);
             await fn.waitEle("#append_thumbs img");
             fn.hideMsg();
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let server = fn.ge("#load_server").value;
             let u_id = fn.ge("#gallery_id").value;
             let g_id = fn.ge("#load_id").value;
@@ -14209,10 +14225,10 @@
         include: ".gallery_thumbs",
         box: [".gallery_thumbs", 0],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_04, 0);
+            fn.showMsg(DL.str_04, 0);
             await fn.waitEle("#thumbs_box img");
             fn.hideMsg();
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let _token = fn.attr('meta[name="csrf-token"]', "content");
             let server = fn.ge("#load_server").value;
             let u_id = fn.ge("#gallery_id").value;
@@ -14263,7 +14279,7 @@
         reg: /^https?:\/\/(lhentai\.com|simplyhentai\.red)\/g\/\d+$/,
         imgs: async () => {
             thumbnailSrcArray = fn.getImgSrcArr(".gallerythumb img");
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("a.gallerythumb");
             let iframe = await fn.iframeVar(url, "images_ext");
             let [imgDir] = fn.ge(".fit-horizontal", iframe.document).src.match(/.+\//);
@@ -14340,7 +14356,7 @@
         box: [".bookthumbnailcontainer", 2],
         imgs: async () => {
             thumbnailSrcArray = fn.getImgSrcArr(".bookthumbnail .lazyloadimage");
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu(".bookthumbnail>a");
             return fn.iframeVar(url, "displayimagelist").then(w => w.displayimagelist.map(e => e.image_url));
         },
@@ -14366,7 +14382,7 @@
         box: [".box:has(>.is-multiline)", 2],
         imgs: async () => {
             thumbnailSrcArray = fn.getImgSrcArr(".card-image img");
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("//a[div[@class='card']]");
             return fn.iframe(url, {
                 waitVar: "pageData",
@@ -14379,7 +14395,7 @@
                 } = object;
                 let CDN_Srcs = frame.pageData.map(e => e.image);
                 let siteSrcs = CDN_Srcs.map(e => e.replace(/i\d\.wp\.com\/|\?filter=null/g, ""));
-                fn.showMsg(displayLanguage.str_56, 0);
+                fn.showMsg(DL.str_56, 0);
                 let status = await fn.xhrHEAD(siteSrcs[0]).then(res => res.status);
                 fn.hideMsg();
                 return status === 200 ? siteSrcs : CDN_Srcs;
@@ -14397,7 +14413,7 @@
         imgs: async () => {
             let CDN_Srcs = _unsafeWindow.pageData.map(e => e.image);
             let siteSrcs = CDN_Srcs.map(e => e.replace(/i\d\.wp\.com\/|\?filter=null/g, ""));
-            fn.showMsg(displayLanguage.str_56, 0);
+            fn.showMsg(DL.str_56, 0);
             let status = await fn.xhrHEAD(siteSrcs[0]).then(res => res.status);
             return status === 200 ? siteSrcs : CDN_Srcs;
         },
@@ -14411,7 +14427,7 @@
         reg: /^https?:\/\/hentailoop\.com\/manga\/[^\/]+\/$/,
         box: [".preview", 2],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             thumbnailSrcArray = await fetch("/wp-admin/admin-ajax.php", {
                 "headers": {
                     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -14575,14 +14591,14 @@
         init: () => fn.waitEle("#doujin-page img"),
         box: ["#doujin-page", 2],
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let srcs = _unsafeWindow.__NEXT_DATA__.props.pageProps.data.images.pages.map(e => e.t);
             let fetchNum = 0;
             return srcs.map(async (src, i, arr) => {
                 await delay(i * 500);
                 src = await _this.checkStatus(src);
                 return fetch(src).then(res => res.blob()).then(blob => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     return URL.createObjectURL(blob);
                 });
             });
@@ -14732,7 +14748,7 @@
         box: [".gallery"],
         imgs: async () => {
             if (fn.ge("#load_id")) {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 let _token = fn.attr('meta[name="csrf-token"]', "content");
                 let id = fn.ge("#load_id").value;
                 let dir = fn.ge("#load_dir").value;
@@ -14761,7 +14777,7 @@
         host: ["asmhentai.com"],
         reg: /^https?:\/\/asmhentai\.com\/gallery\/\d+\/\d+\/$/,
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let _token = fn.attr('meta[name="csrf-token"]', "content");
             let id = fn.ge("#gallery_id").value;
             let dir = fn.ge("#image_dir").value;
@@ -14789,7 +14805,7 @@
             e: "//script[contains(text(),'configUrl')]"
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gst("configUrl").match(/configUrl":"[^,]+/g)[0].slice(12, -1).replaceAll("\\", "");
             return fetch(url).then(res => res.text()).then(text => {
                 let xml = fn.xml(text);
@@ -15078,7 +15094,7 @@
         link: "https://hanime1.me/comics",
         reg: /^https?:\/\/hanime1\.me\/comic\/\d+$/,
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu(".comics-thumbnail-wrapper>a");
             return fn.fetchDoc(url).then(dom => {
                 let imgDir = fn.ge("#current-page-image", dom).dataset.prefix;
@@ -15224,7 +15240,7 @@
         init: () => fn.waitVar("g_th"),
         box: ["#comments_div"],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let server = fn.ge("#load_server").value;
             let u_id = fn.ge("#gallery_id").value;
             let g_id = fn.ge("#load_id").value;
@@ -15269,7 +15285,7 @@
         init: () => fn.waitVar("g_th"),
         box: ["#thumbs_gallery_div", 2],
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let server = fn.ge("#load_server").value;
             let u_id = fn.ge("#gallery_id").value;
             let g_id = fn.ge("#load_id").value;
@@ -15338,7 +15354,7 @@
         delay: 300,
         imgs: async () => {
             let prges = fn.ge("div[data-pages]").dataset.pages;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let imgDir;
             let key = await fn.fetchDoc(fn.gu("#thumbnails-container a")).then(dom => {
                 let url = fn.ge("div[data-cdn]", dom).dataset.cdn;
@@ -15705,7 +15721,7 @@
         host: ["www.yinmh.com", "www.yinmh.top", "www.yinmh.xyz"],
         reg: /^https?:\/\/www\.yinmh\.(com|top|xyz)\/\d+\.html$/,
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fn.fetchDoc(siteUrl).then(dom => fn.gae(".left>.image img.lazy", dom).map(e => e.getAttribute("img") ?? e.src));
         },
         button: [4],
@@ -15990,7 +16006,7 @@
         imgs: (msg = 1) => {
             if (_this.SPA()) {
                 fn.createImgBox("#recommend-info-body", 1);
-                if (msg === 1) fn.showMsg(displayLanguage.str_05, 0);
+                if (msg === 1) fn.showMsg(DL.str_05, 0);
                 let formData = new FormData();
                 formData.append("comicUid", _this.comicUid());
                 formData.append("sort", "0");
@@ -16037,7 +16053,7 @@
             fn.addMutationObserver(() => fn.remove(".dlh,iframe:not(#FullPictureLoadIframe,#FullPictureLoadIframeGallery)"));
         },
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let [galleryId] = fn.lp.match(/\d+/);
             let galleryUrl = `/photos-gallery-aid-${galleryId}.html`;
             return fetch(galleryUrl).then(res => res.text()).then(text => text.match(/\/\/[\w\.]+\/data\/[^"'\\]+/gi));
@@ -16115,7 +16131,7 @@
                 getsignature,
                 getS3ProxySet
             } = _unsafeWindow;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             const get = (page) => new Promise(resolve => {
                 const setTime = getTimeOnece();
@@ -16144,7 +16160,7 @@
                     customTitle += " " + title;
                     debug(`\n自定義標題：${customTitle}`);
                 }
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                 const proxy = getS3ProxySet();
                 return pages.docs.map(e => proxy + e.media.path);
             });
@@ -16252,13 +16268,13 @@
             if (isArray(siteJson?.volume?.pages) && siteJson?.volume?.pages?.length > 0) {
                 return siteJson.volume.pages;
             } else if (fn.ge("//a[text()='本章已分页']")) {
-                fn.showMsg(displayLanguage.str_01, 0);
+                fn.showMsg(DL.str_01, 0);
                 let arr = [];
                 let src;
                 let page = 1;
                 let loop = true;
                 const getData = () => fn.fetchDoc(location.href + "/" + page).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_02}${page}/???`, 0);
+                    fn.showMsg(`${DL.str_02}${page}/???`, 0);
                     const srcs = fn.getImgSrcArr(".charpetBox img", dom);
                     for (src of srcs) {
                         if (arr.includes(src)) {
@@ -16367,12 +16383,12 @@
         host: ["www.vnacg.com"],
         reg: /^https?:\/\/(www|m)\.vnacg\.com\/show\/\d+\.html/,
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let api = `/e/extend/api/show.php?id=${_unsafeWindow.info.id}&page=`;
             let max = await fetch(`${api}1`).then(res => res.json()).then(res => res.pages);
             let fetchNum = 0;
             let resArr = fn.arr(max, (v, i) => fetch(`${api + (i + 1)}`).then(res => res.json()).then(json => {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                 return json.data;
             }));
             return Promise.all(resArr).then(data => data.flat().map(e => e.src));
@@ -16445,7 +16461,7 @@
             e.innerText = "圖片";
         },
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("#more-information1 a:has(i.fa-book)");
             await fn.getCode(url, {
                 mode: "dom",
@@ -16528,7 +16544,7 @@
             _unsafeWindow.onscroll = null;
         },
         imgs: async () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url;
             if (fn.ge("//a[text()='Read']")) {
                 url = fn.gu("//a[text()='Read']");
@@ -16647,7 +16663,7 @@
         reg: /^https?:\/\/rokuhentai\.com\/\w+$/,
         include: ".site-page-card__media",
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.url + "/0";
             return fn.fetchDoc(url).then(dom => fn.getImgSrcArr(".site-reader__image", dom));
         },
@@ -16715,7 +16731,7 @@
         },
         box: [".row.mb-4", 2],
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let urls = fn.gau(".title+div>a.btn-info");
             return fn.getImgA("img[data-src],#lightgallery a,.gallary a", urls, 2000);
         },
@@ -16735,7 +16751,7 @@
             e: ".title+div>a>i.fa-play"
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu(".title+div>a");
             return fn.fetchDoc(url).then(dom => fn.ge("img[data-src]", dom) ? fn.gae("img[data-src]", dom) : fn.gae("#lightgallery a,.gallary a", dom));
         },
@@ -16883,11 +16899,11 @@
         },
         init: () => fn.remove("body>div[id][class][style]"),
         imgs: () => {
-            fn.showMsg(displayLanguage.str_01, 0);
+            fn.showMsg(DL.str_01, 0);
             let fetchNum = 0;
             let resArr = fn.gau("//a[contains(text(),'Read More')]").map((url, i, arr) => {
                 return fn.fetchDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${arr.length}`, 0);
+                    fn.showMsg(`${DL.str_02}${fetchNum+=1}/${arr.length}`, 0);
                     return fn.gae(".entry-content>img,.entry-content>p>img,.entry-content>div>img", dom);
                 });
             })
@@ -17036,7 +17052,7 @@
         },
         box: [".content", 2],
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("#read-online-button");
             return fn.iframeVar(url, "galleryinfo").then(w => {
                 fn.hideMsg();
@@ -17414,7 +17430,7 @@
         init: async () => {
             await fn.waitEle([".read-article img", "uni-view.last-bum"]);
             fn.ge("uni-view.last-bum").addEventListener("click", () => setTimeout(() => location.reload(), 300));
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let [, no, mhid] = fn.url.match(/no=(\d+)&id=(\d+)/);
             let api = `/prod-api/app-api/vv/mh-episodes/get?jiNo=${no}&mhid=${mhid}&id=`;
             let fetchJson = await fetch(api).then(res => res.json());
@@ -18144,7 +18160,7 @@
         init: () => fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
         imgs: () => {
             if (_this.SPA()) {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 const chapter_id = new URL(document.URL).pathname.split("/").at(2);
                 return fetch(`https://api.mangadex.org/at-home/server/${chapter_id}?forcePort443=false`).then(res => res.json()).then(json => {
                     fn.hideMsg();
@@ -18207,7 +18223,7 @@
         observerURL: true,
         imgs: () => {
             if (_this.SPA()) {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 const chapter_id = new URL(document.URL).pathname.split("/").at(3);
                 return fetch(`https://api.namicomi.com/images/chapter/${chapter_id}?newQualities=true`).then(res => res.json()).then(json => {
                     fn.hideMsg();
@@ -18322,7 +18338,7 @@
         insertImg: ["#reader", 2],
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 4);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 4);
             }
         },
         autoDownload: [0],
@@ -18403,7 +18419,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 3);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 3);
             }
         },
         autoDownload: [0],
@@ -18497,7 +18513,7 @@
                 });
                 let api = `${croot}chapterfun.ashx?${searchParams}`;
                 return fetch(api).then(res => res.text()).then(res => {
-                    fn.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${imagecount})`, 0);
+                    fn.showMsg(`${DL.str_06}(${fetchNum+=1}/${imagecount})`, 0);
                     let text = fn.run(res.slice(4));
                     let [, pix] = text.match(/pix="([^"]+)/);
                     let [, pvalue] = text.match(/pvalue=([^;]+)/);
@@ -18600,7 +18616,7 @@
                     });
                     let api = `${croot}chapterfun.ashx?${searchParams}`;
                     return fetch(api).then(res => res.text()).then(res => {
-                        fn.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${imagecount})`, 0);
+                        fn.showMsg(`${DL.str_06}(${fetchNum+=1}/${imagecount})`, 0);
                         let text = fn.run(res.slice(4));
                         let [, pix] = text.match(/pix="([^"]+)/);
                         let [, pvalue] = text.match(/pvalue=([^;]+)/);
@@ -18618,7 +18634,7 @@
         insertImgAF: (parent) => {
             fn.run("jQuery('.read-img-bar').off();")
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 5);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 5);
             }
         },
         next: "//a[div[p[text()='Next Chapter']]][not(starts-with(@href,'java'))]",
@@ -18663,7 +18679,7 @@
         insertImg: [".reader", 2],
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 4);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 4);
             }
             fn.remove(".pager>.viewer,.nav-page");
         },
@@ -18737,7 +18753,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 1);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 1);
             }
         },
         autoDownload: [0],
@@ -18785,7 +18801,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 1);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 1);
             }
         },
         autoDownload: [0],
@@ -18834,7 +18850,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 5);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 5);
             }
         },
         autoDownload: [0],
@@ -18867,7 +18883,7 @@
         insertImg: [".pic_box", 2],
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 5);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 5);
             }
         },
         endColor: "white",
@@ -19011,7 +19027,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 6);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 6);
             }
             document.onkeyup = null;
         },
@@ -19073,7 +19089,7 @@
                 });
                 let api = `chapterfun.ashx?${searchParams}`;
                 return fetch(api).then(res => res.text()).then(res => {
-                    fn.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${imagecount})`, 0);
+                    fn.showMsg(`${DL.str_06}(${fetchNum+=1}/${imagecount})`, 0);
                     let text = fn.run(res.slice(4));
                     let [, pix] = text.match(/pix="([^"]+)/);
                     let [, pvalue] = text.match(/pvalue=([^;]+)/);
@@ -19112,7 +19128,7 @@
             fn.gae("#theManga,#thePic").forEach(e => (e.style.width = ""));
             fn.run("jQuery(document).unbind()");
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 7);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 7);
             }
         },
         autoDownload: [0],
@@ -19164,7 +19180,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 2);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 2);
             }
         },
         autoDownload: [0],
@@ -19272,7 +19288,7 @@
         observerURL: true,
         imgs: () => {
             if (_this.SPA()) {
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 const [chapter_id] = document.location.pathname.split("/").at(-1).split("-");
                 return fetch(`https://api.comick.io/chapter/${chapter_id}`).then(res => res.json()).then(json => {
                     nextLink = json.next?.href;
@@ -19618,7 +19634,7 @@
         endColor: "white",
         insertImgAF: (parent) => {
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 6);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 6);
             }
             fn.remove("#right")
         },
@@ -19759,7 +19775,7 @@
         init: () => fn.waitEle(".chapter-item.active"),
         imgs: () => {
             let id = fn.ge(".chapter-item.active").dataset.id;
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fetch(`/json/chapter?mode=vertical&id=${id}`, {
                 "headers": {
                     "accept": "application/json, text/javascript, */*; q=0.01",
@@ -20174,7 +20190,7 @@ if ("xx" in window) {
         },
         init: () => fn.MangabzUI(),
         imgs: (msg = 1) => {
-            if (msg == 1) fn.showMsg(displayLanguage.str_05, 0);
+            if (msg == 1) fn.showMsg(DL.str_05, 0);
             const {
                 MANGABZ_IMAGE_COUNT,
                 MANGABZ_CURL,
@@ -20196,7 +20212,7 @@ if ("xx" in window) {
                 });
                 let apiUrl = `${MANGABZ_CURL}chapterimage.ashx?${searchParams}`;
                 return fetch(apiUrl).then(res => res.text()).then(res => {
-                    if (msg == 1) fn.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${MANGABZ_IMAGE_COUNT})`, 0);
+                    if (msg == 1) fn.showMsg(`${DL.str_06}(${fetchNum+=1}/${MANGABZ_IMAGE_COUNT})`, 0);
                     return fn.run(res)[0];
                 });
             });
@@ -20261,7 +20277,7 @@ if ("xx" in window) {
         },
         init: async () => {
             fn.MangabzUI();
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fn.ge("#cp_img");
                 tE.innerHTML = "";
@@ -20298,7 +20314,7 @@ if ("xx" in window) {
         },
         init: () => fn.XmanhuaUI(),
         imgs: (msg = 1) => {
-            if (msg == 1) fn.showMsg(displayLanguage.str_05, 0);
+            if (msg == 1) fn.showMsg(DL.str_05, 0);
             const {
                 XMANHUA_IMAGE_COUNT,
                 XMANHUA_CURL,
@@ -20320,7 +20336,7 @@ if ("xx" in window) {
                 });
                 let apiUrl = `${XMANHUA_CURL}chapterimage.ashx?${searchParams}`;
                 return fetch(apiUrl).then(res => res.text()).then(res => {
-                    if (msg == 1) fn.showMsg(`${displayLanguage.str_06}(${fetchnUm+=1}/${XMANHUA_IMAGE_COUNT})`, 0);
+                    if (msg == 1) fn.showMsg(`${DL.str_06}(${fetchnUm+=1}/${XMANHUA_IMAGE_COUNT})`, 0);
                     return fn.run(res)[0];
                 });
             });
@@ -20385,7 +20401,7 @@ if ("xx" in window) {
         },
         init: async () => {
             fn.XmanhuaUI();
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fn.ge("#cp_img");
                 tE.innerHTML = "";
@@ -20422,7 +20438,7 @@ if ("xx" in window) {
             i: 0
         },
         imgs: (msg = 1) => {
-            if (msg == 1) fn.showMsg(displayLanguage.str_05, 0);
+            if (msg == 1) fn.showMsg(DL.str_05, 0);
             const {
                 DM5_IMAGE_COUNT,
                 DM5_CURL,
@@ -20448,7 +20464,7 @@ if ("xx" in window) {
                 });
                 let api = `${DM5_CURL}chapterfun.ashx?${searchParams}`;
                 return fetch(api).then(res => res.text()).then(res => {
-                    if (msg == 1) fn.showMsg(`${displayLanguage.str_06}(${fetchNum+=1}/${DM5_IMAGE_COUNT})`, 0);
+                    if (msg == 1) fn.showMsg(`${DL.str_06}(${fetchNum+=1}/${DM5_IMAGE_COUNT})`, 0);
                     return fn.run(res)[0];
                 });
             });
@@ -20516,7 +20532,7 @@ if ("xx" in window) {
             return fn.createImgArray(srcs)
         },
         init: async () => {
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fn.ge("#cp_img");
                 tE.innerHTML = "";
@@ -20602,7 +20618,7 @@ if ("xx" in window) {
         },
         init: () => fn.XmanhuaUI(),
         imgs: (msg = 1) => {
-            if (msg == 1) fn.showMsg(displayLanguage.str_05, 0);
+            if (msg == 1) fn.showMsg(DL.str_05, 0);
             const {
                 YYMANHUA_IMAGE_COUNT,
                 YYMANHUA_CURL,
@@ -20624,7 +20640,7 @@ if ("xx" in window) {
                 });
                 let apiUrl = `${YYMANHUA_CURL}chapterimage.ashx?${searchParams}`;
                 return fetch(apiUrl).then(res => res.text()).then(res => {
-                    if (msg == 1) fn.showMsg(`${displayLanguage.str_06}(${fetchnUm+=1}/${YYMANHUA_IMAGE_COUNT})`, 0);
+                    if (msg == 1) fn.showMsg(`${DL.str_06}(${fetchnUm+=1}/${YYMANHUA_IMAGE_COUNT})`, 0);
                     return fn.run(res)[0];
                 });
             });
@@ -20689,7 +20705,7 @@ if ("xx" in window) {
         },
         init: async () => {
             fn.XmanhuaUI();
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fn.ge("#cp_img");
                 tE.innerHTML = "";
@@ -21066,7 +21082,7 @@ if ("xx" in window) {
             let max = fn.gt(".HG_COMIC_READER_indicator>div:last-child");
             let fetchNum = 0;
             return fn.arr(max, (v, i) => fetch(`/api${fn.lp}/page?pageNum=${(i + 1)}`).then(res => res.json()).then(json => {
-                fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${max}`, 0);
+                fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
                 return json.data.url;
             }));
         },
@@ -21376,7 +21392,7 @@ if ("xx" in window) {
         observerURL: true,
         imgs: async (url = document.URL) => {
             if (!_this.SPA()) return [];
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let [, chapterId] = url.match(/chapter\/(\d+)\/images/);
             let body = {
                 operationName: "imagesByChapterId",
@@ -21967,7 +21983,7 @@ if ("xx" in window) {
         insertImgAF: (parent) => {
             if (fn.lh == "m.gmh1234.com") fn.run("$('#images').off()");
             if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, displayLanguage.str_143, 3);
+                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 3);
             }
         },
         next: () => fn.fetchDoc(_unsafeWindow.comicUrl).then(dom => {
@@ -22745,7 +22761,7 @@ if ("xx" in window) {
         include: "td img",
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         init: async () => {
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await fn.getKukudmSrc(siteUrl, document, 0).then(srcs => fn.createImgArray(srcs)).then(async imgs => {
                 let tE = fn.ge("//td[input]");
                 tE.innerHTML = "";
@@ -22917,7 +22933,7 @@ if ("xx" in window) {
         include: ".classBox img,.imgBox",
         init: async () => {
             fn.remove("//center[iframe] | //a[img] | //ul[center[li[@class='txtA']]]");
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await fn.getKukudmSrc(siteUrl, document, 0).then(srcs => fn.createImgArray(srcs)).then(async imgs => {
                 let tE = fn.ge(".imgBox");
                 tE.innerHTML = "";
@@ -22984,7 +23000,7 @@ if ("xx" in window) {
             } = _unsafeWindow;
             if (imgDomain === "") {
                 url = url.replace("www.gaonaojin.com", "m.gaonaojin.com");
-                fn.showMsg(displayLanguage.str_05, 0);
+                fn.showMsg(DL.str_05, 0);
                 return fn.xhrDoc(url, {
                     headers: {
                         "Referer": url,
@@ -23709,7 +23725,7 @@ if ("xx" in window) {
         observerURL: true,
         imgs: () => {
             let [id] = localStorage.getItem("history_chapter_ids").match(/\d+/);
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fetch(`https://api.zerosumonline.com/api/v1/viewer?chapter_id=${id}`, {
                 "body": null,
                 "method": "POST"
@@ -23737,7 +23753,7 @@ if ("xx" in window) {
         SPA: () => document.URL.includes("/reader/"),
         observerURL: true,
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fn.fetchDoc(document.URL).then(dom => {
                 fn.hideMsg();
                 let textArr = dom.title.split(" - ");
@@ -23904,6 +23920,7 @@ if ("xx" in window) {
             });
         },
         infiniteScroll: true,
+        hide: "body>div[class][style^='position:fixed;']",
         category: "comic"
     }, {
         name: "D漫画 自動翻頁",
@@ -23947,7 +23964,15 @@ if ("xx" in window) {
             preloadNextPage: 1
         },
         css: ".autoPagerTitle{width:100%}",
+        hide: "body>div[class][style^='position:fixed;']",
         category: "comic autoPager"
+    }, {
+        name: "D漫画 AD",
+        url: {
+            h: "www.dmanhua.com"
+        },
+        hide: "body>div[class][style^='position:fixed;']",
+        category: "ad"
     }, {
         name: "漫画网",
         host: ["www.manhua3.com", "manhuami.cc"],
@@ -24297,6 +24322,7 @@ if ("xx" in window) {
         url: {
             h: [/^(www|m)\.mh160/, "www.veryim.com"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
+            e: "//script[contains(text(),'qTcms_S_m_murl_e')]",
             i: 0
         },
         init: "document.onkeydown=null",
@@ -24336,6 +24362,7 @@ if ("xx" in window) {
         url: {
             h: [/^(www|m)\.mh160/, "www.veryim.com"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
+            e: "//script[contains(text(),'qTcms_S_m_murl_e')]",
             i: 1
         },
         getImgs: () => {
@@ -24628,7 +24655,7 @@ if ("xx" in window) {
             d: "pc"
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             return fn.xhrDoc(siteUrl, {
                 headers: {
                     "User-Agent": Mobile_UA
@@ -24723,7 +24750,7 @@ if ("xx" in window) {
         },
         init: async () => {
             fn.copymangaUI();
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchJson = await _this.fetchJson();
             siteJson = fetchJson;
             debug("\n此頁JSON資料\n", fetchJson);
@@ -24792,7 +24819,7 @@ if ("xx" in window) {
         },
         init: async () => {
             fn.copymangaUI();
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await _this.getImgs().then(async imgs => {
                 let tE = fn.ge(".comicContent-list");
                 tE.innerHTML = "";
@@ -24984,7 +25011,7 @@ if ("xx" in window) {
             });
         },
         init: async () => {
-            fn.showMsg(displayLanguage.str_135, 0);
+            fn.showMsg(DL.str_135, 0);
             await _this.getData();
             let imgs = fn.createImgArray(globalImgArray);
             let tE = fn.ge(".comicContentPopupImageList");
@@ -25679,7 +25706,7 @@ if ("xx" in window) {
         },
         box: ["#contentsDetailShow"],
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let links;
             let chapterIds;
             if (fn.ge("a.btn_more")) {
@@ -25693,7 +25720,7 @@ if ("xx" in window) {
             let fetchNum = 0;
             for (let id of chapterIds) {
                 let res = fetch(`/api/book/fixedList2/${id}/?quality=pc`).then(res => res.json()).then(json => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${links.length}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${links.length}`, 0);
                     try {
                         let arr = [json.coverUrl];
                         json.chapterList[0].pageList.forEach(e => arr.push(e.publicBgImage));
@@ -25722,7 +25749,7 @@ if ("xx" in window) {
             d: "pc"
         },
         imgs: () => {
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let id = fn.lp.split("/").at(-2);
             return fetch(`/api/book/fixedList2/${id}/?quality=pc`).then(res => res.json()).then(json => {
                 try {
@@ -26468,7 +26495,7 @@ if ("xx" in window) {
         case "zh-Hant-TW":
         case "zh-Hant-HK":
         case "zh-Hant-MO":
-            displayLanguage = {
+            DL = {
                 xchina_picnum_error: "圖片數量不符，請反饋。",
                 str_01: "獲取圖片元素中...",
                 str_02: "獲取圖片中 ",
@@ -26663,6 +26690,9 @@ if ("xx" in window) {
                 str_185: "自動排錯",
                 str_186: "更多選單",
                 str_187: "壓縮檔裡創建資料夾",
+                str_188: "移動畫廊",
+                str_189: "單圖模式",
+                str_190: "條漫模式",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -26700,7 +26730,7 @@ if ("xx" in window) {
         case "zh-Hans-CN":
         case "zh-Hans-SG":
         case "zh-Hans-MY":
-            displayLanguage = {
+            DL = {
                 xchina_picnum_error: "图片数量不符，请反馈。",
                 str_01: "获取图片元素中...",
                 str_02: "获取图片中 ",
@@ -26895,6 +26925,9 @@ if ("xx" in window) {
                 str_185: "自动排错",
                 str_186: "更多选单",
                 str_187: "压缩档里创建资料夹",
+                str_188: "移动画廊",
+                str_189: "单图模式",
+                str_190: "条漫模式",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -26926,7 +26959,7 @@ if ("xx" in window) {
             };
             break;
         default:
-            displayLanguage = {
+            DL = {
                 xchina_picnum_error: "图片数量不符，请反馈。",
                 str_01: "Get Images...",
                 str_02: "Get Images ",
@@ -27122,6 +27155,9 @@ if ("xx" in window) {
                 str_185: "Auto Culling",
                 str_186: "More Menu",
                 str_187: "Create a folder in compressed file",
+                str_188: "Mobile Gallery",
+                str_189: "Single Image Mode",
+                str_190: "Webtoon Mode",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
@@ -27155,10 +27191,10 @@ if ("xx" in window) {
     }
 
     const FullPictureLoadBlacklist = localStorage.getItem("FullPictureLoadBlacklist") ?? 0;
-    _GM_registerMenuCommand(displayLanguage.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
+    _GM_registerMenuCommand(DL.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
     _GM_registerMenuCommand("📓 Github README.md", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/README.md"));
     /*const FullPictureLoadBlacklist_menu_command_id = */
-    _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + displayLanguage.str_138 : "✔️  " + displayLanguage.str_138, () => {
+    _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + DL.str_138 : "✔️  " + DL.str_138, () => {
         FullPictureLoadBlacklist == 0 ? localStorage.setItem("FullPictureLoadBlacklist", 1) : localStorage.setItem("FullPictureLoadBlacklist", 0);
         location.reload();
     });
@@ -27406,7 +27442,7 @@ if ("xx" in window) {
         fetchErrorMsg: () => {
             if (fetchErrorArray.length > 0) {
                 debug(`\nfetchErrorArray\n`, fetchErrorArray);
-                setTimeout(() => fn.showMsg(`${displayLanguage.str_97}${fetchErrorArray.length}${displayLanguage.str_98}`, 10000), 1500);
+                setTimeout(() => fn.showMsg(`${DL.str_97}${fetchErrorArray.length}${DL.str_98}`, 10000), 1500);
             }
         },
         //並行請求取得圖片網址，返回圖片網址。
@@ -27414,7 +27450,7 @@ if ("xx" in window) {
             if (fn.ge(".FullPictureLoadImage") && request == 0) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
             if (!getImgFn.includes("getImg()")) getImgFn += " > fn.getImg()";
-            if (msg == 1) fn.showMsg(displayLanguage.str_01, 0);
+            if (msg == 1) fn.showMsg(DL.str_01, 0);
             let imgsArray = [];
             let fetchNum = 0;
             const html = _url => fetch(_url).then(async res => {
@@ -27427,7 +27463,7 @@ if ("xx" in window) {
             }).then(buffer => {
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
-                if (msg == 1) fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${Number(maxPage)}`, 0);
+                if (msg == 1) fn.showMsg(`${DL.str_02}${fetchNum+=1}/${Number(maxPage)}`, 0);
                 return htmlText;
             }).catch(error => {
                 console.error(`\nfn.getImg() > fetch()出錯:\n${decodeURIComponent(_url)}`, error);
@@ -27461,7 +27497,7 @@ if ("xx" in window) {
             if (fn.ge(".FullPictureLoadImage") && request == 0) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
             if (!getImgFn.includes("getImgO()")) getImgFn += " > fn.getImgO()";
-            if (msg == 1) fn.showMsg(displayLanguage.str_01, 0);
+            if (msg == 1) fn.showMsg(DL.str_01, 0);
             let imgsArray = [];
             let fetchNum = 0;
             const html = async (_url, id = 1) => {
@@ -27493,7 +27529,7 @@ if ("xx" in window) {
                             ce.forEach((e, i) => (e.outerHTML = re[i].outerHTML));
                         }
                     }
-                    if (msg == 1) fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${Number(maxPage)}`, 0);
+                    if (msg == 1) fn.showMsg(`${DL.str_02}${fetchNum+=1}/${Number(maxPage)}`, 0);
                     return htmlText;
                 }).catch(error => {
                     console.error(`\nfn.getImgO() > fetch()出錯:\n${decodeURIComponent(_url)}`, error);
@@ -27527,7 +27563,7 @@ if ("xx" in window) {
             if (fn.ge(".FullPictureLoadImage")) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
             if (!getImgFn.includes("getImgIframe()")) getImgFn += " > fn.getImgIframe()";
-            if (showMsg == 1) fn.showMsg(displayLanguage.str_01, 0);
+            if (showMsg == 1) fn.showMsg(DL.str_01, 0);
             let imgsArray = [];
             let fetchNum = 1;
             await fn.waitEle(img);
@@ -27562,7 +27598,7 @@ if ("xx" in window) {
                         }
                     }
                     load.remove();
-                    if (showMsg == 1) fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${Number(maxPage)}`, 0);
+                    if (showMsg == 1) fn.showMsg(`${DL.str_02}${fetchNum+=1}/${Number(maxPage)}`, 0);
                 } else {
                     fetchNum += 1;
                     load.remove();
@@ -27571,7 +27607,7 @@ if ("xx" in window) {
                         url: url
                     };
                     fetchErrorArray.push(obj);
-                    fn.showMsg(displayLanguage.str_03, 3000);
+                    fn.showMsg(DL.str_03, 3000);
                     return;
                 }
             }
@@ -27591,7 +27627,7 @@ if ("xx" in window) {
             if (fn.ge(".FullPictureLoadImage") && request == 0) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
             if (!getImgFn.includes("getImgA()")) getImgFn += " > fn.getImgA()";
-            if (showMsg == 1) fn.showMsg(displayLanguage.str_01, 0);
+            if (showMsg == 1) fn.showMsg(DL.str_01, 0);
             let links, linkEles, linksNum;
             if (isFn(link)) {
                 links = await link();
@@ -27618,7 +27654,7 @@ if ("xx" in window) {
                 }
                 return res.arrayBuffer();
             }).then(buffer => {
-                if (showMsg == 1) fn.showMsg(`${displayLanguage.str_02}${fetchNum+=1}/${linksNum}`, 0);
+                if (showMsg == 1) fn.showMsg(`${DL.str_02}${fetchNum+=1}/${linksNum}`, 0);
                 const decoder = new TextDecoder(document.characterSet || document.charset || document.inputEncoding);
                 const htmlText = decoder.decode(buffer);
                 return htmlText;
@@ -27689,14 +27725,14 @@ if ("xx" in window) {
         //跨域從指定的所有連結取得圖片網址，並行請求有請求間隔參數，返回圖片網址。
         getImgCorsA: (imgSelector, aSelector, time = 100) => {
             isFetching = true;
-            fn.showMsg(displayLanguage.str_01, 0);
+            fn.showMsg(DL.str_01, 0);
             let xhrNum = 0;
             let links;
             isString(aSelector) ? links = fn.gau(aSelector) : links = aSelector;
             let resArr = links.map(async (url, i, arr) => {
                 await delay(time * i);
                 return fn.xhrDoc(url).then(dom => {
-                    fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
+                    fn.showMsg(`${DL.str_02}${xhrNum+=1}/${arr.length}`, 0);
                     return fn.gae(imgSelector, dom, dom);
                 });
             });
@@ -27885,7 +27921,7 @@ if ("xx" in window) {
         //從用AList架設的雲端硬碟，提取圖片和影片網址
         getAList: () => {
             let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURIComponent(a.getAttribute("href"))).map(href => /\.jpe?g$|\.webp$|\.png$|\.gif$|\.mp4$|\.mov$|\.ts|\.zip$/i.test(href) ? href : null).filter(item => item);
-            fn.showMsg(displayLanguage.str_05, 0);
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             let password;
             if ("browser-password" in localStorage) {
@@ -27906,7 +27942,7 @@ if ("xx" in window) {
                     "body": JSON.stringify(body),
                     "method": "POST"
                 }).then(res => res.json()).then(json => {
-                    fn.showMsg(`${displayLanguage.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     return json.code == 200 ? {
                         name: json.data.name,
                         //url: decodeURIComponent(json.data.raw_url)
@@ -28024,7 +28060,7 @@ if ("xx" in window) {
             if (!getImgFn.includes("getNP()")) getImgFn += " > fn.getNP()";
             let nextlink = null;
             let page = 1;
-            if (msg == 1) fn.showMsg(displayLanguage.str_14, 0);
+            if (msg == 1) fn.showMsg(DL.str_14, 0);
             const getNextLink = async (url = "", dom = document) => {
                 if (isFn(nextLinkEle)) {
                     nextlink = await nextLinkEle(dom);
@@ -28053,13 +28089,13 @@ if ("xx" in window) {
                     nextlink = null;
                 }
                 if (isString(url) && isString(nextlink) && (url === nextlink)) {
-                    if (msg == 1) fn.showMsg(displayLanguage.str_15);
+                    if (msg == 1) fn.showMsg(DL.str_15);
                     nextlink = null;
                 }
                 return nextlink;
             };
             const getNextPageEles = async url => {
-                if (msg == 1) fn.showMsg(`${displayLanguage.str_14} (Page${page += 1})`, 0);
+                if (msg == 1) fn.showMsg(`${DL.str_14} (Page${page += 1})`, 0);
                 await fetch(url).then(async res => {
                     if (res.status >= 400) {
                         let resData = await fn.retryUrl(url, res, "fn.getNP()");
@@ -28085,7 +28121,7 @@ if ("xx" in window) {
                     }
                     if (lastPage) {
                         isFetching = false;
-                        if (msg == 1) fn.showMsg(displayLanguage.str_15);
+                        if (msg == 1) fn.showMsg(DL.str_15);
                         return;
                     }
                     if (!fn.ge(pageEle, dom, dom)) {
@@ -28129,7 +28165,7 @@ if ("xx" in window) {
                         await getNextPageEles(nextlink);
                     } else {
                         isFetching = false;
-                        if (msg == 1) fn.showMsg(displayLanguage.str_15);
+                        if (msg == 1) fn.showMsg(DL.str_15);
                         return;
                     }
                 });
@@ -28140,7 +28176,7 @@ if ("xx" in window) {
                 await getNextPageEles(nextlink);
             } else {
                 isFetching = false;
-                if (msg == 1) fn.showMsg(displayLanguage.str_15);
+                if (msg == 1) fn.showMsg(DL.str_15);
                 return;
             }
         },
@@ -28149,19 +28185,19 @@ if ("xx" in window) {
             let imgsSrcArr = [];
             if (links.length > 0) {
                 if (/\.\w+$/.test(links[0]) && !/\.html$/.test(links[0]) && !/\/fappic\.com\//.test(links[0]) && !/pixhost\.to\/show\//.test(links[0]) && !/^https?:\/\/imagetwist\.com\//.test(links[0])) return links;
-                fn.showMsg(displayLanguage.str_01, 0);
+                fn.showMsg(DL.str_01, 0);
                 let xhrNum = 0;
                 let resArr = links.map(async (url, i, arr) => {
                     await delay(100 * i);
                     if (/imx\.to/.test(url)) {
                         return fn.imxXHR(url).then(dom => {
-                            fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
+                            fn.showMsg(`${DL.str_02}${xhrNum+=1}/${arr.length}`, 0);
                             let img = fn.ge("#container img", dom);
                             return img ? img.src : null;
                         });
                     } else if (/imagebam/.test(url)) {
                         return fn.imageBamXHR(url).then(dom => {
-                            fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
+                            fn.showMsg(`${DL.str_02}${xhrNum+=1}/${arr.length}`, 0);
                             let img = fn.ge("img.main-image", dom);
                             return img ? img.src : null;
                         });
@@ -28169,7 +28205,7 @@ if ("xx" in window) {
                         return fn.xhr(url, {
                             responseType: "document"
                         }).then(dom => {
-                            fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
+                            fn.showMsg(`${DL.str_02}${xhrNum+=1}/${arr.length}`, 0);
                             let a = fn.ge("a#download", dom);
                             return a ? a.href : null;
                         });
@@ -28177,7 +28213,7 @@ if ("xx" in window) {
                         return fn.xhr(url, {
                             responseType: "document"
                         }).then(dom => {
-                            fn.showMsg(`${displayLanguage.str_02}${xhrNum+=1}/${arr.length}`, 0);
+                            fn.showMsg(`${DL.str_02}${xhrNum+=1}/${arr.length}`, 0);
                             let img = fn.ge("#imgpreview,#image,.pic.img.img-responsive,#imageid,#img.image-content,.card-body img,.image.img-fluid,img.pic[alt][title]", dom);
                             return img ? img.src : null;
                         });
@@ -28192,7 +28228,7 @@ if ("xx" in window) {
             let hide = siteData.autoPager?.hide;
             if (autoPagerSwitch === true) {
                 autoPagerSwitch = false;
-                fn.showMsg(displayLanguage.str_89);
+                fn.showMsg(DL.str_89);
                 fn.gae(".autoPagerTitle").forEach(e => e.classList.add("off"));
                 if (isString(hide)) {
                     let eles = fn.gae(hide);
@@ -28200,7 +28236,7 @@ if ("xx" in window) {
                 }
             } else {
                 autoPagerSwitch = true;
-                fn.showMsg(displayLanguage.str_90);
+                fn.showMsg(DL.str_90);
                 fn.gae(".autoPagerTitle").forEach(e => e.classList.remove("off"));
                 if (isString(hide)) {
                     let eles = fn.gae(hide);
@@ -28217,7 +28253,7 @@ if ("xx" in window) {
                 url = await fn.getNextLink(doc);
                 if (!url) {
                     autoPagerSwitch = false;
-                    fn.showMsg(displayLanguage.str_58, 3000);
+                    fn.showMsg(DL.str_58, 3000);
                     fn.removeLoading();
                     if (isString(hide)) {
                         let eles = fn.gae(hide);
@@ -28268,7 +28304,7 @@ if ("xx" in window) {
                 if (stopCheck) {
                     autoPagerSwitch = false;
                     fn.removeLoading();
-                    fn.showMsg(displayLanguage.str_58, 3000);
+                    fn.showMsg(DL.str_58, 3000);
                     if (isString(hide)) {
                         let eles = fn.gae(hide);
                         eles.forEach(e => (e.style.display = ""));
@@ -28334,7 +28370,7 @@ if ("xx" in window) {
                     let nextEle = fn.ge(eleSelector, doc, doc);
                     if (!nextEle) {
                         fn.removeLoading();
-                        fn.showMsg(displayLanguage.str_59, 3000);
+                        fn.showMsg(DL.str_59, 3000);
                         return;
                     }
                     tE = fn.gae(eleSelector).at(-1);
@@ -28688,7 +28724,7 @@ if ("xx" in window) {
         //無限滾動創建載入中圖示函式
         addLoading: () => {
             if (siteData.autoPager?.loading === "msg") {
-                fn.showMsg(displayLanguage.str_57, 0);
+                fn.showMsg(DL.str_57, 0);
             } else {
                 try {
                     let img = new Image();
@@ -28711,7 +28747,7 @@ if ("xx" in window) {
                         insertAfter(tE, img);
                     }
                 } catch {
-                    fn.showMsg(displayLanguage.str_57, 0);
+                    fn.showMsg(DL.str_57, 0);
                 }
             }
         },
@@ -28739,7 +28775,7 @@ if ("xx" in window) {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
             if (!getImgFn.includes("getEleF()")) getImgFn += " > fn.getEleF()";
-            fn.showMsg(displayLanguage.str_16, 0);
+            fn.showMsg(DL.str_16, 0);
             if (isString(links)) {
                 links = fn.gau(links);
             }
@@ -28748,7 +28784,7 @@ if ("xx" in window) {
             for (let url of links) {
                 let res = await fn.iframeDoc(url, elements).then(dom => {
                     fn.clearAllTimer();
-                    fn.showMsg(`${displayLanguage.str_17}${fetchNum+=1}/${links.length}`, 0);
+                    fn.showMsg(`${DL.str_17}${fetchNum+=1}/${links.length}`, 0);
                     let eles = fn.gae(elements, dom, dom);
                     if (targetEle === null) {
                         return eles;
@@ -28777,7 +28813,7 @@ if ("xx" in window) {
             if (!getImgFn.includes("getEle()")) getImgFn += " > fn.getEle()";
             let resArr = [];
             let xhrNum = 0;
-            fn.showMsg(displayLanguage.str_16, 0);
+            fn.showMsg(DL.str_16, 0);
             if (isString(links)) {
                 links = fn.gau(links);
             }
@@ -28786,14 +28822,14 @@ if ("xx" in window) {
                 if (time === 0) {
                     res = await fn.fetchDoc(links[i]).then(dom => {
                         debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
-                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        fn.showMsg(`${DL.str_17}${xhrNum+=1}/${links.length}`, 0);
                         //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
                         return fn.gae(elements, dom, dom);
                     });
                 } else {
                     res = fn.fetchDoc(links[i]).then(dom => {
                         debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
-                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        fn.showMsg(`${DL.str_17}${xhrNum+=1}/${links.length}`, 0);
                         //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
                         return fn.gae(elements, dom, dom);
                     });
@@ -28832,7 +28868,7 @@ if ("xx" in window) {
             if (!getImgFn.includes("getCorsEle()")) getImgFn += " > fn.getCorsEle()";
             let resArr = [];
             let xhrNum = 0;
-            fn.showMsg(displayLanguage.str_16, 0);
+            fn.showMsg(DL.str_16, 0);
             if (isString(links)) {
                 links = fn.gau(links);
             }
@@ -28841,14 +28877,14 @@ if ("xx" in window) {
                 if (time === 0) {
                     res = await fn.xhrDoc(links[i]).then(dom => {
                         debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
-                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        fn.showMsg(`${DL.str_17}${xhrNum+=1}/${links.length}`, 0);
                         //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
                         return fn.gae(elements, dom, dom);
                     });
                 } else {
                     res = fn.xhrDoc(links[i]).then(dom => {
                         debug(`\nfn.getEle() URL`, decodeURIComponent(links[i]));
-                        fn.showMsg(`${displayLanguage.str_17}${xhrNum+=1}/${links.length}`, 0);
+                        fn.showMsg(`${DL.str_17}${xhrNum+=1}/${links.length}`, 0);
                         //debug(`fn.getEle()\n${decodeURIComponent(links[i])}\n`, dom);
                         return fn.gae(elements, dom, dom);
                     });
@@ -29084,7 +29120,7 @@ if ("xx" in window) {
                 const buttonObj = [{
                     id: "FullPictureLoadOpenFavoritesBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: displayLanguage.str_128,
+                    text: DL.str_128,
                     cfn: event => {
                         cancelDefault(event);
                         createFavorShadowElement();
@@ -29092,7 +29128,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadShadowGalleryBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: displayLanguage.str_141,
+                    text: DL.str_141,
                     cfn: event => {
                         cancelDefault(event);
                         createShadowGallery();
@@ -29100,7 +29136,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: hasTouchEvent ? displayLanguage.str_107 : displayLanguage.str_107 + ` | [ ${noVideoNum}P ]`,
+                    text: hasTouchEvent ? DL.str_107 : DL.str_107 + ` | [ ${noVideoNum}P ]`,
                     cfn: event => {
                         cancelDefault(event);
                         fastDownloadSwitch = true;
@@ -29109,7 +29145,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadNewTabViewBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: displayLanguage.str_106,
+                    text: DL.str_106,
                     cfn: event => {
                         cancelDefault(event);
                         newTabView();
@@ -29117,7 +29153,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadOptionsBtn",
                     className: "FullPictureLoadPageButtonBottom",
-                    text: displayLanguage.str_85,
+                    text: DL.str_85,
                     cfn: event => {
                         cancelDefault(event);
                         createPictureLoadOptionsShadowElement();
@@ -29125,7 +29161,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadToggleImgModeBtn",
                     className: "FullPictureLoadPageButtonBottom",
-                    text: displayLanguage.str_86,
+                    text: DL.str_86,
                     cfn: event => {
                         cancelDefault(event);
                         toggleImgMode();
@@ -29133,8 +29169,8 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadToggleZoomeBtn",
                     className: "FullPictureLoadPageButtonBottom",
-                    text: displayLanguage.str_87,
-                    title: displayLanguage.str_136,
+                    text: DL.str_87,
+                    title: DL.str_136,
                     cfn: event => {
                         cancelDefault(event);
                         fn.clearAllTimer(2);
@@ -29149,7 +29185,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadCancelZoomBtn",
                     className: "FullPictureLoadPageButtonBottom",
-                    text: displayLanguage.str_88,
+                    text: DL.str_88,
                     cfn: event => {
                         cancelDefault(event);
                         fn.clearAllTimer(2);
@@ -29161,7 +29197,7 @@ if ("xx" in window) {
                     buttonObj[1] = {
                         id: "FullPictureLoadCopyURLBtn",
                         className: "FullPictureLoadPageButtonTop",
-                        text: displayLanguage.str_105,
+                        text: DL.str_105,
                         cfn: event => {
                             cancelDefault(event);
                             copyImgSrcTextB();
@@ -29274,7 +29310,7 @@ if ("xx" in window) {
             if ("endColor" in siteData) {
                 end.style.color = siteData.endColor;
             }
-            end.innerText = `${displayLanguage.str_52}：${noVideoNum}P`;
+            end.innerText = `${DL.str_52}：${noVideoNum}P`;
             fragment.append(end);
             if (srcArr.length > 0 || (srcArr.length >= 0 && videoSrcArray.length > 0)) {
                 const [, insertMode] = siteData.insertImg;
@@ -29302,20 +29338,20 @@ if ("xx" in window) {
                             targetEle = targetEle.parentNode;
                         }
                         if (isString(removeSelector)) fn.remove(removeSelector);
-                        if (siteData.msg != 0 && siteData.category != "comic") fn.showMsg(displayLanguage.str_18);
+                        if (siteData.msg != 0 && siteData.category != "comic") fn.showMsg(DL.str_18);
                     } else if (isString(insertTargetEle)) {
                         targetEle = fn.ge(insertTargetEle);
                         targetEle.innerHTML = "";
                         targetEle.append(fragment);
                         //targetEle.style.textAlign = "center";
                         targetEle.style.display = "block";
-                        if (siteData.msg != 0 && siteData.category != "comic") fn.showMsg(displayLanguage.str_18);
+                        if (siteData.msg != 0 && siteData.category != "comic") fn.showMsg(DL.str_18);
                     }
                     let insertImgAF = siteData.insertImgAF;
                     if (isFn(insertImgAF)) insertImgAF(targetEle);
                     fn.ge("#insertImgMenu")?.remove();
                 } catch (error) {
-                    fn.showMsg(displayLanguage.str_19, 3000);
+                    fn.showMsg(DL.str_19, 3000);
                     console.error("\nfn.insertImg() ele參數錯誤，或用來定位插入的元素不存在。", error);
                     return;
                 }
@@ -29347,7 +29383,7 @@ if ("xx" in window) {
                                 } catch {
                                     imgsNum = 0;
                                     imgs[0].scrollIntoView();
-                                    fn.showMsg(displayLanguage.str_94);
+                                    fn.showMsg(DL.str_94);
                                 }
                             }
                         } else {
@@ -29369,7 +29405,7 @@ if ("xx" in window) {
                 if (options.viewMode == 1 || siteData.viewMode == 1) toggleImgMode();
                 if (siteData.go == 1 && noGoToFirstImage != 1) goToNo1Img();
             } else {
-                fn.showMsg(displayLanguage.str_20);
+                fn.showMsg(DL.str_20);
             }
         },
         immediateInsertImg: async (manual = "no") => {
@@ -29658,7 +29694,7 @@ if ("xx" in window) {
                                     click += 1;
                                     if (click >= 5) {
                                         document.removeEventListener("keydown", callback);
-                                        fn.showMsg(displayLanguage.str_34);
+                                        fn.showMsg(DL.str_34);
                                         location.href = nextLink;
                                     }
                                 }
@@ -29714,7 +29750,7 @@ if ("xx" in window) {
         },
         //延遲
         delay: (time, msg = 1) => {
-            if (time > 200 && msg == 1) fn.showMsg(`${displayLanguage.str_21}${time}${displayLanguage.str_22}...`, time);
+            if (time > 200 && msg == 1) fn.showMsg(`${DL.str_21}${time}${DL.str_22}...`, time);
             return new Promise(resolve => setTimeout(resolve, time));
         },
         //等待函式寫法
@@ -29821,7 +29857,7 @@ if ("xx" in window) {
             if (isString(msg)) {
                 fn.showMsg(msg, 0);
             } else if (msg === 1) {
-                fn.showMsg(displayLanguage.str_56, 0);
+                fn.showMsg(DL.str_56, 0);
             }
             return new Promise(resolve => {
                 const temp = new Image();
@@ -30094,7 +30130,7 @@ if ("xx" in window) {
             if (fn.ge("//title[contains(text(),'404')]", dom, dom)) return [];
             if (!getImgFn.includes("getKukudmSrc")) getImgFn += " > fn.getKukudmSrc()";
             let timeId = setTimeout(() => msg === 1 ? location.reload() : null, 20000);
-            if (msg == 1) fn.showMsg(displayLanguage.str_05, 0);
+            if (msg == 1) fn.showMsg(DL.str_05, 0);
             let max;
             fn.ge("//td[input]", dom, dom) ? max = fn.gt("//td[input]", 1, dom).match(/共(\d+)/)[1] : max = fn.gt(".bottom .subNav", 1, dom).match(/\/(\d+)/)[1];
             url = url.replace(fn.ls, "").replace(/1\.htm$/, "");
@@ -30102,7 +30138,7 @@ if ("xx" in window) {
             let xhrNum = 0;
             let resArr = links.map(url => {
                 return fn.xhrDoc(url).then(dom => {
-                    if (msg == 1) fn.showMsg(`${displayLanguage.str_06}${xhrNum+=1}/${links.length}`, 0);
+                    if (msg == 1) fn.showMsg(`${DL.str_06}${xhrNum+=1}/${links.length}`, 0);
                     let script = fn.gst("document.write", dom);
                     let htmlCode = script.replace("document.write(", "").replace(");", "");
                     let htmlText = fn.run(`(${htmlCode}).toString()`);
@@ -30130,7 +30166,7 @@ if ("xx" in window) {
                 if (isString(first)) {
                     return allSrc;
                 } else {
-                    msg == 1 ? fn.showMsg(displayLanguage.str_56, 0) : null;
+                    msg == 1 ? fn.showMsg(DL.str_56, 0) : null;
                     let status = await fn.xhrHEAD(first.src1).then(res => res.status);
                     return status == 200 ? allSrc.map(e => e.src1) : allSrc.map(e => e.src2);
                 }
@@ -30283,7 +30319,7 @@ if ("xx" in window) {
             }).then(blob => URL.createObjectURL(blob));
         },
         imgBlobUrlArr: async (selector, type = "image/jpeg", quality = 1) => {
-            fn.showMsg(displayLanguage.str_53, 0);
+            fn.showMsg(DL.str_53, 0);
             await delay(200);
             let num = 0;
             let imgs = await fn.gae(selector).map(async (img, index, arr) => {
@@ -30518,7 +30554,7 @@ if ("xx" in window) {
         },
         //傳入選擇器參數為頁面圖片添加Fancybox5功能
         setFancybox: (selector) => {
-            fn.showMsg(displayLanguage.str_137);
+            fn.showMsg(DL.str_137);
             const loadSrcs = (srcArr) => {
                 const oddNumberSrcs = srcArr.filter((img, index) => index % 2 == 0);
                 const evenNumberSrcs = srcArr.filter((img, index) => index % 2 != 0);
@@ -30990,7 +31026,7 @@ if ("xx" in window) {
 
     const getDataMsg = (text, picNum, imgsNum) => {
         if (isStopDownload) return;
-        if (picNum != "none") fn.showMsg(`${displayLanguage.str_23}${downloadNum += 1}/${imgsNum}${displayLanguage.str_24}${text}`, 0);
+        if (picNum != "none") fn.showMsg(`${DL.str_23}${downloadNum += 1}/${imgsNum}${DL.str_24}${text}`, 0);
     };
 
     //取得參照頁
@@ -31059,7 +31095,7 @@ if ("xx" in window) {
                     return;
                 }
                 if (obj.blob.size < 100) {
-                    getDataMsg(displayLanguage.str_26, picNum, imgsNum);
+                    getDataMsg(DL.str_26, picNum, imgsNum);
                     resolve({
                         error: "下載錯誤",
                         data: obj.data,
@@ -31068,7 +31104,7 @@ if ("xx" in window) {
                         get: "Fetch API"
                     });
                 } else {
-                    getDataMsg(displayLanguage.str_25, picNum, imgsNum);
+                    getDataMsg(DL.str_25, picNum, imgsNum);
                     resolve({
                         load: "下載成功",
                         blob: obj.blob,
@@ -31080,7 +31116,7 @@ if ("xx" in window) {
                 }
             }).catch(error => {
                 currentDownloadThread--;
-                getDataMsg(displayLanguage.str_26, picNum, imgsNum);
+                getDataMsg(DL.str_26, picNum, imgsNum);
                 resolve({
                     error: "下載錯誤",
                     picNum: picNum,
@@ -31127,7 +31163,7 @@ if ("xx" in window) {
                             finalUrl: data.finalUrl,
                             get: "GM_xmlhttpRequest"
                         });
-                        getDataMsg(displayLanguage.str_25, picNum, imgsNum);
+                        getDataMsg(DL.str_25, picNum, imgsNum);
                     } else if (/^image|^video|text\/base64\.jpg/.test(blob.type)) {
                         resolve({
                             load: "下載成功",
@@ -31137,7 +31173,7 @@ if ("xx" in window) {
                             finalUrl: data.finalUrl,
                             get: "GM_xmlhttpRequest"
                         });
-                        getDataMsg(displayLanguage.str_25, picNum, imgsNum);
+                        getDataMsg(DL.str_25, picNum, imgsNum);
                     } else {
                         let htmlText = "none";
                         if (/text\/html/.test(blob.type)) {
@@ -31153,7 +31189,7 @@ if ("xx" in window) {
                             data: data,
                             get: "GM_xmlhttpRequest"
                         });
-                        getDataMsg(displayLanguage.str_26, picNum, imgsNum);
+                        getDataMsg(DL.str_26, picNum, imgsNum);
                     }
                 },
                 onerror: error => {
@@ -31165,7 +31201,7 @@ if ("xx" in window) {
                         errorLog: error,
                         get: "GM_xmlhttpRequest"
                     });
-                    getDataMsg(displayLanguage.str_26, picNum, imgsNum);
+                    getDataMsg(DL.str_26, picNum, imgsNum);
                     console.error("GM_XHR_Download() Error: ", error);
                 }
             });
@@ -31188,11 +31224,11 @@ if ("xx" in window) {
 
     const checkGeting = () => {
         if (isDownloading) {
-            alert(displayLanguage.str_48);
+            alert(DL.str_48);
             return true;
         }
         if (isFetching) {
-            alert(displayLanguage.str_49);
+            alert(DL.str_49);
             return true;
         }
         return false;
@@ -31219,10 +31255,10 @@ if ("xx" in window) {
         } else if (isSet(selector)) {
             imgs = [...selector];
         } else if (!selector || selector === "") {
-            fn.showMsg(displayLanguage.str_41);
+            fn.showMsg(DL.str_41);
             return;
         } else if (selector.length < 3) {
-            fn.showMsg(displayLanguage.str_42);
+            fn.showMsg(DL.str_42);
             return;
         } else if (/^\//.test(selector)) {
             imgs = gax(selector);
@@ -31282,23 +31318,23 @@ if ("xx" in window) {
             isCountdowning = true;
             let max = time || options.autoDownloadCountdown;
             let countdownNum = Number(max);
-            fn.showMsg(`${displayLanguage.str_32}${max}${displayLanguage.str_33}`, 0);
+            fn.showMsg(`${DL.str_32}${max}${DL.str_33}`, 0);
             for (let i = 1; i <= Number(max); i++) {
                 await delay(1000);
                 if (isStopDownload) return;
-                fn.showMsg(`${displayLanguage.str_32}${countdownNum-=1}${displayLanguage.str_33}`, 0);
+                fn.showMsg(`${DL.str_32}${countdownNum-=1}${DL.str_33}`, 0);
             }
             await delay(500);
             if (isStopDownload) return;
             if (isFn(next) && isString(ele)) {
-                fn.showMsg(displayLanguage.str_34);
+                fn.showMsg(DL.str_34);
                 location.href = ele;
             } else if (isEle(ele)) {
-                fn.showMsg(displayLanguage.str_35);
+                fn.showMsg(DL.str_35);
                 EClick(ele);
             }
         } else if (!ele && start == 1 || !ele && options.autoDownload == 1) {
-            fn.showMsg(displayLanguage.str_36, 0);
+            fn.showMsg(DL.str_36, 0);
             options.autoDownload = 0;
             let jsonStr = JSON.stringify(options);
             localStorage.setItem("FullPictureLoadOptions", jsonStr);
@@ -31415,9 +31451,9 @@ if ("xx" in window) {
         } else if (array === null) {
             if (!autoDownload || !!autoDownload && start != 1 && options.autoDownload != 1) {
                 selector = siteData.imgs;
-                titleText = await prompt(displayLanguage.str_51, (customTitle || titleReplace));
+                titleText = await prompt(DL.str_51, (customTitle || titleReplace));
                 if (titleText === null) {
-                    fn.showMsg(displayLanguage.str_41);
+                    fn.showMsg(DL.str_41);
                     return;
                 }
             } else if (!!autoDownload) {
@@ -31435,7 +31471,7 @@ if ("xx" in window) {
         let imgsSrcArr = isArray(array) ? array : await getImgs(selector);
         videoSrcArray = checkURL(videoSrcArray);
         if (imgsSrcArr.length > 0 && titleText != null && titleText != "" || videoSrcArray.length > 0) {
-            fn.showMsg(displayLanguage.str_55, 0);
+            fn.showMsg(DL.str_55, 0);
             let loopMsg;
             const imgsNum = imgsSrcArr.length;
             let title = titleText;
@@ -31503,7 +31539,7 @@ if ("xx" in window) {
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
                     downloadNum = 0;
                     isDownloading = false;
-                    let yes = await confirm(`${displayLanguage.str_27}${errorDataArray.length}${displayLanguage.str_28}${displayLanguage.str_29}`);
+                    let yes = await confirm(`${DL.str_27}${errorDataArray.length}${DL.str_28}${DL.str_29}`);
                     if (!yes) {
                         promiseBlobArray = [];
                         blobDataArray = null;
@@ -31540,13 +31576,13 @@ if ("xx" in window) {
                                     }
                                 } else {
                                     console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", data);
-                                    fn.showMsg(displayLanguage.str_30, 0);
+                                    fn.showMsg(DL.str_30, 0);
                                     return;
                                 }
                             } else if ((/webp/i.test(type) || /\.webp/i.test(data.finalUrl)) && !type.includes("image/jpeg") && convertWebpToJpg == 1) {
                                 blobData = await fn.convertImage(blobData);
                                 ex = "jpg";
-                                fn.showMsg(`${displayLanguage.str_102} to ${ex} ${(i+ 1)}/${total}`, 0);
+                                fn.showMsg(`${DL.str_102} to ${ex} ${(i+ 1)}/${total}`, 0);
                             } else if (/^text\/base64\.jpg/.test(type)) {
                                 ex = "jpg";
                             } else {
@@ -31571,12 +31607,12 @@ if ("xx" in window) {
                                     }
                                 } else {
                                     console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", data);
-                                    fn.showMsg(displayLanguage.str_30, 0);
+                                    fn.showMsg(DL.str_30, 0);
                                     return;
                                 }
                             } else {
                                 console.error("\nDownloadFn() PromiseAll blob資料格式錯誤", data);
-                                fn.showMsg(displayLanguage.str_30, 0);
+                                fn.showMsg(DL.str_30, 0);
                                 return;
                             }
                         }
@@ -31609,7 +31645,7 @@ if ("xx" in window) {
                         zip.generateAsync({
                             type: "blob"
                         }, (metadata) => {
-                            fn.showMsg(displayLanguage.str_31 + metadata.percent.toFixed(2) + " %", 0);
+                            fn.showMsg(DL.str_31 + metadata.percent.toFixed(2) + " %", 0);
                         }).then(async data => {
                             fn.hideMsg();
                             debug("\nZIP壓縮檔數據：", data);
@@ -31630,13 +31666,13 @@ if ("xx" in window) {
                     promiseBlobArray = [];
                     downloadNum = 0;
                     isDownloading = false;
-                    fn.showMsg(displayLanguage.str_43);
+                    fn.showMsg(DL.str_43);
                     return;
                 }
             });
         } else {
             isDownloading = false;
-            fn.showMsg(displayLanguage.str_41);
+            fn.showMsg(DL.str_41);
             return;
         }
     };
@@ -31646,7 +31682,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
-        if (srcArr.length == 0 && videoSrcArray.length == 0 && fileUrlArray.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0 && videoSrcArray.length == 0 && fileUrlArray.length == 0) return fn.showMsg(DL.str_44);
         let picNum = srcArr.length;
         let titleText = (customTitle || document.title);
         let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
@@ -31668,7 +31704,7 @@ if ("xx" in window) {
             endings: "native"
         });
         saveData(blob, fileName);
-        fn.showMsg(`${displayLanguage.str_101}`);
+        fn.showMsg(`${DL.str_101}`);
     };
 
     //複製網址或手動模式的插入圖片
@@ -31677,7 +31713,7 @@ if ("xx" in window) {
         let selector = siteData.imgs;
         let srcArr = await getImgs(selector);
         //siteData.insertImg ? debug("手動插入圖片") : debug("複製網址");
-        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0) return fn.showMsg(DL.str_44);
         let imgsNum = srcArr.length;
         let videosNum;
         if ((!fn.ge(".FullPictureLoadImage") && !!siteData.insertImg) || siteData.repeat == 1 && !!siteData.insertImg) {
@@ -31707,7 +31743,7 @@ if ("xx" in window) {
         let str = textArr.join("\n");
         console.log(str);
         copyToClipboard(str);
-        fn.showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
+        fn.showMsg(`${DL.str_45}(${textArr.length - 1})`);
     };
 
     //複製網址
@@ -31715,7 +31751,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
-        if (srcArr.length == 0 && videoSrcArray.length == 0 && fileUrlArray.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0 && videoSrcArray.length == 0 && fileUrlArray.length == 0) return fn.showMsg(DL.str_44);
         let imgsNum = srcArr.length;
         let videosNum;
         if (videoSrcArray.length > 0) {
@@ -31740,7 +31776,7 @@ if ("xx" in window) {
         let str = textArr.join("\n");
         console.log(str);
         copyToClipboard(str);
-        fn.showMsg(`${displayLanguage.str_45}(${textArr.length - 1})`);
+        fn.showMsg(`${DL.str_45}(${textArr.length - 1})`);
     };
 
     //匯出為JSON格式
@@ -31748,7 +31784,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
-        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0) return fn.showMsg(DL.str_44);
         let object = {
             url: siteUrl,
             title: (customTitle || document.title),
@@ -31762,7 +31798,7 @@ if ("xx" in window) {
             type: "application/json"
         });
         saveData(blob, fileName);
-        fn.showMsg(displayLanguage.str_175);
+        fn.showMsg(DL.str_175);
     };
 
     //匯出為Markdown格式
@@ -31770,7 +31806,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
-        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0) return fn.showMsg(DL.str_44);
         let title = "## " + (customTitle || document.title);
         let post = `Post Link：[${siteUrl}](${siteUrl})`;
         let imagesTitle = "## Images";
@@ -31795,7 +31831,7 @@ if ("xx" in window) {
             endings: "native"
         });
         saveData(blob, fileName);
-        fn.showMsg(displayLanguage.str_177);
+        fn.showMsg(DL.str_177);
     };
 
     //複製為Markdown格式
@@ -31803,7 +31839,7 @@ if ("xx" in window) {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
-        if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+        if (srcArr.length == 0) return fn.showMsg(DL.str_44);
         let title = "## " + (customTitle || document.title);
         let post = `Post Link：[${siteUrl}](${siteUrl})`;
         let imagesTitle = "## Images";
@@ -31824,7 +31860,7 @@ if ("xx" in window) {
         let str = textArr.join("\n");
         console.log(str);
         copyToClipboard(str);
-        fn.showMsg(displayLanguage.str_179);
+        fn.showMsg(DL.str_179);
     };
 
     const copyToClipboard = text => {
@@ -31852,7 +31888,7 @@ if ("xx" in window) {
         let ele;
         ge("#FullPictureLoadImgBox:not([style*=none])") ? ele = ge(".FullPictureLoadImage.small") : ele = ge(".FullPictureLoadImage");
         if (ele) {
-            if (time != 0) fn.showMsg(displayLanguage.str_46);
+            if (time != 0) fn.showMsg(DL.str_46);
             setTimeout(() => {
                 ele.scrollIntoView({
                     behavior: "smooth"
@@ -31908,7 +31944,7 @@ if ("xx" in window) {
                         }
                     }
                 });
-                fn.showMsg(`${displayLanguage.str_60} ${options.zoom * 10}%`);
+                fn.showMsg(`${DL.str_60} ${options.zoom * 10}%`);
             }
         }
     };
@@ -31932,7 +31968,7 @@ if ("xx" in window) {
                         }
                     }
                 });
-                fn.showMsg(`${displayLanguage.str_60} ${options.zoom * 10}%`);
+                fn.showMsg(`${DL.str_60} ${options.zoom * 10}%`);
             }
         }
     };
@@ -31959,7 +31995,7 @@ if ("xx" in window) {
                     }
                 });
                 viewMode = 1;
-                fn.showMsg(displayLanguage.str_93);
+                fn.showMsg(DL.str_93);
                 return;
             }
             let width;
@@ -32082,7 +32118,7 @@ if ("xx" in window) {
                 }
             });
             viewMode = 1;
-            fn.showMsg(displayLanguage.str_93);
+            fn.showMsg(DL.str_93);
             let smallImgs = gae("img.FullPictureLoadImage.small");
             setTimeout(() => {
                 smallImgs.forEach(img => fn.imagesObserver.observe(img));
@@ -32142,26 +32178,26 @@ if ("xx" in window) {
                                     if (isString(siteData.next)) {
                                         let next = fn.ge(siteData.next);
                                         if (next) {
-                                            fn.showMsg(displayLanguage.str_95, 3000);
+                                            fn.showMsg(DL.str_95, 3000);
                                             EClick(next);
                                         } else {
                                             imgsNum = 0 - column;
-                                            fn.showMsg(displayLanguage.str_96, 3000);
+                                            fn.showMsg(DL.str_96, 3000);
                                         }
                                     } else if (isFn(siteData.next)) {
                                         let next = await siteData.next();
                                         if (next) {
-                                            fn.showMsg(displayLanguage.str_95, 3000);
+                                            fn.showMsg(DL.str_95, 3000);
                                             location.href = next;
                                         } else {
                                             imgsNum = 0;
-                                            fn.showMsg(displayLanguage.str_96, 3000);
+                                            fn.showMsg(DL.str_96, 3000);
                                         }
                                     }
                                 } else {
                                     imgsNum = 0;
                                     instantScrollIntoView(imgDivs[0]);
-                                    fn.showMsg(displayLanguage.str_94);
+                                    fn.showMsg(DL.str_94);
                                 }
                             }
                         }
@@ -32183,7 +32219,7 @@ if ("xx" in window) {
                 gae(".FullPictureLoadImage:not(.small)").forEach(img => (img.style.width = `${options.zoom * 10}%`));
             }
             viewMode = 0;
-            fn.showMsg(displayLanguage.str_92);
+            fn.showMsg(DL.str_92);
         }
     };
 
@@ -32192,6 +32228,7 @@ if ("xx" in window) {
     const getConfig = () => {
         const default_Config = {
             ViewMode: 0,
+            MobileViewMode: "single",
             webtoonWidth: 800,
             shadowGalleryWheel: 0,
             jumpNum: 100,
@@ -32241,6 +32278,7 @@ if ("xx" in window) {
         _GM_setValue("FancyboxWheel", 1);
         _GM_setValue("FancyboxSlideshowTransition", "fade");
         _GM_setValue("exclude_ex_config", {});
+        _GM_setValue("zipFolderConfig", 1);
     };
 
     //新分頁空白頁檢視圖片
@@ -32275,7 +32313,7 @@ if ("xx" in window) {
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no">
-        <title>${displayLanguage.str_106.replace(/\(.\)/, "")}：${customTitle ?? document.title}</title>
+        <title>${DL.str_106.replace(/\(.\)/, "")}：${customTitle ?? document.title}</title>
     </head>
     <body style="text-align: center;">
         <div id="imgBox"></div>
@@ -32294,7 +32332,7 @@ if ("xx" in window) {
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
             newWindow.thumbnailSrcArray = thumbnailSrcArray;
-            newWindow.menuLanguage = displayLanguage.galleryMenu;
+            newWindow.menuLanguage = DL.galleryMenu;
             newWindow.isOpenFancybox = false;
             newWindow.l10n = Fancyboxl10nV5();
             newWindow.smoothOptions = smoothOptions;
@@ -34024,7 +34062,7 @@ img.horizontal {
                 const next = document.createElement("div");
                 next.id = "next";
                 next.dataset.index = imgElements.length;
-                next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）`;
+                next.innerText = `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）`;
                 mainElement.append(next);
                 next.addEventListener("click", event => {
                     cancelDefault(event);
@@ -34080,7 +34118,7 @@ img.horizontal {
             menuDiv.id = "FixedMenu";
             const menuObj = [{
                 id: "MenuCancelItem",
-                text: displayLanguage.str_142,
+                text: DL.str_142,
                 cfn: () => closeGallery()
             }, {
                 id: "MenuThreadingItem"
@@ -34090,31 +34128,31 @@ img.horizontal {
                 id: "MenuJumpItem",
             }, {
                 id: "menuNext",
-                text: `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144} (N)`,
+                text: `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144} (N)`,
                 cfn: () => setTimeout(() => (location.href = nextLink), 200)
             }, {
                 id: "MenuHorizontalItem",
-                text: displayLanguage.galleryMenu.horizontal,
+                text: DL.galleryMenu.horizontal,
                 cfn: () => horizontalImageLayout()
             }, {
                 id: "MenuWebtoonItem",
-                text: displayLanguage.galleryMenu.webtoon,
+                text: DL.galleryMenu.webtoon,
                 cfn: () => webtoonImageLayout()
             }, {
                 id: "MenuRTLItem",
-                text: displayLanguage.galleryMenu.rtl,
+                text: DL.galleryMenu.rtl,
                 cfn: () => rtlImageLayout()
             }, {
                 id: "MenuSmallItem",
-                text: displayLanguage.galleryMenu.small,
+                text: DL.galleryMenu.small,
                 cfn: () => smallImageLayout()
             }, {
                 id: "MenuSinglePageItem",
-                text: displayLanguage.galleryMenu.single,
+                text: DL.galleryMenu.single,
                 cfn: () => singleImageLayout()
             }, {
                 id: "MenuDefaultItem",
-                text: displayLanguage.galleryMenu.default,
+                text: DL.galleryMenu.default,
                 cfn: () => defaultImageLayout()
             }];
             const createMenu = obj => {
@@ -34133,7 +34171,7 @@ img.horizontal {
             for (let i = 1; i <= 32; i++) {
                 let option = document.createElement("option");
                 option.value = i;
-                option.innerText = displayLanguage.str_162 + i;
+                option.innerText = DL.str_162 + i;
                 threadingSelect.append(option);
             }
             ge("#MenuThreadingItem", menuDiv).append(threadingSelect);
@@ -34143,10 +34181,10 @@ img.horizontal {
                 let option = document.createElement("option");
                 if (i === 0) {
                     option.value = i;
-                    option.innerText = `${displayLanguage.str_150}${displayLanguage.str_152}`;
+                    option.innerText = `${DL.str_150}${DL.str_152}`;
                 } else {
                     option.value = i * 100;
-                    option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                    option.innerText = `${DL.str_150}${i * 100}px`;
                 }
                 jumpSelect.append(option);
             }
@@ -34158,7 +34196,7 @@ img.horizontal {
             behaviorInput.type = "checkbox";
             behaviorDiv.append(behaviorInput);
             let behaviorLabel = document.createElement("label");
-            behaviorLabel.innerText = displayLanguage.str_151;
+            behaviorLabel.innerText = DL.str_151;
             behaviorDiv.append(behaviorLabel);
 
             shadow.append(menuDiv);
@@ -35139,7 +35177,7 @@ img.horizontal {
                 const next = document.createElement("div");
                 next.id = "next";
                 next.dataset.index = imgElements.length;
-                next.innerText = `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144}（ N ）`;
+                next.innerText = `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）`;
                 mainElement.append(next);
                 next.addEventListener("click", event => {
                     cancelDefault(event);
@@ -35195,7 +35233,7 @@ img.horizontal {
             menuDiv.id = "FixedMenu";
             const menuObj = [{
                 id: "MenuCancelItem",
-                text: displayLanguage.str_142,
+                text: DL.str_142,
                 cfn: () => closeGallery()
             }, {
                 id: "MenuThreadingItem"
@@ -35205,31 +35243,31 @@ img.horizontal {
                 id: "MenuJumpItem",
             }, {
                 id: "menuNext",
-                text: `${siteData.category?.includes("comic") ? displayLanguage.str_143 : displayLanguage.str_144} (N)`,
+                text: `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144} (N)`,
                 cfn: () => setTimeout(() => (location.href = nextLink), 200)
             }, {
                 id: "MenuHorizontalItem",
-                text: displayLanguage.galleryMenu.horizontal,
+                text: DL.galleryMenu.horizontal,
                 cfn: () => horizontalImageLayout()
             }, {
                 id: "MenuWebtoonItem",
-                text: displayLanguage.galleryMenu.webtoon,
+                text: DL.galleryMenu.webtoon,
                 cfn: () => webtoonImageLayout()
             }, {
                 id: "MenuRTLItem",
-                text: displayLanguage.galleryMenu.rtl,
+                text: DL.galleryMenu.rtl,
                 cfn: () => rtlImageLayout()
             }, {
                 id: "MenuSmallItem",
-                text: displayLanguage.galleryMenu.small,
+                text: DL.galleryMenu.small,
                 cfn: () => smallImageLayout()
             }, {
                 id: "MenuSinglePageItem",
-                text: displayLanguage.galleryMenu.single,
+                text: DL.galleryMenu.single,
                 cfn: () => singleImageLayout()
             }, {
                 id: "MenuDefaultItem",
-                text: displayLanguage.galleryMenu.default,
+                text: DL.galleryMenu.default,
                 cfn: () => defaultImageLayout()
             }];
             const createMenu = obj => {
@@ -35248,7 +35286,7 @@ img.horizontal {
             for (let i = 1; i <= 32; i++) {
                 let option = document.createElement("option");
                 option.value = i;
-                option.innerText = displayLanguage.str_162 + i;
+                option.innerText = DL.str_162 + i;
                 threadingSelect.append(option);
             }
             ge("#MenuThreadingItem", menuDiv).append(threadingSelect);
@@ -35258,10 +35296,10 @@ img.horizontal {
                 let option = document.createElement("option");
                 if (i === 0) {
                     option.value = i;
-                    option.innerText = `${displayLanguage.str_150}${displayLanguage.str_152}`;
+                    option.innerText = `${DL.str_150}${DL.str_152}`;
                 } else {
                     option.value = i * 100;
-                    option.innerText = `${displayLanguage.str_150}${i * 100}px`;
+                    option.innerText = `${DL.str_150}${i * 100}px`;
                 }
                 jumpSelect.append(option);
             }
@@ -35273,7 +35311,7 @@ img.horizontal {
             behaviorInput.type = "checkbox";
             behaviorDiv.append(behaviorInput);
             let behaviorLabel = document.createElement("label");
-            behaviorLabel.innerText = displayLanguage.str_151;
+            behaviorLabel.innerText = DL.str_151;
             behaviorDiv.append(behaviorLabel);
 
             dom.body.append(menuDiv);
@@ -35556,7 +35594,7 @@ html,body {
     display: block;
     margin: 4px auto 0 auto;
 }
-#buttons {
+.buttons {
     display: block;
     margin: 0 auto 4px auto;
 }
@@ -35580,7 +35618,7 @@ html,body {
 #inputTitle {
     width: calc(100% - 126px);
 }
-#buttons button {
+.buttons button {
     margin-top: 4px;
 }
 button.dark {
@@ -35588,6 +35626,13 @@ button.dark {
     border-color: rgb(81 91 105);
     border-style: solid;
     background-color: rgb(81 91 105);
+    border-radius: .5rem;
+}
+button.mode.active {
+    color: #fff;
+    border-color: #1790e6;
+    border-style: solid;
+    background-color: #1790e6;
     border-radius: .5rem;
 }
 #imgBox {
@@ -35722,6 +35767,23 @@ label.line-through:has(>#size) {
     padding: 2px;
     margin: 4px;
 }
+img.single {
+    width: auto;
+    height: auto;
+    max-width: calc(100% - 6px);
+    max-height: calc(100vh - 6px);
+    display: block;
+    margin: 0 auto;
+    border: solid #fff;
+}
+img.webtoon {
+    width: 100%;
+    height: auto;
+    max-width: 800px;
+    display: block;
+    margin: 0 auto;
+    border: unset;
+}
 @media (max-width: 873px) {
     li.image-item {
         width: 194px;
@@ -35804,50 +35866,69 @@ label.line-through:has(>#size) {
         main.innerHTML = `
 <div class="row">
     <div id="title">
-        <label id="label-title">${displayLanguage.str_153}</label>
+        <label id="label-title">${DL.str_153}</label>
         <input type="text" id="inputTitle">
-        <button id="close" class="close">${displayLanguage.str_132}</button>
+        <button id="close" class="close">${DL.str_132}</button>
     </div>
-    <div id="buttons">
-        <button id="gallery">${displayLanguage.str_106.replace(/\(.\)/, "")}</button>
-        <button id="favor">${displayLanguage.str_128.replace(/\(.\)/, "")}</button>
-        <button id="select-all">${displayLanguage.str_154}</button>
-        <button id="unselect-all">${displayLanguage.str_155}</button>
-        <button id="reverse-selection">${displayLanguage.str_170}</button>
-        <button id="exclude-error">${displayLanguage.str_184}</button>
-        <button id="reload">${displayLanguage.str_156}</button>
-        <button id="combineDownload">${displayLanguage.str_181}</button>
-        <button id="download">${displayLanguage.str_157}</button>
-        <label class="number">${displayLanguage.str_169}<select id="backgroundColor"></select></label>
-        <label id="label-threading" class="number">${displayLanguage.str_161}<select id="threading"></select></label>
-        <label id="exclude" class="number">${displayLanguage.str_183} ▼<p id=excludeNum>0</p><ul id="excludeList"></ul></label>
-        <label class="number">${displayLanguage.str_167}<select id="width"></select></label>
-        <label class="number">${displayLanguage.str_168}<select id="height"></select></label>
-        <label id="filterNumber" class="number">${displayLanguage.str_166 + srcs.length}</label>
-        <label id="total" class="number">${displayLanguage.str_165 + srcs.length}</label>
-        <label class="number"><input id="auto-exclude-error" type="checkbox"></input>${displayLanguage.str_185}</label>
-        <label class="number" title="${displayLanguage.str_173}"><input id="move" type="checkbox"></input>${displayLanguage.str_172}</label>
-        <label class="number"><input id="size" type="checkbox"></input>${displayLanguage.str_171}</label>
-        <label id="more" class="number">${displayLanguage.str_186} ☰<ul id="more-menu"></ul></label>
+    <div class="buttons">
+        <button id="mobile_gallery_btn" class="hide">${DL.str_188}</button>
+        <button id="gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
+        <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
+        <button id="select-all">${DL.str_154}</button>
+        <button id="unselect-all">${DL.str_155}</button>
+        <button id="reverse-selection">${DL.str_170}</button>
+        <button id="exclude-error">${DL.str_184}</button>
+        <button id="reload">${DL.str_156}</button>
+        <button id="combineDownload">${DL.str_181}</button>
+        <button id="download">${DL.str_157}</button>
+        <label class="number">${DL.str_169}<select id="backgroundColor"></select></label>
+        <label id="label-threading" class="number">${DL.str_161}<select id="threading"></select></label>
+        <label id="exclude" class="number">${DL.str_183} ▼<p id=excludeNum>0</p><ul id="excludeList"></ul></label>
+        <label class="number">${DL.str_167}<select id="width"></select></label>
+        <label class="number">${DL.str_168}<select id="height"></select></label>
+        <label id="filterNumber" class="number">${DL.str_166 + srcs.length}</label>
+        <label id="total" class="number">${DL.str_165 + srcs.length}</label>
+        <label class="number"><input id="auto-exclude-error" type="checkbox"></input>${DL.str_185}</label>
+        <label class="number" title="${DL.str_173}"><input id="move" type="checkbox"></input>${DL.str_172}</label>
+        <label class="number"><input id="size" type="checkbox"></input>${DL.str_171}</label>
+        <label id="more" class="number">${DL.str_186} ☰<ul id="more-menu"></ul></label>
     </div>
 </div>
 <div id="imgBox" class="row">
     <ul id="image-list"></ul>
 </div>
 <div class="row">
-    <div id="buttons">
-        <button id="settings">${displayLanguage.str_85.replace(/\(.\)/, "")}</button>
-        <button id="gallery">${displayLanguage.str_106.replace(/\(.\)/, "")}</button>
-        <button id="favor">${displayLanguage.str_128.replace(/\(.\)/, "")}</button>
-        <button id="copy">${displayLanguage.str_105.replace(/\(.\)/, "")}</button>
-        <button id="export">${displayLanguage.str_104.replace(/\(.\)/, "")}</button>
-        <button id="select-all">${displayLanguage.str_154}</button>
-        <button id="unselect-all">${displayLanguage.str_155}</button>
-        <button id="reverse-selection">${displayLanguage.str_170}</button>
-        <button id="exclude-error">${displayLanguage.str_184}</button>
-        <button id="reload">${displayLanguage.str_156}</button>
-        <button id="download">${displayLanguage.str_157}</button>
-        <button id="close">${displayLanguage.str_132}</button>
+    <div class="buttons">
+        <button id="settings">${DL.str_85.replace(/\(.\)/, "")}</button>
+        <button id="mobile_gallery_btn">${DL.str_188}</button>
+        <button id="gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
+        <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
+        <button id="copy">${DL.str_105.replace(/\(.\)/, "")}</button>
+        <button id="export">${DL.str_104.replace(/\(.\)/, "")}</button>
+        <button id="select-all">${DL.str_154}</button>
+        <button id="unselect-all">${DL.str_155}</button>
+        <button id="reverse-selection">${DL.str_170}</button>
+        <button id="exclude-error">${DL.str_184}</button>
+        <button id="reload">${DL.str_156}</button>
+        <button id="download">${DL.str_157}</button>
+        <button id="close">${DL.str_132}</button>
+    </div>
+</div>
+<div class="row hide">
+    <div class="buttons">
+        <button id="mobile_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
+        <button id="single" class="mode">${DL.str_189}</button>
+        <button id="webtoon" class="mode">${DL.str_190}</button>
+        <button id="close">${DL.str_132}</button>
+    </div>
+</div>
+<div id="gallery_imgBox" class="hide"></div>
+<div class="row hide">
+    <div class="buttons">
+        <button id="mobile_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
+        <button id="single" class="mode">${DL.str_189}</button>
+        <button id="webtoon" class="mode">${DL.str_190}</button>
+        <button id="close">${DL.str_132}</button>
     </div>
 </div>
         `;
@@ -35887,6 +35968,7 @@ label.line-through:has(>#size) {
         if (hasTouchEvent) {
             ge("label:has(>#move)", main).remove();
             ge("#combineDownload", main).remove();
+            ge("#mobile_gallery_btn", main).classList.remove("hide");
         }
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
@@ -35906,13 +35988,13 @@ label.line-through:has(>#size) {
         });
         [{
             id: "settings",
-            text: displayLanguage.str_85.replace(/\(.\)/, "")
+            text: DL.str_85.replace(/\(.\)/, "")
         }, {
             id: "copy",
-            text: displayLanguage.str_105.replace(/\(.\)/, "")
+            text: DL.str_105.replace(/\(.\)/, "")
         }, {
             id: "export",
-            text: displayLanguage.str_104.replace(/\(.\)/, "")
+            text: DL.str_104.replace(/\(.\)/, "")
         }].forEach(({
             id,
             text
@@ -35931,11 +36013,11 @@ label.line-through:has(>#size) {
             cancelDefault(event);
             if (excludeE.classList.contains("active")) {
                 excludeE.classList.remove("active");
-                excludeE.firstChild.textContent = displayLanguage.str_183 + " ▼";
+                excludeE.firstChild.textContent = DL.str_183 + " ▼";
                 excludeList.classList.remove("show");
             } else {
                 excludeE.classList.add("active");
-                excludeE.firstChild.textContent = displayLanguage.str_183 + " ▲";
+                excludeE.firstChild.textContent = DL.str_183 + " ▲";
                 excludeList.classList.add("show");
             }
         });
@@ -35960,7 +36042,7 @@ label.line-through:has(>#size) {
                 addLis();
                 widthSelect.value = 0;
                 heightSelect.value = 0;
-                ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+                ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
                 let excludeActives = gae(".active", excludeE).length;
                 let p = ge("#excludeNum", main);
                 if (excludeActives > 0) {
@@ -35980,10 +36062,10 @@ label.line-through:has(>#size) {
             p.innerText = excludeActives;
         }
         let backgroundSelect = ge("#backgroundColor", main);
-        Object.keys(displayLanguage.backgroundColor).forEach((k, i) => {
+        Object.keys(DL.backgroundColor).forEach((k, i) => {
             const option = document.createElement("option");
             option.value = k;
-            option.innerText = displayLanguage.backgroundColor[k];
+            option.innerText = DL.backgroundColor[k];
             fragment.append(option);
         });
         backgroundSelect.append(fragment);
@@ -36034,7 +36116,7 @@ label.line-through:has(>#size) {
             widthNum = Number(widthSelect.value) * 100;
             changeList();
             const selects = gae(".select+.image", main);
-            ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+            ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
             main.focus();
         });
 
@@ -36050,7 +36132,7 @@ label.line-through:has(>#size) {
             heightNum = Number(heightSelect.value) * 100;
             changeList();
             const selects = gae(".select+.image", main);
-            ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+            ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
             main.focus();
         });
 
@@ -36089,6 +36171,21 @@ label.line-through:has(>#size) {
             cancelDefault(event);
             createPictureLoadOptionsShadowElement();
         }));
+        gae("#mobile_gallery_btn", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            gae("#gallery_imgBox,.row", main).forEach(e => {
+                e.classList.toggle("hide");
+            });
+        }));
+        ge("#" + config.MobileViewMode, main).classList.add("active");
+        gae("button.mode", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            gae("button.mode", main).forEach(e => e.classList.remove("active"));
+            gae("#" + button.id, main).forEach(e => e.classList.add("active"));
+            config.MobileViewMode = button.id;
+            saveConfig(config);
+            gae("#gallery_imgBox img", main).forEach(e => (e.className = button.id));
+        }));
         gae("#gallery", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
             newTabView();
@@ -36119,7 +36216,7 @@ label.line-through:has(>#size) {
                 gae("input.check", main).forEach(input => {
                     input.checked = true;
                     input.classList.add("select");
-                    ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+                    ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
                 });
             });
         });
@@ -36129,7 +36226,7 @@ label.line-through:has(>#size) {
                 gae("input.check", main).forEach(input => {
                     input.checked = false;
                     input.classList.remove("select");
-                    ge("#filterNumber", main).innerText = displayLanguage.str_166 + "0";
+                    ge("#filterNumber", main).innerText = DL.str_166 + "0";
                 });
             });
         });
@@ -36145,7 +36242,7 @@ label.line-through:has(>#size) {
                         input.classList.add("select");
                     }
                     const selects = gae(".select+.image", main);
-                    ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+                    ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
                 });
             });
         });
@@ -36157,13 +36254,13 @@ label.line-through:has(>#size) {
                 img.parentElement.classList.add("hide");
             });
             const selects = gae(".select+.image", main);
-            ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+            ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
         }));
         gae("#reload", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
             widthSelect.value = 0;
             heightSelect.value = 0;
-            ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+            ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
         }));
         let combineDownloadButton = ge("#combineDownload", main);
@@ -36196,7 +36293,7 @@ label.line-through:has(>#size) {
             saveConfig(config);
             widthSelect.value = 0;
             heightSelect.value = 0;
-            ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+            ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
             main.focus();
         });
@@ -36211,7 +36308,7 @@ label.line-through:has(>#size) {
             saveConfig(config);
             widthSelect.value = 0;
             heightSelect.value = 0;
-            ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+            ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
             main.focus();
         });
@@ -36224,7 +36321,7 @@ label.line-through:has(>#size) {
                 saveConfig(config);
                 widthSelect.value = 0;
                 heightSelect.value = 0;
-                ge("#filterNumber", main).innerText = displayLanguage.str_166 + srcs.length;
+                ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
                 addLis();
                 main.focus();
             });
@@ -36232,20 +36329,21 @@ label.line-through:has(>#size) {
         const imageList = ge("#image-list", main);
         let Viewer;
         let ViewerJsInstance;
+        const ViewerOptions = {
+            navbar: false,
+            title: false,
+            initialCoverage: 0.99,
+            interval: FancyboxSlideshowTimeoutNum,
+            url: "data-src",
+            viewed: (event) => instantScrollIntoView(event.detail.originalImage)
+        };
         if ("Viewer" in _unsafeWindow) {
             Viewer = _unsafeWindow.Viewer;
-            ViewerJsInstance = new Viewer(imageList, {
-                navbar: false,
-                title: false,
-                initialCoverage: 0.99,
-                interval: FancyboxSlideshowTimeoutNum,
-                url: "data-src",
-                viewed: (event) => instantScrollIntoView(event.detail.originalImage)
-            });
+            ViewerJsInstance = new Viewer(imageList, ViewerOptions);
         }
 
         const addLis = () => {
-            ge("#total", main).innerText = displayLanguage.str_165 + srcs.length;
+            ge("#total", main).innerText = DL.str_165 + srcs.length;
             imageList.innerHTML = "";
             const loadImgList = [];
             inputs = [];
@@ -36262,7 +36360,7 @@ label.line-through:has(>#size) {
                         input.classList.remove("select");
                     }
                     const selects = gae(".select+.image", main);
-                    ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+                    ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
                 };
                 input.onclick = event => {
                     if ((event.ctrlKey || event.altKey || event.shiftKey) && isEle(startInput)) {
@@ -36284,7 +36382,7 @@ label.line-through:has(>#size) {
                             }
                         }
                         const selects = gae(".select+.image", main);
-                        ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+                        ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
                     } else {
                         startInput = event.target;
                     }
@@ -36316,7 +36414,7 @@ label.line-through:has(>#size) {
                         input.classList.remove("select");
                         li.classList.add("hide");
                         const selects = gae(".select+.image", main);
-                        ge("#filterNumber", main).innerText = displayLanguage.str_166 + selects.length;
+                        ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
                     }
                     img.onerror = null;
                 };
@@ -36357,6 +36455,37 @@ label.line-through:has(>#size) {
             }, 200);
         };
         addLis();
+
+        const gallery_imgBox = ge("#gallery_imgBox", main);
+        let Viewer_G;
+        let ViewerJsInstance_G;
+        if ("Viewer" in _unsafeWindow) {
+            Viewer_G = _unsafeWindow.Viewer;
+            ViewerJsInstance_G = new Viewer(gallery_imgBox, ViewerOptions);
+        }
+        const addGalleryImgs = () => {
+            gallery_imgBox.innerHTML = "";
+            const loadImgList = [];
+            for (const [index, src] of srcs.entries()) {
+                const img = new Image();
+                img.className = ge("button.mode.active", main).id;
+                if ("referrerpolicy" in siteData) {
+                    img.setAttribute("referrerpolicy", siteData.referrerpolicy);
+                }
+                img.src = loading_bak;
+                img.dataset.src = src;
+                loadImgList.push([simpleLoadImg, null, img]);
+                fragment.append(img);
+            }
+            gallery_imgBox.append(fragment);
+            if (Viewer_G && ViewerJsInstance_G) {
+                ViewerJsInstance_G.update();
+            }
+            const queue = new Queue(Number(config.threading));
+            queue.addList(loadImgList);
+            queue.run();
+        };
+        addGalleryImgs();
     };
 
     const getXY = (event) => {
@@ -36411,7 +36540,7 @@ label.line-through:has(>#size) {
                     let selector = siteData.capture ?? siteData.imgs;
                     srcArr = await getImgs(selector);
                 }
-                if (srcArr.length == 0) return fn.showMsg(displayLanguage.str_44);
+                if (srcArr.length == 0) return fn.showMsg(DL.str_44);
                 let titleText = customTitle ?? document.title;
                 let picNum = srcArr.length;
                 let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
@@ -36425,7 +36554,7 @@ label.line-through:has(>#size) {
                     endings: "native"
                 });
                 saveData(blob, fileName);
-                fn.showMsg(`${displayLanguage.str_101}`);
+                fn.showMsg(`${DL.str_101}`);
             }
         }];
         const createMenu = obj => {
@@ -36527,7 +36656,7 @@ label.line-through:has(>#size) {
                     pE.style.width = "";
                 }
             });
-            fn.showMsg(displayLanguage.str_61);
+            fn.showMsg(DL.str_61);
         }
     };
 
@@ -36544,7 +36673,7 @@ label.line-through:has(>#size) {
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACFlBMVEVEREAAAABEREBEREBUXnFTXXBTXG5VXXJUXHFUW28grV0grV0hrl4hrV0hq10iql0oomAhrV2BiZiAiJd/h5V+h5Uiq16OlaKNlKGMk5+Mkp+KkZ89p28nq2Hp9+/n9u3t8PHs7/Dg9Ojp7O3d8+bo7O3o6+zn6+3m6uzl6evX8OLV8OHi5ujh5efO7dze4uTe4ePb3+LY3eDX29/W2t7T19u35Mu25Mr01lqw4sbz1Vmv4sXA1NWs4cPw0lnv0lmp4MCk3r3ozVuh3buu0M6vz83kylugysefycadx8OexsOdxsOF0qZ6zp5pyJK1p2S0pmOsoGRWv4SLlKEmuZpBsnc5t3AmuJmQi2ont5kmtpcptJiOiWg0tWwytGorr5Yqr5YsrpUws2kqrJRNmpMusmcsqpIuqJMssWkqsWQqsGUnsGUzoI8lsGGAf2wkr2Ekr2BzfI0irl8hrl5ye4x9fGogrWAhrV03mIwgrF9xeoshq10gql8dp2ccp2cdpmkcnIUanIYcm4QRoIUTnoURn4QdmYM/h4QcmIMSnYMXmoMWmoIbloIclYJDgYIYl4EaloAek4IfkYFqbm0jjoBqbW0ni4ApiX9Hd35kanBjaXBhaG9MbnpOanhOaXhPaHdDbXZHanZGanRLZnZJZ3RSYnVMZXRPY3ROY3VSYXRQYnRTYHRVX3NUX3RSYHNUXnNTXXJTXXFME6frAAAAHnRSTlMAAAUGZ2dqeHh7lrzNzc7O3O/09PT19fn5+fn5/f4hZOrvAAAB1UlEQVR42oWTzYoTQRSFv6q6RqOoqBicTTCKK1cOURBGBV9AXCgu9Vl8FF/ApcshI4qKgrtBByZK0HSGmMxkMrF/qq6LTjptErGX5zu3uu65dY3TYCh9ag2UNPsfjnmpZW4MgBbaIy/6PCnxvL7gEQhJ7AruAqifcZ96EHDX67ngKgCJn/k3B6AC1O9Cj9ri/2mBsZIf9iLi0rMFDhhjbO6NsL9er+CQG3pYMT+XuGVmuH9SzPF7S/UONDfUHl44/6A24wfdpMgsSO6tP52ffxjF6cUT056MBdxf/cVRzP6PiQG8KhZMJedhewik0QT43RsBQUEwLufZx53Td85p7wCwEu+Fs6qAGBsA1aO3XUZbG/EAsAJJlM/MGgOoDltdYNTam3JIOlVmOaj2N/sAjHf9lGdBqwACmmi0FU/TOWxfEY483o/9tcuvJBXU+90PaZHf5NtVFzTL+N7bqD4GS9DRmzl3btJWk2WFIKradqX8LfudU3VKBuKd0vwc+HCjNDJhkJXfB6jq+wZJBSAT5MmKN1/la7sJ+jmsiyQrdkZo9N819FNnXcSZFTt1rGnXhl/G6a26IP/YOXczi5prQmFY3snbkzNSXGyBV+28p+nNF+vn2h97PvHD5SOHkgAAAABJRU5ErkJggg==";
         img.style.bottom = "24px";
         img.style.left = "24px";
-        img.setAttribute("title", displayLanguage.str_47);
+        img.setAttribute("title", DL.str_47);
         img.oncontextmenu = () => false;
         img.addEventListener("click", event => {
             cancelDefault(event);
@@ -36570,7 +36699,7 @@ label.line-through:has(>#size) {
             img2.className = "FullPictureLoadFixedBtn";
             img2.style.display = "none";
             img2.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA7BJREFUWEetl29olVUYwH/n3jvvGpp/WtNlIdoK1MJazBwO0/mlZqFgRCgGfZC7TTbwixqbMnPiHIIwmdd9MYiMhD4o6gqirenGsoF/MLfaahFz3a1Shlv7e9/3yHnnxXvv3vee96574P3wcp4/v/M8z3nOOQK3o67Oj2+0EMlWPKxEkg3Wp0YIQQiTLgQXCWc0UV4+4ca00Ao1HM3G8B0CuROYp5WfFhgGcQ5v+FMCFaFEOs4An1WlM+6vRIq9QIZLx/Fiowh5kvSJaj6uGrezYQ9QX7sEYV4A3pyl43i160jPNvbsG4ifmAlwquZVfDQieV7nfJE/3RJ5MGG7uFh1wT3CFFF24E70RCyAWrnH7NA5V0pH8gooW51r2Tp19wYHO1qROmIFYXryoiPxBEDlfCz9B13YlULd+s0EVq6JcdfQdZvytu/1EHCdp8Y3RmriCUDwWDVSVOgq1s55RMc1hJBHKfmkUulNA1hbzftbomp3Wnk8sEuIUbxGjtqi0wCnjwdBFjut3q3z5CIhzlC6v0Qw3eH+cWoyyTpPAmKYcMazgtM17wCNTk0iUc51Re8iHUWC+pozCAJ2DeL/OHcVCUmDIFjTgmRDPMDB3HzUl4qxq7mR87//MtOU4KpKQTfwUvTsgjl+QrtK8Qr9WeUGsG2gn02Xz9uJ9iiAYWBu9OwbmYtp36YOv9SM/8JTZH1ez5RpxhscsQWYP8fPnzsCZPh8MQph0+THv0MULFlqS9Y60M+6rGx8Hk/M/Nlf71B87Ts7HQtgRgqUZNkruZxYt/Fxp4JJ0+Cj5m/IeXoB1XkFtgCVHa10Dt2ndu0GcuYvtGR+fvAvO5uu0DV03yEFDkWopNVqtix70QrdFz2d9D4cYt+atQkBam//ZEFvXrqMCcPg2sA95zxaReiwDZ203AC4rhxrGyZoRHaGUgoARdpWHA+RQoDHrVh50BxG0RApBAhSeqDU9XEcgUgRwAhpRg67KwaTupAoiD2rX+dk/ibbOtvb3kz93Zv6GhTiECX7jyjBpK9k+Yufo+W9D22dvHXpK9oH/9IAiDYyxwr5oGoyFkD9ubyUfln4Lu+veDnG0de93exouqxz3kdaOE+FPiI4q2u5OqRKVr3G2y8st+x82/cHwc5bGDLRvVj0Ycgtia/lEayUP0xEG2nh7dErd45AZCY1T7MRhKjlmbHjkZzH50h/4M/ucfoQOEeacdhu1dEQeoCItPPzXCVenTj9SNmJ4BLeRS0EAlP6/QiPAMXOipDq4W0VAAAAAElFTkSuQmCC";
-            img2.setAttribute("title", displayLanguage.str_62);
+            img2.setAttribute("title", DL.str_62);
             img2.addEventListener("click", event => {
                 cancelDefault(event);
                 goToImg("first");
@@ -36581,7 +36710,7 @@ label.line-through:has(>#size) {
             img3.className = "FullPictureLoadFixedBtn";
             img3.style.display = "none";
             img3.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA6lJREFUWEfFl21IlWcYx3/3c46vayG1lq5i5FablrQFbon2oiOYzlgfgsY2gvrinCQEwzayklI69SVQPMdDH4KJMkZBoxf6kpkYVjK32FqgtiGbs8xczeF0O5477ucknZfnzaPUDc+n57ru/++67uu6XwROh9+fwNToRiRbECIbWAIsBQQwhGCIILcRfEcgtY3KykknUytn63GibjH/uw4CnwDz7cyf/B8D0YIrcIiyfUNWPuYA39Yk8iBlL1JWAfMcCkebjSPkcZIna9lZM2E0hzGAHrX7NMj8OIWj3a4jta1UVN2N/hEL0ODJwSXOg1xmJu4SgvLst3h/2XLd5OLvv+H75UempDTnFfxBgBJ2f/lTuFEkQCjybitx5dxaVMq2zJURYqd+7eXjtnPWCVMQQS03PBNPAdSaj6S02aU9b/ErXNnykaHQxrPf0HXvT7tVu07KxKbpmngK4Du6HykP2XlXrHqb43mFhmZ7ui7TeOsHuylAyDrKv6pWhiGAUKv1O6n2qjXvUJtbYChS3d3JsZs37AFgHNfU66pFQwBejxcod+I5RwAq9iY+31suqK9Pwj1+H3jx2QIwRiB1kcDrKQYuOBFXNnOXAV2xRNDoaUJQ9lwAJH6Bz3MFyQYzgPXpS0lyubg0OIDaZpxkIHN+Gp+uyCZB0zg/cIdrwybHgaBDLUEvsCIaICttIS1FH7B6wUv6r/5Hf1F1o4PstIWWXdD/90O+LiwmUXPpfgr6i2vtNPzcYxRjnwIYM2q/pvWb2fVGToRTIBjUoylIVydx7Oi8O8i6lzNwa1rEz/FAgFdb/Tz6L+aE/scQQKVueEcFL7gTnJaGrV3emRa+H7kXbacDGC7B5dLt5JtEaqsWZaAOqYxmLw9jM9BnWoTbX3uT5sKSmWoZ2h/u6UJ9MUMvQpM2VFtkff57lGWtmRWE//ZNKq9e0osxZuhtaLERzRbCUjxEU2K7FccL4UD8yVasOLxHfSA/M8v1TCEciIcdRkrVX5fBlH4cp84Wwpl49HGsVH1HapFin1XF2WXCobjBhUSpnqxJ5t/kduDdeCAci4PJlUypNh5LRwt2I/UXj+lQmTicW8DuVWt1m4ZbPezv7jRutfBZLC+l04bqWu7mgh2EMl+QlKx7jU4avjkiA3B0LZ92UZkQwTN2yzGDHWoGD5PpWVVNTCRVI8Ueq+6wgYjzaRY+q96i7gMg1ePU0b0RmIPHaXRooctrEZIP0chCkgH6p0bcz/PHF6yIkDG/FFMAAAAASUVORK5CYII=";
-            img3.setAttribute("title", displayLanguage.str_63);
+            img3.setAttribute("title", DL.str_63);
             img3.addEventListener("click", event => {
                 cancelDefault(event);
                 goToImg("last");
@@ -36665,7 +36794,7 @@ label.line-through:has(>#size) {
         menuDiv.id = "FullPictureLoadFixedMenu";
         menuDiv.style.width = "54px";
         const menuObj = [{
-            text: displayLanguage.str_128,
+            text: DL.str_128,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36673,7 +36802,7 @@ label.line-through:has(>#size) {
             }
         }, {
             name: "shadowGallery",
-            text: displayLanguage.str_141,
+            text: DL.str_141,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36681,21 +36810,21 @@ label.line-through:has(>#size) {
             }
         }, {
             name: "newTabView",
-            text: displayLanguage.str_106,
+            text: DL.str_106,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 newTabView();
             }
         }, {
-            text: displayLanguage.str_158,
+            text: DL.str_158,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 createFilterDownload();
             }
         }, {
-            text: displayLanguage.str_107,
+            text: DL.str_107,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36703,35 +36832,35 @@ label.line-through:has(>#size) {
                 DownloadFn();
             }
         }, {
-            text: displayLanguage.str_174,
+            text: DL.str_174,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 exportJsonFormat();
             }
         }, {
-            text: displayLanguage.str_176,
+            text: DL.str_176,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 exportMarkdownFormat();
             }
         }, {
-            text: displayLanguage.str_178,
+            text: DL.str_178,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 copyMarkdownFormat();
             }
         }, {
-            text: displayLanguage.str_104,
+            text: DL.str_104,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 exportImgSrcText();
             }
         }, {
-            text: displayLanguage.str_105,
+            text: DL.str_105,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36739,7 +36868,7 @@ label.line-through:has(>#size) {
             }
         }, {
             name: "fn",
-            text: displayLanguage.str_159,
+            text: DL.str_159,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36747,7 +36876,7 @@ label.line-through:has(>#size) {
             }
         }, {
             name: "zoom",
-            text: displayLanguage.str_88,
+            text: DL.str_88,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36756,7 +36885,7 @@ label.line-through:has(>#size) {
             }
         }, {
             name: "zoom",
-            text: displayLanguage.str_87,
+            text: DL.str_87,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36771,7 +36900,7 @@ label.line-through:has(>#size) {
             }
         }, {
             name: "toggleImgMode",
-            text: displayLanguage.str_86,
+            text: DL.str_86,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
@@ -36780,21 +36909,21 @@ label.line-through:has(>#size) {
         }, {
             name: "insert",
             id: "insertImgMenu",
-            text: displayLanguage.str_160,
+            text: DL.str_160,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 fn.immediateInsertImg("yes");
             }
         }, {
-            text: displayLanguage.str_85,
+            text: DL.str_85,
             show: 0,
             cfn: event => {
                 cancelDefault(event);
                 createPictureLoadOptionsShadowElement();
             }
         }, {
-            text: displayLanguage.str_133,
+            text: DL.str_133,
             show: 1
         }];
         const createMenu = obj => {
@@ -36820,7 +36949,7 @@ label.line-through:has(>#size) {
             });
             menuDiv.style.width = "128px";
             menuDiv.lastChild.width = "116px";
-            menuDiv.lastChild.innerText = displayLanguage.str_134;
+            menuDiv.lastChild.innerText = DL.str_134;
         }
         menuDiv.onmouseleave = () => {
             fn.gae(".itemShow", menuDiv).forEach(e => {
@@ -36830,7 +36959,7 @@ label.line-through:has(>#size) {
             });
             menuDiv.style.width = "48px";
             menuDiv.lastChild.width = "38px";
-            menuDiv.lastChild.innerText = displayLanguage.str_133;
+            menuDiv.lastChild.innerText = DL.str_133;
             setTimeout(() => (isOpenMenu = false), 200);
         }
     };
@@ -37000,124 +37129,124 @@ label.line-through:has(>#size) {
         main.id = "FullPictureLoadOptions";
         const FullPictureLoadOptionsMainHtmlStr = `
 <div style="width: 100%;">
-    <p id="title">${displayLanguage.str_68}</p>
+    <p id="title">${DL.str_68}</p>
 </div>
 <div id="iconDIV" style="width: 348px; display: flex;">
     <input id="icon" type="checkbox">
-    <label>${displayLanguage.str_69}</label>
+    <label>${DL.str_69}</label>
 </div>
 <div id="ShowEyeDIV" style="width: 348px; display: none;">
     <input id="ShowEye" type="checkbox">
-    <label>${displayLanguage.str_123}</label>
+    <label>${DL.str_123}</label>
 </div>
 <div id="ShowFixedMenuDIV" style="width: 348px; display: flex;">
     <input id="ShowFixedMenu" type="checkbox">
-    <label>※${displayLanguage.str_117}</label>
+    <label>※${DL.str_117}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_108}</label>
+    <label>${DL.str_108}</label>
     <select id="MsgPos"></select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="FavorNewTab" type="checkbox">
-    <label>※${displayLanguage.str_50}</label>
+    <label>※${DL.str_50}</label>
 </div>
 <div id="AutoInsertImgDIV" style="width: 348px; display: flex;">
     <input id="AutoInsertImg" type="checkbox">
-    <label>${displayLanguage.str_139}</label>
+    <label>${DL.str_139}</label>
 </div>
 <div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_79}</label>
+    <label>${DL.str_79}</label>
     <select id="Zoom"></select>
 </div>
 <div id="viewModeDIV" style="width: 348px; display: flex;">
     <input id="viewMode" type="checkbox">
-    <label>${displayLanguage.str_103}</label>
+    <label>${DL.str_103}</label>
 </div>
 <div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_80}</label>
-    <select id="Column" title="${displayLanguage.str_81}"></select>
+    <label>${DL.str_80}</label>
+    <select id="Column" title="${DL.str_81}"></select>
 </div>
 <div id="ShadowGalleryModeDIV" style="width: 348px; display: flex;">
     <input id="ShadowGalleryMode" type="checkbox">
-    <label>${displayLanguage.str_140}</label>
+    <label>${DL.str_140}</label>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="autoExport" type="checkbox">
-    <label>${displayLanguage.str_180}</label>
+    <label>${DL.str_180}</label>
 </div>
 <div id="ShadowGalleryloopViewDIV" style="width: 348px; display: flex;">
     <input id="loopView" type="checkbox">
-    <label>${displayLanguage.str_182}</label>
+    <label>${DL.str_182}</label>
 </div>
 <div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_147}</label>
+    <label>${DL.str_147}</label>
     <select id="ShadowGalleryWheel"></select>
 </div>
 <div id="FancyboxDIV" style="width: 348px; display: flex;">
     <input id="Fancybox" type="checkbox">
-    <label>${displayLanguage.str_78}</label>
+    <label>${DL.str_78}</label>
 </div>
 <div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${displayLanguage.str_146}</label>
+    <label>※${DL.str_146}</label>
     <select id="FancyboxWheel"></select>
 </div>
 <div id="FancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${displayLanguage.str_145}</label>
+    <label>※${DL.str_145}</label>
     <select id="FancyboxSlideshowTimeout"></select>
 </div>
 <div id="FancyboxTransitionDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${displayLanguage.str_148}</label>
+    <label>※${DL.str_148}</label>
     <select id="FancyboxTransition"></select>
 </div>
 <div id="ComicDIV" style="width: 348px; display: none;">
     <input id="Comic" type="checkbox">
-    <label>${displayLanguage.str_76}</label>
+    <label>${DL.str_76}</label>
 </div>
 <div id="DoubleDIV" style="width: 348px; display: flex;">
     <input id="Double" type="checkbox">
-    <label>${displayLanguage.str_77}</label>
+    <label>${DL.str_77}</label>
 </div>
 <div id="AutoDownloadDIV" style="width: 348px; display: flex;">
     <input id="AutoDownload" type="checkbox">
-    <label>${displayLanguage.str_73}${displayLanguage.str_74}</label>
+    <label>${DL.str_73}${DL.str_74}</label>
 </div>
 <div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_75}</label>
+    <label>${DL.str_75}</label>
     <select id="Countdown"></select>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_70}</label>
+    <label>${DL.str_70}</label>
     <select id="Threading"></select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="Zip" type="checkbox">
-    <label>${displayLanguage.str_71}</label>
+    <label>${DL.str_71}</label>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="zipFolder" type="checkbox">
-    <label>※${displayLanguage.str_187}</label>
+    <label>※${DL.str_187}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 6px;">
-    <label>${displayLanguage.str_72}</label>
+    <label>${DL.str_72}</label>
     <select id="Extension"></select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="Convert" type="checkbox">
-    <label>${displayLanguage.str_110}</label>
+    <label>${DL.str_110}</label>
 </div>
 <div id="CustomDownloadVideoDIV" style="width: 348px; display: none;">
     <input id="CustomDownloadVideo" type="checkbox">
-    <label>${displayLanguage.str_124}</label>
+    <label>${DL.str_124}</label>
 </div>
-<button id="CancelBtn">${isOpenFilter ? displayLanguage.str_82.replace(" (Esc)", "") : displayLanguage.str_82}</button>
-<button id="ResetBtn">${displayLanguage.str_83}</button>
-<button id="SaveBtn">${displayLanguage.str_84}</button>
+<button id="CancelBtn">${isOpenFilter ? DL.str_82.replace(" (Esc)", "") : DL.str_82}</button>
+<button id="ResetBtn">${DL.str_83}</button>
+<button id="SaveBtn">${DL.str_84}</button>
 `;
         main.innerHTML = FullPictureLoadOptionsMainHtmlStr;
 
         const MsgPosSelect = ge("#MsgPos", main);
-        Object.values(displayLanguage.str_109).forEach((v, i) => {
+        Object.values(DL.str_109).forEach((v, i) => {
             const option = document.createElement("option");
             option.value = i;
             option.innerText = v;
@@ -37143,7 +37272,7 @@ label.line-through:has(>#size) {
         }
 
         const ShadowGalleryWheelSelect = ge("#ShadowGalleryWheel", main);
-        Object.values(displayLanguage.ShadowGalleryWheel).forEach((v, i) => {
+        Object.values(DL.ShadowGalleryWheel).forEach((v, i) => {
             const option = document.createElement("option");
             option.value = i;
             option.innerText = v;
@@ -37152,7 +37281,7 @@ label.line-through:has(>#size) {
         ShadowGalleryWheelSelect.append(fragment);
 
         const FancyboxWheelSelect = ge("#FancyboxWheel", main);
-        Object.values(displayLanguage.FancyboxWheel).forEach((v, i) => {
+        Object.values(DL.FancyboxWheel).forEach((v, i) => {
             const option = document.createElement("option");
             option.value = i;
             option.innerText = v;
@@ -37170,7 +37299,7 @@ label.line-through:has(>#size) {
         FancyboxSlideshowTimeoutSelect.append(fragment);
 
         const FancyboxTransitionSelect = ge("#FancyboxTransition", main);
-        for (const [k, v] of Object.entries(displayLanguage.FancyboxTransition)) {
+        for (const [k, v] of Object.entries(DL.FancyboxTransition)) {
             const option = document.createElement("option");
             option.value = k;
             option.innerText = v;
@@ -37821,11 +37950,11 @@ a[data-fancybox]:hover {
     let comicInfiniteScrollMode = localStorage.getItem("FullPictureLoadComicInfiniteScrollMode") ?? 0;
 
     const addLazyLoadFullResolutionMenu = async () => {
-        _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ " + displayLanguage.str_111 : "✔️ " + displayLanguage.str_111, () => {
+        _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ " + DL.str_111 : "✔️ " + DL.str_111, () => {
             lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
             location.reload();
         });
-        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ " + displayLanguage.str_113 : "✔️ " + displayLanguage.str_113, () => {
+        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ " + DL.str_113 : "✔️ " + DL.str_113, () => {
             lazyLoadPreloadImages == 0 ? _GM_setValue("lazyLoadPreloadImages", 1) : _GM_setValue("lazyLoadPreloadImages", 0);
             location.reload();
         });
@@ -37834,7 +37963,7 @@ a[data-fancybox]:hover {
     let E_HENTAI_LoadOriginalImage = _GM_getValue("E_HENTAI_LoadOriginalImage", 0);
 
     if (/^https?:\/\/(e-hentai|exhentai).org\//.test(fn.url)) {
-        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ " + displayLanguage.str_114 : "✔️ " + displayLanguage.str_114, () => {
+        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ " + DL.str_114 : "✔️ " + DL.str_114, () => {
             E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
             location.reload();
         });
@@ -38019,7 +38148,7 @@ a[data-fancybox]:hover {
             str == "" ? null : customTitle = str;
             let newTitle = await prompt("New Title", customTitle);
             newTitle == null ? null : customTitle = newTitle;
-            fn.showMsg(displayLanguage.str_118);
+            fn.showMsg(DL.str_118);
             debug("圖集新標題", newTitle || customTitle);
         }
         if (event.code === "KeyF" || event.key === "f" || event.key === "F") { //F鍵
@@ -38073,13 +38202,13 @@ a[data-fancybox]:hover {
                 isStopDownload = true;
                 isDownloading = false;
                 fn.clearAllTimer(2);
-                fn.showMsg(displayLanguage.str_149);
+                fn.showMsg(DL.str_149);
             }
             if (isCountdowning) {
                 isCountdowning = false;
                 isStopDownload = true;
                 fn.clearAllTimer(2);
-                fn.showMsg(displayLanguage.str_149);
+                fn.showMsg(DL.str_149);
             }
             isEsc = true;
             setTimeout(() => (isEsc = false), 200);
@@ -38092,7 +38221,7 @@ a[data-fancybox]:hover {
             return;
         }
         if (event.code === "NumpadDivide" || event.key === "/") { //數字鍵/
-            fn.showMsg(displayLanguage.str_91);
+            fn.showMsg(DL.str_91);
             setDefault(); //重置用戶設定恢復為預設選項
             setTimeout(() => location.reload(), 1000);
             return;
@@ -38283,7 +38412,7 @@ a[data-fancybox]:hover {
     if (showOptions) {
         //_unsafeWindow.FullPictureLoadCustomData = customData;
         //debug("\n圖片全載開啟了GM選單?\n", showOptions);
-        _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
+        _GM_registerMenuCommand(DL.str_67, () => createPictureLoadOptionsShadowElement());
         if (!ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
@@ -38524,27 +38653,27 @@ a[data-fancybox]:hover {
                     if (["is-next", "is-prev", "fancybox-button"].some(n => event?.target?.className?.includes(n))) return;
                 }
                 if ("observerURL" in siteData && isString(nextLink)) {
-                    fn.showMsg(displayLanguage.str_34, 0);
+                    fn.showMsg(DL.str_34, 0);
                     return (location.href = nextLink);
                 }
                 if (isFn(next)) {
-                    fn.showMsg(displayLanguage.str_34, 0);
+                    fn.showMsg(DL.str_34, 0);
                     if (isString(nextE)) {
                         location.href = nextE;
                     } else if (isEle(nextE)) {
                         EClick(nextE);
                     } else {
-                        fn.showMsg(displayLanguage.str_37);
+                        fn.showMsg(DL.str_37);
                     }
                 } else if (isString(next)) {
                     if (isEle(nextE)) {
                         EClick(nextE);
-                        fn.showMsg(displayLanguage.str_35);
+                        fn.showMsg(DL.str_35);
                     } else if (isString(nextE)) {
-                        fn.showMsg(displayLanguage.str_34, 0);
+                        fn.showMsg(DL.str_34, 0);
                         location.href = nextE;
                     } else {
-                        fn.showMsg(displayLanguage.str_37);
+                        fn.showMsg(DL.str_37);
                     }
                 }
             };
@@ -38563,16 +38692,16 @@ a[data-fancybox]:hover {
                 if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
                     event.preventDefault();
                     if (prev === 1) {
-                        fn.showMsg(displayLanguage.str_38);
+                        fn.showMsg(DL.str_38);
                         history.back();
                         return;
                     }
                     let ele = fn.ge(prev);
                     if (ele) {
                         EClick(ele);
-                        fn.showMsg(displayLanguage.str_39);
+                        fn.showMsg(DL.str_39);
                     } else {
-                        fn.showMsg(displayLanguage.str_40);
+                        fn.showMsg(DL.str_40);
                     }
                 }
             });
@@ -38755,35 +38884,35 @@ a[data-fancybox]:hover {
     }
 
     if (!hasTouchEvent && showOptions && isArray(siteData.insertImg)) {
-        _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + displayLanguage.str_121 : "✔️ " + displayLanguage.str_121, () => {
+        _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + DL.str_121 : "✔️ " + DL.str_121, () => {
             TurnOffImageNavigationShortcutKeys == 0 ? _GM_setValue("TurnOffImageNavigationShortcutKeys", 1) : _GM_setValue("TurnOffImageNavigationShortcutKeys", 0);
             location.reload();
         });
     }
 
     if (showOptions && isNumber(siteData.go)) {
-        _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ " + displayLanguage.str_115 : "✔️ " + displayLanguage.str_115, () => {
+        _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ " + DL.str_115 : "✔️ " + DL.str_115, () => {
             noGoToFirstImage == 0 ? _GM_setValue("noGoToFirstImage", 1) : _GM_setValue("noGoToFirstImage", 0);
             location.reload();
         });
     }
 
     if (isArray(siteData.scrollEle) || isFn(siteData.scrollEle)) {
-        _GM_registerMenuCommand(autoScrollAllElement == 0 ? "❌ " + displayLanguage.str_116 : "✔️ " + displayLanguage.str_116, () => {
+        _GM_registerMenuCommand(autoScrollAllElement == 0 ? "❌ " + DL.str_116 : "✔️ " + DL.str_116, () => {
             autoScrollAllElement == 0 ? _GM_setValue("autoScrollAllElement", 1) : _GM_setValue("autoScrollAllElement", 0);
             location.reload();
         });
     }
 
     if (siteData.category && ["nsfw1", "nsfw2", "hcomic", "comic", "lazyLoad"].some(c => c === siteData.category)) {
-        _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + displayLanguage.str_120 : "✔️ " + displayLanguage.str_120, () => {
+        _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + DL.str_120 : "✔️ " + DL.str_120, () => {
             newTabViewLightGallery == 0 ? localStorage.setItem("newTabViewLightGallery", 1) : localStorage.setItem("newTabViewLightGallery", 0);
             location.reload();
         });
     }
 
     if (siteData.category === "comic" && siteData.infiniteScroll || siteData.category === "comic autoPager") {
-        _GM_registerMenuCommand(comicInfiniteScrollMode == 0 ? "❌ " + displayLanguage.str_122 : "✔️  " + displayLanguage.str_122, () => {
+        _GM_registerMenuCommand(comicInfiniteScrollMode == 0 ? "❌ " + DL.str_122 : "✔️  " + DL.str_122, () => {
             comicInfiniteScrollMode == 0 ? localStorage.setItem("FullPictureLoadComicInfiniteScrollMode", 1) : localStorage.setItem("FullPictureLoadComicInfiniteScrollMode", 0);
             location.reload();
         });
@@ -38797,7 +38926,7 @@ a[data-fancybox]:hover {
             if (captureExclude() || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) {
                 if (options.autoDownload == 0) {
-                    fn.showMsg(displayLanguage.str_64, 0);
+                    fn.showMsg(DL.str_64, 0);
                     options.autoDownload = 1;
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
@@ -38809,7 +38938,7 @@ a[data-fancybox]:hover {
                     let jsonStr = JSON.stringify(options);
                     localStorage.setItem("FullPictureLoadOptions", jsonStr);
                     fn.clearSetTimeout();
-                    fn.showMsg(displayLanguage.str_65, 0);
+                    fn.showMsg(DL.str_65, 0);
                     location.reload();
                 }
             }
@@ -39132,7 +39261,7 @@ html,body {
             editFavorDiv.append(textarea);
             FavorSitesElement.appendChild(editFavorDiv);
             [{
-                text: displayLanguage.str_132,
+                text: DL.str_132,
                 id: "editFavorCloseBtn",
                 cfn: event => {
                     cancelDefault(event);
@@ -39140,7 +39269,7 @@ html,body {
                     createFavor();
                 }
             }, {
-                text: displayLanguage.str_131,
+                text: DL.str_131,
                 id: "editFavorSaveBtn",
                 cfn: event => {
                     cancelDefault(event);
@@ -39206,14 +39335,14 @@ html,body {
                 }
             }
             [{
-                text: displayLanguage.str_130,
+                text: DL.str_130,
                 cfn: event => {
                     cancelDefault(event);
                     createFavorTextarea();
                     FavorUl.remove();
                 }
             }, {
-                text: displayLanguage.str_129,
+                text: DL.str_129,
                 cfn: event => {
                     cancelDefault(event);
                     if (!isOpenFilter) {
@@ -39239,7 +39368,7 @@ html,body {
 
     };
 
-    _GM_registerMenuCommand(displayLanguage.str_125, () => {
+    _GM_registerMenuCommand(DL.str_125, () => {
         const keys = [
             "newTabViewLightGallery",
             "newWindowData",
@@ -39256,7 +39385,7 @@ html,body {
         }
         location.reload();
     });
-    _GM_registerMenuCommand(displayLanguage.str_126, () => {
+    _GM_registerMenuCommand(DL.str_126, () => {
         const GM_keys = _GM_listValues();
         if (GM_keys.length > 0) {
             GM_keys.forEach(key => _GM_deleteValue(key));
@@ -39271,8 +39400,8 @@ html,body {
         let menu_command_id_2;
         let menu_command_id_3;
         const registerA = () => {
-            menu_command_id_2 = _GM_registerMenuCommand(displayLanguage.str_163, () => {
-                menu_command_id_1 = _GM_registerMenuCommand(displayLanguage.str_67, () => createPictureLoadOptionsShadowElement());
+            menu_command_id_2 = _GM_registerMenuCommand(DL.str_163, () => {
+                menu_command_id_1 = _GM_registerMenuCommand(DL.str_67, () => createPictureLoadOptionsShadowElement());
                 checkOptionsData();
                 siteData = {
                     imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)").map(src => {
@@ -39304,7 +39433,7 @@ html,body {
             });
         };
         const registerB = () => {
-            menu_command_id_3 = _GM_registerMenuCommand(displayLanguage.str_164, () => {
+            menu_command_id_3 = _GM_registerMenuCommand(DL.str_164, () => {
                 _GM_unregisterMenuCommand(menu_command_id_1);
                 siteData = {};
                 fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadFixedMenu");
