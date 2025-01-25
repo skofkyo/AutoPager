@@ -2385,6 +2385,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.meitu8.cc/">美女写真馆</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.meitu8.cc/">美图网</a>
                 </td>
                 <td></td>
@@ -2735,7 +2741,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://jpg5.su/tatsuya_shiba/albums">JPG5</a>
                 </td>
-                <td><a href="https://jpg5.su/hru_moon/albums">JPG5</a>，作用在上傳者的相簿，手動插入圖片</td>
+                <td><a href="https://jpg5.su/hru_moon/albums">hru_moon</a>，作用在上傳者的相簿，手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -3565,6 +3571,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://pashalism.com/">エロ画像ぱしゃりずむ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosppi.net/">コスッピ！</a>
                 </td>
                 <td></td>
             </tr>
@@ -4416,7 +4428,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://img.ecy8.com/">img.ecy8.com</a>
                 </td>
-                <td>原圖級別，手動插入圖片，再有圖片或影片的資料夾有效</td>
+                <td>原圖級別，手動插入圖片，在有圖片或影片的資料夾有效</td>
             </tr>
             <tr>
                 <td>AList</td>
@@ -5420,7 +5432,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://web.nicecat.cc/">NiceCat</a>
                 </td>
-                <td>SPA網頁，請在info頁做操作。</td>
+                <td>SPA網頁，作用在閱讀頁。</td>
             </tr>
             </tr>
             <tr>
@@ -6134,9 +6146,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.mh160.cc/">漫画160</a>
+                    <a href="https://www.mh160mh.com/">漫画160</a>
                 </td>
-                <td><a href="http://m.mh160.cc/">m.mh160.cc</a>，有無限滾動模式加預讀</td>
+                <td><a href="http://m.mh160mh.com/">m.mh160mh.com</a>，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
