@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.25
+// @version            2025.1.25.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1844,6 +1844,27 @@
         next: ".prev>a",
         prev: ".next>a",
         customTitle: ".focusbox-title",
+        category: "nsfw1"
+    }, {
+        name: "美女写真馆",
+        host: ["www.photo13.com"],
+        url: {
+            t: "美女写真馆",
+            p: "/m/"
+        },
+        init: () => {
+            if ("detectDevTools" in _unsafeWindow) {
+                _unsafeWindow.showWarning = null;
+                _unsafeWindow.detectDevTools = null;
+                _unsafeWindow.onresize = null;
+            }
+            fn.gae(".post-content>blockquote").forEach(e => tempEles.push(e));
+        },
+        imgs: ".post-content img",
+        button: [4],
+        insertImg: [".post-content", 2],
+        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        customTitle: "h1.post-title",
         category: "nsfw1"
     }, {
         name: "找套图/Xiuno BBS",
@@ -7552,10 +7573,10 @@
         customTitle: "h1.single-post-title",
         category: "nsfw2"
     }, {
-        name: "肉感美ガール",
+        name: "肉感美ガール/コスッピ！",
         url: {
-            h: "bi-girl.net",
-            p: /\/[^\/]+$/,
+            h: ["bi-girl.net", "cosppi.net"],
+            p: [/\/[^\/]+$/, "/user/"],
             e: ".img_wrapper_nontop .img_wrapper"
         },
         imgs: () => {
@@ -15978,10 +15999,15 @@
         name: "NiceCat",
         host: "web.nicecat.cc",
         reg: /^https?:\/\/web\.nicecat\.cc\//,
-        SPA: () => document.URL.includes("/comic/info/") && ("headers" in localStorage),
+        SPA: () => {
+            if (document.URL.includes("/comic/book/reader/")) {
+                return fn.wait(() => "imageData" in sessionStorage);
+            } else {
+                sessionStorage.clear();
+                return false;
+            }
+        },
         observerURL: true,
-        comicUid: () => document.URL.match(/\/id\.(.+)$/)[1],
-        getHeaders: () => JSON.parse(localStorage.getItem("headers")),
         init: () => {
             const ajaxHooker = addAjaxHookerLibrary();
             ajaxHooker.filter([{
@@ -15990,48 +16016,24 @@
                 url: "/api/ComicOrder/getComicOrder"
             }]);
             ajaxHooker.hook(request => {
-                if (localStorage.getItem("headers") !== JSON.stringify(request.headers)) {
-                    localStorage.setItem("headers", JSON.stringify(request.headers));
-                }
-                if (getType(request.data) === "FormData") {
-                    let object = Object.fromEntries([...request.data.entries()]);
-                    if ("dateKey" in object) {
-                        if (localStorage.getItem("dateKey") !== object.dateKey) {
-                            localStorage.setItem("dateKey", object.dateKey);
-                        }
+                //console.log(request);
+                request.response = res => {
+                    if (res.status === 200 && request.url.includes("/api/ComicInfo/info")) {
+                        //console.log("ComicInfo", JSON.parse(res.responseText));
+                        localStorage.setItem("ComicInfo", res.responseText);
+                    }
+                    if (res.status === 200 && request.url.includes("/api/ComicOrder/getComicOrder")) {
+                        //console.log("imageData", JSON.parse(res.responseText));
+                        sessionStorage.setItem("imageData", res.responseText);
                     }
                 }
             });
         },
-        imgs: (msg = 1) => {
-            if (_this.SPA()) {
-                fn.createImgBox("#recommend-info-body", 1);
-                if (msg === 1) fn.showMsg(DL.str_05, 0);
-                let formData = new FormData();
-                formData.append("comicUid", _this.comicUid());
-                formData.append("sort", "0");
-                formData.append("dateKey", ("dateKey" in localStorage) ? localStorage.getItem("dateKey") : "SA4J0Br8W5fFPNb+Uhi0ugL0JXkOvcEw1BGid0UiosA=");
-                return fetch("/api/ComicOrder/getComicOrder", {
-                    "headers": _this.getHeaders(),
-                    "body": formData,
-                    "method": "POST"
-                }).then(res => res.json()).then(json => json.data.imageData.map(e => e.imageUrl));
-            } else {
-                return [];
-            }
-        },
-        capture: () => _this.imgs(0),
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 3],
+        imgs: () => JSON.parse(sessionStorage.getItem("imageData")).data.imageData.map(e => e.imageUrl),
         customTitle: () => {
-            if (_this.SPA()) {
-                let formData = new FormData();
-                formData.append("uid", _this.comicUid());
-                return fetch("/api/ComicInfo/info", {
-                    "headers": _this.getHeaders(),
-                    "body": formData,
-                    "method": "POST"
-                }).then(res => res.json()).then(json => json.data.comicData.name_two ?? json.data.comicData.name_one).then(str => str.replaceAll("/", "∕"));
+            if ("ComicInfo" in localStorage) {
+                let json = JSON.parse(localStorage.getItem("ComicInfo"));
+                return json.data.comicData.name_two ?? json.data.comicData.name_one;
             } else {
                 return null;
             }
@@ -26287,6 +26289,7 @@ if ("xx" in window) {
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
+    const isYujian = ("via" in _unsafeWindow) && ("yujianobj" in _unsafeWindow);
     const isString = str => getType(str) === "String";
     const isNumber = num => getType(num) === "Number";
     const isBoolean = b => getType(b) === "Boolean";
@@ -32303,7 +32306,7 @@ if ("xx" in window) {
             let newWindow;
             let dom;
             try {
-                newWindow = _unsafeWindow.open("about:blank", "_blank");
+                newWindow = _unsafeWindow.open((isXBrowser || isYujian) ? location.origin : "about:blank", "_blank");
                 dom = newWindow.document;
             } catch {
                 alert("An error occurred\nUnable to use window.open()");
@@ -35446,6 +35449,9 @@ img.horizontal {
         isOpenFilter = true;
 
         let full_srcs;
+        let Viewer;
+        let ViewerJsInstance;
+        let ViewerJsInstance_G;
         if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
             full_srcs = await getImgs(selector);
@@ -35966,8 +35972,8 @@ img.webtoon {
         };
 
         if (hasTouchEvent) {
-            ge("label:has(>#move)", main).remove();
-            ge("#combineDownload", main).remove();
+            ge("label:has(>#move)", main).classList.add("hide");
+            ge("#combineDownload", main).classList.add("hide");
             ge("#mobile_gallery_btn", main).classList.remove("hide");
         }
         if (backgroundColor === "d") {
@@ -36165,6 +36171,8 @@ img.webtoon {
                 fn.remove("#overflowYHidden");
                 shadowElement.remove();
                 isOpenFilter = false;
+                ViewerJsInstance?.destroy();
+                ViewerJsInstance_G?.destroy();
             });
         });
         gae("#settings", main).forEach(button => button.addEventListener("click", event => {
@@ -36177,7 +36185,7 @@ img.webtoon {
                 e.classList.toggle("hide");
             });
         }));
-        ge("#" + config.MobileViewMode, main).classList.add("active");
+        gae("#" + config.MobileViewMode, main).forEach(e => e.classList.add("active"));
         gae("button.mode", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
             gae("button.mode", main).forEach(e => e.classList.remove("active"));
@@ -36327,8 +36335,6 @@ img.webtoon {
             });
         }
         const imageList = ge("#image-list", main);
-        let Viewer;
-        let ViewerJsInstance;
         const ViewerOptions = {
             navbar: false,
             title: false,
@@ -36457,10 +36463,7 @@ img.webtoon {
         addLis();
 
         const gallery_imgBox = ge("#gallery_imgBox", main);
-        let Viewer_G;
-        let ViewerJsInstance_G;
         if ("Viewer" in _unsafeWindow) {
-            Viewer_G = _unsafeWindow.Viewer;
             ViewerJsInstance_G = new Viewer(gallery_imgBox, ViewerOptions);
         }
         const addGalleryImgs = () => {
@@ -36478,7 +36481,7 @@ img.webtoon {
                 fragment.append(img);
             }
             gallery_imgBox.append(fragment);
-            if (Viewer_G && ViewerJsInstance_G) {
+            if (Viewer && ViewerJsInstance_G) {
                 ViewerJsInstance_G.update();
             }
             const queue = new Queue(Number(config.threading));
