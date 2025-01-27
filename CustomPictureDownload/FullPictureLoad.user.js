@@ -16655,7 +16655,6 @@
     }, {
         name: "野貓韓漫 閱讀頁",
         url: {
-            e: ".logo img[alt^=野貓韓漫],.logo img[alt^=野猫韩漫]",
             p: "/read/"
         },
         imgs: ".module img",
@@ -16674,7 +16673,7 @@
     }, {
         name: "野貓韓漫 目錄頁",
         url: {
-            e: ".logo img[alt^=野貓韓漫],.logo img[alt^=野猫韩漫]",
+            e: ".module-info",
             p: "/m/"
         },
         box: [".module-info", 2],
