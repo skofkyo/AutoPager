@@ -1921,6 +1921,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.kongquehai.top/">孔雀海</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.lolili.net/">洛丽网</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.ladymao.net/">ladymao图库</a>
                 </td>
                 <td>China IP限定</td>
@@ -1928,6 +1940,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.lazymanpic.net/">懒人看图</a>
+                </td>
+                <td>China IP限定</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.youwushow.net/">尤物秀</a>
                 </td>
                 <td>China IP限定</td>
             </tr>
@@ -3703,6 +3721,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://kissjav.com/albums/">KISSJAV</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.x1hub.com/albums/">X1HUB</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.xasiat.com/albums/">Xasiat</a>
                 </td>
                 <td>圖集分類頁添加了自動翻頁</td>
@@ -4635,18 +4665,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://sukidesu.moe/latest">Sukidesu.moe</a>
-                </td>
-                <td>作用在圖片清單頁，SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://animeh.to/manga-home?language=all">AnimeH</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://cathentai.net/">Cathentai</a>
                 </td>
                 <td>作用在圖片清單/List Read頁， <a href="https://hentaibeeg.com/">hentaibeeg.com</a>， <a href="https://hentaicolor.net/">hentaicolor.net</a>， <a href="https://nyahentai.info/">nyahentai.info</a>
@@ -4822,12 +4840,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://9hentai.com/">9hentai</a>
-                </td>
-                <td>作用在圖片清單頁/閱讀頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://asmhentai.com/">AsmHentai</a>
                 </td>
                 <td>作用在圖片清單頁/閱讀頁</td>
@@ -4853,12 +4865,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.hentaicredo.com/">HENTAICREDO.COM</a>
-                </td>
-                <td>作用在圖片清單頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.hentairules.net/">Hentairules</a>
                 </td>
                 <td>作用在圖片清單頁</td>
             </tr>
@@ -5055,14 +5061,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://cndoujin.net/">CNdoujin.net</a>
                 </td>
                 <td>
-                    <a href="doujin18.net/">Doujin18.net</a>，作用在閱讀頁，兩個網站的爬取內容不一樣。
+                    <a href="https://doujin18.net/">Doujin18.net</a>，作用在閱讀頁，兩個網站的爬取內容不一樣。
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://18kami.com/">18Kami.com</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -5072,7 +5072,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://doujindesu.click/">Doujindesu</a>
+                    <a href="https://doujindesu.icu/">Doujindesu</a>
                 </td>
                 <td></td>
             </tr>
@@ -5106,7 +5106,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.nicohentai.com/">逆次元逆ACG</a>
                 </td>
                 <td>
-                    <a href="https://www.susmeat.com/">www.susmeat.com</a>， <a href="https://www.freeacg.org/">www.freeacg.org</a>， <a href="https://nico.yt/">nico.yt</a>
+                    <a href="https://www.susmeat.com/">www.susmeat.com</a>， <a href="https://www.freeacg.org/">www.freeacg.org</a>
                 </td>
             </tr>
             <tr>
@@ -5241,21 +5241,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.setumeow.com/">色图喵h漫画</a>
-                </td>
-                <td>作用在圖片清單頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://18mh.org/">18漫畫</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://rehanman.com/">热漫画</a>
-                </td>
-                <td>SPA網頁，不分章節直接取得所有圖片</td>
             </tr>
             <tr>
                 <td>
@@ -5264,12 +5252,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.kmh123.xyz/">永久发布页</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://tianhei-acg.com/">天黑漫画</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -5288,14 +5270,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.ikanmh.xyz/">漫小肆</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.vnacg.com/">VN漫画网</a>
-                </td>
-                <td>
-                    <a href="https://m.vnacg.com/">m.vnacg.com</a>，作用在下拉閱讀頁
-                </td>
             </tr>
             <tr>
                 <td>
@@ -5325,19 +5299,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.comicun.com/">漫畫聯合國</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://litu100.xyz/">丽图·污漫画</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://yumanse.com/">欲漫涩</a>
                 </td>
                 <td></td>
             </tr>
@@ -5349,10 +5311,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.acgmhs.com/">ACG漫画网</a>
+                    <a href="https://www.acgmhb.com/">ACG漫画网</a>
                 </td>
                 <td>
-                    <a href="https://www.porn-comic.com/">www.porn-comic.com</a>， <a href="https://www.cool-manga.com/">www.cool-manga.com</a>
+                    <a href="https://www.porn-comic.com/">www.porn-comic.com</a>， <a href="https://www.cool-manga.com/">www.cool-manga.com</a>， <a href="https://www.acgn2025.xyz/">最新网址</a>
                 </td>
             </tr>
             <tr>
@@ -5363,23 +5325,17 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://twhentai.com/">TWHentai</a>
-                </td>
-                <td>作用在圖片清單頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://hentai.desi/">十八禁成人H漫</a>
-                </td>
-                <td>作用在圖片清單頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="http://www.177pica.com/">177漫画</a>
                 </td>
                 <td>
                     <a href="http://www.177picyy.com/">www.177picyy.com</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://18manga.top/">18H汉化漫画</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -5413,18 +5369,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://yidan.in/">一耽女孩</a>
-                </td>
-                <td>SPA網頁，Mobile限定</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="http://kkcomic.vip/">快看禁漫</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.sesemanhua.com/">色色漫画</a>
                 </td>
                 <td></td>
@@ -5445,7 +5389,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.hanmanzx.com/">韩漫在线</a>
+                    <a href="https://www.hanmanol.com/">韩漫在线</a>
                 </td>
                 <td>
                     <a href="https://github.com/dongmanhezi/dizhi">地址发布页</a>
@@ -5474,15 +5418,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://tptoon.com/">头牌漫画网</a>
                 </td>
                 <td>
-                    <a href="https://xs8.me/">地址发布页，Mobile限定</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.roumanhua.com/">肉漫画网</a>
-                </td>
-                <td>
-                    <a href="https://m.roumanhua.net/">m.roumanhua.com</a>
+                    <a href="https://xs8.me/">地址发布页</a>，Mobile限定
                 </td>
             </tr>
             <tr>
@@ -5539,12 +5475,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://51comic.org/">51漫画</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://1zse.com/">一之涩漫画</a>
                 </td>
                 <td>
@@ -5565,13 +5495,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.hmllk.com/">韩漫连连看</a>
+                    <a href="https://www.hmkll.com/">韩漫连连看</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.44te.com/">特漫网</a>
+                    <a href="https://www.70te.com/">特漫网</a>
                 </td>
                 <td></td>
             </tr>
@@ -5607,12 +5537,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.kanman.buzz/">漫画大全网</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://h-webtoon.com/">韓漫射</a>
                 </td>
                 <td>同格式， <a href="https://h-doujinshi.xyz/">h-doujinshi.xyz</a>， <a href="https://18hmanga.com/">18hmanga.com</a>
@@ -5628,25 +5552,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.rhmanhua12.xyz/">H肉番动漫</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://semanji.com/">色漫集</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://18manga.top/">18H汉化漫画</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://hanime1.biz/home">hanime1.biz</a>
+                    <a href="https://hanime1.biz/home/1">hanime1.biz</a>
                 </td>
                 <td>
                     <a href="https://anime01.xyz/">科學域名</a>
@@ -5672,7 +5584,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://lxmanga.life/">LXMANGA</a>
+                    <a href="https://lxmanga.info/">LXMANGA</a>
                 </td>
                 <td></td>
             </tr>
@@ -5721,10 +5633,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.relamanhua.org/">熱辣漫畫</a>
+                    <a href="https://www.relamanhua.org/comics?type=1">熱辣漫畫</a>
                 </td>
                 <td>
-                    <a href="https://www.2024manga.com/">www.2024manga.com</a>，付費漫畫依然需要有付費帳號登入後才能看全部，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
+                    <a href="https://www.2024manga.com/comics?type=1">www.2024manga.com</a>，付費漫畫依然需要有付費帳號登入後才能看全部，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
                 </td>
             </tr>
             <tr>
@@ -5854,7 +5766,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://www.zerobywz.com/">zero搬运网</a>
+                    <a href="http://www.zerobywzip.com/">zero搬运网</a>
                 </td>
                 <td>手動插入圖片，<a href="https://zerobyw.github.io/">域名</a></td>
             </tr>
@@ -5908,15 +5820,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://m.gaonaojin.com/">仙漫网M</a>
-                </td>
-                <td>有無限滾動模式加預讀</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.hmttmh.com/">韩漫天堂</a>
                 </td>
-                <td>有無限滾動模式加預讀</td>
+                <td><a href="https://cn.zhuzhumh.com/">猪猪漫画</a>，有無限滾動模式加預讀</td>
             </tr>
             <tr>
                 <td>
@@ -5950,6 +5856,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.wujinmh.com/">无尽漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.36mh.org/">36漫画</a>
                 </td>
                 <td></td>
@@ -5966,13 +5878,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.ikmmh.com/">爱看漫</a>
                 </td>
-                <td></td>
+                <td>Mobile限定</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.greyhoundsoul.com/">灰狗漫画</a>
                 </td>
-                <td></td>
+                <td>Mobile限定</td>
             </tr>
             <tr>
                 <td>
@@ -5982,7 +5894,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.greyhoundsoul.com/">聚合漫画屋</a>
+                    <a href="https://www.52hah.com/">聚合漫画屋</a>
                 </td>
                 <td><a href="https://www.kukanmanhua.org/">酷看漫画</a>，<a href="http://www.ququmh.com/">去去漫画</a>，<a href="http://www.pipiman.com/">皮皮漫画</a>，<a href="https://www.cicoo.cc/">六漫画</a>，<a href="https://www.liumanhua.cc/">六漫画</a>，<a href="https://www.ypdsm.com/">有品漫画</a></td>
             </tr>
@@ -6096,12 +6008,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.gaonaojin.com/">仙漫网</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.2animx.com/">二次元動漫</a>
                 </td>
                 <td>預設關閉</td>
@@ -6181,7 +6087,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.mhw1.com/">漫画屋</a>
                 </td>
                 <td>
-                    <a href="http://www.cmh5.com/">www.cmh5.com</a>，預設關閉
+                    <a href="http://www.mh5.xyz/">www.mh5.xyz</a>，預設關閉
                 </td>
             </tr>
             <tr>
@@ -6206,12 +6112,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.wujinmh.com/">无尽漫画</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://mh5.tw/">漫畫屋</a>
                 </td>
                 <td>預設關閉</td>
@@ -6231,24 +6131,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.bikamanhua.com/">哔咔漫画</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.52hah.com/">聚合漫画屋</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.kukanmanhua.org/">酷看漫画</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.pipiman.com/">皮皮漫画</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
