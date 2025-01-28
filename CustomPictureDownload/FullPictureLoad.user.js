@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.28
+// @version            2025.1.29
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -6332,6 +6332,23 @@
         customTitle: "h1.tdb-title-text,h1.entry-title",
         category: "nsfw2"
     }, {
+        name: "COS4K",
+        host: ["cos4k.com"],
+        url: {
+            t: "COS4K",
+            p: ".html",
+            e: ".wp-block-image,.content p:has(>img)>img"
+        },
+        box: [".content h5,.wp-block-gallery", 2],
+        imgs: () => fn.getImgA(".wp-block-image img,.content p:has(>img)>img", ".post-nav-links a"),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".wp-block-gallery,.wp-block-image,.content p:has(>img),.content p:has(br),.post-nav-links"], 2
+        ],
+        endColor: "white",
+        customTitle: "main h1",
+        category: "nsfw2"
+    }, {
         name: "Cosplay69",
         host: ["www.cosplay69.net", "cosplay69.net"],
         url: () => fn.checkUrl({
@@ -7386,6 +7403,19 @@
         next: "a.nav_link_l",
         prev: "a.f_row_r",
         customTitle: "h1.post_title",
+        setFancybox: true,
+        category: "nsfw2"
+    }, {
+        name: "お宝エログ幕府",
+        url: {
+            h: "bakufu.jp",
+            p: "/archives/"
+        },
+        imgs: ".entry-content a[href*=bakufu]:has(img[src*=bakufu])",
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: "h1.entry-title",
         setFancybox: true,
         category: "nsfw2"
     }, {
@@ -9127,6 +9157,19 @@
             ["//a[img[@data-src][@data-maxwidth]]", 2, "//a[img[@data-src][@data-maxwidth]]"], 2
         ],
         customTitle: ".title",
+        category: "nsfw2"
+    }, {
+        name: "Ciberhentai",
+        url: {
+            h: "www.ciberhentai.com",
+            p: ".html"
+        },
+        imgs: "a[data-gallery]",
+        thums: "a[data-gallery]>img",
+        autoDownload: [0],
+        next: ".prev-post a",
+        prev: ".next-post a",
+        customTitle: "span.post-title",
         category: "nsfw2"
     }, {
         name: "Pics-X",
@@ -14004,7 +14047,7 @@
         endColor: "white",
         go: 1,
         insertImgAF: () => {
-            setTimeout(()=> {
+            setTimeout(() => {
                 fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
                 if (siteData.key != 0 && !isAddKeyEvent) {
                     document.addEventListener("keydown", addKeyEvent);
@@ -15008,9 +15051,10 @@
         category: "hcomic"
     }, {
         name: "爱漫画网 閱讀頁",
+        host: ["www.iimhw.com", "iimhw.com", "518lebook.buzz"],
         url: {
-            h: ["www.iimhw.com", "iimhw.com"],
-            p: "/chapter"
+            e: "a[title=爱漫画网]",
+            //p: "/chapter"
         },
         imgs: ".chapter-content img",
         button: [4],
@@ -15030,9 +15074,8 @@
     }, {
         name: "爱漫画网 目錄頁",
         url: {
-            h: ["www.iimhw.com", "iimhw.com"],
-            p: "/novel",
-            e: "#list-chapter"
+            e: ["a[title=爱漫画网]", "#list-chapter"],
+            //p: "/novel"
         },
         box: ["#list-chapter", 2],
         init: () => fn.getNP("#list-chapter .list-chapter>li", "//div[@id='pagination']//a[text()='Next'][@href]", null, "#pagination"),
@@ -15315,6 +15358,21 @@
             t: siteJson?.name
         }),
         hide: "body>ins,div:not([id],[class]):has(div.items-center)",
+        category: "hcomic"
+    }, {
+        name: "紳士漫畫",
+        host: ["www.ssmh.lol"],
+        url: {
+            t: "紳士漫畫",
+            p: /^\/\d+\.html$/
+        },
+        imgs: ".article-content p>img",
+        button: [4],
+        insertImg: [".article-content p", 2],
+        autoDownload: [0],
+        next: ".article-nav-prev>a",
+        prev: ".article-nav-next>a",
+        customTitle: "h1.article-title",
         category: "hcomic"
     }, {
         name: "嗶咔漫畫PICACG",
@@ -16935,6 +16993,25 @@
         hide: ".blog_section.max-w-7xl.mx-auto.rounded-sm.p-2.pb-3,.flex.flex-row.flex-wrap.items-center.text-center.justify-center",
         category: "hcomic"
     }, {
+        host: ["porn-comic.biz", "slutporn-comic.lol", "wetporn-comic.lol", "groekporn-comic.click"],
+        url: {
+            t: "免費H漫畫同人志在綫閲讀",
+            p: /^\/book\/\d+$/
+        },
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr("section a[href*='/read/']>img");
+            return thumbnailSrcArray.map(e => e.replace(/&w=\d+&q=\d+$/, "&w=2048&q=75"));
+        },
+        button: [4],
+        insertImg: [
+            ["section:has(>a[href*='/read/'])", 2], 2, 2000
+        ],
+        go: 1,
+        customTitle: "main h1",
+        hide: "div:has(>[data-section=readDetailAppBanner])",
+        referer: "src",
+        category: "hcomic"
+    }, {
         name: "JavABC",
         host: ["javabc.club"],
         reg: /^https?:\/\/javabc\.club\/chapter\/\d+$/i,
@@ -17030,7 +17107,7 @@
         customTitle: () => fn.title(" - ", 3),
         category: "hcomic"
     }, {
-        host: ["kkcomic.vip", "www.51comic.org", "18comic.top", "book.51comic.org"],
+        host: ["kkcomic.vip", "www.51comic.org", "book.51comic.org", "18comic.top", "www.18comic.bar", "www.yumanse.com", "91manwu.com", "maozhuamcn.com"],
         url: () => {
             let check = fn.checkUrl({
                 e: [".hl-logo-black", ".hl-logo-white"],
@@ -18459,6 +18536,19 @@
         prev: "a.ch-prev-btn",
         hide: ".ver-src.chapter,.blox",
         customTitle: ".entry-title",
+        category: "comic"
+    }, {
+        name: "Kingsmanga",
+        url: {
+            h: "www.kingsmanga.net"
+        },
+        imgs: ".post-content img",
+        button: [4],
+        insertImg: [".post-content", 2],
+        autoDownload: [0],
+        next: ".reader-content a[rel=next]",
+        prev: ".reader-content a[rel=prev]",
+        customTitle: "h1.entry-title",
         category: "comic"
     }, {
         name: "NOVATO SCANS", //葡萄牙文
@@ -23200,12 +23290,20 @@ if ("xx" in window) {
             if (hasTouchEvent) {
                 let $ = _unsafeWindow.jQuery;
                 $("body").on("click", ".FullPictureLoadImage", () => {
-                    if($(".top-tool-bar").css("top") == "0px"){
-                        $(".top-tool-bar").animate({top:"-100px"},500);
-                        $(".bottom-tool-bar").animate({bottom:"-100px"},500);
-                    }else{
-                        $(".top-tool-bar").animate({top:"0px"},500);
-                        $(".bottom-tool-bar").animate({bottom:"0px"},500);
+                    if ($(".top-tool-bar").css("top") == "0px") {
+                        $(".top-tool-bar").animate({
+                            top: "-100px"
+                        }, 500);
+                        $(".bottom-tool-bar").animate({
+                            bottom: "-100px"
+                        }, 500);
+                    } else {
+                        $(".top-tool-bar").animate({
+                            top: "0px"
+                        }, 500);
+                        $(".bottom-tool-bar").animate({
+                            bottom: "0px"
+                        }, 500);
                     }
                 });
             }
@@ -23611,17 +23709,17 @@ if ("xx" in window) {
         insertImgAF: () => {
             let $ = _unsafeWindow.jQuery;
             $(".FullPictureLoadImage").click(() => {
-                if($(".crt-bar").hasClass("flt")){
+                if ($(".crt-bar").hasClass("flt")) {
                     $(".crt-bar").removeClass("flt");
-                    $(".crt-bar").css("position","absolute");
-                }else{
+                    $(".crt-bar").css("position", "absolute");
+                } else {
                     $(".crt-bar").addClass("flt");
-                    $(".crt-bar").css("position","fixed");
+                    $(".crt-bar").css("position", "fixed");
                 }
-                let node=$("#funcBox");
-                if(node.is(":hidden")){
+                let node = $("#funcBox");
+                if (node.is(":hidden")) {
                     node.show();
-                }else{
+                } else {
                     node.hide();
                 }
             });
@@ -29740,12 +29838,12 @@ if ("xx" in window) {
                             } else {
                                 smoothScrollIntoView(gallery[fancybox.getSlide().index]);
                             }
+                        },
+                        close: () => {
+                            setTimeout(() => {
+                                isOpenFancybox = false;
+                            }, 100);
                         }
-                    },
-                    close: () => {
-                        setTimeout(() => {
-                            isOpenFancybox = false;
-                        }, 100);
                     }
                 };
             }
@@ -37920,12 +38018,14 @@ a[data-fancybox]:hover {
             addReturnTopButton();
         }
         if ("setFancybox" in siteData) {
-            const setFancybox = siteData.setFancybox;
-            if (isBoolean(setFancybox) && options.fancybox == 1 && isString(siteData.imgs)) {
-                fn.setFancybox(siteData.imgs);
-            } else if (isString(setFancybox) && options.fancybox == 1) {
-                fn.setFancybox(setFancybox);
-            }
+            setTimeout(() => {
+                const setFancybox = siteData.setFancybox;
+                if (isBoolean(setFancybox) && options.fancybox == 1 && isString(siteData.imgs)) {
+                    fn.setFancybox(siteData.imgs);
+                } else if (isString(setFancybox) && options.fancybox == 1) {
+                    fn.setFancybox(setFancybox);
+                }
+            }, 2000);
         }
     } catch (error) {
         console.error("圖片全載規則出錯", error);
