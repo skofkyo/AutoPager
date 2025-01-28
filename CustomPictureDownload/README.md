@@ -3408,6 +3408,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://bakufu.jp/">お宝エログ幕府</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://lovekoala.com/">エロ画像-ラブコアラ-</a>
                 </td>
                 <td></td>
@@ -3814,6 +3820,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://adultphotosets.best/">Adult photo sets</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ciberhentai.com/cosplay">Ciberhentai</a>
                 </td>
                 <td></td>
             </tr>
@@ -5111,7 +5123,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.wnacg.com/">紳士漫畫</a>
+                    <a href="https://www.wnacg.com/">紳士漫畫wnacg</a>
                 </td>
                 <td>作用在圖片清單、下拉閱讀頁， <a href="https://www.hentaicomic.ru/">www.hentaicomic.ru</a>， <a href="https://wnacg.date/">紳士漫畫地址發布頁</a>
                 </td>
@@ -5129,6 +5141,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://syacomic.com/">紳夜漫畫</a>
                 </td>
                 <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ssmh.lol/">紳士漫畫ssmh</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -5562,6 +5580,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td>
                     <a href="https://anime01.xyz/">科學域名</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://porn-comic.biz/">免費H漫畫同人志</a>
+                </td>
+                <td>
+                    <a href="https://slutporn-comic.lol/">slutporn-comic.lol</a>，<a href="https://wetporn-comic.lol/">wetporn-comic.lol</a>
                 </td>
             </tr>
             <tr>
@@ -6483,6 +6509,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://manhuaplus.com/">ManhuaPlus 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.kingsmanga.net/">Kingsmanga 泰文</a>
                 </td>
                 <td></td>
             </tr>
