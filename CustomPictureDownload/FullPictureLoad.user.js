@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.29
+// @version            2025.1.30
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -833,6 +833,31 @@
         imgs: "td[id^='postmessage'] img,.view_tit+div[id^=pid] img",
         customTitle: "#thread_subject,.view_tit",
         category: "nsfw2"
+    }, {
+        name: "秀色图集",
+        host: ["www.xstuji.com"],
+        enable: 0,
+        url: {
+            e: ["#top .top", "em:has(>.fa-image)", ".scot img[data-original]"]
+        },
+        imgs: () => {
+            let srcs = [];
+            let max = Number(document.querySelector("em:has(>.fa-image)").innerText.match(/\d+/));
+            let [src] = [...document.querySelectorAll(".scot img[data-original]")].map(e => e.dataset.original).sort();
+            let [, dir, num, ex] = src.match(/(.+\/)(\d+)(\.\w+)$/i);
+            let c_num = prompt("请输入起始数字", num);
+            if (c_num !== null && Number(c_num)) {
+                num = c_num;
+            }
+            for (let i = 0; i < max; i++) {
+                let url = dir + (Number(num) + i) + ex;
+                srcs.push(url);
+            }
+            return srcs;
+        },
+        SPA: true,
+        customTitle: ".sh1",
+        category: "nsfw1"
     }, {
         name: "秀人集",
         host: ["25.xy09.my"],
@@ -6724,6 +6749,16 @@
         hide: "#cboxOverlay,#cboxWrapper",
         category: "nsfw1"
     }, {
+        name: "Du lịch Mường Lò",
+        url: {
+            h: "dulichnghialo.vn"
+        },
+        init: () => setTimeout(() => _unsafeWindow.jQuery(document).off(), 1000),
+        imgs: ".gallery a:has(img)",
+        thums: ".gallery img",
+        customTitle: "h1.entry-title",
+        category: "nsfw1"
+    }, {
         name: "Gai.vn",
         url: {
             h: "gai.vn"
@@ -8660,6 +8695,49 @@
         }),
         downloadVideo: true,
         category: "nsfw2"
+    }, {
+        name: "Gái Đẹp Sexy",
+        url: {
+            h: "gaidepsexy.vaileu.com"
+        },
+        imgs: ".entry p>img",
+        button: [4],
+        insertImg: [".entry", 2],
+        customTitle: "h2.title",
+        category: "nsfw1"
+    }, {
+        name: "GenZ Relax/Ảnh gái sexy/ẢNH GÁI XINH/Hot Girl Xinh 18+/Hình ảnh gái xinh",
+        url: {
+            h: ["genzrelax.com", "anhgaisexy.net", "anhgaixinh.tv", "girlxinh18.com", "gaixinh.photo"]
+        },
+        imgs: ".entry-image img,.entry-content img:not(#img_video)",
+        customTitle: "h1.entry-title,h1.page-title",
+        category: "nsfw1"
+    }, {
+        name: "Hot Girl Xinh 18+",
+        url: {
+            h: "girlxinh18.com",
+            e: ".row-main img[srcset]"
+        },
+        imgs: () => fn.getImgSrcset(".row-main p>img[srcset]"),
+        capture: () => _this.imgs(),
+        customTitle: ".row-main h1",
+        category: "nsfw1"
+    }, {
+        name: "Ảnh Sex",
+        url: {
+            h: "anhsex.asia"
+        },
+        box: ["article p:has(img)", 1],
+        imgs: "article p img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "article p:has(img)"], 2
+        ],
+        endColor: "white",
+        customTitle: "h1.entry-title",
+        hide: ".tbpopup",
+        category: "nsfw1"
     }, {
         name: "Quatvn Club",
         url: {
@@ -11167,7 +11245,6 @@
         include: ".postdetails",
         init: () => {
             document.addEventListener("click", event => {
-                cancelDefault(event);
                 if (event.target.className === "postdetails") {
                     let links = [];
                     if (event.target.querySelector("a[href$='.jpg']:not([href^='http://imagetwist.com/'])")) {
@@ -25840,6 +25917,7 @@ if ("xx" in window) {
                 str_188: "移動畫廊",
                 str_189: "單圖模式",
                 str_190: "條漫模式",
+                str_191: "預設開啟簡易模式",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -26075,6 +26153,7 @@ if ("xx" in window) {
                 str_188: "移动画廊",
                 str_189: "单图模式",
                 str_190: "条漫模式",
+                str_191: "默认打开简易模式",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -26305,6 +26384,7 @@ if ("xx" in window) {
                 str_188: "Mobile Gallery",
                 str_189: "Single Image Mode",
                 str_190: "Webtoon Mode",
+                str_191: "Simple mode enabled by default",
                 galleryMenu: {
                     horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
@@ -38560,55 +38640,65 @@ html,body {
     //簡易模式規則
     if (!("category" in siteData)) {
         isSimpleMode = true;
+        const setFullPictureLoadSimpleMode = localStorage.getItem("setFullPictureLoadSimpleMode") ?? 0;
+        _GM_registerMenuCommand(setFullPictureLoadSimpleMode == 0 ? "❌ " + DL.str_191 : "✔️  " + DL.str_191, () => {
+            setFullPictureLoadSimpleMode == 0 ? localStorage.setItem("setFullPictureLoadSimpleMode", 1) : localStorage.setItem("setFullPictureLoadSimpleMode", 0);
+            location.reload();
+        });
         let menu_command_id_1;
         let menu_command_id_2;
         let menu_command_id_3;
+        const setMode = () => {
+            menu_command_id_1 = _GM_registerMenuCommand(DL.str_67, createPictureLoadOptionsShadowElement);
+            checkOptionsData();
+            siteData = {
+                imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)").map(src => {
+                    if (src.includes(".sinaimg.")) {
+                        return src.replace(/\/orj\d+\/|\/mw\d+\//, "/large/");
+                    } else {
+                        return src;
+                    }
+                }),
+                repeat: 1,
+                SPA: true,
+                category: "photo"
+            };
+            addFullPictureLoadButton();
+            if (!hasTouchEvent) {
+                addFullPictureLoadFixedMenu();
+                document.addEventListener("keydown", addKeyEvent);
+            }
+            if (!ge("#FullPictureLoadMainStyle")) {
+                fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
+            }
+            if (!("Fancybox" in _unsafeWindow)) {
+                addLibrarysV5();
+                Fancyboxl10nV5();
+                fn.css(FancyboxV5Css, "FancyboxV5Css");
+            }
+            _GM_unregisterMenuCommand(menu_command_id_2);
+            registerB();
+        };
+        const removeMode = () => {
+            _GM_unregisterMenuCommand(menu_command_id_1);
+            siteData = {};
+            fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadFixedMenu");
+            if (!hasTouchEvent) {
+                document.removeEventListener("keydown", addKeyEvent);
+            }
+            _GM_unregisterMenuCommand(menu_command_id_3);
+            registerA();
+        };
         const registerA = () => {
-            menu_command_id_2 = _GM_registerMenuCommand(DL.str_163, () => {
-                menu_command_id_1 = _GM_registerMenuCommand(DL.str_67, () => createPictureLoadOptionsShadowElement());
-                checkOptionsData();
-                siteData = {
-                    imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)").map(src => {
-                        if (src.includes(".sinaimg.")) {
-                            return src.replace(/\/orj\d+\/|\/mw\d+\//, "/large/");
-                        } else {
-                            return src;
-                        }
-                    }),
-                    repeat: 1,
-                    SPA: true,
-                    category: "photo"
-                };
-                addFullPictureLoadButton();
-                if (!hasTouchEvent) {
-                    addFullPictureLoadFixedMenu();
-                    document.addEventListener("keydown", addKeyEvent);
-                }
-                if (!ge("#FullPictureLoadMainStyle")) {
-                    fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
-                }
-                if (!("Fancybox" in _unsafeWindow)) {
-                    addLibrarysV5();
-                    Fancyboxl10nV5();
-                    fn.css(FancyboxV5Css, "FancyboxV5Css");
-                }
-                _GM_unregisterMenuCommand(menu_command_id_2);
-                registerB();
-            });
+            menu_command_id_2 = _GM_registerMenuCommand(DL.str_163, setMode);
         };
         const registerB = () => {
-            menu_command_id_3 = _GM_registerMenuCommand(DL.str_164, () => {
-                _GM_unregisterMenuCommand(menu_command_id_1);
-                siteData = {};
-                fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadFixedMenu");
-                if (!hasTouchEvent) {
-                    document.removeEventListener("keydown", addKeyEvent);
-                }
-                _GM_unregisterMenuCommand(menu_command_id_3);
-                registerA();
-            });
+            menu_command_id_3 = _GM_registerMenuCommand(DL.str_164, removeMode);
         };
         registerA();
+        if (setFullPictureLoadSimpleMode == 1) {
+            setTimeout(() => setMode(), 500);
+        }
     }
 
     if (!isSimpleMode && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
