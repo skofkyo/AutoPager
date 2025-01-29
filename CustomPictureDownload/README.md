@@ -2828,55 +2828,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://tuyetnhan.com/">✫ Ảnh đẹp ✫</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://maulon.net/">Maulon</a>
-                </td>
-                <td><a href="https://1sex.maulon.vip/">1sex.maulon.vip</a></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://hinhanhgai.com/">Hình ảnh gái</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.gai.vn/">Gai.vn</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://cangcuc.com/">Căng Cực</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://cosplayvn.club/">Cosplay VN</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://imgcup.com/">imgcup.com</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://truepic.net/">True Pic</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://tangmoc.com/blog/topic/164AF033943823F/hotgirl-model">TangMoc</a>
                 </td>
                 <td></td>
             </tr>
@@ -3610,7 +3562,97 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://anhsex.asia/">Ảnh Sex</a>
+                </td>
+                <td></td>
+            </tr>
+           <tr>
+                <td>
+                    <a href="https://girlxinh18.com/">Hot Girl Xinh 18+</a>
+                </td>
+                <td></td>
+            </tr>
+           <tr>
+                <td>
+                    <a href="https://gaixinh.photo/">Hình ảnh gái xinh</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://anhgaisexy.net/">Ảnh gái sexy</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://anhgaixinh.tv/anh-sexy/">ẢNH GÁI XINH</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://quatvnclub.com/">Quatvn Club</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://genzrelax.com/category/hinh-anh/">GenZ Relax</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tuyetnhan.com/">✫ Ảnh đẹp ✫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dulichnghialo.vn/hinh-anh/">Du lịch Mường Lò</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://maulon.net/">Maulon</a>
+                </td>
+                <td><a href="https://1sex.maulon.vip/">1sex.maulon.vip</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hinhanhgai.com/">Hình ảnh gái</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.gai.vn/">Gai.vn</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cangcuc.com/">Căng Cực</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplayvn.club/">Cosplay VN</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://truepic.net/">True Pic</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tangmoc.com/blog/topic/164AF033943823F/hotgirl-model">TangMoc</a>
                 </td>
                 <td></td>
             </tr>
