@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.30
+// @version            2025.1.30.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -35330,7 +35330,8 @@ img.webtoon {
         let widthNum = 0;
         let heightNum = 0;
         const changeList = () => {
-            gae("img", main).forEach(img => {
+            let num = 0;
+            gae("#image-list img", main).forEach(img => {
                 if (!/^(blob|data)/.test(img.src) || img.classList.contains("loaded")) {
                     const input = img.previousElementSibling;
                     const parent = img.parentElement;
@@ -35340,6 +35341,7 @@ img.webtoon {
                         input.checked = true;
                         input.classList.add("select");
                         parent.classList.remove("hide");
+                        num += 1;
                     } else {
                         input.checked = false;
                         input.classList.remove("select");
@@ -35347,6 +35349,8 @@ img.webtoon {
                     }
                 }
             });
+            ge("#filterNumber", main).innerText = DL.str_166 + num;
+            main.focus();
         };
 
         let widthSelect = ge("#width", main);
@@ -35360,9 +35364,6 @@ img.webtoon {
         widthSelect.addEventListener("change", () => {
             widthNum = Number(widthSelect.value) * 100;
             changeList();
-            const selects = gae(".select+.image", main);
-            ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
-            main.focus();
         });
 
         let heightSelect = ge("#height", main);
@@ -35376,9 +35377,6 @@ img.webtoon {
         heightSelect.addEventListener("change", () => {
             heightNum = Number(heightSelect.value) * 100;
             changeList();
-            const selects = gae(".select+.image", main);
-            ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
-            main.focus();
         });
 
         let threadingSelect = ge("#threading", main);
@@ -35495,7 +35493,7 @@ img.webtoon {
         });
         gae("#exclude-error", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
-            gae("img.error", main).forEach(img => {
+            gae("#image-list img.error", main).forEach(img => {
                 img.previousElementSibling.checked = false;
                 img.previousElementSibling.classList.remove("select");
                 img.parentElement.classList.add("hide");
@@ -35700,6 +35698,8 @@ img.webtoon {
             }, 200);
         };
         addLis();
+
+        if (!hasTouchEvent) return;
 
         const gallery_imgBox = ge("#gallery_imgBox", main);
         if ("Viewer" in _unsafeWindow) {
