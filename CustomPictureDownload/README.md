@@ -201,8 +201,12 @@ https://*wnacg.com/photos-slist-aid-*.html
         ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
     ],
     endColor: "white", //更改頁面容器底部統計圖片數量的文字顏色
+    insertImgBF: () => {
+        //插入圖片之前要執行的代碼
+        code;
+    },
     insertImgAF: (parent) => { //參數parent是插入的圖片的父元素
-        //插入圖片後要執行的代碼
+        //插入圖片之後要執行的代碼
         code;
     },
     go: 1, //insertImg配套選項，圖片插入在頁面偏下位置時，滾動至第一張大圖的位置。
@@ -295,8 +299,11 @@ https://*wnacg.com/photos-slist-aid-*.html
         ["", 1, ""], 2, time
     ],
     endColor: "white",
+    insertImgBF: () => {
+        code;
+    },
     insertImgAF: (parent) => {
-        code
+        code;
     },
     go: 1,
     customTitle: "",
@@ -3057,12 +3064,35 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://thothub.vip/albums/">Thothub Albums</a>
                 </td>
                 <td>
-                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.su/albums/">thothub.su</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a>，<a href="https://thothub.vip/albums/">thothub.vip</a>
-                </td>
+                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.ch/albums/">thothub.ch</a>，<a href="https://thothub.su/albums/">thothub.su</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a></td>
             </tr>
             <tr>
                 <td>
                     <a href="https://redthot.com/photos/">Thothub.wtf</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fappenist.com/photos">Fappenist</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://pornotaran.com/">Pornotaran.com photo</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.babepedia.com/">Babepedia</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.hotcelebshome.com/">Hot Celebs Home</a>
                 </td>
                 <td></td>
             </tr>
