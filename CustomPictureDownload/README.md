@@ -3,22 +3,22 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/01/18
+2025/02/01
 PC
-Chrome 132.0.6834.84 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 132.0.2957.115 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 134.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Chrome 132.0.6834.160 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 132.0.2957.140 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 134.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 134.0.3078.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 134.0.3094.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 131.0.2903.145 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Firefox for Android 134.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 131.0.2957.129 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Firefox for Android 134.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Yandex Browser 24.12.3.110 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 XBrowser 5.0.3
-ViaBrowser 6.1.0
+ViaBrowser 6.2.0
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>Extensions：</h1>
@@ -1194,7 +1194,7 @@ imgs: async () => {
 <p>在頁面左下添加了一個圖片下載按鈕</p>
 <img src="https://i.imgur.com/TxnEvTk.png">
 <p>點擊後會彈出篩選UI</p>
-<img src="https://i.imgur.com/pbTtes5.jpeg">
+<img src="https://i.imgur.com/xZtDrmN.jpeg">
 <p>點下載按鈕後就會開始下載壓縮打包圖片</p>
 <img src="https://i.imgur.com/m6ewqQd.png">
 <p>右鍵點擊圖示複製圖片網址，如果規則insertImg為手動模式，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
@@ -1303,14 +1303,14 @@ imgs: async () => {
 <p>https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/Pagetual_Full_Blacklist.txt</p>
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片篩選下載功能。</p>
-<img src="https://i.imgur.com/NSjxkRx.jpeg">
+<img src="https://i.imgur.com/aWpmS4L.jpeg">
 <p>陽春簡易的圖片清單瀏覽模式，和閱讀順序由右至左的漫畫閱讀模式。實現鍵盤瀏覽漫畫，功能只求簡單實用。</p>
 <br>
-<img src="https://i.imgur.com/vtwqkOX.jpeg">
-<img src="https://i.imgur.com/J0Sz9ri.jpg">
-<img src="https://i.imgur.com/kE3XYlH.jpeg">
-<img src="https://i.imgur.com/TgxYlL6.jpeg">
-<img src="https://i.imgur.com/OibRD2N.jpg">
+<img src="https://i.imgur.com/rTND2Xr.jpeg">
+<img src="https://i.imgur.com/9Ml8a8v.jpeg">
+<img src="https://i.imgur.com/ruHGKQl.jpeg">
+<img src="https://i.imgur.com/QhWC6UI.jpeg">
+<img src="https://i.imgur.com/R0tuAWt.jpeg">
 <h2>自定義編輯網站收藏說明</h2>
 <details>
     <summary>
