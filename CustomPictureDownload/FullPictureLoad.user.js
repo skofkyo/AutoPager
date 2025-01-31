@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.30.1
+// @version            2025.1.31
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -142,7 +142,7 @@
     let combineDownloadSwitch = false;
     let currentDownloadThread = 0;
     let downloadNum = 0;
-    let getImgFn = "";
+    let getImgFnProcessRecord = "";
     let doc = document;
     const fragment = new DocumentFragment();
     let autoPagerSwitch = true;
@@ -386,7 +386,7 @@
                 }
             }
         },
-        button: [4, "24%", 1],
+        button: [4],
         insertImg: [
             ["//div[div[@class='photos']]/*[last()]", 2, ".pager,.photos"], 2
         ],
@@ -1443,7 +1443,9 @@
         imgs: ".content-warp img[title][alt]",
         button: [4],
         insertImg: [".content-warp", 2],
+        insertImgBF: () => fn.waitEle("a.core-next-img"),
         customTitle: ".post-title",
+        mcss: ".post-warp .content-warp{padding:0px}",
         category: "nsfw2"
     }, {
         name: "牛叉资源网 自動翻頁",
@@ -5960,13 +5962,39 @@
         customTitle: ".entry-title",
         category: "nsfw2"
     }, {
+        name: "ThotHub Leaks",
+        url: {
+            h: "thothub.vip",
+            p: "/album/",
+            e: ".images a img"
+        },
+        imgs: () => fn.getImgSrcArr(".images a img").map(e => e.replace(/main\/\d+x\d+/, "sources")),
+        thums: ".images a img",
+        button: [4],
+        insertImg: [".images", 2],
+        customTitle: ".title",
+        category: "nsfw2"
+    }, {
+        name: "ThotHub Leaks",
+        url: {
+            h: "thothub.vip",
+            e: ".entry-title"
+        },
+        imgs: ".entry-content img",
+        customTitle: () => fn.dt({
+            s: ".entry-title",
+            d: /\([\d\s]+Photos\)/i
+        }),
+        category: "nsfw2"
+    }, {
         name: "ThotHD Albums / Thothub Albums",
-        host: ["thothd.com", "thothub.su", "thothub.to", "thothub.lol", "thothub.mx", "thothub.vip", "thethothub.com"],
+        host: ["thothd.com", "thothub.su", "thothub.to", "thothub.lol", "thothub.mx", "thothub.ch", "thethothub.com"],
         url: {
             h: [/thothd/, /thothub/],
-            p: "/albums/"
+            p: "/albums/",
+            e: ".images a[data-fancybox-type] .thumb"
         },
-        imgs: ".images a[data-fancybox-type]",
+        imgs: () => fn.getImgSrcArr(".images a[data-fancybox-type] .thumb").map(e => e.replace(/main\/\d+x\d+/, "sources")),
         thums: ".images a[data-fancybox-type] .thumb",
         button: [4],
         insertImg: [".images", 2],
@@ -9903,19 +9931,23 @@
     }, {
         name: "wikiFeetX / wikiFeet",
         host: ["www.wikifeet.com", "www.wikifeetx.com"],
-        reg: /^https?:\/\/www\.wikifeetx?\.com\/[^\/]+$/,
-        imgs: async () => {
-            await fn.waitEle(".pic>a");
+        url: {
+            h: "www.wikifeet",
+            e: "//script[contains(text(),'messanger.cfname')]"
+        },
+        init: () => fn.waitEle(".pic>a"),
+        imgs: () => {
             const {
                 messanger
             } = _unsafeWindow;
+            customTitle = messanger.cfname;
             let [imgDir] = fn.gu(".pic>a").match(/[^\d]+/);
             thumbnailSrcArray = messanger.gdata.map(e => "https://thumbs.wikifeet.com/" + e.pid + ".jpg");
             return messanger.gdata.map(e => imgDir + e.pid + ".jpg");
         },
         button: [4],
         insertImg: ["#thepics", 2],
-        customTitle: "#content h1",
+        hide: "#content>div[style$='center;']:has(>a>img)",
         category: "nsfw2"
     }, {
         name: "VK",
@@ -10579,26 +10611,61 @@
         customTitle: () => fn.title(" - Best adult videos and photos"),
         category: "nsfw2"
     }, {
-        name: "ThotHub Leaks",
-        host: ["thothub.vip"],
-        reg: /^https?:\/\/thothub\.vip\/album\/\d+\//,
-        imgs: ".images a",
-        thums: ".images a img",
-        button: [4],
-        insertImg: [".images", 2],
-        customTitle: ".title",
+        name: "Fappenist",
+        url: {
+            h: "www.fappenist.com",
+            p: "/photos/",
+            e: "a.gallery-view"
+        },
+        imgs: () => {
+            fn.showMsg(DL.str_05, 0);
+            return fn.fetchDoc(fn.gu("a.gallery-view")).then(dom => {
+                fn.hideMsg();
+                thumbnailSrcArray = fn.getImgSrcArr(".galeria img[data-src]", dom);
+                return fn.gae(".galeria a:has(>img[data-src])", dom);
+
+            });
+        },
+        capture: () => _this.imgs(),
+        customTitle: () => fn.dt({
+            s: "h1.art-title",
+            d: "Gallery view"
+        }),
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw2"
     }, {
-        name: "ThotHub Leaks",
+        name: "Pornotaran.com photo",
         url: {
-            h: "thothub.vip",
-            e: ".entry-title"
+            h: "pornotaran.com",
+            p: ".html",
+            e: ".inner-page__desc div:has(img[data-src])"
         },
-        imgs: ".entry-content img",
-        customTitle: () => fn.dt({
-            s: ".entry-title",
-            d: /\([\d\s]+Photos\)/i
-        }),
+        imgs: () => fn.getImgSrcArr(".inner-page__desc img[data-src]").map(e => e.replace("/thumbs", "")),
+        button: [4],
+        insertImg: [".inner-page__desc div:has(img[data-src])", 2],
+        customTitle: ".inner-page__title",
+        category: "nsfw2"
+    }, {
+        name: "Babepedia",
+        url: {
+            h: "www.babepedia.com",
+            p: "/gallery/"
+        },
+        imgs: "#gallery a[data-fancybox]",
+        thums: "#gallery a[data-fancybox] img",
+        customTitle: "#gallery h1",
+        category: "nsfw2"
+    }, {
+        name: "Hot Celebs Home",
+        url: {
+            h: "www.hotcelebshome.com",
+            e: ".tiled-gallery__gallery img"
+        },
+        imgs: () => fn.getImgSrcArr(".tiled-gallery__gallery img").map(e => e.replace(/(-\d+x\d+)(.\w+)/i, "$2")),
+        capture: () => _this.imgs(),
+        customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
         name: "MrDeepFakes",
@@ -14406,7 +14473,7 @@
         init: () => fn.waitEle(["next-route-announcer", ".grid .group>img"]),
         imgs: () => {
             fn.createImgBox(".container:has(>.grid)");
-            fn.showMsg("獲取數據中...", 0);
+            fn.showMsg(DL.str_05, 0);
             let url = fn.gu(".container:has(>.grid) a");
             return fn.fetchDoc(url).then(dom => {
                 let code = fn.gst("slides", dom);
@@ -21791,7 +21858,7 @@ if ("xx" in window) {
             title: () => siteJson.chapter_title,
             preloadNextPage: 1
         },
-        hide: ".chapter-images,#loading,ins",
+        hide: ".chapter-images,#loading,ins,.chapter-read-pos",
         category: "comic autoPager"
     }, {
         name: "漫画屋格式",
@@ -22466,6 +22533,7 @@ if ("xx" in window) {
             },
             re: ".end-btns",
             title: (dom) => fn.ge("meta[itemprop=chaptername]", dom)?.content,
+            hide: ".comic-recommend",
             preloadNextPage: 1
         },
         category: "comic autoPager"
@@ -25009,7 +25077,8 @@ if ("xx" in window) {
             /www\.manhw\.com\/index\.php\/comic\/\w+$/,
             /rumanhua.com\/\w+\/$/i,
             /haoguoman\.net\/\d+$/,
-            /^https?:\/\/www\.hmttmh\.com\/book\//
+            /^https?:\/\/www\.hmttmh\.com\/book\//,
+            /^https?:\/\/cn.zhuzhumh.com\/book\//,
         ],
         init: async () => {
             if (["www.magayuan.com", "m.magayuan.com"].some(h => h === fn.lh)) {
@@ -25828,7 +25897,7 @@ if ("xx" in window) {
                 str_105: hasTouchEvent ? "複製圖址" : "複製圖址(1)",
                 str_106: hasTouchEvent ? "分頁畫廊" : "分頁畫廊(8)",
                 str_107: hasTouchEvent ? "一鍵下載" : "一鍵下載(3)",
-                str_108: "※訊息提示顯示的位置：",
+                str_108: "※ 訊息提示顯示的位置：",
                 str_109: {
                     c: "置中",
                     ul: "左上",
@@ -25836,7 +25905,7 @@ if ("xx" in window) {
                     ll: "左下",
                     lr: "右下",
                 },
-                str_110: "※Webp轉換為Jpg",
+                str_110: "※ Webp轉換為Jpg",
                 str_111: "惰性載入大圖",
                 str_112: "惰性載入單欄布局",
                 str_113: "惰性載入預讀大圖",
@@ -25871,7 +25940,7 @@ if ("xx" in window) {
                 str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
                 str_144: "下一篇",
-                str_145: "Fancybox5&ViewerJs 幻燈片播放間隔：",
+                str_145: "Fancybox5&ViewerJs幻燈片播放間隔：",
                 str_146: "Fancybox5滾輪操作：",
                 str_147: "畫廊 ( 0、1、3 ) 滾輪操作：",
                 str_148: "Fancybox5幻燈片過場效果：",
@@ -25908,7 +25977,7 @@ if ("xx" in window) {
                 str_179: "複製為Markdown格式",
                 str_180: "自動匯出URLs.txt",
                 str_181: "拼接下載",
-                str_182: "※畫廊圖片循環切換",
+                str_182: "※ 畫廊圖片循環切換",
                 str_183: "排除格式",
                 str_184: "排除錯誤",
                 str_185: "自動排錯",
@@ -26064,7 +26133,7 @@ if ("xx" in window) {
                 str_105: hasTouchEvent ? "拷贝图址" : "拷贝图址(1)",
                 str_106: hasTouchEvent ? "标签画廊" : "标签画廊(8)",
                 str_107: hasTouchEvent ? "一键下载" : "一键下载(3)",
-                str_108: "※讯息提示显示的位置：",
+                str_108: "※ 讯息提示显示的位置：",
                 str_109: {
                     c: "置中",
                     ul: "左上",
@@ -26072,7 +26141,7 @@ if ("xx" in window) {
                     ll: "左下",
                     lr: "右下",
                 },
-                str_110: "※Webp转换为Jpg",
+                str_110: "※ Webp转换为Jpg",
                 str_111: "懒加载大图",
                 str_112: "懒加载单栏布局",
                 str_113: "懒加载预读大图",
@@ -26107,7 +26176,7 @@ if ("xx" in window) {
                 str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
                 str_144: "下一篇",
-                str_145: "Fancybox5&ViewerJs 幻灯片播放间隔：",
+                str_145: "Fancybox5&ViewerJs幻灯片播放间隔：",
                 str_146: "Fancybox5滚轮操作：",
                 str_147: "画廊 ( 0、1、3 ) 滚轮操作：",
                 str_148: "Fancybox5幻灯片过场效果：",
@@ -26144,7 +26213,7 @@ if ("xx" in window) {
                 str_179: "拷贝为Markdown格式",
                 str_180: "自动导出URLs.txt",
                 str_181: "拼接下载",
-                str_182: "※画廊图片循环切换",
+                str_182: "※ 画廊图片循环切换",
                 str_183: "排除格式",
                 str_184: "排除错误",
                 str_185: "自动排错",
@@ -26294,7 +26363,7 @@ if ("xx" in window) {
                 str_105: hasTouchEvent ? "Copy" : "CopyURLs(1)",
                 str_106: hasTouchEvent ? "TabView" : "NewTabView(8)",
                 str_107: hasTouchEvent ? "Download" : "FastDownload(3)",
-                str_108: "※Where the message appears：",
+                str_108: "※ Where the message appears：",
                 str_109: {
                     c: "Center",
                     ul: "Upper left",
@@ -26302,7 +26371,7 @@ if ("xx" in window) {
                     ll: "Lower left",
                     lr: "Lower right",
                 },
-                str_110: "※Convert Webp to Jpg",
+                str_110: "※ Convert Webp to Jpg",
                 str_111: "Lazy Load Full Resolution",
                 str_112: "Lazy Load Single Column Layout",
                 str_113: "Lazy Load Preload Images",
@@ -26375,7 +26444,7 @@ if ("xx" in window) {
                 str_179: "Copied to Markdown format",
                 str_180: "Auto Export URLs.txt",
                 str_181: "Combine Download",
-                str_182: "※Gallery Image Loop Switching",
+                str_182: "※ Gallery Image Loop Switching",
                 str_183: "Exclude Format",
                 str_184: "Culling",
                 str_185: "Auto Culling",
@@ -26691,7 +26760,7 @@ if ("xx" in window) {
         getImg: async (img, maxPage = 1, mode = 1, rText = null, time = 50, url = siteUrl, msg = 1, request = 0) => {
             if (fn.ge(".FullPictureLoadImage") && request == 0) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
-            if (!getImgFn.includes("getImg()")) getImgFn += " > fn.getImg()";
+            if (!getImgFnProcessRecord.includes("getImg()")) getImgFnProcessRecord += " > fn.getImg()";
             if (msg == 1) fn.showMsg(DL.str_01, 0);
             let imgsArray = [];
             let fetchNum = 0;
@@ -26738,7 +26807,7 @@ if ("xx" in window) {
         getImgO: async (img, maxPage = 1, mode = 1, rText = null, time = 200, replaceElement = null, url = siteUrl, msg = 1, request = 0) => {
             if (fn.ge(".FullPictureLoadImage") && request == 0) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
-            if (!getImgFn.includes("getImgO()")) getImgFn += " > fn.getImgO()";
+            if (!getImgFnProcessRecord.includes("getImgO()")) getImgFnProcessRecord += " > fn.getImgO()";
             if (msg == 1) fn.showMsg(DL.str_01, 0);
             let imgsArray = [];
             let fetchNum = 0;
@@ -26804,7 +26873,7 @@ if ("xx" in window) {
         getImgIframe: async (img, maxPage = 1, mode = 1, rEle = null, time = 500, showMsg = 1) => {
             if (fn.ge(".FullPictureLoadImage")) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
-            if (!getImgFn.includes("getImgIframe()")) getImgFn += " > fn.getImgIframe()";
+            if (!getImgFnProcessRecord.includes("getImgIframe()")) getImgFnProcessRecord += " > fn.getImgIframe()";
             if (showMsg == 1) fn.showMsg(DL.str_01, 0);
             let imgsArray = [];
             let fetchNum = 1;
@@ -26868,7 +26937,7 @@ if ("xx" in window) {
         getImgA: async (elementSelector, link, mode = 0, rText = null, showMsg = 1, request = 0) => {
             if (fn.ge(".FullPictureLoadImage") && request == 0) return fn.gae(".FullPictureLoadImage:not(.small)");
             isFetching = true;
-            if (!getImgFn.includes("getImgA()")) getImgFn += " > fn.getImgA()";
+            if (!getImgFnProcessRecord.includes("getImgA()")) getImgFnProcessRecord += " > fn.getImgA()";
             if (showMsg == 1) fn.showMsg(DL.str_01, 0);
             let links, linkEles, linksNum;
             if (isFn(link)) {
@@ -27299,7 +27368,7 @@ if ("xx" in window) {
             if (fn.ge(".FullPictureLoadImage")) return;
             if (isString(nextLinkEle) && !fn.ge(nextLinkEle)) return;
             isFetching = true;
-            if (!getImgFn.includes("getNP()")) getImgFn += " > fn.getNP()";
+            if (!getImgFnProcessRecord.includes("getNP()")) getImgFnProcessRecord += " > fn.getNP()";
             let nextlink = null;
             let page = 1;
             if (msg == 1) fn.showMsg(DL.str_14, 0);
@@ -27956,7 +28025,6 @@ if ("xx" in window) {
                 div.append(a);
             }
             div.addEventListener("click", event => {
-                cancelDefault(event);
                 if (event.target.tagName === "DIV") {
                     fn.toggleAutoPager();
                 }
@@ -28016,7 +28084,7 @@ if ("xx" in window) {
         getEleF: async (links, elements, targetEle = null) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
-            if (!getImgFn.includes("getEleF()")) getImgFn += " > fn.getEleF()";
+            if (!getImgFnProcessRecord.includes("getEleF()")) getImgFnProcessRecord += " > fn.getEleF()";
             fn.showMsg(DL.str_16, 0);
             if (isString(links)) {
                 links = fn.gau(links);
@@ -28052,7 +28120,7 @@ if ("xx" in window) {
         getEle: async (links, elements, targetEle = null, removeEles = null, time = 100, retry = 40) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
-            if (!getImgFn.includes("getEle()")) getImgFn += " > fn.getEle()";
+            if (!getImgFnProcessRecord.includes("getEle()")) getImgFnProcessRecord += " > fn.getEle()";
             let resArr = [];
             let xhrNum = 0;
             fn.showMsg(DL.str_16, 0);
@@ -28107,7 +28175,7 @@ if ("xx" in window) {
         getCorsEle: async (links, elements, targetEle = null, removeEles = null, time = 100) => {
             if (fn.ge(".FullPictureLoadImage")) return;
             isFetching = true;
-            if (!getImgFn.includes("getCorsEle()")) getImgFn += " > fn.getCorsEle()";
+            if (!getImgFnProcessRecord.includes("getCorsEle()")) getImgFnProcessRecord += " > fn.getCorsEle()";
             let resArr = [];
             let xhrNum = 0;
             fn.showMsg(DL.str_16, 0);
@@ -28336,8 +28404,11 @@ if ("xx" in window) {
             return div;
         },
         //插入圖片函式
-        insertImg: (imgsArray, insertTargetEle, mode = 2) => {
+        insertImg: async (imgsArray, insertTargetEle, mode = 2) => {
             if (fn.ge(".FullPictureLoadImage") || isFetching || isDownloading) return;
+            if ("insertImgBF" in siteData && isFn(siteData.insertImgBF)) {
+                await siteData.insertImgBF();
+            }
             let srcArr = [];
             for (let i = 0; i < imgsArray.length; i++) {
                 let check = fn.checkImgSrc(imgsArray[i]);
@@ -29370,7 +29441,7 @@ if ("xx" in window) {
         getKukudmSrc: async (url = siteUrl, dom = document, msg = 1) => {
             if (url === null) return;
             if (fn.ge("//title[contains(text(),'404')]", dom, dom)) return [];
-            if (!getImgFn.includes("getKukudmSrc")) getImgFn += " > fn.getKukudmSrc()";
+            if (!getImgFnProcessRecord.includes("getKukudmSrc")) getImgFnProcessRecord += " > fn.getKukudmSrc()";
             let timeId = setTimeout(() => msg === 1 ? location.reload() : null, 20000);
             if (msg == 1) fn.showMsg(DL.str_05, 0);
             let max;
@@ -30491,8 +30562,8 @@ if ("xx" in window) {
             if (isSet(imgs)) {
                 imgs = [...imgs];
             }
-            if (getImgFn == "" && !getImgFn.includes("專用Fn")) {
-                getImgFn += " > " + siteData.name + "專用Fn";
+            if (getImgFnProcessRecord == "" && !getImgFnProcessRecord.includes("專用Fn")) {
+                getImgFnProcessRecord += " > " + siteData.name + "專用Fn";
             }
         } else if (isSet(selector)) {
             imgs = [...selector];
@@ -30504,13 +30575,13 @@ if ("xx" in window) {
             return;
         } else if (/^\//.test(selector)) {
             imgs = gax(selector);
-            if (siteData.category != "lazyLoad" && !getImgFn.includes("gax(selector)")) {
-                getImgFn += " > gax(selector)";
+            if (siteData.category != "lazyLoad" && !getImgFnProcessRecord.includes("gax(selector)")) {
+                getImgFnProcessRecord += " > gax(selector)";
             }
         } else {
             imgs = gae(selector);
-            if (siteData.category != "lazyLoad" && !getImgFn.includes("gae(selector)")) {
-                getImgFn += " > gae(selector)";
+            if (siteData.category != "lazyLoad" && !getImgFnProcessRecord.includes("gae(selector)")) {
+                getImgFnProcessRecord += " > gae(selector)";
             }
         }
         if (!isArray(imgs)) {
@@ -30533,10 +30604,10 @@ if ("xx" in window) {
             }
         }).filter(item => item);
         if (siteData.category !== "lazyLoad" && globalImgArray.length === 0 && imgs.length !== 0) {
-            debug(`\ngetImgs()${getImgFn} 所有圖片網址：`, imgsSrcArr);
+            debug(`\ngetImgs()${getImgFnProcessRecord} 所有圖片網址：`, imgsSrcArr);
         }
         if (siteData.category !== "lazyLoad" && globalImgArray.length === 0 && imgs.length !== 0) {
-            debug(`\ngetImgs()${getImgFn} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
+            debug(`\ngetImgs()${getImgFnProcessRecord} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
         }
         imgsSrcArr = [...new Set(imgsSrcArr)];
         globalImgArray = imgsSrcArr;
@@ -31524,14 +31595,16 @@ if ("xx" in window) {
     };
 
     //新分頁空白頁檢視圖片
-    const newTabView = async () => {
+    const newTabView = async (src_array = null) => {
 
         if (checkGeting() || isDragging || "eye" in siteData && siteData.eye === 0) return;
 
         const config = getConfig();
 
         let imgSrcs;
-        if ("SPA" in siteData) {
+        if (isArray(src_array)) {
+            imgSrcs = src_array;
+        } else if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
             imgSrcs = await getImgs(selector);
         } else if (!("capture" in siteData)) {
@@ -34701,6 +34774,7 @@ img.horizontal {
         }
         if (full_srcs.length < 1) return (isOpenFilter = false);
         let srcs;
+        let g_srcs;
         const config = getConfig();
         const extensions = {
             jpg: 0,
@@ -34770,11 +34844,17 @@ img.horizontal {
                     }
                     return true;
                 });
+                g_srcs = srcs;
             } else {
                 srcs = full_srcs;
+                g_srcs = srcs;
             }
         };
         exclude_ex_fn();
+
+        const update_g_srcs = () => {
+            g_srcs = gae(".select+.image", main).map(img => img.dataset.src);
+        };
 
         if (!("Viewer" in _unsafeWindow)) {
             _GM_addElement(document.head, "style", {
@@ -35116,7 +35196,7 @@ img.webtoon {
         <button id="close" class="close">${DL.str_132}</button>
     </div>
     <div class="buttons">
-        <button id="mobile_gallery_btn" class="hide">${DL.str_188}</button>
+        <button class="mobile_toggle_filter_gallery_btn hide">${DL.str_188}</button>
         <button id="gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
         <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
         <button id="select-all">${DL.str_154}</button>
@@ -35145,7 +35225,7 @@ img.webtoon {
 <div class="row">
     <div class="buttons">
         <button id="settings">${DL.str_85.replace(/\(.\)/, "")}</button>
-        <button id="mobile_gallery_btn">${DL.str_188}</button>
+        <button class="mobile_toggle_filter_gallery_btn hide">${DL.str_188}</button>
         <button id="gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
         <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
         <button id="copy">${DL.str_105.replace(/\(.\)/, "")}</button>
@@ -35161,7 +35241,7 @@ img.webtoon {
 </div>
 <div class="row hide">
     <div class="buttons">
-        <button id="mobile_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
+        <button class="mobile_toggle_filter_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
         <button id="single" class="mode">${DL.str_189}</button>
         <button id="webtoon" class="mode">${DL.str_190}</button>
         <button id="close">${DL.str_132}</button>
@@ -35170,7 +35250,7 @@ img.webtoon {
 <div id="gallery_imgBox" class="hide"></div>
 <div class="row hide">
     <div class="buttons">
-        <button id="mobile_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
+        <button class="mobile_toggle_filter_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
         <button id="single" class="mode">${DL.str_189}</button>
         <button id="webtoon" class="mode">${DL.str_190}</button>
         <button id="close">${DL.str_132}</button>
@@ -35213,7 +35293,7 @@ img.webtoon {
         if (hasTouchEvent) {
             ge("label:has(>#move)", main).classList.add("hide");
             ge("#combineDownload", main).classList.add("hide");
-            ge("#mobile_gallery_btn", main).classList.remove("hide");
+            gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
         }
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
@@ -35285,6 +35365,10 @@ img.webtoon {
                 _GM_setValue("exclude_ex_config", exclude_ex_config);
                 exclude_ex_fn();
                 addLis();
+                if (hasTouchEvent) {
+                    update_g_srcs();
+                    addGalleryImgs();
+                }
                 widthSelect.value = 0;
                 heightSelect.value = 0;
                 ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
@@ -35329,7 +35413,7 @@ img.webtoon {
 
         let widthNum = 0;
         let heightNum = 0;
-        const changeList = () => {
+        const updateFilterList = () => {
             let num = 0;
             gae("#image-list img", main).forEach(img => {
                 if (!/^(blob|data)/.test(img.src) || img.classList.contains("loaded")) {
@@ -35363,7 +35447,11 @@ img.webtoon {
         widthSelect.append(fragment);
         widthSelect.addEventListener("change", () => {
             widthNum = Number(widthSelect.value) * 100;
-            changeList();
+            updateFilterList();
+            if (hasTouchEvent) {
+                update_g_srcs();
+                addGalleryImgs();
+            }
         });
 
         let heightSelect = ge("#height", main);
@@ -35376,7 +35464,11 @@ img.webtoon {
         heightSelect.append(fragment);
         heightSelect.addEventListener("change", () => {
             heightNum = Number(heightSelect.value) * 100;
-            changeList();
+            updateFilterList();
+            if (hasTouchEvent) {
+                update_g_srcs();
+                addGalleryImgs();
+            }
         });
 
         let threadingSelect = ge("#threading", main);
@@ -35392,6 +35484,10 @@ img.webtoon {
             config.threading = Number(threadingSelect.value);
             saveConfig(config);
             addLis();
+            if (hasTouchEvent) {
+                update_g_srcs();
+                addGalleryImgs();
+            }
             main.focus();
         });
 
@@ -35416,7 +35512,7 @@ img.webtoon {
             cancelDefault(event);
             createPictureLoadOptionsShadowElement();
         }));
-        gae("#mobile_gallery_btn", main).forEach(button => button.addEventListener("click", event => {
+        gae(".mobile_toggle_filter_gallery_btn", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
             gae("#gallery_imgBox,.row", main).forEach(e => {
                 e.classList.toggle("hide");
@@ -35433,7 +35529,8 @@ img.webtoon {
         }));
         gae("#gallery", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
-            newTabView();
+            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+            newTabView(srcs);
         }));
         gae("#favor", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
@@ -35500,6 +35597,10 @@ img.webtoon {
             });
             const selects = gae(".select+.image", main);
             ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
+            if (hasTouchEvent) {
+                update_g_srcs();
+                addGalleryImgs();
+            }
         }));
         gae("#reload", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
@@ -35507,6 +35608,10 @@ img.webtoon {
             heightSelect.value = 0;
             ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
+            if (hasTouchEvent) {
+                update_g_srcs();
+                addGalleryImgs();
+            }
         }));
         let combineDownloadButton = ge("#combineDownload", main);
         if (combineDownloadButton) {
@@ -35540,6 +35645,10 @@ img.webtoon {
             heightSelect.value = 0;
             ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
+            if (hasTouchEvent) {
+                update_g_srcs();
+                addGalleryImgs();
+            }
             main.focus();
         });
         let inputSize = ge("#size", main);
@@ -35555,6 +35664,10 @@ img.webtoon {
             heightSelect.value = 0;
             ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
+            if (hasTouchEvent) {
+                update_g_srcs();
+                addGalleryImgs();
+            }
             main.focus();
         });
         let inputMove = ge("#move", main);
@@ -35568,6 +35681,10 @@ img.webtoon {
                 heightSelect.value = 0;
                 ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
                 addLis();
+                if (hasTouchEvent) {
+                    update_g_srcs();
+                    addGalleryImgs();
+                }
                 main.focus();
             });
         }
@@ -35604,6 +35721,10 @@ img.webtoon {
                     }
                     const selects = gae(".select+.image", main);
                     ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
+                    if (hasTouchEvent) {
+                        update_g_srcs();
+                        addGalleryImgs();
+                    }
                 };
                 input.onclick = event => {
                     if ((event.ctrlKey || event.altKey || event.shiftKey) && isEle(startInput)) {
@@ -35658,6 +35779,10 @@ img.webtoon {
                         li.classList.add("hide");
                         const selects = gae(".select+.image", main);
                         ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
+                        if (hasTouchEvent) {
+                            update_g_srcs();
+                            addGalleryImgs();
+                        }
                     }
                     img.onerror = null;
                 };
@@ -35708,7 +35833,7 @@ img.webtoon {
         const addGalleryImgs = () => {
             gallery_imgBox.innerHTML = "";
             const loadImgList = [];
-            for (const [index, src] of srcs.entries()) {
+            for (const [index, src] of g_srcs.entries()) {
                 const img = new Image();
                 img.className = ge("button.mode.active", main).id;
                 if ("referrerpolicy" in siteData) {
@@ -36383,21 +36508,21 @@ img.webtoon {
 </div>
 <div id="ShowFixedMenuDIV" style="width: 348px; display: flex;">
     <input id="ShowFixedMenu" type="checkbox">
-    <label>※${DL.str_117}</label>
+    <label>※ ${DL.str_117}</label>
 </div>
-<div style="width: 348px; display: flex; margin-left: 6px;">
+<div style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_108}</label>
     <select id="MsgPos"></select>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="FavorNewTab" type="checkbox">
-    <label>※${DL.str_50}</label>
+    <label>※ ${DL.str_50}</label>
 </div>
 <div id="AutoInsertImgDIV" style="width: 348px; display: flex;">
     <input id="AutoInsertImg" type="checkbox">
     <label>${DL.str_139}</label>
 </div>
-<div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_79}</label>
     <select id="Zoom"></select>
 </div>
@@ -36405,7 +36530,7 @@ img.webtoon {
     <input id="viewMode" type="checkbox">
     <label>${DL.str_103}</label>
 </div>
-<div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_80}</label>
     <select id="Column" title="${DL.str_81}"></select>
 </div>
@@ -36421,7 +36546,7 @@ img.webtoon {
     <input id="loopView" type="checkbox">
     <label>${DL.str_182}</label>
 </div>
-<div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_147}</label>
     <select id="ShadowGalleryWheel"></select>
 </div>
@@ -36429,16 +36554,16 @@ img.webtoon {
     <input id="Fancybox" type="checkbox">
     <label>${DL.str_78}</label>
 </div>
-<div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${DL.str_146}</label>
+<div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
+    <label>※ ${DL.str_146}</label>
     <select id="FancyboxWheel"></select>
 </div>
-<div id="FancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${DL.str_145}</label>
+<div id="FancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 7px;">
+    <label>※ ${DL.str_145}</label>
     <select id="FancyboxSlideshowTimeout"></select>
 </div>
-<div id="FancyboxTransitionDIV" style="width: 348px; display: flex; margin-left: 6px;">
-    <label>※${DL.str_148}</label>
+<div id="FancyboxTransitionDIV" style="width: 348px; display: flex; margin-left: 7px;">
+    <label>※ ${DL.str_148}</label>
     <select id="FancyboxTransition"></select>
 </div>
 <div id="ComicDIV" style="width: 348px; display: none;">
@@ -36453,11 +36578,11 @@ img.webtoon {
     <input id="AutoDownload" type="checkbox">
     <label>${DL.str_73}${DL.str_74}</label>
 </div>
-<div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 6px;">
+<div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_75}</label>
     <select id="Countdown"></select>
 </div>
-<div style="width: 348px; display: flex; margin-left: 6px;">
+<div style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_70}</label>
     <select id="Threading"></select>
 </div>
@@ -36467,9 +36592,9 @@ img.webtoon {
 </div>
 <div style="width: 348px; display: flex;">
     <input id="zipFolder" type="checkbox">
-    <label>※${DL.str_187}</label>
+    <label>※ ${DL.str_187}</label>
 </div>
-<div style="width: 348px; display: flex; margin-left: 6px;">
+<div style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_72}</label>
     <select id="Extension"></select>
 </div>
@@ -37090,10 +37215,12 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     font-weight: 500 !important;
     max-width: 100% !important;
     height: 80px !important;
+    margin-bottom: 6px !important;
 }
 
 .FullPictureLoadPageButtonTop {
-    height: 24px;
+    height: 28px !important;
+    line-height: 24px !important;
     min-height: unset !important;
     padding: 1px !important;
     margin: 10px 0 10px 0 !important;
@@ -37103,7 +37230,6 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     color: black !important;
     letter-spacing: normal;
     word-spacing: normal;
-    line-height: normal;
     font-size: 14px !important;
     font-weight: 500 !important;
     text-transform: none;
@@ -37124,17 +37250,17 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 }
 
 .FullPictureLoadPageButtonBottom {
-    height: 24px;
+    height: 28px !important;
+    line-height: 24px !important;
     min-height: unset !important;
     padding: 1px !important;
-    margin: 0 0 6px 0 !important;
+    margin: 0px !important;
     border-radius: unset !important;
     appearance: auto;
     text-rendering: auto;
     color: black !important;
     letter-spacing: normal;
     word-spacing: normal;
-    line-height: normal;
     font-size: 14px !important;
     font-weight: 500 !important;
     text-transform: none;
