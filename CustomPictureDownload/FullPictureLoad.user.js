@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.1.31
+// @version            2025.2.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -25966,7 +25966,7 @@ if ("xx" in window) {
                 str_168: "篩選高度：",
                 str_169: "佈景主題：",
                 str_170: "反向選取",
-                str_171: "顯示檔案大小",
+                str_171: "檔案大小",
                 str_172: "拖動排序",
                 str_173: "可拖動圖片來改變圖片順序。",
                 str_174: "匯出JSON格式",
@@ -26202,7 +26202,7 @@ if ("xx" in window) {
                 str_168: "筛选高度：",
                 str_169: "布景主题：",
                 str_170: "反向选取",
-                str_171: "显示文件大小",
+                str_171: "文件大小",
                 str_172: "拖动排序",
                 str_173: "可拖动图片来改变图片顺序。",
                 str_174: "导出JSON格式",
@@ -34761,6 +34761,7 @@ img.horizontal {
         isOpenFilter = true;
 
         let full_srcs;
+        let isViewMobileGallery = false;
         let Viewer;
         let ViewerJsInstance;
         let ViewerJsInstance_G;
@@ -35014,9 +35015,9 @@ li.image-item p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
 #size,#move,#auto-exclude-error {
-    width: 16px;
-    height: 16px;
-    vertical-align: ${isFirefox ? "middle" : "sub"};
+    width: ${(!isFirefox && !hasTouchEvent) ? "16px" : "18px"};
+    height: ${(!isFirefox && !hasTouchEvent) ? "16px" : "18px"};
+    vertical-align: text-bottom;
     margin: 0 4px 0 2px;
 }
 label.line-through:has(>#size) {
@@ -35055,6 +35056,7 @@ label.line-through:has(>#size) {
 }
 #excludeNum {
     display: none;
+    color: white;
     font-size: 12px;
     line-height: 16px;
     text-align: center;
@@ -35108,6 +35110,32 @@ img.webtoon {
     display: block;
     margin: 0 auto;
     border: unset;
+}
+#scrollUp {
+    position: fixed;
+    z-index: 2147483647;
+    bottom: 90px;
+    right: 20px;
+    color: rgba(143, 143, 143);
+    font-size: 40px;
+    line-height: 30px;
+    font-weight: bold;
+    width: 48px;
+    height: 48px;
+    padding-right: 2px;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    border: #ccc 1px solid;
+    background: rgba(255, 255, 255);
+    border-radius: 24px;
+    opacity: 0.8;
+}
+#scrollUp.dark {
+    color: rgba(255, 255, 255);
+    border: rgb(0, 204, 255) 1px solid;
+    background: #25242c;
+    opacity: 0.5;
 }
 @media (max-width: 873px) {
     li.image-item {
@@ -35189,7 +35217,7 @@ img.webtoon {
         shadow.append(main);
 
         main.innerHTML = `
-<div class="row">
+<div id="filter_top" class="row">
     <div id="title">
         <label id="label-title">${DL.str_153}</label>
         <input type="text" id="inputTitle">
@@ -35239,9 +35267,10 @@ img.webtoon {
         <button id="close">${DL.str_132}</button>
     </div>
 </div>
-<div class="row hide">
+<div id="gallery_top" class="row hide">
     <div class="buttons">
         <button class="mobile_toggle_filter_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
+        <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
         <button id="single" class="mode">${DL.str_189}</button>
         <button id="webtoon" class="mode">${DL.str_190}</button>
         <button id="close">${DL.str_132}</button>
@@ -35251,11 +35280,13 @@ img.webtoon {
 <div class="row hide">
     <div class="buttons">
         <button class="mobile_toggle_filter_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
+        <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
         <button id="single" class="mode">${DL.str_189}</button>
         <button id="webtoon" class="mode">${DL.str_190}</button>
         <button id="close">${DL.str_132}</button>
     </div>
 </div>
+<a id="scrollUp" class="hide" href="javascript:void(0);">︽</a>
         `;
 
         let inputs = [];
@@ -35294,9 +35325,23 @@ img.webtoon {
             ge("label:has(>#move)", main).classList.add("hide");
             ge("#combineDownload", main).classList.add("hide");
             gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
+            ge("#scrollUp", main).classList.remove("hide");
+            ge("#scrollUp", main).addEventListener("click", event => {
+                cancelDefault(event);
+                instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_top" : "#filter_top", main));
+            });
+            let lastScrollTop = 0;
+            main.addEventListener("scroll", event => {
+                if (main.scrollTop > lastScrollTop) {
+                    ge("#scrollUp", main).classList.add("hide");
+                } else if (main.scrollTop < lastScrollTop) {
+                    ge("#scrollUp", main).classList.remove("hide");
+                }
+                lastScrollTop = main.scrollTop;
+            });
         }
         if (backgroundColor === "d") {
-            gae("#main,.row,.number,button", shadow).forEach(e => e.classList.add("dark"));
+            gae("#main,.row,.number,button,#scrollUp", shadow).forEach(e => e.classList.add("dark"));
         }
 
         let moreE = ge("#more", main);
@@ -35404,9 +35449,9 @@ img.webtoon {
             saveConfig(config);
             backgroundColor = config.backgroundColor;
             if (backgroundColor === "d") {
-                gae("#main,.row,.number,li,li p,button", shadow).forEach(e => e.classList.add("dark"));
+                gae("#main,.row,.number,li,li p,button,#scrollUp", shadow).forEach(e => e.classList.add("dark"));
             } else {
-                gae("#main,.row,.number,li,li p,button", shadow).forEach(e => e.classList.remove("dark"));
+                gae("#main,.row,.number,li,li p,button,#scrollUp", shadow).forEach(e => e.classList.remove("dark"));
             }
             main.focus();
         });
@@ -35514,9 +35559,8 @@ img.webtoon {
         }));
         gae(".mobile_toggle_filter_gallery_btn", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
-            gae("#gallery_imgBox,.row", main).forEach(e => {
-                e.classList.toggle("hide");
-            });
+            gae("#gallery_imgBox,.row", main).forEach(e => e.classList.toggle("hide"));
+            isViewMobileGallery ? isViewMobileGallery = false : isViewMobileGallery = true;
         }));
         gae("#" + config.MobileViewMode, main).forEach(e => e.classList.add("active"));
         gae("button.mode", main).forEach(button => button.addEventListener("click", event => {
@@ -37220,7 +37264,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 
 .FullPictureLoadPageButtonTop {
     height: 28px !important;
-    line-height: 24px !important;
+    line-height: 26px !important;
     min-height: unset !important;
     padding: 1px !important;
     margin: 10px 0 10px 0 !important;
@@ -37251,7 +37295,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 
 .FullPictureLoadPageButtonBottom {
     height: 28px !important;
-    line-height: 24px !important;
+    line-height: 26px !important;
     min-height: unset !important;
     padding: 1px !important;
     margin: 0px !important;
