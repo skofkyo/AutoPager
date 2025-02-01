@@ -1310,7 +1310,7 @@ imgs: async () => {
 <img src="https://i.imgur.com/9Ml8a8v.jpeg">
 <img src="https://i.imgur.com/ruHGKQl.jpeg">
 <img src="https://i.imgur.com/QhWC6UI.jpeg">
-<img src="https://i.imgur.com/R0tuAWt.jpeg">
+<img src="https://i.imgur.com/u07PJLq.jpeg">
 <h2>自定義編輯網站收藏說明</h2>
 <details>
     <summary>
@@ -1487,7 +1487,19 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.yalayi.com/">雅拉伊</a>
                 </td>
-                <td>免VIP僅適用PC版和圖片命名是簡單數字遞增的。</td>
+                <td>免VIP僅適用PC版和圖片檔案命名是簡單數字遞增的。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xstuji.com/">秀色图集</a>
+                </td>
+                <td>免VIP僅適用圖片檔案命名是簡單數字遞增的，利用篩選下載先用腳本取得的起始數字來載入圖片，假設無法載入的圖片皆為末尾，那麼正確的起始數字需要減掉載入錯誤的圖片數量，如果圖片載入錯誤的張數是分散的，那麼該規則將無效。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.ootaotu.com/">套图集</a>
+                </td>
+                <td>同上</td>
             </tr>
             <tr>
                 <td>
@@ -1709,12 +1721,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.okxx.de/">秀图湾</a>
                 </td>
                 <td><a href="https://xiusz.com/">xiusz.com</a></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.xiutun.net/">秀臀网</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2005,6 +2011,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.yuzu8.com/">足控资源网</a>
                 </td>
                 <td>只支持免費</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.2mn.cc/">爱死美女网</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2776,8 +2788,19 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://fapellas.com/">Fapellas</a>
                 </td>
-                <td>手動插入圖片， <a href="https://faponic.com/">Faponic</a>
+                <td>手動插入圖片， <a href="https://faponic.com/">Faponic</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapodrop.com/">Fapodrop</a>
                 </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapsan.com/">Fapsan</a>
+                </td>
+                <td>手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -2956,6 +2979,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.nncos.com/">奈奈COS</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cosfan.cc/">COSFAN</a>
+                </td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -3265,10 +3294,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>同上</td>
             </tr>
             <tr>
-                <td>
-                    <a href="https://www.twpornstars.com/iamdorasnow">TW Pornstars</a>
-                </td>
-                <td></td>
+                <td>TW Pornstars</td>
+                <td><a href="https://www.twpornstars.com/iamdorasnow">Sally多啦雪</a>，<a href="https://www.twpornstars.com/axunkaOri">阿薰kaOri</a></td>
             </tr>
             <tr>
                 <td>
