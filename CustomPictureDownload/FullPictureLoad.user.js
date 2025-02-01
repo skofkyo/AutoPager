@@ -835,15 +835,25 @@
         category: "nsfw2"
     }, {
         name: "秀色图集",
-        host: ["www.xstuji.com"],
-        enable: 0,
-        url: {
-            e: ["#top .top", "em:has(>.fa-image)", ".scot img[data-original]"]
+        host: ["www.xstuji.com", "q.xiuse.xyz"],
+        url: () => {
+            let check = fn.checkUrl({
+                e: ["//a[text()='秀色图集']", "#top .top", "em:has(>.fa-image)", ".scot img[data-original]"]
+            });
+            if (check) {
+                let src = fn.ge(".scot img").dataset.original;
+                let f = src.split("/").at(-1);
+                let [n] = f.split(".");
+                let t = n.match(/[a-z]+/ig);
+                return t ? false : true;
+            } else {
+                return false;
+            }
         },
         imgs: () => {
             let srcs = [];
-            let max = Number(document.querySelector("em:has(>.fa-image)").innerText.match(/\d+/));
-            let [src] = [...document.querySelectorAll(".scot img[data-original]")].map(e => e.dataset.original).sort();
+            let max = Number(fn.gt("em:has(>.fa-image)").match(/\d+/));
+            let [src] = fn.getImgSrcArr(".scot img[data-original]").sort();
             let [, dir, num, ex] = src.match(/(.+\/)(\d+)(\.\w+)$/i);
             let c_num = prompt("请输入起始数字", num);
             if (c_num !== null && Number(c_num)) {
@@ -857,6 +867,41 @@
         },
         SPA: true,
         customTitle: ".sh1",
+        category: "nsfw1"
+    }, {
+        name: "套图集",
+        host: ["www.ootaotu.com"],
+        url: () => {
+            let check = fn.checkUrl({
+                e: ["//a[text()='套图集']", "//div[@class='c-if']/span[contains(text(),'图片：')]", ".imgg img"]
+            });
+            if (check) {
+                let src = fn.ge(".imgg img").src;
+                let f = src.split("/").at(-1);
+                let [n] = f.split(".");
+                let t = n.match(/[a-z]+/ig);
+                return t ? false : true;
+            } else {
+                return false;
+            }
+        },
+        imgs: () => {
+            let srcs = [];
+            let max = Number(fn.gt("//div[@class='c-if']/span[contains(text(),'图片：')]").match(/\d+/));
+            let [src] = fn.getImgSrcArr(".imgg img").sort();
+            let [, dir, num, ex] = src.match(/(.+\/)(\d+)(\.\w+)$/i);
+            let c_num = prompt("请输入起始数字", num);
+            if (c_num !== null && Number(c_num)) {
+                num = c_num;
+            }
+            for (let i = 0; i < max; i++) {
+                let url = dir + (Number(num) + i) + ex;
+                srcs.push(url);
+            }
+            return srcs;
+        },
+        SPA: true,
+        customTitle: ".c-tt>h1",
         category: "nsfw1"
     }, {
         name: "秀人集",
@@ -2624,6 +2669,7 @@
         button: [4],
         insertImg: [".article-content", 2],
         customTitle: ".article-title",
+        mcss: ".container,.article{padding:0px}",
         hide: "#ads,body>*[style^='display: block;'],#lbaeb",
         category: "nsfw1"
     }, {
@@ -4195,20 +4241,6 @@
         customTitle: ".media-body>h4",
         category: "nsfw1"
     }, {
-        name: "秀臀网",
-        url: {
-            h: "www.xiutun.net",
-            p: ".html"
-        },
-        imgs: ".wp-posts-content img",
-        button: [4],
-        insertImg: [".wp-posts-content", 2],
-        customTitle: ".article-title",
-        fancybox: {
-            blacklist: 1
-        },
-        category: "nsfw1"
-    }, {
         name: "女神部落",
         url: {
             h: "girlsteam.club"
@@ -4979,6 +5011,42 @@
         customTitle: () => fn.title("/", 1),
         category: "nsfw2"
     }, {
+        name: "Fapodrop",
+        url: {
+            h: "fapodrop.com",
+            e: ".one-pack"
+        },
+        imgs: () => {
+            let url = fn.gu(".one-pack a");
+            let max = url.split("/").at(-1);
+            let src = fn.ge(".one-pack img").src;
+            let [a, b, c] = src.split("_");
+            thumbnailSrcArray = fn.arr(max, (v, i) => a + "_" + String(i + 1).padStart(4, "0") + "_" + c);
+            return thumbnailSrcArray.map(e => e.replace("/thumbnails/", "/photo/").replace("_thumbnail", ""));
+        },
+        button: [4],
+        insertImg: [".one-pack", 3],
+        customTitle: "h1.h3",
+        category: "nsfw2"
+    }, {
+        name: "Fapsan",
+        url: {
+            h: "fapsan.com",
+            e: ".one-pack"
+        },
+        imgs: async () => {
+            let max = fn.gt("h1.h3").match(/\d+/g).at(-1);
+            let pages = Math.ceil(Number(max) / 36);
+            let links = fn.arr(pages, (v, i) => i == 0 ? fn.lp : fn.lp + "/page/" + (i + 1));
+            thumbnailSrcArray = await fn.getImgA(".one-pack img", links);
+            thumbnailSrcArray = thumbnailSrcArray.reverse();
+            return thumbnailSrcArray.map(e => e.replace("/thumbnails/", "/photo/").replace("_thumbnail", ""));
+        },
+        button: [4],
+        insertImg: [".one-pack", 3],
+        customTitle: "h1.h3",
+        category: "nsfw2"
+    }, {
         name: "#TheFappening",
         url: {
             h: "fap.thefappening.one",
@@ -5284,6 +5352,21 @@
         next: "a[rel=prev]",
         prev: "a[rel=next]",
         customTitle: "h1",
+        category: "nsfw1"
+    }, {
+        name: "爱死美女网",
+        host: ["www.2mn.cc", "2mn.cc"],
+        url: {
+            h: "2mn.cc",
+            p: "/mm/"
+        },
+        imgs: "#post_content img",
+        button: [4],
+        insertImg: ["#post_content", 1],
+        autoDownload: [0],
+        next: ".post-previous a",
+        prev: ".nav-links .next",
+        customTitle: "#content h1",
         category: "nsfw1"
     }, {
         name: "美图海",
@@ -6082,6 +6165,25 @@
         next: ".article-nav-prev a",
         prev: ".article-nav-next a",
         customTitle: "h1.article-title",
+        category: "nsfw1"
+    }, {
+        name: "COSFAN",
+        host: ["www.cosfan.cc"],
+        reg: /^https?:\/\/www\.cosfan\.cc\/cosplay\/\d+$/,
+        init: async () => {
+            await fn.waitEle(".cursor-zoom-in img");
+            await fn.wait(() => {
+                let button = fn.ge("//button[text()='加载更多' or text()='More']");
+                if (!!button) {
+                    EClick(button);
+                }
+                return !button;
+            });
+        },
+        imgs: ".cursor-zoom-in img",
+        button: [4],
+        insertImg: [".flex.flex-col.items-center:has(>.grid)", 2],
+        customTitle: ".justify-between h1",
         category: "nsfw1"
     }, {
         name: "Gallery Epic",
@@ -10440,8 +10542,13 @@
                     thums = thums.filter(e => !e.includes("/logos/"));
                     images = images.filter(e => !e.includes("/logos/"));
                 } else {
-                    thums = fn.gae(".albumgrid img[type=image]").map(e => e.src);
-                    images = fn.gae(".albumgrid img[type=image]").map(e => e.getAttribute("original"));
+                    if (hasTouchEvent) {
+                        thums = [];
+                        images = fn.getImgSrcArr(".popup-list img", dom);
+                    } else {
+                        thums = fn.gae(".albumgrid img[type=image]", dom).map(e => e.src);
+                        images = fn.gae(".albumgrid img[type=image]", dom).map(e => e.getAttribute("original"));
+                    }
                 }
                 return {
                     images,
@@ -19048,13 +19155,14 @@
             t: [" - KL", " - JF"],
             p: "-chapter-"
         },
-        imgs: "#list-imga img",
+        init: () => fn.waitEle("#list-imga img[alt^=Page]"),
+        imgs: () => fn.gae("#list-imga img[alt^=Page]"),
         button: [4],
         insertImg: ["#list-imga", 2],
         endColor: "white",
         autoDownload: [0],
         next: () => {
-            let chapters = fn.gae("#zlist-chs option");
+            let chapters = fn.gae(".select-chapter option");
             let urlArr = fn.url.split("/");
             let nextUrl = null;
             chapters.some((e, i, a) => {
@@ -30059,13 +30167,13 @@ if ("xx" in window) {
             let html = `
 <div class="comicControlBottom van-popup van-popup--bottom hide" style="z-index: 2024;">
     <div class="comicControlBottomBottom">
-        <a href="${c}">
+        <a href="${c}" style="color: white;">
             <span class="comicControlBottomBottomItem">
                 <span class="comicControlBottomBottomItemIcon iconfont iconRead_btn_nor_Catalog"></span>
                 <span class="comicControlBottomBottomItemText">目錄</span>
             </span>
         </a>
-        <a href="${h}">
+        <a href="${h}" style="color: white;">
             <span class="comicControlBottomBottomItem">
                 <span class="comicControlBottomBottomItemIcon iconfont iconRead_btn_nor_home"></span>
                 <span class="comicControlBottomBottomItemText">首頁</span>
@@ -31646,7 +31754,7 @@ if ("xx" in window) {
             newWindow.webtoonWidth = config.webtoonWidth;
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
-            newWindow.thumbnailSrcArray = thumbnailSrcArray;
+            newWindow.thumbnailSrcArray = isArray(src_array) ? [] : thumbnailSrcArray;
             newWindow.menuLanguage = DL.galleryMenu;
             newWindow.isOpenFancybox = false;
             newWindow.l10n = Fancyboxl10nV5();
@@ -35128,7 +35236,7 @@ img.webtoon {
     overflow: hidden;
     border: #ccc 1px solid;
     background: rgba(255, 255, 255);
-    border-radius: 24px;
+    border-radius: 12px;
     opacity: 0.8;
 }
 #scrollUp.dark {
@@ -37256,6 +37364,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
 
 #FullPictureLoadOptionsButtonParentDiv {
     font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
+    font-size: initial !important;
     font-weight: 500 !important;
     max-width: 100% !important;
     height: 80px !important;
@@ -37274,6 +37383,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     color: black !important;
     letter-spacing: normal;
     word-spacing: normal;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-size: 14px !important;
     font-weight: 500 !important;
     text-transform: none;
@@ -37305,6 +37415,7 @@ a[data-fancybox="FullPictureLoadImageSmall"] {
     color: black !important;
     letter-spacing: normal;
     word-spacing: normal;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
     font-size: 14px !important;
     font-weight: 500 !important;
     text-transform: none;
