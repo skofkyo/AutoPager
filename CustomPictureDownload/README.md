@@ -1199,6 +1199,8 @@ imgs: async () => {
 <img src="https://i.imgur.com/m6ewqQd.png">
 <p>右鍵點擊圖示複製圖片網址，如果規則insertImg為手動模式，按右鍵是先插入全部圖片，第二次按才是複製圖片網址。</p>
 <p>中鍵點擊圖示匯出網址MediaURLs.txt文件</p>
+<p>手機用的移動畫廊簡易圖片瀏覽模式。</p>
+<img src="https://i.imgur.com/JpEAbG5.jpeg">
 <h1>手動模式說明：</h1>
 <p>部分規則因種種原因寫成了手動規則</p>
 <h3>手動操作頁面聚圖：</h3>
@@ -1503,6 +1505,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.newxiuren.cc/">新秀人</a>
+                </td>
+                <td>免VIP，圖集無法正確取得99張後的圖片網址，從100開始的檔案命名邏輯摸不清。</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.hentaiclub.net/">紳士会所</a>
                 </td>
                 <td>
@@ -1756,6 +1764,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://hanfu.in/">汉服网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.jk.rs/">日式JK</a>
                 </td>
                 <td>
@@ -1825,14 +1839,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.elysium.pro/">Elysium</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.qixianzi.com/">七仙子图片</a>
-                </td>
-                <td>
-                    <a href="https://www.qixianzi.com/e/wap/">www.qixianzi.com/e/wap/</a>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -4479,6 +4485,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.qixianzi.com/">七仙子图片</a>
+                </td>
+                <td>
+                    <a href="https://www.qixianzi.com/e/wap/">www.qixianzi.com/e/wap/</a>，很久沒新圖了
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.wai77.com/">心动美图</a>
                 </td>
                 <td>很久沒新圖了</td>
@@ -5797,7 +5811,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.dm5.com/">DM5</a>
                 </td>
                 <td>
-                    <a href="https://m.dm5.com/">m.dm5.com</a>，有無限滾動模式加預讀
+                    <a href="https://m.dm5.com/">m.dm5.com</a>，有無限滾動模式
                 </td>
             </tr>
             <tr>
@@ -5805,14 +5819,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hk.1kkk.com/">極速</a>
                 </td>
                 <td>
-                    <a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限滾動模式加預讀
+                    <a href="https://m.1kkk.com/">m.1kkk.com</a>，有無限滾動模式
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.manhuaren.com/">漫画人</a>
                 </td>
-                <td>Mobile限定，有無限滾動模式加預讀</td>
+                <td>Mobile限定，有無限滾動模式</td>
             </tr>
             <tr>
                 <td>
@@ -6377,11 +6391,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://mangasee123.com/">MangaSee 英文</a>
+                    <a href="https://weebcentral.com/">Weeb Central 英文</a>
                 </td>
-                <td>
-                    <a href="https://manga4life.com/">MangaLife</a>，SPA網頁
-                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
