@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.2
+// @version            2025.2.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -92,6 +92,7 @@
         viewMode: 0, //0：置中、1：並排
         fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
         shadowGallery: 0, //自動進入影子畫廊，1：自動、0：手動
+        mobileGallery: 0, //自動進入移動畫廊，1：自動、0：手動
         autoExport: 0 //自動匯出網址，1：自動、0：手動
     };
     const FullPictureLoadShowEye = localStorage.getItem("FullPictureLoadShowEye") ?? 1;
@@ -534,7 +535,7 @@
         host: ["www.jkforum.net"],
         reg: /^https?:\/\/www\.jkforum\.net\/(p\/)?thread/,
         init: () => fn.waitEle("img[id^=aimg]"),
-        imgs: () => hasTouchEvent ? fn.gae("img[id^=aimg]:not([style])") : fn.gae("img[id^=aimg][zoomfile]"),
+        imgs: () => isM ? fn.gae("img[id^=aimg]:not([style])") : fn.gae("img[id^=aimg][zoomfile]"),
         capture: () => _this.imgs(),
         customTitle: ".title-hd h1,.post-title",
         category: "nsfw2"
@@ -902,6 +903,33 @@
         },
         SPA: true,
         customTitle: ".c-tt>h1",
+        category: "nsfw1"
+    }, {
+        name: "秀人网官方网站",
+        host: ["www.newxiuren.cc", "m.newxiuren.cc", "www.xiuren.online", "m.xiuren.online", "www.xiuren.cloud", "m.xiuren.cloud", "www.xiuren888.com", "m.xiuren888.com"],
+        url: {
+            h: "xiuren",
+            e: ["img[alt=图片][title=图片]+span", "img[src*='cover.jpg']", "#content img"],
+            p: "piclist",
+            s: "id="
+        },
+        imgs: () => {
+            let max = Number(fn.gt("img[alt=图片][title=图片]+span"));
+            let src = fn.ge("#content img:not(#cover)").src;
+            let obj = new URL(src);
+            src = obj.origin + obj.pathname;
+            let dir = src.split("/");
+            dir.pop();
+            dir = dir.join("/");
+            let id = dir.split("/").at(-1);
+            dir = dir + "/";
+            let srcs = [dir + "cover.jpg"];
+            for (let i = 1; i <= max; i++) {
+                srcs.push(dir + id + String(i).padStart(2, "0") + ".jpg");
+            }
+            return srcs;
+        },
+        customTitle: ".Ptitle,.piclist_box",
         category: "nsfw1"
     }, {
         name: "秀人集",
@@ -1759,7 +1787,7 @@
         init: () => {
             const replaceSrc = () => {
                 fn.gae(".post_images img[src*='timthumb.php?src=']").forEach(e => {
-                    let src = fn.getUP("src", e.src);
+                    let src = fn.getUSP("src", e.src);
                     src = src.replace("https://", "https://i0.wp.com/") + "?w=200";
                     e.src = src;
                 });
@@ -3267,7 +3295,7 @@
         },
         imgs: async () => {
             fn.showMsg(DL.str_05, 0);
-            let id = fn.getUP("aid");
+            let id = fn.getUSP("aid");
             let total = await fetch(`/api/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `/api/image/list?aid=${id}&pageNum=${i + 1}`);
@@ -3292,7 +3320,7 @@
         //button: [4],
         //insertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let id = fn.getUP("aid");
+            let id = fn.getUSP("aid");
             //return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
             return fn.xhr(`https://admin.aiavr.uk/album/info?id=${id}`, {
                 responseType: "json"
@@ -3308,7 +3336,7 @@
         },
         imgs: async () => {
             fn.showMsg(DL.str_05, 0);
-            let id = fn.getUP("aid");
+            let id = fn.getUSP("aid");
             let total = await fetch(`https://admin.aiavr.uk/image/list?aid=${id}&pageNum=1`).then(res => res.json()).then(json => json.total);
             let pages = Math.ceil(total / 6);
             let links = fn.arr(pages, (v, i) => `https://admin.aiavr.uk/image/list?aid=${id}&pageNum=${i + 1}`);
@@ -3333,7 +3361,7 @@
         //button: [4],
         //sertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let id = fn.getUP("aid");
+            let id = fn.getUSP("aid");
             return fetch(`https://admin.aiavr.uk/album/info?id=${id}`).then(res => res.json()).then(json => json.data.title);
         },
         category: "nsfw1"
@@ -3347,7 +3375,7 @@
         },
         imgs: async () => {
             fn.showMsg(DL.str_05, 0);
-            let id = fn.getUP("aid");
+            let id = fn.getUSP("aid");
             let vip = await fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.isSee);
             if (vip == false) {
                 setTimeout(() => {
@@ -3369,7 +3397,7 @@
         //tton: [4],
         //sertImg: [".q-infinite-scroll", 2],
         customTitle: () => {
-            let id = fn.getUP("aid");
+            let id = fn.getUSP("aid");
             return fetch(`https://admin.aiavr.uk/userAlbum/getInfo/${id}`).then(res => res.json()).then(json => json.data.title);
         },
         category: "nsfw1"
@@ -3845,7 +3873,7 @@
     }, {
         name: "美图坊",
         host: ["www.yalatu.com", "m2ph.xyz", "www.m2ph.xyz", "110.40.75.172:39000"],
-        url: () => ["flutter.password", "flutter.account"].every(k => k in localStorage) && hasTouchEvent,
+        url: () => ["flutter.password", "flutter.account"].every(k => k in localStorage) && isM,
         SPA: true,
         init: () => {
             if ("gallery_json" in localStorage) {
@@ -4427,6 +4455,22 @@
         insertImgAF: () => fn.css("#masonry{position:unset!important;height:unset!important}"),
         customTitle: () => fn.title(" – 日式JK"),
         referer: "",
+        category: "nsfw1"
+    }, {
+        name: "汉服网",
+        url: {
+            h: "hanfu.in",
+            e: ".mdui-chip-title"
+        },
+        imgs: "a[data-fancybox=gallery]",
+        customTitle: () => fn.dt({
+            s: ".mdui-chip-title",
+            d: "标题："
+        }),
+        referer: "",
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw1"
     }, {
         name: "妹妹美",
@@ -5803,7 +5847,7 @@
     }, {
         name: "TW Pornstars",
         url: () => fn.checkUrl({
-            h: "www.twpornstars.com"
+            h: "twpornstars.com"
         }) && fn.lp.split("/").length === 2,
         imgs: async () => {
             let pagesNum = 1;
@@ -6746,8 +6790,11 @@
         category: "nsfw2"
     }, {
         name: "Byoru",
-        host: ["byoru.net"],
-        reg: /^https?:\/\/byoru\.net\/[^\/]+\/$/,
+        url: {
+            h: "byoru.net",
+            p: /^\/[^\/]+\/$/,
+            e: "h1.entry-title"
+        },
         init: () => {
             let eles = fn.gae("//p[contains(text(),'Download')] | //p[contains(text(),'Password')]");
             if (eles.length > 0) {
@@ -7107,6 +7154,12 @@
         init: () => {
             let share = fn.ge(".entry.share");
             if (share) share.classList.remove("share");
+            fn.gae(".entry-inner p").forEach(e => {
+                let text = e.innerText;
+                if (text.length > 0) {
+                    tempEles.push(text);
+                }
+            });
         },
         imgs: () => {
             let max;
@@ -7122,6 +7175,16 @@
         insertImg: [
             [".pagination", 1, ".entry-inner>p:not(#FullPictureLoadEnd),.separator"], 2
         ],
+        insertImgAF: (parent) => {
+            if (tempEles.length > 0) {
+                tempEles.forEach(t => {
+                    let p = document.createElement("p");
+                    p.innerText = t;
+                    fragment.append(p);
+                });
+                parent.firstElementChild.before(fragment);
+            }
+        },
         customTitle: () => fn.dt({
             s: ".post-title",
             d: /\(\d+\s?photos\s?\)|(\s?\(\d+\s?photos?\s?\+\s?\d+\s?videos?\))|\([0-9\s]+ảnh[0-9\s\+]+video\)|\([0-9\s]+ảnh.*\)|\/mitaku\.net\//i
@@ -8343,11 +8406,12 @@
         name: "七仙子图片",
         host: ["www.qixianzi.com"],
         reg: /^https?:\/\/www\.qixianzi\.com\/\w+\/\d+\.html$/,
-        imgs: async () => {
-            let a = fn.ge(".picture_content>a");
-            if (a) a.outerHTML = a.innerHTML;
-            await fn.getNP(".picture_content img", "//a[text()='下一页']", null, ".pagination", 0, null, 0);
-            return fn.gae(".picture_content img");
+        imgs: () => {
+            let url = fn.ge("#diggnum script").src;
+            let classid = fn.getUSP("classid", url);
+            let id = fn.getUSP("id", url);
+            let links = [`/e/wap/show.php?classid=${classid}&id=${id}`];
+            return fn.getImgA(".arcmain img", links);
         },
         button: [4],
         insertImg: [".picture_content", 2],
@@ -8355,6 +8419,7 @@
         next: "//li[contains(text(),'上一篇')]/a",
         prev: "//li[contains(text(),'下一篇')]/a",
         customTitle: "h1.diy-h1",
+        hide: "nav:has(.pagination)",
         category: "nsfw1"
     }, {
         name: "七仙子图片M",
@@ -8911,7 +8976,7 @@
         category: "nsfw1"
     }, {
         name: "Nude Models",
-        reg: () => !hasTouchEvent && fn.lh === "blognudemodels.blogspot.com",
+        reg: () => isPC && fn.lh === "blognudemodels.blogspot.com",
         init: () => fn.waitEle("#gadget-dock"),
         imgs: ".separator>a",
         capture: ".separator>a",
@@ -9457,7 +9522,7 @@
             p: "/galleries/"
         }),
         init: () => {
-            if (hasTouchEvent) {
+            if (isM) {
                 fn.addMutationObserver(() => fn.remove(".after_header"));
             }
         },
@@ -10542,7 +10607,7 @@
                     thums = thums.filter(e => !e.includes("/logos/"));
                     images = images.filter(e => !e.includes("/logos/"));
                 } else {
-                    if (hasTouchEvent) {
+                    if (isM) {
                         thums = [];
                         images = fn.getImgSrcArr(".popup-list img", dom);
                     } else {
@@ -10663,7 +10728,7 @@
         },
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
-            return hasTouchEvent ? fn.gae(".img>img[data-src]") : fn.gae("div.img[data-src]");
+            return isM ? fn.gae(".img>img[data-src]") : fn.gae("div.img[data-src]");
         },
         button: [4],
         insertImg: ["div[id^='album'].page-content", 2],
@@ -10678,7 +10743,7 @@
         },
         imgs: () => {
             videoSrcArray = fn.gae(".video source[type='video/mp4']").map(e => e.src);
-            return hasTouchEvent ? fn.gae(".img>img[data-src]").map(e => e.currentSrc) : fn.gae("div.img[data-src]");
+            return isM ? fn.gae(".img>img[data-src]").map(e => e.currentSrc) : fn.gae("div.img[data-src]");
         },
         button: [4],
         insertImg: [".entry-content", 2],
@@ -10906,7 +10971,7 @@
             let gid;
             let gid_url = fn.gu("a[href*='&gid']");
             if (gid_url) {
-                gid = fn.getUP("gid", gid_url);
+                gid = fn.getUSP("gid", gid_url);
             } else {
                 [, , gid] = fn.lp.split("/");
                 if (!Number(gid)) return [];
@@ -11287,7 +11352,7 @@
         imgs: () => {
             fn.showMsg(DL.str_05, 0);
             let cdn = "https://cdn.smutpond.com/";
-            let id = fn.getUP("uid");
+            let id = fn.getUSP("uid");
             return fetch(`https://api.smutpond.com/content/cm/${id}/?media_type=photo_gallery`).then(res => res.json()).then(json => {
                 thumbnailSrcArray = json.media_data.thumbs.map(e => cdn + e);
                 customTitle = json.title;
@@ -11415,7 +11480,7 @@
         name: "ViperGirls/PornCoven/ErotiCity",
         link: "https://viper.to/threads/10623260-Coser-UmekoJ-NieR-2B",
         host: ["vipergirls.to", "viper.to", "viperohilia.art", "vipervault.link", "viperbb.rocks", "viperkats.eu", "planetviper.club", "porncoven.com", "eroticity.net"],
-        reg: () => !hasTouchEvent && /^https?:\/\/(vipergirls\.to|viper\.to|viper\w+\.\w+|planetviper\.club|porncoven\.com|eroticity\.net)\/threads\//i.test(fn.url),
+        reg: () => isPC && /^https?:\/\/(vipergirls\.to|viper\.to|viper\w+\.\w+|planetviper\.club|porncoven\.com|eroticity\.net)\/threads\//i.test(fn.url),
         include: ".postdetails",
         init: () => {
             document.addEventListener("click", event => {
@@ -11450,7 +11515,7 @@
     }, {
         name: "Kitty Kats Forum",
         host: ["kitty-kats.net"],
-        reg: () => !hasTouchEvent && /^https?:\/\/kitty-kats\.net\/threads\//i.test(fn.url),
+        reg: () => isPC && /^https?:\/\/kitty-kats\.net\/threads\//i.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
                 cancelDefault(event);
@@ -11486,7 +11551,7 @@
         name: "Teen Photos",
         host: ["teenphotos.forumes.ru"],
         link: "https://teenphotos.forumes.ru/viewtopic.php?id=324",
-        reg: () => !hasTouchEvent && /^https?:\/\/teenphotos\.forumes\.ru\/viewtopic\.php\?id=\d+/.test(fn.url),
+        reg: () => isPC && /^https?:\/\/teenphotos\.forumes\.ru\/viewtopic\.php\?id=\d+/.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
                 cancelDefault(event);
@@ -11517,7 +11582,7 @@
         name: "XONLY",
         host: ["xonly8.com"],
         link: "https://xonly8.com/index.php?topic=229069.0",
-        reg: () => !hasTouchEvent && /^https?:\/\/xonly\d?\.com\/index\.php\?topic=/.test(fn.url),
+        reg: () => isPC && /^https?:\/\/xonly\d?\.com\/index\.php\?topic=/.test(fn.url),
         init: () => {
             document.addEventListener("click", event => {
                 cancelDefault(event);
@@ -11978,7 +12043,7 @@
         },
         imgs: () => {
             let max;
-            if (hasTouchEvent && fn.ge(".current-page")) {
+            if (isM && fn.ge(".current-page")) {
                 max = fn.gt(".current-page").match(/\d+/g).at(-1);
             } else {
                 max = fn.gt(".nav-links>*:last-child", 2) || 1
@@ -12017,7 +12082,7 @@
         },
         imgs: () => {
             let max;
-            if (hasTouchEvent && fn.ge(".current-page")) {
+            if (isM && fn.ge(".current-page")) {
                 max = fn.gt(".current-page").match(/\d+/g).at(-1);
             } else {
                 max = fn.gt(".nav-links>*:last-child", 2) || 1
@@ -12758,7 +12823,7 @@
         host: ["www.comic18h.com"],
         reg: /^https:\/\/www\.comic18h\.com\/chapter\/\d+\.html$/,
         imgs: async () => {
-            if (hasTouchEvent) {
+            if (isM) {
                 await fn.getNP("#readerarea>div", "//ul[@class='pagination']//a[text()='Next»']");
             } else {
                 await fn.getNP("#readerarea>div", ".pagination li.active+li>a:not(.prevnext)");
@@ -14305,7 +14370,7 @@
                     isAddKeyEvent = true;
                 }
                 if (options.icon == 1 || siteData.icon == 1) addFullPictureLoadButton();
-                if (!hasTouchEvent && ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
+                if (isPC && ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
             }, 1000);
         },
         customTitle: () => fn.ge("[placeholder=Japanese]")?.value || fn.ge("[placeholder='Alternative names']")?.value,
@@ -17808,58 +17873,30 @@
         customTitle: "h1",
         category: "comic"
     }, {
-        name: "MangaSee/MangaLife",
+        name: "Weeb Central",
         url: {
-            h: ["mangasee123.com", "manga4life.com"],
-            p: "/read-online/"
+            h: "weebcentral.com",
+            p: "/chapters/"
         },
-        init: () => fn.waitEle("#TopPage img[ng-src^=http]"),
-        box: ["#TopPage", 1],
-        imgs: () => {
-            let srcArr = [];
-            let ngSrc = fn.attr("#TopPage img", "ng-src");
-            let ps = fn.gae("#TopPage div[ng-repeat]").length;
-            return fn.arr(ps, (v, i) => ngSrc.replace(/^(.+\/\d+-)(\d+)(\.\w+)$/, `$1${String(i + 1).padStart(3, "0")}$3`));
-        },
+        init: () => fn.waitEle("main section img[alt^=Page]"),
+        box: ["section:has(img[alt^=Page])", 1],
+        imgs: () => fn.gae("main section img[alt^=Page]"),
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "#TopPage"], 2
+            ["#FullPictureLoadMainImgBox", 0, "section:has(img[alt^=Page])"], 2
         ],
         endColor: "white",
-        insertImgAF: (parent) => {
-            if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 3);
-            }
-        },
         autoDownload: [0],
         next: () => {
-            let nextIndex = null;
-            let buttons = fn.gae("#ChapterModal [ng-repeat]>button");
-            if (fn.lp.includes("-index-")) {
-                let [, s] = fn.lp.match(/-index-(\d)/);
-                buttons = buttons.filter(e => e.innerText.startsWith("S" + s));
-            }
-            if (buttons.some(e => e.innerText.startsWith("S1 ")) && !fn.lp.includes("-index-")) {
-                buttons = buttons.filter(e => e.innerText.startsWith("S1 "));
-            }
-            let buttonTexts = buttons.map(b => b.innerText);
-            let chapterIndexs = buttonTexts.map(t => t.match(/[\d\.]+$/)[0]).reverse();
-            let [, cNum] = fn.lp.match(/-chapter-(\d+)/);
-            for (let [i, v] of chapterIndexs.entries()) {
-                if (cNum == v) {
-                    if (chapterIndexs[i + 1] !== undefined) {
-                        nextIndex = chapterIndexs[i + 1];
-                    }
-                    break;
-                }
-            }
-            if (nextIndex !== null) {
-                return fn.lp.replace(/(-chapter-)(\d+)/, `$1${nextIndex}`);
-            }
-            return nextIndex;
+            let chapters_url = fn.attr("button[hx-get]", "hx-get");
+            return fn.fetchDoc(chapters_url).then(dom => {
+                let button = fn.ge("#selected_chapter", dom);
+                let next = button?.previousElementSibling;
+                return next ? next.href : null;
+            });
         },
         prev: 1,
-        customTitle: () => fn.title(" Page 1"),
+        customTitle: () => fn.title(" | Weeb Central"),
         category: "comic"
     }, {
         name: "MangaPark",
@@ -18167,7 +18204,7 @@
         },
         autoDownload: [0],
         next: () => {
-            let id = fn.getUP("id");
+            let id = fn.getUSP("id");
             let cOption = fn.gae("#selectEpisode>option").find(e => e.value.endsWith(id));
             let next = cOption?.nextElementSibling;
             if (next) {
@@ -18215,7 +18252,7 @@
         },
         autoDownload: [0],
         next: () => {
-            let id = fn.getUP("id");
+            let id = fn.getUSP("id");
             let cOption = fn.gae(".selectEpisode>option").find(e => e.value.endsWith(id));
             let next = cOption?.nextElementSibling;
             if (next) {
@@ -19580,7 +19617,7 @@ if ("xx" in window) {
             observer: "#FullPictureLoadMainImgBox>img",
             next: () => frameWindow.nextLink,
             title: (dom, frame) => {
-                if (hasTouchEvent) {
+                if (isM) {
                     return "第" + frame.ch + "集";
                 } else {
                     return fn.dt({
@@ -20203,6 +20240,13 @@ if ("xx" in window) {
                 }
             }
         },
+        preloadNext: (nextDoc, obj) => {
+            if (!/dm5|1kkk/.test(fn.lh)) {
+                let code = fn.gst("newImgs", nextDoc);
+                fn.script(code, 0, 1);
+                fn.picPreload(_unsafeWindow.newImgs, obj.customTitle(nextDoc), "next");
+            }
+        },
         infiniteScroll: true,
         category: "comic"
     }, {
@@ -20527,13 +20571,30 @@ if ("xx" in window) {
             let code = fn.gst("x6c", dom).trim().slice(26);
             return JSON.parse(fn.run(code).slice(11, -12));
         },
-        init: async () => {
-            await fn.waitEle("#manga img[src*=hamreus]");
+        init: () => {
             siteJson = _this.json();
+            let nextE = fn.ge("a[data-action='chapter.next']");
+            let prevE = fn.ge("a[data-action='chapter.prev']");
+            let c_url = fn.ge("#mangaTitle a").href;
+            if (siteJson.nextId == 0) {
+                nextE.innerText = "目录";
+                nextE.href = c_url;
+            } else {
+                nextE.href = c_url + siteJson.nextId + ".html";
+            }
+            if (siteJson.prevId == 0) {
+                prevE.innerText = "目录";
+                prevE.href = c_url;
+            } else {
+                prevE.href = c_url + siteJson.prevId + ".html";
+            }
         },
+        box: ["#manga", 2],
         imgs: (json = siteJson) => json.images.map(e => `https://i.hamreus.com${e}?e=${json.sl.e}&m=${json.sl.m}`),
         button: [4],
-        insertImg: ["#manga", 2],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgBF: () => fn.waitEle("#manga img[src*=hamreus]"),
+        insertImgAF: () => fn.css("#manga{display:none!important;}"),
         autoDownload: [0],
         next: () => siteJson.nextId == 0 ? null : fn.ge("#mangaTitle a").href + siteJson.nextId + ".html",
         prev: "//a[text()='上一章']",
@@ -22381,7 +22442,7 @@ if ("xx" in window) {
             },
             title: (dom) => {
                 let text = dom.title.replace(/在线漫画.+$/, "");
-                if (hasTouchEvent) {
+                if (isM) {
                     return text.split(" ").at(-1);
                 } else {
                     return text;
@@ -22465,7 +22526,7 @@ if ("xx" in window) {
                 }
             },
             title: (dom) => {
-                if (hasTouchEvent) {
+                if (isM) {
                     return fn.gt(".setnmh-bookname h2", 1, dom);
                 } else {
                     return fn.gt(".setnmh-bookname h1", 1, dom) + " - " + fn.gt(".setnmh-bookname h2", 1, dom);
@@ -23168,7 +23229,7 @@ if ("xx" in window) {
                     d: " - 如漫画"
                 });
                 let textArr = text.split("_");
-                if (hasTouchEvent) {
+                if (isM) {
                     return textArr[0];
                 } else {
                     return textArr[1] + " - " + textArr[0];
@@ -23253,7 +23314,7 @@ if ("xx" in window) {
             re: "#leftNav,#rightNav,.footer-toolbar",
             title: (dom) => {
                 let textArr = fn.ge("meta[name=keywords]", dom).content.replaceAll("\n", "").split(",");
-                if (hasTouchEvent) {
+                if (isM) {
                     return textArr[1];
                 } else {
                     return textArr[0] + " - " + textArr[1];
@@ -23331,7 +23392,7 @@ if ("xx" in window) {
                     t: dom.title,
                     d: "在线阅读-漫画网"
                 });
-                if (hasTouchEvent) {
+                if (isM) {
                     return text.split("_")[1];
                 } else {
                     return text.replace("_", " - ");
@@ -23416,7 +23477,7 @@ if ("xx" in window) {
         next: "//a[text()='下一章'][starts-with(@href,'/')] | //a[div[span[text()='下一章']]][starts-with(@href,'/')]",
         prev: "//a[text()='上一章'][starts-with(@href,'/')] | //a[div[span[text()='上一章']]][starts-with(@href,'/')]",
         customTitle: (dom = document, url = fn.lp) => {
-            if (hasTouchEvent) {
+            if (isM) {
                 let [, , , mid, cid] = url.split("/");
                 return fn.fetchDoc(`/home/details/${mid}`).then(detailsDom => {
                     let comic_name = fn.gt(".comic_name h1", 1, detailsDom);
@@ -23540,7 +23601,7 @@ if ("xx" in window) {
             ["#FullPictureLoadMainImgBox", 0, ".rd-article-wr,.comic-list"], 2
         ],
         insertImgAF: () => {
-            if (hasTouchEvent) {
+            if (isM) {
                 let $ = _unsafeWindow.jQuery;
                 $("body").on("click", ".FullPictureLoadImage", () => {
                     if ($(".top-tool-bar").css("top") == "0px") {
@@ -23657,7 +23718,7 @@ if ("xx" in window) {
                     t: dom.title,
                     d: "在线漫画阅读_风车漫画"
                 });
-                if (hasTouchEvent) {
+                if (isM) {
                     return text.split("_")[1];
                 } else {
                     return text.replace("_", " - ");
@@ -23767,7 +23828,7 @@ if ("xx" in window) {
                     qTcms_S_m_name,
                     qTcms_S_m_playm
                 } = frame;
-                if (hasTouchEvent) {
+                if (isM) {
                     return qTcms_S_m_playm;
                 } else {
                     return qTcms_S_m_name + " - " + qTcms_S_m_playm;
@@ -24303,7 +24364,7 @@ if ("xx" in window) {
         category: "none"
     }, {
         name: "拷貝漫畫 清除不給開啟開發人員工具",
-        reg: () => !hasTouchEvent && /^(www\.)?(copymanga\.tv|mangacopy\.com)$/.test(fn.lh) && !fn.ge("//title[text()='漫畫觀看']"),
+        reg: () => isPC && /^(www\.)?(copymanga\.tv|mangacopy\.com)$/.test(fn.lh) && !fn.ge("//title[text()='漫畫觀看']"),
         delay: 300,
         init: () => {
             fn.clearAllTimer(3);
@@ -24320,6 +24381,7 @@ if ("xx" in window) {
             p: /^\/h5\/comicContent\/\w+\//,
             i: 0
         },
+        SPA: true,
         xhrJson: (url = siteUrl) => {
             //let [name, id] = url.split("/").slice(-2);
             //let host = fn.lh.replace("www.", "");
@@ -24605,7 +24667,7 @@ if ("xx" in window) {
             title: (dom) => {
                 let m = fn.gt("h1.h2>a", 1, dom);
                 let c = fn.gt("h2.h4", 1, dom).replace(/\[|\]/g, "");
-                return hasTouchEvent ? c : m + " - " + c;
+                return isM ? c : m + " - " + c;
             },
             hide: ".comic-viewer-toc",
             preloadNextPage: 1
@@ -25192,7 +25254,7 @@ if ("xx" in window) {
             if (["www.magayuan.com", "m.magayuan.com"].some(h => h === fn.lh)) {
                 fn.css(".Introduct_Sub{background:url(https://m.idmzj.com/images/int_bg.png)!important;background-size:100% 100%!important}");
             }
-            if (hasTouchEvent) {
+            if (isM) {
                 if (["xmanhua", "yymanhua"].some(h => fn.lh.includes(h)) && fn.ge("//a[text()='章節']")) {
                     EClick("//a[text()='章節']");
                 }
@@ -25684,6 +25746,8 @@ if ("xx" in window) {
     }
 
     const hasTouchEvent = ("ontouchstart" in _unsafeWindow);
+    const isM = ("ontouchstart" in _unsafeWindow);
+    const isPC = !("ontouchstart" in _unsafeWindow);
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
@@ -25791,7 +25855,7 @@ if ("xx" in window) {
     let FancyboxOptions;
     let slideIndex = null;
 
-    if (hasTouchEvent) {
+    if (isM) {
         FancyboxOptions = {
             Hash: false,
             idle: false,
@@ -25975,17 +26039,17 @@ if ("xx" in window) {
                 str_75: "自動下載倒數秒數：",
                 str_76: "啟用當前漫畫站點規則",
                 str_77: "移動裝置雙擊前往下一頁",
-                str_78: "Fancybox燈箱功能",
+                str_78: "Fancybox&ViewerJs燈箱功能",
                 str_79: "頁面容器圖片縮放比例：",
                 str_80: "頁面容器圖片並排數量：",
                 str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
-                str_82: hasTouchEvent ? "取消" : "取消 (Esc)",
+                str_82: isM ? "取消" : "取消 (Esc)",
                 str_83: "重置設定",
                 str_84: "保存設定",
-                str_85: hasTouchEvent ? "腳本選項" : "腳本選項(*)",
-                str_86: hasTouchEvent ? "切換模式" : "切換模式(5)",
-                str_87: hasTouchEvent ? "比例縮放" : "比例縮放(-+)",
-                str_88: hasTouchEvent ? "取消縮放" : "取消縮放(.)",
+                str_85: isM ? "腳本選項" : "腳本選項(*)",
+                str_86: isM ? "切換模式" : "切換模式(5)",
+                str_87: isM ? "比例縮放" : "比例縮放(-+)",
+                str_88: isM ? "取消縮放" : "取消縮放(.)",
                 str_89: "暫停自動翻頁",
                 str_90: "啟用自動翻頁",
                 str_91: "初始化設定",
@@ -26001,10 +26065,10 @@ if ("xx" in window) {
                 str_101: "網址.txt已匯出",
                 str_102: "格式轉換中...",
                 str_103: "頁面容器預設使用並排模式",
-                str_104: hasTouchEvent ? "匯出圖址" : "匯出圖址(7)",
-                str_105: hasTouchEvent ? "複製圖址" : "複製圖址(1)",
-                str_106: hasTouchEvent ? "分頁畫廊" : "分頁畫廊(8)",
-                str_107: hasTouchEvent ? "一鍵下載" : "一鍵下載(3)",
+                str_104: isM ? "匯出圖址" : "匯出圖址(7)",
+                str_105: isM ? "複製圖址" : "複製圖址(1)",
+                str_106: isM ? "分頁畫廊" : "分頁畫廊(8)",
+                str_107: isM ? "一鍵下載" : "一鍵下載(3)",
                 str_108: "※ 訊息提示顯示的位置：",
                 str_109: {
                     c: "置中",
@@ -26031,7 +26095,7 @@ if ("xx" in window) {
                 str_125: "🔄 重置此網站儲存的所有腳本設定",
                 str_126: "🔄 重置腳本儲存的所有全局設定",
                 str_127: "右鍵：匯出圖址(7)",
-                str_128: hasTouchEvent ? "開啟收藏" : "開啟收藏(9)",
+                str_128: isM ? "開啟收藏" : "開啟收藏(9)",
                 str_129: "關閉收藏",
                 str_130: "編輯收藏",
                 str_131: "保存",
@@ -26044,7 +26108,7 @@ if ("xx" in window) {
                 str_138: "此網站禁用",
                 str_139: "自動聚圖至頁面容器",
                 str_140: "自動進入影子畫廊",
-                str_141: hasTouchEvent ? "影子畫廊" : "影子畫廊(G)",
+                str_141: isM ? "影子畫廊" : "影子畫廊(G)",
                 str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
                 str_144: "下一篇",
@@ -26061,9 +26125,9 @@ if ("xx" in window) {
                 str_155: "取消全選",
                 str_156: "重新載入",
                 str_157: "開始下載",
-                str_158: hasTouchEvent ? "篩選下載" : "篩選下載(F)",
-                str_159: hasTouchEvent ? "自訂函式" : "自訂函式(6)",
-                str_160: hasTouchEvent ? "插入圖片" : "插入圖片(1)",
+                str_158: isM ? "篩選下載" : "篩選下載(F)",
+                str_159: isM ? "自訂函式" : "自訂函式(6)",
+                str_160: isM ? "插入圖片" : "插入圖片(1)",
                 str_161: "載入線程：",
                 str_162: "圖片預載數：",
                 str_163: "🖼️ 開啟簡易模式",
@@ -26095,13 +26159,14 @@ if ("xx" in window) {
                 str_189: "單圖模式",
                 str_190: "條漫模式",
                 str_191: "預設開啟簡易模式",
+                str_192: "自動進入移動畫廊",
                 galleryMenu: {
-                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
-                    webtoon: hasTouchEvent ? "條漫模式" : "條漫模式 (4,+,-)",
-                    rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,B,R)",
-                    small: hasTouchEvent ? "小圖像模式" : "小圖像模式 (2,B,R)",
-                    single: hasTouchEvent ? "單圖像模式" : "單圖像模式 (1)",
-                    default: hasTouchEvent ? "預設模式" : "預設模式 (0,B,R)",
+                    horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
+                    webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
+                    rtl: isM ? "右至左模式" : "右至左模式 (3,B,R)",
+                    small: isM ? "小圖像模式" : "小圖像模式 (2,B,R)",
+                    single: isM ? "單圖像模式" : "單圖像模式 (1)",
+                    default: isM ? "預設模式" : "預設模式 (0,B,R)",
                 },
                 FancyboxWheel: {
                     z: "圖片縮放",
@@ -26211,17 +26276,17 @@ if ("xx" in window) {
                 str_75: "自动下载倒数秒数：",
                 str_76: "启用当前漫画站点规则",
                 str_77: "移动设备双击前往下一页",
-                str_78: "Fancybox灯箱功能",
+                str_78: "Fancybox&ViewerJs灯箱功能",
                 str_79: "页面容器图片缩放比例：",
                 str_80: "页面容器图片并排数量：",
                 str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
-                str_82: hasTouchEvent ? "取消" : "取消 (Esc)",
+                str_82: isM ? "取消" : "取消 (Esc)",
                 str_83: "重置设置",
                 str_84: "保存设置",
-                str_85: hasTouchEvent ? "脚本设置" : "脚本设置(*)",
-                str_86: hasTouchEvent ? "切换模式" : "切换模式(5)",
-                str_87: hasTouchEvent ? "比例缩放" : "比例缩放(-+)",
-                str_88: hasTouchEvent ? "取消缩放" : "取消缩放(.)",
+                str_85: isM ? "脚本设置" : "脚本设置(*)",
+                str_86: isM ? "切换模式" : "切换模式(5)",
+                str_87: isM ? "比例缩放" : "比例缩放(-+)",
+                str_88: isM ? "取消缩放" : "取消缩放(.)",
                 str_89: "暂停自动翻页",
                 str_90: "启用自动翻页",
                 str_91: "初始化设置",
@@ -26237,10 +26302,10 @@ if ("xx" in window) {
                 str_101: "网址.txt已导出",
                 str_102: "格式转换中...",
                 str_103: "页面容器默认使用并排模式",
-                str_104: hasTouchEvent ? "导出图址" : "导出图址(7)",
-                str_105: hasTouchEvent ? "拷贝图址" : "拷贝图址(1)",
-                str_106: hasTouchEvent ? "标签画廊" : "标签画廊(8)",
-                str_107: hasTouchEvent ? "一键下载" : "一键下载(3)",
+                str_104: isM ? "导出图址" : "导出图址(7)",
+                str_105: isM ? "拷贝图址" : "拷贝图址(1)",
+                str_106: isM ? "标签画廊" : "标签画廊(8)",
+                str_107: isM ? "一键下载" : "一键下载(3)",
                 str_108: "※ 讯息提示显示的位置：",
                 str_109: {
                     c: "置中",
@@ -26267,7 +26332,7 @@ if ("xx" in window) {
                 str_125: "🔄 重置此网站存储的所有脚本设置",
                 str_126: "🔄 重置脚本存储的所有全局设置",
                 str_127: "右键：导出图址(7)",
-                str_128: hasTouchEvent ? "打开收藏" : "打开收藏(9)",
+                str_128: isM ? "打开收藏" : "打开收藏(9)",
                 str_129: "关闭收藏",
                 str_130: "编辑收藏",
                 str_131: "保存",
@@ -26280,7 +26345,7 @@ if ("xx" in window) {
                 str_138: "此网站禁用",
                 str_139: "自动聚图至页面容器",
                 str_140: "自動進入影子畫廊",
-                str_141: hasTouchEvent ? "影子画廊" : "影子画廊(G)",
+                str_141: isM ? "影子画廊" : "影子画廊(G)",
                 str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
                 str_144: "下一篇",
@@ -26297,9 +26362,9 @@ if ("xx" in window) {
                 str_155: "取消全选",
                 str_156: "重新加载",
                 str_157: "开始下载",
-                str_158: hasTouchEvent ? "筛选下载" : "筛选下载(F)",
-                str_159: hasTouchEvent ? "定义函式" : "定义函式(6)",
-                str_160: hasTouchEvent ? "插入图片" : "插入图片(1)",
+                str_158: isM ? "筛选下载" : "筛选下载(F)",
+                str_159: isM ? "定义函式" : "定义函式(6)",
+                str_160: isM ? "插入图片" : "插入图片(1)",
                 str_161: "加载线程：",
                 str_162: "图片预载数：",
                 str_163: "🖼️ 开启简易模式",
@@ -26331,13 +26396,14 @@ if ("xx" in window) {
                 str_189: "单图模式",
                 str_190: "条漫模式",
                 str_191: "默认打开简易模式",
+                str_192: "自动进入移动画廊",
                 galleryMenu: {
-                    horizontal: hasTouchEvent ? "水平模式" : "水平模式 (5,B,R)",
-                    webtoon: hasTouchEvent ? "条漫模式" : "条漫模式 (4,+,-)",
-                    rtl: hasTouchEvent ? "右至左模式" : "右至左模式 (3,B,R)",
-                    small: hasTouchEvent ? "小图像模式" : "小图像模式 (2,B,R)",
-                    single: hasTouchEvent ? "单图像模式" : "单图像模式 (1)",
-                    default: hasTouchEvent ? "默认模式" : "默认模式 (0,B,R)",
+                    horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
+                    webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
+                    rtl: isM ? "右至左模式" : "右至左模式 (3,B,R)",
+                    small: isM ? "小图像模式" : "小图像模式 (2,B,R)",
+                    single: isM ? "单图像模式" : "单图像模式 (1)",
+                    default: isM ? "默认模式" : "默认模式 (0,B,R)",
                 },
                 FancyboxWheel: {
                     z: "图片缩放",
@@ -26441,17 +26507,17 @@ if ("xx" in window) {
                 str_75: "AutoDownload Countdown Sec：",
                 str_76: "Comic Site Rules Switch",
                 str_77: "Double Click Go To Next Page",
-                str_78: "Fancybox Plugin",
+                str_78: "Fancybox&ViewerJs Plugin",
                 str_79: "Image Zoom Ratio：",
                 str_80: "Number Of Images Side By Side：",
                 str_81: "Comic Category Fixed To 2",
-                str_82: hasTouchEvent ? "Cancel" : "Cancel (Esc)",
+                str_82: isM ? "Cancel" : "Cancel (Esc)",
                 str_83: "Reset",
                 str_84: "Save",
-                str_85: hasTouchEvent ? "Settings" : "Settings(*)",
-                str_86: hasTouchEvent ? "Toggle" : "ToggleMode(5)",
-                str_87: hasTouchEvent ? "Zoom" : "ToggleZoom(-+)",
-                str_88: hasTouchEvent ? "Cancel" : "CancelZoom(.)",
+                str_85: isM ? "Settings" : "Settings(*)",
+                str_86: isM ? "Toggle" : "ToggleMode(5)",
+                str_87: isM ? "Zoom" : "ToggleZoom(-+)",
+                str_88: isM ? "Cancel" : "CancelZoom(.)",
                 str_89: "Pause Automatic Page Turning",
                 str_90: "Enable Automatic Page Turning",
                 str_91: "Initialization Settings",
@@ -26467,10 +26533,10 @@ if ("xx" in window) {
                 str_101: "MediaURLs.txt Exported",
                 str_102: "Format Converting",
                 str_103: "Enable Side-By-Side Mode",
-                str_104: hasTouchEvent ? "Export" : "ExportURLs(7)",
-                str_105: hasTouchEvent ? "Copy" : "CopyURLs(1)",
-                str_106: hasTouchEvent ? "TabView" : "NewTabView(8)",
-                str_107: hasTouchEvent ? "Download" : "FastDownload(3)",
+                str_104: isM ? "Export" : "ExportURLs(7)",
+                str_105: isM ? "Copy" : "CopyURLs(1)",
+                str_106: isM ? "TabView" : "NewTabView(8)",
+                str_107: isM ? "Download" : "FastDownload(3)",
                 str_108: "※ Where the message appears：",
                 str_109: {
                     c: "Center",
@@ -26497,7 +26563,7 @@ if ("xx" in window) {
                 str_125: "🔄 Reset all script settings stored on this site",
                 str_126: "🔄 Reset all saved global settings",
                 str_127: "Right Click：Export URLs(7)",
-                str_128: hasTouchEvent ? "OpenFavor" : "OpenFavor(9)",
+                str_128: isM ? "OpenFavor" : "OpenFavor(9)",
                 str_129: "Close Favor",
                 str_130: "Edit Favor",
                 str_131: "save",
@@ -26511,7 +26577,7 @@ if ("xx" in window) {
                 str_139: "Page Content Auto Insert Images",
                 str_140: "Enable Shadow Gallery",
                 str_141: "Shadow Gallery",
-                str_141: hasTouchEvent ? "ShadowGallery" : "ShadowGallery(G)",
+                str_141: isM ? "ShadowGallery" : "ShadowGallery(G)",
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
@@ -26528,9 +26594,9 @@ if ("xx" in window) {
                 str_155: "Unselect All",
                 str_156: "Reload",
                 str_157: "Download",
-                str_158: hasTouchEvent ? "FilterDownload" : "FilterDownload(F)",
-                str_159: hasTouchEvent ? "Function" : "Function(6)",
-                str_160: hasTouchEvent ? "Insert Images" : "Insert Images(1)",
+                str_158: isM ? "FilterDownload" : "FilterDownload(F)",
+                str_159: isM ? "Function" : "Function(6)",
+                str_160: isM ? "Insert Images" : "Insert Images(1)",
                 str_161: "Threads：",
                 str_162: "Preload：",
                 str_163: "🖼️ Enable Simple Mode",
@@ -26562,13 +26628,14 @@ if ("xx" in window) {
                 str_189: "Single Image Mode",
                 str_190: "Webtoon Mode",
                 str_191: "Simple mode enabled by default",
+                str_192: "Enable Mobile Gallery",
                 galleryMenu: {
-                    horizontal: hasTouchEvent ? "Horizontal" : "Horizontal (5,B,R)",
-                    webtoon: hasTouchEvent ? "Webtoon" : "Webtoon (4,+,-)",
-                    rtl: hasTouchEvent ? "Right To Left" : "Right To Left (3,B,R)",
-                    small: hasTouchEvent ? "Small Image" : "Small Image (2,B,R)",
-                    single: hasTouchEvent ? "Single Image" : "Single Image (1)",
-                    default: hasTouchEvent ? "Default" : "Default (0,B,R)",
+                    horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
+                    webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
+                    rtl: isM ? "Right To Left" : "Right To Left (3,B,R)",
+                    small: isM ? "Small Image" : "Small Image (2,B,R)",
+                    single: isM ? "Single Image" : "Single Image (1)",
+                    default: isM ? "Default" : "Default (0,B,R)",
                 },
                 FancyboxWheel: {
                     z: "zoom",
@@ -26610,7 +26677,7 @@ if ("xx" in window) {
         lp: (() => _unsafeWindow.location.pathname)(),
         lh: (() => _unsafeWindow.location.hostname)(),
         ls: (() => _unsafeWindow.location.search)(),
-        getUP: (p, s = "s") => {
+        getUSP: (p, s = "s") => {
             if (s === "u") {
                 return new URL(document.location.href).searchParams.get(p);
             }
@@ -26662,9 +26729,9 @@ if ("xx" in window) {
             }
             if ("d" in obj) {
                 if (device === "pc") {
-                    checkD = !hasTouchEvent;
+                    checkD = isPC;
                 } else if (device === "m") {
-                    checkD = hasTouchEvent;
+                    checkD = isM;
                 }
                 if (!checkD) return false;
             }
@@ -28557,7 +28624,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadFastDownloadBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: hasTouchEvent ? DL.str_107 : DL.str_107 + ` | [ ${noVideoNum}P ]`,
+                    text: isM ? DL.str_107 : DL.str_107 + ` | [ ${noVideoNum}P ]`,
                     cfn: event => {
                         cancelDefault(event);
                         fastDownloadSwitch = true;
@@ -28614,7 +28681,7 @@ if ("xx" in window) {
                     }
                 }];
 
-                if (hasTouchEvent) {
+                if (isM) {
                     buttonObj[1] = {
                         id: "FullPictureLoadCopyURLBtn",
                         className: "FullPictureLoadPageButtonTop",
@@ -28705,7 +28772,7 @@ if ("xx" in window) {
             }
             if (videoSrcArray.length > 0) {
                 debug("\nfn.insertImg()插入圖片最後確認 videoSrcArray", videoSrcArray);
-                if (!hasTouchEvent && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1) {
+                if (isPC && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1) {
                     let dbtn = fn.ge("#FullPictureLoadFastDownloadBtn", fragment);
                     if (dbtn) {
                         dbtn.innerText = dbtn.innerText.replace("P", `P + ${videoSrcArray.length}V`);
@@ -28758,7 +28825,7 @@ if ("xx" in window) {
                             targetEle.parentNode.style.display = "block";
                             targetEle = targetEle.parentNode;
                         }
-                        if (isString(removeSelector)) fn.remove(removeSelector);
+                        if (isString(removeSelector)) await fn.remove(removeSelector);
                         if (siteData.msg != 0 && siteData.category != "comic") fn.showMsg(DL.str_18);
                     } else if (isString(insertTargetEle)) {
                         targetEle = fn.ge(insertTargetEle);
@@ -28770,7 +28837,9 @@ if ("xx" in window) {
                     }
                     let insertImgAF = siteData.insertImgAF;
                     if (isFn(insertImgAF)) insertImgAF(targetEle);
-                    fn.ge("#insertImgMenu")?.remove();
+                    if (isPC && ShowFullPictureLoadFixedMenu == 1) {
+                        fn.waitEle("#insertImgMenu").then(e => e.remove());
+                    }
                 } catch (error) {
                     fn.showMsg(DL.str_19, 3000);
                     console.error("\nfn.insertImg() ele參數錯誤，或用來定位插入的元素不存在。", error);
@@ -28816,7 +28885,9 @@ if ("xx" in window) {
                     let lastImg = imgs.at(-1);
                     fn.comicNextObserver.observe(lastImg);
                 }
-                fn.gae("#FullPictureLoadGoToFirstImage,#FullPictureLoadGoToLastImage").forEach(e => (e.style.display = "unset"));
+                if (options.icon == 1 || siteData.icon == 1) {
+                    fn.waitEle(["#FullPictureLoadGoToFirstImage", "#FullPictureLoadGoToLastImage"]).then(eles => eles.forEach(e => (e.style.display = "unset")));
+                }
                 if (options.fancybox == 1 && !("fancybox" in siteData) && ("Fancybox" in _unsafeWindow)) {
                     _unsafeWindow.Fancybox.bind("[data-fancybox='FullPictureLoadImageOriginal']", FancyboxOptions);
                 }
@@ -28840,7 +28911,7 @@ if ("xx" in window) {
                 await fn.delay(delayTime || 0);
                 let selector = siteData.imgs;
                 let imgsSrcArray = await getImgs(selector);
-                fn.insertImg(imgsSrcArray, insertSelector, insertMode);
+                await fn.insertImg(imgsSrcArray, insertSelector, insertMode);
             }
         },
         //返回選擇器的首個元素
@@ -29177,18 +29248,18 @@ if ("xx" in window) {
         //等待函式寫法
         wait: (callback, num = 300) => {
             if (!isFn(callback)) return;
-            debug("fn.wait()等待中...", String(callback));
+            debug("fn.wait()函式判斷等待中...", String(callback));
             let loopNum = 0;
             return new Promise(resolve => {
                 const loopFn = async () => {
                     let check = await callback(document, _unsafeWindow);
                     if (!!check) {
-                        debug("fn.wait()等待結束。");
+                        debug("fn.wait()函式判斷等待結束。", String(callback));
                         resolve(true);
                         return;
                     }
                     if (loopNum >= num) {
-                        debug("fn.wait()達循環上限。");
+                        debug("fn.wait()函式判斷達循環上限。", String(callback));
                         resolve(false);
                         return;
                     }
@@ -29204,8 +29275,10 @@ if ("xx" in window) {
         //等待元素
         waitEle: (selector, max = 200, dom = document) => {
             let loopNum = 0;
-            if (selector !== "body") {
-                debug("fn.waitEle()等待中...", selector);
+            let str = String(selector);
+            let isUI = ["insertImgMenu", "FullPictureLoad"].some(s => str.includes(s));
+            if (selector !== "body" && !isUI) {
+                debug(`fn.waitEle()等待"${String(selector)}"元素中...`);
             }
             return new Promise(resolve => {
                 let loop = setInterval(() => {
@@ -29218,18 +29291,18 @@ if ("xx" in window) {
                     } else if (isArray(selector)) {
                         check = selector.every(s => isEle(fn.ge(s, dom, dom)));
                         ele = selector.map(s => fn.gae(s, dom, dom));
-                        ele = ele.flat();
+                        ele = [...new Set(ele.flat())];
                     }
                     if (check) {
-                        if (selector !== "body") {
-                            debug("fn.waitEle()等待結束。");
+                        if (selector !== "body" && !isUI) {
+                            debug(`fn.waitEle()等待"${String(selector)}"元素結束。`);
                         }
                         clearInterval(loop);
                         resolve(ele);
                     }
                     if (loopNum >= max) {
                         clearInterval(loop);
-                        debug(`fn.waitEle()達循環上限，沒有出現"${selector}"元素。`);
+                        debug(`fn.waitEle()達循環上限，沒有出現"${String(selector)}"元素。`);
                         resolve(null);
                     }
                 }, 100);
@@ -29238,7 +29311,7 @@ if ("xx" in window) {
         //等待window環境變數
         waitVar: (key, max = 200) => {
             let loopNum = 0;
-            debug("fn.waitVar()等待中...", key);
+            debug(`fn.waitVar()等待"${String(key)}"環境變數中...`);
             return new Promise(resolve => {
                 let loop = setInterval(() => {
                     loopNum += 1;
@@ -29249,13 +29322,13 @@ if ("xx" in window) {
                         check = key.every(k => (k in _unsafeWindow));
                     }
                     if (check) {
-                        debug("fn.waitVar()等待結束。");
+                        debug(`fn.waitVar()等待"${String(key)}"環境變數結束。`);
                         clearInterval(loop);
                         resolve(true);
                     }
                     if (loopNum >= max) {
                         clearInterval(loop);
-                        debug(`fn.waitVar()達循環上限，沒有出現"${key}"屬性。`);
+                        debug(`fn.waitVar()等待環境變數達循環上限，沒有出現"${String(key)}"屬性。`);
                         resolve(false);
                     }
                 }, 100);
@@ -29975,7 +30048,7 @@ if ("xx" in window) {
         },
         //傳入選擇器參數為頁面圖片添加Fancybox5功能
         setFancybox: (selector) => {
-            fn.showMsg(DL.str_137);
+            if (!isOpenFilter) fn.showMsg(DL.str_137);
             const loadSrcs = (srcArr) => {
                 const oddNumberSrcs = srcArr.filter((img, index) => index % 2 == 0);
                 const evenNumberSrcs = srcArr.filter((img, index) => index % 2 != 0);
@@ -30016,7 +30089,7 @@ if ("xx" in window) {
             }
             let gallery = fn.gae("[data-fancybox]");
             let FancyboxOptions;
-            if (hasTouchEvent) {
+            if (isM) {
                 FancyboxOptions = {
                     Hash: false,
                     idle: false,
@@ -30575,7 +30648,7 @@ if ("xx" in window) {
                     let blob = data.response;
                     //debug("GM blob", blob);
                     //XBrowser Blob的type是""
-                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024 || hasTouchEvent && blob.type == "" && blob.size > 1024) {
+                    if (/\/octet-stream/.test(blob.type) && blob.size > 1024 || isM && blob.type == "" && blob.size > 1024) {
                         resolve({
                             load: "下載成功",
                             blob: blob,
@@ -30920,7 +30993,7 @@ if ("xx" in window) {
                     promiseBlobArray.push(promiseBlob);
                 }
             }
-            if (videoSrcArray.length > 0 && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1 && !hasTouchEvent) {
+            if (videoSrcArray.length > 0 && siteData.downloadVideo === true && FullPictureLoadCustomDownloadVideo == 1 && isPC) {
                 const pad = String(videosNum).length;
                 loopMsg = setInterval(() => {
                     fn.showMsg("Video Downloading...", 0);
@@ -30978,7 +31051,7 @@ if ("xx" in window) {
                         let blobData = data.blob;
                         let type = blobData.type;
                         try {
-                            if (/octet-stream/.test(type) || hasTouchEvent && type === "") {
+                            if (/octet-stream/.test(type) || isM && type === "") {
                                 let url = URL.createObjectURL(blobData);
                                 let check = await fn.checkImgStatus(url, 0);
                                 URL.revokeObjectURL(url);
@@ -31141,7 +31214,7 @@ if ("xx" in window) {
             const [insertTargetEle, insertMode] = siteData.insertImg;
             return fn.insertImg(srcArr, insertTargetEle, insertMode);
         }
-        if (hasTouchEvent) return;
+        if (isM) return;
         if (videoSrcArray.length > 0) {
             videosNum = videoSrcArray.length;
             srcArr = srcArr.concat(videoSrcArray);
@@ -31434,7 +31507,7 @@ if ("xx" in window) {
                 column = 6;
             } else {
                 column = 4;
-                hasTouchEvent ? width = "24%" : width = "24.4%";
+                isM ? width = "24%" : width = "24.4%";
             }
             let imgBox = document.createElement("div");
             imgBox.id = "FullPictureLoadImgBox";
@@ -31745,7 +31818,8 @@ if ("xx" in window) {
             `);
             newWindow.siteData = siteData;
             newWindow.fn = fn;
-            newWindow.hasTouchEvent = hasTouchEvent;
+            newWindow.isM = isM;
+            newWindow.isPC = isPC;
             newWindow.config = config;
             newWindow.lightGallery = newTabViewLightGallery
             newWindow.totalNumberOfElements = 0;
@@ -31776,11 +31850,11 @@ body {
     font-weight: 500;
     font-size: 14px;
     color: #000000;
-    width: ${hasTouchEvent ? "102px" : "144px"};
+    width: ${isM ? "102px" : "144px"};
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: ${hasTouchEvent ? "0px" : "-150px"};
+    left: ${isM ? "0px" : "-150px"};
     bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -31791,7 +31865,7 @@ body {
     }
 }
 .FixedMenuitem {
-    width: ${hasTouchEvent ? "90px" : "132px"};
+    width: ${isM ? "90px" : "132px"};
     height: 24px;
     line-height: 24px;
     overflow: hidden;
@@ -31893,7 +31967,7 @@ img.horizontal {
                 textContent: JqueryJS + FancyboxV5JS + `
 var FancyboxOptions = {};
 
-if (hasTouchEvent) {
+if (isM) {
     FancyboxOptions = {
         Hash: false,
         idle: false,
@@ -32109,7 +32183,7 @@ function addFixedMenu() {
 }
 addFixedMenu();
 
-if (hasTouchEvent) {
+if (isM) {
     document.querySelector("#MenuHorizontalItem").remove();
     let menu = document.querySelector("#FixedMenu");
     menu.style.display = "none";
@@ -32404,7 +32478,7 @@ function aspectRatio() {
             img.style.height = (document.body.clientHeight - num) + "px";
         }
     });
-    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && !hasTouchEvent) {
+    if (imgs[imgViewIndex] !== undefined && config.ViewMode != 4 && isPC) {
         if (config.shadowGalleryWheel != 2) {
             imgs.forEach(e => (e.style.border = ""));
             imgs[imgViewIndex].style.border = "solid #32a1ce";
@@ -32413,7 +32487,7 @@ function aspectRatio() {
     }
 }
 
-if (hasTouchEvent) {
+if (isM) {
     window.addEventListener("deviceorientation", () => {
         aspectRatio();
     });
@@ -32646,7 +32720,7 @@ if (config.ViewMode == 1) {
             return createIframeGallery();
         }
 
-        if (checkGeting() || hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || isM || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -33707,7 +33781,7 @@ img.horizontal {
     //創建框架畫廊
     const createIframeGallery = async () => {
 
-        if (checkGeting() || hasTouchEvent || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || isM || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -34973,7 +35047,7 @@ img.horizontal {
                 textContent: ViewerJs
             });
         }
-        const mainHtml = '<div id="FullPictureLoadFilterDownload" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483640 !important;"></div>';
+        const mainHtml = '<div id="FullPictureLoadFilterDownload" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483641 !important;"></div>';
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
         const shadowElement = ge("#FullPictureLoadFilterDownload");
@@ -35075,7 +35149,7 @@ button.mode.active {
 ul#image-list {
     display: block;
     max-width: 100%;
-    margin: ${hasTouchEvent ? "0 0 0 -1px" : "0 0 0 -2px"};
+    margin: ${isM ? "0 0 0 -1px" : "0 0 0 -2px"};
     padding: 4px 0 0 0;
 }
 li.image-item {
@@ -35123,8 +35197,8 @@ li.image-item p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
 #size,#move,#auto-exclude-error {
-    width: ${(!isFirefox && !hasTouchEvent) ? "16px" : "18px"};
-    height: ${(!isFirefox && !hasTouchEvent) ? "16px" : "18px"};
+    width: ${(!isFirefox && isPC) ? "16px" : "18px"};
+    height: ${(!isFirefox && isPC) ? "16px" : "18px"};
     vertical-align: text-bottom;
     margin: 0 4px 0 2px;
 }
@@ -35222,28 +35296,46 @@ img.webtoon {
 #scrollUp {
     position: fixed;
     z-index: 2147483647;
-    bottom: 90px;
+    bottom: 100px;
     right: 20px;
     color: rgba(143, 143, 143);
     font-size: 40px;
-    line-height: 30px;
-    font-weight: bold;
     width: 48px;
     height: 48px;
-    padding-right: 2px;
     text-align: center;
-    text-decoration: none;
+    align-content: center;
     overflow: hidden;
     border: #ccc 1px solid;
-    background: rgba(255, 255, 255);
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 12px;
     opacity: 0.8;
+    backdrop-filter: saturate(5) blur(100px);
 }
 #scrollUp.dark {
-    color: rgba(255, 255, 255);
+    color: rgba(255, 255, 255, 0.8);
     border: rgb(0, 204, 255) 1px solid;
-    background: #25242c;
+    background: rgb(37, 36, 44, 0.8);
     opacity: 0.5;
+}
+#scrollUpSVG {
+    width: 40px;
+    height: 40px;
+}
+#next {
+    display: block;
+    text-align: center;
+    margin-top: 5px;
+    padding: 10px 0;
+    border: solid #ccc;
+    border-radius: 6px;
+    color: rgb(0, 0, 0);
+    background-color: #7cffcb;
+    background-image: linear-gradient(315deg, #7cffcb 0%, #74f2ce 74%);
+    font-size: 26px;
+    line-height: 40px;
+    height: 40px;
+    text-decoration: unset;
+    cursor: pointer;
 }
 @media (max-width: 873px) {
     li.image-item {
@@ -35394,7 +35486,11 @@ img.webtoon {
         <button id="close">${DL.str_132}</button>
     </div>
 </div>
-<a id="scrollUp" class="hide" href="javascript:void(0);">︽</a>
+<a id="scrollUp" class="hide" href="javascript:void(0);">
+  <svg id="scrollUpSVG" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"></path>
+  </svg>
+</a>
         `;
 
         let inputs = [];
@@ -35429,7 +35525,7 @@ img.webtoon {
             startInput = null;
         };
 
-        if (hasTouchEvent) {
+        if (isM) {
             ge("label:has(>#move)", main).classList.add("hide");
             ge("#combineDownload", main).classList.add("hide");
             gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
@@ -35518,7 +35614,7 @@ img.webtoon {
                 _GM_setValue("exclude_ex_config", exclude_ex_config);
                 exclude_ex_fn();
                 addLis();
-                if (hasTouchEvent) {
+                if (isM) {
                     update_g_srcs();
                     addGalleryImgs();
                 }
@@ -35601,7 +35697,7 @@ img.webtoon {
         widthSelect.addEventListener("change", () => {
             widthNum = Number(widthSelect.value) * 100;
             updateFilterList();
-            if (hasTouchEvent) {
+            if (isM) {
                 update_g_srcs();
                 addGalleryImgs();
             }
@@ -35618,7 +35714,7 @@ img.webtoon {
         heightSelect.addEventListener("change", () => {
             heightNum = Number(heightSelect.value) * 100;
             updateFilterList();
-            if (hasTouchEvent) {
+            if (isM) {
                 update_g_srcs();
                 addGalleryImgs();
             }
@@ -35637,7 +35733,7 @@ img.webtoon {
             config.threading = Number(threadingSelect.value);
             saveConfig(config);
             addLis();
-            if (hasTouchEvent) {
+            if (isM) {
                 update_g_srcs();
                 addGalleryImgs();
             }
@@ -35712,6 +35808,10 @@ img.webtoon {
                     input.classList.add("select");
                     ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
                 });
+                if (isM) {
+                    update_g_srcs();
+                    addGalleryImgs();
+                }
             });
         });
         gae("#unselect-all", main).forEach(button => {
@@ -35722,6 +35822,10 @@ img.webtoon {
                     input.classList.remove("select");
                     ge("#filterNumber", main).innerText = DL.str_166 + "0";
                 });
+                if (isM) {
+                    update_g_srcs();
+                    addGalleryImgs();
+                }
             });
         });
         gae("#reverse-selection", main).forEach(button => {
@@ -35738,6 +35842,10 @@ img.webtoon {
                     const selects = gae(".select+.image", main);
                     ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
                 });
+                if (isM) {
+                    update_g_srcs();
+                    addGalleryImgs();
+                }
             });
         });
         gae("#exclude-error", main).forEach(button => button.addEventListener("click", event => {
@@ -35749,7 +35857,7 @@ img.webtoon {
             });
             const selects = gae(".select+.image", main);
             ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
-            if (hasTouchEvent) {
+            if (isM) {
                 update_g_srcs();
                 addGalleryImgs();
             }
@@ -35760,7 +35868,7 @@ img.webtoon {
             heightSelect.value = 0;
             ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
-            if (hasTouchEvent) {
+            if (isM) {
                 update_g_srcs();
                 addGalleryImgs();
             }
@@ -35797,7 +35905,7 @@ img.webtoon {
             heightSelect.value = 0;
             ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
-            if (hasTouchEvent) {
+            if (isM) {
                 update_g_srcs();
                 addGalleryImgs();
             }
@@ -35816,7 +35924,7 @@ img.webtoon {
             heightSelect.value = 0;
             ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
             addLis();
-            if (hasTouchEvent) {
+            if (isM) {
                 update_g_srcs();
                 addGalleryImgs();
             }
@@ -35833,7 +35941,7 @@ img.webtoon {
                 heightSelect.value = 0;
                 ge("#filterNumber", main).innerText = DL.str_166 + srcs.length;
                 addLis();
-                if (hasTouchEvent) {
+                if (isM) {
                     update_g_srcs();
                     addGalleryImgs();
                 }
@@ -35849,7 +35957,7 @@ img.webtoon {
             url: "data-src",
             viewed: (event) => instantScrollIntoView(event.detail.originalImage)
         };
-        if ("Viewer" in _unsafeWindow) {
+        if (options.fancybox == 1 && ("Viewer" in _unsafeWindow)) {
             Viewer = _unsafeWindow.Viewer;
             ViewerJsInstance = new Viewer(imageList, ViewerOptions);
         }
@@ -35873,7 +35981,7 @@ img.webtoon {
                     }
                     const selects = gae(".select+.image", main);
                     ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
-                    if (hasTouchEvent) {
+                    if (isM) {
                         update_g_srcs();
                         addGalleryImgs();
                     }
@@ -35913,7 +36021,7 @@ img.webtoon {
                 img.dataset.src = src;
                 img.onload = () => {
                     if (img.classList.contains("loaded")) {
-                        if (move == 0 || hasTouchEvent) {
+                        if (move == 0 || isM) {
                             p.innerText = img.dataset.width + " x " + img.dataset.height;
                         } else {
                             p.innerText = (index + 1) + "P | " + img.dataset.width + " x " + img.dataset.height;
@@ -35931,7 +36039,7 @@ img.webtoon {
                         li.classList.add("hide");
                         const selects = gae(".select+.image", main);
                         ge("#filterNumber", main).innerText = DL.str_166 + selects.length;
-                        if (hasTouchEvent) {
+                        if (isM) {
                             update_g_srcs();
                             addGalleryImgs();
                         }
@@ -35940,7 +36048,7 @@ img.webtoon {
                 };
                 loadImgList.push([simpleLoadImg, null, img]);
                 const p = document.createElement("p");
-                if (move == 0 || hasTouchEvent) {
+                if (move == 0 || isM) {
                     p.innerText = "? x ?";
                 } else {
                     p.innerText = (index + 1) + "P | ? x ?";
@@ -35954,7 +36062,7 @@ img.webtoon {
                 li.append(input);
                 li.append(img);
                 li.append(p);
-                if (move != 0 && !hasTouchEvent) {
+                if (move != 0 && isPC) {
                     li.setAttribute("draggable", true);
                     li.addEventListener("dragstart", drag_sort_start);
                     li.addEventListener("drop", drop_sort);
@@ -35976,10 +36084,10 @@ img.webtoon {
         };
         addLis();
 
-        if (!hasTouchEvent) return;
+        if (isPC) return;
 
         const gallery_imgBox = ge("#gallery_imgBox", main);
-        if ("Viewer" in _unsafeWindow) {
+        if (options.fancybox == 1 && ("Viewer" in _unsafeWindow)) {
             ViewerJsInstance_G = new Viewer(gallery_imgBox, ViewerOptions);
         }
         const addGalleryImgs = () => {
@@ -35996,6 +36104,16 @@ img.webtoon {
                 loadImgList.push([simpleLoadImg, null, img]);
                 fragment.append(img);
             }
+            if (isString(nextLink)) {
+                const next = document.createElement("div");
+                next.id = "next";
+                next.innerText = `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}`;
+                next.addEventListener("click", event => {
+                    cancelDefault(event);
+                    return setTimeout(() => (location.href = nextLink), 200);
+                });
+                fragment.append(next);
+            }
             gallery_imgBox.append(fragment);
             if (Viewer && ViewerJsInstance_G) {
                 ViewerJsInstance_G.update();
@@ -36005,6 +36123,10 @@ img.webtoon {
             queue.run();
         };
         addGalleryImgs();
+        if (options.mobileGallery == 1) {
+            let button = ge(".mobile_toggle_filter_gallery_btn", main);
+            EClick(button);
+        }
     };
 
     const getXY = (event) => {
@@ -36135,7 +36257,7 @@ img.webtoon {
             eventMenu.style.right = "64px";
         };
 
-        if (hasTouchEvent) {
+        if (isM) {
             img.addEventListener("touchstart", downEvent, {
                 passive: false,
                 capture: true
@@ -36279,7 +36401,7 @@ img.webtoon {
             eventImg.style.right = "auto";
         };
 
-        if (hasTouchEvent) {
+        if (isM) {
             img.addEventListener("touchstart", downEvent, {
                 passive: false,
                 capture: true
@@ -36690,6 +36812,10 @@ img.webtoon {
     <input id="ShadowGalleryMode" type="checkbox">
     <label>${DL.str_140}</label>
 </div>
+<div id="MobileGalleryModeDIV" style="width: 348px; display: flex;">
+    <input id="MobileGalleryMode" type="checkbox">
+    <label>${DL.str_192}</label>
+</div>
 <div style="width: 348px; display: flex;">
     <input id="autoExport" type="checkbox">
     <label>${DL.str_180}</label>
@@ -36893,12 +37019,15 @@ img.webtoon {
             ge("#viewModeDIV", main).style.display = "none";
             ge("#ColumnDIV", main).style.display = "none";
         }
-        if (hasTouchEvent) {
+        if (isM) {
             ge("#ShowFixedMenuDIV", main).style.display = "none";
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
             ge("#ShadowGalleryWheelDIV", main).style.display = "none";
             ge("#FancyboxWheelDIV", main).style.display = "none";
             ge("#ShadowGalleryloopViewDIV", main).style.display = "none";
+        }
+        if (isPC) {
+            ge("#MobileGalleryModeDIV", main).style.display = "none";
         }
         if (isBoolean(siteData.SPA)) {
             ge("#ShadowGalleryModeDIV", main).style.display = "none";
@@ -36929,20 +37058,21 @@ img.webtoon {
         siteData.category == "comic" ? ge("#Column", main).value = 2 : ge("#Column", main).value = options.column;
         ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
         ge("#ShadowGalleryMode", main).checked = options.shadowGallery == 1 ? true : false;
+        ge("#MobileGalleryMode", main).checked = options.mobileGallery == 1 ? true : false;
         ge("#autoExport", main).checked = options.autoExport == 1 ? true : false;
         ge("#ShadowGalleryWheel", main).value = config.shadowGalleryWheel;
         if (comicSwitch) {
             ge("#ComicDIV", main).style.display = "flex";
         }
         let autoDownload = siteData.autoDownload;
-        if (hasTouchEvent && showOptions || !autoDownload && showOptions) {
+        if (isM && showOptions || !autoDownload && showOptions) {
             fn.gae("#AutoDownloadDIV,#CountdownDIV", main).forEach(e => (e.style.display = "none"));
         }
-        if (isSimpleMode || !hasTouchEvent && showOptions || (hasTouchEvent && showOptions && !siteData.next)) {
+        if (isSimpleMode || isPC && showOptions || (isM && showOptions && !siteData.next)) {
             ge("#DoubleDIV", main).style.display = "none";
         }
         let downloadVideo = siteData.downloadVideo;
-        if (!!downloadVideo && downloadVideo === true && !hasTouchEvent) {
+        if (!!downloadVideo && downloadVideo === true && isPC) {
             ge("#CustomDownloadVideoDIV", main).style.display = "flex";
             ge("#CustomDownloadVideo", main).checked = FullPictureLoadCustomDownloadVideo == 1 ? true : false;
         }
@@ -36982,13 +37112,14 @@ img.webtoon {
             options.column = ge("#Column", main).value;
             options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
             options.shadowGallery = ge("#ShadowGalleryMode", main).checked == true ? 1 : 0;
+            options.mobileGallery = ge("#MobileGalleryMode", main).checked == true ? 1 : 0;
             options.autoExport = ge("#autoExport", main).checked == true ? 1 : 0;
             config.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
             saveConfig(config);
             if (siteData.category != "lazyLoad" && ("capture" in siteData) || isString(siteData.imgs) && !isArray(siteData.insertImg)) {
                 ge("#ShowEye", main).checked == true ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
             }
-            if (!!downloadVideo && downloadVideo === true && !hasTouchEvent) {
+            if (!!downloadVideo && downloadVideo === true && isPC) {
                 ge("#CustomDownloadVideo", main).checked == true ? localStorage.setItem("FullPictureLoadCustomDownloadVideo", 1) : localStorage.setItem("FullPictureLoadCustomDownloadVideo", 0);
             }
             let jsonStr = JSON.stringify(options);
@@ -37982,7 +38113,7 @@ a[data-fancybox]:hover {
         if ("css" in siteData && isString(siteData.css)) {
             fn.css(siteData.css);
         }
-        if ("mcss" in siteData && isString(siteData.mcss) && hasTouchEvent) {
+        if ("mcss" in siteData && isString(siteData.mcss) && isM) {
             fn.css(siteData.mcss);
         }
         if ("hide" in siteData && (isString(siteData.hide) || isArray(siteData.hide))) {
@@ -38200,7 +38331,7 @@ a[data-fancybox]:hover {
                     }
                 }
             };
-            if (hasTouchEvent && !!siteData.next && options.doubleTouchNext == 1) {
+            if (isM && !!siteData.next && options.doubleTouchNext == 1) {
                 document.addEventListener("dblclick", (event) => callback(event));
             }
             document.addEventListener("keydown", event => {
@@ -38340,7 +38471,7 @@ a[data-fancybox]:hover {
                 const [, insertMode] = insertImg;
                 if (insertMode == 1 && !autoStart || insertMode == 2 && !autoStart) {
                     if (options.autoInsert == 1) {
-                        if (options.shadowGallery == 1 && siteData.aeg != 0) {
+                        if (options.shadowGallery == 1 && siteData.aeg != 0 || options.mobileGallery == 1 && siteData.aeg != 0) {
                             await fn.immediateInsertImg();
                         } else {
                             fn.immediateInsertImg();
@@ -38359,6 +38490,7 @@ a[data-fancybox]:hover {
             }
         }
         if (options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
+            fn.hideMsg();
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 if (await siteData.SPA()) {
                     setTimeout(() => createShadowGallery(), 200);
@@ -38366,6 +38498,10 @@ a[data-fancybox]:hover {
             } else {
                 setTimeout(() => createShadowGallery(), 200);
             }
+        }
+        if (isM && !("SPA" in siteData) && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+            fn.hideMsg();
+            createFilterDownload();
         }
         if (options.autoExport == 1 && options.autoDownload != 1) {
             exportImgSrcText();
@@ -38386,7 +38522,7 @@ a[data-fancybox]:hover {
                 } else if (isString(setFancybox) && options.fancybox == 1) {
                     fn.setFancybox(setFancybox);
                 }
-            }, 2000);
+            }, 1500);
         }
     } catch (error) {
         console.error("圖片全載規則出錯", error);
@@ -38408,7 +38544,7 @@ a[data-fancybox]:hover {
         debug("\n列出未分類規則", noneData);
     }
 
-    if (!hasTouchEvent && showOptions && isArray(siteData.insertImg)) {
+    if (isPC && showOptions && isArray(siteData.insertImg)) {
         _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + DL.str_121 : "✔️ " + DL.str_121, () => {
             TurnOffImageNavigationShortcutKeys == 0 ? _GM_setValue("TurnOffImageNavigationShortcutKeys", 1) : _GM_setValue("TurnOffImageNavigationShortcutKeys", 0);
             location.reload();
@@ -38471,7 +38607,7 @@ a[data-fancybox]:hover {
     }
 
     //移動端手動模式頁面聚圖
-    if (hasTouchEvent && "insertImg" in siteData) {
+    if (isM && "insertImg" in siteData) {
         let timeId;
         const touchstartCB = event => {
             //console.log(event);
@@ -38739,7 +38875,7 @@ html,body {
             let ul = ge("#FavorUl", shadow);
             if (ul) {
                 ul.style.gridTemplateColumns = `${fn.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
-                if (hasTouchEvent) {
+                if (isM) {
                     if (verticalScreen) {
                         ul.style.width = "calc(100% - 5px)";
                     } else {
@@ -38748,7 +38884,7 @@ html,body {
                 }
             }
             let edit = ge("#editFavorDiv", shadow);
-            if (edit && hasTouchEvent) {
+            if (edit && isM) {
                 if (verticalScreen) {
                     edit.style.width = "calc(100% - 18px)";
                 } else {
@@ -38768,7 +38904,7 @@ html,body {
             let favorData = _GM_getValue("favorData", defaultFavor);
             let editFavorDiv = document.createElement("div");
             editFavorDiv.id = "editFavorDiv";
-            if (hasTouchEvent) {
+            if (isM) {
                 const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
                 if (verticalScreen) {
                     editFavorDiv.style.width = "calc(100% - 18px)";
@@ -38819,7 +38955,7 @@ html,body {
             let FavorUl = document.createElement("ul");
             FavorUl.id = "FavorUl";
             FavorUl.style.gridTemplateColumns = `${fn.arr(Math.floor(_unsafeWindow.innerWidth / 180), () => "1fr").join(" ")}`;
-            if (hasTouchEvent) {
+            if (isM) {
                 const verticalScreen = _unsafeWindow.innerHeight / _unsafeWindow.innerWidth > 1;
                 if (verticalScreen) {
                     FavorUl.style.width = "calc(100% - 5px)";
@@ -38945,7 +39081,7 @@ html,body {
                 category: "photo"
             };
             addFullPictureLoadButton();
-            if (!hasTouchEvent) {
+            if (isPC) {
                 addFullPictureLoadFixedMenu();
                 document.addEventListener("keydown", addKeyEvent);
             }
@@ -38964,7 +39100,7 @@ html,body {
             _GM_unregisterMenuCommand(menu_command_id_1);
             siteData = {};
             fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadFixedMenu");
-            if (!hasTouchEvent) {
+            if (isPC) {
                 document.removeEventListener("keydown", addKeyEvent);
             }
             _GM_unregisterMenuCommand(menu_command_id_3);
@@ -38984,7 +39120,7 @@ html,body {
 
     if (!isSimpleMode && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
         if (siteData.key != 0) {
-            if (!hasTouchEvent) {
+            if (isPC) {
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
             }
             if (!isAddKeyEvent) {
