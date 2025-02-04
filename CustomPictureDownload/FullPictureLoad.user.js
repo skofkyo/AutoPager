@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.3
+// @version            2025.2.4
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -836,7 +836,7 @@
         category: "nsfw2"
     }, {
         name: "秀色图集",
-        host: ["www.xstuji.com", "q.xiuse.xyz"],
+        host: ["www.xstuji.com", "q.xiuse.xyz", "ootaotu.com", "mm.ootaotu.com"],
         url: () => {
             let check = fn.checkUrl({
                 e: ["//a[text()='秀色图集']", "#top .top", "em:has(>.fa-image)", ".scot img[data-original]"]
@@ -1628,6 +1628,13 @@
         name: "丝袜室",
         host: ["www.siwashi.xyz"],
         reg: /^https?:\/\/www\.siwashi\.xyz\/\w+\/\d+\.html$/,
+        init: () => {
+            fn.gae(".entry-content p").forEach(e => {
+                if (!fn.ge("img", e)) {
+                    tempEles.push(e);
+                }
+            });
+        },
         imgs: () => {
             if (fn.ge("//div[contains(text(),'分页阅读')]")) {
                 fn.showMsg(DL.str_05, 0);
@@ -1640,6 +1647,7 @@
         },
         button: [4],
         insertImg: [".entry-content", 2],
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         autoDownload: [0],
         next: ".article-nav-prev a",
         prev: ".article-nav-next a",
@@ -1917,12 +1925,12 @@
                 _unsafeWindow.detectDevTools = null;
                 _unsafeWindow.onresize = null;
             }
-            fn.gae(".post-content>blockquote").forEach(e => tempEles.push(e));
+            tempEles = fn.gae(".post-content>blockquote");
         },
         imgs: ".post-content img",
         button: [4],
         insertImg: [".post-content", 2],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         customTitle: "h1.post-title",
         category: "nsfw1"
     }, {
@@ -2659,8 +2667,7 @@
             p: ".html",
             e: ".single-content"
         },
-        exclude: "元素",
-        init: () => fn.gae(".abstract,.down-form").forEach(e => tempEles.push(e)),
+        init: () => (tempEles = fn.gae(".abstract,.down-form")),
         imgs: () => {
             let pages = fn.ge(".page-links");
             if (pages) {
@@ -2672,7 +2679,7 @@
         },
         button: [4],
         insertImg: [".single-content", 2],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         autoDownload: [0],
         next: "a[rel=prev]",
         prev: "a[rel=next]",
@@ -2735,13 +2742,13 @@
         imgs: ".wp-posts-content img",
         button: [4],
         insertImg: [".wp-posts-content", 2],
-        insertImgAF: (parent) => {
+        insertImgAF: (_, bar) => {
             tempEles.forEach(t => {
                 let p = document.createElement("p");
                 p.innerText = t;
                 fragment.append(p);
             });
-            parent.firstChild.before(fragment);
+            bar.before(fragment);
         },
         autoDownload: [0],
         next: "//a[p[text()='上一篇']]",
@@ -2806,7 +2813,7 @@
         },
         button: [4],
         insertImg: [".article-content", 2],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         autoDownload: [0],
         next: ".article-nav-prev a",
         prev: ".article-nav-next a",
@@ -3673,17 +3680,16 @@
         imgs: "#image_div img",
         button: [4],
         insertImg: ["//p[img]", 2],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         customTitle: ".item_title>h1",
         hide: ".img-box",
         category: "nsfw1"
     }, {
         name: "Mei101",
-        host: ["www.mei101.com", "m.mei101.com"],
+        host: ["www.mei101.com", "m.mei101.com", "www.mei101.net", "m.mei101.net"],
         url: {
-            h: ".mei101.com",
+            e: ["//script[contains(text(),'var yaomei')]", "#image_div"],
             p: ".html",
-            e: "#image_div"
         },
         imgs: () => {
             let {
@@ -3752,8 +3758,8 @@
         },
         button: [4],
         insertImg: ["#content", 2],
-        insertImgAF: (parent) => {
-            parent.firstChild.before(...tempEles);
+        insertImgAF: (_, bar) => {
+            bar.before(...tempEles);
             fn.run("$(document).off()");
         },
         customTitle: () => fn.dt({
@@ -4280,14 +4286,16 @@
         category: "nsfw1"
     }, {
         name: "丝袜客",
-        host: ["siwake.cc"],
-        reg: /^https?:\/\/siwake\.cc\/post\//,
-        init: () => fn.gae(".Content>.newfujian").forEach(e => tempEles.push(e)),
+        url: {
+            h: "siwake.cc",
+            p: "/post/"
+        },
+        init: () => (tempEles = fn.gae(".Content>.newfujian")),
         imgs: ".Content>a",
         button: [4],
         insertImg: [".Content", 2],
         endColor: "white",
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         autoDownload: [0],
         next: "a.fas",
         prev: "a.next.fas",
@@ -6404,7 +6412,7 @@
         imgs: () => fn.getImgA(".pcontent-imgbox>img", ".post-links>a"),
         button: [4],
         insertImg: [".entry-content", 2],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         autoDownload: [0],
         next: ".post-pre a",
         prev: ".post-nextv a",
@@ -7175,14 +7183,14 @@
         insertImg: [
             [".pagination", 1, ".entry-inner>p:not(#FullPictureLoadEnd),.separator"], 2
         ],
-        insertImgAF: (parent) => {
+        insertImgAF: (_, bar) => {
             if (tempEles.length > 0) {
                 tempEles.forEach(t => {
                     let p = document.createElement("p");
                     p.innerText = t;
                     fragment.append(p);
                 });
-                parent.firstElementChild.before(fragment);
+                bar.before(fragment);
             }
         },
         customTitle: () => fn.dt({
@@ -7319,11 +7327,11 @@
         url: {
             h: "www.everiaclub.com"
         },
-        init: () => fn.gae(".mainleft h1").forEach(e => tempEles.push(e)),
+        init: () => (tempEles = fn.gae(".mainleft h1")),
         imgs: ".mainleft img",
         button: [4],
         insertImg: [".mainleft", 2],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         customTitle: ".mainleft h1",
         category: "nsfw2"
     }, {
@@ -8644,7 +8652,7 @@
         },
         button: [4],
         insertImg: [".td-post-content .tdb-block-inner", 2],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         go: 1,
         customTitle: "h1.tdb-title-text",
         css: ".tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
@@ -9177,7 +9185,7 @@
         },
         button: [4],
         insertImg: [".td-post-content .tdb-block-inner.td-fix-index", 2, 1000],
-        insertImgAF: (parent) => parent.firstChild.before(...tempEles),
+        insertImgAF: (_, bar) => bar.before(...tempEles),
         go: 1,
         customTitle: () => fn.gt(".tdb-title-text").replace(/\d+P[\d\s]+V|\d+P([\d\s\+P]+)?/, "").replaceAll("|", "-").trim(),
         hide: ".td-a-ad",
@@ -10156,9 +10164,9 @@
             let list = fn.lp.split("/").at(-1);
             let picNum;
             if (fn.lh.startsWith("m.")) {
-                [picNum] = document.title.split("–").at(-1).match(/\d+/);
+                [picNum] = document.title.split("–").at(-1).replaceAll(",", "").match(/\d+/);
             } else {
-                picNum = fn.gt(".ui_crumb_count");
+                picNum = fn.gt(".ui_crumb_count").replaceAll(",", "");
             }
             return _this.getVK(list, picNum);
         },
@@ -10580,9 +10588,12 @@
         category: "nsfw2"
     }, {
         name: "BITCHES GIRLS",
-        host: ["bitchesgirls.com"],
-        reg: /^https?:\/\/bitchesgirls\.com\/[^\/]+\/[^\/]+\/[^\/]+\/$/,
-        imgs: async () => {
+        url: {
+            h: "bitchesgirls.com",
+            p: /^\/[^\/]+\/[^\/]+\/[^\/]+\/$/,
+            d: "pc"
+        },
+        imgs: () => {
             fn.showMsg(DL.str_05, 0);
             const getUrls = (dom = document, pageUrl = siteUrl) => {
                 let images = [];
@@ -10607,13 +10618,8 @@
                     thums = thums.filter(e => !e.includes("/logos/"));
                     images = images.filter(e => !e.includes("/logos/"));
                 } else {
-                    if (isM) {
-                        thums = [];
-                        images = fn.getImgSrcArr(".popup-list img", dom);
-                    } else {
-                        thums = fn.gae(".albumgrid img[type=image]", dom).map(e => e.src);
-                        images = fn.gae(".albumgrid img[type=image]", dom).map(e => e.getAttribute("original"));
-                    }
+                    thums = fn.gae(".albumgrid img[type=image]", dom).map(e => e.src);
+                    images = fn.gae(".albumgrid img[type=image]", dom).map(e => e.getAttribute("original"));
                 }
                 return {
                     images,
@@ -15106,6 +15112,18 @@
         },
         imgs: "//article[@id='article']//a[img]",
         customTitle: "header>h2",
+        category: "hcomic"
+    }, {
+        name: "エロ漫画 ヌキブックス",
+        url: {
+            h: "nukibooks.com",
+            p: "/articles/"
+        },
+        init: () => fn.waitEle("#asg-in-page-push-styles"),
+        imgs: ".article-page-list img",
+        button: [4],
+        insertImg: [".article-page-list", 2],
+        customTitle: "h1.detail-ttl",
         category: "hcomic"
     }, {
         name: "Hentai2Read",
@@ -24075,6 +24093,102 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
+        name: "奇漫屋",
+        url: {
+            h: "www.mqzjw.com",
+            p: "/bookstt/",
+            d: "m"
+        },
+        init: () => fn.waitVar("CryptoJS"),
+        imgs: async () => {
+            const {
+                CryptoJS,
+                Mcpath,
+                jQuery: $
+            } = _unsafeWindow;
+            const decrypted_data = (data) => {
+                const key = CryptoJS.enc.Utf8.parse("TRHvYbpGlNFoOdLaXrKRYgvdGwGfjnJj");
+                const iv = CryptoJS.enc.Utf8.parse("kBKXQIpFYTDOHGLQlRUklPLtNPcBKSve");
+                const decrypted = CryptoJS.AES.decrypt(data, key, {
+                    'iv': iv,
+                    'mode': CryptoJS.mode.CBC
+                });
+                const pic_list = decrypted.toString(CryptoJS.enc.Utf8);
+                data = JSON.parse(pic_list);
+                return data;
+            };
+            const id = location.pathname.split("/").at(-1);
+            let page = 1;
+            const datas = [];
+            let loop = true;
+            fn.showMsg(DL.str_05, 0);
+            while (loop) {
+                await $.getJSON("//" + Mcpath.url + Mcpath.web + "index.php/api/data/pic?callback=?", {
+                    cid: id,
+                    page: page
+                }, (res) => {
+                    if (res.code == 1) {
+                        let data = decrypted_data(res.data);
+                        if (data.length > 0) {
+                            fn.showMsg(`${DL.str_06}${page}/???`, 0);
+                            datas.push(data);
+                            page++;
+                        } else {
+                            loop = false;
+                        }
+                    } else {
+                        loop = false;
+                    }
+                });
+            }
+            return datas.flat().map(e => e.img);
+        },
+        button: [4],
+        insertImg: [".comiclist", 2],
+        insertImgAF: () => {
+            const {
+                jQuery: $
+            } = _unsafeWindow;
+            fn.run("jQuery(window).off();");
+            fn.gae(".comic-chapter div[style]").forEach(e => {
+                let isT = ["投诉邮箱", "下载"].some(t => e.innerText.includes(t));
+                if (isT) {
+                    e.remove();
+                }
+            });
+            let click = false;
+            fn.ge(".comiclist").addEventListener("click", () => {
+                click ? click = false : click = true;
+                if (click) {
+                    $(".header").css("transform", "translateY(0%)");
+                    $(".bottom-bar").css("transform", "translateY(0%)");
+                } else {
+                    $(".header").css("transform", "translateY(-100%)");
+                    $(".bottom-bar").css("transform", "translateY(100%)");
+                }
+            });
+            if (isString(nextLink)) {
+                fn.addUrlHtml(nextLink, ".next_chapter", 1, "点击进入下一话");
+                fn.remove(".next_chapter");
+            }
+        },
+        autoDownload: [0],
+        next: () => {
+            let next = fn.ge(".j-rd-next[_href^='/bookstt/']");
+            return next ? next.getAttribute("_href") : null;
+        },
+        prev: ".j-rd-prev",
+        customTitle: () => {
+            let text = fn.title("漫画-免费在线看漫画-奇漫屋");
+            let textArr = text.split("-");
+            return textArr[1] + " - " + textArr[0];
+        },
+        hide: "#xiazai",
+        fancybox: {
+            blacklist: 1
+        },
+        category: "comic"
+    }, {
         name: "云端漫画",
         enable: 0,
         url: {
@@ -28592,16 +28706,17 @@ if ("xx" in window) {
             srcArr = [...new Set(srcArr)];
             let noVideoNum = srcArr.filter(src => !/youtube|\.mp4$|\.webm$/.test(src)).length;
             let buttonFn = siteData.button;
+            let buttonBar;
             if (isArray(buttonFn)) {
                 let [, customWidth, insertBr] = buttonFn;
-                let buttonDiv = document.createElement("div");
-                buttonDiv.id = "FullPictureLoadOptionsButtonParentDiv";
-                buttonDiv.style.width = "100%";
-                //buttonDiv.style.height = "42px";
-                buttonDiv.style.display = "inline-block";
-                buttonDiv.style.textAlign = "center";
+                buttonBar = document.createElement("div");
+                buttonBar.id = "FullPictureLoadOptionsButtonParentDiv";
+                buttonBar.style.width = "100%";
+                //buttonBar.style.height = "42px";
+                buttonBar.style.display = "inline-block";
+                buttonBar.style.textAlign = "center";
                 if (isNumber(insertBr)) {
-                    buttonDiv.style.marginTop = insertBr * 20 + "px";
+                    buttonBar.style.marginTop = insertBr * 20 + "px";
                 }
                 let width = "24%";
                 if (isString(customWidth)) width = customWidth;
@@ -28704,10 +28819,10 @@ if ("xx" in window) {
                     if (!!obj.title) button.title = obj.title;
                     if (!!obj.cfn) button.addEventListener("click", obj.cfn);
                     if (!!obj.mfn) button.addEventListener("mousedown", obj.mfn);
-                    buttonDiv.append(button);
+                    buttonBar.append(button);
                 };
                 [...buttonObj].forEach(obj => createButton(obj));
-                fragment.append(buttonDiv);
+                fragment.append(buttonBar);
             }
             let blackList = fancyboxBlackList();
             if (options.fancybox == 1 && thumbnailSrcArray.length > 0) {
@@ -28836,7 +28951,7 @@ if ("xx" in window) {
                         if (siteData.msg != 0 && siteData.category != "comic") fn.showMsg(DL.str_18);
                     }
                     let insertImgAF = siteData.insertImgAF;
-                    if (isFn(insertImgAF)) insertImgAF(targetEle);
+                    if (isFn(insertImgAF)) insertImgAF(targetEle, buttonBar);
                     if (isPC && ShowFullPictureLoadFixedMenu == 1) {
                         fn.waitEle("#insertImgMenu").then(e => e.remove());
                     }
@@ -32794,8 +32909,8 @@ if (config.ViewMode == 1) {
             fn.remove("#overflowYHidden");
             FullPictureLoadShadowGallery?.remove();
             isOpenGallery = false;
-            if (isCaptureMode && ge("#FullPictureLoadCaptureNum")?.innerText == 0) {
-                ge("#FullPictureLoadCaptureNum").innerText = srcs.length;
+            if (isCaptureMode) {
+                updateEyeNum(srcs.length);
             }
             if ("focus" in siteData) {
                 let selector = siteData.focus;
@@ -33891,8 +34006,8 @@ img.horizontal {
             fn.remove("#overflowYHidden");
             iframe.remove();
             isOpenGallery = false;
-            if (isCaptureMode && ge("#FullPictureLoadCaptureNum")?.innerText == 0) {
-                ge("#FullPictureLoadCaptureNum").innerText = srcs.length;
+            if (isCaptureMode) {
+                updateEyeNum(srcs.length);
             }
             if ("focus" in siteData) {
                 let selector = siteData.focus;
@@ -35750,6 +35865,9 @@ img.webtoon {
         gae("#close", main).forEach(button => {
             button.addEventListener("click", event => {
                 cancelDefault(event);
+                if (isCaptureMode) {
+                    updateEyeNum(full_srcs.length);
+                }
                 fn.remove("#overflowYHidden");
                 shadowElement.remove();
                 isOpenFilter = false;
@@ -36281,6 +36399,13 @@ img.webtoon {
             }
         }
 
+    };
+
+    const updateEyeNum = (num) => {
+        let numE = ge("#FullPictureLoadCaptureNum");
+        if (numE) {
+            numE.innerText = num;
+        }
     };
 
     //清除圖片縮放級別
@@ -38692,7 +38817,7 @@ a[data-fancybox]:hover {
         if (ge("#FullPictureLoadCaptureNum") && captureTotal != captureSrcArray.length) {
             isChangeNum = true;
             captureTotal = captureSrcArray.length;
-            ge("#FullPictureLoadCaptureNum").innerText = captureSrcArray.length;
+            updateEyeNum(captureTotal);
             await delay(100);
             isChangeNum = false;
             if (options.shadowGallery == 1 && siteData.aeg != 0) {
@@ -38706,9 +38831,10 @@ a[data-fancybox]:hover {
 
     async function captureSrcB(invalidPage = 0) {
         if (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || isFetching || FullPictureLoadShowEye == 0) return;
-        if (invalidPage === 1 && !!ge("#FullPictureLoadCaptureNum") && ge("#FullPictureLoadCaptureNum")?.innerText != 0) {
+        const numE = ge("#FullPictureLoadCaptureNum");
+        if (invalidPage === 1 && numE?.innerText != 0) {
             isChangeNum = true;
-            ge("#FullPictureLoadCaptureNum").innerText = 0;
+            updateEyeNum(0);
             await delay(100);
             isChangeNum = false;
             return;
@@ -38718,9 +38844,9 @@ a[data-fancybox]:hover {
         }
         let captureSrcArray = await getImgs(siteData.capture ?? siteData.imgs);
         let num = captureSrcArray.length;
-        if (ge("#FullPictureLoadCaptureNum")) {
+        if (numE) {
             isChangeNum = true;
-            ge("#FullPictureLoadCaptureNum").innerText = num;
+            updateEyeNum(num);
             await delay(100);
             isChangeNum = false;
             if (options.shadowGallery == 1 && siteData.aeg != 0) {
