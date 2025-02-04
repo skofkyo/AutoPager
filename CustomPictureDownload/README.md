@@ -11,7 +11,6 @@ FireFox 134.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Android
 ☆Edge Canary 134.0.3094.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-☆Kiwi Browser 124.0.6327.4 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Edge 131.0.2957.129 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Firefox for Android 134.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
@@ -205,7 +204,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         //插入圖片之前要執行的代碼
         code;
     },
-    insertImgAF: (parent) => { //參數parent是插入的圖片的父元素
+    insertImgAF: (parent, buttonBar) => { //參數parent是插入的圖片的父元素，參數buttonBar是頁面功能按鈕的容器元素
         //插入圖片之後要執行的代碼
         code;
     },
@@ -302,7 +301,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     insertImgBF: () => {
         code;
     },
-    insertImgAF: (parent) => {
+    insertImgAF: (parent, buttonBar) => {
         code;
     },
     go: 1,
@@ -2048,7 +2047,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mei101.com/xingganmeimei/">Mei101</a>
                 </td>
-                <td></td>
+                <td> <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mei101.txt">同格式網站22個</a></td>
             </tr>
             <tr>
                 <td>
@@ -3032,7 +3031,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://cyberdrop.me/">CyberDrop</a>
                 </td>
-                <td>手動插入圖片，需要知道檔案連結，例如：<a href="https://cyberdrop.me/a/gkQIiBxA">https://cyberdrop.me/a/gkQIiBxA</a>，<a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
+                <td>手動插入圖片，需要知道檔案連結，例如：<a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
             </tr>
             <tr>
                 <td>
@@ -3870,7 +3869,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.imagefap.com/">ImageFap</a>
                 </td>
-                <td><a href="https://www.imagefap.com/profile/SOMSIRISUK">SOMSIRISUK</a></td>
+                <td><a href="https://www.imagefap.com/profile/SOMSIRISUK">SOMSIRISUK</a>，<a href="https://beta.imagefap.com/">beta.imagefap.com</a></td>
             </tr>
             <tr>
                 <td>
@@ -3908,7 +3907,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://bitchesgirls.com/">BITCHES GIRLS</a>
                 </td>
-                <td>影片可匯出網址後用Motrix下載</td>
+                <td>只支持PC版，影片可匯出網址後用Motrix下載</td>
             </tr>
             <tr>
                 <td>
@@ -5103,6 +5102,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://nukibooks.com/">エロ漫画 ヌキブックス</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://hdporncomics.com/">HDpornComics</a>
                 </td>
                 <td></td>
@@ -6012,6 +6017,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://m.manhuapi.cc/">m.manhuapi.cc</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mqzjw.com/">奇漫屋</a>
+                </td>
+                <td>Mobile限定</td>
             </tr>
             <tr>
                 <td>
