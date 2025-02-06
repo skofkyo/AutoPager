@@ -3,19 +3,19 @@
 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/02/01
+2025/02/06
 PC
-Chrome 132.0.6834.160 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Chrome 133.0.6943.54 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Edge 132.0.2957.140 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 134.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 135.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
 ☆Edge Canary 134.0.3094.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Edge 131.0.2957.129 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Firefox for Android 134.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Yandex Browser 24.12.3.110 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+☆Firefox for Android 135.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 132.0.2957.129 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Yandex Browser 25.2.0.241 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 XBrowser 5.0.3
 ViaBrowser 6.2.0
 </pre>
@@ -67,7 +67,11 @@ iikmkjmpaadaobahmlepeloendndfphd
 Violentmonkey
 eeagobfjdenkkddmbclomhiblgggliao
 ScriptCat
-liilgpjgabokdklappibcjfablkpcekh</pre>
+liilgpjgabokdklappibcjfablkpcekh
+uBlock Origin
+odfafepnkmbhccpbejgmiehpchacaeak
+User-Agent Switcher and Manager
+cnjkedgepfdpdbnepgmajmmjdjkjnifa</pre>
     </li>
 </ul>
 <h1>提醒：</h1>
@@ -717,15 +721,16 @@ delay(Number);
 <pre>
 //等待元素async/await
 //間隔100毫秒判斷一次
-//有元素返回元素，選擇器為陣列返回元素陣列，超過循環次數返回null。
+//有元素返回元素，選擇器參數為陣列時返回元素陣列，超過循環次數返回null。
 //max，循環的次數
 await fn.waitEle("selector");
 await fn.waitEle("selector", max = 200, doc = document);
 fn.waitEle(String or Array, Number, HTMLDocument or HTMLElement);
 </pre>
 <pre>
-//等待window環境變數
+//等待window環境變數，需要等待多個變數時參數為陣列
 //max，循環的次數
+//
 await fn.waitVar("variable");
 await fn.waitVar("variable", max = 200);
 fn.waitVar(String or Array [String], Number);
@@ -5980,11 +5985,23 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td>SPA網頁，手動插入圖片</td>
             </tr>
-           <tr>
+            <tr>
                 <td>
-                    <a href="https://www.everydaymanga.com/">天天漫画</a>
+                    <a href="https://www.ortzn.com/">天天漫画</a>
                 </td>
-                <td><a href="https://www.manhuazhan.com/">漫画站</a></td>
+                <td><a href="https://www.smkj88.com/">新新漫画</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.rcirr.com/">爱漫画</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manhuazhan.com/">漫画站</a>
+                </td>
+                <td><a href="https://www.everydaymanga.com/">天天漫画</a></td>
             </tr>
             <tr>
                 <td>
@@ -6022,7 +6039,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mqzjw.com/">奇漫屋</a>
                 </td>
-                <td>Mobile限定</td>
+                <td>Mobile IOS限定，Android需要偽裝成IOS User Agent才能取得整個章節的圖片，<a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a></td>
             </tr>
             <tr>
                 <td>
