@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.4
+// @version            2025.2.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4300,7 +4300,6 @@
         next: "a.fas",
         prev: "a.next.fas",
         customTitle: ".title",
-        mcss: "#wrapper .single{padding:0!important}",
         category: "nsfw1"
     }, {
         name: "丝袜客 分類自動翻頁",
@@ -7634,11 +7633,13 @@
         name: "エロ画像まとめ",
         host: ["geinou-nude.com"],
         reg: /^https?:\/\/geinou-nude\.com\/[^\/]+\/(#.*)?$/,
+        init: () => fn.addMutationObserver(() => fn.remove(".widgetarea_sp,.widget_execphp,.adContainer")),
         imgs: ".post_thum>img,.post_content a[href*='/uploads/']",
         autoDownload: [0],
         next: "a.nav_link_l",
         prev: "a.f_row_r",
         customTitle: "h1.post_title",
+        hide: ".widgetarea_sp,.widget_execphp,.adContainer",
         setFancybox: true,
         category: "nsfw2"
     }, {
@@ -23484,6 +23485,47 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "天天漫画",
+        host: ["www.ortzn.com", "m.ortzn.com", "www.smkj88.com", "m.smkj88.com"],
+        url: {
+            t: ["天天漫画", "新新漫画"],
+            p: ["/ttmanhua/", "/88comics/"]
+        },
+        imgs: ".chapter-content img,.hide-scrollbars img",
+        button: [4],
+        insertImg: [".chapter-content,.hide-scrollbars", 2],
+        next: "a[href$='html']:has(>.icon-xiayihua),a[href$=html]:has(>.icon-chapter-right)",
+        prev: "a[href$='html']:has(>.icon-shangyihua),a[href$=html]:has(>.icon-chapter-left)",
+        customTitle: (dom = document) => {
+            if (fn.lp.includes("88comics")) {
+                return fn.gt(".header-center a:nth-child(2)", 1, dom) ?? fn.attr(".chapter-footer a", "alt", dom) + " - " + fn.gt(".header-center span,h1.title", 1, dom);
+            }
+            return fn.gt(".title a[title]", 1, dom) ?? fn.attr(".chapter-tool-box a", "alt", dom) + " - " + fn.gt(".title .active,h1.title", 1, dom);
+        },
+        preloadNext: true,
+        category: "comic"
+    }, {
+        name: "爱漫画",
+        url: {
+            h: "www.rcirr.com",
+            p: "/read_"
+        },
+        imgs: ".acgn-reader-chapter__item-box img, .comic-list img",
+        next: (dom = document) => {
+            let next = fn.ge("#js_pageNextBtn[_href$=html],li.next-chapter[_href$=html]", dom);
+            return next ? next.getAttribute("_href") : null;
+        },
+        prev: "#js_pagePrevBtn[_href$=html],li.prev-chapter[_href$=html]",
+        customTitle: (dom = document) => {
+            if (isM) {
+                return dom.title.split("漫画")[0] + " - " + fn.gt(".comic-name", 1, dom);
+            } else {
+                return fn.gt("#crumbComicLink", 1, dom) + " - " + fn.gt("#js_headChapterName", 1, dom);
+            }
+        },
+        preloadNext: true,
+        category: "comic"
+    }, {
+        name: "天天漫画",
         url: {
             h: "www.everydaymanga.com",
             e: "//script[contains(text(),'newImgs')]"
@@ -23756,7 +23798,10 @@ if ("xx" in window) {
             e: "//script[contains(text(),'qTcms_S_m_murl_e')]",
             i: 0
         },
-        init: "document.onkeydown=null",
+        init: () => {
+            fn.remove(".visible-xs");
+            fn.run("document.onkeydown=null");
+        },
         imgs: () => {
             const {
                 base64_decode,
@@ -23785,7 +23830,7 @@ if ("xx" in window) {
         infiniteScroll: true,
         css: ".action-list li{width:50% !important}",
         mcss: ".container,.content-body{padding:0px !important}",
-        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3),.visible-xs",
+        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3)",
         category: "comic"
     }, {
         name: "漫画160/非常爱漫新站 自動翻頁",
@@ -23806,6 +23851,7 @@ if ("xx" in window) {
             return fn.createImgArray(srcs);
         },
         init: async () => {
+            fn.remove(".visible-xs");
             let imgs = _this.getImgs();
             let tE = fn.createImgBox("//td[//img[@onclick]] | //div[@class='UnderPage']", 2);
             fn.remove("//td[//img[@onclick]] | //div[@class='UnderPage']");
@@ -23870,14 +23916,20 @@ if ("xx" in window) {
         },
         css: ".action-list li{width:50% !important}",
         mcss: ".container,.content-body{padding:0px !important}",
-        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3),li:has(>#prev),li:has(>.curPage),li:has(>#k_next),.visible-xs",
+        hide: "body>a[target],#action>ul>li:nth-child(n+2):nth-child(-n+3),li:has(>#prev),li:has(>.curPage),li:has(>#k_next)",
         category: "comic autoPager"
     }, {
         name: "非常爱漫新站 AD",
         url: {
-            h: "www.veryim.com",
-            p: "/manhua/"
+            h: "www.veryim.com"
         },
+        init: () => fn.addMutationObserver(() => {
+            fn.gae(".visible-xs").forEach(e => {
+                if (e.innerText.includes("广而告之")) {
+                    e.remove();
+                }
+            });
+        }),
         hide: "body>a[target]",
         category: "ad"
     }, {
@@ -24099,38 +24151,56 @@ if ("xx" in window) {
             p: "/bookstt/",
             d: "m"
         },
-        init: () => fn.waitVar("CryptoJS"),
-        imgs: async () => {
+        init: () => {
+            fn.addMutationObserver(() => fn.remove([
+                "//div[a[contains(text(),'下载')]]",
+                "//div[contains(text(),'下载')]",
+                "//div[contains(text(),'投诉邮箱')]",
+                "#alertBox",
+                "#xiazai"
+            ]));
+            return fn.waitVar("CryptoJS");
+        },
+        decrypted_data: (data) => {
             const {
                 CryptoJS,
+            } = _unsafeWindow;
+            const key = CryptoJS.enc.Utf8.parse("TRHvYbpGlNFoOdLaXrKRYgvdGwGfjnJj");
+            const iv = CryptoJS.enc.Utf8.parse("kBKXQIpFYTDOHGLQlRUklPLtNPcBKSve");
+            const decrypted = CryptoJS.AES.decrypt(data, key, {
+                'iv': iv,
+                'mode': CryptoJS.mode.CBC
+            });
+            const pic_list = decrypted.toString(CryptoJS.enc.Utf8);
+            data = JSON.parse(pic_list);
+            return data;
+        },
+        imgs: async (url = fn.lp, msg = 1) => {
+            const {
                 Mcpath,
                 jQuery: $
             } = _unsafeWindow;
-            const decrypted_data = (data) => {
-                const key = CryptoJS.enc.Utf8.parse("TRHvYbpGlNFoOdLaXrKRYgvdGwGfjnJj");
-                const iv = CryptoJS.enc.Utf8.parse("kBKXQIpFYTDOHGLQlRUklPLtNPcBKSve");
-                const decrypted = CryptoJS.AES.decrypt(data, key, {
-                    'iv': iv,
-                    'mode': CryptoJS.mode.CBC
-                });
-                const pic_list = decrypted.toString(CryptoJS.enc.Utf8);
-                data = JSON.parse(pic_list);
-                return data;
-            };
-            const id = location.pathname.split("/").at(-1);
+            const id = url.split("/").at(-1);
             let page = 1;
             const datas = [];
             let loop = true;
-            fn.showMsg(DL.str_05, 0);
+            let temp = "";
+            if (msg === 1) fn.showMsg(DL.str_05, 0);
             while (loop) {
                 await $.getJSON("//" + Mcpath.url + Mcpath.web + "index.php/api/data/pic?callback=?", {
                     cid: id,
                     page: page
                 }, (res) => {
                     if (res.code == 1) {
-                        let data = decrypted_data(res.data);
+                        if (temp != res.data) {
+                            temp = res.data;
+                        } else if (temp == res.data) {
+                            loop = false;
+                            return;
+                        }
+                        let data = _this.decrypted_data(res.data);
                         if (data.length > 0) {
-                            fn.showMsg(`${DL.str_06}${page}/???`, 0);
+                            if (msg === 1) fn.showMsg(`${DL.str_06}${page}/???`, 0);
                             datas.push(data);
                             page++;
                         } else {
@@ -24150,21 +24220,17 @@ if ("xx" in window) {
                 jQuery: $
             } = _unsafeWindow;
             fn.run("jQuery(window).off();");
-            fn.gae(".comic-chapter div[style]").forEach(e => {
-                let isT = ["投诉邮箱", "下载"].some(t => e.innerText.includes(t));
-                if (isT) {
-                    e.remove();
-                }
-            });
-            let click = false;
-            fn.ge(".comiclist").addEventListener("click", () => {
-                click ? click = false : click = true;
-                if (click) {
-                    $(".header").css("transform", "translateY(0%)");
-                    $(".bottom-bar").css("transform", "translateY(0%)");
-                } else {
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                const st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
                     $(".header").css("transform", "translateY(-100%)");
                     $(".bottom-bar").css("transform", "translateY(100%)");
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
+                    $(".header").css("transform", "translateY(0%)");
+                    $(".bottom-bar").css("transform", "translateY(0%)");
+                    lastScrollTop = st;
                 }
             });
             if (isString(nextLink)) {
@@ -24178,16 +24244,32 @@ if ("xx" in window) {
             return next ? next.getAttribute("_href") : null;
         },
         prev: ".j-rd-prev",
-        customTitle: () => {
-            let text = fn.title("漫画-免费在线看漫画-奇漫屋");
+        customTitle: (dom = document) => {
+            let text = dom.title.replace("漫画-免费在线看漫画-奇漫屋", "");
             let textArr = text.split("-");
             return textArr[1] + " - " + textArr[0];
         },
-        hide: "#xiazai",
+        preloadNext: async (nextDoc) => {
+            let srcs = await _this.imgs(nextLink, 0);
+            fn.picPreload(srcs, _this.customTitle(nextDoc), "next");
+        },
         fancybox: {
             blacklist: 1
         },
         category: "comic"
+    }, {
+        name: "奇漫屋AD",
+        url: {
+            h: "www.mqzjw.com",
+            d: "m"
+        },
+        init: () => fn.addMutationObserver(() => fn.remove([
+            "//div[div[contains(text(),'下载')]]",
+            "//div[a[contains(text(),'下载')]]",
+            "#alertBox",
+            "#xiazai"
+        ])),
+        category: "ad"
     }, {
         name: "云端漫画",
         enable: 0,
@@ -26690,7 +26772,6 @@ if ("xx" in window) {
                 str_138: "This Website Is Disabled",
                 str_139: "Page Content Auto Insert Images",
                 str_140: "Enable Shadow Gallery",
-                str_141: "Shadow Gallery",
                 str_141: isM ? "ShadowGallery" : "ShadowGallery(G)",
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
@@ -26739,8 +26820,8 @@ if ("xx" in window) {
                 str_186: "More Menu",
                 str_187: "Create a folder in compressed file",
                 str_188: "Mobile Gallery",
-                str_189: "Single Image Mode",
-                str_190: "Webtoon Mode",
+                str_189: "Single",
+                str_190: "Webtoon",
                 str_191: "Simple mode enabled by default",
                 str_192: "Enable Mobile Gallery",
                 galleryMenu: {
@@ -32828,8 +32909,10 @@ if (config.ViewMode == 1) {
         }
     };
 
+    const hidePageScrollbarY = () => fn.css("html,body{overflow-y:hidden !important}", "overflowYHidden");
+
     //創建影子畫廊
-    const createShadowGallery = async () => {
+    const createShadowGallery = async (srcs_array = null) => {
 
         if (("fancybox" in siteData) || ("gallery" in siteData && siteData.gallery == 1)) {
             return createIframeGallery();
@@ -32840,7 +32923,9 @@ if (config.ViewMode == 1) {
         isOpenGallery = true;
 
         let srcs;
-        if ("SPA" in siteData) {
+        if (isArray(srcs_array)) {
+            srcs = srcs_array;
+        } else if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
             srcs = await getImgs(selector);
         } else if (!("capture" in siteData)) {
@@ -32906,7 +32991,7 @@ if (config.ViewMode == 1) {
             _unsafeWindow.removeEventListener("resize", aspectRatio);
             _unsafeWindow.removeEventListener("keydown", kEvent);
             //gae(hideSelector).forEach(e => (e.style.display = ""));
-            fn.remove("#overflowYHidden");
+            if (!isOpenFilter) fn.remove("#overflowYHidden");
             FullPictureLoadShadowGallery?.remove();
             isOpenGallery = false;
             if (isCaptureMode) {
@@ -33334,11 +33419,7 @@ if (config.ViewMode == 1) {
         //        transform: translate(138px);
         //        transition: all .2s ease-in-out;
         //    }
-        fn.css(`
-html,body {
-    overflow-y: hidden !important;
-}
-        `, "overflowYHidden");
+        hidePageScrollbarY();
 
         const style = createStyle(`
 p#imgBox {
@@ -33894,14 +33975,16 @@ img.horizontal {
     };
 
     //創建框架畫廊
-    const createIframeGallery = async () => {
+    const createIframeGallery = async (srcs_array = null) => {
 
         if (checkGeting() || isM || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
         let srcs;
-        if ("SPA" in siteData) {
+        if (isArray(srcs_array)) {
+            srcs = srcs_array;
+        } else if ("SPA" in siteData) {
             let selector = siteData.capture ?? siteData.imgs;
             srcs = await getImgs(selector);
         } else if (!("capture" in siteData)) {
@@ -34003,7 +34086,7 @@ img.horizontal {
             }
             _unsafeWindow.removeEventListener("resize", aspectRatio);
             //gae(hideSelector).forEach(e => (e.style.display = ""));
-            fn.remove("#overflowYHidden");
+            if (!isOpenFilter) fn.remove("#overflowYHidden");
             iframe.remove();
             isOpenGallery = false;
             if (isCaptureMode) {
@@ -34429,11 +34512,7 @@ img.horizontal {
             dom.addEventListener("keydown", kEvent);
         }
 
-        fn.css(`
-html,body {
-    overflow-y: hidden !important;
-}
-        `, "overflowYHidden");
+        hidePageScrollbarY();
         _GM_addElement(dom.head, "style", {
             textContent: `
 p#imgBox {
@@ -35051,7 +35130,7 @@ img.horizontal {
     };
 
     //創建篩選下載
-    const createFilterDownload = async () => {
+    const createFilterUI = async () => {
 
         if (checkGeting() || isDragging || isOpenFilter) return;
 
@@ -35169,11 +35248,7 @@ img.horizontal {
         const shadow = shadowElement.attachShadow({
             mode: "closed"
         });
-        fn.css(`
-html,body {
-    overflow: hidden !important;
-}
-        `, "overflowYHidden");
+        hidePageScrollbarY();
         const style = createStyle(`
 #main {
     font-size: 14px !important;
@@ -35540,14 +35615,14 @@ img.webtoon {
     </div>
     <div class="buttons">
         <button class="mobile_toggle_filter_gallery_btn hide">${DL.str_188}</button>
-        <button id="gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
+        <button id="shadow_gallery">${DL.str_141.replace(/\(.\)/, "")}</button>
+        <button id="tab_gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
         <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
         <button id="select-all">${DL.str_154}</button>
         <button id="unselect-all">${DL.str_155}</button>
         <button id="reverse-selection">${DL.str_170}</button>
         <button id="exclude-error">${DL.str_184}</button>
         <button id="reload">${DL.str_156}</button>
-        <button id="combineDownload">${DL.str_181}</button>
         <button id="download">${DL.str_157}</button>
         <label class="number">${DL.str_169}<select id="backgroundColor"></select></label>
         <label id="label-threading" class="number">${DL.str_161}<select id="threading"></select></label>
@@ -35569,7 +35644,8 @@ img.webtoon {
     <div class="buttons">
         <button id="settings">${DL.str_85.replace(/\(.\)/, "")}</button>
         <button class="mobile_toggle_filter_gallery_btn hide">${DL.str_188}</button>
-        <button id="gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
+        <button id="shadow_gallery">${DL.str_141.replace(/\(.\)/, "")}</button>
+        <button id="tab_gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
         <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
         <button id="copy">${DL.str_105.replace(/\(.\)/, "")}</button>
         <button id="export">${DL.str_104.replace(/\(.\)/, "")}</button>
@@ -35578,6 +35654,7 @@ img.webtoon {
         <button id="reverse-selection">${DL.str_170}</button>
         <button id="exclude-error">${DL.str_184}</button>
         <button id="reload">${DL.str_156}</button>
+        <button id="combineDownload">${DL.str_181}</button>
         <button id="download">${DL.str_157}</button>
         <button id="close">${DL.str_132}</button>
     </div>
@@ -35640,25 +35717,6 @@ img.webtoon {
             startInput = null;
         };
 
-        if (isM) {
-            ge("label:has(>#move)", main).classList.add("hide");
-            ge("#combineDownload", main).classList.add("hide");
-            gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
-            ge("#scrollUp", main).classList.remove("hide");
-            ge("#scrollUp", main).addEventListener("click", event => {
-                cancelDefault(event);
-                instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_top" : "#filter_top", main));
-            });
-            let lastScrollTop = 0;
-            main.addEventListener("scroll", event => {
-                if (main.scrollTop > lastScrollTop) {
-                    ge("#scrollUp", main).classList.add("hide");
-                } else if (main.scrollTop < lastScrollTop) {
-                    ge("#scrollUp", main).classList.remove("hide");
-                }
-                lastScrollTop = main.scrollTop;
-            });
-        }
         if (backgroundColor === "d") {
             gae("#main,.row,.number,button,#scrollUp", shadow).forEach(e => e.classList.add("dark"));
         }
@@ -35676,14 +35734,17 @@ img.webtoon {
             }
         });
         [{
-            id: "settings",
-            text: DL.str_85.replace(/\(.\)/, "")
+            id: "combineDownload",
+            text: DL.str_181
         }, {
             id: "copy",
             text: DL.str_105.replace(/\(.\)/, "")
         }, {
             id: "export",
             text: DL.str_104.replace(/\(.\)/, "")
+        }, {
+            id: "settings",
+            text: DL.str_85.replace(/\(.\)/, "")
         }].forEach(({
             id,
             text
@@ -35695,6 +35756,27 @@ img.webtoon {
             fragment.append(li);
         });
         moreMenu.append(fragment);
+
+        if (isM) {
+            ge("label:has(>#move)", main).classList.add("hide");
+            gae("#combineDownload", main).forEach(e => e.classList.add("hide"));
+            gae("#shadow_gallery", main).forEach(e => e.classList.add("hide"));
+            gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
+            ge("#scrollUp", main).classList.remove("hide");
+            ge("#scrollUp", main).addEventListener("click", event => {
+                cancelDefault(event);
+                instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_top" : "#filter_top", main));
+            });
+            let lastScrollTop = 0;
+            main.addEventListener("scroll", event => {
+                if (main.scrollTop > lastScrollTop) {
+                    ge("#scrollUp", main).classList.add("hide");
+                } else if (main.scrollTop < lastScrollTop) {
+                    ge("#scrollUp", main).classList.remove("hide");
+                }
+                lastScrollTop = main.scrollTop;
+            });
+        }
 
         let excludeE = ge("#exclude", main);
         let excludeList = ge("#excludeList", main);
@@ -35893,7 +35975,16 @@ img.webtoon {
             saveConfig(config);
             gae("#gallery_imgBox img", main).forEach(e => (e.className = button.id));
         }));
-        gae("#gallery", main).forEach(button => button.addEventListener("click", event => {
+        gae("#shadow_gallery", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+            if (event.ctrlKey || event.altKey || event.shiftKey) {
+                createIframeGallery(srcs);
+            } else {
+                createShadowGallery(srcs);
+            }
+        }));
+        gae("#tab_gallery", main).forEach(button => button.addEventListener("click", event => {
             cancelDefault(event);
             const srcs = gae(".select+.image", main).map(img => img.dataset.src);
             newTabView(srcs);
@@ -35991,29 +36082,24 @@ img.webtoon {
                 addGalleryImgs();
             }
         }));
-        let combineDownloadButton = ge("#combineDownload", main);
-        if (combineDownloadButton) {
-            combineDownloadButton.addEventListener("click", event => {
-                cancelDefault(event);
-                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
-                if (srcs.length == 0) return;
-                combineDownloadSwitch = true;
-                const text = ge("#inputTitle", main).value;
-                DownloadFn(srcs, text);
-            });
-        }
-        gae("#download", main).forEach(button => {
-            button.addEventListener("click", event => {
-                cancelDefault(event);
-                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
-                if (srcs.length == 0) return;
-                const text = ge("#inputTitle", main).value;
-                fn.remove("#overflowYHidden");
-                shadowElement.remove();
-                isOpenFilter = false;
-                DownloadFn(srcs, text);
-            });
-        });
+        gae("#combineDownload", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+            if (srcs.length == 0) return;
+            combineDownloadSwitch = true;
+            const text = ge("#inputTitle", main).value;
+            DownloadFn(srcs, text);
+        }));
+        gae("#download", main).forEach(button => button.addEventListener("click", event => {
+            cancelDefault(event);
+            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+            if (srcs.length == 0) return;
+            const text = ge("#inputTitle", main).value;
+            fn.remove("#overflowYHidden");
+            shadowElement.remove();
+            isOpenFilter = false;
+            DownloadFn(srcs, text);
+        }));
         let inputAEE = ge("#auto-exclude-error", main);
         inputAEE.checked = config.aee == 0 ? false : true;
         inputAEE.addEventListener("change", () => {
@@ -36439,24 +36525,26 @@ img.webtoon {
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACFlBMVEVEREAAAABEREBEREBUXnFTXXBTXG5VXXJUXHFUW28grV0grV0hrl4hrV0hq10iql0oomAhrV2BiZiAiJd/h5V+h5Uiq16OlaKNlKGMk5+Mkp+KkZ89p28nq2Hp9+/n9u3t8PHs7/Dg9Ojp7O3d8+bo7O3o6+zn6+3m6uzl6evX8OLV8OHi5ujh5efO7dze4uTe4ePb3+LY3eDX29/W2t7T19u35Mu25Mr01lqw4sbz1Vmv4sXA1NWs4cPw0lnv0lmp4MCk3r3ozVuh3buu0M6vz83kylugysefycadx8OexsOdxsOF0qZ6zp5pyJK1p2S0pmOsoGRWv4SLlKEmuZpBsnc5t3AmuJmQi2ont5kmtpcptJiOiWg0tWwytGorr5Yqr5YsrpUws2kqrJRNmpMusmcsqpIuqJMssWkqsWQqsGUnsGUzoI8lsGGAf2wkr2Ekr2BzfI0irl8hrl5ye4x9fGogrWAhrV03mIwgrF9xeoshq10gql8dp2ccp2cdpmkcnIUanIYcm4QRoIUTnoURn4QdmYM/h4QcmIMSnYMXmoMWmoIbloIclYJDgYIYl4EaloAek4IfkYFqbm0jjoBqbW0ni4ApiX9Hd35kanBjaXBhaG9MbnpOanhOaXhPaHdDbXZHanZGanRLZnZJZ3RSYnVMZXRPY3ROY3VSYXRQYnRTYHRVX3NUX3RSYHNUXnNTXXJTXXFME6frAAAAHnRSTlMAAAUGZ2dqeHh7lrzNzc7O3O/09PT19fn5+fn5/f4hZOrvAAAB1UlEQVR42oWTzYoTQRSFv6q6RqOoqBicTTCKK1cOURBGBV9AXCgu9Vl8FF/ApcshI4qKgrtBByZK0HSGmMxkMrF/qq6LTjptErGX5zu3uu65dY3TYCh9ag2UNPsfjnmpZW4MgBbaIy/6PCnxvL7gEQhJ7AruAqifcZ96EHDX67ngKgCJn/k3B6AC1O9Cj9ri/2mBsZIf9iLi0rMFDhhjbO6NsL9er+CQG3pYMT+XuGVmuH9SzPF7S/UONDfUHl44/6A24wfdpMgsSO6tP52ffxjF6cUT056MBdxf/cVRzP6PiQG8KhZMJedhewik0QT43RsBQUEwLufZx53Td85p7wCwEu+Fs6qAGBsA1aO3XUZbG/EAsAJJlM/MGgOoDltdYNTam3JIOlVmOaj2N/sAjHf9lGdBqwACmmi0FU/TOWxfEY483o/9tcuvJBXU+90PaZHf5NtVFzTL+N7bqD4GS9DRmzl3btJWk2WFIKradqX8LfudU3VKBuKd0vwc+HCjNDJhkJXfB6jq+wZJBSAT5MmKN1/la7sJ+jmsiyQrdkZo9N819FNnXcSZFTt1rGnXhl/G6a26IP/YOXczi5prQmFY3snbkzNSXGyBV+28p+nNF+vn2h97PvHD5SOHkgAAAABJRU5ErkJggg==";
         img.style.bottom = "24px";
         img.style.left = "24px";
-        img.setAttribute("title", DL.str_47);
-        img.oncontextmenu = () => false;
         img.addEventListener("click", event => {
             cancelDefault(event);
             fastDownloadSwitch = false;
             //DownloadFn();
-            createFilterDownload();
+            createFilterUI();
         });
-        img.addEventListener("mousedown", event => {
-            if (event.button == 1) {
-                cancelDefault(event);
-                exportImgSrcText();
-            }
-            if (event.button == 2) {
-                cancelDefault(event);
-                copyImgSrcText();
-            }
-        });
+        if (!isSimpleMode) {
+            img.setAttribute("title", DL.str_47);
+            img.oncontextmenu = () => false;
+            img.addEventListener("mousedown", event => {
+                if (event.button == 1) {
+                    cancelDefault(event);
+                    exportImgSrcText();
+                }
+                if (event.button == 2) {
+                    cancelDefault(event);
+                    copyImgSrcText();
+                }
+            });
+        }
         document.body.append(img);
         eventImg = img;
         if ("insertImg" in siteData) {
@@ -36480,12 +36568,6 @@ img.webtoon {
             img3.addEventListener("click", event => {
                 cancelDefault(event);
                 goToImg("last");
-            });
-            img3.addEventListener("mousedown", event => {
-                if (event.button == 2) {
-                    cancelDefault(event);
-                    exportImgSrcText();
-                }
             });
             document.body.append(img3);
         }
@@ -36567,6 +36649,7 @@ img.webtoon {
                 createFavorShadowElement();
             }
         }, {
+            no_s: 1,
             name: "shadowGallery",
             text: DL.str_141,
             show: 0,
@@ -36575,6 +36658,7 @@ img.webtoon {
                 createShadowGallery();
             }
         }, {
+            no_s: 1,
             name: "newTabView",
             text: DL.str_106,
             show: 0,
@@ -36587,9 +36671,10 @@ img.webtoon {
             show: 0,
             cfn: event => {
                 cancelDefault(event);
-                createFilterDownload();
+                createFilterUI();
             }
         }, {
+            no_s: 1,
             text: DL.str_107,
             show: 0,
             cfn: event => {
@@ -36598,6 +36683,7 @@ img.webtoon {
                 DownloadFn();
             }
         }, {
+            no_s: 1,
             text: DL.str_174,
             show: 0,
             cfn: event => {
@@ -36605,6 +36691,7 @@ img.webtoon {
                 exportJsonFormat();
             }
         }, {
+            no_s: 1,
             text: DL.str_176,
             show: 0,
             cfn: event => {
@@ -36612,6 +36699,7 @@ img.webtoon {
                 exportMarkdownFormat();
             }
         }, {
+            no_s: 1,
             text: DL.str_178,
             show: 0,
             cfn: event => {
@@ -36619,6 +36707,7 @@ img.webtoon {
                 copyMarkdownFormat();
             }
         }, {
+            no_s: 1,
             text: DL.str_104,
             show: 0,
             cfn: event => {
@@ -36626,6 +36715,7 @@ img.webtoon {
                 exportImgSrcText();
             }
         }, {
+            no_s: 1,
             text: DL.str_105,
             show: 0,
             cfn: event => {
@@ -36633,6 +36723,7 @@ img.webtoon {
                 copyImgSrcTextB();
             }
         }, {
+            no_s: 1,
             name: "fn",
             text: DL.str_159,
             show: 0,
@@ -36641,6 +36732,7 @@ img.webtoon {
                 siteData.fn();
             }
         }, {
+            no_s: 1,
             name: "zoom",
             text: DL.str_88,
             show: 0,
@@ -36650,6 +36742,7 @@ img.webtoon {
                 cancelZoom();
             }
         }, {
+            no_s: 1,
             name: "zoom",
             text: DL.str_87,
             show: 0,
@@ -36665,6 +36758,7 @@ img.webtoon {
                 }
             }
         }, {
+            no_s: 1,
             name: "toggleImgMode",
             text: DL.str_86,
             show: 0,
@@ -36673,6 +36767,7 @@ img.webtoon {
                 toggleImgMode();
             }
         }, {
+            no_s: 1,
             name: "insert",
             id: "insertImgMenu",
             text: DL.str_160,
@@ -36693,7 +36788,13 @@ img.webtoon {
             show: 1
         }];
         const createMenu = obj => {
-            if (!("insertImg" in siteData) && obj.name === "insert" || !("fn" in siteData) && obj.name === "fn" || !siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) || "newTabView" === obj.name && siteData.eye === 0) return;
+            if (
+                !("insertImg" in siteData) && obj.name === "insert" ||
+                !("fn" in siteData) && obj.name === "fn" ||
+                !siteData.insertImg && ["toggleImgMode", "zoom"].some(e => e === obj.name) ||
+                "newTabView" === obj.name && siteData.eye === 0 ||
+                isSimpleMode && ("no_s" in obj)
+            ) return;
             let item = document.createElement("div");
             item.innerText = obj.text;
             if (!!obj.id) item.id = obj.id;
@@ -36941,7 +37042,7 @@ img.webtoon {
     <input id="MobileGalleryMode" type="checkbox">
     <label>${DL.str_192}</label>
 </div>
-<div style="width: 348px; display: flex;">
+<div id="autoExportDIV" style="width: 348px; display: flex;">
     <input id="autoExport" type="checkbox">
     <label>${DL.str_180}</label>
 </div>
@@ -37132,47 +37233,66 @@ img.webtoon {
             ge("#ShowEyeDIV", main).style.display = "flex";
             ge("#ShowEye", main).checked = FullPictureLoadShowEye == 1 ? true : false;
         }
+        const hide = (selectors) => {
+            selectors.forEach(s => (ge(s, main).style.display = "none"));
+        };
+
         if ("insertImg" in siteData) {
             const [, insertMode] = siteData.insertImg;
             if (![1, 2].some(n => n == insertMode)) {
-                ge("#AutoInsertImgDIV", main).style.display = "none";
+                hide(["#AutoInsertImgDIV"]);
             }
         }
         if (!("insertImg" in siteData)) {
-            ge("#AutoInsertImgDIV", main).style.display = "none";
-            ge("#ZoomDIV", main).style.display = "none";
-            ge("#viewModeDIV", main).style.display = "none";
-            ge("#ColumnDIV", main).style.display = "none";
+            hide([
+                "#AutoInsertImgDIV",
+                "#ZoomDIV",
+                "#viewModeDIV",
+                "#ColumnDIV"
+            ]);
         }
         if (isM) {
-            ge("#ShowFixedMenuDIV", main).style.display = "none";
-            ge("#ShadowGalleryModeDIV", main).style.display = "none";
-            ge("#ShadowGalleryWheelDIV", main).style.display = "none";
-            ge("#FancyboxWheelDIV", main).style.display = "none";
-            ge("#ShadowGalleryloopViewDIV", main).style.display = "none";
+            hide([
+                "#ShowFixedMenuDIV",
+                "#ShadowGalleryModeDIV",
+                "#ShadowGalleryWheelDIV",
+                "#FancyboxWheelDIV",
+                "#ShadowGalleryloopViewDIV"
+            ]);
         }
         if (isPC) {
-            ge("#MobileGalleryModeDIV", main).style.display = "none";
-        }
-        if (isBoolean(siteData.SPA)) {
-            ge("#ShadowGalleryModeDIV", main).style.display = "none";
-            ge("#ShadowGalleryWheelDIV", main).style.display = "none";
-            ge("#ShadowGalleryloopViewDIV", main).style.display = "none";
-        }
-        if (isSimpleMode || siteData.aeg == 0) {
-            ge("#ShadowGalleryModeDIV", main).style.display = "none";
+            hide(["#MobileGalleryModeDIV"]);
         }
         if (isSimpleMode) {
-            ge("#iconDIV", main).style.display = "none";
-            ge("#AutoDownloadDIV", main).style.display = "none";
-            ge("#CountdownDIV", main).style.display = "none";
+            hide([
+                "#MobileGalleryModeDIV",
+                "#autoExportDIV"
+            ]);
+        }
+        if (isBoolean(siteData.SPA)) {
+            hide([
+                "#ShadowGalleryModeDIV",
+                "#ShadowGalleryWheelDIV",
+                "#ShadowGalleryloopViewDIV"
+            ]);
+        }
+        if (isSimpleMode || siteData.aeg == 0) {
+            hide(["#ShadowGalleryModeDIV"]);
+        }
+        if (isSimpleMode) {
+            hide([
+                "#iconDIV",
+                "#AutoDownloadDIV",
+                "#CountdownDIV"
+            ]);
         }
         if (fancyboxBlackList()) {
-            //ge("#Fancybox", main).checked = false;
-            ge("#FancyboxDIV", main).style.display = "none";
-            ge("#FancyboxSlideshowTimeoutDIV", main).style.display = "none";
-            ge("#FancyboxWheelDIV", main).style.display = "none";
-            ge("#FancyboxTransitionDIV", main).style.display = "none";
+            hide([
+                "#FancyboxDIV",
+                "#FancyboxSlideshowTimeoutDIV",
+                "#FancyboxWheelDIV",
+                "#FancyboxTransitionDIV"
+            ]);
         } else {
             ge("#Fancybox", main).checked = options.fancybox == 1 ? true : false;
             ge("#FancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
@@ -37442,7 +37562,7 @@ img.webtoon {
     border: 1px solid #303030;
     border-radius: 10px;
     position: fixed;
-    z-index: 2147483640;
+    z-index: 2147483641;
     opacity: 0.7;
 }
 
@@ -37930,46 +38050,47 @@ a[data-fancybox]:hover {
             fn.showMsg(DL.str_118);
             debug("圖集新標題", newTitle || customTitle);
         }
+        if (event.ctrlKey || event.altKey || event.shiftKey) return;
         if (event.code === "KeyF" || event.key === "f" || event.key === "F") { //F鍵
-            return createFilterDownload();
+            return createFilterUI();
         }
-        if (event.code === "KeyG" || event.key === "g" || event.key === "G") { //G鍵
+        if (!isSimpleMode && (event.code === "KeyG" || event.key === "g" || event.key === "G")) { //G鍵
             return createShadowGallery();
         }
-        if ((!event.ctrlKey && !event.shiftKey) && (event.code === "KeyI" || event.key === "i" || event.key === "I")) { //I鍵
+        if (!isSimpleMode && (event.code === "KeyI" || event.key === "i" || event.key === "I")) { //I鍵
             return createIframeGallery();
         }
-        if (event.code === "Numpad0" || event.key === "0") { //數字鍵0
+        if (!isSimpleMode && (event.code === "Numpad0" || event.key === "0")) { //數字鍵0
             fastDownloadSwitch = false;
             return DownloadFn();
         }
-        if (event.code === "Numpad1" || event.key === "1") return copyImgSrcText(); //數字鍵1
-        if (event.code === "Numpad2" || event.key === "2") return goToImg("first"); //數字鍵2
-        if (event.code === "Numpad3" || event.key === "3") { //數字鍵3
+        if (!isSimpleMode && (event.code === "Numpad1" || event.key === "1")) return copyImgSrcText(); //數字鍵1
+        if (!isSimpleMode && (event.code === "Numpad2" || event.key === "2")) return goToImg("first"); //數字鍵2
+        if (!isSimpleMode && (event.code === "Numpad3" || event.key === "3")) { //數字鍵3
             fastDownloadSwitch = true;
             return DownloadFn();
         }
-        if (event.code === "Numpad4" || event.key === "4") return goToImg("last"); //數字鍵4
-        if (event.code === "Numpad5" || event.key === "5") return toggleImgMode(); //數字鍵5
-        if (event.code === "Numpad6" || event.key === "6") { //數字鍵6
+        if (!isSimpleMode && (event.code === "Numpad4" || event.key === "4")) return goToImg("last"); //數字鍵4
+        if (!isSimpleMode && (event.code === "Numpad5" || event.key === "5")) return toggleImgMode(); //數字鍵5
+        if (!isSimpleMode && (event.code === "Numpad6" || event.key === "6")) { //數字鍵6
             if ("fn" in siteData && isFn(siteData.fn)) {
                 return siteData.fn();
             } else {
                 return autoScrollEles();
             }
         }
-        if (event.code === "Numpad7" || event.key === "7") return exportImgSrcText(); //數字鍵7
-        if (event.code === "Numpad8" || event.key === "8") return newTabView(); //數字鍵8
+        if (!isSimpleMode && (event.code === "Numpad7" || event.key === "7")) return exportImgSrcText(); //數字鍵7
+        if (!isSimpleMode && (event.code === "Numpad8" || event.key === "8")) return newTabView(); //數字鍵8
         if (event.code === "Numpad9" || event.key === "9") return createFavorShadowElement(); //數字鍵9
-        if (event.code === "NumpadSubtract" || event.key === "-") { //數字鍵-
+        if (!isSimpleMode && (event.code === "NumpadSubtract" || event.key === "-")) { //數字鍵-
             fn.clearSetTimeout();
             return reduceZoom();
         }
-        if (event.code === "NumpadAdd" || event.key === "+") { //數字鍵+
+        if (!isSimpleMode && (event.code === "NumpadAdd" || event.key === "+")) { //數字鍵+
             fn.clearSetTimeout();
             return increaseZoom();
         }
-        if (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".") { //數字鍵.
+        if (!isSimpleMode && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) { //數字鍵.
             fn.clearSetTimeout();
             return cancelZoom();
         }
@@ -38614,7 +38735,7 @@ a[data-fancybox]:hover {
                 }
             }
         }
-        if (options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
+        if (isPC && options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
             fn.hideMsg();
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 if (await siteData.SPA()) {
@@ -38626,7 +38747,7 @@ a[data-fancybox]:hover {
         }
         if (isM && !("SPA" in siteData) && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
             fn.hideMsg();
-            createFilterDownload();
+            createFilterUI();
         }
         if (options.autoExport == 1 && options.autoDownload != 1) {
             exportImgSrcText();
@@ -38889,11 +39010,7 @@ a[data-fancybox]:hover {
         const shadow = FavorSitesShadowElement.attachShadow({
             mode: "closed"
         });
-        fn.css(`
-html,body {
-    overflow: hidden !important;
-}
-        `, "overflowYHidden");
+        hidePageScrollbarY();
 
         const style = createStyle(`
 #FavorUl {
@@ -39132,9 +39249,7 @@ html,body {
                 text: DL.str_129,
                 cfn: event => {
                     cancelDefault(event);
-                    if (!isOpenFilter) {
-                        fn.remove("#overflowYHidden");
-                    }
+                    if (!isOpenFilter) fn.remove("#overflowYHidden");
                     FavorSitesShadowElement.remove();
                     _unsafeWindow.removeEventListener("resize", reSize_cb);
                 }
