@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.6
+// @version            2025.2.7
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -6390,6 +6390,32 @@
         ],
         endColor: "white",
         customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
+        name: "4K Beautyful Cosplay Girl",
+        host: ["oo4k.com"],
+        url: {
+            e: [
+                "meta[property='og:title'][content$='4K Beautyful Cosplay Girl']",
+                "link[title=JSON]"
+            ],
+            p: "/album/",
+        },
+        init: () => {
+            fn.waitEle("._buttons").then(() => _unsafeWindow?.jQuery(document)?.off());
+        },
+        imgs: () => {
+            let json_url = fn.gu("link[title=JSON]");
+            fn.showMsg(DL.str_05, 0);
+            return fetch(json_url).then(res => res.json()).then(json => {
+                fn.hideMsg();
+                let dom = fn.doc(json.content.rendered);
+                return fn.getImgSrcArr([...dom.images]).filter(e => !e.includes("thumbnail"));
+            });
+        },
+        capture: () => _this.imgs(),
+        customTitle: () => fn.title(" - 4K Beautyful Cosplay Girl"),
+        hide: "._title>._helper",
         category: "nsfw2"
     }, {
         name: "Sexy Asian Model Pics",
@@ -24148,8 +24174,7 @@ if ("xx" in window) {
         name: "奇漫屋",
         url: {
             h: "www.mqzjw.com",
-            p: "/bookstt/",
-            d: "m"
+            p: "/bookstt/"
         },
         init: () => {
             fn.addMutationObserver(() => fn.remove([
@@ -24235,8 +24260,8 @@ if ("xx" in window) {
             });
             if (isString(nextLink)) {
                 fn.addUrlHtml(nextLink, ".next_chapter", 1, "点击进入下一话");
-                fn.remove(".next_chapter");
             }
+            fn.remove(".next_chapter");
         },
         autoDownload: [0],
         next: () => {
@@ -24260,8 +24285,7 @@ if ("xx" in window) {
     }, {
         name: "奇漫屋AD",
         url: {
-            h: "www.mqzjw.com",
-            d: "m"
+            h: "www.mqzjw.com"
         },
         init: () => fn.addMutationObserver(() => fn.remove([
             "//div[div[contains(text(),'下载')]]",
@@ -35493,7 +35517,7 @@ img.webtoon {
     width: 48px;
     height: 48px;
     text-align: center;
-    align-content: center;
+    /*align-content: center;*/
     overflow: hidden;
     border: #ccc 1px solid;
     background: rgba(255, 255, 255, 0.8);
@@ -35510,6 +35534,7 @@ img.webtoon {
 #scrollUpSVG {
     width: 40px;
     height: 40px;
+    margin-top: 4px;
 }
 #next {
     display: block;
