@@ -3,7 +3,7 @@
 // @name:en            Happymh reading aid
 // @name:zh-CN         嗨皮漫画阅读辅助
 // @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.9
+// @version            2.7.10
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -324,7 +324,7 @@
         width: 300px;
         height: auto;
         position: fixed;
-        top: calc((100% - 460px) / 2);
+        top: calc((100% - 520px) / 2);
         left: calc((100% - 302px) / 2);
         border: 1px solid #a0a0a0;
         border-radius: 3px;
@@ -495,7 +495,7 @@
         document.body.append(mainElement);
     };
 
-    GM_registerMenuCommand(i18n.commandMenu.settings, () => createConfigElement());
+    GM_registerMenuCommand(i18n.commandMenu.settings, createConfigElement);
 
     if (configs.removeAd == 1 && isReadPage) {
         addGlobalStyle(`
@@ -778,7 +778,7 @@ footer {
                 targetElement.append(img);
             } else {
                 targetElement = ge("article");
-                targetElement.insertAdjacentElement("afterend", img);
+                targetElement.after(img);
             }
             return img;
         };
@@ -933,6 +933,10 @@ footer {
                 button.innerText = i18n.button.closeComments;
                 Object.assign(button.style, {
                     ...obj,
+                    fontSize: "1rem",
+                    border: "#000 1px solid",
+                    borderRadius: "4px",
+                    backgroundColor: "#ffee5e",
                     marginLeft: "10px"
                 });
                 button.addEventListener("click", () => {
@@ -942,7 +946,7 @@ footer {
                 return button;
             });
 
-            div.insertAdjacentElement("beforeend", topButton);
+            div.append(topButton);
             const messageHtml = `
 <div id="message" class="MuiCardContent-root" style="padding: 3rem 16px; display: flex; flex-direction: column; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; text-align: center; min-height: 260px;width: 100%; background-color: rgb(255, 255, 255);">
   <svg class="MuiSvgIcon-root MuiSvgIcon-colorAction MuiSvgIcon-fontSizeMedium" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="user-select: none; width: 1em;height: 1em; display: inline-block; fill: currentcolor;flex-shrink: 0; font-size: 1.5rem; color: rgba(0, 0, 0, 0.54); transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);">
@@ -1062,7 +1066,7 @@ footer {
                 return;
             }
 
-            div.insertAdjacentElement("beforeend", bottomButton);
+            div.append(bottomButton);
         };
 
         const createPageElement = (data, isFirst = 0) => {
@@ -1072,7 +1076,7 @@ footer {
                 const targetElement = ge("article"); //ge("article:has(>div[id^='imageLoader'])");
                 mainContent = document.createElement("div");
                 mainContent.id = "mainContent";
-                targetElement.insertAdjacentElement("afterend", mainContent);
+                targetElement.after(mainContent);
             }
             if (isFirst === 0) {
                 const title = document.createElement("div");
@@ -1249,14 +1253,11 @@ footer {
                     const pagerTitles = gae(".chapterTitle");
                     const images = gae(".images");
                     if (pagerTitles.length > 3 && images.length > 30) {
-                        const parentE = pagerTitles[0].parentNode;
-                        pagerTitles[0].remove();
-                        const nodes = [...parentE.childNodes];
-                        for (let i = 0; i < nodes.length; i++) {
-                            if (nodes[i].className === "chapterTitle") {
-                                break;
-                            }
-                            nodes[i].remove();
+                        const titleE = pagerTitles[0];
+                        const parentE = titleE.parentNode;
+                        titleE.remove();
+                        while (parentE.firstElementChild.classList.contains("images")) {
+                            parentE.firstElementChild.remove();
                         }
                     }
                 }
@@ -1288,7 +1289,7 @@ footer {
             const firstE = ge("article")?.firstElementChild;
             if (isEle(firstE) && !firstE?.id?.startsWith("imageLoader")) {
                 const targetElement = ge("article");
-                targetElement.insertAdjacentElement("beforebegin", firstE.cloneNode(true));
+                targetElement.before(firstE.cloneNode(true));
             }
             currentData = readData;
             createPageElement(currentData, 1);
@@ -1318,9 +1319,12 @@ footer {
             }
 
             const buttons = [{
+                id: "open-comments",
+                text: i18n.button.openComments,
+                cb: createComments
+            }, {
                 id: "prev-chapter-button",
                 text: i18n.button.prevChapter,
-                bottom: "118px",
                 cb: () => {
                     if (isString(prevChapterUrl)) {
                         _unsafeWindow.location.href = prevChapterUrl;
@@ -1331,7 +1335,6 @@ footer {
             }, {
                 id: "next-chapter-button",
                 text: i18n.button.nextChapter,
-                bottom: "79px",
                 cb: () => {
                     if (isString(nextChapterUrl)) {
                         _unsafeWindow.location.href = nextChapterUrl;
@@ -1340,11 +1343,10 @@ footer {
                     }
                 }
             }, {
-                id: "open-comments",
-                text: i18n.button.openComments,
-                bottom: "40px",
-                cb: () => createComments()
-            }].map(obj => {
+                id: "settings-button",
+                text: i18n.commandMenu.settings,
+                cb: createConfigElement
+            }].map((obj, i) => {
                 const button = document.createElement("button");
                 button.id = obj.id;
                 button.innerText = obj.text;
@@ -1361,10 +1363,10 @@ footer {
                     left: "24px",
                     right: "auto",
                     top: "auto",
+                    bottom: (180 - (i * 40)) + "px",
                     position: "fixed",
                     zIndex: "9999",
-                    display: "none",
-                    bottom: obj.bottom
+                    display: "none"
                 });
                 button.addEventListener("click", obj.cb);
                 return button;
