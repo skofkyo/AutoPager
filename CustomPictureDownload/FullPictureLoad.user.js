@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.9
+// @version            2025.2.9.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4577,24 +4577,27 @@
         name: "HotAsiaGirl分頁模式",
         url: {
             h: "hotgirl.asia",
-            e: [".galeria_img", ".pagination"]
+            e: ".galeria_img"
         },
+        box: [".galeria_img", 1],
         imgs: () => fn.getImgA(".galeria_img>img", ".pagination a[href]"),
         button: [4],
-        insertImg: [".mx-auto", 1],
-        customTitle: "h3",
-        hide: ".galeria_img",
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".galeria_img,#pagination"], 2
+        ],
+        customTitle: ".mvic-desc h3",
         category: "nsfw2"
     }, {
         name: "HotAsiaGirl幻燈片模式",
         url: {
             h: "hotgirl.asia"
         },
+        box: ["#carouselImageIndicators", 2],
         imgs: "#carouselImageIndicators img",
         button: [4],
-        insertImg: [".mx-auto", 2],
-        customTitle: "h3",
-        hide: ".galeria_img",
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: ".mvic-desc h3",
         category: "nsfw2"
     }, {
         name: "HotGirl World",
@@ -12781,10 +12784,11 @@
             /^https?:\/\/kungfutv\.net\/cosplay\/[^\/]+\//,
             /^https?:\/\/seriesdonghua\.net\/cosplay\/[^\/]+\//
         ],
-        imgs: "#readerarea img",
+        box: [".entry-content p:has(img),#readerarea img", 1],
+        imgs: ".entry-content img,#readerarea img",
         button: [4],
         insertImg: [
-            ["#readerarea img", 1, ".ts-main-image"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".entry-content p:has(img),.ts-main-image"], 2
         ],
         endColor: "white",
         customTitle: ".entry-title",
