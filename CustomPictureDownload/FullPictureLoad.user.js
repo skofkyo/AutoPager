@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.7
+// @version            2025.2.9
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -302,6 +302,15 @@
         },
         imgs: () => setArray,
         capture: () => _this.imgs(),
+        category: "photo"
+    }, {
+        name: "Раскраски для детей",
+        url: {
+            h: "l2scarry.ru",
+            e: ".entry-title"
+        },
+        imgs: ".entry-content img:not([src*='/ud2.jpg'])",
+        customTitle: ".entry-title",
         category: "photo"
     }, {
         name: "小黃書/8色人體攝影",
@@ -713,7 +722,6 @@
         },
         capture: () => _this.imgs(),
         customTitle: "h1",
-        //setFancybox: true,
         category: "nsfw2"
     }, {
         name: "Rentry.co",
@@ -4316,23 +4324,23 @@
     }, {
         name: "爱妹子",
         url: {
-            h: ["xx.knit.bid", "mm.187187.xyz", "999888.best", "www.gaik.com", "gaik.com"],
+            h: ["xx.knit.bid", "mm.187187.xyz", "999888.best"],
             p: /^\/([\w-]+\/)?article\/\d+\//i,
             e: ".item-image img,#img-box img"
         },
         init: () => fn.clearAllTimer(2),
-        box: ["#img-box"],
+        box: [".image-container,#img-box"],
         imgs: () => {
-            if (fn.ge(".pagination-multi")) {
-                let max = fn.gau(".pagination-multi a")?.at(-1)?.match(/\d+$/)?.at(0) || 1;
-                return fn.getImg(".item-image img,#img-box img", max);
+            if (fn.ge("li.next-page")) {
+                let max = fn.gt("li.next-page", 2);
+                return fn.getImg(".item-image img", max);
             } else {
                 return fn.gae(".item-image img,#img-box img");
             }
         },
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".item-image,#img-box p:has(>img),.pagination-multi"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".item-image,#img-box p:has(>img),.loading-indicator,.pagination-nav"], 2
         ],
         customTitle: ".focusbox-title",
         css: "a{white-space:unset!important}",
@@ -5062,34 +5070,16 @@
         customTitle: () => fn.title("/", 1),
         category: "nsfw2"
     }, {
-        name: "Fapodrop",
+        name: "Fapodrop/Fapsan",
         url: {
-            h: "fapodrop.com",
-            e: ".one-pack"
-        },
-        imgs: () => {
-            let url = fn.gu(".one-pack a");
-            let max = url.split("/").at(-1);
-            let src = fn.ge(".one-pack img").src;
-            let [a, b, c] = src.split("_");
-            thumbnailSrcArray = fn.arr(max, (v, i) => a + "_" + String(i + 1).padStart(4, "0") + "_" + c);
-            return thumbnailSrcArray.map(e => e.replace("/thumbnails/", "/photo/").replace("_thumbnail", ""));
-        },
-        button: [4],
-        insertImg: [".one-pack", 3],
-        customTitle: "h1.h3",
-        category: "nsfw2"
-    }, {
-        name: "Fapsan",
-        url: {
-            h: "fapsan.com",
+            h: ["fapodrop.com", "fapsan.com"],
             e: ".one-pack"
         },
         imgs: async () => {
             let max = fn.gt("h1.h3").match(/\d+/g).at(-1);
-            let pages = Math.ceil(Number(max) / 36);
+            let pages = Math.ceil(Number(max) / (fn.lh == "fapodrop.com" ? 24 : 36));
             let links = fn.arr(pages, (v, i) => i == 0 ? fn.lp : fn.lp + "/page/" + (i + 1));
-            thumbnailSrcArray = await fn.getImgA(".one-pack img", links);
+            thumbnailSrcArray = await fn.getImgA(".one-pack img[src*=thumbnail]", links);
             thumbnailSrcArray = thumbnailSrcArray.reverse();
             return thumbnailSrcArray.map(e => e.replace("/thumbnails/", "/photo/").replace("_thumbnail", ""));
         },
@@ -7571,10 +7561,7 @@
             return src;
         }),
         capture: () => _this.imgs(),
-        //button: [4],
-        //insertImg: [".entry-content", 2],
         customTitle: ".entry-title,.blog-single-title",
-        setFancybox: ".entry-content a[href*='blogger.'],.blog-content a[href*='blogger.']",
         category: "nsfw1"
     }, {
         name: "グラビア週刊誌 9/グラビア週刊誌 5/グラビア週刊誌 6",
@@ -10816,9 +10803,9 @@
         customTitle: () => fn.title(" - Best adult videos and photos"),
         category: "nsfw2"
     }, {
-        name: "Fappenist",
+        name: "Fappenist/Lmlib",
         url: {
-            h: "www.fappenist.com",
+            h: ["www.fappenist.com", "lmlib.com"],
             p: "/photos/",
             e: "a.gallery-view"
         },
@@ -10856,11 +10843,11 @@
         name: "Babepedia",
         url: {
             h: "www.babepedia.com",
-            p: "/gallery/"
+            p: ["/gallery/", "/babe/"]
         },
-        imgs: "#gallery a[data-fancybox]",
-        thums: "#gallery a[data-fancybox] img",
-        customTitle: "#gallery h1",
+        imgs: "#gallery a[data-fancybox],.gallery a[rel=gallery]",
+        thums: "#gallery a[data-fancybox] img,.gallery a[rel=gallery] img",
+        customTitle: "#gallery h1,#babename",
         category: "nsfw2"
     }, {
         name: "Hot Celebs Home",
@@ -22256,7 +22243,7 @@ if ("xx" in window) {
             return fn.xhrDoc(_this.comicListUrl()).then(dom => {
                 let next = fn.ge(nextXPath, dom, dom);
                 return next ? next.href : null;
-            })
+            });
         },
         prev: 1,
         preloadNext: async (nextDoc, obj) => fn.picPreload(await fn.getKukudmSrc(nextLink, nextDoc, 0), nextDoc.title, "next"),
@@ -22310,7 +22297,7 @@ if ("xx" in window) {
                 return fn.xhrDoc(_this.comicListUrl()).then(dom => {
                     let next = fn.ge(nextXPath, dom, dom);
                     return next ? next.href : null;
-                })
+                });
             },
             stop: (dom) => !fn.ge("//td[input]//img", dom),
             preloadNextPage: async (dom) => {
@@ -22373,7 +22360,7 @@ if ("xx" in window) {
             return fn.xhrDoc(comicListUrl).then(dom => {
                 let next = fn.ge(nextXPath, dom, dom);
                 return next ? next.href : null;
-            })
+            });
         },
         prev: 1,
         customTitle: () => fn.title("在线", 1),
@@ -22425,7 +22412,7 @@ if ("xx" in window) {
             return fn.xhrDoc(_this.comicListUrl()).then(dom => {
                 let next = fn.ge(nextXPath, dom, dom);
                 return next ? next.href : null;
-            })
+            });
         },
         prev: 1,
         preloadNext: async (nextDoc, obj) => fn.picPreload(await fn.getKukudmSrc(nextLink, nextDoc, 0), nextDoc.title.split("在线")[0], "next"),
@@ -22483,7 +22470,7 @@ if ("xx" in window) {
                 return fn.xhrDoc(comicListUrl).then(dom => {
                     let next = fn.ge(nextXPath, dom, dom);
                     return next ? next.href : null;
-                })
+                });
             },
             title: (dom) => {
                 let text = dom.title.replace(/在线漫画.+$/, "");
@@ -24174,7 +24161,8 @@ if ("xx" in window) {
         name: "奇漫屋",
         url: {
             h: "www.mqzjw.com",
-            p: "/bookstt/"
+            p: "/bookstt/",
+            i: 0
         },
         init: () => {
             fn.addMutationObserver(() => fn.remove([
@@ -24186,61 +24174,12 @@ if ("xx" in window) {
             ]));
             return fn.waitVar("CryptoJS");
         },
-        decrypted_data: (data) => {
-            const {
-                CryptoJS,
-            } = _unsafeWindow;
-            const key = CryptoJS.enc.Utf8.parse("TRHvYbpGlNFoOdLaXrKRYgvdGwGfjnJj");
-            const iv = CryptoJS.enc.Utf8.parse("kBKXQIpFYTDOHGLQlRUklPLtNPcBKSve");
-            const decrypted = CryptoJS.AES.decrypt(data, key, {
-                'iv': iv,
-                'mode': CryptoJS.mode.CBC
-            });
-            const pic_list = decrypted.toString(CryptoJS.enc.Utf8);
-            data = JSON.parse(pic_list);
-            return data;
-        },
-        imgs: async (url = fn.lp, msg = 1) => {
-            const {
-                Mcpath,
-                jQuery: $
-            } = _unsafeWindow;
-            const id = url.split("/").at(-1);
-            let page = 1;
-            const datas = [];
-            let loop = true;
-            let temp = "";
-            if (msg === 1) fn.showMsg(DL.str_05, 0);
-            while (loop) {
-                await $.getJSON("//" + Mcpath.url + Mcpath.web + "index.php/api/data/pic?callback=?", {
-                    cid: id,
-                    page: page
-                }, (res) => {
-                    if (res.code == 1) {
-                        if (temp != res.data) {
-                            temp = res.data;
-                        } else if (temp == res.data) {
-                            loop = false;
-                            return;
-                        }
-                        let data = _this.decrypted_data(res.data);
-                        if (data.length > 0) {
-                            if (msg === 1) fn.showMsg(`${DL.str_06}${page}/???`, 0);
-                            datas.push(data);
-                            page++;
-                        } else {
-                            loop = false;
-                        }
-                    } else {
-                        loop = false;
-                    }
-                });
-            }
-            return datas.flat().map(e => e.img);
-        },
+        imgs: () => fn.getMqzjwSrc(),
         button: [4],
         insertImg: [".comiclist", 2],
         insertImgAF: () => {
+            let [id] = fn.gst("readPic").match(/\d+/);
+            fn.ge(".back").href = `/book/${id}.html`;
             const {
                 jQuery: $
             } = _unsafeWindow;
@@ -24275,13 +24214,100 @@ if ("xx" in window) {
             return textArr[1] + " - " + textArr[0];
         },
         preloadNext: async (nextDoc) => {
-            let srcs = await _this.imgs(nextLink, 0);
+            let srcs = await fn.getMqzjwSrc(nextLink, 0);
             fn.picPreload(srcs, _this.customTitle(nextDoc), "next");
         },
         fancybox: {
             blacklist: 1
         },
+        infiniteScroll: true,
+        css: "html{cursor:auto!important}",
         category: "comic"
+    }, {
+        name: "奇漫屋 自動翻頁",
+        url: {
+            h: "www.mqzjw.com",
+            p: "/bookstt/",
+            i: 1
+        },
+        init: async () => {
+            fn.addMutationObserver(() => fn.remove([
+                "//div[a[contains(text(),'下载')]]",
+                "//div[contains(text(),'下载')]",
+                "//div[contains(text(),'投诉邮箱')]",
+                "#alertBox",
+                "#xiazai"
+            ]));
+            await fn.waitVar("CryptoJS");
+            fn.showMsg(DL.str_135, 0);
+            await fn.getMqzjwSrc(fn.lp, 0).then(srcs => fn.createImgArray(srcs)).then(async imgs => {
+                let tE = fn.ge(".comiclist");
+                tE.innerHTML = "";
+                fragment.append(...imgs);
+                tE.append(fragment);
+                fn.ge(".j-rd-prev").outerHTML = fn.ge(".j-rd-prev").outerHTML;
+                fn.ge(".j-rd-next").outerHTML = fn.ge(".j-rd-next").outerHTML;
+                fn.ge(".j-rd-prev").href = fn.attr(".j-rd-prev[_href]", "_href");
+                fn.ge(".j-rd-next").href = fn.attr(".j-rd-next[_href]", "_href");
+                let [id] = fn.gst("readPic").match(/\d+/);
+                fn.ge(".back").href = `/book/${id}.html`;
+                fn.hideMsg();
+                await fn.remove(".next_chapter");
+                await fn.lazyload();
+            });
+            const {
+                jQuery: $
+            } = _unsafeWindow;
+            fn.run("jQuery(window).off();");
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                const st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
+                    $(".header").css("transform", "translateY(-100%)");
+                    $(".bottom-bar").css("transform", "translateY(100%)");
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
+                    $(".header").css("transform", "translateY(0%)");
+                    $(".bottom-bar").css("transform", "translateY(0%)");
+                    lastScrollTop = st;
+                }
+            });
+        },
+        autoPager: {
+            ele: () => fn.getMqzjwSrc(nextLink, 0).then(srcs => fn.createImgArray(srcs)),
+            pos: [".comiclist", 0],
+            observer: ".comiclist>img",
+            next: (dom) => {
+                let next = fn.ge(".j-rd-next[_href^='/bookstt/']", dom);
+                return next ? next.getAttribute("_href") : null;
+            },
+            title: (dom) => {
+                let text = dom.title.replace("漫画-免费在线看漫画-奇漫屋", "");
+                let textArr = text.split("-");
+                return isM ? textArr[0] : textArr[1] + " - " + textArr[0];
+            },
+            re: "span.title,.j-rd-prev[_href],.j-rd-next[_href]",
+            aF: (dom) => {
+                fn.ge(".j-rd-prev").href = fn.attr(".j-rd-prev[_href]", "_href", dom);
+                let nextE = fn.ge(".j-rd-next");
+                let next_url = fn.attr(".j-rd-next[_href]", "_href", dom);
+                if (next_url == "") {
+                    nextE.href = fn.gu(".back");
+                    fn.ge("span", nextE).innerText = "返回";
+                } else {
+                    nextE.href = next_url;
+                }
+            },
+            preloadNextPage: async (dom) => {
+                let next = _this.autoPager.next(dom);
+                if (!!next) {
+                    let srcs = await fn.getMqzjwSrc(next, 0);
+                    fn.fetchDoc(next).then(nextDoc => fn.picPreload(srcs, _this.autoPager.title(nextDoc), "next"));
+                }
+            }
+        },
+        css: "html{cursor:auto!important}",
+        category: "comic autoPager"
     }, {
         name: "奇漫屋AD",
         url: {
@@ -25650,310 +25676,6 @@ if ("xx" in window) {
         openInNewTab: ".markdown-body a[href]:not([target=_blank]):not([id])",
         css: ".markdown-body a{text-decoration:none!important}",
         category: "none"
-    }, {
-        name: "CivitAi Auto Show NSFW",
-        host: ["civitai.com"],
-        reg: /^https?:\/\/civitai\.com\//,
-        init: async () => {
-            await fn.waitEle("img[src*='width='],video[src*='width=']");
-            //自動顯示NSFW
-            const unBlur = async () => {
-                if (/\/posts\/|\/models\//.test(fn.lp)) {
-                    try {
-                        let [ele] = [...document.querySelectorAll(".mantine-1t4bhd4")];
-                        let elePath = ele.querySelector("span>svg>path");
-                        if (elePath) {
-                            let d = elePath.getAttribute("d");
-                            if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") EClick(ele);
-                            await delay(1000);
-                        }
-                    } catch {}
-                }
-                [...document.querySelectorAll("button.cursor-pointer")].forEach(ele => {
-                    let elePath = ele.querySelector("span>svg>path");
-                    if (elePath) {
-                        let d = elePath.getAttribute("d");
-                        if (d == "M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0") EClick(ele);
-                    }
-                });
-            };
-            fn.addMutationObserver(unBlur);
-            //將預覽縮圖替換為原始圖片，延遲載入原始圖片URL，透過腳本管理器選單開啟。
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll("img[src*='width=']:not([src^='data'],.mantine-Avatar-image,.mantine-anvagt,.mantine-d881q8,.mantine-cdh9bk,.mantine-qh395j,.mantine-7aj0so[loading],.mantine-34i7e7,.mantine-lrbwmi,.mantine-14evxiu)")].forEach(item => {
-                        //console.log(item);
-                        if (!/\.mp4/.test(item.dataset.src ?? item.src)) {
-                            let thumbnail = item.dataset.src ?? item.src;
-                            item.dataset.thumb = thumbnail;
-                            item.dataset.url = thumbnail.replace(/width=[\d+\.]\//, ""); //Original Image URL to replace when an error occurs
-                            let original = thumbnail.replace(/width=[\d\.]+\//, "original=true/");
-                            let [imgDir] = original.match(/.+\//);
-                            if (item.alt != "" && /\.\w+$/.test(item.alt)) original = imgDir + item.alt.trim();
-                            item.dataset.src = original;
-                            item.src = loading_bak;
-                            fn.imagesObserver.observe(item);
-                        }
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "img[src*=original]:not([src^='data'],.mantine-Avatar-image,.mantine-anvagt,.mantine-d881q8,.mantine-cdh9bk,.mantine-qh395j,.mantine-7aj0so[loading],.mantine-34i7e7,.mantine-lrbwmi,.mantine-14evxiu),img[data-src*=original]:not(.mantine-Avatar-image,.mantine-anvagt,.mantine-d881q8,.mantine-cdh9bk,.mantine-qh395j,.mantine-7aj0so[loading],.mantine-34i7e7,.mantine-lrbwmi,.mantine-14evxiu)",
-        css: "img[src^=data]{margin:auto;}img[src*=original]:not([src^='data'],.mantine-Avatar-image,.mantine-anvagt,.mantine-d881q8,.mantine-cdh9bk,.mantine-qh395j,.mantine-34i7e7){margin: 0 auto !important;width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
-        category: "lazyLoad"
-    }, {
-        name: "LiblibAI",
-        host: ["www.liblib.art"],
-        reg: /^https?:\/\/www\.liblib\.art\//,
-        init: () => {
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll("img.bg-lighter:not([data-src])")].forEach(img => {
-                        let thumbnail = img.dataset.src ?? img.src;
-                        img.dataset.thumb = thumbnail.replace(/\?image_process=.+/, "") + "?image_process=format,webp&x-oss-process=image/resize,w_600,m_lfit/format,webp";
-                        let original = thumbnail.replace(/\?image_process=.+/, "");
-                        img.dataset.src = original;
-                        img.src = thumbnail;
-                        fn.imagesObserver.observe(img);
-                    });
-                    [...document.querySelectorAll(".relative.cursor-pointer>img:not(.rounded-full,[data-src]),div.image-card img.CarouselWrap_imgItem__h90eB:not([data-src])")].forEach(img => {
-                        let thumbnail = img.dataset.src ?? img.src;
-                        img.dataset.thumb = thumbnail.replace(/\?x-oss-process=image.+/, "") + "?x-oss-process=image/resize,w_600,m_lfit/format,webp";
-                        let original = thumbnail.replace(/\?x-oss-process=image.+/, "");
-                        img.dataset.src = original;
-                        img.src = thumbnail;
-                        fn.imagesObserver.observe(img);
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "img.bg-lighter[data-src],.relative.cursor-pointer>img[data-src],div.image-card img.CarouselWrap_imgItem__h90eB[data-src]",
-        category: "lazyLoad"
-    }, {
-        name: "Tensor.Art",
-        host: ["tensor.art"],
-        reg: /^https?:\/\/tensor\.art\//,
-        init: () => {
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll(".thumbnail-image.transition-transform>img.w-full.h-full:not([data-src]),.thumbnail-image.cursor-pointer>img.w-full.h-full:not([data-src])")].forEach(img => {
-                        let thumbnail = img.dataset.src ?? img.src;
-                        let splitArr = thumbnail.split("/");
-                        let bigSrc;
-                        if (splitArr.length == 9 || splitArr.length == 10) {
-                            splitArr[5] = "w=3840";
-                            bigSrc = splitArr.join("/");
-                        } else {
-                            bigSrc = thumbnail;
-                        }
-                        img.dataset.src = bigSrc;
-                        img.src = loading_bak;
-                        fn.imagesObserver.observe(img);
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: ".thumbnail-image>img[data-src]",
-        css: ".thumbnail-image>img{width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important;margin:0px auto}",
-        category: "lazyLoad"
-    }, {
-        name: "PixAI",
-        host: ["pixai.art"],
-        reg: /^https?:\/\/pixai\.art\//,
-        init: async () => {
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll("img.object-cover[src*='/stillThumb/']:not([data-src])")].forEach(img => {
-                        let thumbnail = img.src;
-                        img.dataset.thumb = thumbnail;
-                        img.dataset.src = thumbnail.replace("/stillThumb/", "/orig/");
-                        img.src = loading_bak;
-                        fn.imagesObserver.observe(img);
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "img.object-contain,a.group img[data-src]",
-        css: "a.group img.object-cover{width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important;margin:0px auto}",
-        category: "lazyLoad"
-    }, {
-        name: "Yodayo",
-        host: ["yodayo.com"],
-        reg: /^https?:\/\/yodayo\.com\/explore\//,
-        init: async () => {
-            await fn.waitEle("img[alt='post thumbnail']");
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll("img[alt='post thumbnail']:not([data-src])")].forEach(img => {
-                        let thumbnail = img.dataset.src ?? img.src;
-                        img.dataset.thumb = thumbnail;
-                        fn.fetchDoc(img.parentNode.parentNode.href).then(dom => {
-                            let original = dom.querySelector(".image-gallery-image").src;
-                            img.dataset.src = original;
-                            img.src = original;
-                        });
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "img[alt='post thumbnail'][data-src]",
-        category: "lazyLoad"
-    }, {
-        name: "NightCafe Creator",
-        host: ["creator.nightcafe.studio"],
-        reg: /^https?:\/\/creator\.nightcafe\.studio\//,
-        init: async () => {
-            await fn.waitEle("img.css-9whsf3");
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    setTimeout(() => {
-                        [...document.querySelectorAll("img.css-9whsf3:not([data-src])")].forEach(img => {
-                            let thumbnail = img.dataset.src ?? img.src;
-                            img.dataset.thumb = thumbnail;
-                            let original = thumbnail.replace(/\?.+$/, "");
-                            img.dataset.src = original;
-                            img.src = loading_bak;
-                            fn.imagesObserver.observe(img);
-                        });
-                    }, 200)
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "img.css-9whsf3[data-src]",
-        css: "img.css-9whsf3{width:unset !important;height:unset !important;max-width:100% !important;max-height:100% !important;min-width:unset !important;min-height:unset !important}",
-        category: "lazyLoad"
-    }, {
-        name: "Midjourney",
-        host: ["midjourney.com"],
-        reg: /^https?:\/\/legacy\.midjourney\.com\//,
-        capture: "img[data-job-id]",
-        category: "lazyLoad"
-    }, {
-        name: "neural.love",
-        host: ["neural.love"],
-        reg: /^https?:\/\/neural\.love\//,
-        init: async () => {
-            await fn.waitEle("a.shadow.bg-dark,img[src*='cdn/ai-photostoc']");
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll("a.shadow.bg-dark:not([data-src]):not([fetch])")].forEach(a => {
-                        a.setAttribute("fetch", "fetch");
-                        let id = a.href.split("/")[4];
-                        let api = `https://saas.neural.love/api/ai-photostock/orders/${id}?id=${id}`;
-                        fetch(api).then(res => res.json()).then(json => {
-                            let [data] = json.output;
-                            let original = data.full ?? data.fullWebp;
-                            a.dataset.src = original;
-                            a.style.backgroundImage = `url("${original}")`;
-                        });
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "a.shadow.bg-dark[data-src],img[src*='cdn/ai-photostoc']",
-        category: "lazyLoad"
-    }, {
-        name: "Playground",
-        host: ["playground.com"],
-        link: "https://playground.com/feed",
-        reg: /^https?:\/\/playground\.com\//,
-        init: async () => {
-            await fn.waitEle("a.image-card-grid,img[data-testid=image-post-image]");
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = async () => {
-                    let postImg = document.querySelector("img[data-testid=image-post-image]");
-                    if (postImg) {
-                        let original = document.querySelector("meta[property='og:image'][content]").content;
-                        postImg.dataset.src = original;
-                        fn.imagesObserver.observe(postImg);
-                    }
-                    let aEles = [...document.querySelectorAll("a.image-card-grid:not([data-src]):not([fetch])")];
-                    aEles.forEach(a => a.setAttribute("fetch", "fetch"));
-                    aEles.map(async a => {
-                        let img = fn.ge("img", a);
-                        if (img) {
-                            let src = img.src;
-                            let testSrc = src.replace(/\.jpe?g$/, ".png");
-                            let original = await new Promise((resolve) => {
-                                fetch(testSrc, {
-                                    method: "HEAD"
-                                }).then((res) => {
-                                    if (res.status == 200) {
-                                        resolve(testSrc);
-                                    } else {
-                                        resolve(src);
-                                    }
-                                }).catch((error) => {
-                                    resolve(src);
-                                });
-                            });
-                            a.dataset.src = original;
-                            img.dataset.src = original;
-                            fn.imagesObserver.observe(img);
-                        }
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "a.image-card-grid[data-src],img[data-testid=image-post-image][data-src]",
-        category: "lazyLoad"
-    }, {
-        name: "Pornderful.ai",
-        host: ["pornderful.ai"],
-        reg: /^https?:\/\/pornderful\.ai\//,
-        init: async () => {
-            await fn.waitEle("a.tw-relative");
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll("a.tw-relative:not([data-src]):not([fetch])")].forEach(a => {
-                        a.setAttribute("fetch", "fetch");
-                        fn.fetchDoc(a.href).then(dom => {
-                            let data = JSON.parse(dom.querySelector("generator-v3-component").attributes[0].nodeValue);
-                            let original = data.path;
-                            a.dataset.src = original;
-                            let img = a.querySelector("img");
-                            img.dataset.src = original;
-                            img.src = loading_bak;
-                            fn.imagesObserver.observe(img);
-                        });
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "a.tw-relative[data-src]",
-        observerClick: "button.tw-mx-auto",
-        category: "lazyLoad"
-    }, {
-        name: "SeaArt AI",
-        host: ["www.seaart.ai"],
-        reg: /^https?:\/\/www\.seaart\.ai\//,
-        init: async () => {
-            if (lazyLoadFullResolution == 1) {
-                const lazyLoad = () => {
-                    [...document.querySelectorAll("img[src*='low.']:not([data-src])")].forEach(img => {
-                        let thumbnail = img.dataset.src ?? img.src;
-                        img.dataset.thumb = thumbnail;
-                        let original = thumbnail.replace("_low.", "_high.");
-                        img.dataset.src = original;
-                        img.src = loading_bak;
-                        fn.imagesObserver.observe(img);
-                    });
-                };
-                fn.addMutationObserver(lazyLoad);
-            }
-        },
-        capture: "img[data-src*='_high.']",
-        css: "*{backdrop-filter:unset!important}",
-        category: "lazyLoad"
     }];
 
     //const debug = (str, obj = "", title = "debug") => console.log(`%c[Full Picture Load] ${title}:`, "background-color: #C9FFC9;", str, obj);
@@ -26298,9 +26020,9 @@ if ("xx" in window) {
                     lr: "右下",
                 },
                 str_110: "※ Webp轉換為Jpg",
-                str_111: "惰性載入大圖",
-                str_112: "惰性載入單欄布局",
-                str_113: "惰性載入預讀大圖",
+                str_111: "",
+                str_112: "",
+                str_113: "",
                 str_114: "E/EX-HENTAI 載入原始圖片連結",
                 str_115: "關閉自動滾動至首張圖片",
                 str_116: "自動滾動所有惰性載入的圖片元素",
@@ -26535,9 +26257,9 @@ if ("xx" in window) {
                     lr: "右下",
                 },
                 str_110: "※ Webp转换为Jpg",
-                str_111: "懒加载大图",
-                str_112: "懒加载单栏布局",
-                str_113: "懒加载预读大图",
+                str_111: "",
+                str_112: "",
+                str_113: "",
                 str_114: "E/EX-HENTAI 加载原始图片链接",
                 str_115: "关闭自动滚动至首张图片",
                 str_116: "自动滚动所有懒加载的图片元素",
@@ -26766,9 +26488,9 @@ if ("xx" in window) {
                     lr: "Lower right",
                 },
                 str_110: "※ Convert Webp to Jpg",
-                str_111: "Lazy Load Full Resolution",
-                str_112: "Lazy Load Single Column Layout",
-                str_113: "Lazy Load Preload Images",
+                str_111: "",
+                str_112: "",
+                str_113: "",
                 str_114: "E/EX-HENTAI Load Original Image",
                 str_115: "Turn Off Auto Scroll To First Image",
                 str_116: "Auto Scroll All Image Elements",
@@ -29888,6 +29610,58 @@ if ("xx" in window) {
                 return [];
             }
         },
+        mqzjw_decrypted_data: (data) => {
+            const {
+                CryptoJS,
+            } = _unsafeWindow;
+            const key = CryptoJS.enc.Utf8.parse("TRHvYbpGlNFoOdLaXrKRYgvdGwGfjnJj");
+            const iv = CryptoJS.enc.Utf8.parse("kBKXQIpFYTDOHGLQlRUklPLtNPcBKSve");
+            const decrypted = CryptoJS.AES.decrypt(data, key, {
+                "iv": iv,
+                "mode": CryptoJS.mode.CBC
+            });
+            const pic_list = decrypted.toString(CryptoJS.enc.Utf8);
+            data = JSON.parse(pic_list);
+            return data;
+        },
+        getMqzjwSrc: async (url = fn.lp, msg = 1) => {
+            const {
+                Mcpath,
+                jQuery: $
+            } = _unsafeWindow;
+            const id = url.split("/").at(-1);
+            let page = 1;
+            const datas = [];
+            let loop = true;
+            let temp = "";
+            if (msg === 1) fn.showMsg(DL.str_05, 0);
+            while (loop) {
+                await $.getJSON("//" + Mcpath.url + Mcpath.web + "index.php/api/data/pic?callback=?", {
+                    cid: id,
+                    page: page
+                }, (res) => {
+                    if (res.code == 1) {
+                        if (temp != res.data) {
+                            temp = res.data;
+                        } else if (temp == res.data) {
+                            loop = false;
+                            return;
+                        }
+                        let data = fn.mqzjw_decrypted_data(res.data);
+                        if (data.length > 0) {
+                            if (msg === 1) fn.showMsg(`${DL.str_06}${page}/???`, 0);
+                            datas.push(data);
+                            page++;
+                        } else {
+                            loop = false;
+                        }
+                    } else {
+                        loop = false;
+                    }
+                });
+            }
+            return datas.flat().map(e => e.img);
+        },
         //移除元素
         remove: async (obj, time = 0) => {
             if (isString(obj)) {
@@ -30976,12 +30750,12 @@ if ("xx" in window) {
             return;
         } else if (/^\//.test(selector)) {
             imgs = gax(selector);
-            if (siteData.category != "lazyLoad" && !getImgFnProcessRecord.includes("gax(selector)")) {
+            if (!getImgFnProcessRecord.includes("gax(selector)")) {
                 getImgFnProcessRecord += " > gax(selector)";
             }
         } else {
             imgs = gae(selector);
-            if (siteData.category != "lazyLoad" && !getImgFnProcessRecord.includes("gae(selector)")) {
+            if (!getImgFnProcessRecord.includes("gae(selector)")) {
                 getImgFnProcessRecord += " > gae(selector)";
             }
         }
@@ -31004,10 +30778,8 @@ if ("xx" in window) {
                 return null;
             }
         }).filter(item => item);
-        if (siteData.category !== "lazyLoad" && globalImgArray.length === 0 && imgs.length !== 0) {
+        if (globalImgArray.length === 0 && imgs.length !== 0) {
             debug(`\ngetImgs()${getImgFnProcessRecord} 所有圖片網址：`, imgsSrcArr);
-        }
-        if (siteData.category !== "lazyLoad" && globalImgArray.length === 0 && imgs.length !== 0) {
             debug(`\ngetImgs()${getImgFnProcessRecord} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
         }
         imgsSrcArr = [...new Set(imgsSrcArr)];
@@ -36403,13 +36175,8 @@ img.webtoon {
             text: "0",
             cfn: async event => {
                 cancelDefault(event);
-                let srcArr;
-                if (siteData.category === "lazyLoad") {
-                    srcArr = captureSrcArray;
-                } else {
-                    let selector = siteData.capture ?? siteData.imgs;
-                    srcArr = await getImgs(selector);
-                }
+                let selector = siteData.capture ?? siteData.imgs;
+                let srcArr = await getImgs(selector);
                 if (srcArr.length == 0) return fn.showMsg(DL.str_44);
                 let titleText = customTitle ?? document.title;
                 let picNum = srcArr.length;
@@ -36897,8 +36664,6 @@ img.webtoon {
     const comicData = customData.filter(item => item.category === "comic");
     //列出H漫站
     const hcomicData = customData.filter(item => item.category === "hcomic");
-    //列出LazyLoad模式規則
-    const lazyLoadData = customData.filter(item => item.category === "lazyLoad");
     //列出自動翻頁
     const autoPagerData = customData.filter(item => item.category.includes("autoPager"));
     //列出去廣告規則
@@ -37254,7 +37019,7 @@ img.webtoon {
         ge("#Countdown", main).value = options.autoDownloadCountdown;
         ge("#Comic", main).checked = options.comic == 1 ? true : false;
         ge("#Double", main).checked = options.doubleTouchNext == 1 ? true : false;
-        if (siteData.category != "lazyLoad" && ("capture" in siteData) || isString(siteData.imgs) && !isArray(siteData.insertImg)) {
+        if (isString(siteData.imgs) && !isArray(siteData.insertImg)) {
             ge("#ShowEyeDIV", main).style.display = "flex";
             ge("#ShowEye", main).checked = FullPictureLoadShowEye == 1 ? true : false;
         }
@@ -37386,7 +37151,7 @@ img.webtoon {
             options.autoExport = ge("#autoExport", main).checked == true ? 1 : 0;
             config.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
             saveConfig(config);
-            if (siteData.category != "lazyLoad" && ("capture" in siteData) || isString(siteData.imgs) && !isArray(siteData.insertImg)) {
+            if (isString(siteData.imgs) && !isArray(siteData.insertImg)) {
                 ge("#ShowEye", main).checked == true ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
             }
             if (!!downloadVideo && downloadVideo === true && isPC) {
@@ -37868,21 +37633,7 @@ a[data-fancybox]:hover {
     let autoScrollAllElement = _GM_getValue("autoScrollAllElement", 0);
     let convertWebpToJpg = _GM_getValue("convertWebpToJpg", 0);
 
-    let lazyLoadFullResolution = _GM_getValue("lazyLoadFullResolution", 0);
-    let lazyLoadPreloadImages = _GM_getValue("lazyLoadPreloadImages", 0);
-
     let comicInfiniteScrollMode = localStorage.getItem("FullPictureLoadComicInfiniteScrollMode") ?? 0;
-
-    const addLazyLoadFullResolutionMenu = async () => {
-        _GM_registerMenuCommand(lazyLoadFullResolution == 0 ? "❌ " + DL.str_111 : "✔️ " + DL.str_111, () => {
-            lazyLoadFullResolution == 0 ? _GM_setValue("lazyLoadFullResolution", 1) : _GM_setValue("lazyLoadFullResolution", 0);
-            location.reload();
-        });
-        _GM_registerMenuCommand(lazyLoadPreloadImages == 0 ? "❌ " + DL.str_113 : "✔️ " + DL.str_113, () => {
-            lazyLoadPreloadImages == 0 ? _GM_setValue("lazyLoadPreloadImages", 1) : _GM_setValue("lazyLoadPreloadImages", 0);
-            location.reload();
-        });
-    };
 
     let E_HENTAI_LoadOriginalImage = _GM_getValue("E_HENTAI_LoadOriginalImage", 0);
 
@@ -38315,7 +38066,7 @@ a[data-fancybox]:hover {
                 }
                 siteData = data;
                 _this = data;
-                if (!data.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === data.category)) {
+                if (!data.category.includes("autoPager") && !["none", "ad"].some(c => c === data.category)) {
                     showOptions = true;
                 }
                 const loadingBakBlobURL = fn.dataURLtoBlobURL(loading_bak);
@@ -38356,7 +38107,7 @@ a[data-fancybox]:hover {
             addLibrarysV3();
             Fancyboxi18nV3();
             FancyboxOptionsV3();
-        } else if (("category" in siteData) && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+        } else if (("category" in siteData) && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
             addLibrarysV5();
             Fancyboxl10nV5();
             fn.css(FancyboxV5Css, "FancyboxV5Css");
@@ -38375,7 +38126,7 @@ a[data-fancybox]:hover {
         }
         if (("category" in siteData) && !ge("#addLibrarysV3") && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
             fn.css(FancyboxV3Css, "FancyboxV3Css");
-        } else if (("category" in siteData) && !ge("#FancyboxV5Css") && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+        } else if (("category" in siteData) && !ge("#FancyboxV5Css") && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
             fn.css(FancyboxV5Css, "FancyboxV5Css");
         }
         if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
@@ -38760,7 +38511,7 @@ a[data-fancybox]:hover {
                 }
             }
         }
-        if (isPC && options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
+        if (isPC && options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
             fn.hideMsg();
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 if (await siteData.SPA()) {
@@ -38770,7 +38521,7 @@ a[data-fancybox]:hover {
                 setTimeout(() => createShadowGallery(), 200);
             }
         }
-        if (isM && !("SPA" in siteData) && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+        if (isM && !("SPA" in siteData) && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category)) {
             fn.hideMsg();
             createFilterUI();
         }
@@ -38793,7 +38544,7 @@ a[data-fancybox]:hover {
                 } else if (isString(setFancybox) && options.fancybox == 1) {
                     fn.setFancybox(setFancybox);
                 }
-            }, 1500);
+            }, 1200);
         }
     } catch (error) {
         console.error("圖片全載規則出錯", error);
@@ -38809,7 +38560,6 @@ a[data-fancybox]:hover {
         debug("\n列出NSFW+規則", nsfw2Data);
         debug("\n列出COMIC規則", comicData);
         debug("\n列出HCOMIC規則", hcomicData);
-        debug("\n列出LazyLoad模式規則", lazyLoadData);
         debug("\n列出自動翻頁規則", autoPagerData);
         debug("\n列出去廣告規則", AD_Data);
         debug("\n列出未分類規則", noneData);
@@ -38836,7 +38586,7 @@ a[data-fancybox]:hover {
         });
     }
 
-    if (siteData.category && ["nsfw1", "nsfw2", "hcomic", "comic", "lazyLoad"].some(c => c === siteData.category)) {
+    if (siteData.category && ["nsfw1", "nsfw2", "hcomic", "comic"].some(c => c === siteData.category)) {
         _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + DL.str_120 : "✔️ " + DL.str_120, () => {
             newTabViewLightGallery == 0 ? localStorage.setItem("newTabViewLightGallery", 1) : localStorage.setItem("newTabViewLightGallery", 0);
             location.reload();
@@ -38915,10 +38665,6 @@ a[data-fancybox]:hover {
 
     //debug("\n最終options物件\n", options);
 
-    if (siteData.category == "lazyLoad") {
-        addLazyLoadFullResolutionMenu();
-    }
-
     //漫畫類預讀下一話圖片
     setTimeout(() => {
         let preloadNext = siteData.preloadNext;
@@ -38970,9 +38716,6 @@ a[data-fancybox]:hover {
                 setTimeout(() => createShadowGallery(), 200);
             }
         }
-        if (lazyLoadPreloadImages == 1) {
-            fn.picPreload(imagePreloadArray, "Lazy Load Mode");
-        }
     }
 
     async function captureSrcB(invalidPage = 0) {
@@ -39002,23 +38745,12 @@ a[data-fancybox]:hover {
     }
 
     //動態捕獲圖片網址
-    if (siteData.category?.includes("lazyLoad") && lazyLoadFullResolution == 1 && !!siteData.capture || isString(siteData.imgs) && !isArray(siteData.insertImg) || isFn(siteData.capture) && siteData.category != "lazyLoad") {
-        if (isFn(siteData.capture) && siteData.category != "lazyLoad" || isString(siteData.capture) && siteData.category != "lazyLoad" || isString(siteData.imgs) && siteData.category != "lazyLoad") {
-            if (FullPictureLoadShowEye == 1 && siteData.eye != 0) {
-                await delay(1000);
-                isCaptureMode = true;
-                addNewTabViewButton();
-                captureSrc();
-            }
-        }
-        if (siteData.category === "lazyLoad" && siteData.eye != 0) {
+    if (isString(siteData.imgs) && !isArray(siteData.insertImg) || isFn(siteData.capture)) {
+        if (FullPictureLoadShowEye == 1 && siteData.eye != 0) {
+            await delay(1000);
             isCaptureMode = true;
             addNewTabViewButton();
-            fn.addMutationObserver(captureSrc, document.body, {
-                childList: true,
-                subtree: true,
-                attributes: true
-            });
+            captureSrc();
         }
     }
 
@@ -39384,7 +39116,7 @@ a[data-fancybox]:hover {
         }
     }
 
-    if (!isSimpleMode && !siteData.category?.includes("autoPager") && !["lazyLoad", "none", "ad"].some(c => c === siteData.category)) {
+    if (!isSimpleMode && !siteData.category?.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category)) {
         if (siteData.key != 0) {
             if (isPC) {
                 if (ShowFullPictureLoadFixedMenu === 1) addFullPictureLoadFixedMenu();
