@@ -1,6 +1,5 @@
 <h1>安裝腳本</h1>
-<a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">圖片全載-FancyboxV5
-</a>
+<a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">圖片全載-FancyboxV5 </a>
 <h1>測試通過環境：</h1>
 <pre>
 2025/02/07
@@ -18,9 +17,9 @@ Edge 132.0.2957.129 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.
 Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Yandex Browser 25.2.0.241 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.8.1</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://www.xbext.com/index.html">XBrowser 5.0.3</a>
 <a href="https://viayoo.com/zh-cn/">ViaBrowser 6.2.0</a>
-<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.8.1</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>Extensions：</h1>
@@ -64,7 +63,8 @@ Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0
             </li>
         </ul>
     </li>
-    <li><a href="https://www.windowslatest.com/2024/04/02/you-can-now-install-any-extension-in-microsoft-edge-canary-for-android/">Edge Canary Extension install by id</a>
+    <li>
+        <a href="https://www.windowslatest.com/2024/04/02/you-can-now-install-any-extension-in-microsoft-edge-canary-for-android/">Edge Canary Extension install by id</a>
         <pre>Tampermonkey
 iikmkjmpaadaobahmlepeloendndfphd
 Violentmonkey
@@ -85,8 +85,8 @@ cnjkedgepfdpdbnepgmajmmjdjkjnifa</pre>
             <strong>「 點擊展開查看依賴庫 」</strong>
         </kbd>
     </summary>
-<br>
-<pre>
+    <br>
+    <pre>
 cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
@@ -98,7 +98,7 @@ cdn.jsdelivr.net
 // @resource ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
-<pre>
+    <pre>
 unpkg.com
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
@@ -131,7 +131,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         </kbd>
     </summary>
     <br>
-<pre>
+    <pre>
 [{
     name: "規則名稱",
     enable: 0, //填0禁用此規則
@@ -353,7 +353,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     …
 }]
 </pre>
-<pre>
+    <pre>
 // 網站自帶Fancybox燈箱功能，不注入FancyboxCSS樣式
 fancybox: {
     v: 3,
@@ -381,7 +381,7 @@ fancybox: {
     <p>簡易實現自動翻頁功能，圖片全載的實驗性輔助功能，需要動態加載的大多都翻不了。</p>
     <p>點擊標題分隔條和雙擊頁面空白處，暫停或啟用自動翻頁。</p>
     <p>需要更高級的自動翻頁功能請使用東方永頁機。</p>
-<pre>
+    <pre>
 變數doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
 舉例選取元素
 doc.querySelector(selector)
@@ -389,7 +389,7 @@ doc.querySelector(selector)
 fn.ge(selector, doc)
 fn.gae(selector, doc)
 </pre>
-<pre>
+    <pre>
 {
     name: "哈哈漫画 www.hahacomic.com 分類自動翻頁",
     enable: 1,
@@ -494,13 +494,13 @@ fn.gae(selector, doc)
         </kbd>
     </summary>
     <br>
-<pre>
+    <pre>
 //取得任意物件的類型
 console.log(getType([])); //'Array'
 console.log(getType({})); //'Object'
 getType(obj);
 </pre>
-<pre>
+    <pre>
 //判斷當前是否為觸控裝置
 hasTouchEvent
 //判斷是否為字串返回布林值
@@ -526,7 +526,7 @@ isEle(obj);
 //判斷字串是否為完整的網址返回布林值
 isURL(obj);
 </pre>
-<pre>
+    <pre>
 //匹配網址和頁面元素，用於規則屬性url和reg是函式的寫法
 //t = document.title 匹配標題部分字串，類型可為字串、正規表達式、字串或正規表達式的陣列
 //h = hosts 匹配網站的域名，類型可為字串、正規表達式、字串或正規表達式的陣列
@@ -558,33 +558,33 @@ const object = {
 }
 fn.checkUrl(object);
 </pre>
-<pre>
+    <pre>
 //返回選擇器的首個元素，支持CSS/Xpath選擇器
 fn.ge("selector");
 fn.ge("selector", doc = document);
 fn.ge("selector", node);
 fn.ge(String, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //返回選擇器的所有元素的陣列，支持CSS/Xpath選擇器
 fn.gae("selector");
 fn.gae("selector", doc = document);
 fn.gae("selector", node);
 fn.gae(String, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //返回A選擇器的首個A元素的href
 fn.gu("selector");
 fn.gu("selector", doc = document);
 fn.gu(String, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //返回A選擇器的所有A元素的href的陣列並且去除重複
 fn.gau("selector");
 fn.gau("selector", doc = document);
 fn.gau(String, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //取得元素的字串
 //mode
 //1返回指定元素的字串(預設)
@@ -594,7 +594,7 @@ fn.gt("selector");
 fn.gt("selector", mode = 1, doc = document);
 fn.gt(String, Number, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //取得元素的字串
 //選擇器為陣列時，依序判斷元素是否存在與字串數是否大於0。
 //例如要拿h1,h2的字串，h1元素在前是英文，h2元素在後是中文，想要先拿中文就寫成["h2", "h1"]。
@@ -602,7 +602,7 @@ fn.getText("selector");
 fn.getText("selector", doc = document);
 fn.getText(String or Array, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //刪除指定字串返回字串
 //s = selector 元素選擇器
 //t = text 文字字串
@@ -629,20 +629,20 @@ fn.dt(objetc);
     d: "example.com"
 }
 </pre>
-<pre>
+    <pre>
 //取得非外部引入的script的字串
 //searchValue，關鍵字串或正規表達式
 fn.gst(searchValue);
 fn.gst(searchValue, doc = document);
 fn.gst(String or RegExp, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //取得元素屬性的值
 fn.attr("selector","屬性");
 fn.attr("selector","屬性", doc = document);
 fn.attr(String, String, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //創建一個DIV用來放圖片，返回DIV
 //元素ID，#FullPictureLoadMainImgBox
 //pos 0，添加進指定的元素裡面
@@ -653,7 +653,7 @@ fn.createImgBox("selector");
 fn.createImgBox("selector", pos = 0, width = null);
 fn.createImgBox(String or HTMLElement, Number, Number);
 </pre>
-<pre>
+    <pre>
 //指定元素選擇器或元素陣列，返回提取出的圖片網址陣列。
 //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，支持dataset和backgroundImage
 //不判斷srcset是因為不是所有網站都遵循srcset屬性的格式
@@ -662,7 +662,7 @@ fn.getImgSrcArr("selector", doc = document);
 fn.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fn.getImgSrcArr(Array [HTMLElement]);
 </pre>
-<pre>
+    <pre>
 //比fn.getImgSrcArr()多了判斷srcset屬性
 //主要用於提取IMG的srcset屬性
 fn.getImgSrcset("img selector");
@@ -670,7 +670,7 @@ fn.getImgSrcset("img selector", doc = document);
 fn.getImgSrcset(String, HTMLDocument);
 fn.getImgSrcset(Array [HTMLImageElement]);
 </pre>
-<pre>
+    <pre>
 //對document.title的字串修改
 //mode
 //0返回【刪除指定字串的標題(預設)】
@@ -681,12 +681,12 @@ fn.title("字串");
 fn.title("字串", mode, doc = document);
 fn.title(String or RegExp, Number, HTMLDocument);
 </pre>
-<pre>
+    <pre>
 //觀察元素變化執行callback
 fn.addMutationObserver(callback, config = MutationObserverConfig, node = document.body);
 fn.addMutationObserver(Function or AsyncFunction, Object, HTMLElement);
 </pre>
-<pre>
+    <pre>
 //將字串解析成document物件
 //搭配fetch(url).then(res => res.text())返回的原始碼使用
 fn.doc("字串");
@@ -697,22 +697,22 @@ fetch(url).then(res => res.text()).then(text => {
     return ele;
 })
 </pre>
-<pre>
+    <pre>
 //將字串解析成xml物件
 fn.xml("字串");
 fn.xml(String);
 </pre>
-<pre>
+    <pre>
 //顯示簡短訊息
 //time ms，0持續顯示
 fn.showMsg("字串", time = 1000);
 fn.showMsg(String, Number);
 </pre>
-<pre>
+    <pre>
 //隱藏簡短訊息
 fn.hideMsg();
 </pre>
-<pre>
+    <pre>
 //延遲運行async/await
 //time ms
 //msg，0不顯示訊息
@@ -721,7 +721,7 @@ fn.delay(Number, Number);
 也能用
 delay(Number);
 </pre>
-<pre>
+    <pre>
 //等待元素async/await
 //間隔100毫秒判斷一次
 //有元素返回元素，選擇器參數為陣列時返回元素陣列，超過循環次數返回null。
@@ -730,7 +730,7 @@ await fn.waitEle("selector");
 await fn.waitEle("selector", max = 200, doc = document);
 fn.waitEle(String or Array, Number, HTMLDocument or HTMLElement);
 </pre>
-<pre>
+    <pre>
 //等待window環境變數，需要等待多個變數時參數為陣列
 //max，循環的次數
 //
@@ -738,7 +738,7 @@ await fn.waitVar("variable");
 await fn.waitVar("variable", max = 200);
 fn.waitVar(String or Array [String], Number);
 </pre>
-<pre>
+    <pre>
 //等待函式寫法，預設最大循環300次100ms，30秒。
 //callback返回真假值或物件，undefined、null、NaN識別為false。
 //callback參數(document, window)
@@ -748,19 +748,19 @@ let callback = (dom, win) => {
 await fn.wait(callback, num = 300);
 fn.wait(Function or AsyncFunction, Number);
 </pre>
-<pre>
+    <pre>
 //功能基本等同eval()
 fn.run("code");
 fn.run(String);
 </pre>
-<pre>
+    <pre>
 //創建空陣列，取代[] for push()的寫法
 //num陣列的長度
 fn.arr(num);
 fn.arr(num, (_, i) => (i + 1));
 fn.arr(Number, Function);
 </pre>
-<pre>
+    <pre>
 //移除元素
 //time ms，延遲的時間
 //Promise可以用await
@@ -772,7 +772,7 @@ let selectors = ["cssSelector" , "XpathSelector"]
 fn.remove(selectors, time = 0);
 fn.remove(String or Array [String], Number);
 </pre>
-<pre>
+    <pre>
 //清除所有setTimeout和setInterval定時器
 //用匿名函式對付匿名函式，可以解決一部份不讓人打開F12開發人員工具的問題
 //mode0，預設運行全部
@@ -782,12 +782,12 @@ fn.remove(String or Array [String], Number);
 fn.clearAllTimer(mode = 0);
 fn.clearAllTimer(Number);
 </pre>
-<pre>
+    <pre>
 //插入樣式，需要先用JS判斷的情況用這個
 fn.css("css");
 fn.css(String);
 </pre>
-<pre>
+    <pre>
 //插入A元素;
 //url 網址
 //selector 元素選擇器或DOM元素
@@ -800,7 +800,7 @@ fn.css(String);
 fn.addUrlHtml("url", "selector", pos = 0, "text");
 fn.addUrlHtml(String, String or HTMLElement, Number, String);
 </pre>
-<pre>
+    <pre>
 //創建script元素
 fn.script(string, number= 0, number = 0, doc = document);
 //返回script
@@ -810,7 +810,7 @@ fn.script("code", 0, 1);
 //src插入到document.body
 fn.script("srcUrl", 1, 1);
 </pre>
-<pre>
+    <pre>
 //依序自動滾動元素
 //selector 元素選擇器
 //ms 滾動的間隔時間
@@ -843,7 +843,7 @@ await fn.aotoScrollEles("img.gallery-item", (ele) => {
 }, 1000);
 return [...new Set(arr)];
 </pre>
-<pre>
+    <pre>
 //確認元素和圖片網址，嘗試取得網址和補全網址，返回一個object。
 {
     ok: Boolean, //成功true失敗false
@@ -852,7 +852,7 @@ return [...new Set(arr)];
 fn.checkImgSrc(HTMLElement);
 //可以使用封裝好的fn.getImgSrcArr();
 </pre>
-<pre>
+    <pre>
 //確認元素有沒有把圖片原始網址放在src以外的屬性，返回一個object。
 {
     ok: Boolean, //成功true失敗false
@@ -861,7 +861,7 @@ fn.checkImgSrc(HTMLElement);
 fn.checkDataset(HTMLElement);
 //可以使用封裝好的fn.getImgSrcArr();
 </pre>
-<pre>
+    <pre>
 //確認圖片狀態屬性 返回一個object
 {
     ok: Boolean, //成功讀取true失敗false
@@ -871,12 +871,12 @@ fn.checkDataset(HTMLElement);
 await fn.checkImgStatus(src);
 fn.checkImgStatus(String);
 </pre>
-<pre>
+    <pre>
 //確認加了CDN[wsrv.nl || wp.com]的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址
 await fn.checkImageCDN([圖片網址陣列]);
 fn.checkImageCDN(Array);			
 </pre>
-<pre>
+    <pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得，無法繪製跨域的圖片，會出現跨域汙染的錯誤。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
@@ -887,7 +887,7 @@ fn.imgToBlobURL(String, String, Number);
 //例子
 [...fn.gae(".mh_comicpic img[src^=blob]")].map(e => fn.imgToBlobURL(e));
 </pre>
-<pre>
+    <pre>
 //封裝fn.imgToBlobURL函式。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
@@ -900,7 +900,7 @@ fn.imgBlobUrlArr(".mh_comicpic img[src^=blob]");
 //例子2
 fn.imgBlobUrlArr(".image>img");
 </pre>
-<pre>
+    <pre>
 //取得代碼並創建script注入到當前頁面
 let obj = {
     cors: true, //跨域
@@ -918,7 +918,7 @@ fn.getCode("https://code.jquery.com/jquery-3.7.1.min.js", {
     cors: true
 });
 </pre>
-<pre>
+    <pre>
 //使用Promise封裝GM_xmlhttpRequest
 //只取得回應標頭，不接收完整資料，快速確認連結的存活狀態。
 fn.xhrHEAD("url");
@@ -932,14 +932,14 @@ if (status == 200) {
 }
 fn.xhrHEAD(String);
 </pre>
-<pre>
+    <pre>
 //使用Promise封裝GM_xmlhttpRequest
 //傳入連結陣列抓取免空圖床的圖片，返回圖片網址的陣列
 //imx.to、imagebam、postimg...等等
 fn.getImageHost([links]);
 fn.getImageHost(Array);
 </pre>
-<pre>
+    <pre>
 //使用Promise封裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
 fn.xhr("url", details = {});
@@ -955,7 +955,7 @@ fn.xhr("url", {
 })
 fn.xhr(String, Object);
 </pre>
-<pre>
+    <pre>
 //使用Promise封裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
 fn.xhrDoc("url", details = {})
 fn.xhrDoc("url", {
@@ -969,7 +969,7 @@ fn.xhrDoc("url").then(doc => {
 })
 fn.xhrDoc(String, Object);
 </pre>
-<pre>
+    <pre>
 //使用Fetch API，返回經過文字編碼的document，避免字元亂碼。
 //無法修改User-Agent
 fn.fetchDoc("url", details = {});
@@ -978,7 +978,7 @@ fn.fetchDoc("url").then(doc => {
 })
 fn.fetchDoc(String, Object);
 </pre>
-<pre>
+    <pre>
 //必須同源不能跨域
 //使用Promise封裝iframe框架，返回iframe框架的document。
 //selector元素選擇器指定等待到元素出現(必須)
@@ -990,7 +990,7 @@ let callback = (dom, frame) => {
 await fn.iframeDoc("url", "selector", time = 5000, callback);
 fn.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
-<pre>
+    <pre>
 //必須同源不能跨域
 //使用Promise封裝Fetch API搭配iframe框架，返回iframe框架的document。
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
@@ -1003,13 +1003,13 @@ let callback = (dom, frame) => {
 await fn.iframeSrcDoc("url", "selector", time = 5000, callback);
 fn.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
-<pre>
+    <pre>
 //必須同源不能跨域
 //使用Promise封裝iframe框架，等待至指定的環境變數出現，返回iframe框架的contentWindow。
 let iframe = await fn.iframeVar("url", "declares", time = 1000);
 fn.iframeVar(String, String, Number);
 </pre>
-<pre>
+    <pre>
 //必須同源不能跨域
 //使用Promise封裝iframe框架，讓調用iframe框架能像fetch的寫法
 const details = {
@@ -1041,7 +1041,7 @@ fn.iframe("url", details).then(object => {
 
 fn.iframe(String, Object);
 </pre>
-<pre>
+    <pre>
 //xhr獲取元素，不局限於圖片
 //links，A元素選擇器或網址陣列
 //selector要獲取的元素選擇器
@@ -1056,7 +1056,7 @@ fn.getEle(String or Array, String, null or String or Array [String, Number], nul
 await fn.getCorsEle([links], "selector", targetEle = null, removeEle = null, time = 100);
 fn.getCorsEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
 </pre>
-<pre>
+    <pre>
 //使用iframe單一線程獲取元素，不局限於圖片，返回元素陣列
 //links，A元素選擇器或網址陣列
 //selector要獲取的元素選擇器
@@ -1065,7 +1065,7 @@ fn.getCorsEle(String or Array, String, null or String or Array [String, Number],
 await fn.getEleF([links], "selector", targetEle = null);
 fn.getEleF(String or Array, String, null or Array [String, Number]);
 </pre>
-<pre>
+    <pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
 //max填入用fn.gt()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 //mode網址頁碼數字遞增模式
@@ -1129,7 +1129,7 @@ fn.getImg(String, Number, Number, Array [String or RegExp, String] or null, Numb
 //獨立出來的可調用函式，返回修改後的連結
 fn.getModeUrl("url", mode, num);
 </pre>
-<pre>
+    <pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
 //fn.getImgO基本同fn.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
 //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
@@ -1137,13 +1137,13 @@ fn.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "
 fn.getImgO("selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 fn.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
 </pre>
-<pre>
+    <pre>
 //fn.getImgIframe基本同fn.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
 fn.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
 fn.getImgIframe("img selector", max, mode, paginationEle = null, time = 1000, showMsg = 1)
 fn.getImgIframe(String, Number, Number, String or  null, Number, Number)
 </pre>
-<pre>
+    <pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
 //mode
 //0多線程(預設)
@@ -1159,14 +1159,14 @@ fn.getImgA("元素選擇器", "A元素選擇器");
 fn.getImgA("元素選擇器", [網址陣列]);
 fn.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
 </pre>
-<pre>
+    <pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址的陣列
 //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fn.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
 fn.getImgCorsA("元素選擇器", [網址陣列], time = 100);
 fn.getImgCorsA(String, String or Array, Number);
 </pre>
-<pre>
+    <pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fn.getImgA()
 fn.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器或函式", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
 //判斷為最後一頁的函式舉例
@@ -1312,7 +1312,7 @@ imgs: async () => {
         "enable": 0,
         "url": "^http",
         "include": "#FullPictureLoadMainStyle"
-    }
+   }
 </pre>
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片篩選下載功能。</p>
@@ -1350,7 +1350,7 @@ imgs: async () => {
 紳士会所,https://www.hentaiclub.net/
 </pre>
     <p>進階，統一修改文字顏色和背景顏色。</p>
-<pre>
+    <pre>
 text-color,#111
 background-color,#16d4cf
 4KHD,https://www.4khd.com/
@@ -1359,7 +1359,7 @@ background-color,#16d4cf
 紳士会所,https://www.hentaiclub.net/
 </pre>
     <p>高階，花裡胡哨，每4個收藏就換一種背景顏色，當然也能穿插改文字顏色。</p>
-<pre>
+    <pre>
 4KHD,https://www.4khd.com/
 小黃書,https://xchina.biz/
 8色人體攝影,https://8se.me/
@@ -1444,8 +1444,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>豆瓣相册</td>
-                <td>作用在相簿頁，例如：<a href="https://www.douban.com/photos/album/1925659550/">大白桃子 写真集『桃白 vol.1』
-</a></td>
+                <td>作用在相簿頁，例如： <a href="https://www.douban.com/photos/album/1925659550/">大白桃子 写真集『桃白 vol.1』 </a>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -1479,7 +1479,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://xchina.biz/">小黃書</a>
                 </td>
                 <td>
-                    <a href="https://xchina.co/">xchina.co</a>，<a href="https://xchina.store/">xchina.store</a>，<a href="https://xchina.bond/">xchina.bond</a>，<a href="https://xiaohuangshu.me/">网址发布页</a>
+                    <a href="https://xchina.co/">xchina.co</a>， <a href="https://xchina.store/">xchina.store</a>， <a href="https://xchina.bond/">xchina.bond</a>， <a href="https://xiaohuangshu.me/">网址发布页</a>
                 </td>
             </tr>
             <tr>
@@ -1539,7 +1539,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.depvailon.com/">Depvailon.Com</a>
                 </td>
                 <td>
-                    <a href="https://baobua.com/">BaoBua</a>，<a href="https://www.kaizty.com/">Kaizty Photos</a>，<a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>
+                    <a href="https://baobua.com/">BaoBua</a>， <a href="https://www.kaizty.com/">Kaizty Photos</a>， <a href="https://nungvl.net/">nungvl.net</a>， <a href="https://lootiu.com/">Lootiu.Com</a>， <a href="https://thismore.fun/">ThisMore.Fun</a>， <a href="https://cosxuxi.club/">CosXuxi Club</a>
                 </td>
             </tr>
             <tr>
@@ -1547,7 +1547,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
                 <td>
-                    <a href="https://pic.yailay.com/">Pic Yailay</a>，<a href="https://www.dongojyousan.com/">dongojyousan.com</a>，<a href="https://redseats.org/">RedSeats.Org</a>，<a href="https://cn.looives.com/">Chinese in beauty</a>
+                    <a href="https://pic.yailay.com/">Pic Yailay</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>
                 </td>
             </tr>
             <tr>
@@ -1561,7 +1561,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xinggan5.top/">极品性感美女</a>
                 </td>
                 <td>
-                    <a href="http://www.plmn5.com/">网址发布页1</a>，<a href="http://xgyw.org/">网址发布页2</a>，永久域名：尤物网.Com
+                    <a href="http://www.plmn5.com/">网址发布页1</a>， <a href="http://xgyw.org/">网址发布页2</a>，永久域名：尤物网.Com
                 </td>
             </tr>
             <tr>
@@ -1574,7 +1574,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="http://25.xy09.my/">秀人集</a>
                 </td>
-                <td>永久域名Xiurenba.Com及(秀人集.com)，<a href="http://a.2xiu.vip/">导航页</a></td>
+                <td>永久域名Xiurenba.Com及(秀人集.com)， <a href="http://a.2xiu.vip/">导航页</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1599,14 +1600,16 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://meirentu.cc/">美人图</a>
                 </td>
                 <td>
-                    <a href="https://meirentu.org/">meirentu.org</a>，<a href="https://meirentu.top/">meirentu.top</a>，<a href="https://meirentu.me/">meirentu.me</a>，<a href="https://meirentu.icu/">meirentu.icu</a>
+                    <a href="https://meirentu.org/">meirentu.org</a>， <a href="https://meirentu.top/">meirentu.top</a>， <a href="https://meirentu.me/">meirentu.me</a>， <a href="https://meirentu.icu/">meirentu.icu</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.taotu8.cc/">秀套图吧</a>
                 </td>
-                <td><a href="https://www.913wen.com/">91性感美女</a></td>
+                <td>
+                    <a href="https://www.913wen.com/">91性感美女</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1618,7 +1621,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.meimeicun.top/">美眉村</a>
                 </td>
-                <td><a href="https://193.123.238.234/">193.123.238.234</a></td>
+                <td>
+                    <a href="https://193.123.238.234/">193.123.238.234</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1644,14 +1649,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.kaka234.cc/">卡卡美女网</a>
                 </td>
                 <td>
-                    <a href="https://www.pic88.cc/">高清图片吧</a>，<a href="https://www.ku138.cc/">美女写真网</a>，<a href="https://www.tu99663.cc/">美女图片网</a>，<a href="https://www.jutu1232.cc/">聚图美女网</a>，China IP限定
+                    <a href="https://www.pic88.cc/">高清图片吧</a>， <a href="https://www.ku138.cc/">美女写真网</a>， <a href="https://www.tu99663.cc/">美女图片网</a>， <a href="https://www.jutu1232.cc/">聚图美女网</a>，China IP限定
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.24tupian.org/">爱死美女图片站</a>
                 </td>
-                <td>需註冊登入才能看大圖和下載，<a href="https://www.aisimm.com/">鏡像站？</a>，與主站帳號通用，圖片伺服器不同。</td>
+                <td>需註冊登入才能看大圖和下載， <a href="https://www.aisimm.com/">鏡像站？</a>，與主站帳號通用，圖片伺服器不同。 </td>
             </tr>
             <tr>
                 <td>
@@ -1686,7 +1691,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://buondua.com/">Buon Dua</a>
                 </td>
                 <td>
-                    <a href="https://buondua.us/">buondua.us</a>，<a href="https://missbaby.top/">MISS BABY</a>
+                    <a href="https://buondua.us/">buondua.us</a>， <a href="https://missbaby.top/">MISS BABY</a>
                 </td>
             </tr>
             <tr>
@@ -1739,7 +1744,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.okxx.de/">秀图湾</a>
                 </td>
-                <td><a href="https://xiusz.com/">xiusz.com</a></td>
+                <td>
+                    <a href="https://xiusz.com/">xiusz.com</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1843,7 +1850,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.tuzac.com/">图宅网</a>
                 </td>
-                <td> <a href="https://www.kkc3.com/">咔咔西三</a>，<a href="https://www.youfreex.com/">YouFreeX</a></td>
+                <td>
+                    <a href="https://www.kkc3.com/">咔咔西三</a>， <a href="https://www.youfreex.com/">YouFreeX</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1907,7 +1916,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://2048.cc/2048/">我为人人</a>
                 </td>
-                <td>貼圖區，<a href="https://2048.info/">地址发布页</a></td>
+                <td>貼圖區， <a href="https://2048.info/">地址发布页</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2008,7 +2018,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://8ezy.com/uncategorized/">8E资源站</a>
                 </td>
                 <td>
-                    <a href="https://8ezy.com/tag/%e7%be%8e%e5%9b%be/">美图</a>，<a href="https://8ezy.com/tag/%E8%8A%B1%E7%B5%AE/">花絮</a>，歸檔頁添加了自動翻頁
+                    <a href="https://8ezy.com/tag/%e7%be%8e%e5%9b%be/">美图</a>， <a href="https://8ezy.com/tag/%E8%8A%B1%E7%B5%AE/">花絮</a>，歸檔頁添加了自動翻頁
                 </td>
             </tr>
             <tr>
@@ -2046,7 +2056,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://girl18.net/">Girl 18+</a>
                 </td>
                 <td>
-                    <a href="https://jvid.girl18.net/">JVID</a>，<a href="https://xiuren.girl18.net/">XIUREN</a>，<a href="https://bobosocks.girl18.net/">BOBOSOCKS</a>，<a href="https://imiss.girl18.net/">IMISS</a>，<a href="https://cosplay.girl18.net/">COSPLAY</a>，<a href="http://bikiniz.net/">Bikini Girl</a>
+                    <a href="https://jvid.girl18.net/">JVID</a>， <a href="https://xiuren.girl18.net/">XIUREN</a>， <a href="https://bobosocks.girl18.net/">BOBOSOCKS</a>， <a href="https://imiss.girl18.net/">IMISS</a>， <a href="https://cosplay.girl18.net/">COSPLAY</a>， <a href="http://bikiniz.net/">Bikini Girl</a>
                 </td>
             </tr>
             <tr>
@@ -2059,13 +2069,17 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mei101.com/xingganmeimei/">Mei101</a>
                 </td>
-                <td> <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mei101.txt">同格式網站22個</a></td>
+                <td>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/mei101.txt">同格式網站22個</a>
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://meitu9.com/">九天美图</a>
                 </td>
-                <td><a href="https://jiutianmeitu.com/">jiutianmeitu.com</a>，<a href="https://2kl.net/">爱看美图</a></td>
+                <td>
+                    <a href="https://jiutianmeitu.com/">jiutianmeitu.com</a>， <a href="https://2kl.net/">爱看美图</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2257,7 +2271,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.aitaotu.cc/">爱套图</a>
                 </td>
-                <td><a href="https://www.2taotu.cc/">www.2taotu.cc</a></td>
+                <td>
+                    <a href="https://www.2taotu.cc/">www.2taotu.cc</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2325,7 +2341,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.656g.com/">656G精品套图</a>
                 </td>
-                <td><a href="http://www.mmww.cc/">秀人妹子图</a></td>
+                <td>
+                    <a href="http://www.mmww.cc/">秀人妹子图</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2352,7 +2370,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://xx.knit.bid/sort/new/">爱妹子</a>
                 </td>
                 <td>
-                    <a href="https://mm.187187.xyz/sort/new/">mm.187187.xyz</a>， <a href="https://999888.best/sort/new/">999888.best</a>， <a href="https://www.gaik.com/sort/new">www.gaik.com</a>
+                    <a href="https://mm.187187.xyz/sort/new/">mm.187187.xyz</a>， <a href="https://999888.best/sort/new/">999888.best</a>
                 </td>
             </tr>
             <tr>
@@ -2360,7 +2378,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://928r.com/">美图社</a>
                 </td>
                 <td>
-                    <a href="https://060k.com/">花瓣美女</a>，<a href="https://www.dmjie.com/show/">大美姐</a>
+                    <a href="https://060k.com/">花瓣美女</a>， <a href="https://www.dmjie.com/show/">大美姐</a>
                 </td>
             </tr>
             <tr>
@@ -2641,7 +2659,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://spacemiss.com/">Space of Miss Beautiful</a>
                 </td>
-                <td>影片連結可以用貓抓擷取，可用Motrix下載<pre>Referer: https://d000d.com/</pre></td>
+                <td>影片連結可以用貓抓擷取，可用Motrix下載
+                    <pre>Referer: https://d000d.com/</pre>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2709,7 +2729,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://jpg5.su/tatsuya_shiba/albums">JPG5</a>
                 </td>
-                <td><a href="https://jpg5.su/hru_moon/albums">hru_moon</a>，作用在上傳者的相簿，手動插入圖片</td>
+                <td>
+                    <a href="https://jpg5.su/hru_moon/albums">hru_moon</a>，作用在上傳者的相簿，手動插入圖片
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2781,7 +2803,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://fapello.com/">Fapello</a>
                 </td>
-                <td><a href="https://fapello.com/sally-dorasnow/">Sally Dorasnow</a>，手動插入圖片</td>
+                <td>
+                    <a href="https://fapello.com/sally-dorasnow/">Sally Dorasnow</a>，手動插入圖片
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2805,7 +2829,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://fapellas.com/">Fapellas</a>
                 </td>
-                <td>手動插入圖片， <a href="https://faponic.com/">Faponic</a></td>
+                <td>手動插入圖片， <a href="https://faponic.com/">Faponic</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2823,7 +2848,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://thefappeningblog.com/">TheFappening</a>
                 </td>
-                <td><a href="https://thefappening.plus/">The Fappening Plus</a>，<a href="https://fap.thefappening.one/">#TheFappening</a>，<a href="https://fap.thefappeningnew.com/">The Fappening</a></td>
+                <td>
+                    <a href="https://thefappening.plus/">The Fappening Plus</a>， <a href="https://fap.thefappening.one/">#TheFappening</a>， <a href="https://fap.thefappeningnew.com/">The Fappening</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -2974,7 +3001,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://dongti.netlify.app/">胴体的秘密</a>
                 </td>
                 <td>
-                   <a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>，<a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>，<a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>，<a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>，<a href="https://fulituku.neocities.org/">福利图库</a>，<a href="https://coser1.neocities.org/">COSER美女图</a>
+                    <a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>， <a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>， <a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>， <a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>， <a href="https://fulituku.neocities.org/">福利图库</a>， <a href="https://coser1.neocities.org/">COSER美女图</a>
                 </td>
             </tr>
             <tr>
@@ -3043,13 +3070,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://cyberdrop.me/">CyberDrop</a>
                 </td>
-                <td>手動插入圖片，需要知道檔案連結，例如：<a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎：<a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數</td>
+                <td>手動插入圖片，需要知道檔案連結，例如： <a href="https://cyberdrop.me/a/QdGaziWb">https://cyberdrop.me/a/QdGaziWb</a>，搜索引擎： <a href="https://www.flaru.com/en/cyberdrop.me/">https://www.flaru.com/en/cyberdrop.me/</a>，下載會出錯時請調低線程數 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://vk.com/">VK</a>
                 </td>
-                <td>作用在相簿頁，例如：<a href="https://vk.com/album-213073007_283330987">Coser@桜井宁宁 Vol.036 宁宁喵</a>，<a href="https://vk.com/album-200938487_302684407">Coser@けん研 (けんけん) 2023.10 写真合集</a>，<a href="https://vk.com/album-206951480_284035019">六味帝皇醬 - 廢墟JK</a></td>
+                <td>作用在相簿頁，例如： <a href="https://vk.com/album-213073007_283330987">Coser@桜井宁宁 Vol.036 宁宁喵</a>， <a href="https://vk.com/album-200938487_302684407">Coser@けん研 (けんけん) 2023.10 写真合集</a>， <a href="https://vk.com/album-206951480_284035019">六味帝皇醬 - 廢墟JK</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3110,7 +3138,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://thothub.vip/albums/">Thothub Albums</a>
                 </td>
                 <td>
-                    <a href="https://thothub.to/albums/">thothub.to</a>，<a href="https://thothub.ch/albums/">thothub.ch</a>，<a href="https://thothub.su/albums/">thothub.su</a>，<a href="https://thothub.lol/albums/">thothub.lol</a>，<a href="https://thothub.mx/albums/">thothub.mx</a></td>
+                    <a href="https://thothub.to/albums/">thothub.to</a>， <a href="https://thothub.ch/albums/">thothub.ch</a>， <a href="https://thothub.su/albums/">thothub.su</a>， <a href="https://thothub.lol/albums/">thothub.lol</a>， <a href="https://thothub.mx/albums/">thothub.mx</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3146,7 +3175,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://nudebird.biz/">Nude Bird</a>
                 </td>
-                <td><a href="https://nudecosplay.biz/">Nude Cosplay</a></td>
+                <td>
+                    <a href="https://nudecosplay.biz/">Nude Cosplay</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3188,7 +3219,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://russiasexygirls.com/">RussiaSexyGirls</a>
                 </td>
-                <td><a href="https://eurosexygirls.com/">EuroSexyGirls</a>，<a href="https://usasexygirls.com/">UsaSexyGirls</a>，<a href="https://asiansexiestgirls.com/">AsianSexyGirls</a>，<a href="https://latinsexygirls.com/">LatinSexyGirls</a>，<a href="https://ebonysexygirls.com/">EbonySexyGirls</a></td>
+                <td>
+                    <a href="https://eurosexygirls.com/">EuroSexyGirls</a>， <a href="https://usasexygirls.com/">UsaSexyGirls</a>， <a href="https://asiansexiestgirls.com/">AsianSexyGirls</a>， <a href="https://latinsexygirls.com/">LatinSexyGirls</a>， <a href="https://ebonysexygirls.com/">EbonySexyGirls</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3287,7 +3320,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
                 </td>
                 <td>
-                   <a href="https://hinhsexviet.com/">Hình Sex Việt</a>
+                    <a href="https://hinhsexviet.com/">Hình Sex Việt</a>
                 </td>
             </tr>
             <tr>
@@ -3318,7 +3351,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>TW Pornstars</td>
-                <td><a href="https://www.twpornstars.com/iamdorasnow">Sally多啦雪</a>，<a href="https://www.twpornstars.com/axunkaOri">阿薰kaOri</a></td>
+                <td>
+                    <a href="https://www.twpornstars.com/iamdorasnow">Sally多啦雪</a>， <a href="https://www.twpornstars.com/axunkaOri">阿薰kaOri</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3496,7 +3531,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://bi-girl.net/">肉感美ガール</a>
                 </td>
-                <td><a href="https://bi-girl.net/iamdorasnow">Sally多啦雪</a></td>
+                <td>
+                    <a href="https://bi-girl.net/iamdorasnow">Sally多啦雪</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3520,7 +3557,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="http://idol-gazoum.net/">アイドル村</a>
                 </td>
-                <td><a href="http://zilli-on.ru/">zilli-on.ru</a></td>
+                <td>
+                    <a href="http://zilli-on.ru/">zilli-on.ru</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3550,7 +3589,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://mabui-onna.com/">マブい女画像集</a>
                 </td>
-                <td><a href="https://cyoinatu-onna.com/">ちょい懐女画像集</a></td>
+                <td>
+                    <a href="https://cyoinatu-onna.com/">ちょい懐女画像集</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3646,13 +3687,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td></td>
             </tr>
-           <tr>
+            <tr>
                 <td>
                     <a href="https://girlxinh18.com/">Hot Girl Xinh 18+</a>
                 </td>
                 <td></td>
             </tr>
-           <tr>
+            <tr>
                 <td>
                     <a href="https://gaixinh.photo/">Hình ảnh gái xinh</a>
                 </td>
@@ -3698,7 +3739,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://maulon.net/">Maulon</a>
                 </td>
-                <td><a href="https://1sex.maulon.vip/">1sex.maulon.vip</a></td>
+                <td>
+                    <a href="https://1sex.maulon.vip/">1sex.maulon.vip</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3772,7 +3815,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://500brothersfun.blogspot.com/">500 Brothers</a>
                 </td>
-                <td><a href="https://safebooru.blogspot.com/">Safebooru</a></td>
+                <td>
+                    <a href="https://safebooru.blogspot.com/">Safebooru</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -3797,7 +3842,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.asiapornphoto.com/">Asia Porn Photo</a>
                 </td>
                 <td>
-                    <a href="https://www.assesphoto.com/">Asses Photo</a>，<a href="https://www.nudedxxx.com/">Nuded Photo</a>
+                    <a href="https://www.assesphoto.com/">Asses Photo</a>， <a href="https://www.nudedxxx.com/">Nuded Photo</a>
                 </td>
             </tr>
             <tr>
@@ -3833,10 +3878,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                     <a href="https://porn-image.com/">Asian Porn Image</a>
+                    <a href="https://porn-image.com/">Asian Porn Image</a>
                 </td>
                 <td>
-                    <a href="https://hentai-cosplay-xxx.com/">Hentai Cosplay</a>，<a href="https://hentai-img-xxx.com/">Hentai Image</a>
+                    <a href="https://hentai-cosplay-xxx.com/">Hentai Cosplay</a>， <a href="https://hentai-img-xxx.com/">Hentai Image</a>
                 </td>
             </tr>
             <tr>
@@ -3887,7 +3932,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.imagefap.com/">ImageFap</a>
                 </td>
-                <td><a href="https://www.imagefap.com/profile/SOMSIRISUK">SOMSIRISUK</a>，<a href="https://beta.imagefap.com/">beta.imagefap.com</a></td>
+                <td>
+                    <a href="https://www.imagefap.com/profile/SOMSIRISUK">SOMSIRISUK</a>， <a href="https://beta.imagefap.com/">beta.imagefap.com</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4101,7 +4148,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://anime.reactor.cc/">Аниме</a>
                 </td>
-                <td><a href="https://witcher.reactor.cc/">Ведьмак</a>，<a href="https://gi.reactor.cc/">Геншин Импакт</a></td>
+                <td>
+                    <a href="https://witcher.reactor.cc/">Ведьмак</a>， <a href="https://gi.reactor.cc/">Геншин Импакт</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4587,7 +4636,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.crtys.net/">人体艺术</a>
                 </td>
                 <td>
-                    <a href="https://hao312.top/">好312图库</a>，<a href="https://dsqs8.com/">導航1</a>，<a href="https://renti100.com/">導航2</a>
+                    <a href="https://hao312.top/">好312图库</a>， <a href="https://dsqs8.com/">導航1</a>， <a href="https://renti100.com/">導航2</a>
                 </td>
             </tr>
             <tr>
@@ -4649,7 +4698,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://ios.pipigou830.top/">哔咔庇护所v2</a>
                 </td>
-                <td><a href="https://soapi.study2026.com/">导航1</a>，<a href="https://pipigou830.top/">导航2</a></td>
+                <td>
+                    <a href="https://soapi.study2026.com/">导航1</a>， <a href="https://pipigou830.top/">导航2</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4669,7 +4720,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.xhs109ww.vip:2024/category/90">小黄书</a>
                 </td>
-                <td><a href="https://kxhs16.vip">永久域名</a></td>
+                <td>
+                    <a href="https://kxhs16.vip">永久域名</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4693,7 +4746,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://xxav.one/tuwen/">XXAV</a>
                 </td>
-                <td><a href="https://www.xxav2235.com/">最新地址</a></td>
+                <td>
+                    <a href="https://www.xxav2235.com/">最新地址</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4870,7 +4925,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://3hentai.net/">3hentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁，<a href="https://hentaivox.com/">HentaiVox</a></td>
+                <td>作用在圖片清單/閱讀頁， <a href="https://hentaivox.com/">HentaiVox</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4936,7 +4992,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hentaiera.com/">HentaiEra</a>
                 </td>
-                <td><a href="https://comicporn.xxx/">Comic Porn XXX</a>，作用在圖片清單頁/閱讀頁</td>
+                <td>
+                    <a href="https://comicporn.xxx/">Comic Porn XXX</a>，作用在圖片清單頁/閱讀頁
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4990,7 +5048,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://thehentai.net/">The Hentai</a>
                 </td>
-                <td><a href="https://en.thehentai.net/">en.thehentai.net</a>，作用在圖片清單頁</td>
+                <td>
+                    <a href="https://en.thehentai.net/">en.thehentai.net</a>，作用在圖片清單頁
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5050,7 +5110,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://kingcomix.com/">KingComiX</a>
                 </td>
-                <td>作用在閱讀頁，<a href="https://chochox.com/">Chochox</a>，<a href="https://comics18.org/">Comics18</a></td>
+                <td>作用在閱讀頁， <a href="https://chochox.com/">Chochox</a>， <a href="https://comics18.org/">Comics18</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5176,7 +5237,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://mangadistrict.com/">MANGA DISTRICT</a>
                 </td>
-                <td><a href="https://apcomics.org/">apcomics</a></td>
+                <td>
+                    <a href="https://apcomics.org/">apcomics</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5276,7 +5339,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://syacomic.com/">紳夜漫畫</a>
                 </td>
-                <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a></td>
+                <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5295,7 +5359,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://niyaniya.moe/">SchaleNetwork</a>
                 </td>
-                <td><a href="https://shupogaki.moe/">shupogaki.moe</a>，<a href="https://hoshino.one/">hoshino.one</a>，SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片連結轉為BlobURL，取得全部圖片需要等待一段時間。</td>
+                <td>
+                    <a href="https://shupogaki.moe/">shupogaki.moe</a>， <a href="https://hoshino.one/">hoshino.one</a>，SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片連結轉為BlobURL，取得全部圖片需要等待一段時間。
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5351,16 +5417,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://iimhw.com/">爱漫画网</a>
                 </td>
-                <td>
-                   目錄頁手動插入所有章節圖片
-                </td>
+                <td> 目錄頁手動插入所有章節圖片 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://atm333.com/">凹凸漫</a>
                 </td>
                 <td>
-                    <a href="https://xman5.com/">X漫</a>，<a href="https://rmtt6.com/">肉漫天堂</a>，目錄頁手動插入所有章節圖片
+                    <a href="https://xman5.com/">X漫</a>， <a href="https://rmtt6.com/">肉漫天堂</a>，目錄頁手動插入所有章節圖片
                 </td>
             </tr>
             <tr>
@@ -5723,7 +5787,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://porn-comic.biz/">免費H漫畫同人志</a>
                 </td>
                 <td>
-                    <a href="https://slutporn-comic.lol/">slutporn-comic.lol</a>，<a href="https://wetporn-comic.lol/">wetporn-comic.lol</a>
+                    <a href="https://slutporn-comic.lol/">slutporn-comic.lol</a>， <a href="https://wetporn-comic.lol/">wetporn-comic.lol</a>
                 </td>
             </tr>
             <tr>
@@ -5911,7 +5975,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.laimanhua88.com/">来漫画</a>
                 </td>
                 <td>
-                    <a href="https://m.laimanhua88.com/">m.laimanhua88.com</a>，<a href="https://www.comemh8.com/">www.comemh8.com</a>，<a href="https://m.comemh8.com/">m.comemh8.com</a>，有無限滾動模式加預讀
+                    <a href="https://m.laimanhua88.com/">m.laimanhua88.com</a>， <a href="https://www.comemh8.com/">www.comemh8.com</a>， <a href="https://m.comemh8.com/">m.comemh8.com</a>，有無限滾動模式加預讀
                 </td>
             </tr>
             <tr>
@@ -5924,13 +5988,16 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mh160mh.com/">漫画160</a>
                 </td>
-                <td><a href="http://m.mh160mh.com/">m.mh160mh.com</a>，有無限滾動模式加預讀</td>
+                <td>
+                    <a href="http://m.mh160mh.com/">m.mh160mh.com</a>，有無限滾動模式加預讀
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="http://www.zerobywzip.com/">zero搬运网</a>
                 </td>
-                <td>手動插入圖片，<a href="https://zerobyw.github.io/">域名</a></td>
+                <td>手動插入圖片， <a href="https://zerobyw.github.io/">域名</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5942,25 +6009,33 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="http://www.guoman8.cc/">国漫吧</a>
                 </td>
-                <td><a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限滾動模式加預讀</td>
+                <td>
+                    <a href="http://m.guoman8.cc/">m.guoman8.cc</a>，有無限滾動模式加預讀
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.haoguoman.net/">好国漫</a>
                 </td>
-                <td><a href="https://m.haoguoman.net/">m.haoguoman.net</a>，有無限滾動模式加預讀</td>
+                <td>
+                    <a href="https://m.haoguoman.net/">m.haoguoman.net</a>，有無限滾動模式加預讀
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.rumanhua.com/">如漫画</a>
                 </td>
-                <td><a href="https://www.dumanwu.com/">读漫屋</a>，有無限滾動模式加預讀</td>
+                <td>
+                    <a href="https://www.dumanwu.com/">读漫屋</a>，有無限滾動模式加預讀
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://manhuami.cc/">漫画网</a>
                 </td>
-                <td><a href="https://www.manhua3.com/">www.manhua3.com</a>，有無限滾動模式加預讀</td>
+                <td>
+                    <a href="https://www.manhua3.com/">www.manhua3.com</a>，有無限滾動模式加預讀
+                </td>
             </tr>
             <tr>
                 <td>
@@ -5984,7 +6059,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.hmttmh.com/">韩漫天堂</a>
                 </td>
-                <td><a href="https://cn.zhuzhumh.com/">猪猪漫画</a>，有無限滾動模式加預讀</td>
+                <td>
+                    <a href="https://cn.zhuzhumh.com/">猪猪漫画</a>，有無限滾動模式加預讀
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6002,7 +6079,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.ortzn.com/">天天漫画</a>
                 </td>
-                <td><a href="https://www.smkj88.com/">新新漫画</a></td>
+                <td>
+                    <a href="https://www.smkj88.com/">新新漫画</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6014,7 +6093,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.manhuazhan.com/">漫画站</a>
                 </td>
-                <td><a href="https://www.everydaymanga.com/">天天漫画</a></td>
+                <td>
+                    <a href="https://www.everydaymanga.com/">天天漫画</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6052,7 +6133,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mqzjw.com/">奇漫屋</a>
                 </td>
-                <td>Mobile IOS限定，PC、Android需要偽裝成IOS User Agent才能取得整個章節的圖片，<a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a></td>
+                <td>Mobile IOS限定，PC、Android需要偽裝成IOS User Agent才能取得整個章節的圖片， <a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6070,13 +6152,16 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://zcymh.com/">最次元</a>
                 </td>
-                <td>Mobile限定，<a href="https://www.beston-test.com/">优乐漫画</a>，<a href="https://yemancomic.com/">野蛮</a>，<a href="https://www.yydskxs.com/">次元</a>，<a href="https://www.myselfcar.com/">脉赛漫画</a>，<a href="https://www.briangary.net/">格雷漫</a></td>
+                <td>Mobile限定， <a href="https://www.beston-test.com/">优乐漫画</a>， <a href="https://yemancomic.com/">野蛮</a>， <a href="https://www.yydskxs.com/">次元</a>， <a href="https://www.myselfcar.com/">脉赛漫画</a>， <a href="https://www.briangary.net/">格雷漫</a>
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.52hah.com/">聚合漫画屋</a>
                 </td>
-                <td><a href="https://www.kukanmanhua.org/">酷看漫画</a>，<a href="http://www.ququmh.com/">去去漫画</a>，<a href="http://www.pipiman.com/">皮皮漫画</a>，<a href="https://www.cicoo.cc/">六漫画</a>，<a href="https://www.liumanhua.cc/">六漫画</a>，<a href="https://www.ypdsm.com/">有品漫画</a></td>
+                <td>
+                    <a href="https://www.kukanmanhua.org/">酷看漫画</a>， <a href="http://www.ququmh.com/">去去漫画</a>， <a href="http://www.pipiman.com/">皮皮漫画</a>， <a href="https://www.cicoo.cc/">六漫画</a>， <a href="https://www.liumanhua.cc/">六漫画</a>， <a href="https://www.ypdsm.com/">有品漫画</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6146,7 +6231,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://m.happymh.com/">嗨皮漫畫</a>
                 </td>
-                <td>圖片手動插入、閱讀、展開目錄、漫畫連結新分頁開啟，預設關閉，需要無限滾動閱讀的話移步專用腳本<a href="https://greasyfork.org/scripts/459843">https://greasyfork.org/scripts/459843</a></td>
+                <td>圖片手動插入、閱讀、展開目錄、漫畫連結新分頁開啟，預設關閉，需要無限滾動閱讀的話移步專用腳本 <a href="https://greasyfork.org/scripts/459843">https://greasyfork.org/scripts/459843</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6196,13 +6282,17 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.k886.net/">看漫畫</a>
                 </td>
-                <td><a href="https://m.k886.net/">m.k886.net</a>，預設關閉</td>
+                <td>
+                    <a href="https://m.k886.net/">m.k886.net</a>，預設關閉
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.dongman.la/">動漫啦</a>
                 </td>
-                <td><a href="https://m.dongman.la/">m.dongman.la</a>，預設關閉</td>
+                <td>
+                    <a href="https://m.dongman.la/">m.dongman.la</a>，預設關閉
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6384,13 +6474,17 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://klz9.com/">KL</a>
                 </td>
-                <td><a href="https://jestful.net/">JF</a></td>
+                <td>
+                    <a href="https://jestful.net/">JF</a>
+                </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://jmanga.sh/">JManga</a>
                 </td>
-                <td><a href="https://momon-ga.org/">Momon-Ga</a>，<a href="https://rawotaku.org/">RawOtaku</a></td>
+                <td>
+                    <a href="https://momon-ga.org/">Momon-Ga</a>， <a href="https://rawotaku.org/">RawOtaku</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6409,7 +6503,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.mangago.me/">Mangago 英文</a>
                 </td>
                 <td>
-                    <a href="https://www.mangago.zone/">mangago.zone</a>，<a href="https://www.youhim.me/">youhim.me</a>，只支持PC版。
+                    <a href="https://www.mangago.zone/">mangago.zone</a>， <a href="https://www.youhim.me/">youhim.me</a>，只支持PC版。
                 </td>
             </tr>
             <tr>
@@ -6440,7 +6534,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://bato.to/">BATOTO 英文</a>
                 </td>
-                <td><a href="https://rentry.co/batoto">Mirror Domains</a></td>
+                <td>
+                    <a href="https://rentry.co/batoto">Mirror Domains</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6453,7 +6549,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hiperdex.com/">Hiperdex 英文</a>
                 </td>
                 <td>
-                    <a href="https://www.mangaread.org/">MangaRead</a>，<a href="https://lhtranslation.net/">LHTranslation</a>，<a href="https://manhuaus.com/">MANHUAUS.COM</a>，<a href="https://novelmic.com/">Novelmic.com</a>，<a href="https://setsuscans.com/">Setsu Scans</a>，<a href="https://www.toongod.org/">ToonGod</a>，<a href="https://www.toongod.org/">ToonGod</a>
+                    <a href="https://www.mangaread.org/">MangaRead</a>， <a href="https://lhtranslation.net/">LHTranslation</a>， <a href="https://manhuaus.com/">MANHUAUS.COM</a>， <a href="https://novelmic.com/">Novelmic.com</a>， <a href="https://setsuscans.com/">Setsu Scans</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://www.toongod.org/">ToonGod</a>
                 </td>
             </tr>
             <tr>
@@ -6522,7 +6618,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://manhuatop.org/">Top Manhua 英文</a>
                 </td>
-                <td><a href="https://topmanhua.fan/">topmanhua.fan</a></td>
+                <td>
+                    <a href="https://topmanhua.fan/">topmanhua.fan</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6601,7 +6699,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://realmoasis.com/">Realm Oasis 英文</a>
                 </td>
                 <td>
-                    <a href="https://hivetoon.com/">Void Scans</a>，<a href="https://nightsup.net/">Night Scans</a>，<a href="https://tercocomic.xyz/">Terco Scans</a>，<a href="https://luascans.com/">Lua Scans</a>，<a href="https://drakecomic.org/">Drake Scans</a>，<a href="https://rizzfables.com/">Rizz Fables</a>
+                    <a href="https://hivetoon.com/">Void Scans</a>， <a href="https://nightsup.net/">Night Scans</a>， <a href="https://tercocomic.xyz/">Terco Scans</a>， <a href="https://luascans.com/">Lua Scans</a>， <a href="https://drakecomic.org/">Drake Scans</a>， <a href="https://rizzfables.com/">Rizz Fables</a>
                 </td>
             </tr>
             <tr>
@@ -6638,7 +6736,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.reaperscans.com/">ReaperScans 英文</a>
                 </td>
-                <td>SPA網頁，手動，<a href="https://www.omegascans.org/">Omega Scans</a></td>
+                <td>SPA網頁，手動， <a href="https://www.omegascans.org/">Omega Scans</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -6720,99 +6819,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
             </tr>
             <tr>
-                <td><a href="https://www.kumanga.com/">KuManga</a></td>
+                <td>
+                    <a href="https://www.kumanga.com/">KuManga</a>
+                </td>
                 <td></td>
-            </tr>
-        </tbody>
-    </table>
-</details>
-<h2>AI繪圖分類內置規則支持列表</h2>
-<details>
-    <summary>
-        <kbd>
-            <strong>「 點擊展開查看 」</strong>
-        </kbd>
-    </summary>
-    <br>
-    <p>請透過腳本管理器選單開啟Lazy Load加載大圖功能，批量下載請使用其他圖片下載腳本。</p>
-    <p>可點擊右下的眼睛圖示新分頁觀看圖片，並且會顯示抓取到的圖片數量。</p>
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    <strong>網站</strong>
-                </th>
-                <th>
-                    <strong>備註</strong>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <a href="https://civitai.com/">Civitai</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖，支持自動顯示NSFW被模糊的圖片。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.liblib.art/">LiblibAI</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://tensor.art/">Tensor.Art</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://pixai.art/">PixAI</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://yodayo.com/explore/">Yodayo</a>
-                </td>
-                <td>SPA網頁，加載大圖。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://creator.nightcafe.studio/explore">NightCafe Creator</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖，不穩定需要上下滾動重複觸發，右下的眼睛數字沒有增加，代表沒有抓到新圖。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://legacy.midjourney.com/showcase/recent/">Midjourney</a>
-                </td>
-                <td>沒有更高解析度的圖片，只是能聚集到新分頁觀看。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://neural.love/search">neural.love</a>
-                </td>
-                <td>SPA網頁，加載大圖。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://playground.com/feed">Playground</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://pornderful.ai/search">Pornderful.ai</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖，首頁會有閃爍的問題。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.seaart.ai/">SeaArt Al</a>
-                </td>
-                <td>SPA網頁，Lazy Load加載大圖。</td>
             </tr>
         </tbody>
     </table>
