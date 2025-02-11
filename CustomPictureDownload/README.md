@@ -4096,6 +4096,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td></td>
             </tr>
+           <tr>
+                <td>
+                    <a href="https://www.boyfriendtv.com/pics/">BoyFriendTv.com</a>
+                </td>
+                <td></td>
+            </tr>
             <tr>
                 <td>
                     <a href="https://jb5.ru/shoubiz/onlyfans-sliv/">МЕДИА ТРЕНД</a>
@@ -4381,6 +4387,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://pornpicxxx.com/">pornpicxxx.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.freexcafe.com/">FreeXcafe</a>
                 </td>
                 <td></td>
@@ -4401,7 +4413,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hdpornpictures.net/">HD Porn Pictures</a>
                 </td>
-                <td></td>
+                <td>
+                    <a href="https://photos.befuck.net/">BeFuck.Net</a>，<a href="https://photos.beeg.porn/">Beeg.Porn</a>，<a href="https://photos.niceporn.tv/">NicePorn</a>，<a href="https://photos.mofosex.net/">MofoSex</a>，<a href="https://photos.redwap.tv/">Redwap</a>，<a href="https://photos.bravotube.tv/">BravoTube</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -4829,6 +4843,42 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.xxav2235.com/">最新地址</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xx3355.com/image">大香蕉</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fulitu.khm001.xyz/">福利图</a>
+                </td>
+                <td><a href="https://meitu.khm005.xyz/">美人图</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sex5.khm002.xyz/Index/tupianlist.html?cateid=522">性屋娱乐</a>
+                </td>
+                <td><a href="https://maomi.av6363.com/Index/tupianlist.html?cateid=2069">猫咪成人网</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fulitu.khm001.xyz/">福利图</a>
+                </td>
+                <td><a href="https://meitu.khm005.xyz/">美人图</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://4hu.khm005.xyz/Index/meinv.html?channelid=7">四虎影院</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.4hu.tv/pic/toupai/">四虎TV</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
