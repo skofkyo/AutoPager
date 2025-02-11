@@ -380,7 +380,7 @@ fancybox: {
     <br>
     <p>簡易實現自動翻頁功能，圖片全載的實驗性輔助功能，需要動態加載的大多都翻不了。</p>
     <p>點擊標題分隔條和雙擊頁面空白處，暫停或啟用自動翻頁。</p>
-    <p>需要更高級的自動翻頁功能請使用東方永頁機。</p>
+    <p>需要更高級的自動翻頁功能請使用東方永頁機(Pagetual)。</p>
     <pre>
 變數doc初始為當前頁的document，當獲取下一頁後為下一頁的document物件
 舉例選取元素
@@ -663,7 +663,7 @@ fn.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fn.getImgSrcArr(Array [HTMLElement]);
 </pre>
     <pre>
-//比fn.getImgSrcArr()多了判斷srcset屬性
+//比fn.getImgSrcArr()多了判斷srcset、data-srcset、data-lazy-srcset屬性
 //主要用於提取IMG的srcset屬性
 fn.getImgSrcset("img selector");
 fn.getImgSrcset("img selector", doc = document);
@@ -1305,7 +1305,7 @@ imgs: async () => {
 <p>PS：Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將調用使用iframe構建的畫廊。</p>
 <p>PS：如果要使用滾動視口的功能，螢幕顯示解析度1920 x 1080建議瀏覽器縮放比例100%，螢幕顯示解析度3840 x 2160建議系統縮放比例200%瀏覽器縮放比例100%，這樣在0、1、3才能剛好滾動一列圖片。</p>
 <h1>腳本共存</h1>
-<p>要與東方永頁機共存，可添加以下的東方永頁機自定義排除規則。</p>
+<p>要與東方永頁機(Pagetual)共存，可添加以下的東方永頁機(Pagetual)自定義排除規則。</p>
 <pre>
    {
         "name": "排除圖片全載",
@@ -1504,6 +1504,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.mmxxdd.com/">梦想岛</a>
+                </td>
+                <td>免VIP僅適用圖片檔案命名是簡單數字遞增的。 <a href="https://www.mmxxdd.com/website.html">永久网址发布</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.xstuji.com/">秀色图集</a>
                 </td>
                 <td>免VIP僅適用圖片檔案命名是簡單數字遞增的，利用篩選下載先用腳本取得的起始數字來載入圖片，假設無法載入的圖片皆為末尾，那麼正確的起始數字需要減掉載入錯誤的圖片數量，如果圖片載入錯誤的張數是分散的，那麼該規則將無效。</td>
@@ -1516,9 +1523,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.newxiuren.cc/">新秀人</a>
+                    <a href="https://www.xiuren.mobi/">新秀人</a>
                 </td>
-                <td>免VIP，圖集無法正確取得99張後的圖片網址，從100開始的檔案命名邏輯摸不清。</td>
+                <td>免VIP，圖集無法正確取得99張後的圖片網址，從100開始的檔案命名邏輯摸不清。 <a href="http://www.xiuren.online/">www.xiuren.online</a>， <a href="http://www.xiuren.cloud/">www.xiuren.cloud</a>， <a href="http://www.xiuren888.com/">www.xiuren888.com</a>， <a href="http://www.newxiuren.cc/">www.newxiuren.cc</a>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -1927,6 +1935,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://ixiu.one/">爱秀网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.92meinv.com/">爱美女</a>
                 </td>
                 <td></td>
@@ -1950,7 +1964,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.xiuwo.net/">秀窝</a>
                 </td>
                 <td>
-                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站82個</a>
+                    <a href="https://www.rmm8.com/">RMM吧</a>， <a href="https://www.zanmm.com/">赞MM</a>， <a href="https://www.entuji.com/">恩图集</a>， <a href="https://www.mhgirl.com/">美Girl图集</a>， <a href="https://www.hutu6.com/">狐图网</a>， <a href="https://www.kunv.cc/">爱秀美女</a>， <a href="https://www.930tu.com/">930圖片網</a>， <a href="https://www.smkwan.com/">四魔写真</a>， <a href="https://www.jnmmw.com/">JN美眉网</a>， <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/tu01.txt">其他同格式網站84個</a>
                 </td>
             </tr>
             <tr>
@@ -2206,6 +2220,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="http://shijiao.meinvnews.com/">好视角</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fulisher.net/image">福利社</a>
                 </td>
                 <td></td>
             </tr>
@@ -2677,9 +2697,15 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://yanxiangrong.github.io/chunmomo/">蠢沫沫</a>
+                    <a href="https://yanxiangrong.github.io/chunmomo/">蠢沫沫 Github</a>
                 </td>
-                <td>非原圖</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://chunmomo.net/">蠢沫沫 chunmomo.net</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3149,6 +3175,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.porntrex.com/albums/">PornTrex</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.whoreshub.com/albums/">WhoresHub</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.fappenist.com/photos">Fappenist</a>
                 </td>
                 <td></td>
@@ -3188,6 +3226,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://cosplay18.pics/">Cosplay18</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bxx.me/">BXX</a>
                 </td>
                 <td></td>
             </tr>
@@ -3350,6 +3394,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>同上</td>
             </tr>
             <tr>
+                <td>tumbex</td>
+                <td>
+                    <a href="https://www.tumbex.com/kyokosdog.tumblr/posts">@kyokosdog</a>， <a href="https://www.tumbex.com/holydasewhale.tumblr/posts">@holydasewhale</a>
+                </td>
+            </tr>
+            <tr>
                 <td>TW Pornstars</td>
                 <td>
                     <a href="https://www.twpornstars.com/iamdorasnow">Sally多啦雪</a>， <a href="https://www.twpornstars.com/axunkaOri">阿薰kaOri</a>
@@ -3405,6 +3455,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://felix0621.pixnet.net/blog">喵魔的亂想魔境</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://gravurezasshi9.doorblog.jp/">グラビア週刊誌 9</a>
                 </td>
                 <td>
@@ -3432,6 +3488,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://idolarea.blogspot.com/">IDOL AREA</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://oppaimag.blogspot.com/">OppaiMag</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://25jingliwangsheng.blogspot.com/">25精力旺盛</a>
                 </td>
                 <td></td>
             </tr>
@@ -3891,6 +3959,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.eporner.com/profile/namaiki/uploaded-pics/">namaiki</a>， <a href="https://www.eporner.com/profile/Khosmo/uploaded-pics/">Khosmo</a>， <a href="https://www.eporner.com/profile/trevor221/uploaded-pics/">trevor221</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.epavx.com/pics/">EPORNER鏡像(es606)</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4441,6 +4515,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.qiuyeshudian.com/">J M G T</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.uecoy.com/">聚美星空</a>
                 </td>
                 <td></td>
@@ -4538,7 +4618,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.6evu.com/">遛无写真</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式29個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式33個</a>
                 </td>
             </tr>
             <tr>
@@ -5465,6 +5545,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://rehanman.com/">热漫画</a>
+                </td>
+                <td>目錄頁閱讀頁直接取得所有章節圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.acgotang.com/">ACG糖</a>
                 </td>
                 <td>
@@ -5818,8 +5904,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
     </table>
 </details>
 <h2>漫畫分類內置規則支持列表</h2>
-<p>漫畫分類為了兼容我提交給東方永頁機的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
-<p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機或自己加黑名單，不然會衝突。</p>
+<p>漫畫分類為了兼容我提交給東方永頁機(Pagetual)的翻頁規則和自己寫的專用腳本，規則幾乎都是預設為關閉狀態。</p>
+<p>如有需要請透過UI選項設定開啟或幹脆修改腳本規則，也需要關閉東方永頁機(Pagetual)或自己加黑名單，不然會衝突。</p>
 <p>透過UI開啟當前漫畫站規則的步驟 > 前往漫畫網站的閱讀頁面 > 瀏覽器右上角腳本管理器 > 圖片全載 > 設定 > UI > 勾選啟用當前漫畫站點規則 > 保存設定</p>
 <p>2023/11/25 常規模式，絕大多數漫畫站增加了預讀下一話圖片的功能，有效的減少等待圖片載入的時間。</p>
 <p>2024/04/27 為一些常用連線品質較好的網站，添加無限滾動模式(自動翻頁)閱讀功能，透過腳本管理器選單開啟。</p>
@@ -6071,6 +6157,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.mqzjw.com/">奇漫屋</a>
+                </td>
+                <td>Mobile IOS限定，PC、Android需要偽裝成IOS User Agent才能取得整個章節的圖片， <a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a>，有無限滾動模式加預讀 </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.aitaocomic.com/">爱淘漫画</a>
                 </td>
                 <td>SPA網頁，手動插入圖片</td>
@@ -6127,13 +6219,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td>
                     <a href="https://m.manhuapi.cc/">m.manhuapi.cc</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.mqzjw.com/">奇漫屋</a>
-                </td>
-                <td>Mobile IOS限定，PC、Android需要偽裝成IOS User Agent才能取得整個章節的圖片， <a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a>
                 </td>
             </tr>
             <tr>
@@ -6765,6 +6850,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://kaliscan.io/home">KaliScan 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangabuff.ru/">Слив манги для вас 俄文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.kingsmanga.net/">Kingsmanga 泰文</a>
                 </td>
                 <td></td>
@@ -6814,8 +6911,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>Ikigai Mangas</td>
                 <td>
-                    <a href="https://visorikigai.eltanews.com/">EltaNews</a>
-                    <a href="https://visorikigai.ajaco.net/">Ajaco</a>
+                    <a href="https://visorikigai.eltanews.com/">EltaNews</a>、 <a href="https://visorikigai.ajaco.net/">Ajaco</a>
                 </td>
             </tr>
             <tr>
