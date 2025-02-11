@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.11
+// @version            2025.2.11.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3249,21 +3249,27 @@
             h: "chunmomo.net",
             p: "/album"
         },
-        imgs: () => {
+        imgs: async () => {
+            let srcs;
             let pages = fn.ge(".all-page");
             if (pages) {
                 let [max] = pages.textContent.match(/\d+/);
-                return fn.getImg(".s-post-content img:not([data-src*='rehanman'])", max, 4);
+                srcs = await fn.getImg(".s-post-content img", max, 4);
             } else {
-                return fn.gae(".s-post-content img:not([data-src*='rehanman'])");
+                srcs = fn.getImgSrcArr(".s-post-content img");
             }
+            return srcs.filter(e => !e.includes("rehanman") && !e.includes("thumbnail"));
         },
         button: [4],
         insertImg: [".s-post-content", 2],
+        autoDownload: [0],
+        next: ".next-page a.pg-arrow",
+        prev: ".prev-page a.pg-arrow",
         customTitle: () => fn.dt({
             s: "h1.entry-title",
             d: "Album –"
         }),
+        hide: "[id^='quads-ad'],[id^=block]",
         category: "nsfw1"
     }, {
         name: "二次元图库",
@@ -6247,6 +6253,20 @@
         customTitle: "h1.title",
         category: "nsfw2"
     }, {
+        name: "EachPorn",
+        url: {
+            h: "eachporn.com",
+            p: "/album/"
+        },
+        box: [".album-info", 1],
+        imgs: ".images a",
+        thums: ".images a img",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: ".content h1",
+        category: "nsfw2"
+    }, {
         name: "The Hentai World",
         link: "https://thehentaiworld.com/hentai-cosplay-images/",
         url: {
@@ -7525,9 +7545,21 @@
         downloadVideo: true,
         category: "nsfw1"
     }, {
+        name: "pornpicxxx.com",
+        url: {
+            h: "pornpicxxx.com",
+            p: "/gallery/"
+        },
+        imgs: "#grid a",
+        thums: "#grid a img",
+        customTitle: ".title h1",
+        category: "nsfw2"
+    }, {
         name: "Porn Pics",
-        host: ["www.pornpics.com"],
-        reg: /^https?:\/\/www\.pornpics\.\w+\/.*galleries\//,
+        url: {
+            h: "www.pornpics.com",
+            p: "galleries/"
+        },
         imgs: "#tiles a.rel-link",
         thums: "#tiles a.rel-link>img",
         button: [4],
@@ -7544,8 +7576,20 @@
         category: "nsfw2"
     }, {
         name: "HD Porn Pictures",
-        host: ["hdpornpictures.net"],
-        reg: /^https?:\/\/hdpornpictures\.net\/id\/\d+\//,
+        url: {
+            h: [
+                "hdpornpictures.net",
+                "bravotube.tv",
+                "redwap.tv",
+                "mofosex.net",
+                "photos.mofosex.net",
+                "niceporn.tv",
+                "beeg.porn",
+                "befuck.net"
+            ],
+            p: "/id/",
+            e: "#tiles a.rel-link"
+        },
         imgs: () => {
             let imgs = fn.gau("#tiles a.rel-link");
             thumbnailSrcArray = imgs.map(e => e + "?w=300");
@@ -7553,7 +7597,7 @@
         },
         button: [4],
         insertImg: ["#main", 3],
-        customTitle: () => fn.title(" - HD Porn Pictures"),
+        customTitle: () => fn.ge(".title-h1")?.textContent,
         category: "nsfw2"
     }, {
         name: "Freebigtit",
@@ -9713,6 +9757,33 @@
         hide: ".content>.block-album",
         category: "nsfw2"
     }, {
+        name: "BoyFriendTv.com",
+        url: () => fn.checkUrl({
+            h: "www.boyfriendtv.com",
+            p: "/pics/"
+        }),
+        box: [".gallery-detail", 2],
+        imgs: async () => {
+            let eles;
+            if (fn.ge("//a[@class='rightKey'][text()='Next']")) {
+                let max = fn.gt("//a[text()='Next']", 2) ?? 1;
+                let links = [fn.lp, ...fn.gau(".gallery-detail .ajax-pager a[href]")];
+                eles = await fn.getEle(links, ".gallery-detail .thumb-item a[style^='background-image']", null, null, 0);
+            } else {
+                eles = fn.gae(".gallery-detail .thumb-item a[style^='background-image']");
+            }
+            thumbnailSrcArray = eles.map(a => {
+                let backgroundImage = a.style.backgroundImage;
+                return backgroundImage.slice(5, -2).trim();
+            });
+            return thumbnailSrcArray.map(e => e.replace("-320-", "-800-"));
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: "#gallery h1",
+        category: "nsfw2"
+    }, {
         name: "МЕДИА ТРЕНД",
         link: "https://jb5.ru/shoubiz/onlyfans-sliv/",
         url: {
@@ -10610,10 +10681,25 @@
         thums: "#container img",
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 2, ".photosgrid"], 3
+            ["#FullPictureLoadMainImgBox", 2, ".photosgrid"], 2
         ],
         endColor: "white",
         customTitle: "#galleryheader>h1",
+        category: "nsfw2"
+    }, {
+        name: "EPORNER Albums",
+        url: {
+            h: "www.eporner.video",
+            p: "/album/"
+        },
+        box: [".album-info", 1],
+        imgs: ".images a",
+        thums: ".images a img",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        endColor: "white",
+        customTitle: ".content h1",
+        hide: ".link-sponsor",
         category: "nsfw2"
     }, {
         name: "KISSJAV",
@@ -12802,6 +12888,89 @@
         customTitle: () => fn.title("-XXAV"),
         hide: ".suspend",
         category: "nsfw1"
+    }, {
+        name: "大香蕉",
+        host: ["xx3355.com", "xx7755.com", "xx9955.com"],
+        url: {
+            e: "//ul[@class='logo']//a[text()='大香蕉']",
+            p: "/image/detail/"
+        },
+        imgs: ".content img",
+        button: [4],
+        insertImg: [".content", 2],
+        go: 1,
+        autoDownload: [0],
+        next: ".post-link .prev",
+        prev: ".post-link .next",
+        customTitle: ".main h1",
+        hide: "#btmBox,#couplet",
+        category: "nsfw2"
+    }, {
+        name: "福利图/美人图",
+        host: ["fulitu.khm001.xyz", "meitu.khm005.xyz"],
+        url: {
+            e: ".logo img[alt=福利图],.logo img[alt=美人图]",
+            p: "/image/pic/"
+        },
+        imgs: () => fn.getImgA(".content img", fn.gau(".page a")),
+        button: [4],
+        insertImg: [".content", 2],
+        autoDownload: [0],
+        next: "//span[contains(text(),'上一篇')]/a",
+        prev: "//span[contains(text(),'下一篇')]/a",
+        customTitle: ".item_title h1",
+        hide: ".home-filter",
+        category: "nsfw2"
+    }, {
+        name: "性福里",
+        host: ["sexfull.av3636.com"],
+        url: {
+            h: "sexfull",
+            p: ["/img/detail_", "/manhua/chapter_"]
+        },
+        imgs: () => fn.getImgA(".left .image img", [fn.lp]),
+        button: [4],
+        insertImg: [".image", 2],
+        customTitle: ".container h2",
+        hide: "#advlist",
+        category: "nsfw2"
+    }, {
+        name: "性屋娱乐/猫咪成人网",
+        host: ["sex5.khm002.xyz", "maomi.av6363.com"],
+        url: {
+            t: ["性屋娱乐", "ＭＡＯＭＩ"],
+            p: ["/tupiandetail/", "/meinvdetail/"]
+        },
+        imgs: () => fn.getImgA("main .content img", [fn.lp]),
+        button: [4],
+        insertImg: ["main .content", 2],
+        customTitle: ".cat_pos_l a:last-child",
+        category: "nsfw2"
+    }, {
+        name: "四虎影院",
+        host: ["4hu.khm005.xyz"],
+        url: {
+            t: "四虎影院",
+            p: "/meinvdetail/"
+        },
+        imgs: ".details-content img",
+        button: [4],
+        insertImg: [".details-content", 2],
+        customTitle: ".news_details h1",
+        hide: ".top_box",
+        category: "nsfw2"
+    }, {
+        name: "四虎TV",
+        host: ["www.4hu.tv"],
+        url: {
+            h: "4hu.tv",
+            p: "/view/"
+        },
+        imgs: ".pic img",
+        button: [4],
+        insertImg: [".pic", 2],
+        customTitle: ".main h1",
+        category: "nsfw2"
     }, {
         name: "wholsp",
         host: ["www.wholsp.com", "wholsp.comc"],
@@ -26097,7 +26266,7 @@ if ("xx" in window) {
             hideClass: false,
             Images: {
                 Panzoom: {
-                    maxScale: 2
+                    maxScale: 4
                 },
                 zoom: false
             },
@@ -26142,7 +26311,7 @@ if ("xx" in window) {
             wheel: FancyboxWheel,
             Images: {
                 Panzoom: {
-                    maxScale: 2
+                    maxScale: 4
                 },
                 zoom: false
             },
@@ -30392,7 +30561,7 @@ if ("xx" in window) {
                     hideClass: false,
                     Images: {
                         Panzoom: {
-                            maxScale: 2
+                            maxScale: 4
                         },
                         zoom: false,
                     },
@@ -30437,7 +30606,7 @@ if ("xx" in window) {
                     wheel: FancyboxWheel,
                     Images: {
                         Panzoom: {
-                            maxScale: 2
+                            maxScale: 4
                         },
                         zoom: false
                     },
@@ -32101,7 +32270,7 @@ if ("xx" in window) {
             dom.write(`
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=4, user-scalable=yes, shrink-to-fit=no">
         <title>${DL.str_106.replace(/\(.\)/, "")}：${customTitle ?? document.title}</title>
     </head>
     <body style="text-align: center;">
@@ -32268,7 +32437,7 @@ if (isM) {
         hideClass: false,
         Images: {
             Panzoom: {
-                maxScale: 2
+                maxScale: 4
             },
             zoom: false
         },
@@ -32335,7 +32504,7 @@ if (isM) {
         wheel: "${FancyboxWheel}",
         Images: {
             Panzoom: {
-                maxScale: 2
+                maxScale: 4
             },
             zoom: false
         },
@@ -33790,7 +33959,7 @@ img.horizontal {
                     wheel: FancyboxWheel,
                     Images: {
                         Panzoom: {
-                            maxScale: 2
+                            maxScale: 4
                         },
                         zoom: false
                     },
@@ -34901,7 +35070,7 @@ img.horizontal {
                             startIndex: index,
                             Images: {
                                 Panzoom: {
-                                    maxScale: 2
+                                    maxScale: 4
                                 },
                                 zoom: false
                             },
@@ -35857,7 +36026,7 @@ img.webtoon {
 
         if (isM) {
             ge("label:has(>#move)", main).classList.add("hide");
-            gae("#combineDownload", main).forEach(e => e.classList.add("hide"));
+            //gae("#combineDownload", main).forEach(e => e.classList.add("hide"));
             gae("#shadow_gallery", main).forEach(e => e.classList.add("hide"));
             gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
             ge("#scrollUp", main).classList.remove("hide");
