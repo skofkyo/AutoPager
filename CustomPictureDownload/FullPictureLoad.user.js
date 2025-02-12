@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.11.1
+// @version            2025.2.12
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -92,7 +92,7 @@
         viewMode: 0, //0：置中、1：並排
         fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
         shadowGallery: 0, //自動進入影子畫廊，1：自動、0：手動
-        mobileGallery: 0, //自動進入移動畫廊，1：自動、0：手動
+        mobileGallery: 0, //自動進入手機畫廊，1：自動、0：手動
         autoExport: 0 //自動匯出網址，1：自動、0：手動
     };
     const FullPictureLoadShowEye = localStorage.getItem("FullPictureLoadShowEye") ?? 1;
@@ -9738,10 +9738,10 @@
         category: "nsfw2"
     }, {
         name: "GayBoysTube",
-        url: () => fn.checkUrl({
+        url: {
             h: "www.gayporntube.com",
             p: "/galleries/"
-        }),
+        },
         init: () => {
             if (isM) {
                 fn.addMutationObserver(() => fn.remove(".after_header"));
@@ -9758,10 +9758,10 @@
         category: "nsfw2"
     }, {
         name: "BoyFriendTv.com",
-        url: () => fn.checkUrl({
+        url: {
             h: "www.boyfriendtv.com",
             p: "/pics/"
-        }),
+        },
         box: [".gallery-detail", 2],
         imgs: async () => {
             let eles;
@@ -26532,7 +26532,7 @@ if ("xx" in window) {
                 str_159: isM ? "自訂函式" : "自訂函式(6)",
                 str_160: isM ? "插入圖片" : "插入圖片(1)",
                 str_161: "載入線程：",
-                str_162: "圖片預載數：",
+                str_162: isM ? "預載：" : "圖片預載數：",
                 str_163: "🖼️ 開啟簡易模式",
                 str_164: "🖼️ 關閉簡易模式",
                 str_165: "圖片總數：",
@@ -26558,11 +26558,11 @@ if ("xx" in window) {
                 str_185: "自動排錯",
                 str_186: "更多選單",
                 str_187: "壓縮檔裡創建資料夾",
-                str_188: "移動畫廊",
+                str_188: "手機畫廊",
                 str_189: "單圖模式",
                 str_190: "條漫模式",
                 str_191: "預設開啟簡易模式",
-                str_192: "自動進入移動畫廊",
+                str_192: "自動進入手機畫廊",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -26769,7 +26769,7 @@ if ("xx" in window) {
                 str_159: isM ? "定义函式" : "定义函式(6)",
                 str_160: isM ? "插入图片" : "插入图片(1)",
                 str_161: "加载线程：",
-                str_162: "图片预载数：",
+                str_162: isM ? "预载：" : "图片预载数：",
                 str_163: "🖼️ 开启简易模式",
                 str_164: "🖼️ 关闭简易模式",
                 str_165: "图片总数：",
@@ -26795,11 +26795,11 @@ if ("xx" in window) {
                 str_185: "自动排错",
                 str_186: "更多选单",
                 str_187: "压缩档里创建资料夹",
-                str_188: "移动画廊",
+                str_188: "手机画廊",
                 str_189: "单图模式",
                 str_190: "条漫模式",
                 str_191: "默认打开简易模式",
-                str_192: "自动进入移动画廊",
+                str_192: "自动进入手机画廊",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -27026,11 +27026,11 @@ if ("xx" in window) {
                 str_185: "Auto Culling",
                 str_186: "More Menu",
                 str_187: "Create a folder in compressed file",
-                str_188: "Mobile Gallery",
+                str_188: "Phone Gallery",
                 str_189: "Single",
                 str_190: "Webtoon",
                 str_191: "Simple mode enabled by default",
-                str_192: "Enable Mobile Gallery",
+                str_192: "Enable Phone Gallery",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -29021,7 +29021,7 @@ if ("xx" in window) {
                 }, {
                     id: "FullPictureLoadShadowGalleryBtn",
                     className: "FullPictureLoadPageButtonTop",
-                    text: DL.str_141,
+                    text: isM ? DL.str_141.replace("Shadow", "") : DL.str_141,
                     cfn: event => {
                         cancelDefault(event);
                         createShadowGallery();
@@ -29086,17 +29086,17 @@ if ("xx" in window) {
                     }
                 }];
 
-                if (isM) {
-                    buttonObj[1] = {
-                        id: "FullPictureLoadCopyURLBtn",
-                        className: "FullPictureLoadPageButtonTop",
-                        text: DL.str_105,
-                        cfn: event => {
-                            cancelDefault(event);
-                            copyImgSrcTextB();
-                        }
-                    };
-                }
+                //if (isM) {
+                //buttonObj[1] = {
+                //id: "FullPictureLoadCopyURLBtn",
+                //className: "FullPictureLoadPageButtonTop",
+                //text: DL.str_105,
+                //cfn: event => {
+                //cancelDefault(event);
+                //copyImgSrcTextB();
+                //}
+                //};
+                //}
 
                 const createButton = obj => {
                     let button = document.createElement("button");
@@ -32185,7 +32185,7 @@ if ("xx" in window) {
         const default_Config = {
             ViewMode: 0,
             MobileViewMode: "single",
-            webtoonWidth: 800,
+            webtoonWidth: isM ? window.innerWidth : 800,
             shadowGalleryWheel: 0,
             jumpNum: 100,
             behavior: "instant",
@@ -32347,6 +32347,31 @@ body {
 .FixedMenuitem.active {
     color: #fff;
     background: #1790E6;
+}
+#setting-btn {
+    width: auto;
+    height: auto;
+    position: fixed;
+    right: ${isM ? "10px" : "30px"};
+    bottom: 150px;
+    z-index: 2;
+}
+.setting-btn {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    user-select:none;
+    color: #000;
+    margin: 5px 0;
+    overflow: hidden;
+    border: rgb(51, 51, 51) 1px solid;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+}
+.setting-btn .icon {
+    margin-top: 10px;
+    width: 28px;
+    height: 28px;
 }
 .hide {
     display: none !important;
@@ -32602,8 +32627,10 @@ function setFancybox() {
     Fancybox.bind("[data-fancybox]", FancyboxOptions);
 }
 
+let menuDiv;
+
 function addFixedMenu() {
-    let menuDiv = document.createElement("div");
+    menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
         id: "MenuHorizontalItem",
@@ -32645,10 +32672,37 @@ function addFixedMenu() {
 }
 addFixedMenu();
 
+let btnDiv;
+
+function addButtons() {
+    btnDiv = document.createElement("div");
+    btnDiv.id = "setting-btn";
+    const btnObj = [{
+        id: "addBtn",
+        svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H624c-8.8 0-16 7.2-16 16v384c0 8.8-7.2 16-16 16H432c-8.8 0-16-7.2-16-16V624c0-8.8-7.2-16-16-16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h384c8.8 0 16-7.2 16-16V16c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v384c0 8.8 7.2 16 16 16h384c8.8 0 16 7.2 16 16z"></path></svg>',
+        cfn: increaseWidth
+    }, {
+        id: "reduceBtn",
+        svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h992c8.8 0 16 7.2 16 16z"></path></svg>',
+        cfn: reduceWidth
+    }];
+    const createDiv = obj => {
+        let item = document.createElement("div");
+        item.id = obj.id;
+        item.className = "setting-btn";
+        item.innerHTML = obj.svg;
+        item.oncontextmenu = () => false;
+        item.addEventListener("click", obj.cfn);
+        btnDiv.append(item);
+    };
+    btnObj.forEach(obj => createDiv(obj));
+    document.body.append(btnDiv);
+}
+addButtons();
+
 if (isM) {
     document.querySelector("#MenuHorizontalItem").remove();
-    let menu = document.querySelector("#FixedMenu");
-    menu.style.display = "none";
+    menuDiv.classList.add("hide");
     let lastScrollTop = 0;
     let scroll = "";
     document.addEventListener("scroll", event => {
@@ -32656,11 +32710,17 @@ if (isM) {
         let st = event.srcElement.scrollingElement.scrollTop;
         if (st > lastScrollTop) {
             scroll = "down";
-            menu.style.display = "none";
+            menuDiv.classList.add("hide");
+            if (config.ViewMode == 4) {
+                btnDiv.classList.add("hide");
+            }
             lastScrollTop = st;
         } else if (st < lastScrollTop - 20) {
             scroll = "up";
-            menu.style.display = "";
+            menuDiv.classList.remove("hide");
+            if (config.ViewMode == 4) {
+                btnDiv.classList.remove("hide");
+            }
             lastScrollTop = st;
         }
     });
@@ -32967,10 +33027,10 @@ function increaseWidth() {
         saveConfig();
         imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
     } else {
-        webtoonWidth = 800;
-        config.webtoonWidth = 800;
+        webtoonWidth = isM ? window.innerWidth : 800;
+        config.webtoonWidth = webtoonWidth;
         saveConfig();
-        imgs.forEach(e => (e.style.maxWidth = "800px"));
+        imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
     }
 }
 
@@ -32982,10 +33042,10 @@ function reduceWidth() {
         saveConfig();
         imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
     } else {
-        webtoonWidth = 800;
-        config.webtoonWidth = 800;
+        webtoonWidth = isM ? window.innerWidth : 800;
+        config.webtoonWidth = webtoonWidth;
         saveConfig();
-        imgs.forEach(e => (e.style.maxWidth = "800px"));
+        imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
     }
 }
 
@@ -33031,10 +33091,8 @@ function createImgElement(mode) {
     });
     const imgBox = document.querySelector("#imgBox");
     if (config.ViewMode == 3) {
-    console.log("哈囉1");
         imgBox.style.direction = "rtl";
     } else {
-    console.log("哈囉2");
         imgBox.style.direction = "";
     }
     imgViewIndex = -1;
@@ -33081,6 +33139,11 @@ function createImgElement(mode) {
     }
     loadImgs();
     aspectRatio();
+    if (config.ViewMode == 4) {
+        btnDiv.classList.remove("hide");
+    } else {
+        btnDiv.classList.add("hide");
+    }
     currentReferenceElement = imgElements.at(0);
     totalNumberOfElements = imgElements.length;
     fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -33184,7 +33247,7 @@ if (config.ViewMode == 1) {
             return createIframeGallery();
         }
 
-        if (checkGeting() || isM || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -33231,10 +33294,10 @@ if (config.ViewMode == 1) {
                 saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
-                webtoonWidth = 800;
-                config.webtoonWidth = 800;
+                webtoonWidth = isM ? _unsafeWindow.innerWidth : 800;
+                config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
-                imgs.forEach(e => (e.style.maxWidth = "800px"));
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             }
         };
 
@@ -33246,10 +33309,10 @@ if (config.ViewMode == 1) {
                 saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
-                webtoonWidth = 800;
-                config.webtoonWidth = 800;
+                webtoonWidth = isM ? _unsafeWindow.innerWidth : 800;
+                config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
-                imgs.forEach(e => (e.style.maxWidth = "800px"));
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             }
         };
 
@@ -33694,17 +33757,22 @@ p#imgBox {
     padding: 0;
     margin: 0;
 }
+.place {
+    height: 54px;
+    padding: 0;
+    margin: 0;
+}
 #FixedMenu {
     text-align: center;
     font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 14px;
     color: #000000;
-    width: 144px;
+    width: ${isM ? "102px" : "144px"};
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: -150px;
+    left: ${isM ? "0px" : "-150px"};
     bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -33715,7 +33783,7 @@ p#imgBox {
     }
 }
 .FixedMenuitem {
-    width: 132px;
+    width: ${isM ? "90px" : "132px"};
     height: 24px;
     line-height: 24px;
     overflow: hidden;
@@ -33739,6 +33807,31 @@ p#imgBox {
 .FixedMenuitem.active {
     color: #fff;
     background: #1790e6;
+}
+#setting-btn {
+    width: auto;
+    height: auto;
+    position: fixed;
+    right: ${isM ? "10px" : "30px"};
+    bottom: 150px;
+    z-index: 2147483647;
+}
+.setting-btn {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    user-select:none;
+    color: #000;
+    margin: 5px 0;
+    overflow: hidden;
+    border: rgb(51, 51, 51) 1px solid;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+}
+.setting-btn .icon {
+    margin-top: 10px;
+    width: 28px;
+    height: 28px;
 }
 .hide {
     display: none !important;
@@ -33849,6 +33942,26 @@ img.horizontal {
         });
         shadow.appendChild(mainElement);
 
+        let lastScrollTop = 0;
+        mainElement.addEventListener("scroll", (event) => {
+            if (mainElement.scrollTop > lastScrollTop) {
+                if (isM) {
+                    menuDiv.classList.add("hide");
+                }
+                if (config.ViewMode == 4) {
+                    ge("#setting-btn", shadow).classList.add("hide");
+                }
+            } else if (mainElement.scrollTop < lastScrollTop) {
+                if (isM) {
+                    menuDiv.classList.remove("hide");
+                }
+                if (config.ViewMode == 4) {
+                    ge("#setting-btn", shadow).classList.remove("hide");
+                }
+            }
+            lastScrollTop = mainElement.scrollTop;
+        });
+
         function loadImgs(imgs) {
             const loadImgList = imgs.map(img => [simpleLoadImg, null, img]);
             const queue = new Queue(Number(config.threading));
@@ -33887,12 +34000,17 @@ img.horizontal {
                 }
                 return img;
             });
+            if (isM) {
+                const b = document.createElement("p");
+                b.className = "place";
+                fragment.append(b);
+            }
             const p = document.createElement("p");
             p.id = "imgBox";
             if (config.ViewMode == 3) {
                 p.style.direction = "rtl";
             }
-            if (siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
+            if (isPC && siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
                 if (_unsafeWindow.devicePixelRatio > 1) {
                     p.style.padding = "2px 6% 0";
                 } else {
@@ -33913,6 +34031,11 @@ img.horizontal {
             mainElement.append(fragment);
             loadImgs(imgElements);
             aspectRatio();
+            if (mode === "webtoon") {
+                btnDiv.classList.remove("hide");
+            } else {
+                btnDiv.classList.add("hide");
+            }
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -33975,7 +34098,7 @@ img.horizontal {
                     Toolbar: {
                         display: {
                             left: ["infobar"],
-                            middle: ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                            middle: isM ? ["flipX", "flipY"] : ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
                             right: ["slideshow", "fullscreen", "thumbs", "close"]
                         }
                     },
@@ -34021,7 +34144,7 @@ img.horizontal {
                 const next = document.createElement("div");
                 next.id = "next";
                 next.dataset.index = imgElements.length;
-                next.innerText = `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）`;
+                next.innerText = `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}`;
                 mainElement.append(next);
                 next.addEventListener("click", event => {
                     cancelDefault(event);
@@ -34068,6 +34191,11 @@ img.horizontal {
                     }, 1000);
                 }
             }
+            if (isM) {
+                const b = document.createElement("p");
+                b.className = "place";
+                mainElement.append(b);
+            }
         }
 
         let menuDiv;
@@ -34079,6 +34207,10 @@ img.horizontal {
                 id: "MenuCancelItem",
                 text: DL.str_142,
                 cfn: () => closeGallery()
+            }, {
+                id: "MenuFavorItem",
+                text: DL.str_128.replace(/\(.\)/, ""),
+                cfn: () => createFavorShadowElement()
             }, {
                 id: "MenuThreadingItem"
             }, {
@@ -34125,6 +34257,7 @@ img.horizontal {
                 menuDiv.append(item);
             };
             menuObj.forEach(obj => createMenu(obj));
+            shadow.append(menuDiv);
 
             let threadingSelect = document.createElement("select");
             for (let i = 1; i <= 32; i++) {
@@ -34135,52 +34268,84 @@ img.horizontal {
             }
             ge("#MenuThreadingItem", menuDiv).append(threadingSelect);
 
-            let jumpSelect = document.createElement("select");
-            for (let i = 0; i <= 100; i++) {
-                let option = document.createElement("option");
-                if (i === 0) {
-                    option.value = i;
-                    option.innerText = `${DL.str_150}${DL.str_152}`;
-                } else {
-                    option.value = i * 100;
-                    option.innerText = `${DL.str_150}${i * 100}px`;
-                }
-                jumpSelect.append(option);
-            }
-            ge("#MenuJumpItem", menuDiv).append(jumpSelect);
-
-            let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
-            let behaviorInput = document.createElement("input");
-            behaviorInput.id = "behaviorInput";
-            behaviorInput.type = "checkbox";
-            behaviorDiv.append(behaviorInput);
-            let behaviorLabel = document.createElement("label");
-            behaviorLabel.innerText = DL.str_151;
-            behaviorDiv.append(behaviorLabel);
-
-            shadow.append(menuDiv);
-
             threadingSelect.value = config.threading;
             threadingSelect.addEventListener("change", () => {
                 config.threading = Number(threadingSelect.value);
                 saveConfig(config);
                 mainElement.focus();
             });
-            jumpSelect.value = config.jumpNum;
-            jumpSelect.addEventListener("change", () => {
-                config.jumpNum = jumpSelect.value;
-                saveConfig(config);
-                mainElement.focus();
-            });
 
-            behaviorInput.checked = config.behavior == "smooth" ? true : false;
-            behaviorInput.addEventListener("change", () => {
-                config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
-                saveConfig(config);
-                mainElement.focus();
-            });
+            if (isPC) {
+                let jumpSelect = document.createElement("select");
+                for (let i = 0; i <= 100; i++) {
+                    let option = document.createElement("option");
+                    if (i === 0) {
+                        option.value = i;
+                        option.innerText = `${DL.str_150}${DL.str_152}`;
+                    } else {
+                        option.value = i * 100;
+                        option.innerText = `${DL.str_150}${i * 100}px`;
+                    }
+                    jumpSelect.append(option);
+                }
+                ge("#MenuJumpItem", menuDiv).append(jumpSelect);
+                jumpSelect.value = config.jumpNum;
+                jumpSelect.addEventListener("change", () => {
+                    config.jumpNum = jumpSelect.value;
+                    saveConfig(config);
+                    mainElement.focus();
+                });
+
+                let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
+                let behaviorInput = document.createElement("input");
+                behaviorInput.id = "behaviorInput";
+                behaviorInput.type = "checkbox";
+                behaviorDiv.append(behaviorInput);
+                let behaviorLabel = document.createElement("label");
+                behaviorLabel.innerText = DL.str_151;
+                behaviorDiv.append(behaviorLabel);
+
+                behaviorInput.checked = config.behavior == "smooth" ? true : false;
+                behaviorInput.addEventListener("change", () => {
+                    config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
+                    saveConfig(config);
+                    mainElement.focus();
+                });
+            }
+            if (isM) {
+                menuDiv.classList.add("hide");
+                gae("#MenuBehaviorItem,#MenuJumpItem,#MenuHorizontalItem", menuDiv).forEach(e => e.classList.add("hide"));
+            }
         }
         addFixedMenu();
+
+        let btnDiv;
+
+        function addButtons() {
+            btnDiv = document.createElement("div");
+            btnDiv.id = "setting-btn";
+            const btnObj = [{
+                id: "addBtn",
+                svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H624c-8.8 0-16 7.2-16 16v384c0 8.8-7.2 16-16 16H432c-8.8 0-16-7.2-16-16V624c0-8.8-7.2-16-16-16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h384c8.8 0 16-7.2 16-16V16c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v384c0 8.8 7.2 16 16 16h384c8.8 0 16 7.2 16 16z"></path></svg>',
+                cfn: increaseWidth
+            }, {
+                id: "reduceBtn",
+                svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h992c8.8 0 16 7.2 16 16z"></path></svg>',
+                cfn: reduceWidth
+            }];
+            const createDiv = obj => {
+                let item = document.createElement("div");
+                item.id = obj.id;
+                item.className = "setting-btn";
+                item.innerHTML = obj.svg;
+                item.oncontextmenu = () => false;
+                item.addEventListener("click", obj.cfn);
+                btnDiv.append(item);
+            };
+            btnObj.forEach(obj => createDiv(obj));
+            shadow.append(btnDiv);
+        }
+        addButtons();
 
         function defaultImageLayout() {
             config.ViewMode = 0;
@@ -34243,7 +34408,7 @@ img.horizontal {
     //創建框架畫廊
     const createIframeGallery = async (srcs_array = null) => {
 
-        if (checkGeting() || isM || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || isOpenGallery || isOpenOptionsUI) return;
 
         isOpenGallery = true;
 
@@ -34324,10 +34489,10 @@ img.horizontal {
                 saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
-                webtoonWidth = 800;
-                config.webtoonWidth = 800;
+                webtoonWidth = isM ? win.innerWidth : 800;
+                config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
-                imgs.forEach(e => (e.style.maxWidth = "800px"));
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             }
         };
 
@@ -34339,10 +34504,10 @@ img.horizontal {
                 saveConfig(config);
                 imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             } else {
-                webtoonWidth = 800;
-                config.webtoonWidth = 800;
+                webtoonWidth = isM ? win.innerWidth : 800;
+                config.webtoonWidth = webtoonWidth;
                 saveConfig(config);
-                imgs.forEach(e => (e.style.maxWidth = "800px"));
+                imgs.forEach(e => (e.style.maxWidth = webtoonWidth + "px"));
             }
         };
 
@@ -34787,17 +34952,22 @@ p#imgBox {
     padding: 0;
     margin: 0;
 }
+.place {
+    height: 54px;
+    padding: 0;
+    margin: 0;
+}
 #FixedMenu {
     text-align: center;
     font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 14px;
     color: #000000;
-    width: 144px;
+    width: ${isM ? "102px" : "144px"};
     height: auto;
     padding: 5px 5px 2px 5px;
     position: fixed;
-    left: -150px;
+    left: ${isM ? "0px" : "-150px"};
     bottom: 0px;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -34808,7 +34978,7 @@ p#imgBox {
     }
 }
 .FixedMenuitem {
-    width: 132px;
+    width: ${isM ? "90px" : "132px"};
     height: 24px;
     line-height: 24px;
     overflow: hidden;
@@ -34832,6 +35002,31 @@ p#imgBox {
 .FixedMenuitem.active {
     color: #fff;
     background: #1790e6;
+}
+#setting-btn {
+    width: auto;
+    height: auto;
+    position: fixed;
+    right: ${isM ? "10px" : "30px"};
+    bottom: 150px;
+    z-index: 2147483647;
+}
+.setting-btn {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    user-select:none;
+    color: #000;
+    margin: 5px 0;
+    overflow: hidden;
+    border: rgb(51, 51, 51) 1px solid;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+}
+.setting-btn .icon {
+    margin-top: 10px;
+    width: 28px;
+    height: 28px;
 }
 .hide {
     display: none !important;
@@ -34951,6 +35146,26 @@ img.horizontal {
         });
         dom.body.appendChild(mainElement);
 
+        let lastScrollTop = 0;
+        mainElement.addEventListener("scroll", (event) => {
+            if (mainElement.scrollTop > lastScrollTop) {
+                if (isM) {
+                    menuDiv.classList.add("hide");
+                }
+                if (config.ViewMode == 4) {
+                    ge("#setting-btn", dom).classList.add("hide");
+                }
+            } else if (mainElement.scrollTop < lastScrollTop) {
+                if (isM) {
+                    menuDiv.classList.remove("hide");
+                }
+                if (config.ViewMode == 4) {
+                    ge("#setting-btn", dom).classList.remove("hide");
+                }
+            }
+            lastScrollTop = mainElement.scrollTop;
+        });
+
         function loadImgs(imgs) {
             const loadImgList = imgs.map(img => [simpleLoadImg, null, img]);
             const queue = new Queue(Number(config.threading));
@@ -34989,12 +35204,17 @@ img.horizontal {
                 }
                 return img;
             });
+            if (isM) {
+                const b = document.createElement("p");
+                b.className = "place";
+                fragment.append(b);
+            }
             const p = document.createElement("p");
             p.id = "imgBox";
             if (config.ViewMode == 3) {
                 p.style.direction = "rtl";
             }
-            if (siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
+            if (isPC && siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
                 if (_unsafeWindow.devicePixelRatio > 1) {
                     p.style.padding = "2px 6% 0";
                 } else {
@@ -35015,6 +35235,11 @@ img.horizontal {
             mainElement.append(fragment);
             loadImgs(imgElements);
             aspectRatio();
+            if (mode === "webtoon") {
+                btnDiv.classList.remove("hide");
+            } else {
+                btnDiv.classList.add("hide");
+            }
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -35087,7 +35312,7 @@ img.horizontal {
                             Toolbar: {
                                 display: {
                                     left: ["infobar"],
-                                    middle: ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
+                                    middle: isM ? ["flipX", "flipY"] : ["zoomIn", "zoomOut", "iterateZoom", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY", "fitX", "fitY", "reset"],
                                     right: ["slideshow", "fullscreen", "thumbs", "close"]
                                 }
                             },
@@ -35134,7 +35359,7 @@ img.horizontal {
                 const next = document.createElement("div");
                 next.id = "next";
                 next.dataset.index = imgElements.length;
-                next.innerText = `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）`;
+                next.innerText = `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}`;
                 mainElement.append(next);
                 next.addEventListener("click", event => {
                     cancelDefault(event);
@@ -35181,7 +35406,40 @@ img.horizontal {
                     }, 1000);
                 }
             }
+            if (isM) {
+                const b = document.createElement("p");
+                b.className = "place";
+                fragment.append(b);
+            }
         }
+
+        let btnDiv;
+
+        function addButtons() {
+            btnDiv = document.createElement("div");
+            btnDiv.id = "setting-btn";
+            const btnObj = [{
+                id: "addBtn",
+                svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H624c-8.8 0-16 7.2-16 16v384c0 8.8-7.2 16-16 16H432c-8.8 0-16-7.2-16-16V624c0-8.8-7.2-16-16-16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h384c8.8 0 16-7.2 16-16V16c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v384c0 8.8 7.2 16 16 16h384c8.8 0 16 7.2 16 16z"></path></svg>',
+                cfn: increaseWidth
+            }, {
+                id: "reduceBtn",
+                svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h992c8.8 0 16 7.2 16 16z"></path></svg>',
+                cfn: reduceWidth
+            }];
+            const createDiv = obj => {
+                let item = document.createElement("div");
+                item.id = obj.id;
+                item.className = "setting-btn";
+                item.innerHTML = obj.svg;
+                item.oncontextmenu = () => false;
+                item.addEventListener("click", obj.cfn);
+                btnDiv.append(item);
+            };
+            btnObj.forEach(obj => createDiv(obj));
+            dom.body.append(btnDiv);
+        }
+        addButtons();
 
         let menuDiv;
 
@@ -35192,6 +35450,10 @@ img.horizontal {
                 id: "MenuCancelItem",
                 text: DL.str_142,
                 cfn: () => closeGallery()
+            }, {
+                id: "MenuFavorItem",
+                text: DL.str_128.replace(/\(.\)/, ""),
+                cfn: () => createFavorShadowElement()
             }, {
                 id: "MenuThreadingItem"
             }, {
@@ -35238,6 +35500,7 @@ img.horizontal {
                 menuDiv.append(item);
             };
             menuObj.forEach(obj => createMenu(obj));
+            dom.body.append(menuDiv);
 
             let threadingSelect = document.createElement("select");
             for (let i = 1; i <= 32; i++) {
@@ -35248,50 +35511,54 @@ img.horizontal {
             }
             ge("#MenuThreadingItem", menuDiv).append(threadingSelect);
 
-            let jumpSelect = document.createElement("select");
-            for (let i = 0; i <= 100; i++) {
-                let option = document.createElement("option");
-                if (i === 0) {
-                    option.value = i;
-                    option.innerText = `${DL.str_150}${DL.str_152}`;
-                } else {
-                    option.value = i * 100;
-                    option.innerText = `${DL.str_150}${i * 100}px`;
-                }
-                jumpSelect.append(option);
-            }
-            ge("#MenuJumpItem", menuDiv).append(jumpSelect);
-
-            let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
-            let behaviorInput = document.createElement("input");
-            behaviorInput.id = "behaviorInput";
-            behaviorInput.type = "checkbox";
-            behaviorDiv.append(behaviorInput);
-            let behaviorLabel = document.createElement("label");
-            behaviorLabel.innerText = DL.str_151;
-            behaviorDiv.append(behaviorLabel);
-
-            dom.body.append(menuDiv);
-
             threadingSelect.value = config.threading;
             threadingSelect.addEventListener("change", () => {
                 config.threading = Number(threadingSelect.value);
                 saveConfig(config);
                 mainElement.focus();
             });
-            jumpSelect.value = config.jumpNum;
-            jumpSelect.addEventListener("change", () => {
-                config.jumpNum = jumpSelect.value;
-                saveConfig(config);
-                mainElement.focus();
-            });
 
-            behaviorInput.checked = config.behavior == "smooth" ? true : false;
-            behaviorInput.addEventListener("change", () => {
-                config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
-                saveConfig(config);
-                mainElement.focus();
-            });
+            if (isPC) {
+                let jumpSelect = document.createElement("select");
+                for (let i = 0; i <= 100; i++) {
+                    let option = document.createElement("option");
+                    if (i === 0) {
+                        option.value = i;
+                        option.innerText = `${DL.str_150}${DL.str_152}`;
+                    } else {
+                        option.value = i * 100;
+                        option.innerText = `${DL.str_150}${i * 100}px`;
+                    }
+                    jumpSelect.append(option);
+                }
+                ge("#MenuJumpItem", menuDiv).append(jumpSelect);
+                jumpSelect.value = config.jumpNum;
+                jumpSelect.addEventListener("change", () => {
+                    config.jumpNum = jumpSelect.value;
+                    saveConfig(config);
+                    mainElement.focus();
+                });
+
+                let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
+                let behaviorInput = document.createElement("input");
+                behaviorInput.id = "behaviorInput";
+                behaviorInput.type = "checkbox";
+                behaviorDiv.append(behaviorInput);
+                let behaviorLabel = document.createElement("label");
+                behaviorLabel.innerText = DL.str_151;
+                behaviorDiv.append(behaviorLabel);
+
+                behaviorInput.checked = config.behavior == "smooth" ? true : false;
+                behaviorInput.addEventListener("change", () => {
+                    config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
+                    saveConfig(config);
+                    mainElement.focus();
+                });
+            }
+            if (isM) {
+                menuDiv.classList.add("hide");
+                gae("#MenuBehaviorItem,#MenuJumpItem,#MenuHorizontalItem", menuDiv).forEach(e => e.classList.add("hide"));
+            }
         }
         addFixedMenu();
 
@@ -36027,7 +36294,7 @@ img.webtoon {
         if (isM) {
             ge("label:has(>#move)", main).classList.add("hide");
             //gae("#combineDownload", main).forEach(e => e.classList.add("hide"));
-            gae("#shadow_gallery", main).forEach(e => e.classList.add("hide"));
+            //gae("#shadow_gallery", main).forEach(e => e.classList.add("hide"));
             gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
             ge("#scrollUp", main).classList.remove("hide");
             ge("#scrollUp", main).addEventListener("click", event => {
@@ -37514,7 +37781,7 @@ img.webtoon {
         if (isM) {
             hide([
                 "#ShowFixedMenuDIV",
-                "#ShadowGalleryModeDIV",
+                //"#ShadowGalleryModeDIV",
                 "#ShadowGalleryWheelDIV",
                 "#FancyboxWheelDIV",
                 "#ShadowGalleryloopViewDIV"
@@ -38981,7 +39248,7 @@ a[data-fancybox]:hover {
                 }
             }
         }
-        if (isPC && options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
+        if (options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
             fn.hideMsg();
             if ("SPA" in siteData && isFn(siteData.SPA)) {
                 if (await siteData.SPA()) {
