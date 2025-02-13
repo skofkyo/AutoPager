@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.12
+// @version            2025.2.13
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2888,9 +2888,10 @@
         category: "nsfw2"
     }, {
         name: "PixiBB",
-        host: ["sexy.pixibb.com"],
-        reg: /^https?:\/\/sexy\.pixibb\.com\/[\w-]+\/$/,
-        include: ".entry-content img",
+        url: {
+            h: "sexy.pixibb.com",
+            e: [".entry-content img", ".post h2"]
+        },
         imgs: () => fn.getImgA(".entry-content img", ".page-links a"),
         button: [4],
         insertImg: [".entry-content", 2],
@@ -2905,6 +2906,7 @@
                 /Maid Raiden Cosplay.*$/
             ]
         }),
+        hide: ".row:has(>a>img[alt^=Watch]),#custom_html-3",
         category: "nsfw1"
     }, {
         name: "PutMega 分類自動翻頁",
@@ -5310,9 +5312,9 @@
         link: "https://hentaidude.tv/category/cosplay/",
         reg: /^https?:\/\/hentaidude\.tv\/[\w-]+\/[^\/]+\/$/,
         include: "h1.entry-title",
-        imgs: ".post-thumb img,.entry-content a.swipebox",
+        imgs: () => fn.getImgSrcArr(".post-thumb img,.entry-content a.swipebox").map(e => e.replace("198.16.76.146", "hentaidude.tv")),
+        capture: () => _this.imgs(),
         customTitle: ".entry-title",
-        setFancybox: true,
         hide: "#cboxOverlay,#colorbox",
         category: "nsfw2"
     }, {
@@ -9760,7 +9762,8 @@
         name: "BoyFriendTv.com",
         url: {
             h: "www.boyfriendtv.com",
-            p: "/pics/"
+            p: "/pics/",
+            d: "pc"
         },
         box: [".gallery-detail", 2],
         imgs: async () => {
@@ -26151,6 +26154,8 @@ if ("xx" in window) {
     const hasTouchEvent = ("ontouchstart" in _unsafeWindow);
     const isM = ("ontouchstart" in _unsafeWindow);
     const isPC = !("ontouchstart" in _unsafeWindow);
+    const isMobileEdge = ["Mobile", "EdgA"].every(t => _unsafeWindow.navigator.userAgent.includes(t));
+    const isMobileYandex = ["Mobile", "YaBrowser"].every(t => _unsafeWindow.navigator.userAgent.includes(t));
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
@@ -29085,18 +29090,6 @@ if ("xx" in window) {
                         cancelZoom();
                     }
                 }];
-
-                //if (isM) {
-                //buttonObj[1] = {
-                //id: "FullPictureLoadCopyURLBtn",
-                //className: "FullPictureLoadPageButtonTop",
-                //text: DL.str_105,
-                //cfn: event => {
-                //cancelDefault(event);
-                //copyImgSrcTextB();
-                //}
-                //};
-                //}
 
                 const createButton = obj => {
                     let button = document.createElement("button");
@@ -32294,6 +32287,7 @@ if ("xx" in window) {
             newWindow.menuLanguage = DL.galleryMenu;
             newWindow.isOpenFancybox = false;
             newWindow.l10n = Fancyboxl10nV5();
+            newWindow.lightboxSwitch = options.fancybox;
             newWindow.smoothOptions = smoothOptions;
             newWindow.instantOptions = instantOptions;
             newWindow.smoothScrollIntoView = smoothScrollIntoView;
@@ -32601,7 +32595,7 @@ if (l10n !== "EN") {
             const newWindowScriptCode = `
 const fragment = new DocumentFragment();
 
-if (lightGallery == 1) {
+if (lightboxSwitch == 1 && lightGallery == 1) {
     var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
         navbar: false,
         title: false,
@@ -32677,6 +32671,7 @@ let btnDiv;
 function addButtons() {
     btnDiv = document.createElement("div");
     btnDiv.id = "setting-btn";
+    btnDiv.className = "hide";
     const btnObj = [{
         id: "addBtn",
         svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H624c-8.8 0-16 7.2-16 16v384c0 8.8-7.2 16-16 16H432c-8.8 0-16-7.2-16-16V624c0-8.8-7.2-16-16-16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h384c8.8 0 16-7.2 16-16V16c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v384c0 8.8 7.2 16 16 16h384c8.8 0 16 7.2 16 16z"></path></svg>',
@@ -33132,14 +33127,14 @@ function createImgElement(mode) {
         imgBox.style.height = "";
         imgBox.style.width = "";
     }
-    if (lightGallery == 1) {
+    if (lightboxSwitch ==1 && lightGallery == 1) {
         ViewerJsInstance.update();
-    } else {
+    } else if (lightboxSwitch == 1){
         setFancybox();
     }
     loadImgs();
     aspectRatio();
-    if (config.ViewMode == 4) {
+    if (isPC && config.ViewMode == 4) {
         btnDiv.classList.remove("hide");
     } else {
         btnDiv.classList.add("hide");
@@ -33750,6 +33745,15 @@ if (config.ViewMode == 1) {
         //    }
         hidePageScrollbarY();
 
+        let placeHeight;
+        if (isMobileEdge || isMobileYandex) {
+            placeHeight = "54px";
+        } else if (isVia || isXBrowser) {
+            placeHeight = "2px";
+        } else {
+            placeHeight = "30px";
+        }
+
         const style = createStyle(`
 p#imgBox {
     display: block;
@@ -33758,7 +33762,7 @@ p#imgBox {
     margin: 0;
 }
 .place {
-    height: 54px;
+    height: ${placeHeight};
     padding: 0;
     margin: 0;
 }
@@ -34031,7 +34035,7 @@ img.horizontal {
             mainElement.append(fragment);
             loadImgs(imgElements);
             aspectRatio();
-            if (mode === "webtoon") {
+            if (isPC && mode === "webtoon") {
                 btnDiv.classList.remove("hide");
             } else {
                 btnDiv.classList.add("hide");
@@ -34219,7 +34223,7 @@ img.horizontal {
                 id: "MenuJumpItem",
             }, {
                 id: "menuNext",
-                text: `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144} (N)`,
+                text: `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}`,
                 cfn: () => setTimeout(() => (location.href = nextLink), 200)
             }, {
                 id: "MenuHorizontalItem",
@@ -34324,6 +34328,7 @@ img.horizontal {
         function addButtons() {
             btnDiv = document.createElement("div");
             btnDiv.id = "setting-btn";
+            btnDiv.className = "hide";
             const btnObj = [{
                 id: "addBtn",
                 svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H624c-8.8 0-16 7.2-16 16v384c0 8.8-7.2 16-16 16H432c-8.8 0-16-7.2-16-16V624c0-8.8-7.2-16-16-16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h384c8.8 0 16-7.2 16-16V16c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v384c0 8.8 7.2 16 16 16h384c8.8 0 16 7.2 16 16z"></path></svg>',
@@ -34944,6 +34949,16 @@ img.horizontal {
         }
 
         hidePageScrollbarY();
+
+        let placeHeight;
+        if (isMobileEdge || isMobileYandex) {
+            placeHeight = "54px";
+        } else if (isVia || isXBrowser) {
+            placeHeight = "2px";
+        } else {
+            placeHeight = "30px";
+        }
+
         _GM_addElement(dom.head, "style", {
             textContent: `
 p#imgBox {
@@ -34953,7 +34968,7 @@ p#imgBox {
     margin: 0;
 }
 .place {
-    height: 54px;
+    height: ${placeHeight};
     padding: 0;
     margin: 0;
 }
@@ -34968,7 +34983,7 @@ p#imgBox {
     padding: 5px 5px 2px 5px;
     position: fixed;
     left: ${isM ? "0px" : "-150px"};
-    bottom: 0px;
+    bottom: ${isM ? "54px" : "0px"};
     border: #ccc 1px solid;
     border-radius: 3px;
     background-color: #fff;
@@ -35235,7 +35250,7 @@ img.horizontal {
             mainElement.append(fragment);
             loadImgs(imgElements);
             aspectRatio();
-            if (mode === "webtoon") {
+            if (isPC && mode === "webtoon") {
                 btnDiv.classList.remove("hide");
             } else {
                 btnDiv.classList.add("hide");
@@ -35409,7 +35424,7 @@ img.horizontal {
             if (isM) {
                 const b = document.createElement("p");
                 b.className = "place";
-                fragment.append(b);
+                mainElement.append(b);
             }
         }
 
@@ -35418,6 +35433,7 @@ img.horizontal {
         function addButtons() {
             btnDiv = document.createElement("div");
             btnDiv.id = "setting-btn";
+            btnDiv.className = "hide";
             const btnObj = [{
                 id: "addBtn",
                 svg: '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1024 432v160c0 8.8-7.2 16-16 16H624c-8.8 0-16 7.2-16 16v384c0 8.8-7.2 16-16 16H432c-8.8 0-16-7.2-16-16V624c0-8.8-7.2-16-16-16H16c-8.8 0-16-7.2-16-16V432c0-8.8 7.2-16 16-16h384c8.8 0 16-7.2 16-16V16c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v384c0 8.8 7.2 16 16 16h384c8.8 0 16 7.2 16 16z"></path></svg>',
@@ -35462,7 +35478,7 @@ img.horizontal {
                 id: "MenuJumpItem",
             }, {
                 id: "menuNext",
-                text: `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144} (N)`,
+                text: `${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}`,
                 cfn: () => setTimeout(() => (location.href = nextLink), 200)
             }, {
                 id: "MenuHorizontalItem",
@@ -36152,10 +36168,10 @@ img.webtoon {
         <button id="shadow_gallery">${DL.str_141.replace(/\(.\)/, "")}</button>
         <button id="tab_gallery">${DL.str_106.replace(/\(.\)/, "")}</button>
         <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
+        <button id="exclude-error">${DL.str_184}</button>
         <button id="select-all">${DL.str_154}</button>
         <button id="unselect-all">${DL.str_155}</button>
         <button id="reverse-selection">${DL.str_170}</button>
-        <button id="exclude-error">${DL.str_184}</button>
         <button id="reload">${DL.str_156}</button>
         <button id="download">${DL.str_157}</button>
         <label class="number">${DL.str_169}<select id="backgroundColor"></select></label>
@@ -37813,19 +37829,10 @@ img.webtoon {
                 "#CountdownDIV"
             ]);
         }
-        if (fancyboxBlackList()) {
-            hide([
-                "#FancyboxDIV",
-                "#FancyboxSlideshowTimeoutDIV",
-                "#FancyboxWheelDIV",
-                "#FancyboxTransitionDIV"
-            ]);
-        } else {
-            ge("#Fancybox", main).checked = options.fancybox == 1 ? true : false;
-            ge("#FancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
-            ge("#FancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
-            ge("#FancyboxTransition", main).value = _GM_getValue("FancyboxSlideshowTransition", "fade");
-        }
+        ge("#Fancybox", main).checked = options.fancybox == 1 ? true : false;
+        ge("#FancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
+        ge("#FancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
+        ge("#FancyboxTransition", main).value = _GM_getValue("FancyboxSlideshowTransition", "fade");
         ge("#Zoom", main).value = options.zoom;
         siteData.category == "comic" ? ge("#Column", main).value = 2 : ge("#Column", main).value = options.column;
         ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
@@ -37838,10 +37845,13 @@ img.webtoon {
         }
         let autoDownload = siteData.autoDownload;
         if (isM && showOptions || !autoDownload && showOptions) {
-            fn.gae("#AutoDownloadDIV,#CountdownDIV", main).forEach(e => (e.style.display = "none"));
+            hide([
+                "#AutoDownloadDIV",
+                "#CountdownDIV"
+            ]);
         }
-        if (isSimpleMode || isPC && showOptions || (isM && showOptions && !siteData.next)) {
-            ge("#DoubleDIV", main).style.display = "none";
+        if (isSimpleMode || isPC && showOptions || (isM && showOptions && !("next" in siteData))) {
+            hide(["#DoubleDIV"]);
         }
         let downloadVideo = siteData.downloadVideo;
         if (!!downloadVideo && downloadVideo === true && isPC) {
@@ -39491,7 +39501,7 @@ a[data-fancybox]:hover {
         }
     }
 
-    const defaultFavor = "main-background-color,#fafafa\ntext-color,#000\nbackground-color,#aceebb\n4KHD,https://www.4khd.com/\nXiunice.com,https://xiunice.com/\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n美女图册,https://www.mntuce.com/\n六色美图,https://www.06se.com/\nEVERIA.CLUB,https://everia.club/\nAVJB,https://avjb.com/albums/\nエロ画像まとめ,https://geinou-nude.com/\nXasiat,https://www.xasiat.com/albums/\nXO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/\n涩图社,https://setushe.pics/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html";
+    const defaultFavor = "main-background-color,#fafafa\ntext-color,#000\nbackground-color,#aceebb\n小黃書,https://xchina.biz/\n紳士会所,https://www.hentaiclub.net/\n图宅网,https://www.tuzac.com/\n丝袜客,https://siwake.cc/\n萌图社,http://www.446m.com/\n美女图册,https://www.mntuce.com/\n六色美图,https://www.06se.com/\n秀色女神,https://www.xsnvshen.co/\n4KHD,https://www.4khd.com/\nXiunice.com,https://xiunice.com/\nAVJB,https://avjb.com/albums/\nXasiat,https://www.xasiat.com/albums/\nEVERIA.CLUB,https://everia.club/\nSexyAsianGirl,https://www.sexyasiangirl.xyz/\n紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html\nエロ画像まとめ,https://geinou-nude.com/";
 
     let FavorOpenInNewTab = _GM_getValue("FavorOpenInNewTab", 0);
 
