@@ -2,20 +2,20 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">圖片全載-FancyboxV5 </a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/02/07
+2025/02/13
 PC
-Chrome 133.0.6943.60 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 132.0.2957.140 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Chrome 133.0.6943.99 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 133.0.3065.59 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 FireFox 135.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 134.0.3094.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 135.0.3131.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 ☆Firefox for Android 135.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Waterfox 1.0.9.2 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 132.0.2957.129 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 133.0.3065.54 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Yandex Browser 25.2.0.241 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Yandex Browser 25.2.1.103 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.8.1</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://www.xbext.com/index.html">XBrowser 5.0.3</a>
@@ -4100,7 +4100,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.boyfriendtv.com/pics/">BoyFriendTv.com</a>
                 </td>
-                <td></td>
+                <td>PC限定</td>
             </tr>
             <tr>
                 <td>
@@ -4790,10 +4790,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://ios.pipigou830.top/">哔咔庇护所v2</a>
+                    <a href="https://https://ios.pipigou833.top/">哔咔庇护所v2</a>
                 </td>
                 <td>
-                    <a href="https://soapi.study2026.com/">导航1</a>， <a href="https://pipigou830.top/">导航2</a>
+                    <a href="https://soapi.study2026.com/">导航1</a>， <a href="https://pipigou833.top/">导航2</a>
                 </td>
             </tr>
             <tr>
