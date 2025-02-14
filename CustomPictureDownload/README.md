@@ -1,5 +1,7 @@
 <h1>安裝腳本</h1>
-<a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">圖片全載-FancyboxV5 </a>
+<a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad_Github.user.js">Github版</a>
+<br>
+<a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
 2025/02/13
@@ -78,7 +80,7 @@ cnjkedgepfdpdbnepgmajmmjdjkjnifa</pre>
     </li>
 </ul>
 <h1>提醒：</h1>
-<p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時，請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com，或自行尋找可替代的依賴庫CDN。</p>
+<p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時，請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com、github.com，或自行尋找可替代的依賴庫CDN。</p>
 <details>
     <summary>
         <kbd>
@@ -86,7 +88,7 @@ cnjkedgepfdpdbnepgmajmmjdjkjnifa</pre>
         </kbd>
     </summary>
     <br>
-    <pre>
+<pre>
 cdn.jsdelivr.net
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
@@ -98,7 +100,7 @@ cdn.jsdelivr.net
 // @resource ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
 // @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
-    <pre>
+<pre>
 unpkg.com
 // @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
@@ -109,6 +111,18 @@ unpkg.com
 // @resource FancyboxV3Css https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 // @resource ViewerJs https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js
 // @resource ViewerJsCss https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css
+</pre>
+<pre>
+github.com
+// @require            https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/JSZip.js
+// @resource ajaxHookerJS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/ajaxHooker.js
+// @resource JqueryJS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/jquery.min.js
+// @resource FancyboxV5JS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/fancybox.umd.js
+// @resource FancyboxV5Css https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/css/fancybox.css
+// @resource FancyboxV3JS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/jquery.fancybox.min.js
+// @resource FancyboxV3Css https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/css/jquery.fancybox.min.css
+// @resource ViewerJs https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/viewer.min.js
+// @resource ViewerJsCss https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/css/viewer.min.css
 </pre>
 </details>
 <br>
@@ -134,10 +148,14 @@ https://*wnacg.com/photos-slist-aid-*.html
     <pre>
 [{
     name: "規則名稱",
-    enable: 0, //填0禁用此規則
-    icon: 0, //填0不顯示左下圖示
-    key: 0, //填0不綁定快捷鍵
-    url: { //將URL拆分判斷，格式類型詳見內置函式的fn.checkUrl(object);
+    //填0禁用此規則。
+    enable: 0,
+    //填0不顯示左下圖示。
+    icon: 0,
+    //填0不綁定快捷鍵。
+    key: 0,
+    //將URL拆分判斷，格式類型詳見內置函式的fn.checkUrl(object)。
+    url: {
         t: "",
         h: "",
         p: "",
@@ -145,15 +163,18 @@ https://*wnacg.com/photos-slist-aid-*.html
         e: "",
         d: ""
     },
+    //函式寫法返回布林值Boolean。
     url: () => Boolean,
-    //reg和url擇其一作為規則匹配的方式
-    reg: /www\.xxxxx\.com/, //正規表達式匹配網址
-    reg: [ //匹配正規表達式陣列
+    //url和reg擇其一用作規則匹配的方式。
+    //正規表達式匹配網址。
+    reg: /www\.xxxxx\.com/,
+    //匹配正規表達式陣列。
+    reg: [
         /RegExp/,
         /RegExp/
     ],
+    //函式寫法返回布林值Boolean。
     reg: () => {
-         //函式寫法返回布林值Boolean
         if (/^https?:\/\/www\.everiaclub\.com\/.+/.test(siteUrl)) {
             if(!siteUrl.includes(".html")) {
                 return true;
@@ -161,97 +182,143 @@ https://*wnacg.com/photos-slist-aid-*.html
         }
         return false;
     },
-    //SPA網頁URL只匹配域名，SPA函式用於判斷頁面域名以外的元素返回Boolean或Promise(例如需要API請求)，切換腳本UI事件添加移除
+    //SPA網頁URL只匹配域名，SPA函式用於判斷頁面域名以外的元素返回Boolean或Promise(例如需要API請求)，切換腳本UI事件添加移除。
     SPA: () => document.URL.includes("/albums/"),
-    //不切換
+    //SPA網頁不切換UI。
     SPA: true,
-    //與SPA屬性搭配使用，觀察URL變化，用於SPA網頁並且URL是會變換的，更替腳本變數諸如globalImgArray、nextLink、customTitle
+    //與SPA屬性搭配使用，觀察URL變化，用於SPA網頁並且URL是會變換的，更替腳本變數諸如globalImgArray、nextLink、customTitle。
     observerURL: true,
-    delay: 300, //延遲載入規則
-    include: "元素選擇器", //網頁必須包含的元素
-    include: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁必須包含陣列裡的所有元素
-    exclude: "元素", //網頁要排除的元素
-    exclude: ["A元素選擇器", "B元素選擇器", "C元素選擇器", "D元素選擇器"], //網頁要排除陣列裡其中的元素
-    init: "code", //載入頁面後要優先執行的代碼
+    //延遲載入規則。
+    delay: 300,
+    //網頁必須包含的元素。
+    include: "selector",
+    //網頁必須包含陣列裡的所有元素。
+    include: ["A_selector", "B_selector", "C_selector", "D_selector"],
+    //網頁要排除的元素
+    exclude: "元素",
+    //網頁要排除陣列裡其中的元素。
+    exclude: ["A_selector", "B_selector", "C_selector", "D_selector"],
+    //載入頁面後要優先執行的代碼。
+    init: "code",
     init: () => {
         code;
     },
-    init: async () => await fn.waitEle("元素選擇器"), //等待直至元素出現
-    init: async () => await fn.waitVar("變數名"), //等待直至window的變數出現
-    init: () => fn.addMutationObserver(() => fn.remove("div[class][style*='z-index']")), //動態刪除元素
-    box: ["selector", pos, width number], //創建一個圖片容器#FullPictureLoadMainImgBox
-    imgs: "#TheImg", //CSS選擇器
-    imgs: "//img[@id="TheImg"]", //XPath選擇器
+    //等待直至元素出現。
+    init: async () => await fn.waitEle("selector"),
+    //等待直至window的環境變數出現。
+    init: async () => await fn.waitVar("variable"),
+    //動態刪除元素。
+    init: () => fn.addMutationObserver(() => fn.remove("div[class][style*='z-index']")),
+    //調用fn.createImgBox()，創建一個圖片容器#FullPictureLoadMainImgBox。
+    box: ["selector", pos, width number],
     //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
-    imgs: () => { //也可自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變數或透過api取得的json。
+    //CSS選擇器
+    imgs: "#TheImg",
+    //XPath選擇器
+    imgs: "//img[@id="TheImg"]",
+    //也可自己創建Array，有時大圖是在A元素上需要透過xhr獲取或放在script或變數或透過api取得的json。
+    imgs: () => {
         code;
         return Array;
     },
-    referrerpolicy: "no-referrer", //https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/referrerPolicy
-    repeat: 1, //重複取得圖片元素，特殊情況會用到例如ViperGirls網站
-    thums: ".thums", //Fancybox要用的縮略圖網址選擇器
+    //https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/referrerPolicy
+    referrerpolicy: "no-referrer",
+    //重複取得圖片元素，特殊情況會用到例如ViperGirls網站。
+    repeat: 1,
+    //Fancybox要用的縮略圖網址選擇器。
+    thums: ".thums",
     //頁面不適合直接修改插入腳本用的圖片，在頁面右下創建一個浮動可拖動的捕獲之眼，這樣行動裝置才能使用到分頁畫廊。
     capture:  "selector",
     capture: () => _this.imgs(),
-    fn: () => { //手動調用自訂函式, 綁定快捷鍵數字鍵6，浮動選單增加自訂函式選單項
+    //手動調用自訂函式, 綁定快捷鍵數字鍵6，浮動選單增加自訂函式選單項。
+    fn: () => {
         …code;
     },
-    //scrollEle當規則有fn屬性時無法調用
-    scrollEle: ["元素", time], //[自動滾動元素, 滾動的間隔], 綁定快捷鍵數字鍵6
+    //[自動滾動元素, 滾動的間隔], 綁定快捷鍵數字鍵6。
+    //scrollEle當規則有fn屬性時無法調用。
+    scrollEle: ["selector", time],
     scrollEle: async () => {
         …code;
     },
-    button: [4, "24%", 1], //[無作用, "寬度%", 增加上邊界]，有此屬性才會添加功能按鈕
-    insertImg: ["元素", 1, time], //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
+    //[無作用, "寬度%", 增加上邊界]，有此屬性才會添加頁面功能按鈕。
+    button: [4, "24%", 1],
+    //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
+    insertImg: ["selector", 1, time],
     insertImg: [
-        ["元素", (插入在此元素) 0(裡面)1(之前) 2(之後), "要移除的元素"], 0(手動) 1(自動) 2(自動Lazy loading模式) 3(手動Lazy loading模式), 自動延遲時間(預設0)
+        ["selector", (插入在此元素) 0(裡面)1(之前) 2(之後), "remove selector"], 0(手動) 1(自動) 2(自動、Lazy模式) 3(手動、Lazy模式), 自動延遲時間(預設0)
     ],
-    endColor: "white", //更改頁面容器底部統計圖片數量的文字顏色
+    //更改頁面容器底部統計圖片數量的文字顏色。
+    endColor: "white",
+    //插入圖片之前要執行的代碼。
     insertImgBF: () => {
-        //插入圖片之前要執行的代碼
         code;
     },
-    insertImgAF: (parent, buttonBar) => { //參數parent是插入的圖片的父元素，參數buttonBar是頁面功能按鈕的容器元素
-        //插入圖片之後要執行的代碼
+    //插入圖片之後要執行的代碼。
+    //參數parent是插入的圖片的父元素，參數buttonBar是頁面功能按鈕的容器元素。
+    insertImgAF: (parent, buttonBar) => {   
         code;
     },
-    go: 1, //insertImg配套選項，圖片插入在頁面偏下位置時，滾動至第一張大圖的位置。
-    customTitle: ".title", //元素選擇器取得元素的字串。
+    //insertImg配套選項，圖片插入在頁面偏下位置時，滾動至第一張大圖的位置。
+    go: 1,
+    //元素選擇器取得元素的字串。
+    customTitle: ".title",
     customTitle: () => {
         code;
         return text;
     },
-    observerTitle: true, //觀察元素變化重新取得標題字串，用於SPA網頁
-    autoDownload: [1, time], //1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
-    next: "//a[text()='下一章']", //設定下一頁元素綁定右方向鍵點擊下一頁。
+    //觀察元素變化重新取得標題字串，用於SPA網頁。
+    observerTitle: true,
+    //參數A，0快捷鍵觸發，1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
+    autoDownload: [A, time],
+    //設定下一頁元素綁定右方向鍵點擊下一頁。
+    next: "//a[text()='下一章']",
     next: () => {
         code;
         return link;
     },
-    prev: "//a[text()='上一章']", //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
-    css: "css", //自訂樣式。
-    mcss: "css", //自訂樣式只作用在觸控裝置。
-    hide: "selector", //用CSS隱藏元素
-    autoClick: "元素", //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All
-    autoClick: ["元素", 1000], //元素,延遲毫秒時間(預設1000)
-    observerClick: "元素", //使用Intersection Observer API，元素進入可視範圍內才點擊
-    observerClick: ["元素A", "元素B"],
-    loadMore: "元素", //監聽scroll事件，滾至頁面底部時點擊元素，能簡單做到自動載入更多
-    openInNewTab: ".manga-cover>a:not([target=_blank])", //指定的A元素在新分頁開啟
-    topButton: true, //添加返回頂部按鈕
-    threading: 1, //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
-    fetch: 1, //使用Fetch API下載圖片，需要圖片下載請求的伺服器有開放CORS。
-    referer: "src", //下載圖片時傳遞的參照頁，預設是使用當前域名，"url"參照頁為當前文檔網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""
-    infiniteScroll: true, //漫畫分類標記有無限滾動模式
-    gallery: 1, //影子畫廊調用Iframe畫廊
-    downloadVideo: true, //下載變數videoSrcArray裡的影片直連網址
+    //設定上一頁元素綁定左方向鍵點擊上一頁，填1則使用history.back();。
+    prev: "//a[text()='上一章']",
+    //自訂樣式。
+    css: "css",
+    //自訂樣式只作用在觸控裝置。
+    mcss: "css",
+    //用CSS隱藏元素。
+    hide: "A_selector,B_selector",
+    //載入頁面後點擊一次此元素，能簡單做到自動簽到、展開目錄、Show All。
+    autoClick: "selector",
+    //元素,time延遲多少毫秒後才點擊(預設1000)
+    autoClick: ["selector", time],
+    //使用Intersection Observer API，元素進入可視範圍內才點擊。
+    observerClick: "selector",
+    observerClick: ["A_selector", "B_selector"],
+    //監聽scroll事件，滾至頁面底部時點擊元素，能簡單做到自動載入更多。
+    loadMore: "selector",
+    //指定的A元素在新分頁開啟。
+    openInNewTab: ".manga-cover>a:not([target=_blank])",
+    //添加返回頂部按鈕。
+    topButton: true,
+    //有些網站限制連接數，下載連接數太大容易出錯，適當降低連接數。
+    threading: 1,
+    //使用Fetch API下載圖片，需要圖片下載請求的伺服器有開放CORS。
+    fetch: 1,
+    //下載圖片時傳遞的參照頁，預設是使用當前域名，"url"參照頁為當前文檔網址，"src"參照頁為圖片網址，也能自訂如"https://www.example.com/"或空""。
+    referer: "src",
+    //下載變數videoSrcArray裡的影片直連網址。
+    downloadVideo: true,
+    //漫畫分類標記有無限滾動模式。
+    infiniteScroll: true,
+    //影子畫廊調用Iframe畫廊。
+    gallery: 1,
     //離開影子畫廊後要滾動到此元素的位置，寫成"last:selector"則取多個元素的最後一個。
     focus: "selector",
-    //不是簡單的首尾元素就寫成用函式判斷返回DOM元素
+    //不是簡單的首尾元素就寫成用函式判斷返回DOM元素。
     focus: () => HTMLElement,
-    closeAF: () =>, //離開影子畫廊後要運行的函式
-    aeg: 0, //0不能自動進入影子畫廊
-    category: "comic" //類別photo、nsfw1、nsfw2、hcomic、comic、lazyload、ad、none
+    //離開影子畫廊後要運行的函式。
+    closeAF: () =>,
+    //0不能自動進入影子畫廊。
+    aeg: 0,
+    //類別photo、nsfw1、nsfw2、hcomic、comic、ad、none
+    category: "comic"
 }, {
     name: "規則2",
     enable: 0,
@@ -284,7 +351,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     init: () => {
         code
     },
-    box: ["selector"], 
+    box: ["selector", 1], 
     imgs: "",
     imgs: () => {
         code
@@ -300,7 +367,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         …code;
     },
     button: [4],
-    insertImg: ["", 0, time],
+    insertImg: ["", 2, time],
     insertImg: [
         ["", 1, ""], 2, time
     ],
@@ -340,9 +407,9 @@ https://*wnacg.com/photos-slist-aid-*.html
     threading: 1,
     fetch: 1,
     referer: "src",
+    downloadVideo: true,
     infiniteScroll: true,
     gallery: 1,
-    downloadVideo: true,
     focus: "",
     focus: () =>,
     closeAF: () =>,
@@ -353,18 +420,18 @@ https://*wnacg.com/photos-slist-aid-*.html
     …
 }]
 </pre>
-    <pre>
-// 網站自帶Fancybox燈箱功能，不注入FancyboxCSS樣式
+<pre>
+// 網站自帶Fancybox燈箱功能，不注入FancyboxCSS樣式。
 fancybox: {
     v: 3,
     css: false
 },
-// 頁面容器使用Fancybox3.5.7
+// 頁面容器使用Fancybox3.5.7。
 fancybox: {
     v: 3,
     insertLibrarys: 1
 },
-// 不使用燈箱功能
+// 不使用燈箱功能。
 fancybox: {
     blacklist: 1
 },
@@ -414,15 +481,19 @@ fn.gae(selector, doc)
     enable: 1,
     reg: /^https:\/\/.+/,
     autoPager: {
-        mode: 0, //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁，"json"請求的資料格式是JSON會存為變數siteJson。
-        waitEle: "selector", //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
-        loadTime: 200, //mode為1時給iframe框架讀取的時間，預設200可省略。
+        //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁，"json"請求的資料格式是JSON會存為變數siteJson。
+        mode: 0,
+        //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
+        waitEle: "selector",
+        //mode為1時給iframe框架讀取的時間，預設200可省略。
+        loadTime: 200,
         frameCode: `
             //mode為1時要注入到iframe裡運行的代碼，由於是字串特殊字元需要轉譯，例如\要表達為\\
             //會改變腳本的frameWindow變數從當前window變為iframe的window
             //可參照8Comic無限動漫自動翻頁規則的用法
         `,
-        ele: "selector", //下一頁主體元素選擇器
+        //下一頁主體元素選擇器
+        ele: "selector",
         ele: (dom) => { 
             //2種寫法
             //1.創建元素和插入元素皆由此函式完成
@@ -430,8 +501,10 @@ fn.gae(selector, doc)
             code;
             return [...elements];
         },
-        pos: ["selector", 0], //[插入下一頁主體元素的基準元素, 0裡面1之前2之後]，預設為主體元素最後一個之後，可省略。
-        next: "selector", //下一頁A元素選擇器
+        //[插入下一頁主體元素的基準元素, 0裡面1之前2之後]，預設為主體元素最後一個之後，可省略。
+        pos: ["selector", 0],
+        //下一頁A元素選擇器
+        next: "selector",
         next: (dom) => { 
             code;
             return url;
@@ -443,8 +516,10 @@ fn.gae(selector, doc)
             code;
             return Promise;
         },
-        re: "selector", //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
-        observer: "selector", //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
+        //替換元素，下一頁的元素替換到當前頁面的相同的元素，如標題、頁碼條，不需要則省略。
+        re: "selector",
+        //用來觸發翻下一頁的元素，有多個元素時取最後一個元素，觸發時機為當元素進入可視範圍時，不使用則省略。
+        observer: "selector",
         stop: (dom) => {
             //根據判斷結果返回布林值boolean停止翻頁。
             code;
@@ -453,12 +528,15 @@ fn.gae(selector, doc)
             }
             return false
         },
-        showTitle: 0, //0不顯示下一頁的標題分隔條，顯示則省略。
-        pageNum: "span.current", //頁數文字選擇器，標題文字簡略為Page n
+        //0不顯示下一頁的標題分隔條，顯示則省略。
+        showTitle: 0,
+        //頁數文字選擇器，標題文字簡略為Page n
+        pageNum: "span.current",
         pageNum: (dom) => {
             return num;
         },
-        title: (dom) => { //完整定義標題文字
+        //完整定義標題文字
+        title: (dom) => {
             //自定義標題分隔條要顯示的文字，不使用則省略。
             code;
             return titleText;
@@ -468,18 +546,25 @@ fn.gae(selector, doc)
                 text: titleText;
             }
         },
-        hide: "selector", //暫時隱藏元素，當暫停翻頁或最後一頁時取消隱藏。
-        bottom: 1000, //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設為當前視窗可視範圍的高度screen.height可省略。
-        sleep: 1000, //翻頁事件注入的間隔時間ms，預設1000可省略。
-        history: 1, //1翻頁後添加瀏覽器歷史紀錄，0不添加，預設1可省略。
-        loading: "msg", //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息
-        lazySrc: "selector", //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片
-        script: "//script[contains(text(),'eval')]", //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變數，不需要則省略。
+        //暫時隱藏元素，當暫停翻頁或最後一頁時取消隱藏。
+        hide: "selector",
+        //不使用observer時，滾動到距離頁面底部剩餘多少高度px時觸發翻下一頁，預設為當前視窗可視範圍的高度screen.height可省略。
+        bottom: 1000,
+        //翻頁事件注入的間隔時間ms，預設1000可省略。
+        sleep: 1000,
+        //1翻頁後添加瀏覽器歷史紀錄，0不添加，預設1可省略。
+        history: 1,
+        //自動翻頁載入中顯示gif或訊息，gif(預設可省略)，msg顯示在畫面中間的文字訊息。
+        loading: "msg",
+        //有元素圖片網址放在dataset屬性，IMG元素的src直接使用dataset，DIV、A元素創建style.backgroundImage顯示dataset圖片。
+        lazySrc: "selector",
+        //下一頁腳本選擇器，將下一頁的腳本代碼插入到當前頁改變變數，不需要則省略。
+        script: "//script[contains(text(),'eval')]",
         bF: (dom) => {
-            //插入下一頁元素之前要執行的代碼，不需要則省略
+            //插入下一頁元素之前要執行的代碼，不需要則省略。
         },
         aF: (dom) => { 
-             //插入下一頁元素之後要執行的代碼，不需要則省略
+             //插入下一頁元素之後要執行的代碼，不需要則省略。
         }
     },
     category: "autoPager"
@@ -500,7 +585,7 @@ console.log(getType([])); //'Array'
 console.log(getType({})); //'Object'
 getType(obj);
 </pre>
-    <pre>
+<pre>
 //判斷當前是否為觸控裝置
 hasTouchEvent
 //判斷是否為字串返回布林值
@@ -526,7 +611,7 @@ isEle(obj);
 //判斷字串是否為完整的網址返回布林值
 isURL(obj);
 </pre>
-    <pre>
+<pre>
 //匹配網址和頁面元素，用於規則屬性url和reg是函式的寫法
 //t = document.title 匹配標題部分字串，類型可為字串、正規表達式、字串或正規表達式的陣列
 //h = hosts 匹配網站的域名，類型可為字串、正規表達式、字串或正規表達式的陣列
@@ -558,33 +643,33 @@ const object = {
 }
 fn.checkUrl(object);
 </pre>
-    <pre>
+<pre>
 //返回選擇器的首個元素，支持CSS/Xpath選擇器
 fn.ge("selector");
 fn.ge("selector", doc = document);
 fn.ge("selector", node);
 fn.ge(String, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //返回選擇器的所有元素的陣列，支持CSS/Xpath選擇器
 fn.gae("selector");
 fn.gae("selector", doc = document);
 fn.gae("selector", node);
 fn.gae(String, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //返回A選擇器的首個A元素的href
 fn.gu("selector");
 fn.gu("selector", doc = document);
 fn.gu(String, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //返回A選擇器的所有A元素的href的陣列並且去除重複
 fn.gau("selector");
 fn.gau("selector", doc = document);
 fn.gau(String, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //取得元素的字串
 //mode
 //1返回指定元素的字串(預設)
@@ -594,7 +679,7 @@ fn.gt("selector");
 fn.gt("selector", mode = 1, doc = document);
 fn.gt(String, Number, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //取得元素的字串
 //選擇器為陣列時，依序判斷元素是否存在與字串數是否大於0。
 //例如要拿h1,h2的字串，h1元素在前是英文，h2元素在後是中文，想要先拿中文就寫成["h2", "h1"]。
@@ -602,7 +687,7 @@ fn.getText("selector");
 fn.getText("selector", doc = document);
 fn.getText(String or Array, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //刪除指定字串返回字串
 //s = selector 元素選擇器
 //t = text 文字字串
@@ -629,20 +714,20 @@ fn.dt(objetc);
     d: "example.com"
 }
 </pre>
-    <pre>
+<pre>
 //取得非外部引入的script的字串
 //searchValue，關鍵字串或正規表達式
 fn.gst(searchValue);
 fn.gst(searchValue, doc = document);
 fn.gst(String or RegExp, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //取得元素屬性的值
 fn.attr("selector","屬性");
 fn.attr("selector","屬性", doc = document);
 fn.attr(String, String, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //創建一個DIV用來放圖片，返回DIV
 //元素ID，#FullPictureLoadMainImgBox
 //pos 0，添加進指定的元素裡面
@@ -653,7 +738,7 @@ fn.createImgBox("selector");
 fn.createImgBox("selector", pos = 0, width = null);
 fn.createImgBox(String or HTMLElement, Number, Number);
 </pre>
-    <pre>
+<pre>
 //指定元素選擇器或元素陣列，返回提取出的圖片網址陣列。
 //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，支持dataset和backgroundImage
 //不判斷srcset是因為不是所有網站都遵循srcset屬性的格式
@@ -662,7 +747,7 @@ fn.getImgSrcArr("selector", doc = document);
 fn.getImgSrcArr(String, HTMLDocument or HTMLElement);
 fn.getImgSrcArr(Array [HTMLElement]);
 </pre>
-    <pre>
+<pre>
 //比fn.getImgSrcArr()多了判斷srcset、data-srcset、data-lazy-srcset屬性
 //主要用於提取IMG的srcset屬性
 fn.getImgSrcset("img selector");
@@ -670,7 +755,7 @@ fn.getImgSrcset("img selector", doc = document);
 fn.getImgSrcset(String, HTMLDocument);
 fn.getImgSrcset(Array [HTMLImageElement]);
 </pre>
-    <pre>
+<pre>
 //對document.title的字串修改
 //mode
 //0返回【刪除指定字串的標題(預設)】
@@ -681,12 +766,12 @@ fn.title("字串");
 fn.title("字串", mode, doc = document);
 fn.title(String or RegExp, Number, HTMLDocument);
 </pre>
-    <pre>
+<pre>
 //觀察元素變化執行callback
 fn.addMutationObserver(callback, config = MutationObserverConfig, node = document.body);
 fn.addMutationObserver(Function or AsyncFunction, Object, HTMLElement);
 </pre>
-    <pre>
+<pre>
 //將字串解析成document物件
 //搭配fetch(url).then(res => res.text())返回的原始碼使用
 fn.doc("字串");
@@ -697,22 +782,22 @@ fetch(url).then(res => res.text()).then(text => {
     return ele;
 })
 </pre>
-    <pre>
+<pre>
 //將字串解析成xml物件
 fn.xml("字串");
 fn.xml(String);
 </pre>
-    <pre>
+<pre>
 //顯示簡短訊息
 //time ms，0持續顯示
 fn.showMsg("字串", time = 1000);
 fn.showMsg(String, Number);
 </pre>
-    <pre>
+<pre>
 //隱藏簡短訊息
 fn.hideMsg();
 </pre>
-    <pre>
+<pre>
 //延遲運行async/await
 //time ms
 //msg，0不顯示訊息
@@ -721,7 +806,7 @@ fn.delay(Number, Number);
 也能用
 delay(Number);
 </pre>
-    <pre>
+<pre>
 //等待元素async/await
 //間隔100毫秒判斷一次
 //有元素返回元素，選擇器參數為陣列時返回元素陣列，超過循環次數返回null。
@@ -730,15 +815,14 @@ await fn.waitEle("selector");
 await fn.waitEle("selector", max = 200, doc = document);
 fn.waitEle(String or Array, Number, HTMLDocument or HTMLElement);
 </pre>
-    <pre>
+<pre>
 //等待window環境變數，需要等待多個變數時參數為陣列
 //max，循環的次數
-//
 await fn.waitVar("variable");
 await fn.waitVar("variable", max = 200);
 fn.waitVar(String or Array [String], Number);
 </pre>
-    <pre>
+<pre>
 //等待函式寫法，預設最大循環300次100ms，30秒。
 //callback返回真假值或物件，undefined、null、NaN識別為false。
 //callback參數(document, window)
@@ -748,19 +832,19 @@ let callback = (dom, win) => {
 await fn.wait(callback, num = 300);
 fn.wait(Function or AsyncFunction, Number);
 </pre>
-    <pre>
+<pre>
 //功能基本等同eval()
 fn.run("code");
 fn.run(String);
 </pre>
-    <pre>
+<pre>
 //創建空陣列，取代[] for push()的寫法
 //num陣列的長度
 fn.arr(num);
 fn.arr(num, (_, i) => (i + 1));
 fn.arr(Number, Function);
 </pre>
-    <pre>
+<pre>
 //移除元素
 //time ms，延遲的時間
 //Promise可以用await
@@ -772,7 +856,7 @@ let selectors = ["cssSelector" , "XpathSelector"]
 fn.remove(selectors, time = 0);
 fn.remove(String or Array [String], Number);
 </pre>
-    <pre>
+<pre>
 //清除所有setTimeout和setInterval定時器
 //用匿名函式對付匿名函式，可以解決一部份不讓人打開F12開發人員工具的問題
 //mode0，預設運行全部
@@ -782,12 +866,12 @@ fn.remove(String or Array [String], Number);
 fn.clearAllTimer(mode = 0);
 fn.clearAllTimer(Number);
 </pre>
-    <pre>
+<pre>
 //插入樣式，需要先用JS判斷的情況用這個
 fn.css("css");
 fn.css(String);
 </pre>
-    <pre>
+<pre>
 //插入A元素;
 //url 網址
 //selector 元素選擇器或DOM元素
@@ -800,7 +884,7 @@ fn.css(String);
 fn.addUrlHtml("url", "selector", pos = 0, "text");
 fn.addUrlHtml(String, String or HTMLElement, Number, String);
 </pre>
-    <pre>
+<pre>
 //創建script元素
 fn.script(string, number= 0, number = 0, doc = document);
 //返回script
@@ -810,7 +894,7 @@ fn.script("code", 0, 1);
 //src插入到document.body
 fn.script("srcUrl", 1, 1);
 </pre>
-    <pre>
+<pre>
 //依序自動滾動元素
 //selector 元素選擇器
 //ms 滾動的間隔時間
@@ -843,7 +927,7 @@ await fn.aotoScrollEles("img.gallery-item", (ele) => {
 }, 1000);
 return [...new Set(arr)];
 </pre>
-    <pre>
+<pre>
 //確認元素和圖片網址，嘗試取得網址和補全網址，返回一個object。
 {
     ok: Boolean, //成功true失敗false
@@ -852,7 +936,7 @@ return [...new Set(arr)];
 fn.checkImgSrc(HTMLElement);
 //可以使用封裝好的fn.getImgSrcArr();
 </pre>
-    <pre>
+<pre>
 //確認元素有沒有把圖片原始網址放在src以外的屬性，返回一個object。
 {
     ok: Boolean, //成功true失敗false
@@ -861,7 +945,7 @@ fn.checkImgSrc(HTMLElement);
 fn.checkDataset(HTMLElement);
 //可以使用封裝好的fn.getImgSrcArr();
 </pre>
-    <pre>
+<pre>
 //確認圖片狀態屬性 返回一個object
 {
     ok: Boolean, //成功讀取true失敗false
@@ -871,12 +955,12 @@ fn.checkDataset(HTMLElement);
 await fn.checkImgStatus(src);
 fn.checkImgStatus(String);
 </pre>
-    <pre>
+<pre>
 //確認加了CDN[wsrv.nl || wp.com]的圖片網址是否有效，無效則刪除CDN返回原始來源的圖片網址
 await fn.checkImageCDN([圖片網址陣列]);
 fn.checkImageCDN(Array);			
 </pre>
-    <pre>
+<pre>
 //網頁圖片src屬性開頭是blob:的，只能通過再繪製轉換來取得，無法繪製跨域的圖片，會出現跨域汙染的錯誤。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
@@ -887,7 +971,7 @@ fn.imgToBlobURL(String, String, Number);
 //例子
 [...fn.gae(".mh_comicpic img[src^=blob]")].map(e => fn.imgToBlobURL(e));
 </pre>
-    <pre>
+<pre>
 //封裝fn.imgToBlobURL函式。
 //selector，canvas、img元素選擇器
 //type轉換的圖片類型"image/jpeg"、"image/webp"、"image/png"
@@ -900,7 +984,7 @@ fn.imgBlobUrlArr(".mh_comicpic img[src^=blob]");
 //例子2
 fn.imgBlobUrlArr(".image>img");
 </pre>
-    <pre>
+<pre>
 //取得代碼並創建script注入到當前頁面
 let obj = {
     cors: true, //跨域
@@ -918,7 +1002,7 @@ fn.getCode("https://code.jquery.com/jquery-3.7.1.min.js", {
     cors: true
 });
 </pre>
-    <pre>
+<pre>
 //使用Promise封裝GM_xmlhttpRequest
 //只取得回應標頭，不接收完整資料，快速確認連結的存活狀態。
 fn.xhrHEAD("url");
@@ -932,14 +1016,14 @@ if (status == 200) {
 }
 fn.xhrHEAD(String);
 </pre>
-    <pre>
+<pre>
 //使用Promise封裝GM_xmlhttpRequest
 //傳入連結陣列抓取免空圖床的圖片，返回圖片網址的陣列
 //imx.to、imagebam、postimg...等等
 fn.getImageHost([links]);
 fn.getImageHost(Array);
 </pre>
-    <pre>
+<pre>
 //使用Promise封裝GM_xmlhttpRequest
 //需要跨域CORS、更改參照頁，更改瀏覽器UA時可用。
 fn.xhr("url", details = {});
@@ -955,7 +1039,7 @@ fn.xhr("url", {
 })
 fn.xhr(String, Object);
 </pre>
-    <pre>
+<pre>
 //使用Promise封裝GM_xmlhttpRequest，返回經過文字編碼的document，避免字元亂碼，需要跨域時使用。
 fn.xhrDoc("url", details = {})
 fn.xhrDoc("url", {
@@ -969,7 +1053,7 @@ fn.xhrDoc("url").then(doc => {
 })
 fn.xhrDoc(String, Object);
 </pre>
-    <pre>
+<pre>
 //使用Fetch API，返回經過文字編碼的document，避免字元亂碼。
 //無法修改User-Agent
 fn.fetchDoc("url", details = {});
@@ -978,7 +1062,7 @@ fn.fetchDoc("url").then(doc => {
 })
 fn.fetchDoc(String, Object);
 </pre>
-    <pre>
+<pre>
 //必須同源不能跨域
 //使用Promise封裝iframe框架，返回iframe框架的document。
 //selector元素選擇器指定等待到元素出現(必須)
@@ -990,7 +1074,7 @@ let callback = (dom, frame) => {
 await fn.iframeDoc("url", "selector", time = 5000, callback);
 fn.iframeDoc(String, String, Number, Function or AsyncFunction);
 </pre>
-    <pre>
+<pre>
 //必須同源不能跨域
 //使用Promise封裝Fetch API搭配iframe框架，返回iframe框架的document。
 //fetch()取得html原始碼傳入iframe框架，需要用iframe框架加載網頁，網站卻又容易卡住逾時時使用，fetch()逾時524或發生400以上錯誤碼，自動重試。
@@ -1003,13 +1087,13 @@ let callback = (dom, frame) => {
 await fn.iframeSrcDoc("url", "selector", time = 5000, callback);
 fn.iframeSrcDoc(String, String, Number, Function or AsyncFunction);
 </pre>
-    <pre>
+<pre>
 //必須同源不能跨域
 //使用Promise封裝iframe框架，等待至指定的環境變數出現，返回iframe框架的contentWindow。
 let iframe = await fn.iframeVar("url", "declares", time = 1000);
 fn.iframeVar(String, String, Number);
 </pre>
-    <pre>
+<pre>
 //必須同源不能跨域
 //使用Promise封裝iframe框架，讓調用iframe框架能像fetch的寫法
 const details = {
@@ -1041,7 +1125,7 @@ fn.iframe("url", details).then(object => {
 
 fn.iframe(String, Object);
 </pre>
-    <pre>
+<pre>
 //xhr獲取元素，不局限於圖片
 //links，A元素選擇器或網址陣列
 //selector要獲取的元素選擇器
@@ -1056,7 +1140,7 @@ fn.getEle(String or Array, String, null or String or Array [String, Number], nul
 await fn.getCorsEle([links], "selector", targetEle = null, removeEle = null, time = 100);
 fn.getCorsEle(String or Array, String, null or String or Array [String, Number], null or String, Number);
 </pre>
-    <pre>
+<pre>
 //使用iframe單一線程獲取元素，不局限於圖片，返回元素陣列
 //links，A元素選擇器或網址陣列
 //selector要獲取的元素選擇器
@@ -1065,7 +1149,7 @@ fn.getCorsEle(String or Array, String, null or String or Array [String, Number],
 await fn.getEleF([links], "selector", targetEle = null);
 fn.getEleF(String or Array, String, null or Array [String, Number]);
 </pre>
-    <pre>
+<pre>
 //xhr抓取圖片元素，返回圖片網址 (只支持靜態網頁，無法跨域請求)
 //max填入用fn.gt()取得最大頁數的數字，或想辦法算出最大頁數的數字。
 //mode網址頁碼數字遞增模式
@@ -1129,7 +1213,7 @@ fn.getImg(String, Number, Number, Array [String or RegExp, String] or null, Numb
 //獨立出來的可調用函式，返回修改後的連結
 fn.getModeUrl("url", mode, num);
 </pre>
-    <pre>
+<pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
 //fn.getImgO基本同fn.getImg，但使用單線程獲取網頁,能設置獲取網頁的間隔時間，類翻頁模式。
 //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
@@ -1137,13 +1221,13 @@ fn.getImgO("元素選擇器", max, mode, ["圖片網址用來替換的字串", "
 fn.getImgO("selector", maxPage = 1, mode = 1, rText = [null, null], time = 200, paginationEle = null, msg = 1)
 fn.getImgO(String, Number, Number, Array [String or RegExp, String] or null, Number, String or null, Number);
 </pre>
-    <pre>
+<pre>
 //fn.getImgIframe基本同fn.getImg，使用iframe框架單線程獲取網頁,能讓網頁運行必要的javaacript。
 fn.getImgIframe("圖片元素選擇器", max, mode, "替換頁碼條元素", time(給予框架讀取的時間), 0 不顯示獲取訊息)
 fn.getImgIframe("img selector", max, mode, paginationEle = null, time = 1000, showMsg = 1)
 fn.getImgIframe(String, Number, Number, String or  null, Number, Number)
 </pre>
-    <pre>
+<pre>
 //xhr抓取圖片元素，返回圖片網址的陣列
 //mode
 //0多線程(預設)
@@ -1159,14 +1243,14 @@ fn.getImgA("元素選擇器", "A元素選擇器");
 fn.getImgA("元素選擇器", [網址陣列]);
 fn.getImgA(String, String or Array, Number, , Array [String or RegExp, String] or null, Number);
 </pre>
-    <pre>
+<pre>
 //xhr抓取圖片元素，可跨域抓圖片，返回圖片網址的陣列
 //IMG、DIV、A、LINK、P、SPAN、LI、FIGURE、ARTICLE，9種元素會先判斷有沒有圖片網址放在dataset屬性，如果沒有IMG取src屬性，A、LINK取href屬性。
 fn.getImgCorsA("元素選擇器", "A元素選擇器", time = 100);
 fn.getImgCorsA("元素選擇器", [網址陣列], time = 100);
 fn.getImgCorsA(String, String or Array, Number);
 </pre>
-    <pre>
+<pre>
 //翻頁模式聚集圖片或是含A元素的預覽縮圖然後fn.getImgA()
 fn.getNP("元素選擇器", "下一頁元素元素選擇器或函式", "判斷為最後一頁的元素選擇器或函式", "替換元素選擇器", time(延遲請求下一頁的時間預設0毫秒), dataset = null, 顯示訊息 = 1)
 //判斷為最後一頁的函式舉例
@@ -1557,12 +1641,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://pic.yailay.com/">Pic Yailay</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://hitxhot.com/">Hitxhot Album Archive II</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3419,6 +3497,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://photobeach.blogspot.com/">Photo Beach</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://jangjooart.blogspot.com/">JANGJOO</a>
                 </td>
                 <td></td>
@@ -3471,7 +3555,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://nisokudemosandal.blog.jp/">エロマニア　猿！</a>
                 </td>
-                <td></td>
+                <td><a href="https://ippondemoninjin.livedoor.blog/">グラドルマニア　猿！</a></td>
             </tr>
             <tr>
                 <td>
@@ -5312,6 +5396,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://nukibooks.com/">エロ漫画 ヌキブックス</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.b-hentai.com/">H研-成年コミック研究会</a>
                 </td>
                 <td></td>
             </tr>
