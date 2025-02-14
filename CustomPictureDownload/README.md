@@ -4916,12 +4916,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://photo.lovegua.com/">瓜老師の鉴赏课</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://xxav.one/tuwen/">XXAV</a>
                 </td>
                 <td>
@@ -6874,12 +6868,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.titaniascans.com/reader/">Titania Scanlations 英文</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://assortedscans.com/">Assorted Scans 英文</a>
                 </td>
                 <td></td>
             </tr>
