@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.13
+// @version            2025.2.14
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -579,26 +579,6 @@
         prev: ".nextNews>a",
         customTitle: "h1",
         hide: "body>ins",
-        category: "nsfw2"
-    }, {
-        name: "Hit-x-Hot格式",
-        host: ["hitxhot.com"],
-        reg: [
-            /^https?:\/\/hitxhot\.com\/blog\/\w+\.html/i
-        ],
-        init: () => fn.clearElementEvent(),
-        imgs: async () => {
-            let max;
-            try {
-                [max] = fn.gt(".entry-title").match(/\d+$/);
-            } catch {
-                max = 1;
-            }
-            return /\?m=1/.test(siteUrl) ? await fn.getImg(".entry-content img", max, "8") : await fn.getImg(".entry-content img", max);
-        },
-        button: [4],
-        insertImg: [".entry-content", 2],
-        customTitle: () => fn.title(/^[a-z-\s\.I]+:/i).split("|")[0].trim(),
         category: "nsfw2"
     }, {
         name: "Depvailon格式",
@@ -4323,8 +4303,7 @@
         name: "秀图湾",
         host: ["www.okxx.de", "okxx.de", "www.xiusz.de", "xiusz.de", "www.xiusz.com", "xiusz.com", "www.aiyes.de", "aiyes.de"],
         url: {
-            t: "xiusz.de",
-            e: ".pic-group"
+            t: "xiusz.de"
         },
         box: [".pic-group", 1],
         imgs: () => {
@@ -4639,8 +4618,7 @@
     }, {
         name: "HotAsiaGirl分頁模式",
         url: {
-            h: "hotgirl.asia",
-            e: ".galeria_img"
+            h: "hotgirl.asia"
         },
         box: [".galeria_img", 1],
         imgs: () => fn.getImgA(".galeria_img>img", ".pagination a[href]"),
@@ -5974,6 +5952,7 @@
         button: [4],
         insertImg: ["//div[div[@id='masonry']]", 2],
         customTitle: () => fn.ge("//meta[@property='og:description']").content,
+        css: ".grid-more{position:relative}",
         category: "nsfw2"
     }, {
         name: "COSPLAYASIAN/COSPLAYTHOTS/COSPLAYRULE34/WAIFUBITCHES/COSPLAY BOOBS/COSPLAYLEAKS/VIPTHOTS/HENTAI BITCHES/LEAKSFANS/CHARMINGASS/LEAKS PIE/CHERRY LEAKS/SWEETLEAKS/OCOSPLAY/WEB CHARMING/COSPLAY KITTYS/TITSPIE/COSPLAY SOSEDKI",
@@ -6001,13 +5980,14 @@
             ],
             p: ["/gallery/", "/photo/", "/photos/", "/picture/", "/album/", "/post/", "/image/", "/img/", "/pic/", "/pics/", "/p/", "/g/"]
         },
-        box: [".grid,div.row:has(>.bg-dark)", 2],
+        box: [".grid,.grid-,div.row:has(>.bg-dark)", 2],
         imgs: "a[data-fancybox],.grid-item>img,.grid-item->img",
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".grid,div.row:has(>.bg-dark)"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".grid,.grid-,div.row:has(>.bg-dark)"], 2
         ],
         customTitle: () => fn.ge("h1.text-uppercase:not(.mt-2)").textContent.replace(/^[\w\s]+:/i, "").trim(),
+        css: ".grid-more{position:relative}",
         hide: "noindex:has(>div>center),div:has(>center>noindex)",
         category: "nsfw2"
     }, {
@@ -6015,7 +5995,7 @@
         url: {
             h: "nudostar.com",
             p: /^\/[^\/]+\//,
-            e: [".pagination-single", "//p/a[img]"]
+            e: "//p/a[img]"
         },
         box: [".pagination-single", 1],
         imgs: () => {
@@ -6273,8 +6253,7 @@
         link: "https://thehentaiworld.com/hentai-cosplay-images/",
         url: {
             h: "thehentaiworld.com",
-            p: /^\/[^\/]+\/[^\/]+\/$/,
-            e: "#miniThumbContainer"
+            p: /^\/[^\/]+\/[^\/]+\/$/
         },
         box: ["#miniThumbContainer", 2],
         imgs: () => {
@@ -6292,8 +6271,7 @@
         link: "https://akaihentai.com/tag/cosplay/",
         url: {
             h: "akaihentai.com",
-            p: /^\/[^\/]+\/$/,
-            e: ".comments"
+            p: /^\/[^\/]+\/$/
         },
         init: () => _unsafeWindow.jQuery("body").off(),
         box: [".comments", 1],
@@ -6689,19 +6667,20 @@
         host: ["bxx.me"],
         url: {
             e: [
-                "meta[property='og:site_name'][content=BXX]"
-            ],
-            p: ".html"
+                "meta[property='og:site_name'][content=BXX]",
+                ".content-inner"
+            ]
         },
         box: [".content-inner p:has(img),.wp-block-gallery,.wp-block-image", 1],
         imgs: () => {
             let max = fn.gt(".page_info")?.match(/\d+/g)?.at(-1) ?? 1;
-            return fn.getImg(".content-inner img", max, 10);
+            return fn.getImg(".content-inner img", max, "4");
         },
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".content-inner p:has(img),.wp-block-gallery,.wp-block-image,.jeg_pagelinks"], 2
         ],
+        go: 1,
         customTitle: "h1.jeg_post_title",
         category: "nsfw2"
     }, {
@@ -7116,8 +7095,7 @@
         name: "imgcup.com",
         url: {
             h: "imgcup.com",
-            p: ".html",
-            e: ".penci-post-gallery-container"
+            p: ".html"
         },
         box: [".penci-post-gallery-container", 2],
         imgs: ".item-gallery-masonry>a",
@@ -7458,6 +7436,16 @@
         customTitle: ".title h2",
         category: "nsfw1"
     }, {
+        name: "Nao Kanzaki and a few friends",
+        host: ["aitoda.blogspot.com"],
+        reg: /^https?:\/\/aitoda\.blogspot\.com\/\d+\/\d+\/[\w-]+\.html/,
+        imgs: ".entry-content .separator a",
+        thums: ".entry-content .separator a img",
+        next: ".blog-pager-older-link",
+        prev: ".blog-pager-newer-link",
+        customTitle: "..entry-title",
+        category: "nsfw1"
+    }, {
         name: "jangjoo",
         host: ["jangjooart.blogspot.com"],
         reg: /^https?:\/\/jangjooart\.blogspot\.com\/\d+\/\d+\/[\w-]+\.html/,
@@ -7630,11 +7618,6 @@
         host: ["idol.gravureprincess.date"],
         reg: /^https?:\/\/idol\.gravureprincess\.date\/\d+\/\d+\/.+\.html/,
         imgs: ".separator img",
-        button: [4],
-        insertImg: [
-            [".entry-content", 0], 2
-        ],
-        go: 1,
         autoDownload: [0],
         next: "a.blog-pager-older-link",
         prev: "a.blog-pager-newer-link",
@@ -7779,9 +7762,11 @@
         openInNewTab: ".autopagerize_page_element a[href]:not([target=_blank]),.article-list-outer a[href]:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "エロマニア　猿！",
-        host: ["nisokudemosandal.blog.jp"],
-        reg: /^https?:\/\/nisokudemosandal\.blog\.jp\/archives\/\d+\.html$/,
+        name: "エロマニア　猿！/グラドルマニア　猿！",
+        url: {
+            h: ["nisokudemosandal.blog.jp", "ippondemoninjin.livedoor.blog"],
+            p: "/archives/"
+        },
         imgs: ".article-body a[title]:has(>img)",
         autoDownload: [0],
         next: "//li[@class='prev']/a | //a[text()='前の記事']",
@@ -12308,8 +12293,7 @@
                 ".place-padding+.place-padding",
                 "//a[@data-title and picture/source]",
                 ".prev-next-page",
-                ".blog-title",
-                "#post-tag"
+                ".blog-title"
             ]
         },
         box: ["#post-tag", 1],
@@ -14695,8 +14679,7 @@
         host: ["cin.cx", "cin.mom"],
         url: {
             h: "cin",
-            p: /^\/v\/\d+$/,
-            e: "#doujin-page"
+            p: /^\/v\/\d+$/
         },
         checkStatus: async (src) => {
             let host = new URL(src).host;
@@ -15520,6 +15503,24 @@
         button: [4],
         insertImg: [".article-page-list", 2],
         customTitle: "h1.detail-ttl",
+        category: "hcomic"
+    }, {
+        name: "H研-成年コミック研究会",
+        url: {
+            h: "www.b-hentai.com",
+            p: ".html"
+        },
+        box: [".wp-block-table", 2],
+        imgs: () => fn.getImgA(".content img", ".article-pagination a"),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".content>img,.content p:has(img),.article-pagination"], 2
+        ],
+        go: 1,
+        autoDownload: [0],
+        next: "//a[div[div[div[text()='Previous']]]]",
+        prev: "//a[div[div[div[text()='Next']]]]",
+        customTitle: "h1.post-title",
         category: "hcomic"
     }, {
         name: "Hentai2Read",
@@ -16787,10 +16788,7 @@
         url: {
             h: /atm|xman|rmtt/,
             p: "detail/",
-            e: [
-                ".hot_banner",
-                ".playlist_full"
-            ]
+            e: ".playlist_full"
         },
         init: () => {
             fn.clearAllTimer();
@@ -17491,7 +17489,7 @@
     }, {
         name: "野貓韓漫 目錄頁",
         url: {
-            e: ".module-info",
+            e: ".module-play-list",
             p: "/m/"
         },
         box: [".module-info", 2],
@@ -18029,7 +18027,6 @@
         url: {
             h: /mangago|youhim/,
             p: /^\/read-manga\/|^\/chapter\//,
-            e: "#pic_container",
             d: "pc"
         },
         init: () => fn.clearAllTimer(),
@@ -19101,8 +19098,7 @@
         name: "Assorted Scans",
         url: {
             h: "assortedscans.com",
-            p: "/reader/",
-            e: "#page-image"
+            p: "/reader/"
         },
         box: ["#page-image", 2],
         imgs: () => {
@@ -22186,7 +22182,6 @@ if ("xx" in window) {
         url: {
             h: [/^www\.(laimanhua|comemh)/],
             p: "/kanmanhua/",
-            e: "#pic-list",
             d: "pc",
             i: 0
         },
@@ -23038,7 +23033,6 @@ if ("xx" in window) {
         url: {
             h: ["www.hmttmh.com", "cn.zhuzhumh.com", "w226.npdn.top", "w323.npdn.top"],
             p: "/chapter/",
-            e: "#comicContain",
             i: 0
         },
         init: async () => {
@@ -23119,7 +23113,6 @@ if ("xx" in window) {
         url: {
             h: ["www.hmttmh.com", "cn.zhuzhumh.com", "w226.npdn.top", "w323.npdn.top"],
             p: "/chapter/",
-            e: "#mainView_img",
             i: 0
         },
         box: ["#mainView_img", 2],
@@ -27121,6 +27114,7 @@ if ("xx" in window) {
                 i: comicInfiniteScroll
             } = obj;
             const {
+                box,
                 imgs: imgSelector,
                 customTitle: titleSelector
             } = tempData;
@@ -27209,6 +27203,10 @@ if ("xx" in window) {
                     checkS = fn.ls.includes(search);
                 }
                 if (!checkS) return false;
+            }
+            if ("box" in tempData && isArray(box) && !("SPA" in tempData)) {
+                const [selector] = box;
+                checkE = !!fn.ge(selector);
             }
             if ("imgs" in tempData && isString(imgSelector) && !("SPA" in tempData)) {
                 checkI = !!fn.ge(imgSelector);
