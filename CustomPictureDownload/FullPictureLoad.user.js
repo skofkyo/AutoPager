@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.14
+// @version            2025.2.15
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1739,7 +1739,6 @@
         category: "nsfw2"
     }, {
         name: "XGirl/MissBby.com 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/(xgirl\.one|missbby\.com)\//,
         autoPager: {
             mode: 1,
@@ -1755,7 +1754,6 @@
         category: "autoPager"
     }, {
         name: "Xerocos 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/xerocos\.com\//,
         autoPager: {
             mode: 1,
@@ -3597,7 +3595,6 @@
     }, {
         name: "Huamao wallpaper 花猫壁纸 en.huamaobizhi.com 分類自動翻頁",
         host: ["ja.huamaobizhi.com", "en.huamaobizhi.com"],
-        enable: 1,
         url: {
             h: "huamaobizhi.com",
             p: /^\/(mixs|tags|artists|people-tags)\/\?/
@@ -4353,7 +4350,6 @@
         category: "nsfw1"
     }, {
         name: "丝袜客 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/siwake\.cc\//,
         autoPager: {
             ele: "#main.gallery",
@@ -4621,7 +4617,8 @@
             h: "hotgirl.asia"
         },
         box: [".galeria_img", 1],
-        imgs: () => fn.getImgA(".galeria_img>img", ".pagination a[href]"),
+        //imgs: () => fn.getImgA(".galeria_img>img", ".pagination a[href]"),
+        imgs: () => fn.getImgA("#carouselImageIndicators img", [fn.lp + "?stype=slideshow"]),
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".galeria_img,#pagination"], 2
@@ -4656,7 +4653,6 @@
         category: "nsfw1"
     }, {
         name: "HotGirl World 分類自動翻頁",
-        enable: 1,
         reg: [
             /^https?:\/\/www\.hotgirl2024\.com\/(\?page=\d+)?$/,
             /^https?:\/\/www\.hotgirl2024\.com\/(category|agency|tag)\/\d+\.html\/(\?page=\d+)?$/,
@@ -6057,7 +6053,8 @@
         imgs: async () => {
             await fn.getNP("//h2[i]/following-sibling::div[1][@class='shrt-blk']/div", "//a[text()='Next ']", null, ".nv-blk");
             thumbnailSrcArray = fn.gae("//h2[i]/following-sibling::div[1][@class='shrt-blk']//img").map(e => e.src).sort();
-            return fn.getImgA(".lrg-pc>a", "//h2[i]/following-sibling::div[1][@class='shrt-blk']//a").then(arr => arr.sort());
+            let links = fn.gau("//h2[i]/following-sibling::div[1][@class='shrt-blk']//a");
+            return fn.getImgA(".lrg-pc>a", links).then(arr => arr.sort());
         },
         button: [4],
         insertImg: [
@@ -7182,7 +7179,6 @@
         category: "nsfw1"
     }, {
         name: "Asigirl.com 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/asigirl\.com\//,
         autoPager: {
             ele: ".oxy-posts",
@@ -7374,20 +7370,6 @@
             d: /\n/g
         }),
         hide: ".affs",
-        category: "nsfw2"
-    }, {
-        name: "photo.camcam.cc",
-        host: ["photo.camcam.cc"],
-        reg: /^https?:\/\/photo\.camcam\.cc\/[^/]+\/$/,
-        box: [".entry-content"],
-        imgs: "a.rgg-img",
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".rgg-container"], 2
-        ],
-        next: "a[rel=prev]",
-        prev: "a[rel=next]",
-        customTitle: ".page-title",
         category: "nsfw2"
     }, {
         name: "3600000 Beauty",
@@ -8641,7 +8623,6 @@
         category: "nsfw2"
     }, {
         name: "嘿～色女孩 分類自動翻頁",
-        enable: 1,
         reg: [
             /^https?:\/\/heysexgirl\.com\/(page\/\d+)?$/,
             /^https?:\/\/heysexgirl\.com\/archives\/category\/\w+(\/page\/\d+)?$/
@@ -10563,7 +10544,6 @@
         category: "nsfw2"
     }, {
         name: "ZzUp.Com 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/(www\.)?zzup\.com\//,
         init: () => fn.remove("iframe[src*='ad']"),
         autoPager: {
@@ -10576,7 +10556,6 @@
         category: "autoPager"
     }, {
         name: "ZzUp.Com 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/w\.zzup\.com\//,
         init: () => {
             if (fn.gae(".imgpagebar").length > 1) {
@@ -10789,7 +10768,6 @@
         category: "nsfw2"
     }, {
         name: "Erotic Pics 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/erotic\.pics\//,
         autoPager: {
             ele: "#masonry",
@@ -10852,7 +10830,6 @@
         name: "PornHub photo", //很容易會被短暫封IP
         host: ["pornhub.com"],
         link: "https://pornhub.com/albums",
-        enable: 1,
         url: {
             h: "pornhub.com",
             p: /^\/album\/\d+$/
@@ -11715,8 +11692,7 @@
             h: "girlsreleased.com",
             p: "/set/"
         },
-        init: () => fn.waitEle("a[target=imageView] img[img-id]"),
-        box: [".images", 2],
+        init: () => fn.waitEle("a[target=imageView] img[img-id]").then(() => fn.createImgBox(".images", 2)),
         imgs: async () => {
             let selector = "a[target=imageView] img[img-id]";
             let f_img = await fn.waitEle(selector);
@@ -12757,23 +12733,6 @@
         customTitle: ".entry-title",
         category: "nsfw2"
     }, {
-        name: "瓜老師の鉴赏课",
-        url: {
-            h: "photo.lovegua.com",
-            p: /^\/\d+\.html$/
-        },
-        box: ["p:has(>img)", 1],
-        imgs: "p:has(>img)>img",
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "p:has(>img)"], 2
-        ],
-        autoDownload: [0],
-        next: ".nav-previous>a",
-        prev: ".nav-next>a",
-        customTitle: ".title.single",
-        category: "nsfw2"
-    }, {
         name: "福利社",
         url: {
             h: "fulisher.net",
@@ -12821,7 +12780,6 @@
         category: "nsfw2"
     }, {
         name: "XO福利圖 分類自動翻頁",
-        enable: 1,
         url: {
             h: "xofulitu",
             t: "XO福利圖",
@@ -13905,6 +13863,7 @@
         reg: /^https?:\/\/yabai\.si\/g\/\w+$/i,
         init: async () => {
             await fn.waitEle(".grid img");
+            fn.createImgBox(".article>:last-child", 2);
             fn.showMsg(DL.str_05, 0);
             let pageData = JSON.parse(document.querySelector("#app").dataset.page);
             let {
@@ -13924,7 +13883,6 @@
             debug("\n此頁JSON資料\n", fetchJson);
             siteJson = fetchJson;
         },
-        box: [".article>:last-child", 2],
         imgs: () => {
             let {
                 code,
@@ -14686,20 +14644,57 @@
             let hosts = ["a", "b", "c", "d", "e", "f", "g"].map(e => host.replace(/^[a-g]/i, e));
             let cs = hosts.map(h => src.replace(host, h));
             for (let url of cs) {
-                let status = await fetch(url, {
-                    method: "HEAD"
-                }).then(res => res.status);
+                let status;
+                try {
+                    let res = await fetch(url, {
+                        method: "HEAD"
+                    });
+                    status = res.status;
+                } catch {
+                    status = 503;
+                }
                 if (status == 200) {
                     return url;
                 }
             }
             return src;
         },
-        init: () => fn.waitEle("#doujin-page img"),
-        box: ["#doujin-page", 2],
-        imgs: () => {
+        imgs: async () => {
             fn.showMsg(DL.str_05, 0);
-            let srcs = _unsafeWindow.__NEXT_DATA__.props.pageProps.data.images.pages.map(e => e.t);
+            let json = JSON.parse(fn.gt("#__NEXT_DATA__"));
+            let srcs;
+            if (json?.props?.pageProps?.data) {
+                let {
+                    images: {
+                        pages
+                    },
+                    title: {
+                        english,
+                        japanese,
+                        pretty
+
+                    }
+                } = json.props.pageProps.data;
+                srcs = pages.map(e => e.t);
+                customTitle = japanese ?? english ?? pretty;
+            } else {
+                let id = json.query.id;
+                srcs = await fetch("https://same.yui.pw/api/v6/book/" + id).then(res => res.json()).then(json => {
+                    let {
+                        images: {
+                            pages
+                        },
+                        title: {
+                            english,
+                            japanese,
+                            pretty
+
+                        }
+                    } = json;
+                    customTitle = japanese ?? english ?? pretty;
+                    return pages.map(e => e.t);
+                });
+            }
             let fetchNum = 0;
             return srcs.map(async (src, i, arr) => {
                 await delay(i * 500);
@@ -14710,18 +14705,6 @@
                 });
             });
         },
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "#doujin-page"], 3
-        ],
-        customTitle: () => fn.dt({
-            s: "[class^='styles_info']>div",
-            d: [
-                "🇨🇳 ",
-                "🇯🇵 ",
-                "🇬🇧 "
-            ]
-        }),
         gallery: 1,
         fetch: 1,
         category: "hcomic"
@@ -15574,7 +15557,6 @@
         category: "hcomic"
     }, {
         name: "HentaiPal.com 分類自動翻頁",
-        enable: 1,
         reg: /^https?:\/\/hentaipal\.com\//,
         init: () => fn.remove("iframe[src*='ad']"),
         autoPager: {
@@ -18371,8 +18353,7 @@
             h: "weebcentral.com",
             p: "/chapters/"
         },
-        init: () => fn.waitEle("main section img[alt^=Page]"),
-        box: ["section:has(img[alt^=Page])", 1],
+        init: () => fn.waitEle("main section img[alt^=Page]").then(() => fn.createImgBox("section:has(img[alt^=Page])", 1)),
         imgs: () => fn.gae("main section img[alt^=Page]"),
         button: [4],
         insertImg: [
@@ -18725,9 +18706,9 @@
         },
         init: async () => {
             await fn.waitEle("#divImage img");
+            fn.createImgBox("#divImage", 1);
             fn.clearAllTimer();
         },
-        box: ["#divImage", 1],
         imgs: () => {
             let code = fn.gst("currImage");
             let [, arrKey] = code.match(/(\w+)\[currImage\]/);
@@ -19093,56 +19074,6 @@
         prev: 1,
         customTitle: "#theHead h2",
         hide: "#loadingbar",
-        category: "comic"
-    }, {
-        name: "Assorted Scans",
-        url: {
-            h: "assortedscans.com",
-            p: "/reader/"
-        },
-        box: ["#page-image", 2],
-        imgs: () => {
-            let max = Number(fn.gt(".curr-page").match(/\d+/g).at(-1));
-            if (max > 1) {
-                let url = fn.lp.slice(0, -2)
-                let links = fn.arr(max, (v, i) => url + `${i + 1}/`);
-                return fn.getImgA("#page-image", links);
-            } else {
-                return fn.gae("#page-image");
-            }
-        },
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "#page-image,#controls,.page-list"], 2
-        ],
-        endColor: "white",
-        insertImgAF: (parent) => {
-            if (nextLink) {
-                fn.addUrlHtml(nextLink, parent, 1, DL.str_143, 2);
-            }
-        },
-        autoDownload: [0],
-        next: () => {
-            let chapters = fn.gae("#chapter .chapter-details>a");
-            let nextUrl = null;
-            chapters.some((e, i, a) => {
-                let lp = new URL(e.href).pathname;
-                if (lp == fn.lp.slice(0, -2)) {
-                    if (a[i - 1] === undefined) {
-                        nextUrl = null;
-                    } else {
-                        nextUrl = a[i - 1].href;
-                    }
-                    let text = fn.gt("#content h1 a").trim() + " - " + e.innerText;
-                    customTitle = text;
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-            return nextUrl;
-        },
-        prev: 1,
         category: "comic"
     }, {
         name: "Asura Scans",
@@ -19945,7 +19876,6 @@
         category: "comic"
     }, {
         name: "COLAMANHUA", //方向鍵上一章下一章、反反偵錯，下載需先手動觸發全部載入圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。
-        enable: 1,
         url: {
             h: "www.colamanga.com",
             p: /^\/manga-.+\.html$/
@@ -19970,7 +19900,6 @@
     }, {
         name: "8Comic無限動漫",
         host: ["www.8comic.com"],
-        enable: 1,
         url: {
             t: "無限動漫",
             p: "/online/",
@@ -20017,8 +19946,8 @@ if ("xx" in window) {
             await fn.waitVar(["xx", "su", "ti", "nn", "mm"]);
             await fn.waitEle("#comics-pics img");
             fn.script(_this.frameCode, 0, 1);
+            fn.createImgBox(".pinch-zoom-container", 2);
         },
-        box: [".pinch-zoom-container", 2],
         imgs: () => _unsafeWindow.newImgs,
         button: [4],
         insertImg: [
@@ -20134,7 +20063,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "Mangabz",
-        enable: 1,
         url: {
             h: "mangabz.com",
             p: "/m",
@@ -20258,7 +20186,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "Xmanhua",
-        enable: 1,
         url: {
             h: "xmanhua.com",
             p: "/m",
@@ -20383,7 +20310,6 @@ if ("xx" in window) {
     }, {
         name: "DM5/極速 分頁模式",
         host: ["www.dm5.com", "m.dm5.com", "www.dm5.cn", "m.dm5.cn", "en.dm5.com", "cnc.dm5.com", "hk.dm5.com", "www.1kkk.com", "m.1kkk.com", "tel.1kkk.com", "en.1kkk.com", "cnc.1kkk.com", "hk.1kkk.com"],
-        enable: 1,
         url: {
             h: [/dm5/, /1kkk/],
             p: /^\/(m|ch|vol|other)/,
@@ -20510,7 +20436,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "DM5/極速 條漫模式",
-        enable: 1,
         url: {
             h: [/dm5/, /1kkk/],
             p: /^\/(m|ch|vol|other)/,
@@ -20562,7 +20487,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "YYMANGA",
-        enable: 1,
         url: {
             h: "yymanhua.com",
             p: "/m",
@@ -20687,7 +20611,6 @@ if ("xx" in window) {
     }, {
         name: "DM5/極速/Mangabz/Xmanhua/yymanhua/漫画人/漫本 手機版",
         host: ["www.dm5.com", "m.dm5.com", "www.dm5.cn", "m.dm5.cn", "en.dm5.com", "cnc.dm5.com", "hk.dm5.com", "www.1kkk.com", "m.1kkk.com", "tel.1kkk.com", "en.1kkk.com", "cnc.1kkk.com", "hk.1kkk.com", "www.mangabz.com", "mangabz.com", "www.xmanhua.com", "xmanhua.com", "www.yymanhua.com", "yymanhua.com", "www.manben.com", "www.manhuaren.com"],
-        enable: 1,
         url: {
             h: /dm5|1kkk|mangabz|xmanhua|yymanhua|manhuaren|manben/,
             p: /^\/(m|ch|vol|other)?[-_0-9]+\//,
@@ -20997,7 +20920,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "漫畫狗",
-        enable: 1,
         url: {
             h: "dogemanga.com",
             p: "/p/",
@@ -21024,7 +20946,6 @@ if ("xx" in window) {
     }, {
         name: "明日方舟泰拉记事社",
         host: ["terra-historicus.hypergryph.com"],
-        enable: 1,
         url: {
             h: "terra-historicus.hypergryph.com"
         },
@@ -21053,7 +20974,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "Manhuagui看漫画M",
-        enable: 1,
         url: {
             h: "m.manhuagui.com",
             p: /^\/comic\/\d+\/\d+.html/,
@@ -21174,7 +21094,6 @@ if ("xx" in window) {
     }, {
         name: "Manhuagui看漫画",
         host: ["www.manhuagui.com", "tw.manhuagui.com", "www.mhgui.com"],
-        enable: 1,
         url: {
             h: /manhuagui|mhgui/,
             p: /^\/comic\/\d+\/\d+.html/,
@@ -21259,7 +21178,6 @@ if ("xx" in window) {
     }, {
         name: "包子漫画 閱讀",
         host: ["cn.baozimh.com", "cn.webmota.com", "tw.baozimh.com", "tw.webmota.com", "www.baozimh.com", "www.webmota.com", "cn.kukuc.co", "tw.kukuc.co", "www.kukuc.co", "tw.czmanga.com", "cn.czmanga.com", "www.czmanga.com", "tw.dzmanga.com", "cn.dzmanga.com", "www.dzmanga.com", "tw.dociy.net", "cn.dociy.net", "www.dociy.net", "tw.twmanga.com", "cn.twmanga.com", "www.twmanga.com"],
-        enable: 1,
         url: {
             t: "包子",
             p: /^\/comic\/chapter\/[^/]+\/\w+\.html/i,
@@ -21454,7 +21372,6 @@ if ("xx" in window) {
     }, {
         name: "動漫狂",
         host: ["www.cartoonmad.com", "cc.fun8.us"],
-        enable: 1,
         url: {
             h: "cc.fun8.us",
             p: "/post/",
@@ -21598,7 +21515,6 @@ if ("xx" in window) {
     }, {
         name: "国漫吧",
         host: ["www.guoman8.cc", "m.guoman8.cc"],
-        enable: 1,
         url: {
             h: ".guoman8.",
             p: /^\/\d+\/\d+\.html$/,
@@ -21705,7 +21621,6 @@ if ("xx" in window) {
     }, {
         name: "古风漫画网",
         host: ["www.gufengmh.com", "m.gufengmh.com", "www.gufengmh9.com", "m.gufengmh9.com"],
-        enable: 1,
         url: {
             h: "gufengmh",
             p: /^\/manhua\/\w+\/\d+\.html/,
@@ -22177,8 +22092,7 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "来漫画",
-        host: ["www.laimanhua8.com", "www.laimanhua88.com", "www.comemh.com", "www.comemh8.com"],
-        enable: 1,
+        host: ["www.laimanhua88.com", "www.comemh8.com"],
         url: {
             h: [/^www\.(laimanhua|comemh)/],
             p: "/kanmanhua/",
@@ -22275,7 +22189,6 @@ if ("xx" in window) {
     }, {
         name: "来漫画M",
         host: ["m.laimanhua8.com", "m.laimanhua88.com", "m.comemh.com", "m.comemh8.com"],
-        enable: 1,
         url: {
             h: [/^m\.(laimanhua|comemh)/],
             p: "/kanmanhua/",
@@ -22442,7 +22355,6 @@ if ("xx" in window) {
     }, {
         name: "好国漫",
         host: ["www.haoguoman.net", "m.haoguoman.net"],
-        enable: 1,
         url: {
             h: "haoguoman.net",
             p: /^\/\d+\/\d+\.html$/,
@@ -22475,7 +22387,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "好国漫 自動翻頁",
-        enable: 1,
         url: {
             h: "haoguoman.net",
             p: /^\/\d+\/\d+\.html$/,
@@ -22660,7 +22571,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫漫聚/KuKu动漫",
-        enable: 1,
         url: {
             h: [
                 "www.manmanju.cc",
@@ -22774,7 +22684,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "漫漫聚M/KuKu动漫M",
-        enable: 1,
         url: {
             h: [
                 "m.manmanju.cc",
@@ -22829,7 +22738,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫漫聚/KuKu动漫M 404",
-        enable: 1,
         url: {
             h: [
                 "m.manmanju.cc",
@@ -22954,7 +22862,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "大树漫画/世伦漫画",
-        enable: 1,
         url: {
             h: ["www.dashumanhua.com", "www.shilunart.com"],
             p: /^\/comic\/\w+\/.+\.html/i,
@@ -22976,7 +22883,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "大树漫画/世伦漫画 自動翻頁",
-        enable: 1,
         url: {
             h: ["www.dashumanhua.com", "www.shilunart.com"],
             p: /^\/comic\/\w+\/.+\.html/i,
@@ -23029,7 +22935,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "韩漫天堂/猪猪漫画",
-        enable: 1,
         url: {
             h: ["www.hmttmh.com", "cn.zhuzhumh.com", "w226.npdn.top", "w323.npdn.top"],
             p: "/chapter/",
@@ -23061,7 +22966,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "韩漫天堂/猪猪漫画 自動翻頁",
-        enable: 1,
         url: {
             h: ["www.hmttmh.com", "cn.zhuzhumh.com", "w226.npdn.top", "w323.npdn.top"],
             p: "/chapter/",
@@ -23109,7 +23013,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "韩漫天堂M/猪猪漫画M",
-        enable: 1,
         url: {
             h: ["www.hmttmh.com", "cn.zhuzhumh.com", "w226.npdn.top", "w323.npdn.top"],
             p: "/chapter/",
@@ -23145,7 +23048,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "韩漫天堂M/猪猪漫画M 自動翻頁",
-        enable: 1,
         url: {
             h: ["www.hmttmh.com", "cn.zhuzhumh.com", "w226.npdn.top", "w323.npdn.top"],
             p: "/chapter/",
@@ -23197,7 +23099,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "Godamanga.ART 英文漫画",
-        enable: 1,
         url: {
             h: ["godamh.org"],
             p: /^\/chapter\/\d+\.html$/i,
@@ -23245,7 +23146,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "Godamanga.ART 自動翻頁",
-        enable: 1,
         url: {
             h: ["godamh.org"],
             p: /^\/chapter\/\d+\.html$/i,
@@ -23309,7 +23209,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "Godamanga.ART 英文漫画",
-        enable: 1,
         url: {
             h: ["manhuascans.org"],
             p: /^\/manga\/[\w-]+\/[\w-]+$/i,
@@ -23343,7 +23242,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "Godamanga.ART 英文漫画 自動翻頁",
-        enable: 1,
         url: {
             h: ["manhuascans.org"],
             p: /^\/manga\/[\w-]+\/[\w-]+$/i,
@@ -23388,7 +23286,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "GODA漫畫/包子漫畫",
-        enable: 1,
         url: {
             h: [
                 "www.cocolamanhua.com",
@@ -23456,7 +23353,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "GODA漫畫/包子漫畫 自動翻頁",
-        enable: 1,
         url: {
             h: [
                 "www.cocolamanhua.com",
@@ -23549,7 +23445,6 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "漫画時間 日文漫画",
-        enable: 1,
         url: {
             h: "www.mangajikan.com",
             p: "chapter-"
@@ -23565,7 +23460,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "ゼロサムオンライン",
-        enable: 1,
         url: {
             h: "zerosumonline.com"
         },
@@ -23589,7 +23483,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "GANMA!(ガンマ)",
-        enable: 1,
         stringSlicer: (string, startText, endText) => {
             const startIndex = string.indexOf(startText) + startText.length;
             const endIndex = string.indexOf(endText, startIndex);
@@ -24177,8 +24070,7 @@ if ("xx" in window) {
             t: "爱淘漫画",
             p: "/detail/"
         },
-        init: () => fn.waitEle(".mx-auto.flex.flex-col.items-center img[data-src]"),
-        box: [".mx-auto.flex.flex-col.items-center", 1],
+        init: () => fn.waitEle(".mx-auto.flex.flex-col.items-center img[data-src]").then(() => fn.createImgBox(".mx-auto.flex.flex-col.items-center", 1)),
         imgs: () => fn.gae(".mx-auto.flex.flex-col.items-center img"),
         button: [4],
         insertImg: [
@@ -24261,7 +24153,6 @@ if ("xx" in window) {
     }, {
         name: "漫画160/非常爱漫新站",
         host: ["www.mh160.cc", "m.mh160.cc", "www.veryim.com"],
-        enable: 1,
         url: {
             h: [/^(www|m)\.mh160/, "www.veryim.com"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
@@ -24304,7 +24195,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫画160/非常爱漫新站 自動翻頁",
-        enable: 1,
         url: {
             h: [/^(www|m)\.mh160/, "www.veryim.com"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
@@ -24444,7 +24334,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "星辰漫画网",
-        enable: 1,
         url: {
             h: ["www.xcmh.com", "m.xcmh.com"],
             p: /^\/\w+\/\w+\/\d+\.html$/
@@ -24883,7 +24772,6 @@ if ("xx" in window) {
     }, {
         name: "灰狗漫画",
         host: ["www.greyhoundsoul.com"],
-        enable: 1,
         url: {
             h: "www.greyhoundsoul.com",
             p: "/greychapter/"
@@ -24909,7 +24797,6 @@ if ("xx" in window) {
     }, {
         name: "拷貝漫畫",
         host: ["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
-        enable: 1,
         url: {
             h: /copymanga|mangacopy/,
             p: /^\/comic\/\w+\/chapter\//,
@@ -25078,7 +24965,6 @@ if ("xx" in window) {
     }, {
         name: "拷貝漫畫M",
         host: ["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
-        enable: 1,
         url: {
             h: /copymanga|mangacopy/,
             p: /^\/h5\/comicContent\/\w+\//,
@@ -25150,7 +25036,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "拷貝漫畫M 自動翻頁",
-        enable: 1,
         url: {
             h: /copymanga|mangacopy/,
             p: /^\/h5\/comicContent\/\w+\//,
@@ -25272,7 +25157,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "漫画DB",
-        enable: 1,
         url: {
             h: "www.manhuadb.com",
             p: /^\/manhua\/\d+\/\w+\.html$/,
@@ -25411,7 +25295,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "樱花漫画",
-        enable: 1,
         url: {
             h: "yinghuamh.net",
             p: /^\/comic\/\w+\/\d+\/\d+/
@@ -25572,7 +25455,6 @@ if ("xx" in window) {
     }, {
         name: "zero搬运网",
         host: ["www.zerobywzip.com"],
-        enable: 1,
         url: {
             h: "www.zero",
             p: "/plugin",
@@ -25594,7 +25476,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "zero搬运网M",
-        enable: 1,
         url: {
             h: "www.zero",
             p: "/plugin",
@@ -25613,7 +25494,6 @@ if ("xx" in window) {
         name: "漫蛙", //方向鍵上一章下一章、清除擋廣告警告、向下滾動隱藏工具列、反反偵錯，，下載需先手動觸發全部載入圖片，函式使用到canvas需要繪製過程會有點卡。
         host: ["manwa.fun"],
         link: "https://fuw11.cc/maKapG",
-        enable: 1,
         url: {
             h: "manwa",
             p: /^\/chapter\/\d+(\?img_host=\d)?$/
@@ -25676,7 +25556,6 @@ if ("xx" in window) {
     }, {
         name: "開車漫画",
         host: ["18p.fun"],
-        enable: 1,
         reg: /^https?:\/\/(www\.)?(18p|gohaveababy|imynest|healthway|beforeout)\.[a-z]{2,5}\/(ForInject\/|Article\/|content\/)/,
         imgs: async () => {
             await fn.waitEle("//script[contains(text(),'_curChap')]");
@@ -25709,7 +25588,6 @@ if ("xx" in window) {
     }, {
         name: "风之动漫",
         host: ["www.fffdm.com"],
-        enable: 1,
         reg: /^https?:\/\/(www\.fffdm\.com|manhua\.fffdm\.com)\/(manhua\/)?\d+\/[^/]+\/$/i,
         fetchJson: (url = siteUrl) => {
             let [mhId, mhcId] = new URL(url).pathname.split("/").slice(-3);
@@ -25771,7 +25649,6 @@ if ("xx" in window) {
     }, {
         name: "漫画皮",
         host: ["www.manhuapi.cc", "m.manhuapi.cc"],
-        enable: 1,
         url: {
             h: "manhuapi",
             p: "/chapter/"
@@ -25789,7 +25666,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "哈哈漫画",
-        enable: 1,
         url: {
             h: "www.hahacomic.com",
             p: /^\/manhua\/\d+\/\d+\.html/
@@ -25804,7 +25680,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "哈哈漫画 - 分類自動翻頁",
-        enable: 1,
         url: {
             h: "www.hahacomic.com",
             p: "/list/"
@@ -25820,7 +25695,6 @@ if ("xx" in window) {
         category: "autoPager"
     }, {
         name: "轻之国度",
-        enable: 1,
         url: {
             h: "www.lightnovel.us",
             p: /^\/\w+\/detail\/\d+/
@@ -25832,7 +25706,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "微信公众号",
-        enable: 1,
         url: {
             h: "mp.weixin.qq.com",
             p: /^\/[^&]+&mid=\d+/
@@ -25841,7 +25714,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "微信公众号",
-        enable: 1,
         url: {
             h: "mp.weixin.qq.com",
             s: "sn="
@@ -25850,7 +25722,6 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "虎扑社区",
-        enable: 1,
         url: {
             h: "bbs.hupu.com",
             p: /^\/\d+\.html/
@@ -25871,7 +25742,6 @@ if ("xx" in window) {
     }, {
         name: "微漫画 目錄頁",
         host: ["medibang.com"],
-        enable: 1,
         url: {
             h: "medibang.com",
             p: "/book/",
@@ -25915,7 +25785,6 @@ if ("xx" in window) {
     }, {
         name: "微漫画 閱讀頁",
         host: ["medibang.com"],
-        enable: 1,
         url: {
             h: "medibang.com",
             p: "/viewer/",
