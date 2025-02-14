@@ -114,15 +114,15 @@ unpkg.com
 </pre>
 <pre>
 github.com
-// @require            https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/JSZip.js
-// @resource ajaxHookerJS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/ajaxHooker.js
-// @resource JqueryJS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/jquery.min.js
-// @resource FancyboxV5JS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/fancybox.umd.js
-// @resource FancyboxV5Css https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/css/fancybox.css
-// @resource FancyboxV3JS https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/jquery.fancybox.min.js
-// @resource FancyboxV3Css https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/css/jquery.fancybox.min.css
-// @resource ViewerJs https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/js/viewer.min.js
-// @resource ViewerJsCss https://github.com/skofkyo/AutoPager/raw/refs/heads/main/CustomPictureDownload/css/viewer.min.css
+// @require            https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/JSZip.js
+// @resource ajaxHookerJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/ajaxHooker.js
+// @resource JqueryJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.min.js
+// @resource FancyboxV5JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/fancybox.umd.js
+// @resource FancyboxV5Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/fancybox.css
+// @resource FancyboxV3JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.fancybox.min.js
+// @resource FancyboxV3Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/jquery.fancybox.min.css
+// @resource ViewerJs https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/viewer.min.js
+// @resource ViewerJsCss https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/viewer.min.css
 </pre>
 </details>
 <br>
