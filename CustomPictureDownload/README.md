@@ -2115,6 +2115,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.yuzu8.com/">足控资源网</a>
+                </td>
+                <td>只支持免費</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yeshezy.com/index.php/vod/type/id/3.html">夜社资源</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.siwashi.xyz/">丝袜室</a>
                 </td>
                 <td></td>
@@ -2122,12 +2134,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.aixiurenmn.com/xiuren">秀人网图集</a>
-                </td>
-                <td>只支持免費</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.yuzu8.com/">足控资源网</a>
                 </td>
                 <td>只支持免費</td>
             </tr>
@@ -5564,9 +5570,15 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://h-comic.com/">H-Comic</a>
+                </td>
+                <td>SPA網頁，作用在閱讀頁，手動模式。</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://web.nicecat.cc/">NiceCat</a>
                 </td>
-                <td>SPA網頁，作用在閱讀頁。</td>
+                <td>SPA網頁，作用在閱讀頁，手動模式。</td>
             </tr>
             </tr>
             <tr>
