@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.23
+// @version            2025.2.23.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -870,7 +870,7 @@
                 e: ["//a[text()='秀色图集']", "#top .top", "em:has(>.fa-image)", ".scot img[data-original]"]
             });
             if (check) {
-                let src = fn.ge(".scot img").dataset.original;
+                let [src] = fn.getImgSrcArr(".scot img");
                 let f = src.split("/").at(-1);
                 let [n] = f.split(".");
                 let t = n.match(/[a-z]+/ig);
@@ -905,7 +905,7 @@
                 e: ["//a[text()='套图集']", "//div[@class='c-if']/span[contains(text(),'图片：')]", ".imgg img"]
             });
             if (check) {
-                let src = fn.ge(".imgg img").src;
+                let [src] = fn.getImgSrcArr(".imgg img");
                 let f = src.split("/").at(-1);
                 let [n] = f.split(".");
                 let t = n.match(/[a-z]+/ig);
@@ -942,7 +942,7 @@
                 e: [".sp", ".simg #image img"]
             });
             if (check) {
-                let src = fn.ge(".simg #image img").src;
+                let [src] = fn.getImgSrcArr(".simg #image img");
                 let f = src.split("/").at(-1);
                 let [n] = f.split(".");
                 let t = n.match(/[a-z]+/ig);
@@ -1056,6 +1056,7 @@
             }
             return srcs;
         },
+        SPA: true,
         customTitle: "h1.article-title",
         category: "nsfw1"
     }, {
@@ -3588,16 +3589,20 @@
                 num = Number(fn.gt(".mores>a").match(/\d+/)[0]);
             }
             let max = Math.ceil(num / 21);
-            let html = "";
+            fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
-            for (let i = 0; i < num; i += 21) {
+            let links = fn.arr(max, (v, i) => `/ajax${is_m ? "" : "s"}.aspx?fun=${is_m ? "getmorett" : "getmore"}&id=${pid}&p=${i * 21}`);
+            let resArr = links.map(u => fetch(u).then(res => {
                 fn.showMsg(`${DL.str_06}${fetchNum+=1}/${max}`, 0);
-                await fetch(`/ajax${is_m ? "" : "s"}.aspx?fun=${is_m ? "getmorett" : "getmore"}&id=${pid}&p=${i}`).then(res => res.text()).then(text => (html += text));
-            }
-            let dom = fn.doc(html);
-            let datas = fn.gae("img[data]", dom).map(e => e.getAttribute("data"));
-            thumbnailSrcArray = datas.map(data => "https://imgs.diercun.com" + data);
-            return datas.map(data => "https://big.diercun.com" + _unsafeWindow.getbig(data));
+                return res.text();
+            }));
+            return Promise.all(resArr).then(data => {
+                let html = data.join("");
+                let dom = fn.doc(html);
+                let datas = fn.gae("img[data]", dom).map(e => e.getAttribute("data"));
+                thumbnailSrcArray = datas.map(data => "https://imgs.diercun.com" + data);
+                return datas.map(data => "https://big.diercun.com" + _unsafeWindow.getbig(data));
+            });
         },
         button: [4],
         insertImg: [
@@ -3628,7 +3633,7 @@
                 let i = url.lastIndexOf("/");
                 let murl = url.substring(i + 1);
                 url = url.replace(murl, murl.substring(1));
-                url = url.replace("img.", "big.");
+                url = url.replace(/imgs?\./, "big.");
                 return url;
             });
         },
@@ -3639,6 +3644,39 @@
         go: 1,
         topButton: true,
         customTitle: ".gtitle1>h1",
+        category: "nsfw1"
+    }, {
+        name: "爱死美女图片M鏡像站？",
+        url: {
+            h: "m.aisimm.com",
+            p: ".html",
+            e: [".center1"]
+        },
+        imgs: async () => {
+            let imgs = fn.gae(".center1 img");
+            if (fn.ge(".page a[href$=html]")) {
+                let url = fn.gau(".page a[href$=html]").at(-1);
+                let [, max] = url.match(/_(\d+)\.html$/);
+                max = Number(max) + 1;
+                let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url.replace(".html", "") + `_${i}.html`);
+                imgs = await fn.getEle(links, ".center1 img");
+            }
+            thumbnailSrcArray = fn.getImgSrcArr(imgs);
+            return thumbnailSrcArray.map(url => {
+                let i = url.lastIndexOf("/");
+                let murl = url.substring(i + 1);
+                url = url.replace(murl, murl.substring(1));
+                url = url.replace(/imgs?\./, "big.");
+                return url;
+            });
+        },
+        button: [4],
+        insertImg: [
+            [".center1", 2], 2
+        ],
+        go: 1,
+        topButton: true,
+        customTitle: ".ser h1",
         category: "nsfw1"
     }, {
         name: "爱死cos美女图片站",
