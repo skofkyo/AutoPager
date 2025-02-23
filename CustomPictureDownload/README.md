@@ -1527,9 +1527,26 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td></td>
             </tr>
             <tr>
-                <td>豆瓣相册</td>
-                <td>作用在相簿頁，例如： <a href="https://www.douban.com/photos/album/1925659550/">大白桃子 写真集『桃白 vol.1』 </a>
+                <td>
+                    <a href="https://www.behance.net/">Behance</a>
                 </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>豆瓣相册</td>
+                <td>作用在相簿頁，例如： <a href="https://www.douban.com/photos/album/1925659550/">大白桃子 写真集『桃白 vol.1』 </a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cureco.jp/">cureco beta</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kai-you.net/type/report">KAI-YOU（カイユウ）</a>
+                </td>
+                <td></td>
             </tr>
         </tbody>
     </table>
@@ -1595,6 +1612,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://xzm2048.com/">写真门</a>
+                </td>
+                <td>免VIP僅適用圖片檔案命名是簡單數字遞增的。
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.xstuji.com/">秀色图集</a>
                 </td>
                 <td>免VIP僅適用圖片檔案命名是簡單數字遞增的，利用篩選下載先用腳本取得的起始數字來載入圖片，假設無法載入的圖片皆為末尾，那麼正確的起始數字需要減掉載入錯誤的圖片數量，如果圖片載入錯誤的張數是分散的，那麼該規則將無效。</td>
@@ -1607,7 +1631,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.xiuren.mobi/">新秀人</a>
+                    <a href="https://www.xiurenwang.cc/">秀人网</a>
+                </td>
+                <td>同上</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.xiuren.mobi/">秀人网</a>
                 </td>
                 <td>免VIP，圖集無法正確取得99張後的圖片網址，從100開始的檔案命名邏輯摸不清。 <a href="http://www.xiuren.online/">www.xiuren.online</a>， <a href="http://www.xiuren.cloud/">www.xiuren.cloud</a>， <a href="http://www.xiuren888.com/">www.xiuren888.com</a>， <a href="http://www.newxiuren.cc/">www.newxiuren.cc</a>
                 </td>
@@ -1742,7 +1772,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.24tupian.org/">爱死美女图片站</a>
                 </td>
-                <td>需註冊登入才能看大圖和下載， <a href="https://www.aisimm.com/">鏡像站？</a>，與主站帳號通用，圖片伺服器不同。 </td>
+                <td><a href="https://m.24tupian.org/">m.24tupian.org</a>，需註冊登入才能看大圖和下載， <a href="https://www.aisimm.com/">鏡像站？</a>，與主站帳號通用，圖片伺服器不同。 </td>
             </tr>
             <tr>
                 <td>
@@ -2256,6 +2286,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://bisipic.online/">bisipic.online</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.yunvkong.com/meinv/">御女控</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -2914,7 +2950,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://fapello.com/">Fapello</a>
                 </td>
                 <td>
-                    <a href="https://fapello.com/sally-dorasnow/">Sally Dorasnow</a>，手動插入圖片
+                    <a href="https://fapello.com/sally-dorasnow/">Sally Dorasnow</a>，手動插入圖片，<a href="https://fapello.pics/">fapello.pics</a>，<a href="https://xapello.com/">xapello.com</a>
                 </td>
             </tr>
             <tr>
@@ -2956,10 +2992,34 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://fapello.ru/">fapello.ru</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://onlytreon.com/">Onlytreon</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://wildskirts.su/">WildSkirts</a>
+                </td>
+                <td>手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapello.cc/albums/hot">fapello.cc</a>
+                </td>
+                <td>手動</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://thefappeningblog.com/">TheFappening</a>
                 </td>
                 <td>
-                    <a href="https://thefappening.plus/">The Fappening Plus</a>， <a href="https://fap.thefappening.one/">#TheFappening</a>， <a href="https://fap.thefappeningnew.com/">The Fappening</a>
+                    <a href="https://thefappening.plus/">The Fappening Plus</a>， <a href="https://fap.thefappening.one/">#TheFappening</a>， <a href="https://fap.thefappeningnew.com/">The Fappening</a>， <a href="https://thefappening2015.com/">The Fappening 2015</a>
                 </td>
             </tr>
             <tr>
@@ -3259,6 +3319,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://epawg.com/albums/">Epawg</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.porntrex.com/albums/">PornTrex</a>
                 </td>
                 <td></td>
@@ -3448,7 +3514,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
                 </td>
                 <td>
-                    <a href="https://hinhsexviet.com/">Hình Sex Việt</a>
+                    <a href="https://hinhsexviet.com/">Hình Sex Việt</a>，<a href="https://hinhkhieudam.com/">Hình Khiêu Dâm</a>
                 </td>
             </tr>
             <tr>
@@ -3458,6 +3524,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://cosplayasian.com/">COSPLAYASIAN</a>， <a href="https://cosplaythots.com/">COSPLAYTHOTS</a>， <a href="https://cosplayrule34.com/">COSPLAYRULE34</a>， <a href="https://waifubitches.com/">WAIFUBITCHES</a>， <a href="https://cosplayboobs.com/">COSPLAY BOOBS</a>， <a href="https://cosplayleaks.com/">COSPLAYLEAKS</a>， <a href="https://vipthots.com/">VIPTHOTS</a>， <a href="https://hentaibitches.com/">HENTAI BITCHES</a>， <a href="https://leaksfan.com/">LEAKSFANS</a>， <a href="https://charmingass.com/">CHARMINGASS</a>， <a href="https://leakspie.com/">LEAKS PIE</a>， <a href="https://cherryleaks.com/">CHERRY LEAKS</a>， <a href="https://sweetleaks.com/">SWEETLEAKS</a>， <a href="https://ocosplay.com/">OCOSPLAY</a>， <a href="https://webcharming.com/">WEB CHARMING</a>， <a href="https://cosplaykittys.com/">COSPLAY KITTYS</a>， <a href="https://titspie.com/">TITSPIE</a>， <a href="https://cosplaysosedki.com/">COSPLAY SOSEDKI</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplayg.com/">COSPLAYG</a>
+                </td>
+                <td><a href="https://cosplayj.com/">COSPLAYJ</a>，<a href="https://cosplayp.com/">COSPLAYP</a></td>
             </tr>
             <tr>
                 <td>
@@ -3633,6 +3705,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://uraaka-ranking.com/">裏垢女子ランキングナビ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://bakufu.jp/">お宝エログ幕府</a>
                 </td>
                 <td></td>
@@ -3701,12 +3779,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://reprint-kh.com/">復刻書林</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://bizyonotudoi.com/">美女の集い</a>
                 </td>
                 <td></td>
@@ -3727,19 +3799,73 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://gravuregalaxy.hatenablog.com/">グラビア大銀河</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mizugazo.com/">水着画像まとめ</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="http://rikitake.com/">Rikitake.com</a>
+                    <a href="https://jk-street-snap.com/">JK 街撮り</a>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <a href="https://xher.net/">xHer</a>
+                    <a href="http://hnalady.com/">エロ画像まとめ えっちなお姉さん</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://kimootoko.net/">キモ男陵辱同人道</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://moeimg.net/">二次萌エロ画像ブログ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eromitai.com/">エロ画像が見たいんだ！</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.eroero-gazou.net/">女体エロエロ画像集～</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bikyonyu-bijo-zukan.com/">美巨乳美女図鑑＠素人画像サイト</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://1000giribest.com/">性癖エロ画像</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://nikkanerog.com/">日刊エログ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yaruo.info/">素人エロ画像やったる夫</a>
                 </td>
                 <td></td>
             </tr>
@@ -3756,6 +3882,28 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="http://blog.livedoor.jp/pururungazou/">ぷるるんお宝画像庫</a>
                 </td>
                 <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://reprint-kh.com/">復刻書林</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Ameba (アメーバ)</td>
+                <td><a href="https://ameblo.jp/shashinsouko/">写真倉庫</a>，<a href="https://ameblo.jp/himemiyaian/">いあんの女神たち</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="http://rikitake.com/">Rikitake.com</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xher.net/">xHer</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3848,6 +3996,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://girlxinh18.com/">Hot Girl Xinh 18+</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tinhayvip.com/">Tin Hay VIP</a>
                 </td>
                 <td></td>
             </tr>
@@ -4266,6 +4420,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://cq.ru/cosplay">CQ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://fotoslava.ru/">Фото идеи и картинки</a>
                 </td>
                 <td></td>
@@ -4307,20 +4467,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://bdsmlr.com/">bdsmlr</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://joyreactor.cc/">JoyReactor</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://anime.reactor.cc/">Аниме</a>
-                </td>
-                <td>
-                    <a href="https://witcher.reactor.cc/">Ведьмак</a>， <a href="https://gi.reactor.cc/">Геншин Импакт</a>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -4653,6 +4799,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://52xiuren.cc/">52XiuRen</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://hualin.san.tc/">HuaLin</a>
                 </td>
                 <td></td>
@@ -4668,14 +4820,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://xerocos.com/">Xerocos</a>
                 </td>
                 <td>SPA網頁，分類頁添加了自動翻頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://aiavr.uk/">图集网</a>
-                </td>
-                <td>
-                    <a href="https://user.aiavr.uk/">user.aiavr.uk</a>，爬取的圖片資料混雜，不屬於該圖集的圖片卻放在一起，評價不及格的爬蟲。
-                </td>
             </tr>
             <tr>
                 <td>
@@ -4722,7 +4866,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.6evu.com/">遛无写真</a>
                 </td>
                 <td>
-                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式33個</a>
+                    <a href="https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/6evu.txt">同格式34個</a>
                 </td>
             </tr>
             <tr>
@@ -4757,7 +4901,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="http://www.xiuren.org/">Xiuren 秀人网</a>
                 </td>
-                <td>很久沒新圖了</td>
+                <td>很久沒新圖了，<a href="http://xiuren.download/">xiuren.download</a></td>
             </tr>
             <tr>
                 <td>
@@ -5005,6 +5149,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://jiepai.sifang.app/all.html">中国街拍</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://maobao.xyz/">微密猫</a>
+                </td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -5567,6 +5717,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.ssmh.lol/">紳士漫畫ssmh</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hmanga.world/">HManga</a>
+                </td>
+                <td>SPA網頁，作用在閱讀頁，手動模式。</td>
             </tr>
             <tr>
                 <td>
@@ -6289,6 +6445,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.ruyanmh.com/">如烟漫画</a>
+                </td>
+                <td>有無限滾動模式加預讀</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.hmttmh.com/">韩漫天堂</a>
                 </td>
                 <td>
@@ -6780,7 +6942,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hiperdex.com/">Hiperdex 英文</a>
                 </td>
                 <td>
-                    <a href="https://www.mangaread.org/">MangaRead</a>， <a href="https://lhtranslation.net/">LHTranslation</a>， <a href="https://manhuaus.com/">MANHUAUS.COM</a>， <a href="https://novelmic.com/">Novelmic.com</a>， <a href="https://setsuscans.com/">Setsu Scans</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://www.toongod.org/">ToonGod</a>
+                    <a href="https://www.mangaread.org/">MangaRead</a>， <a href="https://lhtranslation.net/">LHTranslation</a>， <a href="https://manhuaus.com/">MANHUAUS.COM</a>， <a href="https://novelmic.com/">Novelmic.com</a>， <a href="https://setsuscans.com/">Setsu Scans</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://harimanga.me/">HARIMANGA</a>
                 </td>
             </tr>
             <tr>
@@ -6996,7 +7158,37 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://mangagojo.com/">Mangagojo 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manga-bay.org/home">Manga-Bay 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangafox.fun/">MangaFox 英文</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mangabuff.ru/">Слив манги для вас 俄文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangamen.ru/">MangaMen 俄文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangahub.ru/">Mangahub 俄文</a>
                 </td>
                 <td></td>
             </tr>
