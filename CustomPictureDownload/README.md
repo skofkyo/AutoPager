@@ -4,20 +4,20 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/02/13
+2025/02/24
 PC
-Chrome 133.0.6943.99 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 133.0.3065.59 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 135.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Chrome 133.0.6943.127 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 133.0.3065.82 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 135.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 135.0.3131.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 135.0.3151.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-☆Firefox for Android 135.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+☆Firefox for Android 135.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Waterfox 1.0.9.2 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 133.0.3065.54 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Mises Browser 425010808 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Yandex Browser 25.2.1.103 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Waterfox 1.0.11 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 133.0.3065.67 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Yandex Browser 25.2.2.97 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.8.1</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://www.xbext.com/index.html">XBrowser 5.0.3</a>
@@ -3000,7 +3000,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://onlytreon.com/">Onlytreon</a>
                 </td>
-                <td>手動插入圖片</td>
+                <td>手動插入圖片，<a href="https://fapmenu.com/">FapMenu</a></td>
             </tr>
             <tr>
                 <td>
@@ -4300,9 +4300,15 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://fapello-leaks.com/fr/albums/hot">Fapello Leaks</a>
+                    <a href="https://erothots.co/albums">EroThots</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapello-leaks.com/fr/albums/hot">Fapello Leaks</a>
+                </td>
+                <td><a href="https://getofleaks.co/albums/hot">Onlyfans Leaks</a></td>
             </tr>
             <tr>
                 <td>
@@ -4520,7 +4526,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://imx.to/">imx.to</a>
                 </td>
-                <td>輔助點擊，能在gallery頁進行下載。</td>
+                <td>輔助點擊，能在gallery頁進行下載。<a href="https://www.sexychan.org/c/">https://www.sexychan.org/c/</a>這邊有一些Cosplay Full Gallery，點Reply可以展開更多</td>
             </tr>
             <tr>
                 <td>
@@ -6903,13 +6909,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://mangadex.org/">MangaDex 英文</a>
                 </td>
-                <td>SPA網頁</td>
+                <td>SPA網頁，只支持PC版。</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://namicomi.com/en">NamiComi 英文</a>
                 </td>
-                <td>SPA網頁</td>
+                <td>SPA網頁，只支持PC版。</td>
             </tr>
             <tr>
                 <td>
