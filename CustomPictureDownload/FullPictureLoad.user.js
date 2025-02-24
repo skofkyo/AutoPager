@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.23.19
+// @version            2025.2.24
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -5153,7 +5153,7 @@
         },
         capture: () => _this.imgs(),
         button: [4],
-        insertImg: ["#mainbb", 3],
+        insertImg: ["#mainbb,#first-contents", 3],
         insertImgAF: () => {
             fn.run("jQuery(window).off()");
             fn.remove("#showmore");
@@ -5365,12 +5365,12 @@
         customTitle: ".content h1",
         category: "nsfw2"
     }, {
-        name: "Onlytreon",
+        name: "Onlytreon/FapMenu",
         url: {
-            h: "onlytreon.com",
+            h: ["onlytreon.com", "fapmenu.com"],
             e: ".model-media-prew"
         },
-        box: [".row:has(>.model-media-prew)", 1],
+        box: [".row:has(>.model-media-prew),.grig-model-media", 1],
         imgs: () => {
             let max = Math.ceil(Number(fn.gt("//p[contains(text(),'Media:')]").match(/\d+/g).at(-1)) / 24);
             let links = fn.arr(max, (v, i) => i == 0 ? fn.lp : fn.lp + `/page/${i + 1}`);
@@ -5383,7 +5383,7 @@
         },
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".row:has(>.model-media-prew)"], 3
+            ["#FullPictureLoadMainImgBox", 0, ".row:has(>.model-media-prew),.grig-model-media"], 3
         ],
         customTitle: ".container h1",
         category: "nsfw2"
@@ -5396,12 +5396,22 @@
         imgs: () => {
             let id = fn.ge(".like-btn").dataset.celeb;
             fn.showMsg(DL.str_05, 0);
-            return fetch("https://api.wildskirts.su/api/media/" + id).then(res => res.json()).then(json => Object.values(json.media.items).map(e => {
-                thumbnailSrcArray.push(e.p);
-                return e.u;
-            }));
+            return fetch("https://api.wildskirts.su/api/media/" + id).then(res => res.json()).then(json => {
+                let srcs = [];
+                Object.values(json.media.items).forEach(e => {
+                    if (e.t == "video") {
+                        videoSrcArray.push(e.u);
+                    } else if (e.t == "photo") {
+                        thumbnailSrcArray.push(e.p);
+                        srcs.push(e.u);
+                    }
+                });
+                return srcs;
+            });
         },
         customTitle: ".profile-info .font-semibold",
+        downloadVideo: true,
+        fetch: 1,
         category: "nsfw2"
     }, {
         name: "Fapello",
@@ -6296,8 +6306,9 @@
     }, {
         name: "COSPLAYG.COM/COSPLAYJ.COM/COSPLAYP.COM",
         url: {
-            h: "cosplay",
+            h: /^cosplay(g|j|p)\.com$/,
             p: /^\/\d+\//,
+            e: "main h1"
         },
         imgs: ".gallery img",
         button: [4],
@@ -8441,12 +8452,12 @@
             h: "hnalady.com",
             p: "/blog-entry-"
         },
-        imgs: () => fn.gae(".entry_body img,#more :not(.relation_entry) img").filter(e => !e.closest(".relation_entry,.wakupr")),
+        imgs: () => fn.gae(".entry_body img,#more img,.entry_more img").filter(e => !e.closest(".relation_entry,.wakupr")),
         capture: () => _this.imgs(),
         autoDownload: [0],
-        next: ".page_next a",
-        prev: ".page_prev a",
-        customTitle: "#main h2",
+        next: ".page_next a,.next_entry a",
+        prev: ".page_prev a,.prev_entry a",
+        customTitle: "#main h2,.big_title h2",
         category: "nsfw2"
     }, {
         name: "キモ男陵辱同人道",
@@ -8558,10 +8569,10 @@
             h: "1000giribest.com",
             p: ".html"
         },
-        imgs: ".entry-content img:not([alt^='管理人'])",
+        imgs: ".entry-content img:not([alt^='管理人']),.entry-content-more img:not([alt^='管理人'])",
         autoDownload: [0],
-        next: ".nav-single-previous a",
-        prev: ".nav-single-next a",
+        next: ".nav-single-previous a,.nav-previous a[rel=prev]",
+        prev: ".nav-single-next a,.nav-next a[rel=next]",
         customTitle: "h1.entry-title",
         fetch: 1,
         category: "nsfw2"
@@ -8571,18 +8582,18 @@
         url: {
             h: "ameblo.jp"
         },
-        init: () => fn.waitEle("a.pagingNext"),
+        init: () => fn.waitEle("a.pagingNext,a[href$=html]:has(p.skinWeakColor)"),
         SPA: () => document.URL.includes("/entry-"),
         observerURL: true,
         imgs: () => {
-            let imgs = fn.gae("#entryBody .PhotoSwipeImage").filter(e => !e.closest(".snslink"));
+            let imgs = fn.gae("#entryBody .PhotoSwipeImage,main article img").filter(e => !e.closest(".snslink"));
             return fn.getImgSrcset(imgs).map(e => e.replace(/\?caw=\d+$/, ""));
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
-        next: "a.pagingNext",
-        prev: "a.pagingPrev",
-        customTitle: ".js-entryWrapper h1",
+        next: "//a[contains(@class,'pagingNext')] | //a[p[text()='次の記事']]",
+        prev: "//a[contains(@class,'pagingPrev')] | //a[p[text()='前の記事']]",
+        customTitle: ".js-entryWrapper h1,main article h1",
         fetch: 1,
         hide: "div[aria-hidden]:has(#blogPCOverlayGeneral)",
         category: "nsfw2"
@@ -8594,14 +8605,14 @@
         },
         imgs: () => {
             let d = fn.ge("meta[property='og:image']").content.match(/\d+/g).at(-1);
-            let srcs = fn.getImgSrcArr(".mainEntryBody img,.mainEntryMore img");
+            let srcs = fn.getImgSrcArr(".mainEntryBody img,.mainEntryMore img,#entry .entry-body img");
             return srcs.filter(e => e.includes(d)).map(e => e.replace(/(\d+)s(\.\w+)$/i, "$1$2"));
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
-        next: "a:has(>img[src$='next.png'])",
-        prev: "a:has(>img[src$='previous.png'])",
-        customTitle: ".entry_title_h2_ver2",
+        next: "a:has(>img[src$='next.png']),#nav-top .next a",
+        prev: "a:has(>img[src$='previous.png']),#nav-top .prev a",
+        customTitle: ".entry_title_h2_ver2,header.entry-title h1",
         category: "nsfw2"
     }, {
         name: "素人エロ画像やったる夫",
@@ -11440,9 +11451,29 @@
         customTitle: ".title",
         category: "nsfw2"
     }, {
-        name: "Fapello Leaks",
+        name: "EroThots",
+        host: ["erothots.co", "erothots1.com"],
         url: {
-            h: "fapello-leaks.com",
+            t: "EroThots",
+            p: ["/album/", "/a/"]
+        },
+        box: [".album-gallery", 2],
+        imgs: () => {
+            videoSrcArray = fn.gae(".album-gallery a.item-album-gallery.has-video").map(e => e.dataset.src);
+            return fn.gae(".album-gallery a.item-album-gallery:not(.has-video)");
+        },
+        thums: ".album-gallery a.item-album-gallery:not(.has-video) img",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        go: 1,
+        customTitle: ".head-title",
+        downloadVideo: true,
+        referer: "",
+        category: "nsfw2"
+    }, {
+        name: "Fapello Leaks/Onlyfans Leaks",
+        url: {
+            h: ["fapello-leaks.com", "getofleaks.co"],
             p: "/album/"
         },
         box: [".album-gallery", 2],
@@ -11450,10 +11481,13 @@
             videoSrcArray = fn.gae(".album-gallery a.item-album-gallery.has-video").map(e => e.dataset.src);
             return fn.gae(".album-gallery a.item-album-gallery:not(.has-video)");
         },
+        thums: ".album-gallery a.item-album-gallery:not(.has-video) img",
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
         customTitle: "h1.heading",
+        downloadVideo: true,
+        referer: "",
         category: "nsfw2"
     }, {
         name: "jimpicotphotography.com",
@@ -29995,7 +30029,7 @@ if ("xx" in window) {
             const _delete = () => {
                 str = str?.replace(/[\/\s]?[\(\[［（【“]\d+[\w\s\\\/\.\+-／]+[\)\]］）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "")
             };
-            let j_g_num = ["【", "】"].every(e => str.includes(e));
+            let j_g_num = ["【", "】"].every(e => str?.includes(e));
             if (j_g_num) {
                 let m = str.match(/【(.+)】/);
                 if (m) {
@@ -30007,7 +30041,7 @@ if ("xx" in window) {
             } else {
                 _delete();
             }
-            str = str.replace(/\n/g, " ")
+            str = str?.replace(/\n/g, " ")
                 .replace(/\s\|/g, "")
                 .replace(/\:/g, "：")
                 .replace(/\*/g, "＊")
@@ -31766,9 +31800,10 @@ if ("xx" in window) {
         let a = document.createElement("a");
         a.href = objURL;
         a.download = fileName;
-        document.body.append(a);
-        a.click();
-        a.remove();
+        EClick(a);
+        //document.body.append(a);
+        //a.click();
+        //a.remove();
         setTimeout(() => URL.revokeObjectURL(objURL), 1000);
     };
 
