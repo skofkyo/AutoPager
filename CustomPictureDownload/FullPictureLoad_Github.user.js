@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.24
+// @version            2025.2.25
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1082,6 +1082,32 @@
         hide: ".ptm .cl[style]",
         category: "nsfw1"
     }, {
+        name: "御女控",
+        host: ["www.yunvkong.com"],
+        url: {
+            h: "www.yunvkong.com",
+            p: ".html",
+            e: [".showtitle .mlw", "#showimgXFL img"]
+        },
+        box: ["#showimgXFL p,#showimgXFL>img", 1],
+        imgs: () => {
+            let max = Number(fn.gt(".showtitle .mlw").match(/\d+/g).at(-1));
+            if (max > 1) {
+                return fn.getImg("#showimgXFL img", max, 9);
+            }
+            return fn.gae("#showimgXFL img");
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#showimgXFL p,#showimgXFL>img,#pageNum"], 2
+        ],
+        autoDownload: [0],
+        next: "a.imgpage-left[href$=html]",
+        prev: "a.imgpage-right[href$=html]",
+        customTitle: ".showtitle h2",
+        hide: ".pcad_1_w",
+        category: "nsfw1"
+    }, {
         name: "御女控M",
         host: ["m.yunvkong.com"],
         url: {
@@ -1095,6 +1121,32 @@
         },
         button: [4],
         insertImg: [".contimgw", 1],
+        autoDownload: [0],
+        next: "//a[contains(text(),'上一组图')][starts-with(@href,'/')]",
+        prev: "//a[contains(text(),'下一组图')][starts-with(@href,'/')]",
+        customTitle: ".imgTitle-name",
+        category: "nsfw1"
+    }, {
+        name: "御女控M",
+        host: ["m.yunvkong.com"],
+        url: {
+            h: "m.yunvkong.com",
+            p: ".html"
+        },
+        box: [".img-box", 1],
+        button: [4],
+        imgs: () => {
+            let pages = fn.ge("a[title=Page]");
+            if (pages) {
+                let [, max] = fn.gt(pages).match(/\d+/g);
+                max = Number(max);
+                return fn.getImg(".img-box img", max, 9);
+            }
+            return fn.gae(".img-box img");
+        },
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".img-box,a[title=Page],a[title=Page]~a,a[title=Page]~b"], 2
+        ],
         autoDownload: [0],
         next: "//a[contains(text(),'上一组图')][starts-with(@href,'/')]",
         prev: "//a[contains(text(),'下一组图')][starts-with(@href,'/')]",
@@ -25238,6 +25290,70 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
+        name: "我的漫畫",
+        url: {
+            h: "mycomic.com",
+            p: "/chapters/",
+            i: 0
+        },
+        init: () => fn.MyComicUI(),
+        imgs: "img.page",
+        button: [4],
+        insertImg: ["div:has(>img.page)", 2],
+        autoDownload: [0],
+        next: "//a[contains(text(),'下一話')][contains(@href,'chapters')]",
+        prev: "//a[contains(text(),'上一話')][contains(@href,'chapters')]",
+        customTitle: (dom = document) => fn.dt({
+            t: fn.gt("div[data-flux-breadcrumbs]", 1, dom)
+        }).replace(/\s+/g, " ").replace(" ", " - "),
+        preloadNext: true,
+        infiniteScroll: true,
+        hide: "div:has(>div>div>button[x-ref])",
+        mcss: ".p-6{padding:1.5rem 0}",
+        category: "comic"
+    }, {
+        name: "我的漫畫 自動翻頁",
+        url: {
+            h: "mycomic.com",
+            p: "/chapters/",
+            i: 1
+        },
+        getSrcs: (dom) => fn.getImgSrcArr("img.page", dom),
+        getImgs: (dom = document) => {
+            let srcs = _this.getSrcs(dom);
+            return fn.createImgArray(srcs);
+        },
+        init: async () => {
+            fn.MyComicUI();
+            let imgs = _this.getImgs();
+            let tE = fn.createImgBox("div:has(>img.page)", 2);
+            fragment.append(...imgs);
+            tE.append(fragment);
+            await fn.remove("div:has(>img.page)");
+            await fn.lazyload();
+        },
+        autoPager: {
+            ele: (dom) => _this.getImgs(dom),
+            pos: ["#FullPictureLoadMainImgBox", 0],
+            observer: "#FullPictureLoadMainImgBox>img",
+            next: "//a[contains(text(),'下一話')][contains(@href,'chapters')]",
+            title: (dom) => {
+                let text = fn.dt({
+                    t: fn.gt("div[data-flux-breadcrumbs]", 1, dom)
+                }).replace(/\s+/g, " ");
+                if (isM) {
+                    return text.split(" ")[1];
+                } else {
+                    return text;
+                }
+            },
+            re: "div[data-flux-breadcrumbs],div:has(>div>div>div>button[x-ref])",
+            preloadNextPage: 1
+        },
+        hide: "div:has(>div>div>button[x-ref])",
+        mcss: ".p-6{padding:1.5rem 0}",
+        category: "comic autoPager"
+    }, {
         name: "奇漫屋",
         url: {
             h: "www.mqzjw.com",
@@ -26238,9 +26354,10 @@ if ("xx" in window) {
             //await fn.scrollEles(".img-content img", 200);
             fn.css(".ad-area{opacity:0!important;}#cp_img>.two-ad-area:nth-child(1)>.ad-area,#cp_img>.two-ad-area:nth-child(2){display:none!important}");
             fn.remove(".ad-area,body>div[id]:not([id^='pv-'],[class^='pv-'],[id^='pagetual'],[class^='pagetual'],#comicRead,#fab,[id^='FullPictureLoad'],[class^='FullPictureLoad'],[class^=fancybox])", 5000);
+            await fn.waitVar("jQuery");
+            const $ = _unsafeWindow.jQuery;
             let lastScrollTop = 0;
             document.addEventListener("scroll", event => {
-                const $ = _unsafeWindow.jQuery;
                 let st = event.srcElement.scrollingElement.scrollTop;
                 if (st > lastScrollTop) {
                     $(".view-fix-top-bar").attr("style", "top: -60px;");
@@ -31356,6 +31473,21 @@ if ("xx" in window) {
                     } else {
                         b.classList.add("hide");
                     }
+                }
+            });
+        },
+        MyComicUI: () => {
+            let lastScrollTop = 0;
+            document.addEventListener("scroll", event => {
+                let st = event.srcElement.scrollingElement.scrollTop;
+                if (st > lastScrollTop) {
+                    fn.ge("header[data-flux-header]").style.display = "none";
+                    fn.ge("div:has(>div>div>div>button[x-ref])").style.display = "none";
+                    lastScrollTop = st;
+                } else if (st < lastScrollTop - 20) {
+                    fn.ge("header[data-flux-header]").style.display = "";
+                    fn.ge("div:has(>div>div>div>button[x-ref])").style.display = "";
+                    lastScrollTop = st;
                 }
             });
         },
