@@ -3687,6 +3687,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://ero-gazou.jp/">抜けるっ！二次元エロ画像＆イラストまとめ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.mizugigurabia.com/">水着グラビア</a>
                 </td>
                 <td></td>
@@ -3866,6 +3872,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://yaruo.info/">素人エロ画像やったる夫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.pandagazo.net/">パンダ28号の有名人DAI好キング！</a>
                 </td>
                 <td></td>
             </tr>
@@ -5306,6 +5318,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://ape.su/">APE XXX</a>
+                </td>
+                <td>作用在圖片清單頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.hentai321.top/">山寨3hentai</a>
                 </td>
                 <td>作用在圖片清單頁</td>
@@ -5558,6 +5576,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.b-hentai.com/">H研-成年コミック研究会</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://erozine.jp/">エロジン</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://momon-ga.com/">モモンガッ!!</a>
                 </td>
                 <td></td>
             </tr>
@@ -6835,6 +6865,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://comic-top.com/">Comic Top</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://zerosumonline.com/">ゼロサムオンライン</a>
                 </td>
                 <td></td>
@@ -6954,7 +6990,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hiperdex.com/">Hiperdex 英文</a>
                 </td>
                 <td>
-                    <a href="https://www.mangaread.org/">MangaRead</a>， <a href="https://lhtranslation.net/">LHTranslation</a>， <a href="https://manhuaus.com/">MANHUAUS.COM</a>， <a href="https://novelmic.com/">Novelmic.com</a>， <a href="https://setsuscans.com/">Setsu Scans</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://harimanga.me/">HARIMANGA</a>
+                    <a href="https://www.mangaread.org/">MangaRead</a>， <a href="https://lhtranslation.net/">LHTranslation</a>， <a href="https://manhuaus.com/">MANHUAUS.COM</a>， <a href="https://novelmic.com/">Novelmic.com</a>， <a href="https://setsuscans.com/">Setsu Scans</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://harimanga.me/">HARIMANGA</a>， <a href="https://mangaonlineteam.com/">Manga Online Team</a>
                 </td>
             </tr>
             <tr>
@@ -7188,6 +7224,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://vymanga.com/">VyManga 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mangabuff.ru/">Слив манги для вас 俄文</a>
                 </td>
                 <td></td>
@@ -7201,6 +7243,24 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://mangahub.ru/">Mangahub 俄文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://remanga.org/">ReManga 俄文</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangalib.org/">MangaLib 俄文</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangamammy.ru/">mangamammy 俄文</a>
                 </td>
                 <td></td>
             </tr>
