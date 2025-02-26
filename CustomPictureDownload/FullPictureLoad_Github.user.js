@@ -3,12 +3,12 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.25
+// @version            2025.2.26
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
 // @description:zh-TW  支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
-// @author             tony0809
+// @author             德克斯DEX
 // @match              *://*/*
 // @connect            *
 // @exclude            *.youtube.com*
@@ -8064,6 +8064,23 @@
         customTitle: () => fn.gt("h1").replace(/\s\(\d+枚\)/, "").replaceAll("/", "／"),
         category: "nsfw2"
     }, {
+        name: "抜けるっ！二次元エロ画像＆イラストまとめ",
+        url: {
+            h: "ero-gazou.jp",
+            e: ".grid-container img"
+        },
+        init: () => fn.addMutationObserver(() => document.documentElement.classList.remove("pum-open", "pum-open-overlay", "pum-open-scrollable")),
+        imgs: () => fn.getImgA(".grid-container img", ".pager-numbers a"),
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "a.prev-post",
+        prev: "a.next-post",
+        customTitle: "h1.entry-title",
+        css: "html.pum-open{overflow: auto}",
+        hide: "#content-top,#content-bottom,.pum-overlay",
+        fetch: 1,
+        category: "nsfw2"
+    }, {
         name: "NEWSグラビアアイドル.net",
         host: ["news.idolsenka.net"],
         reg: /^https?:\/\/news\.idolsenka\.net\/archives\/\d+/,
@@ -8426,7 +8443,7 @@
         autoDownload: [0],
         next: "a.pager_next,.next_entry>a",
         prev: "a.pager_prev,.prev_entry>a",
-        customTitle: () => fn.gt(".topentry_title span,.entry_title h1>strong").replace(/\d+枚/, "").replace(/\s\s/g, " ").replaceAll("　", " ").trim(),
+        customTitle: () => fn.gt(".topentry_title span,.entry_title h1>strong"),
         category: "nsfw1"
     }, {
         name: "アイドル村",
@@ -8678,6 +8695,20 @@
         customTitle: "h1.entry-title",
         fetch: 1,
         category: "nsfw2"
+    }, {
+        name: "パンダ28号の有名人DAI好キング！",
+        url: {
+            h: "www.pandagazo.net",
+            s: "p="
+        },
+        imgs: () => fn.getImgSrcset(".eye-catch img,.entry-content .wp-block-image img,.wp-block-gallery img"),
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "a.prev-post",
+        prev: "a.next-post",
+        customTitle: "h1.entry-title",
+        fetch: 1,
+        category: "nsfw1"
     }, {
         name: "ぷるるんお宝画像庫",
         link: "http://blog.livedoor.jp/pururungazou/",
@@ -12112,55 +12143,28 @@
         hide: ".top",
         category: "nsfw2"
     }, {
-        name: "Hentai Image 單張",
-        host: ["hentai-img.com", "hentai-img-xxx.com", "hentai-cosplays.com", "hentai-cosplay-xxx.com", "porn-image.com", "porn-images-xxx.com"],
-        reg: /(hentai-img|hentai-img-xxx|hentai-cosplays|hentai-cosplay-xxx|porn-image|porn-images-xxx)\.com\/image\/[^/]+\//,
-        include: "//a[text()='DETAIL PAGE' or text()='DETAIL HALAMAN' or text()='詳細へ' or text()='详细信息页面' or text()='Страница сведений' or text()='상세 페이지' or text()='página de detalles' or text()='หน้ารายละเอียด' or text()='TRANG CHI TIẾT']",
-        imgs: async () => {
-            let [max] = document.title.split("/").at(-1).match(/\d+/);
-            let url = siteUrl.replace(/\/\d+\/$/, "");
-            let links = fn.arr(max, (v, i) => url + `/${(i + 1)}/`);
-            let imgSrcArray = await fn.getImgA("#display_image_detail a,#detail_list a", links, 100);
-            thumbnailSrcArray = imgSrcArray.map(e => {
-                let arr = e.split("/");
-                arr[arr.length - 1] = "p=305/" + arr[arr.length - 1];
-                return arr.join("/");
-            });
-            return imgSrcArray;
-        },
-        button: [4],
-        insertImg: ["#display_image_detail,#detail_list", 2],
-        customTitle: () => fn.dt({
-            s: "#title>h2,#page h3",
-            d: /\s?Photo\s?\d+P|\s?-\s?\d+\/\d+\s?|\([0-9\s]+ảnh\)/i
-        }),
-        css: "#display_image_detail img{max-width:100% !important}",
-        category: "nsfw2"
-    }, {
         name: "Hentai Image",
-        host: ["hentai-img.com", "hentai-img-xxx.com", "hentai-cosplays.com", "hentai-cosplay-xxx.com", "porn-image.com", "porn-images-xxx.com"],
-        reg: /(hentai-img|hentai-img-xxx|hentai-cosplays|hentai-cosplay-xxx|porn-image|porn-images-xxx)\.com\/image\/[^/]+\/(page\/\d+\/)?$/,
-        init: () => {
-            let ele = fn.ge("//div[span[a]]");
-            if (ele) {
-                let tE = fn.ge("#display_image_detail,#detail_list");
-                insertBefore(tE, ele);
-            }
+        host: ["hentai-img-xxx.com", "hentai-cosplay-xxx.com", "porn-image.com"],
+        url: {
+            h: [/hentai-img-xxx\.com$/, /hentai-cosplay-xxx\.com$/, /porn-image\.com$/],
+            p: "/image/",
+            e: ["#display_image_detail,#detail_list", "#title>h2,#page h3"]
         },
         imgs: async () => {
-            let max = fn.gt("#paginator>*:last-child", 3) || fn.gt(".paginator_page[rel=next]", 2) || 1;
-            let url = siteUrl.replace(/page\/\d+\/$/, "");
-            let links = fn.arr(max, (v, i) => url + `page/${(i + 1)}/`);
-            thumbnailSrcArray = await fn.getImgA(".icon-overlay img,#display_image_detail img", links, 100);
-            thumbnailSrcArray = thumbnailSrcArray.map(e => {
-                let arr = e.split("/");
-                arr[arr.length - 2] = "p=305";
-                return arr.join("/");
+            let [, , url] = fn.lp.split("/");
+            url = `/story/${url}/`;
+            return fn.getImgA("amp-img", [url]).then(srcs => {
+                thumbnailSrcArray = srcs.map(src => {
+                    let arr = src.split("/");
+                    arr[arr.length - 1] = "p=160x200/" + arr[arr.length - 1];
+                    return arr.join("/");
+                });
+                return srcs;
             });
-            return thumbnailSrcArray.map(e => e.replace(/\/p=(700|305)/, ""));
         },
         button: [4],
         insertImg: ["#display_image_detail,#detail_list", 2],
+        insertImgAF: () => fn.remove("#paginator:has(a[href*='/page/'])"),
         autoDownload: [0],
         next: () => {
             let next = fn.ge("//a[text()='Prev Article' or text()='前の記事' or text()='前一篇']");
@@ -14752,6 +14756,36 @@
         customTitle: () => fn.title(/ - Page \d+ - HentaiFox/).replace("|", "-"),
         category: "hcomic"
     }, {
+        name: "APE XXX圖片清單頁",
+        host: ["ape.su"],
+        reg: /^https?:\/\/ape\.su\/\d+\/$/,
+        include: "#append_thumbs",
+        box: ["#append_thumbs"],
+        imgs: async () => {
+            fn.showMsg(DL.str_05, 0);
+            let server = fn.ge("#load_server").value;
+            let u_id = fn.ge("#gallery_id").value;
+            let g_id = fn.ge("#load_id").value;
+            let g_ch = fn.ge("#gallery_ch").value;
+            let img_dir = fn.ge("#load_dir").value;
+            let total_pages = fn.ge("#load_pages").value;
+            thumbnailSrcArray = await fn.fetchDoc("/thumbs_loader", {
+                "headers": {
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "body": `server=${server}&u_id=${u_id}&g_id=${g_id}&g_ch=${g_ch}&img_dir=${img_dir}&visible_pages=0&total_pages=${total_pages}&type=2`,
+                "method": "POST"
+            }).then(dom => [...dom.images].map(e => e.dataset.src ?? e.src));
+            return thumbnailSrcArray.map(e => e.replace(/-\d+x\d+\./, "."));
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        customTitle: ".right_details h1",
+        go: 1,
+        topButton: true,
+        category: "hcomic"
+    }, {
         name: "HentaiZap圖片清單頁",
         host: ["hentaizap.com"],
         reg: /^https?:\/\/hentaizap\.com\/gallery\/\d+\/$/,
@@ -16092,6 +16126,30 @@
         next: "//a[div[div[div[text()='Previous']]]]",
         prev: "//a[div[div[div[text()='Next']]]]",
         customTitle: "h1.post-title",
+        category: "hcomic"
+    }, {
+        name: "エロジン",
+        url: {
+            h: "erozine.jp",
+            p: ["/eromanga/", "/gazou/", "/3d/"]
+        },
+        imgs: "#ar_content img",
+        autoDownload: [0],
+        next: "a.ab:has(img[alt=next])",
+        prev: "a.ab:has(img[alt=prev])",
+        customTitle: "#ar_title",
+        category: "hcomic"
+    }, {
+        name: "モモンガッ!!",
+        url: {
+            h: "momon-ga.com",
+            p: ["/fanzine/mo", "/magazine/mo"]
+        },
+        imgs: "#post-hentai img",
+        button: [4],
+        insertImg: ["#post-hentai", 2],
+        customTitle: "#post-data h1",
+        hide: "div[style]:has(>div[id^='bnc_ad']),div[style]:has(>script[src*='.ad'])",
         category: "hcomic"
     }, {
         name: "Hentai2Read",
@@ -18921,7 +18979,7 @@
         customTitle: () => fn.title("Dynasty Reader » "),
         category: "comic"
     }, {
-        name: "Hiperdex/MangaRead/LHTranslation/MANHUAUS.COM/Novelmic.com/Setsu Scans/ToonGod/HARIMANGA",
+        name: "Hiperdex/MangaRead/LHTranslation/MANHUAUS.COM/Novelmic.com/Setsu Scans/ToonGod/HARIMANGA/mangamammy/Manga Online Team",
         url: {
             h: [
                 "hiperdex.com",
@@ -18933,9 +18991,11 @@
                 "setsuscans.com",
                 "www.toongod.org",
                 "manytoon.com",
-                "harimanga.me"
+                "harimanga.me",
+                "mangamammy.ru",
+                "mangaonlineteam.com"
             ],
-            p: /^\/(manga|comic|webtoon)\/[\w-]+\/chapter/
+            p: /^\/(manga|comic|webtoon)\//
         },
         imgs: ".wp-manga-chapter-img",
         button: [4],
@@ -19045,6 +19105,18 @@
         }),
         category: "comic"
     }, {
+        name: "VyManga",
+        host: ["vymanga.com"],
+        url: {
+            t: "https://summonersky.com"
+        },
+        imgs: ".carousel-item img",
+        autoDownload: [0],
+        next: "a#navbar-chapter-control-next",
+        prev: "a#navbar-chapter-control-prev",
+        customTitle: () => fn.ge("#chapter-info")?.textContent,
+        category: "comic"
+    }, {
         name: "Слив манги для вас",
         url: {
             h: "mangabuff.ru",
@@ -19109,6 +19181,81 @@
         next: "a[data-target='reader-area.chapterNext']",
         prev: "a[data-target='reader-area.chapterPrev']",
         customTitle: () => fn.gt(".reader-info a.text-truncate").split("/")[0] + " - " + fn.gt(".reader-header .text-truncate"),
+        category: "comic"
+    }, {
+        name: "ReManga",
+        url: {
+            h: "remanga.org",
+            p: /^\/manga\/[^\/]+\/\d+/
+        },
+        init: () => {
+            let code = fn.gt("#__NEXT_DATA__");
+            let json = JSON.parse(code);
+            siteJson = json;
+            return fn.waitEle("#chapter-image[src]", 600).then(e => (siteJson.host = new URL(e.src).host));
+        },
+        imgs: () => {
+            let srcs = siteJson.props.pageProps.fallbackData.chapter.content.pages.flat().map(e => e.link);
+            let [src] = srcs;
+            let host = new URL(src).host;
+            return srcs.map(e => e.replace(host, siteJson.host));
+        },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => {
+            let mid = siteJson.props.pageProps.fallbackData.title.content.branches[0].id;
+            let cid = siteJson.query.chapter;
+            return fetch(`https://api.remanga.org/api/titles/chapters/?branch_id=${mid}&user_data=0`).then(res => res.json()).then(json => {
+                let chapters = json.content.sort((a, b) => a.index - b.index);
+                let nextUrl = null;
+                chapters.some((e, i, a) => {
+                    if (e.id == cid) {
+                        if (a[i + 1] === undefined) {
+                            nextUrl = null;
+                        } else {
+                            nextUrl = fn.lp.replace(/\d+$/, a[i + 1].id);
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                return nextUrl;
+            });
+        },
+        prev: 1,
+        category: "comic"
+    }, {
+        name: "MangaLib",
+        url: {
+            h: "mangalib.org",
+            p: "/read/"
+        },
+        init: () => {
+            const ajaxHooker = addAjaxHookerLibrary();
+            ajaxHooker.filter([{
+                type: "xhr",
+                url: "/chapter?"
+            }]);
+            ajaxHooker.hook(request => {
+                request.response = res => {
+                    if (!("srcs" in siteJson)) {
+                        siteJson.srcs = res.response.data.pages.map(e => e.url);
+                    }
+                };
+            });
+            return fn.waitEle("main div[data-page] img");
+        },
+        imgs: () => {
+            let [src] = fn.getImgSrcArr("main div[data-page] img");
+            let host = new URL(src).origin;
+            return siteJson.srcs.map(e => host + e);
+        },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => fn.gu("a:has(.fa-chevron-right):not([aria-current])"),
+        prev: 1,
+        customTitle: () => fn.gt("#app a .u8_vb") + " -" + fn.gt("#app a [data-media-down]"),
         category: "comic"
     }, {
         name: "Weeb Central",
@@ -21563,6 +21710,51 @@ if ("xx" in window) {
         },
         prev: 1,
         customTitle: () => siteJson.comicName + " - " + siteJson.chapterName,
+        category: "comic"
+    }, {
+        name: "再漫画M",
+        url: {
+            h: "m.zaimanhua.com"
+        },
+        SPA: () => document.URL.includes("/pages/comic/page"),
+        observerURL: true,
+        imgs: async () => {
+            let comic_id = fn.getUSP("comic_id");
+            let chapter_id = fn.getUSP("chapter_id");
+            let res_a = fetch(`https://v4api.zaimanhua.com/app/v1/comic/chapter/${comic_id}/${chapter_id}?_v=15`).then(res => res.json()).then(json => {
+                let {
+                    page_url,
+                    page_url_hd,
+                    title: chapter_title
+                } = json.data.data;
+                siteJson.srcs = page_url_hd ?? page_url;
+                siteJson.chapter_title = chapter_title;
+            });
+            let res_b = fetch(`https://v4api.zaimanhua.com/app/v1/comic/detail/${comic_id}?_v=15`).then(res => res.json()).then(json => {
+                let {
+                    chapters,
+                    title: comic_title
+                } = json.data.data;
+                siteJson.comic_title = comic_title;
+                siteJson.chapters = chapters[0].data.sort((a, b) => a.chapter_order - b.chapter_order);
+            });
+            await Promise.all([res_a, res_b]);
+            customTitle = siteJson.comic_title + " - " + siteJson.chapter_title;
+            siteJson.chapters.some((e, i, a) => {
+                if (e.chapter_id == chapter_id) {
+                    if (a[i + 1] === undefined) {
+                        nextLink = null;
+                    } else {
+                        nextLink = `/pages/comic/page?comic_id=${comic_id}&chapter_id=${a[i + 1].chapter_id}&chapter_name=${a[i + 1].chapter_title}`;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            return siteJson.srcs;
+        },
+        css: ".top_nav{z-index: 999999999!important}",
         category: "comic"
     }, {
         name: "动漫之家",
@@ -24292,6 +24484,22 @@ if ("xx" in window) {
         next: "//a[div[span[text()='次話']]]",
         category: "comic"
     }, {
+        name: "Comic Top",
+        url: {
+            h: "comic-top.com",
+            p: "/viewer/",
+            s: "cid="
+        },
+        imgs: () => {
+            let code = fn.gst("chapter");
+            let [, text] = code.match(/chapter[\s=]+({[^;]+)/);
+            let json = JSON.parse(text);
+            return Object.values(json).map(e => e.image);
+        },
+        capture: () => _this.imgs(),
+        customTitle: () => fn.gt(".manga-title") + " - " + fn.gt(".manga-episode"),
+        category: "comic"
+    }, {
         name: "漫畫屋",
         enable: 0,
         url: {
@@ -25297,15 +25505,17 @@ if ("xx" in window) {
             i: 0
         },
         init: () => fn.MyComicUI(),
+        box: ["div:has(>img.page)", 2],
         imgs: "img.page",
         button: [4],
-        insertImg: ["div:has(>img.page)", 2],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "div:has(>img.page)"], 2
+        ],
+        insertImgAF: (p) => p.after(fn.ge("div:has(>div[data-flux-button-group])").cloneNode(true)),
         autoDownload: [0],
         next: "//a[contains(text(),'下一話')][contains(@href,'chapters')]",
         prev: "//a[contains(text(),'上一話')][contains(@href,'chapters')]",
-        customTitle: (dom = document) => fn.dt({
-            t: fn.gt("div[data-flux-breadcrumbs]", 1, dom)
-        }).replace(/\s+/g, " ").replace(" ", " - "),
+        customTitle: (dom = document) => fn.ge("img.page", dom).alt.replace(/:.+$/, ""),
         preloadNext: true,
         infiniteScroll: true,
         hide: "div:has(>div>div>button[x-ref])",
@@ -25329,6 +25539,8 @@ if ("xx" in window) {
             let tE = fn.createImgBox("div:has(>img.page)", 2);
             fragment.append(...imgs);
             tE.append(fragment);
+            let e = fn.ge("div:has(>div[data-flux-button-group])").cloneNode(true);
+            tE.after(e);
             await fn.remove("div:has(>img.page)");
             await fn.lazyload();
         },
@@ -25338,16 +25550,18 @@ if ("xx" in window) {
             observer: "#FullPictureLoadMainImgBox>img",
             next: "//a[contains(text(),'下一話')][contains(@href,'chapters')]",
             title: (dom) => {
-                let text = fn.dt({
-                    t: fn.gt("div[data-flux-breadcrumbs]", 1, dom)
-                }).replace(/\s+/g, " ");
+                let text = fn.ge("img.page", dom).alt.replace(/:.+$/, "");
                 if (isM) {
-                    return text.split(" ")[1];
+                    return text.split(" - ")[1];
                 } else {
                     return text;
                 }
             },
-            re: "div[data-flux-breadcrumbs],div:has(>div>div>div>button[x-ref])",
+            re: "div[data-flux-breadcrumbs]",
+            aF: (dom) => {
+                let ne = fn.ge("div:has(>div[data-flux-button-group])", dom);
+                fn.gae("div:has(>div[data-flux-button-group])").forEach(ce => (ce.innerHTML = ne.innerHTML));
+            },
             preloadNextPage: 1
         },
         hide: "div:has(>div>div>button[x-ref])",
@@ -30145,6 +30359,7 @@ if ("xx" in window) {
             }
             const _delete = () => {
                 str = str?.replace(/[\/\s]?[\(\[［（【“]\d+[\w\s\\\/\.\+-／]+[\)\]］）】”]|\s?\d+p[\+\s]+\d+v|\s?\d+p\+?\d+v|\s?\d+P|\(\d\)/gi, "")
+                    .replace(/\d+枚(まとめ)?/, "");
             };
             let j_g_num = ["【", "】"].every(e => str?.includes(e));
             if (j_g_num) {
@@ -30402,13 +30617,18 @@ if ("xx" in window) {
         //等待函式寫法
         wait: (callback, num = 300) => {
             if (!isFn(callback)) return;
-            debug("fn.wait()函式判斷等待中...", String(callback));
+            let isUI = ["imgElements.at(-1)"].some(s => String(callback).includes(s));
+            if (!isUI) {
+                debug("fn.wait()函式判斷等待中...", String(callback));
+            }
             let loopNum = 0;
             return new Promise(resolve => {
                 const loopFn = async () => {
                     let check = await callback(document, _unsafeWindow);
                     if (!!check) {
-                        debug(`fn.wait()函式判斷等待結束。耗時：${loopNum * 100}ms。`, String(callback));
+                        if (!isUI) {
+                            debug(`fn.wait()函式判斷等待結束。耗時：${loopNum * 100}ms。`, String(callback));
+                        }
                         resolve(true);
                         return;
                     }
