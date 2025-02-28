@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.2.26
+// @version            2025.3.1
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -343,6 +343,19 @@
         customTitle: ".entry-title",
         category: "photo"
     }, {
+        name: "Giffs.ru",
+        url: {
+            h: "giffs.ru"
+        },
+        imgs: () => {
+            let imgs = fn.gae(".entry-content img").filter(e => !e.closest("a[href^='https://t.me/'],.yarpp-related-website"));
+            let srcs = fn.getImgSrcset(imgs);
+            return srcs.map(e => e.replace("https://", "https://i1.wp.com/"));
+        },
+        capture: () => _this.imgs(),
+        customTitle: "h1.entry-title",
+        category: "photo"
+    }, {
         name: "Behance",
         url: {
             h: "www.behance.net",
@@ -351,6 +364,25 @@
         imgs: () => fn.getImgSrcset(".grid__item-image[srcset],.ImageElement-image-SRv"),
         customTitle: () => fn.title(":: Behance"),
         SPA: true,
+        category: "photo"
+    }, {
+        name: "kpopping",
+        url: {
+            h: "kpopping.com",
+            p: "/kpics/"
+        },
+        box: [".justified-gallery", 2],
+        imgs: ".justified-gallery a[data-fancybox]",
+        thums: ".justified-gallery a[data-fancybox] img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".justified-gallery"], 2
+        ],
+        customTitle: ".container h1",
+        fancybox: {
+            v: 3,
+            css: false
+        },
         category: "photo"
     }, {
         name: "小黃書/8色人體攝影",
@@ -1475,9 +1507,9 @@
                 /^(www\.)?\dmeinv\.cc$/,
                 /^www\.silk-necktie\.com$/
             ],
-            p: /^\/\w+\/\w+\.html$/
+            p: /^\/\w+\/\w+\.html$/,
+            ee: "//span/a[text()='ROSI视频']"
         },
-        exclude: "//span/a[text()='ROSI视频']",
         init: () => {
             let pag = fn.gae(".pagination2");
             if (pag.length > 0) pag[0].remove();
@@ -1661,9 +1693,9 @@
         host: ["xiurentu.com", "www.aixiurenmn.com", "www.aixiurenji.com", "www.aixiurentuji.com", "www.aixiurenwang.com"],
         url: {
             e: ".site .logo-wrapper img.logo.tap-logo[alt^='秀人']",
-            p: /^\/\d+\.html/
+            p: /^\/\d+\.html/,
+            ee: "//button[contains(text(),'登录购买')]"
         },
-        exclude: "//button[contains(text(),'登录购买')]",
         imgs: () => fn.getImgA("a[data-fancybox],.entry-content img", ".fenye a"),
         button: [4],
         insertImg: [".entry-content", 2],
@@ -1691,9 +1723,9 @@
         host: ["www.zukong8.com", "www.yuzu8.com", "aisituba.com"],
         url: {
             h: "www.yuzu8.com",
-            p: "archives"
+            p: "archives",
+            ee: ".content-hide-tips"
         },
-        exclude: ".content-hide-tips",
         imgs: "a[data-fancybox]",
         button: [4],
         insertImg: [".entry-content", 2],
@@ -1787,7 +1819,7 @@
                 insertBefore(x, e);
             }
         },
-        imgs: async () => {
+        imgs: () => {
             videoSrcArray = fn.gae("video>source").map(e => e.src);
             return fn.getImgSrcArr(".entry-content img").filter(i => !/jzfi4j-0\.gif|k0j1um-0\.gif/.test(i));
         },
@@ -2350,12 +2382,14 @@
         category: "nsfw2"
     }, {
         name: "柠檬皮",
-        host: ["www.emonl.com"],
-        reg: /^https?:\/\/www\.emonl\.com\/\d+\.html$/i,
-        exclude: [
-            ".read-point-box",
-            "//div[@class='single-content']/p[not(.//img)] | //div[@class='single-content']/fieldset"
-        ],
+        url: {
+            h: "www.emonl.com",
+            p: ".html",
+            ee: [
+                ".read-point-box",
+                "//div[@class='single-content']/p[not(.//img)] | //div[@class='single-content']/fieldset"
+            ]
+        },
         imgs: () => {
             if (fn.ge(".page-links")) {
                 return fn.getImg(".single-content img", (fn.gt(".page-links>a:last-child", 2) || 1), 7);
@@ -2373,13 +2407,12 @@
         category: "nsfw1"
     }, {
         name: "柠檬皮",
-        host: ["www.emonl.com"],
-        reg: /^https?:\/\/www\.emonl\.com\/\d+\.html$/i,
-        include: "//div[@class='single-content']/p[not(.//img)] | //div[@class='single-content']/fieldset",
-        exclude: [
-            ".read-point-box",
-            ".page-links"
-        ],
+        url: {
+            h: "www.emonl.com",
+            p: ".html",
+            e: "//div[@class='single-content']/p[not(.//img)] | //div[@class='single-content']/fieldset",
+            ee: [".read-point-box", ".page-links"]
+        },
         imgs: ".single-content img",
         capture: () => fn.gae(".single-content img"),
         setFancybox: true,
@@ -3030,9 +3063,9 @@
         name: "秀人集",
         url: {
             h: "www.xiuren7.com",
-            p: ".html"
+            p: ".html",
+            ee: ".pay-flexbox"
         },
-        exclude: ".pay-flexbox",
         init: () => {
             let ps = fn.gae(".wp-posts-content p");
             ps.forEach(p => {
@@ -3198,7 +3231,7 @@
         url: {
             h: [/putmega\.com$/, "ibb.co", "img.kiwi", "jpg5.su", "nfhost.me"],
             p: ["/album/", "/a/"],
-            e: "//script[contains(text(),'PF.obj.config.auth_token')]"
+            st: "PF.obj.config.auth_token"
         },
         imgs: () => {
             fn.showMsg(DL.str_05, 0);
@@ -3312,14 +3345,30 @@
         category: "hcomic"
     }, {
         name: "E次元",
-        host: ["www.evacg.org"],
-        reg: /^https?:\/\/www\.evacg\.org\/archives\/\d+/,
-        include: ".wp-caption img",
-        exclude: ".poi-alert__msg",
-        imgs: ".wp-caption img",
+        url: {
+            h: "www.evacg.org",
+            p: "/archives/",
+            ee: ".poi-alert__msg"
+        },
+        imgs: "a[data-featherlight] img,.wp-caption img",
         button: [4],
         insertImg: [
-            [".inn-singular__post__body__content", 0, ".wp-caption"], 2
+            [".inn-singular__post__body__content", 0, "a[data-featherlight],.wp-caption"], 2
+        ],
+        customTitle: ".inn-singular__post__title",
+        category: "nsfw1"
+    }, {
+        name: "E次元",
+        url: {
+            h: "www.evacg.org",
+            p: "/archives/",
+            ee: ".poi-alert__msg"
+        },
+        box: [".inn-singular__post__body__content", 2],
+        imgs: ".inn-singular__post__body__content img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".inn-singular__post__body__content"], 2
         ],
         customTitle: ".inn-singular__post__title",
         category: "nsfw1"
@@ -3373,10 +3422,12 @@
     }, {
         name: "推次元",
         host: ["www.a2cy.com", "a2cy.com"],
-        reg: /^https?:\/\/(www\.)?a2cy\.com\/phone\/list\/\w+\/\d+\.html$/,
-        imgs: ".imgBox img",
+        url: {
+            h: "a2cy.com",
+            p: ".html"
+        },
+        imgs: ".imgBox img,.w.maxImg.tc:not(.box-shadow) img",
         customTitle: "h1",
-        setFancybox: true,
         category: "nsfw1"
     }, {
         name: "Cosplay Porn",
@@ -3622,6 +3673,38 @@
         prev: ".nav-next>a",
         customTitle: ".entry-title",
         hide: "#af-preloader,#page>a,#page>div:not(#content):has(>a>img)",
+        category: "nsfw1"
+    }, {
+        name: "图集网",
+        url: {
+            h: ["aiavr.uk", "m.aiavr.uk", "ialbum.uk"],
+            p: /^\/(systemAlbum\/)?detail/,
+            s: "aid="
+        },
+        init: () => fetch("/api/album/info?id=" + fn.getUSP("aid")).then(res => res.json()).then(json => (siteJson = json.data)),
+        imgs: () => siteJson.imageList.map(({
+            url,
+            sourceWeb,
+            sourceUrl
+        }) => {
+            if (sourceWeb?.startsWith("http") && sourceUrl?.startsWith("/")) {
+                return sourceWeb + sourceUrl;
+            } else if (sourceUrl?.startsWith("http")) {
+                return sourceUrl;
+            } else if (url?.startsWith("http")) {
+                return url;
+            } else {
+                return null;
+            }
+        }),
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => {
+            let id = Number(siteJson?.pre?.id);
+            return id ? "/systemAlbum/detail?aid=" + id : null;
+        },
+        prev: 1,
+        customTitle: () => siteJson.title,
         category: "nsfw1"
     }, {
         name: "爱死美女图片站",
@@ -3945,7 +4028,8 @@
         name: "Mei101",
         host: ["www.mei101.com", "m.mei101.com", "www.mei101.net", "m.mei101.net"],
         url: {
-            e: ["//script[contains(text(),'var yaomei')]", "#image_div"],
+            st: "var yaomei",
+            e: "#image_div",
             p: ".html",
         },
         imgs: () => {
@@ -4034,9 +4118,9 @@
         url: {
             t: "14MM图片网",
             p: /^\/\d+\.html$/,
-            e: "#image_div"
+            e: "#image_div",
+            ee: "//a[@rel='category tag'][text()='演出视频']"
         },
-        exclude: "//a[@rel='category tag'][text()='演出视频']",
         imgs: async () => {
             let max = fn.gt("//a[@class='page-numbers prev'][@title='下一页']//preceding-sibling::a[1]");
             return fn.getImg("#image_div img", max, 9, [/\?x-oss-process.+$/, ""]);
@@ -4119,6 +4203,16 @@
         next: "a[rel=prev]",
         prev: "a[rel=next]",
         customTitle: ".wp-block-post-title",
+        category: "nsfw1"
+    }, {
+        name: "二刺猿地帶",
+        url: {
+            h: "cosplay-nextjs.vercel.app"
+        },
+        SPA: () => document.URL.includes("/albums/"),
+        observerURL: true,
+        imgs: () => fn.gae("div[aria-roledescription='carousel'] img"),
+        customTitle: ".bg-card h1",
         category: "nsfw1"
     }, {
         name: "爱推图",
@@ -4347,9 +4441,9 @@
                 "d2nx.com"
             ],
             p: /^\/\d+\.html$/,
-            e: "#post_content img,.article-content img,.entry-content img"
+            e: "#post_content img,.article-content img,.entry-content img",
+            ee: "//a[@rel='category tag'][contains(text(),'人物简历') or contains(text(),'宅男科技') or contains(text(),'时尚玩酷') or contains(text(),'身边事') or contains(text(),'追星一族') or contains(text(),'网红头条') or contains(text(),'大众娱乐') or contains(text(),'生活热点') or contains(text(),'影评剧透') or contains(text(),'娱乐时尚') or contains(text(),'吃喝玩乐') or contains(text(),'体育') or contains(text(),'亲子宠物') or contains(text(),'番号大全') or contains(text(),'番号推荐') or contains(text(),'最新番号') or contains(text(),'素人番号')]"
         },
-        exclude: "//a[@rel='category tag'][contains(text(),'人物简历') or contains(text(),'宅男科技') or contains(text(),'时尚玩酷') or contains(text(),'身边事') or contains(text(),'追星一族') or contains(text(),'网红头条') or contains(text(),'大众娱乐') or contains(text(),'生活热点') or contains(text(),'影评剧透') or contains(text(),'娱乐时尚') or contains(text(),'吃喝玩乐') or contains(text(),'体育') or contains(text(),'亲子宠物') or contains(text(),'番号大全') or contains(text(),'番号推荐') or contains(text(),'最新番号') or contains(text(),'素人番号')]",
         imgs: () => fn.getImgA("#post_content img,.article-content img,.entry-content img", ".pagelist a,.pagination a,.article-paging a"),
         button: [4],
         insertImg: ["#post_content,.article-content,.entry-content", 2],
@@ -4696,8 +4790,10 @@
         category: "nsfw1"
     }, {
         name: "日式JK旧版",
-        host: ["v2.jk.rs"],
-        reg: /^https?:\/\/v2\.jk\.rs\/\d+\/\d+\/\d+\/\d+\.html$/,
+        url: {
+            h: "v2.jk.rs",
+            p: ".html"
+        },
         imgs: "div[data-fancybox]",
         button: [4],
         insertImg: ["#masonry", 2],
@@ -4711,9 +4807,11 @@
         category: "nsfw1"
     }, {
         name: "日式JK新版",
-        host: ["www.jk.rs"],
-        reg: /^https?:\/\/www\.jk\.rs\/\d+\/\d+\/\d+\/\d+\.html$/,
-        exclude: ".post-hide-content",
+        url: {
+            h: "www.jk.rs",
+            p: ".html",
+            ee: ".post-hide-content"
+        },
         imgs: "a.glightbox",
         button: [4],
         insertImg: [
@@ -4808,6 +4906,27 @@
         customTitle: "h1",
         css: "#arcbox img{margin:unset;min-width:unset}",
         referer: "url",
+        category: "nsfw1"
+    }, {
+        name: "秀色女神OORPG",
+        url: {
+            h: "oorpg.com",
+            e: ["#masonry img", "h1.post-title"]
+        },
+        imgs: () => {
+            let getNum = src => Number(src.split("/").at(-1).match(/\d+/));
+            return fn.getImgSrcArr("#masonry img").filter(e => !e.includes("logo_girl.png")).sort((a, b) => getNum(a) - getNum(b));
+        },
+        button: [4],
+        insertImg: ["#masonry", 2],
+        customTitle: () => fn.dt({
+            s: "h1.post-title",
+            d: "-[秀人套图]"
+        }),
+        fancybox: {
+            v: 3,
+            css: false
+        },
         category: "nsfw1"
     }, {
         name: "优图坊",
@@ -4949,9 +5068,9 @@
     }, {
         name: "LUVBP",
         url: {
-            h: "luvbp.com"
+            h: "luvbp.com",
+            ee: ".c-post-upgrade-cta"
         },
-        exclude: ".c-post-upgrade-cta",
         imgs: ".kg-image-card img",
         customTitle: ".c-post-hero__title",
         category: "nsfw2"
@@ -5443,7 +5562,7 @@
         name: "WildSkirts",
         url: {
             h: "wildskirts.su",
-            e: "//script[contains(text(),\"window['cid']\")]"
+            st: "window['cid']"
         },
         imgs: () => {
             let id = fn.ge(".like-btn").dataset.celeb;
@@ -5819,9 +5938,9 @@
         name: "美图海",
         url: {
             h: "www.meituhai.com",
-            p: "/album/"
+            p: "/album/",
+            ee: ".vip-tip"
         },
-        exclude: ".vip-tip",
         imgs: "#gallery img",
         button: [4],
         insertImg: ["#gallery", 2],
@@ -5849,39 +5968,69 @@
         category: "nsfw1"
     }, {
         name: "推图网",
-        reg: /^https?:\/\/(www|m)\.tuiimg\.com\/meinv\/\d+\//,
-        link: "https://m.tuiimg.com/meinv/",
-        init: async () => {
+        url: {
+            h: "www.tuiimg.com",
+            p: /^\/meinv\/\d+\/$/
+        },
+        init: () => {
             fn.showMsg(DL.str_05, 0);
             let url = fn.url.replace("www.tuiimg.com", "m.tuiimg.com");
-            await fn.xhrDoc(url, {
+            return fn.xhrDoc(url, {
                 headers: {
                     "Referer": url,
                     "User-Agent": Mobile_UA
                 }
             }).then(dom => {
-                let [, , , max, , next] = JSON.parse(fn.gst("_pd", dom).match(/_pd[\s=]+([^;]+)/)[1]);
-                let [path] = fn.ge("#content img", dom).src.match(/.+\//);
-                globalImgArray = fn.arr(max, (v, i) => path + (i + 1) + ".jpg");
+                let [, path, , max, , next] = JSON.parse(fn.gst("_pd", dom).match(/_pd[\s=]+([^;]+)/)[1]);
+                path = "https://i.tuiimg.net/" + path;
+                siteJson.srcs = fn.arr(max, (v, i) => path + (i + 1) + ".jpg");
+                siteJson.next = null;
                 if (isNumber(next)) {
-                    tempNextLink = fn.url.replace(/\d+/, next);
+                    siteJson.next = "/meinv/" + next + "/";
                 }
             });
         },
-        imgs: () => globalImgArray,
+        imgs: () => siteJson.srcs,
         button: [4],
         insertImg: ["#content", 2],
+        insertImgAF: () => fn.remove("#tips,#myfav"),
         autoDownload: [0],
-        next: () => tempNextLink,
+        next: () => siteJson.next,
         prev: 1,
-        customTitle: "#main>h1,.main>h1",
-        hide: "#page",
+        customTitle: "#main>h1",
+        category: "nsfw1"
+    }, {
+        name: "推图网M",
+        link: "https://m.tuiimg.com/meinv/",
+        url: {
+            h: "m.tuiimg.com",
+            p: "/meinv/",
+            st: "_pd"
+        },
+        init: () => {
+            let [, path, , max, , next] = JSON.parse(fn.gst("_pd").match(/_pd[\s=]+([^;]+)/)[1]);
+            path = "https://i.tuiimg.net/" + path;
+            siteJson.srcs = fn.arr(max, (v, i) => path + (i + 1) + ".jpg");
+            siteJson.next = null;
+            if (isNumber(next)) {
+                siteJson.next = "/meinv/" + next + "/";
+            }
+        },
+        imgs: () => siteJson.srcs,
+        button: [4],
+        insertImg: ["#content", 2],
+        insertImgAF: () => fn.remove("#page,#tips,#myfav,#downappM"),
+        autoDownload: [0],
+        next: () => siteJson.next,
+        prev: 1,
+        customTitle: ".main>h1",
         category: "nsfw1"
     }, {
         name: "18AV",
         url: {
             h: "18av.mm-cg.com",
-            e: ["//script[contains(text(),'Large_cgurl')]", ".sel_enlarge_page,.sel_enlarge"]
+            st: "Large_cgurl",
+            e: ".sel_enlarge_page,.sel_enlarge"
         },
         imgs: () => _unsafeWindow.Large_cgurl,
         button: [4],
@@ -5984,9 +6133,11 @@
         customTitle: "h1",
         category: "nsfw2"
     }, {
-        name: "浪女吧",
-        host: ["langnv.neocities.org"],
-        reg: /^https?:\/\/langnv\.neocities\.org\/posts\/\d+\/$/,
+        name: "浪女吧/Ang4u",
+        url: {
+            h: ["langnv.neocities.org", "ang4u.neocities.org"],
+            p: "/posts/"
+        },
         imgs: "#images img",
         button: [4],
         insertImg: ["#images", 2],
@@ -6356,9 +6507,10 @@
         hide: "noindex:has(>div>center),div:has(>center>noindex)",
         category: "nsfw2"
     }, {
-        name: "COSPLAYG.COM/COSPLAYJ.COM/COSPLAYP.COM",
+        name: "COSPLAYD.COM/COSPLAYG.COM/COSPLAYJ.COM/COSPLAYK.COM/COSPLAYP.COM",
         url: {
-            h: /^cosplay(g|j|p)\.com$/,
+            t: /COSPLAY[A-Z]\.COM/,
+            h: /^cosplay[a-z]\.com$/,
             p: /^\/\d+\//,
             e: "main h1"
         },
@@ -6939,12 +7091,13 @@
         name: "ViPinay",
         url: {
             h: "vipinay.com",
-            e: "//script[contains(text(),'mwl_data')]"
+            st: "mwl_data"
         },
-        init: () => fn.waitEle(".entry-content p>img"),
-        imgs: () => fn.getImgSrcArr(".entry-content p>img"),
+        init: () => fn.waitEle(".entry-content p>img,.entry-content p>picture>img"),
+        imgs: () => fn.getImgSrcset(".entry-content p>img,.entry-content p>picture>img"),
         capture: () => _this.imgs(),
         customTitle: "h1.entry-title",
+        fetch: 1,
         category: "nsfw2"
     }, {
         name: "RussiaSexyGirls/EuroSexyGirls/UsaSexyGirls/AsianSexyGirls/LatinSexyGirls/EbonySexyGirls",
@@ -7254,7 +7407,8 @@
         url: {
             h: "eroasian.net",
             p: "/photo-set/",
-            e: ".cm-entry-summary img"
+            e: ".cm-entry-summary img",
+            ee: "a.msacwl-img-link"
         },
         init: () => {
             let info = fn.ge(".wp-block-group");
@@ -7263,7 +7417,6 @@
                 insertBefore(te, info);
             }
         },
-        exclude: "a.msacwl-img-link",
         imgs: () => fn.getImgA(".cm-entry-summary img", ".pagination a"),
         button: [4],
         insertImg: [".cm-entry-summary", 2],
@@ -9721,6 +9874,22 @@
         customTitle: "h1.tdb-title-text",
         category: "nsfw1"
     }, {
+        url: {
+            h: "nangngucnoisoi.org"
+        },
+        box: [".box.info", 2],
+        imgs: ".single-page>p img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".single-page>p"], 2
+        ],
+        autoDownload: [0],
+        next: ".nav-next a[rel=next]",
+        prev: ".nav-previous a[rel=prev]",
+        customTitle: "h1.entry-title",
+        fetch: 1,
+        category: "nsfw1"
+    }, {
         name: "Hot Girl Xinh 18+",
         url: {
             h: "girlxinh18.com",
@@ -10139,10 +10308,10 @@
     }, {
         name: "Elite Babes格式",
         url: {
-            h: ["www.elitebabes.com", "pmatehunter.com", "www.jperotica.com", "www.metarthunter.com", "www.femjoyhunter.com", "nakedporn.pics", "plum.gent"],
-            e: ".list-gallery"
+            h: ["www.elitebabes.com", "pmatehunter.com", "www.jperotica.com", "www.metarthunter.com", "www.femjoyhunter.com", "nakedporn.pics", "plum.gent", "uludagspot.com", "funphotoguys.com"],
+            e: ".list-gallery",
+            ee: "#content video"
         },
-        exclude: "#content video",
         init: () => fn.waitEle(".list-gallery a[data-fancybox]"),
         imgs: () => fn.gae(".list-gallery a[data-fancybox]"),
         thums: ".list-gallery a[data-fancybox]>img",
@@ -10343,6 +10512,17 @@
         customTitle: ".gall_title",
         category: "nsfw2"
     }, {
+        name: "Boombo!",
+        host: ["hot.boombo.biz", "boombo.biz"],
+        url: {
+            h: "boombo.biz"
+        },
+        imgs: ".text div[style] img",
+        button: [4],
+        insertImg: [".text div[style]", 2],
+        customTitle: "#dle-content h1",
+        category: "nsfw2"
+    }, {
         name: "GayBoysTube",
         url: {
             h: "www.gayporntube.com",
@@ -10492,6 +10672,9 @@
             }
         },
         capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: ".nav-previous a[rel=prev]",
+        prev: ".nav-next a[rel=next]",
         customTitle: () => fn.dt({
             s: ".entry-title",
             d: [
@@ -10896,7 +11079,7 @@
         host: ["www.wikifeet.com", "www.wikifeetx.com"],
         url: {
             h: "www.wikifeet",
-            e: "//script[contains(text(),'messanger.cfname')]"
+            st: "messanger.cfname"
         },
         init: () => fn.waitEle(".pic>a"),
         imgs: () => {
@@ -11554,9 +11737,9 @@
         referer: "",
         category: "nsfw2"
     }, {
-        name: "Fapello Leaks/Onlyfans Leaks",
+        name: "Fapello Leaks/Onlyfans Leaks/Only2leaked/SimpCity TV",
         url: {
-            h: ["fapello-leaks.com", "getofleaks.co"],
+            h: ["fapello-leaks.com", "getofleaks.co", "only2leaked.co", "simpcity.tv"],
             p: "/album/"
         },
         box: [".album-gallery", 2],
@@ -11614,9 +11797,8 @@
         customTitle: ".entry-title",
         category: "nsfw2"
     }, {
-        name: "sarlatimmobilier.com",
         url: {
-            h: ["sarlatimmobilier.com", "studiobangchau.com", "monsterbusterclub.tv"]
+            h: ["sarlatimmobilier.com", "studiobangchau.com", "monsterbusterclub.tv", "ecopak.cz"]
         },
         imgs: "#gallery .img-blur a",
         button: [4],
@@ -12213,6 +12395,43 @@
             v: 3,
             css: false
         },
+        category: "nsfw2"
+    }, {
+        url: {
+            h: "getababy.net",
+        },
+        box: [".entry-content a[data-caption]", 1],
+        imgs: ".entry-content a[data-caption]",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".entry-content a[data-caption]"], 2
+        ],
+        customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
+        name: "Hoastie",
+        url: {
+            h: "hoastie.com",
+            p: "/a/",
+            e: "h1.entry-title"
+        },
+        imgs: () => {
+            let s = ".entry-content img";
+            let v = ".entry-content video>source";
+            if (fn.ge(v)) {
+                videoSrcArray = fn.gae(v).map(e => e.src);
+                s = ".entry-featured-media img,.entry-content img";
+            }
+            let imgs = fn.gae(s).filter(e => !e.closest("aside,.g1-teaser"));
+            return fn.getImgSrcset(imgs);
+        },
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: "a.g1-teaser-prev",
+        prev: "a.g1-teaser-next",
+        customTitle: () => fn.ge("h1.entry-title").textContent,
+        downloadVideo: true,
         category: "nsfw2"
     }, {
         name: "DirtyShip.com",
@@ -13287,9 +13506,9 @@
         host: ["ios.pipigou830.top"],
         url: {
             t: "哔咔庇护所",
-            s: "&catid="
+            s: "&catid=",
+            ee: "#dplayer.dplayer"
         },
-        exclude: "#dplayer.dplayer",
         init: async () => {
             fn.remove("//div[@class='row'][div/a/img]");
             await fn.waitEle("#lightbox~img");
@@ -14187,9 +14406,9 @@
         name: "E-Hentai圖片清單頁",
         url: {
             h: ["e-hentai.org", "exhentai.org"],
-            p: /^\/g\/\d+\/\w+\/$/
+            p: /^\/g\/\d+\/\w+\/$/,
+            ee: "//h1[text()='Content Warning']"
         },
-        exclude: "//h1[text()='Content Warning']",
         box: ["#gdt", 2],
         imgs: async () => {
             await fn.getNP("#gdt>*", ".ptds+td>a", null, "//tr[td[@class='ptds']]");
@@ -15464,7 +15683,7 @@
         name: "MultPorn閱讀頁",
         url: {
             h: "multporn.net",
-            e: "//script[contains(text(),'configUrl')]"
+            st: "configUrl"
         },
         imgs: () => {
             fn.showMsg(DL.str_05, 0);
@@ -15847,7 +16066,7 @@
         name: "GNTAI.net",
         url: {
             h: "www.gntai.net",
-            e: "//script[contains(text(),'pages')]"
+            st: "pages"
         },
         imgs: () => {
             let code = fn.gst("pages");
@@ -16270,7 +16489,7 @@
                 "doujin18.net",
                 "cndoujin.net"
             ],
-            e: "//script[contains(text(),'slides_p_path')]"
+            st: "slides_p_path"
         },
         imgs: () => _unsafeWindow.slides_p_path.map(e => atob(e)),
         capture: () => _this.imgs(),
@@ -16353,7 +16572,7 @@
         url: {
             h: "7mmtv.sx",
             p: "hcomic",
-            e: "//script[contains(text(),'Large_cgurl')]"
+            st: "Large_cgurl"
         },
         imgs: () => {
             const {
@@ -16603,6 +16822,62 @@
         hide: ".pre_picture,.next_picture,.tips,.adbox",
         category: "hcomic"
     }, {
+        name: "Naxter",
+        url: {
+            h: "naxter.net"
+        },
+        SPA: () => document.URL.includes("/gallery/"),
+        observerURL: true,
+        json: () => {
+            let [, , id] = document.location.pathname.split("/");
+            return fn.fetchDoc("/gallery/" + id).then(dom => JSON.parse(fn.gst("files", dom)));
+        },
+        imgs: () => {
+            if (_this.SPA()) {
+                fn.showMsg(DL.str_05, 0);
+                return _this.json().then(json => {
+                    let {
+                        props: {
+                            pageProps: {
+                                gallery: {
+                                    files
+                                }
+                            }
+                        },
+                        runtimeConfig: {
+                            media: {
+                                filesBaseUrl
+                            }
+                        }
+                    } = json;
+                    thumbnailSrcArray = files.map(e => filesBaseUrl + "/media/" + e.id + "?size=preview&format=webp");
+                    return files.map(e => filesBaseUrl + "/media/" + e.id);
+                });
+            } else {
+                return [];
+            }
+        },
+        customTitle: () => {
+            if (_this.SPA()) {
+                return _this.json().then(json => {
+                    let {
+                        props: {
+                            pageProps: {
+                                gallery: {
+                                    originalTitle,
+                                    title
+                                }
+                            }
+                        }
+                    } = json;
+                    return originalTitle ? originalTitle : title;
+                });
+            } else {
+                return null;
+            }
+        },
+        category: "hcomic"
+    }, {
         name: "HManga",
         url: {
             h: "hmanga.world"
@@ -16614,14 +16889,18 @@
             return fetch("/api/getdoujin?id=" + id).then(res => res.json());
         },
         imgs: () => {
-            fn.showMsg(DL.str_05, 0);
-            return _this.json().then(json => {
-                let {
-                    baseurl,
-                    page,
-                } = json;
-                return page.map((e, i) => baseurl + (i + 1) + "." + e);
-            });
+            if (_this.SPA()) {
+                fn.showMsg(DL.str_05, 0);
+                return _this.json().then(json => {
+                    let {
+                        baseurl,
+                        page
+                    } = json;
+                    return page.map((e, i) => baseurl + (i + 1) + "." + e);
+                });
+            } else {
+                return [];
+            }
         },
         customTitle: () => {
             if (_this.SPA()) {
@@ -16655,19 +16934,23 @@
             return data.find(d => !!d?.data?.comic);
         }),
         imgs: () => {
-            fn.showMsg(DL.str_05, 0);
-            return _this.json().then(json => {
-                let {
-                    data: {
-                        comic: {
-                            num_pages,
-                            media_id,
-                            comic_source
+            if (_this.SPA()) {
+                fn.showMsg(DL.str_05, 0);
+                return _this.json().then(json => {
+                    let {
+                        data: {
+                            comic: {
+                                num_pages,
+                                media_id,
+                                comic_source
+                            }
                         }
-                    }
-                } = json;
-                return fn.arr(num_pages, (v, i) => `${fn.lo}/api/${comic_source}/${media_id}/pages/${i + 1}`);
-            });
+                    } = json;
+                    return fn.arr(num_pages, (v, i) => `${fn.lo}/api/${comic_source}/${media_id}/pages/${i + 1}`);
+                });
+            } else {
+                return [];
+            }
         },
         customTitle: () => {
             if (_this.SPA()) {
@@ -16964,12 +17247,12 @@
         url: {
             t: ["第一漫画", "歪歪漫画", "第一韩漫", "太极漫画网"],
             p: /^\/view\/\d+\/\d+$/,
-            e: "//script[contains(text(),'$(document).ready')]",
+            st: "$(document).ready",
             d: "m"
         },
         init: () => {
             try {
-                let code = fn.gt("//script[contains(text(),'$(document).ready')]");
+                let code = fn.gst("$(document).ready");
                 let objStr = code.match(/window\.\w+\s?=\s?([^;]+)/)[1];
                 let json = JSON.parse(objStr);
                 debug("\n此頁JSON資料\n", json);
@@ -17753,9 +18036,10 @@
         category: "hcomic"
     }, {
         name: "HO5HO",
-        host: ["www.ho5ho.com"],
-        reg: /^https?:\/\/www\.ho5ho\.com\/.+\/.+\/server.+\//,
-        include: "//script[contains(text(),'chapter_preloaded_images')]",
+        url: {
+            h: "www.ho5ho.com",
+            st: "chapter_preloaded_images"
+        },
         imgs: () => _unsafeWindow.chapter_preloaded_images,
         button: [4],
         insertImg: [".entry-content", 2],
@@ -19053,7 +19337,7 @@
         url: {
             h: "manga-bay.org",
             p: "/reader/",
-            e: "//script[contains(text(),'window.__DATA__')]"
+            st: "window.__DATA__"
         },
         imgs: () => _unsafeWindow.__DATA__.images,
         button: [4],
@@ -19157,7 +19441,7 @@
         name: "MangaMen",
         url: {
             h: "mangamen.ru",
-            e: "//script[contains(text(),'window.__pg')]"
+            st: "window.__pg"
         },
         init: () => fn.waitEle(".reader-view div[page] img[alt]"),
         imgs: () => _unsafeWindow.__pg.map(e => e.u),
@@ -19670,8 +19954,9 @@
         category: "comic"
     }, {
         name: "NiAdd",
+        host: ["www.niadd.com"],
         url: {
-            e: ["//script[contains(text(),'NiaddChpPageCtrl')]"],
+            st: "NiaddChpPageCtrl",
             p: "/statuses/"
         },
         imgs: () => _unsafeWindow.NiaddChpPageCtrl.options.all_imgs_url,
@@ -20601,7 +20886,7 @@
         },
         init: () => (document.onkeydown = null),
         imgs: () => {
-            if (fn.ge("//script[contains(text(),'dirPath')]")) {
+            if (!!fn.gst("dirPath")) {
                 let {
                     dirPath,
                     images
@@ -20745,9 +21030,9 @@
         enable: 0,
         url: {
             h: ["m.happymh.com", "hihimanga.com"],
-            p: "/mangaread/"
+            p: "/mangaread/",
+            ee: ".captcha-area"
         },
-        exclude: ".captcha-area",
         fetchJson: (url = siteUrl) => {
             let mangaCode = new URL(url).pathname.split("/").at(-1);
             let api = `/v2.0/apis/manga/reading?code=${mangaCode}&v=v3.1818134`;
@@ -21532,7 +21817,7 @@ if ("xx" in window) {
         url: {
             h: /dm5|1kkk|mangabz|xmanhua|yymanhua|manhuaren|manben/,
             p: /^\/(m|ch|vol|other)?[-_0-9]+\//,
-            e: "//script[contains(text(),'newImgs')]",
+            st: "newImgs",
             i: 0
         },
         init: async () => {
@@ -21587,7 +21872,7 @@ if ("xx" in window) {
         url: {
             h: /dm5|1kkk|mangabz|xmanhua|yymanhua|manhuaren|manben/,
             p: /^\/(m|ch|vol|other)?[-_0-9]+\//,
-            e: "//script[contains(text(),'newImgs')]",
+            st: "newImgs",
             i: 1
         },
         getSrcs: (dom) => {
@@ -22338,9 +22623,9 @@ if ("xx" in window) {
         url: {
             h: "cc.fun8.us",
             p: "/post/",
+            ee: "#info table[align]",
             i: 0
         },
-        exclude: "#info table[align]",
         init: () => fn.cartoonmadUI(),
         imgs: (dom = document) => {
             let [imgDir] = fn.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//);
@@ -22386,9 +22671,9 @@ if ("xx" in window) {
         url: {
             h: "cc.fun8.us",
             p: "/post/",
+            ee: "#info table[align]",
             i: 1
         },
-        exclude: "#info table[align]",
         getSrcs: (dom) => {
             let [imgDir] = fn.ge("img[onload],img[oncontextmenu]", dom).src.match(/.+\//);
             let max = fn.ge(".onpage", dom).parentNode.lastElementChild.previousElementSibling.innerText;
@@ -24882,39 +25167,6 @@ if ("xx" in window) {
         preloadNext: true,
         category: "comic"
     }, {
-        name: "天天漫画",
-        url: {
-            h: "www.everydaymanga.com",
-            e: "//script[contains(text(),'newImgs')]"
-        },
-        imgs: (w = _unsafeWindow) => w.newImgs,
-        button: [4],
-        insertImg: ["#ChapterContent,.chapter_content", 2],
-        autoDownload: [0],
-        next: "//a[text()='下一章'][starts-with(@href,'/')] | //a[div[span[text()='下一章']]][starts-with(@href,'/')]",
-        prev: "//a[text()='上一章'][starts-with(@href,'/')] | //a[div[span[text()='上一章']]][starts-with(@href,'/')]",
-        customTitle: (dom = document, url = fn.lp) => {
-            if (isM) {
-                let [, , , mid, cid] = url.split("/");
-                return fn.fetchDoc(`/home/details/${mid}`).then(detailsDom => {
-                    let comic_name = fn.gt(".comic_name h1", 1, detailsDom);
-                    let chapters = fn.gae(".catalog_list a", detailsDom);
-                    let chapter = chapters.find(a => a.href.endsWith(cid));
-                    let chapter_name = fn.gt(".chapter_name .name", 1, chapter);
-                    return comic_name + " - " + chapter_name;
-                });
-            } else {
-                return fn.gt(".arthor", 1, dom) + " - " + fn.gt(".title", 1, dom);
-            }
-        },
-        preloadNext: (nextDoc, obj) => {
-            fn.iframeVar(nextLink, "newImgs").then(w => {
-                let srcs = obj.imgs(w);
-                fn.picPreload(srcs, obj.customTitle(nextDoc, new URL(nextLink).pathname), "next");
-            });
-        },
-        category: "comic"
-    }, {
         name: "漫画站",
         url: {
             h: ["www.manhuazhan.com", "m.manhuazhan.com"],
@@ -24950,7 +25202,8 @@ if ("xx" in window) {
         url: {
             t: "喵趣漫画",
             p: ".html",
-            e: "//script[contains(text(),'DATA')]"
+            e: "#manga-imgs",
+            st: "DATA"
         },
         init: () => fn.waitVar("newImgs"),
         imgs: (w = _unsafeWindow) => w.newImgs.map(e => e.url),
@@ -25008,7 +25261,7 @@ if ("xx" in window) {
         name: "无尽漫画",
         url: {
             h: "wujinmh.com",
-            e: "//script[contains(text(),'params')]"
+            st: "params"
         },
         init: () => fn.wait(() => isArray(_unsafeWindow?.params?.images)),
         box: [".rd-article-wr,.comic-list", 1],
@@ -25150,7 +25403,7 @@ if ("xx" in window) {
         url: {
             h: [/^(www|m)\.mh160/, "www.veryim.com"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
-            e: "//script[contains(text(),'qTcms_S_m_murl_e')]",
+            st: "qTcms_S_m_murl_e",
             i: 0
         },
         init: () => {
@@ -25192,7 +25445,7 @@ if ("xx" in window) {
         url: {
             h: [/^(www|m)\.mh160/, "www.veryim.com"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
-            e: "//script[contains(text(),'qTcms_S_m_murl_e')]",
+            st: "qTcms_S_m_murl_e",
             i: 1
         },
         getImgs: () => {
@@ -25474,15 +25727,15 @@ if ("xx" in window) {
         hide: ".read-article>div:has(>div[style*=float]),div[style^=line]",
         category: "comic"
     }, {
-        host: ["say-on.com", "www.yanzhibuluo.com", "www.jianyu120.com", "www.jiasenongye.com", "www.one-uplus.com", "www.qize-airline.com"],
+        host: ["say-on.com", "ahgwyd.com", "www.jianyu120.com", "www.jiasenongye.com", "www.one-uplus.com", "www.qize-airline.com"],
         url: {
-            e: ["//script[contains(text(),'readData')] | //script[contains(text(),'ReadData')]", "//script[contains(text(),'setComic')]"],
+            st: [/(R|r)eadData/, "setComic"],
             p: "/read/"
         },
-        imgs: ".read-content img,#comicContainer img",
+        imgs: ".read-content img,#comicContainer img,.pic-ist img",
         autoDownload: [0],
-        next: ".page-next[href^='/read/'],#nextButton[href^='/read/']",
-        prev: ".page-prev[href^='/read/'],#prevButton[href^='/read/']",
+        next: "//a[div[text()='下一话']][contains(@href,'/read/')] | //a[@class='page-next'][contains(@href,'/read/')] | //a[@id='nextButton'][contains(@href,'/read/')]",
+        prev: "//a[div[text()='上一话']][contains(@href,'/read/')] | //a[@class='page-prev'][contains(@href,'/read/')] | //a[@id='prevButton'][contains(@href,'/read/')]",
         customTitle: () => {
             let object = Object.fromEntries(
                 fn.gst(/readdata/i)
@@ -26523,7 +26776,7 @@ if ("xx" in window) {
             h: "www.zero",
             p: "/plugin",
             s: "a=read",
-            e: "//script[contains(text(),'listimg')]"
+            st: "listimg"
         },
         imgs: () => {
             let code = fn.gst("listimg");
@@ -28042,7 +28295,9 @@ if ("xx" in window) {
                 h: hosts,
                 p: pathname,
                 s: search,
+                st: script_text,
                 e: elements,
+                ee: exclude_elements,
                 t: title,
                 d: device,
                 i: comicInfiniteScroll
@@ -28105,11 +28360,39 @@ if ("xx" in window) {
                 }
                 if (!checkT) return false;
             }
+            if ("st" in obj) {
+                if (isArray(script_text)) {
+                    checkT = script_text.every(text => !![...document.scripts].find(script => {
+                        if (isString(text)) {
+                            return script.textContent.includes(text);
+                        } else if (isRegExp(text)) {
+                            return script.textContent.search(text) > -1;
+                        }
+                    }));
+                } else if (isString(script_text) || isRegExp(script_text)) {
+                    checkT = !![...document.scripts].find(script => {
+                        if (isString(script_text)) {
+                            return script.textContent.includes(script_text);
+                        } else if (isRegExp(script_text)) {
+                            return script.textContent.search(script_text) > -1;
+                        }
+                    });
+                }
+                if (!checkT) return false;
+            }
             if ("e" in obj) {
                 if (isArray(elements)) {
                     checkE = elements.every(selector => !!fn.ge(selector));
                 } else if (isString(elements)) {
                     checkE = !!fn.ge(elements);
+                }
+                if (!checkE) return false;
+            }
+            if ("ee" in obj) {
+                if (isArray(exclude_elements)) {
+                    checkE = exclude_elements.some(selector => !fn.ge(selector));
+                } else if (isString(exclude_elements)) {
+                    checkE = !fn.ge(exclude_elements);
                 }
                 if (!checkE) return false;
             }
@@ -28141,12 +28424,21 @@ if ("xx" in window) {
             if ("box" in tempData && isArray(box) && !("SPA" in tempData)) {
                 const [selector] = box;
                 checkE = !!fn.ge(selector);
+                if (!checkE) {
+                    debug("\n頁面沒有創建容器的定位元素", selector);
+                }
             }
             if ("imgs" in tempData && isString(imgSelector) && !("SPA" in tempData)) {
                 checkI = !!fn.ge(imgSelector);
+                if (!checkI) {
+                    debug("\n頁面沒有指定的圖片元素", imgSelector);
+                }
             }
             if ("customTitle" in tempData && isString(titleSelector) && !("SPA" in tempData)) {
                 checkT = !!fn.ge(titleSelector);
+                if (!checkT) {
+                    debug("\n頁面沒有指定的標題元素", titleSelector);
+                }
             }
             return checkH && checkP && checkS && checkE && checkI && checkT;
         },
@@ -30225,6 +30517,9 @@ if ("xx" in window) {
                 if (siteData.category === "comic") {
                     let lastImg = imgs.at(-1);
                     fn.comicNextObserver.observe(lastImg);
+                }
+                if (isPC && ShowFullPictureLoadFixedMenu === 1) {
+                    fn.waitEle("#FullPictureLoadFixedMenu").then(menu => fn.gae(".zoom,.toggleImgMode", menu).forEach(e => (e.style.display = "")));
                 }
                 if (options.icon == 1 || siteData.icon == 1) {
                     fn.waitEle(["#FullPictureLoadGoToFirstImage", "#FullPictureLoadGoToLastImage"]).then(eles => eles.forEach(e => (e.style.display = "unset")));
@@ -38338,6 +38633,10 @@ img.webtoon {
             item.innerText = obj.text;
             if (!!obj.id) item.id = obj.id;
             if (obj.show === 0) item.classList.add("itemNoShow");
+            if (["toggleImgMode", "zoom"].some(e => e === obj.name)) {
+                item.classList.add(obj.name);
+                item.style.display = "none";
+            };
             item.oncontextmenu = () => false;
             if (!!obj.cfn) item.addEventListener("click", obj.cfn);
             if (!!obj.mfn) item.addEventListener("mousedown", obj.mfn);
