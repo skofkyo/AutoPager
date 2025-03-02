@@ -5153,23 +5153,6 @@
         init: () => fn.addMutationObserver(() => fn.remove("//span[@id='install-pwa-box'] | //div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]")),
         category: "ad"
     }, {
-        name: "TangMoc",
-        host: ["tangmoc.com"],
-        reg: /^https?:\/\/tangmoc\.com\/blog\/show\/\w+\/.+/,
-        init: () => fn.remove("//span[@id='install-pwa-box'] | //div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]"),
-        imgs: () => fn.ge(".btn-warning+.btn-secondary") ? fn.getImgA("a[href*=media]>.media-preview", "a.btn-secondary") : fn.gae("a[href*=media]>.media-preview"),
-        button: [4],
-        insertImg: ["//media[article]", 2],
-        go: 1,
-        customTitle: () => fn.dt({
-            s: "h1",
-            d: [
-                "View - ",
-                /[\s-]+$/
-            ]
-        }),
-        category: "nsfw1"
-    }, {
         name: "Picazor",
         host: ["picazor.com"],
         reg: /^https?:\/\/picazor\.com\/[a-z]{2}\/[\w-]+$/,
@@ -5209,6 +5192,49 @@
             return images;
         },
         fetch: 1,
+        downloadVideo: true,
+        category: "nsfw2"
+    }, {
+        name: "Fapello",
+        host: ["fapello.com"],
+        reg: /^https?:\/\/fapello\.com\/[^\/]+\/$/,
+        init: async () => {
+            if (fn.ge("#showmore")) {
+                let ele = fn.ge("#showmore");
+                let max = ele.dataset.max;
+                let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl + `page-${i + 1}/`);
+                tempEles = await fn.getEle(links, "#content>div");
+            } else {
+                tempEles = fn.gae("#content>div");
+            }
+        },
+        imgs: () => {
+            let imgSrcs = tempEles.map(node => {
+                if (fn.ge("img[src*='icon-play.svg']", node)) {
+                    let videoSrc = fn.ge("img", node).src.replace("https://fapello.com/", "https://cdn.fapello.com/").replace("_300px", "").replace(/\.jpg$/i, ".mp4");
+                    videoSrcArray.push(videoSrc);
+                    return null;
+                } else {
+                    thumbnailSrcArray.push(fn.ge("img", node).src);
+                    let imgSrc = fn.ge("img", node).src.replace("_300px", "");
+                    return imgSrc;
+                }
+            }).filter(Boolean).sort();
+            thumbnailSrcArray.sort();
+            videoSrcArray.sort();
+            return imgSrcs;
+        },
+        capture: () => _this.imgs(),
+        button: [4],
+        insertImg: ["#content", 3],
+        insertImgAF: () => {
+            fn.run("jQuery(window).off()");
+            fn.remove("#showmore,#next_page");
+        },
+        customTitle: () => fn.dt({
+            t: fn.title("/", 1),
+            d: " - Fapello"
+        }),
         downloadVideo: true,
         category: "nsfw2"
     }, {
