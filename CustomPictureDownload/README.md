@@ -189,7 +189,8 @@ https://*wnacg.com/photos-slist-aid-*.html
     //SPA網頁不切換UI。
     SPA: true,
     //與SPA屬性搭配使用，觀察URL變化，用於SPA網頁並且URL是會變換的，更替腳本變數諸如globalImgArray、nextLink、customTitle。
-    observerURL: true,
+    //true使用MutationObserver API，"loop"使用setInterval
+    observeURL: true,
     //延遲載入規則。
     delay: 300,
     //網頁必須包含的元素。
@@ -269,7 +270,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         return text;
     },
     //觀察元素變化重新取得標題字串，用於SPA網頁。
-    observerTitle: true,
+    observeTitle: true,
     //參數A，0快捷鍵觸發，1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
     autoDownload: [A, time],
     //設定下一頁元素綁定右方向鍵點擊下一頁。
@@ -343,7 +344,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     reg: () =>,
     SPA: () =>,
     SPA: true,
-    observerURL: true,
+    observeURL: true,
     delay: 300,
     include: "",
     include: [""],
@@ -389,7 +390,7 @@ https://*wnacg.com/photos-slist-aid-*.html
         s: "",
         d: ""
     }),
-    observerTitle: true,
+    observeTitle: true,
     autoDownload: [1, time],
     next: "",
     next: () => {
@@ -1629,24 +1630,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.xstuji.com/">秀色图集</a>
-                </td>
-                <td>免VIP僅適用圖片檔案命名是簡單數字遞增的，利用篩選下載先用腳本取得的起始數字來載入圖片，假設無法載入的圖片皆為末尾，那麼正確的起始數字需要減掉載入錯誤的圖片數量，如果圖片載入錯誤的張數是分散的，那麼該規則將無效。</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.ootaotu.com/">套图集</a>
-                </td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.xiurenwang.cc/">秀人网</a>
-                </td>
-                <td>同上</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.xiuren.mobi/">秀人网</a>
                 </td>
                 <td>免VIP，圖集無法正確取得99張後的圖片網址，從100開始的檔案命名邏輯摸不清。 <a href="http://www.xiuren.online/">www.xiuren.online</a>， <a href="http://www.xiuren.cloud/">www.xiuren.cloud</a>， <a href="http://www.xiuren888.com/">www.xiuren888.com</a>， <a href="http://www.newxiuren.cc/">www.newxiuren.cc</a>
@@ -2871,7 +2854,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.1ymt.com/discover?t=fresh">咿呀美图</a>
                 </td>
-                <td>SPA網頁，當前網址為圖集/work/時才可用</td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -2966,6 +2949,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://jablehk.com/">Jablehk</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://picazor.com/en">Picazor</a>
+                </td>
+                <td>SPA網頁，手動</td>
             </tr>
             <tr>
                 <td>
@@ -4246,9 +4235,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.epavx.com/pics/">EPORNER鏡像(es606)</a>
+                    <a href="https://www.es606.com/pics/">EPORNER鏡像(es606)</a>
                 </td>
-                <td></td>
+                <td><a href="https://www.epavx.com/pics/">www.epavx.com</a></td>
             </tr>
             <tr>
                 <td>
@@ -6674,12 +6663,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://terra-historicus.hypergryph.com/">明日方舟泰拉记事社</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.colamanga.com/">COLAMANGA</a>
                 </td>
                 <td>方向鍵上下章，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，下載需先觸發載入全部圖片，圖址如為blob函式會使用到canvas需要繪製過程會有點卡。</td>
@@ -6724,18 +6707,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://manhua.zaimanhua.com/">再漫画</a>
                 </td>
                 <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.idmzj.com/">动漫之家</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://m.idmzj.com/">动漫之家M</a>
-                </td>
-                <td>預設關閉</td>
             </tr>
             <tr>
                 <td>
