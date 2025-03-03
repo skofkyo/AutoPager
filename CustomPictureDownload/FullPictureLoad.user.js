@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.3.2
+// @version            2025.3.3
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -250,6 +250,16 @@
             return thumbnailSrcArray.map(e => e.replace("/s/", "/l/"));
         },
         customTitle: ".photo-info>h1",
+        category: "photo"
+    }, {
+        name: "百度 NewsPage",
+        reg: [
+            /^https?:\/\/baijiahao\.baidu\.com\/s\?id=\d+$/,
+            /^https?:\/\/mbd\.baidu\.com\/newspage\/data\/landingsuper\?context=/
+        ],
+        init: () => fn.waitEle(["div[data-testid=article] img", "#header div"]),
+        imgs: "div[data-testid=article] img",
+        customTitle: "#header div",
         category: "photo"
     }, {
         name: "交通部觀光署 桌布下載",
@@ -1684,12 +1694,12 @@
                 let lastNum = _unsafeWindow.core_next.total_page;
                 lastNum = Number(lastNum);
                 if (currentPageNum < lastNum) {
-                    let url = document.location.pathname.replace(/\/page\/\d+/, "");
+                    let url = fn.dlp().replace(/\/page\/\d+/, "");
                     if (url === "/") {
                         url = "";
                     }
-                    if (document.location.search !== "") {
-                        return url + "/page/" + (currentPageNum += 1) + document.location.search;
+                    if (fn.dls() !== "") {
+                        return url + "/page/" + (currentPageNum += 1) + fn.dls();
                     }
                     return url + "/page/" + (currentPageNum += 1);
                 } else {
@@ -1750,9 +1760,9 @@
                 let lastNum = fn.ge(".post-nav[data-max]").dataset.max;
                 lastNum = Number(lastNum);
                 if (currentPageNum < lastNum) {
-                    let url = document.location.pathname.replace(/page\/\d+\/?/, "");
-                    if (document.location.search !== "") {
-                        return url + "page/" + (currentPageNum += 1) + "/" + document.location.search;
+                    let url = fn.dlp().replace(/page\/\d+\/?/, "");
+                    if (fn.dls() !== "") {
+                        return url + "page/" + (currentPageNum += 1) + "/" + fn.dls();
                     }
                     return url + "page/" + (currentPageNum += 1);
                 } else {
@@ -1838,15 +1848,7 @@
         host: ["www.uyn8.cn"],
         reg: /^https?:\/\/www\.uyn8\.cn\/archives\/\d+/i,
         init: "fn.clearAllTimer();",
-        imgs: () => {
-            fn.showMsg("fn.xhrHEA(check)...", 0);
-            let xhrNum = 0;
-            let srcs = fn.getImgSrcArr(".entry-content img");
-            return srcs.map((src, i, arr) => fn.xhrHEAD(src).then(res => {
-                fn.showMsg(`fn.xhrHEAD(${xhrNum+=1}/${arr.length})`, 0);
-                return res.finalUrl;
-            }));
-        },
+        imgs: ".entry-content img",
         button: [4],
         insertImg: [".entry-content", 2],
         customTitle: ".entry-title",
@@ -1854,6 +1856,7 @@
             v: 3,
             css: false
         },
+        referer: "",
         category: "nsfw1"
     }, {
         name: "优美图录",
@@ -3189,7 +3192,7 @@
         url: {
             h: "luscious.net"
         },
-        SPA: () => document.URL.includes("/albums/"),
+        SPA: () => fn.dlp("/albums/"),
         observeURL: true,
         imgs: async () => {
             if (!_this.SPA()) return [];
@@ -3361,14 +3364,18 @@
             h: "www.1ymt.com",
             d: "pc"
         },
-        SPA: () => document.location.pathname.startsWith("/work/"),
+        SPA: () => fn.dlp("/work/"),
         observeURL: "loop",
-        imgs: () => fn.fetchDoc(document.location.pathname, {
-            "headers": {
-                "accept": "text/html, */*; q=0.01",
-                "x-requested-with": "XMLHttpRequest"
-            }
-        }).then(dom => fn.gae(".photo-thumbs li", dom)),
+        imgs: () => {
+            if (!_this.SPA()) return [];
+            return fn.fetchDoc(fn.dlp(), {
+                "headers": {
+                    "accept": "text/html, */*; q=0.01",
+                    "x-requested-with": "XMLHttpRequest"
+                }
+            }).then(dom => fn.gae(".photo-thumbs li", dom));
+        },
+        capture: () => _this.imgs(),
         category: "nsfw1"
     }, {
         name: "Cosersets",
@@ -4098,7 +4105,7 @@
         url: {
             h: "cosplay-nextjs.vercel.app"
         },
-        SPA: () => document.URL.includes("/albums/"),
+        SPA: () => fn.dlp("/albums/"),
         observeURL: "loop",
         imgs: "div[aria-roledescription='carousel'] img",
         customTitle: () => {
@@ -5537,12 +5544,16 @@
         url: {
             h: "fapello.cc"
         },
-        SPA: () => document.URL.includes("/album/"),
+        SPA: () => fn.dlp("/album/"),
         observeURL: true,
         imgs: () => {
-            videoSrcArray = fn.gae(".album-gallery a.has-video").map(e => e.dataset.src);
-            return fn.gae(".album-gallery a:not(.has-video)");
+            if (!_this.SPA()) return [];
+            return fn.waitEle([".album-gallery a:not(.has-video)"]).then(eles => {
+                videoSrcArray = fn.gae(".album-gallery a.has-video").map(e => e.dataset.src);
+                return eles;
+            });
         },
+        capture: () => _this.imgs(),
         customTitle: () => fn.ge(".content-main h1")?.textContent,
         category: "nsfw2"
     }, {
@@ -6397,13 +6408,16 @@
         url: {
             h: "www.tumbex.com"
         },
-        SPA: () => document.URL.includes("/post/"),
+        SPA: () => fn.dlp("/post/"),
         observeURL: "loop",
-        imgs: async () => {
-            await fn.waitEle(".hg-item");
-            let [content] = fn.gae(".post-content");
-            return fn.gae(".hg-item", content);
+        imgs: () => {
+            if (!_this.SPA()) return [];
+            return fn.waitEle(".hg-item").then(() => {
+                let [content] = fn.gae(".post-content");
+                return fn.gae(".hg-item", content);
+            });
         },
+        capture: () => _this.imgs(),
         customTitle: () => fn.title(" - Tumbex"),
         category: "nsfw2"
     }, {
@@ -6411,13 +6425,13 @@
         url: {
             h: "www.simply-cosplay.com"
         },
-        SPA: () => document.URL.includes("/gallery/new/"),
+        SPA: () => fn.dlp("/gallery/new/"),
         observeURL: "loop",
         init: () => fn.wait(() => !!_unsafeWindow?.user?.identifier),
         imgs: () => {
             if (!_this.SPA()) return [];
             fn.showMsg(DL.str_05, 0);
-            let [, , , g] = document.location.pathname.split("/");
+            let [, , , g] = fn.dlp().split("/");
             let token = _unsafeWindow?.user?.token ?? "01730876";
             return fetch(`https://api.simply-porn.com/v2/gallery/${g}?token=${token}&related=8`, {
                 "headers": {
@@ -8779,17 +8793,23 @@
             h: "ameblo.jp"
         },
         init: () => fn.waitEle("a.pagingNext,a[href$=html]:has(p.skinWeakColor)"),
-        SPA: () => document.URL.includes("/entry-"),
+        SPA: () => fn.dlp("/entry-"),
         observeURL: true,
         imgs: () => {
-            let imgs = fn.gae("#entryBody .PhotoSwipeImage,main article img").filter(e => !e.closest(".snslink"));
-            return fn.getImgSrcset(imgs).map(e => e.replace(/\?caw=\d+$/, ""));
+            if (!_this.SPA()) return [];
+            return fn.waitEle(["#entryBody .PhotoSwipeImage,main article img"]).then(eles => {
+                let imgs = eles.filter(e => !e.closest(".snslink"));
+                return fn.getImgSrcset(imgs).map(e => e.replace(/\?caw=\d+$/, ""));
+            });
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
         next: "//a[contains(@class,'pagingNext')] | //a[p[text()='次の記事']]",
         prev: "//a[contains(@class,'pagingPrev')] | //a[p[text()='前の記事']]",
-        customTitle: ".js-entryWrapper h1,main article h1",
+        customTitle: () => {
+            if (!_this.SPA()) return null;
+            return fn.waitEle(".js-entryWrapper h1,main article h1").then(e => e.innerText);
+        },
         fetch: 1,
         hide: "div[aria-hidden]:has(#blogPCOverlayGeneral)",
         category: "nsfw2"
@@ -8929,7 +8949,7 @@
             h: ["kemono.su", "coomer.su"]
         },
         init: () => fn.waitEle("#main"),
-        SPA: () => document.URL.includes("/user/"),
+        SPA: () => fn.dlp("/user/"),
         observeURL: true,
         getPostJson: url => fetch("/api/v1" + new URL(url).pathname).then(async res => {
             return {
@@ -8960,7 +8980,7 @@
             let small = fn.gt(".paginator small");
             let postsTotal = small.match(/\d+/g).at(-1);
             let pagesTotal = Math.ceil(Number(postsTotal) / 50);
-            let api = "/api/v1" + new URL(document.URL).pathname + "/posts-legacy";
+            let api = "/api/v1" + fn.dlp() + "/posts-legacy";
             let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? api : api + `?o=${i * 50}`);
             fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
@@ -9950,7 +9970,7 @@
         init: () => fn.waitEle("#gadget-dock"),
         imgs: ".separator>a",
         capture: ".separator>a",
-        SPA: () => document.URL.includes(".html"),
+        SPA: () => fn.dlp(".html"),
         customTitle: "title",
         observeTitle: true,
         category: "nsfw2"
@@ -10859,7 +10879,7 @@
         url: {
             h: "www.reddit.com"
         },
-        SPA: () => document.URL.includes("/comments/"),
+        SPA: () => fn.dlp("/comments/"),
         observeURL: true,
         imgs: () => {
             let pics = fn.getImgSrcset("gallery-carousel li>img,.media-lightbox-img img");
@@ -12305,7 +12325,7 @@
             p: "/image/",
             e: ["#display_image_detail,#detail_list", "#title>h2,#page h3"]
         },
-        imgs: async () => {
+        imgs: () => {
             let [, , url] = fn.lp.split("/");
             url = `/story/${url}/`;
             return fn.getImgA("amp-img", [url]).then(srcs => {
@@ -12319,7 +12339,7 @@
         },
         button: [4],
         insertImg: ["#display_image_detail,#detail_list", 2],
-        insertImgAF: () => fn.remove("#paginator:has(a[href*='/page/'])"),
+        insertImgAF: () => fn.remove("#paginator:has(a[href*='/page/']),.paginator_area:has(.paginator_page)"),
         autoDownload: [0],
         next: () => {
             let next = fn.ge("//a[text()='Prev Article' or text()='前の記事' or text()='前一篇']");
@@ -14063,7 +14083,7 @@
         },
         setReadHistory: () => {
             let readHistoryData = localStorage.getItem("readHistory");
-            let [, , word, , id] = new URL(document.URL).pathname.split("/");
+            let [, , word, , id] = fn.dlp().split("/");
             let json;
             readHistoryData ? json = JSON.parse(readHistoryData) : json = {};
             json[word] = id;
@@ -16804,13 +16824,13 @@
         init: () => {
             if (_this.SPA()) {
                 return fn.wait(() => {
-                    let [, , id] = document.location.pathname.split("/");
+                    let [, , id] = fn.dlp().split("/");
                     return !!id;
                 });
             }
         },
         json: () => {
-            let [, , id] = document.location.pathname.split("/");
+            let [, , id] = fn.dlp().split("/");
             return fn.fetchDoc("/gallery/" + id).then(dom => JSON.parse(fn.gst("files", dom)));
         },
         imgs: () => {
@@ -16848,10 +16868,10 @@
         url: {
             h: "hmanga.world"
         },
-        SPA: () => document.URL.includes("/manga/"),
+        SPA: () => fn.dlp("/manga/"),
         observeURL: "loop",
         json: () => {
-            let id = document.location.pathname.split("/").at(-1);
+            let id = fn.dlp().split("/").at(-1);
             return fetch("/api/getdoujin?id=" + id).then(res => res.json());
         },
         imgs: () => {
@@ -16922,7 +16942,7 @@
         host: "web.nicecat.cc",
         reg: /^https?:\/\/web\.nicecat\.cc\//,
         SPA: () => {
-            if (document.URL.includes("/comic/book/reader/")) {
+            if (fn.dlp("/comic/book/reader/")) {
                 return fn.wait(() => "imageData" in sessionStorage);
             } else {
                 sessionStorage.clear();
@@ -17011,14 +17031,14 @@
             t: "紳夜漫畫"
         },
         SPA: () => {
-            if (document.URL.includes("/detail/")) {
-                let [id] = new URL(document.URL).pathname.match(/\d+/);
+            if (fn.dlp("/detail/")) {
+                let [id] = fn.dlp().match(/\d+/);
                 return fetch(`https://api.nftbaoyi.com/comic/${id}`).then(res => res.json()).then(async json => {
                     siteJson = json;
                     debug("\n此頁JSON資料\n", siteJson);
                     await fn.waitEle(".grid img");
                     fn.createImgBox(".grid", 1);
-                    return json;
+                    return true;
                 });
             } else {
                 return false;
@@ -17178,7 +17198,7 @@
         name: "Comics",
         host: ["pixiv.app"],
         reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
-        SPA: () => document.URL.includes("/comics/"),
+        SPA: () => fn.dlp("/comics/"),
         observeURL: true,
         init: () => fn.waitEle("footer[class]"),
         imgs: ".bg-slate-100 img,.shadow-md img",
@@ -17892,10 +17912,10 @@
         name: "热漫画",
         host: ["rehanman.com"],
         reg: /^https?:\/\/rehanman\.com\//,
-        SPA: () => document.URL.includes("/webtoon/"),
+        SPA: () => fn.dlp("/webtoon/"),
         observeURL: true,
         imgs: () => {
-            let [, , id] = document.location.pathname.split("/");
+            let [, , id] = fn.dlp().split("/");
             let body = {
                 query: "\n  query entry($id: ID, $inputs: InputEntries) {\n    entry (_id: $id, inputs: $inputs ){\n      _id, \n      title,\n      alt_title,\n      description,\n      title_normalized,\n      adult,\n      released_year,\n      status,\n      thumbnail,\n      type,\n      authors { name },\n      genres { name },\n      created_date,\n      modified_date,\n      rating,\n      rating_votes,\n      views,\n      volumes { id, chapters_count }\n      entries_data { _id, chapters {name, title, index, images}, volume_name }\n      entries_setting { _id, premium, entryId, isHide, countRead }\n    }\n  }\n",
                 variables: {
@@ -19015,13 +19035,13 @@
             e: "link[title=MangaDex]",
             d: "pc"
         },
-        SPA: () => new URL(document.URL).pathname.startsWith("/chapter/"),
+        SPA: () => fn.dlp().startsWith("/chapter/"),
         observeURL: true,
         init: () => fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
         imgs: () => {
             if (_this.SPA()) {
                 fn.showMsg(DL.str_05, 0);
-                const chapter_id = new URL(document.URL).pathname.split("/").at(2);
+                const chapter_id = fn.dlp().split("/").at(2);
                 return fetch(`https://api.mangadex.org/at-home/server/${chapter_id}?forcePort443=false`).then(res => res.json()).then(json => {
                     fn.hideMsg();
                     const {
@@ -19079,12 +19099,12 @@
             e: "meta[content=NamiComi]",
             d: "pc"
         },
-        SPA: () => new URL(document.URL).pathname.includes("/chapter/"),
+        SPA: () => fn.dlp("/chapter/"),
         observeURL: true,
         imgs: () => {
             if (_this.SPA()) {
                 fn.showMsg(DL.str_05, 0);
-                const chapter_id = new URL(document.URL).pathname.split("/").at(3);
+                const chapter_id = fn.dlp().split("/").at(3);
                 return fetch(`https://api.namicomi.com/images/chapter/${chapter_id}?newQualities=true`).then(res => res.json()).then(json => {
                     fn.hideMsg();
                     const {
@@ -19999,7 +20019,7 @@
         },
         init: () => (siteJson = JSON.parse(document.querySelector('#syncData').innerText)),
         imgs: () => {
-            let [, comic_id, chapter_number] = new URL(document.URL).pathname.match(/(\w+)\/\w+\/chapter-(.+)$/i);
+            let [, comic_id, chapter_number] = fn.dlp().match(/(\w+)\/\w+\/chapter-(.+)$/i);
             let headers = new Headers({
                 "Accept": "application/json, text/javascript, */*; q=0.01",
                 "X-Requested-With": "XMLHttpRequest",
@@ -20292,12 +20312,12 @@
         url: {
             h: /^comick\.io$/
         },
-        SPA: () => document.URL.includes("-chapter-"),
+        SPA: () => fn.dlp("-chapter-"),
         observeURL: true,
         imgs: () => {
             if (_this.SPA()) {
                 fn.showMsg(DL.str_05, 0);
-                const [chapter_id] = document.location.pathname.split("/").at(-1).split("-");
+                const [chapter_id] = fn.dlp().split("/").at(-1).split("-");
                 return fetch(`https://api.comick.io/chapter/${chapter_id}`).then(res => res.json()).then(json => {
                     nextLink = json.next?.href;
                     let textArr = json.seoTitle.split(" - ");
@@ -20537,10 +20557,11 @@
             d: "pc"
         },
         SPA: () => {
-            if (document.URL.includes("/chapter")) {
+            if (fn.dlp("/chapter")) {
                 return fn.waitEle("#content .container img:not(.rounded)").then(() => {
                     addFullPictureLoadButton();
                     addFullPictureLoadFixedMenu();
+                    return true;
                 });
             } else {
                 return false;
@@ -20562,14 +20583,14 @@
             d: "pc"
         },
         SPA: () => {
-            if (document.URL.includes("/chapter")) {
-                return fn.waitEle("img[alt*='Chapter']");
+            if (fn.dlp("/chapter")) {
+                return fn.waitEle(".image-container img");
             } else {
                 return false;
             }
         },
         observeURL: true,
-        imgs: () => fn.gae("img[alt*='Chapter']"),
+        imgs: () => fn.gae(".image-container img"),
         autoDownload: [0],
         next: "//a[button[div[p[text()='Next']]]][starts-with(@href,'/series/')]",
         prev: "//a[button[div[p[text()='Prev']]]][starts-with(@href,'/series/')]",
@@ -20794,7 +20815,7 @@
             p: "/read/",
             e: "#images-content .page-read"
         },
-        SPA: () => document.URL.includes("/read/"),
+        SPA: () => fn.dlp("/read/"),
         observeURL: true,
         init: () => fn.waitEle(".chapter-item.active"),
         imgs: () => {
@@ -21890,7 +21911,7 @@ if ("xx" in window) {
             h: "manhua.zaimanhua.com",
             d: "pc"
         },
-        SPA: () => document.URL.includes("/view/"),
+        SPA: () => fn.dlp("/view/"),
         observeURL: "loop",
         getData: async () => {
             await fn.delay(300, 0);
@@ -21935,10 +21956,11 @@ if ("xx" in window) {
     }, {
         name: "再漫画M",
         url: {
-            h: "m.zaimanhua.com"
+            h: "m.zaimanhua.com",
+            d: "m"
         },
-        SPA: () => document.URL.includes("/pages/comic/page"),
-        observeURL: true,
+        SPA: () => fn.dlp("/pages/comic/page"),
+        observeURL: "loop",
         imgs: async () => {
             let comic_id = fn.getUSP("comic_id");
             let chapter_id = fn.getUSP("chapter_id");
@@ -24508,7 +24530,7 @@ if ("xx" in window) {
         url: {
             h: "zerosumonline.com"
         },
-        SPA: () => document.URL.includes("/episode/"),
+        SPA: () => fn.dlp("/episode/"),
         observeURL: true,
         imgs: () => {
             let [id] = localStorage.getItem("history_chapter_ids").match(/\d+/);
@@ -24536,7 +24558,7 @@ if ("xx" in window) {
         url: {
             h: "ganma.jp"
         },
-        SPA: () => document.URL.includes("/reader/"),
+        SPA: () => fn.dlp("/reader/"),
         observeURL: true,
         imgs: () => {
             fn.showMsg(DL.str_05, 0);
@@ -28049,12 +28071,39 @@ if ("xx" in window) {
         lp: (() => _unsafeWindow.location.pathname)(),
         lh: (() => _unsafeWindow.location.hostname)(),
         ls: (() => _unsafeWindow.location.search)(),
+        durl: (p = null) => {
+            const url = _unsafeWindow.document.URL;
+            if (isString(p)) {
+                return url.includes(p);
+            } else if (isRegExp(p)) {
+                return url.search(p) > -1;
+            }
+            return url;
+        },
+        dlp: (p = null) => {
+            const url = _unsafeWindow.location.pathname;
+            if (isString(p)) {
+                return url.includes(p);
+            } else if (isRegExp(p)) {
+                return url.search(p) > -1;
+            }
+            return url;
+        },
+        dls: (p = null) => {
+            const url = _unsafeWindow.document.location.search;
+            if (isString(p)) {
+                return url.includes(p);
+            } else if (isRegExp(p)) {
+                return url.search(p) > -1;
+            }
+            return url;
+        },
         getUSP: (p, s = "s") => {
             if (s === "u") {
-                return new URL(document.location.href).searchParams.get(p);
+                return new URL(fn.dls()).searchParams.get(p);
             }
             if (s === "s") {
-                return new URLSearchParams(document.location.search).get(p);
+                return new URLSearchParams(fn.dls()).get(p);
             }
             if (s?.startsWith("http")) {
                 return new URL(s).searchParams.get(p);
@@ -30330,7 +30379,7 @@ if ("xx" in window) {
         immediateInsertImg: async (manual = "no") => {
             if (captureExclude() || ge(".FullPictureLoadImage")) return;
             if ("SPA" in siteData && isFn(siteData.SPA)) {
-                let validPage = await siteData.SPA();
+                const validPage = await siteData.SPA();
                 if (!validPage) return;
             }
             if (options.autoInsert == 1 && manual === "no" || options.autoInsert == 0 && manual === "yes" || manual === "yes") {
@@ -39722,17 +39771,14 @@ a[data-fancybox]:hover {
 
     const toggleUI = async () => {
         if (!"SPA" in siteData || !isFn(siteData.SPA) || !!ge(".FullPictureLoadImage") || isOpenMenu || isFetching) return;
-        const validPage = siteData.SPA();
-        if (validPage === true || isPromise(validPage)) {
+        isFetching = true;
+        const validPage = await siteData.SPA();
+        isFetching = false;
+        if (!!validPage) {
             isValidPage = true;
             if (isAddFullPictureLoadButton) addFullPictureLoadButton();
             if (isAddFullPictureLoadFixedMenu) addFullPictureLoadFixedMenu();
             if (isAddNewTabViewButton) addNewTabViewButton();
-            if (isPromise(validPage)) {
-                isFetching = true;
-                await validPage;
-                isFetching = false;
-            }
             if (!isAddKeyEvent) {
                 document.addEventListener("keydown", addKeyEvent);
                 isAddKeyEvent = true;
@@ -40155,7 +40201,10 @@ a[data-fancybox]:hover {
                     if (currentURL !== document.URL) {
                         currentURL = document.URL;
                         if (!"SPA" in siteData || !isFn(siteData.SPA) || !!ge(".FullPictureLoadImage") || isOpenMenu || isFetching) return;
-                        if (siteData.SPA()) {
+                        isFetching = true;
+                        const validPage = await siteData.SPA();
+                        isFetching = false;
+                        if (!!validPage) {
                             isValidPage = true;
                             if (isAddFullPictureLoadButton) addFullPictureLoadButton();
                             if (isAddFullPictureLoadFixedMenu) addFullPictureLoadFixedMenu();
