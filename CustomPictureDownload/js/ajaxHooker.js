@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         ajaxHooker
 // @author       cxxjackie
-// @version      1.4.4
+// @version      1.4.5
 // @supportURL   https://bbs.tampermonkey.net.cn/thread-3284-1-1.html
+// @license      GNU LGPL-3.0
 // ==/UserScript==
 
 var ajaxHooker = function() {
     'use strict';
-    const version = '1.4.4';
+    const version = '1.4.5';
     const hookInst = {
         hookFns: [],
         filters: []
@@ -337,7 +338,7 @@ var ajaxHooker = function() {
     }
     function fakeXHR() {
         const xhr = new winAh.realXHR();
-        if ('__ajaxHooker' in xhr) console.warn('检测到不同版本的ajaxHooker，可能发生冲突！');
+        if ('__ajaxHooker' in xhr) console.warn('æ£æµå°ä¸åçæ¬çajaxHookerï¼å¯è½åçå²çªï¼');
         xhr.__ajaxHooker = new XhrHooker(xhr);
         return xhr.__ajaxHooker.proxyXhr;
     }
@@ -428,13 +429,13 @@ var ajaxHooker = function() {
         realFetchClone: resProto.clone,
         hookInsts: new Set()
     };
-    if (winAh.version !== version) console.warn('检测到不同版本的ajaxHooker，可能发生冲突！');
+    if (winAh.version !== version) console.warn('æ£æµå°ä¸åçæ¬çajaxHookerï¼å¯è½åçå²çªï¼');
     win.XMLHttpRequest = winAh.fakeXHR;
     win.fetch = winAh.fakeFetch;
     resProto.clone = winAh.fakeFetchClone;
     winAh.hookInsts.add(hookInst);
-    // 针对头条、抖音 secsdk.umd.js 的兼容性处理
-    class AHFunction {
+    // éå¯¹å¤´æ¡ãæé³ secsdk.umd.js çå¼å®¹æ§å¤ç
+    class AHFunction extends Function {
         call(thisArg, ...args) {
             if (thisArg && thisArg.__ajaxHooker && thisArg.__ajaxHooker.proxyXhr === thisArg) {
                 thisArg = thisArg.__ajaxHooker.originalXhr;
