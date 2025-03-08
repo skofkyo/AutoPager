@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.3.8
+// @version            2025.3.8.13
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -26144,7 +26144,7 @@ if ("xx" in window) {
         name: "拷貝漫畫M SPA",
         url: () => fn.checkUrl({
             h: ["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
-        }) && copymangaSPA_Mode == 1,
+        }) && copymangaSPA_Mode == 1 && isMobileDevice,
         page: () => fn.clp("/h5/comicContent/"),
         json: () => {
             fn.showMsg(DL.str_05, 0);
@@ -27415,6 +27415,7 @@ if ("xx" in window) {
     const isM = ("ontouchstart" in _unsafeWindow);
     const isPC = !("ontouchstart" in _unsafeWindow);
     const isCh = language.includes("zh");
+    const isMobileDevice = ["Mobi", "Android", "iPhone", "iPad", "iPod", "BlackBerry", "IEMobile", "Opera Mini"].some(d => _unsafeWindow.navigator.userAgent.includes(d));
     const isMobileEdge = ["Mobile", "EdgA"].every(t => _unsafeWindow.navigator.userAgent.includes(t));
     const isMobileYandex = ["Mobile", "YaBrowser"].every(t => _unsafeWindow.navigator.userAgent.includes(t));
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
@@ -39948,7 +39949,7 @@ a[data-fancybox]:hover {
 
     let copymangaSPA_Mode = _GM_getValue("copymangaSPA_Mode", 1);
 
-    if (["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"].some(h => fn.lh === h)) {
+    if (["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"].some(h => fn.lh === h) && isMobileDevice) {
         _GM_registerMenuCommand(copymangaSPA_Mode == 0 ? "❌ 拷貝漫畫SPA模式" : "✔️ 拷貝漫畫SPA模式", () => {
             copymangaSPA_Mode == 0 ? _GM_setValue("copymangaSPA_Mode", 1) : _GM_setValue("copymangaSPA_Mode", 0);
             location.reload();
