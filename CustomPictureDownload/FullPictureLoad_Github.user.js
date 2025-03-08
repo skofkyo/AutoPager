@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load - FancyboxV5
 // @name:zh-CN         图片全载-FancyboxV5
 // @name:zh-TW         圖片全載-FancyboxV5
-// @version            2025.3.3
+// @version            2025.3.8
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully loaded images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -41,17 +41,18 @@
 // @grant              GM.addElement
 // @grant              unsafeWindow
 // @grant              window.close
+// @grant              window.onurlchange
 // @run-at             document-end
 // @noframes
 // @require            https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/JSZip.js
-// @resource ajaxHookerJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/ajaxHooker.js
-// @resource JqueryJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.min.js
-// @resource FancyboxV5JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/fancybox.umd.js
-// @resource FancyboxV5Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/fancybox.css
-// @resource FancyboxV3JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.fancybox.min.js
-// @resource FancyboxV3Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/jquery.fancybox.min.css
-// @resource ViewerJs https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/viewer.min.js
-// @resource ViewerJsCss https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/viewer.min.css
+// @resource           ajaxHookerJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/ajaxHooker.js
+// @resource           JqueryJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.min.js
+// @resource           FancyboxV5JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/fancybox.umd.js
+// @resource           FancyboxV5Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/fancybox.css
+// @resource           FancyboxV3JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.fancybox.min.js
+// @resource           FancyboxV3Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/jquery.fancybox.min.css
+// @resource           ViewerJs https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/viewer.min.js
+// @resource           ViewerJsCss https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/viewer.min.css
 // ==/UserScript==
 
 (async (JSZip) => {
@@ -102,6 +103,8 @@
     const _unsafeWindow = unsafeWindow ?? window;
     const language = _unsafeWindow.navigator.language;
     let siteUrl = _unsafeWindow.location.href.replace(_unsafeWindow.location.hash, "");
+    let currentURL = document.URL;
+    let lastValidPageURL = document.URL;
     let frameWindow = _unsafeWindow;
     let siteData = {};
     let _this = {};
@@ -134,6 +137,7 @@
     let isAddFullPictureLoadButton = false;
     let isAddFullPictureLoadFixedMenu = false;
     let isAddNewTabViewButton = false;
+    let isAddAjaxHooker = false;
     let isOpenOptionsUI = false;
     let isOpenMenu = false;
     let isOpenGallery = false;
@@ -307,6 +311,7 @@
         },
         imgs: () => setArray,
         capture: () => _this.imgs(),
+        infiniteCapture: 1,
         downloadVideo: true,
         category: "photo"
     }, {
@@ -343,6 +348,7 @@
         },
         imgs: () => setArray,
         capture: () => _this.imgs(),
+        infiniteCapture: 1,
         category: "photo"
     }, {
         name: "Раскраски для детей",
@@ -369,12 +375,18 @@
     }, {
         name: "Behance",
         url: {
-            h: "www.behance.net",
-            p: "/gallery/"
+            h: "www.behance.net"
         },
-        imgs: () => fn.getImgSrcset(".grid__item-image[srcset],.ImageElement-image-SRv"),
-        customTitle: () => fn.title(":: Behance"),
-        SPA: true,
+        page: () => fn.curl("/gallery/"),
+        SPA: () => _this.page() ? fn.waitEle(["div[class^='UniversalPopup-navigationLayer'],#primary-project-content", "h1[class^='Project-title']", ".grid__item-image[srcset],.ImageElement-image-SRv"]) : false,
+        observeURL: "head",
+        imgs: () => {
+            if (!_this.page()) return [];
+            videoSrcArray = fn.gae(".Preview__project--topMargin iframe[src*='.vimeo.']").map(e => e.src);
+            return fn.getImgSrcset(".grid__item-image[srcset],.ImageElement-image-SRv");
+        },
+        capture: () => _this.imgs(),
+        customTitle: () => _this.page() ? fn.waitEle("h1[class^='Project-title']").then(e => fn.gt(e)) : null,
         category: "photo"
     }, {
         name: "kpopping",
@@ -672,11 +684,13 @@
             "lootiu.com",
             "thismore.fun",
             "cosxuxi.club",
+            "nutrientchoices.com",
             "baobua.com"
         ],
         reg: [
             /^https?:\/\/www\.depvailon\.com\/[^\.]+\.html/,
             /^https?:\/\/cosxuxi\.club\/[^\.]+\.html/,
+            /^https?:\/\/nutrientchoices\.com\/[^\.]+\.html/,
             /^https?:\/\/www\.kaizty\.com\/photos\//,
             /^https?:\/\/nungvl\.net\/gallerys\//,
             /^https?:\/\/lootiu\.com\/gallery\//,
@@ -973,6 +987,7 @@
                 return [];
             }
         },
+        capture: () => _this.imgs(),
         customTitle: () => fn.title(" - 梦想岛"),
         category: "nsfw1"
     }, {
@@ -992,7 +1007,7 @@
             }
             return srcs;
         },
-        SPA: true,
+        repeat: 1,
         customTitle: "h1.article-title",
         category: "nsfw1"
     }, {
@@ -3192,12 +3207,12 @@
         url: {
             h: "luscious.net"
         },
-        SPA: () => fn.dlp("/albums/"),
-        observeURL: true,
+        page: () => fn.clp("/albums/"),
+        SPA: () => _this.page() ? fn.waitEle(["a[href*='/read/'],.album-heading a", ".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a"]) : false,
+        observeURL: "head",
         imgs: async () => {
-            if (!_this.SPA()) return [];
+            if (!_this.page()) return [];
             fn.showMsg(DL.str_05, 0);
-            await fn.waitEle("a[href*='/read/'],.album-heading a");
             const getApiUrl = (id, page) => {
                 let searchParams = new URLSearchParams({
                     operationName: "PictureListInsideAlbum",
@@ -3233,10 +3248,7 @@
         button: [4],
         insertImg: ["article.o-padding-top-bottom,.picture-frame-wrapper", 3],
         downloadVideo: true,
-        customTitle: () => {
-            if (!_this.SPA()) return null;
-            return fn.waitEle(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a").then(e => e.innerText);
-        },
+        customTitle: () => _this.page() ? fn.gt(".album-heading:not(.o-padding-sides),.album-heading.o-padding-sides a") : null,
         css: "body.o-modal-no-scroll{overflow:unset!important}",
         hide: "#modal-root",
         category: "hcomic"
@@ -3364,26 +3376,20 @@
             h: "www.1ymt.com",
             d: "pc"
         },
-        SPA: () => fn.dlp("/work/"),
-        observeURL: "loop",
-        imgs: () => {
-            if (!_this.SPA()) return [];
-            return fn.fetchDoc(fn.dlp(), {
-                "headers": {
-                    "accept": "text/html, */*; q=0.01",
-                    "x-requested-with": "XMLHttpRequest"
-                }
-            }).then(dom => fn.gae(".photo-thumbs li", dom));
-        },
+        page: () => fn.clp("/work/"),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        imgs: () => _this.page() ? fn.getEle([fn.clp()], ".photo-thumbs li:not(.next)") : [],
         capture: () => _this.imgs(),
         category: "nsfw1"
     }, {
         name: "Cosersets",
-        host: ["www.cosersets.com"],
         link: "https://www.cosersets.com/1",
-        reg: /^https?:\/\/www\.cosersets\.com/,
+        url: {
+            h: "www.cosersets.com"
+        },
         SPA: true,
-        observeURL: true,
+        observeURL: "body",
         init: () => fn.waitEle(".z-breadcrumbs .z-breadcrumbs__item"),
         imgs: async (msg = 1) => {
             if (msg === 1) fn.showMsg(DL.str_05, 0);
@@ -3412,10 +3418,11 @@
         category: "nsfw1"
     }, {
         name: "小丁 (Fantasy Factory) Patreon Cosplay Leaks",
-        host: ["www.fantasyfactory.xyz"],
-        reg: /^https?:\/\/www\.fantasyfactory\.xyz\//,
+        url: {
+            h: "www.fantasyfactory.xyz"
+        },
         SPA: true,
-        observeURL: true,
+        observeURL: "body",
         init: () => fn.waitEle("#crumbbar"),
         imgs: () => {
             let urls = fn.gau(".item.file>a");
@@ -3423,15 +3430,13 @@
             return urls.filter(url => !/\.md$|\.mp4$/.test(url));
         },
         capture: () => _this.imgs(),
-        customTitle: async () => {
-            await delay(500);
-            return fn.gt("#crumbbar")?.replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)")
-        },
+        customTitle: () => fn.delay(500, 0).then(() => fn.waitEle("#crumbbar")).then(e => fn.gt(e)?.replace("www.fantasyfactory.xyz", "小丁 (Fantasy Factory)")),
         category: "nsfw1"
     }, {
         name: "Tokar浵卡 Cosplay",
-        host: ["tokar.fantasyfactory.xyz"],
-        reg: /^https?:\/\/tokar\.fantasyfactory\.xyz\/album\/\d+$/,
+        url: {
+            h: "tokar.fantasyfactory.xyz"
+        },
         box: [".container", 2],
         button: [4],
         imgs: async () => {
@@ -3819,7 +3824,7 @@
             h: ["cylsp.org", "pan.catcat.blog", "qinzhi.top", "alist.xiaoyiblog.fun", "yun.pqdh.com"]
         },
         SPA: true,
-        observeURL: true,
+        observeURL: "body",
         imgs: () => fn.getAList(),
         customTitle: () => fn.dt({
             d: [" | 次元LSP", " | 猫猫网盘", " | 云边网盘", " | 小易の云盘", " | ooo.pqdh.com"]
@@ -3832,7 +3837,7 @@
             h: "alist.qiuyeshudian.com"
         },
         SPA: true,
-        observeURL: true,
+        observeURL: "body",
         imgs: () => fn.getAList(),
         customTitle: () => fn.dt({
             d: [
@@ -4105,26 +4110,23 @@
         url: {
             h: "cosplay-nextjs.vercel.app"
         },
-        SPA: () => fn.dlp("/albums/"),
-        observeURL: "loop",
+        page: () => fn.clp("/albums/"),
+        SPA: () => _this.page() ? fn.waitEle("div[aria-roledescription='carousel'] img") : false,
+        observeURL: "nav",
         imgs: "div[aria-roledescription='carousel'] img",
-        customTitle: () => {
+        customTitle: () => _this.page() ? fn.waitEle([".bg-card h1", ".bg-card p"]).then(() => {
             let h = fn.gt(".bg-card h1");
             let g = fn.gt(".bg-card p");
-            if (h && g) {
-                let text;
-                if (h.includes(g)) {
-                    text = h;
-                } else {
-                    text = g + " - " + h;
-                }
-                return fn.dt({
-                    t: text
-                });
+            let text;
+            if (h.includes(g)) {
+                text = h;
             } else {
-                return null;
+                text = g + " - " + h;
             }
-        },
+            return fn.dt({
+                t: text
+            });
+        }) : null,
         referer: "",
         category: "nsfw1"
     }, {
@@ -4212,6 +4214,7 @@
             return srcs;
         },
         capture: () => _this.imgs(),
+        infiniteCapture: 1,
         customTitle: () => siteJson?.title,
         category: "nsfw1"
     }, {
@@ -5160,6 +5163,45 @@
         init: () => fn.addMutationObserver(() => fn.remove("//span[@id='install-pwa-box'] | //div[@class='row mt-3'] | //div[ins[@class='adsbygoogle']] | //div[@class='mt-3'][@id] | //div[@class='row my-5'] | //iframe[@id]")),
         category: "ad"
     }, {
+        name: "Fapeza",
+        url: {
+            h: "fapeza.com",
+            e: ".profile-avatar-wrapper"
+        },
+        init: () => (siteJson.max = fn.ge("#load_more")?.dataset?.max || 1),
+        imgs: () => {
+            let [, avatar] = fn.lp.split("/");
+            let links = fn.arr(siteJson.max, (v, i) => `/ajax/model/${avatar}/page-${i + 1}/`);
+            return fn.getEle(links, ".image-row img").then(eles => {
+                let images = [];
+                let videos = [];
+                let thumbs = [];
+                eles.forEach(e => {
+                    if (e.nextElementSibling) {
+                        videos.push(e.src.replace("_400px.jpg", ".mp4"));
+                    } else {
+                        thumbs.push(e.src);
+                        images.push(e.src.replace("_400px", ""));
+                    }
+                });
+                videoSrcArray = videos.reverse();
+                thumbnailSrcArray = thumbs.reverse();
+                return images.reverse();
+            });
+        },
+        capture: () => _this.imgs(),
+        button: [4],
+        insertImg: [".image-grid-wrap", 3],
+        insertImgAF: () => fn.run("jQuery(window).off()"),
+        customTitle: () => fn.dt({
+            s: ".profile-wrapper h4"
+        }),
+        observerClick: ".superberb_b",
+        css: ".feed-profile-wrapper{padding-top: 58px}",
+        fetch: 1,
+        downloadVideo: true,
+        category: "nsfw2"
+    }, {
         name: "Picazor",
         host: ["picazor.com"],
         reg: /^https?:\/\/picazor\.com\/[a-z]{2}\/[\w-]+$/,
@@ -5294,7 +5336,6 @@
         host: ["fapello.su"],
         reg: /^https?:\/\/fapello\.su\/[^\/]+\/$/,
         init: async () => {
-            const $ = _unsafeWindow.jQuery;
             let total = Number(fn.gt("//div[strong[text()='Media']]").match(/\d+/)[0]); //媒體總數
             console.log("媒體總數", total);
             const model_bid = fn.lp.replaceAll("/", "");
@@ -5302,24 +5343,21 @@
             let max = ele.dataset.max;
             fn.showMsg(DL.str_05, 0);
             let ajaxNum = 0;
-            let resArr = fn.arr(max, (v, i) => new Promise(resolve => {
-                $.ajax({
-                    url: `/ajax/model_new/${model_bid}/page-${i + 1}/photos`,
-                    dataType: "html",
-                    success: (data) => {
-                        fn.showMsg(`${DL.str_06}${ajaxNum+=1}/${max}`, 0);
-                        resolve(data);
-                    }
+            let links = fn.arr(max, (v, i) => `/ajax/model_new/${model_bid}/page-${i + 1}/photos`);
+            let resArr = [];
+            for (let url of links) {
+                let res = await fetch(url).then(res => {
+                    fn.showMsg(`${DL.str_06}${ajaxNum+=1}/${max}`, 0);
+                    return res.text();
                 });
-            }));
+                resArr.push(res);
+                await fn.delay(1000, 0);
+            }
             let tempDom1;
             let picNum;
             await Promise.all(resArr).then(async arr => {
-                await delay(1000);
-                fn.hideMsg();
                 ajaxNum = 0;
-                let html = "";
-                arr.forEach(str => (html += str));
+                let html = arr.join("");
                 tempDom1 = fn.doc(html);
                 picNum = [...tempDom1.images].length; //圖片數量
                 console.log("圖片數量", picNum);
@@ -5329,23 +5367,21 @@
             let videoNum = total - picNum;
             let videoPages = Math.ceil(videoNum / 16);
             fn.showMsg(DL.str_05, 0);
-            let resArr2 = fn.arr(videoPages, (v, i) => new Promise(resolve => {
-                $.ajax({
-                    url: `/ajax/model_new/${model_bid}/page-${i + 1}/videos`,
-                    dataType: "html",
-                    success: (data) => {
-                        fn.showMsg(`${DL.str_06}${ajaxNum+=1}/${videoPages}`, 0);
-                        resolve(data);
-                    }
+            let links2 = fn.arr(videoPages, (v, i) => `/ajax/model_new/${model_bid}/page-${i + 1}/videos`);
+            let resArr2 = [];
+            for (let url of links2) {
+                let res = await fetch(url).then(res => {
+                    fn.showMsg(`${DL.str_06}${ajaxNum+=1}/${videoPages}`, 0);
+                    return res.text();
                 });
-            }));
+                resArr2.push(res);
+                await fn.delay(1000, 0);
+            }
             let tempDom2;
             await Promise.all(resArr2).then(async arr => {
                 await delay(1000);
-                fn.hideMsg();
                 ajaxNum = 0;
-                let html = "";
-                arr.forEach(str => (html += str));
+                let html = arr.join("");
                 tempDom2 = fn.doc(html);
                 let videoUrls = fn.gae("iframe.saint-iframe", tempDom2).map(e => e.src);
                 console.log("iframeVideoUrls", videoUrls);
@@ -5359,7 +5395,6 @@
                 await Promise.all(getVideoUrlsArr).then(async mp4Arr => {
                     await delay(1000);
                     mp4Arr = mp4Arr.filter(Boolean);
-                    fn.hideMsg();
                     console.log("MP4地址", mp4Arr);
                     videoSrcArray = mp4Arr;
                 });
@@ -5542,19 +5577,17 @@
     }, {
         name: "Fapello",
         url: {
-            h: "fapello.cc"
+            h: ["fapello.cc"]
         },
-        SPA: () => fn.dlp("/album/"),
-        observeURL: true,
-        imgs: () => {
-            if (!_this.SPA()) return [];
-            return fn.waitEle([".album-gallery a:not(.has-video)"]).then(eles => {
-                videoSrcArray = fn.gae(".album-gallery a.has-video").map(e => e.dataset.src);
-                return eles;
-            });
-        },
+        page: () => fn.clp("/album/"),
+        SPA: () => _this.page() ? fn.waitEle([".album-gallery a:not(.has-video)", ".content-main h1"]) : false,
+        observeURL: "head",
+        imgs: () => _this.page() ? fn.waitEle([".album-gallery a:not(.has-video)"]).then(eles => {
+            videoSrcArray = fn.gae(".album-gallery a.has-video").map(e => e.dataset.src);
+            return eles;
+        }) : [],
         capture: () => _this.imgs(),
-        customTitle: () => fn.ge(".content-main h1")?.textContent,
+        customTitle: () => _this.page() ? fn.waitEle(".content-main h1").then(e => e.textContent) : null,
         category: "nsfw2"
     }, {
         name: "#TheFappening",
@@ -5671,7 +5704,7 @@
     }, {
         name: "Fapomania",
         host: ["fapomania.com"],
-        reg: /^https?:\/\/fapomania\.com\/[^\/]+\/$/,
+        reg: /^https?:\/\/(\w+\.)?fapomania\.com\/[^\/]+\/$/,
         box: [".previzakosblo", 2],
         imgs: async () => {
             const last = (dom) => !fn.ge(".leftocontar .previzako", dom);
@@ -5702,6 +5735,63 @@
         insertImg: [".list-videos", 2],
         customTitle: () => fn.gt(".headline>h1").replaceAll("/", "-"),
         hide: ".zkido_div",
+        category: "nsfw2"
+    }, {
+        name: "NudoStar",
+        url: {
+            h: "nudostar.com",
+            p: /^\/[^\/]+\//,
+            e: "//p/a[img]"
+        },
+        box: [".pagination-single", 1],
+        imgs: () => {
+            videoSrcArray = fn.gae("video.wp-video-shortcode>source").map(e => e.src);
+            return fn.gae("//p/a[img]");
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "//p[a[img]] | //div[@class='wp-video']"], 2
+        ],
+        go: 1,
+        autoDownload: [0],
+        next: "a.previous-post",
+        prev: "a.next-post",
+        customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
+        name: "NudoStar",
+        url: {
+            h: "nudostar.com",
+            p: /^\/model\/[^\/]+\/$/
+        },
+        imgs: async () => {
+            await fn.getNP(".entry-content div:has(.item_content)", "a.next-post", null, ".pagination-single");
+            thumbnailSrcArray = fn.getImgSrcset(".entry-content img").reverse();
+            return thumbnailSrcArray.map(e => e.replace("_340", ""));
+        },
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: "h1.entry-title",
+        category: "nsfw2"
+    }, {
+        name: "Fapopedia",
+        url: {
+            h: "fapopedia.net",
+            p: /^\/[^\/]+\/$/,
+            e: "a[name='photos']"
+        },
+        box: [".shrt-blk", 2],
+        imgs: async () => {
+            await fn.getNP("//h2[i]/following-sibling::div[1][@class='shrt-blk']/div", "//a[text()='Next ']", null, ".nv-blk");
+            thumbnailSrcArray = fn.gae("//h2[i]/following-sibling::div[1][@class='shrt-blk']//img").map(e => e.src).sort();
+            let links = fn.gau("//h2[i]/following-sibling::div[1][@class='shrt-blk']//a");
+            return fn.getImgA(".lrg-pc>a", links).then(arr => arr.sort());
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "//h2[i]/following-sibling::div[1][@class='shrt-blk']|//div[@class='nv-blk']"], 2
+        ],
+        customTitle: "h1",
         category: "nsfw2"
     }, {
         name: "Nudogram",
@@ -6207,9 +6297,9 @@
         hide: "main a[rel]",
         category: "none"
     }, {
-        name: "Piokok",
+        name: "Pixwox",
         url: {
-            h: "www.piokok.com",
+            h: "www.pixwox.com",
             p: "/profile/",
             e: ".ub_profile"
         },
@@ -6283,6 +6373,7 @@
         },
         customTitle: ".ub_profile .fullname",
         downloadVideo: true,
+        hide: ".as-bar",
         category: "nsfw2"
     }, {
         name: "Imginn",
@@ -6408,30 +6499,30 @@
         url: {
             h: "www.tumbex.com"
         },
-        SPA: () => fn.dlp("/post/"),
-        observeURL: "loop",
-        imgs: () => {
-            if (!_this.SPA()) return [];
-            return fn.waitEle(".hg-item").then(() => {
-                let [content] = fn.gae(".post-content");
-                return fn.gae(".hg-item", content);
-            });
-        },
+        page: () => fn.clp("/post/"),
+        SPA: () => _this.page(),
+        observeURL: "head",
+        imgs: () => _this.page() ? fn.waitEle(".hg-item").then(() => {
+            let [content] = fn.gae(".post-content");
+            return fn.gae(".hg-item", content);
+        }) : [],
         capture: () => _this.imgs(),
-        customTitle: () => fn.title(" - Tumbex"),
+        customTitle: () => _this.page() ? fn.title(" - Tumbex") : null,
+        referer: "",
         category: "nsfw2"
     }, {
         name: "Simply Cosplay",
         url: {
             h: "www.simply-cosplay.com"
         },
-        SPA: () => fn.dlp("/gallery/new/"),
-        observeURL: "loop",
+        page: () => fn.clp("/gallery/new/"),
+        SPA: () => _this.page(),
+        observeURL: "nav",
         init: () => fn.wait(() => !!_unsafeWindow?.user?.identifier),
         imgs: () => {
-            if (!_this.SPA()) return [];
+            if (!_this.page()) return [];
             fn.showMsg(DL.str_05, 0);
-            let [, , , g] = fn.dlp().split("/");
+            let [, , , g] = fn.clp().split("/");
             let token = _unsafeWindow?.user?.token ?? "01730876";
             return fetch(`https://api.simply-porn.com/v2/gallery/${g}?token=${token}&related=8`, {
                 "headers": {
@@ -6511,28 +6602,6 @@
         }),
         category: "nsfw2"
     }, {
-        name: "NudoStar",
-        url: {
-            h: "nudostar.com",
-            p: /^\/[^\/]+\//,
-            e: "//p/a[img]"
-        },
-        box: [".pagination-single", 1],
-        imgs: () => {
-            videoSrcArray = fn.gae("video.wp-video-shortcode>source").map(e => e.src);
-            return fn.gae("//p/a[img]");
-        },
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "//p[a[img]] | //div[@class='wp-video']"], 2
-        ],
-        go: 1,
-        autoDownload: [0],
-        next: "a.previous-post",
-        prev: "a.next-post",
-        customTitle: "h1.entry-title",
-        category: "nsfw2"
-    }, {
         name: "TNApics",
         host: ["www.tnapics.com"],
         reg: /^https:\/\/www\.tnapics\.com\/[\w-]+\/$/,
@@ -6565,26 +6634,6 @@
         },
         capture: () => _this.imgs(),
         customTitle: ".art-title",
-        category: "nsfw2"
-    }, {
-        name: "Fapopedia",
-        url: {
-            h: "fapopedia.net",
-            p: /^\/[^\/]+\/$/,
-            e: "a[name='photos']"
-        },
-        box: [".shrt-blk", 2],
-        imgs: async () => {
-            await fn.getNP("//h2[i]/following-sibling::div[1][@class='shrt-blk']/div", "//a[text()='Next ']", null, ".nv-blk");
-            thumbnailSrcArray = fn.gae("//h2[i]/following-sibling::div[1][@class='shrt-blk']//img").map(e => e.src).sort();
-            let links = fn.gau("//h2[i]/following-sibling::div[1][@class='shrt-blk']//a");
-            return fn.getImgA(".lrg-pc>a", links).then(arr => arr.sort());
-        },
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "//h2[i]/following-sibling::div[1][@class='shrt-blk']|//div[@class='nv-blk']"], 2
-        ],
-        customTitle: "h1",
         category: "nsfw2"
     }, {
         name: "gotanynudes.com",
@@ -6841,20 +6890,30 @@
         name: "COSFAN",
         host: ["www.cosfan.cc"],
         reg: /^https?:\/\/www\.cosfan\.cc\/cosplay\/\d+$/,
-        init: async () => {
-            await fn.waitEle(".cursor-zoom-in img");
-            await fn.wait(() => {
-                let button = fn.ge("//button[text()='加载更多' or text()='More']");
-                if (!!button) {
-                    EClick(button);
-                }
-                return !button;
-            });
+        init: () => fn.waitEle("#baidu-tongji"),
+        imgs: async () => {
+            try {
+                let text = fn.gst('.webp"])');
+                let s = text.indexOf('"') + 1;
+                let e = text.lastIndexOf('"');
+                return text.slice(s, e).split(",");
+            } catch {
+                await fn.waitEle(".cursor-zoom-in img");
+                await fn.wait(() => {
+                    let button = fn.ge("//button[text()='加载更多' or text()='More']");
+                    if (!!button) {
+                        EClick(button);
+                    }
+                    return !button;
+                });
+                return fn.gae(".cursor-zoom-in img");
+            }
         },
-        imgs: ".cursor-zoom-in img",
+        insertImgBF: () => fn.createImgBox("div.flex.flex-col.items-center", 2),
         button: [4],
-        insertImg: [".flex.flex-col.items-center:has(>.grid)", 2],
-        customTitle: ".justify-between h1",
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle("div.flex.flex-col.items-center"),
+        customTitle: "main main h1",
         category: "nsfw1"
     }, {
         name: "Gallery Epic",
@@ -6863,19 +6922,32 @@
             h: "galleryepic",
             p: /^\/(zh|en)\/(cosplay|album)\/\d+$/
         },
-        init: async () => {
-            await fn.waitEle("img[variant='thumbnail']");
-            await fn.wait(() => {
-                let button = fn.ge("//button[text()='加载更多' or text()='More']");
-                if (!!button) {
-                    EClick(button);
-                }
-                return !button;
-            });
+        init: () => fn.waitEle(["img[variant=thumbnail]", "next-route-announcer"]),
+        imgs: async () => {
+            try {
+                let [src] = fn.getImgSrcArr("img[variant=thumbnail]");
+                let [dir] = src.match(/.+\//);
+                let id = src.split("/").at(-1);
+                let text = fn.gst(id);
+                let s = text.indexOf('"') + 1;
+                let e = text.lastIndexOf('"');
+                text = text.slice(s, e).replaceAll("\\", "");
+                return JSON.parse(text).map(e => dir + e);
+            } catch {
+                await fn.wait(() => {
+                    let button = fn.ge("//button[text()='加载更多' or text()='More']");
+                    if (!!button) {
+                        EClick(button);
+                    }
+                    return !button;
+                });
+                return fn.gae("img[variant='thumbnail']");
+            }
         },
-        imgs: "img[variant='thumbnail']",
         button: [4],
-        insertImg: [".flex.flex-col.items-center:has(>.grid)", 2],
+        insertImgBF: () => fn.createImgBox(".flex.flex-col.items-center:has(>.grid)", 2),
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle(".flex.flex-col.items-center:has(>.grid)"),
         customTitle: ".justify-between h2",
         category: "nsfw1"
     }, {
@@ -7014,16 +7086,14 @@
     }, {
         name: "4K Beautyful Cosplay Girl",
         host: ["oo4k.com"],
-        url: {
+        url: () => fn.checkUrl({
             e: [
                 "meta[property='og:title'][content$='4K Beautyful Cosplay Girl']",
                 "link[title=JSON]"
             ],
             p: "/album/",
-        },
-        init: () => {
-            fn.waitEle("._buttons").then(() => _unsafeWindow?.jQuery(document)?.off());
-        },
+        }) && !fn.lp.includes("/category/"),
+        init: () => fn.waitEle("._buttons").then(() => _unsafeWindow?.jQuery(document)?.off()),
         imgs: () => {
             let json_url = fn.gu("link[title=JSON]");
             fn.showMsg(DL.str_05, 0);
@@ -7182,27 +7252,6 @@
         next: ".nav-previous .prev>a",
         prev: ".nav-previous .next>a",
         customTitle: "h1.tdb-title-text,h1.entry-title",
-        category: "nsfw2"
-    }, {
-        name: "BXX",
-        host: ["bxx.me"],
-        url: {
-            e: [
-                "meta[property='og:site_name'][content=BXX]",
-                ".content-inner"
-            ]
-        },
-        box: [".content-inner p:has(img),.wp-block-gallery,.wp-block-image", 1],
-        imgs: () => {
-            let max = fn.gt(".page_info")?.match(/\d+/g)?.at(-1) ?? 1;
-            return fn.getImg(".content-inner img", max, "4");
-        },
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".content-inner p:has(img),.wp-block-gallery,.wp-block-image,.jeg_pagelinks"], 2
-        ],
-        go: 1,
-        customTitle: "h1.jeg_post_title",
         category: "nsfw2"
     }, {
         name: "Cosplay69",
@@ -7506,15 +7555,16 @@
         url: {
             h: "hinhanhgai.com"
         },
-        SPA: () => ["/image/", "/article/"].some(p => document.URL.includes(p)),
-        observeURL: true,
+        page: () => ["/image/", "/article/"].some(p => fn.curl(p)),
+        SPA: () => _this.page(),
+        observeURL: "nav",
         imgs: () => {
-            if (document.URL.includes("/image/")) {
-                let id = document.URL.split("/").at(-1);
+            if (fn.curl("/image/")) {
+                let id = fn.curl().split("/").at(-1);
                 fn.showMsg(DL.str_05, 0);
                 return fetch(`/api/photo/${id}`).then(res => res.json()).then(json => json.files.map(e => e.full_url));
-            } else if (document.URL.includes("/article/")) {
-                return fn.gae(".content img");
+            } else if (fn.curl("/article/")) {
+                return fn.waitEle([".content img"]);
             } else {
                 return [];
             }
@@ -7522,20 +7572,21 @@
         capture: () => _this.imgs(),
         autoDownload: [0],
         next: () => {
+            if (!_this.page()) return null;
             let next = fn.ge("a.next[href^='/image/']");
             return next ? next.href : null;
         },
         prev: 1,
         customTitle: () => {
-            if (document.URL.includes("/image/")) {
-                let id = document.URL.split("/").at(-1);
+            if (fn.clp("/image/")) {
+                let id = fn.curl().split("/").at(-1);
                 return fetch(`/api/photo/${id}`).then(res => res.json()).then(json => fn.dt({
                     t: json.name
                 }));
-            } else if (document.URL.includes("/article/")) {
-                return fn.dt({
-                    s: "h1.title"
-                });
+            } else if (fn.clp("/article/")) {
+                return fn.waitEle("h1.title").then(e => fn.dt({
+                    t: fn.gt(e)
+                }));
             } else {
                 return null;
             }
@@ -7592,19 +7643,40 @@
     }, {
         name: "Gai.vn",
         url: {
-            h: "gai.vn"
+            h: ["www.gai.vn", "gai.vn"]
         },
-        SPA: () => ["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']", ".nav-breadcrumb-item:nth-child(3)"].every(s => !!fn.ge(s)) || !!fn.ge(".FullPictureLoadImage"),
-        observeURL: true,
-        imgs: async () => {
-            if (!["#content .gai-thumb>.vn-box", "a[data-fancybox='slide']"].every(s => !!fn.ge(s))) return [];
-            await fn.getNP(".gai-thumb", "li.page-item.active+li:not(.disabled)>a");
-            fn.remove("//div[nav[@aria-label='Page navigation']]");
-            return fn.gae("a[data-fancybox='slide']");
+        page: () => fn.clp() !== "/" && !fn.clp("/tags-") && fn.ge("#startSlideshow"),
+        SPA: () => _this.page(),
+        observeURL: "head",
+        imgs: () => {
+            if (!_this.page()) return [];
+            fn.showMsg(DL.str_05, 0);
+            return fn.fetchDoc(fn.clp()).then(dom => {
+                apiCustomTitle = fn.gt(".nav-breadcrumb>.nav-breadcrumb-item:last-child", 1, dom);
+                let c_eles = fn.gae("a[data-fancybox='slide']", dom);
+                let c_t_eles = fn.gae("a[data-fancybox='slide'] img", dom);
+                let pages = fn.ge(".pagination .next-page", dom);
+                if (pages) {
+                    let max = fn.gt(".pagination .page-item:has(.next-page)", 2, dom);
+                    let links = fn.arr(max, (v, i) => i == 0 ? fn.clp() : fn.clp() + "-startpic-" + (i * 20));
+                    links.shift();
+                    return fn.getEle(links, "a[data-fancybox='slide']").then(p_eles => {
+                        let p_t_eles = p_eles.map(e => fn.ge("img", e));
+                        let t_eles = [...c_t_eles, ...p_t_eles];
+                        thumbnailSrcArray = t_eles.map(e => e.dataset.src);
+                        return [...c_eles, ...p_eles];
+                    });
+                }
+                thumbnailSrcArray = c_t_eles.map(e => e.dataset.src);
+                return c_eles;
+            });
         },
         button: [4],
-        insertImg: ["#content", 2],
-        customTitle: ".nav-breadcrumb>.nav-breadcrumb-item:last-child",
+        insertImgBF: () => fn.waitEle("#wrapper>.container-fluid").then(e => fn.createImgBox(e, 1, 1200)),
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0], 2
+        ],
+        insertImgAF: () => fn.hideEle("#wrapper>.container-fluid,#secondary-navbar,#playerbutton"),
         fancybox: {
             blacklist: 1
         },
@@ -7927,11 +7999,75 @@
         name: "jangjoo",
         link: "https://felix0621.pixnet.net/blog",
         url: {
-            h: "felix0621.pixnet.net",
+            h: "pixnet.net",
             p: "/post/",
+            e: "#article-content-inner img,.article-content-inner img"
         },
-        imgs: "#article-content-inner img",
-        customTitle: ".title h2",
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr("#article-content-inner img,.article-content-inner img");
+            return thumbnailSrcArray.map(url => {
+                if (url.includes("?url")) {
+                    url = fn.getUSP("url", url);
+                }
+                return url.replace(/_\w\.(\w+)$/i, ".$1");
+            });
+        },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "//li[contains(text(),'上一篇')]/a",
+        prev: "//li[contains(text(),'下一篇')]/a",
+        customTitle: ".title h2,.header-title div",
+        category: "nsfw1"
+    }, {
+        name: "痞客邦相簿",
+        link: "https://nagoat.pixnet.net/album/list",
+        url: {
+            h: "pixnet.net",
+            p: "/album/",
+            e: ".photo-grid-list img"
+        },
+        box: [".photo-grid-list", 1],
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr(".photo-grid-list img");
+            return thumbnailSrcArray.map(url => {
+                if (url.includes("?url")) {
+                    url = fn.getUSP("url", url);
+                }
+                return url.replace(/_\w\.(\w+)$/i, ".$1");
+            });
+        },
+        thums: ".photo-grid-list img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".photo-grid-list"], 2
+        ],
+        insertImgAF: () => fn.remove(".page-function,.upper-page-flip,.lower-page-flip"),
+        customTitle: ".edit-content",
+        category: "nsfw1"
+    }, {
+        name: "痞客邦相簿M",
+        url: {
+            h: "pixnet.net",
+            p: "/album/",
+            e: ".newphoto-list img",
+            d: "m"
+        },
+        box: [".newphoto-list", 1],
+        imgs: async () => {
+            await fn.getNP(".newphoto-list>li", ".page+a.next", null, ".flip:has(.page)");
+            thumbnailSrcArray = fn.getImgSrcArr(".newphoto-list img");
+            return thumbnailSrcArray.map(url => {
+                if (url.includes("?url")) {
+                    url = fn.getUSP("url", url);
+                }
+                return url.replace(/_\w\.(\w+)$/i, ".$1");
+            });
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".newphoto-list"], 2
+        ],
+        customTitle: ".album-header a",
         category: "nsfw1"
     }, {
         name: "Nao Kanzaki and a few friends",
@@ -8790,26 +8926,21 @@
         name: "写真倉庫/いあんの女神たち",
         link: "https://ameblo.jp/shashinsouko/，https://ameblo.jp/himemiyaian/",
         url: {
-            h: "ameblo.jp"
+            h: ["ameblo.jp"]
         },
+        page: () => fn.clp("/entry-"),
+        SPA: () => _this.page(),
+        observeURL: "head",
         init: () => fn.waitEle("a.pagingNext,a[href$=html]:has(p.skinWeakColor)"),
-        SPA: () => fn.dlp("/entry-"),
-        observeURL: true,
-        imgs: () => {
-            if (!_this.SPA()) return [];
-            return fn.waitEle(["#entryBody .PhotoSwipeImage,main article img"]).then(eles => {
-                let imgs = eles.filter(e => !e.closest(".snslink"));
-                return fn.getImgSrcset(imgs).map(e => e.replace(/\?caw=\d+$/, ""));
-            });
-        },
+        imgs: () => _this.page() ? fn.waitEle(["#entryBody .PhotoSwipeImage,main article img"]).then(eles => {
+            let imgs = eles.filter(e => !e.closest(".snslink"));
+            return fn.getImgSrcset(imgs).map(e => e.replace(/\?caw=\d+$/, ""));
+        }) : [],
         capture: () => _this.imgs(),
         autoDownload: [0],
         next: "//a[contains(@class,'pagingNext')] | //a[p[text()='次の記事']]",
         prev: "//a[contains(@class,'pagingPrev')] | //a[p[text()='前の記事']]",
-        customTitle: () => {
-            if (!_this.SPA()) return null;
-            return fn.waitEle(".js-entryWrapper h1,main article h1").then(e => e.innerText);
-        },
+        customTitle: () => _this.page() ? fn.waitEle(".js-entryWrapper h1,main article h1").then(e => fn.gt(e)) : null,
         fetch: 1,
         hide: "div[aria-hidden]:has(#blogPCOverlayGeneral)",
         category: "nsfw2"
@@ -8948,9 +9079,10 @@
         url: {
             h: ["kemono.su", "coomer.su"]
         },
+        page: () => fn.clp("/user/"),
+        SPA: () => _this.page(),
+        observeURL: "head",
         init: () => fn.waitEle("#main"),
-        SPA: () => fn.dlp("/user/"),
-        observeURL: true,
         getPostJson: url => fetch("/api/v1" + new URL(url).pathname).then(async res => {
             return {
                 status: res.status,
@@ -8980,7 +9112,7 @@
             let small = fn.gt(".paginator small");
             let postsTotal = small.match(/\d+/g).at(-1);
             let pagesTotal = Math.ceil(Number(postsTotal) / 50);
-            let api = "/api/v1" + fn.dlp() + "/posts-legacy";
+            let api = "/api/v1" + fn.clp() + "/posts-legacy";
             let pageLinks = fn.arr(pagesTotal, (v, i) => i == 0 ? api : api + `?o=${i * 50}`);
             fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
@@ -9092,7 +9224,7 @@
             "https://nekohouse.su/fantia/user/18"
         ],
         url: {
-            h: "nekohouse.su",
+            h: ["nekohouse.su"],
             p: "/user/",
             e: [".site-section", ".card-list"]
         },
@@ -9966,13 +10098,15 @@
         category: "nsfw1"
     }, {
         name: "Nude Models",
-        reg: () => isPC && fn.lh === "blognudemodels.blogspot.com",
+        url: () => isPC && fn.lh === "blognudemodels.blogspot.com",
+        page: () => fn.clp(".html"),
+        SPA: () => _this.page() ? fn.waitEle([".overview-header", "h1.entry-title", ".separator>a"]) : false,
+        observeURL: "body",
         init: () => fn.waitEle("#gadget-dock"),
-        imgs: ".separator>a",
-        capture: ".separator>a",
-        SPA: () => fn.dlp(".html"),
-        customTitle: "title",
-        observeTitle: true,
+        imgs: () => _this.page() ? fn.waitEle([".separator>a"]) : [],
+        capture: () => _this.imgs(),
+        next: () => _this.page() ? fn.gu("a.next") : null,
+        customTitle: () => _this.page() ? fn.delay(500, 0).then(() => fn.gt("h1.entry-title")) : null,
         category: "nsfw2"
     }, {
         name: "Nude Models",
@@ -10302,7 +10436,7 @@
     }, {
         name: "Elite Babes格式",
         url: {
-            h: ["www.elitebabes.com", "pmatehunter.com", "www.jperotica.com", "www.metarthunter.com", "www.femjoyhunter.com", "nakedporn.pics", "plum.gent", "uludagspot.com", "funphotoguys.com"],
+            h: ["www.elitebabes.com", "pmatehunter.com", "www.jperotica.com", "www.metarthunter.com", "www.femjoyhunter.com", "nakedporn.pics", "plum.gent", "uludagspot.com", "funphotoguys.com", "suikachallenge.com"],
             e: ".list-gallery",
             ee: "#content video"
         },
@@ -10847,12 +10981,11 @@
         url: {
             h: "dtf.ru"
         },
-        observeURL: true,
+        observeURL: "body",
         SPA: () => !!fn.ge(".comments"),
         imgs: () => {
             let [post] = fn.gae(".content__blocks");
             if (post) {
-                fn.createImgBox(".content", 1);
                 //let medias = Object.values(JSON.parse(_unsafeWindow.__INITIAL_STATE__)).find(obj => !!obj.blocks)?.blocks.filter(item => item.type === "media");
                 //return medias?.map(e => "https://leonardo.osnova.io/" + e.data.items[0].image.data.uuid);
                 let imgs = fn.gae(".block-wrapper.block-wrapper--media img", post);
@@ -10866,21 +10999,19 @@
         },
         capture: () => _this.imgs(),
         button: [4],
+        insertImgBF: () => fn.waitEle([".content__blocks", ".content"]).then(() => fn.createImgBox(".content", 1)),
         insertImg: ["#FullPictureLoadMainImgBox", 3],
-        customTitle: async () => {
-            await delay(1000);
-            return fn.dt({
-                d: " — О, порно на DTF"
-            });
-        },
+        customTitle: () => fn.delay(1000, 0).then(() => fn.dt({
+            d: " — О, порно на DTF"
+        })),
         category: "nsfw2"
     }, {
         name: "Reddit",
         url: {
             h: "www.reddit.com"
         },
-        SPA: () => fn.dlp("/comments/"),
-        observeURL: true,
+        SPA: () => fn.clp("/comments/"),
+        observeURL: "body",
         imgs: () => {
             let pics = fn.getImgSrcset("gallery-carousel li>img,.media-lightbox-img img");
             let gifs = fn.gae("shreddit-post[content-href*='.gif']").map(e => e.getAttribute("content-href"));
@@ -10893,22 +11024,19 @@
     }, {
         name: "uCrazy",
         url: {
-            h: "ucrazy.org"
+            h: ["ucrazy.org"]
         },
         SPA: () => !!fn.ge("#addcomment"),
-        observeURL: true,
+        observeURL: "body",
         init: () => fn.addMutationObserver(() => fn.remove(".banner:has(>#advideo_adv_container)")),
         imgs: ".news__content_wrapper img:not(.news__tags-more-icon)",
         capture: () => fn.gae(".news__content_wrapper img:not(.news__tags-more-icon)"),
-        customTitle: async () => {
-            await delay(1000);
-            return fn.dt({
-                d: [
-                    " | uCrazy.org",
-                    " | girls.uCrazy.org"
-                ]
-            });
-        },
+        customTitle: () => fn.delay(1000, 0).then(() => fn.dt({
+            d: [
+                " | uCrazy.org",
+                " | girls.uCrazy.org"
+            ]
+        })),
         category: "nsfw2"
     }, {
         name: "bdsmlr",
@@ -10951,6 +11079,7 @@
         },
         imgs: () => setArray,
         capture: () => _this.imgs(),
+        infiniteCapture: 1,
         hide: ".reblogcontainerouter",
         downloadVideo: true,
         focus: "last:.image_container",
@@ -10965,48 +11094,39 @@
     }, {
         name: "Дзен",
         url: {
-            h: "dzen.ru"
+            h: ["dzen.ru"]
         },
         SPA: () => {
             let url = new URL(document.URL);
             return url.pathname.startsWith("/a/") && url.search === "";
         },
-        observeURL: true,
+        observeURL: "body",
         imgs: () => {
-            //帖子的數據
-            //JSON.parse([...document.scripts].find(s => s.textContent.includes("__APP_STATE__")).textContent.match(/\{"data":\{"__APP_STATE__":.+\)\)/)[0].slice(0, -2));
-            //環境變數_data
             //每張圖片讀取完成後會將圖片網址存到sessionStorage屬性hermioneStatPixels裡
             //sessionStorage.getItem("hermioneStatPixels");
-            if (_this.SPA()) {
-                return fn.wait(() => {
-                    fn.showMsg(DL.str_04, 0);
-                    let imgs = fn.gae("figure img");
-                    let loadeds = fn.gae("figure img[srcset*='w, ']");
-                    if (imgs.length > 0) {
-                        fn.showMsg("Waiting for loading " + loadeds.length + "/" + imgs.length, 0);
-                        return imgs.at(-1)?.getAttribute("srcset")?.includes("w, ");
-                    } else {
-                        return false;
-                    }
-                }, 3000).then(() => {
-                    fn.hideMsg();
-                    //return fn.getImgSrcArr("figure img[srcset]");
-                    let srcs = JSON.parse(sessionStorage.getItem("hermioneStatPixels"));
-                    thumbnailSrcArray = [...new Set(srcs.map(src => src.replace(/\d+$/, "360")))];
-                    return [...new Set(srcs.map(src => src.replace(/\w+$/, "orig")))];
-                });
-            } else {
-                return [];
-            }
+            return _this.SPA() ? fn.wait(() => {
+                fn.showMsg(DL.str_04, 0);
+                let imgs = fn.gae("figure img");
+                let loadeds = fn.gae("figure img[srcset*='w, ']");
+                if (imgs.length > 0) {
+                    fn.showMsg("Waiting for loading " + loadeds.length + "/" + imgs.length, 0);
+                    return imgs.at(-1)?.getAttribute("srcset")?.includes("w, ");
+                } else {
+                    return false;
+                }
+            }, 6000).then(() => {
+                fn.hideMsg();
+                //return fn.getImgSrcArr("figure img[srcset]");
+                let srcs = JSON.parse(sessionStorage.getItem("hermioneStatPixels"));
+                srcs = srcs.filter(src => src.includes("/pub_"));
+                thumbnailSrcArray = [...new Set(srcs.map(src => src.replace(/\d+$/, "360")))];
+                return [...new Set(srcs.map(src => src.replace(/\w+$/, "orig")))];
+            }) : [];
         },
         capture: () => _this.imgs(),
-        customTitle: async () => {
-            await delay(1000);
-            return fn.dt({
-                d: /\|.+$/
-            });
-        },
+        customTitle: () => fn.delay(1000, 0).then(() => fn.dt({
+            d: /\|.+$/
+        })),
         category: "nsfw2"
     }, {
         name: "NUDE_ART_EROTIC",
@@ -14083,7 +14203,7 @@
         },
         setReadHistory: () => {
             let readHistoryData = localStorage.getItem("readHistory");
-            let [, , word, , id] = fn.dlp().split("/");
+            let [, , word, , id] = fn.clp().split("/");
             let json;
             readHistoryData ? json = JSON.parse(readHistoryData) : json = {};
             json[word] = id;
@@ -14756,66 +14876,6 @@
         customTitle: () => fn.ge(".entry-header>span") ? fn.gt(".entry-header>span") : fn.gt(".entry-title"),
         category: "hcomic"
     }, {
-        name: "SchaleNetwork",
-        url: {
-            h: ["shupogaki.moe", "hoshino.one", "niyaniya.moe"]
-        },
-        SPA: () => document.URL.includes("/g/"),
-        observeURL: true,
-        imgs: () => {
-            const [, , g_id, g_key] = location.pathname.split("/");
-            const detailApi = `https://api.schale.network/books/detail/${g_id}/${g_key}`;
-            fn.showMsg(DL.str_05, 0);
-            return fetch(detailApi).then(res => res.json()).then(detailJson => {
-                debug("\ndetailJson\n", detailJson);
-                const {
-                    created_at,
-                    updated_at,
-                    data,
-                    thumbnails
-                } = detailJson;
-                const {
-                    base,
-                    entries
-                } = thumbnails;
-                const thumbs = entries.map(e => base + e.path);
-                thumbnailSrcArray = thumbs;
-                const [maxKey] = Object.keys(data).sort((a, b) => b - a);
-                const {
-                    id,
-                    public_key
-                } = data[maxKey];
-                const dataApi = `https://api.schale.network/books/data/${g_id}/${g_key}/${id}/${public_key}?v=${updated_at ?? created_at}&w=${maxKey}`;
-                return fetch(dataApi).then(res => res.json()).then(dataJson => {
-                    const {
-                        base,
-                        entries
-                    } = dataJson;
-                    debug("\ndataJson\n", dataJson);
-                    let xhrNum = 0;
-                    const srcs = entries.map(async (e, i, arr) => {
-                        await delay(i * 500);
-                        return new Promise(resolve => {
-                            const xhr = new XMLHttpRequest;
-                            xhr.responseType = "blob";
-                            xhr.open("GET", base + e.path + `?w=${maxKey}`);
-                            xhr.onload = () => {
-                                fn.showMsg(`${DL.str_06}${xhrNum+=1}/${arr.length}`, 0);
-                                resolve(URL.createObjectURL(xhr.response));
-                            };
-                            xhr.send();
-                        });
-                    });
-                    return srcs;
-                });
-            });
-        },
-        button: [4],
-        insertImg: ["#previews,main>.group", 0],
-        customTitle: () => fn.getText(["#title>h2", "#title>h1"]),
-        fetch: 1,
-        category: "hcomic"
-    }, {
         name: "Cathentai/Hentaibeeg/Hentaicolor/Nyahentai/圖片清單頁",
         url: {
             h: [
@@ -15422,6 +15482,7 @@
         box: [".rounded-lg", 2],
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr(".img-thumb img,.lazy-img-thumb img");
+            fn.showMsg(DL.str_05, 0);
             return fn.xhrDoc(fn.gu(".img-thumb>a"), {
                 cookie: "reader_mode=1"
             }).then(dom => fn.gae(".justify-between~img[data-src]", dom));
@@ -15429,7 +15490,7 @@
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         go: 1,
-        customTitle: () => fn.getText(["h2[class^=text]", "h1[class^=text]"]),
+        customTitle: "h1[class^=text]",
         category: "hcomic"
     }, {
         name: "TMOHentai圖片清單頁",
@@ -15850,9 +15911,19 @@
             fn.showMsg(DL.str_05, 0);
             let url = fn.gu(".container:has(>.grid) a");
             return fn.fetchDoc(url).then(dom => {
-                let code = fn.gst("slides", dom);
-                let arr = JSON.parse(code.match(/\\"slides\\":([^\]]+\])/)[1].replaceAll("\\", ""));
-                return arr.map(e => e.src);
+                let text = [...dom.scripts]
+                    .filter(script => ["self.__next_f.push", '"'].every(str => script.textContent.includes(str)))
+                    .map(script => {
+                        let code = script.textContent;
+                        let s_index = code.indexOf('"') + 1;
+                        let e_index = code.lastIndexOf('"');
+                        return code.slice(s_index, e_index);
+                    })
+                    .join("")
+                    .replaceAll("\n", "")
+                    .replaceAll("\\", "");
+                text = fn.stringSlicer(text, '"slides":', "]");
+                return JSON.parse(text).map(e => e.src);
             });
         },
         thums: ".grid .group>img",
@@ -16817,24 +16888,21 @@
     }, {
         name: "Naxter",
         url: {
-            h: "naxter.net"
+            h: ["naxter.net"]
         },
-        SPA: () => document.URL.includes("/gallery/"),
-        observeURL: "loop",
-        init: () => {
-            if (_this.SPA()) {
-                return fn.wait(() => {
-                    let [, , id] = fn.dlp().split("/");
-                    return !!id;
-                });
-            }
-        },
+        page: () => fn.clp("/gallery/"),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        init: () => _this.page() ? fn.wait(() => {
+            let [, , id] = fn.clp().split("/");
+            return !!id;
+        }) : void 0,
         json: () => {
-            let [, , id] = fn.dlp().split("/");
+            let [, , id] = fn.clp().split("/");
             return fn.fetchDoc("/gallery/" + id).then(dom => JSON.parse(fn.gst("files", dom)));
         },
         imgs: () => {
-            if (_this.SPA()) {
+            if (_this.page()) {
                 fn.showMsg(DL.str_05, 0);
                 return _this.json().then(json => {
                     let {
@@ -16866,16 +16934,17 @@
     }, {
         name: "HManga",
         url: {
-            h: "hmanga.world"
+            h: ["hmanga.world"]
         },
-        SPA: () => fn.dlp("/manga/"),
-        observeURL: "loop",
+        page: () => fn.clp("/manga/"),
+        SPA: () => _this.page(),
+        observeURL: "nav",
         json: () => {
-            let id = fn.dlp().split("/").at(-1);
+            let id = fn.clp().split("/").at(-1);
             return fetch("/api/getdoujin?id=" + id).then(res => res.json());
         },
         imgs: () => {
-            if (_this.SPA()) {
+            if (_this.page()) {
                 fn.showMsg(DL.str_05, 0);
                 return _this.json().then(json => {
                     let {
@@ -16902,16 +16971,17 @@
             h: "h-comic.com",
             e: "body[data-theme='h-comic-blue-theme']"
         },
-        SPA: () => ["/comics/", "/1"].every(e => document.URL.includes(e)),
-        observeURL: true,
-        json: () => fn.fetchDoc(document.URL).then(dom => {
+        page: () => ["/comics/", "/1"].every(e => fn.curl(e)),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        json: () => fn.fetchDoc(fn.curl()).then(dom => {
             let _text = fn.gst("num_pages", dom);
             [_text] = _text.match(/\[\{.+\}\];/);
             let data = fn.run(_text);
             return data.find(d => !!d?.data?.comic);
         }),
         imgs: () => {
-            if (_this.SPA()) {
+            if (_this.page()) {
                 fn.showMsg(DL.str_05, 0);
                 return _this.json().then(json => {
                     let {
@@ -16939,43 +17009,55 @@
         category: "hcomic"
     }, {
         name: "NiceCat",
-        host: "web.nicecat.cc",
-        reg: /^https?:\/\/web\.nicecat\.cc\//,
+        url: {
+            h: "web.nicecat.cc"
+        },
+        page: () => fn.clp("/comic/book/reader/"),
         SPA: () => {
-            if (fn.dlp("/comic/book/reader/")) {
-                return fn.wait(() => "imageData" in sessionStorage);
+            if (_this.page()) {
+                return fn.wait(() => isArray(siteJson.imageData));
             } else {
-                sessionStorage.clear();
+                siteJson.imageData = null;
                 return false;
             }
         },
-        observeURL: true,
+        observeURL: "nav",
         init: () => {
-            const ajaxHooker = addAjaxHookerLibrary();
-            ajaxHooker.filter([{
-                url: "/api/ComicInfo/info"
-            }, {
-                url: "/api/ComicOrder/getComicOrder"
-            }]);
-            ajaxHooker.hook(request => {
-                //console.log(request);
-                request.response = res => {
-                    if (res.status === 200 && request.url.includes("/api/ComicInfo/info")) {
-                        //console.log("ComicInfo", JSON.parse(res.responseText));
-                        localStorage.setItem("ComicInfo", res.responseText);
+            if (!isAddAjaxHooker) {
+                isAddAjaxHooker = true;
+                const ajaxHooker = addAjaxHookerLibrary();
+                ajaxHooker.filter([{
+                    url: "/api/ComicInfo/info"
+                }, {
+                    url: "/api/ComicOrder/getComicOrder"
+                }]);
+                ajaxHooker.hook(request => {
+                    //console.log(request);
+                    request.response = res => {
+                        if (res.status === 200 && request.url.includes("/api/ComicInfo/info")) {
+                            let json = JSON.parse(res.responseText);
+                            //console.log("ComicInfo", json);
+                            siteJson.ComicInfo = json;
+                        }
+                        if (res.status === 200 && request.url.includes("/api/ComicOrder/getComicOrder")) {
+                            let json = JSON.parse(res.responseText);
+                            //console.log("imageData", json);
+                            siteJson.imageData = json.data.imageData;
+                        }
                     }
-                    if (res.status === 200 && request.url.includes("/api/ComicOrder/getComicOrder")) {
-                        //console.log("imageData", JSON.parse(res.responseText));
-                        sessionStorage.setItem("imageData", res.responseText);
-                    }
-                }
-            });
+                });
+            }
         },
-        imgs: () => JSON.parse(sessionStorage.getItem("imageData")).data.imageData.map(e => e.imageUrl),
+        imgs: () => _this.page() ? siteJson.imageData.map(e => e.imageUrl) : [],
+        capture: () => _this.imgs(),
         customTitle: () => {
-            if ("ComicInfo" in localStorage) {
-                let json = JSON.parse(localStorage.getItem("ComicInfo"));
-                return json.data.comicData.name_two ?? json.data.comicData.name_one;
+            if (!_this.page()) return null;
+            if (isObject(siteJson.ComicInfo)) {
+                let {
+                    name_two,
+                    name_one
+                } = siteJson.ComicInfo.data.comicData
+                return name_two ?? name_one;
             } else {
                 return null;
             }
@@ -17025,34 +17107,33 @@
         hide: "div[align=center],#control_block",
         category: "hcomic"
     }, {
-        name: "紳夜漫畫",
+        name: "紳夜漫畫/工口動漫",
+        host: ["syacomic.com"],
         url: {
             h: "syacomic",
-            t: "紳夜漫畫"
+            t: ["紳夜漫畫", "工口動漫"]
         },
-        SPA: () => {
-            if (fn.dlp("/detail/")) {
-                let [id] = fn.dlp().match(/\d+/);
-                return fetch(`https://api.nftbaoyi.com/comic/${id}`).then(res => res.json()).then(async json => {
-                    siteJson = json;
-                    debug("\n此頁JSON資料\n", siteJson);
-                    await fn.waitEle(".grid img");
-                    fn.createImgBox(".grid", 1);
-                    return true;
-                });
-            } else {
-                return false;
-            }
+        page: () => fn.clp("/comic/detail/"),
+        json: () => {
+            fn.showMsg(DL.str_05, 0);
+            let [id] = fn.clp().match(/\d+/);
+            return fetch(`https://api.nftbaoyi.com/comic/${id}`).then(res => res.json()).then(json => {
+                siteJson = json;
+                debug("\n此頁JSON資料\n", siteJson);
+                apiCustomTitle = siteJson.name;
+                fn.hideMsg();
+            });
         },
-        observeURL: true,
-        imgs: () => siteJson?.book_pages?.map(e => e.img_url) || [],
+        SPA: () => _this.page(),
+        observeURL: "head",
+        init: () => _this.page() ? _this.json() : void 0,
+        imgs: () => _this.page() ? fn.wait(() => isArray(siteJson.book_pages)).then(() => siteJson.book_pages.map(e => e.img_url)) : [],
         button: [4],
+        insertImgBF: () => fn.waitEle(".grid img").then(() => fn.createImgBox(".grid", 1, 1200)),
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".grid,a.justify-center,div:has(>a.block),div:has(>.custom-pagination)"], 2
         ],
-        customTitle: () => fn.dt({
-            t: siteJson?.name
-        }),
+        customTitle: () => _this.page() ? fn.wait(() => isString(siteJson.name)).then(() => siteJson.name) : [],
         hide: "body>ins,div:not([id],[class]):has(div.items-center)",
         category: "hcomic"
     }, {
@@ -17196,13 +17277,21 @@
         category: "hcomic"
     }, {
         name: "Comics",
-        host: ["pixiv.app"],
-        reg: /^https?:\/\/pixiv\.app\/[\w-]+\/comics\/\w+$/i,
-        SPA: () => fn.dlp("/comics/"),
-        observeURL: true,
-        init: () => fn.waitEle("footer[class]"),
-        imgs: ".bg-slate-100 img,.shadow-md img",
-        customTitle: "h1",
+        url: {
+            h: ["pixiv.app"]
+        },
+        page: () => fn.clp("/comics/"),
+        wait: () => fn.waitEle([".bg-slate-100 img,.shadow-md img", "main h1", "footer[class]"]),
+        SPA: () => _this.page() ? _this.wait() : false,
+        observeURL: "body",
+        init: () => _this.page() ? _this.wait() : void 0,
+        imgs: () => _this.page() ? fn.waitEle([".bg-slate-100 img,.shadow-md img"]) : [],
+        button: [4],
+        insertImgBF: () => fn.waitEle(".shadow-md img").then(() => fn.createImgBox(".shadow-md", 1, 1200)),
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".shadow-md"], 2
+        ],
+        customTitle: () => _this.page() ? fn.waitEle("main h1").then(e => fn.gt(e)) : null,
         category: "hcomic"
     }, {
         name: "日韩漫画/歪歪漫画",
@@ -17372,7 +17461,6 @@
             e.innerText = "圖片";
         },
         imgs: async () => {
-            fn.showMsg(DL.str_05, 0);
             let url = fn.gu("#more-information1 a:has(i.fa-book)");
             await fn.getCode(url, {
                 mode: "dom",
@@ -17455,7 +17543,6 @@
             _unsafeWindow.onscroll = null;
         },
         imgs: async () => {
-            fn.showMsg(DL.str_05, 0);
             let url;
             if (fn.ge("//a[text()='Read']")) {
                 url = fn.gu("//a[text()='Read']");
@@ -17910,12 +17997,16 @@
         category: "hcomic"
     }, {
         name: "热漫画",
-        host: ["rehanman.com"],
-        reg: /^https?:\/\/rehanman\.com\//,
-        SPA: () => fn.dlp("/webtoon/"),
-        observeURL: true,
+        url: {
+            t: ["Rehanman", "rehanman"],
+            h: "rehanman.com"
+        },
+        page: () => fn.clp("/webtoon/"),
+        SPA: () => _this.page(),
+        observeURL: "head",
         imgs: () => {
-            let [, , id] = fn.dlp().split("/");
+            if (!_this.page()) return [];
+            let [, , id] = fn.clp().split("/");
             let body = {
                 query: "\n  query entry($id: ID, $inputs: InputEntries) {\n    entry (_id: $id, inputs: $inputs ){\n      _id, \n      title,\n      alt_title,\n      description,\n      title_normalized,\n      adult,\n      released_year,\n      status,\n      thumbnail,\n      type,\n      authors { name },\n      genres { name },\n      created_date,\n      modified_date,\n      rating,\n      rating_votes,\n      views,\n      volumes { id, chapters_count }\n      entries_data { _id, chapters {name, title, index, images}, volume_name }\n      entries_setting { _id, premium, entryId, isHide, countRead }\n    }\n  }\n",
                 variables: {
@@ -17936,6 +18027,7 @@
                 return json.data.entry.entries_data.chapters.map(e => e.images).flat().map(e => "https://img.rehanman.com/uploads/data/china18sky/" + e);
             });
         },
+        capture: () => _this.imgs(),
         category: "hcomic"
     }, {
         name: "Hitomi.la",
@@ -18436,6 +18528,7 @@
     }, {
         name: "野貓韓漫 閱讀頁",
         url: {
+            e: ".homepage .logo",
             p: "/read/"
         },
         imgs: ".module img",
@@ -19035,33 +19128,29 @@
             e: "link[title=MangaDex]",
             d: "pc"
         },
-        SPA: () => fn.dlp().startsWith("/chapter/"),
-        observeURL: true,
-        init: () => fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
+        page: () => fn.clp("/chapter/"),
+        wait: () => fn.wait((d) => d.title != "" && !d.title.includes("Loading")),
+        json: () => fn.showMsg(DL.str_05, 0).then(() => fn.clp().split("/").at(2)).then(id => fetch(`https://api.mangadex.org/at-home/server/${id}?forcePort443=false`).then(res => res.json()).then(json => (siteJson = json) && fn.hideMsg())),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "head",
+        init: () => _this.page() ? _this.json().then(() => _this.wait()).then(() => fn.showMsg(DL.str_04, 0)).then(() => fn.waitEle("#chapter-selector li[data-value]")).then(() => fn.hideMsg()) : _this.wait(),
         imgs: () => {
-            if (_this.SPA()) {
-                fn.showMsg(DL.str_05, 0);
-                const chapter_id = fn.dlp().split("/").at(2);
-                return fetch(`https://api.mangadex.org/at-home/server/${chapter_id}?forcePort443=false`).then(res => res.json()).then(json => {
-                    fn.hideMsg();
-                    const {
-                        baseUrl,
-                        chapter: {
-                            data,
-                            hash
-                        }
-                    } = json;
-                    return data.map(e => baseUrl + "/data/" + hash + "/" + e);
-                });
-            } else {
-                return [];
-            }
+            if (!_this.page()) return [];
+            let {
+                baseUrl,
+                chapter: {
+                    data,
+                    hash
+                }
+            } = siteJson;
+            return data.map(e => baseUrl + "/data/" + hash + "/" + e);
         },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
         next: async () => {
-            if (_this.SPA()) {
-                await fn.waitEle("#chapter-selector li[data-value]");
-                let id = location.pathname.split("/").at(-1);
-                let chapters = [...document.querySelectorAll("#chapter-selector li[data-value]")];
+            if (_this.page()) {
+                let id = fn.clp().split("/").at(-1);
+                let chapters = await fn.waitEle(["#chapter-selector li[data-value]"]);
                 let nextUrl = null;
                 chapters.some((e, i, a) => {
                     if (e.dataset.value == id) {
@@ -19081,7 +19170,8 @@
             }
         },
         customTitle: async () => {
-            await _this.init();
+            if (!_this.page()) return null;
+            await _this.wait();
             let text = fn.dt({
                 d: [
                     /^[\d\s\|]+/,
@@ -19099,41 +19189,40 @@
             e: "meta[content=NamiComi]",
             d: "pc"
         },
-        SPA: () => fn.dlp("/chapter/"),
-        observeURL: true,
+        page: () => fn.clp("/chapter/"),
+        c_id: () => fn.clp().split("/").at(3),
+        json: () => fn.showMsg(DL.str_05, 0).then(() => fetch(`https://api.namicomi.com/images/chapter/${_this.c_id()}?newQualities=true`).then(res => res.json()).then(json => (siteJson = json) && fn.hideMsg())),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "head",
+        id: () => fn.clp().split("/").at(-1),
+        init: () => _this.page() ? _this.json().then(() => fn.showMsg(DL.str_04, 0)).then(() => fn.waitEle(`select.relative option[value="${_this.id()}"]`)).then(() => fn.hideMsg()) : void 0,
         imgs: () => {
-            if (_this.SPA()) {
-                fn.showMsg(DL.str_05, 0);
-                const chapter_id = fn.dlp().split("/").at(3);
-                return fetch(`https://api.namicomi.com/images/chapter/${chapter_id}?newQualities=true`).then(res => res.json()).then(json => {
-                    fn.hideMsg();
-                    const {
-                        data: {
-                            baseUrl,
-                            hash,
-                        }
-                    } = json;
-                    let data;
-                    let quality;
-                    let keys = ["source", "high", "medium", "low"];
-                    for (let k of keys) {
-                        if (Array.isArray(json.data[k])) {
-                            data = json.data[k];
-                            quality = k;
-                            break;
-                        }
-                    }
-                    return data.map(e => baseUrl + "/chapter/" + chapter_id + "/" + hash + `/${quality}/` + e.filename);
-                });
-            } else {
-                return [];
+            if (!_this.page()) return [];
+            let chapter_id = _this.c_id();
+            let {
+                data: {
+                    baseUrl,
+                    hash,
+                }
+            } = siteJson;
+            let data;
+            let quality;
+            let keys = ["source", "high", "medium", "low"];
+            for (let k of keys) {
+                if (Array.isArray(siteJson.data[k])) {
+                    data = siteJson.data[k];
+                    quality = k;
+                    break;
+                }
             }
+            return data.map(e => baseUrl + "/chapter/" + chapter_id + "/" + hash + `/${quality}/` + e.filename);
         },
-        next: async () => {
-            if (_this.SPA()) {
-                let id = location.pathname.split("/").at(-1);
-                await fn.waitEle(`select.relative option[value=${id}]`);
-                let chapters = [...document.querySelectorAll("select.relative option")];
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => {
+            if (_this.page()) {
+                let id = _this.id();
+                let chapters = fn.gae("select.relative option");
                 let nextUrl = null;
                 chapters.some((e, i, a) => {
                     if (e.value == id) {
@@ -19151,9 +19240,9 @@
             } else {
                 return null;
             }
-
         },
         customTitle: () => {
+            if (!_this.page()) return null;
             let text = fn.dt({
                 d: [
                     / - NamiComi.+$/
@@ -19256,15 +19345,17 @@
     }, {
         name: "Disaster Scans",
         url: {
-            h: ["disasterscans.com"],
-            p: "-chapter-"
+            h: ["disasterscans.com"]
         },
-        SPA: true,
-        imgs: () => fn.getImgSrcset("section.container img[srcset]"),
+        page: () => fn.clp("-chapter-"),
+        SPA: () => _this.page() ? fn.waitEle(["section.container img[srcset]", "a[aria-description='next-button']"]) : false,
+        observeURL: "gm",
+        imgs: () => _this.page() ? fn.waitEle(["section.container img[srcset]"]).then(eles => fn.getImgSrcset(eles)) : [],
+        capture: () => _this.imgs(),
         autoDownload: [0],
-        next: "a[aria-description='next-button']",
+        next: () => _this.page() ? fn.waitEle("a[aria-description='next-button']", 10).then(e => isEle(e) && e?.href?.includes("-chapter-") ? e.href : null) : null,
         prev: "a[aria-description='previous-button']",
-        customTitle: () => fn.title(" - Disaster Scans"),
+        customTitle: () => _this.page() ? fn.title(" - Disaster Scans") : null,
         category: "comic"
     }, {
         name: "Manhuaplus",
@@ -19325,12 +19416,16 @@
     }, {
         name: "MangaFox",
         url: {
-            h: "mangafox.fun",
-            p: "/chapter/"
+            h: ["mangafox.fun"]
         },
-        init: () => fn.waitEle("#select-chapter"),
-        imgs: () => {
-            let src = fn.ge("#mangareader img").src;
+        page: () => fn.clp("/chapter/"),
+        wait: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("#select-chapter")).then(() => {
+            let num = fn.clp().match(/\d+/g).at(-1);
+            let s = `#mangareader img[src*='/${num}/']`;
+            return fn.waitEle(s).then(() => fn.hideMsg());
+        }),
+        json: () => {
+            let [src] = fn.getImgSrcArr("#mangareader img");
             let [dir] = src.match(/.+\//);
             let p = new URL(src).pathname;
             let [, m, c] = p.split("/");
@@ -19338,19 +19433,72 @@
             return fetch("https://api.mghcdn.com/graphql", {
                 "headers": {
                     "content-type": "application/json",
-                    "x-mhub-access": "1d2388b4a563e5d7d225f1ce43db110e"
+                    "x-mhub-access": siteJson.x
                 },
                 "body": `{\"query\":\"{chapter(x:mf01,slug:\\\"${m}\\\",number:${c}){id,title,mangaID,number,slug,date,pages,noAd,manga{id,title,slug,mainSlug,author,isWebtoon,isYaoi,isPorn,isSoftPorn,unauthFile,isLicensed}}}\"}`,
                 "method": "POST"
-            }).then(res => res.json()).then(json => JSON.parse(json.data.chapter.pages).i.map(e => dir + e));
+            }).then(res => res.json()).then(json => (siteJson = json) && (siteJson.dir = dir) && fn.hideMsg());
         },
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "head",
+        init: () => {
+            if (!isAddAjaxHooker) {
+                isAddAjaxHooker = true;
+                const ajaxHooker = addAjaxHookerLibrary();
+                ajaxHooker.filter([{
+                    url: "/graphql"
+                }]);
+                ajaxHooker.hook(request => (siteJson.x = request.headers["x-mhub-access"]));
+            }
+            if (_this.page()) return _this.wait().then(() => _this.json());
+        },
+        imgs: () => {
+            if (!_this.page()) return [];
+            return JSON.parse(siteJson.data.chapter.pages).i.map(e => siteJson.dir + e);
+        },
+        capture: () => _this.imgs(),
         autoDownload: [0],
-        next: () => fn.gu(".next:not(.disabled) a"),
+        next: () => _this.page() ? fn.gu(".next:not(.disabled) a") : null,
         prev: 1,
-        customTitle: () => fn.dt({
-            t: fn.ge("meta[property='og:description']").content,
-            d: ["Read", /online for free.+$/]
+        customTitle: () => {
+            if (!_this.page()) return null;
+            let {
+                data: {
+                    chapter: {
+                        manga: {
+                            title: mt
+
+                        },
+                        title: ct
+                    }
+                }
+            } = siteJson;
+            return mt + " - " + ct;
+        },
+        category: "comic"
+    }, {
+        name: "Mangakakalot",
+        url: {
+            h: ["mangakakalot.fun"]
+        },
+        page: () => fn.clp("/chapter-"),
+        wait: () => fn.waitEle(".navbar-fixed-bottom").then(() => {
+            let num = fn.clp().match(/\d+/g).at(-1);
+            let s = `#mangareader img[src*='/${num}/']`;
+            return fn.waitEle(s);
         }),
+        SPA: () => _this.page(),
+        observeURL: "head",
+        init: () => _this.page() ? _this.wait() : void 0,
+        imgs: () => _this.page() ? fn.gae("#mangareader img") : [],
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => _this.page() ? fn.gu(".chapter-pager .next a") : null,
+        prev: ".chapter-pager .previousF a",
+        customTitle: () => _this.page() ? fn.dt({
+            t: fn.ge("#mangareader img").alt,
+            d: " - #1"
+        }) : null,
         category: "comic"
     }, {
         name: "VyManga",
@@ -19363,6 +19511,44 @@
         next: "a#navbar-chapter-control-next",
         prev: "a#navbar-chapter-control-prev",
         customTitle: () => fn.ge("#chapter-info")?.textContent,
+        category: "comic"
+    }, {
+        name: "MangaNato/MangaKakalot/MangaNelo",
+        host: ["www.manganato.gg", "www.natomanga.com", "www.mangakakalot.gg", "www.nelomanga.com"],
+        url: {
+            t: ["MangaNato", "MangaKakalot", "MangaNelo"],
+            p: "/chapter",
+            st: "chapterImages"
+        },
+        SPA: true,
+        imgs: ".container-chapter-reader img",
+        autoDownload: [0],
+        next: ".btn-navigation-chap a.next",
+        prev: ".btn-navigation-chap a.back",
+        customTitle: ".info-top-chapter h2",
+        hide: ".banner-cus",
+        category: "comic"
+    }, {
+        name: "Mangakakalot",
+        host: ["mangakakalot.to"],
+        url: {
+            t: "Mangakakalot",
+            p: "/read/",
+            e: "#reading"
+        },
+        imgs: () => {
+            let id = fn.attr("#reading", "data-reading-id");
+            let type = fn.attr("#reading", "data-reading-type");
+            return fn.fetchDoc(`/ajax/manga/images?id=${id}&type=${type}`).then(dom => fn.gae(".card-wrap[data-url]", dom));
+        },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => {
+            let next = fn.ge(".select-reading [selected]")?.previousElementSibling;
+            return isEle(next) ? next.value : null;
+        },
+        prev: 1,
+        customTitle: ".reading-info h2",
         category: "comic"
     }, {
         name: "Слив манги для вас",
@@ -19433,17 +19619,26 @@
     }, {
         name: "ReManga",
         url: {
-            h: "remanga.org",
-            p: /^\/manga\/[^\/]+\/\d+/
+            h: ["remanga.org"]
         },
-        init: () => {
-            let code = fn.gt("#__NEXT_DATA__");
+        page: () => fn.clp(/^\/manga\/[^\/]+\/\d+/),
+        json: () => fn.fetchDoc(fn.clp()).then(dom => {
+            let code = fn.gt("#__NEXT_DATA__", 1, dom);
             let json = JSON.parse(code);
             siteJson = json;
-            return fn.waitEle("#chapter-image[src]", 600).then(e => (siteJson.host = new URL(e.src).host));
-        },
+            return fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("#chapter-image[src]", 600).then(e => {
+                if (isEle(e)) {
+                    siteJson.host = new URL(e.src).host;
+                }
+            })).then(() => fn.hideMsg());
+        }),
+        SPA: () => _this.page() ? true : (siteJson.host = null) && false,
+        observeURL: "head",
+        init: () => _this.page() ? _this.json() : void 0,
         imgs: () => {
+            if (!_this.page() || !siteJson.host) return [];
             let srcs = siteJson.props.pageProps.fallbackData.chapter.content.pages.flat().map(e => e.link);
+            if (!siteJson.host) return srcs;
             let [src] = srcs;
             let host = new URL(src).host;
             return srcs.map(e => e.replace(host, siteJson.host));
@@ -19451,6 +19646,7 @@
         capture: () => _this.imgs(),
         autoDownload: [0],
         next: () => {
+            if (!_this.page()) return null;
             let mid = siteJson.props.pageProps.fallbackData.title.content.branches[0].id;
             let cid = siteJson.query.chapter;
             return fetch(`https://api.remanga.org/api/titles/chapters/?branch_id=${mid}&user_data=0`).then(res => res.json()).then(json => {
@@ -19461,7 +19657,7 @@
                         if (a[i + 1] === undefined) {
                             nextUrl = null;
                         } else {
-                            nextUrl = fn.lp.replace(/\d+$/, a[i + 1].id);
+                            nextUrl = fn.clp().replace(/\d+$/, a[i + 1].id);
                         }
                         return true;
                     } else {
@@ -20013,13 +20209,22 @@
     }, {
         name: "MangaFire",
         url: {
-            h: "mangafire.to",
-            p: "/read/",
+            h: ["mangafire.to"],
             d: "pc"
         },
-        init: () => (siteJson = JSON.parse(document.querySelector('#syncData').innerText)),
+        page: () => fn.clp("/read/"),
+        json: () => fn.fetchDoc(fn.clp()).then(dom => {
+            let code = fn.gt("#syncData", 1, dom);
+            let json = JSON.parse(code);
+            siteJson = json;
+        }),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "head",
+        init: () => _this.page() ? _this.json() : void 0,
         imgs: () => {
-            let [, comic_id, chapter_number] = fn.dlp().match(/(\w+)\/\w+\/chapter-(.+)$/i);
+            if (!_this.page()) return [];
+            fn.showMsg(DL.str_05, 0);
+            let [, comic_id, chapter_number] = fn.clp().match(/(\w+)\/\w+\/chapter-(.+)$/i);
             let headers = new Headers({
                 "Accept": "application/json, text/javascript, */*; q=0.01",
                 "X-Requested-With": "XMLHttpRequest",
@@ -20027,8 +20232,8 @@
             return fetch(`/ajax/read/${comic_id}/chapter/en`, {
                 headers
             }).then(res => res.json()).then(json => {
-                let tempDom = new DOMParser().parseFromString(json.result.html, "text/html");
-                let chapter_id = [...tempDom.querySelectorAll("li a")].find(a => a.dataset.number == chapter_number).dataset.id;
+                let tempDom = fn.doc(json.result.html);
+                let chapter_id = fn.gae("li a", tempDom).find(a => a.dataset.number == chapter_number).dataset.id;
                 return fetch(`/ajax/read/chapter/${chapter_id}`, {
                     headers
                 }).then(res => res.json()).then(json => json.result.images.map(arr => arr.find(e => e.startsWith("http"))));
@@ -20036,8 +20241,8 @@
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
-        next: () => !!siteJson.next_chapter_url ? new URL(siteJson.next_chapter_url).pathname : null,
-        customTitle: () => fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g),
+        next: () => _this.page() && isURL(siteJson.next_chapter_url) ? new URL(siteJson.next_chapter_url).pathname : null,
+        customTitle: () => _this.page() ? fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g) : null,
         category: "comic"
     }, {
         name: "Top Manhua/Toonily",
@@ -20310,23 +20515,22 @@
     }, {
         name: "Comick",
         url: {
-            h: /^comick\.io$/
+            h: ["comick.io"]
         },
-        SPA: () => fn.dlp("-chapter-"),
-        observeURL: true,
-        imgs: () => {
-            if (_this.SPA()) {
-                fn.showMsg(DL.str_05, 0);
-                const [chapter_id] = fn.dlp().split("/").at(-1).split("-");
-                return fetch(`https://api.comick.io/chapter/${chapter_id}`).then(res => res.json()).then(json => {
-                    nextLink = json.next?.href;
-                    let textArr = json.seoTitle.split(" - ");
-                    apiCustomTitle = textArr[1] + " - " + textArr[0];
-                    return json.chapter.md_images.map(e => `https://meo.comick.pictures/${e.b2key}`);
-                });
-            } else {
-                return [];
-            }
+        page: () => fn.clp("-chapter-"),
+        json: () => fn.showMsg(DL.str_05, 0).then(() => fn.clp().split("/").at(-1).split("-").at(0)).then(id => fetch(`https://api.comick.io/chapter/${id}`).then(res => res.json()).then(json => (siteJson = json) && fn.hideMsg())),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.json() : void 0,
+        imgs: () => _this.page() ? siteJson.chapter.md_images.map(e => `https://meo.comick.pictures/${e.b2key}`) : [],
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => _this.page() && siteJson?.next?.href ? siteJson.next.href : null,
+        prev: 1,
+        customTitle: () => {
+            if (!_this.page()) return null;
+            let textArr = siteJson.seoTitle.split(" - ");
+            return textArr[1] + " - " + textArr[0];
         },
         category: "comic"
     }, {
@@ -20472,43 +20676,48 @@
     }, {
         name: "Flame Comics",
         url: {
-            h: "flamecomics.xyz",
-            p: /^\/series\/\w+\/\w+/
+            h: ["flamecomics.xyz"]
         },
-        init: async () => {
-            let code = fn.gt("#__NEXT_DATA__");
+        json: () => fn.fetchDoc(fn.clp()).then(dom => {
+            let code = fn.gt("#__NEXT_DATA__", 1, dom);
             let json = JSON.parse(code);
             siteJson = json.props.pageProps;
-            fn.addMutationObserver(() => fn.remove("div[class^='Radio_radio_content']"));
-        },
+        }),
+        page: () => fn.clp(/^\/series\/\w+\/\w+/),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.json() : void 0,
         imgs: () => {
+            if (!_this.page()) return [];
             let cdn = "https://cdn.flamecomics.xyz/series";
             let {
                 chapter: {
                     series_id,
                     images,
                     token,
-                    release_date
+                    release_date,
+                    title,
+                    chapter_title,
+                    chapter
                 }
             } = siteJson;
+            apiCustomTitle = title + " - " + (chapter_title ?? "Chapter " + Number(chapter));
             return Object.keys(images).map(i => `${cdn}/${series_id}/${token}/${images[i].name}?${release_date}`);
         },
+        capture: () => _this.imgs(),
         autoDownload: [0],
         next: () => {
+            if (!_this.page()) return null;
             let {
                 next,
                 chapter: {
                     series_id
                 }
-            } = siteJson
-            if (next) {
-                return `/series/${series_id}/${next}`;
-            } else {
-                return null;
-            }
+            } = siteJson;
+            return next ? `/series/${series_id}/${next}` : null;
         },
         prev: 1,
-        customTitle: () => fn.title(" - Flame Comics"),
+        hide: "div[class^='Radio_radio_content']",
         category: "comic"
     }, {
         name: "NineManga",
@@ -20556,25 +20765,18 @@
             h: [/reaperscans\.com$/, /omegascans\.org$/],
             d: "pc"
         },
-        SPA: () => {
-            if (fn.dlp("/chapter")) {
-                return fn.waitEle("#content .container img:not(.rounded)").then(() => {
-                    addFullPictureLoadButton();
-                    addFullPictureLoadFixedMenu();
-                    return true;
-                });
-            } else {
-                return false;
-            }
-        },
-        observeURL: true,
-        imgs: () => fn.gae("#content .container img:not(.rounded)"),
+        page: () => fn.clp("/chapter"),
+        SPA: () => _this.page(),
+        observeURL: "gm",
+        init: () => _this.page() ? fn.waitEle("#content .container img:not(.rounded)") : void 0,
+        imgs: () => _this.page() ? fn.gae("#content .container img:not(.rounded)") : [],
+        capture: () => _this.imgs(),
         autoDownload: [0],
         next: "a:has(>button>.fa-chevron-right)",
         prev: "a:has(>button>.fa-chevron-left)",
-        customTitle: () => fn.dt({
+        customTitle: () => _this.page() ? fn.dt({
             d: [" - Reaper Scans", " - Omega Scans"]
-        }),
+        }) : null,
         category: "comic"
     }, {
         name: "Vortex Scans",
@@ -20582,39 +20784,57 @@
             h: "vortexscans.org",
             d: "pc"
         },
-        SPA: () => {
-            if (fn.dlp("/chapter")) {
-                return fn.waitEle(".image-container img");
-            } else {
-                return false;
-            }
-        },
-        observeURL: true,
-        imgs: () => fn.gae(".image-container img"),
+        page: () => fn.clp("/chapter"),
+        SPA: () => _this.page(),
+        observeURL: "gm",
+        init: () => _this.page() ? fn.waitEle(".image-container img") : void 0,
+        imgs: () => _this.page() ? fn.gae(".image-container img") : [],
+        capture: () => _this.imgs(),
         autoDownload: [0],
         next: "//a[button[div[p[text()='Next']]]][starts-with(@href,'/series/')]",
         prev: "//a[button[div[p[text()='Prev']]]][starts-with(@href,'/series/')]",
-        customTitle: () => fn.dt({
+        customTitle: () => _this.page() ? fn.dt({
             d: " - Vortex Scans"
-        }),
+        }) : null,
         category: "comic"
     }, {
         name: "ZeroScans",
         url: {
-            h: "zscans.com",
-            p: /^\/comics\/[\w-]+\/\d+$/,
+            h: ["zscans.com"],
             d: "pc"
         },
-        SPA: true,
-        init: () => fn.waitVar("__ZEROSCANS__"),
-        imgs: () => _unsafeWindow.__ZEROSCANS__.data.at(0).current_chapter.high_quality,
+        page: () => fn.clp(/^\/comics\/[\w-]+\/\d+$/),
+        json: () => fn.showMsg(DL.str_05, 0).then(() => fn.fetchDoc(fn.clp()).then(dom => {
+            let code = fn.gst("__ZEROSCANS__", dom);
+            let s = code.indexOf("(");
+            let e = code.lastIndexOf(";");
+            let json = fn.run(code.slice(s, e));
+            siteJson = json.data.at(0);
+            fn.hideMsg();
+        })),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.json() : void 0,
+        imgs: () => _this.page() ? siteJson.current_chapter.high_quality : [],
+        capture: () => _this.imgs(),
         autoDownload: [0],
-        next: "//a[span[div[small[text()='next']]]]",
-        prev: "//a[span[div[small[text()='prev']]]]",
-        customTitle: () => fn.dt({
-            s: ".v-breadcrumbs",
+        next: () => {
+            if (!_this.page()) return null;
+            let {
+                current_chapter: {
+                    comic_slug
+                },
+                nav: {
+                    next
+                }
+            } = siteJson;
+            return isObject(next) ? `/comics/${comic_slug}/${next.id}` : null;
+        },
+        prev: 1,
+        customTitle: () => _this.page() ? fn.waitEle(".v-breadcrumbs").then(e => fn.dt({
+            t: fn.gt(e),
             d: "Comics"
-        }),
+        })) : null,
         category: "comic"
     }, {
         name: "InManga",
@@ -20811,14 +21031,15 @@
         name: "RawOtaku/JManga/Momon-Ga",
         host: ["rawotaku.org", "jmanga.sh", "momon-ga.org"],
         url: {
-            h: [/^rawotaku/, /^jmanga/, /^momon-ga/],
-            p: "/read/",
-            e: "#images-content .page-read"
+            t: ["RawOtaku", "jmanga", "Momon-Ga", "MomonGa"],
+            h: [/^rawotaku/, /^jmanga/, /^momon-ga/]
         },
-        SPA: () => fn.dlp("/read/"),
-        observeURL: true,
-        init: () => fn.waitEle(".chapter-item.active"),
+        page: () => fn.clp("/read/"),
+        SPA: () => _this.page(),
+        observeURL: "gm",
+        init: () => _this.page() ? fn.waitEle(["#images-content .page-read", ".chapter-item.active"]) : void 0,
         imgs: () => {
+            if (!_this.page()) return [];
             let id = fn.ge(".chapter-item.active").dataset.id;
             fn.showMsg(DL.str_05, 0);
             return fetch(`/json/chapter?mode=vertical&id=${id}`, {
@@ -20828,20 +21049,16 @@
                 }
             }).then(res => res?.json()).then(json => {
                 fn.hideMsg();
-                if (isObject(json)) {
-                    return [...fn.doc(json.html).images];
-                } else {
-                    return [];
-                }
+                return isObject(json) ? [...fn.doc(json.html).images] : [];
             });
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
         next: "//li[contains(@class,'chapter-item active')]/preceding-sibling::li[1]/a",
         prev: ".chapter-item.active+li>a",
-        customTitle: () => fn.dt({
+        customTitle: () => _this.page() ? fn.dt({
             t: fn.gt(".manga-name") + " - " + fn.gt("#dropdown-chapters button")
-        }),
+        }) : null,
         category: "comic"
     }, {
         name: "ZonaTMO",
@@ -21911,10 +22128,11 @@ if ("xx" in window) {
             h: "manhua.zaimanhua.com",
             d: "pc"
         },
-        SPA: () => fn.dlp("/view/"),
-        observeURL: "loop",
+        page: () => fn.dlp("/view/"),
+        SPA: () => _this.page(),
+        observeURL: "gm",
         getData: async () => {
-            await fn.delay(300, 0);
+            await fn.delay(500, 0);
             await fn.wait((dom, win) => win?.__NUXT__?.data?.getChapters && win?.__NUXT__?.data?.getCationDetails);
             let {
                 chapter_order,
@@ -21943,15 +22161,11 @@ if ("xx" in window) {
                     return true;
                 }
             });
-            tempNextLink = next;
+            nextLink = next;
         },
-        init: async () => {
-            if (_this.SPA()) await _this.getData();
-        },
+        init: () => _this.page() ? _this.getData() : void 0,
         imgs: () => siteJson.srcs,
         autoDownload: [0],
-        next: () => tempNextLink,
-        prev: 1,
         category: "comic"
     }, {
         name: "再漫画M",
@@ -21959,11 +22173,13 @@ if ("xx" in window) {
             h: "m.zaimanhua.com",
             d: "m"
         },
-        SPA: () => fn.dlp("/pages/comic/page"),
-        observeURL: "loop",
-        imgs: async () => {
-            let comic_id = fn.getUSP("comic_id");
-            let chapter_id = fn.getUSP("chapter_id");
+        page: () => fn.clp("/pages/comic/page"),
+        json: () => {
+            let url = fn.curl();
+            let comic_id = fn.getUSP("comic_id", url);
+            let chapter_id = fn.getUSP("chapter_id", url);
+            siteJson.comic_id = comic_id;
+            siteJson.chapter_id = chapter_id;
             let res_a = fetch(`https://v4api.zaimanhua.com/app/v1/comic/chapter/${comic_id}/${chapter_id}?_v=15`).then(res => res.json()).then(json => {
                 let {
                     page_url,
@@ -21981,22 +22197,31 @@ if ("xx" in window) {
                 siteJson.comic_title = comic_title;
                 siteJson.chapters = chapters[0].data.sort((a, b) => a.chapter_order - b.chapter_order);
             });
-            await Promise.all([res_a, res_b]);
-            apiCustomTitle = siteJson.comic_title + " - " + siteJson.chapter_title;
+            return Promise.all([res_a, res_b]);
+        },
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.json() : void 0,
+        imgs: () => _this.page() ? siteJson.srcs : [],
+        capture: () => _this.imgs(),
+        next: () => {
+            if (!_this.page()) return null;
+            let next = null;
             siteJson.chapters.some((e, i, a) => {
-                if (e.chapter_id == chapter_id) {
+                if (e.chapter_id == siteJson.chapter_id) {
                     if (a[i + 1] === undefined) {
-                        nextLink = null;
+                        next = null;
                     } else {
-                        nextLink = `/pages/comic/page?comic_id=${comic_id}&chapter_id=${a[i + 1].chapter_id}&chapter_name=${a[i + 1].chapter_title}`;
+                        next = `/pages/comic/page?comic_id=${siteJson.comic_id}&chapter_id=${a[i + 1].chapter_id}&chapter_name=${a[i + 1].chapter_title}`;
                     }
                     return true;
                 } else {
                     return false;
                 }
             });
-            return siteJson.srcs;
+            return next;
         },
+        customTitle: () => _this.page() ? siteJson.comic_title + " - " + siteJson.chapter_title : null,
         css: ".top_nav{z-index: 999999999!important}",
         category: "comic"
     }, {
@@ -22326,58 +22551,60 @@ if ("xx" in window) {
         name: "Komiic",
         enable: 0,
         url: {
-            h: "komiic.com"
+            h: ["komiic.com"]
         },
-        SPA: () => document.URL.includes("/chapter/"),
-        observeURL: true,
-        imgs: async (url = document.URL) => {
-            if (!_this.SPA()) return [];
+        page: () => fn.curl("/chapter/"),
+        json: () => {
             fn.showMsg(DL.str_05, 0);
-            let [, chapterId] = url.match(/chapter\/(\d+)\/images/);
-            let body = {
+            let [, chapterId] = fn.clp().match(/chapter\/(\d+)\/images/);
+            siteJson.chapterId = chapterId;
+            let c_body = {
                 operationName: "imagesByChapterId",
                 variables: {
                     chapterId: `${chapterId}`
                 },
                 query: "query imagesByChapterId($chapterId: ID!) {\n  imagesByChapterId(chapterId: $chapterId) {\n    id\n    kid\n    height\n    width\n    __typename\n  }\n}\n"
             };
-            let json = await fetch("/api/query", {
+            let res_a = fetch("/api/query", {
                 "headers": {
                     "content-type": "application/json"
                 },
-                "body": JSON.stringify(body),
+                "body": JSON.stringify(c_body),
                 "method": "POST"
-            }).then(res => res.json());
-            debug("\nimages JSON\n", json);
-            return json.data.imagesByChapterId.map(e => "https://komiic.com/api/image/" + e.kid);
-        },
-        capture: () => _this.imgs(),
-        next: async (url = document.URL) => {
-            if (!_this.SPA()) return null;
-            let [, mhId] = url.match(/comic\/(\d+)/);
-            let body = {
+            }).then(res => res.json()).then(json => (siteJson.images = json.data.imagesByChapterId));
+            if ("chapters" in siteJson) return res_a.then(() => fn.hideMsg());
+            let [, mhId] = fn.clp().match(/comic\/(\d+)/);
+            siteJson.mhId = mhId;
+            let n_body = {
                 operationName: "chapterByComicId",
                 variables: {
                     comicId: `${mhId}`
                 },
                 query: "query chapterByComicId($comicId: ID!) {\n  chaptersByComicId(comicId: $comicId) {\n    id\n    serial\n    type\n    dateCreated\n    dateUpdated\n    size\n    __typename\n  }\n}\n"
             };
-            let json = await fetch("/api/query", {
+            let res_b = fetch("/api/query", {
                 "headers": {
                     "content-type": "application/json"
                 },
-                "body": JSON.stringify(body),
+                "body": JSON.stringify(n_body),
                 "method": "POST"
-            }).then(res => res.json());
-            debug("\nchapter JSON\n", json);
-            let [, chapterId] = url.match(/chapter\/(\d+)\/images/);
-            let chapters = json.data.chaptersByComicId;
+            }).then(res => res.json()).then(json => (siteJson.chapters = json.data.chaptersByComicId));
+            return Promise.all([res_a, res_b]).then(() => fn.hideMsg());
+        },
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.json() : void 0,
+        imgs: () => _this.page() ? siteJson.images.map(e => "https://komiic.com/api/image/" + e.kid) : [],
+        capture: () => _this.imgs(),
+        next: () => {
+            if (!_this.page()) return null;
+            let chapters = siteJson.chapters;
             let nextUrl;
             for (let [i, chapter] of chapters.entries()) {
-                if (new RegExp(chapterId).test(chapter.id)) {
+                if (chapter.id.includes(siteJson.chapterId)) {
                     if (chapters[i + 1] !== undefined) {
                         let nextId = chapters[i + 1].id;
-                        nextUrl = siteUrl.replace(new RegExp(`/${chapterId}/`), `/${nextId}/`).replace(/\?page=\d+/, "");
+                        nextUrl = `/comic/${siteJson.mhId}/chapter/${nextId}/images/all`;
                     } else {
                         nextUrl = null;
                     }
@@ -22388,7 +22615,7 @@ if ("xx" in window) {
         },
         prev: 1,
         customTitle: async () => {
-            if (!_this.SPA()) return null;
+            if (!_this.page()) return null;
             await fn.waitEle(".v-breadcrumbs");
             let textArr = fn.gt(".v-breadcrumbs").split("\n");
             return textArr[1] + " - " + textArr[2];
@@ -24530,47 +24757,47 @@ if ("xx" in window) {
         url: {
             h: "zerosumonline.com"
         },
-        SPA: () => fn.dlp("/episode/"),
-        observeURL: true,
-        imgs: () => {
-            let [id] = localStorage.getItem("history_chapter_ids").match(/\d+/);
+        data: () => {
             fn.showMsg(DL.str_05, 0);
+            let [id] = localStorage.getItem("history_chapter_ids").match(/\d+/);
             return fetch(`https://api.zerosumonline.com/api/v1/viewer?chapter_id=${id}`, {
                 "body": null,
                 "method": "POST"
-            }).then(res => res.text()).then(text => {
-                fn.hideMsg();
-                return text.match(/https?:\/\/\w+\.\w+\.com\/\w+\/\d+\/\d+\.\w+/gi);
-            });
+            }).then(res => res.text()).then(text => (siteJson.data = text) && fn.hideMsg());
         },
+        page: () => fn.clp("/episode/"),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.data() : void 0,
+        imgs: () => _this.page() ? siteJson.data.match(/https?:\/\/\w+\.\w+\.com\/\w+\/\d+\/\d+\.\w+/gi) : [],
+        capture: () => _this.imgs(),
         customTitle: () => {
+            if (!_this.page()) return null;
             let textArr = document.title.split("|");
             return textArr[1] + " - " + textArr[0];
         },
         category: "comic"
     }, {
         name: "GANMA!(ガンマ)",
-        stringSlicer: (string, startText, endText) => {
-            const startIndex = string.indexOf(startText) + startText.length;
-            const endIndex = string.indexOf(endText, startIndex);
-            return string.slice(startIndex, endIndex + endText.length);
-        },
         url: {
-            h: "ganma.jp"
+            h: ["ganma.jp"]
         },
-        SPA: () => fn.dlp("/reader/"),
-        observeURL: true,
-        imgs: () => {
-            fn.showMsg(DL.str_05, 0);
-            return fn.fetchDoc(document.URL).then(dom => {
-                fn.hideMsg();
-                let textArr = dom.title.split(" - ");
-                customTitle = textArr[0] + " - " + fn.gt("h1.text-ellipsis", 1, dom);
-                let text = fn.gst("singleModeDisplayUnits", dom).replaceAll("\\", "");
-                return JSON.parse(_this.stringSlicer(text, '"singleModeDisplayUnits":', "]")).map(e => e.url.replaceAll("u0026", "&"));
-            });
-        },
+        page: () => fn.clp("/reader/"),
+        json: () => fn.showMsg(DL.str_05, 0).then(() => fn.fetchDoc(fn.clp()).then(dom => {
+            let textArr = dom.title.split(" - ");
+            customTitle = textArr[0] + " - " + fn.gt("h1.text-ellipsis", 1, dom);
+            let text = fn.gst("singleModeDisplayUnits", dom).replaceAll("\\", "");
+            siteJson.images = JSON.parse(fn.stringSlicer(text, '"singleModeDisplayUnits":', "]"));
+            fn.hideMsg();
+        })),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "gm",
+        init: () => _this.page() ? _this.json() : void 0,
+        imgs: () => _this.page() ? siteJson.images.map(e => e.url.replaceAll("u0026", "&")) : [],
+        capture: () => _this.imgs(),
+        autoDownload: [0],
         next: "//a[div[span[text()='次話']]]",
+        prev: 1,
         category: "comic"
     }, {
         name: "Comic Top",
@@ -25115,22 +25342,20 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
-        name: "爱淘漫画",
         host: ["www.aitaocomic.com", "aitaocomic.com"],
         url: {
-            t: "爱淘漫画",
-            p: "/detail/"
+            t: "爱淘漫画"
         },
-        init: () => fn.waitEle(".mx-auto.flex.flex-col.items-center img[data-src]").then(() => fn.createImgBox(".mx-auto.flex.flex-col.items-center", 1)),
-        imgs: () => fn.gae(".mx-auto.flex.flex-col.items-center img"),
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".mx-auto.flex.flex-col.items-center"], 3
-        ],
+        page: () => fn.clp(/^\/detail\/\w+\/\d+/),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        init: () => _this.page() ? fetch(fn.clp).then(() => fn.waitEle([".mx-auto.flex.flex-col.items-center img[data-src]", "img[alt='收藏圖示']"])) : void 0,
+        imgs: () => _this.page() ? fn.gae(".mx-auto.flex.flex-col.items-center img[data-src]") : [],
+        capture: () => _this.imgs(),
         autoDownload: [0],
         next: "a:has(>img[alt=下一話圖示])",
         prev: "a:has(>img[alt=上一話圖示])",
-        customTitle: () => fn.title("- 爱淘漫画 - 免费线上看"),
+        customTitle: () => _this.page() ? fn.title("- 爱淘漫画 - 免费线上看") : null,
         category: "comic"
     }, {
         name: "风车漫画",
@@ -25916,6 +26141,68 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
+        name: "拷貝漫畫M SPA",
+        url: () => fn.checkUrl({
+            h: ["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
+        }) && copymangaSPA_Mode == 1,
+        page: () => fn.clp("/h5/comicContent/"),
+        json: () => {
+            fn.showMsg(DL.str_05, 0);
+            let [name, id] = fn.clp().split("/").slice(3);
+            let api = `/api/v3/comic/${name}/chapter2/${id}?platform=3`;
+            return fn.xhr(api, {
+                responseType: "json",
+                headers: {
+                    "Referer": `https://${fn.lh}/comic/${name}/chapter/${id}`,
+                    "User-Agent": PC_UA
+                }
+            }).then(json => (siteJson = json) && fn.hideMsg());
+        },
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.json().then(() => fn.waitEle(".van-image__img")) : void 0,
+        imgs: () => {
+            if (!_this.page()) return [];
+            const srcs = [];
+            const {
+                words,
+                contents
+            } = siteJson.results.chapter;
+            words.forEach((w, i) => (srcs[w] = contents[i].url));
+            return srcs;
+        },
+        capture: () => _this.imgs(),
+        button: [4],
+        insertImgBF: () => fn.createImgBox(".comicContentPopupImageList", 2),
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".comicContentPopupImageList"], 2
+        ],
+        insertImgAF: (p) => {
+            const addHtml = (url, text) => {
+                let str = `<div style="padding: 10px 0; text-align: center; font-size: initial !important;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
+                p.insertAdjacentHTML("afterend", str);
+            };
+            let s = fn.curl().split("/").slice(-2);
+            let url = `/h5/details/comic/${s[0]}`;
+            let hUrl = `/h5/index`;
+            addHtml(hUrl, "首頁");
+            addHtml(url, "目錄");
+            let nUrl = _this.next();
+            if (nUrl) addHtml(nUrl, "點選進入下一話");
+            fn.hideEle(".comicFixed");
+        },
+        next: () => {
+            if (!_this.page()) return null;
+            let next = siteJson.results.chapter.next;
+            return next ? fn.curl().replace(/[\w-]+$/, "") + next : null;
+        },
+        customTitle: () => _this.page() ? siteJson.results.comic.name + " - " + siteJson.results.chapter.name : null,
+        fancybox: {
+            blacklist: 1
+        },
+        infiniteScroll: true,
+        category: "comic"
+    }, {
         name: "拷貝漫畫",
         host: ["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
         url: {
@@ -26091,7 +26378,6 @@ if ("xx" in window) {
             p: /^\/h5\/comicContent\/\w+\//,
             i: 0
         },
-        SPA: true,
         xhrJson: (url = siteUrl) => {
             //let [name, id] = url.split("/").slice(-2);
             //let host = fn.lh.replace("www.", "");
@@ -26112,12 +26398,12 @@ if ("xx" in window) {
             siteJson = await _this.xhrJson();
             debug("\n此頁JSON資料\n", siteJson);
             const addHtml = (url, text) => {
-                let str = `<div style="padding: 10px 0; text-align: center;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
+                let str = `<div style="padding: 10px 0; text-align: center; font-size: initial !important;"><a href="${url}"style="width: 100%;font-size: 26px;line-height: 50px;height: 50px;text-align: center;">${text}</a></div>`;
                 fn.ge(".comicContentPopupImageList").insertAdjacentHTML("afterend", str);
             };
             let s = siteUrl.split("/").slice(-2);
-            let url = `https://${fn.lh}/h5/details/comic/${s[0]}`;
-            let hUrl = `https://${fn.lh}/h5/index`;
+            let url = `/h5/details/comic/${s[0]}`;
+            let hUrl = `/h5/index`;
             addHtml(hUrl, "首頁");
             addHtml(url, "目錄");
             let nUrl = _this.next();
@@ -26709,28 +26995,31 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "风之动漫",
-        host: ["www.fffdm.com"],
-        reg: /^https?:\/\/(www\.fffdm\.com|manhua\.fffdm\.com)\/(manhua\/)?\d+\/[^/]+\/$/i,
-        fetchJson: (url = siteUrl) => {
-            let [mhId, mhcId] = new URL(url).pathname.split("/").slice(-3);
+        url: {
+            h: ["www.fffdm.com", "manhua.fffdm.com"]
+        },
+        page: () => fn.clp(/^\/(manhua\/)?\d+\/[^/]+\/$/i),
+        json: () => {
+            let [mhId, mhcId] = fn.clp().split("/").slice(-3);
             let api = `/api/manhua/${mhId}/${mhcId}`;
-            return fetch(api).then(res => res.json());
+            return fetch(api).then(res => res.json()).then(json => (siteJson = json));
         },
-        init: async () => {
-            let json = await _this.fetchJson();
-            debug("\n此頁JSON資料\n", json);
-            siteJson = json;
+        SPA: () => _this.page() ? _this.json() : false,
+        observeURL: "nav",
+        init: () => {
+            if (_this.page()) return _this.json();
         },
-        imgs: async (json = siteJson, msg = 1) => {
+        imgs: async () => {
+            if (!_this.page()) return [];
             let hostArr = fn.gau("link[rel='dns-prefetch']");
-            let [firstPic] = json.cont;
+            let [firstPic] = siteJson.cont;
             let testArr = hostArr.map(e => e + firstPic);
             let ok = false;
             let host;
+            fn.showMsg(DL.str_56, 0);
             for (let [i, test] of testArr.entries()) {
-                let obj = await fn.checkImgStatus(test, msg);
-                console.log(`確認圖片[${i}]`, obj);
-                if (obj.ok) {
+                let status = await fn.xhrHEAD(test).then(res => res.status);
+                if (status == 200) {
                     ok = true;
                     host = hostArr[i];
                     break;
@@ -26738,19 +27027,10 @@ if ("xx" in window) {
             }
             return ok ? siteJson.cont.map(e => host + e) : [];
         },
-        button: [4],
-        insertImg: ["#mh", 2],
-        insertImgAF: async () => {
-            let url = await _this.next();
-            if (!!url) {
-                let text = `<div style="padding: 36px 0; text-align: center;"><a href="${url}"style="font-size: 26px;line-height: 50px;height: 50px;text-align: center;">點選進入下一話</a></div>`;
-                fn.ge("#mh").insertAdjacentHTML("afterend", text);
-                fn.ge("#mh+div").addEventListener("click", () => setTimeout(() => location.reload(), 200));
-            }
-        },
         next: () => {
-            let comicListUrl = decodeURIComponent(siteUrl.replace(/[^\/]+\/$/i, ""));
-            let chapter = decodeURIComponent(siteUrl.match(/[^\/]+\/$/)[0]);
+            if (!_this.page()) return null;
+            let comicListUrl = decodeURIComponent(fn.clp().replace(/[^\/]+\/$/i, ""));
+            let chapter = decodeURIComponent(fn.clp().match(/[^\/]+\/$/)[0]);
             let nextXPath = `//div[@id='content']/li[a[@href='${chapter}']]/preceding-sibling::li[1]/a`;
             return fn.fetchDoc(comicListUrl).then(dom => {
                 let next = fn.ge(nextXPath, dom, dom);
@@ -26758,11 +27038,7 @@ if ("xx" in window) {
             });
         },
         prev: 1,
-        customTitle: (dom = document) => fn.title("第1页", 1, dom),
-        preloadNext: async (nextDoc, obj) => {
-            let json = await obj.fetchJson(nextLink);
-            fn.picPreload(await obj.imgs(json, 0), obj.customTitle(nextDoc), "next");
-        },
+        customTitle: () => _this.page() ? fn.title("第1页 FFF风之动漫") : null,
         fancybox: {
             v: 3,
             insertLibrarys: 1
@@ -27138,6 +27414,7 @@ if ("xx" in window) {
     const hasTouchEvent = ("ontouchstart" in _unsafeWindow);
     const isM = ("ontouchstart" in _unsafeWindow);
     const isPC = !("ontouchstart" in _unsafeWindow);
+    const isCh = language.includes("zh");
     const isMobileEdge = ["Mobile", "EdgA"].every(t => _unsafeWindow.navigator.userAgent.includes(t));
     const isMobileYandex = ["Mobile", "YaBrowser"].every(t => _unsafeWindow.navigator.userAgent.includes(t));
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
@@ -27552,6 +27829,9 @@ if ("xx" in window) {
                 str_190: "條漫模式",
                 str_191: "預設開啟簡易模式",
                 str_192: "自動進入手機畫廊",
+                str_193: "匯出JSON",
+                str_194: "複製MD",
+                str_195: "匯出MD",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -27789,6 +28069,9 @@ if ("xx" in window) {
                 str_190: "条漫模式",
                 str_191: "默认打开简易模式",
                 str_192: "自动进入手机画廊",
+                str_193: "导出JSON",
+                str_194: "拷贝MD",
+                str_195: "导出MD",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28020,6 +28303,9 @@ if ("xx" in window) {
                 str_190: "Webtoon",
                 str_191: "Simple mode enabled by default",
                 str_192: "Enable Phone Gallery",
+                str_193: "Export JSON",
+                str_194: "Copy Markdown",
+                str_195: "Export Markdown",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -28071,6 +28357,33 @@ if ("xx" in window) {
         lp: (() => _unsafeWindow.location.pathname)(),
         lh: (() => _unsafeWindow.location.hostname)(),
         ls: (() => _unsafeWindow.location.search)(),
+        curl: (p = null) => {
+            const url = currentURL;
+            if (isString(p)) {
+                return url.includes(p);
+            } else if (isRegExp(p)) {
+                return url.search(p) > -1;
+            }
+            return url;
+        },
+        clp: (p = null) => {
+            const pathname = new URL(currentURL).pathname;
+            if (isString(p)) {
+                return pathname.includes(p);
+            } else if (isRegExp(p)) {
+                return pathname.search(p) > -1;
+            }
+            return pathname;
+        },
+        cls: (p = null) => {
+            const search = new URL(currentURL).search;
+            if (isString(p)) {
+                return search.includes(p);
+            } else if (isRegExp(p)) {
+                return search.search(p) > -1;
+            }
+            return search;
+        },
         durl: (p = null) => {
             const url = _unsafeWindow.document.URL;
             if (isString(p)) {
@@ -28081,29 +28394,29 @@ if ("xx" in window) {
             return url;
         },
         dlp: (p = null) => {
-            const url = _unsafeWindow.location.pathname;
+            const pathname = _unsafeWindow.document.location.pathname;
             if (isString(p)) {
-                return url.includes(p);
+                return pathname.includes(p);
             } else if (isRegExp(p)) {
-                return url.search(p) > -1;
+                return pathname.search(p) > -1;
             }
-            return url;
+            return pathname;
         },
         dls: (p = null) => {
-            const url = _unsafeWindow.document.location.search;
+            const search = _unsafeWindow.document.location.search;
             if (isString(p)) {
-                return url.includes(p);
+                return search.includes(p);
             } else if (isRegExp(p)) {
-                return url.search(p) > -1;
+                return search.search(p) > -1;
             }
-            return url;
+            return search;
         },
         getUSP: (p, s = "s") => {
             if (s === "u") {
-                return new URL(fn.dls()).searchParams.get(p);
+                return new URL(fn.cls()).searchParams.get(p);
             }
             if (s === "s") {
-                return new URLSearchParams(fn.dls()).get(p);
+                return new URLSearchParams(fn.cls()).get(p);
             }
             if (s?.startsWith("http")) {
                 return new URL(s).searchParams.get(p);
@@ -30516,6 +30829,11 @@ if ("xx" in window) {
                 .trim();
             return str;
         },
+        stringSlicer: (string, startText, endText) => {
+            const startIndex = string.indexOf(startText) + startText.length;
+            const endIndex = string.indexOf(endText, startIndex);
+            return string.slice(startIndex, endIndex + endText.length);
+        },
         //取得元素的屬性值
         attr: (selector, attr, dom = document) => fn.ge(selector, dom, dom).getAttribute(attr),
         //傳入代碼運行代碼
@@ -30550,7 +30868,7 @@ if ("xx" in window) {
             }
         },
         //顯示簡短的訊息
-        showMsg: (text, time = 1000) => {
+        showMsg: async (text, time = 1000) => {
             if (getType(msgTimeId) == "Number") {
                 clearTimeout(msgTimeId);
             }
@@ -30915,6 +31233,7 @@ if ("xx" in window) {
         },
         //取得代碼並創建script注入到當前頁面
         getCode: (url, obj = {}) => {
+            fn.showMsg(DL.str_05, 0);
             const {
                 mode,
                 cors,
@@ -30928,10 +31247,12 @@ if ("xx" in window) {
                     xhr = fn.fetchDoc(url);
                 }
                 return xhr.then(dom => {
+                    fn.hideMsg();
                     let code = fn.gst(key, dom);
                     _GM_addElement(document.body, "script", {
                         textContent: code
                     });
+                    return code;
                 });
             } else {
                 let xhr;
@@ -30941,9 +31262,11 @@ if ("xx" in window) {
                     xhr = fetch(url).then(res => res.text());
                 }
                 return xhr.then(text => {
+                    fn.hideMsg();
                     _GM_addElement(document.body, "script", {
                         textContent: text
                     });
+                    return text;
                 });
             }
         },
@@ -31226,16 +31549,30 @@ if ("xx" in window) {
             return datas.flat().map(e => e.img);
         },
         //移除元素
-        remove: async (obj, time = 0) => {
-            if (isString(obj)) {
+        remove: async (p, time = 0) => {
+            if (isString(p)) {
                 await delay(time);
-                let selector = obj;
+                let selector = p;
                 fn.gae(selector).forEach(e => e.remove());
-            } else if (isArray(obj)) {
-                let selectors = obj;
+            } else if (isArray(p)) {
+                let selectors = p;
                 await delay(time);
                 selectors.forEach(selector => fn.gae(selector).forEach(e => e.remove()));
             }
+        },
+        hideEle: p => {
+            let eles;
+            if (isEle(p)) {
+                eles = [p];
+            } else if (isString(p)) {
+                let selector = p;
+                eles = fn.gae(selector);
+            } else if (isArray(p)) {
+                let selectors = p;
+                eles = selectors.map(selector => fn.gae(selector));
+                eles = [...new Set(eles.flat())];
+            }
+            eles.forEach(e => e.setAttribute("style", "display: none !important;"));
         },
         //創建A元素
         addUrlHtml: (url, selector, pos = 0, text = "點選進入下一話", css = 0) => {
@@ -31795,7 +32132,7 @@ if ("xx" in window) {
             fn.run("$(document).off();");
         },
         copymanga_M_UI: (c, h) => {
-            let s = siteUrl.split("/").slice(-2);
+            let s = fn.curl().split("/").slice(-2);
             let url = `https://${fn.lh}/h5/details/comic/${s[0]}`;
             let html = `
 <div class="comicControlBottom van-popup van-popup--bottom hide" style="z-index: 2024;">
@@ -32308,7 +32645,11 @@ if ("xx" in window) {
     const getImgs = async selector => {
         isFetching = true;
         let imgs = null;
-        if (!("SPA" in siteData) && !("capture" in siteData) && siteData.repeat != 1 && globalImgArray.length > 0) {
+        if (!("SPA" in siteData) && siteData.repeat != 1 && siteData.infiniteCapture != 1 && globalImgArray.length > 0) {
+            isFetching = false;
+            imgs = globalImgArray;
+            return imgs;
+        } else if (lastValidPageURL === currentURL && siteData.repeat != 1 && siteData.infiniteCapture != 1 && globalImgArray.length > 0) {
             isFetching = false;
             imgs = globalImgArray;
             return imgs;
@@ -32350,6 +32691,7 @@ if ("xx" in window) {
             imgs = await Promise.all(imgs); //取出new Promise的值
         }
         fn.hideMsg();
+        if (!isValidPage) return [];
         imgs = imgs.flat().filter(Boolean); //去除空、無用
         let imgsSrcArr = imgs.map(img => {
             let check = fn.checkImgSrc(img);
@@ -32746,13 +33088,13 @@ if ("xx" in window) {
     };
 
     //匯出網址
-    const exportImgSrcText = async (array = null) => {
+    const exportImgSrcText = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
         if (srcArr.length == 0 && videoSrcArray.length == 0 && fileUrlArray.length == 0) return fn.showMsg(DL.str_44);
         let picNum = srcArr.length;
-        let titleText = (apiCustomTitle || customTitle || document.title);
+        let titleText = (text || apiCustomTitle || customTitle || document.title);
         let fileName = `${titleText}[${picNum}P]_MediaURLs.txt`;
         if (videoSrcArray.length > 0) {
             srcArr = srcArr.concat(videoSrcArray);
@@ -32804,20 +33146,26 @@ if ("xx" in window) {
                 s: "title"
             });
         }
-        if (videoSrcArray.length > 0) {
+        if (fileUrlArray.length > 0) {
+            title = `${title}[${imgsNum}P`;
+            if (videoSrcArray.length > 0) {
+                title += ` + ${videoSrcArray.length}V`;
+            }
+            title += ` + ${fileUrlArray.length}File]`;
+        } else if (videoSrcArray.length > 0) {
             title = `${title} [${imgsNum}P + ${videosNum}V]`;
         } else {
             title = `${title} [${imgsNum}P]`;
         }
         let textArr = [title].concat(srcArr);
         let str = textArr.join("\n");
-        console.log(str);
+        //console.log(str);
         copyToClipboard(str);
         fn.showMsg(`${DL.str_45}(${textArr.length - 1})`);
     };
 
     //複製網址
-    const copyImgSrcTextB = async (array = null) => {
+    const copyImgSrcTextB = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
@@ -32830,7 +33178,9 @@ if ("xx" in window) {
         }
         if (fileUrlArray.length > 0) srcArr = srcArr.concat(fileUrlArray);
         let title;
-        if (isString(apiCustomTitle)) {
+        if (isString(text)) {
+            title = text;
+        } else if (isString(apiCustomTitle)) {
             title = apiCustomTitle;
         } else if (isString(customTitle)) {
             title = customTitle;
@@ -32846,26 +33196,29 @@ if ("xx" in window) {
         }
         let textArr = [title].concat(srcArr);
         let str = textArr.join("\n");
-        console.log(str);
+        //console.log(str);
         copyToClipboard(str);
         fn.showMsg(`${DL.str_45}(${textArr.length - 1})`);
     };
 
     //匯出為JSON格式
-    const exportJsonFormat = async (array = null) => {
+    const exportJsonFormat = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
         if (srcArr.length == 0) return fn.showMsg(DL.str_44);
         let object = {
-            url: siteUrl,
-            title: (apiCustomTitle || customTitle || document.title),
+            url: currentURL,
+            title: (text || apiCustomTitle || customTitle || document.title),
             images: srcArr,
         }
         if (videoSrcArray.length > 0) {
             Reflect.set(object, "videos", videoSrcArray);
         };
-        let fileName = (apiCustomTitle || customTitle || document.title) + ".json";
+        if (fileUrlArray.length > 0) {
+            Reflect.set(object, "files", fileUrlArray);
+        }
+        let fileName = (text || apiCustomTitle || customTitle || document.title) + ".json";
         let blob = new Blob([JSON.stringify(object, null, 4)], {
             type: "application/json"
         });
@@ -32874,19 +33227,19 @@ if ("xx" in window) {
     };
 
     //匯出為Markdown格式
-    const exportMarkdownFormat = async (array = null) => {
+    const exportMarkdownFormat = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
         if (srcArr.length == 0) return fn.showMsg(DL.str_44);
-        let title = "## " + (apiCustomTitle || customTitle || document.title);
-        let post = `Post Link：[${siteUrl}](${siteUrl})`;
+        let title = "## " + (text || apiCustomTitle || customTitle || document.title);
+        let post = `Post Link：[${currentURL}](${currentURL})`;
         let imagesTitle = "## Images";
         let images = srcArr.map(async (src, i) => {
             if (src.startsWith("blob")) {
                 src = await fn.blobURLtoDataURL(src);
             }
-            return `![${(apiCustomTitle || customTitle || document.title)}${(i + 1)}P](${src})`;
+            return `![${(text || apiCustomTitle || customTitle || document.title)}${(i + 1)}P](${src})`;
         });
         images = await Promise.all(images);
         let textArr = [title, post, imagesTitle].concat(images);
@@ -32896,8 +33249,14 @@ if ("xx" in window) {
             let videos = videoSrcArray.map(src => "    " + src);
             textArr = textArr.concat(videos);
         };
+        if (fileUrlArray.length > 0) {
+            let filesTitle = "## Files";
+            textArr.push(filesTitle);
+            let files = fileUrlArray.map(url => "    " + url);
+            textArr = textArr.concat(files);
+        }
         let str = textArr.join("\n");
-        let fileName = (apiCustomTitle || customTitle || document.title) + ".md";
+        let fileName = (text || apiCustomTitle || customTitle || document.title) + ".md";
         let blob = new Blob([str], {
             type: "text/markdown",
             endings: "native"
@@ -32907,19 +33266,24 @@ if ("xx" in window) {
     };
 
     //複製為Markdown格式
-    const copyMarkdownFormat = async (array = null) => {
+    const copyMarkdownFormat = async (array = null, text = null) => {
         if (checkGeting() || isOpenOptionsUI) return;
         let selector = siteData.imgs;
         let srcArr = isArray(array) ? array : await getImgs(selector);
         if (srcArr.length == 0) return fn.showMsg(DL.str_44);
-        let title = "## " + (apiCustomTitle || customTitle || document.title);
-        let post = `Post Link：[${siteUrl}](${siteUrl})`;
+        if (isString(text)) {
+            text = fn.dt({
+                t: text
+            });
+        }
+        let title = "## " + (text || apiCustomTitle || customTitle || document.title);
+        let post = `Post Link：[${currentURL}](${currentURL})`;
         let imagesTitle = "## Images";
         let images = srcArr.map(async (src, i) => {
             if (src.startsWith("blob")) {
                 src = await fn.blobURLtoDataURL(src);
             }
-            return `![${(apiCustomTitle || customTitle || document.title)}${(i + 1)}P](${src})`;
+            return `![${(text || apiCustomTitle || customTitle || document.title)}${(i + 1)}P](${src})`;
         });
         images = await Promise.all(images);
         let textArr = [title, post, imagesTitle].concat(images);
@@ -32930,7 +33294,7 @@ if ("xx" in window) {
             textArr = textArr.concat(videos);
         };
         let str = textArr.join("\n");
-        console.log(str);
+        //console.log(str);
         copyToClipboard(str);
         fn.showMsg(DL.str_179);
     };
@@ -34353,14 +34717,18 @@ if (config.ViewMode == 1) {
             return createIframeGallery();
         }
 
-        if (checkGeting() || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || isOpenGallery || isOpenOptionsUI || !isValidPage) return;
 
         isOpenGallery = true;
+
+        if ("SPA" in siteData) {
+            lastValidPageURL = currentURL;
+        }
 
         let srcs;
         if (isArray(srcs_array)) {
             srcs = srcs_array;
-        } else if ("SPA" in siteData) {
+        } else if ("SPA" in siteData || siteData.repeat == 1 || siteData.infiniteCapture == 1) {
             let selector = siteData.capture ?? siteData.imgs;
             srcs = await getImgs(selector);
         } else if (!("capture" in siteData)) {
@@ -34368,7 +34736,10 @@ if (config.ViewMode == 1) {
         } else {
             captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
         }
-        if (srcs.length < 1) return (isOpenGallery = false);
+        if (srcs.length < 1) {
+            fn.showMsg(DL.str_44);
+            return (isOpenGallery = false);
+        }
 
         fn.hideMsg();
 
@@ -35526,14 +35897,18 @@ img.horizontal {
     //創建框架畫廊
     const createIframeGallery = async (srcs_array = null) => {
 
-        if (checkGeting() || isOpenGallery || isOpenOptionsUI) return;
+        if (checkGeting() || isOpenGallery || isOpenOptionsUI || !isValidPage) return;
 
         isOpenGallery = true;
+
+        if ("SPA" in siteData) {
+            lastValidPageURL = currentURL;
+        }
 
         let srcs;
         if (isArray(srcs_array)) {
             srcs = srcs_array;
-        } else if ("SPA" in siteData) {
+        } else if ("SPA" in siteData || siteData.repeat == 1 || siteData.infiniteCapture == 1) {
             let selector = siteData.capture ?? siteData.imgs;
             srcs = await getImgs(selector);
         } else if (!("capture" in siteData)) {
@@ -35541,7 +35916,10 @@ img.horizontal {
         } else {
             captureSrcArray.length > 0 ? srcs = captureSrcArray : srcs = await getImgs(siteData.imgs);
         }
-        if (srcs.length < 1) return (isOpenGallery = false);
+        if (srcs.length < 1) {
+            fn.showMsg(DL.str_44);
+            return (isOpenGallery = false);
+        }
 
         fn.hideMsg();
 
@@ -36793,16 +37171,20 @@ img.horizontal {
     //創建篩選下載
     const createFilterUI = async () => {
 
-        if (checkGeting() || isDragging || isOpenFilter) return;
+        if (checkGeting() || isDragging || isOpenFilter || !isValidPage) return;
 
         isOpenFilter = true;
+
+        if ("SPA" in siteData) {
+            lastValidPageURL = currentURL;
+        }
 
         let full_srcs;
         let isViewMobileGallery = false;
         let Viewer;
         let ViewerJsInstance;
         let ViewerJsInstance_G;
-        if ("SPA" in siteData) {
+        if ("SPA" in siteData || siteData.repeat == 1 || siteData.infiniteCapture == 1) {
             let selector = siteData.capture ?? siteData.imgs;
             full_srcs = await getImgs(selector);
         } else if (!("capture" in siteData)) {
@@ -36810,7 +37192,10 @@ img.horizontal {
         } else {
             captureSrcArray.length > 0 ? full_srcs = captureSrcArray : full_srcs = await getImgs(siteData.imgs);
         }
-        if (full_srcs.length < 1) return (isOpenFilter = false);
+        if (full_srcs.length < 1) {
+            fn.showMsg(DL.str_44);
+            return (isOpenFilter = false);
+        }
         let srcs;
         let g_srcs;
         const config = getConfig();
@@ -37048,8 +37433,8 @@ li.image-item p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
 #size,#move,#auto-exclude-error {
-    width: ${(!isFirefox && isPC) ? "16px" : "18px"};
-    height: ${(!isFirefox && isPC) ? "16px" : "18px"};
+    width: ${(!isFirefox && isPC) ? "16px" : "17px"};
+    height: ${(!isFirefox && isPC) ? "16px" : "17px"};
     vertical-align: text-bottom;
     margin: 0 4px 0 2px;
 }
@@ -37108,8 +37493,8 @@ label.line-through:has(>#size) {
     display: none;
     list-style-type: none;
     top: 28px;
-    left: -2px;
-    width: 80px;
+    left: ${isCh ? "-7px" : "-26px"};
+    width: ${isCh ? "90px" : "150px"};
     text-align: center;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -37405,16 +37790,48 @@ img.webtoon {
             id: "export",
             text: DL.str_104.replace(/\(.\)/, "")
         }, {
+            id: "export_json",
+            text: DL.str_193,
+            cfn: event => {
+                cancelDefault(event);
+                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+                if (srcs.length == 0) return;
+                const text = ge("#inputTitle", main).value;
+                exportJsonFormat(srcs, text);
+            }
+        }, {
+            id: "copy_md",
+            text: DL.str_194,
+            cfn: event => {
+                cancelDefault(event);
+                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+                if (srcs.length == 0) return;
+                const text = ge("#inputTitle", main).value;
+                copyMarkdownFormat(srcs, text);
+            }
+        }, {
+            id: "export_md",
+            text: DL.str_195,
+            cfn: event => {
+                cancelDefault(event);
+                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+                if (srcs.length == 0) return;
+                const text = ge("#inputTitle", main).value;
+                exportMarkdownFormat(srcs, text);
+            }
+        }, {
             id: "settings",
             text: DL.str_85.replace(/\(.\)/, "")
         }].forEach(({
             id,
-            text
+            text,
+            cfn
         }) => {
             const li = document.createElement("li");
             li.id = id;
             li.className = "more-item";
             li.innerText = text;
+            if (isFn(cfn)) li.addEventListener("click", cfn);
             fragment.append(li);
         });
         moreMenu.append(fragment);
@@ -37660,7 +38077,8 @@ img.webtoon {
                 cancelDefault(event);
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
                 if (srcs.length == 0) return;
-                copyImgSrcTextB(srcs);
+                const text = ge("#inputTitle", main).value;
+                copyImgSrcTextB(srcs, text);
             });
         });
         gae("#export", main).forEach(button => {
@@ -37668,7 +38086,8 @@ img.webtoon {
                 cancelDefault(event);
                 const srcs = gae(".select+.image", main).map(img => img.dataset.src);
                 if (srcs.length == 0) return;
-                exportImgSrcText(srcs);
+                const text = ge("#inputTitle", main).value;
+                exportImgSrcText(srcs, text);
             });
         });
         gae("#select-all", main).forEach(button => {
@@ -38020,6 +38439,9 @@ img.webtoon {
     const addNewTabViewButton = () => {
         if (ge("#FullPictureLoadEye") || FullPictureLoadShowEye == 0) return;
         isAddNewTabViewButton = true;
+        if ("page" in siteData && isFn(siteData.page)) {
+            if (!siteData.page()) return;
+        }
         let img = new Image();
         img.id = "FullPictureLoadEye";
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEV0lEQVRYhb2XTWwTRxTHTShJ4NDegJ4rwbGngkpVxCGQ3loVcaIlEuJU2h5oKyFQtXaigojj3VAQErTlQxQCiRMaoF+HxjhNjD/XxVISbGPHxEAc3MR8xo5xeMybZNezn7HAYaUXWZuZ9/vPmzdv3loaGjbVEltGzGL2cMDV2ELC+81hYX9zmO9sFgVfS1iIN4t83Opv81u9bV2cp/X7fX0HPtz6zSd1C/mTn4XgnIurbxH5bwkwRYDAGoGDLeDQmsincA7OrUSA7nsAWNIS4psIeEwNNoPj+/I4/jaZvwN9VRaO+edw9HAdmXxGD1w5XDH+Ahc8vqIiOOdrXU3g/mrBy/MEH/o2h8/tt7facEZEiI2EYvvpnoeFc4sFl/2QE4QshOMBkAVgwi02XPYXcHw+f/pqy6EnGfta4OjP35b+WvjyLVkAntlK4IfEI9AVvwKe8QD4snHoGbtFzU9+ezJB6E7+DvbIMXP4vC/O2/odFYD7Qf6RNBt8auQCDN2PQiFfAN//D6Fh4AYs7XXDkt/m7I3eftgyEIHg5GOYLc3CzdwtOBPvNI+k3z7a1LS91oLl1Qj+Y+RnGMnGoFgoUjt7OwN1l/tlsNrwf+fHJgBmgVrsQRKODp803sagfZ0Fa7se3Bm/Ck+mn8pwXHmtCZwVEZp6LIsoFGeoL90cEvm9FjwWavjfKZcMRnteeg6bSYgliPNOFtx37sPbX9lg5W4r1J9wKkQ0DkYoHOdJPtzp63oJ3IERCLDw/rRXA8/mi4o9T+SeQG7qEby7cRusXf8xrNnwqUIE5kR2ekbhB60/7VGcHqyOFvInKsF7E39q4LiSwexDxQrf2XMA1m3eTuGSrfyCK4+5dA0GMpMaAejvr7SrnG8h/iZJQj4qhYYVIMHRPCoBGHYWTgWQdxK8prsPBsYndRejEWANtAXZ5MAwsXA03AIMqyQAw41hl+BrPtgK9T91y/BlPX2QeTStgf877tNcUOT2szvV2em+d10hAG0Lk4SSCAw7Gguv6f4HGt2iBu66O6hXnDos2EbpldfOxBXIFwuyACwyhjWAgS+/5ILAxJQMn3k2Az2jf+hXRzyG2MMZ1fYjQ79ANJeQRWCR0YhQwc+N3pXhWBHRh1Fptont71mwHNpCDk0pZu107CKM5OJQKpVokcFzTnOC2fOP3GG68nw+D8OTMTrH9GIS+VHaquG9bHQZqa2VXDTO5FUYzATAOxGFzuQIdBHz3BuiheZirBcO3Tha2c34n7BH0Qnpdb2V3GovdUWT1WPfqWjHsHt9LXD0EW7/TNMP0ms5JPy62HCy+rO6PeFCTWl1OiM+KDWlmp6QbcvnP7uqvXLvD5H2VSxcbsnUD/thUqWesMPhcSxXww0FyDlBuldyV6Re4TsgxSacGm4qQBq86+DON7GBtPrtyYrhopDAc84eNT24bg4YDcaKiT0c1m/81sM9neslhOjcb/puL5ZX9ceoERzfvwApT7t293t0AgAAAABJRU5ErkJggg==";
@@ -38177,6 +38599,9 @@ img.webtoon {
     const addFullPictureLoadButton = () => {
         if (ge("#FullPictureLoad")) return;
         isAddFullPictureLoadButton = true;
+        if ("page" in siteData && isFn(siteData.page)) {
+            if (!siteData.page()) return;
+        }
         let img = new Image();
         img.id = "FullPictureLoad";
         img.className = "FullPictureLoadFixedBtn";
@@ -38296,6 +38721,9 @@ img.webtoon {
     const addFullPictureLoadFixedMenu = () => {
         if (ge("#FullPictureLoadFixedMenu")) return;
         isAddFullPictureLoadFixedMenu = true;
+        if ("page" in siteData && isFn(siteData.page)) {
+            if (!siteData.page()) return;
+        }
         let menuDiv = document.createElement("div");
         menuDiv.id = "FullPictureLoadFixedMenu";
         menuDiv.style.width = "54px";
@@ -39502,7 +39930,7 @@ a[data-fancybox]:hover {
 
     let E_HENTAI_LoadOriginalImage = _GM_getValue("E_HENTAI_LoadOriginalImage", 0);
 
-    if (/^https?:\/\/(e-hentai|exhentai).org\//.test(fn.url)) {
+    if (["e-hentai.org", "exhentai.org"].some(h => fn.lp === h)) {
         _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ " + DL.str_114 : "✔️ " + DL.str_114, () => {
             E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
             location.reload();
@@ -39511,9 +39939,18 @@ a[data-fancybox]:hover {
 
     let setYinawSinaOriginalURL = _GM_getValue("setYinawSinaOriginalURL", 0);
 
-    if (/^https?:\/\/yinaw\.com\/\d+\.html$/.test(fn.url)) {
+    if (fn.url === "yinaw.com") {
         _GM_registerMenuCommand(setYinawSinaOriginalURL == 0 ? "❌ 壹纳网使用原始新浪图床链接" : "✔️ 壹纳网使用原始新浪图床链接", () => {
             setYinawSinaOriginalURL == 0 ? _GM_setValue("setYinawSinaOriginalURL", 1) : _GM_setValue("setYinawSinaOriginalURL", 0);
+            location.reload();
+        });
+    }
+
+    let copymangaSPA_Mode = _GM_getValue("copymangaSPA_Mode", 1);
+
+    if (["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"].some(h => fn.lh === h)) {
+        _GM_registerMenuCommand(copymangaSPA_Mode == 0 ? "❌ 拷貝漫畫SPA模式" : "✔️ 拷貝漫畫SPA模式", () => {
+            copymangaSPA_Mode == 0 ? _GM_setValue("copymangaSPA_Mode", 1) : _GM_setValue("copymangaSPA_Mode", 0);
             location.reload();
         });
     }
@@ -39783,16 +40220,37 @@ a[data-fancybox]:hover {
                 document.addEventListener("keydown", addKeyEvent);
                 isAddKeyEvent = true;
             }
-            if ("insertImg" in siteData) {
-                let [, insertMode, ] = siteData.insertImg;
-                if (insertMode === 1 || insertMode === 2) {
-                    if (options.autoInsert == 1) {
-                        await fn.immediateInsertImg();
-                    }
-                    if (options.shadowGallery == 1 && siteData.aeg != 0) {
-                        await createShadowGallery();
-                    }
-                }
+        } else {
+            fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadEye,#FullPictureLoadFixedMenu,#FullPictureLoadFixedMenuB");
+            EyeNumElement = null;
+            document.removeEventListener("keydown", addKeyEvent);
+            isAddKeyEvent = false;
+            isValidPage = false;
+            globalImgArray = [];
+        }
+        await delay(200);
+    };
+
+    const toggleUI_B = async () => {
+        if (!"SPA" in siteData || !isFn(siteData.SPA) || !!ge(".FullPictureLoadImage") || isOpenMenu || isFetching) return;
+        isFetching = true;
+        const validPage = await siteData.SPA();
+        isFetching = false;
+        if (!!validPage) {
+            isValidPage = true;
+            if (isAddFullPictureLoadButton) addFullPictureLoadButton();
+            if (isAddFullPictureLoadFixedMenu) addFullPictureLoadFixedMenu();
+            if (!isAddKeyEvent) {
+                document.addEventListener("keydown", addKeyEvent);
+                isAddKeyEvent = true;
+            }
+            await setFPLF();
+            if ("next" in siteData) {
+                await getNextLink(siteData.next, "\nURL變換 nextLink：");
+            }
+            if (isAddNewTabViewButton) {
+                addNewTabViewButton();
+                captureSrcB();
             }
         } else {
             fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadEye,#FullPictureLoadFixedMenu,#FullPictureLoadFixedMenuB");
@@ -39800,8 +40258,8 @@ a[data-fancybox]:hover {
             document.removeEventListener("keydown", addKeyEvent);
             isAddKeyEvent = false;
             isValidPage = false;
+            globalImgArray = [];
         }
-        await delay(200);
     };
 
     const getNextLink = async (next, text = "\n圖片全載NEXT：") => {
@@ -39955,9 +40413,7 @@ a[data-fancybox]:hover {
         }
     }
 
-    let currentURL = document.URL;
     let isObserveURL = false;
-    let isObserveTitle = false;
     let isAddFancybox = false;
     let isOutputLog = false;
     let isAddNextEvent = false;
@@ -39965,7 +40421,81 @@ a[data-fancybox]:hover {
     let isAddOpenInNewTab = false;
     let isAddLoadMore = false;
 
-    const setFPF = async () => {
+    const historyEvent = () => {
+        setTimeout(() => {
+            if (currentURL !== document.URL) {
+                currentURL = document.URL;
+                toggleUI_B();
+            }
+        }, 200);
+    };
+
+    const historyObserver = () => {
+        _unsafeWindow.addEventListener("popstate", historyEvent);
+    };
+
+    const headObserver = async () => {
+        const config = {
+            attributes: false,
+            childList: true,
+            characterData: true,
+            subtree: true
+        };
+        const callback = (mutationsList) => {
+            mutationsList.forEach((mutation) => {
+                if (mutation.type === "childList" && mutation?.target?.tagName === "TITLE") {
+                    if (currentURL !== document.URL) {
+                        currentURL = document.URL;
+                        toggleUI_B();
+                    }
+                }
+            });
+        };
+        const observer = new MutationObserver(callback);
+        observer.observe(document.head, config);
+        historyObserver();
+    };
+
+    const navEvent = async event => {
+        const url = event.destination.url;
+        const c_host = new URL(currentURL).host;
+        const e_host = new URL(url).host;
+        if (event.hashChange || event.downloadRequest !== null || c_host !== e_host || url.startsWith("blob") || url.startsWith("data")) return;
+        if (currentURL !== url) {
+            currentURL = url;
+            await toggleUI_B();
+        }
+    };
+
+    const navObserver = () => {
+        //Firefox、Safari尚未支持Navigation API
+        _unsafeWindow.navigation.addEventListener("navigate", navEvent);
+        historyObserver();
+    };
+
+    const gmUrlEvent = async event => {
+        const url = event.url;
+        if (currentURL !== url) {
+            currentURL = url;
+            await toggleUI_B();
+        }
+    };
+
+    const gmUrlObserver = () => {
+        window.addEventListener("urlchange", gmUrlEvent);
+        historyObserver();
+    };
+
+    const loopObserver = () => {
+        setInterval(() => {
+            if (currentURL !== document.URL) {
+                currentURL = document.URL;
+                toggleUI_B();
+            }
+        }, 200);
+    };
+
+    const setFPLF = async () => {
         try {
             if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
                 fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
@@ -40037,79 +40567,7 @@ a[data-fancybox]:hover {
                 }
                 debug(`\n自定義標題：${customTitle}`);
             }
-            if ("observeTitle" in siteData && isBoolean(siteData.observeTitle) && siteData.observeTitle === true && !isObserveTitle) {
-                isObserveTitle = true;
-                const observeTitle_CB = async (mutationList, observer) => {
-                    //console.log(mutationList);
-                    if (mutationList) {
-                        const mutationList_removedNodes = [...mutationList].filter(item => item.type === "childList" && item?.removedNodes?.length > 0);
-                        if (mutationList_removedNodes.length > 0) {
-                            for (const mutation of mutationList_removedNodes) {
-                                const removedNodes = mutation.removedNodes;
-                                for (const node of removedNodes) {
-                                    if (node?.id == "FullPictureLoadOptionsShadowElement" || node?.id == "FullPictureLoadShadowGallery" || node?.id == "FullPictureLoadIframeGallery") {
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (observer) {
-                        observer.disconnect();
-                        setTimeout(async () => {
-                            const body = await fn.waitEle("body");
-                            observer.observe(body, MutationObserverConfig);
-                            if (!isOpenGallery) {
-                                await toggleUI();
-                            }
-                        }, 200);
-                    }
-                    if (mutationList) {
-                        try {
-                            const mutationList_addedNodes = [...mutationList].filter(item => item.type === "childList" && item?.addedNodes?.length > 0);
-                            if (mutationList_addedNodes.length === 0) {
-                                return;
-                            }
-                            const strings = ["FullPictureLoad", "FullPictureLoadOptionsShadowElement", "FullPictureLoadShadowGallery", "FullPictureLoadIframeGallery", "pagetual", "comicRead", "Autopage", "pv-"];
-                            for (const mutation of mutationList_addedNodes) {
-                                const attributes = [mutation?.target?.id, mutation?.target?.className, mutation?.target?.name].filter(Boolean);
-                                const checkM = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
-                                if (checkM) {
-                                    return;
-                                }
-                                const addedNodes = mutation.addedNodes;
-                                for (const node of addedNodes) {
-                                    const attributes = [node?.id, node?.className, node?.name].filter(Boolean);
-                                    const checkN = attributes.some(attr => strings.some(str => attr?.startsWith(str)));
-                                    if (checkN) {
-                                        return;
-                                    }
-                                }
-                            }
-                            //console.log(mutationList_addedNodes);
-                        } catch {}
-                    }
-                    if (isFetching || isDownloading) return;
-                    await toggleUI();
-                    const newCustomTitle = await getTitle(siteData.customTitle);
-                    if ("capture" in siteData && !newCustomTitle) {
-                        captureSrcB(1);
-                    }
-                    if (customTitle !== newCustomTitle && newCustomTitle !== null && newCustomTitle !== undefined && newCustomTitle !== "") {
-                        customTitle = newCustomTitle;
-                        debug(`\n自定義標題：${newCustomTitle}`);
-                        if ("capture" in siteData) {
-                            captureSrcB();
-                        }
-                        if ("next" in siteData) {
-                            await getNextLink(siteData.next, "\n標題變換 nextLink：");
-                        }
-                    }
-                };
-                const MutationObserveURL = new MutationObserver(observeTitle_CB);
-                MutationObserveURL.observe(document.body, MutationObserverConfig);
-            }
-            if ("observeURL" in siteData && isBoolean(siteData.observeURL) && siteData.observeURL === true && !isObserveURL) {
+            if ("observeURL" in siteData && siteData.observeURL === "body" && !isObserveURL) {
                 isObserveURL = true;
                 const observeURL_CB = async (mutationList, observer) => {
                     if (mutationList) {
@@ -40130,7 +40588,7 @@ a[data-fancybox]:hover {
                         setTimeout(async () => {
                             const body = await fn.waitEle("body");
                             observer.observe(body, MutationObserverConfig);
-                            if (!isOpenGallery && siteUrl !== _unsafeWindow.document.URL) {
+                            if (!isOpenGallery && currentURL !== _unsafeWindow.document.URL) {
                                 await toggleUI();
                             }
                             if ("customTitle" in siteData && !("capture" in siteData)) {
@@ -40168,8 +40626,8 @@ a[data-fancybox]:hover {
                         } catch {}
                     }
                     if (isFetching || isDownloading) return;
-                    if (siteUrl !== _unsafeWindow.document.URL.replace(_unsafeWindow.location.hash, "")) {
-                        siteUrl = _unsafeWindow.document.URL;
+                    if (currentURL !== _unsafeWindow.document.URL.replace(_unsafeWindow.location.hash, "")) {
+                        currentURL = _unsafeWindow.document.URL;
                         isGotAll = false;
                         await toggleUI();
                         const newCustomTitle = await getTitle(siteData.customTitle);
@@ -40190,42 +40648,46 @@ a[data-fancybox]:hover {
                         if ("next" in siteData) {
                             await getNextLink(siteData.next, "\nURL變換 nextLink：");
                         }
+                        if ("insertImg" in siteData) {
+                            let [, insertMode, ] = siteData.insertImg;
+                            if (insertMode === 1 || insertMode === 2) {
+                                if (options.autoInsert == 1) {
+                                    await fn.immediateInsertImg();
+                                }
+                            }
+                        }
+                        if (options.shadowGallery == 1 && siteData.aeg != 0) {
+                            fn.hideMsg();
+                            await createShadowGallery();
+                        }
+                        if (isM && options.mobileGallery == 1 && siteData.aeg != 0) {
+                            fn.hideMsg();
+                            createFilterUI();
+                        }
                     }
                 };
                 const MutationObserveURL = new MutationObserver(observeURL_CB);
                 MutationObserveURL.observe(document.body, MutationObserverConfig);
             }
-            if ("observeURL" in siteData && isString(siteData.observeURL) && siteData.observeURL === "loop" && !isObserveURL) {
+            if ("observeURL" in siteData && siteData.observeURL === "head" && !isObserveURL) {
                 isObserveURL = true;
-                setInterval(async () => {
-                    if (currentURL !== document.URL) {
-                        currentURL = document.URL;
-                        if (!"SPA" in siteData || !isFn(siteData.SPA) || !!ge(".FullPictureLoadImage") || isOpenMenu || isFetching) return;
-                        isFetching = true;
-                        const validPage = await siteData.SPA();
-                        isFetching = false;
-                        if (!!validPage) {
-                            isValidPage = true;
-                            if (isAddFullPictureLoadButton) addFullPictureLoadButton();
-                            if (isAddFullPictureLoadFixedMenu) addFullPictureLoadFixedMenu();
-                            if (!isAddKeyEvent) {
-                                document.addEventListener("keydown", addKeyEvent);
-                                isAddKeyEvent = true;
-                            }
-                            await setFPF();
-                            if (isAddNewTabViewButton) {
-                                addNewTabViewButton();
-                                captureSrcB();
-                            }
-                        } else {
-                            fn.remove(".FullPictureLoadFixedBtn,#FullPictureLoadEye,#FullPictureLoadFixedMenu,#FullPictureLoadFixedMenuB");
-                            EyeNumElement = null;
-                            document.removeEventListener("keydown", addKeyEvent);
-                            isAddKeyEvent = false;
-                            isValidPage = false;
-                        }
-                    }
-                }, 200);
+                headObserver();
+            }
+            if ("observeURL" in siteData && siteData.observeURL === "nav" && !isObserveURL) {
+                isObserveURL = true;
+                if ("navigation" in _unsafeWindow) {
+                    navObserver();
+                } else {
+                    headObserver();
+                }
+            }
+            if ("observeURL" in siteData && siteData.observeURL === "gm" && !isObserveURL) {
+                isObserveURL = true;
+                gmUrlObserver();
+            }
+            if ("observeURL" in siteData && siteData.observeURL === "loop" && !isObserveURL) {
+                isObserveURL = true;
+                loopObserver();
             }
             if ("next" in siteData && !isAddNextEvent) {
                 isAddNextEvent = true;
@@ -40264,7 +40726,7 @@ a[data-fancybox]:hover {
                     document.addEventListener("dblclick", (event) => callback(event));
                 }
                 document.addEventListener("keydown", event => {
-                    if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
+                    if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || !isValidPage || ["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName) || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                     if (event.code === "ArrowRight" || event.key === "ArrowRight") callback(event);
                 });
             }
@@ -40272,7 +40734,7 @@ a[data-fancybox]:hover {
                 isAddPrevEvent = true;
                 const prev = siteData.prev;
                 document.addEventListener("keydown", event => {
-                    if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
+                    if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || !isValidPage || ["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName) || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                     if (event.code === "ArrowLeft" || event.key === "ArrowLeft") {
                         event.preventDefault();
                         if (prev === 1) {
@@ -40423,16 +40885,22 @@ a[data-fancybox]:hover {
             if (options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
                 fn.hideMsg();
                 if ("SPA" in siteData && isFn(siteData.SPA)) {
-                    if (await siteData.SPA()) {
+                    if (!!await siteData.SPA()) {
                         setTimeout(() => createShadowGallery(), 200);
                     }
                 } else {
                     setTimeout(() => createShadowGallery(), 200);
                 }
             }
-            if (isM && !("SPA" in siteData) && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category)) {
+            if (isM && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category)) {
                 fn.hideMsg();
-                createFilterUI();
+                if ("SPA" in siteData && isFn(siteData.SPA)) {
+                    if (!!await siteData.SPA()) {
+                        setTimeout(() => createFilterUI(), 200);
+                    }
+                } else {
+                    setTimeout(() => createFilterUI(), 200);
+                }
             }
             if (options.autoExport == 1 && options.autoDownload != 1) {
                 exportImgSrcText();
@@ -40462,7 +40930,7 @@ a[data-fancybox]:hover {
             return;
         }
     };
-    await setFPF();
+    await setFPLF();
 
     if (("reg" in siteData) || ("url" in siteData)) {
         debug("\n列出此站資料", siteData);
@@ -40649,6 +41117,7 @@ a[data-fancybox]:hover {
             updateEyeNum(num);
             await delay(100);
             isChangeNum = false;
+            lastValidPageURL = currentURL;
             if (options.shadowGallery == 1 && siteData.aeg != 0) {
                 setTimeout(() => createShadowGallery(), 200);
             }
