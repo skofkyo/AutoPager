@@ -19,7 +19,7 @@ Edge 133.0.3065.67 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.1
 Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Yandex Browser 25.2.2.97 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.8.1</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.9</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://www.xbext.com/index.html">XBrowser 5.0.3</a>
 <a href="https://viayoo.com/zh-cn/">ViaBrowser 6.2.0</a>
 </pre>
@@ -90,39 +90,51 @@ cnjkedgepfdpdbnepgmajmmjdjkjnifa</pre>
     <br>
 <pre>
 cdn.jsdelivr.net
-// @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
-// @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
-// @resource JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min
-// @resource FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
-// @resource FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
-// @resource FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
-// @resource FancyboxV3Css https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
-// @resource ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
-// @resource ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
+// @require            https://cdn.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/JSZip.js
+// @resource           ajaxHookerJS https://cdn.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/ajaxHooker.js
+// @resource           JqueryJS https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @resource           FancyboxV5JS https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
+// @resource           FancyboxV5Css https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
+// @resource           FancyboxV3JS https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+// @resource           FancyboxV3Css https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+// @resource           ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
+// @resource           ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
+</pre>
+<pre>
+fastly.jsdelivr.net
+// @require            https://fastly.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/JSZip.js
+// @resource           ajaxHookerJS https://fastly.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/ajaxHooker.js
+// @resource           JqueryJS https://fastly.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @resource           FancyboxV5JS https://fastly.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
+// @resource           FancyboxV5Css https://fastly.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
+// @resource           FancyboxV3JS https://fastly.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+// @resource           FancyboxV3Css https://fastly.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+// @resource           ViewerJs https://fastly.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
+// @resource           ViewerJsCss https://fastly.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
 <pre>
 unpkg.com
-// @require            https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
-// @resource ajaxHookerJS https://update.greasyfork.org/scripts/465643/1421695/ajaxHookerLatest.js
-// @resource JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
-// @resource FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
-// @resource FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
-// @resource FancyboxV3JS https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
-// @resource FancyboxV3Css https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
-// @resource ViewerJs https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js
-// @resource ViewerJsCss https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css
+// @require            https://greasyfork.org/scripts/473358/code/JSZip.js?version=1237031
+// @resource           ajaxHookerJS https://scriptcat.org/lib/637/1.4.5/ajaxHooker.js#sha256=EGhGTDeet8zLCPnx8+72H15QYRfpTX4MbhyJ4lJZmyg=
+// @resource           JqueryJS https://unpkg.com/jquery@3.7.1/dist/jquery.min.js
+// @resource           FancyboxV5JS https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js
+// @resource           FancyboxV5Css https://unpkg.com/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css
+// @resource           FancyboxV3JS https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js
+// @resource           FancyboxV3Css https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+// @resource           ViewerJs https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js
+// @resource           ViewerJsCss https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
 <pre>
 github.com
 // @require            https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/JSZip.js
-// @resource ajaxHookerJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/ajaxHooker.js
-// @resource JqueryJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.min.js
-// @resource FancyboxV5JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/fancybox.umd.js
-// @resource FancyboxV5Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/fancybox.css
-// @resource FancyboxV3JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.fancybox.min.js
-// @resource FancyboxV3Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/jquery.fancybox.min.css
-// @resource ViewerJs https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/viewer.min.js
-// @resource ViewerJsCss https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/viewer.min.css
+// @resource           ajaxHookerJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/ajaxHooker.js
+// @resource           JqueryJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.min.js
+// @resource           FancyboxV5JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/fancybox.umd.js
+// @resource           FancyboxV5Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/fancybox.css
+// @resource           FancyboxV3JS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/jquery.fancybox.min.js
+// @resource           FancyboxV3Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/jquery.fancybox.min.css
+// @resource           ViewerJs https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/viewer.min.js
+// @resource           ViewerJsCss https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/viewer.min.css
 </pre>
 </details>
 <br>
@@ -184,13 +196,28 @@ https://*wnacg.com/photos-slist-aid-*.html
         }
         return false;
     },
-    //SPA網頁URL只匹配域名，SPA函式用於判斷頁面域名以外的元素返回Boolean或Promise(例如需要API請求)，切換腳本UI事件添加移除。
-    SPA: () => document.URL.includes("/albums/"),
+    //當為SPA網頁時URL只匹配域名，page主要用於判斷要匹配的路徑和非動態載入的元素。
+    page: () => currentURL.includes("/albums/"),
+    //SPA函式判斷返回Boolean或Promise，切換腳本UI事件添加移除。
+    SPA: () => {
+        if (_this.page()) {
+            //等待多個元素
+            return fn.waitEle(["img.image", "h1.title"]);
+            //當observeURL設置為"body"，等待元素和等待api請求需同時寫在init和SPA，但init只會執行一次，腳本先天設計不良的歷史遺留問題，observeURL設置為"nav"、"gm"、"head"、"loop"，init當SPA返回有效物件皆會再次執行。
+            return fetch(api).then(res => res.json()).then(json => {
+                siteJson = json;
+                return true;
+            });
+        } else {
+            return false;
+        }
+    },
+    SPA: () => _this.page(),
     //SPA網頁不切換UI。
     SPA: true,
-    //與SPA屬性搭配使用，觀察URL變化，用於SPA網頁並且URL是會變換的，更替腳本變數諸如globalImgArray、nextLink、customTitle。
-    //true使用MutationObserver API，"loop"使用setInterval
-    observeURL: true,
+    //與SPA屬性搭配使用，觀察URL變化，用於SPA網頁並且URL是會變換的，更替腳本變數諸如globalImgArray、siteJson、nextLink、customTitle、apiCustomTitle。
+    //"head"、"body"使用MutationObserver API，"nav"使用Navigation API監聽navigate事件，當不支持時則使用"head"，"gm"使用window.onurlchange，"loop"使用setInterval。
+    observeURL: "head",
     //延遲載入規則。
     delay: 300,
     //網頁必須包含的元素。
@@ -269,10 +296,8 @@ https://*wnacg.com/photos-slist-aid-*.html
         code;
         return text;
     },
-    //觀察元素變化重新取得標題字串，用於SPA網頁。
-    observeTitle: true,
-    //參數A，0快捷鍵觸發，1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
-    autoDownload: [A, time],
+    //參數mode，0快捷鍵觸發，1載入頁面後立即開始下載，與next搭配可以實現全自動下載，time延遲幾秒後點擊下一頁(預設5)。
+    autoDownload: [mode, time],
     //設定下一頁元素綁定右方向鍵點擊下一頁。
     next: "//a[text()='下一章']",
     next: () => {
@@ -342,9 +367,10 @@ https://*wnacg.com/photos-slist-aid-*.html
         //
     ],
     reg: () =>,
+    page: () =>,
     SPA: () =>,
     SPA: true,
-    observeURL: true,
+    observeURL: "head",
     delay: 300,
     include: "",
     include: [""],
@@ -390,7 +416,6 @@ https://*wnacg.com/photos-slist-aid-*.html
         s: "",
         d: ""
     }),
-    observeTitle: true,
     autoDownload: [1, time],
     next: "",
     next: () => {
@@ -862,6 +887,14 @@ fn.remove(selectors, time = 0);
 fn.remove(String or Array [String], Number);
 </pre>
 <pre>
+//隱藏元素
+fn.hideEle("selector");
+//如果需要多個選擇器並且CSS/Xpath混寫可寫成陣列
+let selectors = ["cssSelector" , "XpathSelector"]
+fn.hideEle(selectors);
+fn.hideEle(String or Array [String]);
+</pre>
+<pre>
 //清除所有setTimeout和setInterval定時器
 //用匿名函式對付匿名函式，可以解決一部份不讓人打開F12開發人員工具的問題
 //mode0，預設運行全部
@@ -990,7 +1023,7 @@ fn.imgBlobUrlArr(".mh_comicpic img[src^=blob]");
 fn.imgBlobUrlArr(".image>img");
 </pre>
 <pre>
-//取得代碼並創建script注入到當前頁面
+//取得代碼並創建script注入到當前頁面，返回代碼字串。
 let obj = {
     cors: true, //跨域
     mode: "dom", //模式，要遍歷script搜索關鍵字用"dom"
@@ -2872,6 +2905,136 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.sexyasiangirl.xyz/">SexyAsianGirl</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ahottie.net/">AHottie</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://youwu.lol/">尤物丧志</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meizi.pics/">高清妹子图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://setu.lol/">色图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://setushe.pics/">涩图社</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://meiru.neocities.org/">美乳小姐姐写真</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://yase.pics/">亚色图库</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fuligirl.top/">福利姬美图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://xiurentu.pics/">秀人图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ugirls.pics/">UGIRLS</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.jtttututu.top/">酱图图</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sanshang.neocities.org/">三上悠亚写真图片</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://sexygirl.lol/">SexyGirl.LOL</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dongti.netlify.app/">胴体的秘密</a>
+                </td>
+                <td>
+                    <a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>， <a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>， <a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>， <a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>， <a href="https://fulituku.neocities.org/">福利图库</a>， <a href="https://coser1.neocities.org/">COSER美女图</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.lspimg.com/">美图鉴赏</a>
+                </td>
+                <td>
+                    <a href="https://acg.lspimg.com/">美图鉴赏ACG</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.vvcon.cn/cosplay">VVCON美瞳网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.nncos.com/">奈奈COS</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.cosfan.cc/">COSFAN</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://galleryepic.one/zh">Gallery Epic</a>
+                </td>
+                <td>高解析原圖需要下載，聚集的只是預覽圖，分類頁添加了自動翻頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplayersgonewild.net/">Cosplayers GoneWild</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://shiki17chen.imgbb.com/albums">ImgBB</a>
                 </td>
                 <td><a href="https://afc123.imgbb.com/albums">afc123</a>，作用在上傳者的相簿，手動插入圖片</td>
@@ -2955,6 +3118,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://picazor.com/en">Picazor</a>
                 </td>
                 <td>SPA網頁，手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fapeza.com/">Fapeza</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3090,136 +3259,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.hotgirlpix.com/">Hot Girl Pix</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.sexyasiangirl.xyz/">SexyAsianGirl</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://ahottie.net/">AHottie</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://youwu.lol/">尤物丧志</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://meizi.pics/">高清妹子图</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://setu.lol/">色图</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://setushe.pics/">涩图社</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://meiru.neocities.org/">美乳小姐姐写真</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://yase.pics/">亚色图库</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://fuligirl.top/">福利姬美图</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://xiurentu.pics/">秀人图</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://ugirls.pics/">UGIRLS</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.jtttututu.top/">酱图图</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://sanshang.neocities.org/">三上悠亚写真图片</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://sexygirl.lol/">SexyGirl.LOL</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://dongti.netlify.app/">胴体的秘密</a>
-                </td>
-                <td>
-                    <a href="https://asiansexybody.netlify.app/">AsianSexyBody</a>， <a href="https://bestgirlsexy2.neocities.org/">BestGirlSexy2</a>， <a href="https://bestgirlsexy3.neocities.org/">BestGirlSexy3</a>， <a href="https://bestgirlsexy4.neocities.org/">BestGirlSexy4</a>， <a href="https://fulituku.neocities.org/">福利图库</a>， <a href="https://coser1.neocities.org/">COSER美女图</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.lspimg.com/">美图鉴赏</a>
-                </td>
-                <td>
-                    <a href="https://acg.lspimg.com/">美图鉴赏ACG</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.vvcon.cn/cosplay">VVCON美瞳网</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.nncos.com/">奈奈COS</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.cosfan.cc/">COSFAN</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://galleryepic.one/zh">Gallery Epic</a>
-                </td>
-                <td>高解析原圖需要下載，聚集的只是預覽圖，分類頁添加了自動翻頁</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://cosplayersgonewild.net/">Cosplayers GoneWild</a>
                 </td>
                 <td></td>
             </tr>
@@ -3392,12 +3431,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://bxx.me/">BXX</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://oo4k.com/album/category/photo/">4K Beautyful Cosplay Girl</a>
                 </td>
                 <td></td>
@@ -3549,10 +3582,8 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>手動插入圖片，SPA網頁</td>
             </tr>
             <tr>
-                <td>
-                    <a href="https://www.piokok.com/profile/iamdorasnow/">Piokok</a>
-                </td>
-                <td>無法線上看大圖，只能匯出網址用Motrix下載或直接打包下載。</td>
+                <td><a href="https://www.pixwox.com/">Pixwox</a></td>
+                <td><a href="https://www.pixwox.com/profile/iamdorasnow/">Sally Teh S.L 多啦雪</a>，<a href="https://www.pixwox.com/profile/puypuychan/">PuyPuy Cosplayer</a>，<a href="https://www.pixwox.com/profile/zerhoe_two/">missy ♡</a>，無法線上看大圖，只能匯出網址用Motrix下載或直接打包下載。</td>
             </tr>
             <tr>
                 <td>
@@ -3571,6 +3602,14 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.twpornstars.com/iamdorasnow">Sally多啦雪</a>， <a href="https://www.twpornstars.com/axunkaOri">阿薰kaOri</a>
                 </td>
+            </tr>
+            <tr>
+                <td>痞客邦相簿</td>
+                <td><a href="https://nagoat.pixnet.net/album/list">NAGoat</a></td>
+            </tr>
+            <tr>
+                <td>痞客邦部落格</td>
+                <td><a href="https://nagoat.pixnet.net/blog">NAGoat</a>，<a href="https://felix0621.pixnet.net/blog">喵魔的亂想魔境</a></td>
             </tr>
             <tr>
                 <td>
@@ -3623,12 +3662,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://idol.gravureprincess.date/">idol.gravureprincess.date</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://felix0621.pixnet.net/blog">喵魔的亂想魔境</a>
                 </td>
                 <td></td>
             </tr>
@@ -5546,7 +5579,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hitomi.la/">Hitomi.la</a>
                 </td>
-                <td>SPA網頁，作用在閱讀頁</td>
+                <td>SPA網頁，作用在圖片清單頁/閱讀頁</td>
             </tr>
             <tr>
                 <td>
@@ -5778,7 +5811,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://syacomic.com/">紳夜漫畫</a>
+                    <a href="https://syacomic.com/comic">紳夜漫畫</a>
                 </td>
                 <td>SPA網頁， <a href="https://syacomic01.website/">地址發布頁</a>
                 </td>
@@ -5813,14 +5846,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td>SPA網頁，作用在閱讀頁，手動模式。</td>
             </tr>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://niyaniya.moe/">SchaleNetwork</a>
-                </td>
-                <td>
-                    <a href="https://shupogaki.moe/">shupogaki.moe</a>， <a href="https://hoshino.one/">hoshino.one</a>，SPA網頁，請在info頁或read頁做操作，網站機制特殊需要用new XMLHttpReque將http圖片連結轉為BlobURL，取得全部圖片需要等待一段時間。
-                </td>
             </tr>
             <tr>
                 <td>
@@ -6645,12 +6670,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.fffdm.com/manhua/">风之动漫</a>
-                </td>
-                <td>SPA網頁，閱讀頁添加了下一話連接，並排模式無法顯示</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.hahacomic.com/">哈哈漫画</a>
                 </td>
                 <td>漫畫列表添加自動翻頁功能</td>
@@ -7192,20 +7211,20 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.reaperscans.com/">ReaperScans 英文</a>
                 </td>
-                <td>SPA網頁，手動， <a href="https://www.omegascans.org/">Omega Scans</a>
+                <td>SPA網頁， <a href="https://www.omegascans.org/">Omega Scans</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="https://www.vortexscans.org/">Vortex Scans 英文</a>
                 </td>
-                <td>SPA網頁，手動</td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
                     <a href="https://zscans.com/">ZeroScans 英文</a>
                 </td>
-                <td>SPA網頁，手動</td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -7245,7 +7264,25 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://mangakakalot.fun/">MangaKakalot 英文</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://vymanga.com/">VyManga 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.manganato.gg/">MangaNato 英文</a>
+                </td>
+                <td><a href="https://www.natomanga.com/">MangaNato</a>，<a href="https://www.mangakakalot.gg/">MangaKakalot</a>，<a href="https://www.nelomanga.com/">MangaNelo</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangakakalot.to/">MangaKakalot 英文</a>
                 </td>
                 <td></td>
             </tr>
