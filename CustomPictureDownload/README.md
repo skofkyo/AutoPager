@@ -4,24 +4,24 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/02/24
+2025/03/09
 PC
-Chrome 133.0.6943.127 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 133.0.3065.82 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 135.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Chrome 134.0.6998.36 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 134.0.3124.51 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 136.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 135.0.3151.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 135.0.3175.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-☆Firefox for Android 135.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+☆Firefox for Android 136.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Waterfox 1.0.11 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 133.0.3065.67 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 133.0.3065.92 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Yandex Browser 25.2.2.97 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Yandex Browser 25.2.4.122 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.9</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-<a href="https://www.xbext.com/index.html">XBrowser 5.0.3</a>
-<a href="https://viayoo.com/zh-cn/">ViaBrowser 6.2.0</a>
+<a href="https://www.xbext.com/index.html">XBrowser 5.1.0</a>
+<a href="https://viayoo.com/zh-cn/">ViaBrowser 6.3.1</a>
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>Extensions：</h1>
@@ -251,12 +251,16 @@ https://*wnacg.com/photos-slist-aid-*.html
         code;
         return Array;
     },
+    //提取IMG的srcset屬性，與imgs擇其一使用。
+    srcset: "img[srcset]",
     //https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/referrerPolicy
     referrerpolicy: "no-referrer",
     //重複取得圖片元素，特殊情況會用到例如ViperGirls網站。
     repeat: 1,
     //Fancybox要用的縮略圖網址選擇器。
     thums: ".thums",
+    //提取影片網址只支持有src屬性的html tag。
+    videos: "video>source",
     //頁面不適合直接修改插入腳本用的圖片，在頁面右下創建一個浮動可拖動的捕獲之眼，這樣行動裝置才能使用到分頁畫廊。
     capture:  "selector",
     capture: () => _this.imgs(),
@@ -270,6 +274,12 @@ https://*wnacg.com/photos-slist-aid-*.html
     scrollEle: async () => {
         …code;
     },
+   //插入圖片之前要執行的代碼。
+    insertImgBF: () => {
+        code;
+    },
+    //插入圖片之前先創建圖片容器。
+    insertImgBF: () => fn.createImgBox(".album-gallery", 2),
     //[無作用, "寬度%", 增加上邊界]，有此屬性才會添加頁面功能按鈕。
     button: [4, "24%", 1],
     //[清空此元素內容插入圖片, 0(手動)1(自動)2(自動Lazy loading模式)3(手動Lazy loading模式), 自動延遲時間(預設0)]。
@@ -279,10 +289,6 @@ https://*wnacg.com/photos-slist-aid-*.html
     ],
     //更改頁面容器底部統計圖片數量的文字顏色。
     endColor: "white",
-    //插入圖片之前要執行的代碼。
-    insertImgBF: () => {
-        code;
-    },
     //插入圖片之後要執行的代碼。
     //參數parent是插入的圖片的父元素，參數buttonBar是頁面功能按鈕的容器元素。
     insertImgAF: (parent, buttonBar) => {   
@@ -335,7 +341,9 @@ https://*wnacg.com/photos-slist-aid-*.html
     downloadVideo: true,
     //漫畫分類標記有無限滾動模式。
     infiniteScroll: true,
-    //影子畫廊調用Iframe畫廊。
+    //禁止圖片背景預讀。
+    preload: 0,
+    //1影子畫廊強制改調用Iframe畫廊，0即使設置了fancybox屬性，依然調用影子畫廊。
     gallery: 1,
     //離開影子畫廊後要滾動到此元素的位置，寫成"last:selector"則取多個元素的最後一個。
     focus: "selector",
@@ -385,9 +393,11 @@ https://*wnacg.com/photos-slist-aid-*.html
     imgs: () => {
         code
     },
+    srcset: "",
     referrerpolicy: "no-referrer",
     repeat: 1,
     thums: "",
+    videos: "",
     capture:  "",
     capture: () => _this.imgs(),
     fn: () =>,
@@ -437,6 +447,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     referer: "src",
     downloadVideo: true,
     infiniteScroll: true,
+    preload: 0,
     gallery: 1,
     focus: "",
     focus: () =>,
@@ -3037,7 +3048,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://shiki17chen.imgbb.com/albums">ImgBB</a>
                 </td>
-                <td><a href="https://afc123.imgbb.com/albums">afc123</a>，作用在上傳者的相簿，手動插入圖片</td>
+                <td><a href="https://afc123.imgbb.com/albums">afc123</a>，<a href="https://2920215920.imgbb.com/albums">2920215920</a>，<a href="https://ozpin.imgbb.com/albums">Ozpin</a>，作用在上傳者的相簿，手動插入圖片</td>
             </tr>
             <tr>
                 <td>
@@ -3172,6 +3183,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://leaks4fap.com/">Leaks4fap</a>
+                </td>
+                <td>手動插入圖片</td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://fapello.ru/">fapello.ru</a>
                 </td>
                 <td>手動插入圖片</td>
@@ -3235,6 +3252,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://nudogram.com/">Nudogram</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://fappeningbook.com/">Fappening Book</a>
                 </td>
                 <td></td>
             </tr>
@@ -3376,6 +3399,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.porntrex.com/albums/">PornTrex</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://bitchesfost.com/">BitchesFost</a>
                 </td>
                 <td></td>
             </tr>
@@ -3576,12 +3605,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td><a href="https://cosplayg.com/">COSPLAYG</a>，<a href="https://cosplayj.com/">COSPLAYJ</a>，<a href="https://cosplayk.com/">COSPLAYK</a>，<a href="https://cosplayp.com/">COSPLAYP</a></td>
             </tr>
             <tr>
-                <td>
-                    <a href="https://hoehot.com/">HoeHot</a>
-                </td>
-                <td>手動插入圖片，SPA網頁</td>
-            </tr>
-            <tr>
                 <td><a href="https://www.pixwox.com/">Pixwox</a></td>
                 <td><a href="https://www.pixwox.com/profile/iamdorasnow/">Sally Teh S.L 多啦雪</a>，<a href="https://www.pixwox.com/profile/puypuychan/">PuyPuy Cosplayer</a>，<a href="https://www.pixwox.com/profile/zerhoe_two/">missy ♡</a>，無法線上看大圖，只能匯出網址用Motrix下載或直接打包下載。</td>
             </tr>
@@ -3619,7 +3642,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://photobeach.blogspot.com/">Photo Beach</a>
+                    <a href="https://2bcosplay.blogspot.com/">NYO Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://Nao Kanzaki and a few friends/">Nao Kanzaki and a few friends</a>
                 </td>
                 <td></td>
             </tr>
@@ -4352,7 +4381,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://bitchesgirls.com/">BITCHES GIRLS</a>
                 </td>
-                <td>只支持PC版，影片可匯出網址後用Motrix下載</td>
+                <td><a href="https://fapsly.live/">fapsly.live</a>，<a href="https://fapsly.net/">fapsly.net</a>，只支持PC版，影片可匯出網址後用Motrix下載</td>
             </tr>
             <tr>
                 <td>
@@ -4370,7 +4399,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://fapello-leaks.com/fr/albums/hot">Fapello Leaks</a>
                 </td>
-                <td><a href="https://getofleaks.co/albums/hot">Onlyfans Leaks</a>，<a href="https://only2leaked.co/albums/hot">Only2leaked</a>，<a href="https://simpcity.tv/albums/hot">SimpCity TV</a></td>
+                <td><a href="https://thothub-leaked.com/albums/hot">Thothub Leaked</a>，<a href="https://getofleaks.co/albums/hot">Onlyfans Leaks</a>，<a href="https://only2leaked.co/albums/hot">Only2leaked</a>，<a href="https://simpcity.tv/albums/hot">SimpCity TV</a></td>
             </tr>
             <tr>
                 <td>
@@ -4944,7 +4973,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="http://www.yyzhenshun.com/">YY美女图片</a>
                 </td>
                 <td>
-                    <a href="http://bb.meinvnews.com/">美眉大宝贝</a>
+                    <a href="http://www.handands.com/">美眉大宝贝</a>
                 </td>
             </tr>
             <tr>
@@ -5240,7 +5269,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://maobao.xyz/">微密猫</a>
                 </td>
-                <td>SPA網頁</td>
+                <td>SPA網頁，<a href="https://www.xiurentaotu.com/">www.xiurentaotu.com</a>，<a href="https://www.xiuren-tu.com/">www.xiuren-tu.com</a>，<a href="https://www.xiurenmote.com/">www.xiurenmote.com</a>，<a href="https://www.xiurenxiezhen.com/">www.xiurenxiezhen.com</a></td>
             </tr>
             <tr>
                 <td>
@@ -5579,7 +5608,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hitomi.la/">Hitomi.la</a>
                 </td>
-                <td>SPA網頁，作用在圖片清單頁/閱讀頁</td>
+                <td>SPA網頁，作用在圖片清單頁</td>
             </tr>
             <tr>
                 <td>
@@ -5725,7 +5754,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hachirumi.com/">Hachirumi.com</a>
                 </td>
-                <td>SPA網頁，在閱讀頁不分章節取得所有圖片</td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -6576,6 +6605,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.mqzjw.com/">奇漫屋</a>
                 </td>
                 <td>Mobile IOS限定，PC、Android需要偽裝成IOS User Agent才能取得整個章節的圖片， <a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a>，有無限滾動模式加預讀 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.bilimanga.net/">嗶哩漫畫</a>
+                </td>
+                <td>Mobile限定，<a href="https://www.bilicomic.net/">www.bilicomic.net</a></td>
             </tr>
             <tr>
                 <td>
