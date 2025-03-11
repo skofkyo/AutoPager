@@ -80,15 +80,26 @@ cnjkedgepfdpdbnepgmajmmjdjkjnifa</pre>
     </li>
 </ul>
 <h1>提醒：</h1>
-<p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時，請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com、github.com，或自行尋找可替代的依賴庫CDN。</p>
-<details>
-    <summary>
-        <kbd>
-            <strong>「 點擊展開查看依賴庫 」</strong>
-        </kbd>
-    </summary>
-    <br>
-<pre>
+<ul>
+    <li>
+        <p>
+            <a href="https://github.com/Tampermonkey/tampermonkey/issues/2215">Tampermonkey 5.3.2+的GM_xmlhttpRequest串行化</a>，導致腳本裡有用到GM_xmlhttpRequest的地方會無法多線程(並行化)請求或下載，解決方法需要用戶自行添加補丁。
+        </p>
+        <pre>
+// @require          https://raw.githubusercontent.com/Tampermonkey/utils/refs/heads/main/requires/gh_2215_make_GM_xhr_more_parallel_again.js
+</pre>
+        <p>或者Tampermonkey回退至 5.1.1，或改用Violentmonkey、ScriptCat。</p>
+    </li>
+    <li>
+        <p>如果所在區域，ISP，或是不可抗力的因素而無法正常連接cdn.jsdelivr.net的依賴庫時，請自行修改腳本將所有cdn.jsdelivr.net替換成unpkg.com、github.com，或自行尋找可替代的依賴庫CDN。</p>
+        <details>
+            <summary>
+                <kbd>
+                    <strong>「 點擊展開查看依賴庫 」</strong>
+                </kbd>
+            </summary>
+            <br>
+            <pre>
 cdn.jsdelivr.net
 // @require            https://cdn.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/JSZip.js
 // @resource           ajaxHookerJS https://cdn.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/ajaxHooker.js
@@ -100,7 +111,7 @@ cdn.jsdelivr.net
 // @resource           ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
 // @resource           ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
-<pre>
+            <pre>
 fastly.jsdelivr.net
 // @require            https://fastly.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/JSZip.js
 // @resource           ajaxHookerJS https://fastly.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/ajaxHooker.js
@@ -112,7 +123,7 @@ fastly.jsdelivr.net
 // @resource           ViewerJs https://fastly.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
 // @resource           ViewerJsCss https://fastly.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
-<pre>
+            <pre>
 unpkg.com
 // @require            https://greasyfork.org/scripts/473358/code/JSZip.js?version=1237031
 // @resource           ajaxHookerJS https://scriptcat.org/lib/637/1.4.5/ajaxHooker.js#sha256=EGhGTDeet8zLCPnx8+72H15QYRfpTX4MbhyJ4lJZmyg=
@@ -124,7 +135,7 @@ unpkg.com
 // @resource           ViewerJs https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js
 // @resource           ViewerJsCss https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css
 </pre>
-<pre>
+            <pre>
 github.com
 // @require            https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/JSZip.js
 // @resource           ajaxHookerJS https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/ajaxHooker.js
@@ -136,14 +147,17 @@ github.com
 // @resource           ViewerJs https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/viewer.min.js
 // @resource           ViewerJsCss https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/viewer.min.css
 </pre>
-</details>
-<br>
-<p>紳士漫畫wnacg，由於Fancybox功能的緣故，元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
-<pre>
+        </details>
+    </li>
+    <li>
+        <p>紳士漫畫wnacg，由於Fancybox功能的緣故，元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
+        <pre>
 https://*wnacg.com/photos-index-aid-*.html
 https://*wnacg.com/photos-slide-aid-*.html
 https://*wnacg.com/photos-slist-aid-*.html
 </pre>
+    </li>
+</ul>
 <h1>簡介：</h1>
 <p>寫這個腳本的緣由是，想讓下載、複製連結不用做展開圖庫挑選圖片的動作，能自己決定要儲存的壓縮檔和資料夾名稱，網站沒有限制連接數的話能做到高速聚集所有圖片，還能添加一些我想要的輔助功能。</p>
 <p>聚圖！反對將一話一集一章一篇一部拆成好幾頁，一頁一張圖真XXX的有病，整頁用Lazy loading的話還能接受，透過選擇器圈選圖片或者自己寫函式，能聚集分頁的所有圖片到當前頁面裡，也能進行下載壓縮打包，如有NEXT元素能做到自動化下載，支持自定義規則方便重複使用，後續擴充規則更容易。</p>
@@ -3606,7 +3620,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td><a href="https://www.pixwox.com/">Pixwox</a></td>
-                <td><a href="https://www.pixwox.com/profile/iamdorasnow/">Sally Teh S.L 多啦雪</a>，<a href="https://www.pixwox.com/profile/puypuychan/">PuyPuy Cosplayer</a>，<a href="https://www.pixwox.com/profile/zerhoe_two/">missy ♡</a>，無法線上看大圖，只能匯出網址用Motrix下載或直接打包下載。</td>
+                <td><a href="https://www.pixwox.com/profile/shimotsuki18/">SHIMO霜月</a>，<a href="https://www.pixwox.com/profile/iamdorasnow/">Sally Teh S.L 多啦雪</a>，<a href="https://www.pixwox.com/profile/puypuychan/">PuyPuy Cosplayer</a>，<a href="https://www.pixwox.com/profile/zerhoe_two/">missy ♡</a>，無法線上看大圖，只能匯出網址用Motrix下載或直接打包下載。</td>
             </tr>
             <tr>
                 <td>
@@ -7019,7 +7033,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.mangago.me/">Mangago 英文</a>
                 </td>
                 <td>
-                    <a href="https://www.mangago.zone/">mangago.zone</a>， <a href="https://www.youhim.me/">youhim.me</a>，只支持PC版。
+                    <a href="https://www.mangago.zone/">mangago.zone</a>， <a href="https://www.youhim.me/">youhim.me</a>
                 </td>
             </tr>
             <tr>
