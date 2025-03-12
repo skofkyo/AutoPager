@@ -4,20 +4,20 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/03/09
+2025/03/12
 PC
-Chrome 134.0.6998.36 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 134.0.3124.51 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 136.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Chrome 134.0.6998.89 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 134.0.3124.66 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 136.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 135.0.3175.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 136.0.3188.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 ☆Firefox for Android 136.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 133.0.3065.92 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 134.0.3124.57 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Yandex Browser 25.2.4.122 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Yandex Browser 25.2.5.105 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.9</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://www.xbext.com/index.html">XBrowser 5.1.0</a>
@@ -87,7 +87,7 @@ cnjkedgepfdpdbnepgmajmmjdjkjnifa</pre>
         </p>
         <pre>
 // @require          https://raw.githubusercontent.com/Tampermonkey/utils/refs/heads/main/requires/gh_2215_make_GM_xhr_more_parallel_again.js
-</pre>
+        </pre>
         <p>或者Tampermonkey回退至 5.1.1，或改用Violentmonkey、ScriptCat。</p>
     </li>
     <li>
@@ -110,7 +110,7 @@ cdn.jsdelivr.net
 // @resource           FancyboxV3Css https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 // @resource           ViewerJs https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
 // @resource           ViewerJsCss https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
-</pre>
+            </pre>
             <pre>
 fastly.jsdelivr.net
 // @require            https://fastly.jsdelivr.net/gh/skofkyo/Script@d81bf60c4883c2efc2c1b72f697af808b4a77a09/lib/JSZip.js
@@ -122,7 +122,7 @@ fastly.jsdelivr.net
 // @resource           FancyboxV3Css https://fastly.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 // @resource           ViewerJs https://fastly.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js
 // @resource           ViewerJsCss https://fastly.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css
-</pre>
+            </pre>
             <pre>
 unpkg.com
 // @require            https://greasyfork.org/scripts/473358/code/JSZip.js?version=1237031
@@ -134,7 +134,7 @@ unpkg.com
 // @resource           FancyboxV3Css https://unpkg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
 // @resource           ViewerJs https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js
 // @resource           ViewerJsCss https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css
-</pre>
+            </pre>
             <pre>
 github.com
 // @require            https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/JSZip.js
@@ -146,11 +146,11 @@ github.com
 // @resource           FancyboxV3Css https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/jquery.fancybox.min.css
 // @resource           ViewerJs https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/js/viewer.min.js
 // @resource           ViewerJsCss https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/css/viewer.min.css
-</pre>
+            </pre>
         </details>
     </li>
     <li>
-        <p>紳士漫畫wnacg，由於Fancybox功能的緣故，元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或在該網站關閉Fancybox功能。</p>
+        <p>紳士漫畫wnacg，由於Fancybox功能的緣故，元素結構導致可能會被擋廣告擴充套件的規則隱藏掉圖片，圖片列表頁、下拉閱讀頁需要加白名單網址(信任名單)，腳本已隱藏廣告元素，或者在該網站關閉Fancybox功能即可不被隱藏圖片，或者直接使用影子畫廊、分頁畫廊來觀看圖片。</p>
         <pre>
 https://*wnacg.com/photos-index-aid-*.html
 https://*wnacg.com/photos-slide-aid-*.html
@@ -969,25 +969,42 @@ fn.scrollEles(String, Number);
 //selector 元素選擇器
 //callback判斷
 //time判斷逾時的時間
-//top 1滾動完後返回頂部0不返回
-fn.aotoScrollEles("selector", callback, time = 5000, top = 1);
-fn.aotoScrollEles(String, Function or AsyncFunction, Number, Number);
+//top滾動完後返回頂部，0不返回、1不返回，也能指定元素卷軸置頂。
+//end頁面底部元素。
+//end_time頁面底部元素完全進入視口可視範圍內後，經過多少時間就結束判斷迴圈。
+let options = {
+    ele: "selector",
+    cb: callback,
+    time: 5000,
+    top: 1 or "selector",
+    end: "selector",
+    end_time: 2000
+};
+fn.aotoScrollEles(options);
+
 //callback例子
+
 //ele參數為滾動的元素自身，此例為判斷元素的子元素有沒有出現img[src]
 let callback = (ele) => fn.ge("img[src]", ele);
+
 //此例為判斷元素的src屬性是否已經轉為BlobURL
 let callback = (img) => /^blob/.test(img.src);
 
 //也可以用於動態捕獲，有些網站會動態創建元素，進入可視範圍才創建新元素，並且可能也會刪除之前創建的元素。
 let arr = [];
-await fn.aotoScrollEles("img.gallery-item", (ele) => {
-    if (/\/media\//.test(ele.src)) {
-        arr.push(ele.src);
-        return true;
-    } else {
-        return false;
-    }
-}, 1000);
+let options = {
+    ele: "img.gallery-item",
+    cb: (ele) => {
+        if (/\/media\//.test(ele.src)) {
+            arr.push(ele.src);
+            return true;
+        } else {
+            return false;
+        }
+    },
+    time: 1000,
+};
+await fn.aotoScrollEles(options);
 return [...new Set(arr)];
 </pre>
 <pre>
@@ -6622,12 +6639,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.bilimanga.net/">嗶哩漫畫</a>
-                </td>
-                <td>Mobile限定，<a href="https://www.bilicomic.net/">www.bilicomic.net</a></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://www.aitaocomic.com/">爱淘漫画</a>
                 </td>
                 <td>SPA網頁，手動插入圖片</td>
@@ -6737,10 +6748,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://manwa.fun/">漫蛙</a>
+                    <a href="https://manwa.me/">漫蛙</a>
                 </td>
                 <td>uBlock加信任名單
-                    <pre>https://manwa.fun/chapter/*</pre> ，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
+                    <pre>https://manwa.me/chapter/*</pre> ，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
                 </td>
             </tr>
             <tr>
@@ -6748,6 +6759,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.yinghuamh.net/">樱花漫画</a>
                 </td>
                 <td>圖片伺服器很不穩定，下載很容易404。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.bilimanga.net/">嗶哩漫畫</a>
+                </td>
+                <td>Mobile限定，圖片伺服器有請求限制容易錯誤，<a href="https://www.bilicomic.net/">www.bilicomic.net</a></td>
             </tr>
             <tr>
                 <td>微信公众号</td>
@@ -6856,10 +6873,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.gmh1234.com/">漫画1234</a>
+                    <a href="https://www.amh1234.com/">漫画1234</a>
                 </td>
                 <td>
-                    <a href="https://m.gmh1234.com/">m.gmh1234.com</a>，預設關閉
+                    <a href="https://m.amh1234.com/">m.amh1234.com</a>，預設關閉
                 </td>
             </tr>
             <tr>
@@ -6937,12 +6954,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.dongmanmanhua.cn/">咚漫</a>
-                </td>
-                <td>預設關閉</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://manga.bilibili.com/">哔哩哔哩漫画</a>
                 </td>
                 <td>預設關閉</td>
             </tr>
@@ -7190,12 +7201,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://comic.nizamkomputer.com/">ComiCastle 英文</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://disasterscans.com/">Disaster Scans 英文</a>
                 </td>
                 <td>SPA網頁</td>
@@ -7307,15 +7312,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://mangafox.fun/">MangaFox 英文</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://mangakakalot.fun/">MangaKakalot 英文</a>
                 </td>
-                <td>SPA網頁</td>
+                <td>SPA網頁，<a href="https://mangafox.fun/">MangaFox</a></td>
             </tr>
             <tr>
                 <td>
