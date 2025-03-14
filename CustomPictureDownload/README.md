@@ -4,7 +4,7 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/03/12
+2025/03/14
 PC
 Chrome 134.0.6998.89 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Edge 134.0.3124.66 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
@@ -12,7 +12,7 @@ FireFox 136.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
 ☆Edge Canary 136.0.3188.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-☆Firefox for Android 136.0 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+☆Firefox for Android 136.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Edge 134.0.3124.57 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
@@ -4587,7 +4587,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://dtf.ru/u/660597-salvatore-ganacci">DTF</a>
                 </td>
                 <td>
-                    <a href="https://dtf.ru/u/36100-tursall">Tursall</a>，SPA網頁，點開作者的PO文，作用在PO文首樓的圖集，手動插入圖片。
+                    <a href="https://dtf.ru/u/36100-tursall">Tursall</a>，<a href="https://dtf.ru/u/589631-the-idol-girls">The IDOL Girls</a>，SPA網頁，點開作者的PO文，作用在PO文首樓的圖集，手動插入圖片。
                 </td>
             </tr>
             <tr>
@@ -5829,6 +5829,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://narutodoujins.com/">Naruto hentai Doujins</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://syntheticgirls.com/">Ai Generated Hentai MILFS</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="http://18p.fun/">開車漫畫</a>
                 </td>
                 <td>只是閱讀請使用東方永頁機，下載操作，需書幣購買的先購買好，第一章閱讀頁按1先跳轉為18p.fun，再按1開始聚圖從頭一路翻到尾，按0下載，標題需手動輸入</td>
@@ -6404,7 +6416,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.copymanga.tv/">拷貝漫畫</a>
                 </td>
                 <td>
-                    <a href="https://copymanga.tv/">copymanga.tv</a>， <a href="https://www.mangacopy.com/">www.mangacopy.com</a>， <a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
+                    <a href="https://copymanga.tv/">copymanga.tv</a>， <a href="https://www.mangacopy.com/">www.mangacopy.com</a>， <a href="https://mangacopy.com/">mangacopy.com</a>，PC版向下滾動隱藏工具列，無限滾動模式手機版需在閱讀頁重新載入才會生效。
                 </td>
             </tr>
             <tr>
@@ -6412,7 +6424,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.relamanhua.org/comics?type=1">熱辣漫畫</a>
                 </td>
                 <td>
-                    <a href="https://www.2024manga.com/comics?type=1">www.2024manga.com</a>，付費漫畫依然需要有付費帳號登入後才能看全部，手機版需在閱讀頁重新載入一次才會生效，有無限滾動模式
+                    <a href="https://www.2024manga.com/comics?type=1">www.2024manga.com</a>，<a href="https://www.manga2024.com/comics?type=1">www.manga2024.com</a>，<a href="https://m.relamanhua.org/v2h5/discoverFreeComic">m.relamanhua.org</a>，<a href="https://m.2024manga.com/v2h5/discoverFreeComic">m.2024manga.com</a>，<a href="https://m.manga2024.com/v2h5/discoverFreeComic">m.manga2024.com</a>，付費漫畫依然需要有付費帳號登入後才能看全部，手機版無限滾動模式需在閱讀頁重新載入才會生效。
                 </td>
             </tr>
             <tr>
