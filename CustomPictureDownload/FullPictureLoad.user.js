@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.15
+// @version            2025.3.16
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4929,8 +4929,7 @@
             h: "hotgirl.asia"
         },
         box: [".galeria_img", 1],
-        //imgs: () => fn.getImgA(".galeria_img>img", ".pagination a[href]"),
-        imgs: () => fn.getImgA("#carouselImageIndicators img", [fn.lp + "?stype=slideshow"]),
+        imgs: () => fn.getImgA(".galeria_img>img", ".pagination a[href]"),
         button: [4],
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".galeria_img,#pagination"], 2
@@ -7329,6 +7328,23 @@
         customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
+        name: "JJCOS",
+        url: {
+            h: ["jjcos.com"],
+            p: "/post/"
+        },
+        init: () => (tempEles = fn.gae("#post-content h2")),
+        imgs: "#post-content img",
+        button: [4],
+        insertImg: ["#post-content", 2],
+        insertImgAF: (_, b) => b.before(...tempEles),
+        go: 1,
+        autoDownload: [0],
+        next: ".next:has(.fa-chevron-left)+a",
+        prev: ".next:has(.fa-chevron-right)+a",
+        customTitle: "#post-content h2",
+        category: "nsfw2"
+    }, {
         name: "Xiunice.com",
         url: {
             h: ["xiunice.com"]
@@ -7979,7 +7995,7 @@
     }, {
         name: "HOTGIRLchina格式",
         url: {
-            h: ["hotgirlchina.com", "hinhsexviet.com", "hinhkhieudam.com"],
+            h: ["hotgirlchina.com", "hinhsexviet.com", "hinhkhieudam.com", "gaidepvietnam.com"],
             e: [".entry-inner img[alt]", ".post-title"]
         },
         init: () => {
@@ -14178,7 +14194,7 @@
         category: "nsfw2"
     }, {
         name: "多多影视/多多影音/全网影视/哥哥在线/微微资讯/酷酷影音/男人社区 模式D",
-        host: ["xoxvi.com"],
+        link: "https://xoxvi.com/arttype/jipinmeinv.html",
         url: {
             e: [
                 "#sidebarTogglePcDown",
@@ -14196,6 +14212,27 @@
         button: [4],
         insertImg: [".single-video-info-content", 1],
         customTitle: ".single-video-title h2",
+        category: "nsfw2"
+    }, {
+        name: "SexBee.TV",
+        link: "https://sexbee.tv/arttype/jipinmeinv/",
+        url: {
+            t: "SexBee.TV",
+            p: "/artdetail/",
+            e: "#list_art_common_art_show img"
+        },
+        imgs: () => {
+            let pages = fn.ge(".pagination");
+            if (pages) {
+                let max = fn.gu("//a[text()='最後 »']").match(/\d+/g).at(-1);
+                let links = fn.arr(max, (v, i) => `?mode=async&function=get_block&block_id=list_art_common_art_show&sort_by=&from=${i + 1}`);
+                return fn.getImgA("#list_art_common_art_show img", links);
+            }
+            return fn.gae("#list_art_common_art_show img");
+        },
+        button: [4],
+        insertImg: ["#list_art_common_art_show", 2],
+        customTitle: ".content-header h2",
         category: "nsfw2"
     }, {
         name: "wholsp",
@@ -19943,7 +19980,7 @@
         name: "VyManga",
         host: ["vymanga.com"],
         url: {
-            t: "https://summonersky.com"
+            h: ["summonersky.com"]
         },
         imgs: ".carousel-item img",
         autoDownload: [0],
@@ -20100,7 +20137,7 @@
     }, {
         name: "MangaLib",
         url: {
-            h: "mangalib.org",
+            h: ["mangalib.org", "mangalib.me"],
             p: "/read/"
         },
         init: () => {
@@ -20128,6 +20165,28 @@
         next: () => fn.gu("a:has(.fa-chevron-right):not([aria-current])"),
         prev: 1,
         customTitle: () => fn.gt("#app a .u8_vb") + " -" + fn.gt("#app a [data-media-down]"),
+        category: "comic"
+    }, {
+        name: "МангаПоиск",
+        url: {
+            h: ["mangapoisk.live"]
+        },
+        page: () => fn.clp("/chapter/"),
+        json: () => fn.showMsg(DL.str_05, 0).then(() => fn.fetchDoc(fn.clp()).then(dom => {
+            doc = dom;
+            let pageData = fn.ge("#app[data-page]", dom).dataset.page;
+            let json = JSON.parse(pageData);
+            siteJson = json.props.chapter.data;
+        }).then(() => fn.hideMsg())),
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "nav",
+        init: () => _this.page() ? _this.json() : void 0,
+        imgs: () => _this.page() ? siteJson.pages.map(e => e.link) : [],
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: () => _this.page() && ("nextChapter" in siteJson) ? siteJson.nextChapter.link : null,
+        prev: 1,
+        customTitle: () => _this.page() ? fn.gt("#page-content h1", 1, doc) : null,
         category: "comic"
     }, {
         name: "Weeb Central",
@@ -27967,7 +28026,7 @@ if ("xx" in window) {
                 str_110: "※ Webp轉換為Jpg",
                 str_111: "💬 Github 反饋",
                 str_112: "提示",
-                str_113: "",
+                str_113: "滾動煞車：",
                 str_114: "E/EX-HENTAI 載入原始圖片連結",
                 str_115: "關閉自動滾動至首張圖片",
                 str_116: "自動滾動所有惰性載入的圖片元素",
@@ -28050,6 +28109,8 @@ if ("xx" in window) {
                 str_193: "匯出JSON",
                 str_194: "複製MD",
                 str_195: "匯出MD",
+                str_196: "前往下一話",
+                str_197: "前往下一篇",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -28207,7 +28268,7 @@ if ("xx" in window) {
                 str_110: "※ Webp转换为Jpg",
                 str_111: "💬 Github 反馈",
                 str_112: "提示",
-                str_113: "",
+                str_113: "滚动煞车：",
                 str_114: "E/EX-HENTAI 加载原始图片链接",
                 str_115: "关闭自动滚动至首张图片",
                 str_116: "自动滚动所有懒加载的图片元素",
@@ -28290,6 +28351,8 @@ if ("xx" in window) {
                 str_193: "导出JSON",
                 str_194: "拷贝MD",
                 str_195: "导出MD",
+                str_196: "前往下一话",
+                str_197: "前往下一篇",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28441,7 +28504,7 @@ if ("xx" in window) {
                 str_110: "※ Convert Webp to Jpg",
                 str_111: "💬 Github Feedback",
                 str_112: "Prompt Message",
-                str_113: "",
+                str_113: "Scroll：",
                 str_114: "E/EX-HENTAI Load Original Image",
                 str_115: "Turn Off Auto Scroll To First Image",
                 str_116: "Auto Scroll All Image Elements",
@@ -28524,6 +28587,8 @@ if ("xx" in window) {
                 str_193: "Export JSON",
                 str_194: "Copy Markdown",
                 str_195: "Export Markdown",
+                str_196: "Go To Next",
+                str_197: "Go To Next",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -34981,6 +35046,8 @@ function createImgElement(mode) {
     totalNumberOfElements = imgElements.length;
     if (config.ViewMode == 5 && ["comic", "hcomic"].some(c => category == c)) {
         switchDirection(imgBox, imgElements);
+    }
+    if (["comic", "hcomic"].some(c => category == c)) {
         switch_r_l_border(imgElements);
     }
     fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -35119,7 +35186,6 @@ if (config.ViewMode == 1) {
         let currentReferenceElement;
         let nextButtonIsShown = false;
         let isShowAlert = false;
-        let dNum = 0;
         let loopView = _GM_getValue("FullPictureLoadLoopView", 1);
 
         const mainHtml = '<div id="FullPictureLoadShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
@@ -35262,9 +35328,13 @@ if (config.ViewMode == 1) {
                 const next = ge("#next", shadow);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (isShowAlert && event.deltaY > 0) {
-                        alertMessage.innerText = Number(alertMessage.innerText) - 1;
-                        if (alertMessage.innerText <= 0) {
-                            return (location.href = nextLink);
+                        let num = Number(alertMessage.innerText.match(/\d/));
+                        if (num > 0) {
+                            alertMessage.innerText = DL.str_113 + (num -= 1);
+                        }
+                        if (num <= 0) {
+                            alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                            return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
                         }
                     } else if (event.deltaY > 0 && imgViewIndex >= imgs.length - 1 && config.ViewMode == 5 && isString(nextLink)) {
                         isShowAlert = true;
@@ -35274,7 +35344,7 @@ if (config.ViewMode == 1) {
                         nextButtonIsShown = false;
                         if (config.ViewMode == 5) {
                             isShowAlert = false;
-                            alertMessage.innerText = "3";
+                            alertMessage.innerText = DL.str_113 + "3";
                             alertDiv.classList.add("hide");
                         }
                         imgViewIndex = imgs.length - 1;
@@ -35284,7 +35354,7 @@ if (config.ViewMode == 1) {
                         nextButtonIsShown = false;
                         if (config.ViewMode == 5) {
                             isShowAlert = false;
-                            alertMessage.innerText = "3";
+                            alertMessage.innerText = DL.str_113 + "3";
                             alertDiv.classList.add("hide");
                         }
                         imgViewIndex--;
@@ -35424,7 +35494,6 @@ if (config.ViewMode == 1) {
             if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
                 event.preventDefault();
                 nextButtonIsShown = false;
-                dNum = 0;
                 if (event.code === "Home" || event.key === "Home") {
                     imgViewIndex = 0;
                 } else {
@@ -35439,16 +35508,12 @@ if (config.ViewMode == 1) {
                 return instantScrollIntoView(img);
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
-                if (next) {
-                    next.style.backgroundColor = "gray";
-                    return (location.href = nextLink);
-                }
-            }
-            if ((["Space", "PageDown"].some(k => event.code === k) || [" ", "PageDown"].some(k => event.key === k)) && nextButtonIsShown) {
-                dNum++;
-                if (dNum > 2) {
-                    next.style.backgroundColor = "gray";
-                    return (location.href = nextLink);
+                if (isString(nextLink)) {
+                    alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                    if (isEle(next)) {
+                        next.style.backgroundColor = "gray";
+                    }
+                    return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
@@ -35823,14 +35888,11 @@ img.horizontal {
     z-index: 2147483647;
     border-radius: 10px;
     font-size: 14px;
+    text-align: center;
 }
 #hint {
-    text-align: center;
     font-size: 16px;
     font-weight: bold;
-}
-#alertMessage {
-    text-align: center;
 }
 #alertBox #nextAlert {
     float: left;
@@ -35838,10 +35900,7 @@ img.horizontal {
     padding: 5px 22px;
     border: 1px solid #ffdb11;
     background-color: #ffdb11;
-}
-#nextAlert a {
-    color: black;
-    text-decoration: none;
+    border-radius: 10px 0px 0px 10px;
 }
 #alertBox #closeAlert {
     float: right;
@@ -35849,6 +35908,7 @@ img.horizontal {
     padding: 5px 22px;
     border: 1px solid #ebebeb;
     background-color: #ebebeb;
+    border-radius: 0px 10px 10px 0px;
 }
         `);
         shadow.appendChild(style);
@@ -35944,7 +36004,6 @@ img.horizontal {
             if (mode === "horizontal") {
                 imgElements.at(0).classList.add("horizontal_first");
                 imgElements.at(-1).classList.add("horizontal_last");
-                alertMessage.innerText = "3";
             }
             const p = document.createElement("p");
             p.id = "imgBox";
@@ -35953,9 +36012,9 @@ img.horizontal {
             }
             if (isPC && siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
                 if (_unsafeWindow.devicePixelRatio > 1) {
-                    p.style.padding = "2px 6% 0";
+                    p.style.padding = "2px 8% 0";
                 } else {
-                    p.style.padding = "0 6%";
+                    p.style.padding = "0 8%";
                 }
                 p.style.margin = "0 auto";
             } else if (config.ViewMode == 5) {
@@ -35981,6 +36040,8 @@ img.horizontal {
             totalNumberOfElements = imgElements.length;
             if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
                 switchDirection(p, imgElements);
+            }
+            if (["comic", "hcomic"].some(c => siteData.category == c)) {
                 switch_r_l_border(imgElements);
             }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -36103,19 +36164,27 @@ img.horizontal {
                             if (entry.isIntersecting) {
                                 nextButtonIsShown = true;
                                 next.style.border = "solid #32a1ce";
+                                if (isPC) {
+                                    alertDiv.classList.remove("hide");
+                                }
                                 if (!isEventAdded) {
                                     isEventAdded = true;
                                     FullPictureLoadShadowGallery.addEventListener("wheel", (event) => {
                                         if (isOpenFancybox || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) return;
                                         if (event.deltaY < 0) {
-                                            dNum = 0;
                                             next.style.border = "";
                                             nextButtonIsShown = false;
+                                            alertMessage.innerText = DL.str_113 + "3";
+                                            alertDiv.classList.add("hide");
                                         } else if (event.deltaY > 0 && nextButtonIsShown) {
-                                            dNum++;
-                                            if (dNum > 2) {
+                                            let num = Number(alertMessage.innerText.match(/\d/));
+                                            if (num > 0) {
+                                                alertMessage.innerText = DL.str_113 + (num -= 1);
+                                            }
+                                            if (num <= 0) {
+                                                alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
                                                 next.style.backgroundColor = "gray";
-                                                return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 500);
+                                                return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 200);
                                             }
                                         }
                                     }, {
@@ -36123,9 +36192,10 @@ img.horizontal {
                                     });
                                 }
                             } else {
-                                dNum = 0;
                                 next.style.border = "";
                                 nextButtonIsShown = false;
+                                alertMessage.innerText = DL.str_113 + "3";
+                                alertDiv.classList.add("hide");
                             }
                         });
                     }, {
@@ -36301,22 +36371,23 @@ img.horizontal {
         let alertMessage;
 
         btnDiv.insertAdjacentHTML("afterend", `
-<div id="alertBox" class="alert-box hide">
+<div id="alertBox" class="hide">
     <div id="hint">${DL.str_112}</div>
-    <p id="alertMessage">3</p>
-    <div id="nextAlert">
-        <a href="${isString(nextLink) ? nextLink : "javascript:void(0)"}">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}</a>
-    </div>
+    <p id="alertMessage">${DL.str_113}3</p>
+    <div id="nextAlert">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）</div>
     <div id="closeAlert">${DL.str_132}</div>
 </div>
         `);
 
         alertDiv = ge("#alertBox", shadow);
         alertMessage = ge("#alertMessage", alertDiv);
-
+        ge("#nextAlert", alertDiv).addEventListener("click", event => {
+            cancelDefault(event);
+            return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
+        });
         ge("#closeAlert", alertDiv).addEventListener("click", () => {
             isShowAlert = false;
-            alertMessage.innerText = "3";
+            alertMessage.innerText = DL.str_113 + "3";
             alertDiv.classList.add("hide");
         });
 
@@ -36593,9 +36664,13 @@ img.horizontal {
                 const next = ge("#next", mainElement);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (isShowAlert && event.deltaY > 0) {
-                        alertMessage.innerText = Number(alertMessage.innerText) - 1;
-                        if (alertMessage.innerText <= 0) {
-                            return (location.href = nextLink);
+                        let num = Number(alertMessage.innerText.match(/\d/));
+                        if (num > 0) {
+                            alertMessage.innerText = DL.str_113 + (num -= 1);
+                        }
+                        if (num <= 0) {
+                            alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                            return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
                         }
                     } else if (event.deltaY > 0 && imgViewIndex >= imgs.length - 1 && config.ViewMode == 5 && isString(nextLink)) {
                         isShowAlert = true;
@@ -36605,7 +36680,7 @@ img.horizontal {
                         nextButtonIsShown = false;
                         if (config.ViewMode == 5) {
                             isShowAlert = false;
-                            alertMessage.innerText = "3";
+                            alertMessage.innerText = DL.str_113 + "3";
                             alertDiv.classList.add("hide");
                         }
                         imgViewIndex = imgs.length - 1;
@@ -36615,7 +36690,7 @@ img.horizontal {
                         nextButtonIsShown = false;
                         if (config.ViewMode == 5) {
                             isShowAlert = false;
-                            alertMessage.innerText = "3";
+                            alertMessage.innerText = DL.str_113 + "3";
                             alertDiv.classList.add("hide");
                         }
                         imgViewIndex--;
@@ -36755,7 +36830,6 @@ img.horizontal {
             if ((event.code === "Home" || event.key === "Home") || (event.code === "End" || event.key === "End")) {
                 event.preventDefault();
                 nextButtonIsShown = false;
-                dNum = 0;
                 if (event.code === "Home" || event.key === "Home") {
                     imgViewIndex = 0;
                 } else {
@@ -36770,16 +36844,12 @@ img.horizontal {
                 return instantScrollIntoView(img);
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
-                if (next) {
-                    next.style.backgroundColor = "gray";
-                    return (location.href = nextLink);
-                }
-            }
-            if ((["Space", "PageDown"].some(k => event.code === k) || [" ", "PageDown"].some(k => event.key === k)) && nextButtonIsShown) {
-                dNum++;
-                if (dNum > 2) {
-                    next.style.backgroundColor = "gray";
-                    return (location.href = nextLink);
+                if (isString(nextLink)) {
+                    alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                    if (isEle(next)) {
+                        next.style.backgroundColor = "gray";
+                    }
+                    return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
@@ -37150,14 +37220,11 @@ img.horizontal {
     z-index: 2147483647;
     border-radius: 10px;
     font-size: 14px;
+    text-align: center;
 }
 #hint {
-    text-align: center;
     font-size: 16px;
     font-weight: bold;
-}
-#alertMessage {
-    text-align: center;
 }
 #alertBox #nextAlert {
     float: left;
@@ -37165,10 +37232,7 @@ img.horizontal {
     padding: 5px 22px;
     border: 1px solid #ffdb11;
     background-color: #ffdb11;
-}
-#nextAlert a {
-    color: black;
-    text-decoration: none;
+    border-radius: 10px 0px 0px 10px;
 }
 #alertBox #closeAlert {
     float: right;
@@ -37176,6 +37240,7 @@ img.horizontal {
     padding: 5px 22px;
     border: 1px solid #ebebeb;
     background-color: #ebebeb;
+    border-radius: 0px 10px 10px 0px;
 }
                 `
         });
@@ -37280,7 +37345,6 @@ img.horizontal {
             if (mode === "horizontal") {
                 imgElements.at(0).classList.add("horizontal_first");
                 imgElements.at(-1).classList.add("horizontal_last");
-                alertMessage.innerText = "3";
             }
             const p = document.createElement("p");
             p.id = "imgBox";
@@ -37289,9 +37353,9 @@ img.horizontal {
             }
             if (isPC && siteData.category.includes("comic") && config.ViewMode != 4 && config.ViewMode != 5) {
                 if (_unsafeWindow.devicePixelRatio > 1) {
-                    p.style.padding = "2px 6% 0";
+                    p.style.padding = "2px 8% 0";
                 } else {
-                    p.style.padding = "0 6%";
+                    p.style.padding = "0 8%";
                 }
                 p.style.margin = "0 auto";
             } else if (config.ViewMode == 5) {
@@ -37317,6 +37381,8 @@ img.horizontal {
             totalNumberOfElements = imgElements.length;
             if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
                 switchDirection(p, imgElements);
+            }
+            if (["comic", "hcomic"].some(c => siteData.category == c)) {
                 switch_r_l_border(imgElements);
             }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -37443,26 +37509,34 @@ img.horizontal {
                     next.style.backgroundColor = "gray";
                     return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 200);
                 });
-                if (config.shadowGalleryWheel != 1) {
+                if (config.shadowGalleryWheel != 1 && [0, 1, 3].some(m => config.ViewMode == m) || [2, 4].some(m => config.ViewMode == m)) {
                     let isEventAdded = false;
                     const nextObserver = new IntersectionObserver((entries, observer) => {
                         entries.forEach(entry => {
                             if (entry.isIntersecting) {
                                 nextButtonIsShown = true;
                                 next.style.border = "solid #32a1ce";
+                                if (isPC) {
+                                    alertDiv.classList.remove("hide");
+                                }
                                 if (!isEventAdded) {
                                     isEventAdded = true;
                                     dom.addEventListener("wheel", (event) => {
                                         if (isOpenFancybox || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) return;
                                         if (event.deltaY < 0) {
-                                            dNum = 0;
                                             next.style.border = "";
                                             nextButtonIsShown = false;
+                                            alertMessage.innerText = DL.str_113 + "3";
+                                            alertDiv.classList.add("hide");
                                         } else if (event.deltaY > 0 && nextButtonIsShown) {
-                                            dNum++;
-                                            if (dNum > 2) {
+                                            let num = Number(alertMessage.innerText.match(/\d/));
+                                            if (num > 0) {
+                                                alertMessage.innerText = DL.str_113 + (num -= 1);
+                                            }
+                                            if (num <= 0) {
+                                                alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
                                                 next.style.backgroundColor = "gray";
-                                                return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 500);
+                                                return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 200);
                                             }
                                         }
                                     }, {
@@ -37470,9 +37544,10 @@ img.horizontal {
                                     });
                                 }
                             } else {
-                                dNum = 0;
                                 next.style.border = "";
                                 nextButtonIsShown = false;
+                                alertMessage.innerText = DL.str_113 + "3";
+                                alertDiv.classList.add("hide");
                             }
                         });
                     }, {
@@ -37523,22 +37598,23 @@ img.horizontal {
         let alertMessage;
 
         btnDiv.insertAdjacentHTML("afterend", `
-<div id="alertBox" class="alert-box hide">
+<div id="alertBox" class="hide">
     <div id="hint">${DL.str_112}</div>
-    <p id="alertMessage">3</p>
-    <div id="nextAlert">
-        <a href="${isString(nextLink) ? nextLink : "javascript:void(0)"}">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}</a>
-    </div>
+    <p id="alertMessage">${DL.str_113}3</p>
+    <div id="nextAlert">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）</div>
     <div id="closeAlert">${DL.str_132}</div>
 </div>
         `);
 
         alertDiv = ge("#alertBox", dom);
         alertMessage = ge("#alertMessage", alertDiv);
-
+        ge("#nextAlert", alertDiv).addEventListener("click", event => {
+            cancelDefault(event);
+            return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
+        });
         ge("#closeAlert", alertDiv).addEventListener("click", () => {
             isShowAlert = false;
-            alertMessage.innerText = "3";
+            alertMessage.innerText = DL.str_113 + "3";
             alertDiv.classList.add("hide");
         });
 
