@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.14
+// @version            2025.3.15
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -14105,6 +14105,99 @@
         customTitle: ".main h1",
         category: "nsfw2"
     }, {
+        name: "多多影视/多多影音/全网影视/哥哥在线/微微资讯/酷酷影音/男人社区 模式A",
+        link: "https://xxselove.com/artmv/",
+        url: {
+            e: [
+                ".v_nav .sel_wrap",
+                "#content_news img"
+            ],
+            p: /^\/art\w+\//
+        },
+        imgs: () => {
+            let pages = fn.ge("//div[@id='page']/a[@class='next'][starts-with(text(),'尾')]");
+            if (pages) {
+                let [max] = fn.gt(pages).match(/\d+/);
+                let dir = fn.dir(fn.lp);
+                let links = fn.arr(max, (v, i) => i == 0 ? dir : dir + `index${i + 1}.html`);
+                return fn.getImgA("#content_news img", links);
+            }
+            return fn.gae("#content_news img");
+        },
+        button: [4],
+        insertImg: ["#content_news", 2],
+        customTitle: ".title h1 a",
+        category: "nsfw2"
+    }, {
+        name: "多多影视/多多影音/全网影视/哥哥在线/微微资讯/酷酷影音/男人社区 模式B",
+        link: "https://m.rusese.org/artmv/",
+        url: {
+            e: [
+                "a.fed-nav-title[href='/artmv/']",
+                ".fed-arti-content img"
+            ],
+            p: /^\/art\w+\//
+        },
+        imgs: () => {
+            let pages = fn.ge(".fed-page-info a[href*='/index']");
+            if (pages) {
+                let [max] = fn.gt(".fed-page-info a:last-child").match(/\d+/);
+                let dir = fn.dir(fn.lp);
+                let links = fn.arr(max, (v, i) => i == 0 ? dir : dir + `index${i + 1}.html`);
+                return fn.getImgA(".fed-arti-content img", links);
+            }
+            return fn.gae(".fed-arti-content img");
+        },
+        button: [4],
+        insertImg: [".fed-arti-content", 2],
+        customTitle: ".fed-arti-info h2",
+        category: "nsfw2"
+    }, {
+        name: "多多影视/多多影音/全网影视/哥哥在线/微微资讯/酷酷影音/男人社区 模式C",
+        link: "https://xxk555.com/arttype/meituqu.html",
+        url: {
+            e: [
+                "a.fed-nav-title[href='/arttype/meituqu.html']",
+                ".fed-arti-content img"
+            ],
+            p: "/artdetail/"
+        },
+        imgs: () => {
+            let pages = fn.ge("//a[text()='尾页']");
+            if (pages) {
+                let max = fn.gu("//a[text()='尾页']").match(/\d+/g).at(-1);
+                let url = fn.lp.replace(/(-\d+)?\.html$/, "");
+                let links = fn.arr(max, (v, i) => i == 0 ? url + ".html" : url + `-${i + 1}.html`);
+                return fn.getImgA(".fed-arti-content img", links);
+            }
+            return fn.gae(".fed-arti-content img");
+        },
+        button: [4],
+        insertImg: [".fed-arti-content", 2],
+        customTitle: ".fed-arti-info h2",
+        category: "nsfw2"
+    }, {
+        name: "多多影视/多多影音/全网影视/哥哥在线/微微资讯/酷酷影音/男人社区 模式D",
+        host: ["xoxvi.com"],
+        url: {
+            e: [
+                "#sidebarTogglePcDown",
+                ".single-video-info-content img"
+            ],
+            p: "/artdetail/"
+        },
+        imgs: async () => {
+            let pages = fn.ge(".page-item.active+li>a:not([title='下一页'])");
+            if (pages) {
+                await fn.getNP(".single-video-info-content>*", ".page-item.active+li>a:not([title='下一页'])", null, ".pagination");
+            }
+            return fn.gae(".single-video-info-content img");
+        },
+        button: [4],
+        insertImg: [".single-video-info-content", 1],
+        customTitle: ".single-video-title h2",
+        category: "nsfw2"
+    }, {
         name: "wholsp",
         host: ["www.wholsp.com", "wholsp.comc"],
         url: {
@@ -27873,7 +27966,7 @@ if ("xx" in window) {
                 },
                 str_110: "※ Webp轉換為Jpg",
                 str_111: "💬 Github 反饋",
-                str_112: "",
+                str_112: "提示",
                 str_113: "",
                 str_114: "E/EX-HENTAI 載入原始圖片連結",
                 str_115: "關閉自動滾動至首張圖片",
@@ -28113,7 +28206,7 @@ if ("xx" in window) {
                 },
                 str_110: "※ Webp转换为Jpg",
                 str_111: "💬 Github 反馈",
-                str_112: "",
+                str_112: "提示",
                 str_113: "",
                 str_114: "E/EX-HENTAI 加载原始图片链接",
                 str_115: "关闭自动滚动至首张图片",
@@ -28347,7 +28440,7 @@ if ("xx" in window) {
                 },
                 str_110: "※ Convert Webp to Jpg",
                 str_111: "💬 Github Feedback",
-                str_112: "",
+                str_112: "Prompt Message",
                 str_113: "",
                 str_114: "E/EX-HENTAI Load Original Image",
                 str_115: "Turn Off Auto Scroll To First Image",
@@ -34446,6 +34539,34 @@ if (isM) {
     });
 }
 
+function switchDirection(box, imgs) {
+    if (box.style.direction == "rtl") {
+        document.body.style.direction = "ltr";
+        box.style.direction = "ltr";
+        imgs.at(0).classList.remove("horizontal_last");
+        imgs.at(0).classList.add("horizontal_first");
+        imgs.at(-1).classList.remove("horizontal_first");
+        imgs.at(-1).classList.add("horizontal_last");
+    } else {
+        document.body.style.direction = "rtl";
+        box.style.direction = "rtl";
+        imgs.at(0).classList.remove("horizontal_first");
+        imgs.at(0).classList.add("horizontal_last");
+        imgs.at(-1).classList.remove("horizontal_last");
+        imgs.at(-1).classList.add("horizontal_first");
+    }
+}
+
+function switch_r_l_border(imgs) {
+    imgs.forEach(img => {
+        if (img.classList.contains("no_r_l_border")) {
+            img.classList.remove("no_r_l_border");
+        } else {
+            img.classList.add("no_r_l_border");
+        }
+    });
+}
+
 document.addEventListener("keydown", event => {
     if (isOpenFancybox || document.querySelector(".viewer-container .viewer-canvas>img") || ["F11", "F12"].some(k => event.code === k || event.key === k) || (config.ViewMode == 5 && event.shiftKey)) return;
     const imgs = [...document.images];
@@ -34479,13 +34600,7 @@ document.addEventListener("keydown", event => {
     if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (config.ViewMode == 5) {
-            if (box.style.direction == "rtl") {
-                document.body.style.direction = "ltr";
-                box.style.direction = "ltr";
-            } else {
-                document.body.style.direction = "rtl";
-                box.style.direction = "rtl";
-            }
+            switchDirection(box, imgs);
             if (imgs[imgViewIndex] !== undefined) {
                 return instantScrollIntoView(imgs[imgViewIndex]);
             }
@@ -34498,13 +34613,7 @@ document.addEventListener("keydown", event => {
         }
     }
     if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
-        imgs.forEach(img => {
-            if (img.classList.contains("no_r_l_border")) {
-                img.classList.remove("no_r_l_border");
-            } else {
-                img.classList.add("no_r_l_border");
-            }
-        });
+        switch_r_l_border(imgs);
         if (imgs[imgViewIndex] !== undefined) {
             return instantScrollIntoView(imgs[imgViewIndex]);
         }
@@ -34870,6 +34979,10 @@ function createImgElement(mode) {
     }
     currentReferenceElement = imgElements.at(0);
     totalNumberOfElements = imgElements.length;
+    if (config.ViewMode == 5 && ["comic", "hcomic"].some(c => category == c)) {
+        switchDirection(imgBox, imgElements);
+        switch_r_l_border(imgElements);
+    }
     fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
         setTimeout(() => {
             aspectRatio();
@@ -35005,6 +35118,7 @@ if (config.ViewMode == 1) {
         let imgViewIndex = -1;
         let currentReferenceElement;
         let nextButtonIsShown = false;
+        let isShowAlert = false;
         let dNum = 0;
         let loopView = _GM_getValue("FullPictureLoadLoopView", 1);
 
@@ -35147,14 +35261,32 @@ if (config.ViewMode == 1) {
                 const imgs = gae("img", shadow);
                 const next = ge("#next", shadow);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
-                    if (event.deltaY < 0 && imgViewIndex < 0) {
+                    if (isShowAlert && event.deltaY > 0) {
+                        alertMessage.innerText = Number(alertMessage.innerText) - 1;
+                        if (alertMessage.innerText <= 0) {
+                            return (location.href = nextLink);
+                        }
+                    } else if (event.deltaY > 0 && imgViewIndex >= imgs.length - 1 && config.ViewMode == 5 && isString(nextLink)) {
+                        isShowAlert = true;
+                        alertDiv.classList.remove("hide");
+                    } else if (event.deltaY < 0 && imgViewIndex < 0) {
                         if (loopView != 1) return;
                         nextButtonIsShown = false;
+                        if (config.ViewMode == 5) {
+                            isShowAlert = false;
+                            alertMessage.innerText = "3";
+                            alertDiv.classList.add("hide");
+                        }
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
                         return instantScrollIntoView(imgs[imgViewIndex]);
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
+                        if (config.ViewMode == 5) {
+                            isShowAlert = false;
+                            alertMessage.innerText = "3";
+                            alertDiv.classList.add("hide");
+                        }
                         imgViewIndex--;
                         if (imgViewIndex < 0 && loopView != 1) {
                             imgViewIndex = 0;
@@ -35250,6 +35382,34 @@ if (config.ViewMode == 1) {
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
+        const switchDirection = (box, imgs) => {
+            if (box.style.direction == "rtl") {
+                mainElement.style.direction = "ltr";
+                box.style.direction = "ltr";
+                imgs.at(0).classList.remove("horizontal_last");
+                imgs.at(0).classList.add("horizontal_first");
+                imgs.at(-1).classList.remove("horizontal_first");
+                imgs.at(-1).classList.add("horizontal_last");
+            } else {
+                mainElement.style.direction = "rtl";
+                box.style.direction = "rtl";
+                imgs.at(0).classList.remove("horizontal_first");
+                imgs.at(0).classList.add("horizontal_last");
+                imgs.at(-1).classList.remove("horizontal_last");
+                imgs.at(-1).classList.add("horizontal_first");
+            }
+        };
+
+        const switch_r_l_border = (imgs) => {
+            imgs.forEach(img => {
+                if (img.classList.contains("no_r_l_border")) {
+                    img.classList.remove("no_r_l_border");
+                } else {
+                    img.classList.add("no_r_l_border");
+                }
+            });
+        };
+
         const kEvent = (event) => {
             if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k) || (config.ViewMode == 5 && event.shiftKey)) return;
             const imgs = gae("img", shadow);
@@ -35341,13 +35501,7 @@ if (config.ViewMode == 1) {
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", shadow);
                 if (config.ViewMode == 5) {
-                    if (box.style.direction == "rtl") {
-                        mainElement.style.direction = "ltr";
-                        box.style.direction = "ltr";
-                    } else {
-                        mainElement.style.direction = "rtl";
-                        box.style.direction = "rtl";
-                    }
+                    switchDirection(box, imgs);
                     if (isEle(imgs[imgViewIndex])) {
                         return instantScrollIntoView(imgs[imgViewIndex]);
                     }
@@ -35360,13 +35514,7 @@ if (config.ViewMode == 1) {
                 }
             }
             if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
-                imgs.forEach(img => {
-                    if (img.classList.contains("no_r_l_border")) {
-                        img.classList.remove("no_r_l_border");
-                    } else {
-                        img.classList.add("no_r_l_border");
-                    }
-                });
+                switch_r_l_border(imgs);
                 if (isEle(imgs[imgViewIndex])) {
                     return instantScrollIntoView(imgs[imgViewIndex]);
                 }
@@ -35664,6 +35812,44 @@ img.horizontal {
     height: 16px;
     margin-top: ${isFirefox ? "2px" : "0px"};
 }
+#alertBox {
+    position: fixed;
+    top: calc(50% - 73px);
+    left: calc(50% - 115px);
+    transform: translate(-20%, -50%);
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    z-index: 2147483647;
+    border-radius: 10px;
+    font-size: 14px;
+}
+#hint {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+#alertMessage {
+    text-align: center;
+}
+#alertBox #nextAlert {
+    float: left;
+    cursor: pointer;
+    padding: 5px 22px;
+    border: 1px solid #ffdb11;
+    background-color: #ffdb11;
+}
+#nextAlert a {
+    color: black;
+    text-decoration: none;
+}
+#alertBox #closeAlert {
+    float: right;
+    cursor: pointer;
+    padding: 5px 22px;
+    border: 1px solid #ebebeb;
+    background-color: #ebebeb;
+}
         `);
         shadow.appendChild(style);
 
@@ -35758,6 +35944,7 @@ img.horizontal {
             if (mode === "horizontal") {
                 imgElements.at(0).classList.add("horizontal_first");
                 imgElements.at(-1).classList.add("horizontal_last");
+                alertMessage.innerText = "3";
             }
             const p = document.createElement("p");
             p.id = "imgBox";
@@ -35792,6 +35979,10 @@ img.horizontal {
             }
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
+            if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
+                switchDirection(p, imgElements);
+                switch_r_l_border(imgElements);
+            }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
@@ -36106,6 +36297,29 @@ img.horizontal {
         }
         addButtons();
 
+        let alertDiv;
+        let alertMessage;
+
+        btnDiv.insertAdjacentHTML("afterend", `
+<div id="alertBox" class="alert-box hide">
+    <div id="hint">${DL.str_112}</div>
+    <p id="alertMessage">3</p>
+    <div id="nextAlert">
+        <a href="${isString(nextLink) ? nextLink : "javascript:void(0)"}">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}</a>
+    </div>
+    <div id="closeAlert">${DL.str_132}</div>
+</div>
+        `);
+
+        alertDiv = ge("#alertBox", shadow);
+        alertMessage = ge("#alertMessage", alertDiv);
+
+        ge("#closeAlert", alertDiv).addEventListener("click", () => {
+            isShowAlert = false;
+            alertMessage.innerText = "3";
+            alertDiv.classList.add("hide");
+        });
+
         function defaultImageLayout() {
             config.ViewMode = 0;
             saveConfig(config);
@@ -36199,6 +36413,7 @@ img.horizontal {
         let imgViewIndex = -1;
         let currentReferenceElement;
         let nextButtonIsShown = false;
+        let isShowAlert = false;
         let dNum = 0;
         let loopView = _GM_getValue("FullPictureLoadLoopView", 1);
 
@@ -36377,14 +36592,32 @@ img.horizontal {
                 const imgs = gae("img", mainElement);
                 const next = ge("#next", mainElement);
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
-                    if (event.deltaY < 0 && imgViewIndex < 0) {
+                    if (isShowAlert && event.deltaY > 0) {
+                        alertMessage.innerText = Number(alertMessage.innerText) - 1;
+                        if (alertMessage.innerText <= 0) {
+                            return (location.href = nextLink);
+                        }
+                    } else if (event.deltaY > 0 && imgViewIndex >= imgs.length - 1 && config.ViewMode == 5 && isString(nextLink)) {
+                        isShowAlert = true;
+                        alertDiv.classList.remove("hide");
+                    } else if (event.deltaY < 0 && imgViewIndex < 0) {
                         if (loopView != 1) return;
                         nextButtonIsShown = false;
+                        if (config.ViewMode == 5) {
+                            isShowAlert = false;
+                            alertMessage.innerText = "3";
+                            alertDiv.classList.add("hide");
+                        }
                         imgViewIndex = imgs.length - 1;
                         imgs[imgViewIndex].style.border = "solid #32a1ce";
                         return instantScrollIntoView(imgs[imgViewIndex]);
                     } else if (event.deltaY < 0 && imgViewIndex >= 0) {
                         nextButtonIsShown = false;
+                        if (config.ViewMode == 5) {
+                            isShowAlert = false;
+                            alertMessage.innerText = "3";
+                            alertDiv.classList.add("hide");
+                        }
                         imgViewIndex--;
                         if (imgViewIndex < 0 && loopView != 1) {
                             imgViewIndex = 0;
@@ -36480,6 +36713,34 @@ img.horizontal {
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
+        const switchDirection = (box, imgs) => {
+            if (box.style.direction == "rtl") {
+                mainElement.style.direction = "ltr";
+                box.style.direction = "ltr";
+                imgs.at(0).classList.remove("horizontal_last");
+                imgs.at(0).classList.add("horizontal_first");
+                imgs.at(-1).classList.remove("horizontal_first");
+                imgs.at(-1).classList.add("horizontal_last");
+            } else {
+                mainElement.style.direction = "rtl";
+                box.style.direction = "rtl";
+                imgs.at(0).classList.remove("horizontal_first");
+                imgs.at(0).classList.add("horizontal_last");
+                imgs.at(-1).classList.remove("horizontal_last");
+                imgs.at(-1).classList.add("horizontal_first");
+            }
+        };
+
+        const switch_r_l_border = (imgs) => {
+            imgs.forEach(img => {
+                if (img.classList.contains("no_r_l_border")) {
+                    img.classList.remove("no_r_l_border");
+                } else {
+                    img.classList.add("no_r_l_border");
+                }
+            });
+        };
+
         const kEvent = (event) => {
             if (isOpenFancybox || ["F11", "F12"].some(k => event.code === k || event.key === k) || (config.ViewMode == 5 && event.shiftKey)) return;
             const imgs = gae("img", mainElement);
@@ -36571,13 +36832,7 @@ img.horizontal {
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", mainElement);
                 if (config.ViewMode == 5) {
-                    if (box.style.direction == "rtl") {
-                        mainElement.style.direction = "ltr";
-                        box.style.direction = "ltr";
-                    } else {
-                        mainElement.style.direction = "rtl";
-                        box.style.direction = "rtl";
-                    }
+                    switchDirection(box, imgs);
                     if (isEle(imgs[imgViewIndex])) {
                         return instantScrollIntoView(imgs[imgViewIndex]);
                     }
@@ -36590,13 +36845,7 @@ img.horizontal {
                 }
             }
             if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
-                imgs.forEach(img => {
-                    if (img.classList.contains("no_r_l_border")) {
-                        img.classList.remove("no_r_l_border");
-                    } else {
-                        img.classList.add("no_r_l_border");
-                    }
-                });
+                switch_r_l_border(imgs);
                 if (isEle(imgs[imgViewIndex])) {
                     return instantScrollIntoView(imgs[imgViewIndex]);
                 }
@@ -36890,6 +37139,44 @@ img.horizontal {
     height: 16px;
     margin-top: ${isFirefox ? "2px" : "0px"};
 }
+#alertBox {
+    position: fixed;
+    top: calc(50% - 73px);
+    left: calc(50% - 115px);
+    transform: translate(-20%, -50%);
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    z-index: 2147483647;
+    border-radius: 10px;
+    font-size: 14px;
+}
+#hint {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+#alertMessage {
+    text-align: center;
+}
+#alertBox #nextAlert {
+    float: left;
+    cursor: pointer;
+    padding: 5px 22px;
+    border: 1px solid #ffdb11;
+    background-color: #ffdb11;
+}
+#nextAlert a {
+    color: black;
+    text-decoration: none;
+}
+#alertBox #closeAlert {
+    float: right;
+    cursor: pointer;
+    padding: 5px 22px;
+    border: 1px solid #ebebeb;
+    background-color: #ebebeb;
+}
                 `
         });
         if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
@@ -36993,6 +37280,7 @@ img.horizontal {
             if (mode === "horizontal") {
                 imgElements.at(0).classList.add("horizontal_first");
                 imgElements.at(-1).classList.add("horizontal_last");
+                alertMessage.innerText = "3";
             }
             const p = document.createElement("p");
             p.id = "imgBox";
@@ -37027,6 +37315,10 @@ img.horizontal {
             }
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
+            if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
+                switchDirection(p, imgElements);
+                switch_r_l_border(imgElements);
+            }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
                     aspectRatio();
@@ -37226,6 +37518,29 @@ img.horizontal {
             dom.body.append(btnDiv);
         }
         addButtons();
+
+        let alertDiv;
+        let alertMessage;
+
+        btnDiv.insertAdjacentHTML("afterend", `
+<div id="alertBox" class="alert-box hide">
+    <div id="hint">${DL.str_112}</div>
+    <p id="alertMessage">3</p>
+    <div id="nextAlert">
+        <a href="${isString(nextLink) ? nextLink : "javascript:void(0)"}">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}${isM ? "" : "（ N ）"}</a>
+    </div>
+    <div id="closeAlert">${DL.str_132}</div>
+</div>
+        `);
+
+        alertDiv = ge("#alertBox", dom);
+        alertMessage = ge("#alertMessage", alertDiv);
+
+        ge("#closeAlert", alertDiv).addEventListener("click", () => {
+            isShowAlert = false;
+            alertMessage.innerText = "3";
+            alertDiv.classList.add("hide");
+        });
 
         let menuDiv;
 
