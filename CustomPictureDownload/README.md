@@ -1463,7 +1463,6 @@ imgs: async () => {
 <p>Esc鍵 離開畫廊</p>
 <p>J、K鍵 畫廊滾動自定義滾動距離</p>
 <p>N鍵 前往下一話或下一篇，如果有的話。</p>
-<p>空白鍵、PageDown鍵 如果有NEXT按鈕並且NEXT按鈕元素9成範圍進入視口時，繼續按空白鍵、PageDown鍵超過2次NEXT按鈕變灰前往NEXT。</p>
 <p>畫廊 (0、1、3) 滾輪操作設定為切換圖片並且有NEXT按鈕時，當滾動到最後一張圖繼續往下滾會標記NEXT按鈕，再繼續往下滾NEXT按鈕變灰前往NEXT。</p>
 <p>畫廊滾輪操作非切換圖片並且有NEXT按鈕，當滾動到NEXT按鈕元素9成範圍進入視口時，再繼續往下滾2次以上NEXT按鈕變灰前往NEXT，往上滾則下滾次數歸零。</p>
 <p>PS：Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將調用使用iframe構建的畫廊。</p>
@@ -3541,6 +3540,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://jjcos.com/">JJCOS</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.xikxak.com/">XikXak</a>
                 </td>
                 <td></td>
@@ -3618,7 +3623,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hotgirlchina.com/">HOTGIRLchina</a>
                 </td>
                 <td>
-                    <a href="https://hinhsexviet.com/">Hình Sex Việt</a>，<a href="https://hinhkhieudam.com/">Hình Khiêu Dâm</a>
+                    <a href="https://hinhsexviet.com/">Hình Sex Việt</a>，<a href="https://hinhkhieudam.com/">Hình Khiêu Dâm</a>，<a href="https://gaidepvietnam.com/">Gái Đẹp Việt Nam</a>
                 </td>
             </tr>
             <tr>
@@ -7373,6 +7378,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://mangalib.org/">MangaLib 俄文</a>
+                </td>
+                <td>SPA網頁</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangapoisk.live/">МангаПоиск 俄文</a>
                 </td>
                 <td>SPA網頁</td>
             </tr>
