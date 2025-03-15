@@ -4,14 +4,14 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/03/14
+2025/03/15
 PC
 Chrome 134.0.6998.89 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 134.0.3124.66 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Edge 134.0.3124.68 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
 FireFox 136.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
 ☆Edge Canary 136.0.3188.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.2.023 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.2.025 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 ☆Firefox for Android 136.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
@@ -1445,7 +1445,7 @@ imgs: async () => {
 <p>數字鍵 2 切換為小尺寸圖片並排模式</p>
 <p>數字鍵 3 切換為圖片高度符合視口高度且順序右至左的模式</p>
 <p>數字鍵 4 切換為條漫模式</p>
-<p>數字鍵 5 切換為水平橫向模式</p>
+<p>數字鍵 5 切換為水平橫向模式，當分類為comic、hcomic時方向預設為右至左。</p>
 <p>W鍵、A鍵、上左方向鍵滾動到目前的上一張圖、S鍵、D鍵、下右方向鍵滾動到目前的下一張圖，當為comic分類且已是最後一張圖繼續按則關閉分頁</p>
 <p>HOME鍵 滾動定位至第一張圖</p>
 <p>END鍵 滾動定位至最後一張圖</p>
