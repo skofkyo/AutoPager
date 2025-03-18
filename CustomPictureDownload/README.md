@@ -230,7 +230,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     //SPA網頁不切換UI。
     SPA: true,
     //與SPA屬性搭配使用，觀察URL變化，用於SPA網頁並且URL是會變換的，更替腳本變數諸如globalImgArray、siteJson、nextLink、customTitle、apiCustomTitle。
-    //"head"、"body"使用MutationObserver API，"nav"使用Navigation API監聽navigate事件，當不支持時則使用"head"，"gm"使用window.onurlchange，"loop"使用setInterval。
+    //"head"、"body"使用MutationObserver API，"nav"使用Navigation API監聽navigate事件，當不支持時則使用"loop"，"gm"使用window.onurlchange，"loop"使用setInterval。
     observeURL: "head",
     //延遲載入規則。
     delay: 300,
@@ -836,6 +836,11 @@ fetch(url).then(res => res.text()).then(text => {
     let ele = fn.ge("selector", doc);
     return ele;
 })
+</pre>
+<pre>
+//將字串解析成DOM Element，返回DocumentFragment
+fn.html("字串");
+fn.html(String);
 </pre>
 <pre>
 //將字串解析成xml物件
@@ -1456,7 +1461,7 @@ imgs: async () => {
 <p>畫廊為條漫模式時，上下方向鍵為預設行為，不會切換圖片。</p>
 <p>畫廊為條漫模式時+、-鍵和修飾鍵Ctrl、Alt、ShiftKey + 滾輪 可增加減少圖片的寬度。</p>
 <p>畫廊為水平模式時，左右方向鍵為預設行為，不會切換圖片。</p>
-<p>畫廊為水平模式時ShiftKey + 滾輪可滾動水平滾動條。</p>
+<p>畫廊為水平模式的滾輪切換圖片時ShiftKey + 滾輪則滾動水平滾動條。</p>
 <p>PS：當瀏覽器封鎖彈出型視窗或uBlock Origin為了阻擋點擊連結觸發廣告把window.open修改成Proxy時，將無法使用分頁畫廊功能。</p>
 <h3>5.影子畫廊模式</h3>
 <p>快捷鍵基本同分頁畫廊模式</p>
@@ -3275,6 +3280,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://shemaleleaks.com/">Shemale Leaks</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://nudostar.tv/">NudoStar.TV</a>
                 </td>
                 <td></td>
@@ -3360,9 +3371,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://ibradome.com/onlyfans-photos">Ibradome</a>
+                    <a href="https://thotsbook.com/photos">Thotsbook</a>
                 </td>
-                <td></td>
+                <td><a href="https://ibradome.com/onlyfans-photos">Ibradome</a>，<a href="https://www.fappenist.com/photos">Fappenist</a>，<a href="https://lmlib.com/photos">Lmlib</a>，<a href="https://teenswall.com/photos">Teenswall</a></td>
             </tr>
             <tr>
                 <td>
@@ -3441,12 +3452,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.whoreshub.com/albums/">WhoresHub</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.fappenist.com/photos">Fappenist</a>
                 </td>
                 <td></td>
             </tr>
@@ -4901,12 +4906,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.1y.is/">1Y Beauties</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://img.ecy8.com/">img.ecy8.com</a>
-                </td>
-                <td>原圖級別，手動插入圖片，在有圖片或影片的資料夾有效</td>
             </tr>
             <tr>
                 <td>AList</td>
@@ -7390,6 +7389,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://mangamammy.ru/">mangamammy 俄文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manga-shi.com/">Manga-shi 俄文</a>
                 </td>
                 <td></td>
             </tr>
