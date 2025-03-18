@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.16
+// @version            2025.3.18
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -61,7 +61,7 @@
     //await wait(() => !!document.body && document.readyState !== "loading");
     //await wait(() => !!document.body && document?.body?.childNodes?.length > 0);
 
-    if ((ge("body.no-js:not(.has-preloader,.single-post)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
+    if ((ge("body.no-js:not(.has-preloader,.single-post,.archive)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
         debug("Cloudflare驗證中不運行腳本。");
         return;
     }
@@ -1665,7 +1665,7 @@
             p: /^\/\d+\.html$/,
             e: "//i[@class='czs-folder-l']/following-sibling::a[1][text()='美女写真' or text()='Cosplay' or text()='JAV.PHOTO']"
         },
-        imgs: ".content-warp img[title][alt]",
+        imgs: () => fn.gae(".content-warp img").filter(e => !e.closest("a[href$='app.html']")),
         button: [4],
         insertImgBF: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("a.core-next-img")),
         insertImg: [".content-warp", 2],
@@ -3881,19 +3881,67 @@
         }),
         category: "nsfw1"
     }, {
-        name: "img.ecy8.com",
+        name: "柚子肉 微博Coser",
+        link: "https://youzirou.org/weibo/users",
         url: {
-            h: "img.ecy8.com"
+            h: ["youzirou.org"]
+        },
+        page: () => fn.clp(/^\/weibo\/user\/\d+(\/pics)?$/),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        init: () => _this.page() ? fn.fetchDoc(fn.clp()).then(dom => (doc = dom)) : void 0,
+        imgs: () => {
+            if (!_this.page()) return [];
+            fn.showMsg(DL.str_05, 0);
+            let id = fn.clp().split("/").at(3);
+            id = Number(id);
+            let p = [...doc.querySelectorAll("main p")].find(p => p.innerText == "微博数").previousElementSibling;
+            let postNum = Number(p.innerText);
+            let body = {
+                "operationName": "WeiboTweets",
+                "variables": {
+                    "pagination": {
+                        "page": 1,
+                        "pageSize": postNum
+                    },
+                    "query": {
+                        "userId": id
+                    }
+                },
+                "query": "query WeiboTweets($pagination: Pagination!, $query: WeiboTweetsFilterQuery) {\n  weiboTweets(pagination: $pagination, query: $query) {\n    data {\n      ...WeiboTweetFragment\n      __typename\n    }\n    pager {\n      page\n      pageSize\n      total\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment WeiboTweetFragment on WeiboTweet {\n  id\n  content\n  isChoice\n  isLiked\n  tweetCreateAt\n  pics {\n    ...WeiboPicFragment\n    __typename\n  }\n  user {\n    ...WeiboUserFragment\n    __typename\n  }\n  __typename\n}\n\nfragment WeiboPicFragment on WeiboPic {\n  id\n  name\n  ossKey\n  imageInfo {\n    ...WeiboImageInfoFragment\n    __typename\n  }\n  __typename\n}\n\nfragment WeiboImageInfoFragment on WeiboPicImageInfo {\n  width\n  height\n  __typename\n}\n\nfragment WeiboUserFragment on WeiboUser {\n  id\n  name\n  info\n  followersCount\n  creatorId\n  __typename\n}"
+            };
+            return fetch("/graphql", {
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "body": JSON.stringify(body),
+                "method": "POST"
+            }).then(res => res.json()).then(json => json.data.weiboTweets.data.map(e => e.pics).flat().map(e => "https://youzirou.org/cdn/weibo/large/" + e.name));
+        },
+        capture: () => _this.imgs(),
+        customTitle: () => _this.page() ? "微博" + fn.dt({
+            t: fn.gt("main p", 1, doc)
+        }) : null,
+        fetch: 1,
+        category: "nsfw1"
+    }, {
+        name: "𝐇𝐨𝐬𝐭𝐞𝐠𝐠",
+        url: {
+            h: "egg.heip.eu.org"
         },
         box: ["body"],
-        imgs: "a[href$=jpg],a[href$=jpeg],a[href$=png],a[href$=webp],a[href$=gif],a[href$=bmp],a[href$=mp4],a[href$=JPG],a[href$=JPEG],a[href$=PNG],a[href$=WEBP],a[href$=GIF],a[href$=BMP],a[href$=MP4]",
+        imgs: () => {
+            let urls = fn.gau(".file a");
+            videoSrcArray = urls.filter(url => fn.isVideo(url));
+            return urls.filter(url => fn.isImage(url));
+        },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 3],
         go: 1,
         customTitle: () => fn.dt({
-            t: fn.gt("h1")?.split("/")?.at(-1)
+            s: "h1>a:last-child"
         }),
-        category: "nsfw1"
+        category: "nsfw2"
     }, {
         name: "新美图录/臺灣美腿女郎",
         url: {
@@ -5321,20 +5369,27 @@
         category: "nsfw2"
     }, {
         name: "Fapello",
-        host: ["fapello.com"],
-        reg: /^https?:\/\/fapello\.com\/[^\/]+\/$/,
-        init: async () => {
-            if (fn.ge("#showmore")) {
-                let ele = fn.ge("#showmore");
-                let max = ele.dataset.max;
-                let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl + `page-${i + 1}/`);
-                tempEles = await fn.getEle(links, "#content>div");
+        url: {
+            h: ["fapello.com", "pt.fapello.com"],
+            p: /^\/[^\/]+\/$/
+        },
+        init: () => {
+            let showmore = fn.ge("#showmore");
+            if (isEle(showmore)) {
+                siteJson.max = Number(showmore.dataset.max);
             } else {
-                tempEles = fn.gae("#content>div");
+                siteJson.max = 1;
             }
         },
-        imgs: () => {
-            let imgSrcs = tempEles.map(node => {
+        imgs: async () => {
+            let eles;
+            if (siteJson.max > 1) {
+                let links = fn.arr(siteJson.max, (v, i) => i == 0 ? siteUrl : siteUrl + `page-${i + 1}/`);
+                eles = await fn.getEle(links, "#content>div");
+            } else {
+                eles = fn.gae("#content>div");
+            }
+            let imgSrcs = eles.map(node => {
                 if (fn.ge("img[src*='icon-play.svg']", node)) {
                     let videoSrc = fn.ge("img", node).src.replace("https://fapello.com/", "https://cdn.fapello.com/").replace("_300px", "").replace(/\.jpg$/i, ".mp4");
                     videoSrcArray.push(videoSrc);
@@ -5582,7 +5637,7 @@
     }, {
         name: "fapello.ru",
         url: {
-            h: "fapello.ru",
+            h: ["www.fapello.ru", "fapello.ru", "onlyfans.name"],
             p: "/galleries/"
         },
         box: [".grid:has(figure)", 1],
@@ -5735,21 +5790,7 @@
         url: {
             h: "thefappening2015.com"
         },
-        srcset: ".lazy-gallery img",
-        button: [4],
-        insertImg: [".entry-content", 2],
-        autoDownload: [0],
-        next: ".nav-previous a[rel=prev]",
-        prev: ".nav-previous a[rel=next]",
-        customTitle: "h1.entry-title",
-        hide: ".header-banner",
-        category: "nsfw2"
-    }, {
-        name: "The Fappening",
-        url: {
-            h: "thefappening2015.com"
-        },
-        srcset: ".lazy-gallery img",
+        srcset: ".lazy-gallery img,.entry-content .wp-image",
         button: [4],
         insertImg: [".entry-content", 2],
         autoDownload: [0],
@@ -5815,6 +5856,33 @@
         },
         category: "nsfw2"
     }, {
+        name: "Shemale Leaks",
+        url: {
+            h: ["shemaleleaks.com"],
+            p: /^\/[^\/]+\/$/
+        },
+        box: [".site-main", 2],
+        imgs: async () => {
+            const next = (dom) => {
+                let n = fn.ge(".nav-next>a", dom);
+                if (isEle(n)) {
+                    let num = n.href.match(/\d+/).at(-1);
+                    return fn.lp + "?page=" + num;
+                } else {
+                    return null;
+                }
+            };
+            await fn.getNP("#main>article", next, null, ".post-navigation");
+            thumbnailSrcArray = fn.getImgSrcArr("#main>article img").reverse();
+            return thumbnailSrcArray.map(e => e.replace("_thumb.", "."));
+        },
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".site-main"], 2
+        ],
+        customTitle: "h1.page-title",
+        category: "nsfw2"
+    }, {
         name: "NudoStar.TV",
         host: ["nudostar.tv"],
         reg: /^https?:\/\/nudostar\.tv\/models\/[^\/]+\/$/,
@@ -5865,7 +5933,7 @@
     }, {
         name: "Fapopedia",
         url: {
-            h: "fapopedia.net",
+            h: ["fapopedia.net", "fapopedia-net.theporn.how"],
             p: /^\/[^\/]+\/$/,
             e: "a[name='photos']"
         },
@@ -5884,8 +5952,11 @@
         category: "nsfw2"
     }, {
         name: "Nudogram",
-        host: ["nudogram.com"],
-        reg: /^https?:\/\/nudogram\.com\/models\/[^\/]+\/$/,
+        host: ["nudogram.com", "dvir.ru"],
+        reg: [
+            /^https?:\/\/nudogram\.com\/models\/[^\/]+\/$/,
+            /^https?:\/\/dvir\.ru\/kingdesi\/models\/[^\/]+\/$/
+        ],
         imgs: async () => {
             await fn.getNP("#list_videos_common_videos_list_items>.item", "//li[span]/following-sibling::li[1]/a", null, ".pagination");
             thumbnailSrcArray = fn.gae("#list_videos_common_videos_list div.img>img").map(e => e.src).reverse();
@@ -6583,7 +6654,7 @@
         imgs: () => {
             if (!_this.page()) return [];
             fn.showMsg(DL.str_05, 0);
-            let g = fn.clp().split("/").at(3);
+            let g = fn.clp().split("/").at(-1);
             let token = _unsafeWindow?.user?.token ?? "01730876";
             return fetch(`https://api.simply-porn.com/v2/gallery/${g}?token=${token}&related=8`, {
                 "headers": {
@@ -6684,15 +6755,25 @@
         downloadVideo: true,
         category: "nsfw2"
     }, {
-        name: "Ibradome",
+        name: "Thotsbook/Ibradome/Fappenist/Lmlib/Teenswall",
         url: {
-            h: ["ibradome.com"],
+            h: ["thotsbook.com", "ibradome.com", "www.fappenist.com", "lmlib.com", "teenswall.com"],
             p: "/photos/",
-            e: "a.gallery-view"
+            e: ["a.gallery-view", "h1.art-title"]
         },
-        imgs: () => fn.getImgA("a.ohidden", [fn.gu("a.gallery-view")]),
+        imgs: () => fn.getEle([fn.gu("a.gallery-view")], ".galeria").then(eles => {
+            let [g] = eles;
+            thumbnailSrcArray = fn.getImgSrcArr("img[data-src]", g);
+            return fn.gae("a.ohidden", g);
+        }),
         capture: () => _this.imgs(),
-        customTitle: ".art-title",
+        customTitle: () => fn.dt({
+            s: "h1.art-title",
+            d: "Gallery view"
+        }),
+        fancybox: {
+            blacklist: 1
+        },
         category: "nsfw2"
     }, {
         url: {
@@ -8277,6 +8358,7 @@
         next: ".widget-previous-post a",
         prev: ".widget-next-post a",
         customTitle: "h1.title",
+        hide: ".d-flex:has(.img-float),body>div[style^='position']",
         downloadVideo: true,
         category: "nsfw1"
     }, {
@@ -8484,10 +8566,7 @@
             h: "news.idolsenka.net",
             p: "/archives/"
         },
-        imgs: () => fn.gae(`
-        .entry-content img:not([alt^='DMM'],[alt*='OFF'],[alt^='FANZA']),
-        .blog-content img:not([alt^='DMM'],[alt*='OFF'],[alt^='FANZA'])
-        `).map(img => {
+        imgs: () => fn.gae(".entry-content img:not([alt^='DMM'],[alt*='OFF'],[alt^='FANZA']),.blog-content img:not([alt^='DMM'],[alt*='OFF'],[alt^='FANZA'])").map(img => {
             let src = img.src;
             if (src.includes("wp.com")) {
                 src = src.replace(/\?resize.+$/, "") + "?ssl=1";
@@ -8500,6 +8579,7 @@
             return src;
         }),
         capture: () => _this.imgs(),
+        videos: "iframe[title='YouTube video player']",
         customTitle: ".entry-title,.blog-single-title",
         category: "nsfw1"
     }, {
@@ -8910,9 +8990,6 @@
             p: "/archives/"
         },
         imgs: ".single_thumbnail>img,.wp-block-gallery img",
-        button: [4],
-        insertImg: [".wp-block-gallery", 2],
-        go: 1,
         customTitle: ".entry-title",
         category: "nsfw1"
     }, {
@@ -9952,10 +10029,11 @@
         links: [
             "https://niwatori.my.id/category/uncategorized/",
             "https://quenbox.top/?cat=1",
-            "https://nekobox.top/index.php/category/blog/"
+            "https://nekobox.top/index.php/category/blog/",
+            "https://imgyagi.top/category/blog/"
         ],
         url: {
-            h: ["niwatori.my.id", "quenbox.top", "nekobox.top"],
+            h: ["niwatori.my.id", "quenbox.top", "nekobox.top", "imgyagi.top"],
             e: [".post-navigation .nav-links"]
         },
         srcset: ".entry-content .wp-block-gallery img",
@@ -11158,7 +11236,7 @@
         url: {
             h: "dtf.ru"
         },
-        page: () => fn.clp(/^\/u\/[^\/]+\/\d+/) || fn.clp(/^\/[^\/]+\/\d+/) && !fn.clp("/u/"),
+        page: () => fn.clp(/^\/(u|s)\/[^\/]+\/\d+/) || fn.clp(/^\/[^\/]+\/\d+/) && !fn.clp("/u/"),
         SPA: () => _this.page(),
         observeURL: "nav",
         imgs: () => {
@@ -12179,29 +12257,6 @@
             ["#FullPictureLoadMainImgBox", 0, ".media-group"], 2
         ],
         customTitle: "#page #page h1",
-        category: "nsfw2"
-    }, {
-        name: "Fappenist/Lmlib",
-        url: {
-            h: ["www.fappenist.com", "lmlib.com"],
-            p: "/photos/",
-            e: "a.gallery-view"
-        },
-        imgs: () => {
-            fn.showMsg(DL.str_05, 0);
-            return fn.fetchDoc(fn.gu("a.gallery-view")).then(dom => {
-                thumbnailSrcArray = fn.getImgSrcArr(".galeria img[data-src]", dom);
-                return fn.gae(".galeria a:has(>img[data-src])", dom);
-            });
-        },
-        capture: () => _this.imgs(),
-        customTitle: () => fn.dt({
-            s: "h1.art-title",
-            d: "Gallery view"
-        }),
-        fancybox: {
-            blacklist: 1
-        },
         category: "nsfw2"
     }, {
         name: "Pornotaran.com photo",
@@ -20701,12 +20756,13 @@
         customTitle: () => _this.page() ? fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g) : null,
         category: "comic"
     }, {
-        name: "Top Manhua/Toonily",
+        name: "Top Manhua/Toonily/Manga-shi",
         url: {
-            h: ["manhuatop.org", "topmanhua.fan", "toonily.com"],
-            p: "/chapter"
+            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com"],
+            p: ["/chapter", "/glava"],
+            e: ".reading-content img"
         },
-        imgs: ".reading-content img",
+        imgs: () => fn.gae(".reading-content img").filter(e => !e.closest("a[href*='/t.me/'],.banner")),
         button: [4],
         insertImg: [".reading-content", 2],
         endColor: "white",
@@ -24177,6 +24233,7 @@ if ("xx" in window) {
             i: 0
         },
         include: "td img",
+        cors: true,
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         imgs: () => fn.getKukudmSrc(),
         button: [4],
@@ -24227,6 +24284,7 @@ if ("xx" in window) {
             i: 1
         },
         include: "td img",
+        cors: true,
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         init: async () => {
             fn.showMsg(DL.str_135, 0);
@@ -24292,14 +24350,13 @@ if ("xx" in window) {
             i: 0
         },
         include: ".classBox img,.imgBox",
+        cors: true,
         init: () => fn.remove("//center[iframe]"),
-        imgs: () => {
-            fn.remove("//a[img] | //ul[center[li]]");
-            return fn.getKukudmSrc();
-        },
+        imgs: () => fn.getKukudmSrc(),
         button: [4],
         insertImg: [".imgBox", 2],
         insertImgAF: async () => {
+            fn.remove("//a[img[not(@class='FullPictureLoadImage')]] | //ul[center[li]]");
             fn.remove(".bottom .subNav~div[style*=height],.bottom .pageLine,.bottom .subNav");
             let nav = fn.ge("ul.subNav").cloneNode(true);
             let tE = fn.ge("div.bottom");
@@ -24348,6 +24405,7 @@ if ("xx" in window) {
             ],
             i: 0
         },
+        cors: true,
         comicListUrl: () => `/comiclist/${siteUrl.split("/")[4]}/index.htm`,
         imgs: () => fn.getKukudmSrc(),
         button: [4],
@@ -24395,6 +24453,7 @@ if ("xx" in window) {
             i: 1
         },
         include: ".classBox img,.imgBox",
+        cors: true,
         init: async () => {
             fn.remove("//center[iframe] | //a[img] | //ul[center[li[@class='txtA']]]");
             fn.showMsg(DL.str_135, 0);
@@ -25662,12 +25721,18 @@ if ("xx" in window) {
         SPA: () => _this.page(),
         observeURL: "nav",
         init: () => _this.page() ? fetch(fn.clp).then(() => fn.waitEle([".mx-auto.flex.flex-col.items-center img[data-src]", "img[alt='收藏圖示']"])) : void 0,
-        imgs: () => _this.page() ? fn.gae(".mx-auto.flex.flex-col.items-center img[data-src]") : [],
+        imgs: (dom = document) => _this.page() ? fn.getImgSrcArr(".mx-auto.flex.flex-col.items-center img[data-src]", dom) : [],
         capture: () => _this.imgs(),
         autoDownload: [0],
         next: "a:has(>img[alt=下一話圖示])",
         prev: "a:has(>img[alt=上一話圖示])",
-        customTitle: () => _this.page() ? fn.title("- 爱淘漫画 - 免费线上看") : null,
+        customTitle: (dom = document) => _this.page() ? dom.title.replace("- 爱淘漫画 - 免费线上看", "") : null,
+        preloadNext: () => {
+            fn.iframeDoc(nextLink, ".mx-auto.flex.flex-col.items-center img[data-src]").then(dom => {
+                let srcs = _this.imgs(dom);
+                fn.picPreload(srcs, _this.customTitle(dom), "next");
+            });
+        },
         category: "comic"
     }, {
         name: "风车漫画",
@@ -28065,7 +28130,7 @@ if ("xx" in window) {
                 str_149: "已取消下載！！！",
                 str_150: "JK滾動",
                 str_151: "JK平滑滾動",
-                str_152: "視口高",
+                str_152: "一個視口",
                 str_153: "標題：",
                 str_154: "全部選取",
                 str_155: "取消全選",
@@ -28111,6 +28176,7 @@ if ("xx" in window) {
                 str_195: "匯出MD",
                 str_196: "前往下一話",
                 str_197: "前往下一篇",
+                str_198: "畫廊 ( 5 ) 滾輪操作：",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -28134,6 +28200,11 @@ if ("xx" in window) {
                     d: "畫廊滾動",
                     t: "圖片切換",
                     s: "圖列切換"
+                },
+                horizontalWheel: {
+                    d: "水平滾動",
+                    d2: "水平滾動自訂JK",
+                    t: "圖片切換"
                 },
                 backgroundColor: {
                     l: "淺色",
@@ -28307,7 +28378,7 @@ if ("xx" in window) {
                 str_149: "已取消下载！！！",
                 str_150: "JK滚动",
                 str_151: "JK平滑滚动",
-                str_152: "视口高",
+                str_152: "一个视口",
                 str_153: "标题：",
                 str_154: "全部选取",
                 str_155: "取消全选",
@@ -28353,6 +28424,7 @@ if ("xx" in window) {
                 str_195: "导出MD",
                 str_196: "前往下一话",
                 str_197: "前往下一篇",
+                str_198: "画廊 ( 5 ) 滚轮操作：",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28376,6 +28448,11 @@ if ("xx" in window) {
                     d: "画廊滚动",
                     t: "图片切换",
                     s: "图列切换"
+                },
+                horizontalWheel: {
+                    d: "水平滚动",
+                    d2: "水平滚动自訂JK",
+                    t: "图片切换"
                 },
                 backgroundColor: {
                     l: "浅色",
@@ -28589,6 +28666,7 @@ if ("xx" in window) {
                 str_195: "Export Markdown",
                 str_196: "Go To Next",
                 str_197: "Go To Next",
+                str_198: "Gallery (5) Wheel：",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -28609,9 +28687,14 @@ if ("xx" in window) {
                     no: "No Animation"
                 },
                 ShadowGalleryWheel: {
-                    d: "Scroll",
+                    d: "Gallery Scroll",
                     t: "Toggle Image",
                     s: "Toggle Row"
+                },
+                horizontalWheel: {
+                    d: "Horizontal Scroll",
+                    d2: "Horizontal Scroll Custom JK",
+                    t: "Toggle Image"
                 },
                 backgroundColor: {
                     l: "Light",
@@ -28758,6 +28841,18 @@ if ("xx" in window) {
                 b: "bmp"
             };
             return object[e];
+        },
+        isImage: file => {
+            if (file.includes("/")) {
+                file = file.split("/").at(-1);
+            }
+            return /\.(bmp|jp(e)?g|jfif|png|tif(f)?|gif|svg|ico|webp|heif|heic|raw|cr2|nef|arw|dng|avif)/i.test(file);
+        },
+        isVideo: file => {
+            if (file.includes("/")) {
+                file = file.split("/").at(-1);
+            }
+            return /\.(mp4|avi|mkv|mov|wmv|flv|webm|mpeg|mpg|3gp|m4v|ts|vob|ogv|rm|rmvb|m2ts|mxf|asf|swf)/i.test(file);
         },
         checkUrl: (obj = {}) => {
             if (fn.clp() === "/" && !("SPA" in tempData) && !("autoPager" in tempData) && tempData.category !== "ad") return false;
@@ -29517,7 +29612,7 @@ if ("xx" in window) {
         },
         //從用AList架設的雲端硬碟，提取圖片和影片網址
         getAList: () => {
-            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURIComponent(a.getAttribute("href"))).map(href => /\.jpe?g$|\.webp$|\.png$|\.gif$|\.mp4$|\.mov$|\.ts|\.zip$/i.test(href) ? href : null).filter(Boolean);
+            let paths = [...document.querySelectorAll("a.list-item")].map(a => decodeURIComponent(a.getAttribute("href"))).map(href => fn.isImage(href) || fn.isVideo(href) || /\.(zip|rar)$/i.test(href) ? href : null).filter(Boolean);
             fn.showMsg(DL.str_05, 0);
             let fetchNum = 0;
             let password;
@@ -29551,10 +29646,10 @@ if ("xx" in window) {
                 console.log("AListDataArray", arr);
                 return arr.map(obj => {
                     if (!obj) return null;
-                    if (/\.mp4$|\.mov$|\.ts$/i.test(obj.name)) {
+                    if (fn.isVideo(obj.name)) {
                         videoSrcArray.push(obj.url);
                         return null;
-                    } else if (/\.zip$/i.test(obj.name)) {
+                    } else if (/\.(zip|rar)$/i.test(obj.name)) {
                         fileUrlArray.push(obj.url);
                         return null;
                     } else {
@@ -31186,6 +31281,11 @@ if ("xx" in window) {
         doc: str => new DOMParser().parseFromString(str, "text/html"),
         //將字串解析為XML物件
         xml: str => new DOMParser().parseFromString(str, "text/xml"),
+        html: str => {
+            const template = document.createElement("template");
+            template.innerHTML = str;
+            return template.content;
+        },
         //根據參數返回修改後的網頁標題
         title: (str, mode = 0, dom = document) => {
             let split = dom.title.replace(/漫画|\s-\s(漫本)|\[\d+p(\d+v)?\]/gi, "").split(str);
@@ -34055,9 +34155,10 @@ if ("xx" in window) {
             ViewMode: 0,
             MobileViewMode: "single",
             webtoonWidth: isM ? window.innerWidth : 800,
-            shadowGalleryWheel: 0,
+            shadowGalleryWheel: 2,
+            horizontalWheel: 0,
             jumpNum: 100,
-            behavior: "instant",
+            behavior: "smooth",
             threading: 2,
             backgroundColor: "l",
             showSize: 0,
@@ -34604,7 +34705,7 @@ if (isM) {
     });
 }
 
-function switchDirection(box, imgs) {
+function toggleDirection(box, imgs) {
     if (box.style.direction == "rtl") {
         document.body.style.direction = "ltr";
         box.style.direction = "ltr";
@@ -34622,7 +34723,7 @@ function switchDirection(box, imgs) {
     }
 }
 
-function switch_r_l_border(imgs) {
+function toggle_r_l_border(imgs) {
     imgs.forEach(img => {
         if (img.classList.contains("no_r_l_border")) {
             img.classList.remove("no_r_l_border");
@@ -34665,7 +34766,7 @@ document.addEventListener("keydown", event => {
     if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
         let box = document.querySelector("#imgBox");
         if (config.ViewMode == 5) {
-            switchDirection(box, imgs);
+            toggleDirection(box, imgs);
             if (imgs[imgViewIndex] !== undefined) {
                 return instantScrollIntoView(imgs[imgViewIndex]);
             }
@@ -34678,7 +34779,7 @@ document.addEventListener("keydown", event => {
         }
     }
     if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
-        switch_r_l_border(imgs);
+        toggle_r_l_border(imgs);
         if (imgs[imgViewIndex] !== undefined) {
             return instantScrollIntoView(imgs[imgViewIndex]);
         }
@@ -34806,6 +34907,13 @@ document.addEventListener("wheel", (event) => {
     if (!isOpenFancybox && !document.querySelector(".viewer-container .viewer-canvas>img") && ([0, 1, 3].some(m => config.ViewMode == m) && [1, 2].some(m => config.shadowGalleryWheel == m) || config.ViewMode == 5) && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
         event.preventDefault();
         event.stopPropagation();
+        if (config.ViewMode == 5 && (config.horizontalWheel == 0 || config.horizontalWheel == 1)) {
+            if (document.body.style.direction == "rtl") {
+                return (document.body.scrollLeft -= event.deltaY);
+            } else {
+                return (document.body.scrollLeft += event.deltaY);
+            }
+        }
         const imgs = [...document.images];
         if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
             if (event.deltaY < 0 && imgViewIndex < 0) {
@@ -35045,10 +35153,10 @@ function createImgElement(mode) {
     currentReferenceElement = imgElements.at(0);
     totalNumberOfElements = imgElements.length;
     if (config.ViewMode == 5 && ["comic", "hcomic"].some(c => category == c)) {
-        switchDirection(imgBox, imgElements);
+        toggleDirection(imgBox, imgElements);
     }
     if (["comic", "hcomic"].some(c => category == c)) {
-        switch_r_l_border(imgElements);
+        toggle_r_l_border(imgElements);
     }
     fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
         setTimeout(() => {
@@ -35326,6 +35434,69 @@ if (config.ViewMode == 1) {
                 event.stopPropagation();
                 const imgs = gae("img", shadow);
                 const next = ge("#next", shadow);
+                const isRTL = mainElement.style.direction == "rtl";
+                if (config.ViewMode == 5 && (config.horizontalWheel == 0 || config.horizontalWheel == 1)) {
+                    if (isString(nextLink) && (mainElement.scrollWidth - mainElement.offsetWidth) < Math.abs(mainElement.scrollLeft + (isRTL ? -2 : 2)) && event.deltaY > 0) {
+                        if (isShowAlert) {
+                            let num = Number(alertMessage.innerText.match(/\d/));
+                            if (num > 0) {
+                                alertMessage.innerText = DL.str_113 + (num -= 1);
+                            }
+                            if (num <= 0) {
+                                alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                                return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
+                            }
+                        }
+                        isShowAlert = true;
+                        alertDiv.classList.remove("hide");
+                    } else if (isString(nextLink)) {
+                        isShowAlert = false;
+                        alertMessage.innerText = DL.str_113 + "3";
+                        alertDiv.classList.add("hide");
+                    }
+                    if (config.horizontalWheel == 0) {
+                        if (isRTL) {
+                            return (mainElement.scrollLeft -= event.deltaY);
+                        } else {
+                            return (mainElement.scrollLeft += event.deltaY);
+                        }
+                    } else if (config.horizontalWheel == 1) {
+                        let num;
+                        if (event.deltaY > 0) {
+                            if (config.jumpNum == 0) {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                                } else {
+                                    num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                                }
+                            } else {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft - Number(config.jumpNum);
+                                } else {
+                                    num = mainElement.scrollLeft + Number(config.jumpNum);
+                                }
+                            }
+                        } else {
+                            if (config.jumpNum == 0) {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                                } else {
+                                    num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                                }
+                            } else {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft + Number(config.jumpNum);
+                                } else {
+                                    num = mainElement.scrollLeft - Number(config.jumpNum);
+                                }
+                            }
+                        }
+                        return mainElement.scrollTo({
+                            left: num,
+                            behavior: config.behavior
+                        });
+                    }
+                }
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (isShowAlert && event.deltaY > 0) {
                         let num = Number(alertMessage.innerText.match(/\d/));
@@ -35452,7 +35623,7 @@ if (config.ViewMode == 1) {
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
-        const switchDirection = (box, imgs) => {
+        const toggleDirection = (box, imgs) => {
             if (box.style.direction == "rtl") {
                 mainElement.style.direction = "ltr";
                 box.style.direction = "ltr";
@@ -35470,7 +35641,7 @@ if (config.ViewMode == 1) {
             }
         };
 
-        const switch_r_l_border = (imgs) => {
+        const toggle_r_l_border = (imgs) => {
             imgs.forEach(img => {
                 if (img.classList.contains("no_r_l_border")) {
                     img.classList.remove("no_r_l_border");
@@ -35509,7 +35680,9 @@ if (config.ViewMode == 1) {
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (isString(nextLink)) {
+                    isShowAlert = true;
                     alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                    alertDiv.classList.remove("hide");
                     if (isEle(next)) {
                         next.style.backgroundColor = "gray";
                     }
@@ -35517,8 +35690,27 @@ if (config.ViewMode == 1) {
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
-                if (config.ViewMode == 5) return;
                 let num;
+                if (config.ViewMode == 5) {
+                    const isRTL = mainElement.style.direction == "rtl";
+                    if (config.jumpNum == 0) {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                        } else {
+                            num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                        }
+                    } else {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft - Number(config.jumpNum);
+                        } else {
+                            num = mainElement.scrollLeft + Number(config.jumpNum);
+                        }
+                    }
+                    return mainElement.scrollTo({
+                        left: num,
+                        behavior: config.behavior
+                    });
+                };
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
                         num = mainElement.scrollTop + imgs[0].offsetHeight;
@@ -35538,8 +35730,27 @@ if (config.ViewMode == 1) {
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
-                if (config.ViewMode == 5) return;
                 let num;
+                if (config.ViewMode == 5) {
+                    const isRTL = mainElement.style.direction == "rtl";
+                    if (config.jumpNum == 0) {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                        } else {
+                            num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                        }
+                    } else {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft + Number(config.jumpNum);
+                        } else {
+                            num = mainElement.scrollLeft - Number(config.jumpNum);
+                        }
+                    }
+                    return mainElement.scrollTo({
+                        left: num,
+                        behavior: config.behavior
+                    });
+                };
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
                         num = mainElement.scrollTop - imgs[0].offsetHeight;
@@ -35566,7 +35777,7 @@ if (config.ViewMode == 1) {
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", shadow);
                 if (config.ViewMode == 5) {
-                    switchDirection(box, imgs);
+                    toggleDirection(box, imgs);
                     if (isEle(imgs[imgViewIndex])) {
                         return instantScrollIntoView(imgs[imgViewIndex]);
                     }
@@ -35579,7 +35790,7 @@ if (config.ViewMode == 1) {
                 }
             }
             if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
-                switch_r_l_border(imgs);
+                toggle_r_l_border(imgs);
                 if (isEle(imgs[imgViewIndex])) {
                     return instantScrollIntoView(imgs[imgViewIndex]);
                 }
@@ -35846,6 +36057,7 @@ img.horizontal {
 #next {
     display: block;
     text-align: center;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     padding: 10px 0;
     margin: ${isM ? "2px" : "6px 1px 6px 7px"};
     border: 4px solid #fff;
@@ -35880,7 +36092,7 @@ img.horizontal {
 #alertBox {
     position: fixed;
     top: calc(50% - 73px);
-    left: calc(50% - 115px);
+    left: calc(50% - 125px);
     transform: translate(-20%, -50%);
     padding: 20px;
     background-color: #f9f9f9;
@@ -35889,6 +36101,7 @@ img.horizontal {
     border-radius: 10px;
     font-size: 14px;
     text-align: center;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
 }
 #hint {
     font-size: 16px;
@@ -36039,10 +36252,10 @@ img.horizontal {
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
             if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
-                switchDirection(p, imgElements);
+                toggleDirection(p, imgElements);
             }
             if (["comic", "hcomic"].some(c => siteData.category == c)) {
-                switch_r_l_border(imgElements);
+                toggle_r_l_border(imgElements);
             }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
@@ -36302,8 +36515,8 @@ img.horizontal {
                         option.value = i;
                         option.innerText = `${DL.str_150}${DL.str_152}`;
                     } else {
-                        option.value = i * 100;
-                        option.innerText = `${DL.str_150}${i * 100}px`;
+                        option.value = i * 50;
+                        option.innerText = `${DL.str_150}${i * 50}px`;
                     }
                     jumpSelect.append(option);
                 }
@@ -36369,15 +36582,16 @@ img.horizontal {
 
         let alertDiv;
         let alertMessage;
-
-        btnDiv.insertAdjacentHTML("afterend", `
+        let alertHtml = `
 <div id="alertBox" class="hide">
     <div id="hint">${DL.str_112}</div>
     <p id="alertMessage">${DL.str_113}3</p>
     <div id="nextAlert">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）</div>
     <div id="closeAlert">${DL.str_132}</div>
 </div>
-        `);
+        `;
+        let alertNode = fn.html(alertHtml);
+        shadow.append(alertNode);
 
         alertDiv = ge("#alertBox", shadow);
         alertMessage = ge("#alertMessage", alertDiv);
@@ -36662,6 +36876,69 @@ img.horizontal {
                 event.stopPropagation();
                 const imgs = gae("img", mainElement);
                 const next = ge("#next", mainElement);
+                const isRTL = mainElement.style.direction == "rtl";
+                if (config.ViewMode == 5 && (config.horizontalWheel == 0 || config.horizontalWheel == 1)) {
+                    if (isString(nextLink) && (mainElement.scrollWidth - mainElement.offsetWidth) < Math.abs(mainElement.scrollLeft + (isRTL ? -2 : 2)) && event.deltaY > 0) {
+                        if (isShowAlert) {
+                            let num = Number(alertMessage.innerText.match(/\d/));
+                            if (num > 0) {
+                                alertMessage.innerText = DL.str_113 + (num -= 1);
+                            }
+                            if (num <= 0) {
+                                alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                                return (isGoToNext = true) && setTimeout(() => (location.href = nextLink), 100);
+                            }
+                        }
+                        isShowAlert = true;
+                        alertDiv.classList.remove("hide");
+                    } else if (isString(nextLink)) {
+                        isShowAlert = false;
+                        alertMessage.innerText = DL.str_113 + "3";
+                        alertDiv.classList.add("hide");
+                    }
+                    if (config.horizontalWheel == 0) {
+                        if (isRTL) {
+                            return (mainElement.scrollLeft -= event.deltaY);
+                        } else {
+                            return (mainElement.scrollLeft += event.deltaY);
+                        }
+                    } else if (config.horizontalWheel == 1) {
+                        let num;
+                        if (event.deltaY > 0) {
+                            if (config.jumpNum == 0) {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                                } else {
+                                    num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                                }
+                            } else {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft - Number(config.jumpNum);
+                                } else {
+                                    num = mainElement.scrollLeft + Number(config.jumpNum);
+                                }
+                            }
+                        } else {
+                            if (config.jumpNum == 0) {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                                } else {
+                                    num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                                }
+                            } else {
+                                if (isRTL) {
+                                    num = mainElement.scrollLeft + Number(config.jumpNum);
+                                } else {
+                                    num = mainElement.scrollLeft - Number(config.jumpNum);
+                                }
+                            }
+                        }
+                        return mainElement.scrollTo({
+                            left: num,
+                            behavior: config.behavior
+                        });
+                    }
+                }
                 if (config.shadowGalleryWheel == 1 || config.ViewMode == 5) {
                     if (isShowAlert && event.deltaY > 0) {
                         let num = Number(alertMessage.innerText.match(/\d/));
@@ -36788,7 +37065,7 @@ img.horizontal {
         };
         _unsafeWindow.addEventListener("resize", aspectRatio);
 
-        const switchDirection = (box, imgs) => {
+        const toggleDirection = (box, imgs) => {
             if (box.style.direction == "rtl") {
                 mainElement.style.direction = "ltr";
                 box.style.direction = "ltr";
@@ -36806,7 +37083,7 @@ img.horizontal {
             }
         };
 
-        const switch_r_l_border = (imgs) => {
+        const toggle_r_l_border = (imgs) => {
             imgs.forEach(img => {
                 if (img.classList.contains("no_r_l_border")) {
                     img.classList.remove("no_r_l_border");
@@ -36845,7 +37122,9 @@ img.horizontal {
             }
             if (event.code === "KeyN" || event.key === "n" || event.key === "N") {
                 if (isString(nextLink)) {
+                    isShowAlert = true;
                     alertMessage.innerText = siteData.category?.includes("comic") ? DL.str_196 : DL.str_197;
+                    alertDiv.classList.remove("hide");
                     if (isEle(next)) {
                         next.style.backgroundColor = "gray";
                     }
@@ -36853,8 +37132,27 @@ img.horizontal {
                 }
             }
             if (event.code === "KeyJ" || event.key === "j" || event.key === "J") {
-                if (config.ViewMode == 5) return;
                 let num;
+                if (config.ViewMode == 5) {
+                    const isRTL = mainElement.style.direction == "rtl";
+                    if (config.jumpNum == 0) {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                        } else {
+                            num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                        }
+                    } else {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft - Number(config.jumpNum);
+                        } else {
+                            num = mainElement.scrollLeft + Number(config.jumpNum);
+                        }
+                    }
+                    return mainElement.scrollTo({
+                        left: num,
+                        behavior: config.behavior
+                    });
+                };
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
                         num = mainElement.scrollTop + imgs[0].offsetHeight;
@@ -36874,8 +37172,27 @@ img.horizontal {
                 });
             }
             if (event.code === "KeyK" || event.key === "k" || event.key === "K") {
-                if (config.ViewMode == 5) return;
                 let num;
+                if (config.ViewMode == 5) {
+                    const isRTL = mainElement.style.direction == "rtl";
+                    if (config.jumpNum == 0) {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft + _unsafeWindow.innerWidth;
+                        } else {
+                            num = mainElement.scrollLeft - _unsafeWindow.innerWidth;
+                        }
+                    } else {
+                        if (isRTL) {
+                            num = mainElement.scrollLeft + Number(config.jumpNum);
+                        } else {
+                            num = mainElement.scrollLeft - Number(config.jumpNum);
+                        }
+                    }
+                    return mainElement.scrollTo({
+                        left: num,
+                        behavior: config.behavior
+                    });
+                };
                 if (config.jumpNum == 0) {
                     if (_unsafeWindow.devicePixelRatio > 1 && [0, 1, 3].some(m => config.ViewMode == m)) {
                         num = mainElement.scrollTop - imgs[0].offsetHeight;
@@ -36902,7 +37219,7 @@ img.horizontal {
             if ((event.code === "KeyR" || event.key === "r" || event.key === "R") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
                 let box = ge("#imgBox", mainElement);
                 if (config.ViewMode == 5) {
-                    switchDirection(box, imgs);
+                    toggleDirection(box, imgs);
                     if (isEle(imgs[imgViewIndex])) {
                         return instantScrollIntoView(imgs[imgViewIndex]);
                     }
@@ -36915,7 +37232,7 @@ img.horizontal {
                 }
             }
             if ((event.code === "KeyB" || event.key === "b" || event.key === "B") && [0, 2, 3, 5].some(m => config.ViewMode == m)) {
-                switch_r_l_border(imgs);
+                toggle_r_l_border(imgs);
                 if (isEle(imgs[imgViewIndex])) {
                     return instantScrollIntoView(imgs[imgViewIndex]);
                 }
@@ -37178,6 +37495,7 @@ img.horizontal {
 #next {
     display: block;
     text-align: center;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     padding: 10px 0;
     margin: ${isM ? "2px" : "6px 1px 6px 7px"};
     border: solid #fff;
@@ -37212,7 +37530,7 @@ img.horizontal {
 #alertBox {
     position: fixed;
     top: calc(50% - 73px);
-    left: calc(50% - 115px);
+    left: calc(50% - 125px);
     transform: translate(-20%, -50%);
     padding: 20px;
     background-color: #f9f9f9;
@@ -37221,6 +37539,7 @@ img.horizontal {
     border-radius: 10px;
     font-size: 14px;
     text-align: center;
+    font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
 }
 #hint {
     font-size: 16px;
@@ -37380,10 +37699,10 @@ img.horizontal {
             currentReferenceElement = imgElements.at(0);
             totalNumberOfElements = imgElements.length;
             if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
-                switchDirection(p, imgElements);
+                toggleDirection(p, imgElements);
             }
             if (["comic", "hcomic"].some(c => siteData.category == c)) {
-                switch_r_l_border(imgElements);
+                toggle_r_l_border(imgElements);
             }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
                 setTimeout(() => {
@@ -37597,14 +37916,16 @@ img.horizontal {
         let alertDiv;
         let alertMessage;
 
-        btnDiv.insertAdjacentHTML("afterend", `
+        let alertHtml = `
 <div id="alertBox" class="hide">
     <div id="hint">${DL.str_112}</div>
     <p id="alertMessage">${DL.str_113}3</p>
     <div id="nextAlert">${siteData.category?.includes("comic") ? DL.str_143 : DL.str_144}（ N ）</div>
     <div id="closeAlert">${DL.str_132}</div>
 </div>
-        `);
+        `;
+        let alertNode = fn.html(alertHtml);
+        dom.body.append(alertNode);
 
         alertDiv = ge("#alertBox", dom);
         alertMessage = ge("#alertMessage", alertDiv);
@@ -37707,8 +38028,8 @@ img.horizontal {
                         option.value = i;
                         option.innerText = `${DL.str_150}${DL.str_152}`;
                     } else {
-                        option.value = i * 100;
-                        option.innerText = `${DL.str_150}${i * 100}px`;
+                        option.value = i * 50;
+                        option.innerText = `${DL.str_150}${i * 50}px`;
                     }
                     jumpSelect.append(option);
                 }
@@ -39837,6 +40158,10 @@ img.webtoon {
     <label>${DL.str_147}</label>
     <select id="ShadowGalleryWheel"></select>
 </div>
+<div id="horizontalWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
+    <label>${DL.str_198}</label>
+    <select id="horizontalWheel"></select>
+</div>
 <div id="FancyboxDIV" style="width: 348px; display: flex;">
     <input id="Fancybox" type="checkbox">
     <label>${DL.str_78}</label>
@@ -39933,6 +40258,15 @@ img.webtoon {
             fragment.append(option);
         });
         ShadowGalleryWheelSelect.append(fragment);
+
+        const horizontalWheelSelect = ge("#horizontalWheel", main);
+        Object.values(DL.horizontalWheel).forEach((v, i) => {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = v;
+            fragment.append(option);
+        });
+        horizontalWheelSelect.append(fragment);
 
         const FancyboxWheelSelect = ge("#FancyboxWheel", main);
         Object.values(DL.FancyboxWheel).forEach((v, i) => {
@@ -40039,6 +40373,7 @@ img.webtoon {
                 "#ShowFixedMenuDIV",
                 //"#ShadowGalleryModeDIV",
                 "#ShadowGalleryWheelDIV",
+                "#horizontalWheelDIV",
                 "#FancyboxWheelDIV",
                 "#ShadowGalleryloopViewDIV"
             ]);
@@ -40056,6 +40391,7 @@ img.webtoon {
             hide([
                 "#ShadowGalleryModeDIV",
                 "#ShadowGalleryWheelDIV",
+                "#horizontalWheelDIV",
                 "#ShadowGalleryloopViewDIV"
             ]);
         }
@@ -40080,6 +40416,7 @@ img.webtoon {
         ge("#MobileGalleryMode", main).checked = options.mobileGallery == 1 ? true : false;
         ge("#autoExport", main).checked = options.autoExport == 1 ? true : false;
         ge("#ShadowGalleryWheel", main).value = config.shadowGalleryWheel;
+        ge("#horizontalWheel", main).value = config.horizontalWheel;
         if (comicSwitch) {
             ge("#ComicDIV", main).style.display = "flex";
         }
@@ -40137,6 +40474,7 @@ img.webtoon {
             options.mobileGallery = ge("#MobileGalleryMode", main).checked == true ? 1 : 0;
             options.autoExport = ge("#autoExport", main).checked == true ? 1 : 0;
             config.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
+            config.horizontalWheel = ge("#horizontalWheel", main).value;
             saveConfig(config);
             if ((isString(siteData.srcset) || isString(siteData.imgs)) && !isArray(siteData.insertImg)) {
                 ge("#ShowEye", main).checked == true ? localStorage.setItem("FullPictureLoadShowEye", 1) : localStorage.setItem("FullPictureLoadShowEye", 0);
@@ -41209,6 +41547,37 @@ a[data-fancybox]:hover {
         }, 500);
     };
 
+    const setCss = () => {
+        if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
+            fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
+        }
+        if (("category" in siteData) && !ge("#addLibrarysV3") && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
+            fn.css(FancyboxV3Css, "FancyboxV3Css");
+        } else if (("category" in siteData) && !ge("#FancyboxV5Css") && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+            fn.css(FancyboxV5Css, "FancyboxV5Css");
+        }
+        if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
+            fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
+        }
+        if ("css" in siteData && isString(siteData.css)) {
+            fn.css(siteData.css, "FullPictureLoadCustomSiteStyle");
+        }
+        if ("mcss" in siteData && isString(siteData.mcss) && isM) {
+            fn.css(siteData.mcss, "FullPictureLoadCustomMobileSiteStyle");
+        }
+        if ("hide" in siteData && (isString(siteData.hide) || isArray(siteData.hide))) {
+            let text = siteData.hide;
+            if (isArray(text)) {
+                text = text.join(",");
+            }
+            text += "{display:none!important;}";
+            fn.css(text, "FullPictureLoadCustomHHide");
+        }
+        if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
+            fn.css(".fancybox__container .to-next>.fancybox__content,.fancybox__container .to-prev>.fancybox__content{display:none!important}", "NoFancyboxSlideshowTransition");
+        }
+    };
+
     const setFPLF = async () => {
         try {
             if ("clearEvent" in siteData) {
@@ -41224,34 +41593,7 @@ a[data-fancybox]:hover {
                     fn.clearAllTimer(3);
                 }
             }
-            if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
-                fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
-            }
-            if (("category" in siteData) && !ge("#addLibrarysV3") && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
-                fn.css(FancyboxV3Css, "FancyboxV3Css");
-            } else if (("category" in siteData) && !ge("#FancyboxV5Css") && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
-                fn.css(FancyboxV5Css, "FancyboxV5Css");
-            }
-            if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
-                fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
-            }
-            if ("css" in siteData && isString(siteData.css)) {
-                fn.css(siteData.css, "FullPictureLoadCustomSiteStyle");
-            }
-            if ("mcss" in siteData && isString(siteData.mcss) && isM) {
-                fn.css(siteData.mcss, "FullPictureLoadCustomMobileSiteStyle");
-            }
-            if ("hide" in siteData && (isString(siteData.hide) || isArray(siteData.hide))) {
-                let text = siteData.hide;
-                if (isArray(text)) {
-                    text = text.join(",");
-                }
-                text += "{display:none!important;}";
-                fn.css(text, "FullPictureLoadCustomHHide");
-            }
-            if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
-                fn.css(".fancybox__container .to-next>.fancybox__content,.fancybox__container .to-prev>.fancybox__content{display:none!important}", "NoFancyboxSlideshowTransition");
-            }
+            setCss();
             if ("init" in siteData) {
                 const init_code = siteData.init;
                 if (isString(init_code)) {
@@ -41260,6 +41602,7 @@ a[data-fancybox]:hover {
                     await init_code();
                 }
             }
+            setCss();
             if (("category" in siteData) && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1 && !isAddFancybox) {
                 isAddFancybox = true;
                 addLibrarysV3();
@@ -41405,7 +41748,7 @@ a[data-fancybox]:hover {
                 if ("navigation" in _unsafeWindow) {
                     navObserver();
                 } else {
-                    headObserver();
+                    loopObserver();
                 }
             }
             if ("observeURL" in siteData && siteData.observeURL === "gm" && !isObserveURL) {
@@ -41660,7 +42003,13 @@ a[data-fancybox]:hover {
                             if (!siteData.page()) return;
                         }
                         if (!!nextLink && !!preloadNext && !isDownloading) {
-                            fn.xhrDoc(nextLink).then(async nextDoc => {
+                            let xhr;
+                            if ("cors" in siteData) {
+                                xhr = fn.xhrDoc(nextLink);
+                            } else {
+                                xhr = fn.fetchDoc(nextLink);
+                            }
+                            xhr.then(async nextDoc => {
                                 //debug("\nnextDoc", nextDoc);
                                 if (isBoolean(preloadNext) && preloadNext === true && isFn(siteData.imgs) && isFn(siteData.customTitle)) {
                                     fn.picPreload(await siteData.imgs(nextDoc), await siteData.customTitle(nextDoc), "next");
@@ -41882,6 +42231,7 @@ a[data-fancybox]:hover {
     Xasiat,https://www.xasiat.com/albums/
     EVERIA.CLUB,https://everia.club/
     SexyAsianGirl,https://www.sexyasiangirl.xyz/
+    二刺猿地帶,https://cosplay-nextjs.vercel.app/
     紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html
     肉感美ガール,https://bi-girl.net/
     エロ画像まとめ,https://geinou-nude.com/`;
