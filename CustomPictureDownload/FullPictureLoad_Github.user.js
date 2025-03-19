@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.18
+// @version            2025.3.19
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -3209,13 +3209,15 @@
         insertImg: ["#content-listing-tabs", 3],
         category: "nsfw2"
     }, {
-        name: "JPG5/anh.im/NF Host",
+        name: "anh.im/Lensdump",
         links: [
-            "https://anh.im/bigradish/albums"
+            "https://anh.im/bigradish/albums",
+            "https://lensdump.com/marcusagrippa777",
+            "https://lensdump.com/saucyspazgurl"
         ],
         url: {
-            h: ["anh.im"],
-            p: ["/album/"],
+            h: ["anh.im", "lensdump.com"],
+            p: ["/album/", "/a/"],
             e: "#content-listing-tabs"
         },
         imgs: async () => {
@@ -4204,12 +4206,16 @@
             h: "cosplay-nextjs.vercel.app"
         },
         page: () => fn.clp("/albums/"),
-        SPA: () => _this.page() ? fn.waitEle("div[aria-roledescription='carousel'] img") : false,
+        data: () => fn.showMsg(DL.str_05, 0).then(() => fn.fetchDoc(fn.clp()).then(dom => (doc = dom) && fn.hideMsg())),
+        SPA: () => _this.page(),
         observeURL: "nav",
-        imgs: "div[aria-roledescription='carousel'] img",
-        customTitle: () => _this.page() ? fn.waitEle([".bg-card h1", ".bg-card p"]).then(() => {
-            let h = fn.gt(".bg-card h1");
-            let g = fn.gt(".bg-card p");
+        init: () => _this.page() ? _this.data() : void 0,
+        imgs: () => _this.page() ? fn.gae("div[aria-roledescription='carousel'] img", doc) : [],
+        capture: () => _this.imgs(),
+        customTitle: () => {
+            if (!_this.page()) return null;
+            let h = fn.gt(".bg-card h1", 1, doc);
+            let g = fn.gt(".bg-card p", 1, doc);
             let text;
             if (h.includes(g)) {
                 text = h;
@@ -4219,7 +4225,7 @@
             return fn.dt({
                 t: text
             });
-        }) : null,
+        },
         referer: "",
         category: "nsfw1"
     }, {
@@ -10857,8 +10863,10 @@
         category: "nsfw2"
     }, {
         name: "SXYPIX",
-        host: ["sxypix.com"],
-        reg: /^https?:\/\/sxypix\.com\/w\/\w+$/i,
+        url: {
+            h: ["sxypix.com"],
+            p: "/w/"
+        },
         box: [".gallgrid", 2],
         imgs: async () => {
             fn.showMsg(DL.str_05, 0);
@@ -10964,7 +10972,7 @@
         url: {
             h: ["jb5.ru"]
         },
-        srcset: ".gallery-item a,span[itemprop=image]>img,.entry-content img[srcset]",
+        srcset: ".gallery-item a,span[itemprop=image]>img,.entry-content img[srcset],.entry-content img[class*='wp-image']",
         customTitle: ".entry-title>h1",
         category: "nsfw2"
     }, {
@@ -10999,7 +11007,7 @@
     }, {
         name: "GamEYE",
         url: {
-            h: "gameye.ru"
+            h: ["gameye.ru", "gameye.kz"]
         },
         imgs: ".wp-block-gallery img",
         customTitle: "section h1",
@@ -17200,11 +17208,11 @@
     }, {
         name: "爱漫画网 閱讀頁",
         host: ["www.iimhw.com", "iimhw.com", "518lebook.buzz"],
-        url: {
+        url: () => fn.checkUrl({
             e: "a[title=爱漫画网]",
-            //p: "/chapter"
-        },
-        imgs: ".chapter-content img",
+            p: "/chapter"
+        }) || fn.curl(/^https?:\/\/518lebook\.buzz\/\?novel\d+\/chapter/),
+        imgs: () => fn.gae(".chapter-content img"),
         button: [4],
         insertImg: [".chapter-content", 2],
         next: "a#next_chap[href$=html]",
@@ -17222,10 +17230,10 @@
         category: "hcomic"
     }, {
         name: "爱漫画网 目錄頁",
-        url: {
+        url: () => fn.checkUrl({
             e: ["a[title=爱漫画网]", "#list-chapter"],
-            //p: "/novel"
-        },
+            p: "/novel"
+        }) || fn.curl(/^https?:\/\/518lebook\.buzz\/\?novel\d+\/$/),
         box: ["#list-chapter", 2],
         init: () => fn.getNP("#list-chapter .list-chapter>li", "//div[@id='pagination']//a[text()='Next'][@href]", null, "#pagination"),
         imgs: () => {
@@ -21665,7 +21673,12 @@
             fn.clearAllTimer(1);
             if (autoScrollAllElement === 1) _this.scrollEle();
         },
-        imgs: () => fn.ge(".mh_comicpic img[src^=blob]") ? fn.imgBlobUrlArr(".mh_comicpic img[src^=blob]") : fn.gae(".mh_comicpic img[src]"),
+        imgs: async () => {
+            if (options.autoDownload == 1) {
+                await _this.scrollEle();
+            }
+            return fn.ge(".mh_comicpic img[src^=blob]") ? fn.imgBlobUrlArr(".mh_comicpic img[src^=blob]") : fn.gae(".mh_comicpic img[src]");
+        },
         scrollEle: () => fn.aotoScrollEles({
             ele: ".mh_comicpic",
             cb: (ele) => isEle(fn.ge("img[src]", ele)),
@@ -21674,6 +21687,7 @@
             end: ".mh_footpager",
             end_time: 2000
         }),
+        autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: () => fn.title(" COLAMANGA", 1),
@@ -27268,12 +27282,18 @@ if ("xx" in window) {
             await fn.waitEle(".content-img.lazy_img[src^=blob]");
             if (autoScrollAllElement === 1) _this.scrollEle();
         },
-        imgs: () => fn.imgBlobUrlArr(".content-img[src^=blob]"),
+        imgs: async () => {
+            if (options.autoDownload == 1) {
+                await _this.scrollEle();
+            }
+            return fn.imgBlobUrlArr(".content-img[src^=blob]");
+        },
         scrollEle: () => fn.aotoScrollEles({
             ele: ".img-content .content-img",
             cb: (img) => /^blob/.test(img.src),
             top: 1
         }),
+        autoDownload: [0],
         next: ".view-fix-bottom-bar-item-menu-next",
         prev: ".view-fix-bottom-bar-item-menu-prev",
         customTitle: () => fn.title("在线阅读", 1),
@@ -34244,7 +34264,7 @@ if ("xx" in window) {
         <title>${DL.str_106.replace(/\(.\)/, "")}：${apiCustomTitle ?? customTitle ?? document.title}</title>
     </head>
     <body style="text-align: center;">
-        <div id="imgBox"></div>
+        <div id="imgBox" tabindex="-1"></div>
     </body>
 </html>
             `);
@@ -34261,7 +34281,7 @@ if ("xx" in window) {
             newWindow.category = siteData.category;
             newWindow.newImgs = imgSrcs;
             newWindow.thumbnailSrcArray = isArray(src_array) ? [] : thumbnailSrcArray;
-            newWindow.preload = !!siteData.preload ? 1 : 0;
+            newWindow.DL = DL;
             newWindow.menuLanguage = DL.galleryMenu;
             newWindow.isOpenFancybox = false;
             newWindow.l10n = Fancyboxl10nV5();
@@ -34319,6 +34339,16 @@ body {
 .FixedMenuitem.active {
     color: #fff;
     background: #1790E6;
+}
+#FixedMenu select {
+    font-weight: normal;
+    text-align: center;
+    color: #000;
+    background-color: #f6f6f6;
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 0 auto;
 }
 #setting-btn {
     width: auto;
@@ -34579,6 +34609,8 @@ if (l10n !== "EN") {
             const newWindowScriptCode = `
 const fragment = new DocumentFragment();
 
+let loadQueue = null;
+
 if (lightboxSwitch == 1 && lightGallery == 1) {
     var ViewerJsInstance = new Viewer(document.querySelector("#imgBox"), {
         navbar: false,
@@ -34611,6 +34643,8 @@ function addFixedMenu() {
     menuDiv = document.createElement("div");
     menuDiv.id = "FixedMenu";
     const menuObj = [{
+        id: "MenuThreadingItem"
+    }, {
         id: "MenuHorizontalItem",
         text: menuLanguage.horizontal,
         cfn: () => horizontalImageLayout()
@@ -34639,14 +34673,28 @@ function addFixedMenu() {
         let item = document.createElement("div");
         item.id = obj.id;
         item.className = "FixedMenuitem";
-        item.innerText = obj.text;
+        item.innerText = obj.text || "";
         item.oncontextmenu = () => false;
         if (!!obj.cfn) item.addEventListener("click", obj.cfn);
         menuDiv.append(item);
     };
     menuObj.forEach(obj => createMenu(obj));
+    let threadingSelect = document.createElement("select");
+    for (let i = 1; i <= 32; i++) {
+        let option = document.createElement("option");
+        option.value = i;
+        option.innerText = DL.str_162 + i;
+        threadingSelect.append(option);
+    }
+    menuDiv.querySelector("#MenuThreadingItem").append(threadingSelect);
     fragment.append(menuDiv);
     document.body.append(fragment);
+    threadingSelect.value = config.threading;
+    threadingSelect.addEventListener("change", () => {
+        config.threading = Number(threadingSelect.value);
+        saveConfig();
+        document.querySelector("#imgBox").focus();
+    });
 }
 addFixedMenu();
 
@@ -34971,14 +35019,6 @@ document.addEventListener("wheel", (event) => {
     passive: false
 });
 
-function loadImgs() {
-    const imgs = [...document.images];
-    const oddNumberImgs = imgs.filter((img, index) => index % 2 == 0);
-    const evenNumberImgs = imgs.filter((img, index) => index % 2 != 0);
-    fn.singleThreadLoadImgs(oddNumberImgs);
-    fn.singleThreadLoadImgs(evenNumberImgs);
-}
-
 function aspectRatio() {
     const verticalScreen = window.innerHeight / window.innerWidth > 1;
     const imgs = [...document.images];
@@ -35087,6 +35127,78 @@ function getPrevRowElement() {
     return eles.at(0);
 }
 
+function simpleLoadImg(img) {
+    return new Promise((resolve) => {
+        if (!img) {
+            resolve();
+        }
+        let loadSrc = img.dataset.src;
+        let temp = new Image();
+        temp.onload = () => {
+            img.dataset.width = temp.naturalWidth;
+            img.dataset.height = temp.naturalHeight;
+            img.classList.add("loaded");
+            img.src = loadSrc;
+            temp = null;
+            resolve();
+        };
+        temp.onerror = () => {
+            if (loadSrc.includes("https://wsrv.nl/")) {
+                loadSrc = loadSrc.replace("https://wsrv.nl/?url=", "");
+            } else if (loadSrc.includes(".wp.com/") && !document.title.endsWith("4KHD")) {
+                loadSrc = loadSrc.replace(/i\\d\\.wp\\.com\\/|\\?.+$/g, "");
+            }
+            img.classList.add("error");
+            img.dataset.src = loadSrc;
+            img.src = loadSrc;
+            temp = null;
+            resolve();
+        };
+        temp.src = loadSrc;
+    });
+}
+
+class Queue {
+    constructor(workerLen) {
+            this.workerLen = workerLen ?? 4;
+            this.list = [];
+            this.worker = new Array(this.workerLen);
+        }
+        * executionFunc(index, func, ...args) {
+            const _this = this;
+            yield func.call(...args).then(() => {
+                _this.worker[index] = undefined;
+                _this.run();
+            });
+        }
+    addList(list) {
+        for (const item of list) {
+            this.list.unshift(item);
+        }
+    }
+    run() {
+        const runIndex = [];
+        for (let i = 0; i < this.workerLen; i++) {
+            const len = this.list.length;
+            if (!this.worker[i] && len > 0) {
+                this.worker[i] = this.executionFunc(i, ...this.list[len - 1]);
+                runIndex.push(i);
+                this.list.pop();
+            }
+        }
+        for (const index of runIndex) {
+            this.worker[index].next();
+        }
+    }
+}
+
+function loadImgs(imgs) {
+    loadQueue = null;
+    loadQueue = new Queue(Number(config.threading));
+    loadQueue.addList(imgs.map(img => [simpleLoadImg, null, img]));
+    loadQueue.run();
+}
+
 function createImgElement(mode) {
     window.scrollTo({
         top: 0
@@ -35141,9 +35253,7 @@ function createImgElement(mode) {
     } else if (lightboxSwitch == 1){
         setFancybox();
     }
-    if (preload == 1) {
-        loadImgs();
-    }
+    loadImgs(imgElements);
     aspectRatio();
     if (isPC && config.ViewMode == 4) {
         btnDiv.classList.remove("hide");
