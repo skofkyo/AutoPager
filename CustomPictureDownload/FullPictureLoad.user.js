@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.19
+// @version            2025.3.20
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -87,7 +87,6 @@
         autoDownload: 0, //!!!維持0不要改!!!建議透過UI選項設定來開啟，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有NEXT時自動下載的倒數秒數
         comic: 0, //1，忽視漫畫站點開關選項，啟用漫畫規則
-        doubleTouchNext: 1, //觸控裝置雙擊前往下一頁，1：開啟、0：關閉
         zoom: 0, //1 ~ 10 腳本插入的圖片縮放比例，10 = 100%，9 = 90%，0 = auto
         column: 4, //圖片並排顯示的數量 2 ~ 6
         viewMode: 0, //0：置中、1：並排
@@ -395,6 +394,12 @@
         init: () => {
             fn.run("$(document).off('keydown');");
             fn.remove("//div[@id='tab_1']/div[contains(text(),'推')] | //div[@class='rules']/ul/li[contains(text(),'推')]");
+            let time_id = setInterval(() => {
+                [...document.getElementsByTagName("style")]
+                ?.find(style => style?.textContent?.includes("customPicDownloadMsg"))
+                    ?.remove();
+            }, 200);
+            setTimeout(() => clearInterval(time_id), 3000);
         },
         imgs: async () => {
             const isMp4 = fn.ge("video[src$='mp4']");
@@ -27847,7 +27852,7 @@ if ("xx" in window) {
                     textContent: code
                 });
             }
-            if (siteData.fancybox && siteData.fancybox.css !== false) {
+            if ("fancybox" in siteData && siteData?.fancybox?.css !== false) {
                 fn.css(FancyboxV3Css, "FancyboxV3Css");
             }
         } catch (error) {
@@ -27860,12 +27865,13 @@ if ("xx" in window) {
             const jsArr = [JqueryJS, FancyboxV5JS];
             for (let [i, code] of jsArr.entries()) {
                 if (i == 0 && ("jQuery" in _unsafeWindow)) continue;
+                if (i == 1 && ("Fancybox" in _unsafeWindow)) return;
                 //fn.script(code, 0, 1);
                 _GM_addElement(document.body, "script", {
                     textContent: code
                 });
             }
-            fn.css(FancyboxV5Css);
+            fn.css(FancyboxV5Css, "FancyboxV5Css");
         } catch (error) {
             console.error("\naddLibrarysV5() 注入函式庫失敗", error);
         }
@@ -28069,7 +28075,7 @@ if ("xx" in window) {
                 str_74: " ( 快捷鍵 [ ctrl + . ] 開始或取消 )",
                 str_75: "自動下載倒數秒數：",
                 str_76: "啟用當前漫畫站點規則",
-                str_77: "移動裝置雙擊前往下一頁",
+                str_77: "自動進入畫廊需點擊主圖示按鈕",
                 str_78: "Fancybox&ViewerJs燈箱功能",
                 str_79: "頁面容器圖片縮放比例：",
                 str_80: "頁面容器圖片並排數量：",
@@ -28317,7 +28323,7 @@ if ("xx" in window) {
                 str_74: " ( 快捷键 [ ctrl + . ] 开始或取消 )",
                 str_75: "自动下载倒数秒数：",
                 str_76: "启用当前漫画站点规则",
-                str_77: "移动设备双击前往下一页",
+                str_77: "自动进入画廊需点击主图示按钮",
                 str_78: "Fancybox&ViewerJs灯箱功能",
                 str_79: "页面容器图片缩放比例：",
                 str_80: "页面容器图片并排数量：",
@@ -28559,7 +28565,7 @@ if ("xx" in window) {
                 str_74: " ( [ ctrl + . ] Start or Cancel)",
                 str_75: "AutoDownload Countdown Sec：",
                 str_76: "Comic Site Rules Switch",
-                str_77: "Double Click Go To Next Page",
+                str_77: "Auto enter Gallery In Icon Button",
                 str_78: "Fancybox&ViewerJs Plugin",
                 str_79: "Image Zoom Ratio：",
                 str_80: "Number Of Images Side By Side：",
@@ -28628,7 +28634,7 @@ if ("xx" in window) {
                 str_137: "Add Fancybox To Image",
                 str_138: "This Website Is Disabled",
                 str_139: "Page Content Auto Insert Images",
-                str_140: "Enable Shadow Gallery",
+                str_140: "Auto enter Shadow Gallery",
                 str_141: isM ? "ShadowGallery" : "ShadowGallery(G)",
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
@@ -28680,7 +28686,7 @@ if ("xx" in window) {
                 str_189: "Single",
                 str_190: "Webtoon",
                 str_191: "Simple mode enabled by default",
-                str_192: "Enable Phone Gallery",
+                str_192: "Auto enter Phone Gallery",
                 str_193: "Export JSON",
                 str_194: "Copy Markdown",
                 str_195: "Export Markdown",
@@ -34216,6 +34222,8 @@ if ("xx" in window) {
             }
         }
         _GM_setValue("FullPictureLoadMsgPos", 0);
+        _GM_setValue("noGoToFirstImage", 0);
+        _GM_setValue("GalleryInIcon", 0);
         _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
         _GM_setValue("FavorOpenInNewTab", 0);
         _GM_setValue("FullPictureLoadLoopView", 1);
@@ -38274,6 +38282,7 @@ img.horizontal {
         });
     };
 
+    let GalleryInIcon = _GM_getValue("GalleryInIcon", 0);
     let closeFilter;
 
     //創建篩選下載
@@ -38637,10 +38646,9 @@ img.webtoon {
     margin: 0 auto;
     border: unset;
 }
-#scrollUp {
+#scroll_U,#scroll_D {
     position: fixed;
     z-index: 2147483647;
-    bottom: 100px;
     right: 20px;
     color: rgba(143, 143, 143);
     font-size: 40px;
@@ -38655,13 +38663,20 @@ img.webtoon {
     opacity: 0.8;
     backdrop-filter: saturate(5) blur(100px);
 }
-#scrollUp.dark {
+#scroll_U {
+    bottom: 160px;
+}
+#scroll_D {
+    bottom: 100px;
+    transform: rotate(180deg);
+}
+#scroll_U.dark,#scroll_D.dark {
     color: rgba(255, 255, 255, 0.8);
     border: rgb(0, 204, 255) 1px solid;
     background: rgb(37, 36, 44, 0.8);
     opacity: 0.5;
 }
-#scrollUpSVG {
+.UDSVG {
     width: 40px;
     height: 40px;
     margin-top: 4px;
@@ -38798,7 +38813,7 @@ img.webtoon {
 <div id="imgBox" class="row">
     <ul id="image-list"></ul>
 </div>
-<div class="row">
+<div id="filter_bottom" class="row">
     <div class="buttons">
         <button id="settings">${DL.str_85.replace(/\(.\)/, "")}</button>
         <button class="mobile_toggle_filter_gallery_btn hide">${DL.str_188}</button>
@@ -38827,7 +38842,7 @@ img.webtoon {
     </div>
 </div>
 <div id="gallery_imgBox" class="hide"></div>
-<div class="row hide">
+<div id="gallery_bottom" class="row hide">
     <div class="buttons">
         <button class="mobile_toggle_filter_gallery_btn">${DL.str_158.replace(/\(.\)/, "")}</button>
         <button id="favor">${DL.str_128.replace(/\(.\)/, "")}</button>
@@ -38836,12 +38851,19 @@ img.webtoon {
         <button id="close">${DL.str_132}</button>
     </div>
 </div>
-<a id="scrollUp" class="hide" href="javascript:void(0);">
-  <svg id="scrollUpSVG" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        `;
+
+        const UD_Buttons = ["scroll_U", "scroll_D"].map(id => {
+            let html = `
+<a id="${id}" class="hide" href="javascript:void(0);">
+  <svg class="UDSVG" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"></path>
   </svg>
 </a>
-        `;
+            `;
+            return fn.html(html);
+        });
+        main.append(...UD_Buttons);
 
         closeFilter = () => {
             if (isCaptureMode) {
@@ -38887,7 +38909,7 @@ img.webtoon {
         };
 
         if (backgroundColor === "d") {
-            gae("#main,.row,.number,button,#scrollUp,#next", shadow).forEach(e => e.classList.add("dark"));
+            gae("#main,.row,.number,button,#scroll_U,#scroll_D,#next", shadow).forEach(e => e.classList.add("dark"));
         }
 
         let moreE = ge("#more", main);
@@ -38960,20 +38982,21 @@ img.webtoon {
 
         if (isM) {
             ge("label:has(>#move)", main).classList.add("hide");
-            //gae("#combineDownload", main).forEach(e => e.classList.add("hide"));
-            //gae("#shadow_gallery", main).forEach(e => e.classList.add("hide"));
-            gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
-            ge("#scrollUp", main).classList.remove("hide");
-            ge("#scrollUp", main).addEventListener("click", event => {
+            gae(".mobile_toggle_filter_gallery_btn,#scroll_U,#scroll_D", main).forEach(e => e.classList.remove("hide"));
+            ge("#scroll_U", main).addEventListener("click", event => {
                 cancelDefault(event);
                 instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_top" : "#filter_top", main));
+            });
+            ge("#scroll_D", main).addEventListener("click", event => {
+                cancelDefault(event);
+                instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_bottom" : "#filter_bottom", main));
             });
             let lastScrollTop = 0;
             main.addEventListener("scroll", event => {
                 if (main.scrollTop > lastScrollTop) {
-                    ge("#scrollUp", main).classList.add("hide");
+                    gae("#scroll_U,#scroll_D", main).forEach(e => e.classList.add("hide"));
                 } else if (main.scrollTop < lastScrollTop) {
-                    ge("#scrollUp", main).classList.remove("hide");
+                    gae("#scroll_U,#scroll_D", main).forEach(e => e.classList.remove("hide"));
                 }
                 lastScrollTop = main.scrollTop;
             });
@@ -39051,9 +39074,9 @@ img.webtoon {
             saveConfig(config);
             backgroundColor = config.backgroundColor;
             if (backgroundColor === "d") {
-                gae("#main,.row,.number,li,li p,button,#scrollUp,#next", shadow).forEach(e => e.classList.add("dark"));
+                gae("#main,.row,.number,li,li p,button,#scroll_U,#scroll_D,#next", shadow).forEach(e => e.classList.add("dark"));
             } else {
-                gae("#main,.row,.number,li,li p,button,#scrollUp,#next", shadow).forEach(e => e.classList.remove("dark"));
+                gae("#main,.row,.number,li,li p,button,#scroll_U,#scroll_D,#next", shadow).forEach(e => e.classList.remove("dark"));
             }
             main.focus();
         });
@@ -39491,6 +39514,10 @@ img.webtoon {
         };
         addLis();
 
+        if (GalleryInIcon == 1 && options.shadowGallery == 1) {
+            let button = ge("#shadow_gallery", main);
+            EClick(button);
+        }
         if (isPC) return;
 
         const gallery_imgBox = ge("#gallery_imgBox", main);
@@ -40236,6 +40263,10 @@ img.webtoon {
     <input id="AutoInsertImg" type="checkbox">
     <label>${DL.str_139}</label>
 </div>
+<div id="noGoToFirstDIV" style="width: 348px; display: flex;">
+    <input id="noGoToFirst" type="checkbox">
+    <label>※ ${DL.str_115}</label>
+</div>
 <div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_79}</label>
     <select id="Zoom"></select>
@@ -40255,6 +40286,10 @@ img.webtoon {
 <div id="MobileGalleryModeDIV" style="width: 348px; display: flex;">
     <input id="MobileGalleryMode" type="checkbox">
     <label>${DL.str_192}</label>
+</div>
+<div id="GalleryInIconDIV" style="width: 348px; display: flex;">
+    <input id="GalleryInIcon" type="checkbox">
+    <label>※ ${DL.str_77}</label>
 </div>
 <div id="autoExportDIV" style="width: 348px; display: flex;">
     <input id="autoExport" type="checkbox">
@@ -40291,10 +40326,6 @@ img.webtoon {
 <div id="ComicDIV" style="width: 348px; display: none;">
     <input id="Comic" type="checkbox">
     <label>${DL.str_76}</label>
-</div>
-<div id="DoubleDIV" style="width: 348px; display: flex;">
-    <input id="Double" type="checkbox">
-    <label>${DL.str_77}</label>
 </div>
 <div id="AutoDownloadDIV" style="width: 348px; display: flex;">
     <input id="AutoDownload" type="checkbox">
@@ -40443,6 +40474,7 @@ img.webtoon {
 
         ge("#icon", main).checked = options.icon == 1 ? true : false;
         ge("#AutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
+        ge("#noGoToFirst", main).checked = _GM_getValue("noGoToFirstImage", 0) == 1 ? true : false;
         ge("#ShowFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
         ge("#FavorNewTab", main).checked = _GM_getValue("FavorOpenInNewTab", 0) == 1 ? true : false;
         ge("#loopView", main).checked = _GM_getValue("FullPictureLoadLoopView", 1) == 1 ? true : false;
@@ -40455,7 +40487,6 @@ img.webtoon {
         ge("#AutoDownload", main).checked = options.autoDownload == 1 ? true : false;
         ge("#Countdown", main).value = options.autoDownloadCountdown;
         ge("#Comic", main).checked = options.comic == 1 ? true : false;
-        ge("#Double", main).checked = options.doubleTouchNext == 1 ? true : false;
         if ((isString(siteData.srcset) || isString(siteData.imgs)) && !isArray(siteData.insertImg)) {
             ge("#ShowEyeDIV", main).style.display = "flex";
             ge("#ShowEye", main).checked = FullPictureLoadShowEye == 1 ? true : false;
@@ -40473,6 +40504,7 @@ img.webtoon {
         if (!("insertImg" in siteData)) {
             hide([
                 "#AutoInsertImgDIV",
+                "#noGoToFirstDIV",
                 "#ZoomDIV",
                 "#viewModeDIV",
                 "#ColumnDIV"
@@ -40489,7 +40521,10 @@ img.webtoon {
             ]);
         }
         if (isPC) {
-            hide(["#MobileGalleryModeDIV"]);
+            hide([
+                "#MobileGalleryModeDIV",
+                "#GalleryInIconDIV"
+            ]);
         }
         if (isSimpleMode) {
             hide([
@@ -40524,6 +40559,7 @@ img.webtoon {
         ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
         ge("#ShadowGalleryMode", main).checked = options.shadowGallery == 1 ? true : false;
         ge("#MobileGalleryMode", main).checked = options.mobileGallery == 1 ? true : false;
+        ge("#GalleryInIcon", main).checked = _GM_getValue("GalleryInIcon", 0) == 1 ? true : false;
         ge("#autoExport", main).checked = options.autoExport == 1 ? true : false;
         ge("#ShadowGalleryWheel", main).value = config.shadowGalleryWheel;
         ge("#horizontalWheel", main).value = config.horizontalWheel;
@@ -40536,9 +40572,6 @@ img.webtoon {
                 "#AutoDownloadDIV",
                 "#CountdownDIV"
             ]);
-        }
-        if (isSimpleMode || isPC && showOptions || (isM && showOptions && !("next" in siteData))) {
-            hide(["#DoubleDIV"]);
         }
         let downloadVideo = siteData.downloadVideo;
         if (!!downloadVideo && downloadVideo === true && isPC) {
@@ -40560,6 +40593,7 @@ img.webtoon {
             cancelDefault(event);
             options.icon = ge("#icon", main).checked == true ? 1 : 0;
             options.autoInsert = ge("#AutoInsertImg", main).checked == true ? 1 : 0;
+            _GM_setValue("noGoToFirstImage", ge("#noGoToFirst", main).checked == true ? 1 : 0);
             _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFixedMenu", main).checked == true ? 1 : 0);
             _GM_setValue("FavorOpenInNewTab", ge("#FavorNewTab", main).checked == true ? 1 : 0);
             _GM_setValue("FullPictureLoadLoopView", ge("#loopView", main).checked == true ? 1 : 0);
@@ -40572,7 +40606,6 @@ img.webtoon {
             options.comic = ge("#Comic", main).checked == true ? 1 : 0;
             options.autoDownload = ge("#AutoDownload", main).checked == true ? 1 : 0;
             options.autoDownloadCountdown = ge("#Countdown", main).value;
-            options.doubleTouchNext = ge("#Double", main).checked == true ? 1 : 0;
             options.fancybox = ge("#Fancybox", main).checked == true ? 1 : 0;
             _GM_setValue("FancyboxSlideshowTimeout", ge("#FancyboxSlideshowTimeout", main).value);
             _GM_setValue("FancyboxWheel", ge("#FancyboxWheel", main).value);
@@ -40582,6 +40615,7 @@ img.webtoon {
             options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
             options.shadowGallery = ge("#ShadowGalleryMode", main).checked == true ? 1 : 0;
             options.mobileGallery = ge("#MobileGalleryMode", main).checked == true ? 1 : 0;
+            _GM_setValue("GalleryInIcon", ge("#GalleryInIcon", main).checked == true ? 1 : 0);
             options.autoExport = ge("#autoExport", main).checked == true ? 1 : 0;
             config.shadowGalleryWheel = ge("#ShadowGalleryWheel", main).value;
             config.horizontalWheel = ge("#horizontalWheel", main).value;
@@ -41658,16 +41692,13 @@ a[data-fancybox]:hover {
     };
 
     const setCss = () => {
-        if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
+        if (("category" in siteData) && !["none", "ad"].some(c => c === siteData.category)) {
             fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
-        if (("category" in siteData) && !ge("#addLibrarysV3") && options.fancybox == 1 && siteData.category !== "none" && !isObject(siteData.autoPager) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
+        if (("category" in siteData) && options.fancybox == 1 && !isObject(siteData.autoPager) && !["none", "ad"].some(c => c === siteData.category) && siteData.fancybox?.v == 3 && siteData.fancybox?.insertLibrarys == 1) {
             fn.css(FancyboxV3Css, "FancyboxV3Css");
-        } else if (("category" in siteData) && !ge("#FancyboxV5Css") && options.fancybox == 1 && !siteData.category?.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
+        } else if (("category" in siteData) && options.fancybox == 1 && !isObject(siteData.autoPager) && !["none", "ad"].some(c => c === siteData.category) && !fancyboxBlackList()) {
             fn.css(FancyboxV5Css, "FancyboxV5Css");
-        }
-        if (("category" in siteData) && !ge("#FullPictureLoadMainStyle") && !["none", "ad"].some(c => c === siteData.category)) {
-            fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
         }
         if ("css" in siteData && isString(siteData.css)) {
             fn.css(siteData.css, "FullPictureLoadCustomSiteStyle");
@@ -41681,7 +41712,7 @@ a[data-fancybox]:hover {
                 text = text.join(",");
             }
             text += "{display:none!important;}";
-            fn.css(text, "FullPictureLoadCustomHHide");
+            fn.css(text, "FullPictureLoadCustomHide");
         }
         if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
             fn.css(".fancybox__container .to-next>.fancybox__content,.fancybox__container .to-prev>.fancybox__content{display:none!important}", "NoFancyboxSlideshowTransition");
@@ -41722,7 +41753,6 @@ a[data-fancybox]:hover {
                 isAddFancybox = true;
                 addLibrarysV5();
                 Fancyboxl10nV5();
-                fn.css(FancyboxV5Css, "FancyboxV5Css");
             }
             if ("box" in siteData && isArray(siteData.box)) {
                 const para = siteData.box;
@@ -41874,9 +41904,6 @@ a[data-fancybox]:hover {
                 const next = siteData.next;
                 const nextE = await getNextLink(next);
                 const callback = (event) => {
-                    if (event.type === "dblclick") {
-                        if (["is-next", "is-prev", "fancybox-button"].some(n => event?.target?.className?.includes(n))) return;
-                    }
                     if ("observeURL" in siteData && isString(nextLink)) {
                         fn.showMsg(DL.str_34, 0);
                         return (location.href = nextLink);
@@ -41902,9 +41929,6 @@ a[data-fancybox]:hover {
                         }
                     }
                 };
-                if (isM && !!siteData.next && options.doubleTouchNext == 1) {
-                    document.addEventListener("dblclick", (event) => callback(event));
-                }
                 document.addEventListener("keydown", event => {
                     if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || !isValidPage || ["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName) || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                     if (event.code === "ArrowRight" || event.key === "ArrowRight") callback(event);
@@ -42062,7 +42086,7 @@ a[data-fancybox]:hover {
                     }
                 }
             }
-            if (options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
+            if (GalleryInIcon == 0 && options.shadowGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category) && !(("capture" in siteData) && ("SPA" in siteData))) {
                 fn.hideMsg();
                 if ("SPA" in siteData && isFn(siteData.SPA)) {
                     if (!!await siteData.SPA()) {
@@ -42072,7 +42096,7 @@ a[data-fancybox]:hover {
                     setTimeout(() => createShadowGallery(), 200);
                 }
             }
-            if (isM && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category)) {
+            if (GalleryInIcon == 0 && isM && options.mobileGallery == 1 && siteData.aeg != 0 && options.autoDownload != 1 && ("imgs" in siteData) && !siteData.category.includes("autoPager") && !["none", "ad"].some(c => c === siteData.category)) {
                 fn.hideMsg();
                 if ("SPA" in siteData && isFn(siteData.SPA)) {
                     if (!!await siteData.SPA()) {
@@ -42160,13 +42184,6 @@ a[data-fancybox]:hover {
     if (isPC && showOptions && isArray(siteData.insertImg)) {
         _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + DL.str_121 : "✔️ " + DL.str_121, () => {
             TurnOffImageNavigationShortcutKeys == 0 ? _GM_setValue("TurnOffImageNavigationShortcutKeys", 1) : _GM_setValue("TurnOffImageNavigationShortcutKeys", 0);
-            location.reload();
-        });
-    }
-
-    if (showOptions && isNumber(siteData.go)) {
-        _GM_registerMenuCommand(noGoToFirstImage == 0 ? "❌ " + DL.str_115 : "✔️ " + DL.str_115, () => {
-            noGoToFirstImage == 0 ? _GM_setValue("noGoToFirstImage", 1) : _GM_setValue("noGoToFirstImage", 0);
             location.reload();
         });
     }
@@ -42681,7 +42698,6 @@ a[data-fancybox]:hover {
             if (!("Fancybox" in _unsafeWindow)) {
                 addLibrarysV5();
                 Fancyboxl10nV5();
-                fn.css(FancyboxV5Css, "FancyboxV5Css");
             }
             _GM_unregisterMenuCommand(menu_command_id_2);
             registerB();
