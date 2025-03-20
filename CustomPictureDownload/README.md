@@ -1670,7 +1670,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://xchina.biz/">小黃書</a>
                 </td>
                 <td>
-                    <a href="https://xchina.co/">xchina.co</a>， <a href="https://xchina.store/">xchina.store</a>， <a href="https://xchina.bond/">xchina.bond</a>， <a href="https://xiaohuangshu.me/">网址发布页</a>
+                    <a href="https://xchina.co/">xchina.co</a>， <a href="https://xchina.store/">xchina.store</a>， <a href="https://xchina.bond/">xchina.bond</a>， <a href="https://xchina.blog/">xchina.blog</a>， <a href="https://xiaohuangshu.me/">网址发布页</a>
                 </td>
             </tr>
             <tr>
