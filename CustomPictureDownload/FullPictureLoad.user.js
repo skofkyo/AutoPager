@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.20
+// @version            2025.3.21
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -949,7 +949,7 @@
             e: ".logo img[alt=梦想岛]",
             p: "/gallery/"
         },
-        imgs: () => {
+        imgs: async () => {
             let src = fn.src(".gallerypic img");
             let dir = fn.dir(src);
             let f = src.split("/").at(-1);
@@ -957,12 +957,37 @@
             let ex = f.split(".").at(-1);
             ex = "." + ex;
             let [max] = fn.gt(".gallery_img label").match(/\d+/);
-            if (num.length == 1 && num == 0) {
+            if (num?.length == 1 && num == 0) {
                 return fn.arr(max, (v, i) => dir + i + ex);
-            } else if (num.length == 3 && Number(num) == 1) {
+            } else if (num?.length == 3 && Number(num) == 1) {
                 return fn.arr(max, (v, i) => dir + String(i + 1).padStart(3, "0") + ex);
+            } else if (num?.length > 1) {
+                [src] = fn.getImgSrcArr(".gallerypic img").sort();
+                f = src.split("/").at(-1);
+                [num] = f.match(/\d+/);
+                num = Number(num);
+                let srcs = [];
+                let successNum = 0;
+                let testNum = 0;
+                let testSrc;
+                let loop = true;
+                while (loop) {
+                    fn.showMsg(`test：${num} | success：${successNum}/${max}`, 0);
+                    testSrc = dir + num + ex;
+                    let status = await fn.xhrHEAD(testSrc).then(res => res.status);
+                    if (status == 200) {
+                        srcs.push(testSrc);
+                        successNum += 1;
+                        if (testNum > 500 || successNum >= max) {
+                            loop = false;
+                        }
+                    }
+                    testNum += 1;
+                    num += 1;
+                }
+                return srcs;
             } else {
-                return [];
+                return fn.gae(".gallerypic img");
             }
         },
         capture: () => _this.imgs(),
@@ -17324,13 +17349,7 @@
         name: "漫小肆",
         host: ["www.mxsweb.cc"],
         url: {
-            h: [
-                "www.jjmhw.cc",
-                "www.ikanmh.xyz",
-                "www.ikanhm.xyz",
-                "www.92hm.life",
-                /^www\.mxs\d{1,2}\.cc$/
-            ],
+            t: "漫小肆",
             p: "chapter"
         },
         init: () => fn.remove("//body/div[div[@id][@style][a]]|//body/div[div[@id][@style]][a[@id][@style]]"),
@@ -17348,6 +17367,7 @@
             }
         },
         referer: "src",
+        hide: "h5[id]:has(h5[id]),.swiper-container",
         category: "hcomic"
     }, {
         name: "Avbebe",
@@ -28203,6 +28223,7 @@ if ("xx" in window) {
                 str_196: "前往下一話",
                 str_197: "前往下一篇",
                 str_198: "畫廊 ( 5 ) 滾輪操作：",
+                str_199: "移動裝置雙擊前往下一頁",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -28451,6 +28472,7 @@ if ("xx" in window) {
                 str_196: "前往下一话",
                 str_197: "前往下一篇",
                 str_198: "画廊 ( 5 ) 滚轮操作：",
+                str_199: "移动设备双击前往下一页",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28693,6 +28715,7 @@ if ("xx" in window) {
                 str_196: "Go To Next",
                 str_197: "Go To Next",
                 str_198: "Gallery (5) Wheel：",
+                str_199: "Double Click Go To Next Page",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -32812,6 +32835,7 @@ if ("xx" in window) {
                     img.src = loadSrc;
                     resolve();
                 } else {
+                    img.classList.add("loaded");
                     img.classList.add("error");
                     img.dataset.src = loadSrc;
                     img.src = loadSrc;
@@ -34233,6 +34257,7 @@ if ("xx" in window) {
         _GM_setValue("FancyboxSlideshowTransition", "fade");
         _GM_setValue("exclude_ex_config", {});
         _GM_setValue("zipFolderConfig", 1);
+        _GM_setValue("doubleTouchNext", 1);
     };
 
     //新分頁空白頁檢視圖片
@@ -39452,15 +39477,15 @@ img.webtoon {
                 img.onload = () => {
                     if (img.classList.contains("loaded")) {
                         if (move == 0 || isM) {
-                            p.innerText = img.dataset.width + " x " + img.dataset.height;
+                            p.innerText = img.naturalWidth + " x " + img.naturalHeight;
                         } else {
-                            p.innerText = (index + 1) + "P | " + img.dataset.width + " x " + img.dataset.height;
+                            p.innerText = (index + 1) + "P | " + img.naturalWidth + " x " + img.naturalHeight;
                         }
-                        img.onload = null;
                         if (config.noSize != 1 && showSize != 0) {
                             getFileSize(img.src, p, inputSize.parentNode);
                         }
                     }
+                    img.classList.remove("error");
                 };
                 img.onerror = () => {
                     if (config.aee == 1) {
@@ -39474,7 +39499,11 @@ img.webtoon {
                             addGalleryImgs();
                         }
                     }
-                    img.onerror = null;
+                    if (move == 0 || isM) {
+                        p.innerText = "? x ?";
+                    } else {
+                        p.innerText = (index + 1) + "P | ? x ?";
+                    }
                 };
                 loadImgList.push([simpleLoadImg, null, img]);
                 const p = document.createElement("p");
@@ -40327,6 +40356,10 @@ img.webtoon {
     <input id="Comic" type="checkbox">
     <label>${DL.str_76}</label>
 </div>
+<div id="DoubleDIV" style="width: 348px; display: flex;">
+    <input id="Double" type="checkbox">
+    <label>※ ${DL.str_199}</label>
+</div>
 <div id="AutoDownloadDIV" style="width: 348px; display: flex;">
     <input id="AutoDownload" type="checkbox">
     <label>${DL.str_73}${DL.str_74}</label>
@@ -40487,6 +40520,7 @@ img.webtoon {
         ge("#AutoDownload", main).checked = options.autoDownload == 1 ? true : false;
         ge("#Countdown", main).value = options.autoDownloadCountdown;
         ge("#Comic", main).checked = options.comic == 1 ? true : false;
+        ge("#Double", main).checked = _GM_getValue("doubleTouchNext", 1) == 1 ? true : false;
         if ((isString(siteData.srcset) || isString(siteData.imgs)) && !isArray(siteData.insertImg)) {
             ge("#ShowEyeDIV", main).style.display = "flex";
             ge("#ShowEye", main).checked = FullPictureLoadShowEye == 1 ? true : false;
@@ -40573,6 +40607,9 @@ img.webtoon {
                 "#CountdownDIV"
             ]);
         }
+        if (isSimpleMode || isPC && showOptions || (isM && showOptions && !("next" in siteData))) {
+            hide(["#DoubleDIV"]);
+        }
         let downloadVideo = siteData.downloadVideo;
         if (!!downloadVideo && downloadVideo === true && isPC) {
             ge("#CustomDownloadVideoDIV", main).style.display = "flex";
@@ -40604,6 +40641,7 @@ img.webtoon {
             options.file_extension = ge("#Extension", main).value;
             _GM_setValue("convertWebpToJpg", ge("#Convert", main).checked == true ? 1 : 0);
             options.comic = ge("#Comic", main).checked == true ? 1 : 0;
+            _GM_setValue("doubleTouchNext", ge("#Double", main).checked == true ? 1 : 0);
             options.autoDownload = ge("#AutoDownload", main).checked == true ? 1 : 0;
             options.autoDownloadCountdown = ge("#Countdown", main).value;
             options.fancybox = ge("#Fancybox", main).checked == true ? 1 : 0;
@@ -41601,6 +41639,7 @@ a[data-fancybox]:hover {
         }
     }
 
+    let doubleTouchNext = _GM_getValue("doubleTouchNext", 1);
     let isObserveURL = false;
     let isAddFancybox = false;
     let isOutputLog = false;
@@ -41904,6 +41943,12 @@ a[data-fancybox]:hover {
                 const next = siteData.next;
                 const nextE = await getNextLink(next);
                 const callback = (event) => {
+                    if (event.type === "dblclick") {
+                        if (
+                            ["FullPictureLoadOptionsShadowElement"].some(id => event?.target?.id?.includes(id)) ||
+                            ["is-next", "is-prev", "fancybox-button"].some(n => event?.target?.className?.includes(n))
+                        ) return;
+                    }
                     if ("observeURL" in siteData && isString(nextLink)) {
                         fn.showMsg(DL.str_34, 0);
                         return (location.href = nextLink);
@@ -41929,6 +41974,9 @@ a[data-fancybox]:hover {
                         }
                     }
                 };
+                if (isM && ("next" in siteData) && doubleTouchNext == 1) {
+                    document.addEventListener("dblclick", (event) => callback(event));
+                }
                 document.addEventListener("keydown", event => {
                     if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isDownloading || !isValidPage || ["INPUT", "TEXTAREA"].some(n => n === document.activeElement.tagName) || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
                     if (event.code === "ArrowRight" || event.key === "ArrowRight") callback(event);
