@@ -1473,7 +1473,7 @@ imgs: async () => {
 <p>PS：Fancybox5功能由於與部分網站的依賴庫或代碼衝突，這部分將調用使用iframe構建的畫廊。</p>
 <p>PS：如果要使用滾動視口的功能，螢幕顯示解析度1920 x 1080建議瀏覽器縮放比例100%，螢幕顯示解析度3840 x 2160建議系統縮放比例200%瀏覽器縮放比例100%，這樣在0、1、3才能剛好滾動一列圖片。</p>
 <h1>腳本共存</h1>
-<p>要與東方永頁機(Pagetual)共存，可添加以下的東方永頁機(Pagetual)自定義排除規則。</p>
+<p>要與東方永頁機(Pagetual)共存，可添加以下的東方永頁機(Pagetual)自定義排除規則，並把圖片全載執行的順位移至東方永頁機之前。</p>
 <pre>
    {
         "name": "排除圖片全載",
@@ -1482,6 +1482,7 @@ imgs: async () => {
         "include": "#FullPictureLoadMainStyle"
    }
 </pre>
+<img src="https://i.imgur.com/fP8mUSu.jpeg">
 <h1>腳本截圖</h1>
 <p>陽春簡易的圖片篩選下載功能。</p>
 <img src="https://i.imgur.com/aWpmS4L.jpeg">
