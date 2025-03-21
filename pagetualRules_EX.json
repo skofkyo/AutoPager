@@ -1,5 +1,10 @@
 [
     {
+        "name": "LUV.VN",
+        "url": "^https?://luv\\.vn/",
+        "css": "img{opacity: 1!important;}"
+    },
+    {
         "name": "bilibili space",
         "url": "^https://space\\.bilibili\\.com/",
         "sandbox": false,
@@ -4817,7 +4822,7 @@
         "example": "https://tw.xchina.co/search/keyword-%E4%B8%9D%E8%A2%9C/mode-photo.html",
         "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.\\w+/search/",
         "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
-        "nextLink": "a.next",
+        "nextLink": "a.next[href]",
         "pageElement": ".article.result>.list",
         "replaceElement": [
             "div.article:not(.result)+div.pager",
@@ -4844,7 +4849,7 @@
         "example": "https://tw.xchina.co/photo/id-63d02a8cdaf75.html，https://8se.me/photo/id-63938c1972fde.html",
         "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.\\w+/photo/",
         "include": "img.cr_only",
-        "nextLink": "a.next",
+        "nextLink": "a.next[href]",
         "pageElement": ".photos > a",
         "replaceElement": [
             "div.article>div.pager:first-child",
@@ -4860,7 +4865,7 @@
         "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.\\w+/(photos|videos|models|fictions|torrents)",
         "exclude": "body>.image",
         "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
-        "nextLink": "a.next",
+        "nextLink": "a.next[href]",
         "pageElement": ".list>.item:not(._300x250),.list>.fiction,.list>.torrent,.videos>.item",
         "replaceElement": [
             "div.article>div.pager:first-child",
@@ -4967,12 +4972,12 @@
         "name": "Mox.moe",
         "author": "skofkyo",
         "example": "https://mox.moe/",
-        "url": "^https?://mox\\.moe",
+        "url": "^https?://(mox|kox|kxo|koz)\\.moe",
         "action": 1,
         "wait": 1000,
-        "nextLink": "//a[button/text()='下頁']",
-        "pageElement": ".listbg",
-        "replaceElement": "td.listtitle[colspan='5']",
+        "nextLink": "//button[@name='link_page']/b/../../following-sibling::a[1]",
+        "pageElement": "tr.listbg",
+        "replaceElement": "tr[style='vertical-align:top']:first-child",
         "rate": 3
     },
     {
