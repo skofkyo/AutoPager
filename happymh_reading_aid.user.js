@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name               嗨皮漫畫閱讀輔助
-// @name:en            Happymh reading aid
-// @name:zh-CN         嗨皮漫画阅读辅助
-// @name:zh-TW         嗨皮漫畫閱讀輔助
-// @version            2.7.11
+// @name               嗨皮漫畫閱讀助手
+// @name:en            Happymh Reading Helper
+// @name:zh-CN         嗨皮漫画阅读助手
+// @name:zh-TW         嗨皮漫畫閱讀助手
+// @version            2.7.12
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
 // @description:zh-TW  無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
-// @author             tony0809
+// @author             德克斯DEX
 // @match              *://m.happymh.com/*
 // @match              *://hihimanga.com/*
 // @icon               data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/gCOMP4AjkD+AI5A/gCOQP4AjkD+AI4w/gCOIP4AjkD+AI5A/gCOQP4AjkD+AI5A/gCOEAAAAAAAAAAAAAAAAP4AjlD+AI6v/gCO//4Ajv/+AI7P/gCOUP4AjjD+AI6P/gCO//4Ajv/+AI7v/gCOgP4AjhAAAAAAAAAAAAAAAAAAAAAA/gCOQP4Ajv/+AI7//gCOgAAAAAAAAAAAAAAAAP4Ajv/+AI7//gCOvwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4AjkD+AI7//gCO//4AjoAAAAAAAAAAAAAAAAD+AI7//gCO//4Ajr8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI5A/gCO//4Ajv/+AI6AAAAAAAAAAAAAAAAA/gCO//4Ajv/+AI6/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/gCOQP4Ajv/+AI7//gCOgAAAAAAAAAAAAAAAAP4Ajv/+AI7//gCOvwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4AjkD+AI7//gCO//4Ajt/+AI6//gCOv/4Ajr/+AI7//gCO//4Ajr8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI5A/gCO//4Ajv/+AI6AAAAAAAAAAAAAAAAA/gCO//4Ajv/+AI6/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/gCOQP4Ajv/+AI7//gCOgAAAAAAAAAAAAAAAAP4Ajv/+AI7//gCOvwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4AjkD+AI7//gCO//4AjoAAAAAAAAAAAAAAAAD+AI7//gCO//4Ajr8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI5Q/gCO//4Ajv/+AI6PAAAAAAAAAAD+AI4Q/gCO//4Ajv/+AI7PAAAAAAAAAAAAAAAAAAAAAAAAAAD+AI6A/gCOv/4Ajr/+AI6//gCOv/4AjoD+AI5Q/gCOv/4Ajr/+AI6//gCOv/4Ajr/+AI4gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAP//AADAAQAAwAEAAOHHAADhxwAA4ccAAOHHAADgBwAA4ccAAOHHAADhxwAA4YcAAMABAAD//wAA//8AAA==
@@ -902,6 +902,8 @@ footer {
 
         const createComments = async () => {
             isOpenComments = true;
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
 
             const div = document.createElement("div");
             div.id = "current-comments";
@@ -918,43 +920,33 @@ footer {
                 zIndex: "10000",
                 backgroundColor: "#fff",
                 fontSize: "14px",
-                overflowY: "auto",
-                overflowX: "hidden"
+                overflow: "hidden"
             });
             document.body.append(div);
 
-            const [topButton, bottomButton] = [{
-                marginTop: "10px"
-            }, {
-                marginBottom: "110px"
-            }].map(obj => {
-                const button = document.createElement("button");
-                button.className = "close-comments";
-                button.innerText = i18n.button.closeComments;
-                Object.assign(button.style, {
-                    ...obj,
-                    fontSize: "1rem",
-                    border: "#000 1px solid",
-                    borderRadius: "4px",
-                    marginLeft: "10px"
-                });
-                button.addEventListener("click", () => {
-                    div.remove();
-                    isOpenComments = false;
-                });
-                return button;
+            let rowHtml = `
+<div style="background-color:#fff;padding:6px;">
+  <button id="close-comments" style="font-size: 1rem; border: 1px solid rgb(0, 0, 0); border-radius: 4px;">${i18n.button.closeComments}</button>
+</div>
+            `;
+            div.insertAdjacentHTML("beforeend", rowHtml);
+
+            ge("#close-comments", div).addEventListener("click", () => {
+                div.remove();
+                isOpenComments = false;
+                document.documentElement.style.overflow = "";
+                document.body.style.overflow = "";
             });
 
-            div.append(topButton);
             const messageHtml = `
-<div id="message" class="MuiCardContent-root" style="padding: 3rem 16px; display: flex; flex-direction: column; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; text-align: center; min-height: 260px;width: 100%; background-color: rgb(255, 255, 255);">
+<div id="message" class="MuiCardContent-root" style="margin: 2px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 3px -2px, rgba(0, 0, 0, 0.14) 0px 3px 4px 0px, rgba(0, 0, 0, 0.12) 0px 1px 8px 0px; padding: 3rem 16px; display: flex; flex-direction: column; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; text-align: center; min-height: 260px;width: calc(100% - 4px); background-color: rgb(255, 255, 255);">
   <svg class="MuiSvgIcon-root MuiSvgIcon-colorAction MuiSvgIcon-fontSizeMedium" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="user-select: none; width: 1em;height: 1em; display: inline-block; fill: currentcolor;flex-shrink: 0; font-size: 1.5rem; color: rgba(0, 0, 0, 0.54); transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);">
     <path d="M21.99 2H2v16h16l4 4-.01-20zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"></path>
   </svg>
   <h6 class="MuiTypography-root MuiTypography-h6" style="color: #000; margin: 0px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: 500; font-size: 1.25rem; line-height: 1.6; letter-spacing: 0.0075em;">数据请求中...</h6>
 </div>`;
             div.insertAdjacentHTML("beforeend", messageHtml);
-            div.insertAdjacentHTML("beforeend", '<ul class="MuiList-root MuiList-padding" style="display: block; padding-left: 10px;"></ul>');
+            div.insertAdjacentHTML("beforeend", '<div style="display:none; overflow-x: hidden; overflow-y: scroll;  height: calc(100% - 42px); margin: 2px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 3px -2px, rgba(0, 0, 0, 0.14) 0px 3px 4px 0px, rgba(0, 0, 0, 0.12) 0px 1px 8px 0px;"><ul class="MuiList-root MuiList-padding" style="display: block; padding-left: 10px; padding-bottom: 110px;"></ul></div>');
 
             const ul = ge("ul", div);
 
@@ -1046,6 +1038,7 @@ footer {
                     });
 
                     ul.insertAdjacentHTML("beforeend", liHtmls);
+                    ul.parentElement.style.display = "";
                 }).catch(error => {
                     loop = false;
                     const h6 = ge("h6", div);
@@ -1064,8 +1057,6 @@ footer {
             if (!isOpenComments) {
                 return;
             }
-
-            div.append(bottomButton);
         };
 
         const createPageElement = (data, isFirst = 0) => {
