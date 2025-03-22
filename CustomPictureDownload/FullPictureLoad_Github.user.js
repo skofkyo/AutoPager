@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.21
+// @version            2025.3.22
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -717,10 +717,10 @@
         }),
         category: "nsfw2"
     }, {
-        name: "pic.yailay.com格式",
+        name: "Hit-x-Hot格式",
         url: {
-            h: ["www.hitxhot.org", "pic.yailay.com", "www.dongojyousan.com", "www.hitxhot.org"],
-            p: ["/articles/", "/gallerys/"]
+            h: ["www.hitxhot.org", "www.dongojyousan.com"],
+            p: ["/gallerys/", "/articles/"]
         },
         clearEvent: true,
         imgs: () => fn.getImgA(".VKSUBTSWA img", "div[id^=post] a"),
@@ -949,6 +949,35 @@
             e: ".logo img[alt=梦想岛]",
             p: "/gallery/"
         },
+        test: async (max) => {
+            let [src] = fn.getImgSrcArr(".gallerypic img").sort();
+            let dir = fn.dir(src);
+            let f = src.split("/").at(-1);
+            let ex = f.split(".").at(-1);
+            ex = "." + ex;
+            let [num] = f.match(/\d+/);
+            num = Number(num);
+            let srcs = [];
+            let successNum = 0;
+            let testNum = 0;
+            let testSrc;
+            let loop = true;
+            while (loop) {
+                fn.showMsg(`test：${num} | success：${successNum}/${max}`, 0);
+                testSrc = dir + num + ex;
+                let status = await fn.xhrHEAD(testSrc).then(res => res.status);
+                if (status == 200) {
+                    srcs.push(testSrc);
+                    successNum += 1;
+                    if (testNum > 500 || successNum >= max) {
+                        loop = false;
+                    }
+                }
+                testNum += 1;
+                num += 1;
+            }
+            return srcs;
+        },
         imgs: async () => {
             let src = fn.src(".gallerypic img");
             let dir = fn.dir(src);
@@ -961,31 +990,17 @@
                 return fn.arr(max, (v, i) => dir + i + ex);
             } else if (num?.length == 3 && Number(num) == 1) {
                 return fn.arr(max, (v, i) => dir + String(i + 1).padStart(3, "0") + ex);
-            } else if (num?.length > 1) {
-                [src] = fn.getImgSrcArr(".gallerypic img").sort();
-                f = src.split("/").at(-1);
-                [num] = f.match(/\d+/);
-                num = Number(num);
-                let srcs = [];
-                let successNum = 0;
-                let testNum = 0;
-                let testSrc;
-                let loop = true;
-                while (loop) {
-                    fn.showMsg(`test：${num} | success：${successNum}/${max}`, 0);
-                    testSrc = dir + num + ex;
-                    let status = await fn.xhrHEAD(testSrc).then(res => res.status);
-                    if (status == 200) {
-                        srcs.push(testSrc);
-                        successNum += 1;
-                        if (testNum > 500 || successNum >= max) {
-                            loop = false;
-                        }
-                    }
-                    testNum += 1;
-                    num += 1;
+            } else if (num?.length > 1 && isNumber(Number(num))) {
+                return _this.test(max);
+            } else if (num?.length == 1 && isNumber(Number(num)) && Number(num) != 0) {
+                let mode = prompt("Mode：1 or 2(test)", 1);
+                if (mode == 1) {
+                    return fn.arr(max, (v, i) => dir + (i + 1) + ex);
+                } else if (mode == 2) {
+                    return _this.test(max);
+                } else {
+                    return fn.gae(".gallerypic img");
                 }
-                return srcs;
             } else {
                 return fn.gae(".gallerypic img");
             }
@@ -16652,6 +16667,32 @@
         customTitle: ".entry-title",
         category: "hcomic"
     }, {
+        name: "LoLHentai.net",
+        host: ["www.lolhentai.net"],
+        link: "https://www.lolhentai.net/index?/category/chinese",
+        reg: /^https?:\/\/www\.lolhentai\.net\/index\?\/category\/\d+-.+$/i,
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr("#thumbnails img");
+            return thumbnailSrcArray.map(src => {
+                let dir = fn.dir(src);
+                dir = dir.replace("/_data/i", "");
+                let file = src.split("/").at(-1);
+                let ex = file.split(".").at(-1);
+                ex = "." + ex;
+                let [a, b] = file.split("-");
+                b = b.replace(/\.\w+$/i, "");
+                return `${dir}${a}-${b}${ex}`;
+            });
+        },
+        box: ["#thumbnails", 2],
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#thumbnails"], 2
+        ],
+        endColor: "white",
+        customTitle: "h1.name a:last-child",
+        category: "hcomic"
+    }, {
         name: "BestPornComix",
         url: {
             h: "bestporncomix.com",
@@ -17343,7 +17384,8 @@
             s: ".breadcrumb span:nth-child(2)",
             d: "首页"
         }),
-        hide: ".banner_ad",
+        css: "body{overflow:unset!important}",
+        hide: ".banner_ad,.swal2-container,.article:has(.media),.jquery-modal.blocker.current,.push-top-container",
         category: "hcomic"
     }, {
         name: "漫小肆",
@@ -18590,7 +18632,7 @@
                     d: "| Hitomi.la"
                 });
                 thumbnailSrcArray = fn.gae(".gallery-preview img").map(e => e.dataset.src ?? e.src);
-                return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo.id, our_galleryinfo[i], "webp", undefined, "a"));
+                return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo.id, our_galleryinfo[i], "webp"));
             });
         },
         button: [4],
@@ -21065,7 +21107,8 @@
                 "rizzfables.com",
                 "tresdaos.com",
                 "zonamiau.com",
-                "mangagojo.com"
+                "mangagojo.com",
+                "rawkuma.com"
             ]
         },
         init: () => fn.addMutationObserver(() => fn.remove("#radio_content,#teaserbottom")),
@@ -25844,9 +25887,9 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "漫画160/非常爱漫新站",
-        host: ["www.mh160.cc", "m.mh160.cc", "www.veryim.com"],
+        host: ["www.mh160mh.com", "m.mh160mh.com", "www.veryim.com"],
         url: {
-            h: [/^(www|m)\.mh160/, "www.veryim.com"],
+            t: ["漫画160", "歪瑞古德漫画"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
             st: "qTcms_S_m_murl_e",
             i: 0
@@ -25888,7 +25931,7 @@ if ("xx" in window) {
     }, {
         name: "漫画160/非常爱漫新站 自動翻頁",
         url: {
-            h: [/^(www|m)\.mh160/, "www.veryim.com"],
+            t: ["漫画160", "歪瑞古德漫画"],
             p: ["/kanmanhua/", /^\/manhua\/\d+\/\d+\.html$/],
             st: "qTcms_S_m_murl_e",
             i: 1
@@ -28637,7 +28680,7 @@ if ("xx" in window) {
                 str_118: "Album title has been updated",
                 str_119: "FancyboxV5 Wheel Toggle Zoom",
                 str_120: "This Website New Tab View uses ViewerJs Plug-in",
-                str_121: "Turn Off Page Content Image Navigation Shortcut Keys",
+                str_121: "Turn Off Image Navigation Shortcut Keys",
                 str_122: "This website uses Infinite Scroll Read Mode",
                 str_123: "Show Capture Eye Icon",
                 str_124: "This website downloads videos",
@@ -40296,6 +40339,10 @@ img.webtoon {
     <input id="noGoToFirst" type="checkbox">
     <label>※ ${DL.str_115}</label>
 </div>
+<div id="noPageNavDIV" style="width: 348px; display: flex;">
+    <input id="noPageNav" type="checkbox">
+    <label>※ ${DL.str_121}</label>
+</div>
 <div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_79}</label>
     <select id="Zoom"></select>
@@ -40508,6 +40555,7 @@ img.webtoon {
         ge("#icon", main).checked = options.icon == 1 ? true : false;
         ge("#AutoInsertImg", main).checked = options.autoInsert == 1 ? true : false;
         ge("#noGoToFirst", main).checked = _GM_getValue("noGoToFirstImage", 0) == 1 ? true : false;
+        ge("#noPageNav", main).checked = _GM_getValue("TurnOffImageNavigationShortcutKeys", 0) == 1 ? true : false;
         ge("#ShowFixedMenu", main).checked = _GM_getValue("ShowFullPictureLoadFixedMenu", 1) == 1 ? true : false;
         ge("#FavorNewTab", main).checked = _GM_getValue("FavorOpenInNewTab", 0) == 1 ? true : false;
         ge("#loopView", main).checked = _GM_getValue("FullPictureLoadLoopView", 1) == 1 ? true : false;
@@ -40539,6 +40587,7 @@ img.webtoon {
             hide([
                 "#AutoInsertImgDIV",
                 "#noGoToFirstDIV",
+                "noPageNavDIV",
                 "#ZoomDIV",
                 "#viewModeDIV",
                 "#ColumnDIV"
@@ -40546,6 +40595,7 @@ img.webtoon {
         }
         if (isM) {
             hide([
+                "noPageNavDIV",
                 "#ShowFixedMenuDIV",
                 //"#ShadowGalleryModeDIV",
                 "#ShadowGalleryWheelDIV",
@@ -40631,6 +40681,7 @@ img.webtoon {
             options.icon = ge("#icon", main).checked == true ? 1 : 0;
             options.autoInsert = ge("#AutoInsertImg", main).checked == true ? 1 : 0;
             _GM_setValue("noGoToFirstImage", ge("#noGoToFirst", main).checked == true ? 1 : 0);
+            _GM_setValue("TurnOffImageNavigationShortcutKeys", ge("#noPageNav", main).checked == true ? 1 : 0);
             _GM_setValue("ShowFullPictureLoadFixedMenu", ge("#ShowFixedMenu", main).checked == true ? 1 : 0);
             _GM_setValue("FavorOpenInNewTab", ge("#FavorNewTab", main).checked == true ? 1 : 0);
             _GM_setValue("FullPictureLoadLoopView", ge("#loopView", main).checked == true ? 1 : 0);
@@ -42227,13 +42278,6 @@ a[data-fancybox]:hover {
         debug("\n列出自動翻頁規則", autoPagerData);
         debug("\n列出去廣告規則", AD_Data);
         debug("\n列出未分類規則", noneData);
-    }
-
-    if (isPC && showOptions && isArray(siteData.insertImg)) {
-        _GM_registerMenuCommand(TurnOffImageNavigationShortcutKeys == 0 ? "❌ " + DL.str_121 : "✔️ " + DL.str_121, () => {
-            TurnOffImageNavigationShortcutKeys == 0 ? _GM_setValue("TurnOffImageNavigationShortcutKeys", 1) : _GM_setValue("TurnOffImageNavigationShortcutKeys", 0);
-            location.reload();
-        });
     }
 
     if (isArray(siteData.scrollEle) || isFn(siteData.scrollEle)) {
