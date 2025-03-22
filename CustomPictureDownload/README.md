@@ -1742,7 +1742,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.hitxhot.org/">Hit-x-Hot</a>
                 </td>
                 <td>
-                    <a href="https://pic.yailay.com/">Pic Yailay</a>， <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>
+                    <a href="https://www.dongojyousan.com/">dongojyousan.com</a>， <a href="https://redseats.org/">RedSeats.Org</a>， <a href="https://cn.looives.com/">Chinese in beauty</a>
                 </td>
             </tr>
             <tr>
@@ -7025,6 +7025,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.rawbig.com/">Big raw</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://rawkuma.com/">Rawkuma</a>
                 </td>
                 <td></td>
             </tr>
