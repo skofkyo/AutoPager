@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.22.16
+// @version            2025.3.23
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -82,7 +82,6 @@
         icon: 1, //是否顯示左下圖示，1：顯示、0：不顯示
         threading: 8, //最大下載線程數
         zip: 1, //1：圖片下載後壓縮打包，0：批量下載圖片，無法全自動下載
-        file_extension: "zip", //zip or cbz
         autoInsert: 1, //頁面容器自動聚圖，1：自動、0：手動
         autoDownload: 0, //!!!維持0不要改!!!建議透過UI選項設定來開啟，需要customData也有autoDownload
         autoDownloadCountdown: 5, //有NEXT時自動下載的倒數秒數
@@ -394,12 +393,6 @@
         init: () => {
             fn.run("$(document).off('keydown');");
             fn.remove("//div[@id='tab_1']/div[contains(text(),'推')] | //div[@class='rules']/ul/li[contains(text(),'推')]");
-            let time_id = setInterval(() => {
-                [...document.getElementsByTagName("style")]
-                ?.find(style => style?.textContent?.includes("customPicDownloadMsg"))
-                    ?.remove();
-            }, 200);
-            setTimeout(() => clearInterval(time_id), 3000);
         },
         imgs: async () => {
             const isMp4 = fn.ge("video[src$='mp4']");
@@ -1712,7 +1705,7 @@
         },
         imgs: () => fn.gae(".content-warp img").filter(e => !e.closest("a[href$='app.html']")),
         button: [4],
-        insertImgBF: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("a.core-next-img")),
+        insertImgBF: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("a.core-next-img").then(() => fn.hideMsg())),
         insertImg: [".content-warp", 2],
         autoDownload: [0],
         next: "//a[div[text()='<<上一篇']]",
@@ -8736,6 +8729,7 @@
         reg: /^https?:\/\/geinou-nude\.com\/[^\/]+\/(#.*)?$/,
         init: () => fn.addMutationObserver(() => fn.remove(".widgetarea_sp,.widget_execphp,.adContainer")),
         imgs: ".post_thum>img,.post_content a[href*='/uploads/']",
+        videos: "iframe[src*=youtube]",
         autoDownload: [0],
         next: "a.nav_link_l",
         prev: "a.f_row_r",
@@ -12666,7 +12660,7 @@
         name: "Fuskator 圖片清單頁",
         host: ["fuskator.com"],
         reg: /^https?:\/\/fuskator\.com\/thumbs\/[\w-~]+\/[\w-~]+\.html$/i,
-        init: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle(".pic_pad")),
+        init: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle(".pic_pad").then(() => fn.hideMsg())),
         imgs: "#thumbimages a,.swipebox a",
         thums: "#thumbimages a>img,.swipebox a>img",
         button: [4],
@@ -15697,7 +15691,7 @@
         host: ["HentaiRox.com"],
         reg: /^https?:\/\/hentairox\.com\/gallery\/\d+\/$/,
         include: "#append_thumbs",
-        init: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("#append_thumbs img")),
+        init: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("#append_thumbs img").then(() => fn.hideMsg())),
         box: ["#comments_div"],
         imgs: async () => {
             fn.showMsg(DL.str_05, 0);
@@ -15747,7 +15741,7 @@
         host: ["hentaienvy.com"],
         reg: /^https?:\/\/hentaienvy\.com\/gallery\/\d+\/$/,
         include: ".gallery_thumbs",
-        init: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("#thumbs_box img")),
+        init: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("#thumbs_box img").then(() => fn.hideMsg())),
         box: [".gallery_thumbs", 0],
         imgs: async () => {
             fn.showMsg(DL.str_05, 0);
@@ -18638,7 +18632,7 @@
         button: [4],
         insertImgBF: () => fn.createImgBox(".content", 2),
         insertImg: ["#FullPictureLoadMainImgBox", 2],
-        go: 1,
+        insertImgAF: () => fn.hideEle(".thumbnail-list,.simplePagerNav"),
         category: "hcomic"
     }, {
         name: "HO5HO",
@@ -28177,7 +28171,7 @@ if ("xx" in window) {
                     ll: "左下",
                     lr: "右下",
                 },
-                str_110: "※ Webp轉換為Jpg",
+                str_110: "WEBP轉換為JPG",
                 str_111: "💬 Github 反饋",
                 str_112: "提示",
                 str_113: "滾動煞車：",
@@ -28267,6 +28261,8 @@ if ("xx" in window) {
                 str_197: "前往下一篇",
                 str_198: "畫廊 ( 5 ) 滾輪操作：",
                 str_199: "移動裝置雙擊前往下一頁",
+                str_200: "AVIF轉換為JPG",
+                str_201: "JPG格式轉換品質",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -28426,7 +28422,7 @@ if ("xx" in window) {
                     ll: "左下",
                     lr: "右下",
                 },
-                str_110: "※ Webp转换为Jpg",
+                str_110: "WEBP转换为JPG",
                 str_111: "💬 Github 反馈",
                 str_112: "提示",
                 str_113: "滚动煞车：",
@@ -28516,6 +28512,8 @@ if ("xx" in window) {
                 str_197: "前往下一篇",
                 str_198: "画廊 ( 5 ) 滚轮操作：",
                 str_199: "移动设备双击前往下一页",
+                str_200: "AVIF转换为JPG",
+                str_201: "JPG格式转换品质",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28669,7 +28667,7 @@ if ("xx" in window) {
                     ll: "Lower left",
                     lr: "Lower right",
                 },
-                str_110: "※ Convert Webp to Jpg",
+                str_110: "Convert WEBP to JPG",
                 str_111: "💬 Github Feedback",
                 str_112: "Prompt Message",
                 str_113: "Scroll：",
@@ -28759,6 +28757,8 @@ if ("xx" in window) {
                 str_197: "Go To Next",
                 str_198: "Gallery (5) Wheel：",
                 str_199: "Double Click Go To Next Page",
+                str_200: "Convert AVIF to JPG",
+                str_201: "Convert Quality",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -28800,7 +28800,6 @@ if ("xx" in window) {
     _GM_registerMenuCommand(DL.str_66, () => _GM_openInTab("https://greasyfork.org/scripts/463305/feedback"));
     _GM_registerMenuCommand(DL.str_111, () => _GM_openInTab("https://github.com/skofkyo/AutoPager/issues"));
     _GM_registerMenuCommand("📓 Github README.md", () => _GM_openInTab("https://github.com/skofkyo/AutoPager/blob/main/CustomPictureDownload/README.md"));
-    /*const FullPictureLoadBlacklist_menu_command_id = */
     _GM_registerMenuCommand(FullPictureLoadBlacklist == 0 ? "❌ " + DL.str_138 : "✔️  " + DL.str_138, () => {
         FullPictureLoadBlacklist == 0 ? localStorage.setItem("FullPictureLoadBlacklist", 1) : localStorage.setItem("FullPictureLoadBlacklist", 0);
         location.reload();
@@ -31657,12 +31656,10 @@ if ("xx" in window) {
                             debug(`fn.waitEle()等待"${String(selector)}"元素結束。耗時：${loopNum * 100}ms。`);
                         }
                         clearInterval(loop);
-                        fn.hideMsg();
                         resolve(ele);
                     }
                     if (loopNum >= max) {
                         clearInterval(loop);
-                        fn.hideMsg();
                         debug(`fn.waitEle()達循環上限，沒有出現"${String(selector)}"元素。`);
                         resolve(null);
                     }
@@ -32273,7 +32270,7 @@ if ("xx" in window) {
                 reader.readAsDataURL(blob);
             });
         },
-        convertImage: async (blob, type = "image/jpeg") => {
+        convertImage: async (blob, type = "image/jpeg", quality = 0.9) => {
             const img = new Image();
             await new Promise((resolve, reject) => {
                 img.onload = resolve;
@@ -32285,7 +32282,7 @@ if ("xx" in window) {
             URL.revokeObjectURL(img.src);
             return canvas.convertToBlob({
                 type: type,
-                quality: 0.9
+                quality: quality
             });
         },
         //自動滾動元素
@@ -33427,7 +33424,11 @@ if ("xx" in window) {
         srcs.forEach(src => URL.revokeObjectURL(src));
     };
 
+    const compressed_extension = _GM_getValue("compressed_extension", "zip");
     const zipFolderConfig = _GM_getValue("zipFolderConfig", 1);
+    const convertWebpToJpg = _GM_getValue("convertWebpToJpg", 0);
+    const convertAvifToJpg = _GM_getValue("convertAvifToJpg", 0);
+    const convertQuality = _GM_getValue("convertQuality", 9);
 
     //圖片影片下載函式
     const DownloadFn = async (array = null, text = null) => {
@@ -33583,8 +33584,19 @@ if ("xx" in window) {
                                     fn.showMsg(DL.str_30, 0);
                                     return;
                                 }
-                            } else if ((/webp/i.test(type) || /\.webp/i.test(data.finalUrl)) && !type.includes("image/jpeg") && convertWebpToJpg == 1) {
-                                blobData = await fn.convertImage(blobData);
+                            } else if (
+                                (/webp/i.test(type) || /\.webp/i.test(data.finalUrl)) && convertWebpToJpg == 1 ||
+                                (/avif/i.test(type) || /\.avif/i.test(data.finalUrl)) && convertAvifToJpg == 1
+                            ) {
+                                let quality;
+                                if (convertQuality == 0) {
+                                    quality = 0;
+                                } else if (convertQuality == 10) {
+                                    quality = 1;
+                                } else {
+                                    quality = Number("0." + convertQuality);
+                                }
+                                blobData = await fn.convertImage(blobData, "image/jpeg", quality);
                                 ex = "jpg";
                                 fn.showMsg(`${DL.str_102} to ${ex} ${(i+ 1)}/${total}`, 0);
                             } else if (/^text\/base64\.jpg/.test(type)) {
@@ -33655,9 +33667,9 @@ if ("xx" in window) {
                             debug("\nZIP壓縮檔數據：", data);
                             let fileName;
                             if (videoSrcArray.length > 0 && siteData.downloadVideo == true && FullPictureLoadCustomDownloadVideo == 1) {
-                                fileName = `${title} [${imgsNum}P + ${videosNum}V].${options.file_extension}`;
+                                fileName = `${title} [${imgsNum}P + ${videosNum}V].${compressed_extension}`;
                             } else {
-                                fileName = `${title} [${imgsNum}P].${options.file_extension}`;
+                                fileName = `${title} [${imgsNum}P].${compressed_extension}`;
                             }
                             saveData(data, fileName);
                             promiseBlobArray = [];
@@ -34299,8 +34311,12 @@ if ("xx" in window) {
         _GM_setValue("FancyboxWheel", 1);
         _GM_setValue("FancyboxSlideshowTransition", "fade");
         _GM_setValue("exclude_ex_config", {});
+        _GM_setValue("compressed_extension", "zip");
         _GM_setValue("zipFolderConfig", 1);
         _GM_setValue("doubleTouchNext", 1);
+        _GM_setValue("convertWebpToJpg", 0);
+        _GM_setValue("convertAvifToJpg", 0);
+        _GM_setValue("convertQuality", 9);
     };
 
     //新分頁空白頁檢視圖片
@@ -40244,7 +40260,7 @@ img.webtoon {
     background-image: unset;
     display: inline-block;
     margin: 0px;
-    padding: ${isFirefox ? "0 0 0 4px" : "0px"};;
+    padding: ${isFirefox ? "0 0 0 4px" : "0px"};
 }
 
 #FullPictureLoadOptions * {
@@ -40268,9 +40284,7 @@ img.webtoon {
     max-width: 110px;
     min-height: unset;
     max-height: 26px;
-    margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 4px;
+    margin: 4px 2px;
     display: inline-block;
     color: #000000;
     border: 1px solid #a0a0a0;
@@ -40428,12 +40442,20 @@ img.webtoon {
     <label>※ ${DL.str_187}</label>
 </div>
 <div style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_72}</label>
+    <label>※ ${DL.str_72}</label>
     <select id="Extension"></select>
 </div>
 <div style="width: 348px; display: flex;">
-    <input id="Convert" type="checkbox">
-    <label>${DL.str_110}</label>
+    <input id="ConvertWEBP" type="checkbox">
+    <label>※ ${DL.str_110}</label>
+</div>
+<div style="width: 348px; display: flex;">
+    <input id="ConvertAVIF" type="checkbox">
+    <label>※ ${DL.str_200}</label>
+</div>
+<div style="width: 348px; display: flex; margin-left: 7px;">
+    <label>※ ${DL.str_201}：</label>
+    <select id="Quality"></select>
 </div>
 <div id="CustomDownloadVideoDIV" style="width: 348px; display: none;">
     <input id="CustomDownloadVideo" type="checkbox">
@@ -40543,6 +40565,21 @@ img.webtoon {
         });
         ExtensionSelect.append(fragment);
 
+        const QualitySelect = ge("#Quality", main);
+        for (let i = 0; i <= 10; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            if (i == 0) {
+                option.innerText = 0;
+            } else if (i == 10) {
+                option.innerText = 1;
+            } else {
+                option.innerText = "0." + i;
+            }
+            fragment.append(option);
+        }
+        QualitySelect.append(fragment);
+
         topDistance = () => {
             if (main.offsetHeight < _unsafeWindow.innerHeight) {
                 let num = (_unsafeWindow.innerHeight - main.offsetHeight) / 2;
@@ -40562,9 +40599,11 @@ img.webtoon {
         ge("#MsgPos", main).value = _GM_getValue("FullPictureLoadMsgPos", 0);
         ge("#Threading", main).value = options.threading;
         ge("#Zip", main).checked = options.zip == 1 ? true : false;
+        ge("#Extension", main).value = _GM_getValue("compressed_extension", "zip");
         ge("#zipFolder", main).checked = zipFolderConfig == 1 ? true : false;
-        ge("#Extension", main).value = options.file_extension;
-        ge("#Convert", main).checked = _GM_getValue("convertWebpToJpg", 1) == 1 ? true : false;
+        ge("#ConvertWEBP", main).checked = _GM_getValue("convertWebpToJpg", 0) == 1 ? true : false;
+        ge("#ConvertAVIF", main).checked = _GM_getValue("convertAvifToJpg", 0) == 1 ? true : false;
+        ge("#Quality", main).value = _GM_getValue("convertQuality", 9);
         ge("#AutoDownload", main).checked = options.autoDownload == 1 ? true : false;
         ge("#Countdown", main).value = options.autoDownloadCountdown;
         ge("#Comic", main).checked = options.comic == 1 ? true : false;
@@ -40688,9 +40727,11 @@ img.webtoon {
             _GM_setValue("FullPictureLoadMsgPos", ge("#MsgPos", main).value);
             options.threading = ge("#Threading", main).value;
             options.zip = ge("#Zip", main).checked == true ? 1 : 0;
+            _GM_setValue("compressed_extension", ge("#Extension", main).value);
             _GM_setValue("zipFolderConfig", ge("#zipFolder", main).checked == true ? 1 : 0);
-            options.file_extension = ge("#Extension", main).value;
-            _GM_setValue("convertWebpToJpg", ge("#Convert", main).checked == true ? 1 : 0);
+            _GM_setValue("convertWebpToJpg", ge("#ConvertWEBP", main).checked == true ? 1 : 0);
+            _GM_setValue("convertAvifToJpg", ge("#ConvertAVIF", main).checked == true ? 1 : 0);
+            _GM_setValue("convertQuality", ge("#Quality", main).value);
             options.comic = ge("#Comic", main).checked == true ? 1 : 0;
             _GM_setValue("doubleTouchNext", ge("#Double", main).checked == true ? 1 : 0);
             options.autoDownload = ge("#AutoDownload", main).checked == true ? 1 : 0;
@@ -41187,7 +41228,6 @@ a[data-fancybox]:hover {
     let TurnOffImageNavigationShortcutKeys = _GM_getValue("TurnOffImageNavigationShortcutKeys", 0);
     let ShowFullPictureLoadFixedMenu = _GM_getValue("ShowFullPictureLoadFixedMenu", 1);
     let autoScrollAllElement = _GM_getValue("autoScrollAllElement", 0);
-    let convertWebpToJpg = _GM_getValue("convertWebpToJpg", 0);
 
     let comicInfiniteScrollMode = localStorage.getItem("FullPictureLoadComicInfiniteScrollMode") ?? 0;
 
@@ -41954,11 +41994,11 @@ a[data-fancybox]:hover {
                                 }
                             }
                         }
-                        if (options.shadowGallery == 1 && siteData.aeg != 0) {
+                        if (GalleryInIcon == 0 && options.shadowGallery == 1 && siteData.aeg != 0) {
                             fn.hideMsg();
                             await createShadowGallery();
                         }
-                        if (isM && options.mobileGallery == 1 && siteData.aeg != 0) {
+                        if (GalleryInIcon == 0 && isM && options.mobileGallery == 1 && siteData.aeg != 0) {
                             fn.hideMsg();
                             createFilterUI();
                         }
@@ -41993,10 +42033,7 @@ a[data-fancybox]:hover {
                 const nextE = await getNextLink(next);
                 const callback = (event) => {
                     if (event.type === "dblclick") {
-                        if (
-                            ["FullPictureLoadOptionsShadowElement"].some(id => event?.target?.id?.includes(id)) ||
-                            ["is-next", "is-prev", "fancybox-button"].some(n => event?.target?.className?.includes(n))
-                        ) return;
+                        if (event?.target?.closest(".fancybox-container,.fancybox__container,.viewer-container,#FullPictureLoadOptionsShadowElement")) return;
                     }
                     if ("observeURL" in siteData && isString(nextLink)) {
                         fn.showMsg(DL.str_34, 0);
@@ -42165,7 +42202,7 @@ a[data-fancybox]:hover {
                     const [, insertMode] = insertImg;
                     if (insertMode == 1 && !autoStart || insertMode == 2 && !autoStart) {
                         if (options.autoInsert == 1) {
-                            if (options.shadowGallery == 1 && siteData.aeg != 0 || options.mobileGallery == 1 && siteData.aeg != 0) {
+                            if (GalleryInIcon == 0 && options.shadowGallery == 1 && siteData.aeg != 0 || GalleryInIcon == 0 && options.mobileGallery == 1 && siteData.aeg != 0) {
                                 await fn.immediateInsertImg();
                             } else {
                                 fn.immediateInsertImg();
@@ -42389,7 +42426,7 @@ a[data-fancybox]:hover {
             updateEyeNum(captureTotal);
             await delay(100);
             isChangeNum = false;
-            if (options.shadowGallery == 1 && siteData.aeg != 0) {
+            if (GalleryInIcon == 0 && options.shadowGallery == 1 && siteData.aeg != 0) {
                 setTimeout(() => createShadowGallery(), 200);
             }
         }
@@ -42415,7 +42452,7 @@ a[data-fancybox]:hover {
             await delay(100);
             isChangeNum = false;
             lastValidPageURL = currentURL;
-            if (options.shadowGallery == 1 && siteData.aeg != 0) {
+            if (GalleryInIcon == 0 && options.shadowGallery == 1 && siteData.aeg != 0) {
                 setTimeout(() => createShadowGallery(), 200);
             }
         }
@@ -42767,13 +42804,25 @@ a[data-fancybox]:hover {
             menu_command_id_1 = _GM_registerMenuCommand(DL.str_67, createPictureLoadOptionsShadowElement);
             checkOptionsData();
             siteData = {
-                imgs: () => fn.getImgSrcset("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)").map(src => {
-                    if (src.includes(".sinaimg.")) {
-                        return src.replace(/\/orj\d+\/|\/mw\d+\//, "/large/");
-                    } else {
-                        return src;
+                imgs: () => {
+                    let eles = gae("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)");
+                    let shadowRootEles = eles.map(ele => {
+                        if (("shadowRoot" in ele) && ele?.shadowRoot?.nodeName == "#document-fragment") {
+                            return gae("a,p,div,span,li,figure,article,img", ele.shadowRoot);
+                        }
+                        return null;
+                    }).filter(Boolean).flat();
+                    if (shadowRootEles.length) {
+                        eles = [...eles, ...shadowRootEles];
                     }
-                }),
+                    return fn.getImgSrcset(eles).map(src => {
+                        if (src.includes(".sinaimg.")) {
+                            return src.replace(/\/orj\d+\/|\/mw\d+\//, "/large/");
+                        } else {
+                            return src;
+                        }
+                    });
+                },
                 repeat: 1,
                 SPA: true,
                 category: "photo"
