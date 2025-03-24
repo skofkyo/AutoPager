@@ -3665,7 +3665,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>TW Pornstars</td>
                 <td>
-                    <a href="https://www.twpornstars.com/iamdorasnow">Sally多啦雪</a>， <a href="https://www.twpornstars.com/axunkaOri">阿薰kaOri</a>
+                    <a href="https://www.twpornstars.com/iamdorasnow">Sally多啦雪</a>， <a href="https://www.twpornstars.com/axunkaOri">阿薰kaOri</a>， <a href="https://www.twpornstars.com/Hokunaimeko">Hokunaimeko</a>v
                 </td>
             </tr>
             <tr>
@@ -4928,6 +4928,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://ozv.me/">美女私房菜</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://qqdk2019.net/">悄悄的看2019</a>
                 </td>
                 <td></td>
@@ -5978,7 +5984,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://iimhw.com/">爱漫画网</a>
                 </td>
-                <td> 目錄頁手動插入所有章節圖片 </td>
+                <td><a href="https://mhmao.com/">漫画猫</a>，目錄頁手動插入所有章節圖片 </td>
             </tr>
             <tr>
                 <td>
@@ -6652,7 +6658,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mqzjw.com/">奇漫屋</a>
                 </td>
-                <td>Mobile IOS限定，PC、Android需要偽裝成IOS User Agent才能取得整個章節的圖片， <a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a>，有無限滾動模式加預讀 </td>
+                <td>Mobile限定，如果無法取得整個章節的圖片需要偽裝成IOS User Agent， <a href="https://whatmyuseragent.com/platforms/ios/ios/18">IOS User Agent</a>，有無限滾動模式加預讀 </td>
             </tr>
             <tr>
                 <td>
@@ -7000,7 +7006,19 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.mangajikan.com/">漫画時間 日文漫畫</a>
+                    <a href="https://www.alphapolis.co.jp/">アルファポリス</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.mangajikan.com/">漫画時間</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://tokiraw.com/">漫画RAW</a>
                 </td>
                 <td></td>
             </tr>
@@ -7194,7 +7212,19 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.mangapill.com/">Mangapill 英文</a>
+                    <a href="https://manhwaz.com/">ManhwaZ 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manhwaz.com/">Mangaclash 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://toonclash.com/">Mangapill 英文</a>
                 </td>
                 <td></td>
             </tr>
