@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.23
+// @version            2025.3.24
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2262,6 +2262,41 @@
         }) : null,
         category: "nsfw2"
     }, {
+        name: "街角ijjiao",
+        url: {
+            h: ["ijjiao.com", "api.ijjiao.com"]
+        },
+        page: () => fn.clp("/album"),
+        parseCode: str => {
+            let s = str.indexOf("(");
+            let e = str.lastIndexOf(";");
+            str = str.slice(s, e);
+            return fn.run(str);
+        },
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        imgs: () => {
+            if (!_this.page()) return [];
+            fn.showMsg(DL.str_05, 0);
+            return fn.fetchDoc(fn.clp()).then(dom => {
+                let code = fn.gst("__NUXT__", dom);
+                let data = _this.parseCode(code);
+                let url = data.routePath.replace(/\/\d+$/, "");
+                let pageTotal = data.data[0].pageTotal;
+                apiCustomTitle = data.data[0].postData.title;
+                let links = fn.arr(pageTotal, (v, i) => i == 0 ? url : `${url}/${i + 1}`);
+                return fn.getEle(links, "//script[contains(text(),'__NUXT__')]").then(scripts => {
+                    let images = scripts.map(script => {
+                        let data = _this.parseCode(script.textContent);
+                        return data.data[0].postData.photoList;
+                    }).flat();
+                    thumbnailSrcArray = images.map(e => e.thumbnail);
+                    return images.map(e => e.photourl);
+                });
+            });
+        },
+        category: "nsfw1"
+    }, {
         name: "微圖坊",
         url: () => fn.checkUrl({
             h: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru", "www.v2ph.ovh"],
@@ -2453,6 +2488,15 @@
         prev: 1,
         customTitle: ".album h1",
         hide: ".asd,.album_list,.page>em,.page>.next,.page>.num,.page>.end,.page>.current",
+        category: "nsfw1"
+    }, {
+        name: "美女私房菜",
+        url: {
+            t: "美女私房菜",
+            p: ".html"
+        },
+        imgs: "img.swiper-lazy",
+        customTitle: () => fn.title(" - 美女私房菜"),
         category: "nsfw1"
     }, {
         name: "聚美星空",
@@ -15073,7 +15117,7 @@
         name: "E-Hentai圖片清單頁",
         url: {
             h: ["e-hentai.org", "exhentai.org"],
-            p: /^\/g\/\d+\/\w+\/$/,
+            p: "/g/",
             ee: "//h1[text()='Content Warning']"
         },
         box: ["#gdt", 2],
@@ -16588,7 +16632,11 @@
             return fn.fetchDoc(url).then(dom => {
                 let dir = fn.ge("#current-page-image", dom).dataset.prefix;
                 let code = fn.gst("extensions", dom);
-                let extensions = fn.run(code.match(/\[.+\]/)[0].replaceAll("&quot;", '"'));
+                code = code.replaceAll("&quot;", '"');
+                let s = code.indexOf("[");
+                let e = code.indexOf("]", s) + 1;
+                code = code.slice(s, e);
+                let extensions = fn.run(code);
                 return extensions.map((e, i) => {
                     if (dir.includes("nhentai")) {
                         return `${dir}${(i + 1)}.${fn.ex(e)}`;
@@ -17274,7 +17322,7 @@
         name: "爱漫画网 閱讀頁",
         host: ["www.iimhw.com", "iimhw.com", "518lebook.buzz"],
         url: () => fn.checkUrl({
-            e: "a[title=爱漫画网]",
+            e: "a[title=爱漫画网],a[title=漫画猫]",
             p: "/chapter"
         }) || fn.curl(/^https?:\/\/518lebook\.buzz\/\?novel\d+\/chapter/),
         imgs: () => fn.gae(".chapter-content img"),
@@ -17296,7 +17344,7 @@
     }, {
         name: "爱漫画网 目錄頁",
         url: () => fn.checkUrl({
-            e: ["a[title=爱漫画网]", "#list-chapter"],
+            e: ["a[title=爱漫画网],a[title=漫画猫]", "#list-chapter"],
             p: "/novel"
         }) || fn.curl(/^https?:\/\/518lebook\.buzz\/\?novel\d+\/$/),
         box: ["#list-chapter", 2],
@@ -20277,7 +20325,7 @@
                     }
                 };
             });
-            return fn.waitEle("main div[data-page] img");
+            return fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("main div[data-page] img").then(() => fn.hideMsg()));
         },
         imgs: () => {
             let [src] = fn.getImgSrcArr("main div[data-page] img");
@@ -20789,8 +20837,7 @@
     }, {
         name: "MangaFire",
         url: {
-            h: ["mangafire.to"],
-            d: "pc"
+            h: ["mangafire.to"]
         },
         page: () => fn.clp("/read/"),
         json: () => fn.fetchDoc(fn.clp()).then(dom => {
@@ -20825,9 +20872,9 @@
         customTitle: () => _this.page() ? fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g) : null,
         category: "comic"
     }, {
-        name: "Top Manhua/Toonily/Manga-shi",
+        name: "Top Manhua/Toonily/Manga-shi/ManhwaZ/Mangaclash",
         url: {
-            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com"],
+            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com", "manhwaz.com", "toonclash.com"],
             p: ["/chapter", "/glava"],
             e: ".reading-content img"
         },
@@ -25199,6 +25246,30 @@ if ("xx" in window) {
         preloadNext: true,
         category: "comic"
     }, {
+        name: "漫画RAW",
+        url: {
+            h: ["tokiraw.com"],
+            p: "/read",
+            s: "id="
+        },
+        imgs: ".page-img",
+        button: [4],
+        insertImg: ["#viewer", 2],
+        autoDownload: [0],
+        next: () => {
+            let mid = fn.gu("main a[href^='/manga/']").split("/").at(-1);
+            let cid = fn.getUSP("id");
+            return fetch("/api/v1/chapters?id=" + mid).then(res => res.text()).then(text => fn.html(text)).then(fragment => {
+                let chapters = fn.gae("option", fragment);
+                let c_chapter = chapters.find(p => p.value == cid);
+                let next = c_chapter?.previousElementSibling;
+                return next ? "/read?id=" + next.value : null;
+            });
+        },
+        prev: 1,
+        customTitle: "main h1",
+        category: "comic"
+    }, {
         name: "ゼロサムオンライン",
         url: {
             h: "zerosumonline.com"
@@ -25221,6 +25292,36 @@ if ("xx" in window) {
             if (!_this.page()) return null;
             let textArr = document.title.split("|");
             return textArr[1] + " - " + textArr[0];
+        },
+        category: "comic"
+    }, {
+        name: "アルファポリス",
+        url: {
+            h: "www.alphapolis.co.jp",
+            p: /^\/manga\/official\/\d+\/\d+$/,
+            d: "pc"
+        },
+        init: () => fn.fetchDoc(fn.lp).then(dom => (doc = dom)),
+        imgs: () => {
+            let data = fn.attr("viewer-manga-horizontal", "v-bind:pages", doc);
+            let array = JSON.parse(data);
+            let srcs = array.filter(isString).filter(src => !src.includes("/white_page/"));
+            return srcs;
+        },
+        capture: () => _this.imgs(),
+        next: () => {
+            let menu = fn.ge("template", doc).content;
+            let episodes = fn.gae("template", menu).map(t => fn.gae(".episode-unit", t.content)).flat();
+            let cid = fn.lp.split("/").at(-1);
+            let c_episode = episodes.find(e => e.dataset.order == cid);
+            let next = c_episode?.previousElementSibling;
+            return next ? fn.dir(fn.lp) + next.dataset.order : null;
+        },
+        prev: 1,
+        customTitle: () => {
+            let menu = fn.ge("template", doc).content;
+            let tag = fn.ge("menu-official-content", menu);
+            return fn.attr(tag, "manga-title") + " - " + fn.attr(tag, "episode-title");
         },
         category: "comic"
     }, {
@@ -28129,7 +28230,7 @@ if ("xx" in window) {
                 str_71: "下載後壓縮打包",
                 str_72: "壓縮檔副檔名：",
                 str_73: "自動下載",
-                str_74: " ( 快捷鍵 [ ctrl + . ] 開始或取消 )",
+                str_74: " ( 快捷鍵 [ ctrl + . ] 開始或取消 ) ESC中斷",
                 str_75: "自動下載倒數秒數：",
                 str_76: "啟用當前漫畫站點規則",
                 str_77: "自動進入畫廊需點擊主圖示按鈕",
@@ -28235,7 +28336,7 @@ if ("xx" in window) {
                 str_171: "檔案大小",
                 str_172: "拖動排序",
                 str_173: "可拖動圖片來改變圖片順序。",
-                str_174: "匯出JSON格式",
+                str_174: "匯出為JSON格式",
                 str_175: "已匯出JSON格式",
                 str_176: "匯出為MD格式",
                 str_177: "已匯出Markdown格式",
@@ -28380,7 +28481,7 @@ if ("xx" in window) {
                 str_71: "压缩打包",
                 str_72: "压缩档文件扩展名：",
                 str_73: "自动下载",
-                str_74: " ( 快捷键 [ ctrl + . ] 开始或取消 )",
+                str_74: " ( 快捷键 [ ctrl + . ] 开始或取消 ) ESC中断",
                 str_75: "自动下载倒数秒数：",
                 str_76: "启用当前漫画站点规则",
                 str_77: "自动进入画廊需点击主图示按钮",
@@ -28486,7 +28587,7 @@ if ("xx" in window) {
                 str_171: "文件大小",
                 str_172: "拖动排序",
                 str_173: "可拖动图片来改变图片顺序。",
-                str_174: "导出JSON格式",
+                str_174: "导出为JSON格式",
                 str_175: "已导出JSON格式",
                 str_176: "导出为MD格式",
                 str_177: "已导出Markdown格式",
@@ -28625,7 +28726,7 @@ if ("xx" in window) {
                 str_71: "Compressed Packaging",
                 str_72: "Compressed File Extension：",
                 str_73: "AutoDownload",
-                str_74: " ( [ ctrl + . ] Start or Cancel)",
+                str_74: " ( [ ctrl + . ] Start or Cancel) ESC interrupt",
                 str_75: "AutoDownload Countdown Sec：",
                 str_76: "Comic Site Rules Switch",
                 str_77: "Auto enter Gallery In Icon Button",
@@ -28739,7 +28840,7 @@ if ("xx" in window) {
                 str_179: "Copied to Markdown format",
                 str_180: "Auto Export URLs.txt",
                 str_181: "Combine Download",
-                str_182: "※ Gallery Image Loop Switching",
+                str_182: "※ Gallery Image Loop Toggle",
                 str_183: "Exclude Format",
                 str_184: "Culling",
                 str_185: "Auto Culling",
@@ -31365,7 +31466,12 @@ if ("xx" in window) {
             return string.slice(startIndex, endIndex + endText.length);
         },
         //取得元素的屬性值
-        attr: (selector, attr, dom = document) => fn.ge(selector, dom, dom).getAttribute(attr),
+        attr: (selector, attr, dom = document) => {
+            if (isEle(selector)) {
+                return selector.getAttribute(attr);
+            }
+            return fn.ge(selector, dom, dom).getAttribute(attr);
+        },
         //傳入代碼運行代碼
         run: code => new Function("return " + code)(),
         //將字串解析為document物件
@@ -35357,7 +35463,7 @@ function createImgElement(mode) {
     if (config.ViewMode == 5 && ["comic", "hcomic"].some(c => category == c)) {
         toggleDirection(imgBox, imgElements);
     }
-    if (["comic", "hcomic"].some(c => category == c)) {
+    if (["comic"].some(c => category == c)) {
         toggle_r_l_border(imgElements);
     }
     fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -36456,7 +36562,7 @@ img.horizontal {
             if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
                 toggleDirection(p, imgElements);
             }
-            if (["comic", "hcomic"].some(c => siteData.category == c)) {
+            if (["comic"].some(c => siteData.category == c)) {
                 toggle_r_l_border(imgElements);
             }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -37903,7 +38009,7 @@ img.horizontal {
             if (mode === "horizontal" && ["comic", "hcomic"].some(c => siteData.category == c)) {
                 toggleDirection(p, imgElements);
             }
-            if (["comic", "hcomic"].some(c => siteData.category == c)) {
+            if (["comic"].some(c => siteData.category == c)) {
                 toggle_r_l_border(imgElements);
             }
             await fn.wait(() => imgElements.at(-1)?.offsetHeight > 100).then(() => {
@@ -40142,20 +40248,20 @@ img.webtoon {
             fn.gae(".itemNoShow", menuDiv).forEach(e => {
                 e.classList.remove("itemNoShow");
                 e.classList.add("itemShow");
-                e.width = "116px";
+                e.width = "122px";
             });
-            menuDiv.style.width = "128px";
-            menuDiv.lastChild.width = "116px";
+            menuDiv.style.width = "134px";
+            menuDiv.lastChild.width = "122px";
             menuDiv.lastChild.innerText = DL.str_134;
         }
         menuDiv.onmouseleave = () => {
             fn.gae(".itemShow", menuDiv).forEach(e => {
                 e.classList.remove("itemShow");
                 e.classList.add("itemNoShow");
-                e.width = "38px";
+                e.width = "44px";
             });
-            menuDiv.style.width = "48px";
-            menuDiv.lastChild.width = "38px";
+            menuDiv.style.width = "54px";
+            menuDiv.lastChild.width = "44px";
             menuDiv.lastChild.innerText = DL.str_133;
             setTimeout(() => (isOpenMenu = false), 200);
         }
@@ -40423,7 +40529,7 @@ img.webtoon {
 </div>
 <div id="AutoDownloadDIV" style="width: 348px; display: flex;">
     <input id="AutoDownload" type="checkbox">
-    <label>${DL.str_73}${DL.str_74}</label>
+    <label style="${language.includes("zh") ? "" : "font-size: 12px!important;"}">${DL.str_73}${DL.str_74}</label>
 </div>
 <div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_75}</label>
@@ -40938,7 +41044,7 @@ img.webtoon {
 
 #FullPictureLoadMsg {
     font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial !important;
-    font-size: 24px;
+    font-size: ${language.includes("zh") ? "24px" : "22px"};
     font-weight: 500;
     text-align: center;
     line-height: 50px;
