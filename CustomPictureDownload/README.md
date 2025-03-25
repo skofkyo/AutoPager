@@ -4,23 +4,23 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/03/15
+2025/03/25
 PC
-Chrome 134.0.6998.89 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 134.0.3124.68 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 136.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Chrome 134.0.6998.166 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Edge 134.0.3124.85 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+FireFox 136.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 136.0.3188.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.2.025 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-☆Firefox for Android 136.0.1 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-<a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+☆Edge Canary 136.0.3216.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.3.001 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+☆Firefox for Android 136.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+<a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 134.0.3124.57 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Yandex Browser 25.2.5.105 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Edge 134.0.3124.68 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Yandex Browser 25.2.6.92 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 <a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.9</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-<a href="https://www.xbext.com/index.html">XBrowser 5.1.0</a>
+<a href="https://www.xbext.com/index.html">XBrowser 5.1.1</a>
 <a href="https://viayoo.com/zh-cn/">ViaBrowser 6.3.1</a>
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
@@ -3690,6 +3690,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://navicosplay.blogspot.com/">Navi Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://Nao Kanzaki and a few friends/">Nao Kanzaki and a few friends</a>
                 </td>
                 <td></td>
@@ -4067,6 +4073,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://minisuka.top/">MINISUKA</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://breakbrunch.com/t/cosplay-by-mon/">BreakBrunch</a>
                 </td>
                 <td></td>
             </tr>
@@ -4909,6 +4921,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td></td>
             </tr>
             <tr>
+                <td>
+                    <a href="https://thegg.net/category/cosplay/">TGG</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
                 <td>AList</td>
                 <td>
                     <a href="https://cylsp.org/">次元LSP</a>， <a href="https://pan.catcat.blog/">猫猫网盘</a>， <a href="https://qinzhi.top/">云边网盘</a>， <a href="https://alist.xiaoyiblog.fun/">小易の云盘</a>， <a href="https://yun.pqdh.com/">ooo.pqdh.com</a>， <a href="https://alist.qiuyeshudian.com/">J M G T</a>，圖片列表跑出來後記得按一下名稱排序，原圖一張幾十MB的建議複製圖址後用Motrix下載，沒有圖片但有影片或壓縮檔建議匯出網址後用Motrix下載。
@@ -5152,6 +5170,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://xsmpic.com/">小濕妹圖庫</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.porn5f.com/">五樓自拍</a>
                 </td>
                 <td></td>
             </tr>
@@ -6573,7 +6597,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="http://www.zerobywzip.com/">zero搬运网</a>
+                    <a href="http://www.zerobywrar.com/">zero搬运网</a>
                 </td>
                 <td>手動插入圖片， <a href="https://zerobyw.github.io/">域名</a>
                 </td>
@@ -6594,10 +6618,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.haoguoman.net/">好国漫</a>
+                    <a href="https://www.haoguoman8.com/">好国漫</a>
                 </td>
                 <td>
-                    <a href="https://m.haoguoman.net/">m.haoguoman.net</a>，有無限滾動模式加預讀
+                    <a href="https://m.haoguoman8.com/">m.haoguoman8.com</a>，有無限滾動模式加預讀
                 </td>
             </tr>
             <tr>
@@ -6744,6 +6768,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.kukanmanhua.org/">酷看漫画</a>， <a href="http://www.ququmh.com/">去去漫画</a>， <a href="http://www.pipiman.com/">皮皮漫画</a>， <a href="https://www.cicoo.cc/">六漫画</a>， <a href="https://www.liumanhua.cc/">六漫画</a>， <a href="https://www.ypdsm.com/">有品漫画</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.bcloudmerge.com/">云端漫画</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
