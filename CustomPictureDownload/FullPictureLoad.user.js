@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.24
+// @version            2025.3.25
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2262,41 +2262,6 @@
         }) : null,
         category: "nsfw2"
     }, {
-        name: "街角ijjiao",
-        url: {
-            h: ["ijjiao.com", "api.ijjiao.com"]
-        },
-        page: () => fn.clp("/album"),
-        parseCode: str => {
-            let s = str.indexOf("(");
-            let e = str.lastIndexOf(";");
-            str = str.slice(s, e);
-            return fn.run(str);
-        },
-        SPA: () => _this.page(),
-        observeURL: "nav",
-        imgs: () => {
-            if (!_this.page()) return [];
-            fn.showMsg(DL.str_05, 0);
-            return fn.fetchDoc(fn.clp()).then(dom => {
-                let code = fn.gst("__NUXT__", dom);
-                let data = _this.parseCode(code);
-                let url = data.routePath.replace(/\/\d+$/, "");
-                let pageTotal = data.data[0].pageTotal;
-                apiCustomTitle = data.data[0].postData.title;
-                let links = fn.arr(pageTotal, (v, i) => i == 0 ? url : `${url}/${i + 1}`);
-                return fn.getEle(links, "//script[contains(text(),'__NUXT__')]").then(scripts => {
-                    let images = scripts.map(script => {
-                        let data = _this.parseCode(script.textContent);
-                        return data.data[0].postData.photoList;
-                    }).flat();
-                    thumbnailSrcArray = images.map(e => e.thumbnail);
-                    return images.map(e => e.photourl);
-                });
-            });
-        },
-        category: "nsfw1"
-    }, {
         name: "微圖坊",
         url: () => fn.checkUrl({
             h: ["www.v2ph.com", "www.v2ph.net", "www.v2ph.ru", "www.v2ph.ovh"],
@@ -2491,6 +2456,7 @@
         category: "nsfw1"
     }, {
         name: "美女私房菜",
+        host: ["ozv.me"],
         url: {
             t: "美女私房菜",
             p: ".html"
@@ -3605,76 +3571,107 @@
         hide: "[id^='quads-ad'],[id^=block]",
         category: "nsfw1"
     }, {
-        name: "二次元图库",
-        host: ["vtecy.top"],
-        reg: /^https?:\/\/vtecy\.top\/index\.php\/\d+\/\d+\/\d+\/[^\/]+\/$/,
-        imgs: ".entry-content img",
-        button: [4],
-        insertImg: [".entry-content", 2],
-        autoDownload: [0],
-        next: ".post-next h2>a",
-        prev: ".post-pre h2>a",
-        customTitle: ".entry-header>h1",
-        category: "nsfw2"
-    }, {
         name: "女神社",
-        host: ["nshens.com", "inewgirl.com", "lovens.shop"],
-        reg: /^https?:\/\/((www\.)?nshens\.com|(www\.)?inewgirl\.com)\/(web\/)?\d+\/\d+\/\d+\/[^/]+$/,
-        exclude: ".justify-center>button>.v-btn__content",
-        init: () => fn.waitEle("h3"),
-        imgs: async () => {
+        url: {
+            h: ["nshens.com", "inewgirl.com", "lovens.shop"]
+        },
+        page: () => fn.clp(/^\/web\/\d+\/\d+\/\d+\/[^\/]+$/),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        imgs: () => {
+            if (!_this.page()) return [];
             fn.showMsg(DL.str_05, 0);
-            let [max] = fn.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
-            let links = fn.arr(max, (v, i) => siteUrl + "/" + (i + 1));
-            let fetchNum = 0;
-            let resArr = links.map((url, i, arr) => {
-                return fn.fetchDoc(url).then(dom => {
+            return fn.fetchDoc(fn.clp()).then(async dom => {
+                let code = fn.gst("__NUXT__", dom);
+                let data = fn.parseCode(code);
+                apiCustomTitle = data.data[0].postData.title;
+                let url = "/web" + data.routePath;
+                let pageTotal = data.data[0].pageTotal;
+                let links = fn.arr(pageTotal, (v, i) => i == 0 ? url : url + "/" + (i + 1));
+                let fetchNum = 0;
+                let resArr = links.map((url, i, arr) => fn.fetchDoc(url).then(dom => {
                     fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
                     let code = fn.gst("photoList", dom);
-                    return fn.run(code.match(/photoList:([^\]]+\])/)[1]);
-                });
+                    return fn.TextToArray(code, "photoList");
+                }));
+                let photourl = await Promise.all(resArr).then(data => data.flat().map(e => e.photourl));
+                if (photourl.length > [...new Set(photourl)].length) setTimeout(() => fn.showMsg("VIP套圖需升級為VIP", 5000), 1200);
+                return photourl;
             });
-            let photourl = await Promise.all(resArr).then(data => data.flat().map(e => e.photourl));
-            if (photourl.length > [...new Set(photourl)].length) setTimeout(() => fn.showMsg("VIP套圖需升級為VIP", 5000), 1200);
-            return photourl;
         },
         button: [4],
         insertImg: ["//div[a[div[@class='v-image v-responsive theme--light']]]", 2],
-        customTitle: "h3",
         category: "nsfw2"
     }, {
         name: "Chottie", //很多都需要VIP，不然只會重複抓到第一頁的圖片
-        host: ["chottie.com", "chinesehottie.com"],
-        reg: /^https?:\/\/((www\.)?chottie\.com|(www\.)?chinesehottie\.com)\/blog\/(\w{2}\/)?archives\/\d+$/,
-        exclude: ".justify-center>button>.v-btn__content",
-        init: () => fn.waitEle("h3"),
-        imgs: async () => {
+        url: {
+            h: ["chottie.com", "chinesehottie.com"]
+        },
+        page: () => fn.clp(/^\/blog\/(\w{2}\/)?archives\/\d+$/),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        imgs: () => {
+            if (!_this.page()) return [];
             fn.showMsg(DL.str_05, 0);
-            let [max] = fn.gt(".v-pagination li:last-child,div:has(>div.current-item)~div:last-child", 2).match(/\d+/);
-            let links = fn.arr(max, (v, i) => siteUrl + "/" + (i + 1));
-            let fetchNum = 0;
-            let resArr = links.map((url, i, arr) => {
-                return fn.fetchDoc(url).then(dom => {
-                    fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
-                    let code, imgs;
-                    try {
-                        code = fn.gst("imgList", dom);
-                        imgs = fn.run(code.match(/imgList:([^\]]+\])/)[1]);
-                    } catch {
-                        code = fn.gst("snapshotList", dom);
-                        imgs = fn.run(code.match(/snapshotList:([^\]]+\])/)[1]);
-                    }
-                    return imgs;
+            return fn.fetchDoc(fn.clp()).then(async dom => {
+                let code = fn.gst("__NUXT__", dom);
+                let data = fn.parseCode(code);
+                apiCustomTitle = data.data[0].postData.title;
+                let url = "/blog" + data.routePath;
+                let pageTotal = data.data[0].pageTotal;
+                let links = fn.arr(pageTotal, (v, i) => i == 0 ? url : url + "/" + (i + 1));
+                let fetchNum = 0;
+                let resArr = links.map((url, i, arr) => {
+                    return fn.fetchDoc(url).then(dom => {
+                        fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
+                        let code, imgs;
+                        try {
+                            code = fn.gst("imgList", dom);
+                            imgs = fn.TextToArray(code, "imgList");
+                        } catch {
+                            code = fn.gst("snapshotList", dom);
+                            imgs = fn.TextToArray(code, "snapshotList");
+                        }
+                        return imgs;
+                    });
                 });
+                let imgList = await Promise.all(resArr).then(data => data.flat());
+                if (imgList.length > [...new Set(imgList)].length) setTimeout(() => fn.showMsg("VIP套圖需升級為VIP", 5000), 1200);
+                return imgList;
             });
-            let data = await Promise.all(resArr).then(data => data.flat());
-            if (data.length > [...new Set(data)].length) setTimeout(() => fn.showMsg("VIP套圖需升級為VIP", 5000), 1200);
-            return data;
         },
         button: [4],
         insertImg: ["//div[a[div[@class='v-image v-responsive theme--light']]]", 2],
-        customTitle: "h3",
         category: "nsfw2"
+    }, {
+        name: "街角ijjiao",
+        url: {
+            h: ["ijjiao.com", "api.ijjiao.com"]
+        },
+        page: () => fn.clp("/album"),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        imgs: () => {
+            if (!_this.page()) return [];
+            fn.showMsg(DL.str_05, 0);
+            return fn.fetchDoc(fn.clp()).then(dom => {
+                let code = fn.gst("__NUXT__", dom);
+                let data = fn.parseCode(code);
+                let url = data.routePath.replace(/\/\d+$/, "");
+                let pageTotal = data.data[0].pageTotal;
+                apiCustomTitle = data.data[0].postData.title;
+                let links = fn.arr(pageTotal, (v, i) => i == 0 ? url : `${url}/${i + 1}`);
+                return fn.getEle(links, "//script[contains(text(),'__NUXT__')]").then(scripts => {
+                    let images = scripts.map(script => {
+                        let data = _this.parseCode(script.textContent);
+                        return data.data[0].postData.photoList;
+                    }).flat();
+                    thumbnailSrcArray = images.map(e => e.thumbnail);
+                    return images.map(e => e.photourl);
+                });
+            });
+        },
+        category: "nsfw1"
     }, {
         name: "tu928美女写真网",
         url: {
@@ -5180,6 +5177,19 @@
         customTitle: "#posttitle",
         category: "nsfw1"
     }, {
+        name: "TGG",
+        url: {
+            h: ["thegg.net"],
+            e: "#header img,#body img"
+        },
+        imgs: () => fn.getImgSrcset("#header img:not([alt*='author']),#body img:not([alt*='author'])").filter(src => !src.includes("banner")),
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "//a[text()='Next post']",
+        prev: "//a[text()='Previous post']",
+        customTitle: ".info h2",
+        category: "nsfw1"
+    }, {
         name: "LUVBP",
         url: {
             h: "luvbp.com",
@@ -6297,7 +6307,8 @@
                     "User-Agent": Mobile_UA
                 }
             }).then(dom => {
-                let [, path, , max, , next] = JSON.parse(fn.gst("_pd", dom).match(/_pd[\s=]+([^;]+)/)[1]);
+                let code = fn.gst("_pd", dom);
+                let [, path, , max, , next] = fn.TextToArray(code, "_pd");
                 path = "https://i.tuiimg.net/" + path;
                 siteJson.srcs = fn.arr(max, (v, i) => path + (i + 1) + ".jpg");
                 siteJson.next = null;
@@ -6324,7 +6335,8 @@
             st: "_pd"
         },
         init: () => {
-            let [, path, , max, , next] = JSON.parse(fn.gst("_pd").match(/_pd[\s=]+([^;]+)/)[1]);
+            let code = fn.gst("_pd");
+            let [, path, , max, , next] = fn.TextToArray(code, "_pd");
             path = "https://i.tuiimg.net/" + path;
             siteJson.srcs = fn.arr(max, (v, i) => path + (i + 1) + ".jpg");
             siteJson.next = null;
@@ -7179,8 +7191,8 @@
                 let data_a = [...dom.scripts].filter(script => script.textContent.includes(',\\"images\\":\\"['));
                 if (data_a.length) {
                     let code = data_a.at(0).textContent.replaceAll("\n", "").replaceAll("\\", "");
-                    code = fn.stringSlicer(code, '"images":"', "]");
-                    return JSON.parse(code).map(e => dir + e);
+                    let images = fn.TextToArray(code, '"images":');
+                    return images.map(e => dir + e);
                 }
                 let data_b = [...dom.scripts].filter(script => [id, '[\\"', '\\"]'].every(str => script.textContent.includes(str)));
                 if (data_b.length) {
@@ -8351,11 +8363,11 @@
     }, {
         name: "Nao Kanzaki and a few friends/NYO Cosplay",
         url: {
-            h: ["aitoda.blogspot.com", "2bcosplay.blogspot.com"],
+            h: ["aitoda.blogspot.com", "2bcosplay.blogspot.com", "navicosplay.blogspot.com"],
             p: /^\/\d+\/\d+\/[\w-]+\.html/
         },
-        imgs: ".entry-content .separator a",
-        thums: ".entry-content .separator a img",
+        imgs: ".entry-content .separator a,div.separator>img",
+        thums: ".entry-content .separator a img,div.separator>img",
         videos: "iframe[title='YouTube video player'],iframe[id^='BLOGGER-video']",
         autoDownload: [0],
         next: ".blog-pager-older-link",
@@ -10191,6 +10203,14 @@
         customTitle: ".entry-title",
         category: "nsfw2"
     }, {
+        name: "BreakBrunch",
+        url: {
+            h: ["breakbrunch.com"]
+        },
+        imgs: ".single-content img",
+        customTitle: "h1.single-title",
+        category: "nsfw2"
+    }, {
         name: "PhimVu/Kutekorean.Com",
         host: ["m.phimvuspot.com", "m.kutekorean.com"],
         reg: [
@@ -10856,7 +10876,8 @@
                     return fetch(a.href).then(res => res.text()).then(async text => {
                         await delay(200 * i);
                         let id = a.href.split("/").at(-1);
-                        let spirit = fn.run(text.match(/var\sspirit\s?=\s?([^;]+);/)[1]);
+                        text = fn.stringSlicer(text, "spirit = ", ";");
+                        let spirit = fn.run(text);
                         let api = `/backend.php?&spirit=${spirit}&photo=${id}`;
                         return fetch(api).then(res => res.json()).then(json => {
                             fn.showMsg(`${DL.str_06}${fetchNum+=1}/${arr.length}`, 0);
@@ -13767,6 +13788,15 @@
         customTitle: ".detail-title",
         category: "nsfw2"
     }, {
+        name: "五樓自拍",
+        host: ["www.porn5f.com"],
+        url: {
+            t: "五樓自拍",
+            p: "/album/"
+        },
+        imgs: ".photo-owl-carousel img",
+        category: "nsfw2"
+    }, {
         name: "尼克成人網 人體寫真",
         host: ["nick20.com"],
         link: "https://nick20.com/pic/index.html",
@@ -14430,8 +14460,8 @@
             if (fn.ge(".comic-name")) {
                 return fn.gt(".comic-name");
             } else {
-                let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
-                let bookInfo = fn.run(text);
+                let code = fn.gst("bookInfo");
+                let bookInfo = fn.TextToObject(code, "bookInfo");
                 return bookInfo.book_name;
             }
         },
@@ -15526,18 +15556,19 @@
             /^https?:\/\/3hentai\.net\/d\/\d+$/,
             /^https?:\/\/hentaivox\.com\/view\/\d+$/
         ],
-        imgs: async () => {
+        imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr(".single-thumb>a>img");
             fn.showMsg(DL.str_05, 0);
             let url = fn.gu(".single-thumb>a");
-            let json = await fn.fetchDoc(url).then(dom => {
+            return fn.fetchDoc(url).then(dom => {
                 let code = fn.gst("readerPages", dom);
-                let [jsonCode] = code.match(/JSON[^;]+/);
+                let jsonCode = fn.stringSlicer(code, "readerPages =", ";");
                 return fn.run(jsonCode);
+            }).then(json => {
+                let max = json.lastPage;
+                let dir = json.baseUriImg.replace("%s", "");
+                return fn.arr(max, (v, i) => dir + json.pages[(i + 1)].f);
             });
-            let max = json.lastPage;
-            let dir = json.baseUriImg.replace("%s", "");
-            return fn.arr(max, (v, i) => dir + json.pages[(i + 1)].f);
         },
         button: [4],
         insertImg: [
@@ -16343,7 +16374,9 @@
         },
         imgs: () => {
             fn.showMsg(DL.str_05, 0);
-            let url = fn.gst("configUrl").match(/configUrl":"[^,]+/g)[0].slice(12, -1).replaceAll("\\", "");
+            let code = fn.gst("configUrl")
+            let [, url] = code.match(/configUrl":"([^"]+)/);
+            url = url.replaceAll("\\", "");
             return fetch(url).then(res => res.text()).then(text => {
                 let xml = fn.xml(text);
                 let imgs = fn.gae("image", xml);
@@ -16524,8 +16557,7 @@
                     .join("")
                     .replaceAll("\n", "")
                     .replaceAll("\\", "");
-                text = fn.stringSlicer(text, '"slides":', "]");
-                return JSON.parse(text).map(e => e.src);
+                return fn.TextToArray(text, '"slides":').map(e => e.src);
             });
         },
         thums: ".grid .group>img",
@@ -16633,10 +16665,7 @@
                 let dir = fn.ge("#current-page-image", dom).dataset.prefix;
                 let code = fn.gst("extensions", dom);
                 code = code.replaceAll("&quot;", '"');
-                let s = code.indexOf("[");
-                let e = code.indexOf("]", s) + 1;
-                code = code.slice(s, e);
-                let extensions = fn.run(code);
+                let extensions = fn.TextToArray(code, "extensions");
                 return extensions.map((e, i) => {
                     if (dir.includes("nhentai")) {
                         return `${dir}${(i + 1)}.${fn.ex(e)}`;
@@ -16763,14 +16792,12 @@
         },
         imgs: () => {
             let code = fn.gst("pages");
-            let [, textArr] = code.match(/var pages = ([^;]+)/);
-            let arr = fn.run(textArr);
-            return arr.map(e => e.page_image);
+            return fn.TextToArray(code, "pages").map(e => e.page_image);
         },
         button: [4],
         insertImg: ["#img-page", 2],
+        insertImgAF: () => fn.hideEle("#chapter-pages,#grid-buttons"),
         customTitle: "#main h1",
-        hide: "#chapter-pages",
         category: "hcomic"
     }, {
         name: "IMHentai圖片清單頁",
@@ -17594,13 +17621,17 @@
             h: "h-comic.com",
             e: "body[data-theme='h-comic-blue-theme']"
         },
-        page: () => ["/comics/", "/1"].every(e => fn.curl(e)),
+        page: () => ["/comics/", "/1"].every(e => fn.clp(e)),
         SPA: () => _this.page(),
         observeURL: "nav",
-        json: () => fn.fetchDoc(fn.curl()).then(dom => {
-            let _text = fn.gst("num_pages", dom);
-            [_text] = _text.match(/\[\{.+\}\];/);
-            let data = fn.run(_text);
+        json: () => fn.fetchDoc(fn.clp()).then(dom => {
+            let code = fn.gst("num_pages", dom);
+            siteJson.env = fn.TextToObject(code, "env:");
+            let a = code.indexOf("data:");
+            let b = code.indexOf("[", a);
+            let c = code.lastIndexOf("],") + 1;
+            let data = code.slice(b, c);
+            data = fn.run(data);
             return data.find(d => !!d?.data?.comic);
         }),
         imgs: () => {
@@ -17622,7 +17653,7 @@
                         }
                     } = json;
                     apiCustomTitle = japanese ?? english ?? pretty;
-                    return fn.arr(num_pages, (v, i) => `${fn.lo}/api/${comic_source}/${media_id}/pages/${i + 1}`);
+                    return fn.arr(num_pages, (v, i) => `${siteJson.env.PUBLIC_IAMGE_SERVER_URL}/${comic_source}/${media_id}/pages/${i + 1}`);
                 });
             } else {
                 return [];
@@ -17923,7 +17954,6 @@
         url: {
             t: ["第一漫画", "歪歪漫画", "第一韩漫", "太极漫画网"],
             p: /^\/view\/\d+\/\d+$/,
-            st: "$(document).ready",
             d: "m"
         },
         init: () => {
@@ -17988,10 +18018,7 @@
             p: /^\/view\/\d+\/\d+$/,
             d: "m"
         },
-        init: async () => {
-            await fn.waitVar("chapter_id");
-            siteJson = Object.entries(_unsafeWindow).filter(([k, v]) => !!v?.comic)[0][1];
-        },
+        init: () => fn.waitVar("chapter_id").then(() => (siteJson = Object.entries(_unsafeWindow).filter(([k, v]) => !!v?.comic)[0][1])),
         imgs: () => siteJson.volume.pages,
         button: [4, "24%", 3],
         insertImg: [".charpetBox", 2],
@@ -18207,6 +18234,7 @@
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, "#more-information1>div.row:has(img)"], 2
         ],
+        go: 1,
         customTitle: () => fn.getText([".row>.col-xs-12>h2", "div.name>h2", ".gallery_title", ".gallery_title2"]),
         category: "hcomic"
     }, {
@@ -19443,8 +19471,8 @@
             if (fn.ge(".comic-name")) {
                 return fn.gt(".comic-name");
             } else {
-                let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
-                let bookInfo = fn.run(text);
+                let code = fn.gst("bookInfo");
+                let bookInfo = fn.TextToObject(code, "bookInfo");
                 return bookInfo.book_name;
             }
         },
@@ -19466,8 +19494,8 @@
             if (fn.ge(".title")) {
                 return fn.gt(".title");
             } else {
-                let [, text] = fn.gst("bookInfo").match(/bookInfo[\s=]+([^;]+)/);
-                let bookInfo = fn.run(text);
+                let code = fn.gst("bookInfo");
+                let bookInfo = fn.TextToObject(code, "bookInfo");
                 return bookInfo.book_name + " - " + bookInfo.chapter_name;
             }
         },
@@ -19897,12 +19925,12 @@
         link: "https://rentry.co/batoto",
         url: {
             e: "meta[property='og:site_name'][content=Batoto]",
-            p: "/chapter/"
+            p: "/chapter/",
+            st: "imgHttps"
         },
         imgs: () => {
             let code = fn.gst("imgHttps");
-            let [, text] = code.match(/imgHttps[\s\=]+([^;]+)/);
-            return JSON.parse(text);
+            return fn.TextToArray(code, "imgHttps");
         },
         button: [4],
         insertImg: ["#viewer", 2],
@@ -19926,7 +19954,7 @@
             e: "astro-island[props*=imageFiles]"
         },
         init: () => fn.waitEle("div[name='image-item'] img"),
-        imgs: () => JSON.parse(JSON.parse(document.querySelector("astro-island[props*=imageFiles]").getAttribute("props")).imageFiles.find(e => typeof e === "string")).map(([, url]) => url),
+        imgs: () => JSON.parse(JSON.parse(fn.attr("astro-island[props*=imageFiles]", "props")).imageFiles.find(isString)).map(([, url]) => url),
         button: [4],
         insertImg: ["div[name='image-item']", 2],
         autoDownload: [0],
@@ -20519,10 +20547,10 @@
             if (fn.lh.includes("fanfox")) {
                 return document.title + fn.gt(".mangaread-title");
             } else {
-                let [text] = fn.gst("addHistory").match(/{"href[^}]+}/);
-                let obj = JSON.parse(text);
+                let code = fn.gst("addHistory");
+                let json = fn.TextToObject(code, "addHistory");
                 let ch = fn.gt(".return-title");
-                return obj.name + " - " + ch;
+                return json.name + " - " + ch;
             }
         },
         category: "comic"
@@ -22038,12 +22066,13 @@ if ("xx" in window) {
         },
         getSrcs: (dom) => {
             let code = fn.gst("MANGABZ_IMAGE_COUNT", dom);
-            let [, imagesNum] = code.match(/MANGABZ_IMAGE_COUNT[\s\=]+(\d+)/);
-            let [, chapterURL] = code.match(/MANGABZ_CURL[\s\="]+([^"]+)/);
-            let [, cid] = code.match(/MANGABZ_CID[\s\=]+(\d+)/);
-            let [, mid] = code.match(/MANGABZ_MID[\s\=]+(\d+)/);
-            let dt = encodeURIComponent(code.match(/MANGABZ_VIEWSIGN_DT[\s\="]+([^"]+)/)[1]);
-            let [, sing] = code.match(/MANGABZ_VIEWSIGN[\s\="]+([^"]+)/);
+            let imagesNum = fn.numVar(code, "MANGABZ_IMAGE_COUNT");
+            let chapterURL = fn.textVar(code, "MANGABZ_CURL");
+            let cid = fn.numVar(code, "MANGABZ_CID");
+            let mid = fn.numVar(code, "MANGABZ_MID");
+            let dt = fn.textVar(code, "MANGABZ_VIEWSIGN_DT");
+            dt = encodeURIComponent(dt);
+            let sing = fn.textVar(code, "MANGABZ_VIEWSIGN");
             let resArr = fn.arr(imagesNum, (v, i) => {
                 let searchParams = new URLSearchParams({
                     cid: cid,
@@ -22055,10 +22084,7 @@ if ("xx" in window) {
                     _sign: sing
                 });
                 let api = `${chapterURL}chapterimage.ashx?${searchParams}`;
-                return fetch(api).then(res => res.text()).then(text => {
-                    let srcArr = fn.run(text);
-                    return srcArr[0];
-                });
+                return fetch(api).then(res => res.text()).then(text => fn.run(text)[0]);
             });
             return Promise.all(resArr);
         },
@@ -22086,8 +22112,7 @@ if ("xx" in window) {
             re: ".container",
             title: (dom) => {
                 let code = fn.gst("MANGABZ_CTITLE", dom);
-                let [, title] = code.match(/MANGABZ_CTITLE[\s\="]+([^"]+)/);
-                return title;
+                return fn.textVar(code, "MANGABZ_CTITLE");
             },
             preloadNextPage: 1
         },
@@ -22161,12 +22186,13 @@ if ("xx" in window) {
         },
         getSrcs: (dom) => {
             let code = fn.gst("XMANHUA_IMAGE_COUNT", dom);
-            let [, imagesNum] = code.match(/XMANHUA_IMAGE_COUNT[\s\=]+(\d+)/);
-            let [, chapterURL] = code.match(/XMANHUA_CURL[\s\="]+([^"]+)/);
-            let [, cid] = code.match(/XMANHUA_CID[\s\=]+(\d+)/);
-            let [, mid] = code.match(/XMANHUA_MID[\s\=]+(\d+)/);
-            let dt = encodeURIComponent(code.match(/XMANHUA_VIEWSIGN_DT[\s\="]+([^"]+)/)[1]);
-            let [, sing] = code.match(/XMANHUA_VIEWSIGN[\s\="]+([^"]+)/);
+            let imagesNum = fn.numVar(code, "XMANHUA_IMAGE_COUNT");
+            let chapterURL = fn.textVar(code, "XMANHUA_CURL");
+            let cid = fn.numVar(code, "XMANHUA_CID");
+            let mid = fn.numVar(code, "XMANHUA_MID");
+            let dt = fn.textVar(code, "XMANHUA_VIEWSIGN_DT");
+            dt = encodeURIComponent(dt);
+            let sing = fn.textVar(code, "XMANHUA_VIEWSIGN");
             let resArr = fn.arr(imagesNum, (v, i) => {
                 let searchParams = new URLSearchParams({
                     cid: cid,
@@ -22178,10 +22204,7 @@ if ("xx" in window) {
                     _sign: sing
                 });
                 let api = `${chapterURL}chapterimage.ashx?${searchParams}`;
-                return fetch(api).then(res => res.text()).then(text => {
-                    let srcArr = fn.run(text);
-                    return srcArr[0];
-                });
+                return fetch(api).then(res => res.text()).then(text => fn.run(text)[0]);
             });
             return Promise.all(resArr);
         },
@@ -22209,8 +22232,7 @@ if ("xx" in window) {
             re: ".container",
             title: (dom) => {
                 let code = fn.gst("XMANHUA_CTITLE", dom);
-                let [, title] = code.match(/XMANHUA_CTITLE[\s\="]+([^"]+)/);
-                return title;
+                return fn.textVar(code, "XMANHUA_CTITLE");
             },
             preloadNextPage: 1
         },
@@ -22288,12 +22310,12 @@ if ("xx" in window) {
         },
         getSrcs: (dom) => {
             let code = fn.gst("DM5_IMAGE_COUNT", dom);
-            let [, imagesNum] = code.match(/DM5_IMAGE_COUNT[\s\=]+(\d+)/);
-            let [, chapterURL] = code.match(/DM5_CURL[\s\="]+([^"]+)/);
-            let [, cid] = code.match(/DM5_CID[\s\=]+(\d+)/);
-            let [, mid] = code.match(/DM5_MID[\s\=]+(\d+)/);
-            let [, dt] = code.match(/DM5_VIEWSIGN_DT[\s\="]+([^"]+)/);
-            let [, sing] = code.match(/DM5_VIEWSIGN[\s\="]+([^"]+)/);
+            let imagesNum = fn.numVar(code, "DM5_IMAGE_COUNT");
+            let chapterURL = fn.textVar(code, "DM5_CURL");
+            let cid = fn.numVar(code, "DM5_CID");
+            let mid = fn.numVar(code, "DM5_MID");
+            let dt = fn.textVar(code, "DM5_VIEWSIGN_DT");
+            let sing = fn.textVar(code, "DM5_VIEWSIGN");
             let keyE = fn.ge("#dm5_key");
             let key = keyE.value;
             let resArr = fn.arr(imagesNum, (v, i) => {
@@ -22309,10 +22331,7 @@ if ("xx" in window) {
                     _sign: sing
                 });
                 let api = `${chapterURL}chapterfun.ashx?${searchParams}`;
-                return fetch(api).then(res => res.text()).then(text => {
-                    let srcArr = fn.run(text);
-                    return srcArr[0];
-                });
+                return fetch(api).then(res => res.text()).then(text => fn.run(text)[0]);
             });
             return Promise.all(resArr)
         },
@@ -22338,8 +22357,7 @@ if ("xx" in window) {
             next: "//a[text()='下一章']",
             re: ".active.right-arrow,.view-paging",
             title: (dom) => fn.gt(".title", 1, dom).replace("首页 ", "").replace(/\s+/g, " ").trim(),
-            hide: ".view-comment",
-            preloadNextPage: 1
+            hide: ".view-comment"
         },
         css: "body{overflow:unset!important}",
         hide: "a[href^='javascript:Show'],.chapterpager,.view-ad,.view-mask",
@@ -22358,7 +22376,6 @@ if ("xx" in window) {
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: (dom = document) => fn.title("_", 2, dom),
-        preloadNext: (nextDoc, obj) => fn.picPreload(fn.getImgSrcArr(obj.imgs, nextDoc), obj.customTitle(nextDoc), "next"),
         css: "body{overflow:unset!important}",
         infiniteScroll: true,
         category: "comic"
@@ -22390,8 +22407,7 @@ if ("xx" in window) {
             next: "//a[text()='下一章']",
             re: ".view-paging",
             title: (dom) => fn.gt(".title", 1, dom).replace("首页 ", "").replace(/\s+/, " ").trim(),
-            hide: ".view-comment",
-            preloadNextPage: 1
+            hide: ".view-comment"
         },
         css: "body{overflow:unset!important}",
         category: "comic autoPager"
@@ -22462,12 +22478,13 @@ if ("xx" in window) {
         },
         getSrcs: (dom) => {
             let code = fn.gst("YYMANHUA_IMAGE_COUNT", dom);
-            let [, imagesNum] = code.match(/YYMANHUA_IMAGE_COUNT[\s\=]+(\d+)/);
-            let [, chapterURL] = code.match(/YYMANHUA_CURL[\s\="]+([^"]+)/);
-            let [, cid] = code.match(/YYMANHUA_CID[\s\=]+(\d+)/);
-            let [, mid] = code.match(/YYMANHUA_MID[\s\=]+(\d+)/);
-            let dt = encodeURIComponent(code.match(/YYMANHUA_VIEWSIGN_DT[\s\="]+([^"]+)/)[1]);
-            let [, sing] = code.match(/YYMANHUA_VIEWSIGN[\s\="]+([^"]+)/);
+            let imagesNum = fn.numVar(code, "YYMANHUA_IMAGE_COUNT");
+            let chapterURL = fn.textVar(code, "YYMANHUA_CURL");
+            let cid = fn.numVar(code, "YYMANHUA_CID");
+            let mid = fn.numVar(code, "YYMANHUA_MID");
+            let dt = fn.textVar(code, "YYMANHUA_VIEWSIGN_DT");
+            dt = encodeURIComponent(dt);
+            let sing = fn.textVar(code, "YYMANHUA_VIEWSIGN");
             let resArr = fn.arr(imagesNum, (v, i) => {
                 let searchParams = new URLSearchParams({
                     cid: cid,
@@ -22479,10 +22496,7 @@ if ("xx" in window) {
                     _sign: sing
                 });
                 let api = `${chapterURL}chapterimage.ashx?${searchParams}`;
-                return fetch(api).then(res => res.text()).then(text => {
-                    let srcArr = fn.run(text);
-                    return srcArr[0];
-                });
+                return fetch(api).then(res => res.text()).then(text => fn.run(text)[0]);
             });
             return Promise.all(resArr);
         },
@@ -22510,8 +22524,7 @@ if ("xx" in window) {
             re: ".container",
             title: (dom) => {
                 let code = fn.gst("YYMANHUA_CTITLE", dom);
-                let [, title] = code.match(/YYMANHUA_CTITLE[\s\="]+([^"]+)/);
-                return title;
+                return fn.textVar(code, "YYMANHUA_CTITLE");
             },
             preloadNextPage: 1
         },
@@ -22584,11 +22597,8 @@ if ("xx" in window) {
         },
         getSrcs: (dom) => {
             let code = fn.gst("newImgs", dom);
-            code = code.replace("eval", "");
-            let text = fn.run(code);
-            let arrText = text.replace(/var newImgs=|;$/g, "");
-            let srcs = fn.run(arrText);
-            return srcs;
+            let text = fn.parseCode(code);
+            return fn.TextToArray(text, "newImgs");
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -22643,6 +22653,14 @@ if ("xx" in window) {
                 let b = fn.ge("body.viewbody", dom);
                 if (fn.lh.includes("mangabz") && b) {
                     b.innerHTML = b.innerHTML.replace("<!--", "").replace("-->", "");
+                }
+            },
+            preloadNextPage: (dom) => {
+                if (!/dm5|1kkk/.test(fn.lh)) {
+                    let next = _this.autoPager.next(dom);
+                    if (next) {
+                        fn.fetchDoc(next).then(_dom => fn.picPreload(_this.getSrcs(_dom), _this.autoPager.title(_dom), "next"));
+                    }
                 }
             }
         },
@@ -22766,10 +22784,7 @@ if ("xx" in window) {
             p: /^\/comic\/\d+\/\d+.html/,
             i: 0
         },
-        json: (dom = document) => {
-            let code = fn.gst("x6c", dom).trim().slice(26);
-            return JSON.parse(fn.run(code).slice(11, -12));
-        },
+        json: (dom = document) => fn.manhuaguiJson(dom),
         init: () => {
             siteJson = _this.json();
             let nextE = fn.ge("a[data-action='chapter.next']");
@@ -22814,15 +22829,10 @@ if ("xx" in window) {
             p: /^\/comic\/\d+\/\d+.html/,
             i: 1
         },
-        json: (dom = document) => {
-            let code = fn.gst("x6c", dom).trim().slice(26);
-            let json = JSON.parse(fn.run(code).slice(11, -12));
-            return json;
-        },
+        json: (dom = document) => fn.manhuaguiJson(dom),
         getSrcs: (dom) => {
             let json = _this.json(dom);
-            let srcs = json.images.map(e => `https://i.hamreus.com${e}?e=${json.sl.e}&m=${json.sl.m}`);
-            return srcs;
+            return json.images.map(e => `https://i.hamreus.com${e}?e=${json.sl.e}&m=${json.sl.m}`);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -22888,8 +22898,7 @@ if ("xx" in window) {
         },
         init: "$(document).unbind('keydown');",
         imgs: (dom = document) => {
-            let code = fn.gst("x6c", dom).slice(26, -1);
-            let json = fn.run(fn.run(code).slice(11, -11));
+            let json = fn.manhuaguiJson(dom);
             let domain = "https://i.hamreus.com";
             return json.files.map(e => `${domain+json.path+e}?e=${json.sl.e}&m=${json.sl.m}`);
         },
@@ -22915,16 +22924,11 @@ if ("xx" in window) {
             p: /^\/comic\/\d+\/\d+.html/,
             i: 1
         },
-        json: (dom = document) => {
-            let code = fn.gst("x6c", dom).slice(26, -1);
-            let json = fn.run(fn.run(code).slice(11, -11));
-            return json;
-        },
+        json: (dom = document) => fn.manhuaguiJson(dom),
         getSrcs: (dom) => {
             let json = _this.json(dom);
             let domain = "https://i.hamreus.com";
-            let srcs = json.files.map(e => `${domain+json.path+e}?e=${json.sl.e}&m=${json.sl.m}`);
-            return srcs;
+            return json.files.map(e => `${domain+json.path+e}?e=${json.sl.e}&m=${json.sl.m}`);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -23210,8 +23214,7 @@ if ("xx" in window) {
             let src = fn.src("img[onload],img[oncontextmenu]", dom);
             let dir = fn.dir(src);
             let max = fn.ge(".onpage", dom).parentNode.lastElementChild.previousElementSibling.innerText;
-            let srcs = fn.arr(max, (v, i) => dir + String((i + 1)).padStart(3, "0") + ".jpg");
-            return srcs;
+            return fn.arr(max, (v, i) => dir + String((i + 1)).padStart(3, "0") + ".jpg");
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -23320,11 +23323,6 @@ if ("xx" in window) {
             } = _unsafeWindow;
             return cInfo.btitle + " - " + cInfo.ctitle;
         },
-        preloadNext: async (nextDoc, obj) => {
-            let code = fn.gst("cInfo", nextDoc);
-            fn.script(code, 0, 1);
-            fn.picPreload(obj.imgs(), obj.customTitle(), "next");
-        },
         css: ".action-list li{width:50%!important}",
         hide: "#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo),footer~*",
         infiniteScroll: true,
@@ -23338,19 +23336,18 @@ if ("xx" in window) {
         },
         json: (dom) => {
             let code = fn.gst("eval", dom);
-            let codeText = code.match(/eval(\(.+\)\))/)[0].slice(4);
-            let objText = fn.run(codeText);
-            objText = objText.replace(/var\scInfo\s?=|;/g, "");
-            let json = fn.run(objText);
-            return json;
+            let s = code.indexOf("(");
+            let e = code.indexOf("{}))", s) + 5;
+            code = code.slice(s, e);
+            let objText = fn.run(code);
+            return fn.TextToObject(objText, "cInfo");
         },
         getSrcs: (dom) => {
             let json = _this.json(dom);
             const {
                 pageConfig
             } = _unsafeWindow;
-            let srcs = json.fs.map(e => /^http/.test(e) ? e : "//" + pageConfig.host.auto[0] + e);
-            return srcs;
+            return json.fs.map(e => /^http/.test(e) ? e : "//" + pageConfig.host.auto[0] + e);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -23393,8 +23390,7 @@ if ("xx" in window) {
                 }
             },
             re: ".title h2,.main-btn,#mangaTitle,#action",
-            title: (dom) => _this.json(dom).ctitle,
-            preloadNextPage: 1
+            title: (dom) => _this.json(dom).ctitle
         },
         css: ".action-list li{width:50%!important}",
         hide: "#imgLoading,#manga,.action,#action>ul>li:nth-child(n+2):nth-child(-n+3),.bd_960_90,body>section,#action~*:not(#pageNo,#FullPictureLoadMsg),footer~*:not(#FullPictureLoadMsg),#prev,#pageSelect,#next,#pager>*:not([onclick]),#pager>*[onclick*='next()'],.backToTop~div[style*='overflow']",
@@ -23463,12 +23459,10 @@ if ("xx" in window) {
         },
         getSrcs: (dom) => {
             let code = fn.gst("chapterImages", dom);
-            let [, imagesArrText] = code.match(/chapterImages[\s=]+([^;]+)/);
-            let cImages = fn.run(imagesArrText);
-            let [, cPath] = code.match(/chapterPath[\s="]+([^"]+)/);
+            let cImages = fn.TextToArray(code, "chapterImages");
+            let cPath = fn.textVar(code, "chapterPath");
             let [, domain] = code.match(/pageImage[\s="]+(https?:\/\/\w+\.\w+\.\w+\/)/);
-            let srcs = cImages.map(e => domain + cPath + e);
-            return srcs;
+            return cImages.map(e => domain + cPath + e);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -23491,9 +23485,8 @@ if ("xx" in window) {
             observer: "#FullPictureLoadMainImgBox>img",
             next: (dom, r = 1) => {
                 let code = fn.gst("nextChapterData", dom);
-                let [, nextText] = code.match(/nextChapterData[\s=]+([^;]+)/);
-                let [, cUrlText] = code.match(/comicUrl[\s="]+([^"]+)/);
-                let nextrData = JSON.parse(nextText);
+                let cUrlText = fn.textVar(code, "comicUrl");
+                let nextrData = fn.TextToObject(code, "nextChapterData");
                 if (nextrData?.id > 0) {
                     return cUrlText + nextrData.id + ".html";
                 } else {
@@ -23918,9 +23911,8 @@ if ("xx" in window) {
                 getpicdamin
             } = _unsafeWindow;
             let code = fn.gst("picTree", dom);
-            let base64Text = code.match(/picTree[\s\=]+([^;]+)/)[1].replaceAll('"', "").replaceAll("'", "");
-            let srcs = base64_decode(base64Text).split("$qingtiandy$").map(e => getpicdamin() + e);
-            return srcs;
+            let base64Text = fn.textVar(code, "picTree");
+            return base64_decode(base64Text).split("$qingtiandy$").map(e => getpicdamin() + e);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -24007,14 +23999,11 @@ if ("xx" in window) {
         },
         json: (dom) => {
             let code = fn.gst("mhInfo", dom);
-            let [, objText] = code.match(/mhInfo[\s=]+([^;]+)/);
-            let json = JSON.parse(objText);
-            return json;
+            return fn.TextToObject(code, "mhInfo");
         },
         getSrcs: (dom) => {
             let json = _this.json(dom);
-            let srcs = json.images.map(e => _unsafeWindow.realurl + json.path + e);
-            return srcs;
+            return json.images.map(e => _unsafeWindow.realurl + json.path + e);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -24126,25 +24115,25 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "好国漫",
-        host: ["www.haoguoman.net", "m.haoguoman.net"],
+        host: ["www.haoguoman8.com", "m.haoguoman8.com"],
         url: {
-            h: "haoguoman.net",
+            t: "好国漫",
             p: /^\/\d+\/\d+\.html$/,
             i: 0
         },
-        init: async () => {
-            await fn.wait(() => !!_unsafeWindow?.CMS?.chapter?.decrypt);
-            let code = fn.gst("params");
-            let [, dataBase64] = code.match(/params[\s='"]+([^'"]+)/);
+        json: (dom) => {
+            let code = fn.gst("params", dom);
+            let dataBase64 = fn.textVar(code, "params");
             let dataJson = _unsafeWindow?.CMS?.chapter?.decrypt(dataBase64);
-            siteJson = dataJson;
+            return dataJson;
         },
+        init: () => fn.wait(() => !!_unsafeWindow?.CMS?.chapter?.decrypt),
         box: [".chapter-images", 2],
-        imgs: () => {
+        imgs: (dom = document) => {
             let {
                 chapter_images,
                 images_domain
-            } = siteJson;
+            } = _this.json(dom);
             return chapter_images.map(e => images_domain + e);
         },
         button: [4],
@@ -24153,22 +24142,28 @@ if ("xx" in window) {
         autoDownload: [0],
         next: "a.j-chapter-next[href$=html]",
         prev: "a.j-chapter-prev[href$=html]",
-        customTitle: () => siteJson.comic_name + " - " + siteJson.chapter_title,
+        customTitle: (dom = document) => {
+            let {
+                comic_name,
+                chapter_title
+            } = _this.json(dom);
+            return comic_name + " - " + chapter_title;
+        },
+        preloadNext: true,
         hide: ".chapter-images,#loading,ins",
         infiniteScroll: true,
         category: "comic"
     }, {
         name: "好国漫 自動翻頁",
         url: {
-            h: "haoguoman.net",
+            t: "好国漫",
             p: /^\/\d+\/\d+\.html$/,
             i: 1
         },
         json: (dom = document) => {
             let code = fn.gst("params", dom);
-            let [, dataBase64] = code.match(/params[\s='"]+([^'"]+)/);
+            let dataBase64 = fn.textVar(code, "params");
             let dataJson = _unsafeWindow?.CMS?.chapter?.decrypt(dataBase64);
-            siteJson = dataJson;
             return dataJson;
         },
         getSrcs: (dom) => {
@@ -24177,8 +24172,7 @@ if ("xx" in window) {
                 chapter_images,
                 images_domain
             } = json;
-            let srcs = chapter_images.map(e => images_domain + e);
-            return srcs;
+            return chapter_images.map(e => images_domain + e);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -24198,7 +24192,7 @@ if ("xx" in window) {
             observer: "#FullPictureLoadMainImgBox>img",
             next: "a.j-chapter-next[href$=html]",
             re: ".breadcrumb,.j-chapter-next,.j-chapter-prev,.chapter-next,.comic-name,.clearfix>li:not(.collect)",
-            title: () => siteJson.chapter_title,
+            title: (dom) => _this.json(dom).chapter_title,
             preloadNextPage: 1
         },
         hide: ".chapter-images,#loading,ins,.chapter-read-pos",
@@ -24727,15 +24721,16 @@ if ("xx" in window) {
             p: "/chapter/",
             i: 0
         },
+        cors: true,
         init: async () => {
             await fn.waitVar("newImgs");
             _unsafeWindow.newImgs = [];
         },
         box: ["#comicContain", 2],
         imgs: (dom = document) => {
-            let newImgsCode = fn.gst("newImgs", dom);
-            newImgsCode = fn.run(newImgsCode.replace("\n", "").trim().slice(4));
-            newImgsCode = newImgsCode.replace("var newImgs=", "");
+            let code = fn.gst("newImgs", dom);
+            let newImgsCode = fn.parseCode(code);
+            newImgsCode = fn.stringSlicer(newImgsCode, "newImgs=", ";");
             let newImgsArr = fn.run(newImgsCode);
             return newImgsArr;
         },
@@ -24759,12 +24754,12 @@ if ("xx" in window) {
             e: "#comicContain",
             i: 1
         },
+        cors: true,
         getSrcs: (dom) => {
-            let newImgsCode = fn.gst("newImgs", dom);
-            newImgsCode = fn.run(newImgsCode.replace("\n", "").trim().slice(4));
-            newImgsCode = newImgsCode.replace("var newImgs=", "");
-            let srcs = fn.run(newImgsCode);
-            return srcs;
+            let code = fn.gst("newImgs", dom);
+            let newImgsCode = fn.parseCode(code);
+            newImgsCode = fn.stringSlicer(newImgsCode, "newImgs=", ";");
+            return fn.run(newImgsCode);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -24805,12 +24800,12 @@ if ("xx" in window) {
             p: "/chapter/",
             i: 0
         },
+        cors: true,
         box: ["#mainView_img", 2],
         imgs: (dom = document) => {
-            let imgsCode = fn.gst("original", dom);
-            imgsCode = imgsCode.replace("\n", "").trim().slice(4);
-            imgsCode = fn.run(imgsCode);
-            return imgsCode.match(/https?:\/\/[^/]+\/\w+\/\d+\/[\w-]+\.\w+/gi);
+            let code = fn.gst("original", dom);
+            code = fn.parseCode(code);
+            return code.match(/https?:\/\/[^/]+\/\w+\/\d+\/[\w-]+\.\w+/gi);
         },
         button: [4],
         insertImg: [
@@ -24841,12 +24836,11 @@ if ("xx" in window) {
             e: "#mainView_img",
             i: 1
         },
+        cors: true,
         getSrcs: (dom) => {
-            let imgsCode = fn.gst("original", dom);
-            imgsCode = imgsCode.replace("\n", "").trim().slice(4);
-            imgsCode = fn.run(imgsCode);
-            let srcs = imgsCode.match(/https?:\/\/[^/]+\/\w+\/\d+\/[\w-]+\.\w+/gi);
-            return srcs;
+            let code = fn.gst("original", dom);
+            code = fn.parseCode(code);
+            return code.match(/https?:\/\/[^/]+\/\w+\/\d+\/[\w-]+\.\w+/gi);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -25334,7 +25328,7 @@ if ("xx" in window) {
             let textArr = dom.title.split(" - ");
             customTitle = textArr[0] + " - " + fn.gt("h1.text-ellipsis", 1, dom);
             let text = fn.gst("singleModeDisplayUnits", dom).replaceAll("\\", "");
-            siteJson.images = JSON.parse(fn.stringSlicer(text, '"singleModeDisplayUnits":', "]"));
+            siteJson.images = fn.TextToArray(text, '"singleModeDisplayUnits":');
             fn.hideMsg();
         })),
         SPA: () => _this.page() ? true : (siteJson = {}) && false,
@@ -25809,13 +25803,9 @@ if ("xx" in window) {
         init: () => fn.wait(() => isArray(_unsafeWindow?.params?.images)),
         box: [".chapter-main", 1],
         imgs: (frame = _unsafeWindow) => frame.params.images.map(src => {
-            src = "https://img1.baipiaoguai.org" + src;
-            //if (frame.params.source_id == 12) {
-            //let domains = ["img1-2.baipiaoguai.org", "img1-3.baipiaoguai.org", "img1-4.baipiaoguai.org"];
-            //let domain = domains[Math.floor(Math.random() * domains.length)];
-            //let newUrl = new URL(src);
-            //src = src.replace(newUrl.hostname, domain);
-            //}
+            if (frame.params.source_id == 12) {
+                src = "https://img1.baipiaoguai.org" + src;
+            }
             return src;
         }),
         button: [4, "24%", 3],
@@ -26247,8 +26237,8 @@ if ("xx" in window) {
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
         customTitle: (dom = document) => {
-            let [, text] = fn.gst("bookInfo", dom).match(/bookInfo[\s=]+([^;]+)/);
-            let bookInfo = fn.run(text);
+            let code = fn.gst("bookInfo", dom);
+            let bookInfo = fn.TextToObject(code, "bookInfo");
             return bookInfo.book_name.replace(/_\d+$/, "") + " - " + bookInfo.chapter_name;
         },
         preloadNext: (nextDoc, obj) => fn.iframeDoc(nextLink, "#cp_img img[data-original]:not([src*=loading])", 30000).then(nextIframeDoc => fn.picPreload(fn.getImgSrcArr(obj.imgs, nextIframeDoc), obj.customTitle(nextIframeDoc), "next")),
@@ -26320,16 +26310,8 @@ if ("xx" in window) {
         next: "//a[div[text()='下一话']][contains(@href,'/read/')] | //a[@class='page-next'][contains(@href,'/read/')] | //a[@id='nextButton'][contains(@href,'/read/')]",
         prev: "//a[div[text()='上一话']][contains(@href,'/read/')] | //a[@class='page-prev'][contains(@href,'/read/')] | //a[@id='prevButton'][contains(@href,'/read/')]",
         customTitle: () => {
-            let object = Object.fromEntries(
-                fn.gst(/readdata/i)
-                .replace(/[\w\s]+readdata[\s=]+/i, "")
-                .replace("{", "")
-                .replace("}", "")
-                .replaceAll("\n", "")
-                .replaceAll(" ", "")
-                .replaceAll("'", "")
-                .split(",").map(e => e.split(":"))
-            );
+            let code = fn.gst(/readdata/i);
+            let object = fn.TextToObject(code, "eadData");
             return object.comicName + " - " + object.readName;
         },
         category: "comic"
@@ -26568,7 +26550,6 @@ if ("xx" in window) {
         category: "ad"
     }, {
         name: "云端漫画",
-        enable: 0,
         url: {
             h: "www.bcloudmerge.com",
             p: "/bmergechapter/"
@@ -26577,15 +26558,16 @@ if ("xx" in window) {
         imgs: ".mh_list img,#content img",
         button: [4],
         insertImg: [".mh_list,#content", 2],
+        insertImgAF: () => fn.hideEle(".jump-list"),
         autoDownload: [0],
         next: "//a[text()='下一章']",
         prev: "//a[text()='上一章']",
-        customTitle: () => {
-            const {
-                read
-            } = _unsafeWindow;
+        customTitle: (dom = document) => {
+            let code = fn.gst("read", dom);
+            let read = fn.TextToObject(code, "read");
             return read.articlename + " - " + read.cname;
         },
+        preloadNext: true,
         category: "comic"
     }, {
         name: "最次元/野蛮/优乐漫画/次元/脉赛漫画/格雷漫",
@@ -26599,12 +26581,12 @@ if ("xx" in window) {
         autoDownload: [0],
         next: "#js_pageNextBtn>a,a#next",
         prev: "#js_pagePrevBtn>a,a#prev",
-        customTitle: () => {
-            let code = fn.gst("read");
-            let [, objText] = code.match(/read[\s=]+([^;]+)/);
-            let json = fn.run(objText);
-            return json.articlename + " - " + json.chaptername;
+        customTitle: (dom = document) => {
+            let code = fn.gst("read", dom);
+            let read = fn.TextToObject(code, "read");
+            return read.articlename + " - " + read.chaptername;
         },
+        preloadNext: true,
         css: "#reader-scroll{overflow:hidden}",
         hide: "div[style*='background-color'],.down-app,div:has(button[onclick*='/buy']),body>div[style^='position:fixed;']",
         category: "comic"
@@ -26633,9 +26615,8 @@ if ("xx" in window) {
         prev: "#js_pagePrevBtn>a",
         customTitle: () => {
             let code = fn.gst("read");
-            let [, objText] = code.match(/read[\s=]+([^;]+)/);
-            let json = fn.run(objText);
-            return json.articlename + " - " + json.chaptername;
+            let read = fn.TextToObject(code, "read");
+            return read.articlename + " - " + read.chaptername;
         },
         css: "#img-box{max-width:800px;margin:0 auto}",
         category: "comic"
@@ -26652,18 +26633,12 @@ if ("xx" in window) {
         autoDownload: [0],
         next: "a#next",
         prev: "a#prev",
-        customTitle: () => {
-            let code = fn.gst("read");
-            let [, objText] = code.match(/read[\s=]+([^;]+)/);
-            objText = objText.slice(1, -1).replaceAll("'", "");
-            let properties = objText.split(",");
-            let obj = {};
-            properties.forEach(property => {
-                let [key, value] = property.split(":");
-                obj[key?.trim()] = value?.trim();
-            });
-            return obj.articlename + " - " + obj.chaptername;
+        customTitle: (dom = document) => {
+            let code = fn.gst("read", dom);
+            let read = fn.TextToObject(code, "read");
+            return read.articlename + " - " + read.chaptername;
         },
+        preloadNext: true,
         hide: "body>div[class][style^='position:fixed;'],body>div[style]:has(>p),.epContent+.z-index-99:has(>.down-app),.down-app,.z-index-99 div:has(p>br),.z-index-99 div[style]:has(>button[style][onclick])",
         fancybox: {
             blacklist: 1
@@ -26682,12 +26657,12 @@ if ("xx" in window) {
         autoDownload: [0],
         next: "#next",
         prev: "#prev",
-        customTitle: () => {
-            let code = fn.gst("read");
-            let [, objText] = code.match(/read[\s=]+([^;]+)/);
-            let json = fn.run(objText);
-            return json.articlename + " - " + json.chaptername;
+        customTitle: (dom = document) => {
+            let code = fn.gst("read", dom);
+            let read = fn.TextToObject(code, "read");
+            return read.articlename + " - " + read.chaptername;
         },
+        preloadNext: true,
         hide: ".imgbg,.mask,body>div[class][style^='position:fixed;'],body>div[style]:has(>p),.epContent+.z-index-99:has(>.down-app),.down-app,.z-index-99 div:has(p>br),.z-index-99 div[style]:has(>button[style][onclick])",
         fancybox: {
             blacklist: 1
@@ -26720,7 +26695,8 @@ if ("xx" in window) {
         name: "拷貝漫畫M SPA",
         url: () => fn.checkUrl({
             h: ["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
-        }) && copymangaSPA_Mode == 1 && isMobileDeviceUA,
+            d: "m"
+        }) && copymangaSPA_Mode == 1,
         page: () => fn.clp("/h5/comicContent/"),
         clearLoop: true,
         json: (url = fn.clp(), msg = 1) => {
@@ -27212,8 +27188,7 @@ if ("xx" in window) {
             let vgData = fn.ge(".vg-r-data", dom);
             let imgHost = vgData.dataset.host;
             let imgPre = vgData.dataset.img_pre;
-            let srcs = imgDataArr.map(e => imgHost + imgPre + e.img);
-            return srcs;
+            return imgDataArr.map(e => imgHost + imgPre + e.img);
         },
         getImgs: (dom = document) => {
             let srcs = _this.getSrcs(dom);
@@ -27375,7 +27350,7 @@ if ("xx" in window) {
         category: "comic"
     }, {
         name: "zero搬运网",
-        host: ["www.zerobywzip.com"],
+        host: ["www.zerobywrar.com"],
         url: {
             h: "www.zero",
             p: "/plugin",
@@ -27384,8 +27359,7 @@ if ("xx" in window) {
         },
         imgs: () => {
             let code = fn.gst("listimg");
-            let [arrText] = code.match(/listimg[\s=]+([^;]+)/);
-            let dataArr = fn.run(arrText);
+            let dataArr = fn.TextToArray(code, "listimg");
             return dataArr.map(e => e.file);
         },
         button: [4],
@@ -27401,9 +27375,20 @@ if ("xx" in window) {
             h: "www.zero",
             p: "/plugin",
             s: "a=read",
-            e: ".areadiv"
+            d: "m"
         },
-        imgs: ".zjimg>img",
+        imgs: () => {
+            fn.showMsg(DL.str_05, 0);
+            return fn.xhrDoc(fn.url, {
+                headers: {
+                    "User-Agent": PC_UA
+                }
+            }).then(dom => {
+                let code = fn.gst("listimg", dom);
+                let dataArr = fn.TextToArray(code, "listimg");
+                return dataArr.map(e => e.file);
+            });
+        },
         button: [4],
         insertImg: [".areadiv", 3],
         autoDownload: [0],
@@ -29080,7 +29065,7 @@ if ("xx" in window) {
                 if (device === "pc") {
                     checkD = isPC;
                 } else if (device === "m") {
-                    checkD = isM;
+                    checkD = isM || isMobileDeviceUA;
                 }
                 if (!checkD) return false;
             }
@@ -30333,9 +30318,8 @@ if ("xx" in window) {
                 let ele = fn.gae(observer).at(-1);
                 fn.nextObserver.observe(ele);
             }
-            let preloadNextPage = siteData.autoPager?.preloadNextPage;
-            if (!!preloadNextPage) {
-                fn.preloadNextPage(doc);
+            if ("preloadNextPage" in siteData.autoPager) {
+                setTimeout(() => fn.preloadNextPage(doc), 3000);
             }
         },
         //無限滾動預讀下一頁
@@ -30354,8 +30338,7 @@ if ("xx" in window) {
                 }
                 if (!!nextUrl) {
                     let _fetch;
-                    let xhr = siteData.autoPager?.preloadNextPageXHR;
-                    if (!!xhr && xhr === "cors") {
+                    if ("cors" in siteData) {
                         _fetch = fn.xhrDoc(nextUrl);
                     } else {
                         _fetch = fn.fetchDoc(nextUrl);
@@ -30859,7 +30842,7 @@ if ("xx" in window) {
             }
         },
         //圖片預讀函式
-        picPreload: async (srcArr, title = (customTitle || document.title), page = "current") => {
+        picPreload: async (srcArr, title = (apiCustomTitle || customTitle || document.title), page = "current") => {
             const errorNumArr = new Array(srcArr.length).fill(0);
             const loadImg = async (src, index) => {
                 await new Promise(resolve => {
@@ -31464,6 +31447,40 @@ if ("xx" in window) {
             const startIndex = string.indexOf(startText) + startText.length;
             const endIndex = string.indexOf(endText, startIndex);
             return string.slice(startIndex, endIndex + endText.length);
+        },
+        textVar: (str, key) => {
+            let a = str.indexOf(key);
+            let b = str.indexOf("=", a);
+            let c = str.indexOf(";", b);
+            str = str.slice(b + 1, c).replaceAll("'", "").replaceAll('"', "").trim();
+            return String(str);
+        },
+        numVar: (str, key) => {
+            let a = str.indexOf(key);
+            let b = str.indexOf("=", a);
+            let c = str.indexOf(";", b);
+            str = str.slice(b + 1, c);
+            return Number(str);
+        },
+        TextToObject: (str, key) => {
+            let a = str.indexOf(key);
+            let b = str.indexOf("{", a);
+            let c = str.indexOf("}", b) + 1;
+            str = str.slice(b, c);
+            return fn.run(str);
+        },
+        TextToArray: (str, key) => {
+            let a = str.indexOf(key);
+            let b = str.indexOf("[", a);
+            let c = str.indexOf("]", b) + 1;
+            str = str.slice(b, c);
+            return fn.run(str);
+        },
+        parseCode: str => {
+            let s = str.indexOf("(");
+            let e = str.lastIndexOf(")") + 1;
+            str = str.slice(s, e);
+            return fn.run(str);
         },
         //取得元素的屬性值
         attr: (selector, attr, dom = document) => {
@@ -32086,6 +32103,14 @@ if ("xx" in window) {
             const cId = Number(fn.ge("#u_id,#load_dir+#gallery_id").value ?? "");
             const randomServer = _unsafeWindow.random_server ?? findServer(cId);
             return fn.arr(num, (v, i) => `//${randomServer}/${imageDir}/${galleryId}/${(i + 1)}.${fn.ex(_unsafeWindow.g_th[i + 1][0])}`);
+        },
+        manhuaguiJson: (dom = document) => {
+            let code = fn.gst("x6c", dom);
+            let data = fn.parseCode(code);
+            let s = data.indexOf("{");
+            let e = data.lastIndexOf("}") + 1;
+            data = data.slice(s, e);
+            return JSON.parse(data);
         },
         //漫漫聚和KuKu动漫取得圖片網址的函式
         getKukudmSrc: (url = siteUrl, dom = document, msg = 1) => {
@@ -42291,9 +42316,8 @@ a[data-fancybox]:hover {
                     let eles = fn.gae(hide);
                     eles.forEach(e => (e.style.display = "none"));
                 }
-                let preloadNextPage = siteData.autoPager?.preloadNextPage;
-                if (!!preloadNextPage) {
-                    fn.preloadNextPage();
+                if ("preloadNextPage" in siteData.autoPager) {
+                    setTimeout(() => fn.preloadNextPage(), 3000);
                 }
             }
             if ("insertImg" in siteData) {
@@ -42398,7 +42422,7 @@ a[data-fancybox]:hover {
                     } catch (error) {
                         console.error("圖片全載preloadNext()出錯", error);
                     }
-                }, 5000);
+                }, 3000);
             }
         } catch (error) {
             console.error("圖片全載規則出錯", error);
