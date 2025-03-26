@@ -308,8 +308,6 @@ https://*wnacg.com/photos-slist-aid-*.html
     insertImgAF: (parent, buttonBar) => {   
         code;
     },
-    //insertImg配套選項，圖片插入在頁面偏下位置時，滾動至第一張大圖的位置。
-    go: 1,
     //元素選擇器取得元素的字串。
     customTitle: ".title",
     customTitle: () => {
@@ -431,7 +429,6 @@ https://*wnacg.com/photos-slist-aid-*.html
     insertImgAF: (parent, buttonBar) => {
         code;
     },
-    go: 1,
     customTitle: "",
     customTitle: () => {
         code
@@ -4517,7 +4514,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://clannadhouse.com/">TIỆM TẠP HÓA KỲ DIỆU</a>
+                    <a href="https://clannadhouse.com/">CLANNAD</a>
                 </td>
                 <td></td>
             </tr>
