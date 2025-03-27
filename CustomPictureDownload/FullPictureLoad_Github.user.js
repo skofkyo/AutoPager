@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.26
+// @version            2025.3.27
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1693,11 +1693,12 @@
         },
         category: "nsfw1"
     }, {
-        name: "牛叉资源网",
+        name: "乳乐资源网",
         url: {
-            h: "niuc.net",
+            h: ["rulel.com"],
             p: /^\/\d+\.html$/,
             e: "//i[@class='czs-folder-l']/following-sibling::a[1][text()='美女写真' or text()='Cosplay' or text()='JAV.PHOTO']"
+
         },
         imgs: () => fn.gae(".content-warp img").filter(e => !e.closest("a[href$='app.html']")),
         button: [4],
@@ -1710,9 +1711,9 @@
         mcss: ".post-warp .content-warp{padding:0px}",
         category: "nsfw2"
     }, {
-        name: "牛叉资源网 自動翻頁",
+        name: "乳乐资源网 自動翻頁",
         url: {
-            h: "niuc.net",
+            h: ["rulel.com"],
             e: [".post-list", ".list-footer"]
         },
         init: () => fn.waitEle(".el-pager .active").then(e => (currentPageNum = Number(fn.gt(e)))),
@@ -3685,11 +3686,11 @@
     }, {
         name: "图集网",
         url: {
-            h: ["aiavr.uk", "m.aiavr.uk", "ialbum.uk"],
+            h: ["www.aiavr.uk", "aiavr.uk", "m.aiavr.uk", "www.ialbum.uk", "ialbum.uk"],
             p: /^\/(systemAlbum\/)?detail/,
             s: "aid="
         },
-        init: () => fetch("/api/album/info?id=" + fn.getUSP("aid")).then(res => res.json()).then(json => (siteJson = json.data)),
+        init: () => fn.showMsg(DL.str_05, 0).then(() => fetch("/api/album/info?id=" + fn.getUSP("aid")).then(res => res.json()).then(json => (siteJson = json.data) && fn.hideMsg())),
         imgs: () => siteJson.imageList.map(({
             url,
             sourceWeb,
@@ -6366,7 +6367,7 @@
                 /^xiurentu\./,
                 /^ugirls\./,
                 /jtttututu/,
-                "jipin.pics",
+                /jipin\./,
                 "stuba.netlify.app",
                 "setushe.pics",
                 "meizi.pics",
@@ -10085,6 +10086,17 @@
         customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
+        name: "ErooHub",
+        url: {
+            h: ["eroohub.com"],
+            p: "/p/"
+        },
+        imgs: "#post img",
+        button: [4],
+        insertImg: ["#post", 2],
+        customTitle: ".container span",
+        category: "nsfw2"
+    }, {
         name: "Sexy Girl Pictures",
         url: {
             h: "beautypics.org",
@@ -11052,10 +11064,55 @@
     }, {
         name: "CQ",
         url: {
-            h: "cq.ru"
+            h: ["cq.ru"]
         },
         imgs: ".p__header-image img[srcset],a.swipebox:has(img[srcset]),.gallery-top a.swiper-slide",
         customTitle: "h1.h1-h2",
+        hide: ".m.--top",
+        category: "nsfw1"
+    }, {
+        name: "VGTimes",
+        url: {
+            h: ["vgtimes.ru"],
+            e: ".slideGallery img"
+        },
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcArr(".news_item_image_img img,.slideGallery img");
+            return thumbnailSrcArray.map(src => src.replace("/thumbs/", "/"));
+        },
+        capture: () => _this.imgs(),
+        customTitle: "h1.news_item_title",
+        category: "nsfw1"
+    }, {
+        name: "Zone of Games",
+        url: {
+            h: "www.zoneofgames.ru"
+        },
+        imgs: () => fn.gae(".news-content img"),
+        capture: () => _this.imgs(),
+        videos: ".ipsEmbeddedVideo iframe",
+        customTitle: "h1.news-title",
+        category: "nsfw2"
+    }, {
+        name: "GameMAG",
+        url: {
+            h: "gamemag.ru"
+        },
+        imgs: () => {
+            thumbnailSrcArray = fn.getImgSrcset("#gallery img");
+            return thumbnailSrcArray.map(src => src.replace("/small", "/original"));
+        },
+        capture: () => _this.imgs(),
+        videos: "iframe[src*='vk.com/video']",
+        customTitle: "h1.overview__title",
+        category: "nsfw1"
+    }, {
+        name: "GameFans",
+        url: {
+            h: "gamefans.ru"
+        },
+        imgs: "#fstory img",
+        customTitle: "#pageTitle",
         category: "nsfw1"
     }, {
         name: "Фото идеи и картинки",
@@ -14308,8 +14365,9 @@
     }, {
         name: "SexBee.TV",
         link: "https://sexbee.tv/arttype/jipinmeinv/",
+        host: ["sexbee.tv", "m.beebee.top", "m.beeku.top", "蜜.2025tv.top"],
         url: {
-            t: "SexBee.TV",
+            t: ["SexBee.TV", "beebee.top", "蜜TV", "蜜视频", "beeku.top", "酷TV", "酷视频"],
             p: "/artdetail/",
             e: "#list_art_common_art_show img"
         },
@@ -20761,16 +20819,16 @@
         customTitle: () => _this.page() ? fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g) : null,
         category: "comic"
     }, {
-        name: "Top Manhua/Toonily/Manga-shi/ManhwaZ/Mangaclash",
+        name: "Top Manhua/Toonily/Manga-shi/ManhwaZ/Mangaclash/MANGAGG",
         url: {
-            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com", "manhwaz.com", "toonclash.com"],
+            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com", "manhwaz.com", "toonclash.com", "mangagg.com"],
             p: ["/chapter", "/glava"],
             e: ".reading-content img"
         },
         imgs: () => fn.gae(".reading-content img").filter(e => !e.closest("a[href*='/t.me/'],.banner")),
         button: [4],
         insertImg: [".reading-content", 2],
-        endColor: "white",
+        endColor: () => ["manhuatop.org", "toonily.com"].some(h => fn.lh == h) ? "white" : "black",
         autoDownload: [0],
         next: "a.next_page",
         prev: "a.prev_page",
@@ -24274,6 +24332,7 @@ if ("xx" in window) {
         customTitle: (dom = document) => fn.gt(".setnmh-bookname h1", 1, dom) + " - " + fn.gt(".setnmh-bookname h2", 1, dom),
         preloadNext: true,
         infiniteScroll: true,
+        hide: "div[id^=shadouyouAsfile],body>div[id][style^=position]",
         category: "comic"
     }, {
         name: "大树漫画/世伦漫画/如烟漫画 自動翻頁",
@@ -24333,6 +24392,7 @@ if ("xx" in window) {
             hide: ".setnmh-detailspage,#setnmh-footer>nav",
             preloadNextPage: 1
         },
+        hide: "div[id^=shadouyouAsfile],body>div[id][style^=position]",
         category: "comic autoPager"
     }, {
         name: "韩漫天堂/猪猪漫画",
@@ -26190,9 +26250,9 @@ if ("xx" in window) {
         preloadNext: true,
         category: "comic"
     }, {
-        name: "最次元/野蛮/优乐漫画/次元/脉赛漫画/格雷漫",
+        name: "最次元/野蛮/优乐漫画/次元/脉赛漫画/格雷漫/开心漫画",
         url: {
-            h: ["zcymh.com", "yemancomic.com", "www.beston-test.com", "www.yydskxs.com", "www.myselfcar.com", "www.briangary.net"],
+            h: ["zcymh.com", "yemancomic.com", "www.beston-test.com", "www.yydskxs.com", "www.myselfcar.com", "www.briangary.net", "www.source-ex.com"],
             p: /^\/\w+\/\d+\/\d+\.html$/
         },
         imgs: "#img-box img,#imgsec img",
@@ -27549,7 +27609,6 @@ if ("xx" in window) {
     const isFirefox = _unsafeWindow.navigator.userAgent.includes("Firefox");
     const isXBrowser = ("mbrowser" in _unsafeWindow) && !!_unsafeWindow?.mbrowser?.GM_xmlhttpRequest;
     const isVia = ("via" in _unsafeWindow) && ("via_gm" in _unsafeWindow);
-    const isYujian = ("yujianobj" in _unsafeWindow);
     const isString = str => getType(str) === "String";
     const isNumber = num => getType(num) === "Number";
     const isBoolean = b => getType(b) === "Boolean";
@@ -28639,12 +28698,14 @@ if ("xx" in window) {
             return object[e];
         },
         isImage: file => {
+            file = String(file);
             if (file.includes("/")) {
                 file = file.split("/").at(-1);
             }
-            return /\.(bmp|jp(e)?g|jfif|png|tif(f)?|gif|svg|ico|webp|heif|heic|raw|cr2|nef|arw|dng|avif)/i.test(file);
+            return /\.(bmp|jpe?g|jfif|png|tiff?|gif|svg|ico|webp|heif|heic|raw|cr2|nef|arw|dng|avif)/i.test(file);
         },
         isVideo: file => {
+            file = String(file);
             if (file.includes("/")) {
                 file = file.split("/").at(-1);
             }
@@ -29483,13 +29544,19 @@ if ("xx" in window) {
                     } catch {
                         return src;
                     }
+                } else if (srcset && isString(srcset)) {
+                    if (fn.isImage(srcset)) {
+                        return srcset;
+                    } else {
+                        return null;
+                    }
                 } else {
                     if (ele?.parentElement?.id === "pagetual-preload") return null;
                     if (isSimpleMode && ele?.tagName === "A") {
                         let check = fn.checkDataset(ele);
                         if (check.ok) {
                             //if (decodeURIComponent(check.src).includes("/none")) console.log(ele);
-                            if (!/\.(jpe?g|png|webp|gif|bmp|tif|svg)/i.test(check.src)) {
+                            if (!fn.isImage(check.src)) {
                                 console.log("\n可能不是含圖片網址的A元素\n", ele);
                                 return null;
                             }
@@ -34179,7 +34246,11 @@ if ("xx" in window) {
             let newWindow;
             let dom;
             try {
-                newWindow = _unsafeWindow.open((isXBrowser || isYujian) ? location.origin : "about:blank", "_blank");
+                if ("yujianobj" in _unsafeWindow || isXBrowser) {
+                    newWindow = _unsafeWindow.open(location.origin);
+                } else {
+                    newWindow = _unsafeWindow.open("about:blank", "_blank");
+                }
                 dom = newWindow.document;
             } catch {
                 alert("An error occurred\nUnable to use window.open()");
@@ -42696,10 +42767,10 @@ a[data-fancybox]:hover {
             checkOptionsData();
             siteData = {
                 imgs: () => {
-                    let eles = gae("a,p,div,span,li,figure,article,img:not(.FullPictureLoadFixedBtn)");
+                    let eles = gae("a,p,div,span,li,figure,article,picture>source,img:not(.FullPictureLoadFixedBtn)");
                     let shadowRootEles = eles.map(ele => {
                         if (("shadowRoot" in ele) && ele?.shadowRoot?.nodeName == "#document-fragment") {
-                            return gae("a,p,div,span,li,figure,article,img", ele.shadowRoot);
+                            return gae("a,p,div,span,li,figure,article,picture>source,img", ele.shadowRoot);
                         }
                         return null;
                     }).filter(Boolean).flat();
