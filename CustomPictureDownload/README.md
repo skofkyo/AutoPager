@@ -2207,7 +2207,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://niuc.net/">牛叉资源网</a>
+                    <a href="https://rulel.net/">乳乐资源网</a>
                 </td>
                 <td>分類添加了自動翻頁</td>
             </tr>
@@ -3599,7 +3599,13 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://hotgirl.biz/">Hotgirl.biz</a>
+                    <a href="https://eroasian.net/">EroAsian</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://eroohub.com/">ErooHub</a>
                 </td>
                 <td></td>
             </tr>
@@ -4575,6 +4581,30 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://cq.ru/cosplay">CQ</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://vgtimes.ru/cosplay/">VGTimes</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.zoneofgames.ru/news/66056-2b-v-krasivom-kosplee-po-nier-automata-18.html">Zone of Games</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gamemag.ru/news/153359/nier-automata-2b-cosplayby-lada-lyumos">GameMAG</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://gamefans.ru/cosplay/">GameFans</a>
                 </td>
                 <td></td>
             </tr>
@@ -6800,7 +6830,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://manwa.me/">漫蛙</a>
                 </td>
-                <td>uBlock加信任名單
+                <td><a href="https://manwajs.vip/">走失页1</a>，<a href="https://trello.com/b/NacDoP5n/manwa">走失页2</a>，<a href="https://fuwt.cc/mw666">跳转页2</a>，uBlock加信任名單
                     <pre>https://manwa.me/chapter/*</pre> ，手動按6自動滾動等待全部圖片載入，或勾選腳本管理器選單的自動滾動所有惰性載入的圖片元素，載入頁面後立即開始自動滾動，閱讀頁去廣告無提示、方向鍵上下章、向下滾動隱藏工具列、更新頁自動載入更多、目錄展開全部章節，下載需先觸發載入全部圖片，函式使用到canvas需要繪製過程會有點卡。
                 </td>
             </tr>
@@ -7252,6 +7282,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://toonclash.com/">Mangapill 英文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://mangagg.com/">MANGAGG 英文</a>
                 </td>
                 <td></td>
             </tr>
