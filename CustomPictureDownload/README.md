@@ -1874,10 +1874,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://buondua.com/">Buon Dua</a>
+                    <a href="https://buondua.us/">Buon Dua</a>
                 </td>
                 <td>
-                    <a href="https://buondua.us/">buondua.us</a>， <a href="https://missbaby.top/">MISS BABY</a>
+                    <a href="https://missbaby.top/">MISS BABY</a>
                 </td>
             </tr>
             <tr>
@@ -2207,7 +2207,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://rulel.net/">乳乐资源网</a>
+                    <a href="https://rulel.com/">乳乐资源网</a>
                 </td>
                 <td>分類添加了自動翻頁</td>
             </tr>
@@ -5991,7 +5991,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.itsacg.com/plugin.php?id=jameson_manhua">紳士泛漫畫</a>
                 </td>
-                <td></td>
+                <td><a href="https://itsacg.top/">福利漫畫地址發布頁</a></td>
             </tr>
             <tr>
                 <td>
@@ -6594,10 +6594,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
             <tr>
                 <td>
-                    <a href="https://www.gufengmh9.com/">古风漫画网</a>
+                    <a href="https://www.gufengmh.com/">古风漫画网</a>
                 </td>
                 <td>
-                    <a href="https://m.gufengmh9.com/">m.gufengmh9.com</a>， <a href="https://www.gf618.com/">www.gf618.com</a>，有無限滾動模式加預讀
+                    <a href="https://m.gufengmh.com/">m.gufengmh.com</a>， <a href="https://www.gf618.com/">www.gf618.com</a>，有無限滾動模式加預讀
                 </td>
             </tr>
             <tr>
