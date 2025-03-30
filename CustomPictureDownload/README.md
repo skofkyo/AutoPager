@@ -2862,7 +2862,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.4khd.com/">4KHD</a>
                 </td>
                 <td>
-                    <a href="https://fxcc.cc/">二級域名導航</a>
+                    <a href="https://fxcc.cc/">二級域名導航</a>，<a href="https://yssxc.xxtt.ink/">yssxc.xxtt.ink</a>，<a href="https://juzpz.cchh.ink/">juzpz.cchh.ink</a>
                 </td>
             </tr>
             <tr>
@@ -5360,9 +5360,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://maobao.xyz/">微密猫</a>
+                    <a href="https://wemao.xyz/">微密猫</a>
                 </td>
-                <td>SPA網頁，<a href="https://www.xiurentaotu.com/">www.xiurentaotu.com</a>，<a href="https://www.xiuren-tu.com/">www.xiuren-tu.com</a>，<a href="https://www.xiurenmote.com/">www.xiurenmote.com</a>，<a href="https://www.xiurenxiezhen.com/">www.xiurenxiezhen.com</a></td>
+                <td>SPA網頁，<a href="https://maobao.xyz/">maobao.xyz</a>，<a href="https://mvxzsp.com/">mvxzsp.com</a></td>
             </tr>
             <tr>
                 <td>
@@ -6295,11 +6295,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.55comics.com/">污污漫书</a>
+                    <a href="https://www.55comics.xyz/">污污漫书</a>
                 </td>
-                <td>
-                    <a href="https://www.55manshu.com/">55漫書</a>
-                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -7219,9 +7217,15 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://raw.senmanga.com/">Sen Manga 英文</a>
+                    <a href="https://raw.senmanga.com/">Sen Manga RAW</a>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.senmanga.com/">Sen Manga 多語系</a>
+                </td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
@@ -7305,12 +7309,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.titaniascans.com/reader/">Titania Scanlations 英文</a>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://asuracomic.net/">Asura Scans 英文</a>
                 </td>
                 <td></td>
@@ -7332,12 +7330,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://demonicscans.org/">MangaDemon 英文</a>
                 </td>
                 <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://mangahub.io/">MangaHub 英文</a>
-                </td>
-                <td>手動</td>
             </tr>
             <tr>
                 <td>
@@ -7430,7 +7422,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://mangakakalot.fun/">MangaKakalot 英文</a>
                 </td>
-                <td>SPA網頁，<a href="https://mangafox.fun/">MangaFox</a></td>
+                <td>SPA網頁，<a href="https://mangahub.io/">MangaHub 英文</a>，<a href="https://mangafox.fun/">MangaFox</a></td>
             </tr>
             <tr>
                 <td>
