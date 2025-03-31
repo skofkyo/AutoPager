@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.30.22
+// @version            2025.3.31
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -526,7 +526,7 @@
             }
         },
         css: "body{overflow:unset!important}",
-        hide: ".push-slider,.article:has(>div>.media),div:has(>.links),a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,.photoMask,.banner_ad,.banner-sexgps,div[class*='backdrop-show']",
+        hide: ".push-slider,.article:has(.recommendation_widget),.article:has(>div>.media),div:has(>.links),a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,.photoMask,.banner_ad,.banner-sexgps,div[class*='backdrop-show']",
         topButton: true,
         downloadVideo: true,
         category: "nsfw2"
@@ -540,7 +540,7 @@
         },
         init: () => fn.addMutationObserver(() => fn.remove("[class*='exoclick']")),
         css: "body{overflow:unset!important}",
-        hide: ".push-slider,.article:has(>div>.media),div:has(>.links),a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,.photoMask,.banner_ad,.banner-sexgps,div[class*='backdrop-show']",
+        hide: ".push-slider,.article:has(.recommendation_widget),.article:has(>div>.media),div:has(>.links),a[clickmode=ad],a:has(>div>div>img),.photos>div.item,.jquery-modal.blocker.current,.push-top,.push-bottom,.slider-ad,.article.ad,.pager>.tips,.photoMask,.banner_ad,.banner-sexgps,div[class*='backdrop-show']",
         category: "ad"
     }, {
         name: "紳士会所",
@@ -1743,6 +1743,7 @@
             insertLibrarys: 1
         },
         downloadVideo: true,
+        hide: ".single-top-html,.single-bottom-html",
         category: "nsfw2"
     }, {
         name: "8E资源站 自動翻頁",
@@ -2445,6 +2446,7 @@
             t: "美女私房菜",
             p: ".html"
         },
+        init: () => fn.clearAllTimer(3),
         imgs: "img.swiper-lazy",
         customTitle: () => fn.title(" - 美女私房菜"),
         category: "nsfw1"
@@ -3401,6 +3403,21 @@
         customTitle: "h1",
         category: "nsfw1"
     }, {
+        name: "Nu-Cosplay",
+        url: {
+            h: ["nu-cosplay.com"],
+            p: /^\/[^\/]+\/$/,
+            e: ".gallery-item img",
+        },
+        imgs: () => fn.getImgSrcset(".gallery-item img"),
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-nextv>a",
+        customTitle: "h1.entry-title",
+        category: "nsfw1"
+    }, {
         name: "Cosplay Porn",
         link: "https://cosplayporn.online/category/cosplay/",
         url: {
@@ -4163,10 +4180,10 @@
         hide: ".affs",
         category: "nsfw1"
     }, {
-        name: "14MM图片网",
-        host: ["www.luoli.xin"],
+        name: "14MM图片网/图片吧",
+        host: ["www.luoli.xin", "www.tp8.org"],
         url: {
-            t: "14MM图片网",
+            t: ["14MM图片网", "图片吧"],
             p: /^\/\d+\.html$/,
             e: "#image_div",
             ee: "//a[@rel='category tag'][text()='演出视频']"
@@ -4772,6 +4789,7 @@
         ],
         customTitle: ".focusbox-title",
         css: "a{white-space:unset!important}",
+        hide: ".clickadu-container",
         category: "nsfw1"
     }, {
         name: "爱妹子 反反廣告提示",
@@ -9698,7 +9716,7 @@
             h: ["www.tuzac.com", "www.kkc3.com", "www.youfreex.com"],
             p: "/file/"
         },
-        imgs: async () => {
+        imgs: () => {
             let a = fn.ge("#the-photo-link");
             if (a) a.outerHTML = a.innerHTML;
             let max = fn.attr("#auto-play", "total");
@@ -14702,7 +14720,7 @@
         url: () => fn.checkUrl({
             h: ["m.relamanhua.org", "m.2024manga.com", "m.manga2024.com"],
         }) && isMobileDeviceUA,
-        clearLoop: true,
+        //clearLoop: true,
         page: () => fn.clp("/v2h5/comicContent/"),
         json: (url = fn.clp(), msg = 1) => {
             if (msg == 1) fn.showMsg(DL.str_05, 0);
@@ -17113,14 +17131,27 @@
         customTitle: "h1.entry-title",
         category: "hcomic"
     }, {
-        name: "MANGA DISTRICT/apcomics",
+        name: "ReadManga18",
         url: {
-            h: ["mangadistrict.com", "apcomics.org", "ilikecomix.com"]
+            h: ["www.readmanga18.com", "readmanga18.com"]
+        },
+        imgs: ".read-content img",
+        button: [4],
+        insertImg: [".read-content", 2],
+        autoDownload: [0],
+        next: "a.navi-change-chapter-btn-next",
+        prev: "a.navi-change-chapter-btn-prev",
+        customTitle: ".read-manga h1",
+        category: "hcomic"
+    }, {
+        name: "MANGA DISTRICT/apcomics/manga18free",
+        url: {
+            h: ["mangadistrict.com", "apcomics.org", "ilikecomix.com", "manga18free.com"]
         },
         imgs: ".reading-content img",
         button: [4],
         insertImg: [".reading-content", 2],
-        endColor: "white",
+        endColor: () => fn.ge(".text-ui-light") ? "white" : "black",
         autoDownload: [0],
         next: "a.next_page",
         prev: "a.prev_page",
@@ -20906,7 +20937,7 @@
         imgs: () => fn.gae(".reading-content img").filter(e => !e.closest("a[href*='/t.me/'],.banner")),
         button: [4],
         insertImg: [".reading-content", 2],
-        endColor: () => ["manhuatop.org", "toonily.com"].some(h => fn.lh == h) ? "white" : "black",
+        endColor: () => fn.ge(".text-ui-light") ? "white" : "black",
         autoDownload: [0],
         next: "a.next_page",
         prev: "a.prev_page",
@@ -26295,10 +26326,11 @@ if ("xx" in window) {
         name: "拷貝漫畫M SPA",
         url: () => fn.checkUrl({
             h: ["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"],
+            i: 0,
             d: "m"
         }) && copymangaSPA_Mode == 1,
         page: () => fn.clp("/h5/comicContent/"),
-        clearLoop: true,
+        //clearLoop: true,
         json: (url = fn.clp(), msg = 1) => {
             if (msg == 1) fn.showMsg(DL.str_05, 0);
             let [name, id] = url.split("/").slice(3);
@@ -26523,6 +26555,7 @@ if ("xx" in window) {
         category: "none"
     }, {
         name: "拷貝漫畫 清除不給開啟開發人員工具",
+        enable: 0,
         reg: () => isPC && /^(www\.)?(copymanga\.tv|mangacopy\.com)$/.test(fn.lh) && !fn.ge("//title[text()='漫畫觀看']"),
         delay: 300,
         init: () => {
@@ -26674,6 +26707,7 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "拷貝漫畫M 清除不給開啟開發人員工具",
+        enable: 0,
         reg: /^https?:\/\/(www\.)?(copymanga\.tv|mangacopy\.com)\/h5/,
         init: async () => {
             fn.clearAllTimer(3);
