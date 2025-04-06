@@ -4,23 +4,23 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/03/25
+2025/04/06
 PC
-Chrome 134.0.6998.166 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Edge 134.0.3124.85 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
-FireFox 136.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+Chrome 135.0.7049.42 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Edge 135.0.3179.54 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+FireFox 137.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 136.0.3216.0 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+☆Edge Canary 136.0.3236.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 ☆Lemur Browser 2.7.3.001 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-☆Firefox for Android 136.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+☆Firefox for Android 137.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-Edge 134.0.3124.68 + Tampermonkey 5.3.3 or Violentmonkey 2.29.0 or ScriptCat 0.16.6
+Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Edge 134.0.3124.105 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Yandex Browser 25.2.6.92 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Yandex Browser 25.2.8.97 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.7.9</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
-<a href="https://www.xbext.com/index.html">XBrowser 5.1.1</a>
+<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.8.15</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+<a href="https://www.xbext.com/index.html">XBrowser 5.1.2</a>
 <a href="https://viayoo.com/zh-cn/">ViaBrowser 6.3.1</a>
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
@@ -666,7 +666,7 @@ isURL(obj);
 //t = document.title 匹配標題部分字串，類型可為字串、正規表達式、字串或正規表達式的陣列
 //h = hosts 匹配網站的域名，類型可為字串、正規表達式、字串或正規表達式的陣列
 //p = pathname 匹配網址的路徑，類型可為字串、正規表達式、字串或正規表達式的陣列
-//s = search 匹配網址的搜尋參數，類型可為字串或正規表達式
+//s = search 匹配網址的查詢參數，類型可為字串或正規表達式
 //e = elements 匹配網頁的元素選擇器，類型可為字串或字串的陣列，如為陣列則網頁必須匹配到陣列裡的所有選擇器
 //ee = exclude elements 排除網頁的元素選擇器，類型可為字串或字串的陣列
 //st = script text content 匹配非外部引入的script的關鍵字串，類型可為字串、正規表達式、字串或正規表達式的陣列，如為陣列則必須匹配到陣列裡的所有關鍵字串
@@ -2239,9 +2239,9 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.aixiurenmn.com/xiuren">秀人网图集</a>
+                    <a href="https://www.xiurenst.com/xiuren">秀人图</a>
                 </td>
-                <td>只支持免費</td>
+                <td>只支持免費， <a href="https://www.xiurenst.com/xiuren">地址发布页</a></td>
             </tr>
             <tr>
                 <td>
@@ -3493,6 +3493,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://rule34cosplay.com/">Rule34Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://oo4k.com/album/category/photo/">4K Beautyful Cosplay Girl</a>
                 </td>
                 <td></td>
@@ -3780,6 +3786,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://oppaimag.blogspot.com/">OppaiMag</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://maiasihd.blogspot.com/">adnvadnvvda</a>
                 </td>
                 <td></td>
             </tr>
@@ -5417,7 +5429,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://nhentai.net/">nhentai</a>
                 </td>
-                <td>作用在圖片清單/閱讀頁， <a href="https://nyahentai.red/">nyahentai.red</a>， <a href="https://www.hentai.name/">www.hentai.name</a>， <a href="https://nhentai.xxx/">nhentai.xxx</a>， <a href="https://nhentai.to/">nhentai.to</a>， <a href="https://nhentai.website/">nhentai.website</a>， <a href="https://simplyhentai.org/">simplyhentai.org</a>， <a href="https://simplyhentai.red/">simplyhentai.red</a>
+                <td>作用在圖片清單/閱讀頁， <a href="https://nyahentai.red/">nyahentai.red</a>， <a href="https://www.hentai.name/">www.hentai.name</a>， <a href="https://nhentai.xxx/">nhentai.xxx</a>， <a href="https://nhentai.to/">nhentai.to</a>， <a href="https://nhentai.website/">nhentai.website</a>， <a href="https://nhentai.moe/">nhentai.moe</a>， <a href="https://simplyhentai.org/">simplyhentai.org</a>， <a href="https://simplyhentai.red/">simplyhentai.red</a>
                 </td>
             </tr>
             <tr>
@@ -5831,10 +5843,16 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.readmanga18.com/">ReadManga18</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://mangadistrict.com/">MANGA DISTRICT</a>
                 </td>
                 <td>
-                    <a href="https://apcomics.org/">apcomics</a>
+                    <a href="https://apcomics.org/">apcomics</a>，<a href="https://manga18free.com/">manga18free</a>
                 </td>
             </tr>
             <tr>
@@ -5891,6 +5909,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.nakal.me/">NAKAL</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://chochoxhd.com/">ChoChoX</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://narutodoujins.com/">Naruto hentai Doujins</a>
                 </td>
                 <td></td>
@@ -5911,7 +5941,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.favcomic.com/picture">喜漫漫画</a>
                 </td>
-                <td>完整H漫需付費會員</td>
+                <td>完整H漫需付費會員，<a href="https://www.51comics.com/picture">51漫画</a></td>
             </tr>
             <tr>
                 <td>
@@ -6745,7 +6775,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.manhua55.com/">漫画屋</a>
                 </td>
-                <td></td>
+                <td><a href="https://www.jiongcy.com/">囧次元</a></td>
             </tr>
             <tr>
                 <td>
@@ -7091,6 +7121,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://klmanga.ax/">Manga Raw</a>
+                </td>
+                <td><a href="https://klmanga.my/">klmanga.my</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.firemanga.com/">Fire Manga</a>
                 </td>
                 <td></td>
@@ -7103,7 +7139,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://rawkuma.com/">Rawkuma</a>
+                    <a href="https://rawkuma.net/">Rawkuma</a>
                 </td>
                 <td></td>
             </tr>
@@ -7122,6 +7158,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://momon-ga.org/">Momon-Ga</a>， <a href="https://rawotaku.org/">RawOtaku</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://niraw.com/">Niraw</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -7336,7 +7378,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://realmoasis.com/">Realm Oasis 英文</a>
                 </td>
                 <td>
-                    <a href="https://hivetoon.com/">Void Scans</a>， <a href="https://nightsup.net/">Night Scans</a>， <a href="https://tercocomic.xyz/">Terco Scans</a>， <a href="https://luascans.com/">Lua Scans</a>， <a href="https://drakecomic.org/">Drake Scans</a>， <a href="https://rizzfables.com/">Rizz Fables</a>
+                    <a href="https://hivetoon.com/">Void Scans</a>， <a href="https://nightsup.net/">Night Scans</a>， <a href="https://tecnoxcomics.xyz/">Terco Scans</a>， <a href="https://luascans.com/">Lua Scans</a>， <a href="https://drakecomic.org/">Drake Scans</a>， <a href="https://rizzfables.com/">Rizz Fables</a>
                 </td>
             </tr>
             <tr>
@@ -7368,6 +7410,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://flamecomics.xyz/">Flame Comics 英文</a>
                 </td>
                 <td>SPA網頁，手動</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://hivecomic.com/">Voids Scans 英文</a>
+                </td>
+                <td>SPA網頁</td>
             </tr>
             <tr>
                 <td>
