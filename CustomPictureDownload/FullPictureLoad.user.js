@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.3.31
+// @version            2025.4.6
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -127,6 +127,7 @@
     let isStopDownload = false;
     let isCountdowning = false;
     let isFetching = false;
+    let isXhrHeadRequest = false;
     let isGotAll = false;
     let isAutoScrolling = false;
     let isValidPage = true;
@@ -975,8 +976,7 @@
             let dir = fn.dir(src);
             let f = src.split("/").at(-1);
             let [num] = f.match(/\d+/);
-            let ex = f.split(".").at(-1);
-            ex = "." + ex;
+            let ex = ".jpg";
             let [max] = fn.gt(".gallery_img label").match(/\d+/);
             if (num?.length == 1 && num == 0) {
                 return fn.arr(max, (v, i) => dir + i + ex);
@@ -1603,8 +1603,8 @@
         hide: ".article:has(>div>.media),.banner,.banner_ad,.push-top,.push-bottom,.banner-sexgps",
         category: "ad"
     }, {
-        name: "秀人网图集",
-        host: ["xiurentu.com", "www.aixiurenmn.com", "www.aixiurenji.com", "www.aixiurentuji.com", "www.aixiurenwang.com"],
+        name: "秀人图",
+        host: ["xiurentu.xyz", "www.xiurentu.com", "www.xiurenst.com", "aituxiuren.com", "www.aixiurentus.com"],
         url: {
             e: ".site .logo-wrapper img.logo.tap-logo[alt^='秀人']",
             p: /^\/\d+\.html/,
@@ -1681,7 +1681,7 @@
             e: "//i[@class='czs-folder-l']/following-sibling::a[1][text()='美女写真' or text()='Cosplay' or text()='JAV.PHOTO']"
 
         },
-        imgs: () => fn.gae(".content-warp img").filter(e => !e.closest("a[href$='app.html']")),
+        imgs: () => fn.gae(".content-warp img").filter(e => !e.closest("a[href$='app.html'],a[href*='/t.me/']")),
         button: [4],
         insertImgBF: () => fn.showMsg(DL.str_04, 0).then(() => fn.waitEle("a.core-next-img").then(() => fn.hideMsg())),
         insertImg: [".content-warp", 2],
@@ -2204,6 +2204,7 @@
         host: [
             "www.",
             "weme[245679].com",
+            "wemimao1.vip",
             "wemao.xyz",
             "maobao.xyz",
             "mvxzsp.com",
@@ -2215,7 +2216,9 @@
             "xiurenmote.com",
             "xiurenxiezhen.com",
             "hywsg.com",
+            "jvidmtpj.com",
             "panssphw.com",
+            "pansspzp.com",
             "www.xiuren-wang.com"
         ],
         url: {
@@ -3406,10 +3409,9 @@
         name: "Nu-Cosplay",
         url: {
             h: ["nu-cosplay.com"],
-            p: /^\/[^\/]+\/$/,
-            e: ".gallery-item img",
+            p: /^\/[^\/]+\/$/
         },
-        imgs: () => fn.getImgSrcset(".gallery-item img"),
+        srcset: ".gallery-item img",
         button: [4],
         insertImg: [".entry-content", 2],
         autoDownload: [0],
@@ -4010,6 +4012,7 @@
         imgs: () => {
             let urls = fn.gau(".file a");
             videoSrcArray = urls.filter(url => fn.isVideo(url));
+            fileUrlArray = urls.filter(url => fn.isZip(url));
             return urls.filter(url => fn.isImage(url));
         },
         button: [4],
@@ -4773,7 +4776,7 @@
             p: /^\/([\w-]+\/)?article\/\d+\//i,
             e: ".item-image img,#img-box img"
         },
-        init: () => fn.clearAllTimer(2),
+        init: () => setTimeout(() => fn.clearAllTimer(2), 1000),
         box: [".image-container,#img-box"],
         imgs: () => {
             if (fn.ge("li.next-page")) {
@@ -4796,7 +4799,7 @@
         url: {
             h: ["xx.knit.bid", "mm.187187.xyz", "999888.best"]
         },
-        init: () => fn.clearAllTimer(2),
+        init: () => setTimeout(() => fn.clearAllTimer(2), 1000),
         openInNewTab: ".excerpts-wrapper a:not([target=_blank])",
         category: "ad"
     }, {
@@ -7305,6 +7308,20 @@
         customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
+        name: "Rule34Cosplay",
+        url: {
+            h: ["rule34cosplay.com"],
+            p: "/feed/"
+        },
+        box: ["a[href^='/media/']", 1],
+        imgs: "a[href^='/media/'] img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "a[href^='/media/']"], 2
+        ],
+        customTitle: "h2.text-base",
+        category: "nsfw2"
+    }, {
         name: "Cosplay18",
         url: {
             h: "cosplay18.pics",
@@ -8356,6 +8373,205 @@
         imgs: ".entry-content a:has(>img),br~a,br~img",
         category: "nsfw2"
     }, {
+        name: "sekushipic",
+        url: {
+            h: ["sekushipic.blogspot.com"],
+            p: /^\/\d+\/\d+\/[^\.]+\.html/
+        },
+        imgs: ".separator>a",
+        thums: ".separator img",
+        button: [4],
+        insertImg: [
+            [".separator", 1, ".separator,.separator~br"], 2
+        ],
+        autoDownload: [0],
+        next: "a.blog-pager-older-link",
+        prev: "a.blog-pager-newer-link",
+        customTitle: ".entry-title",
+        hide: ".post-header",
+        category: "nsfw1"
+    }, {
+        name: "IDOL AREA/OppaiMag/adnvadnvvda",
+        url: {
+            h: ["idolarea.blogspot.com", "oppaimag.blogspot.com", "maiasihd.blogspot.com"],
+            p: /^\/\d+\/\d+\/[^\.]+\.html/
+        },
+        imgs: ".separator>a",
+        thums: ".separator img",
+        button: [4],
+        insertImg: [".entry-content,.post-content", 2],
+        customTitle: "h1.entry-title,h1.post-title",
+        category: "nsfw1"
+    }, {
+        name: "25精力旺盛",
+        url: {
+            h: ["25jingliwangsheng.blogspot.com"],
+            p: /^\/\d+\/\d+\/[^\.]+\.html/
+        },
+        box: [".entry-content img[alt='']", 1],
+        imgs: ".entry-content img[alt='']",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".entry-content img[alt='']"], 2
+        ],
+        customTitle: "h1.entry-title",
+        category: "nsfw1"
+    }, {
+        name: "Nude Models",
+        url: () => isPC && fn.lh === "blognudemodels.blogspot.com",
+        page: () => fn.clp(".html"),
+        SPA: () => _this.page(),
+        observeURL: "loop",
+        init: () => _this.page() ? fn.waitEle([".overview-header", "h1.entry-title", ".separator>a"]) : fn.waitEle("#gadget-dock"),
+        imgs: () => _this.page() ? fn.gae(".separator>a") : [],
+        repeat: 1,
+        capture: () => _this.imgs(),
+        next: () => _this.page() ? fn.gu("a.next") : null,
+        customTitle: () => _this.page() ? fn.delay(200, 0).then(() => fn.dt({
+            s: "h1.entry-title"
+        })) : null,
+        category: "nsfw2"
+    }, {
+        name: "Nude Models",
+        reg: /^https?:\/\/blognudemodels\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html\?m=1$/,
+        init: () => fn.waitEle(".separator img"),
+        imgs: ".separator>a",
+        button: [4],
+        insertImg: [
+            [".separator", 1, ".separator,.separator~br"], 2
+        ],
+        customTitle: "title",
+        category: "nsfw2"
+    }, {
+        name: "Curvy Asian",
+        url: {
+            h: ["curvyasian.blogspot.com"],
+            p: /^\/\d+\/\d+\/[^\.]+\.html/
+        },
+        imgs: "#blogger-gallery a.item-link",
+        thums: "#blogger-gallery a.item-link img",
+        button: [4],
+        insertImg: ["#blogger-gallery", 2],
+        autoDownload: [0],
+        next: "a.blog-pager-older-link",
+        prev: "a.blog-pager-newer-link",
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
+        name: "500 Brothers/Safebooru",
+        url: {
+            h: ["500brothersfun.blogspot.com", "safebooru.blogspot.com"],
+            p: /^\/\d+\/\d+\/[^\.]+\.html/
+        },
+        box: [".separator", 1],
+        imgs: () => fn.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/")),
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".separator~br,.separator"], 2
+        ],
+        customTitle: ".entry-title",
+        category: "nsfw2"
+    }, {
+        name: "min: archive/True Pic",
+        url: {
+            h: ["min-bin.blogspot.com", "truepichk.blogspot.com"],
+            p: /^\/\d+\/\d+\/[^\.]+\.html/
+        },
+        imgs: () => fn.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/")),
+        button: [4],
+        insertImg: [".post-body", 2],
+        autoDownload: [0],
+        next: "a.blog-pager-older-link",
+        prev: "a.blog-pager-newer-link",
+        customTitle: ".entry-title",
+        category: "nsfw2"
+    }, {
+        name: "Tabakus Gallery",
+        reg: /^https?:\/\/tabakus\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
+        init: () => fn.waitEle(".separator img"),
+        box: [".separator:has(>a>img[height])", 1],
+        imgs: ".separator>a:has(>img[height])",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, ".separator:has(>a>img),.separator~br"], 2
+        ],
+        customTitle: ".post_item>h1",
+        category: "nsfw2"
+    }, {
+        name: "Graphis",
+        host: ["20sanctuary-grahpis.blogspot.com"],
+        reg: /^https?:\/\/20sanctuary-grahpis\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
+        imgs: () => {
+            thumbnailSrcArray = fn.gae(".separator>a img").map(e => e.src.replace("/s320/", "/w100/"));
+            return fn.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/"));
+        },
+        button: [4],
+        insertImg: [".post-body", 2],
+        customTitle: ".post_item>h1,.entry-titleS",
+        category: "nsfw2"
+    }, {
+        name: "Chinese Nude Art Photos",
+        url: {
+            h: ["chinesenudeart.blogspot.com"],
+            p: /^\/\d+\/\d+\/[\w-]+\.html/i
+        },
+        imgs: ".entry-content a[href]",
+        thums: ".entry-content a[href]>img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: "a.blog-pager-older-link",
+        prev: "a.blog-pager-newer-link",
+        customTitle: () => fn.dt({
+            s: ".entry-title",
+            d: [
+                "Chinese beautiful model Amanda -",
+                "Beautiful Chinese girl -",
+                "Beautiful Chinese girl ",
+                "Chinese Beautiful girl -",
+                " |18+ Nude model Amateur"
+            ]
+        }),
+        mcss: "#outer-wrapper{margin:0px!important;width:100%!important}",
+        category: "nsfw1"
+    }, {
+        name: "CUTE GIRLS ADDICT",
+        url: {
+            h: ["cutegirlsaddict.blogspot.com"],
+            p: /^\/\d+\/\d+\/[a-z0-9-]+\.html/i
+        },
+        imgs: async () => {
+            thumbnailSrcArray = fn.gae(".separator>a>img").map(e => {
+                let arr = e.src.split("/");
+                arr[7] = "w100";
+                return arr.join("/");
+            });
+            let srcArr = fn.gau(".separator>a");
+            let firstSrcArr = srcArr[0].split("/");
+            if (firstSrcArr.length === 9) {
+                firstSrcArr[7] = "s16000";
+                let testMaxSrc = firstSrcArr.join("/");
+                let obj = await fn.checkImgStatus(testMaxSrc);
+                debug("\n確認圖片狀態\n", obj);
+                if (obj.ok) {
+                    srcArr = srcArr.map(src => {
+                        let arr = src.split("/");
+                        arr[7] = "s16000";
+                        return arr.join("/");
+                    });
+                    return srcArr;
+                } else {
+                    return srcArr;
+                }
+            } else {
+                return srcArr;
+            }
+        },
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: "h1.post-title,h3.entry-title",
+        category: "nsfw1"
+    }, {
         name: "Everia.club",
         host: ["everia.club", "torayaki.com", "evevoa.com"],
         url: {
@@ -8852,6 +9068,7 @@
         },
         capture: () => _this.imgs(),
         customTitle: ".entry-title",
+        hide: ".ad_caution,aside:has(.box_ad_sp_top)",
         category: "nsfw2"
     }, {
         name: "アイドルセクシー画像集＆裏",
@@ -9502,9 +9719,9 @@
                             images.push(fn.lo + e.getAttribute("href"));
                         } else if (e.tagName === "A") {
                             let url = e.href;
-                            if (/\.(mp4|mov)/i.test(url)) {
+                            if (fn.isVideo(url)) {
                                 videoSrcArray.push(url);
-                            } else if (/\.(rar|zip|7z|cbz)/i.test(url)) {
+                            } else if (fn.isZip(url)) {
                                 fileUrlArray.push(url);
                             }
                         }
@@ -9527,9 +9744,9 @@
                         images.push(fn.lo + e.getAttribute("href"));
                     } else if (e.tagName === "A") {
                         let url = e.href;
-                        if (/\.(mp4|mov)/i.test(url)) {
+                        if (fn.isVideo(url)) {
                             videoSrcArray.push(url);
-                        } else if (/\.(rar|zip|7z|cbz)/i.test(url)) {
+                        } else if (fn.isZip(url)) {
                             fileUrlArray.push(url);
                         }
                     }
@@ -9554,9 +9771,9 @@
             let urls = fn.gau("a[download]");
             if (urls.length > 0) {
                 urls.forEach(url => {
-                    if (/\.(mp4|mov)/i.test(url)) {
+                    if (fn.isVideo(url)) {
                         videoSrcArray.push(url);
-                    } else if (/\.(rar|zip|7z|cbz)/i.test(url)) {
+                    } else if (fn.isZip(url)) {
                         fileUrlArray.push(url);
                     }
                 });
@@ -10104,19 +10321,15 @@
         name: "Sexy Girl Pictures",
         url: {
             h: "beautypics.org",
-            p: /^\/archives\/\d+$/,
-            e: ".page-content img"
+            p: "/archives/"
         },
-        imgs: () => {
-            if (fn.ge(".page-content img[srcset]")) {
-                return fn.getImgSrcset(".page-content img[srcset]");
-            } else {
-                return fn.gae(".page-content img");
-            }
-        },
+        srcset: ".elementor-widget-theme-post-content img",
         button: [4],
-        insertImg: [".page-content", 2],
-        customTitle: () => fn.title(" – Sexy Girl Pictures"),
+        insertImg: [".elementor-widget-theme-post-content", 2],
+        autoDownload: [0],
+        next: ".elementor-post-navigation a[rel=prev]",
+        prev: ".elementor-post-navigation a[rel=next]",
+        customTitle: "h1.elementor-heading-title",
         category: "nsfw1"
     }, {
         name: "Girl Atlas",
@@ -10337,143 +10550,6 @@
         observerClick: ".catfish-bottom-close",
         category: "nsfw2"
     }, {
-        name: "sekushipic",
-        url: {
-            h: ["sekushipic.blogspot.com"],
-            p: /^\/\d+\/\d+\/[^\.]+\.html/
-        },
-        imgs: ".separator>a",
-        thums: ".separator img",
-        button: [4],
-        insertImg: [
-            [".separator", 1, ".separator,.separator~br"], 2
-        ],
-        autoDownload: [0],
-        next: "a.blog-pager-older-link",
-        prev: "a.blog-pager-newer-link",
-        customTitle: ".entry-title",
-        hide: ".post-header",
-        category: "nsfw1"
-    }, {
-        name: "IDOL AREA/OppaiMag",
-        url: {
-            h: ["idolarea.blogspot.com", "oppaimag.blogspot.com"],
-            p: /^\/\d+\/\d+\/[^\.]+\.html/
-        },
-        imgs: ".separator>a",
-        thums: ".separator img",
-        button: [4],
-        insertImg: [".entry-content", 2],
-        customTitle: ".entry-title",
-        category: "nsfw1"
-    }, {
-        name: "25精力旺盛",
-        url: {
-            h: ["25jingliwangsheng.blogspot.com"],
-            p: /^\/\d+\/\d+\/[^\.]+\.html/
-        },
-        box: [".entry-content img[alt='']", 1],
-        imgs: ".entry-content img[alt='']",
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".entry-content img[alt='']"], 2
-        ],
-        customTitle: ".entry-title",
-        category: "nsfw1"
-    }, {
-        name: "Nude Models",
-        url: () => isPC && fn.lh === "blognudemodels.blogspot.com",
-        page: () => fn.clp(".html"),
-        SPA: () => _this.page(),
-        observeURL: "loop",
-        init: () => _this.page() ? fn.waitEle([".overview-header", "h1.entry-title", ".separator>a"]) : fn.waitEle("#gadget-dock"),
-        imgs: () => _this.page() ? fn.gae(".separator>a") : [],
-        repeat: 1,
-        capture: () => _this.imgs(),
-        next: () => _this.page() ? fn.gu("a.next") : null,
-        customTitle: () => _this.page() ? fn.delay(200, 0).then(() => fn.dt({
-            s: "h1.entry-title"
-        })) : null,
-        category: "nsfw2"
-    }, {
-        name: "Nude Models",
-        reg: /^https?:\/\/blognudemodels\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html\?m=1$/,
-        init: () => fn.waitEle(".separator img"),
-        imgs: ".separator>a",
-        button: [4],
-        insertImg: [
-            [".separator", 1, ".separator,.separator~br"], 2
-        ],
-        customTitle: "title",
-        category: "nsfw2"
-    }, {
-        name: "Curvy Asian",
-        url: {
-            h: ["curvyasian.blogspot.com"],
-            p: /^\/\d+\/\d+\/[^\.]+\.html/
-        },
-        imgs: "#blogger-gallery a.item-link",
-        thums: "#blogger-gallery a.item-link img",
-        button: [4],
-        insertImg: ["#blogger-gallery", 2],
-        autoDownload: [0],
-        next: "a.blog-pager-older-link",
-        prev: "a.blog-pager-newer-link",
-        customTitle: ".entry-title",
-        category: "nsfw1"
-    }, {
-        name: "500 Brothers/Safebooru",
-        url: {
-            h: ["500brothersfun.blogspot.com", "safebooru.blogspot.com"],
-            p: /^\/\d+\/\d+\/[^\.]+\.html/
-        },
-        box: [".separator", 1],
-        imgs: () => fn.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/")),
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".separator~br,.separator"], 2
-        ],
-        customTitle: ".entry-title",
-        category: "nsfw2"
-    }, {
-        name: "min: archive/True Pic",
-        url: {
-            h: ["min-bin.blogspot.com", "truepichk.blogspot.com"],
-            p: /^\/\d+\/\d+\/[^\.]+\.html/
-        },
-        imgs: () => fn.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/")),
-        button: [4],
-        insertImg: [".post-body", 2],
-        autoDownload: [0],
-        next: "a.blog-pager-older-link",
-        prev: "a.blog-pager-newer-link",
-        customTitle: ".entry-title",
-        category: "nsfw2"
-    }, {
-        name: "Tabakus Gallery",
-        reg: /^https?:\/\/tabakus\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
-        init: () => fn.waitEle(".separator img"),
-        box: [".separator:has(>a>img[height])", 1],
-        imgs: ".separator>a:has(>img[height])",
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".separator:has(>a>img),.separator~br"], 2
-        ],
-        customTitle: ".post_item>h1",
-        category: "nsfw2"
-    }, {
-        name: "Graphis",
-        host: ["20sanctuary-grahpis.blogspot.com"],
-        reg: /^https?:\/\/20sanctuary-grahpis\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html/,
-        imgs: () => {
-            thumbnailSrcArray = fn.gae(".separator>a img").map(e => e.src.replace("/s320/", "/w100/"));
-            return fn.gau(".separator>a").map(u => u.replace("/s1600/", "/s16000/"));
-        },
-        button: [4],
-        insertImg: [".post-body", 2],
-        customTitle: ".post_item>h1,.entry-titleS",
-        category: "nsfw2"
-    }, {
         name: "Asia Idols",
         url: {
             h: ["asiaidols.wordpress.com"],
@@ -10502,68 +10578,6 @@
         ],
         customTitle: ".container h1",
         category: "nsfw2"
-    }, {
-        name: "Chinese Nude Art Photos",
-        url: {
-            h: ["chinesenudeart.blogspot.com"],
-            p: /^\/\d+\/\d+\/[\w-]+\.html/i
-        },
-        imgs: ".entry-content a[href]",
-        thums: ".entry-content a[href]>img",
-        button: [4],
-        insertImg: [".entry-content", 2],
-        autoDownload: [0],
-        next: "a.blog-pager-older-link",
-        prev: "a.blog-pager-newer-link",
-        customTitle: () => fn.dt({
-            s: ".entry-title",
-            d: [
-                "Chinese beautiful model Amanda -",
-                "Beautiful Chinese girl -",
-                "Beautiful Chinese girl ",
-                "Chinese Beautiful girl -",
-                " |18+ Nude model Amateur"
-            ]
-        }),
-        mcss: "#outer-wrapper{margin:0px!important;width:100%!important}",
-        category: "nsfw1"
-    }, {
-        name: "CUTE GIRLS ADDICT",
-        url: {
-            h: ["cutegirlsaddict.blogspot.com"],
-            p: /^\/\d+\/\d+\/[a-z0-9-]+\.html/i
-        },
-        imgs: async () => {
-            thumbnailSrcArray = fn.gae(".separator>a>img").map(e => {
-                let arr = e.src.split("/");
-                arr[7] = "w100";
-                return arr.join("/");
-            });
-            let srcArr = fn.gau(".separator>a");
-            let firstSrcArr = srcArr[0].split("/");
-            if (firstSrcArr.length === 9) {
-                firstSrcArr[7] = "s16000";
-                let testMaxSrc = firstSrcArr.join("/");
-                let obj = await fn.checkImgStatus(testMaxSrc);
-                debug("\n確認圖片狀態\n", obj);
-                if (obj.ok) {
-                    srcArr = srcArr.map(src => {
-                        let arr = src.split("/");
-                        arr[7] = "s16000";
-                        return arr.join("/");
-                    });
-                    return srcArr;
-                } else {
-                    return srcArr;
-                }
-            } else {
-                return srcArr;
-            }
-        },
-        button: [4],
-        insertImg: [".entry-content", 2],
-        customTitle: "h1.post-title,h3.entry-title",
-        category: "nsfw1"
     }, {
         name: "4KUP",
         host: ["4kup.net"],
@@ -10877,13 +10891,31 @@
             h: "www.ciberhentai.com",
             p: ".html"
         },
-        imgs: "a[data-gallery]",
+        imgs: "a[data-gallery],#mangacomic img",
         thums: "a[data-gallery]>img",
         autoDownload: [0],
         next: ".prev-post a",
         prev: ".next-post a",
         customTitle: "span.post-title",
+        hide: ".arcenter-container.flex-container",
         category: "nsfw2"
+    }, {
+        name: "ChoChoX",
+        url: {
+            h: ["chochoxhd.com"]
+        },
+        box: ["#fullscreen-btn+p", 2],
+        imgs: "#fullscreen-btn+p img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#fullscreen-btn+p"], 2
+        ],
+        autoDownload: [0],
+        next: ".prev-post a",
+        prev: ".next-post a",
+        customTitle: "span.post-title",
+        hide: ".arcenter-container.flex-container",
+        category: "hcomic"
     }, {
         name: "Pics-X",
         host: ["pics-x.com"],
@@ -14345,11 +14377,15 @@
     }, {
         name: "SexBee.TV",
         link: "https://sexbee.tv/arttype/jipinmeinv/",
-        host: ["sexbee.tv", "m.beebee.top", "m.beeku.top", "蜜.2025tv.top"],
+        host: ["sexbee.tv", "m.beebee.top", "m.beeku.top", "蜜.2025tv.top", "m.aistv.top", "xiaobee.vip", "meimeibee.com"],
         url: {
-            t: ["SexBee.TV", "beebee.top", "蜜TV", "蜜视频", "beeku.top", "酷TV", "酷视频"],
-            p: "/artdetail/",
-            e: "#list_art_common_art_show img"
+            e: [
+                "#site-header .app-nav-toggle>.lines",
+                "#site-header a.logo>img[src='/assets/images/logo.png']",
+                "#list_art_common_art_show img"
+            ],
+            st: ["pageContext", "toastMessage"],
+            p: "/artdetail/"
         },
         imgs: () => {
             let pages = fn.ge(".pagination");
@@ -14676,6 +14712,26 @@
         prev: ".ch-prev-btn:not(.disabled)",
         customTitle: ".entry-title",
         hide: ".blox.mlb.kln",
+        category: "hcomic"
+    }, {
+        name: "NAKAL",
+        url: {
+            h: "www.nakal.me",
+            p: "/chapter/"
+        },
+        imgs: ".chapter-content  img",
+        button: [4],
+        insertImg: [".chapter-content", 2],
+        next: () => {
+            let chapters = fn.gae("#chapter-list option");
+            let c_chapter = chapters.find(e => e.value == fn.url);
+            let next = c_chapter?.nextElementSibling;
+            return next ? next.value : null;
+        },
+        prev: 1,
+        customTitle: () => fn.dt({
+            t: fn.ge(".container h1").textContent
+        }),
         category: "hcomic"
     }, {
         name: "Naruto hentai Doujins/Ai Generated Hentai MILFS",
@@ -15220,6 +15276,7 @@
                 "nhentai.xxx",
                 "nhentai.to",
                 "nhentai.website",
+                "nhentai.moe",
                 "simplyhentai.org"
             ],
             p: /^\/g\/\d+\/?$/
@@ -15256,7 +15313,7 @@
                 let url = fn.gu(".gallery_thumbs a");
                 let iframe = await fn.iframeVar(url, "g_th");
                 return fn.arr(max, (v, i) => `${dir}${(i + 1)}.${fn.ex(iframe.g_th.fl[(i + 1)][0])}`);
-            } else if (fn.lh === "nhentai.to" || fn.lh === "nhentai.website") {
+            } else if (["nhentai.to", "nhentai.website", "nhentai.moe"].some(h => fn.lh === h)) {
                 fn.showMsg(DL.str_05, 0);
                 let url = fn.gu("a.gallerythumb");
                 return fn.iframeVar(url, "reader").then(frame => {
@@ -16008,8 +16065,8 @@
         category: "hcomic"
     }, {
         name: "nhentai.to/nhentai.website閱讀頁",
-        host: ["nhentai.to", "nhentai.website"],
-        reg: /^https?:\/\/nhentai\.(to|website)\/g\/\d+\/\d+$/,
+        host: ["nhentai.to", "nhentai.website", "nhentai.moe"],
+        reg: /^https?:\/\/nhentai\.(to|website|moe)\/g\/\d+\/\d+\/?$/,
         init: () => fn.waitVar("reader"),
         imgs: () => {
             const {
@@ -17829,9 +17886,9 @@
         },
         category: "hcomic"
     }, {
-        name: "喜漫漫画",
+        name: "喜漫漫画/51漫画",
         url: {
-            h: "www.favcomic.com",
+            h: ["www.favcomic.com", "www.51comics.com"],
             p: "/chapter/"
         },
         imgs: "#content img",
@@ -18648,7 +18705,7 @@
                     d: "| Hitomi.la"
                 });
                 thumbnailSrcArray = fn.gae(".gallery-preview img").map(e => e.dataset.src ?? e.src);
-                return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo.id, our_galleryinfo[i], "webp"));
+                return galleryinfo.files.map((e, i) => url_from_url_from_hash(galleryinfo.id, our_galleryinfo[i], hitomi_img_type));
             });
         },
         button: [4],
@@ -21127,30 +21184,31 @@
         hide: "#teaser3",
         category: "comic"
     }, {
-        name: "Realm Oasis/Voids-Scans/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables/TresDaos/Lectormiau/Mangagojo",
+        name: "Realm Oasis/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables/TresDaos/Lectormiau/Mangagojo/Niraw",
         url: {
             h: [
                 "realmoasis.com",
-                "hivetoon.com",
                 "nightsup.net",
-                "tercocomic.xyz",
+                "tecnoxcomics.xyz",
                 "luascans.com",
                 "drakecomic.org",
                 "rizzfables.com",
                 "tresdaos.com",
                 "zonamiau.com",
                 "mangagojo.com",
-                "rawkuma.com"
+                "rawkuma.net",
+                "niraw.com"
             ]
         },
         init: () => fn.addMutationObserver(() => fn.remove("#radio_content,#teaserbottom")),
-        imgs: "#readerarea img[class*='wp-image'],#readerarea .ts-main-image,#readerarea img[loading]",
+        imgs: "#readerarea img[class*='wp-image'],#readerarea .ts-main-image,#readerarea img[loading],#readerarea .chapter-img",
         button: [4],
         insertImg: ["#readerarea", 2],
+        endColor: () => fn.ge(".darkmode") ? "white" : "black",
         autoDownload: [0],
         next: "a.ch-next-btn",
         prev: "a.ch-prev-btn",
-        hide: ".ver-src.chapter,.blox",
+        hide: ".ver-src.chapter,.blox,div[style]:has(>div>script)",
         customTitle: ".entry-title",
         category: "comic"
     }, {
@@ -21259,6 +21317,29 @@
         },
         prev: 1,
         hide: "div[class^='Radio_radio_content']",
+        category: "comic"
+    }, {
+        name: "Voids Scans",
+        url: {
+            h: ["hivecomic.com"]
+        },
+        data: () => fn.showMsg(DL.str_05, 0).then(() => fn.fetchDoc(fn.clp()).then(dom => (doc = dom))).then(() => fn.hideMsg()),
+        page: () => fn.clp("/chapter"),
+        SPA: () => _this.page(),
+        observeURL: "nav",
+        init: () => _this.page() ? _this.data() : void 0,
+        imgs: () => {
+            if (!_this.page()) return [];
+            let code = fn.gst('\\"images\\"', doc);
+            code = code.replaceAll("\\", "");
+            return fn.TextToArray(code, '"images":').map(e => e.url);
+        },
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "//a[button[div[p[text()='Next']]]]",
+        prev: "//a[button[div[p[text()='Prev']]]]",
+        customTitle: () => _this.page() ? fn.title(" - Void Scans hivetoon", 0, doc) : null,
+        hide: "#radio_content",
         category: "comic"
     }, {
         name: "NineManga",
@@ -21511,6 +21592,67 @@
         next: "a.next[href$=html]",
         prev: "a.prev[href$=html]",
         customTitle: "h1.txt-primary",
+        category: "comic"
+    }, {
+        name: "Manga Raw",
+        host: ["klmanga.ax", "klmanga.my"],
+        url: {
+            t: "Manga Raw",
+            st: ["var zing", "chapter_id"]
+        },
+        box: [".manga_nav_footer", 1],
+        imgs: async () => {
+            fn.showMsg(DL.str_05, 0);
+            let code = fn.gst("data:");
+            let obj_a = fn.TextToObject(code, "data:", 2);
+            code = fn.gst("var zing");
+            let obj_b = fn.TextToObject(code, "zing");
+            let json = {
+                ...obj_a,
+                ...obj_b
+            };
+            let page = 1;
+            let img_index = 0;
+            let loop = true;
+            let html = "";
+            const getData = () => {
+                let params = new URLSearchParams({
+                    nonce_a: json.nonce_a,
+                    action: "z_do_ajax",
+                    _action: "decode_images_100",
+                    p: json.p,
+                    img_index,
+                    chapter_id: json.chapter_id
+                }).toString();
+                return fetch("/wp-admin/admin-ajax.php", {
+                    "headers": {
+                        "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+                    },
+                    "body": params,
+                    "method": "POST"
+                }).then(res => res.json()).then(json => {
+                    fn.showMsg(`${DL.str_06}${page}/???`, 0);
+                    img_index = json.img_index;
+                    html += json.mes;
+                    if (json?.going != 1) {
+                        loop = false;
+                    }
+                });
+            };
+            while (loop) {
+                await getData();
+                page++;
+            }
+            return [...fn.doc(html).images];
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        autoDownload: [0],
+        next: ".nav-links a.next_page",
+        prev: ".nav-links a.prev_page",
+        customTitle: () => fn.dt({
+            d: ["(Raw – Free)", " - Manga Raw"]
+        }),
         category: "comic"
     }, {
         name: "KLManga",
@@ -25396,11 +25538,14 @@ if ("xx" in window) {
         },
         category: "comic"
     }, {
-        name: "漫画屋",
-        host: ["www.manhua55.com"],
-        reg: /^https?:\/\/www\.manhua55\.com\/chapter\/[\d-]+\.html$/,
+        name: "漫画屋/囧次元",
+        host: ["www.manhua55.com", "www.jiongcy.com"],
+        reg: [
+            /^https?:\/\/(www\.)?manhua55\.com\/chapter\/[\d-]+\.html$/,
+            /^https?:\/\/(www\.)?jiongcy\.com\/kan\/\d+\/\d+\.html$/
+        ],
         init: () => fn.wait(() => isArray(_unsafeWindow?.params?.images)),
-        box: [".chapter-main", 1],
+        box: [".chapter-main,.more-box", 1],
         imgs: (frame = _unsafeWindow) => frame.params.images.map(src => {
             if (frame.params.source_id == 12) {
                 src = "https://img1.baipiaoguai.org" + src;
@@ -25409,14 +25554,14 @@ if ("xx" in window) {
         }),
         button: [4, "24%", 3],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".chapter-main"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".chapter-main,.more-box"], 2
         ],
         autoDownload: [0],
-        next: "#next-chapter",
-        prev: "#prev-chapter",
+        next: "id('next-chapter') | //a[text()='下一章'][starts-with(@href,'/')]",
+        prev: "id('prev-chapter') | //a[text()='上一章'][starts-with(@href,'/')]",
         customTitle: (dom = document) => fn.dt({
             t: dom.title,
-            d: [",_在线漫画阅读_漫画屋", "漫画"]
+            d: [",_在线漫画阅读_漫画屋", "漫画", /- 免费观看.+$/]
         }).replace("_", " - "),
         preloadNext: (nextDoc, obj) => {
             fn.iframeVar(nextLink, "params").then(w => {
@@ -27603,6 +27748,8 @@ if ("xx" in window) {
     const _GM_getResourceText = (() => isFn(GM_getResourceText) ? GM_getResourceText : GM.getResourceText)();
     const _GM_addElement = (() => isFn(GM_addElement) ? GM_addElement : GM.addElement)();
 
+    const UI_zIndex = Number(_GM_getValue("UI_zIndex", 2147483647));
+
     const ajaxHookerJS = _GM_getResourceText("ajaxHookerJS");
     const JqueryJS = _GM_getResourceText("JqueryJS");
     const FancyboxV5JS = _GM_getResourceText("FancyboxV5JS");
@@ -27851,7 +27998,7 @@ if ("xx" in window) {
                 str_71: "下載後壓縮打包",
                 str_72: "壓縮檔副檔名：",
                 str_73: "自動下載",
-                str_74: " ( 快捷鍵 [ ctrl + . ] 開始或取消 ) ESC中斷",
+                str_74: "ESC鍵：可中斷自動下載\n快捷鍵 [ ctrl + . ]：開始自動下載或取消自動下載",
                 str_75: "自動下載倒數秒數：",
                 str_76: "啟用當前漫畫站點規則",
                 str_77: "自動進入畫廊需點擊主圖示按鈕",
@@ -27932,7 +28079,7 @@ if ("xx" in window) {
                 str_146: "Fancybox5滾輪操作：",
                 str_147: "畫廊 ( 0、1、3 ) 滾輪操作：",
                 str_148: "Fancybox5幻燈片過場效果：",
-                str_149: "已取消下載！！！",
+                str_149: "已中斷下載！！！",
                 str_150: "JK滾動",
                 str_151: "JK平滑滾動",
                 str_152: "一個視口",
@@ -27985,6 +28132,10 @@ if ("xx" in window) {
                 str_199: "移動裝置雙擊前往下一頁",
                 str_200: "AVIF轉換為JPG",
                 str_201: "JPG格式轉換品質",
+                str_202: "Hitomi.la 圖片格式：",
+                str_203: "懸停提示✨",
+                str_204: "⚙️ 腳本UI最外層堆疊順序",
+                str_205: "請輸入z-index值（7 ~ 2147483647）",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -28102,7 +28253,7 @@ if ("xx" in window) {
                 str_71: "压缩打包",
                 str_72: "压缩档文件扩展名：",
                 str_73: "自动下载",
-                str_74: " ( 快捷键 [ ctrl + . ] 开始或取消 ) ESC中断",
+                str_74: "ESC键：可中断自动下载\n快捷键 [ ctrl + . ]：开始自动下载或取消自动下载",
                 str_75: "自动下载倒数秒数：",
                 str_76: "启用当前漫画站点规则",
                 str_77: "自动进入画廊需点击主图示按钮",
@@ -28183,7 +28334,7 @@ if ("xx" in window) {
                 str_146: "Fancybox5滚轮操作：",
                 str_147: "画廊 ( 0、1、3 ) 滚轮操作：",
                 str_148: "Fancybox5幻灯片过场效果：",
-                str_149: "已取消下载！！！",
+                str_149: "已中断下载！！！",
                 str_150: "JK滚动",
                 str_151: "JK平滑滚动",
                 str_152: "一个视口",
@@ -28236,6 +28387,10 @@ if ("xx" in window) {
                 str_199: "移动设备双击前往下一页",
                 str_200: "AVIF转换为JPG",
                 str_201: "JPG格式转换品质",
+                str_202: "Hitomi.la 图片格式：",
+                str_203: "悬停提示✨",
+                str_204: "⚙️ 脚本UI最外层堆叠顺序",
+                str_205: "请输入z-index值（7 ~ 2147483647）",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28337,8 +28492,8 @@ if ("xx" in window) {
                 str_61: "Cancel Eoom",
                 str_62: "Go To First Image",
                 str_63: "Left Click：Go To Last Image\nLeft Click：Export URLs.txt",
-                str_64: "Start AutoDownload!!!",
-                str_65: "Stop AutoDownload!!!",
+                str_64: "Start Auto Download!!!",
+                str_65: "Stop Auto Download!!!",
                 str_66: "💬 Greasy Fork Feedback",
                 str_67: "⚙️ Settings",
                 str_68: "Current(※Global) Website Options",
@@ -28346,8 +28501,8 @@ if ("xx" in window) {
                 str_70: "Max Download Thread：",
                 str_71: "Compressed Packaging",
                 str_72: "Compressed File Extension：",
-                str_73: "AutoDownload",
-                str_74: " ( [ ctrl + . ] Start or Cancel) ESC interrupt",
+                str_73: "Auto Download",
+                str_74: "ESC：Interrupt Auto Download\nShortcut key [ ctrl + . ]：Start Auto Download Or Cancel Auto Download",
                 str_75: "AutoDownload Countdown Sec：",
                 str_76: "Comic Site Rules Switch",
                 str_77: "Auto enter Gallery In Icon Button",
@@ -28428,7 +28583,7 @@ if ("xx" in window) {
                 str_146: "FB5 Wheel：",
                 str_147: "Gallery (0、1、3) Wheel：",
                 str_148: "FB5 Slideshow Transition：",
-                str_149: "Download Canceled！！！",
+                str_149: "Download Interrupted！！！",
                 str_150: "JK Scroll ",
                 str_151: "JK Smooth Scroll",
                 str_152: "Viewport",
@@ -28481,6 +28636,10 @@ if ("xx" in window) {
                 str_199: "Double Click Go To Next Page",
                 str_200: "Convert AVIF to JPG",
                 str_201: "Convert Quality",
+                str_202: "Hitomi.la Image Format：",
+                str_203: "TIP✨",
+                str_204: "⚙️ UI z-index",
+                str_205: "Please enter a z-index value（7 ~ 2147483647）",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -28528,6 +28687,7 @@ if ("xx" in window) {
     });
     if (FullPictureLoadBlacklist == 1) return;
 
+    const FullPictureLoadMsgPos = _GM_getValue("FullPictureLoadMsgPos", 0);
     let msgTimeId;
 
     const fn = {
@@ -28668,6 +28828,13 @@ if ("xx" in window) {
                 file = file.split("/").at(-1);
             }
             return /\.(mp4|avi|mkv|mov|wmv|flv|webm|mpeg|mpg|3gp|m4v|ts|vob|ogv|rm|rmvb|m2ts|mxf|asf|swf)/i.test(file);
+        },
+        isZip: file => {
+            file = String(file);
+            if (file.includes("/")) {
+                file = file.split("/").at(-1);
+            }
+            return /\.(rar|zip|7z|cbz)/i.test(file);
         },
         checkUrl: (obj = {}) => {
             if (fn.clp() === "/" && !("SPA" in tempData) && !("autoPager" in tempData) && tempData.category !== "ad") return false;
@@ -29464,7 +29631,7 @@ if ("xx" in window) {
                     if (fn.isVideo(obj.name)) {
                         videoSrcArray.push(obj.url);
                         return null;
-                    } else if (/\.(zip|rar)$/i.test(obj.name)) {
+                    } else if (fn.isZip(obj.name)) {
                         fileUrlArray.push(obj.url);
                         return null;
                     } else {
@@ -30016,7 +30183,7 @@ if ("xx" in window) {
                 iframe.name = "FullPictureLoad-iframe";
                 iframe.id = "FullPictureLoadIframe";
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
+                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -30069,7 +30236,7 @@ if ("xx" in window) {
                 iframe.id = "FullPictureLoadIframe";
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 //iframe.style.display = "none";
-                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
+                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 tid = setTimeout(() => resolve(null), time);
                 const call = async () => {
                     clearTimeout(tid);
@@ -30132,7 +30299,7 @@ if ("xx" in window) {
             return new Promise(async (resolve, reject) => {
                 const iframe = document.createElement("iframe");
                 iframe.id = "FullPictureLoadIframe";
-                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483645;content-visibility: auto;contain-intrinsic-size: auto 300px;";
+                iframe.style.cssText = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;content-visibility: auto;contain-intrinsic-size: auto 300px;";
                 iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
                 const call = async () => {
                     const {
@@ -30963,9 +31130,10 @@ if ("xx" in window) {
                 await fn.insertImg(imgsSrcArray, insertSelector, insertMode);
             }
         },
+        isXPath: xpath => /^\(*(descendant::|\.\/|\/|id\()/.test(xpath),
         //返回選擇器的首個元素
         ge: (selector, contextNode = null, dom = document) => {
-            if (/^\//.test(selector)) {
+            if (fn.isXPath(selector)) {
                 return dom.evaluate(selector, (contextNode ?? document), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             } else {
                 return (contextNode ?? document).querySelector(selector);
@@ -30975,7 +31143,7 @@ if ("xx" in window) {
         gu: (selector, contextNode = null, dom = document) => fn.ge(selector, contextNode, dom)?.href,
         //返回選擇器的所有元素的陣列
         gae: (selector, contextNode = null, dom = document) => {
-            if (/^\//.test(selector)) {
+            if (fn.isXPath(selector)) {
                 let nodes = [];
                 let results = dom.evaluate(selector, (contextNode ?? document), null, XPathResult.ANY_TYPE, null);
                 let node = null;
@@ -31112,12 +31280,19 @@ if ("xx" in window) {
             return Number(str);
         },
         //傳入字串和關鍵字串提取Object字串轉為Object物件
-        TextToObject: (str, key) => {
+        TextToObject: (str, key, mode = 1) => {
             let a = str.indexOf(key);
             let b = str.indexOf("{", a);
             let c = str.indexOf("}", b) + 1;
             str = str.slice(b, c);
-            return fn.run(str);
+            if (mode = 2) {
+                return Object.fromEntries(str.slice(1, -1).replaceAll("\n", "").replaceAll("'", "").replaceAll('"', "").split(",").map(e => {
+                    let [k, v] = e.split(":");
+                    return [k.trim(), v.trim()];
+                }));
+            } else {
+                return fn.run(str);
+            }
         },
         //傳入字串和關鍵字串提取Array字串轉為Array陣列物件
         TextToArray: (str, key) => {
@@ -31187,6 +31362,17 @@ if ("xx" in window) {
             if (!msgE) {
                 msgE = document.createElement("div");
                 msgE.id = "FullPictureLoadMsg";
+                if (FullPictureLoadMsgPos == 1) {
+                    msgE.style.cssText = "top:10px;left:10px;";
+                } else if (FullPictureLoadMsgPos == 2) {
+                    msgE.style.cssText = "top:10px;right:10px;";
+                } else if (FullPictureLoadMsgPos == 3) {
+                    msgE.style.cssText = "bottom:10px;left:72px;";
+                } else if (FullPictureLoadMsgPos == 4) {
+                    msgE.style.cssText = "bottom:10px;right:10px;";
+                } else {
+                    msgE.style.cssText = "top:30%;left:50%;margin-left:-180px;";
+                }
                 document.body.append(msgE);
             }
             msgE.innerText = text;
@@ -31989,34 +32175,34 @@ if ("xx" in window) {
             }
             switch (css) {
                 case 1:
-                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:rgb(137 5 188);border:solid #bbb;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:rgb(137 5 188);border:solid #bbb;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 2:
-                    fn.css(".addUrl>a{text-decoration:none;color:rgb(50 50 50);background-color:rgb(200 200 200);border-radius:0.25rem;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(50 50 50);background-color:rgb(200 200 200);border-radius:0.25rem;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 3:
-                    fn.css(".addUrl>a{text-decoration:none;color:#6c757d;background-color:#fff;border:solid #6c757d;border-radius:0.25rem;padding:.5rem 2rem;transition:background-color .2s,color .2s;&:hover{color:#fff;background-color:#6c757d}}");
+                    fn.css(".addUrl>a{text-decoration:none;color:#6c757d;background-color:#fff;border:solid #6c757d;border-radius:0.25rem;padding:.5rem 2rem;transition:background-color .2s,color .2s;&:hover{color:#fff;background-color:#6c757d}}", "addUrlHtml");
                     break;
                 case 4:
-                    fn.css(".addUrl>a{text-decoration:none;color:#003366;background-color:#fff;border:solid #6c757d;border-radius:0.25rem;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:#003366;background-color:#fff;border:solid #6c757d;border-radius:0.25rem;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 5:
-                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:rgb(77 147 255);border:solid #bbb;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:rgb(77 147 255);border:solid #bbb;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 6:
-                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:#b5d540;border:solid #b5d540;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:#b5d540;border:solid #b5d540;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 7:
-                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:#65415f;border:solid #65415f;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background-color:#65415f;border:solid #65415f;border-radius:0.25rem;font-weight:700;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 8:
-                    fn.css(".addUrl>a{text-decoration:none;color:#ddd;background-color:#555;border-radius:0.25rem;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:#ddd;background-color:#555;border-radius:0.25rem;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 9:
-                    fn.css(".addUrl>a{text-decoration:none;color:#2f98f1;background-color:#2f2f3b;border:solid #c67605;border-radius:0.25rem;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:#2f98f1;background-color:#2f2f3b;border:solid #c67605;border-radius:0.25rem;padding:.5rem 2rem}", "addUrlHtml");
                     break;
                 case 10:
-                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background: var(--success) url('../img/slice.jpg') repeat-x;background-size: contain;border:none;border-radius:0.25rem;padding:.5rem 2rem}");
+                    fn.css(".addUrl>a{text-decoration:none;color:rgb(255 255 255);background: var(--success) url('../img/slice.jpg') repeat-x;background-size: contain;border:none;border-radius:0.25rem;padding:.5rem 2rem}", "addUrlHtml");
                     break;
             }
         },
@@ -32175,7 +32361,8 @@ if ("xx" in window) {
                 time,
                 top,
                 end: end_selector,
-                end_time
+                end_time,
+                block
             } = obj;
             let isEnd = false;
             if (isString(end_selector)) {
@@ -32236,7 +32423,9 @@ if ("xx" in window) {
                                 resolve();
                                 return;
                             }
-                            arr[i].scrollIntoView();
+                            arr[i].scrollIntoView({
+                                block: (block ?? "start")
+                            });
                             if (isEnd || await callback(arr[i])) {
                                 clearTimeout(timeId);
                                 clearInterval(loop);
@@ -32705,6 +32894,42 @@ if ("xx" in window) {
         }
     };
 
+    const xhrLoadImagesFormat = async (srcs) => {
+        isXhrHeadRequest = true;
+        const loaded = [];
+        let num = 0;
+        fn.showMsg("fn.xhrHEA(check)...", 0);
+        return new Promise(resolve => {
+            const xhrLoadImageFormat = async (src, i) => {
+                if (await fn.xhrHEAD(src).then(res => res.status) == 200) {
+                    src = src;
+                } else {
+                    let jpg = src.replace(/\.\w+$/, ".jpg");
+                    let png = src.replace(/\.\w+$/, ".png");
+                    let jpeg = src.replace(/\.\w+$/, ".jpeg");
+                    if (await fn.xhrHEAD(jpg).then(res => res.status) == 200) {
+                        src = jpg;
+                    } else if (await fn.xhrHEAD(png).then(res => res.status) == 200) {
+                        src = png;
+                    } else if (await fn.xhrHEAD(jpeg).then(res => res.status) == 200) {
+                        src = jpeg;
+                    }
+                }
+                loaded[i] = src;
+                num += 1;
+                fn.showMsg(`fn.xhrHEAD(${num}/${srcs.length})`, 0);
+                if (num == srcs.length) {
+                    isXhrHeadRequest = false;
+                    resolve(loaded);
+                }
+            };
+            const loadList = srcs.map((src, i) => [xhrLoadImageFormat, null, src, i]);
+            const queue = new Queue(2);
+            queue.addList(loadList);
+            queue.run();
+        });
+    };
+
     function simpleLoadImg(img) {
         return new Promise((resolve) => {
             if (!img) {
@@ -32772,7 +32997,7 @@ if ("xx" in window) {
         }
 
         run() {
-            if (isOpenGallery || isOpenFilter) {
+            if (isXhrHeadRequest || isOpenGallery || isOpenFilter) {
                 const runIndex = [];
                 for (let i = 0; i < this.workerLen; i++) {
                     const len = this.list.length;
@@ -33066,7 +33291,7 @@ if ("xx" in window) {
         //document.body.append(a);
         //a.click();
         //a.remove();
-        setTimeout(() => URL.revokeObjectURL(objURL), 1000);
+        setTimeout(() => URL.revokeObjectURL(objURL), 4000);
     };
 
     const captureExclude = () => (isChangeNum || isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || isFetching || isDownloading);
@@ -34162,6 +34387,7 @@ if ("xx" in window) {
                 localStorage.removeItem(key);
             }
         }
+        _GM_setValue("UI_zIndex", 2147483647)
         _GM_setValue("FullPictureLoadMsgPos", 0);
         _GM_setValue("goToFirstImage", 1);
         _GM_setValue("GalleryInIcon", 0);
@@ -35376,7 +35602,7 @@ if (config.ViewMode == 1) {
         let isShowAlert = false;
         let loopView = _GM_getValue("FullPictureLoadLoopView", 1);
 
-        const mainHtml = '<div id="FullPictureLoadShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        const mainHtml = `<div id="FullPictureLoadShadowGallery" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: ${UI_zIndex - 3} !important;"></div>`;
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
         const FullPictureLoadShadowGallery = ge("#FullPictureLoadShadowGallery");
@@ -36221,7 +36447,7 @@ img.horizontal {
             padding: "0",
             position: "fixed",
             opacity: "1",
-            zIndex: "2147483647",
+            zIndex: UI_zIndex - 3,
             backgroundColor: "#333",
             color: "#222",
             fontSize: "14px",
@@ -36799,7 +37025,7 @@ img.horizontal {
             padding: "0",
             position: "fixed",
             opacity: "1",
-            zIndex: "2147483646",
+            zIndex: UI_zIndex - 3,
             backgroundColor: "#333",
             color: "#222"
         });
@@ -36819,7 +37045,7 @@ img.horizontal {
         _GM_addElement(dom.head, "style", {
             textContent: FancyboxV5Css + `
 .fancybox__container {
-    z-index: 2147483647 !important;
+    z-index: ${UI_zIndex} !important;
 }
             `
         });
@@ -37668,7 +37894,7 @@ img.horizontal {
             padding: "0",
             position: "fixed",
             opacity: "1",
-            zIndex: "2147483647",
+            zIndex: UI_zIndex - 3,
             backgroundColor: "#333",
             color: "#222",
             fontSize: "14px",
@@ -38366,7 +38592,7 @@ img.horizontal {
                 textContent: ViewerJs
             });
         }
-        const mainHtml = '<div id="FullPictureLoadFilterDownload" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483641 !important;"></div>';
+        const mainHtml = `<div id="FullPictureLoadFilterDownload" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: ${UI_zIndex - 5} !important;"></div>`;
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
         const shadowElement = ge("#FullPictureLoadFilterDownload");
@@ -38397,6 +38623,17 @@ img.horizontal {
     color: white;
     background-color: #333;
 }
+input,select {
+    color: #000;
+    background-color: #fff;
+}
+input.dark,select.dark {
+    color: #fff;
+    background-color: #333;
+}
+input.dark {
+    border: 1px solid #575757;
+}
 .show {
     display: block !important;
 }
@@ -38420,6 +38657,9 @@ img.horizontal {
 .buttons {
     display: block;
     margin: 0 auto 4px auto;
+}
+label {
+    user-select: none;
 }
 #label-title,
 #close {
@@ -38483,7 +38723,7 @@ li.image-item.dark {
     background-color: #333;
     border: rgb(0, 204, 255) 1px solid;
 }
-img.image {
+li img.image {
     display: block;
     width: auto;
     height: auto;
@@ -38492,7 +38732,7 @@ img.image {
     margin: 0px auto;
     object-fit: contain;
 }
-input.check {
+li input.check {
     position: absolute;
     top: 2px;
     left: 2px;
@@ -38533,10 +38773,14 @@ label.line-through:has(>#size) {
     border: #ccc 1px solid;
     border-radius: 3px;
     position: absolute;
-    z-index: 2147483645;
+    z-index: ${UI_zIndex - 4};
     background-color: #fff;
     margin: 0;
     padding: 0;
+}
+#excludeList.dark {
+    color: #fff;
+    background-color: #333;
 }
 .excludeItem {
     list-style: none;
@@ -38545,6 +38789,11 @@ label.line-through:has(>#size) {
     background-color: #f6f6f6;
     padding: 2px;
     margin: 2px;
+}
+.excludeItem.dark {
+    color: #fff;
+    background-color: #333;
+    border: #eee 1px solid;
 }
 .excludeItem.active {
     color: #fff;
@@ -38566,7 +38815,7 @@ label.line-through:has(>#size) {
     border-radius: 8px;
     margin: 0;
     padding: 0;
-    z-index: 2147483645;
+    z-index: ${UI_zIndex - 4};
 }
 #more-menu {
     display: none;
@@ -38578,18 +38827,19 @@ label.line-through:has(>#size) {
     border: #ccc 1px solid;
     border-radius: 3px;
     position: absolute;
-    z-index: 2147483645;
+    z-index: ${UI_zIndex - 4};
     background-color: #fff;
     margin: 0;
     padding: 0;
 }
-.more-item {
-    list-style: none;
-    color: black;
-    border: #ccc 1px solid;
-    background-color: #f6f6f6;
-    padding: 2px;
-    margin: 4px;
+#more-menu.dark {
+    color: #fff;
+    background-color: #333;
+}
+.more-item.dark {
+    color: #fff;
+    background-color: #333;
+    border: #eee 1px solid;
 }
 img.single {
     width: auto;
@@ -38838,6 +39088,7 @@ img.webtoon {
             ViewerJsInstance_G?.destroy();
         };
 
+        const ui_selector = "#main,input,select,.row,.number,button,.image-item,.image-item p,#excludeList,.excludeItem,#more-menu,.more-item,#scroll_U,#scroll_D,#next";
         let inputs = [];
         let startInput;
 
@@ -38869,10 +39120,6 @@ img.webtoon {
             });
             startInput = null;
         };
-
-        if (backgroundColor === "d") {
-            gae("#main,.row,.number,button,#scroll_U,#scroll_D,#next", shadow).forEach(e => e.classList.add("dark"));
-        }
 
         let moreE = ge("#more", main);
         let moreMenu = ge("#more-menu", main);
@@ -39036,12 +39283,16 @@ img.webtoon {
             saveConfig(config);
             backgroundColor = config.backgroundColor;
             if (backgroundColor === "d") {
-                gae("#main,.row,.number,li,li p,button,#scroll_U,#scroll_D,#next", shadow).forEach(e => e.classList.add("dark"));
+                gae(ui_selector, shadow).forEach(e => e.classList.add("dark"));
             } else {
-                gae("#main,.row,.number,li,li p,button,#scroll_U,#scroll_D,#next", shadow).forEach(e => e.classList.remove("dark"));
+                gae(ui_selector, shadow).forEach(e => e.classList.remove("dark"));
             }
             main.focus();
         });
+
+        if (backgroundColor === "d") {
+            gae(ui_selector, shadow).forEach(e => e.classList.add("dark"));
+        }
 
         let widthNum = 0;
         let heightNum = 0;
@@ -39424,7 +39675,25 @@ img.webtoon {
                     }
                     img.classList.remove("error");
                 };
-                img.onerror = () => {
+                img.onerror = (error) => {
+                    if (["www.mmxxdd.com", "mmxxdd.com"].some(h => fn.lh == h)) {
+                        if (!("load_jpg" in error.target.dataset)) {
+                            let src = error.target.dataset.src.replace(/\.\w+$/i, ".jpg");
+                            error.target.dataset.load_jpg = 1;
+                            error.target.dataset.src = src;
+                            error.target.src = src;
+                        } else if (!("load_png" in error.target.dataset)) {
+                            let src = error.target.dataset.src.replace(/\.\w+$/i, ".png");
+                            error.target.dataset.load_png = 1;
+                            error.target.dataset.src = src;
+                            error.target.src = src;
+                        } else if (!("load_jpeg" in error.target.dataset)) {
+                            let src = error.target.dataset.src.replace(/\.\w+$/i, ".jpeg");
+                            error.target.dataset.load_jpeg = 1;
+                            error.target.dataset.src = src;
+                            error.target.src = src;
+                        }
+                    }
                     if (config.aee == 1) {
                         input.checked = false;
                         input.classList.remove("select");
@@ -39501,6 +39770,26 @@ img.webtoon {
                 }
                 img.src = loading_bak;
                 img.dataset.src = src;
+                img.onerror = (error) => {
+                    if (["www.mmxxdd.com", "mmxxdd.com"].some(h => fn.lh == h)) {
+                        if (!("load_jpg" in error.target.dataset)) {
+                            let src = error.target.dataset.src.replace(/\.\w+$/i, ".jpg");
+                            error.target.dataset.load_jpg = 1;
+                            error.target.dataset.src = src;
+                            error.target.src = src;
+                        } else if (!("load_png" in error.target.dataset)) {
+                            let src = error.target.dataset.src.replace(/\.\w+$/i, ".png");
+                            error.target.dataset.load_png = 1;
+                            error.target.dataset.src = src;
+                            error.target.src = src;
+                        } else if (!("load_jpeg" in error.target.dataset)) {
+                            let src = error.target.dataset.src.replace(/\.\w+$/i, ".jpeg");
+                            error.target.dataset.load_jpeg = 1;
+                            error.target.dataset.src = src;
+                            error.target.src = src;
+                        }
+                    }
+                };
                 loadImgList.push([simpleLoadImg, null, img]);
                 fragment.append(img);
             }
@@ -40151,7 +40440,7 @@ img.webtoon {
 
         const config = getConfig();
 
-        const mainHtml = '<div id="FullPictureLoadOptionsShadowElement" style="display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        const mainHtml = `<div id="FullPictureLoadOptionsShadowElement" style="display: initial !important;position: fixed !important;z-index: ${UI_zIndex - 1} !important;"></div>`;
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
         const mainElement = ge("#FullPictureLoadOptionsShadowElement");
@@ -40171,7 +40460,7 @@ img.webtoon {
     border-radius: 3px;
     box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
     background-color: #fafafb;
-    z-index: 2147483647;
+    z-index: ${UI_zIndex - 1};
 }
 
 #FullPictureLoadOptions label {
@@ -40196,11 +40485,12 @@ img.webtoon {
 }
 
 #FullPictureLoadOptions * {
+    user-select: none;
     font: unset;
     font-family: ui-monospace, sans-serif, system-ui, -apple-system, Segoe UI, Arial;
     font-weight: 500;
     font-size: 14px;
-    color: black;
+    color: fff;
     float: none;
     line-height: 22px;
     margin-bottom: 0px;
@@ -40247,6 +40537,10 @@ img.webtoon {
     margin-block-end: 0px;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
+}
+.tip {
+    color: #0075ff;
+    cursor: help;
 }
         `);
         shadow.appendChild(style);
@@ -40353,9 +40647,10 @@ img.webtoon {
     <input id="Double" type="checkbox">
     <label>※ ${DL.str_199}</label>
 </div>
-<div id="AutoDownloadDIV" style="width: 348px; display: flex;">
+<div id="AutoDownloadDIV" style="width: 348px; display: flex;" title="${DL.str_74}">
     <input id="AutoDownload" type="checkbox">
-    <label style="${language.includes("zh") ? "" : "font-size: 12px!important;"}">${DL.str_73}${DL.str_74}</label>
+    <label>${DL.str_73}</label>
+    <span id="AutoDownloadTIP" class="tip">${DL.str_203}</span>
 </div>
 <div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 7px;">
     <label>${DL.str_75}</label>
@@ -40376,6 +40671,14 @@ img.webtoon {
 <div style="width: 348px; display: flex; margin-left: 7px;">
     <label>※ ${DL.str_72}</label>
     <select id="Extension"></select>
+</div>
+<div id="HitomiDIV" style="width: 348px; display: flex; margin-left: 7px;">
+    <label>${DL.str_202}</label>
+    <select id="Hitomi"></select>
+</div>
+<div id="EHentaiDIV" style="width: 348px; display: flex;">
+    <input id="EHentai" type="checkbox">
+    <label>${DL.str_114}</label>
 </div>
 <div style="width: 348px; display: flex;">
     <input id="ConvertWEBP" type="checkbox">
@@ -40497,6 +40800,15 @@ img.webtoon {
         });
         ExtensionSelect.append(fragment);
 
+        const HitomiSelect = ge("#Hitomi", main);
+        ["webp", "avif"].forEach(v => {
+            const option = document.createElement("option");
+            option.value = v;
+            option.innerText = v;
+            fragment.append(option);
+        });
+        HitomiSelect.append(fragment);
+
         const QualitySelect = ge("#Quality", main);
         for (let i = 0; i <= 10; i++) {
             const option = document.createElement("option");
@@ -40532,6 +40844,8 @@ img.webtoon {
         ge("#Threading", main).value = options.threading;
         ge("#Zip", main).checked = options.zip == 1 ? true : false;
         ge("#Extension", main).value = _GM_getValue("compressed_extension", "zip");
+        ge("#EHentai", main).checked = _GM_getValue("E_HENTAI_LoadOriginalImage", 0) == 1 ? true : false;
+        ge("#Hitomi", main).value = _GM_getValue("hitomi_img_type", "webp");
         ge("#zipFolder", main).checked = zipFolderConfig == 1 ? true : false;
         ge("#ConvertWEBP", main).checked = _GM_getValue("convertWebpToJpg", 0) == 1 ? true : false;
         ge("#ConvertAVIF", main).checked = _GM_getValue("convertAvifToJpg", 0) == 1 ? true : false;
@@ -40580,6 +40894,12 @@ img.webtoon {
                 "#MobileGalleryModeDIV",
                 "#GalleryInIconDIV"
             ]);
+        }
+        if (!["e-hentai.org", "exhentai.org"].some(h => fn.lh == h)) {
+            hide(["#EHentaiDIV"]);
+        }
+        if (fn.lh != "hitomi.la") {
+            hide(["#HitomiDIV"]);
         }
         if (isSimpleMode) {
             hide([
@@ -40660,6 +40980,8 @@ img.webtoon {
             options.threading = ge("#Threading", main).value;
             options.zip = ge("#Zip", main).checked == true ? 1 : 0;
             _GM_setValue("compressed_extension", ge("#Extension", main).value);
+            _GM_setValue("E_HENTAI_LoadOriginalImage", ge("#EHentai", main).checked == true ? 1 : 0);
+            _GM_setValue("hitomi_img_type", ge("#Hitomi", main).value);
             _GM_setValue("zipFolderConfig", ge("#zipFolder", main).checked == true ? 1 : 0);
             _GM_setValue("convertWebpToJpg", ge("#ConvertWEBP", main).checked == true ? 1 : 0);
             _GM_setValue("convertAvifToJpg", ge("#ConvertAVIF", main).checked == true ? 1 : 0);
@@ -40698,42 +41020,12 @@ img.webtoon {
     };
 
     //腳本的CSS樣式
-    let FullPictureLoadMsgPos = _GM_getValue("FullPictureLoadMsgPos", 0);
-
-    let msgPosCss;
-    if (FullPictureLoadMsgPos == 1) {
-        msgPosCss = `
-    top: 10px;
-    left: 10px;
-        `;
-    } else if (FullPictureLoadMsgPos == 2) {
-        msgPosCss = `
-    top: 10px;
-    right: 10px;
-        `;
-    } else if (FullPictureLoadMsgPos == 3) {
-        msgPosCss = `
-    bottom: 10px;
-    left: 72px;
-        `;
-    } else if (FullPictureLoadMsgPos == 4) {
-        msgPosCss = `
-    bottom: 10px;
-    right: 10px;
-        `;
-    } else {
-        msgPosCss = `
-    top: 30%;
-    left: 50%;
-    margin-left: -180px;
-        `;
-    }
 
     const FullPictureLoadStyle = `
 .fancybox-container,
 .fancybox__container,
 .viewer-container {
-    z-index: 2147483647 !important;
+    z-index: ${UI_zIndex} !important;
 }
 
 .fancybox-image,
@@ -40752,7 +41044,7 @@ img.webtoon {
     width: 53px !important;
     height: 53px !important;
     border: unset;
-    z-index: 99;
+    z-index: ${UI_zIndex - 6};
     opacity: 0.6;
 }
 
@@ -40777,7 +41069,7 @@ img.webtoon {
     border-radius: unset !important;
     margin: unset !important;
     padding: unset !important;
-    z-index: 2147483640 !important;
+    z-index: ${UI_zIndex - 6} !important;
     cursor: pointer !important;
     pointer-events: auto !important;
     background: unset !important;
@@ -40793,7 +41085,7 @@ img.webtoon {
     height: 32px !important;
     margin: 0 !important;
     border-radius: unset !important;
-    z-index: 2147483600 !important;
+    z-index: ${UI_zIndex - 6} !important;
     opacity: 1 !important;
     cursor: pointer !important;
     pointer-events: auto !important;
@@ -40815,7 +41107,7 @@ img.webtoon {
     background-color: #fff !important;
     box-sizing: unset !important;
     opacity: 0.4;
-    z-index: 2147483640 !important;
+    z-index: ${UI_zIndex - 6} !important;
 }
 
 #FullPictureLoadFixedMenu > div,
@@ -40864,7 +41156,7 @@ img.webtoon {
     border-radius: 3px !important;
     background-color: #fff !important;
     opacity: 1;
-    z-index: 2147483600 !important;
+    z-index: ${UI_zIndex - 6} !important;
     letter-spacing: unset !important;
 }
 
@@ -40877,13 +41169,12 @@ img.webtoon {
     color: #ffffff;
     width: 360px;
     height: auto;
-    ${msgPosCss}
     padding: 0px !important;
     background-color: #000;
     border: 1px solid #303030;
     border-radius: 10px;
     position: fixed;
-    z-index: 2147483641;
+    z-index: ${UI_zIndex - 4};
     opacity: 0.7;
 }
 
@@ -41165,14 +41456,7 @@ a[data-fancybox]:hover {
 
     const E_HENTAI_LoadOriginalImage = _GM_getValue("E_HENTAI_LoadOriginalImage", 0);
 
-    if (["e-hentai.org", "exhentai.org"].some(h => fn.lp === h)) {
-        _GM_registerMenuCommand(E_HENTAI_LoadOriginalImage == 0 ? "❌ " + DL.str_114 : "✔️ " + DL.str_114, () => {
-            E_HENTAI_LoadOriginalImage == 0 ? _GM_setValue("E_HENTAI_LoadOriginalImage", 1) : _GM_setValue("E_HENTAI_LoadOriginalImage", 0);
-            location.reload();
-        });
-    }
-
-    let setYinawSinaOriginalURL = _GM_getValue("setYinawSinaOriginalURL", 0);
+    const setYinawSinaOriginalURL = _GM_getValue("setYinawSinaOriginalURL", 0);
 
     if (fn.url === "yinaw.com") {
         _GM_registerMenuCommand(setYinawSinaOriginalURL == 0 ? "❌ 壹纳网使用原始新浪图床链接" : "✔️ 壹纳网使用原始新浪图床链接", () => {
@@ -41181,7 +41465,7 @@ a[data-fancybox]:hover {
         });
     }
 
-    let copymangaSPA_Mode = _GM_getValue("copymangaSPA_Mode", 1);
+    const copymangaSPA_Mode = _GM_getValue("copymangaSPA_Mode", 1);
 
     if (["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"].some(h => fn.lh === h) && isMobileDeviceUA) {
         _GM_registerMenuCommand(copymangaSPA_Mode == 0 ? "❌ 拷貝漫畫SPA模式" : "✔️ 拷貝漫畫SPA模式", () => {
@@ -41189,6 +41473,8 @@ a[data-fancybox]:hover {
             location.reload();
         });
     }
+
+    const hitomi_img_type = _GM_getValue("hitomi_img_type", "webp");
 
     //確認選項設置資料
     const checkOptionsData = async () => {
@@ -41656,6 +41942,14 @@ a[data-fancybox]:hover {
             return;
         }
     }
+
+    _GM_registerMenuCommand(DL.str_204, () => {
+        let num = prompt(DL.str_205, UI_zIndex);
+        if (Number(num) && Number(num) > 6) {
+            _GM_setValue("UI_zIndex", num);
+            location.reload();
+        }
+    });
 
     if (showOptions) {
         _GM_registerMenuCommand(DL.str_67, () => createPictureLoadOptionsShadowElement());
@@ -42293,7 +42587,7 @@ a[data-fancybox]:hover {
     if (!!autoDownload) {
         //自動下載快捷鍵
         document.addEventListener("keydown", event => {
-            if (captureExclude() || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
+            if (isOpenOptionsUI || isOpenGallery || isOpenFancybox || isOpenFilter || ge(".fancybox-container,#FullPictureLoadFavorSites")) return;
             if (event.ctrlKey && (event.code === "NumpadDecimal" || event.code === "Period" || event.key === ".")) {
                 if (options.autoDownload == 0) {
                     fn.showMsg(DL.str_64, 0);
@@ -42437,6 +42731,8 @@ a[data-fancybox]:hover {
     Xasiat,https://www.xasiat.com/albums/
     EVERIA.CLUB,https://everia.club/
     SexyAsianGirl,https://www.sexyasiangirl.xyz/
+    Cup2D,https://cup2d.com/
+    Mega Gallery,https://www.ecy8.com/
     二刺猿地帶,https://cosplay-nextjs.vercel.app/
     紳士漫畫,https://www.wnacg.com/albums-index-cate-3.html
     肉感美ガール,https://bi-girl.net/
@@ -42446,7 +42742,7 @@ a[data-fancybox]:hover {
 
     const createFavorShadowElement = () => {
 
-        const mainHtml = '<div id="FullPictureLoadFavorSites" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: 2147483647 !important;"></div>';
+        const mainHtml = `<div id="FullPictureLoadFavorSites" style="overflow: clip !important;display: initial !important;position: fixed !important;z-index: ${UI_zIndex - 2} !important;"></div>`;
         document.body.insertAdjacentHTML("beforeend", mainHtml);
 
         const FavorSitesShadowElement = ge("#FullPictureLoadFavorSites");
@@ -42549,7 +42845,7 @@ a[data-fancybox]:hover {
             padding: "10px",
             position: "fixed",
             opacity: "1",
-            zIndex: "2147483647",
+            zIndex: UI_zIndex - 2,
             backgroundColor: "#fafafa",
             fontSize: "14px",
             overflowY: "auto",
