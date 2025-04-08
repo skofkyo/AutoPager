@@ -1874,10 +1874,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://buondua.us/">Buon Dua</a>
+                    <a href="https://buondua.com/">Buon Dua</a>
                 </td>
                 <td>
-                    <a href="https://missbaby.top/">MISS BABY</a>
+                    <a href="https://buondua.us/">buondua.us</a>
                 </td>
             </tr>
             <tr>
@@ -2862,7 +2862,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://www.4khd.com/">4KHD</a>
                 </td>
                 <td>
-                    <a href="https://fxcc.cc/">二級域名導航</a>，<a href="https://yssxc.xxtt.ink/">yssxc.xxtt.ink</a>，<a href="https://juzpz.cchh.ink/">juzpz.cchh.ink</a>
+                    <a href="https://fxcc.cc/">二級域名導航</a>
                 </td>
             </tr>
             <tr>
@@ -4728,10 +4728,10 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.wikifeetx.com/celebs">wikiFeetX</a>
+                    <a href="https://wikifeetx.com/photos">wikiFeetX</a>
                 </td>
                 <td>
-                    <a href="https://www.wikifeet.com/celebs">wikiFeet</a>
+                    <a href="https://wikifeet.com/photos">wikiFeet</a>
                 </td>
             </tr>
             <tr>
@@ -5717,6 +5717,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://rokuhentai.com/">Roku Hentai</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://www.hentaiset.com/">HENTAISET.COM</a>
                 </td>
                 <td></td>
@@ -5854,12 +5860,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://apcomics.org/">apcomics</a>，<a href="https://manga18free.com/">manga18free</a>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://rokuhentai.com/">Roku Hentai</a>
-                </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -7150,6 +7150,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://jestful.net/">JF</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://manga1000.top/">MANGA1000</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
