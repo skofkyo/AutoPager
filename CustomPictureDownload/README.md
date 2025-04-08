@@ -7153,7 +7153,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://manga1000.top/">MANGA1000</a>
+                    <a href="https://rawkuro.net/home">RawKuro</a>
                 </td>
                 <td></td>
             </tr>
