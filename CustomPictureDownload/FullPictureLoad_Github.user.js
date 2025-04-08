@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.6
+// @version            2025.4.8
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -865,11 +865,9 @@
             /^https?:\/\/www\.cool18\.com\/bbs\d*\/index\.php\?app=forum&act=threadview&tid=\d+/,
             /^https?:\/\/wap\.cool18\.com\/index\.php\?app=index&act=view&cid=\d+/
         ],
-        imgs: "img[mydatasrc],#shownewsc img,.show_content img",
-        customTitle: () => fn.dt({
-            s: ".show_content b,h1.article-tit",
-            d: /(\s?\.?)?\s?\(\d+P\)\s?/i
-        }),
+        imgs: "img[mydatasrc],#shownewsc img,.show_content img,img[data-fancybox]",
+        customTitle: ".main-title,.show_content b,h1.article-tit",
+        gallery: 1,
         hide: ".img_ad_list",
         category: "nsfw2"
     }, {
@@ -2206,6 +2204,7 @@
             "weme[245679].com",
             "wemimao1.vip",
             "wemao.xyz",
+            "weiminew.com",
             "maobao.xyz",
             "mvxzsp.com",
             "stxlmt.com",
@@ -3830,8 +3829,10 @@
         category: "nsfw1"
     }, {
         name: "爱死cos美女图片站",
-        host: ["www.24cos.org", "www.lovecos.net"],
-        reg: /^https?:\/\/(www\.24cos\.org|www\.lovecos\.net)\/\w+\/\d+\.html$/,
+        url: {
+            h: ["www.24cos.org", "24cos.org", "www.lovecos.net"],
+            p: /^\/\w+\/\d+\.html$/
+        },
         imgs: async () => {
             let pages = fn.gau(".page>a");
             let liImgs = fn.gae(".mtp>li");
@@ -8054,7 +8055,7 @@
         category: "autoPager"
     }, {
         name: "4KHD",
-        host: ["www.4khd.com", "yssxc.xxtt.ink", "juzpz.cchh.ink"],
+        host: ["www.4khd.com", "csjw.xxtt.ink", "pbnm.cchh.ink"],
         url: {
             e: "//a[@rel='home'][text()='4KHD']",
             p: /^\/content\/\d+\/[^\.\/]+\.html$/
@@ -8120,9 +8121,9 @@
         customTitle: "h1.elementor-heading-title",
         category: "nsfw1"
     }, {
-        name: "Buon Dua/MISS BABY",
+        name: "Buon Dua",
         url: {
-            h: ["buondua.com", "buondua.us", "missbaby.top"],
+            h: ["buondua.com", "buondua.us"],
             e: ".article-fulltext img[alt]"
         },
         init: () => {
@@ -8130,6 +8131,29 @@
             fn.remove(".search-form~*");
         },
         imgs: () => fn.getImg(".article-fulltext img[alt]", fn.gt(".pagination-list>span:last-child>a").match(/\d+/)[0]),
+        button: [4],
+        insertImg: [".article-fulltext", 2],
+        customTitle: ".article-header>h1",
+        referrerpolicy: "strict-origin",
+        category: "nsfw2"
+    }, {
+        name: "MISS BABY",
+        url: {
+            h: ["missbaby.top"],
+            e: ".article-fulltext img[alt]"
+        },
+        init: () => {
+            fn.remove("//div[text()='Sponsored ads']");
+            fn.remove(".search-form~*");
+        },
+        imgs: () => fn.getImg(".article-fulltext img[alt]", fn.gt(".pagination-list>span:last-child>a").match(/\d+/)[0]).then(srcs => srcs.map(src => {
+            if (src.includes(".misskon.") || src.includes(".mrcong.")) {
+                let url = src.replace(/\w+\.\w+\.\w+\//, "");
+                let obj = new URL(url);
+                return obj.origin + obj.pathname;
+            }
+            return src;
+        })),
         button: [4],
         insertImg: [".article-fulltext", 2],
         customTitle: ".article-header>h1",
@@ -11643,25 +11667,21 @@
         category: "nsfw2"
     }, {
         name: "wikiFeetX / wikiFeet",
-        host: ["www.wikifeet.com", "www.wikifeetx.com"],
+        host: ["wikifeet.com", "wikifeetx.com"],
         url: {
-            h: "www.wikifeet",
-            st: "messanger.cfname"
+            h: "wikifeet",
+            st: "gallery"
         },
-        init: () => fn.waitEle(".pic>a"),
+        init: () => fn.waitEle("#gallery a").then(() => (siteJson = _unsafeWindow.tdata)),
         imgs: () => {
-            const {
-                messanger
-            } = _unsafeWindow;
-            customTitle = messanger.cfname;
-            let src = fn.gu(".pic>a");
+            let src = fn.gu("#gallery a");
             let dir = fn.dir(src);
-            thumbnailSrcArray = messanger.gdata.map(e => "https://thumbs.wikifeet.com/" + e.pid + ".jpg");
-            return messanger.gdata.map(e => dir + e.pid + ".jpg");
+            thumbnailSrcArray = siteJson.gallery.map(e => "https://thumbs.wikifeet.com/" + e.pid + ".jpg").sort();
+            return siteJson.gallery.map(e => dir + e.pid + ".jpg").sort();
         },
-        button: [4],
-        insertImg: ["#thepics", 2],
-        hide: "#content>div[style$='center;']:has(>a>img)",
+        capture: () => _this.imgs(),
+        customTitle: () => siteJson.cname,
+        hide: "div:has(>iframe),div:has(>a>picture)",
         category: "nsfw2"
     }, {
         name: "VK",
@@ -13499,36 +13519,6 @@
         insertImg: ["#FullPictureLoadMainImgBox", 2],
         category: "nsfw2"
     }, {
-        name: "一千美女",
-        url: {
-            h: [
-                /yqmn\.live$/
-            ],
-            s: "action-imagelist-uid-"
-        },
-        imgs: async () => {
-            await fn.getNP(".imglist>*,.m_aana>ul,.main_column_pic,.pic-list>ul", "strong+a:not(.next)", null, ".pages");
-            return fn.getImgA(".bigimg img,#articlebody img,.content_pic img,#big-pic img", ".imglist a,.m_aana a,.main_column_pic a,.pic-list a");
-        },
-        button: [4],
-        insertImg: [".imglist,.m_aana,.main_column,.pic-list", 2],
-        customTitle: () => {
-            let selector = ".title>div[style],.imgWrap a,.name>a";
-            let r = /\(\d+p\)|\s?\(.+\)\s?/i;
-            if (fn.ge(selector)) {
-                return fn.dt({
-                    s: selector,
-                    d: r
-                });
-            } else {
-                return fn.dt({
-                    t: fn.ge(".main_column_pic img").alt,
-                    d: r
-                });
-            }
-        },
-        category: "nsfw2"
-    }, {
         name: "人体艺术",
         link: "https://dsqs8.com/",
         url: {
@@ -13546,27 +13536,6 @@
         next: ".prev>a",
         prev: ".next>a",
         customTitle: "h1.tit",
-        category: "nsfw2"
-    }, {
-        name: "上流时尚人体艺术/美女坊",
-        url: {
-            h: [
-                /6643\.live$/,
-                /mnrt\.xyz$/
-            ],
-            p: /^\/html\/\d+\/n-\d+\.html$/
-        },
-        imgs: () => {
-            let [max] = fn.gt("a.next", 2).match(/\d+$/);
-            let links = fn.arr(max, (v, i) => i == 0 ? fn.url : fn.url.replace(".html", "") + `-${i + 1}.html`);
-            return fn.getImgA("#d_BigPic img,.arcbody img", links);
-        },
-        button: [4],
-        insertImg: ["#efpBigPic,.arcbody", 2],
-        autoDownload: [0],
-        next: "#efpNextTxt>a,.arcLocal a:last-child",
-        prev: "#efpPreTxt>a,.arcLocal a",
-        customTitle: "#d_picTit,.arctitle>h1>a",
         category: "nsfw2"
     }, {
         name: "Girl Girl Go",
@@ -14088,7 +14057,7 @@
         box: [".ngg-galleryoverview", 1],
         imgs: async () => {
             await fn.getNP(".ngg-gallery-thumbnail-box", ".ngg-navigation>span.current+a:not(.prev)", null, ".ngg-navigation");
-            return fn.gae(".ngg-gallery-thumbnail a")
+            return fn.gae(".ngg-gallery-thumbnail a");
         },
         thums: ".ngg-gallery-thumbnail img",
         button: [4],
@@ -16777,6 +16746,16 @@
         insertImg: ["#img-page", 2],
         insertImgAF: () => fn.hideEle("#chapter-pages,#grid-buttons"),
         customTitle: "#main h1",
+        category: "hcomic"
+    }, {
+        name: "BRHENTAI",
+        url: {
+            h: ["brhentai.win"]
+        },
+        imgs: ".listaImagens img",
+        button: [4],
+        insertImg: [".listaImagens", 2],
+        customTitle: "h1.post-titulo",
         category: "hcomic"
     }, {
         name: "IMHentai圖片清單頁",
@@ -19997,7 +19976,9 @@
                 "manytoon.com",
                 "harimanga.me",
                 "mangamammy.ru",
-                "mangaonlineteam.com"
+                "mangaonlineteam.com",
+                "lectormanga.top",
+                "brmangas.top"
             ],
             p: /^\/(manga|comic|webtoon)\//
         },
@@ -20985,9 +20966,9 @@
         customTitle: () => _this.page() ? fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g) : null,
         category: "comic"
     }, {
-        name: "Top Manhua/Toonily/Manga-shi/ManhwaZ/Mangaclash/MANGAGG",
+        name: "Top Manhua/Toonily/Manga-shi/ManhwaZ/Mangaclash/MANGAGG/Asura Scan",
         url: {
-            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com", "manhwaz.com", "toonclash.com", "mangagg.com"],
+            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com", "manhwaz.com", "toonclash.com", "mangagg.com", "asurascan.me"],
             p: ["/chapter", "/glava"],
             e: ".reading-content img"
         },
@@ -21184,12 +21165,13 @@
         hide: "#teaser3",
         category: "comic"
     }, {
-        name: "Realm Oasis/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables/TresDaos/Lectormiau/Mangagojo/Niraw",
+        name: "Realm Oasis/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables/TresDaos/Lectormiau/Mangagojo/Niraw/漫画ばんく",
         url: {
             h: [
                 "realmoasis.com",
                 "nightsup.net",
                 "tecnoxcomics.xyz",
+                "tercofable.xyz",
                 "luascans.com",
                 "drakecomic.org",
                 "rizzfables.com",
@@ -21197,7 +21179,10 @@
                 "zonamiau.com",
                 "mangagojo.com",
                 "rawkuma.net",
-                "niraw.com"
+                "niraw.com",
+                "mangakl.top",
+                "mangaku.win",
+                "phoenixmanga.com"
             ]
         },
         init: () => fn.addMutationObserver(() => fn.remove("#radio_content,#teaserbottom")),
@@ -21647,6 +21632,7 @@
         },
         button: [4],
         insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle(".br-content,div:has(>.go-open-popup-wrap)"),
         autoDownload: [0],
         next: ".nav-links a.next_page",
         prev: ".nav-links a.prev_page",
@@ -21656,22 +21642,27 @@
         category: "comic"
     }, {
         name: "KLManga",
-        host: ["klz9.com", "jestful.net"],
+        host: ["klz9.com", "jestful.net", "hachiraw.win", "cmoa1.top"],
         url: {
-            t: [" - KL", " - JF"],
-            p: "-chapter-"
+            t: [" - KL", " - JF", "- Hachiraw", "- CMOA"],
+            st: "load_image"
         },
-        init: () => fn.waitEle("#list-imga img[alt^=Page]"),
-        imgs: () => fn.gae("#list-imga img[alt^=Page]"),
+        box: ["#list-imga", 2],
+        imgs: () => {
+            fn.showMsg(DL.str_05, 0);
+            let code = fn.gst("load_image");
+            let cid = Number(code.match(/\d+/));
+            return fn.fetchDoc(`/${fn.generateRandomString(30, 1)}.iog?cid=${cid}`).then(dom => [...dom.images]);
+        },
         button: [4],
-        insertImg: ["#list-imga", 2],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle("#list-imga"),
         endColor: "white",
         autoDownload: [0],
         next: () => {
-            let c = fn.url.split("/").at(-1);
-            let c_option = fn.gae(".select-chapter option").find(e => e.value == c);
-            let next = c_option?.previousElementSibling;
-            return next ? fn.dir(fn.lp) + next.value : null;
+            let cc = fn.ge(".select-chapter option[selected]");
+            let next = cc?.previousElementSibling;
+            return next ? fn.dir(fn.url) + next.value : null;
         },
         prev: 1,
         customTitle: () => fn.dt({
@@ -21680,11 +21671,40 @@
         }),
         category: "comic"
     }, {
-        name: "RawOtaku/JManga/Momon-Ga",
-        host: ["rawotaku.org", "jmanga.sh", "momon-ga.org"],
+        name: "MANGA1000",
         url: {
-            t: ["RawOtaku", "jmanga", "Momon-Ga", "MomonGa"],
-            h: [/^rawotaku/, /^jmanga/, /^momon-ga/]
+            h: ["manga1000.top", "kakuyomu.in", "mangakoma01.net"],
+            st: "CHAPTER_ID"
+        },
+        box: ["#chapterContent", 2],
+        imgs: () => {
+            fn.showMsg(DL.str_05, 0);
+            let code = fn.gst("CHAPTER_ID");
+            let cid = fn.numVar(code, "CHAPTER_ID");
+            return fetch(`/ajax/image/list/chap/${cid}`, {
+                "headers": {
+                    "accept": "application/json, text/javascript, */*; q=0.01",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "body": null,
+                "method": "POST"
+            }).then(res => res.json()).then(json => [...fn.doc(json.html).images].map(e => e.src));
+        },
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle("#chapterContent"),
+        endColor: "white",
+        autoDownload: [0],
+        next: "a.nextBtn[href^='/']",
+        prev: "a.prevBtn[href^='/']",
+        customTitle: "main h1",
+        category: "comic"
+    }, {
+        name: "RawOtaku/JManga/Momon-Ga",
+        host: ["rawotaku.org", "jmanga.sh", "momon-ga.org", "jpraw.xyz"],
+        url: {
+            t: ["RawOtaku", "jmanga", "Momon-Ga", "MomonGa", "JP Raw"],
+            h: [/^rawotaku/, /^jmanga/, /^momon-ga/, /^jpraw/]
         },
         page: () => fn.clp("/read/"),
         SPA: () => _this.page(),
@@ -27497,6 +27517,69 @@ if ("xx" in window) {
         hide: ".mdModal.mdWd1",
         category: "comic"
     }, {
+        name: "HachiRAW/JRAW",
+        url: {
+            h: ["hachiraw.net", "jraw.top"],
+            p: "/chapter"
+        },
+        box: ["#TopPage", 2, 1200],
+        imgs: () => fn.getImgSrcArr("#TopPage img").filter(e => e != "https://hachiraw.net/01.png"),
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle("#TopPage"),
+        autoDownload: [0],
+        next: () => {
+            let cc = fn.ge("div:has(>.btn-success)");
+            let next = cc?.previousElementSibling?.firstElementChild;
+            return next ? next.href : null;
+        },
+        prev: 1,
+        category: "comic"
+    }, {
+        name: "KKRAW",
+        url: {
+            h: ["kkraw.com"],
+            p: "/chapter"
+        },
+        box: [".more-box", 2],
+        imgs: ".more-box img",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle(".more-box"),
+        autoDownload: [0],
+        next: "//a[text()='次の章'][starts-with(@href,'/')]",
+        prev: "//a[text()='前の章'][starts-with(@href,'/')]",
+        customTitle: () => fn.title(" - 無料読み - Kkraw"),
+        category: "comic"
+    }, {
+        name: "コミックシーモア",
+        url: {
+            h: ["syosetu.gs"],
+            p: "-chapter-"
+        },
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        autoDownload: [0],
+        next: "a.nextchapter",
+        prev: "a.prevchapter",
+        customTitle: "h1.entry-title",
+        category: "comic"
+    }, {
+        name: "SHINIGAMI",
+        url: {
+            h: ["shinigami-id.top"],
+            p: "/ch/"
+        },
+        imgs: ".read-img>img",
+        button: [4],
+        insertImg: [".read-img", 2],
+        autoDownload: [0],
+        next: "//a[contains(text(),'Next »')]",
+        prev: "//a[contains(text(),'« Prev')]",
+        customTitle: "section h3",
+        category: "comic"
+    }, {
         name: "漫畫類 自動展開目錄",
         reg: [
             /(mangabz|xmanhua|yymanhua|dm5|1kkk|manhuaren|manben|mkzhan)\.com\/[\w-]+\//,
@@ -30911,7 +30994,7 @@ if ("xx" in window) {
             }
             let blackList = fancyboxBlackList();
             if (options.fancybox == 1 && thumbnailSrcArray.length > 0) {
-                if (!/www\.24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(fn.lh) || !/^data/.test(thumbnailSrcArray[0])) {
+                if (!/(www\.)?24cos\.org|www\.lovecos\.net|luohuaxiu\.com|kemono\.su|coomer\.su/.test(fn.lh) || !/^data/.test(thumbnailSrcArray[0])) {
                     thumbnailSrcArray = [...new Set(thumbnailSrcArray)];
                 }
             }
@@ -30935,6 +31018,7 @@ if ("xx" in window) {
                     img.src = loading_bak;
                     img.dataset.src = srcArr[i];
                 } else {
+                    img.loading = "lazy";
                     img.decoding = "async";
                     img.onload = () => {
                         img.classList.remove("error");
@@ -31675,6 +31759,9 @@ if ("xx" in window) {
             }
             return new Promise(resolve => {
                 const temp = new Image();
+                if ("referrerpolicy" in siteData) {
+                    temp.setAttribute("referrerpolicy", siteData.referrerpolicy);
+                }
                 temp.onload = () => {
                     if (isString(msg)) fn.hideMsg();
                     resolve({
@@ -34177,6 +34264,7 @@ if ("xx" in window) {
                     img.dataset.src = src;
                 } else {
                     img.decoding = "async";
+                    img.loading = "lazy";
                     img.onload = () => {
                         img.classList.remove("error");
                     };
@@ -35330,6 +35418,9 @@ function simpleLoadImg(img) {
         }
         let loadSrc = img.dataset.src;
         let temp = new Image();
+        if ("referrerpolicy" in siteData) {
+            temp.setAttribute("referrerpolicy", siteData.referrerpolicy);
+        }
         temp.onload = () => {
             img.dataset.width = temp.naturalWidth;
             img.dataset.height = temp.naturalHeight;
@@ -41945,7 +42036,7 @@ a[data-fancybox]:hover {
 
     _GM_registerMenuCommand(DL.str_204, () => {
         let num = prompt(DL.str_205, UI_zIndex);
-        if (Number(num) && Number(num) > 6) {
+        if (Number(num) && Number(num) > 6 && Number(num) < 2147483648) {
             _GM_setValue("UI_zIndex", num);
             location.reload();
         }
