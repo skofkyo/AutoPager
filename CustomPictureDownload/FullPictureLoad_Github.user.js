@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.8.11
+// @version            2025.4.9
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -61,7 +61,7 @@
     //await wait(() => !!document.body && document.readyState !== "loading");
     //await wait(() => !!document.body && document?.body?.childNodes?.length > 0);
 
-    if ((ge("body.no-js:not(.has-preloader,.single-post,.archive)") && !ge("body.no-js #layout-default")) || ge(".captcha-area")) {
+    if ((ge("body.no-js:not(.has-preloader,.single-post,.archive)") && !ge("#layout-default")) || ge(".captcha-area") && !ge("#layout-default")) {
         debug("Cloudflare驗證中不運行腳本。");
         return;
     }
@@ -202,7 +202,7 @@
     }, {
         name: "豆瓣相册",
         url: {
-            h: ["douban.com"],
+            h: ["www.douban.com", "douban.com"],
             p: "/album/",
             d: "pc"
         },
@@ -227,7 +227,7 @@
     }, {
         name: "豆瓣相册M",
         url: {
-            h: ["douban.com"],
+            h: ["www.douban.com", "douban.com"],
             p: "/album/",
             d: "m"
         },
@@ -1433,25 +1433,18 @@
         category: "nsfw1"
     }, {
         name: "ROSI小莉最新写真",
-        host: ["www.rosi211.cc"],
-        reg: /^https?:\/\/(www\.)?rosi\d{3}\.cc\/\d+$/i,
-        init: () => {
-            let pag = fn.gae(".wp-pagenavi");
-            if (pag.length > 0) pag[0].remove();
-            let ele = fn.ge(".entry-header");
-            if (ele) {
-                let te = fn.ge("article.post");
-                insertBefore(te, ele);
-            }
+        host: ["www.rosimm.top"],
+        url: {
+            t: "ROSI小莉写真官网",
+            p: /^\/html\/\d+$/
         },
-        imgs: () => fn.getImgA("article img", ".wp-pagenavi a"),
+        imgs: () => fn.getImgA("article img", ".page-links a"),
         button: [4],
         insertImg: ["article.post", 2],
         autoDownload: [0],
         next: ".nav-previous>a",
         prev: ".nav-next>a",
-        customTitle: ".entry-title",
-        mcss: "#primary{padding:6px !important}.col-md-12{padding:0px !important}",
+        customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
         name: "闺秀网",
@@ -1631,47 +1624,6 @@
         css: ".navbar .nav-list>.menu-item>a{line-height:20px;margin:0 6px}",
         category: "ad"
     }, {
-        name: "足控资源网",
-        host: ["www.zukong8.com", "www.yuzu8.com", "aisituba.com"],
-        url: {
-            h: "www.yuzu8.com",
-            p: "archives",
-            ee: ".content-hide-tips"
-        },
-        imgs: "a[data-fancybox]",
-        button: [4],
-        insertImg: [".entry-content", 2],
-        autoDownload: [0],
-        next: ".article-nav-prev a",
-        prev: ".article-nav-next a",
-        customTitle: ".entry-title",
-        fancybox: {
-            v: 3,
-            css: false
-        },
-        category: "nsfw1"
-    }, {
-        name: "资源库图站",
-        host: ["www.zyktu.top"],
-        url: {
-            e: "a[title^=资源库图站]>img[alt^=资源库图站]",
-            p: /^\/index\.php\/archives\/\d+\/$/
-        },
-        imgs: "span[data-fancybox]>img",
-        button: [4],
-        insertImg: [
-            ["span[data-fancybox]", 1, "span[data-fancybox],span[data-fancybox]~br"], 2
-        ],
-        autoDownload: [0],
-        next: "//a[text()='下一篇']",
-        prev: "//a[text()='上一篇']",
-        customTitle: ".joe_detail__title",
-        fancybox: {
-            v: 3,
-            insertLibrarys: 1
-        },
-        category: "nsfw1"
-    }, {
         name: "乳乐资源网",
         url: {
             h: ["rulel.com"],
@@ -1811,39 +1763,6 @@
         customTitle: ".breadcrumbs li:last-child",
         category: "nsfw2"
     }, {
-        name: "丝袜室",
-        host: ["www.siwashi.xyz"],
-        reg: /^https?:\/\/www\.siwashi\.xyz\/\w+\/\d+\.html$/,
-        init: () => {
-            fn.gae(".entry-content p").forEach(e => {
-                if (!fn.ge("img", e)) {
-                    tempEles.push(e);
-                }
-            });
-        },
-        imgs: () => {
-            if (fn.ge("//div[contains(text(),'分页阅读')]")) {
-                fn.showMsg(DL.str_05, 0);
-                let links = fn.gau("//div[contains(text(),'分页阅读')]/a");
-                links = [fn.url, ...links];
-                return links.flatMap(url => fn.fetchDoc(url).then(dom => fn.gae(".entry-content img", dom).map(e => e.dataset.srcset ?? e.src)));
-            } else {
-                return fn.gae(".entry-content img").map(e => e.dataset.srcset ?? e.src);
-            }
-        },
-        button: [4],
-        insertImg: [".entry-content", 2],
-        insertImgAF: (_, bar) => bar.before(...tempEles),
-        autoDownload: [0],
-        next: ".article-nav-prev a",
-        prev: ".article-nav-next a",
-        customTitle: ".entry-title",
-        fancybox: {
-            v: 3,
-            css: false
-        },
-        category: "nsfw1"
-    }, {
         name: "牛牛美图",
         url: {
             h: ["www.uyn8.cn"],
@@ -1939,9 +1858,9 @@
         openInNewTab: ".grid a:not([target=_blank])",
         category: "autoPager"
     }, {
-        name: "私图网/图库库",
+        name: "图库库",
         url: {
-            h: ["baoruba.com", "tukuku.cc"],
+            h: ["tukuku.cc"],
             p: ".html"
         },
         imgs: ".entry-content img[decoding]",
@@ -1950,7 +1869,7 @@
         autoDownload: [0],
         next: ".nav-previous>a",
         prev: ".nav-next>a",
-        customTitle: () => fn.title(/ - 私图网| - 图库库/),
+        customTitle: () => fn.title(" - 图库库"),
         hide: "[id].widget_text,.gridmode-post-thumbnail-single,.gridbit-thumbnail-alignwide",
         category: "nsfw1"
     }, {
@@ -2599,8 +2518,10 @@
         category: "nsfw1"
     }, {
         name: "MM5MM5美女图片M",
-        host: ["m.mm5mm5.com"],
-        reg: /^https?:\/\/m\.mm5mm5\.com\/mm\/\d+/,
+        url: {
+            h: "m.mm5mm5.com",
+            p: "/mm/"
+        },
         imgs: () => {
             let [, max] = fn.gt(".contentpage>span>i").match(/\/(\d+)/);
             let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl + "/" + (i + 1));
@@ -2642,11 +2563,11 @@
         imgs: () => {
             let all = fn.ge("//a[text()='多图显示']");
             if (all) {
-                return fn.getImgA(".picsbox img", [all]);
+                return fn.getImgA(".picsbox img", [all]).then(srcs => srcs.filter(e => !e.includes("/logo/") && !e.includes("onerror")));
             }
             let max = fn.gt("#allnum");
             let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
-            return fn.getImgA(".picsbox img", links, 2);
+            return fn.getImgA(".picsbox img", links, 2).then(srcs => srcs.filter(e => !e.includes("/logo/") && !e.includes("onerror")));
         },
         button: [4],
         insertImg: [".picsbox>center", 2],
@@ -2664,7 +2585,7 @@
         imgs: () => {
             let [max] = fn.gt("//span[b[@id='thenum']]").match(/\d+$/);
             let links = fn.arr(max, (v, i) => i == 0 ? siteUrl : siteUrl.replace(".html", "") + "_" + (i + 1) + ".html");
-            return fn.getImgA(".swiper-slide img", links, 200);
+            return fn.getImgA(".swiper-slide img", links, 200).then(srcs => srcs.filter(e => !e.includes("/logo/") && !e.includes("onerror")));
         },
         button: [4],
         insertImg: ["#slider", 2],
@@ -2672,6 +2593,7 @@
             s: ".infoline",
             d: /\d+\s\/\s\d+\n/
         }),
+        hide: "union,#pic_list li:has(img:not([src*=shunvi]))",
         category: "nsfw1"
     }, {
         name: "TWOIMG",
@@ -3464,40 +3386,6 @@
         capture: () => _this.imgs(),
         category: "nsfw1"
     }, {
-        name: "Cosersets",
-        link: "https://www.cosersets.com/1",
-        url: {
-            h: "www.cosersets.com"
-        },
-        SPA: true,
-        observeURL: "body",
-        init: () => fn.waitEle(".z-breadcrumbs .z-breadcrumbs__item"),
-        imgs: async (msg = 1) => {
-            if (msg === 1) fn.showMsg(DL.str_05, 0);
-            let body = {
-                storageKey: "1",
-                path: decodeURIComponent(window.location.pathname.replace(/^\/1/, "")),
-                password: "",
-                orderBy: "name",
-                orderDirection: "asc"
-            };
-            let fetchJson = await fetch("/api/storage/files", {
-                "headers": {
-                    "accept": "application/json, text/plain, */*",
-                    "content-type": "application/json;charset=UTF-8;"
-                },
-                "body": JSON.stringify(body),
-                "method": "POST"
-            }).then(res => res.json());
-            return fetchJson.data.files.map(file => file.url);
-        },
-        capture: () => _this.imgs(0),
-        customTitle: async () => {
-            await delay(500);
-            return fn.gt(".z-breadcrumbs")?.replace(/\n/g, " - ").replace(/首页 - |Cosersets - /, "");
-        },
-        category: "nsfw1"
-    }, {
         name: "小丁 (Fantasy Factory) Patreon Cosplay Leaks",
         url: {
             h: "www.fantasyfactory.xyz"
@@ -4093,7 +3981,7 @@
         insertImg: ["//p[img]", 2],
         insertImgAF: (_, bar) => bar.before(...tempEles),
         customTitle: ".item_title>h1",
-        hide: ".img-box",
+        hide: ".img-box,#installContainer",
         category: "nsfw1"
     }, {
         name: "Mei101",
@@ -4132,11 +4020,10 @@
         category: "nsfw1"
     }, {
         name: "小姐姐么/妹妹图集",
-        host: ["xiaojiejie.me", "www.mmtuji.com"],
-        reg: [
-            /^https?:\/\/xiaojiejie\.me\/\d+\/[^\/]+\/$/,
-            /^https?:\/\/www\.mmtuji\.com\/\d+\.html$/
-        ],
+        url: {
+            h: ["xiaojiejie.me", "www.mmtuji.com"],
+            st: "chenxing"
+        },
         init: () => {
             if (fn.lh.includes("mmtuji")) {
                 _unsafeWindow.fuckyou = null;
@@ -4490,19 +4377,6 @@
         customTitle: ".info-title>h1",
         category: "nsfw1"
     }, {
-        name: "第一美女套图网",
-        host: ["meitu.sbs"],
-        url: {
-            t: "第一美女套图网",
-            p: /^\/artdetail\w+\.html$/
-        },
-        imgs: ".ttnr img",
-        button: [4],
-        insertImg: [".ttnr", 2],
-        //customTitle: ".breadcrumbs span",
-        customTitle: () => fn.title(" - 第一美女套图网"),
-        category: "nsfw1"
-    }, {
         name: "遛无写真格式",
         url: {
             h: [
@@ -4773,27 +4647,41 @@
     }, {
         name: "爱妹子",
         url: {
-            h: ["xx.knit.bid", "mm.187187.xyz", "999888.best"],
+            h: ["xx.knit.bid"],
             p: /^\/([\w-]+\/)?article\/\d+\//i,
-            e: ".item-image img,#img-box img"
+            e: ".item-image img"
         },
-        init: () => setTimeout(() => fn.clearAllTimer(2), 1000),
-        box: [".image-container,#img-box"],
+        box: [".image-container"],
         imgs: () => {
             if (fn.ge("li.next-page")) {
                 let max = fn.gt("li.next-page", 2);
-                return fn.getImg(".item-image img", max);
+                let links = fn.arr(max, (v, i) => i == 0 ? fn.lp : fn.lp + `page/${i + 1}/`);
+                return fn.getImgA(".item-image img", links);
             } else {
-                return fn.gae(".item-image img,#img-box img");
+                return fn.gae(".item-image img");
             }
         },
         button: [4],
         insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".item-image,#img-box p:has(>img),.loading-indicator,.pagination-nav"], 2
+            ["#FullPictureLoadMainImgBox", 0, ".item-image,.loading-indicator,.pagination-nav"], 2
         ],
+        insertImgAF: () => setTimeout(() => fn.clearAllTimer(2), 1500),
         customTitle: ".focusbox-title",
         css: "a{white-space:unset!important}",
         hide: ".clickadu-container",
+        category: "nsfw1"
+    }, {
+        name: "爱妹子",
+        url: {
+            h: ["mm.187187.xyz", "999888.best"],
+            p: /^\/([\w-]+\/)?article\/\d+\//i,
+            e: "#img-box img"
+        },
+        imgs: "#img-box img",
+        button: [4],
+        insertImg: ["#img-box", 2],
+        customTitle: ".focusbox-title",
+        css: "a{white-space:unset!important}",
         category: "nsfw1"
     }, {
         name: "爱妹子 反反廣告提示",
@@ -4971,8 +4859,10 @@
         category: "nsfw1"
     }, {
         name: "秀色女神",
-        host: ["www.xsnvshen.co"],
-        reg: /^https?:\/\/www\.xsnvshen\.(co|com)\/album\/\d+/,
+        url: {
+            host: ["www.xsnvshen.co", "www.xsnvshen.com"],
+            p: "/album/"
+        },
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr("img[id^='imglist'][data-original]");
             return thumbnailSrcArray.map(e => e.replace("thumb_600x900/", ""));
@@ -4985,8 +4875,10 @@
         category: "nsfw1"
     }, {
         name: "秀色女神M",
-        host: ["m.xsnvshen.co"],
-        reg: /^https?:\/\/m\.xsnvshen\.(co|com)\/album\/\d+/,
+        url: {
+            host: ["m.xsnvshen.co", "m.xsnvshen.com"],
+            p: "/album/"
+        },
         imgs: async () => {
             let [max] = fn.gt(".pg_current").match(/\d+$/);
             thumbnailSrcArray = await fn.getImg("#arcbox img.lazy", max, 6);
@@ -5002,8 +4894,10 @@
         category: "nsfw1"
     }, {
         name: "秀色女神news",
-        host: ["www.xsnvshen.co", "m.xsnvshen.co"],
-        reg: /^https?:\/\/(www|m)\.xsnvshen\.co\/news\/\d+/,
+        url: {
+            host: ["www.xsnvshen.co", "www.xsnvshen.com", "m.xsnvshen.co", "m.xsnvshen.com"],
+            p: "/news/"
+        },
         imgs: "#arcbox img",
         button: [4],
         insertImg: [
@@ -5083,8 +4977,10 @@
         category: "nsfw2"
     }, {
         name: "HotGirl World",
-        host: ["www.hotgirl2024.com"],
-        reg: /^https?:\/\/www\.hotgirl2024\.com\/g\/\w+\.html\//,
+        url: {
+            h: ["www.hotgirl2024.com"],
+            P: "/g/"
+        },
         imgs: () => fn.getImg(".article__image-list img", fn.gt(".pagination__total") || 1),
         button: [4],
         insertImg: [".article__image-list", 2],
@@ -5892,15 +5788,6 @@
         customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
-        name: "Epic Porn Pics",
-        url: {
-            h: "epicpornpics.com"
-        },
-        imgs: ".masonry-item a[title]:not(.no-lightbox)",
-        thums: ".masonry-item a[title]:not(.no-lightbox) img",
-        customTitle: ".entry-content h1",
-        category: "nsfw2"
-    }, {
         name: "Desi Porn Photo",
         url: {
             h: "desipornphoto.com"
@@ -6145,18 +6032,6 @@
         hide: "#modalAdblock",
         category: "ad"
     }, {
-        name: "52自拍",
-        host: ["shaonvtu.xyz"],
-        url: {
-            h: "shaonvtu.xyz",
-            s: "albums"
-        },
-        imgs: ".images img",
-        button: [4],
-        insertImg: [".images", 2],
-        customTitle: ".content h1",
-        category: "nsfw2"
-    }, {
         name: "吃瓜大队",
         host: ["cgdd.net"],
         url: {
@@ -6186,26 +6061,6 @@
         prev: ".prev a",
         customTitle: ".suit_title>h1",
         hide: "#right-bottom,#ad,.ad",
-        category: "nsfw2"
-    }, {
-        name: "福利乐园",
-        url: {
-            h: ["www.fulily.com", "fulily.com"],
-            p: /^\/\d+\/\d+\/\d+\/[^\/]+\/$/
-        },
-        imgs: () => {
-            let pages = fn.ge(".article-paging .current");
-            if (pages) {
-                return fn.getImgA(".article-content img", ".article-paging a");
-            }
-            return fn.gae(".article-content img");
-        },
-        button: [4],
-        insertImg: [".article-content", 3],
-        autoDownload: [0],
-        next: ".article-nav-prev a",
-        prev: ".article-nav-next a",
-        customTitle: ".article-title",
         category: "nsfw2"
     }, {
         name: "Taotuxp.com/www.taotucd.com",
@@ -6365,16 +6220,15 @@
         customTitle: "header>h2",
         category: "nsfw2"
     }, {
-        name: "尤物丧志/色图/亚色图库/福利姬美图/秀人图/UGIRLS/酱图图/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/高清妹子图/SexyGirl.LOL",
+        name: "尤物丧志/色图/亚色图库/福利姬美图/秀人图/UGIRLS/極品妹子圖/爽图吧/涩图社/美乳小姐姐写真/三上悠亚写真图片/AHottie/高清妹子图",
         url: {
             h: [
                 /^youwu\./,
                 /^setu\./,
                 /^yase\./,
                 /^fuligirl\./,
-                /^xiurentu\./,
+                /^xiuren(tu)?\./,
                 /^ugirls\./,
-                /jtttututu/,
                 /jipin\./,
                 "stuba.netlify.app",
                 "setushe.pics",
@@ -6382,8 +6236,7 @@
                 "meiru.neocities.org",
                 "meitu.neocities.org",
                 "sanshang.neocities.org",
-                /ahottie/,
-                "sexygirl.lol"
+                /ahottie/
             ],
             e: ["img.block", "//div[img[@title]]", "#main>h1,header>h1"]
         },
@@ -6408,8 +6261,10 @@
         category: "nsfw2"
     }, {
         name: "色图替換圖片服務器",
-        reg: /^https?:\/\/setu/,
-        include: "img[src*='teleimgs.pages.dev']",
+        url: {
+            h: "setu",
+            e: "img[src*='teleimgs.pages.dev']"
+        },
         init: () => {
             const replaceSrc = () => {
                 [...document.querySelectorAll("img[src*='teleimgs.pages.dev']")].forEach(e => {
@@ -6436,6 +6291,15 @@
         next: "//span[text()='Prev:']/following-sibling::a[1]",
         prev: "//span[text()='Next:']/following-sibling::a[1]",
         customTitle: "h1",
+        category: "nsfw2"
+    }, {
+        name: "酱图图",
+        host: ["www.jtttututu.top"],
+        reg: /^https?:\/\/www\.jtttututu\.top\/\?\d+\.html$/,
+        imgs: ".entry-content img",
+        button: [4],
+        insertImg: [".entry-content", 2],
+        customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
         name: "浪女吧/Ang4u",
@@ -6502,9 +6366,9 @@
         customTitle: ".entry-header>h1",
         category: "nsfw1"
     }, {
-        name: "Pixwox",
+        name: "Pixnoy",
         url: {
-            h: "www.pixwox.com",
+            h: "www.pixnoy.com",
             p: "/profile/",
             e: ".ub_profile"
         },
@@ -6743,8 +6607,10 @@
         category: "nsfw2"
     }, {
         name: "OSOSEDKI",
-        host: ["ososedki.com"],
-        reg: /^https?:\/\/ososedki\.com\/([a-z]{2}\/)?photos\//,
+        url: {
+            h: ["ososedki.com"],
+            p: "/photos/"
+        },
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr("a[data-fancybox] img").sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
             return fn.gau("a[data-fancybox]").sort((a, b) => a.match(/(\d+)\.\w+$/)[1] - b.match(/(\d+)\.\w+$/)[1]);
@@ -7080,8 +6946,10 @@
         category: "nsfw2"
     }, {
         name: "Cosplayers GoneWild",
-        host: ["cosplayersgonewild.net"],
-        reg: /^https?:\/\/cosplayersgonewild\.net\/albums\/\d+\/$/,
+        url: {
+            h: ["cosplayersgonewild.net"],
+            p: "/albums/"
+        },
         init: () => fn.waitEle("#main-carousel-list img"),
         box: [".grid", 2],
         imgs: "#main-carousel-list img",
@@ -7360,32 +7228,6 @@
         hide: "._title>._helper",
         category: "nsfw2"
     }, {
-        name: "Sexy Asian Model Pics",
-        url: {
-            h: "www.sexyasianmodelpics.com",
-            p: "/album/",
-        },
-        init: () => {
-            let ps = fn.gae(".entry-content>p");
-            if (ps.length > 0) {
-                ps.forEach(p => {
-                    let img = fn.ge("img", p);
-                    if (!img) {
-                        tempEles.push(p.cloneNode(true));
-                    }
-                });
-            }
-        },
-        imgs: () => fn.getImgA(".pcontent-imgbox>img", ".post-links>a"),
-        button: [4],
-        insertImg: [".entry-content", 2],
-        insertImgAF: (_, bar) => bar.before(...tempEles),
-        autoDownload: [0],
-        next: ".post-pre a",
-        prev: ".post-nextv a",
-        customTitle: ".entry-header>h1",
-        category: "nsfw1"
-    }, {
         name: "HOTPIC",
         url: {
             h: ["hotpic.cc"],
@@ -7404,8 +7246,7 @@
             h: "vipinay.com",
             st: "mwl_data"
         },
-        init: () => fn.waitEle(".entry-content p>img,.entry-content p>picture>img"),
-        imgs: () => fn.getImgSrcset(".entry-content p>img,.entry-content p>picture>img"),
+        imgs: () => fn.waitEle([".entry-content p>img,.entry-content p>picture>img,.entry-content img[class*='wp-image']"]).then(eles => fn.getImgSrcset(eles)),
         capture: () => _this.imgs(),
         customTitle: "h1.entry-title",
         fetch: 1,
@@ -7424,9 +7265,11 @@
         category: "nsfw2"
     }, {
         name: "JimmysOnline.com",
-        host: ["www.jimmysonline.com"],
-        reg: /^https?:\/\/www\.jimmysonline\.com\/[^\/]+\/$/,
-        include: "a.aigpl-img-link[data-mfp-src]",
+        url: {
+            h: "www.jimmysonline.com",
+            p: /^\/[^\/]+\/$/,
+            e: "a.aigpl-img-link[data-mfp-src]"
+        },
         imgs: () => fn.gae("a.aigpl-img-link[data-mfp-src]").map(a => a.dataset.mfpSrc),
         button: [4],
         insertImg: [".aigpl-gallery", 2],
@@ -7434,9 +7277,11 @@
         category: "nsfw2"
     }, {
         name: "gaidam18",
-        host: ["gaidam18.com"],
-        reg: /^https?:\/\/gaidam18\.com\/[^\/]+\/$/,
-        include: "figure.gallery-item,.entry-content>div>a[href*='blogger'],.entry-content img[src*='/wp-content/uploads/']",
+        url: {
+            h: ["gaidam18.com"],
+            p: /^\/[^\/]+\/$/,
+            e: "figure.gallery-item,.entry-content>div>a[href*='blogger'],.entry-content img[src*='/wp-content/uploads/']"
+        },
         imgs: () => {
             if (fn.ge(".gallery-item img")) {
                 return fn.gae(".gallery-item img");
@@ -7523,53 +7368,6 @@
         customTitle: "h1.tdb-title-text,h1.entry-title",
         category: "nsfw2"
     }, {
-        name: "Cosplay69",
-        host: ["www.cosplay69.net", "cosplay69.net"],
-        url: () => fn.checkUrl({
-            h: "cosplay69.net",
-            p: /^\/[^\/]+\/$/,
-            e: "//a[@rel='category tag'][text()='Album']"
-        }) && !["sssins.com", "nicezzz.com"].some(t => document.documentElement.innerText.includes(t)),
-        init: async () => {
-            await fn.waitEle(".entry-content img");
-            fn.addMutationObserver(() => {
-                document.documentElement.style.overflow = "";
-                document.body.classList.remove("has-header-ad", "tie-popup-is-opend");
-                fn.remove("#tie-popup-adblock");
-            });
-            let iframe = fn.ge(".iframe-container,iframe[scrolling]");
-            if (iframe) {
-                let x = fn.ge(".entry-content");
-                fn.gae(".iframe-container,iframe[scrolling]").forEach(e => insertBefore(x, e));
-            }
-            if (fn.ge(".gallery")) {
-                fn.createImgBox(".gallery", 1);
-            } else {
-                fn.createImgBox(".entry-content p:has(>img),.entry-content ul", 1);
-            }
-        },
-        imgs: () => fn.fetchDoc(fn.url).then(dom => fn.gae("a[data-fancybox],.gallery-item a,.entry-content img[alt]:not(.crp_thumb,[src*='/banner'])", dom)),
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".gallery,.entry-content p:has(>img:not(.crp_thumb)),.entry-content ul"], 2
-        ],
-        autoDownload: [0],
-        next: ".nav-previous>a",
-        prev: ".nav-next>a",
-        customTitle: "h1.entry-title",
-        category: "nsfw2"
-    }, {
-        name: "Cosplay69",
-        reg: /^https?:\/\/(www\.)?cosplay69\.net\//,
-        init: () => {
-            fn.addMutationObserver(() => {
-                document.documentElement.style.overflow = "";
-                document.body.classList.remove("has-header-ad", "tie-popup-is-opend");
-                fn.remove("#tie-popup-adblock");
-            });
-        },
-        category: "ad"
-    }, {
         name: "X Cosplay",
         host: ["xcosplay.top"],
         reg: /^https?:\/\/xcosplay\.top\/[^\/]+\/$/,
@@ -7585,52 +7383,11 @@
         customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
-        name: "Ero Cosplay",
-        host: ["www.erocosplay.org"],
-        reg: /^https?:\/\/www\.erocosplay\.org\/[^\/]+\/$/,
-        include: "#reader",
-        init: () => fn.waitEle("#reader img"),
-        imgs: () => {
-            let textCode = fn.gst("pages").match(/pages[\s=]+([^;]+)/)[1].replaceAll("\n", "");
-            return fn.run(textCode);
-        },
-        button: [4],
-        insertImg: ["#reader", 2],
-        insertImgAF: () => {
-            document.removeEventListener("keydown", _unsafeWindow.handleKeyboardEvent);
-        },
-        autoDownload: [0],
-        next: () => {
-            let selector = `[data-href="${fn.url}"]`;
-            let currentE = fn.ge(selector);
-            let next = currentE?.nextElementSibling;
-            if (next?.nodeName === "OPTION") {
-                return next.dataset.href;
-            } else {
-                return null;
-            }
-        },
-        prev: 1,
-        customTitle: ".entry-title",
-        css: "#reader{width:auto!important;height:auto!important}",
-        hide: "#mode,#botmenureader,.popSc",
-        category: "nsfw1"
-    }, {
-        name: "Ero Cosplay AAD",
-        host: ["www.erocosplay.org"],
-        reg: /^https?:\/\/www\.erocosplay\.org\//,
-        hide: ".popSc",
-        category: "ad"
-    }, {
         name: "CG Cosplay",
-        host: ["cgcosplay.org"],
-        reg: /^https?:\/\/cgcosplay\.org\/\d+\/$/,
-        include: [
-            ".gallery",
-            ".gallery a",
-            ".elementor-heading-title"
-        ],
-        //exclude: "//a[text()='Login' or text()='Log in here']",
+        url: {
+            h: ["cgcosplay.org"],
+            p: /^\/\d+\/$/
+        },
         init: () => {
             let video = fn.ge(".fluid_video_wrapper");
             if (video) {
@@ -7639,9 +7396,6 @@
             }
         },
         imgs: ".gallery .gallery-item a:has(>img:not([src$='/banner']))",
-        //button: [4],
-        //insertImg: [".gallery", 3],
-        //autoDownload: [0],
         next: ".nav-previous a[rel=prev]",
         prev: ".nav-next a[rel=next]",
         customTitle: ".elementor-heading-title",
@@ -7652,18 +7406,6 @@
         reg: /^https?:\/\/cgcosplay\.org\//,
         hide: "#page+[id][class]:has(.adblock_title)",
         category: "ad"
-    }, {
-        name: "Asupan",
-        host: ["asupan.art", "www.korenime.org"],
-        reg: /^https?:\/\/(asupan\.art|www\.korenime\.org)\/id\/\d+$/,
-        box: [".gallery", 2],
-        imgs: ".gallery img",
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".gallery"], 2
-        ],
-        customTitle: "h1>span",
-        category: "nsfw1"
     }, {
         name: "AsiaOnTop",
         host: ["asiaontop.com", "asiaon.top"],
@@ -7693,72 +7435,18 @@
             h: "mitaku.net",
             e: "a.msacwl-img-link[data-mfp-src]"
         },
-        imgs: () => fn.gae("a.msacwl-img-link[data-mfp-src]").map(a => a.dataset.mfpSrc).slice(1, -1),
+        imgs: () => fn.gae("a.msacwl-img-link[data-mfp-src]").map(a => a.dataset.mfpSrc),
         button: [4],
         insertImg: [
-            [".cm-post-content", 2], 2
+            [".entry-content", 2], 2
         ],
         autoDownload: [0],
         next: ".previous>a",
         prev: ".next>a",
         customTitle: () => fn.dt({
-            s: "h1.cm-entry-title",
+            s: "h1.entry-title",
             d: /.[\smitaku]{6,7}\.net./
         }),
-        category: "nsfw2"
-    }, {
-        name: "EroAsian",
-        url: {
-            h: "eroasian.net",
-            p: "/photo-set/",
-            e: ".cm-entry-summary img",
-            ee: "a.msacwl-img-link"
-        },
-        init: () => {
-            let info = fn.ge(".wp-block-group");
-            if (info) {
-                let te = fn.ge(".cm-entry-summary");
-                insertBefore(te, info);
-            }
-        },
-        imgs: () => fn.getImgA(".cm-entry-summary img", ".pagination a"),
-        button: [4],
-        insertImg: [".cm-entry-summary", 2],
-        autoDownload: [0],
-        next: ".previous>a",
-        prev: ".next>a",
-        customTitle: ".cm-entry-title",
-        category: "nsfw2"
-    }, {
-        name: "EroAsian",
-        url: {
-            h: "eroasian.net",
-            p: "/photo-set/",
-            e: "a.msacwl-img-link"
-        },
-        init: () => {
-            let info = fn.ge(".wp-block-group");
-            if (info) {
-                let te = fn.ge(".cm-entry-summary");
-                insertBefore(te, info);
-            }
-        },
-        box: [".cm-entry-summary", 0],
-        imgs: () => fn.gae("a.msacwl-img-link[data-mfp-src]").map(a => {
-            if (/^http/.test(a.dataset.mfpSrc)) {
-                return a.dataset.mfpSrc;
-            } else {
-                return fn.lo + a.dataset.mfpSrc;
-            }
-        }).slice(1, -1),
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0], 2
-        ],
-        autoDownload: [0],
-        next: ".previous>a",
-        prev: ".next>a",
-        customTitle: ".cm-entry-title",
         category: "nsfw2"
     }, {
         name: "Byoru",
@@ -7906,7 +7594,7 @@
     }, {
         name: "Du lịch Mường Lò",
         url: {
-            h: "dulichnghialo.vn"
+            h: "diendandatdai.com"
         },
         init: () => setTimeout(() => _unsafeWindow.jQuery(document).off(), 1000),
         imgs: ".gallery a:has(img)",
@@ -8361,13 +8049,13 @@
         customTitle: ".album-header a",
         category: "nsfw1"
     }, {
-        name: "Nao Kanzaki and a few friends/NYO Cosplay",
+        name: "Nao Kanzaki and a few friends/NYO Cosplay/Navi Cosplay",
         url: {
             h: ["aitoda.blogspot.com", "2bcosplay.blogspot.com", "navicosplay.blogspot.com"],
             p: /^\/\d+\/\d+\/[\w-]+\.html/
         },
-        imgs: ".entry-content .separator a,div.separator>img",
-        thums: ".entry-content .separator a img,div.separator>img",
+        imgs: ".entry-content .separator a:not([data-saferedirecturl]),div.separator>img",
+        thums: ".entry-content .separator a:not([data-saferedirecturl]) img,div.separator>img",
         videos: "iframe[title='YouTube video player'],iframe[id^='BLOGGER-video']",
         autoDownload: [0],
         next: ".blog-pager-older-link",
@@ -8424,7 +8112,7 @@
         thums: ".separator img",
         button: [4],
         insertImg: [".entry-content,.post-content", 2],
-        customTitle: "h1.entry-title,h1.post-title",
+        customTitle: "h1.entry-title,h1.post-title,h3.entry-title,h3.post-title",
         category: "nsfw1"
     }, {
         name: "25精力旺盛",
@@ -8438,7 +8126,7 @@
         insertImg: [
             ["#FullPictureLoadMainImgBox", 0, ".entry-content img[alt='']"], 2
         ],
-        customTitle: "h1.entry-title",
+        customTitle: "h1.entry-title,h3.entry-title",
         category: "nsfw1"
     }, {
         name: "Nude Models",
@@ -8940,8 +8628,10 @@
         category: "nsfw1"
     }, {
         name: "水着グラビア",
-        host: ["www.mizugigurabia.com"],
-        reg: /^https?:\/\/www\.mizugigurabia\.com\/\?p=\d+$/,
+        url: {
+            h: ["www.mizugigurabia.com"],
+            s: "p="
+        },
         init: () => {
             fn.clearAllTimer();
             fn.remove("#content-top");
@@ -8965,9 +8655,15 @@
         category: "nsfw2"
     }, {
         name: "エロ酒場",
-        host: ["ero-sakaba.com"],
-        reg: /^https?:\/\/ero-sakaba\.com\/\?p=\d+$/,
-        imgs: ".post_thum img,#post_body img[data-srcset]",
+        url: {
+            h: ["ero-sakaba.com"],
+            s: "p="
+        },
+        imgs: () => {
+            let srcs = fn.getImgSrcArr(".post_thum img,#post_body img[data-srcset]");
+            return srcs.map(e => e.replace(/-\d+x\d+\./, "."));
+        },
+        capture: () => _this.imgs(),
         autoDownload: [0],
         next: "a.nav_link_l",
         prev: "a.f_row_r",
@@ -8994,7 +8690,11 @@
             h: "bakufu.jp",
             p: "/archives/"
         },
-        imgs: ".entry-content a[href*=bakufu]:has(img[src*=bakufu])",
+        imgs: () => {
+            let srcs = fn.getImgSrcArr(".entry-content a[href*=bakufu]:has(img[src*=bakufu])");
+            return srcs.map(e => e.replace("-scaled.", "."));
+        },
+        capture: () => _this.imgs(),
         autoDownload: [0],
         next: ".nav-previous>a",
         prev: ".nav-next>a",
@@ -9011,9 +8711,15 @@
         category: "nsfw2"
     }, {
         name: "惚れた.net",
-        host: ["horeta.net"],
-        reg: /^https?:\/\/horeta\.net\/[\w-]+\/$/,
-        imgs: ".entry-content p>img.alignnone,.gallery-item img",
+        url: {
+            h: ["horeta.net"],
+            p: /^\/[\w-]+\/$/
+        },
+        imgs: () => {
+            let srcs = fn.getImgSrcArr(".entry-content p>img.alignnone,.gallery-item img");
+            return srcs.map(e => e.replace("-scaled.", "."));
+        },
+        capture: () => _this.imgs(),
         autoDownload: [0],
         next: ".st-next-link",
         prev: ".st-prev-link",
@@ -9021,8 +8727,10 @@
         category: "nsfw1"
     }, {
         name: "エロ画像女神ちゃんねる",
-        host: ["megamich.com"],
-        reg: /^https?:\/\/megamich\.com\/[^\/]+\/\d+\.html$/,
+        url: {
+            h: ["megamich.com"],
+            p: /^\/[^\/]+\/\d+\.html$/
+        },
         imgs: () => {
             let pages = fn.ge(".page-numbers");
             if (pages) {
@@ -9146,8 +8854,10 @@
         category: "nsfw2"
     }, {
         name: "復刻書林",
-        host: ["reprint-kh.com"],
-        reg: /^https?:\/\/reprint-kh\.com\/archives\/\d+$/,
+        url: {
+            h: ["reprint-kh.com"],
+            p: "/archives/"
+        },
         imgs: async () => {
             if (fn.ge(".gallery-row")) {
                 await fn.getNP(".gallery-row", "//a[span[text()='次のページ']]");
@@ -9284,7 +8994,11 @@
             h: ["mizugazo.com"],
             p: "/archives/"
         },
-        imgs: ".single_thumbnail>img,.wp-block-gallery img",
+        imgs: () => {
+            let srcs = fn.getImgSrcArr(".single_thumbnail>img,.wp-block-gallery img");
+            return srcs.map(e => e.replace(/-\d+x\d+\./, "."));
+        },
+        capture: () => _this.imgs(),
         customTitle: ".entry-title",
         category: "nsfw1"
     }, {
@@ -9292,7 +9006,11 @@
         url: {
             h: "uraaka-ranking.com"
         },
-        imgs: ".in-pict img",
+        imgs: () => {
+            let srcs = fn.getImgSrcArr(".in-pict img");
+            return srcs.map(e => e.replace(":small", ""));
+        },
+        capture: () => _this.imgs(),
         customTitle: "h1.entry-title",
         category: "nsfw2"
     }, {
@@ -9370,6 +9088,17 @@
         customTitle: "h1.entry-title",
         fetch: 1,
         downloadVideo: true,
+        category: "nsfw1"
+    }, {
+        name: "芸能人のエロ画像",
+        url: {
+            h: "geinoujin-gazou.mixh.jp"
+        },
+        imgs: ".eye-catch-wrap img,.entry-content img",
+        autoDownload: [0],
+        next: "a.prev-post",
+        prev: "a.next-post",
+        customTitle: "h1.entry-title",
         category: "nsfw1"
     }, {
         name: "JKワールド",
@@ -9451,9 +9180,9 @@
             p: "/blog-entry-"
         },
         imgs: () => {
-            let d = fn.ge("meta[property='og:image']").content.match(/\d+/g).at(-1);
-            let srcs = fn.getImgSrcArr(".mainEntryBody img,.mainEntryMore img,#entry .entry-body img");
-            return srcs.filter(e => e.includes(d)).map(e => e.replace(/(\d+)s(\.\w+)$/i, "$1$2"));
+            let eles = fn.gae(".mainEntryBody img,.mainEntryMore img,#entry .entry-body img").filter(e => !e.closest("a[href*='html'],a[href*='?']"));
+            let srcs = fn.getImgSrcArr(eles);
+            return srcs.map(e => e.replace(/s(\.\w+)$/, "$1"));
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
@@ -9529,8 +9258,10 @@
         category: "nsfw1"
     }, {
         name: "Love Asian Babes",
-        host: ["amazon-love.com"],
-        reg: /^https?:\/\/amazon-love\.com\/[^.]+\.html$/,
+        url: {
+            h: ["amazon-love.com"],
+            p: /^\/[^.]+\.html$/
+        },
         imgs: () => {
             let max = fn.gt("//a[text()='Next Page »']", 2) || 1;
             return fn.getImg(".entry-content img", max, 7);
@@ -10051,32 +9782,6 @@
         css: ".blog-posts-wrapper article.has-post-thumbnail .entry-container{margin:0 auto 0 !important}",
         category: "autoPager"
     }, {
-        name: "2LSP",
-        host: ["2lsp.xyz"],
-        reg: /^https?:\/\/2lsp\.xyz\/[^/]+\/$/,
-        include: ".entry-content img[data-srcset]",
-        exclude: ".content-hide-tips",
-        init: () => fn.clearAllTimer(),
-        observerClick: ".swal2-close",
-        imgs: () => fn.gae(".entry-content img[data-srcset]").map(e => e.dataset.srcset),
-        button: [4],
-        insertImg: [".entry-content", 2],
-        autoDownload: [0],
-        next: ".article-nav-prev>a",
-        prev: ".article-nav-next>a",
-        customTitle: "h1.entry-title",
-        fancybox: {
-            v: 3,
-            insertLibrarys: 1
-        },
-        category: "nsfw1"
-    }, {
-        name: "2LSP",
-        host: ["2lsp.xyz"],
-        reg: /^https?:\/\/2lsp\.xyz\//,
-        observerClick: ".swal2-close",
-        category: "none"
-    }, {
         name: "性趣套图",
         host: ["tt.539765.xyz", "tt.xqtt.de"],
         url: {
@@ -10198,83 +9903,6 @@
         hide: "#touch_to_see",
         category: "nsfw2"
     }, {
-        name: "Models Vibe",
-        host: ["www.modelsvibe.com"],
-        reg: /^https?:\/\/www\.modelsvibe\.com\/[^/]+\/$/,
-        include: ".td-post-content img,.td-post-content .page-nav",
-        init: () => {
-            let ele = fn.ge("//p[br and not(contains(text(),'[ad_1]'))]");
-            if (!!ele) {
-                ele = ele.cloneNode(true);
-                fn.gae("img", ele).forEach(img => img.remove());
-                let tE = fn.ge(".td-post-content");
-                insertBefore(tE, ele);
-            }
-            let ele2 = fn.ge("//p[contains(text(),'Number of pictures')]");
-            if (!!ele2) {
-                if (ele2.previousSibling.tagName == "P") {
-                    ele2.previousSibling.innerHTML = ele2.previousSibling.innerHTML + "<br>" + ele2.innerText;
-                    let e = ele2.previousSibling;
-                    let te = ele2.previousSibling.parentNode;
-                    insertBefore(te, e);
-                }
-            }
-            fn.gae(".td-post-content .tdb-block-inner p").forEach(p => {
-                if (!fn.ge("img", p) && !p.innerText.includes("[ad_1]")) {
-                    tempEles.push(p);
-                }
-            });
-        },
-        imgs: () => {
-            if (fn.ge(".page-nav")) {
-                let max = fn.gt(".page-nav>*:last-child", 2);
-                return fn.getImg(".td-post-content img", max, 4);
-            } else if (fn.ge(".td-post-content img[srcset]")) {
-                return fn.getImgSrcset(".td-post-content img");
-            } else {
-                return fn.gae(".td-post-content img");
-            }
-        },
-        button: [4],
-        insertImg: [".td-post-content .tdb-block-inner", 2],
-        insertImgAF: (_, bar) => bar.before(...tempEles),
-        customTitle: "h1.tdb-title-text",
-        css: ".tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
-        category: "nsfw1"
-    }, {
-        name: "Models Vibe - 分類自動翻頁",
-        reg: /^https?:\/\/www\.modelsvibe\.com\/(albums\/.+)?(page\/\d+\/)?$/,
-        init: () => {
-            /page\/\d+\//.test(fn.lp) ? currentPageNum = Number(fn.lp.match(/\/page\/(\d+)/)[1]) : currentPageNum = 1;
-        },
-        autoPager: {
-            ele: ".td_flex_block:not(.td-flex-radius),.td_block_inner.tdb-block-inner",
-            observer: ".td-cpt-post",
-            next: () => {
-                let url = siteUrl.replace(/page\/\d+\/?/, "") + `page/${currentPageNum += 1}/`;
-                return url;
-            },
-            re: ".page-nav,.td-load-more-wrap",
-            stop: (dom) => !!fn.ge(".td-404-title", dom),
-            bF: (dom) => {
-                fn.gae("span[data-img-url]", dom).forEach(span => {
-                    span.classList.add("td-animation-stack-type0-2");
-                    span.style.backgroundImage = `url("${span.dataset.imgUrl}")`;
-                });
-            },
-            pageNum: () => currentPageNum
-        },
-        openInNewTab: ".td-cpt-post a:not([target=_blank])",
-        css: ".tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
-        hide: ".tdi_60.td-a-rec",
-        category: "autoPager"
-    }, {
-        name: "Models Vibe - 修正選單CSS和去廣告",
-        reg: /^https?:\/\/www\.modelsvibe\.com\//,
-        css: ".tdb_header_menu .tdb-menu .tdb-mega-menu-inactive,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive{pointer-events:auto!important}.tdb_header_menu .tdb-menu .tdb-mega-menu-inactive > ul,.tdb_header_menu .tdb-menu .tdb-menu-item-inactive>ul{visibility:unset!important;opacity:1!important}.tdb_header_menu .tdb-normal-menu ul .tdb-menu-item{list-style-type:auto!important}",
-        hide: ".tdi_60.td-a-rec",
-        category: "ad"
-    }, {
         name: "Digital AI Gallery",
         url: {
             h: ["larose.vip"],
@@ -10320,7 +9948,7 @@
         ],
         url: {
             h: ["niwatori.my.id", "quenbox.top", "nekobox.top", "imgyagi.top"],
-            e: [".post-navigation .nav-links"]
+            e: ".post-navigation .nav-links"
         },
         srcset: ".entry-content .wp-block-gallery img",
         button: [4],
@@ -10330,17 +9958,6 @@
         prev: ".nav-next>a",
         customTitle: "h1.entry-title",
         category: "nsfw1"
-    }, {
-        name: "ErooHub",
-        url: {
-            h: ["eroohub.com"],
-            p: "/p/"
-        },
-        imgs: "#post img",
-        button: [4],
-        insertImg: ["#post", 2],
-        customTitle: ".container span",
-        category: "nsfw2"
     }, {
         name: "Sexy Girl Pictures",
         url: {
@@ -10410,8 +10027,12 @@
         ],
         include: [".post-content img", "h1.post-title"],
         imgs: () => {
-            let [, max] = fn.gt("h1.post-title")?.match(/\/(\d+)$/);
-            max = Number(max) || 1;
+            let max;
+            try {
+                [, max] = fn.gt("h1.post-title")?.match(/\/(\d+)$/);
+            } catch {
+                max = 1;
+            }
             return /\?m=1/.test(siteUrl) ? fn.getImg(".post-content img", max, "8") : fn.getImg(".post-content img", max);
         },
         button: [4],
@@ -10506,11 +10127,13 @@
         customTitle: "h2.title",
         category: "nsfw1"
     }, {
-        name: "GenZ Relax/Ảnh gái sexy/ẢNH GÁI XINH/Hot Girl Xinh 18+/Hình ảnh gái xinh",
+        name: "GenZ Relax/ẢNH GÁI XINH/Hot Girl Xinh 18+/Hình ảnh gái xinh",
         url: {
-            h: ["genzrelax.com", "anhgaisexy.net", "anhgaixinh.tv", "girlxinh18.com", "gaixinh.photo"]
+            h: ["genzrelax.com", "anhgaixinh.tv", "girlxinh18.com", "gaixinh.photo"],
+            e: ".entry-image img,.entry-content img:not(#img_video)"
         },
-        imgs: ".entry-image img,.entry-content img:not(#img_video)",
+        imgs: () => fn.gae(".entry-image img,.entry-content img:not(#img_video)").filter(e => !e.closest("a[href*='?']")),
+        capture: () => _this.imgs(),
         customTitle: "h1.entry-title,h1.page-title",
         category: "nsfw1"
     }, {
@@ -10520,22 +10143,6 @@
         },
         srcset: "img.entry-thumb[srcset],img[class*='wp-image'][srcset]",
         customTitle: "h1.tdb-title-text",
-        category: "nsfw1"
-    }, {
-        url: {
-            h: "nangngucnoisoi.org"
-        },
-        box: [".box.info", 2],
-        imgs: ".single-page>p img",
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, ".single-page>p"], 2
-        ],
-        autoDownload: [0],
-        next: ".nav-next a[rel=next]",
-        prev: ".nav-previous a[rel=prev]",
-        customTitle: "h1.entry-title",
-        fetch: 1,
         category: "nsfw1"
     }, {
         name: "Hot Girl Xinh 18+",
@@ -10616,34 +10223,6 @@
         prev: "a[rel=next]",
         customTitle: ".entry-title",
         category: "nsfw2"
-    }, {
-        name: "Space of Miss Beautiful",
-        url: {
-            h: "spacemiss.com",
-            e: [".td-post-content .tdb-block-inner.td-fix-index", ".tdb-title-text"]
-        },
-        init: async () => {
-            let img = await fn.waitEle(".td-post-content .tdb-block-inner.td-fix-index img");
-            let video = fn.ge(".td-post-content .tdb-block-inner.td-fix-index>center:has(>iframe)");
-            let p = fn.ge("p.has-text-align-center");
-            if (p) {
-                tempEles.push(p.cloneNode(true));
-            }
-            if (img && video) {
-                tempEles.push(video);
-            }
-        },
-        imgs: () => {
-            videoSrcArray = fn.gae("video>source[type='video/mp4']").map(e => e.src);
-            return fn.gae(".td-post-content .tdb-block-inner.td-fix-index img").map(e => decodeURIComponent(e.src));
-        },
-        button: [4],
-        insertImg: [".td-post-content .tdb-block-inner.td-fix-index", 2, 1000],
-        insertImgAF: (_, bar) => bar.before(...tempEles),
-        customTitle: () => fn.gt(".tdb-title-text").replace(/\d+P[\d\s]+V|\d+P([\d\s\+P]+)?/, "").replaceAll("|", "-").trim(),
-        hide: ".td-a-ad",
-        //downloadVideo: true,
-        category: "nsfw1"
     }, {
         name: "呦糖社",
         host: ["www.nicesss.com"],
@@ -10773,8 +10352,10 @@
         category: "nsfw2"
     }, {
         name: "成人图片 Qinimg",
-        host: ["www.qinimg.com"],
-        reg: /^https?:\/\/www\.qinimg\.com\/image\/\d+\.html$/,
+        url: {
+            h: "www.qinimg.com",
+            p: "/image/"
+        },
         imgs: () => {
             thumbnailSrcArray = fn.gae("#image a>img").map(e => e.getAttribute("img") != "" ? e.getAttribute("img") : e.src);
             return fn.gae("#image a");
@@ -10843,8 +10424,10 @@
         category: "nsfw2"
     }, {
         name: "NSFWalbum",
-        host: ["nsfwalbum.com"],
-        reg: /^https?:\/\/nsfwalbum\.com\/album\/\d+$/,
+        url: {
+            h: ["nsfwalbum.com"],
+            p: "/album/"
+        },
         box: [".album", 2],
         imgs: () => {
             thumbnailSrcArray = fn.getImgSrcArr(".albumPhoto");
@@ -10942,8 +10525,10 @@
         category: "hcomic"
     }, {
         name: "Pics-X",
-        host: ["pics-x.com"],
-        reg: /^https?:\/\/pics-x\.com\/gallery\/\d+\//i,
+        url: {
+            h: ["pics-x.com"],
+            p: "/gallery/"
+        },
         init: () => fn.waitEle("#images-container img"),
         imgs: "#images-container img",
         button: [4],
@@ -11140,16 +10725,6 @@
         customTitle: "h1.news_item_title",
         category: "nsfw1"
     }, {
-        name: "Zone of Games",
-        url: {
-            h: "www.zoneofgames.ru"
-        },
-        imgs: () => fn.gae(".news-content img"),
-        capture: () => _this.imgs(),
-        videos: ".ipsEmbeddedVideo iframe",
-        customTitle: "h1.news-title",
-        category: "nsfw2"
-    }, {
         name: "GameMAG",
         url: {
             h: "gamemag.ru"
@@ -11173,7 +10748,7 @@
     }, {
         name: "Фото идеи и картинки",
         url: {
-            h: "fotoslava.ru",
+            h: "nd27.ru",
             e: ".entry-title"
         },
         imgs: ".gallery-item img",
@@ -11307,8 +10882,6 @@
             h: "www.ligadasnovinhas.com"
         },
         imgs: "#post-info img",
-        button: [4],
-        insertImg: ["#post-info center:has(picture),#post-info p:has(picture)", 2],
         customTitle: ".post h1",
         category: "nsfw2"
     }, {
@@ -12101,9 +11674,10 @@
         category: "autoPager"
     }, {
         name: "Erotic Pics",
-        host: ["erotic.pics"],
-        reg: /^https?:\/\/erotic\.pics\/[^\/]+\/$/,
-        include: ".entry-content img",
+        url: {
+            h: ["erotic.pics"],
+            p: /^\/[^\/]+\/$/
+        },
         imgs: ".entry-content img",
         button: [4],
         insertImg: [".entry-content", 2],
@@ -13338,35 +12912,6 @@
         prev: "//span[contains(text(),'下一篇')]/a",
         category: "nsfw1"
     }, {
-        name: "xHer",
-        url: {
-            h: "xher.net",
-            s: "/category/"
-        },
-        box: ["#thumbnails", 1],
-        imgs: () => {
-            let url = fn.gu("a[rel=last]");
-            let [max] = /\d+$/.exec(url);
-            url = url.replace(/\d+$/, "");
-            max = Number(max);
-            let pages = [fn.url];
-            for (let i = 15; i <= max; i += 15) {
-                pages.push(url + i);
-            }
-            return fn.getEle(pages, "#thumbnails>li").then(eles => {
-                thumbnailSrcArray = eles.map(li => fn.src("img", li));
-                let links = eles.map(li => fn.gu("a", li));
-                return fn.getImgA("#downloadSwitchLink", links);
-            });
-        },
-        button: [4],
-        insertImg: [
-            ["#FullPictureLoadMainImgBox", 0, "#thumbnails"], 2
-        ],
-        customTitle: ".titrePage>h2>a+a",
-        fetch: 1,
-        category: "nsfw2"
-    }, {
         name: "JavCup",
         url: {
             h: "javcup.com",
@@ -13829,29 +13374,6 @@
         hide: "div:has(>center>a>img)",
         category: "nsfw2"
     }, {
-        name: "4k图",
-        url: {
-            h: "4kce.com",
-            e: "h1.entry-title"
-        },
-        imgs: ".entry-content img",
-        button: [4],
-        insertImg: [".entry-content", 2],
-        autoDownload: [0],
-        next: "span.prev>a",
-        prev: "span.next>a",
-        customTitle: () => {
-            let text = fn.gt(".entry-title");
-            if (text.includes("：")) {
-                [, text] = text.split("：");
-            }
-            return fn.dt({
-                t: text,
-                d: /[-PVGMB\d\.]+$/
-            });
-        },
-        category: "nsfw1"
-    }, {
         name: "漫画精品",
         host: ["xxxxn.click"],
         url: {
@@ -13950,53 +13472,6 @@
         hide: "#span_h4",
         category: "nsfw2"
     }, {
-        name: "小黄书",
-        host: ["kxhs16.vip"],
-        url: {
-            t: "小黄书",
-            p: "/comic_ls/"
-        },
-        box: [".row-section", 2],
-        imgs: () => {
-            let links = fn.gau("#myList a");
-            return fn.getEle(links, "//script[contains(text(),'decodeURIComponent')]").then(scripts => {
-                return scripts.map(script => {
-                    let text = script.textContent.replace('document.write(decodeURIComponent("', "").slice(0, -3);
-                    let dom = fn.doc(decodeURIComponent(text));
-                    return fn.gae(".card-content img", dom);
-                }).flat();
-            });
-        },
-        button: [4],
-        insertImg: ["#FullPictureLoadMainImgBox", 3],
-        customTitle: () => fn.dt({
-            s: ".detail-box .info p",
-            d: /^[^：]+：/
-        }),
-        observerClick: ["i[id^='cvtop'][id$='close']", "i[id^='cvfooter'][id$='close']", "i[id^='left'][id$='close']"],
-        hide: ".app-abk,.abk-swiper,.fotxt,.footer-container .container",
-        category: "nsfw2"
-    }, {
-        name: "小黄书",
-        host: ["kxhs16.vip"],
-        url: {
-            t: "小黄书",
-            p: "/gua_details/"
-        },
-        imgs: "#art-content img",
-        customTitle: "#art-content strong",
-        observerClick: ["i[id^='cvtop'][id$='close']", "i[id^='cvfooter'][id$='close']", "i[id^='left'][id$='close']"],
-        hide: ".app-abk,.abk-swiper,.fotxt,.footer-container .container",
-        category: "nsfw2"
-    }, {
-        name: "小黄书 AD",
-        url: {
-            t: "小黄书"
-        },
-        observerClick: ["i[id^='cvtop'][id$='close']", "i[id^='cvfooter'][id$='close']", "i[id^='left'][id$='close']"],
-        hide: ".list-grid,.app-abk,.abk-swiper,.fotxt,.footer-container .container",
-        category: "ad"
-    }, {
         name: "奶PARTTY",
         host: ["ilk01.com"],
         url: {
@@ -14065,24 +13540,6 @@
             ["#FullPictureLoadMainImgBox", 0, ".ngg-galleryoverview,.ngg-navigation"], 2
         ],
         customTitle: ".entry-title",
-        category: "nsfw2"
-    }, {
-        name: "福利社",
-        url: {
-            h: "fulisher.net",
-            p: "/image/"
-        },
-        init: () => {
-            fn.waitEle(".read-more-open").then(e => EClick(e));
-        },
-        imgs: ".wp-posts-content .wp-block-gallery img",
-        //button: [4],
-        //insertImg: [".wp-posts-content", 2],
-        autoDownload: [0],
-        next: "a[href$=html]:has(.fa-angle-left)",
-        prev: "a[href$=html]:has(.fa-angle-right)",
-        customTitle: ".article-title",
-        //css: ".wp-posts-content{max-height:unset!important}",
         category: "nsfw2"
     }, {
         name: "XO福利圖",
@@ -14368,22 +13825,6 @@
         button: [4],
         insertImg: ["#list_art_common_art_show", 2],
         customTitle: ".content-header h2",
-        category: "nsfw2"
-    }, {
-        name: "wholsp",
-        host: ["www.wholsp.com", "wholsp.comc"],
-        url: {
-            h: "wholsp.com",
-            p: "/resource/"
-        },
-        imgs: "p[data-fancybox]",
-        button: [4],
-        insertImg: [".wp-posts-content", 2],
-        customTitle: ".article-title",
-        fancybox: {
-            v: 3,
-            css: false
-        },
         category: "nsfw2"
     }, {
         name: "美女写真图集",
@@ -15220,9 +14661,11 @@
         category: "hcomic"
     }, {
         name: "E-Hentai圖片清單頁",
-        host: ["e-hentai.org"],
         link: "https://e-hentai.org/lofi/",
-        reg: /^https?:\/\/e-hentai\.org\/lofi\/g\/\w+\/\w+\//,
+        url: {
+            h: ["e-hentai.org"],
+            p: "/lofi/g/"
+        },
         imgs: async () => {
             await fn.getNP(".gi,#gh>a", "//a[text()='Next Page >' or text()='下一页 >']", null, "#ia");
             let links = fn.gau(".gi>a,#gh>a");
@@ -22319,7 +21762,7 @@ if ("xx" in window) {
         category: "comic autoPager"
     }, {
         name: "DM5/極速 分頁模式",
-        host: ["www.dm5.com", "m.dm5.com", "www.dm5.cn", "m.dm5.cn", "en.dm5.com", "cnc.dm5.com", "hk.dm5.com", "www.1kkk.com", "m.1kkk.com", "tel.1kkk.com", "en.1kkk.com", "cnc.1kkk.com", "hk.1kkk.com"],
+        host: ["www.dm5.com", "m.dm5.com", "www.dm5.cn", "m.dm5.cn", "en.dm5.com", "cnc.dm5.com", "hk.dm5.com", "cnc.dm5.com", "www.1kkk.com", "m.1kkk.com", "tel.1kkk.com", "en.1kkk.com", "cnc.1kkk.com", "hk.1kkk.com"],
         url: {
             h: [/dm5/, /1kkk/],
             p: /^\/(m|ch|vol|other)/,
@@ -28924,7 +28367,7 @@ if ("xx" in window) {
             return /\.(rar|zip|7z|cbz)/i.test(file);
         },
         checkUrl: (obj = {}) => {
-            if (fn.clp() === "/" && !("SPA" in tempData) && !("autoPager" in tempData) && tempData.category !== "ad") return false;
+            if (fn.clp() === "/" && fn.cls() === "" && !("SPA" in tempData) && !("autoPager" in tempData) && !["none", "ad"].some(c => tempData.category == c)) return false;
             const {
                 h: hosts,
                 p: pathname,
@@ -38930,6 +38373,14 @@ label.line-through:has(>#size) {
 #more-menu.dark {
     color: #fff;
     background-color: #333;
+}
+.more-item {
+    list-style: none;
+    color: black;
+    border: #ccc 1px solid;
+    background-color: #f6f6f6;
+    padding: 2px;
+    margin: 4px;
 }
 .more-item.dark {
     color: #fff;
