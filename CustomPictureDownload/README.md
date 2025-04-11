@@ -1695,7 +1695,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.mmxxdd.com/">梦想岛</a>
                 </td>
-                <td>免VIP僅適用圖片檔案命名是簡單數字遞增的。 <a href="https://www.mmxxdd.com/website.html">永久网址发布</a>
+                <td><a href="https://www.mmxxdd.com/website.html">永久网址发布</a>，免VIP僅適用圖片檔案命名是簡單數字遞增的，當無固定匹配時提供4種模式選擇使用，簡易生成圖片網址，默認格式.jpg，圖集若為多圖片格式，可利用篩選下載，會嘗試載入.jpg、.jpeg、.png三種格式，載入線程太大一直試錯可能會被圖片伺服器封IP一段時間。
                 </td>
             </tr>
             <tr>
@@ -3056,12 +3056,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://asiantolick.com/page/news">Asian To Lick</a>
                 </td>
                 <td>自動修正404</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="https://www.modelsvibe.com/">Models Vibe</a>
-                </td>
-                <td>分類頁添加了自動翻頁功能</td>
             </tr>
             <tr>
                 <td>
