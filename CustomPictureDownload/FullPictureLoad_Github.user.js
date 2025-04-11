@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.10
+// @version            2025.4.11
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -980,13 +980,16 @@
                 return fn.arr(max, (v, i) => dir + i + ex);
             } else if (num?.length == 3 && Number(num) == 1) {
                 return fn.arr(max, (v, i) => dir + String(i + 1).padStart(3, "0") + ex);
-            } else if (num?.length > 1 && isNumber(Number(num))) {
-                return _this.test(max);
-            } else if (num?.length == 1 && isNumber(Number(num)) && Number(num) != 0) {
-                let mode = prompt("Mode：1 or 2(test)", 1);
+            } else if (isNumber(Number(num))) {
+                let tfs = fn.getImgSrcArr(".gallerypic img").map(e => e.split("/").at(-1));
+                let mode = prompt("thums：" + String(tfs) + "\nMode：\n1. [0.jpg]\n2. [1.jpg]\n3. [001.jpg]\n4. [test()]", 1);
                 if (mode == 1) {
-                    return fn.arr(max, (v, i) => dir + (i + 1) + ex);
+                    return fn.arr(max, (v, i) => dir + i + ex);
                 } else if (mode == 2) {
+                    return fn.arr(max, (v, i) => dir + (i + 1) + ex);
+                } else if (mode == 3) {
+                    return fn.arr(max, (v, i) => dir + String(i + 1).padStart(3, "0") + ex);
+                } else if (mode == 4) {
                     return _this.test(max);
                 } else {
                     return fn.gae(".gallerypic img");
@@ -7983,7 +7986,8 @@
             e: "#article-content-inner img,.article-content-inner img"
         },
         imgs: () => {
-            thumbnailSrcArray = fn.getImgSrcArr("#article-content-inner img,.article-content-inner img");
+            let eles = fn.gae("#article-content-inner img,.article-content-inner img").filter(e => !e.closest(".in-read-ad"));
+            thumbnailSrcArray = fn.getImgSrcArr(eles);
             return thumbnailSrcArray.map(url => {
                 if (url.includes("?url")) {
                     url = fn.getUSP("url", url);
@@ -19374,9 +19378,9 @@
             p: "/title/",
             e: "astro-island[props*=imageFiles]"
         },
-        init: () => fn.waitEle("div[name='image-item'] img"),
         imgs: () => JSON.parse(JSON.parse(fn.attr("astro-island[props*=imageFiles]", "props")).imageFiles.find(isString)).map(([, url]) => url),
         button: [4],
+        insertImgBF: () => fn.waitEle("div[name='image-item'] img"),
         insertImg: ["div[name='image-item']", 2],
         autoDownload: [0],
         next: "//a[span[text()='Next Chapter ▶']]",
@@ -19926,6 +19930,7 @@
         url: {
             t: "Share Any Manga on MangaPark",
             p: ["chapter", "/title/"],
+            e: "select.select",
             st: "image_server"
         },
         imgs: () => JSON.parse(fn.gst("image_server")).objs.filter(e => {
