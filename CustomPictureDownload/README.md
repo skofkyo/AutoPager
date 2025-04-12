@@ -531,7 +531,7 @@ fn.gae(selector, doc)
     enable: 1,
     reg: /^https:\/\/.+/,
     autoPager: {
-        //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁，"json"請求的資料格式是JSON會存為變數siteJson。
+        //0(預設可省略)靜態翻頁使用Fetch API加載下一頁，1動態翻頁使用iframe框架加載下一頁，"json"請求的資料格式是JSON，ele、title的第一個參數也是傳入json。
         mode: 0,
         //mode為1時等待直到指定的元素出現，不需要則省略，預設使用主體元素選擇器。
         waitEle: "selector",
@@ -542,6 +542,26 @@ fn.gae(selector, doc)
             //會改變腳本的frameWindow變數從當前window變為iframe的window
             //可參照8Comic無限動漫自動翻頁規則的用法
         `,
+        //mode為"json"時，需要自訂的請求選項。
+        fetchOptions: () => {
+            let body = {
+                "index": "3",
+                "post_paged": currentPageNum
+            };
+            return {
+                "headers": {
+                    "accept": "application/json, text/plain, */*",
+                    "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6",
+                    "cache-control": "no-cache",
+                    "content-type": "application/x-www-form-urlencoded",
+                    "pragma": "no-cache"
+                },
+                "body": new URLSearchParams(body).toString(),
+                "method": "POST"
+            }
+        },
+        //mode為"json"時，請求後要優先執行的函式。
+        fetchCB: (json) => (siteJson.max = json.pages),
         //下一頁主體元素選擇器
         ele: "selector",
         ele: (dom) => { 
