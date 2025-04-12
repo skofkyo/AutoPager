@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.11.16
+// @version            2025.4.12
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1699,11 +1699,142 @@
         hide: ".single-top-html,.single-bottom-html",
         category: "nsfw2"
     }, {
-        name: "8E资源站 自動翻頁",
+        name: "8E资源站 首頁自動翻頁",
+        reg: /^https?:\/\/8ezy\.com\/$/,
+        init: () => {
+            siteJson.max = 10;
+            currentPageNum = 1;
+        },
+        autoPager: {
+            mode: "json",
+            fetchOptions: () => {
+                let body = {
+                    "index": "3",
+                    "post_paged": currentPageNum
+                };
+                return {
+                    "headers": {
+                        "accept": "application/json, text/plain, */*",
+                        "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6",
+                        "cache-control": "no-cache",
+                        "content-type": "application/x-www-form-urlencoded",
+                        "pragma": "no-cache"
+                    },
+                    "body": new URLSearchParams(body).toString(),
+                    "method": "POST"
+                }
+            },
+            fetchCB: (json) => (siteJson.max = json.pages),
+            ele: (json) => [fn.html(json.data)],
+            pos: ["#home-row-suoyou .b2_gap", 0],
+            next: () => {
+                if (currentPageNum < siteJson.max) {
+                    currentPageNum += 1;
+                    return "/wp-json/b2/v1/getModulePostList";
+                } else {
+                    return null;
+                }
+            },
+            aF: () => {
+                [...document.querySelectorAll(".post-list-item .picture:has(source)")].forEach(e => {
+                    fn.ge("source", e)?.remove();
+                    let img = fn.ge("img", e);
+                    img.src = img.dataset.src;
+                    img.classList.add("entered");
+                    img.classList.add("loaded");
+                });
+            },
+            pageNum: () => currentPageNum,
+            showTitle: 0,
+            history: 0
+        },
+        openInNewTab: ".post-list-item a:not([target=_blank])",
+        category: "autoPager"
+    }, {
+        name: "8E资源站 歸檔自動翻頁",
+        link: "https://8ezy.com/uncategorized/",
         url: {
             h: ["8ezy.com"],
+            p: ["/uncategorized/", "/acgn/", "/%e7%be%8e%e5%9b%be/", "/video/"],
             e: [".post-list-item", ".post-nav[data-max]"]
         },
+        init: async () => {
+            await fn.waitEle("button.selected,a.button.selected[href^=http]");
+            let code = fn.gst("b2_cat");
+            let obj = fn.TextToObject(code, '"opt"', 1);
+            siteJson = obj;
+            currentPageNum = Number(obj.post_paged);
+        },
+        autoPager: {
+            mode: "json",
+            fetchOptions: () => {
+                let body = {
+                    "post_type": "post-1",
+                    "post_order": "new",
+                    "post_row_count": "4",
+                    "post_count": "24",
+                    "post_thumb_ratio": "1/0.618",
+                    "post_open_type": "1",
+                    "post_meta[0]": "user",
+                    "post_meta[1]": "date",
+                    "post_meta[2]": "views",
+                    "post_meta[3]": "like",
+                    "post_meta[4]": "cats",
+                    "post_meta[5]": "des",
+                    "post_paged": currentPageNum,
+                    "post_load_more": "0",
+                    "post_cat[0]": Number(siteJson.post_cat),
+                    "show_sidebar": "",
+                    "width": "1100",
+                    "no_rows": "false",
+                    "paged": currentPageNum
+                };
+                return {
+                    "headers": {
+                        "accept": "application/json, text/plain, */*",
+                        "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6",
+                        "cache-control": "no-cache",
+                        "content-type": "application/x-www-form-urlencoded",
+                        "pragma": "no-cache"
+                    },
+                    "body": new URLSearchParams(body).toString(),
+                    "method": "POST"
+                }
+            },
+            ele: (json) => [fn.html(json.data)],
+            pos: [".b2_gap", 0],
+            observer: ".archive-row .post-list-item",
+            next: () => {
+                let lastNum = fn.ge(".post-nav[data-max]").dataset.max;
+                lastNum = Number(lastNum);
+                if (currentPageNum < lastNum) {
+                    currentPageNum += 1;
+                    return "/wp-json/b2/v1/getPostList";
+                } else {
+                    return null;
+                }
+            },
+            aF: () => {
+                [...document.querySelectorAll(".post-list-item .picture:has(source)")].forEach(e => {
+                    fn.ge("source", e)?.remove();
+                    let img = fn.ge("img", e);
+                    img.src = img.dataset.src;
+                    img.classList.add("entered");
+                    img.classList.add("loaded");
+                });
+            },
+            pageNum: () => currentPageNum,
+            showTitle: 0,
+            history: 0
+        },
+        openInNewTab: ".post-list-item a:not([target=_blank])",
+        category: "autoPager"
+    }, {
+        name: "8E资源站 搜索自動翻頁",
+        reg: [
+            /^https?:\/\/8ezy\.com\/\?s=/,
+            /^https?:\/\/8ezy\.com\/page\/\d+\/\?s=/
+        ],
         init: async () => {
             await fn.waitEle("button.selected,a.button.selected[href^=http]");
             currentPageNum = Number(fn.gt("button.selected,a.button.selected[href^=http]"));
@@ -1729,6 +1860,7 @@
                     fn.ge("source", e)?.remove();
                     let img = fn.ge("img", e);
                     img.src = img.dataset.src;
+                    img.classList.add("entered");
                     img.classList.add("loaded");
                 });
             },
@@ -24397,7 +24529,7 @@ if ("xx" in window) {
                 return `https://api-get-v2.mgsearcher.com/api/chapter/getinfo?m=${ms}&c=${cs}`;
             }
         },
-        getSrcs: (json = siteJson) => {
+        getSrcs: (json) => {
             let {
                 line,
                 images
@@ -24405,8 +24537,8 @@ if ("xx" in window) {
             let host = line === 2 ? "https://f40-1-4.g-mh.online" : "https://t40-1-4.g-mh.online";
             return images.map(e => host + e.url);
         },
-        getImgs: () => {
-            let srcs = _this.getSrcs();
+        getImgs: (json) => {
+            let srcs = _this.getSrcs(json);
             return fn.createImgArray(srcs);
         },
         init: async () => {
@@ -24417,7 +24549,7 @@ if ("xx" in window) {
                 cache: "no-cache"
             }).then(res => res.json());
             siteJson = fetchJson;
-            let imgs = _this.getImgs();
+            let imgs = _this.getImgs(fetchJson);
             let tE = fn.createImgBox(".touch-manipulation", 2);
             fn.remove(["#noad-button,.absolute,.adshow", "//div[ins[@class='adsbygoogle']]"]);
             await fn.remove(".touch-manipulation");
@@ -24427,7 +24559,7 @@ if ("xx" in window) {
         },
         autoPager: {
             mode: "json",
-            ele: () => _this.getImgs(),
+            ele: (json) => _this.getImgs(json),
             observer: "#FullPictureLoadMainImgBox>img",
             pos: ["#FullPictureLoadMainImgBox", 0],
             next: async () => {
@@ -24438,11 +24570,11 @@ if ("xx" in window) {
                     return null;
                 }
             },
-            title: (json = siteJson) => json.data.info.title,
+            title: (json) => json.data.info.title,
             history: 0,
             hide: ".justify-center:has(>.border-t),div:has(>.banners),div:has(>div>.cardlist)",
-            preloadNextPage: () => {
-                let next = siteJson.data.info?.next;
+            preloadNextPage: (json) => {
+                let next = json?.data?.info?.next || siteJson?.data?.info?.next;
                 if (next) {
                     let api = _this.getApi("next");
                     fetch(api, {
@@ -24503,11 +24635,14 @@ if ("xx" in window) {
         },
         data: () => {
             fn.showMsg(DL.str_05, 0);
-            let [id] = localStorage.getItem("history_chapter_ids").match(/\d+/);
-            return fetch(`https://api.zerosumonline.com/api/v1/viewer?chapter_id=${id}`, {
-                "body": null,
-                "method": "POST"
-            }).then(res => res.text()).then(text => (siteJson.data = text) && fn.hideMsg());
+            return fn.fetchDoc(fn.clp()).then(dom => {
+                let code = fn.gst("decodedChapterId", dom);
+                let [, id] = code.match(/decodedChapterId[\\\s"':]+(\d+)/);
+                return fetch(`https://api.zerosumonline.com/api/v1/viewer?chapter_id=${id}`, {
+                    "body": null,
+                    "method": "POST"
+                }).then(res => res.text()).then(text => (siteJson.data = text) && fn.hideMsg());
+            });
         },
         page: () => fn.clp("/episode/"),
         SPA: () => _this.page() ? true : (siteJson = {}) && false,
@@ -29493,10 +29628,20 @@ if ("xx" in window) {
             }
             let mode = siteData.autoPager?.mode;
             let eleSelector = siteData.autoPager.ele;
+            let apiJson;
             if (isString(mode) && mode == "json") {
-                siteJson = await fetch(url, {
+                let options = {
                     cache: "no-cache"
-                }).then(res => res.json());
+                };
+                if (isFn(siteData.autoPager?.fetchOptions)) {
+                    options = siteData.autoPager.fetchOptions();
+                }
+                apiJson = await fetch(url, options).then(res => res.json()).then(json => {
+                    if (isFn(siteData.autoPager?.fetchCB)) {
+                        siteData.autoPager.fetchCB(json);
+                    }
+                    return json;
+                });
             } else if (isNumber(mode) && mode == 1) {
                 doc = await fn.iframeDoc(url, (siteData.autoPager?.waitEle || eleSelector), 30000);
             } else {
@@ -29585,7 +29730,9 @@ if ("xx" in window) {
             let newEles, tE;
             let pos = siteData.autoPager?.pos;
             if (isFn(eleSelector) && pos || isString(eleSelector)) {
-                if (isFn(eleSelector)) {
+                if (isString(mode) && mode == "json") {
+                    newEles = await eleSelector(apiJson);
+                } else if (isFn(eleSelector)) {
                     newEles = await eleSelector(doc);
                 } else if (isString(eleSelector)) {
                     let nextEle = fn.ge(eleSelector, doc, doc);
@@ -29608,7 +29755,7 @@ if ("xx" in window) {
                         titleText = `Page ${await num(doc)}`;
                     } else if (isFn(title)) {
                         try {
-                            titleText = await title(mode == "json" ? siteJson : doc, frameWindow);
+                            titleText = await title(mode == "json" ? apiJson : doc, frameWindow);
                             if (isObject(titleText)) {
                                 titleText.ok ? titleText = titleText.text : add = false;
                             }
@@ -29665,7 +29812,7 @@ if ("xx" in window) {
                 fn.nextObserver.observe(ele);
             }
             if ("preloadNextPage" in siteData.autoPager) {
-                setTimeout(() => fn.preloadNextPage(doc), 3000);
+                setTimeout(() => fn.preloadNextPage(mode == "json" ? apiJson : doc), 3000);
             }
         },
         //無限滾動預讀下一頁
@@ -29902,7 +30049,7 @@ if ("xx" in window) {
             let nextSelector = siteData.autoPager.next;
             if (isFn(nextSelector)) {
                 let nextCode = await nextSelector(dom);
-                if (nextLink === nextCode) return null;
+                if (nextLink === nextCode && siteData?.autoPager?.mode !== "json") return null;
                 nextLink = nextCode;
             } else if (isString(nextSelector)) {
                 let nextEle = fn.ge(nextSelector, dom, dom);
@@ -30821,7 +30968,7 @@ if ("xx" in window) {
             let b = str.indexOf("{", a);
             let c = str.indexOf("}", b) + 1;
             str = str.slice(b, c);
-            if (mode = 2) {
+            if (mode == 2) {
                 return Object.fromEntries(str.slice(1, -1).replaceAll("\n", "").replaceAll("'", "").replaceAll('"', "").split(",").map(e => {
                     let [k, v] = e.split(":");
                     return [k.trim(), v.trim()];
