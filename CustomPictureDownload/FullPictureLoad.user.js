@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.13
+// @version            2025.4.15
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -521,9 +521,13 @@
                         text = text.replace("Graphis", "Graphis " + t);
                     }
                 }
-                return text;
+                return fn.dt({
+                    t: text
+                });
             } catch {
-                return document.title;
+                return fn.dt({
+                    t: document.title
+                });
             }
         },
         css: "body{overflow:unset!important}",
@@ -27828,6 +27832,10 @@ if ("xx" in window) {
                 str_203: "懸停提示✨",
                 str_204: "⚙️ 腳本UI最外層堆疊順序",
                 str_205: "請輸入z-index值（7 ~ 2147483647）",
+                str_206: "圖片尺寸：",
+                str_207: "預設",
+                str_208: "圖片代理",
+                str_209: "不使用",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -27860,6 +27868,13 @@ if ("xx" in window) {
                 backgroundColor: {
                     l: "淺色",
                     d: "深色"
+                },
+                tab: {
+                    p: "頁面",
+                    g: "畫廊",
+                    l: "燈箱",
+                    d: "下載",
+                    o: "其他"
                 }
             };
             break;
@@ -28083,6 +28098,10 @@ if ("xx" in window) {
                 str_203: "悬停提示✨",
                 str_204: "⚙️ 脚本UI最外层堆叠顺序",
                 str_205: "请输入z-index值（7 ~ 2147483647）",
+                str_206: "图片尺寸：",
+                str_207: "默认",
+                str_208: "图片代理",
+                str_209: "不使用",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28115,6 +28134,13 @@ if ("xx" in window) {
                 backgroundColor: {
                     l: "浅色",
                     d: "深色"
+                },
+                tab: {
+                    p: "页面",
+                    g: "画廊",
+                    l: "灯箱",
+                    d: "下载",
+                    o: "其他"
                 }
             };
             break;
@@ -28332,6 +28358,10 @@ if ("xx" in window) {
                 str_203: "TIP✨",
                 str_204: "⚙️ UI z-index",
                 str_205: "Please enter a z-index value（7 ~ 2147483647）",
+                str_206: "Image Size：",
+                str_207: "Default",
+                str_208: "Image CDN",
+                str_209: "Not used",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -28364,6 +28394,13 @@ if ("xx" in window) {
                 backgroundColor: {
                     l: "Light",
                     d: "Dark"
+                },
+                tab: {
+                    p: "page",
+                    g: "gallery",
+                    l: "lightbox",
+                    d: "download",
+                    o: "other"
                 }
             };
             break;
@@ -29188,8 +29225,9 @@ if ("xx" in window) {
                     "data-lazyload-src",
                     "data-mfp-src",
                     "data-actualsrc",
-                    "data-bgset",
+                    "data-bgsrc",
                     "data-bigsrc",
+                    "data-bgset",
                     "data-cfsrc",
                     "data-cover",
                     "data-defer-src",
@@ -29347,13 +29385,30 @@ if ("xx" in window) {
             let imgs;
             isString(selector) ? imgs = fn.gae(selector, dom, dom) : imgs = selector;
             let srcs = imgs.map(ele => {
-                let srcset = ele.getAttribute("srcset") || ele.getAttribute("data-srcset") || ele.getAttribute("data-lazy-srcset");
-                if (srcset && /[xw],/.test(srcset)) {
+                let srcset = ele.getAttribute("srcset") || ele.getAttribute("data-srcset") || ele.getAttribute("data-lazy-srcset") || ele.getAttribute("data-bgset");
+                if (srcset && String(srcset).includes(",")) {
                     let splitArr = srcset.split(",").map(src => src.trim()).filter(Boolean);
-                    splitArr = splitArr.sort((a, b) => a.match(/\s([\d\.]+)(w|x)$/)[1] - b.match(/\s([\d\.]+)(w|x)$/)[1]);
+                    splitArr = splitArr.sort((a, b) => {
+                        let a_num;
+                        try {
+                            a_num = a.match(/\s([\d\.]+)(w|x)$/)[1];
+                        } catch {
+                            a_num = 1;
+                        }
+                        let b_num;
+                        try {
+                            b_num = a.match(/\s([\d\.]+)(w|x)$/)[1];
+                        } catch {
+                            b_num = 1;
+                        }
+                        return a_num - b_num;
+                    });
                     let [src] = splitArr.at(-1).trim().split(" ");
                     if (/^https:\/\/i\d\.wp\.com/.test(src)) {
                         src = src.replace(/\?.+$/, "?ssl=1");
+                    }
+                    if (!src.includes(".yituyu.")) {
+                        src = src.replace(/-\d+x\d+\./, ".");
                     }
                     //if (decodeURIComponent(src).includes("/none")) console.log(ele);
                     try {
@@ -29392,7 +29447,9 @@ if ("xx" in window) {
                         if (/^https:\/\/i\d\.wp\.com/.test(src)) {
                             src = src.replace(/\?.+$/, "?ssl=1").replace(/-\d+x\d+\./, ".");
                         } else {
-                            src = src.replace(/-\d+x\d+\./, ".");
+                            if (!src.includes(".yituyu.")) {
+                                src = src.replace(/-\d+x\d+\./, ".");
+                            }
                             if (src.includes(".jpg.jpg")) {
                                 src = src.replace(".jpg.jpg", ".jpg");
                             }
@@ -33087,6 +33144,19 @@ if ("xx" in window) {
             debug(`\ngetImgs()${getImgFnProcessRecord} 去重複後的圖片網址：`, [...new Set(imgsSrcArr)]);
         }
         imgsSrcArr = [...new Set(imgsSrcArr)];
+        let cdn = Number(_GM_getValue("wp_image_cdn", -1));
+        if (cdn > -1) {
+            imgsSrcArr = imgsSrcArr.map(e => {
+                if (e.includes("?") || e.includes("wp.com/") || e.startsWith("data") || e.startsWith("blob")) {
+                    return e;
+                } else {
+                    let _old = new URL(e).host;
+                    let _new = `i${cdn}.wp.com/` + _old;
+                    e = e.replace(_old, _new).replace("http:", "https:") + "?ssl=1";
+                    return e;
+                }
+            });
+        }
         globalImgArray = imgsSrcArr;
         let thums = siteData.thums;
         if (isString(thums)) {
@@ -33295,7 +33365,7 @@ if ("xx" in window) {
                     let promiseBlob;
                     await fn.checkDownloadThread();
                     if (isStopDownload) return (promiseBlobArray = []);
-                    siteData.fetch == 1 ? promiseBlob = Fetch_API_Download(src, picNum, imgsNum) : promiseBlob = GM_XHR_Download(src, picNum, imgsNum);
+                    (siteData.fetch == 1 || src.includes(".wp.com/")) ? promiseBlob = Fetch_API_Download(src, picNum, imgsNum): promiseBlob = GM_XHR_Download(src, picNum, imgsNum);
                     promiseBlobArray.push(promiseBlob);
                 }
             }
@@ -34126,6 +34196,8 @@ if ("xx" in window) {
         _GM_setValue("eye_menu_bottom", "22px");
         _GM_setValue("eye_menu_left", "auto");
         _GM_setValue("eye_menu_right", "64px");
+        _GM_setValue("image_size", -1);
+        _GM_setValue("wp_image_cdn", -1);
     };
 
     //新分頁空白頁檢視圖片
@@ -38227,6 +38299,7 @@ img.horizontal {
             avif: 0,
             tiff: 0
         };
+        let image_size = Number(_GM_getValue("image_size", -1));
         let exclude_ex_config = _GM_getValue("exclude_ex_config", extensions);
         exclude_ex_config = Object.assign(extensions, exclude_ex_config);
         let threading = Number(config.threading);
@@ -38338,12 +38411,11 @@ img.horizontal {
 input,select {
     color: #000;
     background-color: #fff;
+    border: 1px solid;
 }
 input.dark,select.dark {
     color: #fff;
     background-color: #333;
-}
-input.dark {
     border: 1px solid #575757;
 }
 .show {
@@ -38464,10 +38536,10 @@ li.image-item p.dark {
     background-color: rgba(82, 82, 122, 0.8);
 }
 #size,#move,#auto-exclude-error {
-    width: ${(!isFirefox && isPC) ? "16px" : "17px"};
-    height: ${(!isFirefox && isPC) ? "16px" : "17px"};
-    vertical-align: text-bottom;
-    margin: 0 4px 0 2px;
+    width: 17px;
+    height: 17px;
+    vertical-align: sub;
+    margin: 0 4px 0 -4px;
 }
 label.line-through:has(>#size) {
     text-decoration: line-through;
@@ -38533,8 +38605,8 @@ label.line-through:has(>#size) {
     display: none;
     list-style-type: none;
     top: 28px;
-    left: ${isCh ? "-7px" : "-26px"};
-    width: ${isCh ? "90px" : "150px"};
+    left: ${isCh ? "-13px" : "-26px"};
+    width: ${isCh ? "100px" : "150px"};
     text-align: center;
     border: #ccc 1px solid;
     border-radius: 3px;
@@ -38580,7 +38652,7 @@ img.webtoon {
 }
 #scroll_U,#scroll_D {
     position: fixed;
-    z-index: 2147483647;
+    z-index: ${UI_zIndex - 4};
     right: 20px;
     color: rgba(143, 143, 143);
     font-size: 40px;
@@ -38730,16 +38802,27 @@ img.webtoon {
         <button id="reload">${DL.str_156}</button>
         <button id="download">${DL.str_157}</button>
         <label class="number">${DL.str_169}<select id="backgroundColor"></select></label>
+        <label class="number">${DL.str_206}<select id="imageSize"></select></label>
         <label id="label-threading" class="number">${DL.str_161}<select id="threading"></select></label>
         <label id="exclude" class="number">${DL.str_183} ▼<p id=excludeNum>0</p><ul id="excludeList"></ul></label>
         <label class="number">${DL.str_167}<select id="width"></select></label>
         <label class="number">${DL.str_168}<select id="height"></select></label>
         <label id="filterNumber" class="number">${DL.str_166 + srcs.length}</label>
         <label id="total" class="number">${DL.str_165 + srcs.length}</label>
-        <label class="number"><input id="auto-exclude-error" type="checkbox"></input>${DL.str_185}</label>
-        <label class="number" title="${DL.str_173}"><input id="move" type="checkbox"></input>${DL.str_172}</label>
-        <label class="number"><input id="size" type="checkbox"></input>${DL.str_171}</label>
-        <label id="more" class="number">${DL.str_186} ☰<ul id="more-menu"></ul></label>
+        <label id="more" class="number">${DL.str_186} ☰
+            <ul id="more-menu">
+                <li id="combineDownload" class="more-item">${DL.str_181}</li>
+                <li id="copy" class="more-item">${DL.str_104.replace(/\(.\)/, "")}</li>
+                <li id="export" class="more-item">${DL.str_104.replace(/\(.\)/, "")}</li>
+                <li id="export_json" class="more-item">${DL.str_193}</li>
+                <li id="copy_md" class="more-item">${DL.str_194}</li>
+                <li id="export_md" class="more-item">${DL.str_195}</li>
+                <li class="more-item"><input id="auto-exclude-error" type="checkbox"></input>${DL.str_185}</li>
+                <li class="more-item" title="${DL.str_173}"><input id="move" type="checkbox"></input>${DL.str_172}</li>
+                <li class="more-item"><input id="size" type="checkbox"></input>${DL.str_171}</li>
+                <li id="settings" class="more-item">${DL.str_85.replace(/\(.\)/, "")}</li>
+            </ul>
+        </label>
     </div>
 </div>
 <div id="imgBox" class="row">
@@ -38787,7 +38870,7 @@ img.webtoon {
 
         const UD_Buttons = ["scroll_U", "scroll_D"].map(id => {
             let html = `
-<a id="${id}" class="hide" href="javascript:void(0);">
+<a id="${id}" href="javascript:void(0);">
   <svg class="UDSVG" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"></path>
   </svg>
@@ -38796,6 +38879,25 @@ img.webtoon {
             return fn.html(html);
         });
         main.append(...UD_Buttons);
+
+        ge("#scroll_U", main).addEventListener("click", event => {
+            cancelDefault(event);
+            instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_top" : "#filter_top", main));
+        });
+        ge("#scroll_D", main).addEventListener("click", event => {
+            cancelDefault(event);
+            instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_bottom" : "#filter_bottom", main));
+        });
+
+        let lastScrollTop = 0;
+        main.addEventListener("scroll", event => {
+            if (main.scrollTop > lastScrollTop) {
+                gae("#scroll_U,#scroll_D", main).forEach(e => e.classList.add("hide"));
+            } else if (main.scrollTop < lastScrollTop) {
+                gae("#scroll_U,#scroll_D", main).forEach(e => e.classList.remove("hide"));
+            }
+            lastScrollTop = main.scrollTop;
+        });
 
         closeFilter = () => {
             if (isCaptureMode) {
@@ -38844,91 +38946,42 @@ img.webtoon {
         let moreE = ge("#more", main);
         let moreMenu = ge("#more-menu", main);
         moreE.addEventListener("click", (event) => {
+            if (event.target.id == "more") {
+                cancelDefault(event);
+                if (moreE.classList.contains("active")) {
+                    moreE.classList.remove("active");
+                    moreMenu.classList.remove("show");
+                } else {
+                    moreE.classList.add("active");
+                    moreMenu.classList.add("show");
+                }
+            }
+        });
+        ge("#export_json", main).addEventListener("click", event => {
             cancelDefault(event);
-            if (moreE.classList.contains("active")) {
-                moreE.classList.remove("active");
-                moreMenu.classList.remove("show");
-            } else {
-                moreE.classList.add("active");
-                moreMenu.classList.add("show");
-            }
+            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+            if (srcs.length == 0) return;
+            const text = ge("#inputTitle", main).value;
+            exportJsonFormat(srcs, text);
         });
-        [{
-            id: "combineDownload",
-            text: DL.str_181
-        }, {
-            id: "copy",
-            text: DL.str_105.replace(/\(.\)/, "")
-        }, {
-            id: "export",
-            text: DL.str_104.replace(/\(.\)/, "")
-        }, {
-            id: "export_json",
-            text: DL.str_193,
-            cfn: event => {
-                cancelDefault(event);
-                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
-                if (srcs.length == 0) return;
-                const text = ge("#inputTitle", main).value;
-                exportJsonFormat(srcs, text);
-            }
-        }, {
-            id: "copy_md",
-            text: DL.str_194,
-            cfn: event => {
-                cancelDefault(event);
-                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
-                if (srcs.length == 0) return;
-                const text = ge("#inputTitle", main).value;
-                copyMarkdownFormat(srcs, text);
-            }
-        }, {
-            id: "export_md",
-            text: DL.str_195,
-            cfn: event => {
-                cancelDefault(event);
-                const srcs = gae(".select+.image", main).map(img => img.dataset.src);
-                if (srcs.length == 0) return;
-                const text = ge("#inputTitle", main).value;
-                exportMarkdownFormat(srcs, text);
-            }
-        }, {
-            id: "settings",
-            text: DL.str_85.replace(/\(.\)/, "")
-        }].forEach(({
-            id,
-            text,
-            cfn
-        }) => {
-            const li = document.createElement("li");
-            li.id = id;
-            li.className = "more-item";
-            li.innerText = text;
-            if (isFn(cfn)) li.addEventListener("click", cfn);
-            fragment.append(li);
+        ge("#copy_md", main).addEventListener("click", event => {
+            cancelDefault(event);
+            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+            if (srcs.length == 0) return;
+            const text = ge("#inputTitle", main).value;
+            copyMarkdownFormat(srcs, text);
         });
-        moreMenu.append(fragment);
+        ge("#export_md", main).addEventListener("click", event => {
+            cancelDefault(event);
+            const srcs = gae(".select+.image", main).map(img => img.dataset.src);
+            if (srcs.length == 0) return;
+            const text = ge("#inputTitle", main).value;
+            exportMarkdownFormat(srcs, text);
+        });
 
         if (isM) {
-            ge("label:has(>#move)", main).classList.add("hide");
-            gae(".mobile_toggle_filter_gallery_btn,#scroll_U,#scroll_D", main).forEach(e => e.classList.remove("hide"));
-            ge("#scroll_U", main).addEventListener("click", event => {
-                cancelDefault(event);
-                instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_top" : "#filter_top", main));
-            });
-            ge("#scroll_D", main).addEventListener("click", event => {
-                cancelDefault(event);
-                instantScrollIntoView(ge(isViewMobileGallery ? "#gallery_bottom" : "#filter_bottom", main));
-            });
-            let lastScrollTop = 0;
-            main.addEventListener("scroll", event => {
-                if (main.scrollTop > lastScrollTop) {
-                    gae("#scroll_U,#scroll_D", main).forEach(e => e.classList.add("hide"));
-                } else if (main.scrollTop < lastScrollTop) {
-                    gae("#scroll_U,#scroll_D", main).forEach(e => e.classList.remove("hide"));
-                }
-                lastScrollTop = main.scrollTop;
-            });
+            ge("li:has(>#move)", main).classList.add("hide");
+            gae(".mobile_toggle_filter_gallery_btn", main).forEach(e => e.classList.remove("hide"));
         }
 
         let excludeE = ge("#exclude", main);
@@ -39006,6 +39059,36 @@ img.webtoon {
                 gae(ui_selector, shadow).forEach(e => e.classList.add("dark"));
             } else {
                 gae(ui_selector, shadow).forEach(e => e.classList.remove("dark"));
+            }
+            main.focus();
+        });
+
+        let imageSizeSelect = ge("#imageSize", main);
+        for (let i = -1; i <= 400; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            if (i < 0) {
+                option.innerText = DL.str_207;
+            } else {
+                option.innerText = i + 100;
+            }
+            fragment.append(option);
+        }
+        imageSizeSelect.append(fragment);
+        imageSizeSelect.value = image_size;
+        imageSizeSelect.addEventListener("change", () => {
+            image_size = Number(imageSizeSelect.value);
+            _GM_setValue("image_size", image_size);
+            if (image_size < 0) {
+                gae("#image-list .image-item", main).forEach(item => {
+                    item.style.width = "";
+                    item.style.height = "";
+                });
+            } else {
+                gae("#image-list .image-item", main).forEach(item => {
+                    item.style.width = image_size + 100 + "px";
+                    item.style.height = image_size + 100 + "px";
+                });
             }
             main.focus();
         });
@@ -39440,6 +39523,10 @@ img.webtoon {
                 }
                 const li = document.createElement("li");
                 li.className = "image-item";
+                if (image_size > -1) {
+                    li.style.width = image_size + 100 + "px";
+                    li.style.height = image_size + 100 + "px";
+                }
                 if (backgroundColor === "d") {
                     p.classList.add("dark");
                     li.classList.add("dark");
@@ -40179,7 +40266,7 @@ img.webtoon {
     border: 1px solid #a0a0a0;
     border-radius: 3px;
     box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
-    background-color: #fafafb;
+    background-color: #e9e9e9;
     z-index: ${UI_zIndex - 1};
 }
 
@@ -40226,7 +40313,7 @@ img.webtoon {
     max-width: 110px;
     min-height: unset;
     max-height: 26px;
-    margin: 4px 2px;
+    margin: 0 2px 4px 2px;
     display: inline-block;
     color: #000000;
     border: 1px solid #a0a0a0;
@@ -40258,9 +40345,52 @@ img.webtoon {
     margin-inline-start: 0px;
     margin-inline-end: 0px;
 }
-.tip {
+
+#FullPictureLoadOptions .tip {
     color: #0075ff !important;
     cursor: help;
+}
+
+#FullPictureLoadOptions #tabs {
+    padding: 0 0 0 10px;
+}
+
+#FullPictureLoadOptions .tab {
+    cursor: pointer;
+    background-color: #bbb;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    overflow: hidden;
+}
+
+#FullPictureLoadOptions .tab.active {
+    padding: 1px 6px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(51, 51, 51);
+    font-weight: bold;
+    border-bottom: 3px solid rgb(255, 111, 97);
+}
+
+#FullPictureLoadOptions .tab.active::before {
+    content: "⭐";
+    font-size: 0.8em;
+    padding-right: 2px;
+}
+
+#FullPictureLoadOptions .hide {
+    display: none;
+}
+
+#FullPictureLoadOptions .row {
+    text-align: left;
+    margin: 5px 0px;
+    padding: 0px;
+}
+
+#FullPictureLoadOptions .set{
+    min-height: 170px;
 }
         `);
         shadow.appendChild(style);
@@ -40271,156 +40401,191 @@ img.webtoon {
 <div style="width: 100%;">
     <p id="title">${DL.str_68}</p>
 </div>
-<div id="iconDIV" style="width: 348px; display: flex;">
-    <input id="icon" type="checkbox">
-    <label>${DL.str_69}</label>
+<div id="tabs" class="row">
+    <span id="page_tab" class="tab active">${DL.tab.p}</span>
+    <span id="gallery_tab" class="tab">${DL.tab.g}</span>
+    <span id="lightbox_tab" class="tab">${DL.tab.l}</span>
+    <span id="download_tab" class="tab">${DL.tab.d}</span>
+    <span id="other_tab" class="tab">${DL.tab.o}</span>
 </div>
-<div id="ShowEyeDIV" style="width: 348px; display: none;">
-    <input id="ShowEye" type="checkbox">
-    <label>${DL.str_123}</label>
+<div id="page" class="row set">
+    <div id="iconDIV" style="width: 348px; display: flex;">
+        <input id="icon" type="checkbox">
+        <label>${DL.str_69}</label>
+    </div>
+    <div id="ShowEyeDIV" style="width: 348px; display: none;">
+        <input id="ShowEye" type="checkbox">
+        <label>${DL.str_123}</label>
+    </div>
+    <div id="ShowFixedMenuDIV" style="width: 348px; display: flex;">
+        <input id="ShowFixedMenu" type="checkbox">
+        <label>※ ${DL.str_117}</label>
+    </div>
+    <div style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_108}</label>
+        <select id="MsgPos"></select>
+    </div>
+    <div id="AutoInsertImgDIV" style="width: 348px; display: flex;">
+        <input id="AutoInsertImg" type="checkbox">
+        <label>${DL.str_139}</label>
+    </div>
+    <div id="GoToFirstDIV" style="width: 348px; display: flex;">
+        <input id="GoToFirst" type="checkbox">
+        <label>※ ${DL.str_115}</label>
+    </div>
+    <div id="noPageNavDIV" style="width: 348px; display: flex;">
+        <input id="noPageNav" type="checkbox">
+        <label>※ ${DL.str_121}</label>
+    </div>
+    <div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_79}</label>
+        <select id="Zoom"></select>
+    </div>
+    <div id="viewModeDIV" style="width: 348px; display: flex;">
+        <input id="viewMode" type="checkbox">
+        <label>${DL.str_103}</label>
+    </div>
+    <div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_80}</label>
+        <select id="Column" title="${DL.str_81}"></select>
+    </div>
 </div>
-<div id="ShowFixedMenuDIV" style="width: 348px; display: flex;">
-    <input id="ShowFixedMenu" type="checkbox">
-    <label>※ ${DL.str_117}</label>
+<div id="gallery" class="row set hide">
+    <div id="ShadowGalleryModeDIV" style="width: 348px; display: flex;">
+        <input id="ShadowGalleryMode" type="checkbox">
+        <label>${DL.str_140}</label>
+    </div>
+    <div id="MobileGalleryModeDIV" style="width: 348px; display: flex;">
+        <input id="MobileGalleryMode" type="checkbox">
+        <label>${DL.str_192}</label>
+    </div>
+    <div id="GalleryInIconDIV" style="width: 348px; display: flex;">
+        <input id="GalleryInIcon" type="checkbox">
+        <label>※ ${DL.str_77}</label>
+    </div>
+    <div id="ShadowGalleryloopViewDIV" style="width: 348px; display: flex;">
+        <input id="loopView" type="checkbox">
+        <label>${DL.str_182}</label>
+    </div>
+    <div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_147}</label>
+        <select id="ShadowGalleryWheel"></select>
+    </div>
+    <div id="horizontalWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_198}</label>
+        <select id="horizontalWheel"></select>
+    </div>
 </div>
-<div style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_108}</label>
-    <select id="MsgPos"></select>
+<div id="lightbox" class="row set hide">
+    <div id="FancyboxDIV" style="width: 348px; display: flex;">
+        <input id="Fancybox" type="checkbox">
+        <label>${DL.str_78}</label>
+    </div>
+    <div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>※ ${DL.str_146}</label>
+        <select id="FancyboxWheel"></select>
+    </div>
+    <div id="FancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>※ ${DL.str_145}</label>
+        <select id="FancyboxSlideshowTimeout"></select>
+    </div>
+    <div id="FancyboxTransitionDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>※ ${DL.str_148}</label>
+        <select id="FancyboxTransition"></select>
+    </div>
 </div>
-<div style="width: 348px; display: flex;">
-    <input id="FavorNewTab" type="checkbox">
-    <label>※ ${DL.str_50}</label>
+<div id="download" class="row set hide">
+    <div id="AutoDownloadDIV" style="width: 348px; display: flex;" title="${DL.str_74}">
+        <input id="AutoDownload" type="checkbox">
+        <label>${DL.str_73}</label>
+        <span id="AutoDownloadTIP" class="tip">${DL.str_203}</span>
+    </div>
+    <div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_75}</label>
+        <select id="Countdown"></select>
+    </div>
+    <div style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_70}</label>
+        <select id="Threading"></select>
+    </div>
+    <div style="width: 348px; display: flex;">
+        <input id="Zip" type="checkbox">
+        <label>${DL.str_71}</label>
+    </div>
+    <div style="width: 348px; display: flex;">
+        <input id="zipFolder" type="checkbox">
+        <label>※ ${DL.str_187}</label>
+    </div>
+    <div style="width: 348px; display: flex; margin-left: 7px;">
+        <label>※ ${DL.str_72}</label>
+        <select id="Extension"></select>
+    </div>
+    <div style="width: 348px; display: flex;">
+        <input id="ConvertWEBP" type="checkbox">
+        <label>※ ${DL.str_110}</label>
+    </div>
+    <div style="width: 348px; display: flex;">
+        <input id="ConvertAVIF" type="checkbox">
+        <label>※ ${DL.str_200}</label>
+    </div>
+    <div style="width: 348px; display: flex; margin-left: 7px;">
+        <label>※ ${DL.str_201}：</label>
+        <select id="Quality"></select>
+    </div>
+    <div id="CustomDownloadVideoDIV" style="width: 348px; display: none;">
+        <input id="CustomDownloadVideo" type="checkbox">
+        <label>${DL.str_124}</label>
+    </div>
 </div>
-<div id="AutoInsertImgDIV" style="width: 348px; display: flex;">
-    <input id="AutoInsertImg" type="checkbox">
-    <label>${DL.str_139}</label>
-</div>
-<div id="GoToFirstDIV" style="width: 348px; display: flex;">
-    <input id="GoToFirst" type="checkbox">
-    <label>※ ${DL.str_115}</label>
-</div>
-<div id="noPageNavDIV" style="width: 348px; display: flex;">
-    <input id="noPageNav" type="checkbox">
-    <label>※ ${DL.str_121}</label>
-</div>
-<div id="ZoomDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_79}</label>
-    <select id="Zoom"></select>
-</div>
-<div id="viewModeDIV" style="width: 348px; display: flex;">
-    <input id="viewMode" type="checkbox">
-    <label>${DL.str_103}</label>
-</div>
-<div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_80}</label>
-    <select id="Column" title="${DL.str_81}"></select>
-</div>
-<div id="ShadowGalleryModeDIV" style="width: 348px; display: flex;">
-    <input id="ShadowGalleryMode" type="checkbox">
-    <label>${DL.str_140}</label>
-</div>
-<div id="MobileGalleryModeDIV" style="width: 348px; display: flex;">
-    <input id="MobileGalleryMode" type="checkbox">
-    <label>${DL.str_192}</label>
-</div>
-<div id="GalleryInIconDIV" style="width: 348px; display: flex;">
-    <input id="GalleryInIcon" type="checkbox">
-    <label>※ ${DL.str_77}</label>
-</div>
-<div id="autoExportDIV" style="width: 348px; display: flex;">
-    <input id="autoExport" type="checkbox">
-    <label>${DL.str_180}</label>
-</div>
-<div id="ShadowGalleryloopViewDIV" style="width: 348px; display: flex;">
-    <input id="loopView" type="checkbox">
-    <label>${DL.str_182}</label>
-</div>
-<div id="ShadowGalleryWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_147}</label>
-    <select id="ShadowGalleryWheel"></select>
-</div>
-<div id="horizontalWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_198}</label>
-    <select id="horizontalWheel"></select>
-</div>
-<div id="FancyboxDIV" style="width: 348px; display: flex;">
-    <input id="Fancybox" type="checkbox">
-    <label>${DL.str_78}</label>
-</div>
-<div id="FancyboxWheelDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>※ ${DL.str_146}</label>
-    <select id="FancyboxWheel"></select>
-</div>
-<div id="FancyboxSlideshowTimeoutDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>※ ${DL.str_145}</label>
-    <select id="FancyboxSlideshowTimeout"></select>
-</div>
-<div id="FancyboxTransitionDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>※ ${DL.str_148}</label>
-    <select id="FancyboxTransition"></select>
-</div>
-<div id="ComicDIV" style="width: 348px; display: none;">
-    <input id="Comic" type="checkbox">
-    <label>${DL.str_76}</label>
-</div>
-<div id="DoubleDIV" style="width: 348px; display: flex;">
-    <input id="Double" type="checkbox">
-    <label>※ ${DL.str_199}</label>
-</div>
-<div id="AutoDownloadDIV" style="width: 348px; display: flex;" title="${DL.str_74}">
-    <input id="AutoDownload" type="checkbox">
-    <label>${DL.str_73}</label>
-    <span id="AutoDownloadTIP" class="tip">${DL.str_203}</span>
-</div>
-<div id="CountdownDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_75}</label>
-    <select id="Countdown"></select>
-</div>
-<div style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_70}</label>
-    <select id="Threading"></select>
-</div>
-<div style="width: 348px; display: flex;">
-    <input id="Zip" type="checkbox">
-    <label>${DL.str_71}</label>
-</div>
-<div style="width: 348px; display: flex;">
-    <input id="zipFolder" type="checkbox">
-    <label>※ ${DL.str_187}</label>
-</div>
-<div style="width: 348px; display: flex; margin-left: 7px;">
-    <label>※ ${DL.str_72}</label>
-    <select id="Extension"></select>
-</div>
-<div id="HitomiDIV" style="width: 348px; display: flex; margin-left: 7px;">
-    <label>${DL.str_202}</label>
-    <select id="Hitomi"></select>
-</div>
-<div id="EHentaiDIV" style="width: 348px; display: flex;">
-    <input id="EHentai" type="checkbox">
-    <label>${DL.str_114}</label>
-</div>
-<div style="width: 348px; display: flex;">
-    <input id="ConvertWEBP" type="checkbox">
-    <label>※ ${DL.str_110}</label>
-</div>
-<div style="width: 348px; display: flex;">
-    <input id="ConvertAVIF" type="checkbox">
-    <label>※ ${DL.str_200}</label>
-</div>
-<div style="width: 348px; display: flex; margin-left: 7px;">
-    <label>※ ${DL.str_201}：</label>
-    <select id="Quality"></select>
-</div>
-<div id="CustomDownloadVideoDIV" style="width: 348px; display: none;">
-    <input id="CustomDownloadVideo" type="checkbox">
-    <label>${DL.str_124}</label>
+<div id="other" class="row set hide">
+    <div style="width: 348px; display: flex;">
+        <input id="FavorNewTab" type="checkbox">
+        <label>※ ${DL.str_50}</label>
+    </div>
+    <div id="autoExportDIV" style="width: 348px; display: flex;">
+        <input id="autoExport" type="checkbox">
+        <label>${DL.str_180}</label>
+    </div>
+    <div id="ComicDIV" style="width: 348px; display: none;">
+        <input id="Comic" type="checkbox">
+        <label>${DL.str_76}</label>
+    </div>
+    <div id="DoubleDIV" style="width: 348px; display: flex;">
+        <input id="Double" type="checkbox">
+        <label>※ ${DL.str_199}</label>
+    </div>
+    <div style="width: 348px; display: flex; margin-left: 7px;">
+        <label>※ ${DL.str_208}：</label>
+        <select id="cdn"></select>
+    </div>
+    <div id="EHentaiDIV" style="width: 348px; display: flex;">
+        <input id="EHentai" type="checkbox">
+        <label>${DL.str_114}</label>
+    </div>
+    <div id="HitomiDIV" style="width: 348px; display: flex; margin-left: 7px;">
+        <label>${DL.str_202}</label>
+        <select id="Hitomi"></select>
+    </div>
 </div>
 <button id="CancelBtn">${(isOpenGallery || isOpenFilter) ? DL.str_82.replace(" (Esc)", "") : DL.str_82}</button>
 <button id="ResetBtn">${DL.str_83}</button>
 <button id="SaveBtn">${DL.str_84}</button>
 `;
         main.innerHTML = FullPictureLoadOptionsMainHtmlStr;
+
+        const tab_toggle = (event, id) => {
+            cancelDefault(event);
+            gae(".tab", main).forEach(e => e.classList.remove("active"));
+            gae(".set", main).forEach(e => e.classList.add("hide"));
+            event.target.classList.add("active");
+            ge(id, main).classList.remove("hide");
+        };
+
+        ge("#page_tab", main).addEventListener("click", event => tab_toggle(event, "#page"));
+        ge("#gallery_tab", main).addEventListener("click", event => tab_toggle(event, "#gallery"));
+        ge("#lightbox_tab", main).addEventListener("click", event => tab_toggle(event, "#lightbox"));
+        ge("#download_tab", main).addEventListener("click", event => tab_toggle(event, "#download"));
+        ge("#other_tab", main).addEventListener("click", event => tab_toggle(event, "#other"));
 
         const MsgPosSelect = ge("#MsgPos", main);
         Object.values(DL.str_109).forEach((v, i) => {
@@ -40544,6 +40709,19 @@ img.webtoon {
         }
         QualitySelect.append(fragment);
 
+        const cdnSelect = ge("#cdn", main);
+        for (let i = -1; i <= 3; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            if (i < 0) {
+                option.innerText = DL.str_209;
+            } else {
+                option.innerText = `i${i}.wp.com`;
+            }
+            fragment.append(option);
+        }
+        cdnSelect.append(fragment);
+
         topDistance = () => {
             if (main.offsetHeight < _unsafeWindow.innerHeight) {
                 let num = (_unsafeWindow.innerHeight - main.offsetHeight) / 2;
@@ -40566,6 +40744,7 @@ img.webtoon {
         ge("#Extension", main).value = _GM_getValue("compressed_extension", "zip");
         ge("#EHentai", main).checked = _GM_getValue("E_HENTAI_LoadOriginalImage", 0) == 1 ? true : false;
         ge("#Hitomi", main).value = _GM_getValue("hitomi_img_type", "webp");
+        ge("#cdn", main).value = _GM_getValue("wp_image_cdn", -1);
         ge("#zipFolder", main).checked = zipFolderConfig == 1 ? true : false;
         ge("#ConvertWEBP", main).checked = _GM_getValue("convertWebpToJpg", 0) == 1 ? true : false;
         ge("#ConvertAVIF", main).checked = _GM_getValue("convertAvifToJpg", 0) == 1 ? true : false;
@@ -40702,6 +40881,7 @@ img.webtoon {
             _GM_setValue("compressed_extension", ge("#Extension", main).value);
             _GM_setValue("E_HENTAI_LoadOriginalImage", ge("#EHentai", main).checked == true ? 1 : 0);
             _GM_setValue("hitomi_img_type", ge("#Hitomi", main).value);
+            _GM_setValue("wp_image_cdn", ge("#cdn", main).value);
             _GM_setValue("zipFolderConfig", ge("#zipFolder", main).checked == true ? 1 : 0);
             _GM_setValue("convertWebpToJpg", ge("#ConvertWEBP", main).checked == true ? 1 : 0);
             _GM_setValue("convertAvifToJpg", ge("#ConvertAVIF", main).checked == true ? 1 : 0);
