@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.15
+// @version            2025.4.16
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1702,59 +1702,6 @@
         downloadVideo: true,
         hide: ".single-top-html,.single-bottom-html",
         category: "nsfw2"
-    }, {
-        name: "8E资源站 首頁自動翻頁",
-        reg: /^https?:\/\/8ezy\.com\/$/,
-        init: () => {
-            siteJson.max = 10;
-            currentPageNum = 1;
-        },
-        autoPager: {
-            mode: "json",
-            fetchOptions: () => {
-                let body = {
-                    "index": "3",
-                    "post_paged": currentPageNum
-                };
-                return {
-                    "headers": {
-                        "accept": "application/json, text/plain, */*",
-                        "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6",
-                        "cache-control": "no-cache",
-                        "content-type": "application/x-www-form-urlencoded",
-                        "pragma": "no-cache"
-                    },
-                    "body": new URLSearchParams(body).toString(),
-                    "method": "POST"
-                }
-            },
-            fetchCB: (json) => (siteJson.max = json.pages),
-            ele: (json) => [fn.html(json.data)],
-            pos: ["#home-row-suoyou .b2_gap", 0],
-            next: () => {
-                if (currentPageNum < siteJson.max) {
-                    currentPageNum += 1;
-                    return "/wp-json/b2/v1/getModulePostList";
-                } else {
-                    return null;
-                }
-            },
-            aF: () => {
-                [...document.querySelectorAll(".post-list-item .picture:has(source)")].forEach(e => {
-                    fn.ge("source", e)?.remove();
-                    let img = fn.ge("img", e);
-                    img.src = img.dataset.src;
-                    img.classList.add("entered");
-                    img.classList.add("loaded");
-                });
-            },
-            pageNum: () => currentPageNum,
-            showTitle: 0,
-            history: 0
-        },
-        openInNewTab: ".post-list-item a:not([target=_blank])",
-        topButton: true,
-        category: "autoPager"
     }, {
         name: "8E资源站 歸檔自動翻頁",
         link: "https://8ezy.com/uncategorized/",
@@ -4336,6 +4283,17 @@
         },
         referer: "",
         category: "nsfw1"
+    }, {
+        name: "AIHGAME",
+        url: {
+            h: ["aihgirl.com"],
+            p: ["/manga/detail/", "/gallery/detail/"]
+        },
+        imgs: ".gallery-images img,.manga-images img",
+        button: [4],
+        insertImg: [".gallery-images,.manga-images", 2],
+        customTitle: ".gallery-title,.manga-title",
+        category: "hcomic"
     }, {
         name: "爱推图",
         url: {
@@ -10941,7 +10899,8 @@
             s: ".entry-title",
             d: [
                 /\(\d+[\sфотfots]+\)|[\d\sфотfots]+/,
-                /[\d\s]+фото/,
+                /\(?[\d\s]+фото\)?/,
+                /[\d\s]+горячих/,
                 "слив"
             ]
         }),
@@ -16076,7 +16035,7 @@
     }, {
         name: "HentaiPaw圖片清單頁/Hentai-One圖片清單頁",
         url: {
-            h: ["hentaipaw.com", "ch.hentai-one.com"],
+            h: [/([a-z]{2}\.)hentaipaw.com/, "ch.hentai-one.com"],
             p: "/articles/"
         },
         init: () => fn.waitEle(["next-route-announcer", ".grid .group>img"]),
@@ -19526,6 +19485,23 @@
         prev: "//a[span[text()='◀ Prev Chapter']]",
         customTitle: () => fn.title(" - Read Free Manga Online at Bato.To"),
         hide: ".max-w-screen-2xl:has(button.btn-info)",
+        category: "comic"
+    }, {
+        name: "BATOTO DEV",
+        host: ["bato.si"],
+        url: {
+            e: ["//p[contains(text(),'BATO.TO')]", "script[type='qwik/json']", ".select.select-sm"],
+            p: "/title/"
+        },
+        box: [".grid:has(div[data-name='image-item'])", 1],
+        imgs: "div[data-name='image-item'] img",
+        button: [4],
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.hideEle(".grid:has(div[data-name='image-item'])"),
+        autoDownload: [0],
+        next: "//a[span[text()='Next Chapter']]",
+        prev: "//a[span[text()='Prev Chapter']]",
+        customTitle: () => fn.title(" - Read Free Manga Online"),
         category: "comic"
     }, {
         name: "Dynasty Reader",
@@ -27698,7 +27674,7 @@ if ("xx" in window) {
                 str_75: "自動下載倒數秒數：",
                 str_76: "啟用當前漫畫站點規則",
                 str_77: "自動進入畫廊需點擊主圖示按鈕",
-                str_78: "Fancybox&ViewerJs燈箱功能",
+                str_78: "Fancybox&Viewer燈箱功能",
                 str_79: "頁面容器圖片縮放比例：",
                 str_80: "頁面容器圖片並排數量：",
                 str_81: "comic類固定為2，comic類並排後為右至左的漫讀模式，hcomic類也設定為2將套用。",
@@ -27745,12 +27721,12 @@ if ("xx" in window) {
                 str_116: "自動滾動所有惰性載入的圖片元素",
                 str_117: "顯示浮動選單",
                 str_118: "圖集標題已更新",
-                str_119: "FancyboxV5滾輪圖片縮放",
-                str_120: "此網站分頁畫廊使用ViewerJs插件",
+                str_119: "Fancybox5滾輪圖片縮放",
+                str_120: "分頁畫廊使用Viewer插件",
                 str_121: "關閉頁面容器圖片導覽快捷鍵",
                 str_122: "此漫畫站使用無限滾動閱讀模式",
                 str_123: "顯示右下捕獲之眼圖示",
-                str_124: "此網站下載影片",
+                str_124: "下載影片",
                 str_125: "🔄 重置此網站儲存的所有腳本設定",
                 str_126: "🔄 重置腳本儲存的所有全局設定",
                 str_127: "右鍵：匯出圖址(7)",
@@ -27771,7 +27747,7 @@ if ("xx" in window) {
                 str_142: "離開畫廊 (Esc)",
                 str_143: "下一話",
                 str_144: "下一篇",
-                str_145: "Fancybox5&ViewerJs幻燈片播放間隔：",
+                str_145: "Fancybox5&Viewer幻燈片播放間隔：",
                 str_146: "Fancybox5滾輪操作：",
                 str_147: "畫廊 ( 0、1、3 ) 滾輪操作：",
                 str_148: "Fancybox5幻燈片過場效果：",
@@ -27964,7 +27940,7 @@ if ("xx" in window) {
                 str_75: "自动下载倒数秒数：",
                 str_76: "启用当前漫画站点规则",
                 str_77: "自动进入画廊需点击主图示按钮",
-                str_78: "Fancybox&ViewerJs灯箱功能",
+                str_78: "Fancybox&Viewer灯箱功能",
                 str_79: "页面容器图片缩放比例：",
                 str_80: "页面容器图片并排数量：",
                 str_81: "comic类固定为2，comic类并排后为右至左的漫读模式，hcomic类也设置为2将套用。",
@@ -28011,12 +27987,12 @@ if ("xx" in window) {
                 str_116: "自动滚动所有懒加载的图片元素",
                 str_117: "显示浮动菜单",
                 str_118: "图集标题已更新",
-                str_119: "FancyboxV5滚轮图片缩放",
-                str_120: "此网站标签画廊使用ViewerJs插件",
+                str_119: "Fancybox5滚轮图片缩放",
+                str_120: "标签画廊使用Viewer插件",
                 str_121: "关闭页面容器图片导览快捷键",
                 str_122: "此漫画站使用无限滚动阅读模式",
                 str_123: "显示右下捕获之眼图标",
-                str_124: "此网站下载视频",
+                str_124: "下载视频",
                 str_125: "🔄 重置此网站存储的所有脚本设置",
                 str_126: "🔄 重置脚本存储的所有全局设置",
                 str_127: "右键：导出图址(7)",
@@ -28037,7 +28013,7 @@ if ("xx" in window) {
                 str_142: "离开画廊 (Esc)",
                 str_143: "下一话",
                 str_144: "下一篇",
-                str_145: "Fancybox5&ViewerJs幻灯片播放间隔：",
+                str_145: "Fancybox5&Viewer幻灯片播放间隔：",
                 str_146: "Fancybox5滚轮操作：",
                 str_147: "画廊 ( 0、1、3 ) 滚轮操作：",
                 str_148: "Fancybox5幻灯片过场效果：",
@@ -28224,7 +28200,7 @@ if ("xx" in window) {
                 str_75: "AutoDownload Countdown Sec：",
                 str_76: "Comic Site Rules Switch",
                 str_77: "Auto enter Gallery In Icon Button",
-                str_78: "Fancybox&ViewerJs Plugin",
+                str_78: "Fancybox&Viewer Plugin",
                 str_79: "Image Zoom Ratio：",
                 str_80: "Number Of Images Side By Side：",
                 str_81: "Comic Category Fixed To 2",
@@ -28271,12 +28247,12 @@ if ("xx" in window) {
                 str_116: "Auto Scroll All Image Elements",
                 str_117: "Show Fixed Menu",
                 str_118: "Album title has been updated",
-                str_119: "FancyboxV5 Wheel Toggle Zoom",
-                str_120: "This Website New Tab View uses ViewerJs Plug-in",
+                str_119: "Fancybox5 Wheel Toggle Zoom",
+                str_120: "New Tab View Uses Viewer Plugin",
                 str_121: "Turn Off Image Navigation Shortcut Keys",
-                str_122: "This website uses Infinite Scroll Read Mode",
+                str_122: "This Website Uses Infinite Scroll Read Mode",
                 str_123: "Show Capture Eye Icon",
-                str_124: "This website downloads videos",
+                str_124: "Download Videos",
                 str_125: "🔄 Reset all script settings stored on this site",
                 str_126: "🔄 Reset all saved global settings",
                 str_127: "Right Click：Export URLs(7)",
@@ -28297,10 +28273,10 @@ if ("xx" in window) {
                 str_142: "Close (Esc)",
                 str_143: "Next Chapter",
                 str_144: "Next Post",
-                str_145: "FB5&ViewerJs Play Delay：",
-                str_146: "FB5 Wheel：",
+                str_145: "Fancybox5&Viewer Play Delay：",
+                str_146: "Fancybox5 Wheel：",
                 str_147: "Gallery (0、1、3) Wheel：",
-                str_148: "FB5 Slideshow Transition：",
+                str_148: "Slideshow Transition：",
                 str_149: "Download Interrupted！！！",
                 str_150: "JK Scroll ",
                 str_151: "JK Smooth Scroll",
@@ -28396,11 +28372,11 @@ if ("xx" in window) {
                     d: "Dark"
                 },
                 tab: {
-                    p: "page",
-                    g: "gallery",
-                    l: "lightbox",
-                    d: "download",
-                    o: "other"
+                    p: "Page",
+                    g: "Gallery",
+                    l: "Lightbox",
+                    d: "Download",
+                    o: "Other"
                 }
             };
             break;
@@ -36180,6 +36156,7 @@ img.horizontal {
     margin-top: ${isFirefox ? "2px" : "0px"};
 }
 #alertBox {
+    color: #000;
     position: fixed;
     top: calc(50% - 73px);
     left: calc(50% - 125px);
@@ -37618,6 +37595,7 @@ img.horizontal {
     margin-top: ${isFirefox ? "2px" : "0px"};
 }
 #alertBox {
+    color: #000;
     position: fixed;
     top: calc(50% - 73px);
     left: calc(50% - 125px);
@@ -38484,6 +38462,7 @@ button.mode.active {
 }
 #imgBox {
     text-align: center;
+    /*min-height: calc(100vh - 120px);*/
 }
 ul#image-list {
     display: block;
@@ -38812,7 +38791,7 @@ img.webtoon {
         <label id="more" class="number">${DL.str_186} ☰
             <ul id="more-menu">
                 <li id="combineDownload" class="more-item">${DL.str_181}</li>
-                <li id="copy" class="more-item">${DL.str_104.replace(/\(.\)/, "")}</li>
+                <li id="copy" class="more-item">${DL.str_105.replace(/\(.\)/, "")}</li>
                 <li id="export" class="more-item">${DL.str_104.replace(/\(.\)/, "")}</li>
                 <li id="export_json" class="more-item">${DL.str_193}</li>
                 <li id="copy_md" class="more-item">${DL.str_194}</li>
@@ -40266,7 +40245,7 @@ img.webtoon {
     border: 1px solid #a0a0a0;
     border-radius: 3px;
     box-shadow: -2px 2px 5px rgb(0 0 0 / 30%);
-    background-color: #e9e9e9;
+    background-color: #eee;
     z-index: ${UI_zIndex - 1};
 }
 
@@ -40357,10 +40336,10 @@ img.webtoon {
 
 #FullPictureLoadOptions .tab {
     cursor: pointer;
-    background-color: #bbb;
+    background-color: #ccc;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    color: #666;
+    color: #333;
     border-bottom: 3px solid transparent;
     overflow: hidden;
 }
@@ -40375,7 +40354,7 @@ img.webtoon {
 
 #FullPictureLoadOptions .tab.active::before {
     content: "⭐";
-    font-size: 0.8em;
+    font-size: 1em;
     padding-right: 2px;
 }
 
@@ -40493,6 +40472,10 @@ img.webtoon {
         <label>※ ${DL.str_148}</label>
         <select id="FancyboxTransition"></select>
     </div>
+    <div style="width: 348px; display: flex;">
+        <input id="Viewer" type="checkbox">
+        <label>${DL.str_120}</label>
+    </div>
 </div>
 <div id="download" class="row set hide">
     <div id="AutoDownloadDIV" style="width: 348px; display: flex;" title="${DL.str_74}">
@@ -40558,6 +40541,10 @@ img.webtoon {
         <label>※ ${DL.str_208}：</label>
         <select id="cdn"></select>
     </div>
+    <div id="CopymangaDIV" style="width: 348px; display: flex;">
+        <input id="Copymanga" type="checkbox">
+        <label>拷貝漫畫移動端SPA模式</label>
+    </div>
     <div id="EHentaiDIV" style="width: 348px; display: flex;">
         <input id="EHentai" type="checkbox">
         <label>${DL.str_114}</label>
@@ -40565,6 +40552,10 @@ img.webtoon {
     <div id="HitomiDIV" style="width: 348px; display: flex; margin-left: 7px;">
         <label>${DL.str_202}</label>
         <select id="Hitomi"></select>
+    </div>
+    <div id="YinawDIV" style="width: 348px; display: flex;">
+        <input id="Yinaw" type="checkbox">
+        <label>壹纳网使用原始新浪图床链接</label>
     </div>
 </div>
 <button id="CancelBtn">${(isOpenGallery || isOpenFilter) ? DL.str_82.replace(" (Esc)", "") : DL.str_82}</button>
@@ -40742,8 +40733,10 @@ img.webtoon {
         ge("#Threading", main).value = options.threading;
         ge("#Zip", main).checked = options.zip == 1 ? true : false;
         ge("#Extension", main).value = _GM_getValue("compressed_extension", "zip");
+        ge("#Copymanga", main).checked = _GM_getValue("copymangaSPA_Mode", 1) == 1 ? true : false;
         ge("#EHentai", main).checked = _GM_getValue("E_HENTAI_LoadOriginalImage", 0) == 1 ? true : false;
         ge("#Hitomi", main).value = _GM_getValue("hitomi_img_type", "webp");
+        ge("#Yinaw", main).checked = _GM_getValue("setYinawSinaOriginalURL", 0) == 1 ? true : false;
         ge("#cdn", main).value = _GM_getValue("wp_image_cdn", -1);
         ge("#zipFolder", main).checked = zipFolderConfig == 1 ? true : false;
         ge("#ConvertWEBP", main).checked = _GM_getValue("convertWebpToJpg", 0) == 1 ? true : false;
@@ -40794,24 +40787,22 @@ img.webtoon {
                 "#GalleryInIconDIV"
             ]);
         }
+        if (!["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"].some(h => fn.lh === h)) {
+            hide(["#CopymangaDIV"]);
+        }
         if (!["e-hentai.org", "exhentai.org"].some(h => fn.lh == h)) {
             hide(["#EHentaiDIV"]);
         }
         if (fn.lh != "hitomi.la") {
             hide(["#HitomiDIV"]);
         }
+        if (fn.lh != "yinaw.com") {
+            hide(["#YinawDIV"]);
+        }
         if (isSimpleMode) {
             hide([
                 "#MobileGalleryModeDIV",
                 "#autoExportDIV"
-            ]);
-        }
-        if (isBoolean(siteData.SPA)) {
-            hide([
-                "#ShadowGalleryModeDIV",
-                "#ShadowGalleryWheelDIV",
-                "#horizontalWheelDIV",
-                "#ShadowGalleryloopViewDIV"
             ]);
         }
         if (isSimpleMode || siteData.aeg == 0) {
@@ -40824,6 +40815,7 @@ img.webtoon {
                 "#CountdownDIV"
             ]);
         }
+        ge("#Viewer", main).checked = (localStorage.getItem("newTabViewLightGallery") ?? 0) == 1 ? true : false;
         ge("#Fancybox", main).checked = options.fancybox == 1 ? true : false;
         ge("#FancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
         ge("#FancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
@@ -40879,8 +40871,10 @@ img.webtoon {
             options.threading = ge("#Threading", main).value;
             options.zip = ge("#Zip", main).checked == true ? 1 : 0;
             _GM_setValue("compressed_extension", ge("#Extension", main).value);
+            _GM_setValue("copymangaSPA_Mode", ge("#Copymanga", main).checked == true ? 1 : 0);
             _GM_setValue("E_HENTAI_LoadOriginalImage", ge("#EHentai", main).checked == true ? 1 : 0);
             _GM_setValue("hitomi_img_type", ge("#Hitomi", main).value);
+            _GM_setValue("setYinawSinaOriginalURL", ge("#Yinaw", main).checked == true ? 1 : 0);
             _GM_setValue("wp_image_cdn", ge("#cdn", main).value);
             _GM_setValue("zipFolderConfig", ge("#zipFolder", main).checked == true ? 1 : 0);
             _GM_setValue("convertWebpToJpg", ge("#ConvertWEBP", main).checked == true ? 1 : 0);
@@ -40891,6 +40885,7 @@ img.webtoon {
             options.autoDownload = ge("#AutoDownload", main).checked == true ? 1 : 0;
             options.autoDownloadCountdown = ge("#Countdown", main).value;
             options.fancybox = ge("#Fancybox", main).checked == true ? 1 : 0;
+            localStorage.setItem("newTabViewLightGallery", ge("#Viewer", main).checked == true ? 1 : 0);
             _GM_setValue("FancyboxSlideshowTimeout", ge("#FancyboxSlideshowTimeout", main).value);
             _GM_setValue("FancyboxWheel", ge("#FancyboxWheel", main).value);
             _GM_setValue("FancyboxSlideshowTransition", ge("#FancyboxTransition", main).value);
@@ -41358,21 +41353,7 @@ a[data-fancybox]:hover {
 
     const setYinawSinaOriginalURL = _GM_getValue("setYinawSinaOriginalURL", 0);
 
-    if (fn.url === "yinaw.com") {
-        _GM_registerMenuCommand(setYinawSinaOriginalURL == 0 ? "❌ 壹纳网使用原始新浪图床链接" : "✔️ 壹纳网使用原始新浪图床链接", () => {
-            setYinawSinaOriginalURL == 0 ? _GM_setValue("setYinawSinaOriginalURL", 1) : _GM_setValue("setYinawSinaOriginalURL", 0);
-            location.reload();
-        });
-    }
-
     const copymangaSPA_Mode = _GM_getValue("copymangaSPA_Mode", 1);
-
-    if (["www.copymanga.tv", "copymanga.tv", "www.mangacopy.com", "mangacopy.com"].some(h => fn.lh === h) && isMobileDeviceUA) {
-        _GM_registerMenuCommand(copymangaSPA_Mode == 0 ? "❌ 拷貝漫畫SPA模式" : "✔️ 拷貝漫畫SPA模式", () => {
-            copymangaSPA_Mode == 0 ? _GM_setValue("copymangaSPA_Mode", 1) : _GM_setValue("copymangaSPA_Mode", 0);
-            location.reload();
-        });
-    }
 
     const hitomi_img_type = _GM_getValue("hitomi_img_type", "webp");
 
@@ -42464,13 +42445,6 @@ a[data-fancybox]:hover {
     if (isArray(siteData.scrollEle) || isFn(siteData.scrollEle)) {
         _GM_registerMenuCommand(autoScrollAllElement == 0 ? "❌ " + DL.str_116 : "✔️ " + DL.str_116, () => {
             autoScrollAllElement == 0 ? _GM_setValue("autoScrollAllElement", 1) : _GM_setValue("autoScrollAllElement", 0);
-            location.reload();
-        });
-    }
-
-    if (siteData.category && ["nsfw1", "nsfw2", "hcomic", "comic"].some(c => c === siteData.category)) {
-        _GM_registerMenuCommand(newTabViewLightGallery == 0 ? "❌ " + DL.str_120 : "✔️ " + DL.str_120, () => {
-            newTabViewLightGallery == 0 ? localStorage.setItem("newTabViewLightGallery", 1) : localStorage.setItem("newTabViewLightGallery", 0);
             location.reload();
         });
     }
