@@ -5057,7 +5057,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://yinaw.com/">壹纳网</a>
                 </td>
-                <td>腳本管理器選項可以勾選壹纳网使用原始新浪图床链结，需使用Header Editor擴展修改標頭， <a href="https://sspai.com/post/77650">奔跑中的奶酪的修改說明</a>
+                <td>設定 > 其他 > 壹纳网使用原始新浪图床链结，需使用Header Editor擴展修改標頭， <a href="https://sspai.com/post/77650">奔跑中的奶酪的修改說明</a>
                 </td>
             </tr>
             <tr>
@@ -5275,7 +5275,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://e-hentai.org/">E-Hentai</a>
                 </td>
-                <td>作用在圖片清單頁，手動插入大圖減少消耗GP配額，可透過腳本管理器選單選擇是否載入原圖連結， <a href="https://exhentai.org/">exhentai.org</a>， <a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。 </td>
+                <td>作用在圖片清單頁，手動插入大圖減少消耗GP配額，設定 > 其他 > 可選擇是否載入原圖連結， <a href="https://exhentai.org/">exhentai.org</a>， <a href="https://e-hentai.org/lofi/">https://e-hentai.org/lofi/</a>，圖片下載錯誤率極高，不建議使用本腳本下載。 </td>
             </tr>
             <tr>
                 <td>
@@ -5565,7 +5565,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://hitomi.la/">Hitomi.la</a>
                 </td>
-                <td>SPA網頁，作用在圖片清單頁</td>
+                <td>SPA網頁，作用在圖片清單頁，設定 > 其他 > 可選擇圖片格式WEBP、AVIF</td>
             </tr>
             <tr>
                 <td>
@@ -5835,6 +5835,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://www.ssmh.lol/">紳士漫畫ssmh</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://aihgirl.com/manga/">AIHGAME</a>
                 </td>
                 <td></td>
             </tr>
