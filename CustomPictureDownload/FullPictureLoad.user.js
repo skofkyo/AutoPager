@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.16
+// @version            2025.4.17
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -1500,6 +1500,20 @@
         ],
         customTitle: "h2.blog-details-headline",
         category: "nsfw1"
+    }, {
+        name: "秀人网",
+        url: {
+            h: "www.xiurenpic.com",
+            p: "/article/"
+        },
+        box: ["#gallery", 1],
+        imgs: "#gallery img",
+        button: [4],
+        insertImg: [
+            ["#FullPictureLoadMainImgBox", 0, "#gallery"], 2
+        ],
+        customTitle: ".filename",
+        category: "nsfw2"
     }, {
         name: "福利图",
         url: {
@@ -7314,7 +7328,9 @@
             ],
             p: "/album/",
         }) && !fn.lp.includes("/category/"),
-        init: () => fn.waitEle("._buttons").then(() => _unsafeWindow?.jQuery(document)?.off()),
+        init: () => {
+            fn.waitEle("._buttons,.post-nav-links").then(() => _unsafeWindow?.jQuery(document)?.off());
+        },
         imgs: () => {
             let json_url = fn.gu("link[title=JSON]");
             fn.showMsg(DL.str_05, 0);
@@ -7684,7 +7700,7 @@
             h: ["tuyetnhan.com"],
             p: /^\/[^\/]+\/$/
         },
-        srcset: ".entry-content img:not([src*='/logo'],[src*='/emoji/'])",
+        srcset: ".entry-content img:not([src*='/logo'],[src*='/emoji/'],[src*='/style/'])",
         autoDownload: [0],
         next: "a[rel=prev]",
         prev: "a[rel=next]",
@@ -8186,9 +8202,9 @@
         imgs: ".entry-content a:has(>img),br~a,br~img",
         category: "nsfw2"
     }, {
-        name: "sekushipic",
+        name: "sekushipic/Idolru Channel/Cosplay Club",
         url: {
-            h: ["sekushipic.blogspot.com"],
+            h: ["sekushipic.blogspot.com", "janidol.blogspot.com", "cosplay-club3.blogspot.com"],
             p: /^\/\d+\/\d+\/[^\.]+\.html/
         },
         imgs: ".separator>a",
@@ -8348,6 +8364,19 @@
         mcss: "#outer-wrapper{margin:0px!important;width:100%!important}",
         category: "nsfw1"
     }, {
+        name: "Dicas de Animes",
+        url: {
+            h: ["dicadeanimesbr.blogspot.com"],
+            p: /^\/\d+\/\d+\/[\w-]+\.html/i
+        },
+        imgs: ".entry-content a:has(>img)",
+        thums: ".entry-content a:has(>img) img",
+        autoDownload: [0],
+        next: "a.prev-post-link",
+        prev: "a.next-post-link",
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
         name: "CUTE GIRLS ADDICT",
         url: {
             h: ["cutegirlsaddict.blogspot.com"],
@@ -8385,10 +8414,82 @@
         customTitle: "h1.post-title,h3.entry-title",
         category: "nsfw1"
     }, {
-        name: "Everia.club",
-        host: ["everia.club", "torayaki.com", "evevoa.com"],
+        name: "COSPLAYJP",
         url: {
-            e: ["//div[@id='site-logo']//a[@rel='home'][text()='EVERIA.CLUB']", ".wp-block-image img,.entry-content img"]
+            h: ["cosplayjp.wordpress.com"],
+            p: /^\/\d+\/\d+\/\d+\/[\w-]+\//i
+        },
+        imgs: ".entry-content .wp-block-image a",
+        thums: "entry-content .wp-block-image a img",
+        autoDownload: [0],
+        next: ".nav-previous>a",
+        prev: ".nav-next>a",
+        customTitle: () => fn.dt({
+            t: fn.ge(".entry-title").textContent
+        }),
+        category: "nsfw1"
+    }, {
+        name: "Sexy Fandom",
+        url: {
+            h: ["sexyfandom.com"],
+            p: "/archives/"
+        },
+        srcset: ".post_content img",
+        autoDownload: [0],
+        next: "#prepost",
+        prev: "#nextpost",
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
+        name: "COSPLAYJP",
+        url: {
+            h: ["dailycosplay.com"]
+        },
+        srcset: ".post_content img",
+        autoDownload: [0],
+        next: "#prepost",
+        prev: "#nextpost",
+        customTitle: ".entry-title",
+        category: "nsfw1"
+    }, {
+        name: "Daily Cosplay",
+        url: {
+            h: ["dailycosplay.com"]
+        },
+        imgs: () => fn.gae("tbody td[width='754'] center img[title]").filter(e => !e.closest("img[alt=Previous],img[alt=Next],.t2")),
+        capture: () => _this.imgs(),
+        autoDownload: [0],
+        next: "td[align=LEFT] a:has(img[alt=Previous])",
+        prev: "td[align=RIGHT] a:has(img[alt=Next])",
+        customTitle: () => fn.title(" - Daily Cosplay .com"),
+        category: "nsfw1"
+    }, {
+        name: "Animexx",
+        url: {
+            h: ["www.animexx.de"],
+            e: [".header_mitte>a", "#cosplay_tab_holder"],
+            st: "PHPSESSID"
+        },
+        imgs: () => {
+            fn.showMsg(DL.str_05, 0);
+            let data_url = new URL(document.querySelector(".header_mitte>a").href).searchParams.get("back").replace(/\?.+$/, "");
+            let code = [...document.scripts].find(s => s.textContent.includes("PHPSESSID")).textContent;
+            let [, id] = code.match(/PHPSESSID=(\w+)/);
+            return fetch(data_url + "photoswipe/?PHPSESSID=" + id, {
+                "headers": {
+                    "accept": "application/json, text/javascript, */*; q=0.01",
+                    "x-requested-with": "XMLHttpRequest"
+                }
+            }).then(res => res.json()).then(data => data.map(e => e.url));
+        },
+        capture: () => _this.imgs(),
+        customTitle: () => fn.title("auf Animexx.de"),
+        category: "nsfw1"
+    }, {
+        name: "Everia.club",
+        host: ["everia.club"],
+        url: {
+            e: ["//div[@id='site-logo']//a[@rel='home'][text()='EVERIA.CLUB']", ".wp-block-image img,.separator>a.no-lightbox,.entry-content img"]
         },
         imgs: () => {
             let [img, a] = [".wp-block-image img", ".separator>a.no-lightbox"]
@@ -8402,7 +8503,7 @@
         },
         button: [4],
         insertImg: [".entry-content", 2],
-        customTitle: "h1",
+        customTitle: ".entry-title",
         category: "nsfw2"
     }, {
         name: "Everia club",
@@ -12905,6 +13006,47 @@
                     a[href*='imagevenue'],
                     a[href*='imagebam']
                     `)].map(a => a.href);
+                    captureLinksArray = links;
+                    fn.showMsg(`Capture ${links.length} Links`);
+                    debug("captureLinksArray", captureLinksArray);
+                }
+            });
+        },
+        imgs: () => fn.getImageHost(),
+        repeat: 1,
+        category: "nsfw2"
+    }, {
+        name: "Teen Models",
+        host: ["teen-models.forum"],
+        link: "https://teen-models.forum/thread-13449.html",
+        url: {
+            h: "teen-models.forum",
+            p: "/thread-",
+            e: ".post_author",
+            d: "pc"
+        },
+        init: () => {
+            document.addEventListener("click", event => {
+                cancelDefault(event);
+                if (event.target.className === "post_author") {
+                    let links = [...event.target.nextElementSibling.querySelectorAll(`
+                    a[href*='https://imgspice.com/'],
+                    a[href*='imx.to']:not([href*='/u/i/']),
+                    a[href*='pixhost.to'],
+                    a[href^='http://imagetwist.com/'],
+                    a[href*='postimg.cc'],
+                    a[href*='fastpic.org'],
+                    a[href*='vipr.im'],
+                    a[href*='turboimagehost'],
+                    a[href*='imgbox.com'],
+                    a[href*='imagevenue'],
+                    a[href*='imagebam']
+                    `)].map(a => {
+                        if (a.href.includes("linkanonymous")) {
+                            return a.href.replace("https://linkanonymous.com/?", "");
+                        }
+                        return a.href;
+                    });
                     captureLinksArray = links;
                     fn.showMsg(`Capture ${links.length} Links`);
                     debug("captureLinksArray", captureLinksArray);
@@ -33269,7 +33411,7 @@ if ("xx" in window) {
     const zipFolderConfig = _GM_getValue("zipFolderConfig", 1);
     const convertWebpToJpg = _GM_getValue("convertWebpToJpg", 0);
     const convertAvifToJpg = _GM_getValue("convertAvifToJpg", 0);
-    const convertQuality = _GM_getValue("convertQuality", 9);
+    const jpgConvertQuality = _GM_getValue("jpgConvertQuality", 90);
 
     //圖片影片下載函式
     const DownloadFn = async (array = null, text = null) => {
@@ -33430,12 +33572,12 @@ if ("xx" in window) {
                                 (/avif/i.test(type) || /\.avif/i.test(data.finalUrl)) && convertAvifToJpg == 1
                             ) {
                                 let quality;
-                                if (convertQuality == 0) {
+                                if (jpgConvertQuality == 0) {
                                     quality = 0;
-                                } else if (convertQuality == 10) {
+                                } else if (jpgConvertQuality == 100) {
                                     quality = 1;
                                 } else {
-                                    quality = Number("0." + convertQuality);
+                                    quality = Number("0." + jpgConvertQuality);
                                 }
                                 blobData = await fn.convertImage(blobData, "image/jpeg", quality);
                                 ex = "jpg";
@@ -34159,7 +34301,7 @@ if ("xx" in window) {
         _GM_setValue("doubleTouchNext", 1);
         _GM_setValue("convertWebpToJpg", 0);
         _GM_setValue("convertAvifToJpg", 0);
-        _GM_setValue("convertQuality", 9);
+        _GM_setValue("jpgConvertQuality", 90);
         _GM_setValue("icon_top", "auto");
         _GM_setValue("icon_bottom", "24px");
         _GM_setValue("icon_left", "24px");
@@ -38520,7 +38662,7 @@ li.image-item p.dark {
     vertical-align: sub;
     margin: 0 4px 0 -4px;
 }
-label.line-through:has(>#size) {
+li.line-through:has(>#size) {
     text-decoration: line-through;
 }
 #exclude,#more {
@@ -40686,15 +40828,15 @@ img.webtoon {
         HitomiSelect.append(fragment);
 
         const QualitySelect = ge("#Quality", main);
-        for (let i = 0; i <= 10; i++) {
+        for (let i = 0; i <= 100; i++) {
             const option = document.createElement("option");
             option.value = i;
             if (i == 0) {
                 option.innerText = 0;
-            } else if (i == 10) {
+            } else if (i == 100) {
                 option.innerText = 1;
             } else {
-                option.innerText = "0." + i;
+                option.innerText = Number("0." + i);
             }
             fragment.append(option);
         }
@@ -40741,7 +40883,7 @@ img.webtoon {
         ge("#zipFolder", main).checked = zipFolderConfig == 1 ? true : false;
         ge("#ConvertWEBP", main).checked = _GM_getValue("convertWebpToJpg", 0) == 1 ? true : false;
         ge("#ConvertAVIF", main).checked = _GM_getValue("convertAvifToJpg", 0) == 1 ? true : false;
-        ge("#Quality", main).value = _GM_getValue("convertQuality", 9);
+        ge("#Quality", main).value = _GM_getValue("jpgConvertQuality", 90);
         ge("#AutoDownload", main).checked = options.autoDownload == 1 ? true : false;
         ge("#Countdown", main).value = options.autoDownloadCountdown;
         ge("#Comic", main).checked = options.comic == 1 ? true : false;
@@ -40879,7 +41021,7 @@ img.webtoon {
             _GM_setValue("zipFolderConfig", ge("#zipFolder", main).checked == true ? 1 : 0);
             _GM_setValue("convertWebpToJpg", ge("#ConvertWEBP", main).checked == true ? 1 : 0);
             _GM_setValue("convertAvifToJpg", ge("#ConvertAVIF", main).checked == true ? 1 : 0);
-            _GM_setValue("convertQuality", ge("#Quality", main).value);
+            _GM_setValue("jpgConvertQuality", ge("#Quality", main).value);
             options.comic = ge("#Comic", main).checked == true ? 1 : 0;
             _GM_setValue("doubleTouchNext", ge("#Double", main).checked == true ? 1 : 0);
             options.autoDownload = ge("#AutoDownload", main).checked == true ? 1 : 0;
