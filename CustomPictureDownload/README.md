@@ -3666,6 +3666,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://sekushipic.blogspot.com/">sekushipic</a>
                 </td>
                 <td></td>
+            </tr>v
+            <tr>
+                <td>
+                    <a href="https://janidol.blogspot.com/">Idolru Channel</a>
+                </td>
+                <td></td>
+            </tr>
+           <tr>
+                <td>
+                    <a href="https://cosplay-club3.blogspot.com/">Cosplay Club</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -4203,7 +4215,19 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://dicadeanimesbr.blogspot.com/search/label/Cosplay">Dicas de Animes</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://cutegirlsaddict.blogspot.com/">CUTE GIRLS ADDICT</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://cosplayjp.wordpress.com/">COSPLAYJP</a>
                 </td>
                 <td></td>
             </tr>
@@ -4885,6 +4909,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://www.xiurenpic.com/last.html">秀人网</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://hualin.san.tc/">HuaLin</a>
                 </td>
                 <td></td>
@@ -5245,6 +5275,18 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://seriesdonghua.net/cosplay">Series Donghua</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://dailycosplay.com/2022/May/30b.html">Daily Cosplay</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.animexx.de/cosplay/">Animexx</a>
                 </td>
                 <td></td>
             </tr>
