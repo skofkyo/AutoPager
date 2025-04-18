@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.17
+// @version            2025.4.18
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -380,6 +380,16 @@
             v: 3,
             css: false
         },
+        category: "photo"
+    }, {
+        name: "Irancartoon",
+        url: {
+            h: "www.irancartoon.com",
+            p: "/gallery/"
+        },
+        imgs: "#galls a",
+        thums: "#galls a img",
+        customTitle: ".post_title",
         category: "photo"
     }, {
         name: "小黃書/8色人體攝影",
@@ -4849,6 +4859,23 @@
         customTitle: () => fn.gt(".text-center>h1").replace("|", "-"),
         category: "nsfw1"
     }, {
+        name: "福利兔",
+        url: {
+            h: "www.fulitu.cc",
+            p: ".html"
+        },
+        imgs: "div[data-fancybox]",
+        button: [4],
+        insertImg: [
+            ["#masonry", 2, "#masonry"], 2
+        ],
+        customTitle: ".post-info h2",
+        fancybox: {
+            v: 3,
+            css: false
+        },
+        category: "nsfw1"
+    }, {
         name: "猎美社",
         url: {
             h: "liemeishe.com"
@@ -8433,17 +8460,6 @@
         url: {
             h: ["sexyfandom.com"],
             p: "/archives/"
-        },
-        srcset: ".post_content img",
-        autoDownload: [0],
-        next: "#prepost",
-        prev: "#nextpost",
-        customTitle: ".entry-title",
-        category: "nsfw1"
-    }, {
-        name: "COSPLAYJP",
-        url: {
-            h: ["dailycosplay.com"]
         },
         srcset: ".post_content img",
         autoDownload: [0],
@@ -16177,7 +16193,7 @@
     }, {
         name: "HentaiPaw圖片清單頁/Hentai-One圖片清單頁",
         url: {
-            h: [/([a-z]{2}\.)hentaipaw.com/, "ch.hentai-one.com"],
+            h: [/([a-z]{2}\.)?hentaipaw.com/, "ch.hentai-one.com"],
             p: "/articles/"
         },
         init: () => fn.waitEle(["next-route-announcer", ".grid .group>img"]),
@@ -16810,6 +16826,15 @@
             [".gallery", 2], 1
         ],
         endColor: "white",
+        category: "hcomic"
+    }, {
+        name: "FreeAdultComix",
+        url: {
+            h: ["freeadultcomix.com"]
+        },
+        imgs: ".foto img",
+        endColor: "white",
+        customTitle: ".post-conteudo h1",
         category: "hcomic"
     }, {
         name: "Manga18.club/hanman18.com/18PornComic/Doujin18.net/CNdoujin.net",
@@ -17552,9 +17577,9 @@
         },
         category: "hcomic"
     }, {
-        name: "喜漫漫画/51漫画",
+        name: "喜漫漫画",
         url: {
-            h: ["www.favcomic.com", "www.51comics.com"],
+            h: ["www.favcomic.com", "www.favcomic.net"],
             p: "/chapter/"
         },
         imgs: "#content img",
@@ -19666,7 +19691,23 @@
         customTitle: () => fn.title("Dynasty Reader » "),
         category: "comic"
     }, {
-        name: "Hiperdex/MangaRead/LHTranslation/MANHUAUS.COM/Novelmic.com/Setsu Scans/ToonGod/HARIMANGA/mangamammy/Manga Online Team",
+        name: "Top Manhua/Toonily/Manga-shi/ManhwaZ/Mangaclash/MANGAGG/Asura Scan",
+        url: {
+            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com", "manhwaz.com", "toonclash.com", "mangagg.com", "asurascan.me"],
+            p: ["/chapter", "/glava"],
+            e: ".reading-content img"
+        },
+        imgs: () => fn.gae(".reading-content img").filter(e => !e.closest("a[href*='/t.me/'],.banner")),
+        button: [4],
+        insertImg: [".reading-content", 2],
+        endColor: () => fn.ge(".text-ui-light") ? "white" : "black",
+        autoDownload: [0],
+        next: "a.next_page",
+        prev: "a.prev_page",
+        customTitle: "#chapter-heading",
+        category: "comic"
+    }, {
+        name: "Hiperdex/MangaRead/LHTranslation/MANHUAUS.COM/Novelmic.com/Setsu Scans/ToonGod/HARIMANGA/mangamammy/Manga Online Team/Manhwa Crush",
         url: {
             h: [
                 "hiperdex.com",
@@ -19682,13 +19723,15 @@
                 "mangamammy.ru",
                 "mangaonlineteam.com",
                 "lectormanga.top",
-                "brmangas.top"
+                "brmangas.top",
+                "manhwacrush.me"
             ],
             p: /^\/(manga|comic|webtoon)\//
         },
         imgs: ".wp-manga-chapter-img",
         button: [4],
         insertImg: [".reading-content", 2],
+        endColor: () => fn.ge(".text-ui-light") ? "white" : "black",
         autoDownload: [0],
         next: "a.next_page",
         prev: "a.prev_page",
@@ -20671,22 +20714,6 @@
         customTitle: () => _this.page() ? fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g) : null,
         category: "comic"
     }, {
-        name: "Top Manhua/Toonily/Manga-shi/ManhwaZ/Mangaclash/MANGAGG/Asura Scan",
-        url: {
-            h: ["manhuatop.org", "topmanhua.fan", "toonily.com", "manga-shi.com", "manhwaz.com", "toonclash.com", "mangagg.com", "asurascan.me"],
-            p: ["/chapter", "/glava"],
-            e: ".reading-content img"
-        },
-        imgs: () => fn.gae(".reading-content img").filter(e => !e.closest("a[href*='/t.me/'],.banner")),
-        button: [4],
-        insertImg: [".reading-content", 2],
-        endColor: () => fn.ge(".text-ui-light") ? "white" : "black",
-        autoDownload: [0],
-        next: "a.next_page",
-        prev: "a.prev_page",
-        customTitle: "#chapter-heading",
-        category: "comic"
-    }, {
         name: "Mangapill",
         url: {
             h: ["www.mangapill.com", "mangapill.com"],
@@ -20870,7 +20897,7 @@
         hide: "#teaser3",
         category: "comic"
     }, {
-        name: "Realm Oasis/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables/TresDaos/Lectormiau/Mangagojo/Niraw/漫画ばんく",
+        name: "Realm Oasis/Night Scans/Terco Scans/Lua Scans/Drake Scans/Rizz Fables/TresDaos/Lectormiau/Mangagojo/Niraw/漫画ばんく/Cosmic Scans Indonesia",
         url: {
             h: [
                 "realmoasis.com",
@@ -20887,11 +20914,12 @@
                 "niraw.com",
                 "mangakl.top",
                 "mangaku.win",
-                "phoenixmanga.com"
+                "phoenixmanga.com",
+                "cosmic345.co"
             ]
         },
         init: () => fn.addMutationObserver(() => fn.remove("#radio_content,#teaserbottom")),
-        imgs: "#readerarea img[class*='wp-image'],#readerarea .ts-main-image,#readerarea img[loading],#readerarea .chapter-img",
+        imgs: "#readerarea img[class*='wp-image'],#readerarea .ts-main-image,#readerarea img[loading],#readerarea .chapter-img,#readerarea img[src*='/chapter'],#readerarea img[src*='/Chapter']",
         button: [4],
         insertImg: ["#readerarea", 2],
         endColor: () => fn.ge(".darkmode") ? "white" : "black",
@@ -20899,6 +20927,18 @@
         next: "a.ch-next-btn",
         prev: "a.ch-prev-btn",
         hide: ".ver-src.chapter,.blox,div[style]:has(>div>script)",
+        customTitle: ".entry-title",
+        category: "comic"
+    }, {
+        name: "NTRGod",
+        url: {
+            h: ["ntrgod.com"]
+        },
+        imgs: "#chapter_imgs img",
+        repeat: 1,
+        autoDownload: [0],
+        next: "a.ch-next-btn",
+        prev: "a.ch-prev-btn",
         customTitle: ".entry-title",
         category: "comic"
     }, {
@@ -21060,19 +21100,22 @@
         }),
         category: "comic"
     }, {
-        name: "ReadComicsOnline",
+        name: "ReadComicsOnline/M440.in",
         url: {
-            h: "readcomicsonline.ru",
-            p: "/comic/"
+            h: ["www.readcomicsonline.ru", "readcomicsonline.ru", "m440.in"],
+            p: ["/comic/", "/manga/"]
         },
         imgs: "#all img",
         button: [4],
-        insertImg: [".imagecnt", 2],
+        insertImg: [".imagecnt,#ppp", 2],
         autoDownload: [0],
         next: () => _unsafeWindow.next_chapter ? _unsafeWindow.next_chapter : null,
         prev: 1,
         customTitle: () => fn.dt({
-            d: " - Page 1"
+            d: [
+                " - Page 1",
+                / - Pág\. 1.+$/
+            ]
         }),
         category: "comic"
     }, {
@@ -21530,6 +21573,18 @@
             s: ".uk-breadcrumb",
             d: "Home"
         }),
+        category: "comic"
+    }, {
+        name: "LeerCapitulo",
+        reg: /^https?:\/\/www\.leercapitulo\.co\/leer\/.+/,
+        init: () => fn.waitEle("#page_select"),
+        imgs: () => fn.gae("#page_select option").map(e => e.value),
+        button: [4],
+        insertImg: [".each-page", 2],
+        autoDownload: [0],
+        next: "a.next",
+        prev: "a.pre",
+        customTitle: ".bodycontainer h1",
         category: "comic"
     }, {
         name: "ManhuaPlus",
@@ -28074,8 +28129,8 @@ if ("xx" in window) {
                 str_67: "⚙️ 设置",
                 str_68: "当前(※全局)网站设置",
                 str_69: "显示左下图标按钮",
-                str_70: "下载后最大下载线程数：",
-                str_71: "压缩打包",
+                str_70: "最大下载线程数：",
+                str_71: "下载后压缩打包",
                 str_72: "压缩档文件扩展名：",
                 str_73: "自动下载",
                 str_74: "ESC键：可中断自动下载\n快捷键 [ ctrl + . ]：开始自动下载或取消自动下载",
@@ -40481,13 +40536,14 @@ img.webtoon {
     background-color: #ccc;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
+    padding: 4px;
     color: #333;
     border-bottom: 3px solid transparent;
     overflow: hidden;
 }
 
 #FullPictureLoadOptions .tab.active {
-    padding: 1px 6px;
+    padding: 4px 8px;
     background-color: rgb(255, 255, 255);
     color: rgb(51, 51, 51);
     font-weight: bold;
