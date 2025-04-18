@@ -4,20 +4,20 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/04/06
+2025/04/18
 PC
-Chrome 135.0.7049.42 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Edge 135.0.3179.54 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-FireFox 137.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Chrome 135.0.7049.96 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Edge 135.0.3179.85 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+FireFox 137.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 136.0.3236.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.3.001 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-☆Firefox for Android 137.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+☆Edge Canary 137.0.3265.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+☆Lemur Browser 2.7.3.002 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+☆Firefox for Android 137.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 <a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Waterfox 1.0.12 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Edge 134.0.3124.105 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Mises Browser 425021906 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-Yandex Browser 25.2.8.97 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Waterfox 1.0.13 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Edge 135.0.3179.72 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Mises Browser 425041604 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Yandex Browser 25.3.0.33 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 <a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.8.15</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
 <a href="https://www.xbext.com/index.html">XBrowser 5.1.2</a>
@@ -1656,6 +1656,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 </td>
                 <td></td>
             </tr>
+            <tr>
+                <td>
+                    <a href="https://www.irancartoon.com/site/gallery">Irancartoon</a>
+                </td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </details>
@@ -1999,6 +2005,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://v2.jk.rs/">日式JK旧版</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.fulitu.cc/">福利兔</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -3666,7 +3678,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://sekushipic.blogspot.com/">sekushipic</a>
                 </td>
                 <td></td>
-            </tr>v
+            </tr>
             <tr>
                 <td>
                     <a href="https://janidol.blogspot.com/">Idolru Channel</a>
@@ -5725,6 +5737,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://freeadultcomix.com/">FreeAdultComix</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://hentaifr.net/">Hentai FR</a>
                 </td>
                 <td></td>
@@ -5835,7 +5853,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>
                     <a href="https://www.favcomic.com/picture">喜漫漫画</a>
                 </td>
-                <td>完整H漫需付費會員，<a href="https://www.51comics.com/picture">51漫画</a></td>
+                <td>完整H漫需付費會員</td>
             </tr>
             <tr>
                 <td>
@@ -7134,7 +7152,7 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://hiperdex.com/">Hiperdex 英文</a>
                 </td>
                 <td>
-                    <a href="https://www.mangaread.org/">MangaRead</a>， <a href="https://lhtranslation.net/">LHTranslation</a>， <a href="https://manhuaus.com/">MANHUAUS.COM</a>， <a href="https://novelmic.com/">Novelmic.com</a>， <a href="https://setsuscans.com/">Setsu Scans</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://harimanga.me/">HARIMANGA</a>， <a href="https://mangaonlineteam.com/">Manga Online Team</a>
+                    <a href="https://www.mangaread.org/">MangaRead</a>， <a href="https://lhtranslation.net/">LHTranslation</a>， <a href="https://manhuaus.com/">MANHUAUS.COM</a>， <a href="https://novelmic.com/">Novelmic.com</a>， <a href="https://setsuscans.com/">Setsu Scans</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://www.toongod.org/">ToonGod</a>， <a href="https://harimanga.me/">HARIMANGA</a>， <a href="https://mangaonlineteam.com/">Manga Online Team</a>， <a href="https://manhwacrush.me/">Manhwa Crush</a>
                 </td>
             </tr>
             <tr>
@@ -7368,6 +7386,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://cosmic345.co/">Cosmic Scans Indonesia 英文</a>
+                </td>
+                <td><a href="https://cosmictoon.ae/">cosmictoon.ae</a></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://manga-bay.org/home">Manga-Bay 英文</a>
                 </td>
                 <td></td>
@@ -7489,6 +7513,24 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             <tr>
                 <td>
                     <a href="https://zonamiau.com/">Lectormiau 西班牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://m440.in/">M440.in 西班牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://ntrgod.com/">NTRGod 西班牙文</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://www.leercapitulo.co/">LeerCapitulo 西班牙文</a>
                 </td>
                 <td></td>
             </tr>
