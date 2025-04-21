@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.18
+// @version            2025.4.21
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -8273,8 +8273,8 @@
         customTitle: "h1.entry-title,h3.entry-title",
         category: "nsfw1"
     }, {
-        name: "Nude Models",
-        url: () => isPC && fn.lh === "blognudemodels.blogspot.com",
+        name: "Nude Models/Beauty Pretty Sexy",
+        url: () => isPC && (fn.lh === "blognudemodels.blogspot.com" || fn.lh === "beprse.blogspot.com"),
         page: () => fn.clp(".html"),
         SPA: () => _this.page(),
         observeURL: "loop",
@@ -8288,8 +8288,8 @@
         })) : null,
         category: "nsfw2"
     }, {
-        name: "Nude Models",
-        reg: /^https?:\/\/blognudemodels\.blogspot\.com\/\d+\/\d+\/[^\.]+\.html\?m=1$/,
+        name: "Nude Models/Beauty Pretty Sexy",
+        reg: /^https?:\/\/(blognudemodels\.blogspot\.com|beprse\.blogspot\.com)\/\d+\/\d+\/[^\.]+\.html\?m=1$/,
         init: () => fn.waitEle(".separator img"),
         imgs: ".separator>a",
         button: [4],
@@ -20682,35 +20682,45 @@
             h: ["mangafire.to"]
         },
         page: () => fn.clp("/read/"),
-        json: () => fn.fetchDoc(fn.clp()).then(dom => {
-            let code = fn.gt("#syncData", 1, dom);
-            let json = JSON.parse(code);
-            siteJson = json;
-        }),
-        SPA: () => _this.page() ? true : (siteJson = {}) && false,
-        observeURL: "head",
-        init: () => _this.page() ? _this.json() : void 0,
-        imgs: () => {
-            if (!_this.page()) return [];
-            fn.showMsg(DL.str_05, 0);
-            let [, comic_id, chapter_number] = fn.clp().match(/(\w+)\/\w+\/chapter-(.+)$/i);
+        chapters: () => {
             let headers = new Headers({
                 "Accept": "application/json, text/javascript, */*; q=0.01",
                 "X-Requested-With": "XMLHttpRequest",
             });
-            return fetch(`/ajax/read/${comic_id}/chapter/en`, {
+            let [, , id, lang] = fn.clp().split("/");
+            id = id.split(".").at(-1);
+            return fetch(`/ajax/read/${id}/chapter/${lang}`, {
                 headers
             }).then(res => res.json()).then(json => {
-                let tempDom = fn.doc(json.result.html);
-                let chapter_id = fn.gae("li a", tempDom).find(a => a.dataset.number == chapter_number).dataset.id;
-                return fetch(`/ajax/read/chapter/${chapter_id}`, {
-                    headers
-                }).then(res => res.json()).then(json => json.result.images.map(arr => arr.find(e => e.startsWith("http"))));
+                let temp = fn.html(json.result.html);
+                siteJson.chapters = fn.gae("a[data-id]", temp);
             });
+        },
+        SPA: () => _this.page() ? true : (siteJson = {}) && false,
+        observeURL: "head",
+        init: () => _this.page() ? _this.chapters() : void 0,
+        imgs: () => {
+            if (!_this.page()) return [];
+            fn.showMsg(DL.str_05, 0);
+            let c = fn.clp().split("/").at(-1);
+            let cc = siteJson.chapters.find(a => a.href.includes(c));
+            let headers = new Headers({
+                "Accept": "application/json, text/javascript, */*; q=0.01",
+                "X-Requested-With": "XMLHttpRequest",
+            });
+            return fetch(`/ajax/read/chapter/${cc.dataset.id}`, {
+                headers
+            }).then(res => res.json()).then(json => json.result.images.map(arr => arr.find(e => e.startsWith("http"))));
         },
         capture: () => _this.imgs(),
         autoDownload: [0],
-        next: () => _this.page() && isURL(siteJson.next_chapter_url) ? new URL(siteJson.next_chapter_url).pathname : null,
+        next: () => {
+            if (!_this.page()) return null;
+            let c = fn.clp().split("/").at(-1);
+            let index = siteJson.chapters.findIndex(a => a.href.includes(c));
+            let next = siteJson.chapters[index - 1];
+            return isEle(next) ? next.href : null;
+        },
         customTitle: () => _this.page() ? fn.title(/ - Read Manga Online| \| Read Online on MangaFire|Manga, /g) : null,
         category: "comic"
     }, {
@@ -21576,6 +21586,7 @@
         category: "comic"
     }, {
         name: "LeerCapitulo",
+        host: ["www.leercapitulo.co"],
         reg: /^https?:\/\/www\.leercapitulo\.co\/leer\/.+/,
         init: () => fn.waitEle("#page_select"),
         imgs: () => fn.gae("#page_select option").map(e => e.value),
@@ -27682,6 +27693,8 @@ if ("xx" in window) {
     const FancyboxSlideshowTimeout = Number(_GM_getValue("FancyboxSlideshowTimeout", 3));
     const FancyboxSlideshowTimeoutNum = FancyboxSlideshowTimeout == 0 ? 500 : (FancyboxSlideshowTimeout * 1000);
     const FancyboxSlideshowTransition = _GM_getValue("FancyboxSlideshowTransition", "fade") == "no" ? "false" : _GM_getValue("FancyboxSlideshowTransition", "fade");
+    const FancyboxAutoClose = _GM_getValue("FancyboxAutoClose", 1);
+    const FancyboxAutoNext = _GM_getValue("FancyboxAutoNext", 1);
 
     let isOpenFancybox = false;
     let FancyboxOptions;
@@ -27722,6 +27735,17 @@ if ("xx" in window) {
                         fn.scrollEvent(slideIndex);
                     } else {
                         fn.scrollEvent(fancybox.getSlide().index);
+                    }
+                    if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                        if (FancyboxAutoClose == 1) {
+                            fancybox.close();
+                        }
+                        if (FancyboxAutoNext == 1) {
+                            if (!!nextLink) {
+                                fn.showMsg(DL.str_34);
+                                setTimeout(() => (location.href = nextLink), 100);
+                            }
+                        }
                     }
                 },
                 close: fancybox => {
@@ -27768,6 +27792,17 @@ if ("xx" in window) {
                         fn.scrollEvent(slideIndex);
                     } else {
                         fn.scrollEvent(fancybox.getSlide().index);
+                    }
+                    if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                        if (FancyboxAutoClose == 1) {
+                            fancybox.close();
+                        }
+                        if (FancyboxAutoNext == 1) {
+                            if (!!nextLink) {
+                                fn.showMsg(DL.str_34);
+                                setTimeout(() => (location.href = nextLink), 100);
+                            }
+                        }
                     }
                 },
                 close: fancybox => {
@@ -28009,6 +28044,8 @@ if ("xx" in window) {
                 str_207: "預設",
                 str_208: "圖片代理",
                 str_209: "不使用",
+                str_210: "Fancybox5尾返首時自動退出",
+                str_211: "Fancybox5尾返首時自動下一頁",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "條漫模式" : "條漫模式 (4,+,-)",
@@ -28275,6 +28312,8 @@ if ("xx" in window) {
                 str_207: "默认",
                 str_208: "图片代理",
                 str_209: "不使用",
+                str_210: "Fancybox5尾返首时自动退出",
+                str_211: "Fancybox5尾返首时自动下一页",
                 galleryMenu: {
                     horizontal: isM ? "水平模式" : "水平模式 (5,B,R)",
                     webtoon: isM ? "条漫模式" : "条漫模式 (4,+,-)",
@@ -28535,6 +28574,8 @@ if ("xx" in window) {
                 str_207: "Default",
                 str_208: "Image CDN",
                 str_209: "Not used",
+                str_210: "Fancybox5 Last Auto Close",
+                str_211: "Fancybox5 Last Auto Go To Next",
                 galleryMenu: {
                     horizontal: isM ? "Horizontal" : "Horizontal (5,B,R)",
                     webtoon: isM ? "Webtoon" : "Webtoon (4,+,-)",
@@ -32590,6 +32631,17 @@ if ("xx" in window) {
                             } else {
                                 smoothScrollIntoView(gallery[fancybox.getSlide().index]);
                             }
+                            if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                                if (FancyboxAutoClose == 1) {
+                                    fancybox.close();
+                                }
+                                if (FancyboxAutoNext == 1) {
+                                    if (!!nextLink) {
+                                        fn.showMsg(DL.str_34);
+                                        setTimeout(() => (location.href = nextLink), 100);
+                                    }
+                                }
+                            }
                         },
                         close: () => {
                             setTimeout(() => {
@@ -32634,6 +32686,17 @@ if ("xx" in window) {
                                 smoothScrollIntoView(gallery[slide.index]);
                             } else {
                                 smoothScrollIntoView(gallery[fancybox.getSlide().index]);
+                            }
+                            if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                                if (FancyboxAutoClose == 1) {
+                                    fancybox.close();
+                                }
+                                if (FancyboxAutoNext == 1) {
+                                    if (!!nextLink) {
+                                        fn.showMsg(DL.str_34);
+                                        setTimeout(() => (location.href = nextLink), 100);
+                                    }
+                                }
                             }
                         },
                         close: () => {
@@ -34350,6 +34413,8 @@ if ("xx" in window) {
         _GM_setValue("FancyboxSlideshowTimeout", 3);
         _GM_setValue("FancyboxWheel", 1);
         _GM_setValue("FancyboxSlideshowTransition", "fade");
+        _GM_setValue("FancyboxAutoClose", 1);
+        _GM_setValue("FancyboxAutoNext", 1);
         _GM_setValue("exclude_ex_config", {});
         _GM_setValue("compressed_extension", "zip");
         _GM_setValue("zipFolderConfig", 1);
@@ -34423,7 +34488,8 @@ if ("xx" in window) {
             newWindow.isM = isM;
             newWindow.isPC = isPC;
             newWindow.config = config;
-            newWindow.lightGallery = newTabViewLightGallery
+            newWindow.lightGallery = newTabViewLightGallery;
+            newWindow.FancyboxAutoClose = FancyboxAutoClose;
             newWindow.totalNumberOfElements = 0;
             newWindow.currentReferenceElement = null;
             newWindow.imgViewIndex = -1;
@@ -34661,6 +34727,11 @@ if (isM) {
                     }
                     smoothScrollIntoView(imgs[fancybox.getSlide().index]);
                 }
+                if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                    if (FancyboxAutoClose == 1) {
+                        fancybox.close();
+                    }
+                }
             },
             close: fancybox => {
                 document.body.classList.remove("hide-scrollbar");
@@ -34725,6 +34796,11 @@ if (isM) {
                     currentReferenceElement = img;
                     img.style.border = "solid #32a1ce";
                     smoothScrollIntoView(img);
+                }
+                if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                    if (FancyboxAutoClose == 1) {
+                        fancybox.close();
+                    }
                 }
             },
             close: fancybox => {
@@ -34843,7 +34919,9 @@ function addFixedMenu() {
     threadingSelect.addEventListener("change", () => {
         config.threading = Number(threadingSelect.value);
         saveConfig();
-        document.querySelector("#imgBox").focus();
+        if (!isM) {
+            document.querySelector("#imgBox").focus();
+        }
     });
 }
 addFixedMenu();
@@ -36446,7 +36524,9 @@ img.horizontal {
             mainElement.scrollTo({
                 top: 0
             });
-            mainElement.focus();
+            if (!isM) {
+                mainElement.focus();
+            }
             imgViewIndex = -1;
             gae(".FixedMenuitem", shadow).forEach(item => item.classList.remove("active"));
             mainElement.style.overflow = "hidden scroll";
@@ -36603,6 +36683,18 @@ img.horizontal {
                                 currentReferenceElement = img;
                                 img.style.border = "solid #32a1ce";
                                 instantScrollIntoView(img);
+                            }
+                            if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                                if (FancyboxAutoClose == 1) {
+                                    fancybox.close();
+                                }
+                                if (FancyboxAutoNext == 1) {
+                                    if (!!nextLink) {
+                                        closeGallery();
+                                        fn.showMsg(DL.str_34);
+                                        setTimeout(() => (location.href = nextLink), 100);
+                                    }
+                                }
                             }
                         },
                         close: fancybox => {
@@ -36768,7 +36860,9 @@ img.horizontal {
             threadingSelect.addEventListener("change", () => {
                 config.threading = Number(threadingSelect.value);
                 saveConfig(config);
-                mainElement.focus();
+                if (!isM) {
+                    mainElement.focus();
+                }
             });
 
             if (isPC) {
@@ -36789,7 +36883,9 @@ img.horizontal {
                 jumpSelect.addEventListener("change", () => {
                     config.jumpNum = jumpSelect.value;
                     saveConfig(config);
-                    mainElement.focus();
+                    if (!isM) {
+                        mainElement.focus();
+                    }
                 });
 
                 let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
@@ -36805,7 +36901,9 @@ img.horizontal {
                 behaviorInput.addEventListener("change", () => {
                     config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
                     saveConfig(config);
-                    mainElement.focus();
+                    if (!isM) {
+                        mainElement.focus();
+                    }
                 });
             }
             if (isM) {
@@ -37894,7 +37992,9 @@ img.horizontal {
             mainElement.scrollTo({
                 top: 0
             });
-            mainElement.focus();
+            if (!isM) {
+                mainElement.focus();
+            }
             imgViewIndex = -1;
             gae(".FixedMenuitem", dom).forEach(item => item.classList.remove("active"));
             mainElement.style.overflow = "hidden scroll";
@@ -38061,6 +38161,18 @@ img.horizontal {
                                         currentReferenceElement = img;
                                         img.style.border = "solid #32a1ce";
                                         instantScrollIntoView(img);
+                                    }
+                                    if (fancybox.carousel.page == 0 && (fancybox.carousel.prevPage == fancybox.carousel.pages.at(-1).index)) {
+                                        if (FancyboxAutoClose == 1) {
+                                            fancybox.close();
+                                        }
+                                        if (FancyboxAutoNext == 1) {
+                                            if (!!nextLink) {
+                                                closeGallery();
+                                                fn.showMsg(DL.str_34);
+                                                setTimeout(() => (location.href = nextLink), 100);
+                                            }
+                                        }
                                     }
                                 },
                                 close: fancybox => {
@@ -38282,7 +38394,9 @@ img.horizontal {
             threadingSelect.addEventListener("change", () => {
                 config.threading = Number(threadingSelect.value);
                 saveConfig(config);
-                mainElement.focus();
+                if (!isM) {
+                    mainElement.focus();
+                }
             });
 
             if (isPC) {
@@ -38303,7 +38417,9 @@ img.horizontal {
                 jumpSelect.addEventListener("change", () => {
                     config.jumpNum = jumpSelect.value;
                     saveConfig(config);
-                    mainElement.focus();
+                    if (!isM) {
+                        mainElement.focus();
+                    }
                 });
 
                 let behaviorDiv = ge("#MenuBehaviorItem", menuDiv);
@@ -38319,7 +38435,9 @@ img.horizontal {
                 behaviorInput.addEventListener("change", () => {
                     config.behavior = behaviorInput.checked == true ? "smooth" : "instant";
                     saveConfig(config);
-                    mainElement.focus();
+                    if (!isM) {
+                        mainElement.focus();
+                    }
                 });
             }
             if (isM) {
@@ -39236,7 +39354,9 @@ img.webtoon {
             } else {
                 gae(ui_selector, shadow).forEach(e => e.classList.remove("dark"));
             }
-            main.focus();
+            if (!isM) {
+                main.focus();
+            }
         });
 
         let imageSizeSelect = ge("#imageSize", main);
@@ -39266,7 +39386,9 @@ img.webtoon {
                     item.style.height = image_size + 100 + "px";
                 });
             }
-            main.focus();
+            if (!isM) {
+                main.focus();
+            }
         });
 
         if (backgroundColor === "d") {
@@ -39296,7 +39418,9 @@ img.webtoon {
                 }
             });
             ge("#filterNumber", main).innerText = DL.str_166 + num;
-            main.focus();
+            if (!isM) {
+                main.focus();
+            }
         };
 
         let widthSelect = ge("#width", main);
@@ -39350,7 +39474,9 @@ img.webtoon {
                 update_g_srcs();
                 addGalleryImgs();
             }
-            main.focus();
+            if (!isM) {
+                main.focus();
+            }
         });
 
         let titleReplace = fn.dt({
@@ -39531,7 +39657,9 @@ img.webtoon {
                 update_g_srcs();
                 addGalleryImgs();
             }
-            main.focus();
+            if (!isM) {
+                main.focus();
+            }
         });
         let inputSize = ge("#size", main);
         if (config.noSize == 1) {
@@ -39550,7 +39678,9 @@ img.webtoon {
                 update_g_srcs();
                 addGalleryImgs();
             }
-            main.focus();
+            if (!isM) {
+                main.focus();
+            }
         });
         let inputMove = ge("#move", main);
         if (inputMove) {
@@ -39567,7 +39697,9 @@ img.webtoon {
                     update_g_srcs();
                     addGalleryImgs();
                 }
-                main.focus();
+                if (!isM) {
+                    main.focus();
+                }
             });
         }
         const imageList = ge("#image-list", main);
@@ -39723,7 +39855,9 @@ img.webtoon {
             if (Viewer && ViewerJsInstance) {
                 ViewerJsInstance.update();
             }
-            main.focus();
+            if (!isM) {
+                main.focus();
+            }
             setTimeout(() => {
                 const queue = new Queue(Number(config.threading));
                 queue.addList(loadImgList);
@@ -40671,6 +40805,14 @@ img.webtoon {
         <select id="FancyboxTransition"></select>
     </div>
     <div style="width: 348px; display: flex;">
+        <input id="FancyboxAutoClose" type="checkbox">
+        <label>※ ${DL.str_210}</label>
+    </div>
+    <div style="width: 348px; display: flex;">
+        <input id="FancyboxAutoNext" type="checkbox">
+        <label>※ ${DL.str_211}</label>
+    </div>
+    <div style="width: 348px; display: flex;">
         <input id="Viewer" type="checkbox">
         <label>${DL.str_120}</label>
     </div>
@@ -41018,6 +41160,8 @@ img.webtoon {
         ge("#FancyboxSlideshowTimeout", main).value = FancyboxSlideshowTimeout;
         ge("#FancyboxWheel", main).value = _GM_getValue("FancyboxWheel", 1);
         ge("#FancyboxTransition", main).value = _GM_getValue("FancyboxSlideshowTransition", "fade");
+        ge("#FancyboxAutoClose", main).checked = _GM_getValue("FancyboxAutoClose", 1) == 1 ? true : false;
+        ge("#FancyboxAutoNext", main).checked = _GM_getValue("FancyboxAutoNext", 1) == 1 ? true : false;
         ge("#Zoom", main).value = options.zoom;
         siteData.category == "comic" ? ge("#Column", main).value = 2 : ge("#Column", main).value = options.column;
         ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
@@ -41087,6 +41231,8 @@ img.webtoon {
             _GM_setValue("FancyboxSlideshowTimeout", ge("#FancyboxSlideshowTimeout", main).value);
             _GM_setValue("FancyboxWheel", ge("#FancyboxWheel", main).value);
             _GM_setValue("FancyboxSlideshowTransition", ge("#FancyboxTransition", main).value);
+            _GM_setValue("FancyboxAutoClose", ge("#FancyboxAutoClose", main).checked == true ? 1 : 0);
+            _GM_setValue("FancyboxAutoNext", ge("#FancyboxAutoNext", main).checked == true ? 1 : 0);
             options.zoom = ge("#Zoom", main).value;
             options.column = ge("#Column", main).value;
             options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
