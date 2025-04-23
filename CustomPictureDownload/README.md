@@ -4,24 +4,24 @@
 <a href="https://raw.githubusercontent.com/skofkyo/AutoPager/main/CustomPictureDownload/FullPictureLoad.user.js">GreasyFork版</a>
 <h1>測試通過環境：</h1>
 <pre>
-2025/04/18
+2025/04/23
 PC
-Chrome 135.0.7049.96 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Chrome 135.0.7049.115 + Tampermonkey 5.1.1 or Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Edge 135.0.3179.85 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 FireFox 137.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Android
-☆Edge Canary 137.0.3265.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-☆Lemur Browser 2.7.3.002 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-☆Firefox for Android 137.0.2 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-<a href="https://github.com/kiwibrowser/src.next/releases/tag/12867802748">Kiwi Browser 132.0.6961.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+☆Edge Canary 137.0.3276.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+☆<a href="https://github.com/kiwibrowser/src.next/releases">Kiwi Browser 137.0.7337.0</a> + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+☆Firefox for Android 138.0 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
+Lemur Browser 2.7.3.002 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Waterfox 1.0.13 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Edge 135.0.3179.72 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Mises Browser 425041604 + Tampermonkey 5.3.3 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Yandex Browser 25.3.0.33 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 Mask Browser 1.7.3.8 + Tampermonkey 5.1.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
-<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.8.15</a> + Tampermonkey 5.3.1 or Violentmonkey 2.30.0 or ScriptCat 0.16.6
+<a href="https://club.yujianpay.com/index.php/archives/13/">雨见浏览器 7.8.2.1</a> + Tampermonkey 5.3.1 or Violentmonkey 2.31.0 or ScriptCat 0.16.6
 <a href="https://www.xbext.com/index.html">XBrowser 5.1.2</a>
-<a href="https://viayoo.com/zh-cn/">ViaBrowser 6.3.1</a>
+<a href="https://viayoo.com/zh-cn/">ViaBrowser 6.4.0</a>
 </pre>
 <p>PS：一些手機瀏覽器內建安裝腳本功能的，如果需要使用到腳本管理器選單和GM_xmlhttpRequest可能無法正常使用。</p>
 <h1>Extensions：</h1>
@@ -288,7 +288,7 @@ https://*wnacg.com/photos-slist-aid-*.html
     scrollEle: async () => {
         …code;
     },
-   //插入圖片之前要執行的代碼。
+    //插入圖片之前要執行的代碼。
     insertImgBF: () => {
         code;
     },
@@ -378,6 +378,8 @@ https://*wnacg.com/photos-slist-aid-*.html
         p: "",
         s: "",
         e: "",
+        ee: "",
+        st: "",
         d: ""
     },
     url: () =>,
@@ -2891,12 +2893,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://www.1ymt.com/discover?t=fresh">咿呀美图</a>
-                </td>
-                <td>SPA網頁</td>
-            </tr>
-            <tr>
-                <td>
                     <a href="https://asianpink.net/">AsianPink</a>
                 </td>
                 <td>高解析原圖需要下載，聚集的只是預覽圖</td>
@@ -3607,6 +3603,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
+                    <a href="https://picgir.blogspot.com/">Picgir</a>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
                     <a href="https://aitoda.blogspot.com/">Nao Kanzaki and a few friends</a>
                 </td>
                 <td></td>
@@ -4204,6 +4206,12 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                     <a href="https://blognudemodels.blogspot.com/">Nude Models</a>
                 </td>
                 <td>點開PO文後，可以3、8。</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://beprse.blogspot.com/">Beauty Pretty Sexy</a>
+                </td>
+                <td>同上</td>
             </tr>
             <tr>
                 <td>
@@ -7039,9 +7047,15 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
             </tr>
             <tr>
                 <td>
-                    <a href="https://klmanga.ax/">Manga Raw</a>
+                    <a href="https://klmanga.lu/">Manga Raw</a>
                 </td>
-                <td><a href="https://klmanga.my/">klmanga.my</a></td>
+                <td><a href="https://syosetu.now/">Syosetu</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://rawlazy.io/">Raw Lazy</a>
+                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
