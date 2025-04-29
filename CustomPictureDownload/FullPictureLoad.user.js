@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.23
+// @version            2025.4.29
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -4038,11 +4038,11 @@
     }, {
         name: "秀窝/RMM吧/赞MM格式",
         url: {
-            e: ["#showimg img", "//p[contains(text(),'图片数量')]"],
+            e: ["#showimg img", "//p[contains(text(),'图片数量') or contains(text(),'圖片數量')]"],
             p: ".html"
         },
         init: () => fn.clearAllTimer(),
-        imgs: () => fn.getImgO("#showimg img", fn.gt("//p[contains(text(),'图片数量')]").match(/\d+/)[0], 9),
+        imgs: () => fn.getImgO("#showimg img", fn.gt("//p[contains(text(),'图片数量') or contains(text(),'圖片數量')]").match(/\d+/)[0], 9),
         button: [4],
         insertImg: ["#showimg", 2],
         customTitle: ".weizhi h1",
@@ -4740,9 +4740,8 @@
         category: "nsfw1"
     }, {
         name: "秀图湾",
-        host: ["www.okxx.de", "okxx.de", "www.xiusz.de", "xiusz.de", "www.xiusz.com", "xiusz.com", "www.aiyes.de", "aiyes.de"],
         url: {
-            t: "xiusz.de"
+            h: ["www.okxx.de", "okxx.de", "www.xiusz.de", "xiusz.de", "www.xiusz.com", "xiusz.com", "www.aiyes.de", "aiyes.de"]
         },
         box: [".pic-group", 1],
         imgs: () => {
@@ -12820,11 +12819,15 @@
             h: ["sexythots.com"],
             p: "/gallery/"
         },
-        srcset: ".gallery_grid img",
-        thums: ".gallery_grid img",
+        box: [".gallery_grid", 1],
+        imgs: () => {
+            let eles = fn.gae("#album img").filter(e => !e.closest("#singleTabs"));
+            return fn.getImgSrcset(eles);
+        },
         button: [4],
-        insertImg: [".gallery_grid", 2],
-        customTitle: () => fn.title(" - SexyThots.com"),
+        insertImg: ["#FullPictureLoadMainImgBox", 2],
+        insertImgAF: () => fn.remove(".gallery_grid,#album>a:has(>img)"),
+        customTitle: () => fn.title(" | SexyThots.com"),
         category: "nsfw2"
     }, {
         name: "SexyGirlsPics",
@@ -20253,7 +20256,7 @@
         }),
         button: [4],
         insertImgBF: () => fn.waitEle("[data-name='image-item'] img"),
-        insertImg: [".items-center:has(>div[data-name='image-item'])", 2],
+        insertImg: ["div:has(>div[data-name='image-item'])", 2],
         autoDownload: [0],
         next: "//a[span[text()='Next Chapter']]",
         prev: "//a[span[text()='Prev Chapter']]",
@@ -31992,23 +31995,23 @@ if ("xx" in window) {
         //IMHentai網站用的取得圖片網址
         getImhentaiSrc: async () => {
             await fn.waitVar("g_th");
-            const findServer = cId => {
-                if (cId > 0 && cId <= 274825) return "m1.imhentai.xxx";
-                if (cId > 274825 && cId <= 403818) return "m2.imhentai.xxx";
-                if (cId > 403818 && cId <= 527143) return "m3.imhentai.xxx";
-                if (cId > 527143 && cId <= 632481) return "m4.imhentai.xxx";
-                if (cId > 632481 && cId <= 816010) return "m5.imhentai.xxx";
-                if (cId > 816010 && cId <= 970098) return "m6.imhentai.xxx";
-                if (cId > 970098 && cId <= 1121113) return "m7.imhentai.xxx";
-                if (cId > 1121113 && cId <= 1259410) return "m8.imhentai.xxx";
-                return "m9.imhentai.xxx";
+            const server = id => {
+                if (id > 0 && id <= 274825) return "1";
+                if (id > 274825 && id <= 403818) return "2";
+                if (id > 403818 && id <= 527143) return "3";
+                if (id > 527143 && id <= 632481) return "4";
+                if (id > 632481 && id <= 816010) return "5";
+                if (id > 816010 && id <= 970098) return "6";
+                if (id > 970098 && id <= 1121113) return "7";
+                if (id > 1121113 && id <= 1259410) return "8";
+                if (id > 1259410 && id <= 1439024) return "9";
+                return "10";
             };
             const galleryId = fn.ge(".gview>#gallery_id,#load_id").value;
             const imageDir = fn.ge("#image_dir,#load_dir").value;
-            const num = fn.ge("#pages,#load_pages").value ?? "";
-            const cId = Number(fn.ge("#u_id,#load_dir+#gallery_id").value ?? "");
-            const randomServer = _unsafeWindow.random_server ?? findServer(cId);
-            return fn.arr(num, (v, i) => `//${randomServer}/${imageDir}/${galleryId}/${(i + 1)}.${fn.ex(_unsafeWindow.g_th[i + 1][0])}`);
+            const num = fn.ge("#pages,#load_pages").value;
+            const u_id = Number(fn.ge("#u_id,#load_dir+#gallery_id").value);
+            return fn.arr(num, (v, i) => `${location.protocol}//m${server(u_id)}.imhentai.xxx/${imageDir}/${galleryId}/${(i + 1)}.${fn.ex(_unsafeWindow.g_th[i + 1][0])}`);
         },
         manhuaguiJson: (dom = document) => {
             let code = fn.gst("x6c", dom);
