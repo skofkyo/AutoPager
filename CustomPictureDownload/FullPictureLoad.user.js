@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2025.4.29
+// @version            2025.4.30
 // @description        支持寫真、H漫、漫畫的網站1000+，圖片全量加載，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -88,7 +88,7 @@
         comic: 0, //1，忽視漫畫站點開關選項，啟用漫畫規則
         zoom: 0, //1 ~ 10 腳本插入的圖片縮放比例，10 = 100%，9 = 90%，0 = auto
         column: 4, //圖片並排顯示的數量 2 ~ 6
-        viewMode: 0, //0：置中、1：並排
+        //viewMode: 0, //0：置中、1：並排
         fancybox: 1, //Fancybox圖片燈箱展示功能，1：開啟、0：關閉
         shadowGallery: 0, //自動進入影子畫廊，1：自動、0：手動
         mobileGallery: 0, //自動進入手機畫廊，1：自動、0：手動
@@ -27540,11 +27540,15 @@ if ("xx" in window) {
     }, {
         name: "m.4khd.com 自動跳轉",
         host: ["m.4khd.com"],
+        enable: 0,
         url: {
             h: "m.4khd.com",
             p: /^\/\w+$|^\/link\/|^\/vip\//i
         },
         init: () => {
+            if (fn.ge("#content a[href*='reload']")) {
+                return location.reload();
+            }
             if (fn.lp.includes("/vip/")) {
                 fn.css(FullPictureLoadStyle, "FullPictureLoadMainStyle");
                 fn.showMsg("系統錯誤，1秒後關閉。");
@@ -27715,6 +27719,7 @@ if ("xx" in window) {
     })();
 
     const UI_zIndex = Number(_GM_getValue("UI_zIndex", 2147483647));
+    const pageViewMode = _GM_getValue("pageViewMode", 0);
 
     const ajaxHookerJS = _GM_getResourceText("ajaxHookerJS");
     const JqueryJS = _GM_getResourceText("JqueryJS");
@@ -31172,7 +31177,7 @@ if ("xx" in window) {
                 ) {
                     fn.MutationObserver_aff();
                 }
-                if (options.viewMode == 1 || siteData.viewMode == 1) toggleImgMode();
+                if (pageViewMode == 1 || siteData.viewMode == 1) toggleImgMode();
                 if (goToFirstImage == 1) goToNo1Img();
             } else {
                 fn.showMsg(DL.str_20);
@@ -34495,6 +34500,7 @@ if ("xx" in window) {
         }
         _GM_setValue("UI_zIndex", 2147483647)
         _GM_setValue("FullPictureLoadMsgPos", 0);
+        _GM_setValue("pageViewMode", 0);
         _GM_setValue("goToFirstImage", 1);
         _GM_setValue("GalleryInIcon", 0);
         _GM_setValue("ShowFullPictureLoadFixedMenu", 1);
@@ -40845,7 +40851,7 @@ img.webtoon {
     </div>
     <div id="viewModeDIV" style="width: 348px; display: flex;">
         <input id="viewMode" type="checkbox">
-        <label>${DL.str_103}</label>
+        <label>※ ${DL.str_103}</label>
     </div>
     <div id="ColumnDIV" style="width: 348px; display: flex; margin-left: 7px;">
         <label>${DL.str_80}</label>
@@ -41255,7 +41261,8 @@ img.webtoon {
         ge("#FancyboxAutoNext", main).checked = _GM_getValue("FancyboxAutoNext", 1) == 1 ? true : false;
         ge("#Zoom", main).value = options.zoom;
         siteData.category == "comic" ? ge("#Column", main).value = 2 : ge("#Column", main).value = options.column;
-        ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
+        //ge("#viewMode", main).checked = options.viewMode == 1 ? true : false;
+        ge("#viewMode", main).checked = _GM_getValue("pageViewMode", 0) == 1 ? true : false;
         ge("#ShadowGalleryMode", main).checked = options.shadowGallery == 1 ? true : false;
         ge("#MobileGalleryMode", main).checked = options.mobileGallery == 1 ? true : false;
         ge("#GalleryInIcon", main).checked = _GM_getValue("GalleryInIcon", 0) == 1 ? true : false;
@@ -41326,7 +41333,8 @@ img.webtoon {
             _GM_setValue("FancyboxAutoNext", ge("#FancyboxAutoNext", main).checked == true ? 1 : 0);
             options.zoom = ge("#Zoom", main).value;
             options.column = ge("#Column", main).value;
-            options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
+            //options.viewMode = ge("#viewMode", main).checked == true ? 1 : 0;
+            _GM_setValue("pageViewMode", ge("#viewMode", main).checked == true ? 1 : 0);
             options.shadowGallery = ge("#ShadowGalleryMode", main).checked == true ? 1 : 0;
             options.mobileGallery = ge("#MobileGalleryMode", main).checked == true ? 1 : 0;
             _GM_setValue("GalleryInIcon", ge("#GalleryInIcon", main).checked == true ? 1 : 0);
