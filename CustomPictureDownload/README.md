@@ -7588,10 +7588,6 @@ XO福利圖,https://kb1.a7xofulitu.com/儿歌三百首/
                 <td>自動展開目錄</td>
             </tr>
             <tr>
-                <td>m.4khd.com</td>
-                <td>自動跳轉，擋廣告需加入白名單。</td>
-            </tr>
-            <tr>
                 <td>4kup.net</td>
                 <td>自動跳轉</td>
             </tr>
